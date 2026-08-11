@@ -1,0 +1,141 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Sadat Real Estate Operational API",
+    "version": "0.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "Process is alive",
+            "headers": {
+              "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+              "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HealthResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ready": {
+      "get": {
+        "operationId": "getReadiness",
+        "responses": {
+          "200": {
+            "description": "Required dependencies are ready",
+            "headers": {
+              "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+              "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ReadinessResponse" }
+              }
+            }
+          },
+          "503": {
+            "description": "A required dependency is unavailable",
+            "headers": {
+              "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+              "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ReadinessResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "headers": {
+      "X-Request-Id": {
+        "description": "Validated request correlation identifier; generated when the inbound value is absent or malformed.",
+        "schema": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$" }
+      },
+      "Traceparent": {
+        "description": "W3C trace context for this API span.",
+        "schema": { "type": "string", "pattern": "^00-[0-9a-f]{32}-[0-9a-f]{16}-[0-9a-f]{2}$" }
+      }
+    },
+    "schemas": {
+      "ResponseMeta": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["requestId"],
+        "properties": {
+          "requestId": { "type": "string", "minLength": 1, "maxLength": 128 },
+          "page": { "type": "integer", "minimum": 1 },
+          "limit": { "type": "integer", "minimum": 1 },
+          "total": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "ErrorDetail": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "code", "messageKey"],
+        "properties": {
+          "path": {
+            "type": "array",
+            "maxItems": 32,
+            "items": { "oneOf": [{ "type": "string", "minLength": 1, "maxLength": 128 }, { "type": "integer", "minimum": 0 }] }
+          },
+          "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*$", "maxLength": 64 },
+          "messageKey": { "type": "string", "pattern": "^[a-z][a-zA-Z0-9]*(?:[._-][a-zA-Z0-9]+)*$", "maxLength": 160 }
+        }
+      },
+      "ApiError": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "messageKey", "details", "requestId"],
+        "properties": {
+          "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*$", "maxLength": 64 },
+          "messageKey": { "type": "string", "pattern": "^[a-z][a-zA-Z0-9]*(?:[._-][a-zA-Z0-9]+)*$", "maxLength": 160 },
+          "details": { "type": "array", "maxItems": 100, "items": { "$ref": "#/components/schemas/ErrorDetail" } },
+          "requestId": { "type": "string", "minLength": 1, "maxLength": 128 }
+        }
+      },
+      "ErrorEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["error"],
+        "properties": { "error": { "$ref": "#/components/schemas/ApiError" } }
+      },
+      "SuccessEnvelope": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["data", "meta"],
+        "properties": {
+          "data": {},
+          "meta": { "$ref": "#/components/schemas/ResponseMeta" }
+        }
+      },
+      "HealthResponse": {
+        "type": "object",
+        "required": ["status"],
+        "properties": { "status": { "const": "ok" } }
+      },
+      "ReadinessResponse": {
+        "type": "object",
+        "required": ["status", "checks"],
+        "properties": {
+          "status": { "enum": ["ready", "not_ready"] },
+          "checks": {
+            "type": "object",
+            "required": ["mongodb"],
+            "properties": { "mongodb": { "enum": ["ready", "not_ready"] } }
+          }
+        }
+      }
+    }
+  }
+}

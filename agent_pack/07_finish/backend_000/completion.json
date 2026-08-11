@@ -1,6 +1,6 @@
 {
   "taskId": "backend_000",
-  "summary": "Truth-repaired the repository inventory and completion evidence: the root is documented as containing Agent Pack and discovery docs, the mutable task status is delegated to canonical state files, and every recorded verification command is exact or explicitly blocked/skipped.",
+  "summary": "Refreshed the repository-truth inventory after the Git worktree became available. The root is documented as a clean main worktree at inspection with Agent Pack and discovery docs only; the application runtime and dependent infrastructure remain absent and unclaimed.",
   "filesChanged": [
     "docs/repository-inventory.md",
     "agent_pack/08_reality_sync/CURRENT_STATE.md",
@@ -25,13 +25,31 @@
       "command": "Get-ChildItem -Force -Name",
       "exitCode": 0,
       "result": "passed",
-      "notes": "Verified top-level entries are agent_pack and docs."
+      "notes": "Verified .git, agent_pack, and docs are present at the top level."
+    },
+    {
+      "command": "git rev-parse --show-toplevel",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Git worktree root resolved successfully."
     },
     {
       "command": "git status --short",
-      "exitCode": 128,
-      "result": "blocked",
-      "notes": "The configured root is not a Git repository."
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The initial pre-mutation status was clean; later output contains only this task's documented and generated changes."
+    },
+    {
+      "command": "git branch --show-current",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Current branch is main."
+    },
+    {
+      "command": "git log -1 --oneline",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Git history is available."
     },
     {
       "command": "node -v",
@@ -67,7 +85,7 @@
       "command": "node -e \"const s=require('./agent_pack/03_execution/TASK_STATE.json'); const st=require('./agent_pack/step_info.json'); const f=require('./agent_pack/07_finish/FINISH_INDEX.json'); if(s.tasks.backend_000.status!=='in_progress'||st.selectedTaskId!=='backend_000'||st.selectedTaskStatus!=='in_progress'||!Array.isArray(f)||Object.values(s.tasks).filter(x=>x.status==='in_progress').length!==1) process.exit(1); console.log('CANONICAL_STATE_OK');\"",
       "exitCode": 0,
       "result": "passed",
-      "notes": "Canonical task state and selector point to the single repair task before closure."
+      "notes": "Canonical state and selector point to the single repair task before closure."
     },
     {
       "command": "node -e \"JSON.parse(require('fs').readFileSync('agent_pack/07_finish/backend_000/completion.json','utf8')); console.log('EVIDENCE_JSON_OK');\"",
@@ -118,13 +136,15 @@
     "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
     "agent_pack/01_product/OPEN_QUESTIONS.md",
     "agent_pack/08_reality_sync/DECISION_LOG.md",
-    "node agent_pack/scripts/audit_pack.mjs output with zero errors",
-    "node agent_pack/scripts/select_next_step.mjs output selecting backend_000 during repair"
+    "git rev-parse --show-toplevel output resolving the current root",
+    "git branch --show-current output main",
+    "git log -1 --oneline output confirming available history",
+    "node agent_pack/scripts/audit_pack.mjs output with zero errors"
   ],
   "knownGaps": [
-    "The supplied root is not a Git repository, so no Git diff or clean-worktree baseline is available.",
-    "Application runtime, dependencies, tests, database topology, provider credentials, and deployment environment are not supplied.",
-    "Runtime quality gates remain blocked until the application repository is supplied."
+    "No application runtime, package manifest, lockfile, tests, database topology, provider credentials, or deployment environment is supplied.",
+    "Runtime quality gates remain blocked until the application repository is supplied.",
+    "Node v22.18.0 is available while the architecture baseline plans Node 24 LTS."
   ],
-  "completedAt": "2026-08-11T20:34:15.620Z"
+  "completedAt": "2026-08-11T20:41:27.821Z"
 }

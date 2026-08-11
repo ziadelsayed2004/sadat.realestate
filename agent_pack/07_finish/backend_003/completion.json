@@ -1,0 +1,244 @@
+{
+  "taskId": "backend_003",
+  "summary": "Added strict, typed validation for APP_ENV, API_HOST, and API_PORT, safe diagnostics and a non-secret example, wired entrypoint validation before listening, and covered valid, invalid, and secret-redaction cases without adding routes or provider/database configuration.",
+  "filesChanged": [
+    "package.json",
+    "apps/api/package.json",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/config/environment.ts",
+    "apps/api/src/modules/config/check-environment.ts",
+    "apps/api/tests/config/environment.test.ts",
+    "apps/api/.env.example",
+    "docs/api/environment.md",
+    "docs/repository-inventory.md",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/07_finish/backend_003/completion.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/step_info.json"
+  ],
+  "verification": [
+    {
+      "command": "Get-Location",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository root confirmed at D:\\Projects\\$current.projects\\sadat.realestate."
+    },
+    {
+      "command": "git status --short",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Existing user-owned Agent Pack and workspace changes were preserved."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Zero Agent Pack audit errors while backend_003 was in progress."
+    },
+    {
+      "command": "node agent_pack/scripts/select_next_step.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "backend_003 remained the live selected task with backend_002 complete."
+    },
+    {
+      "command": "node agent_pack/scripts/set_task_status.mjs backend_003 in_progress",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Only backend_003 was marked in progress and its dependency was complete."
+    },
+    {
+      "command": "node -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "v22.18.0 is installed; the declared Node >=24 <25 baseline remains blocked."
+    },
+    {
+      "command": "npm.cmd -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "npm 11.6.4 matches the repository package-manager pin."
+    },
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Clean lockfile installation completed with zero reported vulnerabilities; Node engine warnings reflect the unavailable Node 24 baseline."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Infrastructure syntax and strict API TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API source and configuration tests typechecked successfully."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy, manifest, package-boundary, and lockfile checks passed."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Nine workspace-policy tests and nine API configuration/lifecycle tests passed."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All API configuration and existing lifecycle tests passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace validation and API build completed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Compiled API output, including configuration validation, was emitted successfully."
+    },
+    {
+      "command": "npm.cmd ls --workspaces --depth=0",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All five declared workspaces resolved."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities were reported."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; npm.cmd run env:check; $envCheck=$LASTEXITCODE; Remove-Item Env:APP_ENV,Env:API_HOST,Env:API_PORT -ErrorAction SilentlyContinue; if ($envCheck -ne 0) { exit $envCheck }",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Synthetic non-secret values produced ENV_CHECK_OK and were removed from the process afterward; no .env file was loaded."
+    },
+    {
+      "command": "node --input-type=module -e \"import { parseRuntimeEnvironment } from './apps/api/dist/modules/config/environment.js'; const c=parseRuntimeEnvironment({APP_ENV:'test',API_HOST:'127.0.0.1',API_PORT:'3100'}); if(c.api.port!==3100 || c.api.host!=='127.0.0.1') throw new Error('compiled config mismatch'); console.log('CONFIG_RUNTIME_SMOKE_OK');\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Compiled configuration parsing accepted the synthetic listener configuration."
+    },
+    {
+      "command": "node -e \"const fs=require('fs'); const files=['package.json','package-lock.json','apps/api/package.json','apps/api/tsconfig.json','apps/api/tsconfig.test.json','tsconfig.base.json','agent_pack/03_execution/TASK_STATE.json','agent_pack/07_finish/FINISH_INDEX.json']; for (const f of files) JSON.parse(fs.readFileSync(f,'utf8')); console.log('JSON_PARSE_OK '+files.length);\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Changed manifests, lockfile, TypeScript configuration, and canonical state JSON parsed successfully."
+    },
+    {
+      "command": "node -e \"const fs=require('fs'); const files=['apps/api/src/app.ts','apps/api/src/server.ts','apps/api/src/modules/config/environment.ts','apps/api/src/modules/config/check-environment.ts']; const text=files.map(f=>fs.readFileSync(f,'utf8')).join('\\n'); const forbiddenRoutes=['/api/v1','/health','/ready']; const routeMethods=['app.get(','app.post(','app.put(','app.patch(','app.delete(','app.use(']; if(forbiddenRoutes.some(x=>text.includes(x)) || routeMethods.some(x=>text.includes(x))) process.exit(1); console.log('ROUTE_ABSENCE_OK');\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No public route, health, readiness, or /api/v1 declaration was introduced."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "No API inventory script exists and this task intentionally adds no public routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate && npm.cmd run postman:validate",
+      "exitCode": null,
+      "result": "skipped",
+      "notes": "No OpenAPI, Postman, DTO, or route contract changed."
+    },
+    {
+      "command": "live API/provider smoke test",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "No isolated non-production provider credentials, database topology, or external test data is available."
+    },
+    {
+      "command": "npm.cmd run test:e2e",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "No E2E harness is present; later quality work owns the full matrix."
+    },
+    {
+      "command": "npm.cmd run test:e2e:api:full",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "No full API E2E harness or database/provider environment exists."
+    },
+    {
+      "command": "npm.cmd run test:visual",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "No frontend runtime or visual harness exists."
+    },
+    {
+      "command": "npm.cmd run test:a11y",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "No frontend runtime or accessibility harness exists."
+    },
+    {
+      "command": "npm.cmd run security:check",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "No security-check script exists; security middleware is a later task."
+    },
+    {
+      "command": "node agent_pack/scripts/set_task_status.mjs backend_003 complete",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "backend_003 closed after its acceptance evidence was validated; no task remained in progress."
+    },
+    {
+      "command": "node agent_pack/scripts/sync_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Generated task board, counts, state, finish index, and step information were synchronized."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final integrity audit reported zero errors and no in-progress tasks."
+    },
+    {
+      "command": "node agent_pack/scripts/select_next_step.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The next dependency-ready task is backend_004; it was reported but not started."
+    },
+    {
+      "command": "node -e \"const fs=require('fs'); const state=JSON.parse(fs.readFileSync('agent_pack/03_execution/TASK_STATE.json','utf8')); const finish=JSON.parse(fs.readFileSync('agent_pack/07_finish/FINISH_INDEX.json','utf8')); const step=JSON.parse(fs.readFileSync('agent_pack/step_info.json','utf8')); const evidence=JSON.parse(fs.readFileSync('agent_pack/07_finish/backend_003/completion.json','utf8')); const active=Object.entries(state.tasks).filter(([,v])=>v.status==='in_progress').map(([id])=>id); if(state.tasks.backend_003.status!=='complete' || active.length!==0 || step.selectedTaskId!=='backend_004' || evidence.taskId!=='backend_003' || !finish.includes('backend_003')) process.exit(1); console.log('TASK_FINISH_STATE_CONSISTENT');\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Canonical task state, completion evidence, finish index, and step_info agree."
+    }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/config/environment.ts",
+    "apps/api/src/modules/config/check-environment.ts",
+    "apps/api/src/server.ts",
+    "apps/api/tests/config/environment.test.ts",
+    "apps/api/.env.example",
+    "docs/api/environment.md",
+    "agent_pack/04_tracks/backend/B0_discovery_foundation/backend_003.md"
+  ],
+  "knownGaps": [
+    "Node v22.18.0 is installed while the declared baseline is Node >=24 <25.",
+    "The application intentionally does not load .env files; only process-provided configuration is validated.",
+    "Database, provider, authentication, storage, security middleware, observability, deployment, OpenAPI/Postman runtime artifacts, and full E2E infrastructure remain future tasks."
+  ],
+  "completedAt": "2026-08-11T21:17:20.9449122Z"
+}

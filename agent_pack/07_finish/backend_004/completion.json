@@ -1,0 +1,230 @@
+{
+  "taskId": "backend_004",
+  "summary": "Implemented a typed Mongoose connection lifecycle with validated and redacted MongoDB configuration, reconnect/error/disconnect state tracking, liveness and dependency-readiness routes, environment-specific non-destructive index policy, and a synthetic local/UAT seed harness that is idempotent and refuses Production before connecting. Added unit coverage and synchronized OpenAPI, Postman, environment examples, and database documentation without implementing later domain tasks.",
+  "filesChanged": [
+    "package.json",
+    "package-lock.json",
+    "apps/api/package.json",
+    "apps/api/.env.example",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/database/api-inventory.ts",
+    "apps/api/src/modules/database/connection.ts",
+    "apps/api/src/modules/database/environment.ts",
+    "apps/api/src/modules/database/health.ts",
+    "apps/api/src/modules/database/index-policy.ts",
+    "apps/api/src/modules/database/run-seed.ts",
+    "apps/api/src/modules/database/seed.ts",
+    "apps/api/src/modules/database/validate-api-artifacts.ts",
+    "apps/api/tests/server.test.ts",
+    "apps/api/tests/database/artifacts.test.ts",
+    "apps/api/tests/database/connection.test.ts",
+    "apps/api/tests/database/environment.test.ts",
+    "apps/api/tests/database/health.test.ts",
+    "apps/api/tests/database/index-policy.test.ts",
+    "apps/api/tests/database/seed.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/database.md",
+    "docs/api/environment.md",
+    "packages/config/scripts/workspace-policy.mjs",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "agent_pack/01_product/API_MODULE_CATALOG.json",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/07_finish/backend_004/completion.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/DECISION_LOG.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
+    "agent_pack/step_info.json"
+  ],
+  "verification": [
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Initial and pre-close audits reported zero errors with backend_004 as the only in-progress task."
+    },
+    {
+      "command": "node agent_pack/scripts/select_next_step.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "backend_004 was selected with backend_003 complete."
+    },
+    {
+      "command": "node agent_pack/scripts/set_task_status.mjs backend_004 in_progress",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "backend_004 remained the only active task."
+    },
+    {
+      "command": "node -v",
+      "exitCode": 0,
+      "result": "passed_with_gap",
+      "notes": "v22.18.0 is installed; the repository declares Node >=24 <25."
+    },
+    {
+      "command": "npm -v",
+      "exitCode": 1,
+      "result": "environment_invocation_failed",
+      "notes": "PowerShell blocked npm.ps1 under the host execution policy; the equivalent npm.cmd command was used thereafter."
+    },
+    {
+      "command": "npm.cmd -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "npm 11.6.4 matches the package-manager pin."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Strict source and test typechecking passed before and after the database changes."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Initial API baseline passed 20 tests; the final root test run executed the expanded API suite with 23 passing tests."
+    },
+    {
+      "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/database/environment.test.ts apps/api/tests/database/index-policy.test.ts apps/api/tests/database/connection.test.ts apps/api/tests/database/health.test.ts apps/api/tests/database/seed.test.ts apps/api/tests/database/artifacts.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 14 database-scoped tests passed using injectable mocks, including lifecycle failure/reconnect, readiness failure, Production seed refusal, and repeat-run idempotency."
+    },
+    {
+      "command": "TEST_MONGODB_URI presence check",
+      "exitCode": 0,
+      "result": "blocked",
+      "notes": "Blocked — prerequisites unavailable: isolated MongoDB replica-set test URI is not configured."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final syntax and strict API TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final workspace policy, package boundary, and lockfile checks passed. An intermediate run exited 1 after removing mongodb-memory-server because its stale policy pin still required it; the policy was corrected and this exact command then passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final run passed 9 workspace-policy tests and 23 API tests. An intermediate run exited 1 for the same stale dependency policy and passed after that policy was corrected."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final workspace validation and API TypeScript build passed. An intermediate run exited 1 for the stale dependency policy and passed after correction."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API TypeScript output compiled successfully."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory reported only GET /health and GET /ready."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI operational routes match the runtime inventory."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman operational routes match the runtime inventory."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final audit reported zero vulnerabilities."
+    },
+    {
+      "command": "Production db:seed redaction and refusal smoke",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The wrapped check confirmed the seed CLI failed for Production and emitted none of the synthetic URI username, password, or host."
+    },
+    {
+      "command": "npm.cmd uninstall mongodb-memory-server --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Removed the unused in-process MongoDB test package; no registry version query was run and the final audit remained clean."
+    },
+    {
+      "command": "node agent_pack/scripts/set_task_status.mjs backend_004 complete",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Planned closure command; verified after writing this evidence."
+    },
+    {
+      "command": "node agent_pack/scripts/sync_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Planned closure command; verified after writing this evidence."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Planned final integrity audit; verified after synchronization."
+    },
+    {
+      "command": "node agent_pack/scripts/select_next_step.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Planned final selector check; verified after synchronization without starting the next task."
+    }
+  ],
+  "mongoDbTopology": {
+    "unit": "Injectable mocked Mongoose connection and mocked seed ledger; no network database.",
+    "integration": "Not run because TEST_MONGODB_URI is not configured.",
+    "replicaSet": "Blocked — prerequisites unavailable: isolated MongoDB replica-set test URI is not configured."
+  },
+  "blockedOptionalChecks": [
+    "Blocked — prerequisites unavailable: isolated MongoDB replica-set test URI is not configured."
+  ],
+  "scopeNotes": [
+    "No backend_005 or later functionality was implemented.",
+    "apps/api integration files, manifests, the lockfile, and .env.example are outside the atomic task's primary database roots but are required to wire lifecycle/readiness, declare Mongoose, expose scripts, and document MONGODB_URI.",
+    "packages/config/scripts/workspace-policy.mjs was changed only to remove the stale mongodb-memory-server approval after that unused dependency was removed as explicitly requested."
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/database/environment.ts",
+    "apps/api/src/modules/database/connection.ts",
+    "apps/api/src/modules/database/health.ts",
+    "apps/api/src/modules/database/index-policy.ts",
+    "apps/api/src/modules/database/seed.ts",
+    "apps/api/src/modules/database/run-seed.ts",
+    "apps/api/tests/database/connection.test.ts",
+    "apps/api/tests/database/health.test.ts",
+    "apps/api/tests/database/index-policy.test.ts",
+    "apps/api/tests/database/seed.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/database.md",
+    "agent_pack/04_tracks/backend/B0_discovery_foundation/backend_004.md"
+  ],
+  "knownGaps": [
+    "Node v22.18.0 is installed while the declared and architecture baseline is Node >=24 <25; verification passed on the available host runtime but Node 24 remains unverified.",
+    "No isolated TEST_MONGODB_URI or replica-set topology is configured, so optional live integration and transaction/topology checks were not run.",
+    "The seed registry intentionally contains no domain records until later model-owning tasks approve synthetic fixtures."
+  ],
+  "completedAt": "2026-08-11T22:08:56.1445407Z"
+}

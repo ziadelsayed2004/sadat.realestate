@@ -1,0 +1,62 @@
+{
+  "taskId": "backend_006",
+  "summary": "Implemented the API security baseline with Helmet headers, exact-origin CORS, bounded JSON and URL-encoded bodies, in-memory rate limiting with health/readiness probe exemptions, unsafe-input sanitization, an explicit trust-proxy policy, and redacted security error envelopes. Integrated the middleware without adding product routes; /health and /ready remain unchanged.",
+  "filesChanged": [
+    "apps/api/src/modules/security/middleware.ts",
+    "apps/api/tests/security/middleware.test.ts",
+    "apps/api/src/app.ts",
+    "apps/api/package.json",
+    "package-lock.json",
+    "packages/config/scripts/workspace-policy.mjs",
+    "docs/api/security.md",
+    "agent_pack/07_finish/backend_006/completion.json"
+  ],
+  "verification": [
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "passed", "notes": "Initial Agent Pack audit clean." },
+    { "command": "node agent_pack/scripts/select_next_step.mjs", "exitCode": 0, "result": "passed", "notes": "Selected backend_006 with backend_005 complete." },
+    { "command": "node agent_pack/scripts/set_task_status.mjs backend_006 in_progress", "exitCode": 0, "result": "passed", "notes": "Only backend_006 marked in progress before implementation." },
+    { "command": "npm.cmd install helmet --workspace apps/api --save-exact", "exitCode": 0, "result": "passed", "notes": "Installed the required security dependency at the exact version selected by npm (helmet 8.3.0)." },
+    { "command": "npm.cmd install --package-lock-only --ignore-scripts", "exitCode": 0, "result": "passed", "notes": "Lockfile synchronized." },
+    { "command": "npm.cmd ci", "exitCode": 0, "result": "passed", "notes": "Clean workspace install completed; npm reported zero vulnerabilities." },
+    { "command": "node -v", "exitCode": 0, "result": "passed", "notes": "Runtime reported v22.18.0; repository declares Node >=24<25, recorded as a known verification gap." },
+    { "command": "npm.cmd -v", "exitCode": 0, "result": "passed", "notes": "npm 11.6.4." },
+    { "command": "npm.cmd run workspace:check", "exitCode": 0, "result": "passed", "notes": "Workspace policy passed." },
+    { "command": "npm.cmd run typecheck --workspace packages/contracts", "exitCode": 0, "result": "passed", "notes": "Contracts typecheck passed." },
+    { "command": "npm.cmd run typecheck --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "API typecheck passed." },
+    { "command": "npm.cmd run typecheck", "exitCode": 0, "result": "passed", "notes": "Root syntax and workspace typechecks passed." },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "passed", "notes": "Root workspace lint/policy passed." },
+    { "command": "npm.cmd test -- --runInBand", "exitCode": 0, "result": "passed", "notes": "All workspace tests passed: 9 workspace tests and 33 API tests." },
+    { "command": "npm.cmd test --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "All 33 API tests passed." },
+    { "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/security/middleware.test.ts", "exitCode": 0, "result": "passed", "notes": "Focused security suite passed: 5 tests." },
+    { "command": "npm.cmd run build --workspace packages/contracts", "exitCode": 0, "result": "passed", "notes": "Contracts build passed." },
+    { "command": "npm.cmd run build --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "API build passed." },
+    { "command": "npm.cmd run build", "exitCode": 0, "result": "passed", "notes": "Root build passed." },
+    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "passed", "notes": "No high-severity vulnerabilities reported." },
+    { "command": "npm.cmd run api:inventory", "exitCode": 0, "result": "passed", "notes": "Runtime inventory remains exactly GET /health and GET /ready." },
+    { "command": "npm.cmd run openapi:validate", "exitCode": 0, "result": "passed", "notes": "OpenAPI validation passed; no route or DTO changes required." },
+    { "command": "npm.cmd run postman:validate", "exitCode": 0, "result": "passed", "notes": "Postman validation passed; operational routes unchanged." },
+    { "command": "node -e \"for (const f of ['package.json','package-lock.json','apps/api/package.json','packages/contracts/package.json','apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json']) JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('JSON_VALID')\"", "exitCode": 0, "result": "passed", "notes": "Changed JSON and route artifacts parsed successfully." },
+    { "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; npm.cmd run env:check", "exitCode": 0, "result": "passed", "notes": "Synthetic non-production environment check passed; no real .env read." },
+    { "command": "API lint script discovery", "exitCode": 0, "result": "skipped", "notes": "apps/api has no dedicated lint script; root npm run lint is the applicable check." },
+    { "command": "Optional E2E/coverage/visual/accessibility/security-check script discovery", "exitCode": 0, "result": "skipped", "notes": "These optional scripts are not defined in the repository." }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/security/middleware.ts",
+    "apps/api/src/app.ts",
+    "apps/api/tests/security/middleware.test.ts",
+    "docs/api/security.md",
+    "agent_pack/04_tracks/backend/B0_discovery_foundation/backend_006.md"
+  ],
+  "scopeNotes": [
+    "apps/api/src/app.ts is outside the task's primary security source root but was required to install the security middleware in the runtime entrypoint.",
+    "apps/api/package.json and package-lock.json were changed outside the source root to add the required Helmet dependency and keep the lockfile reproducible.",
+    "packages/config/scripts/workspace-policy.mjs was changed to keep the enforced dependency allowlist synchronized with the required Helmet dependency."
+  ],
+  "knownGaps": [
+    "Execution used Node v22.18.0 while the repository declares Node >=24<25.",
+    "The rate limiter is intentionally in-memory and single-instance; a later deployment task must provide a shared store for multi-replica production operation.",
+    "No dedicated API lint, E2E, visual, accessibility, coverage, or security-check scripts are defined; root lint and the focused/runtime test suites passed.",
+    "No live MongoDB or provider topology was required for this middleware-only task."
+  ],
+  "completedAt": "2026-08-11T22:42:24.6231220Z"
+}

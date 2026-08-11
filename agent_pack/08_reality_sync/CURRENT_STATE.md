@@ -1,10 +1,12 @@
 # Current Reality Snapshot
 
-- Snapshot date: 2026-08-11.
-- Repository root contains `agent_pack/` and `docs/`; it is not a Git repository.
-- Runtime source received: none. Backend and frontend implementations are not present or verified.
-- No package manifest, lockfile, workspace, tests, OpenAPI runtime, Postman collection, CI, deployment files, or environment examples are present.
-- Node.js `v22.18.0` and npm `11.6.4` are available; the planned environment baseline is Node 24 LTS.
+- Snapshot date: 2026-08-12.
+- Repository root is a Git worktree on `main` and contains `.git/`, `agent_pack/`, and `docs/`.
+- The initial pre-mutation Git worktree check was clean; subsequent changes in this run are the documented truth repair and generated task-state synchronization.
+- The npm workspace foundation is present: root `package.json`, `package-lock.json`, `tsconfig.base.json`, `.gitignore`, and manifests for `apps/api`, `apps/web`, `packages/contracts`, `packages/ui`, and `packages/config`.
+- Structural policy scripts and Node tests are present under `packages/config/`; `apps/api` now contains the minimal Express/TypeScript runtime shell, lifecycle tests, and pinned dependencies.
+- The API exposes only operational `/health` and `/ready` routes. A Mongoose connection boundary, MongoDB readiness ping, environment-specific index policy, and local-only seed harness now exist. Strict validation covers `APP_ENV`, `API_HOST`, `API_PORT`, and redacted `MONGODB_URI`; the checked-in example is documentation only. Shared DTO envelopes, the HTTP security baseline, validated request/trace context, and redacted structured request-completion logs are implemented. React/web runtime, product routes, authentication, CI, deployment files, providers, and external isolated live-test data remain absent.
+- Node.js `v22.18.0` and npm `11.6.4` are available; the repository declares Node `>=24 <25` and the planned environment baseline is Node 24 LTS.
 - Design handoff is present in the Agent Pack with 131 Screen IDs.
 - Agent Pack audit is clean. Mutable task status and the selected task are authoritative only in `03_execution/TASK_STATE.json` and `step_info.json`; this snapshot does not duplicate them.
 - Repository inventory: `docs/repository-inventory.md`.

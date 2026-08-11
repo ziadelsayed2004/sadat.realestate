@@ -1,0 +1,224 @@
+{
+  "taskId": "backend_002",
+  "summary": "Bootstrapped the Express 5 and strict TypeScript API runtime with separate application/server lifecycle modules, graceful shutdown handling, exact dependencies, build/test scripts, and lifecycle tests. No public product routes were introduced.",
+  "filesChanged": [
+    "package.json",
+    "package-lock.json",
+    "apps/api/package.json",
+    "apps/api/tsconfig.json",
+    "apps/api/tsconfig.test.json",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/tests/server.test.ts",
+    "packages/config/scripts/workspace-policy.mjs",
+    "packages/config/scripts/run-tests.mjs",
+    "packages/config/tests/workspace-policy.test.mjs",
+    "docs/architecture/api-bootstrap.md",
+    "docs/architecture/monorepo-workspaces.md",
+    "docs/repository-inventory.md",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/07_finish/backend_002/completion.json",
+    "agent_pack/step_info.json",
+    "agent_pack/07_finish/FINISH_INDEX.json"
+  ],
+  "verification": [
+    {
+      "command": "Get-Location",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository root confirmed."
+    },
+    {
+      "command": "git status --short",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Existing user-owned Agent Pack and workspace changes were preserved."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Zero Agent Pack audit errors before implementation."
+    },
+    {
+      "command": "node agent_pack/scripts/select_next_step.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Selected backend_002, open, with backend_001 complete."
+    },
+    {
+      "command": "node agent_pack/scripts/set_task_status.mjs backend_002 in_progress",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Only backend_002 was marked in progress."
+    },
+    {
+      "command": "npm.cmd install --package-lock-only --ignore-scripts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Lockfile synchronized; Node 22 versus declared Node 24 engine warnings were recorded."
+    },
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Exact dependency graph installed with no audit vulnerabilities."
+    },
+    {
+      "command": "node -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "v22.18.0 available; Node 24 baseline remains unverified."
+    },
+    {
+      "command": "npm.cmd -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "11.6.4 matches the repository package-manager pin."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy and exact API dependency/lockfile validation passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The initial run exposed an incorrect AddressInfo import; after correction, the exact command was rerun successfully. Infrastructure syntax checks and API TypeScript test configuration passed."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API source and lifecycle tests typechecked under strict settings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Nine workspace policy tests and three API lifecycle tests passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API TypeScript build emitted compiled bootstrap output."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace validation and API build passed."
+    },
+    {
+      "command": "npm.cmd ls --workspaces --depth=0",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All five workspaces and exact API dependencies resolved."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity vulnerabilities found."
+    },
+    {
+      "command": "node --input-type=module -e \"import assert from 'node:assert/strict'; import {createApiServer,startApiServer,stopApiServer} from './apps/api/dist/server.js'; const server=createApiServer(); const address=await startApiServer(server,{host:'127.0.0.1',port:0}); try { const response=await fetch('http://127.0.0.1:'+address.port+'/not-a-route'); assert.equal(response.status,404); } finally { await stopApiServer(server); } console.log('COMPILED_RUNTIME_SMOKE_OK')\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Compiled server started on an ephemeral port, returned 404 for an unimplemented path, and stopped cleanly."
+    },
+    {
+      "command": "node -e \"const fs=require('fs'); for (const f of ['package.json','package-lock.json','apps/api/package.json','apps/api/tsconfig.json','apps/api/tsconfig.test.json']) JSON.parse(fs.readFileSync(f,'utf8')); console.log('JSON_PARSE_OK')\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Changed JSON manifests and configurations parsed successfully."
+    },
+    {
+      "command": "route absence check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No app route declarations, /api/v1 paths, health, or readiness endpoints were introduced."
+    },
+    {
+      "command": "node -e \"const fs=require('fs'); const s=JSON.parse(fs.readFileSync('agent_pack/03_execution/TASK_STATE.json','utf8')); const i=JSON.parse(fs.readFileSync('agent_pack/step_info.json','utf8')); const active=Object.entries(s.tasks).filter(([,v])=>v.status==='in_progress').map(([id])=>id); if(i.selectedTaskId!=='backend_002'||i.selectedTaskStatus!=='in_progress'||active.join(',')!=='backend_002') process.exit(1); console.log('TASK_STATE_CONSISTENT')\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Only backend_002 was active before closure."
+    },
+    {
+      "command": "npm.cmd run dev --workspace apps/api",
+      "exitCode": null,
+      "result": "skipped",
+      "notes": "Long-running watch command; build and compiled lifecycle smoke covered the same runtime entry without leaving a process active."
+    },
+    {
+      "command": "npm.cmd run start --workspace apps/api",
+      "exitCode": null,
+      "result": "skipped",
+      "notes": "Long-running production command; compiled runtime smoke verified the built server lifecycle."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "Environment validation is the dependency-ready backend_003 task and no root script exists yet."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "Runtime inventory tooling belongs to a later task; this task intentionally adds no routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate && npm.cmd run postman:validate",
+      "exitCode": null,
+      "result": "skipped",
+      "notes": "No route, DTO, OpenAPI, or Postman artifact changed."
+    },
+    {
+      "command": "live API/provider smoke test",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "No non-production provider credentials, database topology, or isolated external test data exists."
+    },
+    {
+      "command": "npm.cmd run test:e2e:api:full",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "Full E2E harness is not present and belongs to later quality work."
+    },
+    {
+      "command": "npm.cmd run test:visual",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "No web runtime or visual harness exists."
+    },
+    {
+      "command": "npm.cmd run test:a11y",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "No web runtime or accessibility harness exists."
+    }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/tests/server.test.ts",
+    "apps/api/package.json",
+    "packages/config/scripts/workspace-policy.mjs",
+    "docs/architecture/api-bootstrap.md",
+    "agent_pack/04_tracks/backend/B0_discovery_foundation/backend_002.md"
+  ],
+  "knownGaps": [
+    "Node v22.18.0 is available while the declared baseline is Node >=24 <25.",
+    "Environment validation, MongoDB, health/readiness, shared contracts/errors, security middleware, observability, web runtime, OpenAPI/Postman runtime artifacts, CI, and provider integrations remain future tasks."
+  ],
+  "completedAt": "2026-08-11T21:04:41.5185756Z"
+}

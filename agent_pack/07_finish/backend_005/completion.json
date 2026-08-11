@@ -1,0 +1,227 @@
+{
+  "taskId": "backend_005",
+  "summary": "Added the canonical @sadat-real-estate/contracts package with strict Zod runtime schemas, inferred DTO types, success/error envelopes, request metadata, and redacted API error/success helpers. Added reusable OpenAPI components and contract-focused tests without adding product routes; /health and /ready remain unchanged.",
+  "filesChanged": [
+    "package.json",
+    "package-lock.json",
+    "apps/api/package.json",
+    "apps/api/src/modules/contracts/error-boundary.ts",
+    "apps/api/src/modules/contracts/response.ts",
+    "apps/api/tests/contracts/error-boundary.test.ts",
+    "apps/api/openapi/openapi.json",
+    "packages/contracts/package.json",
+    "packages/contracts/tsconfig.json",
+    "packages/contracts/src/contracts/envelopes.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "packages/config/scripts/workspace-policy.mjs",
+    "docs/api/contracts.md",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/07_finish/backend_005/completion.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/step_info.json"
+  ],
+  "verification": [
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Initial and pre-close audits reported zero errors."
+    },
+    {
+      "command": "node agent_pack/scripts/select_next_step.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Selected backend_005 with backend_004 complete."
+    },
+    {
+      "command": "node agent_pack/scripts/set_task_status.mjs backend_005 in_progress",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "backend_005 became the only in-progress task."
+    },
+    {
+      "command": "npm.cmd install zod --workspace packages/contracts --save-exact",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Added Zod 4.4.3 once as explicitly authorized; no registry lookup or version comparison was run."
+    },
+    {
+      "command": "npm.cmd install --package-lock-only --ignore-scripts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Synchronized workspace manifests and lockfile."
+    },
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Clean install completed with zero reported vulnerabilities. Node 22 engine warnings reflect the declared Node 24 baseline gap."
+    },
+    {
+      "command": "node -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "v22.18.0 available; repository declares >=24 <25."
+    },
+    {
+      "command": "npm.cmd -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "npm 11.6.4."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Strict contracts package typecheck passed."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API source and contract tests typechecked after building the contracts package."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, and API checks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy and lockfile checks passed."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "9 workspace tests and 28 API tests passed, including contract/error-envelope coverage."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "28/28 API tests passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts declarations and ESM output compiled."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API compiled against the public contracts package."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace, contracts, and API builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Zero vulnerabilities reported."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Synthetic test values produced ENV_CHECK_OK; no .env file was read."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory remains exactly GET /health and GET /ready."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI route inventory and reusable contract components validate."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman route inventory remains synchronized; no active route DTO changed."
+    },
+    {
+      "command": "JSON parse validation for manifests, lockfile, OpenAPI, Postman, and finish index",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All selected-task JSON artifacts parsed successfully."
+    },
+    {
+      "command": "API lint script discovery",
+      "exitCode": 0,
+      "result": "skipped",
+      "notes": "apps/api has no lint script; root lint is the repository's applicable lint gate."
+    },
+    {
+      "command": "Full E2E, visual, accessibility, coverage, and security script discovery",
+      "exitCode": 0,
+      "result": "skipped",
+      "notes": "Those optional scripts are not defined in the current repository."
+    },
+    {
+      "command": "Live API/provider smoke",
+      "exitCode": 0,
+      "result": "skipped",
+      "notes": "Not applicable to this contract-only task; no live provider or production data was used."
+    },
+    {
+      "command": "node agent_pack/scripts/set_task_status.mjs backend_005 complete",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Task closed after mandatory evidence passed."
+    },
+    {
+      "command": "node agent_pack/scripts/sync_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Generated task board, counts, state, finish index, and step info synchronized."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final Agent Pack audit has zero errors."
+    },
+    {
+      "command": "node agent_pack/scripts/select_next_step.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Selector identifies backend_006 after backend_005; it was not started."
+    }
+  ],
+  "sourceEvidence": [
+    "packages/contracts/src/contracts/envelopes.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/contracts/error-boundary.ts",
+    "apps/api/src/modules/contracts/response.ts",
+    "apps/api/tests/contracts/error-boundary.test.ts",
+    "apps/api/openapi/openapi.json",
+    "docs/api/contracts.md",
+    "agent_pack/04_tracks/backend/B0_discovery_foundation/backend_005.md"
+  ],
+  "knownGaps": [
+    "Node v22.18.0 is installed while the repository declares Node >=24 <25; verification passed on the available host runtime but Node 24 remains unverified.",
+    "No product-specific DTOs or route middleware were added; later domain tasks must extend the shared error-code/message-key catalog through the public contracts package.",
+    "The repository does not define separate API lint, E2E, visual, accessibility, coverage, or security-check scripts."
+  ],
+  "scopeNotes": [
+    "No backend_006 or later task was implemented.",
+    "Manifest, lockfile, workspace policy, and build-orchestration changes were required to install Zod once and make @sadat-real-estate/contracts directly buildable/importable."
+  ],
+  "completedAt": "2026-08-11T22:34:02.5940637Z"
+}

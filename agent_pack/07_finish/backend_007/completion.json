@@ -1,0 +1,72 @@
+{
+  "taskId": "backend_007",
+  "summary": "Implemented validated request and W3C trace context using AsyncLocalStorage, canonical correlation response headers, newline-delimited structured request-completion logs, defensive recursive redaction for credentials/PII/tokens, safe error serialization, bounded metadata, and sink-failure isolation. Integrated observability before the security boundary so security error envelopes share the canonical request ID. No product route was added; /health and /ready retain their existing bodies and semantics.",
+  "filesChanged": [
+    "apps/api/src/modules/observability/context.ts",
+    "apps/api/src/modules/observability/logger.ts",
+    "apps/api/src/modules/observability/middleware.ts",
+    "apps/api/tests/observability/observability.test.ts",
+    "apps/api/src/app.ts",
+    "apps/api/package.json",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/observability.md",
+    "docs/repository-inventory.md",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/step_info.json",
+    "agent_pack/07_finish/backend_007/completion.json"
+  ],
+  "verification": [
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "passed", "notes": "Initial and pre-close audits reported zero errors; backend_007 was the only in-progress task after status transition." },
+    { "command": "node agent_pack/scripts/select_next_step.mjs", "exitCode": 0, "result": "passed", "notes": "Selected backend_007 with backend_006 complete." },
+    { "command": "node agent_pack/scripts/set_task_status.mjs backend_007 in_progress", "exitCode": 0, "result": "passed", "notes": "Only backend_007 entered in-progress state." },
+    { "command": "node -v", "exitCode": 0, "result": "passed", "notes": "Reported v22.18.0; the declared Node 24 baseline mismatch is recorded as a known gap." },
+    { "command": "npm.cmd -v", "exitCode": 0, "result": "passed", "notes": "Reported npm 11.6.4." },
+    { "command": "npm.cmd ci", "exitCode": 0, "result": "passed", "notes": "Clean installation completed with zero vulnerabilities; Node engine warnings matched the known runtime gap." },
+    { "command": "npm.cmd run typecheck --workspace packages/contracts", "exitCode": 0, "result": "passed", "notes": "Shared contracts typecheck passed." },
+    { "command": "npm.cmd run typecheck --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "API source and tests typecheck passed after implementation." },
+    { "command": "npm.cmd run typecheck", "exitCode": 0, "result": "passed", "notes": "Root syntax and workspace typechecks passed on the final code state." },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "passed", "notes": "Applicable root workspace lint/policy check passed." },
+    { "command": "npm.cmd test -- --runInBand", "exitCode": 0, "result": "passed", "notes": "Passed 9 workspace-policy tests and 38 API tests." },
+    { "command": "npm.cmd test --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "All 38 API tests passed." },
+    { "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/observability/observability.test.ts", "exitCode": 0, "result": "passed", "notes": "All 5 focused observability tests passed, including redaction and concurrent context isolation." },
+    { "command": "npm.cmd run build --workspace packages/contracts", "exitCode": 0, "result": "passed", "notes": "Contracts build passed." },
+    { "command": "npm.cmd run build --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "API build passed." },
+    { "command": "npm.cmd run build", "exitCode": 0, "result": "passed", "notes": "Root build passed on the final code state." },
+    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "passed", "notes": "Reported zero vulnerabilities." },
+    { "command": "npm.cmd run api:inventory", "exitCode": 0, "result": "passed", "notes": "Runtime inventory remains exactly GET /health and GET /ready." },
+    { "command": "npm.cmd run openapi:validate", "exitCode": 0, "result": "passed", "notes": "OpenAPI document with correlation response headers validated." },
+    { "command": "npm.cmd run postman:validate", "exitCode": 0, "result": "passed", "notes": "Postman collection with correlation-header assertions validated." },
+    { "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; npm.cmd run env:check", "exitCode": 0, "result": "passed", "notes": "Synthetic non-production environment validation passed; no real .env was read." },
+    { "command": "node -e \"for (const f of ['package.json','package-lock.json','apps/api/package.json','apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json']) JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('JSON_VALID')\"", "exitCode": 0, "result": "passed", "notes": "Changed JSON and API artifacts parsed successfully." },
+    { "command": "node -e \"const root=require('./package.json'); const api=require('./apps/api/package.json'); const names=['test:coverage','test:e2e','test:e2e:api','test:e2e:api:full','test:visual','test:a11y','security:check']; console.log(JSON.stringify({apiLint:api.scripts?.lint??null,optional:Object.fromEntries(names.map(n=>[n,root.scripts?.[n]??null]))},null,2))\"", "exitCode": 0, "result": "skipped", "notes": "Discovery confirmed no dedicated API lint, coverage, E2E, visual, accessibility, or security-check scripts; applicable root lint and tests ran successfully." }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B0_discovery_foundation/backend_007.md",
+    "apps/api/src/modules/observability/context.ts",
+    "apps/api/src/modules/observability/logger.ts",
+    "apps/api/src/modules/observability/middleware.ts",
+    "apps/api/tests/observability/observability.test.ts",
+    "docs/api/observability.md",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json"
+  ],
+  "scopeNotes": [
+    "apps/api/src/app.ts is outside the primary observability root but was required to install request context before the existing security middleware.",
+    "apps/api/package.json is outside the primary source root but was required to include the focused observability suite in the standard API test command.",
+    "docs/repository-inventory.md is outside docs/api and was updated because the selected task proved its claim that request context/logging was absent to be stale.",
+    "OpenAPI and Postman routes were not expanded; only the newly active X-Request-Id and Traceparent response-header contract was synchronized."
+  ],
+  "knownGaps": [
+    "Verification used Node v22.18.0 while the repository declares Node >=24 <25; Node 24 CI verification remains required.",
+    "Logs currently use an injectable newline-delimited JSON sink with stdout as the runtime default; centralized transport/export and retention are deployment concerns for later tasks.",
+    "No dedicated API lint, coverage, E2E, visual, accessibility, or security-check scripts are defined; the applicable root checks and focused security/observability tests passed.",
+    "No live MongoDB or external provider topology was required for this observability-only task."
+  ],
+  "completedAt": "2026-08-11T22:54:00.4058568Z"
+}

@@ -5,13 +5,13 @@
 ## B0_discovery_foundation
 
 - [x] backend_000 — جرد حقيقة المستودع وتثبيت القرارات
-- [ ] backend_001 — تهيئة الـMonorepo والـWorkspaces
-- [ ] backend_002 — Bootstrap لـExpress وTypeScript
-- [ ] backend_003 — إدارة البيئة والأسرار
-- [ ] backend_004 — اتصال MongoDB والصحة والـseed
-- [ ] backend_005 — العقود المشتركة وError Envelope
-- [ ] backend_006 — خط أساس أمان الـAPI
-- [ ] backend_007 — السجلات وRequest Context
+- [x] backend_001 — تهيئة الـMonorepo والـWorkspaces
+- [x] backend_002 — Bootstrap لـExpress وTypeScript
+- [x] backend_003 — إدارة البيئة والأسرار
+- [x] backend_004 — اتصال MongoDB والصحة والـseed
+- [x] backend_005 — العقود المشتركة وError Envelope
+- [x] backend_006 — خط أساس أمان الـAPI
+- [x] backend_007 — السجلات وRequest Context
 - [ ] backend_008 — بنية الاختبارات وCI والجودة
 - [ ] backend_009 — هيكل OpenAPI وPostman
 ## B1_identity_access

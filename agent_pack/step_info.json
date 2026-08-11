@@ -1,31 +1,31 @@
 {
-  "generatedAt": "2026-08-11T20:35:55.301Z",
-  "selectedTaskId": "backend_001",
+  "generatedAt": "2026-08-11T22:55:01.339Z",
+  "selectedTaskId": "backend_008",
   "selectedTaskStatus": "open",
-  "selectedTaskFile": "04_tracks/backend/B0_discovery_foundation/backend_001.md",
+  "selectedTaskFile": "04_tracks/backend/B0_discovery_foundation/backend_008.md",
   "selectedTask": {
-    "id": "backend_001",
+    "id": "backend_008",
     "phase": "B0_discovery_foundation",
-    "area": "foundation",
-    "title": "تهيئة الـMonorepo والـWorkspaces",
-    "goal": "أنشئ هيكل npm workspaces المعتمد مع apps/api وapps/web وpackages/contracts وpackages/ui وإعدادات مشتركة بدون تنفيذ ميزات المنتج.",
-    "kind": "infrastructure",
+    "area": "testing",
+    "title": "بنية الاختبارات وCI والجودة",
+    "goal": "جهّز unit/integration/API test harness وlint/typecheck/coverage وCI أساسي قابل للتشغيل محليًا.",
+    "kind": "quality",
     "screens": [],
     "sourceRefs": [],
     "notes": [],
     "track": "backend",
-    "sequence": 2,
+    "sequence": 9,
     "dependsOn": [
-      "backend_000"
+      "backend_007"
     ],
-    "atomicTaskFile": "04_tracks/backend/B0_discovery_foundation/backend_001.md",
+    "atomicTaskFile": "04_tracks/backend/B0_discovery_foundation/backend_008.md",
     "allowedRoots": [
-      "package.json",
-      "package-lock.json",
-      "apps/api/**",
-      "packages/contracts/**",
-      "packages/config/**",
-      "docs/**",
+      "apps/api/src/modules/testing/**",
+      "apps/api/tests/testing/**",
+      "packages/contracts/src/testing/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
       "agent_pack/**"
     ],
     "acceptance": [
@@ -48,11 +48,11 @@
   "counts": {
     "backend": {
       "total": 113,
-      "open": 112,
+      "open": 105,
       "in_progress": 0,
       "partial": 0,
       "blocked": 0,
-      "complete": 1
+      "complete": 8
     },
     "frontend": {
       "total": 75,
@@ -65,69 +65,6 @@
   },
   "blockedTasks": [],
   "blockedByDependencies": [
-    {
-      "taskId": "backend_002",
-      "unresolved": [
-        {
-          "taskId": "backend_001",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_003",
-      "unresolved": [
-        {
-          "taskId": "backend_002",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_004",
-      "unresolved": [
-        {
-          "taskId": "backend_003",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_005",
-      "unresolved": [
-        {
-          "taskId": "backend_004",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_006",
-      "unresolved": [
-        {
-          "taskId": "backend_005",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_007",
-      "unresolved": [
-        {
-          "taskId": "backend_006",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_008",
-      "unresolved": [
-        {
-          "taskId": "backend_007",
-          "status": "open"
-        }
-      ]
-    },
     {
       "taskId": "backend_009",
       "unresolved": [

@@ -8,7 +8,7 @@
       "public"
     ],
     "purpose": "Liveness",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "unversioned-operational"
   },
   {
@@ -20,7 +20,7 @@
       "operations"
     ],
     "purpose": "Readiness dependencies",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "unversioned-operational"
   },
   {
