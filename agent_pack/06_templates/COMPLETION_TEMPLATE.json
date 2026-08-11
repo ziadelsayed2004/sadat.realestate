@@ -1,0 +1,11 @@
+{
+  "taskId": "backend_000",
+  "summary": "وصف موجز لما تحقق فعليًا",
+  "filesChanged": ["path/to/file"],
+  "verification": [
+    { "command": "npm run typecheck", "result": "passed", "notes": "" }
+  ],
+  "sourceEvidence": ["Figma node / API contract / code path"],
+  "knownGaps": [],
+  "completedAt": "2026-08-11T00:00:00.000Z"
+}

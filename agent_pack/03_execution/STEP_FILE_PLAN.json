@@ -1,0 +1,2183 @@
+[
+  {
+    "taskId": "backend_000",
+    "allowedRoots": [
+      "package.json",
+      "package-lock.json",
+      "apps/api/**",
+      "packages/contracts/**",
+      "packages/config/**",
+      "docs/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_001",
+    "allowedRoots": [
+      "package.json",
+      "package-lock.json",
+      "apps/api/**",
+      "packages/contracts/**",
+      "packages/config/**",
+      "docs/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_002",
+    "allowedRoots": [
+      "package.json",
+      "package-lock.json",
+      "apps/api/**",
+      "packages/contracts/**",
+      "packages/config/**",
+      "docs/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_003",
+    "allowedRoots": [
+      "apps/api/src/modules/config/**",
+      "apps/api/tests/config/**",
+      "packages/contracts/src/config/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_004",
+    "allowedRoots": [
+      "apps/api/src/modules/database/**",
+      "apps/api/tests/database/**",
+      "packages/contracts/src/database/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_005",
+    "allowedRoots": [
+      "apps/api/src/modules/contracts/**",
+      "apps/api/tests/contracts/**",
+      "packages/contracts/src/contracts/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_006",
+    "allowedRoots": [
+      "apps/api/src/modules/security/**",
+      "apps/api/tests/security/**",
+      "packages/contracts/src/security/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_007",
+    "allowedRoots": [
+      "apps/api/src/modules/observability/**",
+      "apps/api/tests/observability/**",
+      "packages/contracts/src/observability/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_008",
+    "allowedRoots": [
+      "apps/api/src/modules/testing/**",
+      "apps/api/tests/testing/**",
+      "packages/contracts/src/testing/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_009",
+    "allowedRoots": [
+      "apps/api/src/modules/docs/**",
+      "apps/api/tests/docs/**",
+      "packages/contracts/src/docs/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_010",
+    "allowedRoots": [
+      "apps/api/src/modules/identity/**",
+      "apps/api/tests/identity/**",
+      "packages/contracts/src/identity/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_011",
+    "allowedRoots": [
+      "apps/api/src/modules/auth/**",
+      "apps/api/tests/auth/**",
+      "packages/contracts/src/auth/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_012",
+    "allowedRoots": [
+      "apps/api/src/modules/auth/**",
+      "apps/api/tests/auth/**",
+      "packages/contracts/src/auth/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_013",
+    "allowedRoots": [
+      "apps/api/src/modules/seeker/**",
+      "apps/api/tests/seeker/**",
+      "packages/contracts/src/seeker/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_014",
+    "allowedRoots": [
+      "apps/api/src/modules/provider/**",
+      "apps/api/tests/provider/**",
+      "packages/contracts/src/provider/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_015",
+    "allowedRoots": [
+      "apps/api/src/modules/uploads/**",
+      "apps/api/tests/uploads/**",
+      "packages/contracts/src/uploads/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_016",
+    "allowedRoots": [
+      "apps/api/src/modules/admin/**",
+      "apps/api/tests/admin/**",
+      "packages/contracts/src/admin/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_017",
+    "allowedRoots": [
+      "apps/api/src/modules/rbac/**",
+      "apps/api/tests/rbac/**",
+      "packages/contracts/src/rbac/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_018",
+    "allowedRoots": [
+      "apps/api/src/modules/rbac/**",
+      "apps/api/tests/rbac/**",
+      "packages/contracts/src/rbac/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_019",
+    "allowedRoots": [
+      "apps/api/src/modules/accounts/**",
+      "apps/api/tests/accounts/**",
+      "packages/contracts/src/accounts/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_020",
+    "allowedRoots": [
+      "apps/api/src/modules/audit/**",
+      "apps/api/tests/audit/**",
+      "packages/contracts/src/audit/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_030",
+    "allowedRoots": [
+      "apps/api/src/modules/localization/**",
+      "apps/api/tests/localization/**",
+      "packages/contracts/src/localization/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_031",
+    "allowedRoots": [
+      "apps/api/src/modules/locations/**",
+      "apps/api/tests/locations/**",
+      "packages/contracts/src/locations/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_032",
+    "allowedRoots": [
+      "apps/api/src/modules/taxonomy/**",
+      "apps/api/tests/taxonomy/**",
+      "packages/contracts/src/taxonomy/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_033",
+    "allowedRoots": [
+      "apps/api/src/modules/taxonomy/**",
+      "apps/api/tests/taxonomy/**",
+      "packages/contracts/src/taxonomy/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_034",
+    "allowedRoots": [
+      "apps/api/src/modules/organizations/**",
+      "apps/api/tests/organizations/**",
+      "packages/contracts/src/organizations/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_035",
+    "allowedRoots": [
+      "apps/api/src/modules/cms/**",
+      "apps/api/tests/cms/**",
+      "packages/contracts/src/cms/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_036",
+    "allowedRoots": [
+      "apps/api/src/modules/cms/**",
+      "apps/api/tests/cms/**",
+      "packages/contracts/src/cms/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_037",
+    "allowedRoots": [
+      "apps/api/src/modules/cms/**",
+      "apps/api/tests/cms/**",
+      "packages/contracts/src/cms/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_038",
+    "allowedRoots": [
+      "apps/api/src/modules/cms/**",
+      "apps/api/tests/cms/**",
+      "packages/contracts/src/cms/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_039",
+    "allowedRoots": [
+      "apps/api/src/modules/settings/**",
+      "apps/api/tests/settings/**",
+      "packages/contracts/src/settings/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_040",
+    "allowedRoots": [
+      "apps/api/src/modules/projects/**",
+      "apps/api/tests/projects/**",
+      "packages/contracts/src/projects/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_041",
+    "allowedRoots": [
+      "apps/api/src/modules/projects/**",
+      "apps/api/tests/projects/**",
+      "packages/contracts/src/projects/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_042",
+    "allowedRoots": [
+      "apps/api/src/modules/projects/**",
+      "apps/api/tests/projects/**",
+      "packages/contracts/src/projects/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_043",
+    "allowedRoots": [
+      "apps/api/src/modules/properties/**",
+      "apps/api/tests/properties/**",
+      "packages/contracts/src/properties/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_044",
+    "allowedRoots": [
+      "apps/api/src/modules/properties/**",
+      "apps/api/tests/properties/**",
+      "packages/contracts/src/properties/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_045",
+    "allowedRoots": [
+      "apps/api/src/modules/properties/**",
+      "apps/api/tests/properties/**",
+      "packages/contracts/src/properties/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_046",
+    "allowedRoots": [
+      "apps/api/src/modules/properties/**",
+      "apps/api/tests/properties/**",
+      "packages/contracts/src/properties/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_047",
+    "allowedRoots": [
+      "apps/api/src/modules/media/**",
+      "apps/api/tests/media/**",
+      "packages/contracts/src/media/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_048",
+    "allowedRoots": [
+      "apps/api/src/modules/properties/**",
+      "apps/api/tests/properties/**",
+      "packages/contracts/src/properties/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_049",
+    "allowedRoots": [
+      "apps/api/src/modules/properties/**",
+      "apps/api/tests/properties/**",
+      "packages/contracts/src/properties/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_050",
+    "allowedRoots": [
+      "apps/api/src/modules/properties/**",
+      "apps/api/tests/properties/**",
+      "packages/contracts/src/properties/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_051",
+    "allowedRoots": [
+      "apps/api/src/modules/properties/**",
+      "apps/api/tests/properties/**",
+      "packages/contracts/src/properties/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_052",
+    "allowedRoots": [
+      "apps/api/src/modules/properties/**",
+      "apps/api/tests/properties/**",
+      "packages/contracts/src/properties/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_053",
+    "allowedRoots": [
+      "apps/api/src/modules/properties/**",
+      "apps/api/tests/properties/**",
+      "packages/contracts/src/properties/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_054",
+    "allowedRoots": [
+      "apps/api/src/modules/moderation/**",
+      "apps/api/tests/moderation/**",
+      "packages/contracts/src/moderation/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_055",
+    "allowedRoots": [
+      "apps/api/src/modules/performance/**",
+      "apps/api/tests/performance/**",
+      "packages/contracts/src/performance/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_060",
+    "allowedRoots": [
+      "apps/api/src/modules/public/**",
+      "apps/api/tests/public/**",
+      "packages/contracts/src/public/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_061",
+    "allowedRoots": [
+      "apps/api/src/modules/search/**",
+      "apps/api/tests/search/**",
+      "packages/contracts/src/search/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_062",
+    "allowedRoots": [
+      "apps/api/src/modules/public/**",
+      "apps/api/tests/public/**",
+      "packages/contracts/src/public/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_063",
+    "allowedRoots": [
+      "apps/api/src/modules/compare/**",
+      "apps/api/tests/compare/**",
+      "packages/contracts/src/compare/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_064",
+    "allowedRoots": [
+      "apps/api/src/modules/organizations/**",
+      "apps/api/tests/organizations/**",
+      "packages/contracts/src/organizations/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_065",
+    "allowedRoots": [
+      "apps/api/src/modules/favorites/**",
+      "apps/api/tests/favorites/**",
+      "packages/contracts/src/favorites/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_066",
+    "allowedRoots": [
+      "apps/api/src/modules/seeker/**",
+      "apps/api/tests/seeker/**",
+      "packages/contracts/src/seeker/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_067",
+    "allowedRoots": [
+      "apps/api/src/modules/seeker/**",
+      "apps/api/tests/seeker/**",
+      "packages/contracts/src/seeker/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_068",
+    "allowedRoots": [
+      "apps/api/src/modules/notifications/**",
+      "apps/api/tests/notifications/**",
+      "packages/contracts/src/notifications/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_069",
+    "allowedRoots": [
+      "apps/api/src/modules/security/**",
+      "apps/api/tests/security/**",
+      "packages/contracts/src/security/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_070",
+    "allowedRoots": [
+      "apps/api/src/modules/requests/**",
+      "apps/api/tests/requests/**",
+      "packages/contracts/src/requests/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_071",
+    "allowedRoots": [
+      "apps/api/src/modules/requests/**",
+      "apps/api/tests/requests/**",
+      "packages/contracts/src/requests/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_072",
+    "allowedRoots": [
+      "apps/api/src/modules/viewings/**",
+      "apps/api/tests/viewings/**",
+      "packages/contracts/src/viewings/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_073",
+    "allowedRoots": [
+      "apps/api/src/modules/requests/**",
+      "apps/api/tests/requests/**",
+      "packages/contracts/src/requests/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_074",
+    "allowedRoots": [
+      "apps/api/src/modules/requests/**",
+      "apps/api/tests/requests/**",
+      "packages/contracts/src/requests/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_075",
+    "allowedRoots": [
+      "apps/api/src/modules/seeker/**",
+      "apps/api/tests/seeker/**",
+      "packages/contracts/src/seeker/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_076",
+    "allowedRoots": [
+      "apps/api/src/modules/provider/**",
+      "apps/api/tests/provider/**",
+      "packages/contracts/src/provider/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_077",
+    "allowedRoots": [
+      "apps/api/src/modules/admin/**",
+      "apps/api/tests/admin/**",
+      "packages/contracts/src/admin/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_078",
+    "allowedRoots": [
+      "apps/api/src/modules/requests/**",
+      "apps/api/tests/requests/**",
+      "packages/contracts/src/requests/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_079",
+    "allowedRoots": [
+      "apps/api/src/modules/moderation/**",
+      "apps/api/tests/moderation/**",
+      "packages/contracts/src/moderation/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_080",
+    "allowedRoots": [
+      "apps/api/src/modules/security/**",
+      "apps/api/tests/security/**",
+      "packages/contracts/src/security/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_081",
+    "allowedRoots": [
+      "apps/api/src/modules/notifications/**",
+      "apps/api/tests/notifications/**",
+      "packages/contracts/src/notifications/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_090",
+    "allowedRoots": [
+      "apps/api/src/modules/articles/**",
+      "apps/api/tests/articles/**",
+      "packages/contracts/src/articles/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_091",
+    "allowedRoots": [
+      "apps/api/src/modules/articles/**",
+      "apps/api/tests/articles/**",
+      "packages/contracts/src/articles/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_092",
+    "allowedRoots": [
+      "apps/api/src/modules/articles/**",
+      "apps/api/tests/articles/**",
+      "packages/contracts/src/articles/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_093",
+    "allowedRoots": [
+      "apps/api/src/modules/community/**",
+      "apps/api/tests/community/**",
+      "packages/contracts/src/community/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_094",
+    "allowedRoots": [
+      "apps/api/src/modules/community/**",
+      "apps/api/tests/community/**",
+      "packages/contracts/src/community/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_095",
+    "allowedRoots": [
+      "apps/api/src/modules/moderation/**",
+      "apps/api/tests/moderation/**",
+      "packages/contracts/src/moderation/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_096",
+    "allowedRoots": [
+      "apps/api/src/modules/community/**",
+      "apps/api/tests/community/**",
+      "packages/contracts/src/community/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_097",
+    "allowedRoots": [
+      "apps/api/src/modules/quality/**",
+      "apps/api/tests/quality/**",
+      "packages/contracts/src/quality/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_100",
+    "allowedRoots": [
+      "apps/api/src/modules/ads/**",
+      "apps/api/tests/ads/**",
+      "packages/contracts/src/ads/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_101",
+    "allowedRoots": [
+      "apps/api/src/modules/ads/**",
+      "apps/api/tests/ads/**",
+      "packages/contracts/src/ads/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_102",
+    "allowedRoots": [
+      "apps/api/src/modules/ads/**",
+      "apps/api/tests/ads/**",
+      "packages/contracts/src/ads/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_103",
+    "allowedRoots": [
+      "apps/api/src/modules/payments/**",
+      "apps/api/tests/payments/**",
+      "packages/contracts/src/payments/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_104",
+    "allowedRoots": [
+      "apps/api/src/modules/payments/**",
+      "apps/api/tests/payments/**",
+      "packages/contracts/src/payments/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_105",
+    "allowedRoots": [
+      "apps/api/src/modules/ads/**",
+      "apps/api/tests/ads/**",
+      "packages/contracts/src/ads/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_106",
+    "allowedRoots": [
+      "apps/api/src/modules/ads/**",
+      "apps/api/tests/ads/**",
+      "packages/contracts/src/ads/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_107",
+    "allowedRoots": [
+      "apps/api/src/modules/provider/**",
+      "apps/api/tests/provider/**",
+      "packages/contracts/src/provider/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_108",
+    "allowedRoots": [
+      "apps/api/src/modules/reports/**",
+      "apps/api/tests/reports/**",
+      "packages/contracts/src/reports/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_110",
+    "allowedRoots": [
+      "apps/api/src/modules/commissions/**",
+      "apps/api/tests/commissions/**",
+      "packages/contracts/src/commissions/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_111",
+    "allowedRoots": [
+      "apps/api/src/modules/commissions/**",
+      "apps/api/tests/commissions/**",
+      "packages/contracts/src/commissions/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_112",
+    "allowedRoots": [
+      "apps/api/src/modules/commissions/**",
+      "apps/api/tests/commissions/**",
+      "packages/contracts/src/commissions/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_113",
+    "allowedRoots": [
+      "apps/api/src/modules/commissions/**",
+      "apps/api/tests/commissions/**",
+      "packages/contracts/src/commissions/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_114",
+    "allowedRoots": [
+      "apps/api/src/modules/commissions/**",
+      "apps/api/tests/commissions/**",
+      "packages/contracts/src/commissions/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_115",
+    "allowedRoots": [
+      "apps/api/src/modules/commissions/**",
+      "apps/api/tests/commissions/**",
+      "packages/contracts/src/commissions/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_116",
+    "allowedRoots": [
+      "apps/api/src/modules/provider/**",
+      "apps/api/tests/provider/**",
+      "packages/contracts/src/provider/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_117",
+    "allowedRoots": [
+      "apps/api/src/modules/testing/**",
+      "apps/api/tests/testing/**",
+      "packages/contracts/src/testing/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_120",
+    "allowedRoots": [
+      "apps/api/src/modules/admin/**",
+      "apps/api/tests/admin/**",
+      "packages/contracts/src/admin/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_121",
+    "allowedRoots": [
+      "apps/api/src/modules/admin/**",
+      "apps/api/tests/admin/**",
+      "packages/contracts/src/admin/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_122",
+    "allowedRoots": [
+      "apps/api/src/modules/notifications/**",
+      "apps/api/tests/notifications/**",
+      "packages/contracts/src/notifications/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_123",
+    "allowedRoots": [
+      "apps/api/src/modules/settings/**",
+      "apps/api/tests/settings/**",
+      "packages/contracts/src/settings/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_124",
+    "allowedRoots": [
+      "apps/api/src/modules/media/**",
+      "apps/api/tests/media/**",
+      "packages/contracts/src/media/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_125",
+    "allowedRoots": [
+      "apps/api/src/modules/events/**",
+      "apps/api/tests/events/**",
+      "packages/contracts/src/events/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_126",
+    "allowedRoots": [
+      "apps/api/src/modules/docs/**",
+      "apps/api/tests/docs/**",
+      "packages/contracts/src/docs/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_127",
+    "allowedRoots": [
+      "apps/api/src/modules/postman/**",
+      "apps/api/tests/postman/**",
+      "packages/contracts/src/postman/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_128",
+    "allowedRoots": [
+      "apps/api/src/modules/fixtures/**",
+      "apps/api/tests/fixtures/**",
+      "packages/contracts/src/fixtures/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_129",
+    "allowedRoots": [
+      "apps/api/src/modules/security/**",
+      "apps/api/tests/security/**",
+      "packages/contracts/src/security/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_130",
+    "allowedRoots": [
+      "apps/api/src/modules/security/**",
+      "apps/api/tests/security/**",
+      "packages/contracts/src/security/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_131",
+    "allowedRoots": [
+      "apps/api/src/modules/performance/**",
+      "apps/api/tests/performance/**",
+      "packages/contracts/src/performance/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_132",
+    "allowedRoots": [
+      "apps/api/src/modules/database/**",
+      "apps/api/tests/database/**",
+      "packages/contracts/src/database/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_133",
+    "allowedRoots": [
+      "apps/api/src/modules/deployment/**",
+      "apps/api/tests/deployment/**",
+      "packages/contracts/src/deployment/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_134",
+    "allowedRoots": [
+      "apps/api/src/modules/observability/**",
+      "apps/api/tests/observability/**",
+      "packages/contracts/src/observability/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_135",
+    "allowedRoots": [
+      "apps/api/src/modules/security/**",
+      "apps/api/tests/security/**",
+      "packages/contracts/src/security/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_136",
+    "allowedRoots": [
+      "apps/api/src/modules/testing/**",
+      "apps/api/tests/testing/**",
+      "packages/contracts/src/testing/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_137",
+    "allowedRoots": [
+      "apps/api/src/modules/handoff/**",
+      "apps/api/tests/handoff/**",
+      "packages/contracts/src/handoff/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_138",
+    "allowedRoots": [
+      "apps/api/src/modules/release/**",
+      "apps/api/tests/release/**",
+      "packages/contracts/src/release/**",
+      "docs/api/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_000",
+    "allowedRoots": [
+      "apps/web/src/features/frontend_foundation/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_001",
+    "allowedRoots": [
+      "apps/web/src/features/design_system/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_002",
+    "allowedRoots": [
+      "apps/web/src/features/design_system/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_003",
+    "allowedRoots": [
+      "apps/web/src/features/routing/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_004",
+    "allowedRoots": [
+      "apps/web/src/features/contracts/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_005",
+    "allowedRoots": [
+      "apps/web/src/features/auth/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_006",
+    "allowedRoots": [
+      "apps/web/src/features/localization/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_007",
+    "allowedRoots": [
+      "apps/web/src/features/ux_states/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_008",
+    "allowedRoots": [
+      "apps/web/src/features/accessibility/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_009",
+    "allowedRoots": [
+      "apps/web/src/features/testing/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_010",
+    "allowedRoots": [
+      "apps/web/src/features/public/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_011",
+    "allowedRoots": [
+      "apps/web/src/features/public/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_012",
+    "allowedRoots": [
+      "apps/web/src/features/public/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_013",
+    "allowedRoots": [
+      "apps/web/src/features/public/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_014",
+    "allowedRoots": [
+      "apps/web/src/features/public/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_015",
+    "allowedRoots": [
+      "apps/web/src/features/content/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_016",
+    "allowedRoots": [
+      "apps/web/src/features/community/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_017",
+    "allowedRoots": [
+      "apps/web/src/features/content/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_018",
+    "allowedRoots": [
+      "apps/web/src/features/seo/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_019",
+    "allowedRoots": [
+      "apps/web/src/features/qa/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_020",
+    "allowedRoots": [
+      "apps/web/src/features/auth/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_021",
+    "allowedRoots": [
+      "apps/web/src/features/auth/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_022",
+    "allowedRoots": [
+      "apps/web/src/features/provider_auth/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_023",
+    "allowedRoots": [
+      "apps/web/src/features/provider_auth/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_024",
+    "allowedRoots": [
+      "apps/web/src/features/provider_auth/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_025",
+    "allowedRoots": [
+      "apps/web/src/features/provider_auth/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_026",
+    "allowedRoots": [
+      "apps/web/src/features/qa/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_030",
+    "allowedRoots": [
+      "apps/web/src/features/seeker/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_031",
+    "allowedRoots": [
+      "apps/web/src/features/seeker/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_032",
+    "allowedRoots": [
+      "apps/web/src/features/seeker/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_033",
+    "allowedRoots": [
+      "apps/web/src/features/seeker/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_034",
+    "allowedRoots": [
+      "apps/web/src/features/seeker/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_035",
+    "allowedRoots": [
+      "apps/web/src/features/seeker/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_036",
+    "allowedRoots": [
+      "apps/web/src/features/qa/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_040",
+    "allowedRoots": [
+      "apps/web/src/features/provider/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_041",
+    "allowedRoots": [
+      "apps/web/src/features/provider/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_042",
+    "allowedRoots": [
+      "apps/web/src/features/provider_property/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_043",
+    "allowedRoots": [
+      "apps/web/src/features/provider_property/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_044",
+    "allowedRoots": [
+      "apps/web/src/features/provider_property/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_045",
+    "allowedRoots": [
+      "apps/web/src/features/provider_property/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_046",
+    "allowedRoots": [
+      "apps/web/src/features/provider/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_047",
+    "allowedRoots": [
+      "apps/web/src/features/provider/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_048",
+    "allowedRoots": [
+      "apps/web/src/features/provider/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_049",
+    "allowedRoots": [
+      "apps/web/src/features/provider/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_050",
+    "allowedRoots": [
+      "apps/web/src/features/provider/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_051",
+    "allowedRoots": [
+      "apps/web/src/features/qa/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_060",
+    "allowedRoots": [
+      "apps/web/src/features/admin/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_061",
+    "allowedRoots": [
+      "apps/web/src/features/admin_accounts/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_062",
+    "allowedRoots": [
+      "apps/web/src/features/admin_accounts/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_063",
+    "allowedRoots": [
+      "apps/web/src/features/admin_master_data/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_064",
+    "allowedRoots": [
+      "apps/web/src/features/admin_projects/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_065",
+    "allowedRoots": [
+      "apps/web/src/features/admin_properties/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_066",
+    "allowedRoots": [
+      "apps/web/src/features/admin_requests/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_067",
+    "allowedRoots": [
+      "apps/web/src/features/admin_content/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_068",
+    "allowedRoots": [
+      "apps/web/src/features/admin_community/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_069",
+    "allowedRoots": [
+      "apps/web/src/features/admin_content/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_070",
+    "allowedRoots": [
+      "apps/web/src/features/admin_ads/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_071",
+    "allowedRoots": [
+      "apps/web/src/features/admin_commissions/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_072",
+    "allowedRoots": [
+      "apps/web/src/features/admin_home/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_073",
+    "allowedRoots": [
+      "apps/web/src/features/admin_settings/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_074",
+    "allowedRoots": [
+      "apps/web/src/features/admin_settings/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_075",
+    "allowedRoots": [
+      "apps/web/src/features/admin_rbac/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_076",
+    "allowedRoots": [
+      "apps/web/src/features/admin/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_077",
+    "allowedRoots": [
+      "apps/web/src/features/qa/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_080",
+    "allowedRoots": [
+      "apps/web/src/features/e2e/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_081",
+    "allowedRoots": [
+      "apps/web/src/features/visual/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_082",
+    "allowedRoots": [
+      "apps/web/src/features/localization/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_083",
+    "allowedRoots": [
+      "apps/web/src/features/accessibility/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_084",
+    "allowedRoots": [
+      "apps/web/src/features/performance/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_085",
+    "allowedRoots": [
+      "apps/web/src/features/security/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_086",
+    "allowedRoots": [
+      "apps/web/src/features/uat/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_087",
+    "allowedRoots": [
+      "apps/web/src/features/deployment/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_088",
+    "allowedRoots": [
+      "apps/web/src/features/docs/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_089",
+    "allowedRoots": [
+      "apps/web/src/features/release/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_090",
+    "allowedRoots": [
+      "apps/web/src/features/release/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  }
+]

@@ -1,0 +1,196 @@
+[
+  {
+    "module": "health",
+    "routePrefixes": [
+      "/health",
+      "/ready"
+    ],
+    "backendTaskIds": [
+      "backend_004",
+      "backend_134"
+    ],
+    "status": "planned"
+  },
+  {
+    "module": "auth",
+    "routePrefixes": [
+      "/api/v1/auth"
+    ],
+    "backendTaskIds": [
+      "backend_010",
+      "backend_011",
+      "backend_012"
+    ],
+    "status": "planned"
+  },
+  {
+    "module": "seeker",
+    "routePrefixes": [
+      "/api/v1/seeker",
+      "/api/v1/me"
+    ],
+    "backendTaskIds": [
+      "backend_013",
+      "backend_065",
+      "backend_066",
+      "backend_067",
+      "backend_068",
+      "backend_075"
+    ],
+    "status": "planned"
+  },
+  {
+    "module": "provider",
+    "routePrefixes": [
+      "/api/v1/provider"
+    ],
+    "backendTaskIds": [
+      "backend_014",
+      "backend_015",
+      "backend_040",
+      "backend_051",
+      "backend_076",
+      "backend_107",
+      "backend_116"
+    ],
+    "status": "planned"
+  },
+  {
+    "module": "public",
+    "routePrefixes": [
+      "/api/v1/public"
+    ],
+    "backendTaskIds": [
+      "backend_060",
+      "backend_061",
+      "backend_062",
+      "backend_063",
+      "backend_064",
+      "backend_092",
+      "backend_096"
+    ],
+    "status": "planned"
+  },
+  {
+    "module": "admin-accounts",
+    "routePrefixes": [
+      "/api/v1/admin/users",
+      "/api/v1/admin/providers",
+      "/api/v1/admin/roles"
+    ],
+    "backendTaskIds": [
+      "backend_016",
+      "backend_017",
+      "backend_019",
+      "backend_121"
+    ],
+    "status": "planned"
+  },
+  {
+    "module": "master-data",
+    "routePrefixes": [
+      "/api/v1/admin/locations",
+      "/api/v1/admin/property-categories",
+      "/api/v1/admin/features"
+    ],
+    "backendTaskIds": [
+      "backend_031",
+      "backend_032",
+      "backend_033"
+    ],
+    "status": "planned"
+  },
+  {
+    "module": "projects-properties",
+    "routePrefixes": [
+      "/api/v1/admin/projects",
+      "/api/v1/admin/properties",
+      "/api/v1/provider/properties"
+    ],
+    "backendTaskIds": [
+      "backend_040",
+      "backend_041",
+      "backend_043",
+      "backend_049",
+      "backend_052"
+    ],
+    "status": "planned"
+  },
+  {
+    "module": "requests",
+    "routePrefixes": [
+      "/api/v1/admin/requests",
+      "/api/v1/seeker/requests",
+      "/api/v1/provider/requests"
+    ],
+    "backendTaskIds": [
+      "backend_070",
+      "backend_071",
+      "backend_072",
+      "backend_073",
+      "backend_077"
+    ],
+    "status": "planned"
+  },
+  {
+    "module": "content-community",
+    "routePrefixes": [
+      "/api/v1/admin/articles",
+      "/api/v1/public/articles",
+      "/api/v1/public/community"
+    ],
+    "backendTaskIds": [
+      "backend_090",
+      "backend_091",
+      "backend_092",
+      "backend_093",
+      "backend_095"
+    ],
+    "status": "planned"
+  },
+  {
+    "module": "ads-payments",
+    "routePrefixes": [
+      "/api/v1/admin/ads",
+      "/api/v1/provider/ads"
+    ],
+    "backendTaskIds": [
+      "backend_100",
+      "backend_101",
+      "backend_102",
+      "backend_103",
+      "backend_104",
+      "backend_105"
+    ],
+    "status": "planned"
+  },
+  {
+    "module": "commissions",
+    "routePrefixes": [
+      "/api/v1/admin/commissions",
+      "/api/v1/provider/commission"
+    ],
+    "backendTaskIds": [
+      "backend_110",
+      "backend_111",
+      "backend_112",
+      "backend_113",
+      "backend_114",
+      "backend_115",
+      "backend_116"
+    ],
+    "status": "planned"
+  },
+  {
+    "module": "settings-audit",
+    "routePrefixes": [
+      "/api/v1/admin/settings",
+      "/api/v1/admin/audit-logs"
+    ],
+    "backendTaskIds": [
+      "backend_020",
+      "backend_123"
+    ],
+    "status": "planned"
+  }
+]

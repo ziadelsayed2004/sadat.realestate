@@ -1,0 +1,130 @@
+{
+  "taskId": "backend_000",
+  "summary": "Truth-repaired the repository inventory and completion evidence: the root is documented as containing Agent Pack and discovery docs, the mutable task status is delegated to canonical state files, and every recorded verification command is exact or explicitly blocked/skipped.",
+  "filesChanged": [
+    "docs/repository-inventory.md",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
+    "agent_pack/01_product/OPEN_QUESTIONS.md",
+    "agent_pack/08_reality_sync/DECISION_LOG.md",
+    "agent_pack/07_finish/backend_000/completion.json",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/step_info.json"
+  ],
+  "verification": [
+    {
+      "command": "Get-Location",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Verified the repository root."
+    },
+    {
+      "command": "Get-ChildItem -Force -Name",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Verified top-level entries are agent_pack and docs."
+    },
+    {
+      "command": "git status --short",
+      "exitCode": 128,
+      "result": "blocked",
+      "notes": "The configured root is not a Git repository."
+    },
+    {
+      "command": "node -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "v22.18.0 available."
+    },
+    {
+      "command": "npm.cmd -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "11.6.4 available."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Pack integrity audit reports zero errors."
+    },
+    {
+      "command": "node agent_pack/scripts/select_next_step.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "While this repair is in progress, backend_000 remains the selected task."
+    },
+    {
+      "command": "if ((Test-Path -LiteralPath 'agent_pack') -and (Test-Path -LiteralPath 'docs/repository-inventory.md')) { exit 0 } else { exit 1 }",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Required Agent Pack and inventory documentation exist."
+    },
+    {
+      "command": "node -e \"const s=require('./agent_pack/03_execution/TASK_STATE.json'); const st=require('./agent_pack/step_info.json'); const f=require('./agent_pack/07_finish/FINISH_INDEX.json'); if(s.tasks.backend_000.status!=='in_progress'||st.selectedTaskId!=='backend_000'||st.selectedTaskStatus!=='in_progress'||!Array.isArray(f)||Object.values(s.tasks).filter(x=>x.status==='in_progress').length!==1) process.exit(1); console.log('CANONICAL_STATE_OK');\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Canonical task state and selector point to the single repair task before closure."
+    },
+    {
+      "command": "node -e \"JSON.parse(require('fs').readFileSync('agent_pack/07_finish/backend_000/completion.json','utf8')); console.log('EVIDENCE_JSON_OK');\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The completion evidence parses as valid JSON."
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "Not run: package.json is absent, so no npm script exists."
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "Not run: package.json is absent, so no npm script exists."
+    },
+    {
+      "command": "npm run test -- --runInBand",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "Not run: package.json and test sources are absent."
+    },
+    {
+      "command": "npm run build",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "Not run: package.json is absent, so no build script exists."
+    },
+    {
+      "command": "npm audit --audit-level=high",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "Not run: package.json and package-lock.json are absent."
+    },
+    {
+      "command": "route/OpenAPI/Postman checks when applicable",
+      "exitCode": null,
+      "result": "skipped",
+      "notes": "No runtime routes, OpenAPI runtime document, or Postman collection exists; blueprint entries remain planned only."
+    }
+  ],
+  "sourceEvidence": [
+    "docs/repository-inventory.md",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
+    "agent_pack/01_product/OPEN_QUESTIONS.md",
+    "agent_pack/08_reality_sync/DECISION_LOG.md",
+    "node agent_pack/scripts/audit_pack.mjs output with zero errors",
+    "node agent_pack/scripts/select_next_step.mjs output selecting backend_000 during repair"
+  ],
+  "knownGaps": [
+    "The supplied root is not a Git repository, so no Git diff or clean-worktree baseline is available.",
+    "Application runtime, dependencies, tests, database topology, provider credentials, and deployment environment are not supplied.",
+    "Runtime quality gates remain blocked until the application repository is supplied."
+  ],
+  "completedAt": "2026-08-11T20:34:15.620Z"
+}

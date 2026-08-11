@@ -1,0 +1,3641 @@
+[
+  {
+    "id": "PUB-01",
+    "surface": "public",
+    "englishName": "Home",
+    "arabicName": "الرئيسية",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1RDaXkGyrC4p2ycy_wHR7gNssJS7sNU7O",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/",
+    "frontendTaskId": "frontend_010",
+    "backendTaskIds": [
+      "backend_060"
+    ]
+  },
+  {
+    "id": "PUB-02",
+    "surface": "public",
+    "englishName": "Properties Listing",
+    "arabicName": "قائمة العقارات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1qQzXJ32c1YuOBvx88oZBRezWmEqJ_VOI",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/properties",
+    "frontendTaskId": "frontend_011",
+    "backendTaskIds": [
+      "backend_061"
+    ]
+  },
+  {
+    "id": "PUB-03",
+    "surface": "public",
+    "englishName": "Property Details",
+    "arabicName": "تفاصيل العقار",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1YKuQuflPrwhW_YzDuLL8cqc748ZEDtoQ",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/properties/:slug",
+    "frontendTaskId": "frontend_012",
+    "backendTaskIds": [
+      "backend_062"
+    ]
+  },
+  {
+    "id": "PUB-04",
+    "surface": "public",
+    "englishName": "Unit Comparison",
+    "arabicName": "مقارنة الوحدات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/133Vb7i7iA6aqf96cKafQaq4zXfn6VRw8",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/compare",
+    "frontendTaskId": "frontend_013",
+    "backendTaskIds": [
+      "backend_063"
+    ]
+  },
+  {
+    "id": "PUB-05",
+    "surface": "public",
+    "englishName": "Developers & Companies",
+    "arabicName": "المطورون والشركات العقارية",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1Hx02nn7Ll4Rv4fbR8Xea8uPKL0ChEkLM",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/developers",
+    "frontendTaskId": "frontend_014",
+    "backendTaskIds": [
+      "backend_064"
+    ]
+  },
+  {
+    "id": "PUB-06",
+    "surface": "public",
+    "englishName": "Developer Profile",
+    "arabicName": "ملف المطور العقاري",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1tZHKw4xEPyQY2ICmRdXz5CwrYbucNoo1",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/developers/:slug",
+    "frontendTaskId": "frontend_014",
+    "backendTaskIds": [
+      "backend_064"
+    ]
+  },
+  {
+    "id": "PUB-07",
+    "surface": "public",
+    "englishName": "Articles Listing",
+    "arabicName": "قائمة المقالات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1TNZyuSMv5lqL847yqnjJJzedmEhycR2Z",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/articles",
+    "frontendTaskId": "frontend_015",
+    "backendTaskIds": [
+      "backend_092"
+    ]
+  },
+  {
+    "id": "PUB-08",
+    "surface": "public",
+    "englishName": "Article Details",
+    "arabicName": "تفاصيل المقال",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1kTANteLpbcB5kmw8yLPGoZvwh4CVCLAr",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/articles/:slug",
+    "frontendTaskId": "frontend_015",
+    "backendTaskIds": [
+      "backend_092"
+    ]
+  },
+  {
+    "id": "PUB-09",
+    "surface": "public",
+    "englishName": "Community Feed",
+    "arabicName": "الكوميونيتي",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/113EnHTq_O-sfoNJYbelWyoPi1hcdvk3J",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/community",
+    "frontendTaskId": "frontend_016",
+    "backendTaskIds": [
+      "backend_093",
+      "backend_096"
+    ]
+  },
+  {
+    "id": "PUB-10",
+    "surface": "public",
+    "englishName": "Create Post — Modal",
+    "arabicName": "إنشاء منشور — نافذة منبثقة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1FyJqHCqwTdzzPa4y4e7UGsV6IH5laGOd",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/community?create=1",
+    "frontendTaskId": "frontend_016",
+    "backendTaskIds": [
+      "backend_093",
+      "backend_096"
+    ]
+  },
+  {
+    "id": "PUB-11",
+    "surface": "public",
+    "englishName": "About Platform",
+    "arabicName": "عن المنصة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1YfgHS3imL4ebIizEII7GFR418HXGpkY7",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/about",
+    "frontendTaskId": "frontend_017",
+    "backendTaskIds": [
+      "backend_036"
+    ]
+  },
+  {
+    "id": "PUB-12",
+    "surface": "public",
+    "englishName": "Team",
+    "arabicName": "فريق العمل",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1WwO7cVz_vckLwjzW4SZ87nlliGI0W8if",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/team",
+    "frontendTaskId": "frontend_017",
+    "backendTaskIds": [
+      "backend_036"
+    ]
+  },
+  {
+    "id": "AUTH-01",
+    "surface": "auth",
+    "englishName": "Login",
+    "arabicName": "تسجيل الدخول",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1f1LbwCBwIm4-7YnGmAid82kTKO6c6sZc",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/auth/login",
+    "frontendTaskId": "frontend_020",
+    "backendTaskIds": [
+      "backend_011",
+      "backend_012"
+    ]
+  },
+  {
+    "id": "AUTH-02",
+    "surface": "auth",
+    "englishName": "Seeker Registration — Default",
+    "arabicName": "إنشاء حساب باحث — افتراضي",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1v7bcXiDuK2pnEg1m8DrdJWPOYOhd3Oi0",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/auth/register/seeker",
+    "frontendTaskId": "frontend_021",
+    "backendTaskIds": [
+      "backend_013"
+    ]
+  },
+  {
+    "id": "AUTH-03",
+    "surface": "auth",
+    "englishName": "Seeker Registration — Default",
+    "arabicName": "إنشاء حساب باحث — افتراضي",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/15ED2RFZZgeRuo0KfEpNBlxiZBhhp-32R",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/auth/register/seeker",
+    "frontendTaskId": "frontend_021",
+    "backendTaskIds": [
+      "backend_013"
+    ]
+  },
+  {
+    "id": "AUTH-04",
+    "surface": "auth",
+    "englishName": "Phone Verification — OTP",
+    "arabicName": "تأكيد رقم الهاتف — رمز التحقق",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/17KO1GaXuTSpVg1YouOfUgcTgJ4j3N8Ax",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/auth/verify-phone",
+    "frontendTaskId": "frontend_020",
+    "backendTaskIds": [
+      "backend_011",
+      "backend_012"
+    ]
+  },
+  {
+    "id": "AUTH-05",
+    "surface": "auth",
+    "englishName": "Phone Verification — OTP",
+    "arabicName": "تأكيد رقم الهاتف — رمز التحقق",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1zWpe-X_sOYwJe8WS9T4a18p9sZAfG5Kj",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/auth/verify-phone",
+    "frontendTaskId": "frontend_020",
+    "backendTaskIds": [
+      "backend_011",
+      "backend_012"
+    ]
+  },
+  {
+    "id": "AUTH-06",
+    "surface": "auth",
+    "englishName": "Seeker Registration — Success",
+    "arabicName": "تم إنشاء حساب الباحث",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1MV0Ls2wpsAzzm8P05toWgiQqRe1sIzkW",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/auth/register/seeker/success",
+    "frontendTaskId": "frontend_021",
+    "backendTaskIds": [
+      "backend_013"
+    ]
+  },
+  {
+    "id": "AUTH-07",
+    "surface": "auth",
+    "englishName": "Provider Type Selection — Default",
+    "arabicName": "اختيار نوع مقدم العقار — افتراضي",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/16BX8MSYprjY3KZoI9FLUB8nitqq0PjEK",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/auth/register/provider/type",
+    "frontendTaskId": "frontend_022",
+    "backendTaskIds": [
+      "backend_014"
+    ]
+  },
+  {
+    "id": "AUTH-08",
+    "surface": "auth",
+    "englishName": "Provider Type Selection — Selected",
+    "arabicName": "اختيار نوع مقدم العقار — محدد",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1oUpeR-CISHjIhbyGPkhqPADmCUf58Seg",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/auth/register/provider/type",
+    "frontendTaskId": "frontend_022",
+    "backendTaskIds": [
+      "backend_014"
+    ]
+  },
+  {
+    "id": "AUTH-09",
+    "surface": "auth",
+    "englishName": "Provider Registration — Account Details",
+    "arabicName": "تسجيل مقدم العقار — بيانات الحساب",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1_SO4sScjNW9GVGMqWUDRRIMNxxl2X2bu",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/auth/register/provider/account",
+    "frontendTaskId": "frontend_023",
+    "backendTaskIds": [
+      "backend_014"
+    ]
+  },
+  {
+    "id": "AUTH-09+",
+    "surface": "auth",
+    "englishName": "Provider Registration — Account Details",
+    "arabicName": "تسجيل مقدم العقار — بيانات الحساب",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1ICA0hJuwo3mWwBdVwZAi0UtrjEIKiIG-",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/auth/register/provider/account",
+    "frontendTaskId": "frontend_023",
+    "backendTaskIds": [
+      "backend_014"
+    ]
+  },
+  {
+    "id": "AUTH-10",
+    "surface": "auth",
+    "englishName": "Provider Registration — Business Details",
+    "arabicName": "تسجيل مقدم العقار — بيانات النشاط",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1Gc5u4F3x_6NTHjZfyA7gZlHWR_lEuhmG",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/auth/register/provider/business",
+    "frontendTaskId": "frontend_024",
+    "backendTaskIds": [
+      "backend_014"
+    ]
+  },
+  {
+    "id": "AUTH-10+",
+    "surface": "auth",
+    "englishName": "Provider Registration — Business Details",
+    "arabicName": "تسجيل مقدم العقار — بيانات النشاط",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1i9zhjfFxAQk4fLrqhA7QAjpJIscXAAcq",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/auth/register/provider/business",
+    "frontendTaskId": "frontend_024",
+    "backendTaskIds": [
+      "backend_014"
+    ]
+  },
+  {
+    "id": "AUTH-11",
+    "surface": "auth",
+    "englishName": "Provider Registration — Developer Company Details",
+    "arabicName": "تسجيل مقدم العقار — بيانات شركة التطوير",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1Bk7CqnHocflKdAvDrjrh2B2kXSyoteRk",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/auth/register/provider/company",
+    "frontendTaskId": "frontend_024",
+    "backendTaskIds": [
+      "backend_014"
+    ]
+  },
+  {
+    "id": "AUTH-12",
+    "surface": "auth",
+    "englishName": "Provider Registration — Documents",
+    "arabicName": "تسجيل مقدم العقار — المستندات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1gVQgJgzilt4hpDgQF7_2LHLaMe1Hhkz7",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/auth/register/provider/documents",
+    "frontendTaskId": "frontend_024",
+    "backendTaskIds": [
+      "backend_015"
+    ]
+  },
+  {
+    "id": "AUTH-13",
+    "surface": "auth",
+    "englishName": "Provider Registration — Review & Submit",
+    "arabicName": "تسجيل مقدم العقار — المراجعة والإرسال",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1mhqu7_EJ1r_ujb2nbY6uWr9R32drA724",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/auth/register/provider/review",
+    "frontendTaskId": "frontend_025",
+    "backendTaskIds": [
+      "backend_014"
+    ]
+  },
+  {
+    "id": "AUTH-14",
+    "surface": "auth",
+    "englishName": "Provider Application — Under Review",
+    "arabicName": "طلب مقدم العقار — قيد المراجعة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1KmHKcWsraQGbuqGMW9Awlf8_fpLCMWXF",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider-application/status",
+    "frontendTaskId": "frontend_025",
+    "backendTaskIds": [
+      "backend_014"
+    ]
+  },
+  {
+    "id": "AUTH-15",
+    "surface": "auth",
+    "englishName": "Provider Application — Tracking",
+    "arabicName": "متابعة طلب مقدم العقار",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1A8-RuDzNN1af4fJ7721NS7e8uBm_Xizu",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider-application/status",
+    "frontendTaskId": "frontend_025",
+    "backendTaskIds": [
+      "backend_014"
+    ]
+  },
+  {
+    "id": "AUTH-16",
+    "surface": "auth",
+    "englishName": "Provider Application — Needs Information",
+    "arabicName": "طلب مقدم العقار — يحتاج استكمال",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1dqMR6mouTsvGYIaSNj7nYGZMsInSf4yL",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider-application/needs-information",
+    "frontendTaskId": "frontend_025",
+    "backendTaskIds": [
+      "backend_014"
+    ]
+  },
+  {
+    "id": "AUTH-17",
+    "surface": "auth",
+    "englishName": "Provider Application — Approved",
+    "arabicName": "طلب مقدم العقار — تم الاعتماد",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/19OL6QQmoC-IaKXAyNb22x-0Uhz2Is62i",
+    "deviceScope": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider-application/approved",
+    "frontendTaskId": "frontend_025",
+    "backendTaskIds": [
+      "backend_014"
+    ]
+  },
+  {
+    "id": "SEK-01",
+    "surface": "seeker",
+    "englishName": "Seeker Overview",
+    "arabicName": "نظرة عامة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1EMmNVoMLcOU1Rjv1N0q_4j9tGCOGqvgE",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/seeker",
+    "frontendTaskId": "frontend_030",
+    "backendTaskIds": [
+      "backend_066"
+    ]
+  },
+  {
+    "id": "SEK-02",
+    "surface": "seeker",
+    "englishName": "My Requests",
+    "arabicName": "طلباتي",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1BZ3kI-A4xUMfK7-ww6pVcaR8E5XDWgGl",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/seeker/requests",
+    "frontendTaskId": "frontend_031",
+    "backendTaskIds": [
+      "backend_075"
+    ]
+  },
+  {
+    "id": "SEK-03",
+    "surface": "seeker",
+    "englishName": "Request Details — Under Review",
+    "arabicName": "تفاصيل الطلب — قيد المراجعة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1akycehbR3O5_Mgdi6W5VCbJm943kASAe",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/seeker/requests/:id",
+    "frontendTaskId": "frontend_031",
+    "backendTaskIds": [
+      "backend_075"
+    ]
+  },
+  {
+    "id": "SEK-04",
+    "surface": "seeker",
+    "englishName": "Request Details — Contacted",
+    "arabicName": "تفاصيل الطلب — تم التواصل",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1hQUpbNKCrw6NQpt3S7ia6jiziY5kdVE2",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/seeker/requests/:id",
+    "frontendTaskId": "frontend_031",
+    "backendTaskIds": [
+      "backend_075"
+    ]
+  },
+  {
+    "id": "SEK-05",
+    "surface": "seeker",
+    "englishName": "Viewing Requests",
+    "arabicName": "طلبات المعاينة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1UBASEVD4IUBPnJl7hptGqB7Qv9EAlilU",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/seeker/viewings",
+    "frontendTaskId": "frontend_032",
+    "backendTaskIds": [
+      "backend_072"
+    ]
+  },
+  {
+    "id": "SEK-06",
+    "surface": "seeker",
+    "englishName": "Saved Properties",
+    "arabicName": "العقارات المحفوظة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1Vjh9lRx6mBrgJ3YvWTIR1iTT4r3-10M6",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/seeker/saved",
+    "frontendTaskId": "frontend_033",
+    "backendTaskIds": [
+      "backend_065"
+    ]
+  },
+  {
+    "id": "SEK-07",
+    "surface": "seeker",
+    "englishName": "Notifications",
+    "arabicName": "الإشعارات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1SN0-v9Bf0xsgrPhTJ4Tzfby_6wUyZqrz",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/seeker/notifications",
+    "frontendTaskId": "frontend_034",
+    "backendTaskIds": [
+      "backend_068"
+    ]
+  },
+  {
+    "id": "SEK-08",
+    "surface": "seeker",
+    "englishName": "Profile & Preferences — Search Preferences",
+    "arabicName": "الملف الشخصي والتفضيلات — تفضيلات البحث",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1Y80mQORqpi-tGD3pe2ZIyPo2b74SFHx9",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/seeker/profile?tab=preferences",
+    "frontendTaskId": "frontend_035",
+    "backendTaskIds": [
+      "backend_067"
+    ]
+  },
+  {
+    "id": "SEK-09",
+    "surface": "seeker",
+    "englishName": "Profile & Preferences — Personal Information",
+    "arabicName": "الملف الشخصي والتفضيلات — المعلومات الشخصية",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1od5yxd_sFEXo8V7FJKJE3YnnBvh4ERXY",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/seeker/profile?tab=personal",
+    "frontendTaskId": "frontend_035",
+    "backendTaskIds": [
+      "backend_067"
+    ]
+  },
+  {
+    "id": "SEK-10",
+    "surface": "seeker",
+    "englishName": "Account Settings",
+    "arabicName": "إعدادات الحساب",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1SMtml3vJtyoq2ORxLVXpt_6-5eBobKDc",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/seeker/settings",
+    "frontendTaskId": "frontend_035",
+    "backendTaskIds": [
+      "backend_067"
+    ]
+  },
+  {
+    "id": "PRV-01",
+    "surface": "provider",
+    "englishName": "Dashboard Overview",
+    "arabicName": "نظرة عامة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1-Jda_ykLlQC3ZwlFG8I-t6sq3B8UOg86",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider",
+    "frontendTaskId": "frontend_040",
+    "backendTaskIds": [
+      "backend_051",
+      "backend_066"
+    ]
+  },
+  {
+    "id": "PRV-02",
+    "surface": "provider",
+    "englishName": "My Properties",
+    "arabicName": "عقاراتي",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1BmLx4tpZxfEGPmnsbQhay7RdCdpvy1hC",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/properties",
+    "frontendTaskId": "frontend_041",
+    "backendTaskIds": [
+      "backend_051"
+    ]
+  },
+  {
+    "id": "PRV-03",
+    "surface": "provider",
+    "englishName": "Add Property — 01 Basic Information",
+    "arabicName": "إضافة عقار — 01 البيانات الأساسية",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1DdoEN9a92vmsDI0Zk8dSN1Yxk5k37K4R",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/properties/new/basic",
+    "frontendTaskId": "frontend_042",
+    "backendTaskIds": [
+      "backend_043",
+      "backend_044",
+      "backend_045",
+      "backend_046",
+      "backend_047",
+      "backend_048",
+      "backend_049"
+    ]
+  },
+  {
+    "id": "PRV-04",
+    "surface": "provider",
+    "englishName": "Add Property — 02 Location",
+    "arabicName": "إضافة عقار — 02 الموقع",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1cHXSIRo0S4A5f2S16gpanhN4GgYsNDRS",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/properties/:id/location",
+    "frontendTaskId": "frontend_042",
+    "backendTaskIds": [
+      "backend_043",
+      "backend_044",
+      "backend_045",
+      "backend_046",
+      "backend_047",
+      "backend_048",
+      "backend_049"
+    ]
+  },
+  {
+    "id": "PRV-05",
+    "surface": "provider",
+    "englishName": "Add Property — 03 Property Details",
+    "arabicName": "إضافة عقار — 03 تفاصيل العقار",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1MVrrVE_RnSRXENVtxkfCznzhRRgUfwxW",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/properties/:id/details",
+    "frontendTaskId": "frontend_043",
+    "backendTaskIds": [
+      "backend_043",
+      "backend_044",
+      "backend_045",
+      "backend_046",
+      "backend_047",
+      "backend_048",
+      "backend_049"
+    ]
+  },
+  {
+    "id": "PRV-06",
+    "surface": "provider",
+    "englishName": "Add Property — 04 Price & Payment",
+    "arabicName": "إضافة عقار — 04 السعر والسداد",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1cVLnmNLXHOdryi27qcAcGYp3EY3-2FDp",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/properties/:id/price-payment",
+    "frontendTaskId": "frontend_043",
+    "backendTaskIds": [
+      "backend_043",
+      "backend_044",
+      "backend_045",
+      "backend_046",
+      "backend_047",
+      "backend_048",
+      "backend_049"
+    ]
+  },
+  {
+    "id": "PRV-07",
+    "surface": "provider",
+    "englishName": "Add Property — 05 Features & Services",
+    "arabicName": "إضافة عقار — 05 المميزات والخدمات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1Oe-Y3S0qVxzfFYS1ck58iu4QUOKe2NhB",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/properties/:id/features",
+    "frontendTaskId": "frontend_043",
+    "backendTaskIds": [
+      "backend_043",
+      "backend_044",
+      "backend_045",
+      "backend_046",
+      "backend_047",
+      "backend_048",
+      "backend_049"
+    ]
+  },
+  {
+    "id": "PRV-08",
+    "surface": "provider",
+    "englishName": "Add Property — 06 Media",
+    "arabicName": "إضافة عقار — 06 الصور والوسائط",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1PTID8nypqLiSrU3-O6cAiXoJdu9hVUi4",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/properties/:id/media",
+    "frontendTaskId": "frontend_044",
+    "backendTaskIds": [
+      "backend_043",
+      "backend_044",
+      "backend_045",
+      "backend_046",
+      "backend_047",
+      "backend_048",
+      "backend_049"
+    ]
+  },
+  {
+    "id": "PRV-09",
+    "surface": "provider",
+    "englishName": "Add Property — 07 Contact",
+    "arabicName": "إضافة عقار — 07 التواصل",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1yW0-rmLNBH19aM5xW3l3q0sm51yARrLS",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/properties/:id/contact",
+    "frontendTaskId": "frontend_044",
+    "backendTaskIds": [
+      "backend_043",
+      "backend_044",
+      "backend_045",
+      "backend_046",
+      "backend_047",
+      "backend_048",
+      "backend_049"
+    ]
+  },
+  {
+    "id": "PRV-10",
+    "surface": "provider",
+    "englishName": "Add Property — 08 Review & Submit",
+    "arabicName": "إضافة عقار — 08 المراجعة والإرسال",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1Q4Enn2KDiWVSa3zI_htObrmdyMn4f0WQ",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/properties/:id/review",
+    "frontendTaskId": "frontend_044",
+    "backendTaskIds": [
+      "backend_043",
+      "backend_044",
+      "backend_045",
+      "backend_046",
+      "backend_047",
+      "backend_048",
+      "backend_049"
+    ]
+  },
+  {
+    "id": "PRV-11",
+    "surface": "provider",
+    "englishName": "Add Property — Validation Errors",
+    "arabicName": "إضافة عقار — بيانات تحتاج استكمال",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1LMR8ByJMrmEE5500eTUOTtB0rWcL8G3u",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/properties/:id/review",
+    "frontendTaskId": "frontend_045",
+    "backendTaskIds": [
+      "backend_043",
+      "backend_044",
+      "backend_045",
+      "backend_046",
+      "backend_047",
+      "backend_048",
+      "backend_049"
+    ]
+  },
+  {
+    "id": "PRV-12",
+    "surface": "provider",
+    "englishName": "Property Submitted",
+    "arabicName": "تم إرسال العقار للمراجعة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1rNEVgpLFKw_zSNpAXndLQfWMyNlT2bhb",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/properties/:id/submitted",
+    "frontendTaskId": "frontend_045",
+    "backendTaskIds": [
+      "backend_043",
+      "backend_044",
+      "backend_045",
+      "backend_046",
+      "backend_047",
+      "backend_048",
+      "backend_049"
+    ]
+  },
+  {
+    "id": "PRV-13",
+    "surface": "provider",
+    "englishName": "Property Rejected",
+    "arabicName": "تعذر اعتماد العقار",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1wpWqXwKoSFCkvlGwPQxzjuAt6cti-uxT",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/properties/:id/rejected",
+    "frontendTaskId": "frontend_045",
+    "backendTaskIds": [
+      "backend_043",
+      "backend_044",
+      "backend_045",
+      "backend_046",
+      "backend_047",
+      "backend_048",
+      "backend_049"
+    ]
+  },
+  {
+    "id": "PRV-14",
+    "surface": "provider",
+    "englishName": "Property Published",
+    "arabicName": "تم نشر العقار",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/19ObqV6wXoya0W2PD0N_lWrTMNGkiGg0A",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/properties/:id/published",
+    "frontendTaskId": "frontend_045",
+    "backendTaskIds": [
+      "backend_043",
+      "backend_044",
+      "backend_045",
+      "backend_046",
+      "backend_047",
+      "backend_048",
+      "backend_049"
+    ]
+  },
+  {
+    "id": "PRV-15",
+    "surface": "provider",
+    "englishName": "Projects Listing",
+    "arabicName": "المشاريع",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1JM9TjIqqsFhXnObamIdFGepIPeLUf0ml",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/projects",
+    "frontendTaskId": "frontend_046",
+    "backendTaskIds": [
+      "backend_040"
+    ]
+  },
+  {
+    "id": "PRV-16",
+    "surface": "provider",
+    "englishName": "Customer Requests",
+    "arabicName": "طلبات العملاء",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/19m_KQKHWSE-l-j3eqvML0W6RygO3tlAj",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/customer-requests",
+    "frontendTaskId": "frontend_047",
+    "backendTaskIds": [
+      "backend_074",
+      "backend_076"
+    ]
+  },
+  {
+    "id": "PRV-17",
+    "surface": "provider",
+    "englishName": "Add Customer Request — Modal",
+    "arabicName": "إضافة طلب عميل — نافذة منبثقة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1u6elv1Y8xHFM22yAUsy2iF4WmJiG5wom",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/customer-requests?create=1",
+    "frontendTaskId": "frontend_047",
+    "backendTaskIds": [
+      "backend_074",
+      "backend_076"
+    ]
+  },
+  {
+    "id": "PRV-18",
+    "surface": "provider",
+    "englishName": "Viewing Appointments",
+    "arabicName": "مواعيد المعاينات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1wV5wYwgV1HV8sSBohdBqbIKP6qwztZgP",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/viewings",
+    "frontendTaskId": "frontend_048",
+    "backendTaskIds": [
+      "backend_072"
+    ]
+  },
+  {
+    "id": "PRV-19",
+    "surface": "provider",
+    "englishName": "Ad Requests",
+    "arabicName": "طلبات الإعلانات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1KCTXCjiPpyefVI2qnLBwQB1pI87MuCw3",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/ads",
+    "frontendTaskId": "frontend_049",
+    "backendTaskIds": [
+      "backend_101",
+      "backend_107"
+    ]
+  },
+  {
+    "id": "PRV-20",
+    "surface": "provider",
+    "englishName": "Commission",
+    "arabicName": "العمولة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1FyRkPx1NM9yneEO-rbVV1hzunmUgjTmb",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/commission",
+    "frontendTaskId": "frontend_049",
+    "backendTaskIds": [
+      "backend_116"
+    ]
+  },
+  {
+    "id": "PRV-21",
+    "surface": "provider",
+    "englishName": "Notifications",
+    "arabicName": "الإشعارات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1zDmZ5xczx2W_0TqF1eCdgn42SrlmwVDW",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/notifications",
+    "frontendTaskId": "frontend_050",
+    "backendTaskIds": [
+      "backend_068"
+    ]
+  },
+  {
+    "id": "PRV-22-1",
+    "surface": "provider",
+    "englishName": "Settings",
+    "arabicName": "الإعدادات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/16sjluzJbRkAkORle4X--TNoVN01yXTv_",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/settings",
+    "frontendTaskId": "frontend_050",
+    "backendTaskIds": [
+      "backend_123"
+    ]
+  },
+  {
+    "id": "PRV-22-2",
+    "surface": "provider",
+    "englishName": "Settings",
+    "arabicName": "الإعدادات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1H1alNI_tQb1hlFv7VBeosfrmghm6sfq9",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/settings",
+    "frontendTaskId": "frontend_050",
+    "backendTaskIds": [
+      "backend_123"
+    ]
+  },
+  {
+    "id": "PRV-22-3",
+    "surface": "provider",
+    "englishName": "Settings",
+    "arabicName": "الإعدادات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1BrEClGr2UVWzR4s0p2Yt7Oce5eheWW8i",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/provider/settings",
+    "frontendTaskId": "frontend_050",
+    "backendTaskIds": [
+      "backend_123"
+    ]
+  },
+  {
+    "id": "ADM-01",
+    "surface": "admin",
+    "englishName": "Admin Overview",
+    "arabicName": "نظرة عامة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1s72Hbu89r_FpVR9NWqyi5N9kFfGfZJAa",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin",
+    "frontendTaskId": "frontend_060",
+    "backendTaskIds": [
+      "backend_120"
+    ]
+  },
+  {
+    "id": "ADM-02",
+    "surface": "admin",
+    "englishName": "Users Management",
+    "arabicName": "إدارة المستخدمين",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/14vSGg7Ljzv6rcp87XJQN3sk3rDF3oiwh",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/users",
+    "frontendTaskId": "frontend_061",
+    "backendTaskIds": [
+      "backend_016",
+      "backend_017",
+      "backend_019",
+      "backend_121"
+    ]
+  },
+  {
+    "id": "ADM-03",
+    "surface": "admin",
+    "englishName": "Property Seekers",
+    "arabicName": "الباحثون عن عقار",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1Wzt9wRgunYtmiBpNUuiCYBIJ8SkCiUhU",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/property-seekers",
+    "frontendTaskId": "frontend_061",
+    "backendTaskIds": [
+      "backend_016",
+      "backend_017",
+      "backend_019",
+      "backend_121"
+    ]
+  },
+  {
+    "id": "ADM-04",
+    "surface": "admin",
+    "englishName": "Property Providers",
+    "arabicName": "مقدمو العقارات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1YwgW0GdiDn87ZodQT33xOaCFiwUEFd7T",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/providers",
+    "frontendTaskId": "frontend_061",
+    "backendTaskIds": [
+      "backend_016",
+      "backend_017",
+      "backend_019",
+      "backend_121"
+    ]
+  },
+  {
+    "id": "ADM-05",
+    "surface": "admin",
+    "englishName": "Provider Documents Review",
+    "arabicName": "مراجعة مستندات مقدمي العقارات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1Zm2pM2-ReIbtM6x4SL7M9U5kdUnSQF4Q",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/verification",
+    "frontendTaskId": "frontend_061",
+    "backendTaskIds": [
+      "backend_016",
+      "backend_017",
+      "backend_019",
+      "backend_121"
+    ]
+  },
+  {
+    "id": "ADM-06",
+    "surface": "admin",
+    "englishName": "Account Reports",
+    "arabicName": "بلاغات الحسابات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1Evyazld_AFFdEYHEzGlM48Z6GnxG-UYV",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/account-reports",
+    "frontendTaskId": "frontend_062",
+    "backendTaskIds": [
+      "backend_016",
+      "backend_017",
+      "backend_019",
+      "backend_121"
+    ]
+  },
+  {
+    "id": "ADM-07",
+    "surface": "admin",
+    "englishName": "Account Report Details",
+    "arabicName": "تفاصيل بلاغ الحساب",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/19Pa0NzUKpbvpY0Kh460QB6Jj8kxe14ut",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/account-reports/:id",
+    "frontendTaskId": "frontend_062",
+    "backendTaskIds": [
+      "backend_016",
+      "backend_017",
+      "backend_019",
+      "backend_121"
+    ]
+  },
+  {
+    "id": "ADM-08",
+    "surface": "admin",
+    "englishName": "Account Restrictions",
+    "arabicName": "قيود الحسابات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1HbA-ztHzERThbWC88U68QQINzCTiLSNQ",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/account-restrictions",
+    "frontendTaskId": "frontend_062",
+    "backendTaskIds": [
+      "backend_016",
+      "backend_017",
+      "backend_019",
+      "backend_121"
+    ]
+  },
+  {
+    "id": "ADM-09",
+    "surface": "admin",
+    "englishName": "Property Categories & Types",
+    "arabicName": "التصنيفات وأنواع العقارات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1BsuhLY1vb55AY8eokQf0KEeTyIS4g9bw",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/property-categories",
+    "frontendTaskId": "frontend_063",
+    "backendTaskIds": [
+      "backend_031",
+      "backend_032",
+      "backend_033"
+    ]
+  },
+  {
+    "id": "ADM-10",
+    "surface": "admin",
+    "englishName": "Locations & Neighborhoods",
+    "arabicName": "المناطق والأحياء",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1qIx1wxB5bBDIjfIYLI-huLuBDNNQIjX-",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/locations",
+    "frontendTaskId": "frontend_063",
+    "backendTaskIds": [
+      "backend_031",
+      "backend_032",
+      "backend_033"
+    ]
+  },
+  {
+    "id": "ADM-11",
+    "surface": "admin",
+    "englishName": "Features & Services",
+    "arabicName": "المميزات والخدمات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/11uMoUTllcJFJ5gV7-B7aynZcQrRkLFjq",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/features",
+    "frontendTaskId": "frontend_063",
+    "backendTaskIds": [
+      "backend_031",
+      "backend_032",
+      "backend_033"
+    ]
+  },
+  {
+    "id": "ADM-12",
+    "surface": "admin",
+    "englishName": "Projects Management",
+    "arabicName": "إدارة المشروعات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1HhR6X0VfCdBj3zARqW0KuYqivJLhL3Zk",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/projects",
+    "frontendTaskId": "frontend_064",
+    "backendTaskIds": [
+      "backend_040",
+      "backend_041",
+      "backend_049",
+      "backend_052",
+      "backend_053",
+      "backend_054"
+    ]
+  },
+  {
+    "id": "ADM-13",
+    "surface": "admin",
+    "englishName": "Projects Review",
+    "arabicName": "مراجعة المشروعات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1fp0z0D1aD_uyZjYeb-5GGUkPDaFlK0R2",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/projects/review",
+    "frontendTaskId": "frontend_064",
+    "backendTaskIds": [
+      "backend_040",
+      "backend_041",
+      "backend_049",
+      "backend_052",
+      "backend_053",
+      "backend_054"
+    ]
+  },
+  {
+    "id": "ADM-14",
+    "surface": "admin",
+    "englishName": "Properties Management",
+    "arabicName": "إدارة العقارات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/154nQHf5hLQ4AwXr0b9ig8ld0De2FatIc",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/properties",
+    "frontendTaskId": "frontend_065",
+    "backendTaskIds": [
+      "backend_040",
+      "backend_041",
+      "backend_049",
+      "backend_052",
+      "backend_053",
+      "backend_054"
+    ]
+  },
+  {
+    "id": "ADM-15",
+    "surface": "admin",
+    "englishName": "Properties Review",
+    "arabicName": "مراجعة العقارات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1Q-t49USiJBt--gA6LMDi7_9lXH3FDCBL",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/properties/review",
+    "frontendTaskId": "frontend_065",
+    "backendTaskIds": [
+      "backend_040",
+      "backend_041",
+      "backend_049",
+      "backend_052",
+      "backend_053",
+      "backend_054"
+    ]
+  },
+  {
+    "id": "ADM-16",
+    "surface": "admin",
+    "englishName": "Suspected Duplicate Properties",
+    "arabicName": "عقارات يشتبه بتكرارها",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1q4VnWJnoJZPD28Mso4QQiMfNKjFyWHHp",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/properties/possible-duplicates",
+    "frontendTaskId": "frontend_065",
+    "backendTaskIds": [
+      "backend_040",
+      "backend_041",
+      "backend_049",
+      "backend_052",
+      "backend_053",
+      "backend_054"
+    ]
+  },
+  {
+    "id": "ADM-17",
+    "surface": "admin",
+    "englishName": "Property Reports",
+    "arabicName": "بلاغات العقارات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1jSZHxNYJsd2iP9Dxit6LNnH933mmKvsP",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/property-reports",
+    "frontendTaskId": "frontend_065",
+    "backendTaskIds": [
+      "backend_040",
+      "backend_041",
+      "backend_049",
+      "backend_052",
+      "backend_053",
+      "backend_054"
+    ]
+  },
+  {
+    "id": "ADM-18",
+    "surface": "admin",
+    "englishName": "Requests Management",
+    "arabicName": "إدارة الطلبات",
+    "sourceStatus": "GROUP LINK",
+    "driveUrl": "https://drive.google.com/drive/folders/1qunt0uMMz1Q3EyNrLY1DJgmexvnOp_24",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/requests",
+    "frontendTaskId": "frontend_066",
+    "backendTaskIds": [
+      "backend_070",
+      "backend_077",
+      "backend_078",
+      "backend_079"
+    ]
+  },
+  {
+    "id": "ADM-19",
+    "surface": "admin",
+    "englishName": "Customer Requests",
+    "arabicName": "طلبات العملاء",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1A8nI4o_jjyoTlR2T2nXJ2b7ZMfi68Upj",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/customer-requests",
+    "frontendTaskId": "frontend_066",
+    "backendTaskIds": [
+      "backend_070",
+      "backend_077",
+      "backend_078",
+      "backend_079"
+    ]
+  },
+  {
+    "id": "ADM-20",
+    "surface": "admin",
+    "englishName": "Overdue Requests",
+    "arabicName": "الطلبات المتأخرة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1eEytRpPosmYvn1GkqJT1QByUGuZxhpsJ",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/overdue-requests",
+    "frontendTaskId": "frontend_066",
+    "backendTaskIds": [
+      "backend_070",
+      "backend_077",
+      "backend_078",
+      "backend_079"
+    ]
+  },
+  {
+    "id": "ADM-21",
+    "surface": "admin",
+    "englishName": "Contact Requests",
+    "arabicName": "طلبات التواصل",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1i8PdHEcfxqXPbnrAvwGH-eBEYUGDxbYE",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/contact-requests",
+    "frontendTaskId": "frontend_066",
+    "backendTaskIds": [
+      "backend_070",
+      "backend_077",
+      "backend_078",
+      "backend_079"
+    ]
+  },
+  {
+    "id": "ADM-22",
+    "surface": "admin",
+    "englishName": "Viewing Requests",
+    "arabicName": "طلبات المعاينة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1-yq0DjVfPvIA38DvJPOlBXGenMSOCRZD",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/viewing-requests",
+    "frontendTaskId": "frontend_066",
+    "backendTaskIds": [
+      "backend_070",
+      "backend_077",
+      "backend_078",
+      "backend_079"
+    ]
+  },
+  {
+    "id": "ADM-23",
+    "surface": "admin",
+    "englishName": "Property Search Requests",
+    "arabicName": "طلبات البحث عن عقار",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1-QhIOQf0fPdV-cDfiyu_xysmg4wP8C3I",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/search-requests",
+    "frontendTaskId": "frontend_066",
+    "backendTaskIds": [
+      "backend_070",
+      "backend_077",
+      "backend_078",
+      "backend_079"
+    ]
+  },
+  {
+    "id": "ADM-24",
+    "surface": "admin",
+    "englishName": "Request Issues & Reports",
+    "arabicName": "بلاغات ومشكلات الطلبات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1EjcMHZros-GyAcTG_yzY5_jGc9T_swon",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/request-issues",
+    "frontendTaskId": "frontend_066",
+    "backendTaskIds": [
+      "backend_070",
+      "backend_077",
+      "backend_078",
+      "backend_079"
+    ]
+  },
+  {
+    "id": "ADM-25",
+    "surface": "admin",
+    "englishName": "Articles Management",
+    "arabicName": "إدارة المقالات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1mtUKZqqDoN5noUYT_XNmTZzm8Bta6VNS",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/articles",
+    "frontendTaskId": "frontend_067",
+    "backendTaskIds": [
+      "backend_090",
+      "backend_091",
+      "backend_095",
+      "backend_035",
+      "backend_036",
+      "backend_037"
+    ]
+  },
+  {
+    "id": "ADM-26",
+    "surface": "admin",
+    "englishName": "Article Categories",
+    "arabicName": "تصنيفات المقالات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1syHK9e5B8eMCKaYcS7Tt-M_Ibtqugyj4",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/article-categories",
+    "frontendTaskId": "frontend_067",
+    "backendTaskIds": [
+      "backend_090",
+      "backend_091",
+      "backend_095",
+      "backend_035",
+      "backend_036",
+      "backend_037"
+    ]
+  },
+  {
+    "id": "ADM-27",
+    "surface": "admin",
+    "englishName": "Community Management",
+    "arabicName": "إدارة الكوميونيتي",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1v-dhWpWpgDMJJK_J7QMX4KJrQ1LX2Hzw",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/community",
+    "frontendTaskId": "frontend_068",
+    "backendTaskIds": [
+      "backend_090",
+      "backend_091",
+      "backend_095",
+      "backend_035",
+      "backend_036",
+      "backend_037"
+    ]
+  },
+  {
+    "id": "ADM-28",
+    "surface": "admin",
+    "englishName": "Comments",
+    "arabicName": "التعليقات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1rf8YWR6oo3MlcWiksOyoJQkbP3bTpHpJ",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/community/comments",
+    "frontendTaskId": "frontend_068",
+    "backendTaskIds": [
+      "backend_090",
+      "backend_091",
+      "backend_095",
+      "backend_035",
+      "backend_036",
+      "backend_037"
+    ]
+  },
+  {
+    "id": "ADM-29",
+    "surface": "admin",
+    "englishName": "Reports & Moderation",
+    "arabicName": "البلاغات والإشراف",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1un9tRaMEbov-zH_Pl7JgOlk5TvvcHR-K",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/community/moderation",
+    "frontendTaskId": "frontend_068",
+    "backendTaskIds": [
+      "backend_090",
+      "backend_091",
+      "backend_095",
+      "backend_035",
+      "backend_036",
+      "backend_037"
+    ]
+  },
+  {
+    "id": "ADM-30",
+    "surface": "admin",
+    "englishName": "About Platform",
+    "arabicName": "النبذة عن المنصة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1T4o9bQ0ebHJpX-fNIpRKDczlk3F37daH",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/content/about",
+    "frontendTaskId": "frontend_069",
+    "backendTaskIds": [
+      "backend_090",
+      "backend_091",
+      "backend_095",
+      "backend_035",
+      "backend_036",
+      "backend_037"
+    ]
+  },
+  {
+    "id": "ADM-31",
+    "surface": "admin",
+    "englishName": "Team Management",
+    "arabicName": "إدارة فريق العمل",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1k7lhpKe1sM8O1hQoLs6fTgY-88f_dlTf",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/content/team",
+    "frontendTaskId": "frontend_069",
+    "backendTaskIds": [
+      "backend_090",
+      "backend_091",
+      "backend_095",
+      "backend_035",
+      "backend_036",
+      "backend_037"
+    ]
+  },
+  {
+    "id": "ADM-32",
+    "surface": "admin",
+    "englishName": "Sadat Population Counter",
+    "arabicName": "عداد سكان مدينة السادات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1JWQ-qEIvxxqHBPnsGz2xDA2_kMG_sq7s",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/content/population-counter",
+    "frontendTaskId": "frontend_069",
+    "backendTaskIds": [
+      "backend_090",
+      "backend_091",
+      "backend_095",
+      "backend_035",
+      "backend_036",
+      "backend_037"
+    ]
+  },
+  {
+    "id": "ADM-33",
+    "surface": "admin",
+    "englishName": "Ad Requests",
+    "arabicName": "طلبات الإعلانات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1vodkGQoNGThb-UrzVNR-N7uA3Of9_6c-",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/ads/requests",
+    "frontendTaskId": "frontend_070",
+    "backendTaskIds": [
+      "backend_100",
+      "backend_101",
+      "backend_102",
+      "backend_103",
+      "backend_104",
+      "backend_105",
+      "backend_108"
+    ]
+  },
+  {
+    "id": "ADM-34",
+    "surface": "admin",
+    "englishName": "Pending Payment Proofs",
+    "arabicName": "الإثباتات المعلقة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1X7DQgPePHd2vGNbXdW9qdwNqluX-rvmQ",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/ads/payment-proofs/pending",
+    "frontendTaskId": "frontend_070",
+    "backendTaskIds": [
+      "backend_100",
+      "backend_101",
+      "backend_102",
+      "backend_103",
+      "backend_104",
+      "backend_105",
+      "backend_108"
+    ]
+  },
+  {
+    "id": "ADM-35",
+    "surface": "admin",
+    "englishName": "Approved Payment Proofs",
+    "arabicName": "الإثباتات المقبولة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1-CkxHZ4zDc4rnmBlVOqG2cjpNv0cKgkI",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/ads/payment-proofs/approved",
+    "frontendTaskId": "frontend_070",
+    "backendTaskIds": [
+      "backend_100",
+      "backend_101",
+      "backend_102",
+      "backend_103",
+      "backend_104",
+      "backend_105",
+      "backend_108"
+    ]
+  },
+  {
+    "id": "ADM-36",
+    "surface": "admin",
+    "englishName": "Ad Calendar",
+    "arabicName": "تقويم الإعلانات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1NU5LwfOuUFPZBwQDwPQGblfi8Z4Iiwhj",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/ads/calendar",
+    "frontendTaskId": "frontend_070",
+    "backendTaskIds": [
+      "backend_100",
+      "backend_101",
+      "backend_102",
+      "backend_103",
+      "backend_104",
+      "backend_105",
+      "backend_108"
+    ]
+  },
+  {
+    "id": "ADM-37",
+    "surface": "admin",
+    "englishName": "Pending Payments Review",
+    "arabicName": "مراجعة المدفوعات المعلقة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/102cwmkS9hhuqd6ED-V5x-SNOu-E4o-5d",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/ads/payments/pending-review",
+    "frontendTaskId": "frontend_070",
+    "backendTaskIds": [
+      "backend_100",
+      "backend_101",
+      "backend_102",
+      "backend_103",
+      "backend_104",
+      "backend_105",
+      "backend_108"
+    ]
+  },
+  {
+    "id": "ADM-38",
+    "surface": "admin",
+    "englishName": "Financial Review",
+    "arabicName": "الفحص المالي",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1Zt7UFy_7uDnJKHmBNFq4ErTkrECPQaL8",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/ads/financial-review",
+    "frontendTaskId": "frontend_070",
+    "backendTaskIds": [
+      "backend_100",
+      "backend_101",
+      "backend_102",
+      "backend_103",
+      "backend_104",
+      "backend_105",
+      "backend_108"
+    ]
+  },
+  {
+    "id": "ADM-39",
+    "surface": "admin",
+    "englishName": "Commissions Management",
+    "arabicName": "إدارة العمولات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1t9KQogo6BKdm9zCLSagbFR_5c27xnTrH",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/commissions",
+    "frontendTaskId": "frontend_071",
+    "backendTaskIds": [
+      "backend_110",
+      "backend_111",
+      "backend_112",
+      "backend_114",
+      "backend_115"
+    ]
+  },
+  {
+    "id": "ADM-40",
+    "surface": "admin",
+    "englishName": "Create Commission Policy",
+    "arabicName": "إنشاء سياسة عمولة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1re3_Mj3yrCDf6zOry5acvfH-nvLt90f4",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/commissions/policies/new",
+    "frontendTaskId": "frontend_071",
+    "backendTaskIds": [
+      "backend_110",
+      "backend_111",
+      "backend_112",
+      "backend_114",
+      "backend_115"
+    ]
+  },
+  {
+    "id": "ADM-41",
+    "surface": "admin",
+    "englishName": "Commission Change Log",
+    "arabicName": "سجل قرارات وتغييرات العمولات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1KAstGvgXaS2lFM3Rtki1Ueae-BkIMfP0",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/commissions/change-log",
+    "frontendTaskId": "frontend_071",
+    "backendTaskIds": [
+      "backend_110",
+      "backend_111",
+      "backend_112",
+      "backend_114",
+      "backend_115"
+    ]
+  },
+  {
+    "id": "ADM-42",
+    "surface": "admin",
+    "englishName": "Account Commission",
+    "arabicName": "عمولة الحساب",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1EnlY-JZIiN2qTUNiCPoEpbn7KoojtuR6",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/commissions/accounts/:id",
+    "frontendTaskId": "frontend_071",
+    "backendTaskIds": [
+      "backend_110",
+      "backend_111",
+      "backend_112",
+      "backend_114",
+      "backend_115"
+    ]
+  },
+  {
+    "id": "ADM-43",
+    "surface": "admin",
+    "englishName": "Commission Exceptions",
+    "arabicName": "استثناءات العمولات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1ephF31UhqOBDeqVWS5jggCJruKlDqfBB",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/commissions/exceptions",
+    "frontendTaskId": "frontend_071",
+    "backendTaskIds": [
+      "backend_110",
+      "backend_111",
+      "backend_112",
+      "backend_114",
+      "backend_115"
+    ]
+  },
+  {
+    "id": "ADM-44",
+    "surface": "admin",
+    "englishName": "Create Commission Exception",
+    "arabicName": "إنشاء استثناء عمولة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1omJ-4MUy3SMnkCygfxwVA5UBST4UAWo-",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/commissions/exceptions/new",
+    "frontendTaskId": "frontend_071",
+    "backendTaskIds": [
+      "backend_110",
+      "backend_111",
+      "backend_112",
+      "backend_114",
+      "backend_115"
+    ]
+  },
+  {
+    "id": "ADM-45",
+    "surface": "admin",
+    "englishName": "Commission Policy Confirmations",
+    "arabicName": "تأكيد سياسات العمولات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1kKKdCYENuH3RIB7rLEZ4-sNsuht9ewhB",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/commissions/confirmations",
+    "frontendTaskId": "frontend_071",
+    "backendTaskIds": [
+      "backend_110",
+      "backend_111",
+      "backend_112",
+      "backend_114",
+      "backend_115"
+    ]
+  },
+  {
+    "id": "ADM-46",
+    "surface": "admin",
+    "englishName": "Ad Banners",
+    "arabicName": "البانرات الإعلانية",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1bt_4Eee608KYDLwS1DDAyYRFefQ0gV2X",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/banners",
+    "frontendTaskId": "frontend_072",
+    "backendTaskIds": [
+      "backend_035",
+      "backend_037",
+      "backend_038",
+      "backend_106"
+    ]
+  },
+  {
+    "id": "ADM-47",
+    "surface": "admin",
+    "englishName": "Add New Banner",
+    "arabicName": "إضافة بانر جديد",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1e0FVw_SDl2cKAr7KXwRKL3jAMnNUQh23",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/banners/new",
+    "frontendTaskId": "frontend_072",
+    "backendTaskIds": [
+      "backend_035",
+      "backend_037",
+      "backend_038",
+      "backend_106"
+    ]
+  },
+  {
+    "id": "ADM-48",
+    "surface": "admin",
+    "englishName": "Sadat Real Estate Tips",
+    "arabicName": "نصائح عقارات السادات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/16zSWznfKZOkXuYUg7oB1774r--fAbF9f",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/content/tips",
+    "frontendTaskId": "frontend_072",
+    "backendTaskIds": [
+      "backend_035",
+      "backend_037",
+      "backend_038",
+      "backend_106"
+    ]
+  },
+  {
+    "id": "ADM-49",
+    "surface": "admin",
+    "englishName": "Homepage Management",
+    "arabicName": "إدارة الصفحة الرئيسية",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1hzPMW4k_59AQRZpD_9nBmAMI7pV67f9d",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/content/homepage",
+    "frontendTaskId": "frontend_072",
+    "backendTaskIds": [
+      "backend_035",
+      "backend_037",
+      "backend_038",
+      "backend_106"
+    ]
+  },
+  {
+    "id": "ADM-50",
+    "surface": "admin",
+    "englishName": "Platform Information",
+    "arabicName": "بيانات المنصة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1kU-ZltMai1vFLk-_W8IhdAnJMrnCIw7J",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/settings/platform",
+    "frontendTaskId": "frontend_073",
+    "backendTaskIds": [
+      "backend_035",
+      "backend_037",
+      "backend_038",
+      "backend_106"
+    ]
+  },
+  {
+    "id": "ADM-51",
+    "surface": "admin",
+    "englishName": "Contact Information",
+    "arabicName": "بيانات التواصل",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1_1LBD4BnQ3pFWe3OAiMziiw9eKbQ51Zm",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/settings/contact",
+    "frontendTaskId": "frontend_073",
+    "backendTaskIds": [
+      "backend_035",
+      "backend_037",
+      "backend_038",
+      "backend_106"
+    ]
+  },
+  {
+    "id": "ADM-52",
+    "surface": "admin",
+    "englishName": "Social Media Accounts",
+    "arabicName": "حسابات التواصل الاجتماعي",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1GYULMZZDXwyqfI2GOBMJavvzlLNLRfLX",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/settings/social",
+    "frontendTaskId": "frontend_073",
+    "backendTaskIds": [
+      "backend_035",
+      "backend_037",
+      "backend_038",
+      "backend_106"
+    ]
+  },
+  {
+    "id": "ADM-53",
+    "surface": "admin",
+    "englishName": "Property Settings",
+    "arabicName": "إعدادات العقارات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1BNlfcKdMtypREnOUWe_Lh4px7TCFQp_1",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/settings/properties",
+    "frontendTaskId": "frontend_074",
+    "backendTaskIds": [
+      "backend_039",
+      "backend_123"
+    ]
+  },
+  {
+    "id": "ADM-54",
+    "surface": "admin",
+    "englishName": "Request Settings",
+    "arabicName": "إعدادات الطلبات",
+    "sourceStatus": "GROUP LINK",
+    "driveUrl": "https://drive.google.com/drive/folders/1qunt0uMMz1Q3EyNrLY1DJgmexvnOp_24",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/settings/requests",
+    "frontendTaskId": "frontend_074",
+    "backendTaskIds": [
+      "backend_039",
+      "backend_123"
+    ]
+  },
+  {
+    "id": "ADM-55",
+    "surface": "admin",
+    "englishName": "Advertising Settings",
+    "arabicName": "إعدادات الإعلانات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1aVqDrydYZtIn1KMOhQEsxc7xOps-kzcM",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/settings/advertising",
+    "frontendTaskId": "frontend_074",
+    "backendTaskIds": [
+      "backend_039",
+      "backend_123"
+    ]
+  },
+  {
+    "id": "ADM-56",
+    "surface": "admin",
+    "englishName": "General SEO",
+    "arabicName": "SEO عام",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1GIDQHo-0SB-z9nY7tJk7S7pUiC5qo3hN",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/settings/seo",
+    "frontendTaskId": "frontend_074",
+    "backendTaskIds": [
+      "backend_039",
+      "backend_123"
+    ]
+  },
+  {
+    "id": "ADM-57",
+    "surface": "admin",
+    "englishName": "Privacy & Security",
+    "arabicName": "الخصوصية والأمان",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1Y0PqcQl6kHn-8HNxXQA1f81aT-uAVIIL",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/settings/privacy-security",
+    "frontendTaskId": "frontend_074",
+    "backendTaskIds": [
+      "backend_039",
+      "backend_123"
+    ]
+  },
+  {
+    "id": "ADM-58",
+    "surface": "admin",
+    "englishName": "Display Settings",
+    "arabicName": "إعدادات العرض",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/189KpHFjhdzbl31vpvW3LG11yxWD3Hx3W",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/settings/display",
+    "frontendTaskId": "frontend_074",
+    "backendTaskIds": [
+      "backend_039",
+      "backend_123"
+    ]
+  },
+  {
+    "id": "ADM-59",
+    "surface": "admin",
+    "englishName": "Admin Users",
+    "arabicName": "المستخدمون الإداريون",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1wx5UUBb6FLodC04BNax8sovunKAWbITH",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/admin-users",
+    "frontendTaskId": "frontend_075",
+    "backendTaskIds": [
+      "backend_016",
+      "backend_017",
+      "backend_121"
+    ]
+  },
+  {
+    "id": "ADM-60",
+    "surface": "admin",
+    "englishName": "Add Admin User",
+    "arabicName": "إضافة مستخدم إداري",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1Vn-oqbWZlGbkbUnEHBQYQTfbRuzieMyb",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/admin-users/new",
+    "frontendTaskId": "frontend_075",
+    "backendTaskIds": [
+      "backend_016",
+      "backend_017",
+      "backend_121"
+    ]
+  },
+  {
+    "id": "ADM-61",
+    "surface": "admin",
+    "englishName": "Admin User Details — Super Admin",
+    "arabicName": "تفاصيل المستخدم الإداري — مدير النظام",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1WYQc8OIzjQJpSA6_PJRVdrVnxRcCj7nL",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/admin-users/:id",
+    "frontendTaskId": "frontend_075",
+    "backendTaskIds": [
+      "backend_016",
+      "backend_017",
+      "backend_121"
+    ]
+  },
+  {
+    "id": "ADM-62",
+    "surface": "admin",
+    "englishName": "Admin User Details — Standard Role",
+    "arabicName": "تفاصيل المستخدم الإداري — دور مخصص",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1Ib6-LMKjv0diQpa3vVXJpkSQR2UYtVtW",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/admin-users/:id",
+    "frontendTaskId": "frontend_075",
+    "backendTaskIds": [
+      "backend_016",
+      "backend_017",
+      "backend_121"
+    ]
+  },
+  {
+    "id": "ADM-63",
+    "surface": "admin",
+    "englishName": "Roles & Permissions",
+    "arabicName": "الأدوار والصلاحيات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1DuWzNGZwAG3NViUjxujCBz0SJ0cut9IC",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/roles",
+    "frontendTaskId": "frontend_075",
+    "backendTaskIds": [
+      "backend_016",
+      "backend_017",
+      "backend_121"
+    ]
+  },
+  {
+    "id": "ADM-64",
+    "surface": "admin",
+    "englishName": "Role Details & Permissions",
+    "arabicName": "تفاصيل الدور والصلاحيات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1NwvLAwHhG6yw75lnR0DRr0CerhiCFtLg",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/roles/:id",
+    "frontendTaskId": "frontend_075",
+    "backendTaskIds": [
+      "backend_016",
+      "backend_017",
+      "backend_121"
+    ]
+  },
+  {
+    "id": "ADM-65",
+    "surface": "admin",
+    "englishName": "Admin Notifications",
+    "arabicName": "إشعارات الإدارة",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/16zLyUMI_IPh4w-n4mt_-B6nFmSreYDj_",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/notifications",
+    "frontendTaskId": "frontend_076",
+    "backendTaskIds": [
+      "backend_122"
+    ]
+  },
+  {
+    "id": "ADM-66",
+    "surface": "admin",
+    "englishName": "Audit Log",
+    "arabicName": "سجل الإجراءات",
+    "sourceStatus": "LIVE",
+    "driveUrl": "https://drive.google.com/drive/folders/1-7uwvvFg0Y3J1jeuF3Jj6-Td4Y03fIpL",
+    "deviceScope": [
+      "desktop"
+    ],
+    "directionScope": [
+      "rtl",
+      "ltr"
+    ],
+    "locales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "route": "/admin/audit-log",
+    "frontendTaskId": "frontend_076",
+    "backendTaskIds": [
+      "backend_020"
+    ]
+  }
+]

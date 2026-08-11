@@ -1,0 +1,1926 @@
+[
+  {
+    "method": "GET",
+    "path": "/health",
+    "module": "health",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Liveness",
+    "status": "planned",
+    "apiVersion": "unversioned-operational"
+  },
+  {
+    "method": "GET",
+    "path": "/ready",
+    "module": "health",
+    "auth": "none",
+    "roles": [
+      "operations"
+    ],
+    "purpose": "Readiness dependencies",
+    "status": "planned",
+    "apiVersion": "unversioned-operational"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/auth/login",
+    "module": "auth",
+    "auth": "none",
+    "roles": [
+      "seeker",
+      "provider",
+      "admin"
+    ],
+    "purpose": "Login",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/auth/otp/send",
+    "module": "auth",
+    "auth": "none",
+    "roles": [
+      "seeker",
+      "provider"
+    ],
+    "purpose": "Send OTP",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/auth/otp/verify",
+    "module": "auth",
+    "auth": "none",
+    "roles": [
+      "seeker",
+      "provider"
+    ],
+    "purpose": "Verify OTP",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/auth/refresh",
+    "module": "auth",
+    "auth": "refresh-cookie",
+    "roles": [
+      "authenticated"
+    ],
+    "purpose": "Rotate refresh session",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/auth/logout",
+    "module": "auth",
+    "auth": "refresh-cookie",
+    "roles": [
+      "authenticated"
+    ],
+    "purpose": "Revoke session",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/auth/password/forgot",
+    "module": "auth",
+    "auth": "none",
+    "roles": [
+      "eligible-users"
+    ],
+    "purpose": "Start password reset",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/auth/password/reset",
+    "module": "auth",
+    "auth": "reset-challenge",
+    "roles": [
+      "eligible-users"
+    ],
+    "purpose": "Finish password reset",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/auth/register/seeker",
+    "module": "auth",
+    "auth": "verified-otp",
+    "roles": [
+      "seeker"
+    ],
+    "purpose": "Create seeker account",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/me",
+    "module": "identity",
+    "auth": "access-token",
+    "roles": [
+      "authenticated"
+    ],
+    "purpose": "Current profile",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/me",
+    "module": "identity",
+    "auth": "access-token",
+    "roles": [
+      "authenticated"
+    ],
+    "purpose": "Update owned profile",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/me/preferences",
+    "module": "identity",
+    "auth": "access-token",
+    "roles": [
+      "authenticated"
+    ],
+    "purpose": "Read preferences",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/me/preferences",
+    "module": "identity",
+    "auth": "access-token",
+    "roles": [
+      "authenticated"
+    ],
+    "purpose": "Update preferences",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/me/sessions",
+    "module": "auth",
+    "auth": "access-token",
+    "roles": [
+      "authenticated"
+    ],
+    "purpose": "List sessions",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "DELETE",
+    "path": "/api/v1/me/sessions/:sessionId",
+    "module": "auth",
+    "auth": "access-token",
+    "roles": [
+      "authenticated"
+    ],
+    "purpose": "Revoke owned session",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/application",
+    "module": "provider-onboarding",
+    "auth": "access-token",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Read owned application",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/provider/application/account",
+    "module": "provider-onboarding",
+    "auth": "access-token",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Save account step",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/provider/application/business",
+    "module": "provider-onboarding",
+    "auth": "access-token",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Save business step",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/provider/application/company",
+    "module": "provider-onboarding",
+    "auth": "access-token",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Save developer company step",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/application/documents",
+    "module": "provider-onboarding",
+    "auth": "access-token",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Upload private document",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "DELETE",
+    "path": "/api/v1/provider/application/documents/:documentId",
+    "module": "provider-onboarding",
+    "auth": "access-token",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Delete owned draft document",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/application/submit",
+    "module": "provider-onboarding",
+    "auth": "access-token",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Submit application",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/application/status",
+    "module": "provider-onboarding",
+    "auth": "access-token",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Track application",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/bootstrap",
+    "module": "public",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Locale/display bootstrap",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/home",
+    "module": "public",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Published homepage",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/properties",
+    "module": "properties",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Published listing/search",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/properties/:slug",
+    "module": "properties",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Published property details",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/public/properties/compare",
+    "module": "properties",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Compare up to two properties",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/developers",
+    "module": "organizations",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Verified organization listing",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/developers/:slug",
+    "module": "organizations",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Developer profile",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/articles",
+    "module": "articles",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Published articles",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/articles/:slug",
+    "module": "articles",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Published article details",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/community/posts",
+    "module": "community",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Moderated community feed",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/community/posts/:postId",
+    "module": "community",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Post and visible comments",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/about",
+    "module": "cms",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Published about content",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/team",
+    "module": "cms",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Published team",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/public/sitemap",
+    "module": "seo",
+    "auth": "none",
+    "roles": [
+      "crawler"
+    ],
+    "purpose": "Sitemap data projection",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/seeker/overview",
+    "module": "seeker",
+    "auth": "access-token",
+    "roles": [
+      "seeker"
+    ],
+    "purpose": "Dashboard summary",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/seeker/requests",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "seeker"
+    ],
+    "purpose": "Owned requests",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/seeker/requests/:requestId",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "seeker"
+    ],
+    "purpose": "Owned safe request details",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/seeker/contact-requests",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "seeker"
+    ],
+    "purpose": "Create contact request",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/seeker/search-requests",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "seeker"
+    ],
+    "purpose": "Create property search request",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/seeker/viewings",
+    "module": "viewings",
+    "auth": "access-token",
+    "roles": [
+      "seeker"
+    ],
+    "purpose": "Owned viewings",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/seeker/viewings",
+    "module": "viewings",
+    "auth": "access-token",
+    "roles": [
+      "seeker"
+    ],
+    "purpose": "Request viewing",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/seeker/viewings/:viewingId",
+    "module": "viewings",
+    "auth": "access-token",
+    "roles": [
+      "seeker"
+    ],
+    "purpose": "Reschedule owned viewing",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/seeker/viewings/:viewingId/cancel",
+    "module": "viewings",
+    "auth": "access-token",
+    "roles": [
+      "seeker"
+    ],
+    "purpose": "Cancel owned viewing",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/seeker/favorites",
+    "module": "favorites",
+    "auth": "access-token",
+    "roles": [
+      "seeker"
+    ],
+    "purpose": "Saved properties",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PUT",
+    "path": "/api/v1/seeker/favorites/:propertyId",
+    "module": "favorites",
+    "auth": "access-token",
+    "roles": [
+      "seeker"
+    ],
+    "purpose": "Save property idempotently",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "DELETE",
+    "path": "/api/v1/seeker/favorites/:propertyId",
+    "module": "favorites",
+    "auth": "access-token",
+    "roles": [
+      "seeker"
+    ],
+    "purpose": "Remove saved property",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/seeker/notifications",
+    "module": "notifications",
+    "auth": "access-token",
+    "roles": [
+      "seeker"
+    ],
+    "purpose": "Seeker inbox",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/seeker/notifications/:notificationId/read",
+    "module": "notifications",
+    "auth": "access-token",
+    "roles": [
+      "seeker"
+    ],
+    "purpose": "Mark owned notification read",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/seeker/notifications/read-all",
+    "module": "notifications",
+    "auth": "access-token",
+    "roles": [
+      "seeker"
+    ],
+    "purpose": "Mark all owned read",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/dashboard",
+    "module": "provider",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Provider KPIs",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/properties",
+    "module": "properties",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Owned property list",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/properties",
+    "module": "properties",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Create property draft",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/properties/:propertyId",
+    "module": "properties",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Owned property details",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/provider/properties/:propertyId/steps/:step",
+    "module": "properties",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Save wizard step",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/properties/:propertyId/media",
+    "module": "media",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Upload property media",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/provider/properties/:propertyId/media/order",
+    "module": "media",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Reorder media",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "DELETE",
+    "path": "/api/v1/provider/properties/:propertyId/media/:assetId",
+    "module": "media",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Delete owned draft media",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/properties/:propertyId/submit",
+    "module": "properties",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Submit property review",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/projects",
+    "module": "projects",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Owned projects",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/projects",
+    "module": "projects",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Create project draft",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/provider/projects/:projectId",
+    "module": "projects",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Update owned project",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/projects/:projectId/submit",
+    "module": "projects",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Submit project review",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/customer-requests",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Owned/assigned customer requests",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/customer-requests",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Add customer request",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/customer-requests/:requestId",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Allowed request details",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/customer-requests/:requestId/transitions",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Allowed request transition",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/viewings",
+    "module": "viewings",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Provider viewings",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/viewings/:viewingId/transitions",
+    "module": "viewings",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Allowed viewing transition",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/ads",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Owned ad requests",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/ads",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Create ad request",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/ads/:adRequestId",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Owned ad details/quote",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/ads/:adRequestId/accept-quote",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Accept valid quote",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/ads/:adRequestId/payment-proof",
+    "module": "payments",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Upload private proof",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/commission",
+    "module": "commissions",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Effective commission read-only",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/commission/confirm",
+    "module": "commissions",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Confirm policy version",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/notifications",
+    "module": "notifications",
+    "auth": "access-token",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Provider inbox",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/provider/settings",
+    "module": "settings",
+    "auth": "access-token",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Provider settings",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/provider/settings",
+    "module": "settings",
+    "auth": "access-token",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Update owned settings",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/overview",
+    "module": "admin",
+    "auth": "access-token",
+    "roles": [
+      "admin:overview.view"
+    ],
+    "purpose": "Admin KPIs",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/users",
+    "module": "admin-accounts",
+    "auth": "access-token",
+    "roles": [
+      "admin:users.view"
+    ],
+    "purpose": "User list",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/users/:userId",
+    "module": "admin-accounts",
+    "auth": "access-token",
+    "roles": [
+      "admin:users.view"
+    ],
+    "purpose": "User details",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/users/:userId/transitions",
+    "module": "admin-accounts",
+    "auth": "access-token",
+    "roles": [
+      "admin:users.manage"
+    ],
+    "purpose": "Account transition/restriction",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/providers",
+    "module": "admin-accounts",
+    "auth": "access-token",
+    "roles": [
+      "admin:providers.view"
+    ],
+    "purpose": "Provider applications",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/providers/:providerId",
+    "module": "admin-accounts",
+    "auth": "access-token",
+    "roles": [
+      "admin:providers.view"
+    ],
+    "purpose": "Provider/application details",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/providers/:providerId/review",
+    "module": "admin-accounts",
+    "auth": "access-token",
+    "roles": [
+      "admin:providers.review"
+    ],
+    "purpose": "Review provider with reason",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/provider-documents/:documentId/access",
+    "module": "media",
+    "auth": "access-token",
+    "roles": [
+      "admin:documents.review"
+    ],
+    "purpose": "Authorized short-lived document access",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/account-reports",
+    "module": "moderation",
+    "auth": "access-token",
+    "roles": [
+      "admin:account-reports.view"
+    ],
+    "purpose": "Account reports",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/account-reports/:reportId/resolve",
+    "module": "moderation",
+    "auth": "access-token",
+    "roles": [
+      "admin:account-reports.manage"
+    ],
+    "purpose": "Resolve account report",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/admin-users",
+    "module": "admin-rbac",
+    "auth": "access-token",
+    "roles": [
+      "admin:staff.view"
+    ],
+    "purpose": "Admin user list",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/admin-users",
+    "module": "admin-rbac",
+    "auth": "access-token",
+    "roles": [
+      "admin:staff.manage"
+    ],
+    "purpose": "Create admin user",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/admin/admin-users/:adminId",
+    "module": "admin-rbac",
+    "auth": "access-token",
+    "roles": [
+      "admin:staff.manage"
+    ],
+    "purpose": "Update/disable admin user",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/roles",
+    "module": "admin-rbac",
+    "auth": "access-token",
+    "roles": [
+      "admin:roles.view"
+    ],
+    "purpose": "Role list",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/roles",
+    "module": "admin-rbac",
+    "auth": "access-token",
+    "roles": [
+      "admin:roles.manage"
+    ],
+    "purpose": "Create role",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/admin/roles/:roleId",
+    "module": "admin-rbac",
+    "auth": "access-token",
+    "roles": [
+      "admin:roles.manage"
+    ],
+    "purpose": "Update role permissions",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/locations",
+    "module": "master-data",
+    "auth": "access-token",
+    "roles": [
+      "admin:locations.view"
+    ],
+    "purpose": "Locations/neighborhoods",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/locations",
+    "module": "master-data",
+    "auth": "access-token",
+    "roles": [
+      "admin:locations.manage"
+    ],
+    "purpose": "Create location",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/admin/locations/:locationId",
+    "module": "master-data",
+    "auth": "access-token",
+    "roles": [
+      "admin:locations.manage"
+    ],
+    "purpose": "Update/reorder/toggle location",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/property-categories",
+    "module": "master-data",
+    "auth": "access-token",
+    "roles": [
+      "admin:taxonomy.view"
+    ],
+    "purpose": "Property taxonomy",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/property-categories",
+    "module": "master-data",
+    "auth": "access-token",
+    "roles": [
+      "admin:taxonomy.manage"
+    ],
+    "purpose": "Create category/type",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/admin/property-categories/:categoryId",
+    "module": "master-data",
+    "auth": "access-token",
+    "roles": [
+      "admin:taxonomy.manage"
+    ],
+    "purpose": "Update category/type",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/features",
+    "module": "master-data",
+    "auth": "access-token",
+    "roles": [
+      "admin:features.view"
+    ],
+    "purpose": "Features/services",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/features",
+    "module": "master-data",
+    "auth": "access-token",
+    "roles": [
+      "admin:features.manage"
+    ],
+    "purpose": "Create feature/service",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/admin/features/:featureId",
+    "module": "master-data",
+    "auth": "access-token",
+    "roles": [
+      "admin:features.manage"
+    ],
+    "purpose": "Update feature/service",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/projects",
+    "module": "projects",
+    "auth": "access-token",
+    "roles": [
+      "admin:projects.view"
+    ],
+    "purpose": "Project list",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/projects/:projectId/review",
+    "module": "projects",
+    "auth": "access-token",
+    "roles": [
+      "admin:projects.review"
+    ],
+    "purpose": "Review project",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/properties",
+    "module": "properties",
+    "auth": "access-token",
+    "roles": [
+      "admin:properties.view"
+    ],
+    "purpose": "Property list",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/properties/:propertyId",
+    "module": "properties",
+    "auth": "access-token",
+    "roles": [
+      "admin:properties.view"
+    ],
+    "purpose": "Property/revision details",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/properties/:propertyId/review",
+    "module": "properties",
+    "auth": "access-token",
+    "roles": [
+      "admin:properties.review"
+    ],
+    "purpose": "Review property/revision",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/properties/possible-duplicates",
+    "module": "properties",
+    "auth": "access-token",
+    "roles": [
+      "admin:properties.review"
+    ],
+    "purpose": "Explainable duplicate candidates",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/properties/:propertyId/visibility",
+    "module": "properties",
+    "auth": "access-token",
+    "roles": [
+      "admin:properties.manage"
+    ],
+    "purpose": "Hide/restore/archive",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/property-reports",
+    "module": "moderation",
+    "auth": "access-token",
+    "roles": [
+      "admin:property-reports.view"
+    ],
+    "purpose": "Property reports",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/property-reports/:reportId/resolve",
+    "module": "moderation",
+    "auth": "access-token",
+    "roles": [
+      "admin:property-reports.manage"
+    ],
+    "purpose": "Resolve property report",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/requests",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "admin:requests.view"
+    ],
+    "purpose": "All requests",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/requests/:requestId",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "admin:requests.view"
+    ],
+    "purpose": "Operational request details",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/requests/:requestId/assign",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "admin:requests.assign"
+    ],
+    "purpose": "Assign request",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/requests/:requestId/transitions",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "admin:requests.manage"
+    ],
+    "purpose": "Request transition",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/requests/:requestId/notes",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "admin:requests.notes"
+    ],
+    "purpose": "Internal note",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/overdue-requests",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "admin:requests.view"
+    ],
+    "purpose": "Overdue read model",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/viewings",
+    "module": "viewings",
+    "auth": "access-token",
+    "roles": [
+      "admin:viewings.view"
+    ],
+    "purpose": "Viewing operations",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/request-issues",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "admin:request-issues.view"
+    ],
+    "purpose": "Request issues/reports",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/request-issues/:issueId/resolve",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "admin:request-issues.manage"
+    ],
+    "purpose": "Resolve issue",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/article-categories",
+    "module": "articles",
+    "auth": "access-token",
+    "roles": [
+      "admin:content.view"
+    ],
+    "purpose": "Article categories",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/article-categories",
+    "module": "articles",
+    "auth": "access-token",
+    "roles": [
+      "admin:content.manage"
+    ],
+    "purpose": "Create article category",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/articles",
+    "module": "articles",
+    "auth": "access-token",
+    "roles": [
+      "admin:content.view"
+    ],
+    "purpose": "Article list",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/articles",
+    "module": "articles",
+    "auth": "access-token",
+    "roles": [
+      "admin:content.manage"
+    ],
+    "purpose": "Create article",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/admin/articles/:articleId",
+    "module": "articles",
+    "auth": "access-token",
+    "roles": [
+      "admin:content.manage"
+    ],
+    "purpose": "Update article",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/articles/:articleId/transitions",
+    "module": "articles",
+    "auth": "access-token",
+    "roles": [
+      "admin:content.publish"
+    ],
+    "purpose": "Publish/archive article",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/community/posts",
+    "module": "community",
+    "auth": "access-token",
+    "roles": [
+      "admin:community.view"
+    ],
+    "purpose": "Community posts",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/community/comments",
+    "module": "community",
+    "auth": "access-token",
+    "roles": [
+      "admin:community.view"
+    ],
+    "purpose": "Community comments",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/community/reports",
+    "module": "moderation",
+    "auth": "access-token",
+    "roles": [
+      "admin:community.moderate"
+    ],
+    "purpose": "Community reports",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/community/reports/:reportId/resolve",
+    "module": "moderation",
+    "auth": "access-token",
+    "roles": [
+      "admin:community.moderate"
+    ],
+    "purpose": "Moderation action",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/content/:namespace",
+    "module": "cms",
+    "auth": "access-token",
+    "roles": [
+      "admin:content.view"
+    ],
+    "purpose": "Versioned CMS content",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PUT",
+    "path": "/api/v1/admin/content/:namespace",
+    "module": "cms",
+    "auth": "access-token",
+    "roles": [
+      "admin:content.manage"
+    ],
+    "purpose": "Update CMS content",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/ad-requests",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "admin:ads.view"
+    ],
+    "purpose": "Ad request list",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/ad-requests/:adRequestId",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "admin:ads.view"
+    ],
+    "purpose": "Ad request details",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/ad-requests/:adRequestId/quote",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "admin:ads.price"
+    ],
+    "purpose": "Issue manual quote",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/payment-proofs/:proofId/review",
+    "module": "payments",
+    "auth": "access-token",
+    "roles": [
+      "admin:payments.review"
+    ],
+    "purpose": "Approve/reject proof",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/ad-calendar",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "admin:ads.view"
+    ],
+    "purpose": "Scheduled ads calendar",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/ad-requests/:adRequestId/schedule",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "admin:ads.schedule"
+    ],
+    "purpose": "Schedule approved ad",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/banners",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "admin:banners.view"
+    ],
+    "purpose": "Banner list",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/banners",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "admin:banners.manage"
+    ],
+    "purpose": "Create banner",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/admin/banners/:bannerId",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "admin:banners.manage"
+    ],
+    "purpose": "Update/schedule banner",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/commission-policies",
+    "module": "commissions",
+    "auth": "access-token",
+    "roles": [
+      "admin:commissions.view"
+    ],
+    "purpose": "Policy list",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/commission-policies",
+    "module": "commissions",
+    "auth": "access-token",
+    "roles": [
+      "admin:commissions.manage"
+    ],
+    "purpose": "Create versioned policy",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/account-commissions/:accountId",
+    "module": "commissions",
+    "auth": "access-token",
+    "roles": [
+      "admin:commissions.view"
+    ],
+    "purpose": "Effective account commission",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PUT",
+    "path": "/api/v1/admin/account-commissions/:accountId",
+    "module": "commissions",
+    "auth": "access-token",
+    "roles": [
+      "admin:commissions.manage"
+    ],
+    "purpose": "Set account override",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/commission-exceptions",
+    "module": "commissions",
+    "auth": "access-token",
+    "roles": [
+      "admin:commissions.view"
+    ],
+    "purpose": "Exception list",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/commission-exceptions",
+    "module": "commissions",
+    "auth": "access-token",
+    "roles": [
+      "admin:commissions.manage"
+    ],
+    "purpose": "Create exception",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/commission-confirmations",
+    "module": "commissions",
+    "auth": "access-token",
+    "roles": [
+      "admin:commissions.view"
+    ],
+    "purpose": "Confirmation states",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/commission-change-log",
+    "module": "commissions",
+    "auth": "access-token",
+    "roles": [
+      "admin:commissions.view"
+    ],
+    "purpose": "Commission audit projection",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/settings/:namespace",
+    "module": "settings",
+    "auth": "access-token",
+    "roles": [
+      "admin:settings.view"
+    ],
+    "purpose": "Read settings namespace",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PUT",
+    "path": "/api/v1/admin/settings/:namespace",
+    "module": "settings",
+    "auth": "access-token",
+    "roles": [
+      "admin:settings.manage"
+    ],
+    "purpose": "Update settings namespace",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/notifications",
+    "module": "notifications",
+    "auth": "access-token",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "Admin inbox",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/notifications/read-all",
+    "module": "notifications",
+    "auth": "access-token",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "Mark admin inbox read",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/audit-logs",
+    "module": "audit",
+    "auth": "access-token",
+    "roles": [
+      "admin:audit.view"
+    ],
+    "purpose": "Audit search",
+    "status": "planned",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/audit-logs/:auditId",
+    "module": "audit",
+    "auth": "access-token",
+    "roles": [
+      "admin:audit.view"
+    ],
+    "purpose": "Audit details",
+    "status": "planned",
+    "apiVersion": "v1"
+  }
+]
