@@ -42,7 +42,7 @@ This is a multi-surface real-estate platform, not a simple listing website. It c
 
 ## Gaps That Must Not Be Invented
 
-- Final OTP provider, login channel, and password policy per user type.
+- Production OTP vendor selection; approved login identifiers and Admin-only password policy are resolved in Q-001.
 - Exact document requirements for each provider type and final frame-level fields.
 - Commission-trigger event, settlement, and collection method.
 - Media/storage, maps, and notification providers.

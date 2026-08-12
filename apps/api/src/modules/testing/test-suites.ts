@@ -1,11 +1,19 @@
 export const TEST_SUITES = Object.freeze({
   unit: Object.freeze([
+    'tests/auth/contracts.test.ts',
+    'tests/auth/crypto.test.ts',
+    'tests/auth/environment.test.ts',
+    'tests/auth/models.test.ts',
+    'tests/auth/otp.test.ts',
+    'tests/auth/repository.test.ts',
+    'tests/auth/service.test.ts',
     'tests/config/environment.test.ts',
     'tests/contracts/error-boundary.test.ts',
     'tests/database/connection.test.ts',
     'tests/database/environment.test.ts',
     'tests/database/index-policy.test.ts',
     'tests/database/seed.test.ts',
+    'tests/identity/models.test.ts',
     'tests/testing/harness.test.ts'
   ]),
   integration: Object.freeze([
@@ -14,6 +22,7 @@ export const TEST_SUITES = Object.freeze({
     'tests/database/health.test.ts'
   ]),
   api: Object.freeze([
+    'tests/auth/router.test.ts',
     'tests/server.test.ts',
     'tests/security/middleware.test.ts',
     'tests/observability/observability.test.ts'

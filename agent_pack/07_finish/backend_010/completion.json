@@ -1,0 +1,208 @@
+{
+  "taskId": "backend_010",
+  "summary": "Implemented connection-scoped Mongoose models for User, SeekerProfile, ProviderProfile, AdminProfile, and Session. Added normalized optional email/phone identity candidates with partial unique indexes without choosing the unresolved login channel, explicit account/provider states and transition guards, unique profile ownership, provider review indexes, hashed-token-only sessions with unique lookup and TTL indexes, strict schemas, optimistic concurrency for mutable account/provider state, and focused model/index/state tests. No route, authentication flow, permission behavior, public DTO, OpenAPI path, or Postman request was added; runtime inventory remains exactly GET /health and GET /ready.",
+  "filesChanged": [
+    "apps/api/src/modules/identity/account-state.ts",
+    "apps/api/src/modules/identity/models.ts",
+    "apps/api/tests/identity/models.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/identity-models.md",
+    "docs/repository-inventory.md",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/step_info.json",
+    "agent_pack/07_finish/backend_010/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Initial and pre-close audits reported 188 tasks, English policy compliance, backend_010 as the only in-progress task after transition, and zero errors."
+    },
+    {
+      "command": "node agent_pack/scripts/select_next_step.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Selected backend_010 with backend_009 complete."
+    },
+    {
+      "command": "node agent_pack/scripts/set_task_status.mjs backend_010 in_progress",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Only backend_010 entered in-progress state."
+    },
+    {
+      "command": "node -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported v22.18.0; the declared Node 24 baseline mismatch is recorded as a known gap."
+    },
+    {
+      "command": "npm.cmd -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported npm 11.6.4."
+    },
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Clean installation completed with zero vulnerabilities; Node engine warnings matched the known local runtime gap."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared contracts typecheck passed."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API identity models, runtime, and tests typecheck passed on the final implementation."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax and all workspace typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy and ESLint checks passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:unit",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 32 unit-suite tests passed, including seven focused identity model, index, validation, secret-exclusion, and transition tests."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Passed all 12 workspace-policy tests and all 56 API tests."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 56 API tests passed."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 56 API tests passed with 93.68% lines, 85.15% branches, and 91.01% functions. Both new identity source files reached 100% line, branch, and function coverage."
+    },
+    {
+      "command": "$env:APP_ENV='test'; Remove-Item Env:TEST_MONGODB_URI -ErrorAction SilentlyContinue; npm.cmd run test:integration:live",
+      "exitCode": 2,
+      "result": "blocked",
+      "notes": "Blocked — prerequisites unavailable: isolated TEST_MONGODB_URI is not configured. Server-enforced unique and TTL index behavior was not reported as passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts build passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API build passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root build passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported zero vulnerabilities."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Synthetic non-production environment validation passed; no real .env was read."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory remains exactly GET /health and GET /ready; no identity or authentication route was added."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI remains synchronized with the unchanged runtime route surface."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman remains synchronized with the unchanged runtime route surface."
+    },
+    {
+      "command": "node -e \"for (const f of ['package.json','package-lock.json','apps/api/package.json','apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json','apps/api/postman/Sadat-Real-Estate.local.postman_environment.json']) JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('JSON_VALID')\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Relevant JSON artifacts parsed successfully."
+    },
+    {
+      "command": "npm.cmd run quality",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The final local CI-equivalent gate passed lint, typecheck, workspace tests, coverage, build, inventory, OpenAPI/Postman validation, dependency audit, and Agent Pack audit."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors were found."
+    },
+    {
+      "command": "node -e \"const p=require('./package.json'); for (const n of ['test:e2e','test:e2e:api','test:e2e:api:full','test:visual','test:a11y','security:check']) console.log(n+'='+(p.scripts?.[n]??'MISSING'))\"",
+      "exitCode": 0,
+      "result": "skipped",
+      "notes": "Discovery confirmed optional E2E, visual, accessibility, and dedicated security-check scripts are not defined; none is reported as passed."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B1_identity_access/backend_010.md",
+    "agent_pack/01_product/STATE_MACHINES.md",
+    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md",
+    "apps/api/src/modules/identity/account-state.ts",
+    "apps/api/src/modules/identity/models.ts",
+    "apps/api/tests/identity/models.test.ts",
+    "docs/api/identity-models.md"
+  ],
+  "scopeNotes": [
+    "apps/api/src/modules/testing/test-suites.ts is outside the primary identity roots but was required because the existing harness rejects every unclassified API test file.",
+    "docs/repository-inventory.md is outside docs/api and was updated because the selected task made its prior statement that identity/account models were absent stale.",
+    "No shared transport contract was added because this model-only task exposes no route or DTO. OpenAPI and Postman remained unchanged and validated.",
+    "No dependency was added or upgraded."
+  ],
+  "knownGaps": [
+    "Verification used Node v22.18.0 while the repository declares Node >=24 <25; the first hosted Node 24 CI run remains external.",
+    "Blocked — prerequisites unavailable: isolated TEST_MONGODB_URI is not configured, so MongoDB server enforcement of partial uniqueness and TTL cleanup was not exercised.",
+    "Q-001 remains unresolved; the model supports normalized email, phone, or both but intentionally does not choose a login identifier, OTP channel, or password policy.",
+    "Profile-role consistency, reason-bearing sensitive state changes, session rotation/reuse behavior, authentication endpoints, authorization, and projections belong to later dependency-ready tasks.",
+    "MongoDB TTL cleanup is asynchronous; later authentication services must reject expired sessions independently of cleanup timing.",
+    "Optional full E2E, visual, accessibility, and dedicated security-check scripts remain undefined and are not claimed as passed."
+  ],
+  "completedAt": "2026-08-12T17:53:39.7757239Z"
+}

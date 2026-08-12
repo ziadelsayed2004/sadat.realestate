@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "Sadat Real Estate Operational API",
-    "description": "Contains implemented requests only. Future product requests must use {{apiV1BaseUrl}} and must not be added before their runtime routes exist. /health and /ready remain operational root probes.",
+    "name": "Sadat Real Estate API",
+    "description": "Contains implemented requests only. Product requests use {{apiV1BaseUrl}} exactly once; /health and /ready remain operational root probes. Authentication requests use only synthetic placeholders and the runtime-managed HttpOnly refresh cookie.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -66,6 +66,137 @@
         "method": "GET",
         "header": [],
         "url": { "raw": "{{baseUrl}}/ready", "host": ["{{baseUrl}}"], "path": ["ready"] }
+      }
+    },
+    {
+      "name": "Auth - Admin Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Admin login returns a safe envelope', function () {",
+              "  pm.expect([200, 400, 401, 403, 413, 429, 500]).to.include(pm.response.code);",
+              "  const body = pm.response.json();",
+              "  pm.expect(body).to.not.have.property('refreshToken');",
+              "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"synthetic.admin@example.test\",\n  \"password\": \"replace-with-isolated-synthetic-password\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{apiV1BaseUrl}}/auth/login", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "login"] }
+      }
+    },
+    {
+      "name": "Auth - Send Phone OTP",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('OTP send never returns the code', function () {",
+              "  pm.expect([202, 400, 413, 429, 500, 503]).to.include(pm.response.code);",
+              "  const body = pm.response.json();",
+              "  pm.expect(JSON.stringify(body)).to.not.include('000000');",
+              "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"phone\": \"+201000000000\",\n  \"roleType\": \"seeker\",\n  \"purpose\": \"login\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{apiV1BaseUrl}}/auth/otp/send", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "otp", "send"] }
+      }
+    },
+    {
+      "name": "Auth - Verify Phone OTP",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('OTP verification is strict and no-store', function () {",
+              "  pm.expect([200, 400, 401, 403, 413, 429, 500]).to.include(pm.response.code);",
+              "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
+              "  if (pm.response.code === 200) { pm.expect(pm.response.json()).to.not.have.property('refreshToken'); }",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"phone\": \"+201000000000\",\n  \"roleType\": \"seeker\",\n  \"purpose\": \"login\",\n  \"challengeId\": \"replace-with-send-response-challenge-id\",\n  \"code\": \"000000\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{apiV1BaseUrl}}/auth/otp/verify", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "otp", "verify"] }
+      }
+    },
+    {
+      "name": "Auth - Refresh",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Refresh rotation remains cookie-bound', function () {",
+              "  pm.expect([200, 400, 401, 403, 413, 429, 500]).to.include(pm.response.code);",
+              "  pm.expect(pm.response.json()).to.not.have.property('refreshToken');",
+              "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": { "raw": "{{apiV1BaseUrl}}/auth/refresh", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "refresh"] }
+      }
+    },
+    {
+      "name": "Auth - Logout",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Logout revokes or safely rejects the cookie session', function () {",
+              "  pm.expect([200, 400, 401, 413, 429, 500]).to.include(pm.response.code);",
+              "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": { "raw": "{{apiV1BaseUrl}}/auth/logout", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "logout"] }
       }
     }
   ]

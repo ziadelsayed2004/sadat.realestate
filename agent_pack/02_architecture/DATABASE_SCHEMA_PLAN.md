@@ -9,6 +9,7 @@
 | provider_profiles / applications | Provider type and onboarding | Unique userId, status + updatedAt |
 | provider_documents | Private-document metadata | providerId + type, status |
 | admin_profiles / roles | Administration and RBAC | Unique userId/name |
+| admin_credentials | Admin-only Argon2id credential hashes | Unique userId |
 | audit_logs | Append-only audit | actorId + createdAt, targetType + targetId + createdAt |
 | organizations | Developer, company, or office | Unique slug, status + name search |
 | locations / neighborhoods | Geographic hierarchy | Unique slug, parent/order/active |

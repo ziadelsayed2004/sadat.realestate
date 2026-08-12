@@ -2,7 +2,7 @@
 
 The API uses a dedicated Mongoose connection configured from the process-provided `MONGODB_URI`. The URI is validated for MongoDB schemes without being printed or included in diagnostics.
 
-`GET /health` reports process liveness only. `GET /ready` reports `200` only when the MongoDB readiness ping succeeds; an unavailable database returns `503` with a redacted dependency status. These operational routes are intentionally unversioned and have no product data or authentication behavior yet.
+`GET /health` reports process liveness only. `GET /ready` reports `200` only when every installed required dependency is ready. It always checks MongoDB and, when the authentication runtime is installed, also checks the OTP provider adapter. An unavailable database or required OTP adapter returns `503` with redacted per-dependency status. These operational routes are intentionally unversioned and expose no connection or provider details.
 
 Index creation is automatic only in `local` and `test`. `preview`, `uat`, and `production` use deployment-managed indexes; production never performs destructive synchronization at process startup.
 

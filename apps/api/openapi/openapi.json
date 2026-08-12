@@ -68,9 +68,199 @@
           }
         }
       }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "operationId": "loginAdmin",
+        "summary": "Authenticate an Admin with normalized email and password",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AdminLoginRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/AuthSessionSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/AuthError" },
+          "403": { "$ref": "#/components/responses/AuthError" },
+          "413": { "$ref": "#/components/responses/AuthError" },
+          "429": { "$ref": "#/components/responses/AuthError" },
+          "500": { "$ref": "#/components/responses/AuthError" }
+        }
+      }
+    },
+    "/api/v1/auth/otp/send": {
+      "post": {
+        "operationId": "sendPhoneOtp",
+        "summary": "Create and deliver a bounded phone OTP challenge",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/OtpSendRequest" }
+            }
+          }
+        },
+        "responses": {
+          "202": { "$ref": "#/components/responses/OtpSendSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "413": { "$ref": "#/components/responses/AuthError" },
+          "429": { "$ref": "#/components/responses/AuthError" },
+          "500": { "$ref": "#/components/responses/AuthError" },
+          "503": { "$ref": "#/components/responses/AuthError" }
+        }
+      }
+    },
+    "/api/v1/auth/otp/verify": {
+      "post": {
+        "operationId": "verifyPhoneOtp",
+        "summary": "Verify a phone OTP for login or a one-time registration authority",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/OtpVerifyRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/OtpVerifySuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/AuthError" },
+          "403": { "$ref": "#/components/responses/AuthError" },
+          "413": { "$ref": "#/components/responses/AuthError" },
+          "429": { "$ref": "#/components/responses/AuthError" },
+          "500": { "$ref": "#/components/responses/AuthError" }
+        }
+      }
+    },
+    "/api/v1/auth/refresh": {
+      "post": {
+        "operationId": "refreshSession",
+        "summary": "Rotate an opaque refresh session",
+        "security": [{ "refreshCookie": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/EmptyAuthRequest" } }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/AuthSessionSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/AuthError" },
+          "403": { "$ref": "#/components/responses/AuthError" },
+          "413": { "$ref": "#/components/responses/AuthError" },
+          "429": { "$ref": "#/components/responses/AuthError" },
+          "500": { "$ref": "#/components/responses/AuthError" }
+        }
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "operationId": "logoutSession",
+        "summary": "Revoke the current refresh session",
+        "security": [{ "refreshCookie": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/EmptyAuthRequest" } }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/LogoutSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/AuthError" },
+          "413": { "$ref": "#/components/responses/AuthError" },
+          "429": { "$ref": "#/components/responses/AuthError" },
+          "500": { "$ref": "#/components/responses/AuthError" }
+        }
+      }
     }
   },
   "components": {
+    "securitySchemes": {
+      "refreshCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "sadat_refresh",
+        "description": "Opaque rotating refresh token. Never exposed in a response body."
+      }
+    },
+    "responses": {
+      "AuthSessionSuccess": {
+        "description": "Authenticated session established; refresh token is set as an HttpOnly cookie",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" },
+          "Set-Cookie": {
+            "description": "Rotating sadat_refresh cookie with HttpOnly, SameSite=Strict, scoped Path, and Secure outside Local/Test",
+            "schema": { "type": "string" }
+          }
+        },
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/AuthSessionSuccessEnvelope" } }
+        }
+      },
+      "OtpSendSuccess": {
+        "description": "OTP challenge accepted for delivery; the code is never returned",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/OtpSendSuccessEnvelope" } }
+        }
+      },
+      "OtpVerifySuccess": {
+        "description": "Existing account authenticated or a single-use registration authority issued",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" },
+          "Set-Cookie": {
+            "description": "Present only for an authenticated outcome; sets the rotating sadat_refresh cookie",
+            "schema": { "type": "string" }
+          }
+        },
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/OtpVerifySuccessEnvelope" } }
+        }
+      },
+      "LogoutSuccess": {
+        "description": "Current refresh session revoked and cookie cleared",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" },
+          "Set-Cookie": { "description": "Clears sadat_refresh", "schema": { "type": "string" } }
+        },
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/LogoutSuccessEnvelope" } }
+        }
+      },
+      "ValidationError": {
+        "description": "Strict request validation failed",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } }
+        }
+      },
+      "AuthError": {
+        "description": "Authentication, account-state, replay, or rate-limit failure",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } }
+        }
+      }
+    },
     "headers": {
       "X-Request-Id": {
         "description": "Validated request correlation identifier; generated when the inbound value is absent or malformed.",
@@ -133,6 +323,146 @@
           "meta": { "$ref": "#/components/schemas/ResponseMeta" }
         }
       },
+      "AdminLoginRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["email", "password"],
+        "properties": {
+          "email": { "type": "string", "format": "email", "minLength": 3, "maxLength": 254 },
+          "password": { "type": "string", "minLength": 1, "maxLength": 1024, "writeOnly": true }
+        }
+      },
+      "EmptyAuthRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "maxProperties": 0
+      },
+      "NormalizedPhone": {
+        "type": "string",
+        "pattern": "^\\+[1-9]\\d{7,14}$",
+        "maxLength": 16,
+        "description": "Canonical E.164 phone number after removing allowed presentation separators or converting a 00 prefix"
+      },
+      "OtpSendRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["phone", "roleType", "purpose"],
+        "properties": {
+          "phone": { "$ref": "#/components/schemas/NormalizedPhone" },
+          "roleType": { "enum": ["seeker", "provider"] },
+          "purpose": { "enum": ["login", "registration"] }
+        }
+      },
+      "OtpVerifyRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["phone", "roleType", "purpose", "challengeId", "code"],
+        "properties": {
+          "phone": { "$ref": "#/components/schemas/NormalizedPhone" },
+          "roleType": { "enum": ["seeker", "provider"] },
+          "purpose": { "enum": ["login", "registration"] },
+          "challengeId": { "type": "string", "format": "uuid" },
+          "code": { "type": "string", "pattern": "^\\d{6}$", "writeOnly": true }
+        }
+      },
+      "OtpSendData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["accepted", "challengeId", "expiresInSeconds", "retryAfterSeconds"],
+        "properties": {
+          "accepted": { "const": true },
+          "challengeId": { "type": "string", "format": "uuid" },
+          "expiresInSeconds": { "type": "integer", "minimum": 1 },
+          "retryAfterSeconds": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "OtpAuthenticatedData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["outcome", "accessToken", "tokenType", "expiresInSeconds", "user"],
+        "properties": {
+          "outcome": { "const": "authenticated" },
+          "accessToken": { "type": "string", "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$" },
+          "tokenType": { "const": "Bearer" },
+          "expiresInSeconds": { "type": "integer", "minimum": 1 },
+          "user": { "$ref": "#/components/schemas/AuthenticatedUser" }
+        }
+      },
+      "OtpVerifiedData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["outcome", "verificationToken", "expiresInSeconds", "roleType"],
+        "properties": {
+          "outcome": { "const": "verified" },
+          "verificationToken": { "type": "string", "pattern": "^[A-Za-z0-9_-]{43}$", "readOnly": true },
+          "expiresInSeconds": { "type": "integer", "minimum": 1 },
+          "roleType": { "enum": ["seeker", "provider"] }
+        }
+      },
+      "OtpVerifyData": {
+        "oneOf": [
+          { "$ref": "#/components/schemas/OtpAuthenticatedData" },
+          { "$ref": "#/components/schemas/OtpVerifiedData" }
+        ],
+        "discriminator": { "propertyName": "outcome" }
+      },
+      "OtpSendSuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/OtpSendData" } } }
+        ]
+      },
+      "OtpVerifySuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/OtpVerifyData" } } }
+        ]
+      },
+      "AuthenticatedUser": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "roleType", "status"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "roleType": { "enum": ["seeker", "provider", "admin"] },
+          "status": { "enum": ["draft", "unverified", "pending_review", "needs_information", "verified", "rejected", "restricted", "suspended"] }
+        }
+      },
+      "AuthSessionData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["accessToken", "tokenType", "expiresInSeconds", "user"],
+        "properties": {
+          "accessToken": { "type": "string", "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$" },
+          "tokenType": { "const": "Bearer" },
+          "expiresInSeconds": { "type": "integer", "minimum": 1 },
+          "user": { "$ref": "#/components/schemas/AuthenticatedUser" }
+        }
+      },
+      "AuthSessionSuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          {
+            "type": "object",
+            "properties": { "data": { "$ref": "#/components/schemas/AuthSessionData" } }
+          }
+        ]
+      },
+      "LogoutData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["loggedOut"],
+        "properties": { "loggedOut": { "const": true } }
+      },
+      "LogoutSuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          {
+            "type": "object",
+            "properties": { "data": { "$ref": "#/components/schemas/LogoutData" } }
+          }
+        ]
+      },
       "HealthResponse": {
         "type": "object",
         "required": ["status"],
@@ -146,7 +476,14 @@
           "checks": {
             "type": "object",
             "required": ["mongodb"],
-            "properties": { "mongodb": { "enum": ["ready", "not_ready"] } }
+            "additionalProperties": false,
+            "properties": {
+              "mongodb": { "enum": ["ready", "not_ready"] },
+              "otp": {
+                "enum": ["ready", "not_ready"],
+                "description": "Present when the authentication runtime is installed"
+              }
+            }
           }
         }
       }

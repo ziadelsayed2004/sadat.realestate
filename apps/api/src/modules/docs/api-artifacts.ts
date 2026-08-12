@@ -1,4 +1,10 @@
 import { OPERATIONAL_ROUTE_DEFINITIONS } from '../database/health.js';
+import { AUTH_ROUTE_DEFINITIONS } from '../auth/router.js';
+
+export const IMPLEMENTED_ROUTE_DEFINITIONS = Object.freeze([
+  ...OPERATIONAL_ROUTE_DEFINITIONS,
+  ...AUTH_ROUTE_DEFINITIONS
+]);
 
 export const PRODUCT_API_BASE_PATH = '/api/v1';
 export const POSTMAN_COLLECTION_SCHEMA =
@@ -19,7 +25,7 @@ const HTTP_METHODS = new Set([
 const SECRET_KEY = /(authorization|credential|password|private|secret|token)/i;
 
 type JsonRecord = Record<string, unknown>;
-type OperationalRouteDefinition = (typeof OPERATIONAL_ROUTE_DEFINITIONS)[number];
+type ImplementedRouteDefinition = (typeof IMPLEMENTED_ROUTE_DEFINITIONS)[number];
 
 export interface PostmanEnvironmentValue {
   key?: unknown;
@@ -32,7 +38,7 @@ export interface ApiArtifactValidationInput {
   openApi: unknown;
   postmanCollection: unknown;
   postmanEnvironment: unknown;
-  implementedRoutes?: readonly OperationalRouteDefinition[];
+  implementedRoutes?: readonly ImplementedRouteDefinition[];
 }
 
 function isRecord(value: unknown): value is JsonRecord {
@@ -44,7 +50,7 @@ function routeKey(method: string, routePath: string): string {
 }
 
 function expectedRouteKeys(
-  routes: readonly OperationalRouteDefinition[] = OPERATIONAL_ROUTE_DEFINITIONS
+  routes: readonly ImplementedRouteDefinition[] = IMPLEMENTED_ROUTE_DEFINITIONS
 ): string[] {
   return routes.map((route) => routeKey(route.method, route.path)).sort();
 }
@@ -92,7 +98,7 @@ function collectLocalReferences(value: unknown, output: string[] = []): string[]
 
 export function validateOpenApiDocument(
   document: unknown,
-  implementedRoutes: readonly OperationalRouteDefinition[] = OPERATIONAL_ROUTE_DEFINITIONS
+  implementedRoutes: readonly ImplementedRouteDefinition[] = IMPLEMENTED_ROUTE_DEFINITIONS
 ): string[] {
   if (!isRecord(document)) return ['OpenAPI document must be an object'];
   const issues: string[] = [];
@@ -176,7 +182,7 @@ function validateNoSecretVariables(values: Map<string, PostmanEnvironmentValue>,
 
 export function validatePostmanCollection(
   collection: unknown,
-  implementedRoutes: readonly OperationalRouteDefinition[] = OPERATIONAL_ROUTE_DEFINITIONS
+  implementedRoutes: readonly ImplementedRouteDefinition[] = IMPLEMENTED_ROUTE_DEFINITIONS
 ): string[] {
   if (!isRecord(collection)) return ['Postman collection must be an object'];
   const issues: string[] = [];

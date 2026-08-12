@@ -1,0 +1,204 @@
+{
+  "taskId": "backend_011",
+  "summary": "Implemented the Q-001-compliant authentication and session foundation: strict shared Admin-login/session/logout contracts; normalized Admin email/password login with Argon2id hashes isolated in a connection-scoped AdminCredential model; short-lived signed access tokens; 32-byte opaque refresh tokens stored only as SHA-256 hashes; compare-and-set refresh rotation; family revocation on concurrent or later reuse; expiry/account-state checks; current-session logout; no-store responses; and host-only HttpOnly SameSite=Strict refresh cookies that are Secure outside Local/Test. Added POST /api/v1/auth/login, /refresh, and /logout and synchronized runtime inventory, OpenAPI, Postman, product blueprint, environment validation, tests, and documentation. Seeker/Provider phone OTP remains exclusively backend_012 scope.",
+  "filesChanged": [
+    ".github/workflows/ci.yml",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "agent_pack/01_product/PROJECT_ANALYSIS.md",
+    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/07_finish/backend_011/completion.json",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
+    "agent_pack/step_info.json",
+    "apps/api/.env.example",
+    "apps/api/openapi/openapi.json",
+    "apps/api/package.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "apps/api/src/app.ts",
+    "apps/api/src/modules/auth/crypto.ts",
+    "apps/api/src/modules/auth/environment.ts",
+    "apps/api/src/modules/auth/models.ts",
+    "apps/api/src/modules/auth/repository.ts",
+    "apps/api/src/modules/auth/router.ts",
+    "apps/api/src/modules/auth/runtime.ts",
+    "apps/api/src/modules/auth/service.ts",
+    "apps/api/src/modules/config/check-environment.ts",
+    "apps/api/src/modules/database/api-inventory.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/src/server.ts",
+    "apps/api/tests/auth/contracts.test.ts",
+    "apps/api/tests/auth/crypto.test.ts",
+    "apps/api/tests/auth/environment.test.ts",
+    "apps/api/tests/auth/models.test.ts",
+    "apps/api/tests/auth/repository.test.ts",
+    "apps/api/tests/auth/router.test.ts",
+    "apps/api/tests/auth/service.test.ts",
+    "apps/api/tests/database/artifacts.test.ts",
+    "apps/api/tests/docs/api-artifacts.test.ts",
+    "apps/api/tests/identity/models.test.ts",
+    "docs/api/authentication.md",
+    "docs/api/identity-models.md",
+    "docs/repository-inventory.md",
+    "package-lock.json",
+    "packages/config/scripts/workspace-policy.mjs",
+    "packages/contracts/src/auth/index.ts",
+    "packages/contracts/src/contracts/index.ts"
+  ],
+  "verification": [
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Initial, in-progress, and final pre-close audits reported 188 tasks, English policy compliance, backend_011 as the only in-progress task, and zero errors."
+    },
+    {
+      "command": "node agent_pack/scripts/select_next_step.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Selected backend_011 with backend_010 complete and no other task in progress."
+    },
+    {
+      "command": "node agent_pack/scripts/set_task_status.mjs backend_011 in_progress",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Only backend_011 entered in-progress state."
+    },
+    {
+      "command": "npm.cmd install argon2 --workspace apps/api --save-exact",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Installed exact argon2 0.45.1 once because the security baseline requires Argon2id and the existing dependency set could not provide it; the install reported zero vulnerabilities."
+    },
+    {
+      "command": "node -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported v22.18.0; the declared Node 24 baseline mismatch is recorded as a known gap."
+    },
+    {
+      "command": "npm.cmd -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported npm 11.6.4."
+    },
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Clean lockfile installation completed with 199 packages and zero vulnerabilities; only the known local Node engine warning was emitted."
+    },
+    {
+      "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/auth/*.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 20 focused auth tests passed before final suite integration."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final root test run passed all 12 workspace-policy tests and all 76 then-current API tests; the later final quality run passed the expanded 77-test API suite."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All tests passed with 94.51% lines, 86.06% branches, and 92.28% functions before the final cookie-policy regression was added."
+    },
+    {
+      "command": "npm.cmd run quality",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final local CI-equivalent gate passed lint, root/contracts/API typecheck, 12 workspace-policy tests, all 77 API tests, coverage at 94.59% lines / 86.08% branches / 92.28% functions, root/contracts/API build, five-route runtime inventory, OpenAPI/Postman validation, high-severity dependency audit with zero vulnerabilities, and Agent Pack audit with zero errors."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='dGVzdC1vbmx5LXN5bnRoZXRpYy1hdXRoLXNlY3JldC0zMi1ieXRlcw'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Synthetic non-production environment validation passed and emitted only the redacted configuration summary; no real .env was read."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported zero vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported exactly GET /health, GET /ready, POST /api/v1/auth/login, POST /api/v1/auth/refresh, and POST /api/v1/auth/logout."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI 3.1 routes, schemas, local references, and implemented runtime inventory are synchronized."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman routes match runtime inventory, use /api/v1 exactly once, and contain no checked-in secret variables."
+    },
+    {
+      "command": "node -e \"for (const f of ['package.json','package-lock.json','apps/api/package.json','apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json','apps/api/postman/Sadat-Real-Estate.local.postman_environment.json','agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json','agent_pack/01_product/API_MODULE_CATALOG.json']) JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('JSON_VALID')\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All changed/relevant JSON artifacts parsed successfully."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors were found."
+    },
+    {
+      "command": "npm.cmd run test:integration:live",
+      "exitCode": 2,
+      "result": "blocked",
+      "notes": "Blocked — prerequisites unavailable: isolated TEST_MONGODB_URI is not configured. No provisioned synthetic Admin exists for live login/rotation/logout. This optional external integration check is not reported as passed."
+    },
+    {
+      "command": "node -e \"const p=require('./package.json'); for (const n of ['test:e2e','test:e2e:api','test:e2e:api:full','test:visual','test:a11y','security:check']) console.log(n+'='+(p.scripts?.[n]??'MISSING'))\"",
+      "exitCode": 0,
+      "result": "skipped",
+      "notes": "Discovery confirmed optional E2E, visual, accessibility, and dedicated security-check scripts are undefined; none is reported as passed."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B1_identity_access/backend_011.md",
+    "agent_pack/01_product/OPEN_QUESTIONS.md#Q-001",
+    "agent_pack/08_reality_sync/DECISION_LOG.md#Q-001-authentication-identifiers-and-methods",
+    "agent_pack/02_architecture/SECURITY_BASELINE.md",
+    "apps/api/src/modules/auth/service.ts",
+    "apps/api/src/modules/auth/repository.ts",
+    "apps/api/src/modules/auth/router.ts",
+    "apps/api/tests/auth",
+    "apps/api/openapi/openapi.json",
+    "docs/api/authentication.md"
+  ],
+  "scopeNotes": [
+    "apps/api/src/app.ts and apps/api/src/server.ts are outside the primary auth glob but were necessary to mount and construct the selected task's runtime routes.",
+    "apps/api/src/modules/config/check-environment.ts, apps/api/.env.example, and .github/workflows/ci.yml were required to validate and document the new signing-secret configuration without reading a real .env.",
+    "apps/api/src/modules/database/api-inventory.ts, apps/api/src/modules/docs/api-artifacts.ts, their tests, and apps/api/src/modules/testing/test-suites.ts were required because the repository enforces executable route/artifact drift and exact test classification.",
+    "apps/api/package.json, package-lock.json, and packages/config/scripts/workspace-policy.mjs were required to add exact argon2 0.45.1 and keep the dependency policy synchronized. No other dependency was added or upgraded.",
+    "docs/repository-inventory.md and the affected Agent Pack product/database/reality documents were updated because their prior no-authentication claims became stale.",
+    "The pre-existing Q-001 resolution files and backend_010 implementation were preserved; this task did not reimplement or broaden them.",
+    "OTP send/verify, Seeker registration, password reset, session listing/revocation UI endpoints, Admin MFA, and downstream bearer authorization were not implemented because they belong to later tasks."
+  ],
+  "mongoDbTopology": "No external MongoDB topology was used. Mandatory behavior was verified through injectable repository boundaries, connection-scoped Mongoose schema validation, and in-process Express API tests.",
+  "knownGaps": [
+    "Blocked — prerequisites unavailable: isolated TEST_MONGODB_URI is not configured, so server-enforced AdminCredential/session indexes and live refresh rotation were not exercised.",
+    "No synthetic Admin is provisioned and no Production data or credential was introduced; live login requires an explicitly authorized isolated provisioning path.",
+    "Verification used Node v22.18.0 while the repository declares Node >=24 <25; the hosted Node 24 CI run remains external.",
+    "The Production OTP vendor remains a release-readiness prerequisite but does not block backend_011 or backend_012.",
+    "Optional full E2E, visual, accessibility, and dedicated security-check scripts remain undefined and are not claimed as passed."
+  ],
+  "completedAt": "2026-08-12T20:54:51.984Z"
+}

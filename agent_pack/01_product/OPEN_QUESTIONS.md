@@ -1,10 +1,10 @@
 # Open Questions & Decision Register
 
-All entries below are pending. The defaults are temporary planning assumptions only and are not approved product behavior.
+Entries marked Pending remain unresolved. Their defaults are temporary planning assumptions only and are not approved product behavior. Entries marked Resolved contain approved product decisions.
 
 | ID | Decision required | Owner role | Status | Affected work | Temporary default / constraint |
 |---|---|---|---|---|---|
-| Q-001 | Login identifier, OTP channel, and provider authentication model | Product + Security | Pending | `backend_011`, `backend_012`, `backend_016`, `frontend_020` | Seeker/provider phone; admin email/password; provider adapter until approved |
+| Q-001 | Login identifier, OTP channel, and provider authentication model | Product + Security | Resolved | `backend_011`, `backend_012`, `backend_016`, `frontend_020` | Seekers and Property Providers use normalized E.164 phone numbers with OTP and no passwords. Admin users use normalized email addresses and passwords. OTP uses an adapter boundary with deterministic fake adapters in Local and Test; the Production vendor is a readiness prerequisite and does not block implementation. Admin-only passwords follow `SECURITY_BASELINE.md`. All successful authentication uses the same access-token and rotating opaque-refresh session model. Admin MFA remains a separate pre-production decision/task unless otherwise required by repository truth. |
 | Q-002 | Required fields and documents for each provider type | Product + Compliance | Pending | `backend_014`, `backend_015`, `frontend_022`–`frontend_025` | Derive from approved frames; do not guess |
 | Q-003 | Storage/CDN provider, file limits, and retention | Platform + Security | Pending | `backend_015`, `backend_047`, `backend_103`, `backend_124`, `backend_130` | Storage adapter; local-only adapter for development |
 | Q-004 | Map/geocoding provider and location precision | Product + Platform | Pending | `backend_044`, `backend_055`, `frontend_042` | Coordinates optional until approved |

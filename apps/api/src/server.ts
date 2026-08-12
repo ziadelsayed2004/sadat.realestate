@@ -7,6 +7,11 @@ import { parseRuntimeEnvironment } from './modules/config/environment.js';
 import { parseDatabaseEnvironment, DatabaseEnvironmentValidationError } from './modules/database/environment.js';
 import { createDatabaseConnection } from './modules/database/connection.js';
 import type { AppDependencies } from './app.js';
+import {
+  AuthEnvironmentValidationError,
+  parseAuthEnvironment
+} from './modules/auth/environment.js';
+import { createAuthRuntime } from './modules/auth/runtime.js';
 
 export interface ApiListenOptions {
   host: string;
@@ -75,9 +80,11 @@ function isEntrypoint(): boolean {
 async function runEntrypoint(): Promise<void> {
   const runtimeEnvironment = parseRuntimeEnvironment(process.env);
   const databaseEnvironment = parseDatabaseEnvironment(process.env);
+  const authEnvironment = parseAuthEnvironment(process.env, runtimeEnvironment.appEnvironment);
   const database = createDatabaseConnection(databaseEnvironment, runtimeEnvironment.appEnvironment);
   await database.connect();
-  const server = createApiServer({ database });
+  const auth = createAuthRuntime(database.nativeConnection, authEnvironment);
+  const server = createApiServer({ database, auth });
   let shuttingDown = false;
 
   const shutdown = async () => {
@@ -108,6 +115,7 @@ async function runEntrypoint(): Promise<void> {
 
 function safeStartupMessage(error: unknown): string {
   if (error instanceof DatabaseEnvironmentValidationError) return error.message;
+  if (error instanceof AuthEnvironmentValidationError) return error.message;
   return error instanceof Error && error.name === 'EnvironmentValidationError'
     ? error.message
     : 'API server failed to start safely; database details were not emitted.';

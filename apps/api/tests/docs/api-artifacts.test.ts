@@ -3,7 +3,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
-import { OPERATIONAL_ROUTE_DEFINITIONS } from '../../src/modules/database/health.js';
 import {
   collectOpenApiRoutes,
   collectPostmanRoutes,
@@ -11,7 +10,8 @@ import {
   validateApiArtifacts,
   validateOpenApiDocument,
   validatePostmanCollection,
-  validatePostmanEnvironment
+  validatePostmanEnvironment,
+  IMPLEMENTED_ROUTE_DEFINITIONS
 } from '../../src/modules/docs/api-artifacts.js';
 
 const apiRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../');
@@ -30,7 +30,7 @@ function loadArtifacts() {
 
 test('current OpenAPI and Postman artifacts match only implemented runtime routes', () => {
   const artifacts = loadArtifacts();
-  const expected = OPERATIONAL_ROUTE_DEFINITIONS
+  const expected = IMPLEMENTED_ROUTE_DEFINITIONS
     .map((route) => `${route.method} ${route.path}`)
     .sort();
   assert.deepEqual(validateApiArtifacts(artifacts), []);
@@ -43,24 +43,31 @@ test('OpenAPI 3.1 declares the future product base without prefixing operational
   assert.equal(openApi.openapi, '3.1.0');
   assert.equal(openApi['x-product-api-base-path'], PRODUCT_API_BASE_PATH);
   assert.deepEqual(validateOpenApiDocument(openApi), []);
-  assert.ok(collectOpenApiRoutes(openApi).every((route) => !route.includes('/api/v1/')));
+  assert.equal(collectOpenApiRoutes(openApi).filter((route) => route.includes('/api/v1/')).length, 5);
 });
 
 test('Postman collection and environment use safe loopback variables with api/v1 exactly once', () => {
   const artifacts = loadArtifacts();
   assert.deepEqual(validatePostmanCollection(artifacts.postmanCollection), []);
   assert.deepEqual(validatePostmanEnvironment(artifacts.postmanEnvironment), []);
-  assert.doesNotMatch(JSON.stringify(artifacts), /password|privateKey|accessToken|refreshToken/i);
+  assert.doesNotMatch(
+    JSON.stringify(artifacts.postmanEnvironment),
+    /password|privateKey|accessToken|refreshToken/i
+  );
+  assert.match(
+    JSON.stringify(artifacts.postmanCollection),
+    /replace-with-isolated-synthetic-password/
+  );
 });
 
 test('validation rejects a documented but unimplemented product route', () => {
   const openApi = structuredClone(loadArtifacts().openApi) as {
     paths: Record<string, unknown>;
   };
-  openApi.paths['/api/v1/auth/login'] = { post: { responses: { '200': { description: 'Fake' } } } };
+  openApi.paths['/api/v1/auth/password/forgot'] = { post: { responses: { '200': { description: 'Fake' } } } };
   assert.ok(
     validateOpenApiDocument(openApi).includes(
-      'OpenAPI documents unimplemented POST /api/v1/auth/login'
+      'OpenAPI documents unimplemented POST /api/v1/auth/password/forgot'
     )
   );
 });

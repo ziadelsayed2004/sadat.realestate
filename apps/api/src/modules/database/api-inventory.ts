@@ -1,3 +1,3 @@
-import { OPERATIONAL_ROUTE_DEFINITIONS } from './health.js';
+import { IMPLEMENTED_ROUTE_DEFINITIONS } from '../docs/api-artifacts.js';
 
-console.log(JSON.stringify(OPERATIONAL_ROUTE_DEFINITIONS, null, 2));
+console.log(JSON.stringify(IMPLEMENTED_ROUTE_DEFINITIONS, null, 2));

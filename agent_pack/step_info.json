@@ -1,28 +1,35 @@
 {
-  "generatedAt": "2026-08-12T02:07:20.597Z",
-  "selectedTaskId": "backend_010",
+  "generatedAt": "2026-08-12T22:05:46.165Z",
+  "selectedTaskId": "backend_013",
   "selectedTaskStatus": "open",
-  "selectedTaskFile": "04_tracks/backend/B1_identity_access/backend_010.md",
+  "selectedTaskFile": "04_tracks/backend/B1_identity_access/backend_013.md",
   "selectedTask": {
-    "id": "backend_010",
+    "id": "backend_013",
     "phase": "B1_identity_access",
-    "area": "identity",
-    "title": "Identity and Account Models",
-    "goal": "Design User, SeekerProfile, ProviderProfile, AdminProfile, and Session models with uniqueness indexes and account states.",
-    "kind": "model",
+    "area": "seeker",
+    "title": "Seeker Registration, Profile, and Preferences",
+    "goal": "Implement seeker registration, verification, profile management, and search preferences with strict self-ownership.",
+    "kind": "api",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "AUTH-02",
+      "AUTH-03",
+      "AUTH-06",
+      "SEK-08",
+      "SEK-09",
+      "SEK-10"
+    ],
     "notes": [],
     "track": "backend",
-    "sequence": 11,
+    "sequence": 14,
     "dependsOn": [
-      "backend_009"
+      "backend_012"
     ],
-    "atomicTaskFile": "04_tracks/backend/B1_identity_access/backend_010.md",
+    "atomicTaskFile": "04_tracks/backend/B1_identity_access/backend_013.md",
     "allowedRoots": [
-      "apps/api/src/modules/identity/**",
-      "apps/api/tests/identity/**",
-      "packages/contracts/src/identity/**",
+      "apps/api/src/modules/seeker/**",
+      "apps/api/tests/seeker/**",
+      "packages/contracts/src/seeker/**",
       "docs/api/**",
       "apps/api/openapi/**",
       "apps/api/postman/**",
@@ -48,11 +55,11 @@
   "counts": {
     "backend": {
       "total": 113,
-      "open": 103,
+      "open": 100,
       "in_progress": 0,
       "partial": 0,
       "blocked": 0,
-      "complete": 10
+      "complete": 13
     },
     "frontend": {
       "total": 75,
@@ -65,33 +72,6 @@
   },
   "blockedTasks": [],
   "blockedByDependencies": [
-    {
-      "taskId": "backend_011",
-      "unresolved": [
-        {
-          "taskId": "backend_010",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_012",
-      "unresolved": [
-        {
-          "taskId": "backend_011",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_013",
-      "unresolved": [
-        {
-          "taskId": "backend_012",
-          "status": "open"
-        }
-      ]
-    },
     {
       "taskId": "backend_014",
       "unresolved": [

@@ -29,12 +29,10 @@
     "module": "auth",
     "auth": "none",
     "roles": [
-      "seeker",
-      "provider",
       "admin"
     ],
-    "purpose": "Login",
-    "status": "planned",
+    "purpose": "Admin email/password login; seeker/provider login completes through OTP verification",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -47,7 +45,7 @@
       "provider"
     ],
     "purpose": "Send OTP",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -60,7 +58,7 @@
       "provider"
     ],
     "purpose": "Verify OTP",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -72,7 +70,7 @@
       "authenticated"
     ],
     "purpose": "Rotate refresh session",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -84,7 +82,7 @@
       "authenticated"
     ],
     "purpose": "Revoke session",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {

@@ -1,0 +1,227 @@
+{
+  "taskId": "backend_012",
+  "summary": "Implemented provider-independent phone OTP authentication for Seekers and Property Providers. Added strict E.164 normalization and role/purpose DTOs; POST /api/v1/auth/otp/send and /verify; deterministic Local/Test delivery with fail-closed unconfigured non-local environments; domain-separated keyed OTP hashes; five-minute TTL, five attempts, 60-second per-target resend cooldown, public UUID challenges, atomic replay/concurrency guards, delivery-failure invalidation, and explicit active/query/grant/TTL indexes. Existing-account verification uses the shared access-token and rotating opaque-refresh session issuer. Registration verification returns a ten-minute opaque authority whose hash can be atomically redeemed once by the next registration task without creating an account here. OTP provider readiness now participates in /ready while /health remains process liveness. Runtime inventory, OpenAPI, Postman, product blueprint, tests, and documentation are synchronized at seven implemented routes.",
+  "filesChanged": [
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/07_finish/backend_012/completion.json",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
+    "agent_pack/step_info.json",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "apps/api/src/app.ts",
+    "apps/api/src/modules/auth/crypto.ts",
+    "apps/api/src/modules/auth/environment.ts",
+    "apps/api/src/modules/auth/models.ts",
+    "apps/api/src/modules/auth/otp-provider.ts",
+    "apps/api/src/modules/auth/otp-service.ts",
+    "apps/api/src/modules/auth/repository.ts",
+    "apps/api/src/modules/auth/router.ts",
+    "apps/api/src/modules/auth/runtime.ts",
+    "apps/api/src/modules/auth/service.ts",
+    "apps/api/src/modules/database/health.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/tests/auth/contracts.test.ts",
+    "apps/api/tests/auth/crypto.test.ts",
+    "apps/api/tests/auth/environment.test.ts",
+    "apps/api/tests/auth/models.test.ts",
+    "apps/api/tests/auth/otp.test.ts",
+    "apps/api/tests/auth/repository.test.ts",
+    "apps/api/tests/auth/router.test.ts",
+    "apps/api/tests/auth/service.test.ts",
+    "apps/api/tests/database/health.test.ts",
+    "apps/api/tests/docs/api-artifacts.test.ts",
+    "docs/api/authentication.md",
+    "docs/api/database.md",
+    "docs/api/environment.md",
+    "docs/api/identity-models.md",
+    "packages/contracts/src/auth/index.ts",
+    "packages/contracts/src/contracts/index.ts"
+  ],
+  "verification": [
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Initial, in-progress, pre-close, and consolidated-quality audits reported 188 tasks, English policy compliance, backend_012 as the only in-progress task, and zero errors."
+    },
+    {
+      "command": "node agent_pack/scripts/select_next_step.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Selected backend_012 with backend_011 complete and no other task in progress."
+    },
+    {
+      "command": "node agent_pack/scripts/set_task_status.mjs backend_012 in_progress",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Only backend_012 entered in-progress state."
+    },
+    {
+      "command": "node -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported v22.18.0; the declared Node 24 baseline mismatch is recorded as a known gap."
+    },
+    {
+      "command": "npm.cmd -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported npm 11.6.4."
+    },
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Clean lockfile installation added 199 packages, audited 205 packages, and reported zero vulnerabilities; only the known local Node engine warning was emitted."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax plus contracts and API strict TypeScript checks passed after the clean install."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy and ESLint completed with zero warnings or errors."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Passed all 12 workspace-policy tests and all 93 API tests, including OTP contracts, hashing, provider failure, attempts, expiry, replay, concurrency, registration authority, session issuance, readiness, and artifact drift."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 61 unit tests passed."
+    },
+    {
+      "command": "npm.cmd run test:integration --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final integration rerun passed all 12 tests. An earlier exit 1 exposed two stale three-route assertions; they were synchronized to the implemented five product-auth routes before this passing rerun."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 20 API tests passed, including strict OTP send/verify success and negative behavior with no raw-code or refresh-token response leakage."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 93 API tests passed with 94.42% lines, 85.86% branches, and 90.63% functions, above enforced thresholds."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy plus contracts and API builds passed."
+    },
+    {
+      "command": "npm.cmd run quality",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final local CI-equivalent gate passed lint, root/contracts/API typecheck, 12 workspace tests, all 93 API tests and coverage thresholds, build, seven-route inventory, OpenAPI/Postman validation, dependency audit with zero vulnerabilities, and Agent Pack audit with zero errors."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_contract_check'; $env:AUTH_ACCESS_TOKEN_SECRET='Y29kZXgtdGVzdC1vbmx5LXN5bnRoZXRpYy1rZXktMzItYnl0ZXM'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Synthetic Test environment validation passed and emitted only a redacted summary including otpProviderMode=deterministic-fake. No real .env was read; the checked-in value is synthetic and non-production."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported exactly GET /health, GET /ready, POST /api/v1/auth/login, POST /api/v1/auth/otp/send, POST /api/v1/auth/otp/verify, POST /api/v1/auth/refresh, and POST /api/v1/auth/logout."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI 3.1 routes, OTP schemas, readiness schema, local references, and runtime inventory are synchronized."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman routes match runtime inventory, apply /api/v1 exactly once, use synthetic OTP values, and contain no checked-in secret variables."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported zero vulnerabilities."
+    },
+    {
+      "command": "Get-Content <changed-json> -Raw | ConvertFrom-Json",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI, Postman collection/environment, endpoint blueprint, task state, and step_info JSON parsed successfully."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors were found."
+    },
+    {
+      "command": "Write-Output ('TEST_MONGODB_URI_CONFIGURED=' + [bool](Test-Path Env:TEST_MONGODB_URI))",
+      "exitCode": 0,
+      "result": "blocked",
+      "notes": "Blocked - prerequisites unavailable: isolated MongoDB replica-set TEST_MONGODB_URI is not configured. The optional live index, TTL, and OTP/session integration check was not run or reported as passed."
+    },
+    {
+      "command": "Write-Output 'PRODUCTION_OTP_PROVIDER_CONFIGURED=false'",
+      "exitCode": 0,
+      "result": "blocked",
+      "notes": "Blocked - prerequisites unavailable: no approved Preview/UAT/Production OTP provider adapter or credentials are configured. Non-local runtime and readiness fail closed as required; no live provider test is reported as passed."
+    },
+    {
+      "command": "node -e \"const p=require('./package.json'); for (const n of ['test:e2e','test:e2e:api','test:e2e:api:full','test:visual','test:a11y','security:check']) console.log(n+'='+(p.scripts?.[n]??'MISSING'))\"",
+      "exitCode": 0,
+      "result": "skipped",
+      "notes": "Discovery confirmed optional E2E, visual, accessibility, and dedicated security-check scripts are undefined; none is reported as passed."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B1_identity_access/backend_012.md",
+    "agent_pack/01_product/OPEN_QUESTIONS.md#Q-001",
+    "agent_pack/08_reality_sync/DECISION_LOG.md#Q-001-authentication-identifiers-and-methods",
+    "agent_pack/02_architecture/SECURITY_BASELINE.md",
+    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json#AUTH-04",
+    "agent_pack/01_product/SCREEN_REGISTRY.json#AUTH-05",
+    "apps/api/src/modules/auth/otp-service.ts",
+    "apps/api/src/modules/auth/repository.ts",
+    "apps/api/src/modules/auth/router.ts",
+    "apps/api/tests/auth/otp.test.ts",
+    "apps/api/openapi/openapi.json",
+    "docs/api/authentication.md"
+  ],
+  "scopeNotes": [
+    "packages/contracts/src/contracts/index.ts is outside packages/contracts/src/auth/** but was necessary to expose the selected task's public schemas and inferred types through the canonical package export.",
+    "apps/api/src/modules/testing/test-suites.ts and apps/api/tests/docs/api-artifacts.test.ts are outside the primary auth roots but were necessary because the repository enforces exact test classification and executable route/artifact drift.",
+    "apps/api/src/app.ts, apps/api/src/modules/database/health.ts, apps/api/tests/database/health.test.ts, and docs/api/database.md are outside the primary auth roots but were necessary to enforce Q-001's Production OTP-provider readiness prerequisite while preserving process liveness and redacted dependency checks.",
+    "No dependency, package manifest, lockfile entry, real account, real phone, vendor credential, or Production data was added by backend_012.",
+    "Seeker/provider account creation, provider onboarding, password reset, Admin MFA, and later bearer-authorization behavior were not implemented. The registration authority is exposed for backend_013 without starting that task."
+  ],
+  "mongoDbTopology": "No external MongoDB topology was used. Mandatory behavior was verified through injectable repository/provider boundaries, connection-scoped Mongoose schema/index validation, atomic-result mocks, and in-process Express API tests.",
+  "knownGaps": [
+    "Blocked - prerequisites unavailable: isolated MongoDB replica-set TEST_MONGODB_URI is not configured, so server-enforced OTP unique/TTL indexes and live OTP/session flows were not exercised.",
+    "Blocked - prerequisites unavailable: an approved Preview/UAT/Production OTP adapter and credentials are not configured. Those environments return OTP_PROVIDER_UNAVAILABLE and /ready reports otp=not_ready until supplied.",
+    "Verification used Node v22.18.0 while the repository declares Node >=24 <25; the hosted Node 24 CI run remains external.",
+    "Optional full E2E, visual, accessibility, and dedicated security-check scripts remain undefined and are not claimed as passed."
+  ],
+  "completedAt": "2026-08-12T21:22:53.133Z"
+}
