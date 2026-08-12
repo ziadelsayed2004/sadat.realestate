@@ -1,15 +1,15 @@
 # Test Strategy
 
-| المستوى | النطاق |
+| Level | Scope |
 |---|---|
-| Unit | policies/resolvers/validators/mappers/state transitions |
-| Integration | repositories/Mongo indexes/transactions/storage adapters |
-| API | auth/RBAC/ownership/validation/errors/idempotency |
-| Contract | OpenAPI response compatibility/generated client |
-| Frontend component | states/i18n/permissions/forms |
-| E2E | user journeys لكل surface مع fixtures قابلة للإعادة |
-| Visual | Screen IDs والمقاسات واللغات |
-| Security | IDOR/upload/injection/session/replay/rate limits |
-| Performance | property search/admin lists/SSR/Core Web Vitals |
+| Unit | Policies, resolvers, validators, mappers, and state transitions |
+| Integration | Repositories, MongoDB indexes and transactions, storage adapters |
+| API | Authentication, RBAC, ownership, validation, errors, idempotency |
+| Contract | OpenAPI response compatibility and generated client |
+| Frontend component | States, localization, permissions, and forms |
+| End-to-end | User journeys for each surface with repeatable fixtures |
+| Visual | Screen IDs, viewports, and locales |
+| Security | IDOR, upload, injection, session, replay, and rate limits |
+| Performance | Property search, admin lists, SSR, and Core Web Vitals |
 
-لا تعتمد اختبارات live provider ضمن suite عادي. إذا غابت credentials أو replica set أو isolated UAT، النتيجة `Blocked — prerequisites unavailable` وليست Passed.
+Live-provider checks do not belong in the normal suite. If credentials, replica-set support, or isolated UAT data are unavailable, record `Blocked — prerequisites unavailable`; never report Passed.

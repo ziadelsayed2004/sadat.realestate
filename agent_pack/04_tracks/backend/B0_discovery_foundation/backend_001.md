@@ -1,4 +1,4 @@
-# backend_001 — تهيئة الـMonorepo والـWorkspaces
+# backend_001 — Initialize the Monorepo and Workspaces
 
 | Field | Value |
 |---|---|
@@ -11,15 +11,15 @@
 
 ## Goal
 
-أنشئ هيكل npm workspaces المعتمد مع apps/api وapps/web وpackages/contracts وpackages/ui وإعدادات مشتركة بدون تنفيذ ميزات المنتج.
+Create the approved npm workspaces structure for apps/api, apps/web, packages/contracts, packages/ui, and shared configuration without implementing product features.
 
 ## Screen IDs
 
-- لا توجد شاشة مباشرة؛ المهمة تدعم العقود أو البنية.
+- No direct screen; this task supports contracts, infrastructure, or cross-surface behavior.
 
-## Source Refs
+## Source References
 
-- PRD/architecture/related runtime contracts.
+- Product requirements, architecture guidance, and directly related runtime contracts.
 
 ## Allowed Roots
 
@@ -31,16 +31,16 @@
 - `docs/**`
 - `agent_pack/**`
 
-أي ملف خارجها يحتاج سببًا صريحًا وتحديث task evidence؛ لا توسع scope صامتًا.
+Any file outside these roots requires an explicit necessity note in completion evidence. Never expand scope silently.
 
 ## Acceptance Criteria
 
-- [ ] تم فحص Runtime الحالي ولم تُستبدل حقيقة قائمة بافتراض.
-- [ ] النطاق المحدد فقط نُفذ، وكل dependency أو قرار غير محسوم موثق.
-- [ ] لا توجد أسرار أو بيانات إنتاج أو claims غير مدعومة.
-- [ ] Contracts وvalidation وerror codes وpermissions/ownership متزامنة مع التنفيذ.
-- [ ] أضيفت اختبارات إيجابية وسلبية وvalidation/state حسب طبيعة المهمة.
-- [ ] OpenAPI/Postman/API inventory حُدثت إذا تغيرت routes أو DTOs.
+- [ ] Inspect the current runtime and never replace existing truth with an assumption.
+- [ ] Implement only the selected scope and document every unresolved dependency or decision.
+- [ ] Do not introduce secrets, production data, or unsupported claims.
+- [ ] Keep contracts, validation, error codes, permissions, ownership, and runtime behavior synchronized.
+- [ ] Add applicable positive, negative, authorization, validation, and state-transition tests.
+- [ ] Update OpenAPI, Postman, and runtime API inventory when routes or DTOs change.
 
 ## Verification
 
@@ -51,8 +51,8 @@
 - `npm audit --audit-level=high`
 - `route/OpenAPI/Postman checks when applicable`
 
-الأمر غير الموجود أو prerequisite المفقود يسجل `Blocked — prerequisites unavailable` ولا يعتبر Passed.
+A missing command or prerequisite is recorded as `Blocked — prerequisites unavailable`; it is never reported as Passed.
 
 ## Finish
 
-أنشئ `07_finish/backend_001/completion.json`، ثم استخدم status tool وشغّل sync/audit/selector وتوقف.
+Create `07_finish/backend_001/completion.json`, then use the status tool and run sync, audit, and selector. Stop after this task.

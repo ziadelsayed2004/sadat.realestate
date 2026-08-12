@@ -1,10 +1,12 @@
 {
   "info": {
     "name": "Sadat Real Estate Operational API",
+    "description": "Contains implemented requests only. Future product requests must use {{apiV1BaseUrl}} and must not be added before their runtime routes exist. /health and /ready remain operational root probes.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl", "value": "http://127.0.0.1:3000" }
+    { "key": "baseUrl", "value": "http://127.0.0.1:3000", "type": "string" },
+    { "key": "apiV1BaseUrl", "value": "{{baseUrl}}/api/v1", "type": "string" }
   ],
   "event": [
     {
@@ -23,6 +25,20 @@
   "item": [
     {
       "name": "Health",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Process is alive', function () {",
+              "  pm.response.to.have.status(200);",
+              "  pm.expect(pm.response.json()).to.eql({ status: 'ok' });",
+              "});"
+            ]
+          }
+        }
+      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -31,6 +47,21 @@
     },
     {
       "name": "Readiness",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Dependency readiness is explicit', function () {",
+              "  pm.expect([200, 503]).to.include(pm.response.code);",
+              "  pm.expect(pm.response.json()).to.have.keys('status', 'checks');",
+              "  pm.expect(pm.response.json().checks).to.have.property('mongodb');",
+              "});"
+            ]
+          }
+        }
+      ],
       "request": {
         "method": "GET",
         "header": [],

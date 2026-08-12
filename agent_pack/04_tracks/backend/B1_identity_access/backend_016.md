@@ -1,4 +1,4 @@
-# backend_016 — دخول الإدارة وحسابات المسؤولين
+# backend_016 — Admin Login and Administrator Accounts
 
 | Field | Value |
 |---|---|
@@ -11,13 +11,13 @@
 
 ## Goal
 
-نفّذ admin login وإدارة الحساب الإداري وحماية bootstrap لأول Super Admin.
+Implement admin login and administrator-account management with protected bootstrap for the first Super Admin.
 
 ## Screen IDs
 
-- لا توجد شاشة مباشرة؛ المهمة تدعم العقود أو البنية.
+- No direct screen; this task supports contracts, infrastructure, or cross-surface behavior.
 
-## Source Refs
+## Source References
 
 - `ADM-59`
 - `ADM-60`
@@ -34,16 +34,16 @@
 - `apps/api/postman/**`
 - `agent_pack/**`
 
-أي ملف خارجها يحتاج سببًا صريحًا وتحديث task evidence؛ لا توسع scope صامتًا.
+Any file outside these roots requires an explicit necessity note in completion evidence. Never expand scope silently.
 
 ## Acceptance Criteria
 
-- [ ] تم فحص Runtime الحالي ولم تُستبدل حقيقة قائمة بافتراض.
-- [ ] النطاق المحدد فقط نُفذ، وكل dependency أو قرار غير محسوم موثق.
-- [ ] لا توجد أسرار أو بيانات إنتاج أو claims غير مدعومة.
-- [ ] Contracts وvalidation وerror codes وpermissions/ownership متزامنة مع التنفيذ.
-- [ ] أضيفت اختبارات إيجابية وسلبية وvalidation/state حسب طبيعة المهمة.
-- [ ] OpenAPI/Postman/API inventory حُدثت إذا تغيرت routes أو DTOs.
+- [ ] Inspect the current runtime and never replace existing truth with an assumption.
+- [ ] Implement only the selected scope and document every unresolved dependency or decision.
+- [ ] Do not introduce secrets, production data, or unsupported claims.
+- [ ] Keep contracts, validation, error codes, permissions, ownership, and runtime behavior synchronized.
+- [ ] Add applicable positive, negative, authorization, validation, and state-transition tests.
+- [ ] Update OpenAPI, Postman, and runtime API inventory when routes or DTOs change.
 
 ## Verification
 
@@ -54,8 +54,8 @@
 - `npm audit --audit-level=high`
 - `route/OpenAPI/Postman checks when applicable`
 
-الأمر غير الموجود أو prerequisite المفقود يسجل `Blocked — prerequisites unavailable` ولا يعتبر Passed.
+A missing command or prerequisite is recorded as `Blocked — prerequisites unavailable`; it is never reported as Passed.
 
 ## Finish
 
-أنشئ `07_finish/backend_016/completion.json`، ثم استخدم status tool وشغّل sync/audit/selector وتوقف.
+Create `07_finish/backend_016/completion.json`, then use the status tool and run sync, audit, and selector. Stop after this task.

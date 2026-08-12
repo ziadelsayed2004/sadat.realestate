@@ -1,9 +1,23 @@
 {
   "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
-    "title": "Sadat Real Estate Operational API",
-    "version": "0.0.0"
+    "title": "Sadat Real Estate API",
+    "version": "0.0.0",
+    "description": "Executable contract for implemented routes only. Product routes use /api/v1; operational probes remain at the process root."
   },
+  "servers": [
+    {
+      "url": "{baseUrl}",
+      "description": "Local synthetic default; replace with an explicitly approved non-production or production origin.",
+      "variables": {
+        "baseUrl": {
+          "default": "http://127.0.0.1:3000"
+        }
+      }
+    }
+  ],
+  "x-product-api-base-path": "/api/v1",
   "paths": {
     "/health": {
       "get": {

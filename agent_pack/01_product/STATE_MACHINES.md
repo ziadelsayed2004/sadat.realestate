@@ -2,28 +2,28 @@
 
 ## Provider Application
 
-`draft → pending_review → needs_information → pending_review → approved | rejected`، ويمكن `approved → suspended` بإجراء إداري موثق.
+`draft -> pending_review -> needs_information -> pending_review -> approved | rejected`. An authorized, audited action may move `approved -> suspended`.
 
-## Project / Property
+## Project and Property
 
-`draft → pending_review → needs_changes → pending_review → approved → published` أو `rejected`. من `published` يمكن `hidden` أو `archived`. تعديل المنشور ينشئ Revision ولا يستبدل النسخة العامة قبل الاعتماد.
+`draft -> pending_review -> needs_changes -> pending_review -> approved -> published`, or `rejected`. A published item may become `hidden` or `archived`. Editing a published item creates a revision and does not replace the public version before approval.
 
 ## Request
 
-الأساس: `new → contacted → follow_up → viewing → interested | negotiation → completed | closed`. كل نوع يملك transitions مسموحة؛ لا تُقبل قفزة غير معرفة.
+Base flow: `new -> contacted -> follow_up -> viewing -> interested | negotiation -> completed | closed`. Each request type defines its allowed transitions; undefined jumps are rejected.
 
-## Ad Request
+## Advertising Request
 
-`draft → review → waiting_pricing → quote_sent → waiting_payment → scheduled → active → ended`، مع rejected/cancelled/expired حيث يلزم.
+`draft -> review -> waiting_pricing -> quote_sent -> waiting_payment -> scheduled -> active -> ended`, with rejected, cancelled, or expired states where required.
 
 ## Payment Proof
 
-`uploaded → pending_review → approved | rejected`. Uploaded لا تعني دفعًا معتمدًا.
+`uploaded -> pending_review -> approved | rejected`. Uploaded does not mean approved payment.
 
 ## Account
 
-`draft/unverified → pending_review → needs_information → verified | rejected`، و`verified → restricted | suspended → verified` بإجراء مصرح.
+`draft/unverified -> pending_review -> needs_information -> verified | rejected`, and an authorized action may move `verified -> restricted | suspended -> verified`.
 
 ## Commission Resolution
 
-اختر بالترتيب: active exception → active account override → active default policy. خزّن policy/version/source/effectiveAt في snapshot عند الحدث التجاري المتفق عليه.
+Resolve in this order: active exception, active account override, active default policy. Store policy, version, source, and effectiveAt in a snapshot at the approved commercial event.

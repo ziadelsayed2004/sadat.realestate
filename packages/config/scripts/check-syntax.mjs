@@ -3,7 +3,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const configRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const repositoryRoot = path.resolve(configRoot, '..', '..');
 const files = [
+  path.join(repositoryRoot, 'eslint.config.mjs'),
   path.join(configRoot, 'scripts', 'workspace-policy.mjs'),
   path.join(configRoot, 'scripts', 'check-workspaces.mjs'),
   path.join(configRoot, 'scripts', 'check-syntax.mjs'),

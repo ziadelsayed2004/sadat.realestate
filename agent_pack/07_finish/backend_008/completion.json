@@ -1,0 +1,238 @@
+{
+  "taskId": "backend_008",
+  "summary": "Implemented a categorized unit, integration, and API test harness; native Node coverage with enforced thresholds; real TypeScript/JavaScript linting; a reproducible local quality command; and a basic Node 24 GitHub Actions workflow. Added guarded optional live MongoDB verification that refuses non-test environments and reports a missing isolated URI as blocked. No product route, DTO, database model, or frontend behavior was added; runtime inventory remains exactly GET /health and GET /ready.",
+  "filesChanged": [
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/src/modules/testing/run-test-suite.ts",
+    "apps/api/src/modules/testing/live-mongodb.ts",
+    "apps/api/tests/testing/harness.test.ts",
+    "apps/api/tests/observability/observability.test.ts",
+    "apps/api/package.json",
+    "eslint.config.mjs",
+    ".github/workflows/ci.yml",
+    "package.json",
+    "package-lock.json",
+    "packages/config/scripts/check-syntax.mjs",
+    "packages/config/scripts/workspace-policy.mjs",
+    "packages/config/tests/workspace-policy.test.mjs",
+    "docs/api/testing.md",
+    "docs/repository-inventory.md",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
+    "agent_pack/01_product/PRD_AR.md",
+    "agent_pack/01_product/PROJECT_ANALYSIS_AR.md",
+    "agent_pack/05_prompts/BACKEND_SINGLE_TASK_RUNNER_AR.md",
+    "agent_pack/05_prompts/FRONTEND_SINGLE_TASK_RUNNER_AR.md",
+    "agent_pack/05_prompts/MASTER_SINGLE_TASK_RUNNER_AR.md",
+    "agent_pack/09_sources/DOT_Studio_Sadat_Real_Estate_Developer_Handoff_LIVE_DRIVE_AR.html",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/step_info.json",
+    "agent_pack/07_finish/backend_008/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "After removal of six stale legacy-language duplicates preserved in agent_pack.zip, pre-close audits reported 188 tasks, English policy compliance, backend_008 as the only in-progress task, and zero errors."
+    },
+    {
+      "command": "node agent_pack/scripts/select_next_step.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Selected backend_008 with backend_007 complete."
+    },
+    {
+      "command": "node agent_pack/scripts/set_task_status.mjs backend_008 in_progress",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Only backend_008 entered in-progress state."
+    },
+    {
+      "command": "npm.cmd install --save-dev --save-exact eslint @eslint/js typescript-eslint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Installed the single required lint toolchain without registry comparison commands; exact versions and lockfile were recorded."
+    },
+    {
+      "command": "node -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported v22.18.0; the declared Node 24 baseline mismatch is recorded as a known gap."
+    },
+    {
+      "command": "npm.cmd -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported npm 11.6.4."
+    },
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Clean install completed with zero vulnerabilities; Node engine warnings matched the known local runtime gap."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared contracts typecheck passed."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API source and tests typecheck passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax and all workspace typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy and ESLint checks passed on the final source state."
+    },
+    {
+      "command": "npm.cmd run test:unit",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 25 unit-suite tests passed."
+    },
+    {
+      "command": "npm.cmd run test:integration",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 4 dependency-boundary integration tests passed without external services."
+    },
+    {
+      "command": "npm.cmd run test:api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 13 API behavior tests passed."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Passed 12 workspace-policy tests and all 42 API tests."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 42 API tests passed."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 42 API tests passed with 91.88% lines, 89.97% branches, and 89.73% functions, exceeding the configured 80/70/80 thresholds."
+    },
+    {
+      "command": "$env:APP_ENV='test'; Remove-Item Env:TEST_MONGODB_URI -ErrorAction SilentlyContinue; npm.cmd run test:integration:live; exit $LASTEXITCODE",
+      "exitCode": 2,
+      "result": "blocked",
+      "notes": "Blocked — prerequisites unavailable: isolated TEST_MONGODB_URI is not configured. This optional check is not reported as passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts build passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API build passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root build passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported zero vulnerabilities."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Synthetic non-production environment validation passed; no real .env was read."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory remains exactly GET /health and GET /ready."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The unchanged active-route OpenAPI document validated."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The unchanged active-route Postman collection validated."
+    },
+    {
+      "command": "node -e \"for (const f of ['package.json','package-lock.json','apps/api/package.json','packages/contracts/package.json','apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json']) JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('JSON_VALID')\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Changed package JSON and API artifacts parsed successfully."
+    },
+    {
+      "command": "npm.cmd run quality",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The reproducible local CI-equivalent gate passed lint, typecheck, workspace tests, coverage, build, inventory, OpenAPI/Postman validation, dependency audit, and Agent Pack audit."
+    },
+    {
+      "command": "python -c \"import yaml\"",
+      "exitCode": 1,
+      "result": "skipped",
+      "notes": "A standalone YAML parser was unavailable because PyYAML is not installed. The CI workflow contract is instead covered by 12 passing workspace-policy tests; hosted GitHub Actions validation remains pending."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B0_discovery_foundation/backend_008.md",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/src/modules/testing/run-test-suite.ts",
+    "apps/api/src/modules/testing/live-mongodb.ts",
+    "apps/api/tests/testing/harness.test.ts",
+    "eslint.config.mjs",
+    ".github/workflows/ci.yml",
+    "docs/api/testing.md"
+  ],
+  "scopeNotes": [
+    "Root package.json, package-lock.json, and eslint.config.mjs are outside the primary allowed roots but were necessary to install and configure real repository-wide linting and the local CI-equivalent quality command.",
+    ".github/workflows/ci.yml is outside the primary allowed roots but is required by the selected task's basic CI workflow acceptance.",
+    "packages/config policy, syntax, and tests are outside the primary allowed roots but were required to enforce the root quality scripts and Node 24 CI contract.",
+    "apps/api/package.json is outside the primary allowed roots but was required to expose the categorized and optional live test commands.",
+    "apps/api/tests/observability/observability.test.ts had one unused import removed because real ESLint correctly surfaced it.",
+    "docs/repository-inventory.md was updated because this task made its prior testing and CI gap statements stale.",
+    "Before task selection, six stale legacy _AR duplicates that violated the current English-only Agent Pack policy were removed so the authoritative audit could pass. Their exact originals remain recoverable in agent_pack.zip, and current English replacements or reference records already exist.",
+    "OpenAPI and Postman were not changed because this quality-foundation task added no route or DTO."
+  ],
+  "knownGaps": [
+    "Verification used Node v22.18.0 while the repository declares Node >=24 <25; the workflow targets Node 24, but its first hosted run remains external.",
+    "Blocked — prerequisites unavailable: isolated TEST_MONGODB_URI is not configured, so no live MongoDB topology or transaction behavior was exercised.",
+    "No standalone YAML parser is installed locally; workflow structure and commands are enforced by repository tests, while hosted GitHub Actions validation remains pending.",
+    "This foundation does not claim complete API, E2E, visual, accessibility, or platform coverage."
+  ],
+  "completedAt": "2026-08-11T23:47:07.7637079Z"
+}

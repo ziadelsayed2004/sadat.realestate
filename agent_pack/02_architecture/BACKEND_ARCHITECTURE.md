@@ -1,25 +1,25 @@
 # Backend Architecture
 
-## الطبقات
+## Layers
 
-Route → auth/rate-limit/validation → Controller → Application Service → Domain Policy → Repository/Provider → Response mapper.
+Route -> authentication, rate limit, and validation -> Controller -> Application Service -> Domain Policy -> Repository or Provider -> Response Mapper.
 
 ## Modules
 
-identity، auth، admin-rbac، accounts، audit، locations، taxonomy، organizations، providers، projects، properties، media، search، favorites، requests، viewings، notifications، articles، community، moderation، ads، payments، commissions، settings، reports.
+Identity, auth, admin RBAC, accounts, audit, locations, taxonomy, organizations, providers, projects, properties, media, search, favorites, requests, viewings, notifications, articles, community, moderation, ads, payments, commissions, settings, and reports.
 
-## مبادئ
+## Principles
 
-- REST `/api/v1` وعقود OpenAPI 3.1.
-- Zod-style runtime schemas مشتركة، TypeScript strict، no implicit any.
-- Mongoose schemas مع explicit indexes وtimestamps وoptimistic concurrency حيث توجد مسودات.
-- single-document atomicity أولًا؛ transaction فقط لعبور عدة aggregates مع replica set.
-- outbox داخل transaction للأحداث التي لا يجوز فقدها؛ worker idempotent مع retry/dead-letter.
-- كل list endpoint: allowlisted filters/sort/search وpage/cursor وحد أقصى.
-- كل response حساس projection صريح، وليس `toJSON` الخام.
+- REST under `/api/v1` with OpenAPI 3.1 contracts.
+- Shared runtime schemas, strict TypeScript, and no implicit any.
+- Mongoose schemas with explicit indexes, timestamps, and optimistic concurrency where drafts exist.
+- Prefer single-document atomicity. Use transactions only across aggregates and only with replica-set support.
+- Use a transactional outbox for events that cannot be lost, with idempotent workers, retry, and dead-letter handling.
+- Every list endpoint uses allowlisted filters, sort, and search plus bounded page or cursor pagination.
+- Every sensitive response uses an explicit projection, never raw model serialization.
 
-## التوثيق والاختبار
+## Documentation and Tests
 
-- كل route منفذ يظهر في OpenAPI/inventory/Postman أو يصنف internal.
-- كل mutation: positive + unauthenticated + unauthorized/ownership + validation + invalid transition.
-- العمليات الحساسة: idempotency/replay/concurrency tests.
+- Every implemented route appears in OpenAPI, runtime inventory, and Postman, or is explicitly classified as internal.
+- Every mutation includes positive, unauthenticated, unauthorized or ownership, validation, and invalid-transition coverage.
+- Sensitive operations include idempotency, replay, and concurrency tests where applicable.

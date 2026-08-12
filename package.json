@@ -18,9 +18,16 @@
   "scripts": {
     "workspace:check": "node packages/config/scripts/check-workspaces.mjs",
     "typecheck": "node packages/config/scripts/check-syntax.mjs && npm run typecheck --workspace packages/contracts && npm run typecheck --workspace apps/api",
-    "lint": "npm run workspace:check",
+    "lint": "npm run workspace:check && eslint \"apps/api/src/**/*.ts\" \"apps/api/tests/**/*.ts\" \"packages/contracts/src/**/*.ts\" \"packages/config/**/*.mjs\" \"eslint.config.mjs\" --max-warnings=0",
     "test": "node packages/config/scripts/run-tests.mjs",
+    "test:workspace": "node --test packages/config/tests/workspace-policy.test.mjs",
+    "test:unit": "npm run test:unit --workspace apps/api",
+    "test:integration": "npm run test:integration --workspace apps/api",
+    "test:api": "npm run test:api --workspace apps/api",
+    "test:coverage": "npm run test:coverage --workspace apps/api",
+    "test:integration:live": "npm run test:integration:live --workspace apps/api",
     "build": "npm run workspace:check && npm run build --workspace packages/contracts && npm run build --workspace apps/api",
+    "quality": "npm run lint && npm run typecheck && npm run test:workspace && npm run test:coverage && npm run build && npm run api:inventory && npm run openapi:validate && npm run postman:validate && npm audit --audit-level=high && node agent_pack/scripts/audit_pack.mjs",
     "env:check": "npm run env:check --workspace apps/api",
     "api:inventory": "npm run api:inventory --workspace apps/api",
     "openapi:validate": "npm run openapi:validate --workspace apps/api",
@@ -28,5 +35,10 @@
     "db:seed": "npm run db:seed --workspace apps/api",
     "dev": "npm run dev --workspace apps/api",
     "start": "npm run start --workspace apps/api"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.8.1",
+    "typescript-eslint": "8.67.0"
   }
 }

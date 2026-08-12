@@ -1,9 +1,9 @@
-# Post Task Sync Protocol
+# Post-Task Sync Protocol
 
-بعد كل مهمة:
+After each selected task:
 
-1. اكتب `07_finish/<task_id>/completion.json` وفيه summary وfilesChanged وverification وknownGaps.
-2. شغّل:
+1. Write `07_finish/<task_id>/completion.json` with a summary, changed files, verification, source evidence, and known gaps.
+2. For successful completion, run:
 
 ```bash
 node agent_pack/scripts/set_task_status.mjs <task_id> complete
@@ -12,5 +12,6 @@ node agent_pack/scripts/audit_pack.mjs
 node agent_pack/scripts/select_next_step.mjs
 ```
 
-3. تأكد أن `TASK_BOARD.md` و`COUNT_SUMMARY.json` و`FINISH_INDEX.json` و`step_info.json` متزامنة.
-4. لا تُعدّل الملفات المولدة يدويًا؛ عدّل `TASK_STATE.json` فقط عبر الأداة.
+3. Confirm that `TASK_BOARD.md`, `COUNT_SUMMARY.json`, `FINISH_INDEX.json`, and `step_info.json` agree.
+4. Do not edit generated state views manually. Use the status tool for state transitions.
+5. If the task is Partial or Blocked, set that status with an exact reason, run sync/audit/selector, report the blocker, and stop.

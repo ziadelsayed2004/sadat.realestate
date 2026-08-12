@@ -9,6 +9,12 @@ export const EXPECTED_WORKSPACES = [
   ['packages/config', '@sadat-real-estate/config']
 ];
 
+export const EXPECTED_ROOT_DEV_DEPENDENCIES = {
+  '@eslint/js': '10.0.1',
+  eslint: '10.8.1',
+  'typescript-eslint': '8.67.0'
+};
+
 export const EXPECTED_API_DEPENDENCIES = {
   dependencies: { '@sadat-real-estate/contracts': '0.0.0', express: '5.2.1', helmet: '8.3.0', mongoose: '9.9.2' },
   devDependencies: {
@@ -42,10 +48,6 @@ export function loadWorkspaceGraph(rootDir) {
   return { rootPackage, workspacePackages, lockfile, tsconfig };
 }
 
-function hasOwn(value, key) {
-  return value !== null && typeof value === 'object' && Object.prototype.hasOwnProperty.call(value, key);
-}
-
 function normalizedMap(value) {
   return JSON.stringify(Object.fromEntries(Object.entries(value ?? {}).sort(([left], [right]) => left.localeCompare(right))));
 }
@@ -61,6 +63,14 @@ export function validateWorkspaceGraph(graph) {
   if (rootPackage.packageManager !== 'npm@11.6.4') issues.push('root packageManager must be npm@11.6.4');
   if (rootPackage.engines?.node !== '>=24 <25') issues.push('root Node engine must be >=24 <25');
   if (rootPackage.engines?.npm !== '>=11 <12') issues.push('root npm engine must be >=11 <12');
+  if (normalizedMap(rootPackage.devDependencies) !== normalizedMap(EXPECTED_ROOT_DEV_DEPENDENCIES)) {
+    issues.push('root devDependencies do not match the approved quality dependency set');
+  }
+  for (const scriptName of ['lint', 'typecheck', 'test:workspace', 'test:unit', 'test:integration', 'test:api', 'test:coverage', 'build', 'quality']) {
+    if (typeof rootPackage.scripts?.[scriptName] !== 'string' || !rootPackage.scripts[scriptName].trim()) {
+      issues.push(`root quality script is missing: ${scriptName}`);
+    }
+  }
 
   const configuredWorkspaces = Array.isArray(rootPackage.workspaces) ? rootPackage.workspaces : [];
   const expectedPaths = EXPECTED_WORKSPACES.map(([workspacePath]) => workspacePath);

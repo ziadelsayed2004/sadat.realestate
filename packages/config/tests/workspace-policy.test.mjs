@@ -39,6 +39,27 @@ test('rejects an invalid Node engine', () => {
   assert.ok(validateWorkspaceGraph(graph).includes('root Node engine must be >=24 <25'));
 });
 
+test('rejects an unexpected root quality dependency', () => {
+  const graph = graphCopy();
+  graph.rootPackage.devDependencies.unapproved = '1.0.0';
+  assert.ok(validateWorkspaceGraph(graph).includes('root devDependencies do not match the approved quality dependency set'));
+});
+
+test('rejects a missing root quality command', () => {
+  const graph = graphCopy();
+  delete graph.rootPackage.scripts['test:coverage'];
+  assert.ok(validateWorkspaceGraph(graph).includes('root quality script is missing: test:coverage'));
+});
+
+test('keeps CI on the declared Node baseline and the local quality command', () => {
+  const workflow = fs.readFileSync(path.join(rootDir, '.github', 'workflows', 'ci.yml'), 'utf8');
+  assert.match(workflow, /node-version: 24/);
+  assert.match(workflow, /run: npm ci/);
+  assert.match(workflow, /run: npm run quality/);
+  assert.match(workflow, /APP_ENV: test/);
+  assert.doesNotMatch(workflow, /TEST_MONGODB_URI|production/);
+});
+
 test('rejects a missing lockfile workspace entry', () => {
   const graph = graphCopy();
   delete graph.lockfile.packages['apps/api'];

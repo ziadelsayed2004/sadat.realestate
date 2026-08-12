@@ -1,38 +1,38 @@
 # Project Execution Policy
 
-## الترتيب الإلزامي
+## Mandatory Order
 
-1. Discovery وقرار المعمارية.
-2. Backend foundation/security/contracts.
-3. الهوية وRBAC.
-4. Master data وCMS.
-5. المشروعات والعقارات والوسائط والمراجعات.
-6. البحث والباحث والطلبات والمعاينات.
-7. المحتوى والكوميونيتي.
-8. الإعلانات وإثباتات الدفع.
-9. العمولات والإدارة والتقارير.
-10. Backend security/readiness/handoff gate.
-11. Frontend foundation وVite SSR.
-12. Public/Auth/Seeker/Provider/Admin بالترتيب.
-13. E2E/visual/i18n/accessibility/performance/release.
+1. Discovery and architecture decisions.
+2. Backend foundation, security, and contracts.
+3. Identity and RBAC.
+4. Master data and CMS.
+5. Projects, properties, media, and reviews.
+6. Search, seeker features, requests, and viewings.
+7. Content and community.
+8. Advertising and payment proofs.
+9. Commissions, administration, and reports.
+10. Backend security, readiness, and handoff gate.
+11. Frontend foundation and Vite SSR.
+12. Public, Auth, Seeker, Provider, and Admin surfaces in that order.
+13. End-to-end, visual, localization, accessibility, performance, and release gates.
 
-## قاعدة المهمة الواحدة
+## One-Task Rule
 
-- الـselector يختار أول مهمة Open أو Partial انتهت كل Dependencies الخاصة بها.
-- يُسمح بمهمة واحدة In Progress.
-- لا يبدأ المنفذ المهمة التالية في نفس التشغيل.
-- أي prerequisite خارجي مفقود يسجل Blocked مع السبب؛ لا يُختلق بديل يغير المنتج.
+- The selector chooses the first Open or Partial task whose dependencies are complete.
+- At most one task may be In Progress.
+- The runner must not begin the next task in the same run.
+- A missing external prerequisite becomes Blocked with a precise reason; never invent a substitute that changes product behavior.
 
 ## Backend Gate
 
-لا يبدأ `frontend_000` قبل إغلاق `backend_138` بأدلة build/lint/typecheck/tests/security/inventory/handoff.
+`frontend_000` cannot start until `backend_138` is closed with evidence for build, lint, typecheck, tests, security, inventory, readiness, and handoff.
 
 ## Statuses
 
-| الحالة | المعنى |
+| Status | Meaning |
 |---|---|
-| open | لم تبدأ |
-| in_progress | المهمة الوحيدة الجاري تنفيذها |
-| partial | تنفيذ موجود لكن Acceptance غير مكتملة |
-| blocked | مانع محدد موثق |
-| complete | الكود والاختبارات والدليل مكتملة |
+| open | Not started |
+| in_progress | The single task currently being executed |
+| partial | Implementation exists, but acceptance is incomplete |
+| blocked | A specific documented prerequisite prevents completion |
+| complete | Code, verification, and evidence are complete |

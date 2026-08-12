@@ -1,20 +1,20 @@
-# Deployment & Operations Plan
+# Deployment and Operations Plan
 
 ## Processes
 
 - API process.
-- Worker process للoutbox/schedules/SLA.
-- Web SSR process + static assets.
+- Worker process for outbox, schedules, and SLA.
+- Web SSR process plus static assets.
 - MongoDB replica set.
-- Object storage/CDN حسب القرار.
+- Object storage and CDN according to the approved decision.
 
-## Release
+## Release Flow
 
-build immutable images → migrations/index checks → deploy preview → smoke → backup checkpoint → rolling production → post-deploy smoke → monitor → rollback عند الفشل.
+Build immutable images -> run migration and index checks -> deploy preview -> smoke test -> create backup checkpoint -> rolling production deployment -> post-deploy smoke -> monitor -> roll back on failure.
 
 ## Required Gates
 
-typecheck، lint، tests، audit، OpenAPI diff، pack audit، database readiness، storage/provider readiness، backup restore evidence، health/readiness، no secrets scan.
+Typecheck, lint, tests, dependency audit, OpenAPI diff, Agent Pack audit, database readiness, storage/provider readiness, backup-restore evidence, health/readiness, and secret scanning.
 
 ## Official Technical Basis
 

@@ -1,4 +1,4 @@
-# frontend_066 — إدارة الطلبات بكل أنواعها
+# frontend_066 — All Request-Type Administration
 
 | Field | Value |
 |---|---|
@@ -11,7 +11,7 @@
 
 ## Goal
 
-نفّذ shell والقوائم والمتأخر والتواصل والمعاينات والبحث والمشكلات.
+Implement the shell, lists, overdue requests, contacts, viewings, searches, and issues.
 
 ## Screen IDs
 
@@ -23,9 +23,9 @@
 - `ADM-23`
 - `ADM-24`
 
-## Source Refs
+## Source References
 
-- PRD/architecture/related runtime contracts.
+- Product requirements, architecture guidance, and directly related runtime contracts.
 
 ## Allowed Roots
 
@@ -36,17 +36,17 @@
 - `packages/contracts/**`
 - `agent_pack/**`
 
-أي ملف خارجها يحتاج سببًا صريحًا وتحديث task evidence؛ لا توسع scope صامتًا.
+Any file outside these roots requires an explicit necessity note in completion evidence. Never expand scope silently.
 
 ## Acceptance Criteria
 
-- [ ] تم فحص Runtime الحالي ولم تُستبدل حقيقة قائمة بافتراض.
-- [ ] النطاق المحدد فقط نُفذ، وكل dependency أو قرار غير محسوم موثق.
-- [ ] لا توجد أسرار أو بيانات إنتاج أو claims غير مدعومة.
-- [ ] تمت مطابقة Screen IDs بالـFrame الفعلي وتسجيل الرابط في Evidence.
-- [ ] لا توجد mocks إنتاجية؛ البيانات من عقود Backend المنفذة.
-- [ ] Loading/Empty/Error/Retry/Success وpermission variants مكتملة عند الحاجة.
-- [ ] AR/EN/ZH-CN والاتجاه ونطاق الأجهزة واختبارات الواجهة مكتملة.
+- [ ] Inspect the current runtime and never replace existing truth with an assumption.
+- [ ] Implement only the selected scope and document every unresolved dependency or decision.
+- [ ] Do not introduce secrets, production data, or unsupported claims.
+- [ ] Match every selected Screen ID to its approved frame and record the exact reference in evidence.
+- [ ] Use implemented backend contracts only; production mocks and invented endpoints are forbidden.
+- [ ] Complete applicable Loading, Empty, Error, Retry, Success, and permission variants.
+- [ ] Verify Arabic RTL plus every other supported locale, direction, approved device scope, and applicable UI tests.
 
 ## Verification
 
@@ -56,8 +56,8 @@
 - `npm run build`
 - `targeted Playwright/visual/a11y checks`
 
-الأمر غير الموجود أو prerequisite المفقود يسجل `Blocked — prerequisites unavailable` ولا يعتبر Passed.
+A missing command or prerequisite is recorded as `Blocked — prerequisites unavailable`; it is never reported as Passed.
 
 ## Finish
 
-أنشئ `07_finish/frontend_066/completion.json`، ثم استخدم status tool وشغّل sync/audit/selector وتوقف.
+Create `07_finish/frontend_066/completion.json`, then use the status tool and run sync, audit, and selector. Stop after this task.

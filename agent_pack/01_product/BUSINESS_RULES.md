@@ -1,19 +1,19 @@
 # Business Rules
 
-| ID | القاعدة | Enforcement |
+| ID | Rule | Enforcement |
 |---|---|---|
-| BR-001 | مصدر كل عقار منشور واضح | Model + publish validation + projections |
-| BR-002 | Verified Badge لاعتماد حقيقي فقط | Backend-derived flag |
-| BR-003 | المقارنة عنصران فقط | API validation + UI guard |
-| BR-004 | الباحث لا يرى internal notes/assignment/audit | Projection + negative tests |
-| BR-005 | إجراءات الرفض/الاستكمال/الإيقاف الحساسة تحتاج سببًا | Validation + audit |
-| BR-006 | الإجراء غير المسموح لا يظهر أو يكون View Only | RBAC + availableActions + UI |
-| BR-007 | إثبات الدفع مراجعة يدوية ولا يعني تحققًا بنكيًا | State machine + copy |
-| BR-008 | لا سعر إعلان ثابت عام | Quote workflow |
-| BR-009 | العمولة ليست Universal hardcode | Policy resolver |
-| BR-010 | المحتوى العام Published فقط | Query scopes |
-| BR-011 | المستندات وإثباتات الدفع لا تستخدم public permanent URLs | Private storage gateway |
-| BR-012 | AR RTL وEN/ZH-CN LTR بنفس العقود | i18n contracts |
-| BR-013 | لا AI/حكومة/بنك/ملكية تلقائي دون Integration حقيقي | Product guardrail |
-| BR-014 | لا أرقام تشغيلية وهمية في Production | Data source + tests |
-| BR-015 | Screen ID مرجع QA وليس اسم route إلزاميًا | Coverage matrix |
+| BR-001 | Every published property has a clear source | Model, publish validation, and projections |
+| BR-002 | The verified badge represents genuine approval only | Backend-derived flag |
+| BR-003 | Comparison contains at most two items | API validation and UI guard |
+| BR-004 | Seekers never see internal notes, assignments, or audit data | Projection and negative tests |
+| BR-005 | Sensitive reject, needs-information, and suspend actions require a reason | Validation and audit |
+| BR-006 | Unauthorized actions are hidden or View Only | RBAC, availableActions, and UI |
+| BR-007 | A payment proof is manually reviewed and is not bank verification | State machine and interface copy |
+| BR-008 | Advertising has no assumed universal public price | Quote workflow |
+| BR-009 | Commission is not a universal hardcode | Policy resolver |
+| BR-010 | Public content must be Published | Query scopes |
+| BR-011 | Documents and payment proofs never use permanent public URLs | Private storage gateway |
+| BR-012 | Arabic RTL and English/Simplified Chinese LTR use the same contracts | Localization contracts |
+| BR-013 | No AI, government, bank, or ownership automation without a real approved integration | Product guardrail |
+| BR-014 | Production cannot display fabricated operational numbers | Data source and tests |
+| BR-015 | A Screen ID is a QA reference, not a mandatory route name | Coverage matrix |

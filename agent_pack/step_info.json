@@ -1,40 +1,40 @@
 {
-  "generatedAt": "2026-08-11T22:55:01.339Z",
-  "selectedTaskId": "backend_008",
+  "generatedAt": "2026-08-12T02:07:20.597Z",
+  "selectedTaskId": "backend_010",
   "selectedTaskStatus": "open",
-  "selectedTaskFile": "04_tracks/backend/B0_discovery_foundation/backend_008.md",
+  "selectedTaskFile": "04_tracks/backend/B1_identity_access/backend_010.md",
   "selectedTask": {
-    "id": "backend_008",
-    "phase": "B0_discovery_foundation",
-    "area": "testing",
-    "title": "بنية الاختبارات وCI والجودة",
-    "goal": "جهّز unit/integration/API test harness وlint/typecheck/coverage وCI أساسي قابل للتشغيل محليًا.",
-    "kind": "quality",
+    "id": "backend_010",
+    "phase": "B1_identity_access",
+    "area": "identity",
+    "title": "Identity and Account Models",
+    "goal": "Design User, SeekerProfile, ProviderProfile, AdminProfile, and Session models with uniqueness indexes and account states.",
+    "kind": "model",
     "screens": [],
     "sourceRefs": [],
     "notes": [],
     "track": "backend",
-    "sequence": 9,
+    "sequence": 11,
     "dependsOn": [
-      "backend_007"
+      "backend_009"
     ],
-    "atomicTaskFile": "04_tracks/backend/B0_discovery_foundation/backend_008.md",
+    "atomicTaskFile": "04_tracks/backend/B1_identity_access/backend_010.md",
     "allowedRoots": [
-      "apps/api/src/modules/testing/**",
-      "apps/api/tests/testing/**",
-      "packages/contracts/src/testing/**",
+      "apps/api/src/modules/identity/**",
+      "apps/api/tests/identity/**",
+      "packages/contracts/src/identity/**",
       "docs/api/**",
       "apps/api/openapi/**",
       "apps/api/postman/**",
       "agent_pack/**"
     ],
     "acceptance": [
-      "تم فحص Runtime الحالي ولم تُستبدل حقيقة قائمة بافتراض.",
-      "النطاق المحدد فقط نُفذ، وكل dependency أو قرار غير محسوم موثق.",
-      "لا توجد أسرار أو بيانات إنتاج أو claims غير مدعومة.",
-      "Contracts وvalidation وerror codes وpermissions/ownership متزامنة مع التنفيذ.",
-      "أضيفت اختبارات إيجابية وسلبية وvalidation/state حسب طبيعة المهمة.",
-      "OpenAPI/Postman/API inventory حُدثت إذا تغيرت routes أو DTOs."
+      "Inspect the current runtime and never replace existing truth with an assumption.",
+      "Implement only the selected scope and document every unresolved dependency or decision.",
+      "Do not introduce secrets, production data, or unsupported claims.",
+      "Keep contracts, validation, error codes, permissions, ownership, and runtime behavior synchronized.",
+      "Add applicable positive, negative, authorization, validation, and state-transition tests.",
+      "Update OpenAPI, Postman, and runtime API inventory when routes or DTOs change."
     ],
     "verification": [
       "npm run typecheck",
@@ -48,11 +48,11 @@
   "counts": {
     "backend": {
       "total": 113,
-      "open": 105,
+      "open": 103,
       "in_progress": 0,
       "partial": 0,
       "blocked": 0,
-      "complete": 8
+      "complete": 10
     },
     "frontend": {
       "total": 75,
@@ -65,24 +65,6 @@
   },
   "blockedTasks": [],
   "blockedByDependencies": [
-    {
-      "taskId": "backend_009",
-      "unresolved": [
-        {
-          "taskId": "backend_008",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_010",
-      "unresolved": [
-        {
-          "taskId": "backend_009",
-          "status": "open"
-        }
-      ]
-    },
     {
       "taskId": "backend_011",
       "unresolved": [

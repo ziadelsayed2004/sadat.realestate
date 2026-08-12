@@ -2,22 +2,22 @@
 
 ## Rendering Strategy
 
-- Public routes: Vite SSR + hydration لأن property/article/developer pages تحتاج SEO وHTML فعلي.
-- Auth: responsive CSR داخل SSR shell حسب الحاجة.
-- Seeker/Provider/Admin: protected SPA route groups، Desktop فقط حسب التصميم الحالي.
+- Public routes use Vite SSR and hydration because property, article, and developer pages require SEO and real HTML.
+- Auth routes use responsive client behavior within the SSR shell as needed.
+- Seeker, Provider, and Admin use protected SPA route groups and are desktop-only in the current approved design scope.
 
 ## Organization
 
-- route modules تحمّل feature boundaries lazy.
-- server state عبر Query client؛ form state محلي؛ لا global store شامل بلا داعٍ.
-- API client/generated types من `packages/contracts`.
-- permission gate يعتمد على backend `availableActions` ولا يفترض الدور من اللون أو النص.
-- localized routes ثابتة قدر الإمكان، والمحتوى/metadata بحسب locale.
+- Route modules lazy-load feature boundaries.
+- Server state uses a query client; form state stays local. Do not add a global store without a concrete need.
+- API client and generated types come from `packages/contracts`.
+- Permission gates consume backend `availableActions`; they never infer authorization from colors or labels.
+- Keep route shapes stable where possible; localize content and metadata by locale.
 
 ## Design System
 
-Tokens من Figma، primitives direction-safe، components لا تحتوي business logic. كل component له loading/disabled/error/focus/RTL/LTR variants عند الحاجة.
+Extract tokens from Figma, make primitives direction-safe, and keep business logic out of components. Each applicable component supports loading, disabled, error, focus, RTL, and LTR variants.
 
 ## SEO
 
-SSR، canonical، hreflang للغات، JSON-LD مناسب دون بيانات مخترعة، sitemap للعقارات/المطورين/المقالات المنشورة، و404 حقيقي للعناصر غير المتاحة.
+Use SSR, canonical links, locale-specific hreflang, truthful JSON-LD, sitemaps for published properties/developers/articles, and real 404 responses for unavailable resources.

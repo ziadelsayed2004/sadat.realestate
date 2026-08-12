@@ -1,33 +1,33 @@
 # Security Baseline
 
-## Identity & Sessions
+## Identity and Sessions
 
-- Argon2id لكلمات المرور، OTP hashed + TTL + attempt limits.
-- access token قصير، opaque refresh hashed مع rotation/reuse detection.
-- logout/revocation، secure HttpOnly SameSite cookie، no token in localStorage.
+- Use Argon2id for passwords and hashed OTP challenges with TTL and attempt limits.
+- Use short-lived access tokens and hashed opaque refresh tokens with rotation and reuse detection.
+- Support logout and revocation with Secure, HttpOnly, SameSite cookies; never store tokens in localStorage.
 
 ## Authorization
 
-- AuthN ثم RBAC ثم object ownership/scope.
-- allowlist fields لمنع mass assignment.
-- negative IDOR matrix لكل endpoint حساس.
+- Apply authentication, then RBAC, then object ownership or scope.
+- Allowlist mutable fields to prevent mass assignment.
+- Maintain a negative IDOR matrix for every sensitive endpoint.
 
-## Inputs & MongoDB
+## Inputs and MongoDB
 
-- runtime schemas، reject unknown fields حيث يلزم، منع operators/prototype pollution.
-- allowlisted filter/sort، limits، timeouts، وsafe regex policy.
+- Use runtime schemas, reject unknown fields where appropriate, and prevent operators and prototype pollution.
+- Allowlist filters and sorting; enforce limits, timeouts, and a safe regex policy.
 
 ## Uploads
 
-- MIME + magic bytes + size/count، أسماء مولدة، private/public separation.
-- لا path من المستخدم، لا SVG/HTML نشط بلا sanitization، وفحص malware adapter عند الإنتاج.
+- Validate MIME, magic bytes, size, and count; generate file names and separate public from private assets.
+- Never accept a user-controlled storage path. Sanitize active SVG/HTML if allowed, and use a malware-scanning adapter in production.
 
 ## Web
 
-- Helmet/CSP، CORS allowlist، CSRF analysis، output escaping، open redirect allowlist.
-- sensitive pages no-store، logs redacted، errors لا تكشف stack في production.
+- Apply Helmet and CSP, CORS allowlists, CSRF analysis, output escaping, and open-redirect allowlists.
+- Mark sensitive pages no-store, redact logs, and hide production stacks.
 
 ## Operations
 
-- least privilege DB/storage، secrets rotation، audit، backups، dependency scanning.
-- لا Production E2E أو destructive seed دون بيئة معزولة وموافقة واضحة.
+- Use least-privilege database and storage access, secret rotation, audit, backups, and dependency scanning.
+- Never run destructive seed or production E2E operations without an isolated environment and explicit authorization.

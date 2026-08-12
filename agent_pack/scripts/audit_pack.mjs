@@ -9,12 +9,17 @@ const screens = read('01_product/SCREEN_REGISTRY.json');
 const coverage = read('01_product/SCREEN_COVERAGE.json');
 const endpoints = read('01_product/API_ENDPOINT_BLUEPRINT.json');
 const finish = read('07_finish/FINISH_INDEX.json');
+const manifest = read('03_execution/MANIFEST.json');
 const errors = [];
 const ids = catalog.map((task) => task.id);
 if (new Set(ids).size !== ids.length) errors.push('Duplicate task IDs');
 if (new Set(screens.map((screen) => screen.id)).size !== screens.length) errors.push('Duplicate screen IDs');
 if (screens.length !== 131) errors.push('Expected 131 screen IDs, found ' + screens.length);
 if (Object.keys(state.tasks).length !== catalog.length) errors.push('TASK_STATE count mismatch');
+if (manifest.packLanguage !== 'en') errors.push('Agent Pack language must be en');
+if (manifest.productLocalization?.primaryLocale !== 'ar' || manifest.productLocalization?.primaryDirection !== 'rtl') {
+  errors.push('Product localization must preserve Arabic as the primary RTL locale');
+}
 const endpointKeys = endpoints.map((entry) => entry.method + ' ' + entry.path);
 if (new Set(endpointKeys).size !== endpointKeys.length) errors.push('Duplicate endpoint blueprint method/path');
 for (const endpoint of endpoints) {
@@ -44,6 +49,8 @@ for (let i = 0; i < catalog.length; i += 1) {
 const inProgress = Object.entries(state.tasks).filter(([, entry]) => entry.status === 'in_progress');
 if (inProgress.length > 1) errors.push('More than one in_progress task');
 for (const screen of screens) {
+  if ('arabicName' in screen) errors.push('Screen registry must not embed Arabic planning copy: ' + screen.id);
+  if (!screen.locales?.includes('ar') || !screen.directionScope?.includes('rtl')) errors.push('Screen lost Arabic RTL product coverage: ' + screen.id);
   const owners = catalog.filter((task) => task.screens.includes(screen.id));
   if (owners.length !== 1) errors.push('Screen ' + screen.id + ' mapped to ' + owners.length + ' frontend tasks');
   const row = coverage.find((item) => item.id === screen.id);
@@ -52,9 +59,15 @@ for (const screen of screens) {
 }
 for (const taskId of finish) if (state.tasks[taskId]?.status !== 'complete') errors.push('FINISH_INDEX contains non-complete or missing task: ' + taskId);
 const jsonFiles = [];
-const walk = (dir) => { for (const entry of fs.readdirSync(dir, { withFileTypes: true })) { const p = path.join(dir, entry.name); if (entry.isDirectory()) walk(p); else if (entry.name.endsWith('.json')) jsonFiles.push(p); } };
+const textFiles = [];
+const textExtensions = new Set(['.md', '.json', '.mjs', '.js', '.ts', '.txt', '.yaml', '.yml', '.html']);
+const localeSuffixPattern = /(^|_)AR(?=(_|\.|$))/i;
+const walk = (dir) => { for (const entry of fs.readdirSync(dir, { withFileTypes: true })) { const p = path.join(dir, entry.name); if (entry.isDirectory()) walk(p); else { if (entry.name.endsWith('.json')) jsonFiles.push(p); if (textExtensions.has(path.extname(entry.name).toLowerCase())) textFiles.push(p); if (localeSuffixPattern.test(entry.name)) errors.push('Locale-suffixed Agent Pack filename is forbidden: ' + path.relative(pack, p)); } } };
 walk(pack);
 for (const file of jsonFiles) { try { JSON.parse(fs.readFileSync(file, 'utf8')); } catch (error) { errors.push('Invalid JSON ' + path.relative(pack, file) + ': ' + error.message); } }
-const report = { tasks: catalog.length, backend: catalog.filter((task) => task.track === 'backend').length, frontend: catalog.filter((task) => task.track === 'frontend').length, screens: screens.length, endpointBlueprint: endpoints.length, jsonFiles: jsonFiles.length, inProgress: inProgress.map(([id]) => id), errors };
+for (const file of textFiles) {
+  if (/[\u0600-\u06ff]/u.test(fs.readFileSync(file, 'utf8'))) errors.push('Arabic-script text found in English-only Agent Pack file: ' + path.relative(pack, file));
+}
+const report = { tasks: catalog.length, backend: catalog.filter((task) => task.track === 'backend').length, frontend: catalog.filter((task) => task.track === 'frontend').length, screens: screens.length, endpointBlueprint: endpoints.length, jsonFiles: jsonFiles.length, textFilesCheckedForEnglishPolicy: textFiles.length, packLanguage: manifest.packLanguage, primaryProductLocale: manifest.productLocalization?.primaryLocale, inProgress: inProgress.map(([id]) => id), errors };
 console.log(JSON.stringify(report, null, 2));
 if (errors.length) process.exit(1);

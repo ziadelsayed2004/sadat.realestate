@@ -3,11 +3,11 @@
   "byTrack": {
     "backend": {
       "total": 113,
-      "open": 105,
+      "open": 103,
       "in_progress": 0,
       "partial": 0,
       "blocked": 0,
-      "complete": 8
+      "complete": 10
     },
     "frontend": {
       "total": 75,
@@ -19,12 +19,12 @@
     }
   },
   "byStatus": {
-    "open": 180,
+    "open": 178,
     "in_progress": 0,
     "partial": 0,
     "blocked": 0,
-    "complete": 8
+    "complete": 10
   },
-  "selectedTaskId": "backend_008",
-  "updatedAt": "2026-08-11T22:55:00.810Z"
+  "selectedTaskId": "backend_010",
+  "updatedAt": "2026-08-12T02:07:20.379Z"
 }

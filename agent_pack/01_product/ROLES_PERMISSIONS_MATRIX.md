@@ -1,19 +1,19 @@
-# Roles & Permissions Matrix
+# Roles and Permissions Matrix
 
-| الدور | المسؤولية | أمثلة صلاحيات |
+| Role | Responsibility | Example Permissions |
 |---|---|---|
-| مدير النظام | وصول كامل للنظام والأدوار والإعدادات والسجل | all، مع safeguards ضد حذف آخر مدير |
-| مراجع حسابات | مراجعة حسابات المقدمين والتوثيق والمستندات والقيود | providers.review، documents.review، accounts.restrict |
-| مراجع عقارات ومشاريع | مراجعة العقارات والمشروعات والتعديلات والبلاغات | properties.review، projects.review، property_reports.manage |
-| محرر محتوى | المقالات والتصنيفات والنبذة والفريق والرئيسية | content.manage، home.manage |
-| مشرف كوميونيتي | المنشورات والتعليقات والبلاغات | community.moderate |
-| مسؤول إعلانات ومدفوعات | الطلبات والتسعير والإثباتات والجدولة والعمولات حسب الصلاحية | ads.manage، proofs.review، commissions.view/manage |
-| مسؤول دعم ومتابعة | الطلبات والمعاينات والتواصل والتأخر والمشكلات | requests.manage، viewings.manage، issues.manage |
-| مشاهد فقط | عرض بلا تعديل أو اعتماد | *.view فقط |
+| Super Admin | Full access to system, roles, settings, and audit | All, with safeguards against deleting the final Super Admin |
+| Account Reviewer | Provider accounts, verification, documents, and restrictions | `providers.review`, `documents.review`, `accounts.restrict` |
+| Property and Project Reviewer | Properties, projects, revisions, and reports | `properties.review`, `projects.review`, `property_reports.manage` |
+| Content Editor | Articles, categories, About, Team, and homepage | `content.manage`, `home.manage` |
+| Community Moderator | Posts, comments, and reports | `community.moderate` |
+| Ads and Payments Manager | Requests, quotes, proofs, scheduling, and authorized commission operations | `ads.manage`, `proofs.review`, `commissions.view/manage` |
+| Support and Follow-up Agent | Requests, viewings, contact, overdue items, and issues | `requests.manage`, `viewings.manage`, `issues.manage` |
+| View Only | Read access without mutation or approval | `*.view` only |
 
-## قواعد التنفيذ
+## Enforcement Rules
 
-- Permission granularity: `module.action` مع scope عند الحاجة.
-- Admin role لا يلغي ownership/projection rules للبيانات الحساسة إلا بصلاحية صريحة.
-- واجهة المستخدم ليست enforcement؛ الـAPI يعيد `permissions` و`availableActions` ويمنع الطلب نفسه.
-- كل mutation حساسة تسجل actor/target/reason/before/after/traceId.
+- Permission granularity uses `module.action` with scope where required.
+- An administrative role does not bypass ownership or sensitive projection rules without an explicit permission.
+- The UI is not the enforcement boundary. The API returns `permissions` and `availableActions` and rejects the same forbidden request server-side.
+- Every sensitive mutation records actor, target, reason, before, after, and traceId.

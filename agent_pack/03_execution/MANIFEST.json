@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "project": "Sadat Real Estate Platform",
-  "packVersion": "1.0.0",
-  "generatedAt": "2026-08-11T00:00:00.000Z",
+  "packVersion": "1.1.0",
+  "generatedAt": "2026-08-11T23:27:35.498Z",
   "sourceHandoffDate": "2026-08-09",
   "screenCounts": {
     "PUB": 12,
@@ -18,10 +18,24 @@
     "frontend": 75
   },
   "canonicalFiles": {
-    "product": "01_product/PRD_AR.md",
+    "product": "01_product/PRD.md",
     "tasks": "03_execution/TASK_CATALOG.json",
     "state": "03_execution/TASK_STATE.json",
     "selector": "step_info.json",
-    "screens": "01_product/SCREEN_REGISTRY.json"
+    "screens": "01_product/SCREEN_REGISTRY.json",
+    "languagePolicy": "00_start_here/LANGUAGE_POLICY.md",
+    "runner": "05_prompts/MASTER_SINGLE_TASK_RUNNER.md",
+    "sourceReference": "09_sources/HANDOFF_REFERENCE.md"
+  },
+  "packLanguage": "en",
+  "productLocalization": {
+    "primaryLocale": "ar",
+    "primaryDirection": "rtl",
+    "supportedLocales": [
+      "ar",
+      "en",
+      "zh-CN"
+    ],
+    "note": "Agent Pack language is English; product localization requirements are unchanged."
   }
 }

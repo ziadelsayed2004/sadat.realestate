@@ -3,7 +3,6 @@
     "id": "PUB-01",
     "surface": "public",
     "englishName": "Home",
-    "arabicName": "الرئيسية",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1RDaXkGyrC4p2ycy_wHR7gNssJS7sNU7O",
     "deviceScope": [
@@ -24,13 +23,13 @@
     "frontendTaskId": "frontend_010",
     "backendTaskIds": [
       "backend_060"
-    ]
+    ],
+    "localizedNameKey": "screens.pub_01.title"
   },
   {
     "id": "PUB-02",
     "surface": "public",
     "englishName": "Properties Listing",
-    "arabicName": "قائمة العقارات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1qQzXJ32c1YuOBvx88oZBRezWmEqJ_VOI",
     "deviceScope": [
@@ -51,13 +50,13 @@
     "frontendTaskId": "frontend_011",
     "backendTaskIds": [
       "backend_061"
-    ]
+    ],
+    "localizedNameKey": "screens.pub_02.title"
   },
   {
     "id": "PUB-03",
     "surface": "public",
     "englishName": "Property Details",
-    "arabicName": "تفاصيل العقار",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1YKuQuflPrwhW_YzDuLL8cqc748ZEDtoQ",
     "deviceScope": [
@@ -78,13 +77,13 @@
     "frontendTaskId": "frontend_012",
     "backendTaskIds": [
       "backend_062"
-    ]
+    ],
+    "localizedNameKey": "screens.pub_03.title"
   },
   {
     "id": "PUB-04",
     "surface": "public",
     "englishName": "Unit Comparison",
-    "arabicName": "مقارنة الوحدات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/133Vb7i7iA6aqf96cKafQaq4zXfn6VRw8",
     "deviceScope": [
@@ -105,13 +104,13 @@
     "frontendTaskId": "frontend_013",
     "backendTaskIds": [
       "backend_063"
-    ]
+    ],
+    "localizedNameKey": "screens.pub_04.title"
   },
   {
     "id": "PUB-05",
     "surface": "public",
     "englishName": "Developers & Companies",
-    "arabicName": "المطورون والشركات العقارية",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1Hx02nn7Ll4Rv4fbR8Xea8uPKL0ChEkLM",
     "deviceScope": [
@@ -132,13 +131,13 @@
     "frontendTaskId": "frontend_014",
     "backendTaskIds": [
       "backend_064"
-    ]
+    ],
+    "localizedNameKey": "screens.pub_05.title"
   },
   {
     "id": "PUB-06",
     "surface": "public",
     "englishName": "Developer Profile",
-    "arabicName": "ملف المطور العقاري",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1tZHKw4xEPyQY2ICmRdXz5CwrYbucNoo1",
     "deviceScope": [
@@ -159,13 +158,13 @@
     "frontendTaskId": "frontend_014",
     "backendTaskIds": [
       "backend_064"
-    ]
+    ],
+    "localizedNameKey": "screens.pub_06.title"
   },
   {
     "id": "PUB-07",
     "surface": "public",
     "englishName": "Articles Listing",
-    "arabicName": "قائمة المقالات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1TNZyuSMv5lqL847yqnjJJzedmEhycR2Z",
     "deviceScope": [
@@ -186,13 +185,13 @@
     "frontendTaskId": "frontend_015",
     "backendTaskIds": [
       "backend_092"
-    ]
+    ],
+    "localizedNameKey": "screens.pub_07.title"
   },
   {
     "id": "PUB-08",
     "surface": "public",
     "englishName": "Article Details",
-    "arabicName": "تفاصيل المقال",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1kTANteLpbcB5kmw8yLPGoZvwh4CVCLAr",
     "deviceScope": [
@@ -213,13 +212,13 @@
     "frontendTaskId": "frontend_015",
     "backendTaskIds": [
       "backend_092"
-    ]
+    ],
+    "localizedNameKey": "screens.pub_08.title"
   },
   {
     "id": "PUB-09",
     "surface": "public",
     "englishName": "Community Feed",
-    "arabicName": "الكوميونيتي",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/113EnHTq_O-sfoNJYbelWyoPi1hcdvk3J",
     "deviceScope": [
@@ -241,13 +240,13 @@
     "backendTaskIds": [
       "backend_093",
       "backend_096"
-    ]
+    ],
+    "localizedNameKey": "screens.pub_09.title"
   },
   {
     "id": "PUB-10",
     "surface": "public",
     "englishName": "Create Post — Modal",
-    "arabicName": "إنشاء منشور — نافذة منبثقة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1FyJqHCqwTdzzPa4y4e7UGsV6IH5laGOd",
     "deviceScope": [
@@ -269,13 +268,13 @@
     "backendTaskIds": [
       "backend_093",
       "backend_096"
-    ]
+    ],
+    "localizedNameKey": "screens.pub_10.title"
   },
   {
     "id": "PUB-11",
     "surface": "public",
     "englishName": "About Platform",
-    "arabicName": "عن المنصة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1YfgHS3imL4ebIizEII7GFR418HXGpkY7",
     "deviceScope": [
@@ -296,13 +295,13 @@
     "frontendTaskId": "frontend_017",
     "backendTaskIds": [
       "backend_036"
-    ]
+    ],
+    "localizedNameKey": "screens.pub_11.title"
   },
   {
     "id": "PUB-12",
     "surface": "public",
     "englishName": "Team",
-    "arabicName": "فريق العمل",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1WwO7cVz_vckLwjzW4SZ87nlliGI0W8if",
     "deviceScope": [
@@ -323,13 +322,13 @@
     "frontendTaskId": "frontend_017",
     "backendTaskIds": [
       "backend_036"
-    ]
+    ],
+    "localizedNameKey": "screens.pub_12.title"
   },
   {
     "id": "AUTH-01",
     "surface": "auth",
     "englishName": "Login",
-    "arabicName": "تسجيل الدخول",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1f1LbwCBwIm4-7YnGmAid82kTKO6c6sZc",
     "deviceScope": [
@@ -351,13 +350,13 @@
     "backendTaskIds": [
       "backend_011",
       "backend_012"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_01.title"
   },
   {
     "id": "AUTH-02",
     "surface": "auth",
     "englishName": "Seeker Registration — Default",
-    "arabicName": "إنشاء حساب باحث — افتراضي",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1v7bcXiDuK2pnEg1m8DrdJWPOYOhd3Oi0",
     "deviceScope": [
@@ -378,13 +377,13 @@
     "frontendTaskId": "frontend_021",
     "backendTaskIds": [
       "backend_013"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_02.title"
   },
   {
     "id": "AUTH-03",
     "surface": "auth",
     "englishName": "Seeker Registration — Default",
-    "arabicName": "إنشاء حساب باحث — افتراضي",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/15ED2RFZZgeRuo0KfEpNBlxiZBhhp-32R",
     "deviceScope": [
@@ -405,13 +404,13 @@
     "frontendTaskId": "frontend_021",
     "backendTaskIds": [
       "backend_013"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_03.title"
   },
   {
     "id": "AUTH-04",
     "surface": "auth",
     "englishName": "Phone Verification — OTP",
-    "arabicName": "تأكيد رقم الهاتف — رمز التحقق",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/17KO1GaXuTSpVg1YouOfUgcTgJ4j3N8Ax",
     "deviceScope": [
@@ -433,13 +432,13 @@
     "backendTaskIds": [
       "backend_011",
       "backend_012"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_04.title"
   },
   {
     "id": "AUTH-05",
     "surface": "auth",
     "englishName": "Phone Verification — OTP",
-    "arabicName": "تأكيد رقم الهاتف — رمز التحقق",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1zWpe-X_sOYwJe8WS9T4a18p9sZAfG5Kj",
     "deviceScope": [
@@ -461,13 +460,13 @@
     "backendTaskIds": [
       "backend_011",
       "backend_012"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_05.title"
   },
   {
     "id": "AUTH-06",
     "surface": "auth",
     "englishName": "Seeker Registration — Success",
-    "arabicName": "تم إنشاء حساب الباحث",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1MV0Ls2wpsAzzm8P05toWgiQqRe1sIzkW",
     "deviceScope": [
@@ -488,13 +487,13 @@
     "frontendTaskId": "frontend_021",
     "backendTaskIds": [
       "backend_013"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_06.title"
   },
   {
     "id": "AUTH-07",
     "surface": "auth",
     "englishName": "Provider Type Selection — Default",
-    "arabicName": "اختيار نوع مقدم العقار — افتراضي",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/16BX8MSYprjY3KZoI9FLUB8nitqq0PjEK",
     "deviceScope": [
@@ -515,13 +514,13 @@
     "frontendTaskId": "frontend_022",
     "backendTaskIds": [
       "backend_014"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_07.title"
   },
   {
     "id": "AUTH-08",
     "surface": "auth",
     "englishName": "Provider Type Selection — Selected",
-    "arabicName": "اختيار نوع مقدم العقار — محدد",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1oUpeR-CISHjIhbyGPkhqPADmCUf58Seg",
     "deviceScope": [
@@ -542,13 +541,13 @@
     "frontendTaskId": "frontend_022",
     "backendTaskIds": [
       "backend_014"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_08.title"
   },
   {
     "id": "AUTH-09",
     "surface": "auth",
     "englishName": "Provider Registration — Account Details",
-    "arabicName": "تسجيل مقدم العقار — بيانات الحساب",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1_SO4sScjNW9GVGMqWUDRRIMNxxl2X2bu",
     "deviceScope": [
@@ -569,13 +568,13 @@
     "frontendTaskId": "frontend_023",
     "backendTaskIds": [
       "backend_014"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_09.title"
   },
   {
     "id": "AUTH-09+",
     "surface": "auth",
     "englishName": "Provider Registration — Account Details",
-    "arabicName": "تسجيل مقدم العقار — بيانات الحساب",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1ICA0hJuwo3mWwBdVwZAi0UtrjEIKiIG-",
     "deviceScope": [
@@ -596,13 +595,13 @@
     "frontendTaskId": "frontend_023",
     "backendTaskIds": [
       "backend_014"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_09_plus.title"
   },
   {
     "id": "AUTH-10",
     "surface": "auth",
     "englishName": "Provider Registration — Business Details",
-    "arabicName": "تسجيل مقدم العقار — بيانات النشاط",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1Gc5u4F3x_6NTHjZfyA7gZlHWR_lEuhmG",
     "deviceScope": [
@@ -623,13 +622,13 @@
     "frontendTaskId": "frontend_024",
     "backendTaskIds": [
       "backend_014"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_10.title"
   },
   {
     "id": "AUTH-10+",
     "surface": "auth",
     "englishName": "Provider Registration — Business Details",
-    "arabicName": "تسجيل مقدم العقار — بيانات النشاط",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1i9zhjfFxAQk4fLrqhA7QAjpJIscXAAcq",
     "deviceScope": [
@@ -650,13 +649,13 @@
     "frontendTaskId": "frontend_024",
     "backendTaskIds": [
       "backend_014"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_10_plus.title"
   },
   {
     "id": "AUTH-11",
     "surface": "auth",
     "englishName": "Provider Registration — Developer Company Details",
-    "arabicName": "تسجيل مقدم العقار — بيانات شركة التطوير",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1Bk7CqnHocflKdAvDrjrh2B2kXSyoteRk",
     "deviceScope": [
@@ -677,13 +676,13 @@
     "frontendTaskId": "frontend_024",
     "backendTaskIds": [
       "backend_014"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_11.title"
   },
   {
     "id": "AUTH-12",
     "surface": "auth",
     "englishName": "Provider Registration — Documents",
-    "arabicName": "تسجيل مقدم العقار — المستندات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1gVQgJgzilt4hpDgQF7_2LHLaMe1Hhkz7",
     "deviceScope": [
@@ -704,13 +703,13 @@
     "frontendTaskId": "frontend_024",
     "backendTaskIds": [
       "backend_015"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_12.title"
   },
   {
     "id": "AUTH-13",
     "surface": "auth",
     "englishName": "Provider Registration — Review & Submit",
-    "arabicName": "تسجيل مقدم العقار — المراجعة والإرسال",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1mhqu7_EJ1r_ujb2nbY6uWr9R32drA724",
     "deviceScope": [
@@ -731,13 +730,13 @@
     "frontendTaskId": "frontend_025",
     "backendTaskIds": [
       "backend_014"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_13.title"
   },
   {
     "id": "AUTH-14",
     "surface": "auth",
     "englishName": "Provider Application — Under Review",
-    "arabicName": "طلب مقدم العقار — قيد المراجعة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1KmHKcWsraQGbuqGMW9Awlf8_fpLCMWXF",
     "deviceScope": [
@@ -758,13 +757,13 @@
     "frontendTaskId": "frontend_025",
     "backendTaskIds": [
       "backend_014"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_14.title"
   },
   {
     "id": "AUTH-15",
     "surface": "auth",
     "englishName": "Provider Application — Tracking",
-    "arabicName": "متابعة طلب مقدم العقار",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1A8-RuDzNN1af4fJ7721NS7e8uBm_Xizu",
     "deviceScope": [
@@ -785,13 +784,13 @@
     "frontendTaskId": "frontend_025",
     "backendTaskIds": [
       "backend_014"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_15.title"
   },
   {
     "id": "AUTH-16",
     "surface": "auth",
     "englishName": "Provider Application — Needs Information",
-    "arabicName": "طلب مقدم العقار — يحتاج استكمال",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1dqMR6mouTsvGYIaSNj7nYGZMsInSf4yL",
     "deviceScope": [
@@ -812,13 +811,13 @@
     "frontendTaskId": "frontend_025",
     "backendTaskIds": [
       "backend_014"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_16.title"
   },
   {
     "id": "AUTH-17",
     "surface": "auth",
     "englishName": "Provider Application — Approved",
-    "arabicName": "طلب مقدم العقار — تم الاعتماد",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/19OL6QQmoC-IaKXAyNb22x-0Uhz2Is62i",
     "deviceScope": [
@@ -839,13 +838,13 @@
     "frontendTaskId": "frontend_025",
     "backendTaskIds": [
       "backend_014"
-    ]
+    ],
+    "localizedNameKey": "screens.auth_17.title"
   },
   {
     "id": "SEK-01",
     "surface": "seeker",
     "englishName": "Seeker Overview",
-    "arabicName": "نظرة عامة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1EMmNVoMLcOU1Rjv1N0q_4j9tGCOGqvgE",
     "deviceScope": [
@@ -864,13 +863,13 @@
     "frontendTaskId": "frontend_030",
     "backendTaskIds": [
       "backend_066"
-    ]
+    ],
+    "localizedNameKey": "screens.sek_01.title"
   },
   {
     "id": "SEK-02",
     "surface": "seeker",
     "englishName": "My Requests",
-    "arabicName": "طلباتي",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1BZ3kI-A4xUMfK7-ww6pVcaR8E5XDWgGl",
     "deviceScope": [
@@ -889,13 +888,13 @@
     "frontendTaskId": "frontend_031",
     "backendTaskIds": [
       "backend_075"
-    ]
+    ],
+    "localizedNameKey": "screens.sek_02.title"
   },
   {
     "id": "SEK-03",
     "surface": "seeker",
     "englishName": "Request Details — Under Review",
-    "arabicName": "تفاصيل الطلب — قيد المراجعة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1akycehbR3O5_Mgdi6W5VCbJm943kASAe",
     "deviceScope": [
@@ -914,13 +913,13 @@
     "frontendTaskId": "frontend_031",
     "backendTaskIds": [
       "backend_075"
-    ]
+    ],
+    "localizedNameKey": "screens.sek_03.title"
   },
   {
     "id": "SEK-04",
     "surface": "seeker",
     "englishName": "Request Details — Contacted",
-    "arabicName": "تفاصيل الطلب — تم التواصل",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1hQUpbNKCrw6NQpt3S7ia6jiziY5kdVE2",
     "deviceScope": [
@@ -939,13 +938,13 @@
     "frontendTaskId": "frontend_031",
     "backendTaskIds": [
       "backend_075"
-    ]
+    ],
+    "localizedNameKey": "screens.sek_04.title"
   },
   {
     "id": "SEK-05",
     "surface": "seeker",
     "englishName": "Viewing Requests",
-    "arabicName": "طلبات المعاينة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1UBASEVD4IUBPnJl7hptGqB7Qv9EAlilU",
     "deviceScope": [
@@ -964,13 +963,13 @@
     "frontendTaskId": "frontend_032",
     "backendTaskIds": [
       "backend_072"
-    ]
+    ],
+    "localizedNameKey": "screens.sek_05.title"
   },
   {
     "id": "SEK-06",
     "surface": "seeker",
     "englishName": "Saved Properties",
-    "arabicName": "العقارات المحفوظة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1Vjh9lRx6mBrgJ3YvWTIR1iTT4r3-10M6",
     "deviceScope": [
@@ -989,13 +988,13 @@
     "frontendTaskId": "frontend_033",
     "backendTaskIds": [
       "backend_065"
-    ]
+    ],
+    "localizedNameKey": "screens.sek_06.title"
   },
   {
     "id": "SEK-07",
     "surface": "seeker",
     "englishName": "Notifications",
-    "arabicName": "الإشعارات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1SN0-v9Bf0xsgrPhTJ4Tzfby_6wUyZqrz",
     "deviceScope": [
@@ -1014,13 +1013,13 @@
     "frontendTaskId": "frontend_034",
     "backendTaskIds": [
       "backend_068"
-    ]
+    ],
+    "localizedNameKey": "screens.sek_07.title"
   },
   {
     "id": "SEK-08",
     "surface": "seeker",
     "englishName": "Profile & Preferences — Search Preferences",
-    "arabicName": "الملف الشخصي والتفضيلات — تفضيلات البحث",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1Y80mQORqpi-tGD3pe2ZIyPo2b74SFHx9",
     "deviceScope": [
@@ -1039,13 +1038,13 @@
     "frontendTaskId": "frontend_035",
     "backendTaskIds": [
       "backend_067"
-    ]
+    ],
+    "localizedNameKey": "screens.sek_08.title"
   },
   {
     "id": "SEK-09",
     "surface": "seeker",
     "englishName": "Profile & Preferences — Personal Information",
-    "arabicName": "الملف الشخصي والتفضيلات — المعلومات الشخصية",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1od5yxd_sFEXo8V7FJKJE3YnnBvh4ERXY",
     "deviceScope": [
@@ -1064,13 +1063,13 @@
     "frontendTaskId": "frontend_035",
     "backendTaskIds": [
       "backend_067"
-    ]
+    ],
+    "localizedNameKey": "screens.sek_09.title"
   },
   {
     "id": "SEK-10",
     "surface": "seeker",
     "englishName": "Account Settings",
-    "arabicName": "إعدادات الحساب",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1SMtml3vJtyoq2ORxLVXpt_6-5eBobKDc",
     "deviceScope": [
@@ -1089,13 +1088,13 @@
     "frontendTaskId": "frontend_035",
     "backendTaskIds": [
       "backend_067"
-    ]
+    ],
+    "localizedNameKey": "screens.sek_10.title"
   },
   {
     "id": "PRV-01",
     "surface": "provider",
     "englishName": "Dashboard Overview",
-    "arabicName": "نظرة عامة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1-Jda_ykLlQC3ZwlFG8I-t6sq3B8UOg86",
     "deviceScope": [
@@ -1115,13 +1114,13 @@
     "backendTaskIds": [
       "backend_051",
       "backend_066"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_01.title"
   },
   {
     "id": "PRV-02",
     "surface": "provider",
     "englishName": "My Properties",
-    "arabicName": "عقاراتي",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1BmLx4tpZxfEGPmnsbQhay7RdCdpvy1hC",
     "deviceScope": [
@@ -1140,13 +1139,13 @@
     "frontendTaskId": "frontend_041",
     "backendTaskIds": [
       "backend_051"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_02.title"
   },
   {
     "id": "PRV-03",
     "surface": "provider",
     "englishName": "Add Property — 01 Basic Information",
-    "arabicName": "إضافة عقار — 01 البيانات الأساسية",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1DdoEN9a92vmsDI0Zk8dSN1Yxk5k37K4R",
     "deviceScope": [
@@ -1171,13 +1170,13 @@
       "backend_047",
       "backend_048",
       "backend_049"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_03.title"
   },
   {
     "id": "PRV-04",
     "surface": "provider",
     "englishName": "Add Property — 02 Location",
-    "arabicName": "إضافة عقار — 02 الموقع",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1cHXSIRo0S4A5f2S16gpanhN4GgYsNDRS",
     "deviceScope": [
@@ -1202,13 +1201,13 @@
       "backend_047",
       "backend_048",
       "backend_049"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_04.title"
   },
   {
     "id": "PRV-05",
     "surface": "provider",
     "englishName": "Add Property — 03 Property Details",
-    "arabicName": "إضافة عقار — 03 تفاصيل العقار",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1MVrrVE_RnSRXENVtxkfCznzhRRgUfwxW",
     "deviceScope": [
@@ -1233,13 +1232,13 @@
       "backend_047",
       "backend_048",
       "backend_049"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_05.title"
   },
   {
     "id": "PRV-06",
     "surface": "provider",
     "englishName": "Add Property — 04 Price & Payment",
-    "arabicName": "إضافة عقار — 04 السعر والسداد",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1cVLnmNLXHOdryi27qcAcGYp3EY3-2FDp",
     "deviceScope": [
@@ -1264,13 +1263,13 @@
       "backend_047",
       "backend_048",
       "backend_049"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_06.title"
   },
   {
     "id": "PRV-07",
     "surface": "provider",
     "englishName": "Add Property — 05 Features & Services",
-    "arabicName": "إضافة عقار — 05 المميزات والخدمات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1Oe-Y3S0qVxzfFYS1ck58iu4QUOKe2NhB",
     "deviceScope": [
@@ -1295,13 +1294,13 @@
       "backend_047",
       "backend_048",
       "backend_049"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_07.title"
   },
   {
     "id": "PRV-08",
     "surface": "provider",
     "englishName": "Add Property — 06 Media",
-    "arabicName": "إضافة عقار — 06 الصور والوسائط",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1PTID8nypqLiSrU3-O6cAiXoJdu9hVUi4",
     "deviceScope": [
@@ -1326,13 +1325,13 @@
       "backend_047",
       "backend_048",
       "backend_049"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_08.title"
   },
   {
     "id": "PRV-09",
     "surface": "provider",
     "englishName": "Add Property — 07 Contact",
-    "arabicName": "إضافة عقار — 07 التواصل",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1yW0-rmLNBH19aM5xW3l3q0sm51yARrLS",
     "deviceScope": [
@@ -1357,13 +1356,13 @@
       "backend_047",
       "backend_048",
       "backend_049"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_09.title"
   },
   {
     "id": "PRV-10",
     "surface": "provider",
     "englishName": "Add Property — 08 Review & Submit",
-    "arabicName": "إضافة عقار — 08 المراجعة والإرسال",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1Q4Enn2KDiWVSa3zI_htObrmdyMn4f0WQ",
     "deviceScope": [
@@ -1388,13 +1387,13 @@
       "backend_047",
       "backend_048",
       "backend_049"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_10.title"
   },
   {
     "id": "PRV-11",
     "surface": "provider",
     "englishName": "Add Property — Validation Errors",
-    "arabicName": "إضافة عقار — بيانات تحتاج استكمال",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1LMR8ByJMrmEE5500eTUOTtB0rWcL8G3u",
     "deviceScope": [
@@ -1419,13 +1418,13 @@
       "backend_047",
       "backend_048",
       "backend_049"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_11.title"
   },
   {
     "id": "PRV-12",
     "surface": "provider",
     "englishName": "Property Submitted",
-    "arabicName": "تم إرسال العقار للمراجعة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1rNEVgpLFKw_zSNpAXndLQfWMyNlT2bhb",
     "deviceScope": [
@@ -1450,13 +1449,13 @@
       "backend_047",
       "backend_048",
       "backend_049"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_12.title"
   },
   {
     "id": "PRV-13",
     "surface": "provider",
     "englishName": "Property Rejected",
-    "arabicName": "تعذر اعتماد العقار",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1wpWqXwKoSFCkvlGwPQxzjuAt6cti-uxT",
     "deviceScope": [
@@ -1481,13 +1480,13 @@
       "backend_047",
       "backend_048",
       "backend_049"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_13.title"
   },
   {
     "id": "PRV-14",
     "surface": "provider",
     "englishName": "Property Published",
-    "arabicName": "تم نشر العقار",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/19ObqV6wXoya0W2PD0N_lWrTMNGkiGg0A",
     "deviceScope": [
@@ -1512,13 +1511,13 @@
       "backend_047",
       "backend_048",
       "backend_049"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_14.title"
   },
   {
     "id": "PRV-15",
     "surface": "provider",
     "englishName": "Projects Listing",
-    "arabicName": "المشاريع",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1JM9TjIqqsFhXnObamIdFGepIPeLUf0ml",
     "deviceScope": [
@@ -1537,13 +1536,13 @@
     "frontendTaskId": "frontend_046",
     "backendTaskIds": [
       "backend_040"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_15.title"
   },
   {
     "id": "PRV-16",
     "surface": "provider",
     "englishName": "Customer Requests",
-    "arabicName": "طلبات العملاء",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/19m_KQKHWSE-l-j3eqvML0W6RygO3tlAj",
     "deviceScope": [
@@ -1563,13 +1562,13 @@
     "backendTaskIds": [
       "backend_074",
       "backend_076"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_16.title"
   },
   {
     "id": "PRV-17",
     "surface": "provider",
     "englishName": "Add Customer Request — Modal",
-    "arabicName": "إضافة طلب عميل — نافذة منبثقة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1u6elv1Y8xHFM22yAUsy2iF4WmJiG5wom",
     "deviceScope": [
@@ -1589,13 +1588,13 @@
     "backendTaskIds": [
       "backend_074",
       "backend_076"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_17.title"
   },
   {
     "id": "PRV-18",
     "surface": "provider",
     "englishName": "Viewing Appointments",
-    "arabicName": "مواعيد المعاينات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1wV5wYwgV1HV8sSBohdBqbIKP6qwztZgP",
     "deviceScope": [
@@ -1614,13 +1613,13 @@
     "frontendTaskId": "frontend_048",
     "backendTaskIds": [
       "backend_072"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_18.title"
   },
   {
     "id": "PRV-19",
     "surface": "provider",
     "englishName": "Ad Requests",
-    "arabicName": "طلبات الإعلانات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1KCTXCjiPpyefVI2qnLBwQB1pI87MuCw3",
     "deviceScope": [
@@ -1640,13 +1639,13 @@
     "backendTaskIds": [
       "backend_101",
       "backend_107"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_19.title"
   },
   {
     "id": "PRV-20",
     "surface": "provider",
     "englishName": "Commission",
-    "arabicName": "العمولة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1FyRkPx1NM9yneEO-rbVV1hzunmUgjTmb",
     "deviceScope": [
@@ -1665,13 +1664,13 @@
     "frontendTaskId": "frontend_049",
     "backendTaskIds": [
       "backend_116"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_20.title"
   },
   {
     "id": "PRV-21",
     "surface": "provider",
     "englishName": "Notifications",
-    "arabicName": "الإشعارات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1zDmZ5xczx2W_0TqF1eCdgn42SrlmwVDW",
     "deviceScope": [
@@ -1690,13 +1689,13 @@
     "frontendTaskId": "frontend_050",
     "backendTaskIds": [
       "backend_068"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_21.title"
   },
   {
     "id": "PRV-22-1",
     "surface": "provider",
     "englishName": "Settings",
-    "arabicName": "الإعدادات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/16sjluzJbRkAkORle4X--TNoVN01yXTv_",
     "deviceScope": [
@@ -1715,13 +1714,13 @@
     "frontendTaskId": "frontend_050",
     "backendTaskIds": [
       "backend_123"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_22_1.title"
   },
   {
     "id": "PRV-22-2",
     "surface": "provider",
     "englishName": "Settings",
-    "arabicName": "الإعدادات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1H1alNI_tQb1hlFv7VBeosfrmghm6sfq9",
     "deviceScope": [
@@ -1740,13 +1739,13 @@
     "frontendTaskId": "frontend_050",
     "backendTaskIds": [
       "backend_123"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_22_2.title"
   },
   {
     "id": "PRV-22-3",
     "surface": "provider",
     "englishName": "Settings",
-    "arabicName": "الإعدادات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1BrEClGr2UVWzR4s0p2Yt7Oce5eheWW8i",
     "deviceScope": [
@@ -1765,13 +1764,13 @@
     "frontendTaskId": "frontend_050",
     "backendTaskIds": [
       "backend_123"
-    ]
+    ],
+    "localizedNameKey": "screens.prv_22_3.title"
   },
   {
     "id": "ADM-01",
     "surface": "admin",
     "englishName": "Admin Overview",
-    "arabicName": "نظرة عامة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1s72Hbu89r_FpVR9NWqyi5N9kFfGfZJAa",
     "deviceScope": [
@@ -1790,13 +1789,13 @@
     "frontendTaskId": "frontend_060",
     "backendTaskIds": [
       "backend_120"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_01.title"
   },
   {
     "id": "ADM-02",
     "surface": "admin",
     "englishName": "Users Management",
-    "arabicName": "إدارة المستخدمين",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/14vSGg7Ljzv6rcp87XJQN3sk3rDF3oiwh",
     "deviceScope": [
@@ -1818,13 +1817,13 @@
       "backend_017",
       "backend_019",
       "backend_121"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_02.title"
   },
   {
     "id": "ADM-03",
     "surface": "admin",
     "englishName": "Property Seekers",
-    "arabicName": "الباحثون عن عقار",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1Wzt9wRgunYtmiBpNUuiCYBIJ8SkCiUhU",
     "deviceScope": [
@@ -1846,13 +1845,13 @@
       "backend_017",
       "backend_019",
       "backend_121"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_03.title"
   },
   {
     "id": "ADM-04",
     "surface": "admin",
     "englishName": "Property Providers",
-    "arabicName": "مقدمو العقارات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1YwgW0GdiDn87ZodQT33xOaCFiwUEFd7T",
     "deviceScope": [
@@ -1874,13 +1873,13 @@
       "backend_017",
       "backend_019",
       "backend_121"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_04.title"
   },
   {
     "id": "ADM-05",
     "surface": "admin",
     "englishName": "Provider Documents Review",
-    "arabicName": "مراجعة مستندات مقدمي العقارات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1Zm2pM2-ReIbtM6x4SL7M9U5kdUnSQF4Q",
     "deviceScope": [
@@ -1902,13 +1901,13 @@
       "backend_017",
       "backend_019",
       "backend_121"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_05.title"
   },
   {
     "id": "ADM-06",
     "surface": "admin",
     "englishName": "Account Reports",
-    "arabicName": "بلاغات الحسابات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1Evyazld_AFFdEYHEzGlM48Z6GnxG-UYV",
     "deviceScope": [
@@ -1930,13 +1929,13 @@
       "backend_017",
       "backend_019",
       "backend_121"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_06.title"
   },
   {
     "id": "ADM-07",
     "surface": "admin",
     "englishName": "Account Report Details",
-    "arabicName": "تفاصيل بلاغ الحساب",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/19Pa0NzUKpbvpY0Kh460QB6Jj8kxe14ut",
     "deviceScope": [
@@ -1958,13 +1957,13 @@
       "backend_017",
       "backend_019",
       "backend_121"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_07.title"
   },
   {
     "id": "ADM-08",
     "surface": "admin",
     "englishName": "Account Restrictions",
-    "arabicName": "قيود الحسابات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1HbA-ztHzERThbWC88U68QQINzCTiLSNQ",
     "deviceScope": [
@@ -1986,13 +1985,13 @@
       "backend_017",
       "backend_019",
       "backend_121"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_08.title"
   },
   {
     "id": "ADM-09",
     "surface": "admin",
     "englishName": "Property Categories & Types",
-    "arabicName": "التصنيفات وأنواع العقارات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1BsuhLY1vb55AY8eokQf0KEeTyIS4g9bw",
     "deviceScope": [
@@ -2013,13 +2012,13 @@
       "backend_031",
       "backend_032",
       "backend_033"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_09.title"
   },
   {
     "id": "ADM-10",
     "surface": "admin",
     "englishName": "Locations & Neighborhoods",
-    "arabicName": "المناطق والأحياء",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1qIx1wxB5bBDIjfIYLI-huLuBDNNQIjX-",
     "deviceScope": [
@@ -2040,13 +2039,13 @@
       "backend_031",
       "backend_032",
       "backend_033"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_10.title"
   },
   {
     "id": "ADM-11",
     "surface": "admin",
     "englishName": "Features & Services",
-    "arabicName": "المميزات والخدمات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/11uMoUTllcJFJ5gV7-B7aynZcQrRkLFjq",
     "deviceScope": [
@@ -2067,13 +2066,13 @@
       "backend_031",
       "backend_032",
       "backend_033"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_11.title"
   },
   {
     "id": "ADM-12",
     "surface": "admin",
     "englishName": "Projects Management",
-    "arabicName": "إدارة المشروعات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1HhR6X0VfCdBj3zARqW0KuYqivJLhL3Zk",
     "deviceScope": [
@@ -2097,13 +2096,13 @@
       "backend_052",
       "backend_053",
       "backend_054"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_12.title"
   },
   {
     "id": "ADM-13",
     "surface": "admin",
     "englishName": "Projects Review",
-    "arabicName": "مراجعة المشروعات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1fp0z0D1aD_uyZjYeb-5GGUkPDaFlK0R2",
     "deviceScope": [
@@ -2127,13 +2126,13 @@
       "backend_052",
       "backend_053",
       "backend_054"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_13.title"
   },
   {
     "id": "ADM-14",
     "surface": "admin",
     "englishName": "Properties Management",
-    "arabicName": "إدارة العقارات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/154nQHf5hLQ4AwXr0b9ig8ld0De2FatIc",
     "deviceScope": [
@@ -2157,13 +2156,13 @@
       "backend_052",
       "backend_053",
       "backend_054"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_14.title"
   },
   {
     "id": "ADM-15",
     "surface": "admin",
     "englishName": "Properties Review",
-    "arabicName": "مراجعة العقارات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1Q-t49USiJBt--gA6LMDi7_9lXH3FDCBL",
     "deviceScope": [
@@ -2187,13 +2186,13 @@
       "backend_052",
       "backend_053",
       "backend_054"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_15.title"
   },
   {
     "id": "ADM-16",
     "surface": "admin",
     "englishName": "Suspected Duplicate Properties",
-    "arabicName": "عقارات يشتبه بتكرارها",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1q4VnWJnoJZPD28Mso4QQiMfNKjFyWHHp",
     "deviceScope": [
@@ -2217,13 +2216,13 @@
       "backend_052",
       "backend_053",
       "backend_054"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_16.title"
   },
   {
     "id": "ADM-17",
     "surface": "admin",
     "englishName": "Property Reports",
-    "arabicName": "بلاغات العقارات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1jSZHxNYJsd2iP9Dxit6LNnH933mmKvsP",
     "deviceScope": [
@@ -2247,13 +2246,13 @@
       "backend_052",
       "backend_053",
       "backend_054"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_17.title"
   },
   {
     "id": "ADM-18",
     "surface": "admin",
     "englishName": "Requests Management",
-    "arabicName": "إدارة الطلبات",
     "sourceStatus": "GROUP LINK",
     "driveUrl": "https://drive.google.com/drive/folders/1qunt0uMMz1Q3EyNrLY1DJgmexvnOp_24",
     "deviceScope": [
@@ -2275,13 +2274,13 @@
       "backend_077",
       "backend_078",
       "backend_079"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_18.title"
   },
   {
     "id": "ADM-19",
     "surface": "admin",
     "englishName": "Customer Requests",
-    "arabicName": "طلبات العملاء",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1A8nI4o_jjyoTlR2T2nXJ2b7ZMfi68Upj",
     "deviceScope": [
@@ -2303,13 +2302,13 @@
       "backend_077",
       "backend_078",
       "backend_079"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_19.title"
   },
   {
     "id": "ADM-20",
     "surface": "admin",
     "englishName": "Overdue Requests",
-    "arabicName": "الطلبات المتأخرة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1eEytRpPosmYvn1GkqJT1QByUGuZxhpsJ",
     "deviceScope": [
@@ -2331,13 +2330,13 @@
       "backend_077",
       "backend_078",
       "backend_079"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_20.title"
   },
   {
     "id": "ADM-21",
     "surface": "admin",
     "englishName": "Contact Requests",
-    "arabicName": "طلبات التواصل",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1i8PdHEcfxqXPbnrAvwGH-eBEYUGDxbYE",
     "deviceScope": [
@@ -2359,13 +2358,13 @@
       "backend_077",
       "backend_078",
       "backend_079"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_21.title"
   },
   {
     "id": "ADM-22",
     "surface": "admin",
     "englishName": "Viewing Requests",
-    "arabicName": "طلبات المعاينة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1-yq0DjVfPvIA38DvJPOlBXGenMSOCRZD",
     "deviceScope": [
@@ -2387,13 +2386,13 @@
       "backend_077",
       "backend_078",
       "backend_079"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_22.title"
   },
   {
     "id": "ADM-23",
     "surface": "admin",
     "englishName": "Property Search Requests",
-    "arabicName": "طلبات البحث عن عقار",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1-QhIOQf0fPdV-cDfiyu_xysmg4wP8C3I",
     "deviceScope": [
@@ -2415,13 +2414,13 @@
       "backend_077",
       "backend_078",
       "backend_079"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_23.title"
   },
   {
     "id": "ADM-24",
     "surface": "admin",
     "englishName": "Request Issues & Reports",
-    "arabicName": "بلاغات ومشكلات الطلبات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1EjcMHZros-GyAcTG_yzY5_jGc9T_swon",
     "deviceScope": [
@@ -2443,13 +2442,13 @@
       "backend_077",
       "backend_078",
       "backend_079"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_24.title"
   },
   {
     "id": "ADM-25",
     "surface": "admin",
     "englishName": "Articles Management",
-    "arabicName": "إدارة المقالات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1mtUKZqqDoN5noUYT_XNmTZzm8Bta6VNS",
     "deviceScope": [
@@ -2473,13 +2472,13 @@
       "backend_035",
       "backend_036",
       "backend_037"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_25.title"
   },
   {
     "id": "ADM-26",
     "surface": "admin",
     "englishName": "Article Categories",
-    "arabicName": "تصنيفات المقالات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1syHK9e5B8eMCKaYcS7Tt-M_Ibtqugyj4",
     "deviceScope": [
@@ -2503,13 +2502,13 @@
       "backend_035",
       "backend_036",
       "backend_037"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_26.title"
   },
   {
     "id": "ADM-27",
     "surface": "admin",
     "englishName": "Community Management",
-    "arabicName": "إدارة الكوميونيتي",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1v-dhWpWpgDMJJK_J7QMX4KJrQ1LX2Hzw",
     "deviceScope": [
@@ -2533,13 +2532,13 @@
       "backend_035",
       "backend_036",
       "backend_037"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_27.title"
   },
   {
     "id": "ADM-28",
     "surface": "admin",
     "englishName": "Comments",
-    "arabicName": "التعليقات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1rf8YWR6oo3MlcWiksOyoJQkbP3bTpHpJ",
     "deviceScope": [
@@ -2563,13 +2562,13 @@
       "backend_035",
       "backend_036",
       "backend_037"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_28.title"
   },
   {
     "id": "ADM-29",
     "surface": "admin",
     "englishName": "Reports & Moderation",
-    "arabicName": "البلاغات والإشراف",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1un9tRaMEbov-zH_Pl7JgOlk5TvvcHR-K",
     "deviceScope": [
@@ -2593,13 +2592,13 @@
       "backend_035",
       "backend_036",
       "backend_037"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_29.title"
   },
   {
     "id": "ADM-30",
     "surface": "admin",
     "englishName": "About Platform",
-    "arabicName": "النبذة عن المنصة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1T4o9bQ0ebHJpX-fNIpRKDczlk3F37daH",
     "deviceScope": [
@@ -2623,13 +2622,13 @@
       "backend_035",
       "backend_036",
       "backend_037"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_30.title"
   },
   {
     "id": "ADM-31",
     "surface": "admin",
     "englishName": "Team Management",
-    "arabicName": "إدارة فريق العمل",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1k7lhpKe1sM8O1hQoLs6fTgY-88f_dlTf",
     "deviceScope": [
@@ -2653,13 +2652,13 @@
       "backend_035",
       "backend_036",
       "backend_037"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_31.title"
   },
   {
     "id": "ADM-32",
     "surface": "admin",
     "englishName": "Sadat Population Counter",
-    "arabicName": "عداد سكان مدينة السادات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1JWQ-qEIvxxqHBPnsGz2xDA2_kMG_sq7s",
     "deviceScope": [
@@ -2683,13 +2682,13 @@
       "backend_035",
       "backend_036",
       "backend_037"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_32.title"
   },
   {
     "id": "ADM-33",
     "surface": "admin",
     "englishName": "Ad Requests",
-    "arabicName": "طلبات الإعلانات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1vodkGQoNGThb-UrzVNR-N7uA3Of9_6c-",
     "deviceScope": [
@@ -2714,13 +2713,13 @@
       "backend_104",
       "backend_105",
       "backend_108"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_33.title"
   },
   {
     "id": "ADM-34",
     "surface": "admin",
     "englishName": "Pending Payment Proofs",
-    "arabicName": "الإثباتات المعلقة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1X7DQgPePHd2vGNbXdW9qdwNqluX-rvmQ",
     "deviceScope": [
@@ -2745,13 +2744,13 @@
       "backend_104",
       "backend_105",
       "backend_108"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_34.title"
   },
   {
     "id": "ADM-35",
     "surface": "admin",
     "englishName": "Approved Payment Proofs",
-    "arabicName": "الإثباتات المقبولة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1-CkxHZ4zDc4rnmBlVOqG2cjpNv0cKgkI",
     "deviceScope": [
@@ -2776,13 +2775,13 @@
       "backend_104",
       "backend_105",
       "backend_108"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_35.title"
   },
   {
     "id": "ADM-36",
     "surface": "admin",
     "englishName": "Ad Calendar",
-    "arabicName": "تقويم الإعلانات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1NU5LwfOuUFPZBwQDwPQGblfi8Z4Iiwhj",
     "deviceScope": [
@@ -2807,13 +2806,13 @@
       "backend_104",
       "backend_105",
       "backend_108"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_36.title"
   },
   {
     "id": "ADM-37",
     "surface": "admin",
     "englishName": "Pending Payments Review",
-    "arabicName": "مراجعة المدفوعات المعلقة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/102cwmkS9hhuqd6ED-V5x-SNOu-E4o-5d",
     "deviceScope": [
@@ -2838,13 +2837,13 @@
       "backend_104",
       "backend_105",
       "backend_108"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_37.title"
   },
   {
     "id": "ADM-38",
     "surface": "admin",
     "englishName": "Financial Review",
-    "arabicName": "الفحص المالي",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1Zt7UFy_7uDnJKHmBNFq4ErTkrECPQaL8",
     "deviceScope": [
@@ -2869,13 +2868,13 @@
       "backend_104",
       "backend_105",
       "backend_108"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_38.title"
   },
   {
     "id": "ADM-39",
     "surface": "admin",
     "englishName": "Commissions Management",
-    "arabicName": "إدارة العمولات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1t9KQogo6BKdm9zCLSagbFR_5c27xnTrH",
     "deviceScope": [
@@ -2898,13 +2897,13 @@
       "backend_112",
       "backend_114",
       "backend_115"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_39.title"
   },
   {
     "id": "ADM-40",
     "surface": "admin",
     "englishName": "Create Commission Policy",
-    "arabicName": "إنشاء سياسة عمولة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1re3_Mj3yrCDf6zOry5acvfH-nvLt90f4",
     "deviceScope": [
@@ -2927,13 +2926,13 @@
       "backend_112",
       "backend_114",
       "backend_115"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_40.title"
   },
   {
     "id": "ADM-41",
     "surface": "admin",
     "englishName": "Commission Change Log",
-    "arabicName": "سجل قرارات وتغييرات العمولات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1KAstGvgXaS2lFM3Rtki1Ueae-BkIMfP0",
     "deviceScope": [
@@ -2956,13 +2955,13 @@
       "backend_112",
       "backend_114",
       "backend_115"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_41.title"
   },
   {
     "id": "ADM-42",
     "surface": "admin",
     "englishName": "Account Commission",
-    "arabicName": "عمولة الحساب",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1EnlY-JZIiN2qTUNiCPoEpbn7KoojtuR6",
     "deviceScope": [
@@ -2985,13 +2984,13 @@
       "backend_112",
       "backend_114",
       "backend_115"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_42.title"
   },
   {
     "id": "ADM-43",
     "surface": "admin",
     "englishName": "Commission Exceptions",
-    "arabicName": "استثناءات العمولات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1ephF31UhqOBDeqVWS5jggCJruKlDqfBB",
     "deviceScope": [
@@ -3014,13 +3013,13 @@
       "backend_112",
       "backend_114",
       "backend_115"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_43.title"
   },
   {
     "id": "ADM-44",
     "surface": "admin",
     "englishName": "Create Commission Exception",
-    "arabicName": "إنشاء استثناء عمولة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1omJ-4MUy3SMnkCygfxwVA5UBST4UAWo-",
     "deviceScope": [
@@ -3043,13 +3042,13 @@
       "backend_112",
       "backend_114",
       "backend_115"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_44.title"
   },
   {
     "id": "ADM-45",
     "surface": "admin",
     "englishName": "Commission Policy Confirmations",
-    "arabicName": "تأكيد سياسات العمولات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1kKKdCYENuH3RIB7rLEZ4-sNsuht9ewhB",
     "deviceScope": [
@@ -3072,13 +3071,13 @@
       "backend_112",
       "backend_114",
       "backend_115"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_45.title"
   },
   {
     "id": "ADM-46",
     "surface": "admin",
     "englishName": "Ad Banners",
-    "arabicName": "البانرات الإعلانية",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1bt_4Eee608KYDLwS1DDAyYRFefQ0gV2X",
     "deviceScope": [
@@ -3100,13 +3099,13 @@
       "backend_037",
       "backend_038",
       "backend_106"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_46.title"
   },
   {
     "id": "ADM-47",
     "surface": "admin",
     "englishName": "Add New Banner",
-    "arabicName": "إضافة بانر جديد",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1e0FVw_SDl2cKAr7KXwRKL3jAMnNUQh23",
     "deviceScope": [
@@ -3128,13 +3127,13 @@
       "backend_037",
       "backend_038",
       "backend_106"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_47.title"
   },
   {
     "id": "ADM-48",
     "surface": "admin",
     "englishName": "Sadat Real Estate Tips",
-    "arabicName": "نصائح عقارات السادات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/16zSWznfKZOkXuYUg7oB1774r--fAbF9f",
     "deviceScope": [
@@ -3156,13 +3155,13 @@
       "backend_037",
       "backend_038",
       "backend_106"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_48.title"
   },
   {
     "id": "ADM-49",
     "surface": "admin",
     "englishName": "Homepage Management",
-    "arabicName": "إدارة الصفحة الرئيسية",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1hzPMW4k_59AQRZpD_9nBmAMI7pV67f9d",
     "deviceScope": [
@@ -3184,13 +3183,13 @@
       "backend_037",
       "backend_038",
       "backend_106"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_49.title"
   },
   {
     "id": "ADM-50",
     "surface": "admin",
     "englishName": "Platform Information",
-    "arabicName": "بيانات المنصة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1kU-ZltMai1vFLk-_W8IhdAnJMrnCIw7J",
     "deviceScope": [
@@ -3212,13 +3211,13 @@
       "backend_037",
       "backend_038",
       "backend_106"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_50.title"
   },
   {
     "id": "ADM-51",
     "surface": "admin",
     "englishName": "Contact Information",
-    "arabicName": "بيانات التواصل",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1_1LBD4BnQ3pFWe3OAiMziiw9eKbQ51Zm",
     "deviceScope": [
@@ -3240,13 +3239,13 @@
       "backend_037",
       "backend_038",
       "backend_106"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_51.title"
   },
   {
     "id": "ADM-52",
     "surface": "admin",
     "englishName": "Social Media Accounts",
-    "arabicName": "حسابات التواصل الاجتماعي",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1GYULMZZDXwyqfI2GOBMJavvzlLNLRfLX",
     "deviceScope": [
@@ -3268,13 +3267,13 @@
       "backend_037",
       "backend_038",
       "backend_106"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_52.title"
   },
   {
     "id": "ADM-53",
     "surface": "admin",
     "englishName": "Property Settings",
-    "arabicName": "إعدادات العقارات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1BNlfcKdMtypREnOUWe_Lh4px7TCFQp_1",
     "deviceScope": [
@@ -3294,13 +3293,13 @@
     "backendTaskIds": [
       "backend_039",
       "backend_123"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_53.title"
   },
   {
     "id": "ADM-54",
     "surface": "admin",
     "englishName": "Request Settings",
-    "arabicName": "إعدادات الطلبات",
     "sourceStatus": "GROUP LINK",
     "driveUrl": "https://drive.google.com/drive/folders/1qunt0uMMz1Q3EyNrLY1DJgmexvnOp_24",
     "deviceScope": [
@@ -3320,13 +3319,13 @@
     "backendTaskIds": [
       "backend_039",
       "backend_123"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_54.title"
   },
   {
     "id": "ADM-55",
     "surface": "admin",
     "englishName": "Advertising Settings",
-    "arabicName": "إعدادات الإعلانات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1aVqDrydYZtIn1KMOhQEsxc7xOps-kzcM",
     "deviceScope": [
@@ -3346,13 +3345,13 @@
     "backendTaskIds": [
       "backend_039",
       "backend_123"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_55.title"
   },
   {
     "id": "ADM-56",
     "surface": "admin",
     "englishName": "General SEO",
-    "arabicName": "SEO عام",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1GIDQHo-0SB-z9nY7tJk7S7pUiC5qo3hN",
     "deviceScope": [
@@ -3372,13 +3371,13 @@
     "backendTaskIds": [
       "backend_039",
       "backend_123"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_56.title"
   },
   {
     "id": "ADM-57",
     "surface": "admin",
     "englishName": "Privacy & Security",
-    "arabicName": "الخصوصية والأمان",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1Y0PqcQl6kHn-8HNxXQA1f81aT-uAVIIL",
     "deviceScope": [
@@ -3398,13 +3397,13 @@
     "backendTaskIds": [
       "backend_039",
       "backend_123"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_57.title"
   },
   {
     "id": "ADM-58",
     "surface": "admin",
     "englishName": "Display Settings",
-    "arabicName": "إعدادات العرض",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/189KpHFjhdzbl31vpvW3LG11yxWD3Hx3W",
     "deviceScope": [
@@ -3424,13 +3423,13 @@
     "backendTaskIds": [
       "backend_039",
       "backend_123"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_58.title"
   },
   {
     "id": "ADM-59",
     "surface": "admin",
     "englishName": "Admin Users",
-    "arabicName": "المستخدمون الإداريون",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1wx5UUBb6FLodC04BNax8sovunKAWbITH",
     "deviceScope": [
@@ -3451,13 +3450,13 @@
       "backend_016",
       "backend_017",
       "backend_121"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_59.title"
   },
   {
     "id": "ADM-60",
     "surface": "admin",
     "englishName": "Add Admin User",
-    "arabicName": "إضافة مستخدم إداري",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1Vn-oqbWZlGbkbUnEHBQYQTfbRuzieMyb",
     "deviceScope": [
@@ -3478,13 +3477,13 @@
       "backend_016",
       "backend_017",
       "backend_121"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_60.title"
   },
   {
     "id": "ADM-61",
     "surface": "admin",
     "englishName": "Admin User Details — Super Admin",
-    "arabicName": "تفاصيل المستخدم الإداري — مدير النظام",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1WYQc8OIzjQJpSA6_PJRVdrVnxRcCj7nL",
     "deviceScope": [
@@ -3505,13 +3504,13 @@
       "backend_016",
       "backend_017",
       "backend_121"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_61.title"
   },
   {
     "id": "ADM-62",
     "surface": "admin",
     "englishName": "Admin User Details — Standard Role",
-    "arabicName": "تفاصيل المستخدم الإداري — دور مخصص",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1Ib6-LMKjv0diQpa3vVXJpkSQR2UYtVtW",
     "deviceScope": [
@@ -3532,13 +3531,13 @@
       "backend_016",
       "backend_017",
       "backend_121"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_62.title"
   },
   {
     "id": "ADM-63",
     "surface": "admin",
     "englishName": "Roles & Permissions",
-    "arabicName": "الأدوار والصلاحيات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1DuWzNGZwAG3NViUjxujCBz0SJ0cut9IC",
     "deviceScope": [
@@ -3559,13 +3558,13 @@
       "backend_016",
       "backend_017",
       "backend_121"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_63.title"
   },
   {
     "id": "ADM-64",
     "surface": "admin",
     "englishName": "Role Details & Permissions",
-    "arabicName": "تفاصيل الدور والصلاحيات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1NwvLAwHhG6yw75lnR0DRr0CerhiCFtLg",
     "deviceScope": [
@@ -3586,13 +3585,13 @@
       "backend_016",
       "backend_017",
       "backend_121"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_64.title"
   },
   {
     "id": "ADM-65",
     "surface": "admin",
     "englishName": "Admin Notifications",
-    "arabicName": "إشعارات الإدارة",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/16zLyUMI_IPh4w-n4mt_-B6nFmSreYDj_",
     "deviceScope": [
@@ -3611,13 +3610,13 @@
     "frontendTaskId": "frontend_076",
     "backendTaskIds": [
       "backend_122"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_65.title"
   },
   {
     "id": "ADM-66",
     "surface": "admin",
     "englishName": "Audit Log",
-    "arabicName": "سجل الإجراءات",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1-7uwvvFg0Y3J1jeuF3Jj6-Td4Y03fIpL",
     "deviceScope": [
@@ -3636,6 +3635,7 @@
     "frontendTaskId": "frontend_076",
     "backendTaskIds": [
       "backend_020"
-    ]
+    ],
+    "localizedNameKey": "screens.adm_66.title"
   }
 ]

@@ -2,31 +2,31 @@
 
 ## Base
 
-- Prefix: `/api/v1` مرة واحدة.
-- JSON UTF-8، timestamps ISO-8601 UTC، وعرض timezone في الواجهة.
-- IDs strings؛ لا تكشف internal sequences.
+- Apply `/api/v1` exactly once.
+- Use UTF-8 JSON and ISO-8601 UTC timestamps; presentation timezone belongs to the client.
+- Expose identifiers as strings and never reveal internal sequences.
 
-## Success
+## Success Envelope
 
 `{ "data": ..., "meta": { "requestId": "...", "page": ... } }`
 
-## Error
+## Error Envelope
 
 `{ "error": { "code": "PROPERTY_NOT_FOUND", "messageKey": "errors.propertyNotFound", "details": [], "requestId": "..." } }`
 
 ## Lists
 
-`page/limit` أو cursor وفق طبيعة المورد، مع max limit، allowlisted sort/filter، وtotal فقط عندما يكون عمليًا.
+Use page/limit or cursor pagination according to the resource, with a maximum limit, allowlisted sorting and filtering, and total counts only when practical.
 
 ## Mutation Safety
 
-- Validation قبل service.
-- Idempotency-Key للعمليات المعرضة لإعادة الإرسال.
-- If-Match/version للمسودات والإعدادات الحساسة.
-- الحالة الجديدة و`availableActions` تعود بعد كل transition.
+- Validate before entering the service layer.
+- Use `Idempotency-Key` for replay-prone operations.
+- Use `If-Match` or a version field for drafts and sensitive settings.
+- Return the new state and `availableActions` after every transition.
 
 ## Security
 
-- Bearer access token؛ refresh opaque داخل HttpOnly Secure cookie.
-- permission + ownership policies داخل API.
-- private files عبر authorized short-lived delivery.
+- Use bearer access tokens and opaque refresh tokens in HttpOnly Secure cookies.
+- Enforce permissions and ownership inside the API.
+- Deliver private files through authorized short-lived access.

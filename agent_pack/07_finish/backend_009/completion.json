@@ -1,0 +1,206 @@
+{
+  "taskId": "backend_009",
+  "summary": "Established the executable OpenAPI 3.1 and Postman foundation without adding or claiming product endpoints. OpenAPI now declares JSON Schema 2020-12 and the future /api/v1 product base while preserving root-level operational probes. Postman now has safe baseUrl/apiV1BaseUrl variables, synthetic local environment scaffolding, and operational assertions. Added typed drift validators and negative tests that reject undocumented runtime drift, unimplemented routes, duplicate API prefixes, unresolved local references, and checked-in secret-shaped variables. Runtime inventory remains exactly GET /health and GET /ready.",
+  "filesChanged": [
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/docs/validate-api-artifacts.ts",
+    "apps/api/tests/docs/api-artifacts.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "apps/api/postman/Sadat-Real-Estate.local.postman_environment.json",
+    "apps/api/package.json",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/api-artifacts.md",
+    "docs/repository-inventory.md",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/step_info.json",
+    "agent_pack/07_finish/backend_009/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Initial and pre-close audits reported 188 tasks, English policy compliance, backend_009 as the only in-progress task after transition, and zero errors."
+    },
+    {
+      "command": "node agent_pack/scripts/select_next_step.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Selected backend_009 with backend_008 complete."
+    },
+    {
+      "command": "node agent_pack/scripts/set_task_status.mjs backend_009 in_progress",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Only backend_009 entered in-progress state."
+    },
+    {
+      "command": "node -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported v22.18.0; the declared Node 24 baseline mismatch is recorded as a known gap."
+    },
+    {
+      "command": "npm.cmd -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported npm 11.6.4."
+    },
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Clean installation completed with zero vulnerabilities; Node engine warnings matched the known local runtime gap."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared contracts typecheck passed."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API source and tests typecheck passed on the final implementation."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax and workspace typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy and ESLint checks passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:integration",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 11 integration tests passed, including seven focused positive and negative API-artifact tests plus operational route/readiness regressions."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Passed all 12 workspace-policy tests and all 49 API tests."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 49 API tests passed."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 49 API tests passed with 92.48% lines, 84.69% branches, and 90.59% functions, exceeding configured thresholds."
+    },
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts build passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API build passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root build passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported zero vulnerabilities."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Synthetic non-production environment validation passed; no real .env was read."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory remains exactly GET /health and GET /ready; no product route was added."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI 3.1 version, dialect, base path, exact runtime routes, required schemas, and local references validated."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman collection and local environment validated for exact runtime routes, safe loopback defaults, a single /api/v1 prefix, and absence of secret-shaped variables."
+    },
+    {
+      "command": "node -e \"for (const f of ['package.json','package-lock.json','apps/api/package.json','apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json','apps/api/postman/Sadat-Real-Estate.local.postman_environment.json']) JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('JSON_VALID')\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All changed and relevant JSON artifacts parsed successfully."
+    },
+    {
+      "command": "npm.cmd run quality",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The final local CI-equivalent gate passed lint, typecheck, workspace tests, coverage, build, inventory, OpenAPI/Postman validation, dependency audit, and Agent Pack audit."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors were found."
+    },
+    {
+      "command": "node -e \"const p=require('./package.json'); for (const n of ['test:e2e','test:e2e:api','test:e2e:api:full','test:visual','test:a11y','security:check']) console.log(n+'='+(p.scripts?.[n]??'MISSING'))\"",
+      "exitCode": 0,
+      "result": "skipped",
+      "notes": "Discovery confirmed the optional E2E, visual, accessibility, and dedicated security-check scripts are not defined; none is reported as passed."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B0_discovery_foundation/backend_009.md",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/docs/validate-api-artifacts.ts",
+    "apps/api/tests/docs/api-artifacts.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "apps/api/postman/Sadat-Real-Estate.local.postman_environment.json",
+    "docs/api/api-artifacts.md"
+  ],
+  "scopeNotes": [
+    "apps/api/package.json is outside the primary allowed roots but was required to point the existing validation commands at the new docs-owned executable validators.",
+    "apps/api/src/modules/testing/test-suites.ts is outside the primary allowed roots but was required because the existing harness rejects any unclassified API test file.",
+    "docs/repository-inventory.md is outside docs/api and was updated because the selected task made its prior statement that the /api/v1 documentation foundation was absent stale.",
+    "No runtime route, controller, product DTO, authentication behavior, database model, OpenAPI planned operation, or Postman planned request was added."
+  ],
+  "knownGaps": [
+    "Verification used Node v22.18.0 while the repository declares Node >=24 <25; the first hosted Node 24 CI run remains external.",
+    "No implemented /api/v1 product route exists yet, so the base is represented only as validated OpenAPI metadata and safe Postman variables; this is intentional and avoids documenting planned endpoints as active.",
+    "No isolated TEST_MONGODB_URI or live MongoDB topology was needed or exercised for this documentation-only task.",
+    "Postman scripts were structurally validated but were not executed by an external Newman/live-server runner; equivalent operational behavior is covered by passing API tests.",
+    "Optional full E2E, visual, accessibility, and dedicated security-check scripts remain undefined and are not claimed as passed."
+  ],
+  "completedAt": "2026-08-12T02:06:03.5777726Z"
+}

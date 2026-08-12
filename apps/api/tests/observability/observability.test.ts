@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { setTimeout as delay } from 'node:timers/promises';
-import { createApp } from '../../src/app.js';
 import { createApiServer, startApiServer, stopApiServer } from '../../src/server.js';
 import {
   createRequestContext,
