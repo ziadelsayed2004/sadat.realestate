@@ -118,7 +118,7 @@
       "seeker"
     ],
     "purpose": "Create seeker account",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -130,7 +130,7 @@
       "authenticated"
     ],
     "purpose": "Current profile",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -142,7 +142,7 @@
       "authenticated"
     ],
     "purpose": "Update owned profile",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -154,7 +154,7 @@
       "authenticated"
     ],
     "purpose": "Read preferences",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -166,7 +166,7 @@
       "authenticated"
     ],
     "purpose": "Update preferences",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {

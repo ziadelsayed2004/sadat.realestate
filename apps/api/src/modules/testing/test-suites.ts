@@ -7,6 +7,8 @@ export const TEST_SUITES = Object.freeze({
     'tests/auth/otp.test.ts',
     'tests/auth/repository.test.ts',
     'tests/auth/service.test.ts',
+    'tests/seeker/contracts.test.ts',
+    'tests/seeker/service.test.ts',
     'tests/config/environment.test.ts',
     'tests/contracts/error-boundary.test.ts',
     'tests/database/connection.test.ts',
@@ -23,6 +25,7 @@ export const TEST_SUITES = Object.freeze({
   ]),
   api: Object.freeze([
     'tests/auth/router.test.ts',
+    'tests/seeker/router.test.ts',
     'tests/server.test.ts',
     'tests/security/middleware.test.ts',
     'tests/observability/observability.test.ts'

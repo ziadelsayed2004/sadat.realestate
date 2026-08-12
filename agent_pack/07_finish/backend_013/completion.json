@@ -1,0 +1,140 @@
+{
+  "taskId": "backend_013",
+  "summary": "Implemented seeker registration through the shared OTP grant boundary, verified profile and preferences contracts, self-owned bearer-authenticated profile/preferences operations, route inventory, OpenAPI/Postman artifacts, and unit/API coverage.",
+  "filesChanged": [
+    "apps/api/src/modules/seeker/auth.ts",
+    "apps/api/src/modules/seeker/repository.ts",
+    "apps/api/src/modules/seeker/router.ts",
+    "apps/api/src/modules/seeker/runtime.ts",
+    "apps/api/src/modules/seeker/service.ts",
+    "apps/api/tests/seeker/contracts.test.ts",
+    "apps/api/tests/seeker/router.test.ts",
+    "apps/api/tests/seeker/service.test.ts",
+    "packages/contracts/src/seeker/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/identity/models.ts",
+    "apps/api/src/modules/auth/router.ts",
+    "apps/api/src/modules/auth/runtime.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/tests/docs/api-artifacts.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "docs/api/seeker.md",
+    "docs/api/authentication.md",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/step_info.json",
+    "agent_pack/07_finish/backend_013/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace dependencies installed from the lockfile; npm reported 0 vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root TypeScript project references and API/contracts typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "99 tests passed across workspace and API suites."
+    },
+    {
+      "command": "npm.cmd run test:coverage --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "99 API tests passed; coverage reported 92.02% lines, 84.84% branches, and 89.88% functions."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace build passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory passed and lists 12 active routes, including the five seeker routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI 3.1 artifact parses and validates."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman collection parses and validates with the five seeker requests."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities reported."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_backend013_contract_only'; $env:AUTH_ACCESS_TOKEN_SECRET='Y2Fub25pY2FsLXN5bnRoZXRpYy1rZXktMzItYnl0ZXM'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Synthetic test-only environment validation passed; variables were removed afterward and no real .env was read."
+    },
+    {
+      "command": "node packages/config/scripts/check-syntax.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository configuration syntax check passed."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack integrity audit reported zero errors before closure."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors in the implementation diff."
+    },
+    {
+      "command": "TEST_MONGODB_URI availability check",
+      "exitCode": 0,
+      "result": "blocked",
+      "notes": "Blocked — prerequisites unavailable: isolated MongoDB replica-set TEST_MONGODB_URI is not configured. No live MongoDB test was claimed."
+    }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/seeker/router.ts defines POST /api/v1/auth/register/seeker, GET/PATCH /api/v1/me, and GET/PATCH /api/v1/me/preferences.",
+    "apps/api/src/modules/seeker/auth.ts enforces bearer access-token authentication and seeker-role authorization with subject self-ownership.",
+    "packages/contracts/src/seeker/index.ts provides strict Zod request, response, profile, preferences, and registration contracts.",
+    "apps/api/tests/seeker/contracts.test.ts, service.test.ts, and router.test.ts cover valid/invalid payloads, OTP grant redemption, duplicate registration, authorization, and self-ownership.",
+    "apps/api/openapi/openapi.json, apps/api/postman/Sadat-Real-Estate.postman_collection.json, and API_ENDPOINT_BLUEPRINT.json are synchronized with the five active routes."
+  ],
+  "knownGaps": [
+    "Live integration against an isolated MongoDB replica set remains blocked because TEST_MONGODB_URI is not configured.",
+    "The local runtime is Node 22.18.0 while the repository declares Node 24 as its baseline; all available verification commands passed under the local runtime.",
+    "No optional browser E2E, visual, or accessibility scripts are configured for this backend task."
+  ],
+  "completedAt": "2026-08-13T01:21:35.2835533+03:00"
+}

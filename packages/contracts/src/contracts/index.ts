@@ -49,6 +49,31 @@ export {
   otpVerifySuccessEnvelopeSchema
 } from '../auth/index.js';
 
+export {
+  registrationTokenSchema,
+  seekerLocaleSchema,
+  seekerPreferencesSchema,
+  seekerPreferencesPatchSchema,
+  seekerPreferencesSuccessEnvelopeSchema,
+  seekerProfileDataSchema,
+  seekerProfilePatchSchema,
+  seekerProfileSuccessEnvelopeSchema,
+  seekerRegistrationDataSchema,
+  seekerRegistrationRequestSchema,
+  seekerRegistrationSuccessEnvelopeSchema
+} from '../seeker/index.js';
+
+export type {
+  SeekerLocale,
+  SeekerPreferences,
+  SeekerPreferencesData,
+  SeekerPreferencesPatch,
+  SeekerProfileData,
+  SeekerProfilePatch,
+  SeekerRegistrationData,
+  SeekerRegistrationRequest
+} from '../seeker/index.js';
+
 export type {
   AdminLoginRequest,
   AuthAccountState,

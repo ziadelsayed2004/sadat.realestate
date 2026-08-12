@@ -43,7 +43,10 @@ test('OpenAPI 3.1 declares the future product base without prefixing operational
   assert.equal(openApi.openapi, '3.1.0');
   assert.equal(openApi['x-product-api-base-path'], PRODUCT_API_BASE_PATH);
   assert.deepEqual(validateOpenApiDocument(openApi), []);
-  assert.equal(collectOpenApiRoutes(openApi).filter((route) => route.includes('/api/v1/')).length, 5);
+  assert.equal(
+    collectOpenApiRoutes(openApi).filter((route) => route.includes('/api/v1/')).length,
+    IMPLEMENTED_ROUTE_DEFINITIONS.filter((route) => route.path.startsWith('/api/v1/')).length
+  );
 });
 
 test('Postman collection and environment use safe loopback variables with api/v1 exactly once', () => {

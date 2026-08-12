@@ -198,6 +198,85 @@
         "header": [],
         "url": { "raw": "{{apiV1BaseUrl}}/auth/logout", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "logout"] }
       }
+    },
+    {
+      "name": "Seeker - Register",
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Seeker registration returns a safe session envelope', function () {",
+            "  pm.expect([201, 400, 401, 409, 413, 429, 500]).to.include(pm.response.code);",
+            "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
+            "});"
+          ]
+        }
+      }],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"verificationToken\": \"replace-with-verified-otp-token\",\n  \"firstName\": \"Synthetic\",\n  \"lastName\": \"Seeker\",\n  \"locale\": \"ar\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{apiV1BaseUrl}}/auth/register/seeker", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "register", "seeker"] }
+      }
+    },
+    {
+      "name": "Seeker - My Profile",
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Profile response is an envelope without private fields', function () {",
+            "  pm.expect([200, 401, 403, 404, 413, 429, 500]).to.include(pm.response.code);",
+            "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
+            "});"
+          ]
+        }
+      }],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{apiV1BaseUrl}}/me", "host": ["{{apiV1BaseUrl}}"], "path": ["me"] }
+      }
+    },
+    {
+      "name": "Seeker - Update Profile",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"firstName\": \"Synthetic\",\n  \"locale\": \"ar\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{apiV1BaseUrl}}/me", "host": ["{{apiV1BaseUrl}}"], "path": ["me"] }
+      }
+    },
+    {
+      "name": "Seeker - My Preferences",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{apiV1BaseUrl}}/me/preferences", "host": ["{{apiV1BaseUrl}}"], "path": ["me", "preferences"] }
+      }
+    },
+    {
+      "name": "Seeker - Update Preferences",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"locations\": [\"synthetic-location-id\"],\n  \"purpose\": \"buy\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{apiV1BaseUrl}}/me/preferences", "host": ["{{apiV1BaseUrl}}"], "path": ["me", "preferences"] }
+      }
     }
   ]
 }

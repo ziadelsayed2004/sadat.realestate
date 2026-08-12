@@ -1,35 +1,39 @@
 {
-  "generatedAt": "2026-08-12T22:05:46.165Z",
-  "selectedTaskId": "backend_013",
+  "generatedAt": "2026-08-12T22:23:03.257Z",
+  "selectedTaskId": "backend_014",
   "selectedTaskStatus": "open",
-  "selectedTaskFile": "04_tracks/backend/B1_identity_access/backend_013.md",
+  "selectedTaskFile": "04_tracks/backend/B1_identity_access/backend_014.md",
   "selectedTask": {
-    "id": "backend_013",
+    "id": "backend_014",
     "phase": "B1_identity_access",
-    "area": "seeker",
-    "title": "Seeker Registration, Profile, and Preferences",
-    "goal": "Implement seeker registration, verification, profile management, and search preferences with strict self-ownership.",
+    "area": "provider",
+    "title": "Provider Types and Registration Application",
+    "goal": "Implement provider-type selection and a multi-step onboarding draft with Pending, Needs Information, Approved, and Rejected states.",
     "kind": "api",
     "screens": [],
     "sourceRefs": [
-      "AUTH-02",
-      "AUTH-03",
-      "AUTH-06",
-      "SEK-08",
-      "SEK-09",
-      "SEK-10"
+      "AUTH-07",
+      "AUTH-08",
+      "AUTH-09",
+      "AUTH-10",
+      "AUTH-11",
+      "AUTH-13",
+      "AUTH-14",
+      "AUTH-15",
+      "AUTH-16",
+      "AUTH-17"
     ],
     "notes": [],
     "track": "backend",
-    "sequence": 14,
+    "sequence": 15,
     "dependsOn": [
-      "backend_012"
+      "backend_013"
     ],
-    "atomicTaskFile": "04_tracks/backend/B1_identity_access/backend_013.md",
+    "atomicTaskFile": "04_tracks/backend/B1_identity_access/backend_014.md",
     "allowedRoots": [
-      "apps/api/src/modules/seeker/**",
-      "apps/api/tests/seeker/**",
-      "packages/contracts/src/seeker/**",
+      "apps/api/src/modules/provider/**",
+      "apps/api/tests/provider/**",
+      "packages/contracts/src/provider/**",
       "docs/api/**",
       "apps/api/openapi/**",
       "apps/api/postman/**",
@@ -55,11 +59,11 @@
   "counts": {
     "backend": {
       "total": 113,
-      "open": 100,
+      "open": 99,
       "in_progress": 0,
       "partial": 0,
       "blocked": 0,
-      "complete": 13
+      "complete": 14
     },
     "frontend": {
       "total": 75,
@@ -72,15 +76,6 @@
   },
   "blockedTasks": [],
   "blockedByDependencies": [
-    {
-      "taskId": "backend_014",
-      "unresolved": [
-        {
-          "taskId": "backend_013",
-          "status": "open"
-        }
-      ]
-    },
     {
       "taskId": "backend_015",
       "unresolved": [

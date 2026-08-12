@@ -36,6 +36,17 @@ export interface UserRecord {
 
 export interface SeekerProfileRecord {
   userId: Types.ObjectId;
+  firstName?: string;
+  lastName?: string;
+  preferences?: {
+    propertyTypes?: string[];
+    locations?: string[];
+    purpose?: 'buy' | 'rent';
+    minPrice?: number;
+    maxPrice?: number;
+    bedroomsMin?: number;
+    bedroomsMax?: number;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -136,7 +147,20 @@ userSchema.index(
 userSchema.index({ roleType: 1, status: 1 }, { name: 'users_role_status' });
 
 const seekerProfileSchema = new Schema<SeekerProfileRecord>(
-  { userId: { type: Schema.Types.ObjectId, required: true, immutable: true, ref: 'User' } },
+  {
+    userId: { type: Schema.Types.ObjectId, required: true, immutable: true, ref: 'User' },
+    firstName: { type: String, trim: true, maxlength: 80 },
+    lastName: { type: String, trim: true, maxlength: 80 },
+    preferences: {
+      propertyTypes: { type: [String], default: undefined },
+      locations: { type: [String], default: undefined },
+      purpose: { type: String, enum: ['buy', 'rent'] },
+      minPrice: { type: Number, min: 0 },
+      maxPrice: { type: Number, min: 0 },
+      bedroomsMin: { type: Number, min: 0, max: 100 },
+      bedroomsMax: { type: Number, min: 0, max: 100 }
+    }
+  },
   { ...strictOptions, collection: 'seeker_profiles' }
 );
 seekerProfileSchema.index({ userId: 1 }, { name: 'seeker_profiles_user_unique', unique: true });

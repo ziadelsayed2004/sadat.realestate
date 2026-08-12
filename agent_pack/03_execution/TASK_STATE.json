@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-12T21:22:53.133Z",
+  "updatedAt": "2026-08-12T22:22:26.693Z",
   "tasks": {
     "backend_000": {
       "status": "complete",
@@ -94,11 +94,11 @@
       "evidencePath": "07_finish/backend_012/completion.json"
     },
     "backend_013": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-12T22:08:24.715Z",
+      "completedAt": "2026-08-12T22:22:26.693Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/backend_013/completion.json"
     },
     "backend_014": {
       "status": "open",

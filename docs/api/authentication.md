@@ -9,10 +9,11 @@
 | `POST /api/v1/auth/login` | Public, rate limited | Accepts only normalized Admin email and password; returns a signed access token and sets an opaque refresh cookie. |
 | `POST /api/v1/auth/otp/send` | Public, globally and per-target rate limited | Creates a five-minute seeker/provider phone challenge and asks the configured adapter to deliver it. Returns `202` without the code. |
 | `POST /api/v1/auth/otp/verify` | Public, rate limited | Consumes a valid challenge once. Login returns the shared session and refresh cookie; registration returns a ten-minute, single-use verification authority. |
+| `POST /api/v1/auth/register/seeker` | Verified registration authority | Consumes the seeker OTP authority once, creates the verified phone-owned seeker profile, and returns the shared session with a refresh cookie. |
 | `POST /api/v1/auth/refresh` | `sadat_refresh` cookie | Rotates the opaque token exactly once, revokes the predecessor, and detects reuse. |
 | `POST /api/v1/auth/logout` | `sadat_refresh` cookie | Revokes the current session and clears the cookie. |
 
-Account creation, password reset, session listing, and per-session management remain planned. OTP registration verification does not create an account; `backend_013` owns Seeker registration and later provider onboarding owns Provider account creation.
+Provider account creation, password reset, session listing, and per-session management remain planned. OTP registration verification is only an authority; `backend_013` consumes it for Seeker registration, and later provider onboarding owns Provider account creation.
 
 ## Phone and request contracts
 
@@ -36,7 +37,7 @@ Strict runtime schemas reject unknown fields, `admin` roles, unsupported purpose
 - Admin passwords are hashed with Argon2id. Only the dedicated `admin_credentials` collection stores the hash; normal queries and JSON omit it.
 - Access tokens use a short-lived signed JWT-compatible `HS256` shape with issuer, audience, user ID, session ID, role, account state, issue/expiry times, and a unique token ID. `AUTH_ACCESS_TOKEN_SECRET` must be a canonical base64url value representing at least 32 random bytes and is never logged or returned.
 - Refresh tokens are 32 random bytes encoded with base64url. Only their SHA-256 hashes are stored in `sessions`.
-- Successful authentication uses the same access/refresh model for every role. Verified phone login calls the same session issuer as Admin login; account registration does not issue a session in this task.
+- Successful authentication uses the same access/refresh model for every role. Verified phone login and Seeker registration call the same session issuer as Admin login; the opaque refresh token remains cookie-only.
 
 ## Rotation and replay policy
 

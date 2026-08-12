@@ -12,10 +12,12 @@ import {
   type ObservabilityOptions
 } from './modules/observability/middleware.js';
 import { createAuthRouter, type AuthRouterDependencies } from './modules/auth/router.js';
+import { createSeekerRouter, type SeekerRouterDependencies } from './modules/seeker/router.js';
 
 export interface AppDependencies {
   database: DatabaseReadiness;
   auth?: AuthRouterDependencies;
+  seeker?: SeekerRouterDependencies;
   security?: SecurityOptions;
   observability?: ObservabilityOptions;
 }
@@ -35,6 +37,7 @@ export function createApp(dependencies: AppDependencies): Express {
   for (const middleware of createSecurityMiddleware(security)) app.use(middleware);
   app.use(createOperationalRouter(dependencies.database, dependencies.auth?.otpService));
   if (dependencies.auth) app.use('/api/v1/auth', createAuthRouter(dependencies.auth));
+  if (dependencies.seeker) app.use('/api/v1', createSeekerRouter(dependencies.seeker));
   app.use(createSecurityErrorHandler());
   return app;
 }

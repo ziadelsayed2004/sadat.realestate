@@ -12,6 +12,7 @@ import { getRequestContext } from '../observability/context.js';
 import type { AuthCookiePolicy } from './environment.js';
 import { AuthServiceError, type AuthService } from './service.js';
 import { OtpServiceError, type OtpService } from './otp-service.js';
+import type { AccessTokenService } from './crypto.js';
 
 export const AUTH_ROUTE_DEFINITIONS = [
   { method: 'POST', path: '/api/v1/auth/login', operationId: 'loginAdmin' },
@@ -25,6 +26,7 @@ export interface AuthRouterDependencies {
   service: AuthService;
   otpService: OtpService;
   cookie: AuthCookiePolicy;
+  accessTokens?: AccessTokenService;
 }
 
 const AUTH_ERROR_MAP = Object.freeze({

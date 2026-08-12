@@ -37,13 +37,14 @@ export function createAuthRuntime(
   const identityModels = createIdentityModels(connection);
   const authModels = createAuthModels(connection);
   const repository = createMongooseAuthRepository(identityModels, authModels);
+  const accessTokens = createHmacAccessTokenService(
+    environment.accessTokenSecret,
+    environment.accessTokenTtlSeconds
+  );
   const service = createAuthService({
     repository,
     passwordHasher: createArgon2PasswordHasher(),
-    accessTokens: createHmacAccessTokenService(
-      environment.accessTokenSecret,
-      environment.accessTokenTtlSeconds
-    ),
+    accessTokens,
     refreshTokens: createOpaqueTokenService(),
     accessTokenTtlSeconds: environment.accessTokenTtlSeconds,
     refreshTokenTtlSeconds: environment.refreshTokenTtlSeconds
@@ -59,7 +60,7 @@ export function createAuthRuntime(
     verificationTokens: createOpaqueTokenService(),
     authService: service
   });
-  return { service, otpService, cookie: environment.cookie };
+  return { service, otpService, cookie: environment.cookie, accessTokens };
 }
 
 export { createAuthRouter };

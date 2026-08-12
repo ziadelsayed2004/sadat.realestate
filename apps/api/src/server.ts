@@ -12,6 +12,7 @@ import {
   parseAuthEnvironment
 } from './modules/auth/environment.js';
 import { createAuthRuntime } from './modules/auth/runtime.js';
+import { createSeekerRuntime } from './modules/seeker/runtime.js';
 
 export interface ApiListenOptions {
   host: string;
@@ -84,7 +85,14 @@ async function runEntrypoint(): Promise<void> {
   const database = createDatabaseConnection(databaseEnvironment, runtimeEnvironment.appEnvironment);
   await database.connect();
   const auth = createAuthRuntime(database.nativeConnection, authEnvironment);
-  const server = createApiServer({ database, auth });
+  if (!auth.accessTokens) throw new Error('Auth access-token verifier is required for seeker routes');
+  const seeker = createSeekerRuntime(
+    database.nativeConnection,
+    auth.service,
+    auth.accessTokens,
+    auth.cookie
+  );
+  const server = createApiServer({ database, auth, seeker });
   let shuttingDown = false;
 
   const shutdown = async () => {
