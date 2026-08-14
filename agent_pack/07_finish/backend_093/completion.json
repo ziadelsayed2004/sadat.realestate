@@ -1,0 +1,12 @@
+{
+  "taskId":"backend_093",
+  "summary":"Implemented strict owned community post creation, edit, removal, moderation state, and public filtering with bounded body validation and IDOR coverage.",
+  "filesChanged":["packages/contracts/src/community/index.ts","packages/contracts/src/contracts/index.ts","apps/api/src/modules/community/service.ts","apps/api/tests/community/post-service.test.ts","apps/api/src/modules/testing/test-suites.ts","docs/api/community-posts.md"],
+  "verification":[
+    {"command":"npm.cmd run build --workspace packages/contracts; node --import tsx --test --test-concurrency=1 apps/api/tests/community/post-service.test.ts","exitCode":0,"result":"Passed","notes":"Ownership, moderation, removal, public filtering, and IDOR tests passed."},
+    {"command":"npm.cmd run typecheck; npm.cmd run lint; node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Typecheck, lint, and audit passed."}
+  ],
+  "sourceEvidence":["packages/contracts/src/community/index.ts","apps/api/src/modules/community/service.ts","apps/api/tests/community/post-service.test.ts","docs/api/community-posts.md"],
+  "knownGaps":["HTTP route wiring is not claimed in this service increment."],
+  "completedAt":"2026-08-14T14:16:00.000Z"
+}

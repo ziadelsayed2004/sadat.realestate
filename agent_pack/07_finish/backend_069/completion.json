@@ -1,0 +1,98 @@
+{
+  "taskId": "backend_069",
+  "summary": "Completed the public and seeker projection security audit with a regression matrix proving that explicit allowlisted projections exclude internal notes, assignments, provider documents, audit records, credentials, storage keys, signed URLs, and access tokens while published/active and recipient ownership filters remain enforced.",
+  "filesChanged": [
+    "apps/api/tests/security/public-projections.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/public-data-masking.md",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md"
+  ],
+  "verification": [
+    {
+      "command": "npx.cmd tsx --test apps/api/tests/security/public-projections.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "2 focused projection-security tests passed across homepage, property details, favorites, and notifications."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts build and API typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace check and ESLint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All 326 repository tests passed serially."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace, contracts, and API builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "0 vulnerabilities reported."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtZGV2ZWxvcG1lbnQtb25seS1rZXktMzItYnl0ZXM'; npm.cmd run env:check --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Synthetic non-production environment validation passed without reading a .env file."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime inventory passed and contains the canonical B4 public and seeker routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "node -e \"JSON.parse(require('fs').readFileSync('apps/api/openapi/openapi.json','utf8')); JSON.parse(require('fs').readFileSync('apps/api/postman/Sadat-Real-Estate.postman_collection.json','utf8')); JSON.parse(require('fs').readFileSync('agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json','utf8')); console.log('JSON_VALID')\"",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Changed JSON artifacts parsed successfully."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors before closure."
+    }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/public/homepage.ts and properties.ts use explicit published/active allowlisted projections.",
+    "apps/api/src/modules/search/properties.ts, compare/properties.ts, organizations/public.ts, and favorites/service.ts use strict public contracts and omit workflow/storage fields.",
+    "apps/api/src/modules/seeker/service.ts, overview.ts, and notifications/service.ts derive self-owned projections from authenticated subjects.",
+    "apps/api/tests/security/public-projections.test.ts asserts forbidden-key absence and safe-state filtering across public and seeker surfaces.",
+    "Product requirements and security baseline source references in backend_069"
+  ],
+  "knownGaps": [
+    "No live MongoDB replica-set or external provider smoke test was run because TEST_MONGODB_URI and isolated credentials are unavailable; local projection and route tests are deterministic and fail closed.",
+    "The repository declares Node >=24 <25 while this environment provides Node 22.18.0; all available checks passed.",
+    "No security:check script is defined in the repository; the dedicated projection-security matrix is included in the repository test suite.",
+    "No frontend changes were authorized or made by this backend task."
+  ],
+  "completedAt": "2026-08-14T14:59:22.3078318+03:00"
+}

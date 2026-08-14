@@ -25,6 +25,18 @@ import {
 import { createLocationRuntime } from './modules/locations/runtime.js';
 import { createTaxonomyRuntime } from './modules/taxonomy/runtime.js';
 import { createFeatureService } from './modules/taxonomy/features.js';
+import { createProjectRuntime } from './modules/projects/runtime.js';
+import { createPropertyRuntime } from './modules/properties/runtime.js';
+import { createPropertyMediaRuntime } from './modules/media/runtime.js';
+import { createModerationRuntime } from './modules/moderation/runtime.js';
+import { createPublicRuntime } from './modules/public/runtime.js';
+import { createPublicSearchRuntime } from './modules/search/runtime.js';
+import { createPublicCompareRuntime } from './modules/compare/runtime.js';
+import { createPublicOrganizationRuntime } from './modules/organizations/runtime.js';
+import { createFavoriteRuntime } from './modules/favorites/runtime.js';
+import { createNotificationRuntime } from './modules/notifications/runtime.js';
+import { createRequestRuntime } from './modules/requests/runtime.js';
+import { createViewingRuntime } from './modules/viewings/runtime.js';
 
 export interface ApiListenOptions {
   host: string;
@@ -137,6 +149,18 @@ async function runEntrypoint(): Promise<void> {
   );
   const taxonomy = createTaxonomyRuntime(database.nativeConnection, auth.accessTokens, auditInfrastructure.writer, rbac.service);
   const features = { accessTokens: auth.accessTokens, service: createFeatureService(database.nativeConnection, auditInfrastructure.writer, rbac.service) };
+  const projects = createProjectRuntime(database.nativeConnection, auth.accessTokens, audit.writer, rbac.service);
+  const properties = createPropertyRuntime(database.nativeConnection, auth.accessTokens, audit.writer, rbac.service);
+  const propertyMedia = createPropertyMediaRuntime(database.nativeConnection, auth.accessTokens, parseUploadEnvironment(process.env, runtimeEnvironment.appEnvironment), audit.writer);
+  const moderation = createModerationRuntime(database.nativeConnection, auth.accessTokens, audit.writer, rbac.service);
+  const publicHomepage = createPublicRuntime(database.nativeConnection);
+  const publicSearch = createPublicSearchRuntime(database.nativeConnection);
+  const publicCompare = createPublicCompareRuntime(database.nativeConnection);
+  const publicOrganizations = createPublicOrganizationRuntime(database.nativeConnection);
+  const favorites = createFavoriteRuntime(database.nativeConnection, auth.accessTokens);
+  const notifications = createNotificationRuntime(database.nativeConnection, auth.accessTokens);
+  const requests = createRequestRuntime(database.nativeConnection, auth.accessTokens);
+  const viewings = createViewingRuntime(database.nativeConnection, auth.accessTokens);
   const server = createApiServer({
     database,
     auth,
@@ -148,7 +172,19 @@ async function runEntrypoint(): Promise<void> {
     audit,
     locations,
     taxonomy,
-    features
+    features,
+    projects,
+    properties,
+    propertyMedia,
+    moderation,
+    publicHomepage,
+    publicSearch,
+    publicCompare,
+    publicOrganizations,
+    favorites,
+    notifications,
+    requests,
+    viewings
   });
   let shuttingDown = false;
 

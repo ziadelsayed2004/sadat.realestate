@@ -1,0 +1,12 @@
+{
+  "taskId":"backend_094",
+  "summary":"Added community comment and reply contracts and service behavior with published-post gating, maximum reply depth two, bounded content, and ownership/admin removal checks.",
+  "filesChanged":["packages/contracts/src/community/index.ts","packages/contracts/src/contracts/index.ts","apps/api/src/modules/community/service.ts","apps/api/tests/community/post-service.test.ts","docs/api/community-comments.md"],
+  "verification":[
+    {"command":"npm.cmd run build --workspace packages/contracts; node --import tsx --test --test-concurrency=1 apps/api/tests/community/post-service.test.ts","exitCode":0,"result":"Passed","notes":"Post and comment ownership, publication gating, depth, and removal tests passed."},
+    {"command":"npm.cmd run typecheck; npm.cmd run lint; node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Typecheck, lint, and audit passed."}
+  ],
+  "sourceEvidence":["packages/contracts/src/community/index.ts","apps/api/src/modules/community/service.ts","apps/api/tests/community/post-service.test.ts","docs/api/community-comments.md"],
+  "knownGaps":["HTTP route wiring is not claimed in this service increment."],
+  "completedAt":"2026-08-14T14:24:00.000Z"
+}

@@ -1,0 +1,18 @@
+{
+  "taskId": "backend_076",
+  "summary": "Added provider CRM regression coverage for provider-owned list/detail projections, IDOR rejection, and optimistic lifecycle transitions, with provider-facing documentation.",
+  "filesChanged": [
+    "apps/api/tests/provider/request-crm.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/provider-request-crm.md"
+  ],
+  "verification": [
+    {"command":"node --import tsx --test --test-concurrency=1 apps/api/tests/provider/request-crm.test.ts","exitCode":0,"result":"Passed","notes":"Provider scope, IDOR, and transition assertions passed."},
+    {"command":"npm.cmd run typecheck","exitCode":0,"result":"Passed","notes":"Contracts and API typecheck passed."},
+    {"command":"npm.cmd run lint","exitCode":0,"result":"Passed","notes":"Workspace and ESLint checks passed."},
+    {"command":"node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Agent Pack audit clean; full repository gate is retained for the B5 transition gate."}
+  ],
+  "sourceEvidence": ["apps/api/src/modules/requests/service.ts","apps/api/src/modules/requests/router.ts","apps/api/tests/provider/request-crm.test.ts","docs/api/provider-request-crm.md"],
+  "knownGaps": ["Full repository suite/build/artifact matrix will be rerun at the B5 phase gate after the remaining B5 changes."],
+  "completedAt":"2026-08-14T13:12:00.000Z"
+}

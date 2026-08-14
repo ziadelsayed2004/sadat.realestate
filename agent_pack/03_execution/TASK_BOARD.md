@@ -41,61 +41,61 @@
 - [x] backend_039 — SEO and Public Privacy
 ## B3_projects_properties
 
-- [ ] backend_040 — Project Model and Provider CRUD
-- [ ] backend_041 — Project Review Workflow
-- [ ] backend_042 — Public Project Projection
-- [ ] backend_043 — Property Model and Source Identity
-- [ ] backend_044 — Property Draft, Core Data, and Location
-- [ ] backend_045 — Property Details, Pricing, and Payment Plans
-- [ ] backend_046 — Property Features, Services, and Contact
-- [ ] backend_047 — Property Media Processing
-- [ ] backend_048 — Property Validation and Review Submission
-- [ ] backend_049 — Property Review and Publication
-- [ ] backend_050 — Property Revisions and Change History
-- [ ] backend_051 — Provider Property Management
-- [ ] backend_052 — Admin Property Management
-- [ ] backend_053 — Potential Duplicate Detection
-- [ ] backend_054 — Property Reports
-- [ ] backend_055 — Property Indexes and Queries
+- [x] backend_040 — Project Model and Provider CRUD
+- [x] backend_041 — Project Review Workflow
+- [x] backend_042 — Public Project Projection
+- [x] backend_043 — Property Model and Source Identity
+- [x] backend_044 — Property Draft, Core Data, and Location
+- [x] backend_045 — Property Details, Pricing, and Payment Plans
+- [x] backend_046 — Property Features, Services, and Contact
+- [x] backend_047 — Property Media Processing
+- [x] backend_048 — Property Validation and Review Submission
+- [x] backend_049 — Property Review and Publication
+- [x] backend_050 — Property Revisions and Change History
+- [x] backend_051 — Provider Property Management
+- [x] backend_052 — Admin Property Management
+- [x] backend_053 — Potential Duplicate Detection
+- [x] backend_054 — Property Reports
+- [x] backend_055 — Property Indexes and Queries
 ## B4_public_seeker
 
-- [ ] backend_060 — Homepage Read Model
-- [ ] backend_061 — Public Property Listing, Search, and Filters
-- [ ] backend_062 — Public Property Details
-- [ ] backend_063 — Two-Unit Comparison
-- [ ] backend_064 — Developer and Company Directory
-- [ ] backend_065 — Saved Properties
-- [ ] backend_066 — Seeker Overview
-- [ ] backend_067 — Search Preferences and Account
-- [ ] backend_068 — Seeker Notification Center
-- [ ] backend_069 — Public Data Masking and Projection
+- [x] backend_060 — Homepage Read Model
+- [x] backend_061 — Public Property Listing, Search, and Filters
+- [x] backend_062 — Public Property Details
+- [x] backend_063 — Two-Unit Comparison
+- [x] backend_064 — Developer and Company Directory
+- [x] backend_065 — Saved Properties
+- [x] backend_066 — Seeker Overview
+- [x] backend_067 — Search Preferences and Account
+- [x] backend_068 — Seeker Notification Center
+- [x] backend_069 — Public Data Masking and Projection
 ## B5_requests_crm
 
-- [ ] backend_070 — Unified Request Model and States
-- [ ] backend_071 — Contact Requests
-- [ ] backend_072 — Viewing Requests and Appointments
-- [ ] backend_073 — Property Search Requests
-- [ ] backend_074 — Provider-Added Customer Requests
-- [ ] backend_075 — Seeker Requests and Details
-- [ ] backend_076 — Provider Request CRM
-- [ ] backend_077 — Admin Request Operations
-- [ ] backend_078 — SLA and Overdue Requests
-- [ ] backend_079 — Request Reports and Issues
-- [ ] backend_080 — Assignment, Internal Notes, and Projection
-- [ ] backend_081 — Request Lifecycle Events and Notifications
+- [x] backend_070 — Unified Request Model and States
+- [x] backend_071 — Contact Requests
+- [x] backend_072 — Viewing Requests and Appointments
+- [x] backend_073 — Property Search Requests
+- [x] backend_074 — Provider-Added Customer Requests
+- [x] backend_075 — Seeker Requests and Details
+- [x] backend_076 — Provider Request CRM
+- [x] backend_077 — Admin Request Operations
+- [x] backend_078 — SLA and Overdue Requests
+- [x] backend_079 — Request Reports and Issues
+- [x] backend_080 — Assignment, Internal Notes, and Projection
+- [x] backend_081 — Request Lifecycle Events and Notifications
 ## B6_content_community
 
-- [ ] backend_090 — Article Categories
-- [ ] backend_091 — Article Management
-- [ ] backend_092 — Public Article Listing and Details
-- [ ] backend_093 — Community Posts
-- [ ] backend_094 — Community Comments
-- [ ] backend_095 — Community Reporting and Moderation
-- [ ] backend_096 — Public Community Projection
-- [ ] backend_097 — Content and Localization Audit
+- [x] backend_090 — Article Categories
+- [x] backend_091 — Article Management
+- [x] backend_092 — Public Article Listing and Details
+- [x] backend_093 — Community Posts
+- [x] backend_094 — Community Comments
+- [x] backend_095 — Community Reporting and Moderation
+- [x] backend_096 — Public Community Projection
+- [x] backend_097 — Content and Localization Audit
 ## B7_ads_payments
 
-- [ ] backend_100 — Ad Placements and Settings
+- [ ] backend_100 — Ad Placements and Settings — IN PROGRESS
 - [ ] backend_101 — Advertising Requests
 - [ ] backend_102 — Manual Pricing and Quotes
 - [ ] backend_103 — Private Payment-Proof Upload

@@ -1,0 +1,107 @@
+{
+  "taskId": "backend_043",
+  "summary": "Added strict property and unit contracts, a Mongoose property model with provider/project/source relationships and lifecycle/index boundaries, and a property source-identity adapter that derives truthful verification from existing approval state. Added deterministic validation, mass-assignment, relationship, localization, and model-index tests plus API documentation.",
+  "filesChanged": [
+    "packages/contracts/src/properties/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/properties/models.ts",
+    "apps/api/src/modules/properties/source-identity.ts",
+    "apps/api/tests/properties/properties.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/properties-model.md"
+  ],
+  "verification": [
+    {
+      "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/properties/properties.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "4 property model, contract, source-identity, and invalid-state tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Repository syntax, contracts, API, and test TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace policy and ESLint checks passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace and API suite passed 267 tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts and API builds completed successfully."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Coverage thresholds passed; aggregate lines 86.97%, functions 81.86%, branches 86.99%."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity dependency vulnerabilities reported."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtZGV2ZWxvcG1lbnQtb25seS1rZXktMzItYnl0ZXM'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Synthetic test environment validated without reading a .env file."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Existing runtime inventory remained deterministic; no property routes were invented by this model task."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI artifact validated; no route contract changed."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman artifact validated; no route contract changed."
+    },
+    {
+      "command": "node -e \"for (const f of ['apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json','agent_pack/03_execution/TASK_STATE.json','agent_pack/03_execution/TASK_CATALOG.json']) { JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('JSON_OK',f) }\"",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Changed JSON artifacts parsed successfully."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors with backend_043 as the sole task in progress before closure."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B3_projects_properties/backend_043.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (PRV-03 and ADM-14)",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (property routes remain planned for later B3 tasks)",
+    "apps/api/src/modules/organizations/source-identity.ts",
+    "apps/api/src/modules/properties/models.ts",
+    "apps/api/tests/properties/properties.test.ts"
+  ],
+  "knownGaps": [
+    "The local runtime is Node 22.18.0 while the repository declares Node >=24 <25; Node 24 CI validation remains required.",
+    "No isolated MongoDB replica set or TEST_MONGODB_URI is available, so live integration/index execution is skipped; deterministic model tests pass.",
+    "Property transport routes and production content remain owned by later B3 tasks; this task intentionally adds no public or administrative route."
+  ],
+  "completedAt": "2026-08-14T01:03:00.000Z"
+}

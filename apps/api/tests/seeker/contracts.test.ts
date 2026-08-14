@@ -26,6 +26,7 @@ test('rejects malformed seeker identifiers, empty patches, and inverted ranges',
   }));
   assert.throws(() => seekerProfilePatchSchema.parse({}));
   assert.throws(() => seekerPreferencesPatchSchema.parse({}));
+  assert.throws(() => seekerPreferencesPatchSchema.parse({ locations: ['new-cairo'], userId: 'other-user' }));
   assert.throws(() => seekerPreferencesSchema.parse({ minPrice: 10, maxPrice: 1 }));
   assert.throws(() => seekerPreferencesSchema.parse({ bedroomsMin: 3, bedroomsMax: 1 }));
 });

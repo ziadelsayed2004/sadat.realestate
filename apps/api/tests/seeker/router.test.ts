@@ -61,11 +61,19 @@ const service: SeekerService = {
 async function withServer(run: (baseUrl: string) => Promise<void>) {
   const server = createApiServer({
     database: { isReady: async () => true },
-    seeker: { service, accessTokens, cookie }
+    seeker: { service, accessTokens, cookie, overview: { async get() { return { requests: 2, viewings: 1, savedProperties: 3, notifications: 4, unreadNotifications: 2 }; } } }
   });
   const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
   try { await run(`http://127.0.0.1:${address.port}`); } finally { await stopApiServer(server); }
 }
+
+test('serves the authenticated seeker overview from real aggregate summaries', async () => {
+  await withServer(async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/api/v1/seeker/overview`, { headers: { Authorization: `Bearer ${token}` } });
+    assert.equal(response.status, 200);
+    assert.deepEqual((await response.json() as { data: unknown }).data, { requests: 2, viewings: 1, savedProperties: 3, notifications: 4, unreadNotifications: 2 });
+  });
+});
 
 test('requires bearer authentication and prevents non-seeker access', async () => {
   await withServer(async (baseUrl) => {
@@ -95,6 +103,22 @@ test('registers and serves only the authenticated seeker projection', async () =
     assert.equal(body.data?.id, '0123456789abcdef01234567');
     assert.equal(body.data?.phone, '+201000000000');
     assert.equal('internalNotes' in (body.data ?? {}), false);
+
+    const updatedProfile = await fetch(`${baseUrl}/api/v1/me`, {
+      method: 'PATCH', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName: 'Mariam', locale: 'en' })
+    });
+    assert.equal(updatedProfile.status, 200);
+    const updatedProfileBody = await updatedProfile.json() as { data?: { firstName?: string; locale?: string } };
+    assert.equal(updatedProfileBody.data?.firstName, 'Mariam');
+    assert.equal(updatedProfileBody.data?.locale, 'en');
+
+    const updatedPreferences = await fetch(`${baseUrl}/api/v1/me/preferences`, {
+      method: 'PATCH', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ locations: ['new-cairo'], minPrice: 100, maxPrice: 200 })
+    });
+    assert.equal(updatedPreferences.status, 200);
+    assert.equal(typeof (await updatedPreferences.json() as { data?: { updatedAt?: string } }).data?.updatedAt, 'string');
 
     const invalid = await fetch(`${baseUrl}/api/v1/me/preferences`, {
       method: 'PATCH', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },

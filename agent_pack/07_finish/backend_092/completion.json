@@ -1,0 +1,12 @@
+{
+  "taskId":"backend_092",
+  "summary":"Added published-only article listing and slug detail projections with deterministic pagination, locale fallback across ar/en/zh-CN, and safe localized SEO metadata.",
+  "filesChanged":["apps/api/src/modules/articles/service.ts","apps/api/tests/articles/article-service.test.ts","docs/api/public-articles.md"],
+  "verification":[
+    {"command":"node --import tsx --test --test-concurrency=1 apps/api/tests/articles/article-service.test.ts","exitCode":0,"result":"Passed","notes":"Draft exclusion, publish lifecycle, public list/detail, fallback, SEO, and not-found tests passed."},
+    {"command":"npm.cmd run typecheck; npm.cmd run lint; node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Typecheck, lint, and audit passed."}
+  ],
+  "sourceEvidence":["packages/contracts/src/articles/index.ts","apps/api/src/modules/articles/service.ts","apps/api/tests/articles/article-service.test.ts","docs/api/public-articles.md"],
+  "knownGaps":["Public HTTP route wiring remains outside this service increment; no route inventory change was claimed."],
+  "completedAt":"2026-08-14T14:05:00.000Z"
+}

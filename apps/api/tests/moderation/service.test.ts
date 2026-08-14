@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
+import type { ModerationRepository, StoredPropertyReport } from '../../src/modules/moderation/repository.js';
+import { createModerationService, ModerationServiceError } from '../../src/modules/moderation/service.js';
+
+const reporter = '0123456789abcdef01234567'; const admin = '1123456789abcdef01234567'; const property = '2123456789abcdef01234567'; const reportId = '3123456789abcdef01234567'; const now = new Date('2026-08-14T08:00:00.000Z');
+const claims = (sub = reporter, role: 'seeker' | 'provider' | 'admin' = 'seeker') => ({ sub, role, status: 'verified', iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sid: '4123456789abcdef01234567', iat: 1, exp: 2, jti: 'j' } as AccessTokenClaims);
+function fixture() {
+  const rows = new Map<string, StoredPropertyReport>();
+  const repository: ModerationRepository = {
+    async create(input) { if ([...rows.values()].some(row => row.propertyId === input.propertyId && row.reporterId === input.reporterId && row.reason === input.report.reason && row.status === 'open')) return { kind: 'duplicate' }; const report: StoredPropertyReport = { id: reportId, propertyId: input.propertyId, reporterId: input.reporterId, reason: input.report.reason, ...(input.report.details ? { details: input.report.details } : {}), status: 'open', version: 0, createdAt: input.now, updatedAt: input.now }; rows.set(report.id, report); return { kind: 'written', report }; },
+    async list(query) { const values = [...rows.values()].filter(row => (!query.status || row.status === query.status) && (!query.propertyId || row.propertyId === query.propertyId)); return { items: values.slice((query.page - 1) * query.limit, query.page * query.limit), total: values.length }; },
+    async resolve(input) { const current = rows.get(input.reportId); if (!current) return { kind: 'not_found' }; if (current.version !== input.expectedVersion) return { kind: 'version_conflict' }; if (!['open', 'in_review'].includes(current.status)) return { kind: 'invalid_state' }; const report = { ...current, status: input.action === 'resolve' ? 'resolved' as const : 'dismissed' as const, resolutionReason: input.reason, version: current.version + 1, updatedAt: input.now }; rows.set(input.reportId, report); return { kind: 'written', report }; }
+  };
+  return { rows, service: createModerationService({ repository, authorization: { async authorize(id, permission) { return id === admin && (permission === 'admin:property-reports.view' || permission === 'admin:property-reports.manage'); } }, now: () => now }) };
+}
+const context = { requestId: 'report-1', traceId: 'a'.repeat(32) };
+
+test('creates reports with strict reasons, redacts reporter identity, and deduplicates replay', async () => { const { service } = fixture(); const created = await service.create(claims(), property, { reason: 'duplicate', details: 'Same listing appears twice' }, context); assert.equal(created.status, 'open'); assert.equal('reporterId' in created, false); await assert.rejects(service.create(claims(), property, { reason: 'duplicate', details: 'Same listing appears twice' }, context), error => error instanceof ModerationServiceError && error.code === 'REPORT_DUPLICATE'); await assert.rejects(service.create({ ...claims(), status: 'pending_review' } as AccessTokenClaims, property, { reason: 'fraud' }, context), error => error instanceof ModerationServiceError && error.code === 'REPORT_FORBIDDEN'); });
+test('admin list applies view permission and reporter privacy while manage resolves state', async () => { const { service } = fixture(); await service.create(claims(), property, { reason: 'inaccurate' }, context); const listed = await service.list(admin, { page: 1, limit: 20 }); assert.equal(listed.items.length, 1); assert.equal(listed.items[0]?.reporterId, reporter); const resolved = await service.resolve(admin, reportId, { version: 0, action: 'resolve', reason: 'Verified and resolved report' }, context); assert.equal(resolved.status, 'resolved'); await assert.rejects(service.resolve(reporter, reportId, { version: 1, action: 'dismiss', reason: 'Unauthorized resolution' }, context), error => error instanceof ModerationServiceError && error.code === 'REPORT_FORBIDDEN'); });

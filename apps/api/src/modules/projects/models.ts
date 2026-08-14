@@ -1,0 +1,11 @@
+import { Schema, type Connection, type Model, type Types } from 'mongoose';
+import type { LocalizedText, ProjectStatus } from '@sadat-real-estate/contracts';
+export interface ProjectRecord { providerId: Types.ObjectId; name: LocalizedText; slug: string; description?: LocalizedText; locationId?: Types.ObjectId; organizationId?: Types.ObjectId; website?: string; status: ProjectStatus; submittedAt?: Date; reviewedBy?: Types.ObjectId; reviewedAt?: Date; reviewReason?: string; publishedAt?: Date; createdAt: Date; updatedAt: Date; version: number; }
+export interface ProjectModels { Project: Model<ProjectRecord>; }
+const localized = new Schema<LocalizedText>({ ar:{type:String,trim:true,maxlength:20000}, en:{type:String,trim:true,maxlength:20000}, 'zh-CN':{type:String,trim:true,maxlength:20000} }, {_id:false,strict:'throw'});
+export const projectSchema = new Schema<ProjectRecord>({
+  providerId:{type:Schema.Types.ObjectId,required:true,immutable:true,ref:'User'}, name:{type:localized,required:true}, slug:{type:String,required:true,trim:true,lowercase:true,match:/^[a-z0-9]+(?:-[a-z0-9]+)*$/}, description:localized,
+  locationId:{type:Schema.Types.ObjectId,ref:'Location'}, organizationId:{type:Schema.Types.ObjectId,ref:'Organization'}, website:{type:String,maxlength:2048}, status:{type:String,enum:['draft','pending_review','needs_changes','approved','published','rejected','hidden','archived'],default:'draft'}, submittedAt:Date, reviewedBy:{type:Schema.Types.ObjectId,ref:'User'}, reviewedAt:Date, reviewReason:{type:String,maxlength:500}, publishedAt:Date,
+}, {collection:'projects',strict:'throw',timestamps:true,versionKey:'version',optimisticConcurrency:true});
+projectSchema.index({providerId:1,updatedAt:-1},{name:'projects_provider_updated'}); projectSchema.index({providerId:1,slug:1},{unique:true,name:'projects_provider_slug_unique'}); projectSchema.index({status:1,updatedAt:-1},{name:'projects_status_updated'}); projectSchema.index({'name.ar':'text','name.en':'text','name.zh-CN':'text'},{name:'projects_name_search',default_language:'none'});
+export function createProjectModels(connection: Connection): ProjectModels { return { Project:(connection.models.Project as Model<ProjectRecord>|undefined) ?? connection.model<ProjectRecord>('Project',projectSchema) }; }

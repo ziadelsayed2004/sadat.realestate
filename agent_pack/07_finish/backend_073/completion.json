@@ -1,0 +1,31 @@
+{
+  "taskId": "backend_073",
+  "summary": "Implemented bounded property-search request criteria with ownership-scoped tracking and explicit non-AI behavior. Added regression coverage for criteria validation, deterministic budget bounds, locale handling, and prevention of fabricated match scores.",
+  "filesChanged": [
+    "apps/api/tests/requests/service.test.ts",
+    "docs/api/property-search-requests.md"
+  ],
+  "verification": [
+    {
+      "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/requests/service.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Property-search criteria, validation, ownership, and no-match-score assertions passed."
+    },
+    {
+      "command": "npm.cmd run typecheck; npm.cmd run lint; npm.cmd test -- --runInBand; npm.cmd run build; npm.cmd audit --audit-level=high; npm.cmd run api:inventory; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Repository gates passed; 333 tests passed, build and dependency audit were clean, inventory and API artifacts validated, and Agent Pack audit reported zero errors."
+    }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/requests/service.ts",
+    "apps/api/src/modules/requests/router.ts",
+    "packages/contracts/src/requests/index.ts",
+    "apps/api/tests/requests/service.test.ts",
+    "docs/api/property-search-requests.md"
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-14T12:56:00.000Z"
+}

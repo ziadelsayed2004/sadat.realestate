@@ -1,0 +1,26 @@
+import { z } from 'zod';
+
+export const PROPERTY_REPORT_REASONS = ['duplicate', 'fraud', 'inaccurate', 'inappropriate', 'other'] as const;
+export const propertyReportReasonSchema = z.enum(PROPERTY_REPORT_REASONS);
+export const PROPERTY_REPORT_STATUSES = ['open', 'in_review', 'resolved', 'dismissed'] as const;
+export const propertyReportStatusSchema = z.enum(PROPERTY_REPORT_STATUSES);
+export const PROPERTY_REPORT_ACTIONS = ['resolve', 'dismiss'] as const;
+export const propertyReportActionSchema = z.enum(PROPERTY_REPORT_ACTIONS);
+const objectId = z.string().regex(/^[a-f0-9]{24}$/);
+const reason = z.string().trim().min(5).max(500).regex(/^[^\u0000-\u001f\u007f]+$/u);
+export const propertyReportIdParamsSchema = z.object({ reportId: objectId }).strict();
+export const propertyReportPropertyParamsSchema = z.object({ propertyId: objectId }).strict();
+export const propertyReportCreateSchema = z.object({ reason: propertyReportReasonSchema, details: z.string().trim().min(5).max(2_000).regex(/^[^\u0000-\u001f\u007f]+$/u).optional() }).strict();
+export const propertyReportResolveSchema = z.object({ version: z.number().int().nonnegative(), action: propertyReportActionSchema, reason }).strict();
+const positive = (fallback: number, max: number) => z.preprocess(value => value === undefined ? fallback : Number(value), z.number().int().positive().max(max));
+export const propertyReportListQuerySchema = z.object({ status: propertyReportStatusSchema.optional(), propertyId: objectId.optional(), page: positive(1, 100000), limit: positive(20, 100) }).strict();
+export const propertyReportDataSchema = z.object({ id: objectId, propertyId: objectId, reporterId: objectId.optional(), reason: propertyReportReasonSchema, details: z.string().max(2_000).optional(), status: propertyReportStatusSchema, resolutionReason: reason.optional(), version: z.number().int().nonnegative(), createdAt: z.string().datetime({ offset: true }), updatedAt: z.string().datetime({ offset: true }) }).strict();
+export const propertyReportListDataSchema = z.object({ items: z.array(propertyReportDataSchema), page: z.number().int().positive(), limit: z.number().int().positive(), total: z.number().int().nonnegative() }).strict();
+export type PropertyReportReason = z.infer<typeof propertyReportReasonSchema>;
+export type PropertyReportStatus = z.infer<typeof propertyReportStatusSchema>;
+export type PropertyReportAction = z.infer<typeof propertyReportActionSchema>;
+export type PropertyReportCreate = z.infer<typeof propertyReportCreateSchema>;
+export type PropertyReportResolve = z.infer<typeof propertyReportResolveSchema>;
+export type PropertyReportListQuery = z.infer<typeof propertyReportListQuerySchema>;
+export type PropertyReportData = z.infer<typeof propertyReportDataSchema>;
+export type PropertyReportListData = z.infer<typeof propertyReportListDataSchema>;

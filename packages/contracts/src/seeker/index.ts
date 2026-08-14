@@ -67,6 +67,14 @@ export const seekerRegistrationDataSchema = z.object({
 export const seekerRegistrationSuccessEnvelopeSchema = successEnvelopeSchema(seekerRegistrationDataSchema);
 export const seekerProfileSuccessEnvelopeSchema = successEnvelopeSchema(seekerProfileDataSchema);
 export const seekerPreferencesSuccessEnvelopeSchema = successEnvelopeSchema(seekerPreferencesDataSchema);
+export const seekerOverviewDataSchema = z.object({
+  requests: z.number().int().nonnegative(),
+  viewings: z.number().int().nonnegative(),
+  savedProperties: z.number().int().nonnegative(),
+  notifications: z.number().int().nonnegative(),
+  unreadNotifications: z.number().int().nonnegative()
+}).strict();
+export const seekerOverviewSuccessEnvelopeSchema = successEnvelopeSchema(seekerOverviewDataSchema);
 
 export type SeekerLocale = z.infer<typeof seekerLocaleSchema>;
 export type SeekerPreferences = z.infer<typeof seekerPreferencesSchema>;
@@ -76,3 +84,4 @@ export type SeekerPreferencesPatch = z.infer<typeof seekerPreferencesPatchSchema
 export type SeekerProfileData = z.infer<typeof seekerProfileDataSchema>;
 export type SeekerPreferencesData = z.infer<typeof seekerPreferencesDataSchema>;
 export type SeekerRegistrationData = z.infer<typeof seekerRegistrationDataSchema>;
+export type SeekerOverviewData = z.infer<typeof seekerOverviewDataSchema>;

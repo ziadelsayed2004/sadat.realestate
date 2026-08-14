@@ -1,0 +1,12 @@
+{
+  "taskId":"backend_090",
+  "summary":"Implemented strict multilingual article-category contracts and an administrative category service with stable slug uniqueness, bounded ordering, activation, and RBAC.",
+  "filesChanged":["packages/contracts/src/articles/index.ts","packages/contracts/src/contracts/index.ts","apps/api/src/modules/articles/service.ts","apps/api/tests/articles/article-service.test.ts","apps/api/src/modules/testing/test-suites.ts","docs/api/article-categories.md"],
+  "verification":[
+    {"command":"npm.cmd run build --workspace packages/contracts; node --import tsx --test --test-concurrency=1 apps/api/tests/articles/article-service.test.ts","exitCode":0,"result":"Passed","notes":"Contracts built and category CRUD, ordering, activation, duplicate-slug, and RBAC tests passed."},
+    {"command":"npm.cmd run typecheck; npm.cmd run lint; node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Typecheck, lint, and Agent Pack audit passed."}
+  ],
+  "sourceEvidence":["packages/contracts/src/articles/index.ts","apps/api/src/modules/articles/service.ts","apps/api/tests/articles/article-service.test.ts","docs/api/article-categories.md"],
+  "knownGaps":["Article/public route wiring is intentionally deferred to the next sequential B6 tasks; no route inventory change was claimed."],
+  "completedAt":"2026-08-14T13:51:00.000Z"
+}

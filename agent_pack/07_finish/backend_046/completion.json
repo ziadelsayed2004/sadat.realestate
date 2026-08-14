@@ -1,0 +1,119 @@
+{
+  "taskId": "backend_046",
+  "summary": "Added strict feature/service master-data associations and privacy-safe contact fields to the provider property wizard, persisted them with ownership and optimistic-version checks, and synchronized contracts, runtime, tests, documentation, OpenAPI, and Postman artifacts.",
+  "filesChanged": [
+    "packages/contracts/src/properties/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/properties/models.ts",
+    "apps/api/src/modules/properties/repository.ts",
+    "apps/api/src/modules/properties/service.ts",
+    "apps/api/src/modules/properties/router.ts",
+    "apps/api/tests/properties/properties.test.ts",
+    "apps/api/tests/properties/service.test.ts",
+    "apps/api/tests/properties/router.test.ts",
+    "agent_pack/scripts/sync_property_artifacts.mjs",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "docs/api/properties-features-contact.md"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "215 unit tests passed, including property feature/service uniqueness, contact privacy/normalization, ownership, optimistic versions, and route behavior."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Repository syntax, contracts, API, and test TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace policy and ESLint checks passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace and API suite passed 275 tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts and API builds completed successfully."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Coverage thresholds passed; aggregate lines 86.23%, functions 81.56%, branches 86.65%."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity dependency vulnerabilities reported."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtZGV2ZWxvcG1lbnQtb25seS1rZXktMzItYnl0ZXM'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Synthetic test environment validated without reading a .env file."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Property provider route inventory remained synchronized; the existing parameterized step route now documents the added steps."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI feature/service/contact schemas and step variants validated."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman artifact validated against the canonical property step route."
+    },
+    {
+      "command": "node -e \"for (const f of ['apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json','agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json']) JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('JSON_OK')\"",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Changed JSON artifacts parsed successfully."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors with backend_046 as the sole task in progress before closure."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B3_projects_properties/backend_046.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (PRV-07 and PRV-09)",
+    "packages/contracts/src/taxonomy/index.ts",
+    "packages/contracts/src/provider/index.ts",
+    "apps/api/src/modules/properties/models.ts",
+    "apps/api/src/modules/properties/repository.ts",
+    "apps/api/src/modules/properties/service.ts",
+    "apps/api/tests/properties/properties.test.ts",
+    "apps/api/tests/properties/service.test.ts",
+    "docs/api/properties-features-contact.md"
+  ],
+  "knownGaps": [
+    "The local runtime is Node 22.18.0 while the repository declares Node >=24 <25; Node 24 CI validation remains required.",
+    "No isolated MongoDB replica set or TEST_MONGODB_URI is available, so live transaction/index execution is skipped; deterministic repository-boundary tests pass.",
+    "No security:check script exists in the repository; dependency audit and the existing security-focused unit coverage were run.",
+    "Later property media, submission/review/publication, and public projection behavior remain owned by dependency-ready B3 tasks."
+  ],
+  "completedAt": "2026-08-14T01:43:55.0213243Z"
+}

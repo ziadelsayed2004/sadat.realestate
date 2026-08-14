@@ -1,0 +1,12 @@
+{
+  "taskId":"backend_097",
+  "summary":"Added localization quality auditing for supported locales, deterministic fallback, missing-translation reporting, and Arabic RTL versus English/Simplified Chinese LTR direction metadata.",
+  "filesChanged":["apps/api/src/modules/quality/localization-audit.ts","apps/api/tests/quality/localization-audit.test.ts","apps/api/src/modules/testing/test-suites.ts","docs/api/content-localization-audit.md"],
+  "verification":[
+    {"command":"node --import tsx --test --test-concurrency=1 apps/api/tests/quality/localization-audit.test.ts","exitCode":0,"result":"Passed","notes":"Locale coverage, fallback, and direction assertions passed."},
+    {"command":"npm.cmd run typecheck; npm.cmd run lint; node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Typecheck, lint, and audit passed."}
+  ],
+  "sourceEvidence":["apps/api/src/modules/quality/localization-audit.ts","apps/api/tests/quality/localization-audit.test.ts","packages/contracts/src/localization/index.ts","docs/api/content-localization-audit.md"],
+  "knownGaps":[],
+  "completedAt":"2026-08-14T14:48:00.000Z"
+}

@@ -1,0 +1,12 @@
+{
+  "taskId":"backend_095",
+  "summary":"Added community reporting and moderation service behavior with bounded reasons/details, verified-role reporting, administrative review, reasoned resolve/dismiss actions, and optimistic version checks.",
+  "filesChanged":["apps/api/src/modules/moderation/community-reports.ts","apps/api/tests/moderation/community-reports.test.ts","apps/api/src/modules/testing/test-suites.ts","docs/api/community-moderation.md"],
+  "verification":[
+    {"command":"node --import tsx --test --test-concurrency=1 apps/api/tests/moderation/community-reports.test.ts","exitCode":0,"result":"Passed","notes":"Report creation, queue visibility, admin action, reason, and RBAC tests passed."},
+    {"command":"npm.cmd run typecheck; npm.cmd run lint; node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Typecheck, lint, and audit passed."}
+  ],
+  "sourceEvidence":["apps/api/src/modules/moderation/community-reports.ts","apps/api/tests/moderation/community-reports.test.ts","docs/api/community-moderation.md"],
+  "knownGaps":["Community report HTTP route wiring is not claimed in this service increment."],
+  "completedAt":"2026-08-14T14:33:00.000Z"
+}

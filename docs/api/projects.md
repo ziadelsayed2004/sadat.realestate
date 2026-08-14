@@ -1,0 +1,9 @@
+# Projects and provider-owned CRUD
+
+Projects use stable IDs and logical slugs, localized names/descriptions for `ar`, `en`, and `zh-CN`, optional approved location and organization references, and the project lifecycle defined by the product state machine. Provider CRUD is restricted to verified provider bearer sessions and filters every read/update by the authenticated provider ID; ownership, provider IDs, verification flags, and review fields are never accepted from client payloads.
+
+Create starts a `draft`. Updates require the current optimistic version and preserve the draft boundary. A verified provider submits a draft or `needs_changes` project with a reason and version, moving it to `pending_review`. An authorized Admin with `admin:projects.review` may move `pending_review` to `needs_changes`, `approved`, or `rejected`, then publish an approved project. Each transition records the actor, reason, request, trace, reviewer, and timestamps through the existing audit writer; stale versions and invalid state transitions fail closed. Public projection and revisions remain owned by later B3 tasks.
+
+No production projects or map coordinates are seeded. Location and organization references are optional and can remain empty until approved master data is available.
+
+The reusable public projection emits only `published` projects and never exposes provider IDs, review fields, or storage internals. An approved developer projection may be attached when available, and linked properties are filtered to `published` plus active records and sorted by slug. Until the property runtime is available, the linked-property result is deterministically empty rather than fabricated. Draft, pending-review, needs-changes, approved-but-not-published, rejected, hidden, and archived projects return no public projection.

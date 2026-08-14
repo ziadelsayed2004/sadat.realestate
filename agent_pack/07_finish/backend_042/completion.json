@@ -1,0 +1,45 @@
+{
+  "taskId": "backend_042",
+  "summary": "Implemented a strict published-only public project projection with optional approved developer identity, deterministic published/active linked-property filtering, safe empty-state behavior, and contract/test coverage.",
+  "filesChanged": [
+    "packages/contracts/src/projects/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/projects/service.ts",
+    "apps/api/tests/projects/projects.test.ts",
+    "agent_pack/scripts/sync_project_artifacts.mjs",
+    "apps/api/openapi/openapi.json",
+    "docs/api/projects.md"
+  ],
+  "verification": [
+    { "command": "node --test --import tsx apps/api/tests/projects/projects.test.ts apps/api/tests/projects/router.test.ts", "exitCode": 0, "result": "Passed", "notes": "8 focused project CRUD, workflow, route, and public projection tests passed." },
+    { "command": "npm.cmd run typecheck", "exitCode": 0, "result": "Passed", "notes": "Contracts and API typechecks passed." },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "Passed", "notes": "Workspace and ESLint checks passed." },
+    { "command": "npm.cmd test -- --runInBand", "exitCode": 0, "result": "Passed", "notes": "All 263 repository tests passed." },
+    { "command": "npm.cmd run build", "exitCode": 0, "result": "Passed", "notes": "Contracts and API builds passed." },
+    { "command": "npm.cmd run test:coverage", "exitCode": 0, "result": "Passed", "notes": "All 263 tests passed with enforced coverage thresholds." },
+    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "Passed", "notes": "0 vulnerabilities found." },
+    { "command": "npm.cmd run env:check", "exitCode": 0, "result": "Passed", "notes": "Synthetic local environment validation passed." },
+    { "command": "npm.cmd run api:inventory", "exitCode": 0, "result": "Passed", "notes": "Existing project CRUD/review inventory remains synchronized; no speculative public route added." },
+    { "command": "npm.cmd run openapi:validate", "exitCode": 0, "result": "Passed", "notes": "OPENAPI_VALID." },
+    { "command": "npm.cmd run postman:validate", "exitCode": 0, "result": "Passed", "notes": "POSTMAN_VALID." },
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "Passed", "notes": "Agent Pack audit has zero errors." },
+    { "command": "JSON parse changed OpenAPI/Postman/blueprint files", "exitCode": 0, "result": "Passed", "notes": "All changed JSON files parsed successfully." }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B3_projects_properties/backend_042.md",
+    "agent_pack/01_product/PRD.md",
+    "apps/api/src/modules/projects/service.ts",
+    "apps/api/tests/projects/projects.test.ts",
+    "docs/api/projects.md"
+  ],
+  "scopeNotes": [
+    "No public project route was invented because the canonical endpoint blueprint has no such route and the property runtime is the next dependency; the reusable projection contract is ready for the later public properties surface.",
+    "Linked properties are accepted only as published and active records and safely return an empty array when the property adapter has no data.",
+    "Live MongoDB integration was not run because isolated replica-set prerequisites and TEST_MONGODB_URI were unavailable."
+  ],
+  "knownGaps": [
+    "Node v22.18.0 is available while the repository declares Node >=24 <25.",
+    "Production organization/property data is not seeded; the projection uses explicit optional developer data and deterministic empty linked-property state."
+  ],
+  "completedAt": "2026-08-14T00:54:30.000Z"
+}

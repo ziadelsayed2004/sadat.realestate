@@ -1,0 +1,14 @@
+{
+  "taskId":"backend_077",
+  "summary":"Added administrative request-operation coverage for filtered visibility, assignment, optimistic versioning, lifecycle transitions, and provider RBAC denial.",
+  "filesChanged":["apps/api/tests/admin/request-operations.test.ts","apps/api/src/modules/testing/test-suites.ts","docs/api/admin-request-operations.md"],
+  "verification":[
+    {"command":"node --import tsx --test --test-concurrency=1 apps/api/tests/admin/request-operations.test.ts","exitCode":0,"result":"Passed","notes":"Admin list, assignment, transition, optimistic version, and RBAC assertions passed."},
+    {"command":"npm.cmd run typecheck","exitCode":0,"result":"Passed","notes":"Typecheck passed."},
+    {"command":"npm.cmd run lint","exitCode":0,"result":"Passed","notes":"Lint passed."},
+    {"command":"node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Agent Pack audit clean; full matrix retained for B5 gate."}
+  ],
+  "sourceEvidence":["apps/api/src/modules/requests/service.ts","apps/api/src/modules/requests/router.ts","apps/api/tests/admin/request-operations.test.ts","docs/api/admin-request-operations.md"],
+  "knownGaps":["Full repository suite/build/artifact matrix will be rerun at the B5 transition gate."],
+  "completedAt":"2026-08-14T13:16:00.000Z"
+}

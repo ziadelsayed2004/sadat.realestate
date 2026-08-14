@@ -1,0 +1,12 @@
+{
+  "taskId":"backend_080",
+  "summary":"Added administrative request assignment and internal-note support with optimistic versions, an admin notes route, native repository persistence, and regression coverage proving seeker projections omit CRM internals.",
+  "filesChanged":["apps/api/src/modules/requests/service.ts","apps/api/src/modules/requests/repository.ts","apps/api/src/modules/requests/router.ts","apps/api/tests/security/request-projection.test.ts","apps/api/src/modules/testing/test-suites.ts","apps/api/openapi/openapi.json","apps/api/postman/Sadat-Real-Estate.postman_collection.json","docs/api/request-assignment-notes.md"],
+  "verification":[
+    {"command":"node --import tsx --test --test-concurrency=1 apps/api/tests/security/request-projection.test.ts","exitCode":0,"result":"Passed","notes":"Seeker projection exclusion assertions passed."},
+    {"command":"npm.cmd run typecheck; npm.cmd run lint; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Typecheck, lint, API artifact validation, and Agent Pack audit passed."}
+  ],
+  "sourceEvidence":["apps/api/src/modules/requests/service.ts","apps/api/src/modules/requests/repository.ts","apps/api/src/modules/requests/router.ts","apps/api/tests/security/request-projection.test.ts","docs/api/request-assignment-notes.md"],
+  "knownGaps":["Full repository suite/build/dependency matrix will run at the B5 gate."],
+  "completedAt":"2026-08-14T13:36:00.000Z"
+}

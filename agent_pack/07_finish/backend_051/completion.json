@@ -1,0 +1,42 @@
+{
+  "taskId": "backend_051",
+  "summary": "Added provider-owned property listing with strict bounded status/search/sort/direction/page/limit query validation, deterministic ordering and pagination metadata, owner scoping, and state-derived availableActions for provider management.",
+  "filesChanged": [
+    "packages/contracts/src/properties/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/properties/repository.ts",
+    "apps/api/src/modules/properties/service.ts",
+    "apps/api/src/modules/properties/router.ts",
+    "apps/api/tests/properties/service.test.ts",
+    "apps/api/tests/properties/router.test.ts",
+    "agent_pack/scripts/sync_property_artifacts.mjs",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json"
+  ],
+  "verification": [
+    { "command": "npm.cmd run typecheck", "exitCode": 0, "result": "Passed", "notes": "Contracts and API checks passed." },
+    { "command": "npm.cmd run test:unit --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "222 unit/API tests passed, including owner list and action summary coverage." },
+    { "command": "npm.cmd test -- --runInBand", "exitCode": 0, "result": "Passed", "notes": "283 repository/API tests passed serially." },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "Passed", "notes": "Workspace and lint checks passed." },
+    { "command": "npm.cmd run build", "exitCode": 0, "result": "Passed", "notes": "Production builds passed." },
+    { "command": "npm.cmd run test:coverage --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "Full API coverage run passed configured thresholds." },
+    { "command": "npm.cmd run api:inventory --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "Provider list route is present in runtime inventory." },
+    { "command": "npm.cmd run openapi:validate --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "OpenAPI artifact valid." },
+    { "command": "npm.cmd run postman:validate --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "Postman artifact valid." },
+    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "Passed", "notes": "No high or critical vulnerabilities found." },
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "Passed", "notes": "Agent Pack audit reported zero errors." }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/properties/repository.ts",
+    "apps/api/src/modules/properties/service.ts",
+    "apps/api/src/modules/properties/router.ts",
+    "apps/api/tests/properties/service.test.ts",
+    "apps/api/tests/properties/router.test.ts",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (PRV-02)"
+  ],
+  "knownGaps": [
+    "Live MongoDB replica-set integration was unavailable and not run; deterministic local tests and synthetic readiness checks remain green."
+  ],
+  "completedAt": "2026-08-14T02:35:00.000Z"
+}

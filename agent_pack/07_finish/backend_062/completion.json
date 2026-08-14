@@ -1,0 +1,51 @@
+{
+  "taskId": "backend_062",
+  "summary": "Implemented published-only GET /api/v1/public/properties/:slug details with localized SEO projection, explicit persisted source identity, published project context, ready active media metadata, and deterministic related property cards without internal workflow or storage fields.",
+  "filesChanged": [
+    "packages/contracts/src/public/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/public/properties.ts",
+    "apps/api/src/modules/public/router.ts",
+    "apps/api/src/modules/public/runtime.ts",
+    "apps/api/tests/public/properties.test.ts",
+    "apps/api/tests/public/details-router.test.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "docs/api/public-property-details.md"
+  ],
+  "verification": [
+    { "command": "npx.cmd tsx --test apps/api/tests/public/homepage.test.ts apps/api/tests/public/router.test.ts apps/api/tests/public/properties.test.ts apps/api/tests/public/details-router.test.ts", "exitCode": 0, "result": "passed", "notes": "9 focused homepage/details projection and route tests passed." },
+    { "command": "npm.cmd run typecheck --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "Contracts and API TypeScript checks passed." },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "passed", "notes": "Workspace and ESLint checks passed with no warnings." },
+    { "command": "npm.cmd test -- --runInBand", "exitCode": 0, "result": "passed", "notes": "Root checks and 305 API tests passed." },
+    { "command": "npm.cmd run build", "exitCode": 0, "result": "passed", "notes": "Contracts and API builds passed." },
+    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "passed", "notes": "0 vulnerabilities reported." },
+    { "command": "npm.cmd run api:inventory --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "Inventory includes GET /api/v1/public/properties/:slug." },
+    { "command": "npm.cmd run openapi:validate --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "OpenAPI route and local references validated." },
+    { "command": "npm.cmd run postman:validate --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "Postman collection/environment validated." },
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "passed", "notes": "Agent Pack audit reported zero errors." }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B4_public_seeker/backend_062.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (PUB-03)",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (GET /api/v1/public/properties/:slug)",
+    "apps/api/src/modules/public/properties.ts",
+    "apps/api/tests/public/properties.test.ts",
+    "apps/api/tests/public/details-router.test.ts",
+    "docs/api/public-property-details.md"
+  ],
+  "integrationNote": "The existing public router/runtime, app/server wiring, route inventory, test suite, and API artifacts were extended only to expose this selected public details behavior.",
+  "knownGaps": [
+    "No production property/media seed data is present; unknown or media-less properties safely return 404 or empty media/related arrays.",
+    "Public media intentionally exposes metadata only because the current storage adapter has no approved public delivery URL contract; storage keys, hashes, and processing state never leak.",
+    "Live MongoDB query/transaction checks were not run because an isolated TEST_MONGODB_URI and replica-set topology are unavailable.",
+    "Repository declares Node >=24 <25 while this environment reports Node v22.18.0; all available checks pass on the current runtime.",
+    "No security:check script exists in the checked-in manifests, so that optional gate was not run."
+  ],
+  "completedAt": "2026-08-14T10:54:09.0333945Z"
+}

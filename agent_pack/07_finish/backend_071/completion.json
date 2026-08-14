@@ -1,0 +1,33 @@
+{
+  "taskId": "backend_071",
+  "summary": "Added contact-request processing with strict minimal acknowledgements, deterministic duplicate replay handling, and bounded per-seeker abuse protection while retaining ownership and validation controls.",
+  "filesChanged": [
+    "apps/api/src/modules/requests/service.ts",
+    "apps/api/src/modules/requests/router.ts",
+    "apps/api/tests/requests/router.test.ts",
+    "docs/api/requests.md"
+  ],
+  "verification": [
+    { "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/requests/router.test.ts apps/api/tests/requests/service.test.ts", "exitCode": 0, "result": "passed", "notes": "Contact validation, authentication, minimal acknowledgement, replay, and rate-limit tests passed." },
+    { "command": "npm.cmd run typecheck", "exitCode": 0, "result": "passed", "notes": "Contracts and API typecheck passed." },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "passed", "notes": "Lint passed with zero warnings." },
+    { "command": "npm.cmd test -- --runInBand", "exitCode": 0, "result": "passed", "notes": "Serial repository suite passed with 329 tests." },
+    { "command": "npm.cmd run build", "exitCode": 0, "result": "passed", "notes": "Contracts and API builds passed." },
+    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "passed", "notes": "No high-severity dependency vulnerabilities reported." },
+    { "command": "npm.cmd run api:inventory", "exitCode": 0, "result": "passed", "notes": "Contact route remains present in runtime inventory." },
+    { "command": "npm.cmd run openapi:validate", "exitCode": 0, "result": "passed", "notes": "OpenAPI validation passed." },
+    { "command": "npm.cmd run postman:validate", "exitCode": 0, "result": "passed", "notes": "Postman validation passed." },
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "passed", "notes": "Agent Pack audit reported zero errors." }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/requests/service.ts",
+    "apps/api/src/modules/requests/router.ts",
+    "apps/api/tests/requests/router.test.ts",
+    "packages/contracts/src/requests/index.ts"
+  ],
+  "knownGaps": [
+    "Cross-instance rate limiting requires a shared production limiter when deployed horizontally; the local boundary is deterministic and fail-safe.",
+    "Viewing, SLA, assignment notes, and lifecycle notification details remain dependency-ordered B5 tasks."
+  ],
+  "completedAt": "2026-08-14T12:36:00.000Z"
+}

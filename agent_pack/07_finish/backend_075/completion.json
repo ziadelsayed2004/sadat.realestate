@@ -1,0 +1,44 @@
+{
+  "taskId": "backend_075",
+  "summary": "Added seeker request list/detail projection coverage for under-review and contacted states, ownership isolation, deterministic pagination, and exclusion of CRM-only assignment, SLA, and creator fields.",
+  "filesChanged": [
+    "apps/api/tests/seeker/requests-projection.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/seeker-requests.md"
+  ],
+  "verification": [
+    {
+      "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/seeker/requests-projection.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Seeker ownership, lifecycle-state projection, and internal-field exclusion assertions passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts and API typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace and ESLint checks passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/api; npm.cmd run build; npm.cmd audit --audit-level=high; npm.cmd run api:inventory; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All 336 tests passed after registering the new test, build and dependency audit were clean, API artifacts validated, and Agent Pack audit reported zero errors."
+    }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/requests/service.ts",
+    "apps/api/src/modules/requests/router.ts",
+    "apps/api/tests/seeker/requests-projection.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/seeker-requests.md"
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-14T13:06:00.000Z"
+}

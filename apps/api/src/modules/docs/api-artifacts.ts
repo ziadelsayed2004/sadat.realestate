@@ -9,6 +9,18 @@ import { AUDIT_ROUTE_DEFINITIONS } from '../audit/router.js';
 import { LOCATION_ROUTE_DEFINITIONS } from '../locations/router.js';
 import { TAXONOMY_ROUTE_DEFINITIONS } from '../taxonomy/router.js';
 import { FEATURE_ROUTE_DEFINITIONS } from '../taxonomy/features.js';
+import { PROJECT_ROUTE_DEFINITIONS } from '../projects/router.js';
+import { PROPERTY_ROUTE_DEFINITIONS } from '../properties/router.js';
+import { PROPERTY_MEDIA_ROUTE_DEFINITIONS } from '../media/router.js';
+import { MODERATION_ROUTE_DEFINITIONS } from '../moderation/router.js';
+import { PUBLIC_ROUTE_DEFINITIONS } from '../public/router.js';
+import { SEARCH_ROUTE_DEFINITIONS } from '../search/router.js';
+import { COMPARE_ROUTE_DEFINITIONS } from '../compare/router.js';
+import { ORGANIZATION_ROUTE_DEFINITIONS } from '../organizations/router.js';
+import { FAVORITE_ROUTE_DEFINITIONS } from '../favorites/router.js';
+import { NOTIFICATION_ROUTE_DEFINITIONS } from '../notifications/router.js';
+import { REQUEST_ROUTE_DEFINITIONS } from '../requests/router.js';
+import { VIEWING_ROUTE_DEFINITIONS } from '../viewings/router.js';
 
 export const IMPLEMENTED_ROUTE_DEFINITIONS = Object.freeze([
   ...OPERATIONAL_ROUTE_DEFINITIONS,
@@ -18,10 +30,22 @@ export const IMPLEMENTED_ROUTE_DEFINITIONS = Object.freeze([
   ...UPLOAD_ROUTE_DEFINITIONS,
   ...RBAC_ROUTE_DEFINITIONS,
   ...ACCOUNT_ROUTE_DEFINITIONS,
-  ...AUDIT_ROUTE_DEFINITIONS
-  ,...LOCATION_ROUTE_DEFINITIONS,
-  ...TAXONOMY_ROUTE_DEFINITIONS
-  ,...FEATURE_ROUTE_DEFINITIONS
+  ...AUDIT_ROUTE_DEFINITIONS,
+  ...LOCATION_ROUTE_DEFINITIONS,
+  ...TAXONOMY_ROUTE_DEFINITIONS,
+  ...FEATURE_ROUTE_DEFINITIONS,
+  ...PROJECT_ROUTE_DEFINITIONS,
+  ...PROPERTY_ROUTE_DEFINITIONS,
+  ...PROPERTY_MEDIA_ROUTE_DEFINITIONS,
+  ...MODERATION_ROUTE_DEFINITIONS,
+  ...PUBLIC_ROUTE_DEFINITIONS,
+  ...SEARCH_ROUTE_DEFINITIONS,
+  ...COMPARE_ROUTE_DEFINITIONS,
+  ...ORGANIZATION_ROUTE_DEFINITIONS,
+  ...FAVORITE_ROUTE_DEFINITIONS,
+  ...NOTIFICATION_ROUTE_DEFINITIONS
+  ,...REQUEST_ROUTE_DEFINITIONS,
+  ...VIEWING_ROUTE_DEFINITIONS
 ]);
 
 export const PRODUCT_API_BASE_PATH = '/api/v1';

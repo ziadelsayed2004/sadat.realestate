@@ -1,0 +1,43 @@
+{
+  "taskId": "backend_055",
+  "summary": "Added a query-driven property index catalog and strict plan helpers, introduced provider/status pagination and weighted localized text indexes plus the existing geospatial coverage, switched property list search to MongoDB text queries, and added deterministic pagination and synthetic explain-plan tests and documentation.",
+  "filesChanged": [
+    "apps/api/src/modules/performance/property-indexes.ts",
+    "apps/api/tests/performance/property-indexes.test.ts",
+    "packages/contracts/src/performance/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/properties/models.ts",
+    "apps/api/src/modules/properties/repository.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/property-indexes.md"
+  ],
+  "verification": [
+    { "command": "npm.cmd run typecheck", "exitCode": 0, "result": "passed", "notes": "Contracts and API TypeScript checks passed." },
+    { "command": "npm.cmd run test:unit --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "230 unit tests passed, including the performance index suite." },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "passed", "notes": "Workspace and ESLint checks passed with no warnings." },
+    { "command": "npm.cmd run build", "exitCode": 0, "result": "passed", "notes": "Contracts and API builds passed." },
+    { "command": "npm.cmd run test:coverage --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "291 tests passed; coverage 85.37% lines, 80.31% branches, 85.71% functions." },
+    { "command": "npm.cmd test -- --runInBand", "exitCode": 0, "result": "passed", "notes": "Root checks and 291 API tests passed." },
+    { "command": "npm.cmd run api:inventory --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "Runtime inventory completed; no route changes were introduced by this task." },
+    { "command": "npm.cmd run openapi:validate --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "OpenAPI validation passed." },
+    { "command": "npm.cmd run postman:validate --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "Postman validation passed." },
+    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "passed", "notes": "0 vulnerabilities reported." },
+    { "command": "npm.cmd run env:check --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "Synthetic test environment validated without reading a real .env." },
+    { "command": "node -e \"for (const f of ['packages/contracts/src/performance/index.ts','agent_pack/07_finish/backend_055/completion.json']) { if (f.endsWith('.json')) JSON.parse(require('fs').readFileSync(f,'utf8')); } console.log('CHANGED_JSON_OK')\"", "exitCode": 0, "result": "passed", "notes": "Changed Agent Pack JSON parsed successfully; TypeScript contract syntax is covered by typecheck." }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/performance/property-indexes.ts",
+    "apps/api/tests/performance/property-indexes.test.ts",
+    "apps/api/src/modules/properties/models.ts",
+    "apps/api/src/modules/properties/repository.ts",
+    "packages/contracts/src/performance/index.ts",
+    "docs/api/property-indexes.md"
+  ],
+  "integrationNote": "apps/api/src/modules/properties/models.ts and repository.ts are outside the task's performance roots but were necessary to wire the selected query-driven compound/text indexes into the existing property model and list queries; no unrelated behavior was changed.",
+  "knownGaps": [
+    "Live MongoDB explain('executionStats') and replica-set transaction checks were not run because isolated test topology and TEST_MONGODB_URI are unavailable; synthetic explain assertions and schema index inspection pass.",
+    "Repository declares Node >=24 <25 while this environment reports Node v22.18.0; all available checks pass on the current runtime.",
+    "No security:check script exists in the checked-in manifests, so that optional gate was not run."
+  ],
+  "completedAt": "2026-08-14T03:12:10.000Z"
+}

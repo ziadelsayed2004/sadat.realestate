@@ -1,0 +1,14 @@
+{
+  "taskId":"backend_081",
+  "summary":"Added a bounded request lifecycle outbox with stable deduplication keys, deterministic pending reads, and idempotent delivery acknowledgment, plus regression coverage.",
+  "filesChanged":["apps/api/src/modules/notifications/outbox.ts","apps/api/tests/notifications/outbox.test.ts","apps/api/src/modules/testing/test-suites.ts","docs/api/request-lifecycle-events.md"],
+  "verification":[
+    {"command":"node --import tsx --test --test-concurrency=1 apps/api/tests/notifications/outbox.test.ts","exitCode":0,"result":"Passed","notes":"Replay deduplication, bounded pending read, and one-time acknowledgment passed."},
+    {"command":"npm.cmd run typecheck","exitCode":0,"result":"Passed","notes":"Typecheck passed."},
+    {"command":"npm.cmd run lint","exitCode":0,"result":"Passed","notes":"Lint passed."},
+    {"command":"node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Agent Pack audit clean; full B5 gate follows."}
+  ],
+  "sourceEvidence":["apps/api/src/modules/notifications/outbox.ts","apps/api/tests/notifications/outbox.test.ts","docs/api/request-lifecycle-events.md"],
+  "knownGaps":["External notification-provider delivery is intentionally not claimed; full repository matrix will run at the B5 gate."],
+  "completedAt":"2026-08-14T13:42:00.000Z"
+}

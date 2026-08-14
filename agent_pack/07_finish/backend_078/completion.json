@@ -1,0 +1,12 @@
+{
+  "taskId":"backend_078",
+  "summary":"Implemented server-owned 48-hour request due dates and an idempotent administrative overdue read model that excludes terminal requests and reports bounded overdue seconds.",
+  "filesChanged":["apps/api/src/modules/requests/service.ts","apps/api/src/modules/requests/router.ts","apps/api/tests/requests/overdue.test.ts","apps/api/src/modules/testing/test-suites.ts","apps/api/openapi/openapi.json","apps/api/postman/Sadat-Real-Estate.postman_collection.json","docs/api/request-sla-overdue.md"],
+  "verification":[
+    {"command":"node --import tsx --test --test-concurrency=1 apps/api/tests/requests/overdue.test.ts","exitCode":0,"result":"Passed","notes":"Overdue filtering, terminal exclusion, and deterministic overdue seconds passed."},
+    {"command":"npm.cmd run typecheck; npm.cmd run lint; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Typecheck, lint, OpenAPI/Postman validation, and Agent Pack audit passed."}
+  ],
+  "sourceEvidence":["apps/api/src/modules/requests/service.ts","apps/api/src/modules/requests/router.ts","packages/contracts/src/requests/index.ts","apps/api/tests/requests/overdue.test.ts","docs/api/request-sla-overdue.md"],
+  "knownGaps":["Full repository suite/build/dependency matrix will run at the B5 gate."],
+  "completedAt":"2026-08-14T13:21:00.000Z"
+}

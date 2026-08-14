@@ -1,0 +1,56 @@
+{
+  "taskId": "backend_047",
+  "summary": "Implemented private property image and floor-plan media uploads with signature validation, deterministic scan/failure states, owner-scoped ordering and cover selection, deletion, and publication-ready filtering; synchronized runtime routes, contracts, tests, docs, OpenAPI, Postman, and endpoint blueprint.",
+  "filesChanged": [
+    "packages/contracts/src/media/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/media/models.ts",
+    "apps/api/src/modules/media/repository.ts",
+    "apps/api/src/modules/media/service.ts",
+    "apps/api/src/modules/media/router.ts",
+    "apps/api/src/modules/media/runtime.ts",
+    "apps/api/tests/media/media.test.ts",
+    "apps/api/tests/media/router.test.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "agent_pack/scripts/sync_property_media_artifacts.mjs",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "docs/api/property-media.md"
+  ],
+  "verification": [
+    { "command": "npm.cmd run test:unit --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "217 API unit tests passed, including strict media contracts/model, processing failure, replay, ownership, ordering, and deletion coverage." },
+    { "command": "npm.cmd run test:api --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "48 API route tests passed, including canonical media upload/order/delete routes and authorization." },
+    { "command": "npm.cmd run typecheck", "exitCode": 0, "result": "Passed", "notes": "Contracts, API runtime, and test TypeScript checks passed." },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "Passed", "notes": "Workspace policy and ESLint checks passed with zero warnings." },
+    { "command": "npm.cmd test -- --runInBand", "exitCode": 0, "result": "Passed", "notes": "Workspace and API suite passed 278 tests." },
+    { "command": "npm.cmd run build", "exitCode": 0, "result": "Passed", "notes": "Contracts and API builds completed successfully." },
+    { "command": "npm.cmd run test:coverage", "exitCode": 0, "result": "Passed", "notes": "Coverage thresholds passed; aggregate lines 85.90%, functions 80.85%, branches 85.56%." },
+    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "Passed", "notes": "No high-severity dependency vulnerabilities reported." },
+    { "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtZGV2ZWxvcG1lbnQtb25seS1rZXktMzItYnl0ZXM'; npm.cmd run env:check", "exitCode": 0, "result": "Passed", "notes": "Synthetic test environment validated without reading a .env file." },
+    { "command": "npm.cmd run api:inventory", "exitCode": 0, "result": "Passed", "notes": "Property media upload, order, and delete routes appear in runtime inventory." },
+    { "command": "npm.cmd run openapi:validate", "exitCode": 0, "result": "Passed", "notes": "Media binary upload and ordering schemas/routes validated." },
+    { "command": "npm.cmd run postman:validate", "exitCode": 0, "result": "Passed", "notes": "Media Postman requests validated against the canonical routes." },
+    { "command": "node -e \"for (const f of ['apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json','agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json','agent_pack/03_execution/TASK_STATE.json']) JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('JSON_OK')\"", "exitCode": 0, "result": "Passed", "notes": "Changed JSON artifacts parsed successfully." },
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "Passed", "notes": "Agent Pack audit reported zero errors with backend_047 as the sole task in progress before closure." }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B3_projects_properties/backend_047.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (PRV-08)",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "apps/api/src/modules/media/service.ts",
+    "apps/api/src/modules/media/models.ts",
+    "apps/api/tests/media/media.test.ts",
+    "docs/api/property-media.md"
+  ],
+  "knownGaps": [
+    "The local runtime is Node 22.18.0 while the repository declares Node >=24 <25; Node 24 CI validation remains required.",
+    "No isolated MongoDB replica set or TEST_MONGODB_URI is available, so live transaction/index execution is skipped; deterministic storage/scanner and repository-boundary tests pass.",
+    "No security:check script exists in the repository; dependency audit and security-focused media/upload tests were run.",
+    "Production object storage and malware-scanner credentials are intentionally unavailable; non-test environments fail closed through the existing upload adapter boundary."
+  ],
+  "completedAt": "2026-08-14T02:00:50.9010710Z"
+}

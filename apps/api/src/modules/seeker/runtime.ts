@@ -9,6 +9,7 @@ import { createSeekerRouter, type SeekerRouterDependencies } from './router.js';
 import { createMongooseSeekerRepository } from './repository.js';
 import { createSeekerService } from './service.js';
 import { createOpaqueTokenService } from '../auth/crypto.js';
+import { createMongooseSeekerOverviewRepository, createSeekerOverviewService } from './overview.js';
 
 export function createSeekerRuntime(
   connection: Connection,
@@ -38,7 +39,8 @@ export function createSeekerRuntime(
       authService
     }),
     accessTokens,
-    cookie
+    cookie,
+    overview: createSeekerOverviewService({ repository: createMongooseSeekerOverviewRepository(connection) })
   };
 }
 

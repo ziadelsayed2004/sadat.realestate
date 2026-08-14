@@ -1,31 +1,30 @@
 {
-  "generatedAt": "2026-08-14T00:08:36.601Z",
-  "selectedTaskId": "backend_040",
-  "selectedTaskStatus": "open",
-  "selectedTaskFile": "04_tracks/backend/B3_projects_properties/backend_040.md",
+  "generatedAt": "2026-08-14T14:30:39.460Z",
+  "selectedTaskId": "backend_100",
+  "selectedTaskStatus": "in_progress",
+  "selectedTaskFile": "04_tracks/backend/B7_ads_payments/backend_100.md",
   "selectedTask": {
-    "id": "backend_040",
-    "phase": "B3_projects_properties",
-    "area": "projects",
-    "title": "Project Model and Provider CRUD",
-    "goal": "Model projects, localized content, locations, developers, and states, and provide ownership-restricted CRUD.",
+    "id": "backend_100",
+    "phase": "B7_ads_payments",
+    "area": "ads",
+    "title": "Ad Placements and Settings",
+    "goal": "Model ad placements, availability, and settings without a hardcoded public price.",
     "kind": "api",
     "screens": [],
     "sourceRefs": [
-      "PRV-15",
-      "ADM-12"
+      "ADM-55"
     ],
     "notes": [],
     "track": "backend",
-    "sequence": 32,
+    "sequence": 78,
     "dependsOn": [
-      "backend_039"
+      "backend_097"
     ],
-    "atomicTaskFile": "04_tracks/backend/B3_projects_properties/backend_040.md",
+    "atomicTaskFile": "04_tracks/backend/B7_ads_payments/backend_100.md",
     "allowedRoots": [
-      "apps/api/src/modules/projects/**",
-      "apps/api/tests/projects/**",
-      "packages/contracts/src/projects/**",
+      "apps/api/src/modules/ads/**",
+      "apps/api/tests/ads/**",
+      "packages/contracts/src/ads/**",
       "docs/api/**",
       "apps/api/openapi/**",
       "apps/api/postman/**",
@@ -51,11 +50,11 @@
   "counts": {
     "backend": {
       "total": 113,
-      "open": 82,
-      "in_progress": 0,
+      "open": 35,
+      "in_progress": 1,
       "partial": 0,
       "blocked": 0,
-      "complete": 31
+      "complete": 77
     },
     "frontend": {
       "total": 75,
@@ -69,425 +68,11 @@
   "blockedTasks": [],
   "blockedByDependencies": [
     {
-      "taskId": "backend_041",
-      "unresolved": [
-        {
-          "taskId": "backend_040",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_042",
-      "unresolved": [
-        {
-          "taskId": "backend_041",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_043",
-      "unresolved": [
-        {
-          "taskId": "backend_042",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_044",
-      "unresolved": [
-        {
-          "taskId": "backend_043",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_045",
-      "unresolved": [
-        {
-          "taskId": "backend_044",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_046",
-      "unresolved": [
-        {
-          "taskId": "backend_045",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_047",
-      "unresolved": [
-        {
-          "taskId": "backend_046",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_048",
-      "unresolved": [
-        {
-          "taskId": "backend_047",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_049",
-      "unresolved": [
-        {
-          "taskId": "backend_048",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_050",
-      "unresolved": [
-        {
-          "taskId": "backend_049",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_051",
-      "unresolved": [
-        {
-          "taskId": "backend_050",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_052",
-      "unresolved": [
-        {
-          "taskId": "backend_051",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_053",
-      "unresolved": [
-        {
-          "taskId": "backend_052",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_054",
-      "unresolved": [
-        {
-          "taskId": "backend_053",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_055",
-      "unresolved": [
-        {
-          "taskId": "backend_054",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_060",
-      "unresolved": [
-        {
-          "taskId": "backend_055",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_061",
-      "unresolved": [
-        {
-          "taskId": "backend_060",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_062",
-      "unresolved": [
-        {
-          "taskId": "backend_061",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_063",
-      "unresolved": [
-        {
-          "taskId": "backend_062",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_064",
-      "unresolved": [
-        {
-          "taskId": "backend_063",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_065",
-      "unresolved": [
-        {
-          "taskId": "backend_064",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_066",
-      "unresolved": [
-        {
-          "taskId": "backend_065",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_067",
-      "unresolved": [
-        {
-          "taskId": "backend_066",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_068",
-      "unresolved": [
-        {
-          "taskId": "backend_067",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_069",
-      "unresolved": [
-        {
-          "taskId": "backend_068",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_070",
-      "unresolved": [
-        {
-          "taskId": "backend_069",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_071",
-      "unresolved": [
-        {
-          "taskId": "backend_070",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_072",
-      "unresolved": [
-        {
-          "taskId": "backend_071",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_073",
-      "unresolved": [
-        {
-          "taskId": "backend_072",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_074",
-      "unresolved": [
-        {
-          "taskId": "backend_073",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_075",
-      "unresolved": [
-        {
-          "taskId": "backend_074",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_076",
-      "unresolved": [
-        {
-          "taskId": "backend_075",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_077",
-      "unresolved": [
-        {
-          "taskId": "backend_076",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_078",
-      "unresolved": [
-        {
-          "taskId": "backend_077",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_079",
-      "unresolved": [
-        {
-          "taskId": "backend_078",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_080",
-      "unresolved": [
-        {
-          "taskId": "backend_079",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_081",
-      "unresolved": [
-        {
-          "taskId": "backend_080",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_090",
-      "unresolved": [
-        {
-          "taskId": "backend_081",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_091",
-      "unresolved": [
-        {
-          "taskId": "backend_090",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_092",
-      "unresolved": [
-        {
-          "taskId": "backend_091",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_093",
-      "unresolved": [
-        {
-          "taskId": "backend_092",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_094",
-      "unresolved": [
-        {
-          "taskId": "backend_093",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_095",
-      "unresolved": [
-        {
-          "taskId": "backend_094",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_096",
-      "unresolved": [
-        {
-          "taskId": "backend_095",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_097",
-      "unresolved": [
-        {
-          "taskId": "backend_096",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_100",
-      "unresolved": [
-        {
-          "taskId": "backend_097",
-          "status": "open"
-        }
-      ]
-    },
-    {
       "taskId": "backend_101",
       "unresolved": [
         {
           "taskId": "backend_100",
-          "status": "open"
+          "status": "in_progress"
         }
       ]
     },

@@ -1,0 +1,50 @@
+{
+  "taskId": "backend_061",
+  "summary": "Implemented the unauthenticated GET /api/v1/public/properties listing with strict allowlisted filters, bounded pagination, deterministic sorting, safe published-active projections, Mongo text search, and operator-injection prevention.",
+  "filesChanged": [
+    "packages/contracts/src/search/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/search/properties.ts",
+    "apps/api/src/modules/search/router.ts",
+    "apps/api/src/modules/search/runtime.ts",
+    "apps/api/tests/search/properties.test.ts",
+    "apps/api/tests/search/router.test.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "docs/api/public-properties-search.md"
+  ],
+  "verification": [
+    { "command": "npx.cmd tsx --test apps/api/tests/search/properties.test.ts apps/api/tests/search/router.test.ts", "exitCode": 0, "result": "passed", "notes": "5 focused search, projection, pagination, and route security tests passed." },
+    { "command": "npm.cmd run typecheck --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "Contracts and API TypeScript checks passed." },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "passed", "notes": "Workspace and ESLint checks passed with no warnings." },
+    { "command": "npm.cmd test -- --runInBand", "exitCode": 0, "result": "passed", "notes": "Root checks and 301 API tests passed." },
+    { "command": "npm.cmd run build", "exitCode": 0, "result": "passed", "notes": "Contracts and API builds passed." },
+    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "passed", "notes": "0 vulnerabilities reported." },
+    { "command": "npm.cmd run api:inventory --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "Inventory includes GET /api/v1/public/properties." },
+    { "command": "npm.cmd run openapi:validate --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "OpenAPI route and local references validated." },
+    { "command": "npm.cmd run postman:validate --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "Postman collection/environment validated." },
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "passed", "notes": "Agent Pack audit reported zero errors." }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B4_public_seeker/backend_061.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (PUB-02)",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (GET /api/v1/public/properties)",
+    "apps/api/src/modules/search/properties.ts",
+    "apps/api/tests/search/properties.test.ts",
+    "apps/api/tests/search/router.test.ts",
+    "docs/api/public-properties-search.md"
+  ],
+  "integrationNote": "apps/api/src/app.ts, apps/api/src/server.ts, apps/api/src/modules/docs/api-artifacts.ts, and apps/api/src/modules/testing/test-suites.ts are outside the selected search roots but were required to expose the public route, runtime adapter, inventory, and tests.",
+  "knownGaps": [
+    "No production property seed data is present; the runtime safely returns an empty page when no published active rows exist.",
+    "Live MongoDB query-plan and replica-set checks were not run because an isolated TEST_MONGODB_URI and topology are unavailable.",
+    "Repository declares Node >=24 <25 while this environment reports Node v22.18.0; all available checks pass on the current runtime.",
+    "No security:check script exists in the checked-in manifests, so that optional gate was not run."
+  ],
+  "completedAt": "2026-08-14T10:47:27.1985283Z"
+}

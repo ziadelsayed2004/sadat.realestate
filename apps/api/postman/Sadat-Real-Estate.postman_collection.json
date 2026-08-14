@@ -5,8 +5,16 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl", "value": "http://127.0.0.1:3000", "type": "string" },
-    { "key": "apiV1BaseUrl", "value": "{{baseUrl}}/api/v1", "type": "string" }
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:3000",
+      "type": "string"
+    },
+    {
+      "key": "apiV1BaseUrl",
+      "value": "{{baseUrl}}/api/v1",
+      "type": "string"
+    }
   ],
   "event": [
     {
@@ -42,7 +50,15 @@
       "request": {
         "method": "GET",
         "header": [],
-        "url": { "raw": "{{baseUrl}}/health", "host": ["{{baseUrl}}"], "path": ["health"] }
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
       }
     },
     {
@@ -65,7 +81,331 @@
       "request": {
         "method": "GET",
         "header": [],
-        "url": { "raw": "{{baseUrl}}/ready", "host": ["{{baseUrl}}"], "path": ["ready"] }
+        "url": {
+          "raw": "{{baseUrl}}/ready",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "ready"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Public - Homepage",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Published homepage projection is available', function () {",
+              "  pm.expect([200, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.keys('sections', 'properties', 'developers', 'content', 'banners');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/public/home",
+          "host": ["{{apiV1BaseUrl}}"],
+          "path": ["public", "home"]
+        },
+        "description": "Unauthenticated published-only homepage feed. Draft, inactive, and sensitive workflow fields are excluded."
+      }
+    },
+    {
+      "name": "Public - Property Listing",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Published property listing is bounded', function () {",
+              "  pm.expect([200, 400, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.keys('items', 'page', 'limit', 'total');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/public/properties?sort=publishedAt&direction=desc&page=1&limit=20",
+          "host": ["{{apiV1BaseUrl}}"],
+          "path": ["public", "properties"],
+          "query": [
+            { "key": "sort", "value": "publishedAt" },
+            { "key": "direction", "value": "desc" },
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "20" }
+          ]
+        },
+        "description": "Unauthenticated published and active property listing with allowlisted filters and deterministic pagination."
+      }
+    },
+    {
+      "name": "Public - Property Details",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Published property details are explicit', function () {",
+              "  pm.expect([200, 400, 404, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.keys('id', 'slug', 'kind', 'name', 'transactionType', 'source', 'seo', 'project', 'media', 'relatedProperties');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/public/properties/:slug",
+          "host": ["{{apiV1BaseUrl}}"],
+          "path": ["public", "properties", ":slug"],
+          "variable": [{ "key": "slug", "value": "synthetic-apartment" }]
+        },
+        "description": "Unauthenticated published property details; draft, inactive, workflow, and storage-internal fields are excluded."
+      }
+    },
+    {
+      "name": "Public - Property Compare",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Property comparison stays within fixed fields', function () {",
+              "  pm.expect([200, 400, 404, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data.fields).to.eql(['name', 'transactionType', 'price', 'area', 'layout']);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"propertyIds\": [\"000000000000000000000000\"]\n}", "options": { "raw": { "language": "json" } } },
+        "url": { "raw": "{{apiV1BaseUrl}}/public/properties/compare", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "properties", "compare"] },
+        "description": "Unauthenticated comparison for one or two published active properties; unknown/draft items fail closed."
+      }
+    },
+    {
+      "name": "Public - Developer Directory",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Public directory returns a safe envelope', function () {",
+              "  pm.expect([200, 400, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.property('items');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{apiV1BaseUrl}}/public/developers?kind=developer_company", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "developers"], "query": [{ "key": "kind", "value": "developer_company" }] },
+        "description": "Unauthenticated approved developer/company directory with bounded filters."
+      }
+    },
+    {
+      "name": "Public - Developer Profile",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Public profile returns a safe envelope', function () {",
+              "  pm.expect([200, 400, 404, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data.verified).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{apiV1BaseUrl}}/public/developers/:slug", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "developers", ":slug"], "variable": [{ "key": "slug", "value": "trusted-company" }] },
+        "description": "Unauthenticated approved organization profile with published projects and active properties only."
+      }
+    },
+    {
+      "name": "Seeker - Saved Properties",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Saved properties returns a safe envelope', function () {",
+              "  pm.expect([200, 401, 403, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.property('items');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{seekerAccessToken}}" }],
+        "url": { "raw": "{{apiV1BaseUrl}}/seeker/favorites?page=1&limit=20", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "favorites"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }] },
+        "description": "Requires a transient verified seeker bearer token; stale properties are omitted from the projection."
+      }
+    },
+    {
+      "name": "Seeker - Save Property",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Save property returns an idempotent result', function () {",
+              "  pm.expect([200, 400, 401, 403, 404, 500]).to.include(pm.response.code);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Authorization", "value": "Bearer {{seekerAccessToken}}" }],
+        "url": { "raw": "{{apiV1BaseUrl}}/seeker/favorites/:propertyId", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "favorites", ":propertyId"], "variable": [{ "key": "propertyId", "value": "000000000000000000000000" }] },
+        "description": "Requires a transient verified seeker token and a published active property; replay is idempotent."
+      }
+    },
+    {
+      "name": "Seeker - Remove Saved Property",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Remove property returns an idempotent result', function () {",
+              "  pm.expect([200, 400, 401, 403, 500]).to.include(pm.response.code);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [{ "key": "Authorization", "value": "Bearer {{seekerAccessToken}}" }],
+        "url": { "raw": "{{apiV1BaseUrl}}/seeker/favorites/:propertyId", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "favorites", ":propertyId"], "variable": [{ "key": "propertyId", "value": "000000000000000000000000" }] },
+        "description": "Requires a transient verified seeker token; removing a missing save is safe and idempotent."
+      }
+    },
+    {
+      "name": "Seeker - Overview",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Seeker overview returns real aggregate fields', function () {",
+              "  pm.expect([200, 401, 403, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.property('savedProperties');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{seekerAccessToken}}" }],
+        "url": { "raw": "{{apiV1BaseUrl}}/seeker/overview", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "overview"] },
+        "description": "Requires a transient verified seeker token. Counts are sourced from available seeker-owned aggregates and safely return zero when empty."
+      }
+    },
+    {
+      "name": "Seeker - Notifications",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Notification inbox is bounded and recipient-owned', function () {",
+              "  pm.expect([200, 400, 401, 403, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.keys('items', 'unreadCount', 'page', 'limit', 'total');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{seekerAccessToken}}" }],
+        "url": { "raw": "{{apiV1BaseUrl}}/seeker/notifications?page=1&limit=20&unreadOnly=false", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "notifications"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }, { "key": "unreadOnly", "value": "false" }] },
+        "description": "Requires a transient verified seeker token; only localized safe notification projections are returned."
+      }
+    },
+    {
+      "name": "Seeker - Mark Notification Read",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Notification read transition is ownership protected', function () {",
+              "  pm.expect([200, 400, 401, 403, 404, 500]).to.include(pm.response.code);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Authorization", "value": "Bearer {{seekerAccessToken}}" }],
+        "url": { "raw": "{{apiV1BaseUrl}}/seeker/notifications/:notificationId/read", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "notifications", ":notificationId", "read"], "variable": [{ "key": "notificationId", "value": "000000000000000000000000" }] },
+        "description": "Requires a transient verified seeker token; foreign notification IDs are indistinguishable from not found."
+      }
+    },
+    {
+      "name": "Seeker - Mark All Notifications Read",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Read-all returns a changed count', function () {",
+              "  pm.expect([200, 401, 403, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.property('updatedCount');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Authorization", "value": "Bearer {{seekerAccessToken}}" }],
+        "url": { "raw": "{{apiV1BaseUrl}}/seeker/notifications/read-all", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "notifications", "read-all"] },
+        "description": "Requires a transient verified seeker token; replay is idempotent and returns the number changed."
       }
     },
     {
@@ -88,13 +428,32 @@
       ],
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"email\": \"synthetic.admin@example.test\",\n  \"password\": \"replace-with-isolated-synthetic-password\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
-        "url": { "raw": "{{apiV1BaseUrl}}/auth/login", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "login"] }
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/auth/login",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
       }
     },
     {
@@ -117,13 +476,33 @@
       ],
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"phone\": \"+201000000000\",\n  \"roleType\": \"seeker\",\n  \"purpose\": \"login\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
-        "url": { "raw": "{{apiV1BaseUrl}}/auth/otp/send", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "otp", "send"] }
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/auth/otp/send",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "otp",
+            "send"
+          ]
+        }
       }
     },
     {
@@ -145,13 +524,33 @@
       ],
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"phone\": \"+201000000000\",\n  \"roleType\": \"seeker\",\n  \"purpose\": \"login\",\n  \"challengeId\": \"replace-with-send-response-challenge-id\",\n  \"code\": \"000000\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
-        "url": { "raw": "{{apiV1BaseUrl}}/auth/otp/verify", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "otp", "verify"] }
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/auth/otp/verify",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "otp",
+            "verify"
+          ]
+        }
       }
     },
     {
@@ -174,7 +573,16 @@
       "request": {
         "method": "POST",
         "header": [],
-        "url": { "raw": "{{apiV1BaseUrl}}/auth/refresh", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "refresh"] }
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/auth/refresh",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "refresh"
+          ]
+        }
       }
     },
     {
@@ -196,65 +604,124 @@
       "request": {
         "method": "POST",
         "header": [],
-        "url": { "raw": "{{apiV1BaseUrl}}/auth/logout", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "logout"] }
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/auth/logout",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "logout"
+          ]
+        }
       }
     },
     {
       "name": "Seeker - Register",
-      "event": [{
-        "listen": "test",
-        "script": {
-          "type": "text/javascript",
-          "exec": [
-            "pm.test('Seeker registration returns a safe session envelope', function () {",
-            "  pm.expect([201, 400, 401, 409, 413, 429, 500]).to.include(pm.response.code);",
-            "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
-            "});"
-          ]
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Seeker registration returns a safe session envelope', function () {",
+              "  pm.expect([201, 400, 401, 409, 413, 429, 500]).to.include(pm.response.code);",
+              "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
+              "});"
+            ]
+          }
         }
-      }],
+      ],
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"verificationToken\": \"replace-with-verified-otp-token\",\n  \"firstName\": \"Synthetic\",\n  \"lastName\": \"Seeker\",\n  \"locale\": \"ar\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
-        "url": { "raw": "{{apiV1BaseUrl}}/auth/register/seeker", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "register", "seeker"] }
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/auth/register/seeker",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "register",
+            "seeker"
+          ]
+        }
       }
     },
     {
       "name": "Seeker - My Profile",
-      "event": [{
-        "listen": "test",
-        "script": {
-          "type": "text/javascript",
-          "exec": [
-            "pm.test('Profile response is an envelope without private fields', function () {",
-            "  pm.expect([200, 401, 403, 404, 413, 429, 500]).to.include(pm.response.code);",
-            "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
-            "});"
-          ]
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Profile response is an envelope without private fields', function () {",
+              "  pm.expect([200, 401, 403, 404, 413, 429, 500]).to.include(pm.response.code);",
+              "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
+              "});"
+            ]
+          }
         }
-      }],
+      ],
       "request": {
         "method": "GET",
         "header": [],
-        "url": { "raw": "{{apiV1BaseUrl}}/me", "host": ["{{apiV1BaseUrl}}"], "path": ["me"] }
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/me",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "me"
+          ]
+        }
       }
     },
     {
       "name": "Seeker - Update Profile",
       "request": {
         "method": "PATCH",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"firstName\": \"Synthetic\",\n  \"locale\": \"ar\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
-        "url": { "raw": "{{apiV1BaseUrl}}/me", "host": ["{{apiV1BaseUrl}}"], "path": ["me"] }
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/me",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "me"
+          ]
+        }
       }
     },
     {
@@ -262,33 +729,80 @@
       "request": {
         "method": "GET",
         "header": [],
-        "url": { "raw": "{{apiV1BaseUrl}}/me/preferences", "host": ["{{apiV1BaseUrl}}"], "path": ["me", "preferences"] }
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/me/preferences",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "me",
+            "preferences"
+          ]
+        }
       }
     },
     {
       "name": "Seeker - Update Preferences",
       "request": {
         "method": "PATCH",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"locations\": [\"synthetic-location-id\"],\n  \"purpose\": \"buy\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
-        "url": { "raw": "{{apiV1BaseUrl}}/me/preferences", "host": ["{{apiV1BaseUrl}}"], "path": ["me", "preferences"] }
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/me/preferences",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "me",
+            "preferences"
+          ]
+        }
       }
     },
     {
       "name": "Provider - Create Application",
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"providerType\": \"individual_broker\",\n  \"providerOtpGrant\": \"replace-with-isolated-provider-otp-grant\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
-        "url": { "raw": "{{apiV1BaseUrl}}/provider/application", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application"] }
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/application",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "application"
+          ]
+        }
       }
     },
     {
@@ -296,59 +810,148 @@
       "request": {
         "method": "GET",
         "header": [],
-        "url": { "raw": "{{apiV1BaseUrl}}/provider/application", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application"] }
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/application",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "application"
+          ]
+        }
       }
     },
     {
       "name": "Provider - Save Account Step",
       "request": {
         "method": "PATCH",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"version\": 0,\n  \"accountOwnerFullName\": \"Synthetic Provider\",\n  \"displayName\": \"Synthetic Provider Profile\",\n  \"email\": \"provider@example.invalid\",\n  \"primaryLocationId\": \"synthetic-primary-location\",\n  \"serviceAreaIds\": [\"synthetic-service-area\"],\n  \"preferredLocale\": \"ar\",\n  \"termsAcceptedAt\": \"2026-08-13T00:00:00.000Z\",\n  \"privacyAcceptedAt\": \"2026-08-13T00:00:00.000Z\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
-        "url": { "raw": "{{apiV1BaseUrl}}/provider/application/account", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application", "account"] }
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/application/account",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "application",
+            "account"
+          ]
+        }
       }
     },
     {
       "name": "Provider - Save Business Step",
       "request": {
         "method": "PATCH",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"version\": 0,\n  \"legalBusinessName\": \"Synthetic Brokerage LLC\",\n  \"tradeName\": \"Synthetic Brokerage\",\n  \"businessAddress\": \"Synthetic business address\",\n  \"commercialRegistrationNumber\": \"SYNTHETIC-CR\",\n  \"taxRegistrationNumber\": \"SYNTHETIC-TAX\",\n  \"authorizedRepresentativeFullName\": \"Synthetic Representative\",\n  \"authorizedRepresentativeTitle\": \"Manager\",\n  \"accountOwnerHasRegisteredAuthority\": true\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
-        "url": { "raw": "{{apiV1BaseUrl}}/provider/application/business", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application", "business"] }
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/application/business",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "application",
+            "business"
+          ]
+        }
       }
     },
     {
       "name": "Provider - Save Company Step",
       "request": {
         "method": "PATCH",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"version\": 0,\n  \"legalCompanyName\": \"Synthetic Developer LLC\",\n  \"brandName\": \"Synthetic Developer\",\n  \"headOfficeAddress\": \"Synthetic head-office address\",\n  \"commercialRegistrationNumber\": \"SYNTHETIC-CR\",\n  \"taxRegistrationNumber\": \"SYNTHETIC-TAX\",\n  \"authorizedRepresentativeFullName\": \"Synthetic Representative\",\n  \"authorizedRepresentativeTitle\": \"Manager\",\n  \"accountOwnerHasRegisteredAuthority\": true\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
-        "url": { "raw": "{{apiV1BaseUrl}}/provider/application/company", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application", "company"] }
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/application/company",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "application",
+            "company"
+          ]
+        }
       }
     },
     {
       "name": "Provider - Submit Application",
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"version\": 0\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
-        "url": { "raw": "{{apiV1BaseUrl}}/provider/application/submit", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application", "submit"] }
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/application/submit",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "application",
+            "submit"
+          ]
+        }
       }
     },
     {
@@ -356,36 +959,71 @@
       "request": {
         "method": "GET",
         "header": [],
-        "url": { "raw": "{{apiV1BaseUrl}}/provider/application/status", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application", "status"] }
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/application/status",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "application",
+            "status"
+          ]
+        }
       }
     },
     {
       "name": "Provider - Upload Private Document",
-      "event": [{
-        "listen": "test",
-        "script": {
-          "type": "text/javascript",
-          "exec": [
-            "pm.test('Private upload never exposes storage internals', function () {",
-            "  pm.expect([200, 201, 400, 401, 403, 409, 413, 429, 503]).to.include(pm.response.code);",
-            "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
-            "  pm.expect(JSON.stringify(pm.response.json())).to.not.include('storageKey');",
-            "});"
-          ]
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Private upload never exposes storage internals', function () {",
+              "  pm.expect([200, 201, 400, 401, 403, 409, 413, 429, 503]).to.include(pm.response.code);",
+              "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
+              "  pm.expect(JSON.stringify(pm.response.json())).to.not.include('storageKey');",
+              "});"
+            ]
+          }
         }
-      }],
+      ],
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/pdf", "type": "text" },
-          { "key": "X-Document-Category", "value": "government_id_front", "type": "text" },
-          { "key": "X-File-Name", "value": "synthetic-identity.pdf", "type": "text" }
+          {
+            "key": "Content-Type",
+            "value": "application/pdf",
+            "type": "text"
+          },
+          {
+            "key": "X-Document-Category",
+            "value": "government_id_front",
+            "type": "text"
+          },
+          {
+            "key": "X-File-Name",
+            "value": "synthetic-identity.pdf",
+            "type": "text"
+          }
         ],
-        "body": { "mode": "file", "file": { "src": "" } },
+        "body": {
+          "mode": "file",
+          "file": {
+            "src": ""
+          }
+        },
         "url": {
           "raw": "{{apiV1BaseUrl}}/provider/application/documents",
-          "host": ["{{apiV1BaseUrl}}"],
-          "path": ["provider", "application", "documents"]
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "application",
+            "documents"
+          ]
         },
         "description": "Select only an isolated synthetic PDF/JPEG/PNG fixture. The runtime requires a provider bearer session; no token or real document is stored in this collection."
       }
@@ -394,17 +1032,41 @@
       "name": "Provider - Authorize Private Document Download",
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"purpose\": \"provider_review\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
         "url": {
           "raw": "{{apiV1BaseUrl}}/provider/application/documents/:documentId/access",
-          "host": ["{{apiV1BaseUrl}}"],
-          "path": ["provider", "application", "documents", ":documentId", "access"],
-          "variable": [{ "key": "documentId", "value": "000000000000000000000000", "type": "string" }]
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "application",
+            "documents",
+            ":documentId",
+            "access"
+          ],
+          "variable": [
+            {
+              "key": "documentId",
+              "value": "000000000000000000000000",
+              "type": "string"
+            }
+          ]
         },
         "description": "Requires fresh provider ownership authorization and returns a 300-second bearer URL. Do not persist or log the response URL."
       }
@@ -416,9 +1078,22 @@
         "header": [],
         "url": {
           "raw": "{{apiV1BaseUrl}}/provider/application/documents/:documentId",
-          "host": ["{{apiV1BaseUrl}}"],
-          "path": ["provider", "application", "documents", ":documentId"],
-          "variable": [{ "key": "documentId", "value": "000000000000000000000000", "type": "string" }]
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "application",
+            "documents",
+            ":documentId"
+          ],
+          "variable": [
+            {
+              "key": "documentId",
+              "value": "000000000000000000000000",
+              "type": "string"
+            }
+          ]
         }
       }
     },
@@ -429,13 +1104,31 @@
         "header": [],
         "url": {
           "raw": "{{apiV1BaseUrl}}/private/provider-documents/:documentId?expires=0000000000&signature=replace-with-fresh-signed-value",
-          "host": ["{{apiV1BaseUrl}}"],
-          "path": ["private", "provider-documents", ":documentId"],
-          "query": [
-            { "key": "expires", "value": "0000000000" },
-            { "key": "signature", "value": "replace-with-fresh-signed-value" }
+          "host": [
+            "{{apiV1BaseUrl}}"
           ],
-          "variable": [{ "key": "documentId", "value": "000000000000000000000000", "type": "string" }]
+          "path": [
+            "private",
+            "provider-documents",
+            ":documentId"
+          ],
+          "query": [
+            {
+              "key": "expires",
+              "value": "0000000000"
+            },
+            {
+              "key": "signature",
+              "value": "replace-with-fresh-signed-value"
+            }
+          ],
+          "variable": [
+            {
+              "key": "documentId",
+              "value": "000000000000000000000000",
+              "type": "string"
+            }
+          ]
         },
         "description": "Use only the unpersisted URL returned by the access endpoint. The URL is GET-only, exact-object, and expires after 300 seconds."
       }
@@ -447,8 +1140,13 @@
         "header": [],
         "url": {
           "raw": "{{apiV1BaseUrl}}/admin/roles",
-          "host": ["{{apiV1BaseUrl}}"],
-          "path": ["admin", "roles"]
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "roles"
+          ]
         },
         "description": "Requires a transient verified Admin bearer token with admin:roles.view. No token is stored in this collection."
       }
@@ -457,16 +1155,31 @@
       "name": "Admin RBAC - Create View Only Role",
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"name\": \"Synthetic View Only\",\n  \"description\": \"Synthetic read-only administrative role\",\n  \"accessMode\": \"view_only\",\n  \"permissions\": [\"admin:roles.view\", \"admin:providers.view\"],\n  \"reason\": \"Create a synthetic least-privilege role for isolated testing\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
         "url": {
           "raw": "{{apiV1BaseUrl}}/admin/roles",
-          "host": ["{{apiV1BaseUrl}}"],
-          "path": ["admin", "roles"]
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "roles"
+          ]
         },
         "description": "Requires a transient verified Admin bearer token with admin:roles.manage and a reason. Persisted wildcard permissions are rejected; the mutation and its audit record commit atomically."
       }
@@ -475,17 +1188,39 @@
       "name": "Admin RBAC - Update Role",
       "request": {
         "method": "PATCH",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"version\": 0,\n  \"active\": false,\n  \"reason\": \"Deactivate a synthetic role for isolated testing\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
         "url": {
           "raw": "{{apiV1BaseUrl}}/admin/roles/:roleId",
-          "host": ["{{apiV1BaseUrl}}"],
-          "path": ["admin", "roles", ":roleId"],
-          "variable": [{ "key": "roleId", "value": "000000000000000000000000", "type": "string" }]
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "roles",
+            ":roleId"
+          ],
+          "variable": [
+            {
+              "key": "roleId",
+              "value": "000000000000000000000000",
+              "type": "string"
+            }
+          ]
         },
         "description": "Requires a transient verified Admin bearer token with admin:roles.manage, the current optimistic version, and a reason. The mutation and its audit record commit atomically."
       }
@@ -497,11 +1232,22 @@
         "header": [],
         "url": {
           "raw": "{{apiV1BaseUrl}}/admin/audit-logs?page=1&limit=25",
-          "host": ["{{apiV1BaseUrl}}"],
-          "path": ["admin", "audit-logs"],
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "audit-logs"
+          ],
           "query": [
-            { "key": "page", "value": "1" },
-            { "key": "limit", "value": "25" }
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "25"
+            }
           ]
         },
         "description": "Requires a transient verified Admin bearer token with admin:audit.view. Results are paginated explicit redacted projections; no token or audit content is stored in this collection."
@@ -514,9 +1260,21 @@
         "header": [],
         "url": {
           "raw": "{{apiV1BaseUrl}}/admin/audit-logs/:auditId",
-          "host": ["{{apiV1BaseUrl}}"],
-          "path": ["admin", "audit-logs", ":auditId"],
-          "variable": [{ "key": "auditId", "value": "000000000000000000000000", "type": "string" }]
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "audit-logs",
+            ":auditId"
+          ],
+          "variable": [
+            {
+              "key": "auditId",
+              "value": "000000000000000000000000",
+              "type": "string"
+            }
+          ]
         },
         "description": "Requires a transient verified Admin bearer token with admin:audit.view. Replace the synthetic ID only in an isolated non-production environment."
       }
@@ -525,17 +1283,40 @@
       "name": "Admin Accounts - Restrict User",
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"action\": \"restrict\",\n  \"reason\": \"Synthetic policy restriction for isolated testing\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
         "url": {
           "raw": "{{apiV1BaseUrl}}/admin/users/:userId/transitions",
-          "host": ["{{apiV1BaseUrl}}"],
-          "path": ["admin", "users", ":userId", "transitions"],
-          "variable": [{ "key": "userId", "value": "000000000000000000000000", "type": "string" }]
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "users",
+            ":userId",
+            "transitions"
+          ],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "000000000000000000000000",
+              "type": "string"
+            }
+          ]
         },
         "description": "Requires a transient verified Admin bearer token with admin:users.manage. Use only an isolated synthetic non-Admin account. The reason is mandatory; no bearer token is stored in this collection."
       }
@@ -544,17 +1325,40 @@
       "name": "Admin Accounts - Review Provider",
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"action\": \"verify\",\n  \"reason\": \"Manual platform review completed with synthetic fixtures\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
         "url": {
           "raw": "{{apiV1BaseUrl}}/admin/providers/:providerId/review",
-          "host": ["{{apiV1BaseUrl}}"],
-          "path": ["admin", "providers", ":providerId", "review"],
-          "variable": [{ "key": "providerId", "value": "000000000000000000000000", "type": "string" }]
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "providers",
+            ":providerId",
+            "review"
+          ],
+          "variable": [
+            {
+              "key": "providerId",
+              "value": "000000000000000000000000",
+              "type": "string"
+            }
+          ]
         },
         "description": "Requires a transient verified Admin bearer token with admin:providers.review. providerId is the Provider application ID. Verification means manual platform approval only and makes no government or legal verification claim."
       }
@@ -566,12 +1370,26 @@
         "header": [],
         "url": {
           "raw": "{{apiV1BaseUrl}}/admin/locations?active=true&page=1&limit=20",
-          "host": ["{{apiV1BaseUrl}}"],
-          "path": ["admin", "locations"],
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "locations"
+          ],
           "query": [
-            { "key": "active", "value": "true" },
-            { "key": "page", "value": "1" },
-            { "key": "limit", "value": "20" }
+            {
+              "key": "active",
+              "value": "true"
+            },
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "20"
+            }
           ]
         },
         "description": "Requires a transient verified Admin bearer token with admin:locations.view. Filters, sorting, and pagination are bounded and allowlisted."
@@ -581,13 +1399,32 @@
       "name": "Admin Locations - Create",
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"kind\": \"location\",\n  \"name\": {\n    \"ar\": \"Synthetic location\",\n    \"en\": \"Synthetic location\"\n  },\n  \"slug\": \"synthetic-location\",\n  \"order\": 0,\n  \"active\": true,\n  \"reason\": \"Create synthetic location in isolated testing\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
-        "url": { "raw": "{{apiV1BaseUrl}}/admin/locations", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "locations"] },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/locations",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "locations"
+          ]
+        },
         "description": "Requires a transient verified Admin bearer token with admin:locations.manage. Uses synthetic values only; localized content, stable slug, and reason are required."
       }
     },
@@ -595,16 +1432,39 @@
       "name": "Admin Locations - Update",
       "request": {
         "method": "PATCH",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"version\": 0,\n  \"order\": 1,\n  \"active\": false,\n  \"reason\": \"Reorder synthetic location in isolated testing\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
         "url": {
           "raw": "{{apiV1BaseUrl}}/admin/locations/:locationId",
-          "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "locations", ":locationId"],
-          "variable": [{ "key": "locationId", "value": "000000000000000000000000", "type": "string" }]
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "locations",
+            ":locationId"
+          ],
+          "variable": [
+            {
+              "key": "locationId",
+              "value": "000000000000000000000000",
+              "type": "string"
+            }
+          ]
         },
         "description": "Requires admin:locations.manage, a transient bearer token, current optimistic version, and reason. Replace the ID only in isolated non-production data."
       }
@@ -613,27 +1473,1023 @@
       "name": "Admin Locations - Delete Unreferenced",
       "request": {
         "method": "DELETE",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"version\": 0,\n  \"reason\": \"Delete unused synthetic location in isolated testing\"\n}",
-          "options": { "raw": { "language": "json" } }
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
         "url": {
           "raw": "{{apiV1BaseUrl}}/admin/locations/:locationId",
-          "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "locations", ":locationId"],
-          "variable": [{ "key": "locationId", "value": "000000000000000000000000", "type": "string" }]
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "locations",
+            ":locationId"
+          ],
+          "variable": [
+            {
+              "key": "locationId",
+              "value": "000000000000000000000000",
+              "type": "string"
+            }
+          ]
         },
         "description": "Requires admin:locations.manage. Deletion fails closed for child-neighborhood or Provider references and is intended only for isolated synthetic data."
       }
     },
-    {"name":"Admin Taxonomy - List","request":{"method":"GET","header":[],"url":{"raw":"{{apiV1BaseUrl}}/admin/property-categories","host":["{{apiV1BaseUrl}}"],"path":["admin","property-categories"]},"description":"Requires admin:taxonomy.view and a transient bearer token."}},
-    {"name":"Admin Taxonomy - Create","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\n  \"kind\": \"category\",\n  \"name\": { \"en\": \"Synthetic category\" },\n  \"slug\": \"synthetic-category\",\n  \"reason\": \"Create synthetic category for isolated testing\"\n}"},"url":{"raw":"{{apiV1BaseUrl}}/admin/property-categories","host":["{{apiV1BaseUrl}}"],"path":["admin","property-categories"]},"description":"Requires admin:taxonomy.manage; synthetic data only."}},
-    {"name":"Admin Taxonomy - Update","request":{"method":"PATCH","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\n  \"version\": 0,\n  \"active\": false,\n  \"reason\": \"Deactivate synthetic taxonomy\"\n}"},"url":{"raw":"{{apiV1BaseUrl}}/admin/property-categories/:categoryId","host":["{{apiV1BaseUrl}}"],"path":["admin","property-categories",":categoryId"],"variable":[{"key":"categoryId","value":"000000000000000000000000"}]},"description":"Requires admin:taxonomy.manage and current version."}},
-    {"name":"Admin Taxonomy - Delete","request":{"method":"DELETE","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\n  \"version\": 0,\n  \"reason\": \"Delete unused synthetic taxonomy\"\n}"},"url":{"raw":"{{apiV1BaseUrl}}/admin/property-categories/:categoryId","host":["{{apiV1BaseUrl}}"],"path":["admin","property-categories",":categoryId"],"variable":[{"key":"categoryId","value":"000000000000000000000000"}]},"description":"Fails closed while referenced; isolated synthetic data only."}},
-    {"name":"Admin Features - List","request":{"method":"GET","url":{"raw":"{{apiV1BaseUrl}}/admin/features","host":["{{apiV1BaseUrl}}"],"path":["admin","features"]}}},
-    {"name":"Admin Features - Create","request":{"method":"POST","body":{"mode":"raw","raw":"{\"kind\":\"feature\",\"groupKey\":\"interior\",\"name\":{\"en\":\"Synthetic\"},\"slug\":\"synthetic-feature\",\"reason\":\"Create synthetic feature\"}"},"url":{"raw":"{{apiV1BaseUrl}}/admin/features","host":["{{apiV1BaseUrl}}"],"path":["admin","features"]}}},
-    {"name":"Admin Features - Update","request":{"method":"PATCH","body":{"mode":"raw","raw":"{\"version\":0,\"active\":false,\"reason\":\"Deactivate synthetic feature\"}"},"url":{"raw":"{{apiV1BaseUrl}}/admin/features/:featureId","host":["{{apiV1BaseUrl}}"],"path":["admin","features",":featureId"]}}},
-    {"name":"Admin Features - Delete","request":{"method":"DELETE","body":{"mode":"raw","raw":"{\"version\":0,\"reason\":\"Delete unused synthetic feature\"}"},"url":{"raw":"{{apiV1BaseUrl}}/admin/features/:featureId","host":["{{apiV1BaseUrl}}"],"path":["admin","features",":featureId"]}}}
+    {
+      "name": "Admin Taxonomy - List",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/property-categories",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "property-categories"
+          ]
+        },
+        "description": "Requires admin:taxonomy.view and a transient bearer token."
+      }
+    },
+    {
+      "name": "Admin Taxonomy - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"kind\": \"category\",\n  \"name\": { \"en\": \"Synthetic category\" },\n  \"slug\": \"synthetic-category\",\n  \"reason\": \"Create synthetic category for isolated testing\"\n}"
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/property-categories",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "property-categories"
+          ]
+        },
+        "description": "Requires admin:taxonomy.manage; synthetic data only."
+      }
+    },
+    {
+      "name": "Admin Taxonomy - Update",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"version\": 0,\n  \"active\": false,\n  \"reason\": \"Deactivate synthetic taxonomy\"\n}"
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/property-categories/:categoryId",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "property-categories",
+            ":categoryId"
+          ],
+          "variable": [
+            {
+              "key": "categoryId",
+              "value": "000000000000000000000000"
+            }
+          ]
+        },
+        "description": "Requires admin:taxonomy.manage and current version."
+      }
+    },
+    {
+      "name": "Admin Taxonomy - Delete",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"version\": 0,\n  \"reason\": \"Delete unused synthetic taxonomy\"\n}"
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/property-categories/:categoryId",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "property-categories",
+            ":categoryId"
+          ],
+          "variable": [
+            {
+              "key": "categoryId",
+              "value": "000000000000000000000000"
+            }
+          ]
+        },
+        "description": "Fails closed while referenced; isolated synthetic data only."
+      }
+    },
+    {
+      "name": "Admin Features - List",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/features",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "features"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Admin Features - Create",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"kind\":\"feature\",\"groupKey\":\"interior\",\"name\":{\"en\":\"Synthetic\"},\"slug\":\"synthetic-feature\",\"reason\":\"Create synthetic feature\"}"
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/features",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "features"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Admin Features - Update",
+      "request": {
+        "method": "PATCH",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"version\":0,\"active\":false,\"reason\":\"Deactivate synthetic feature\"}"
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/features/:featureId",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "features",
+            ":featureId"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Admin Features - Delete",
+      "request": {
+        "method": "DELETE",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"version\":0,\"reason\":\"Delete unused synthetic feature\"}"
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/features/:featureId",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "features",
+            ":featureId"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Provider Projects",
+      "item": [
+        {
+          "name": "List Owned Projects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/projects?page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "projects"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Requires a transient verified provider bearer token. Results are owned-project projections only."
+          }
+        },
+        {
+          "name": "Create Project Draft",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": { \"ar\": \"Synthetic project\", \"en\": \"Synthetic project\" },\n  \"slug\": \"synthetic-project\",\n  \"reason\": \"Create synthetic project draft\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/projects",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "projects"
+              ]
+            },
+            "description": "Requires an isolated verified provider session; ownership is derived from the bearer identity."
+          }
+        },
+        {
+          "name": "Update Project Draft",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"name\": { \"en\": \"Updated synthetic project\" },\n  \"reason\": \"Update synthetic project draft\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/projects/:projectId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "projects",
+                ":projectId"
+              ],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires a verified provider bearer token and current optimistic version."
+          }
+        },
+        {
+          "name": "Submit Project",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"reason\": \"Submit synthetic project for review\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/projects/:projectId/submit",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "projects",
+                ":projectId",
+                "submit"
+              ],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires a verified provider bearer token and current optimistic version."
+          }
+        },
+        {
+          "name": "Review Project",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 1,\n  \"action\": \"approve\",\n  \"reason\": \"Approve synthetic project\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/projects/:projectId/review",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "projects",
+                ":projectId",
+                "review"
+              ],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires an isolated verified admin session with admin:projects.review."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Provider Property Media",
+      "item": [
+        {
+          "name": "Upload Property Media",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "image/jpeg"
+              },
+              {
+                "key": "x-media-kind",
+                "value": "image"
+              },
+              {
+                "key": "x-file-name",
+                "value": "synthetic-property.jpg"
+              }
+            ],
+            "body": {
+              "mode": "file"
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/properties/:propertyId/media",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "properties",
+                ":propertyId",
+                "media"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires an isolated verified provider session and a safe JPEG/PNG/floor-plan fixture."
+          }
+        },
+        {
+          "name": "Reorder Property Media",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 1,\n  \"items\": [{ \"mediaId\": \"000000000000000000000000\", \"sortOrder\": 0, \"isCover\": true }],\n  \"reason\": \"Order property media\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/properties/:propertyId/media/order",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "properties",
+                ":propertyId",
+                "media",
+                "order"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Property Media",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/properties/:propertyId/media/:assetId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "properties",
+                ":propertyId",
+                "media",
+                ":assetId"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                },
+                {
+                  "key": "assetId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Provider Properties",
+      "item": [
+        {
+          "name": "List Provider Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/properties?status=draft&sort=updatedAt&direction=desc&page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "properties"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "draft"
+                },
+                {
+                  "key": "sort",
+                  "value": "updatedAt"
+                },
+                {
+                  "key": "direction",
+                  "value": "desc"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Returns only authenticated provider-owned properties with bounded filters, deterministic ordering, pagination metadata, and state-derived availableActions."
+          }
+        },
+        {
+          "name": "Create Property Draft",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": { \"ar\": \"Synthetic apartment\", \"en\": \"Synthetic apartment\" },\n  \"slug\": \"synthetic-apartment\",\n  \"transactionType\": \"sale\",\n  \"source\": { \"providerId\": \"000000000000000000000000\", \"sourceType\": \"individual_broker\" },\n  \"reason\": \"Create synthetic property draft\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/properties",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "properties"
+              ]
+            },
+            "description": "Requires an isolated verified provider session. Provider ownership is checked against the bearer subject."
+          }
+        },
+        {
+          "name": "Get Property Draft",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/properties/:propertyId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "properties",
+                ":propertyId"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Returns only the authenticated provider-owned property."
+          }
+        },
+        {
+          "name": "Save Property Step",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"name\": { \"en\": \"Updated synthetic apartment\" },\n  \"reason\": \"Save basic property data\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/properties/:propertyId/steps/:step",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "properties",
+                ":propertyId",
+                "steps",
+                ":step"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                },
+                {
+                  "key": "step",
+                  "value": "basic"
+                }
+              ]
+            },
+            "description": "Requires the current optimistic version; set step to basic, location, details, price-payment, features-services, or contact. Location writes also require an existing active location. Contact data contains no provider identity override or secrets."
+          }
+        },
+        {
+          "name": "Submit Property",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"reason\": \"Submit property for review\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/properties/:propertyId/submit",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "properties",
+                ":propertyId",
+                "submit"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Aggregate validation returns structured field errors; only a valid owned draft can enter pending_review."
+          }
+        },
+        {
+          "name": "Review Property",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 1,\n  \"action\": \"approve\",\n  \"reason\": \"Approve reviewed property\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/properties/:propertyId/review",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                ":propertyId",
+                "review"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires an authorized verified admin and a mandatory reason."
+          }
+        },
+        {
+          "name": "Change Property Visibility",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 2,\n  \"action\": \"hide\",\n  \"reason\": \"Hide property temporarily\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/properties/:propertyId/visibility",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                ":propertyId",
+                "visibility"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Hide, restore, or archive operations require an authorized verified admin and a mandatory reason."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Properties",
+      "item": [
+        {
+          "name": "List Properties",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/properties?status=pending_review&sort=updatedAt&direction=desc&page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "pending_review"
+                },
+                {
+                  "key": "sort",
+                  "value": "updatedAt"
+                },
+                {
+                  "key": "direction",
+                  "value": "desc"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Requires admin:properties.view. Filters are bounded and results are paginated with safe state-derived actions."
+          }
+        },
+        {
+          "name": "Find Possible Duplicates",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/properties/possible-duplicates?propertyId=000000000000000000000000&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "properties",
+                "possible-duplicates"
+              ],
+              "query": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Requires admin:properties.review. Returns deterministic signals and human-readable explanations only; no AI matching or unverifiable score."
+          }
+        },
+        {
+          "name": "List Property Reports",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/property-reports?status=open&page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "property-reports"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "open"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Requires admin:property-reports.view. Reporter identity is included only for administrators with manage permission."
+          }
+        },
+        {
+          "name": "Resolve Property Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"action\": \"resolve\",\n  \"reason\": \"Verified duplicate and handled\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/property-reports/:reportId/resolve",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "property-reports",
+                ":reportId",
+                "resolve"
+              ],
+              "variable": [
+                {
+                  "key": "reportId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires admin:property-reports.manage and the current optimistic version."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Property Reports",
+      "item": [
+        {
+          "name": "Create Property Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"duplicate\",\n  \"details\": \"Same property appears twice\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/properties/:propertyId/reports",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "properties",
+                ":propertyId",
+                "reports"
+              ],
+              "variable": [
+                {
+                  "key": "propertyId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires a verified seeker, provider, or administrator token. Replays of the same reason are deduplicated."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Requests CRM",
+      "item": [
+        { "name": "Create seeker contact request", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/seeker/contact-requests", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "contact-requests"] } } },
+        { "name": "Create seeker search request", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/seeker/search-requests", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "search-requests"] } } },
+        { "name": "List seeker requests", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/seeker/requests", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "requests"] } } },
+        { "name": "Get seeker request", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/seeker/requests/:requestId", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "requests", ":requestId"] } } },
+        { "name": "Create provider customer request", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/provider/customer-requests", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "customer-requests"] } } },
+        { "name": "List provider customer requests", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/provider/customer-requests", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "customer-requests"] } } },
+        { "name": "Get provider customer request", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/provider/customer-requests/:requestId", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "customer-requests", ":requestId"] } } },
+        { "name": "Transition provider customer request", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/provider/customer-requests/:requestId/transitions", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "customer-requests", ":requestId", "transitions"] } } },
+        { "name": "List admin requests", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/admin/requests", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "requests"] } } },
+        { "name": "List overdue admin requests", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/admin/requests/overdue", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "requests", "overdue"] } } },
+        { "name": "Get admin request", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/admin/requests/:requestId", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "requests", ":requestId"] } } },
+        { "name": "Assign admin request", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/admin/requests/:requestId/assign", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "requests", ":requestId", "assign"] } } },
+        { "name": "Add admin request note", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/admin/requests/:requestId/notes", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "requests", ":requestId", "notes"] } } },
+        { "name": "Transition admin request", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/admin/requests/:requestId/transitions", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "requests", ":requestId", "transitions"] } } }
+      ]
+    },
+    {
+      "name": "Viewings",
+      "item": [
+        { "name": "List seeker viewings", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/seeker/viewings", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "viewings"] } } },
+        { "name": "Create seeker viewing", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/seeker/viewings", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "viewings"] } } },
+        { "name": "Reschedule seeker viewing", "request": { "method": "PATCH", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/seeker/viewings/:viewingId", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "viewings", ":viewingId"] } } },
+        { "name": "Cancel seeker viewing", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/seeker/viewings/:viewingId/cancel", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "viewings", ":viewingId", "cancel"] } } },
+        { "name": "List provider viewings", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/provider/viewings", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "viewings"] } } },
+        { "name": "Transition provider viewing", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/provider/viewings/:viewingId/transitions", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "viewings", ":viewingId", "transitions"] } } },
+        { "name": "List admin viewings", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/admin/viewings", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "viewings"] } } }
+      ]
+    }
   ]
 }

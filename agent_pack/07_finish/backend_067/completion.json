@@ -1,0 +1,99 @@
+{
+  "taskId": "backend_067",
+  "summary": "Verified and regression-covered the existing self-owned seeker profile, locale account setting, and search-preference APIs. Added positive profile/preferences update coverage, strict unknown-field coverage, and documentation that keeps account deletion/privacy workflows out of this scope.",
+  "filesChanged": [
+    "apps/api/tests/seeker/router.test.ts",
+    "apps/api/tests/seeker/contracts.test.ts",
+    "docs/api/seeker.md",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md"
+  ],
+  "verification": [
+    {
+      "command": "npx.cmd tsx --test apps/api/tests/seeker/contracts.test.ts apps/api/tests/seeker/service.test.ts apps/api/tests/seeker/router.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "7 focused tests passed, including self-owned profile/locale and preferences updates, invalid ranges, unknown fields, unauthenticated access, and role/state authorization."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Syntax, contracts, and API typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace check and ESLint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All 319 repository tests passed serially."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace, contracts, and API builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "0 vulnerabilities reported."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtZGV2ZWxvcG1lbnQtb25seS1rZXktMzItYnl0ZXM'; npm.cmd run env:check --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Synthetic non-production environment validation passed without reading a .env file."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Inventory confirms GET/PATCH /api/v1/me and GET/PATCH /api/v1/me/preferences."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "node -e \"JSON.parse(require('fs').readFileSync('apps/api/openapi/openapi.json','utf8')); JSON.parse(require('fs').readFileSync('apps/api/postman/Sadat-Real-Estate.postman_collection.json','utf8')); JSON.parse(require('fs').readFileSync('agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json','utf8')); console.log('JSON_VALID')\"",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Changed contract/artifact JSON files parsed successfully."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors before closure."
+    }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/seeker/service.ts enforces bearer-subject self ownership and active seeker states.",
+    "apps/api/src/modules/seeker/repository.ts persists only allowlisted profile/preferences fields for the subject ID.",
+    "packages/contracts/src/seeker/index.ts defines strict locale, profile, preference, and bounded range schemas.",
+    "apps/api/src/modules/seeker/router.ts exposes the four self-owned profile/preferences operations.",
+    "apps/api/tests/seeker/service.test.ts and apps/api/tests/seeker/router.test.ts cover ownership, authorization, validation, and update behavior.",
+    "SEK-08, SEK-09, and SEK-10 source references in backend_067"
+  ],
+  "knownGaps": [
+    "Account deletion, anonymization, and privacy-request behavior remains deferred under Q-012; no unsupported destructive route was added.",
+    "Live MongoDB replica-set smoke tests were not run because TEST_MONGODB_URI is unavailable; deterministic service/router tests verify the behavior.",
+    "The repository declares Node >=24 <25 while this environment provides Node 22.18.0; all available checks passed.",
+    "No security:check script is defined in the repository."
+  ],
+  "completedAt": "2026-08-14T14:41:52.3826698+03:00"
+}

@@ -1,0 +1,128 @@
+{
+  "taskId": "backend_044",
+  "summary": "Implemented provider-owned property draft creation, read, and resumable basic/location wizard-step saves with strict localization, bounded coordinates, optimistic version checks, ownership/role guards, active-location validation, audit metadata, and synchronized API artifacts.",
+  "filesChanged": [
+    "packages/contracts/src/properties/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/properties/models.ts",
+    "apps/api/src/modules/properties/repository.ts",
+    "apps/api/src/modules/properties/service.ts",
+    "apps/api/src/modules/properties/router.ts",
+    "apps/api/src/modules/properties/runtime.ts",
+    "apps/api/tests/properties/properties.test.ts",
+    "apps/api/tests/properties/service.test.ts",
+    "apps/api/tests/properties/router.test.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "agent_pack/scripts/sync_property_artifacts.mjs",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/properties-drafts.md"
+  ],
+  "verification": [
+    {
+      "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/properties/properties.test.ts apps/api/tests/properties/service.test.ts apps/api/tests/properties/router.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "9 focused property contract, model, service, ownership, invalid-state, and route tests passed."
+    },
+    {
+      "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/docs/api-artifacts.test.ts apps/api/tests/database/artifacts.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Artifact route parity and validation tests passed after canonicalizing the parameterized step route."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Repository syntax, contracts, API, and test TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace policy and ESLint checks passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace and API suite passed 272 tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts and API builds completed successfully."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Coverage thresholds passed; aggregate lines 86.38%, functions 81.52%, branches 86.65%."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity dependency vulnerabilities reported."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtZGV2ZWxvcG1lbnQtb25seS1rZXktMzItYnl0ZXM'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Synthetic test environment validated without reading a .env file."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Inventory includes the three property draft routes and existing routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI route/component artifact validated."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman route artifact validated with a single canonical :step request."
+    },
+    {
+      "command": "node -e \"for (const f of ['apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json','agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json','agent_pack/03_execution/TASK_STATE.json','agent_pack/03_execution/TASK_CATALOG.json']) { JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('JSON_OK',f) }\"",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Changed JSON artifacts parsed successfully."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors with backend_044 as the sole task in progress before closure."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B3_projects_properties/backend_044.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (PRV-03 and PRV-04)",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "apps/api/src/modules/properties/repository.ts",
+    "apps/api/src/modules/properties/service.ts",
+    "apps/api/tests/properties/service.test.ts",
+    "apps/api/tests/properties/router.test.ts",
+    "docs/api/properties-drafts.md"
+  ],
+  "knownGaps": [
+    "The local runtime is Node 22.18.0 while the repository declares Node >=24 <25; Node 24 CI validation remains required.",
+    "No isolated MongoDB replica set or TEST_MONGODB_URI is available, so live transaction/index execution is skipped; deterministic repository-boundary tests pass.",
+    "Property submission, review/publication, media, public projections, and later provider/admin management remain owned by dependency-ready B3 tasks.",
+    "apps/api/src/app.ts, apps/api/src/server.ts, apps/api/src/modules/docs/api-artifacts.ts, and apps/api/src/modules/testing/test-suites.ts were changed only as necessary to wire and discover the selected property draft routes; this integration necessity is outside the task module roots."
+  ],
+  "completedAt": "2026-08-14T01:19:00.000Z"
+}

@@ -24,6 +24,18 @@ import { createAuditRouter, type AuditRouterDependencies } from './modules/audit
 import { createLocationRouter, type LocationRouterDependencies } from './modules/locations/router.js';
 import { createTaxonomyRouter, type TaxonomyRouterDependencies } from './modules/taxonomy/router.js';
 import { createFeatureRouter, type FeatureService } from './modules/taxonomy/features.js';
+import { createProjectRouter, type ProjectRouterDependencies } from './modules/projects/router.js';
+import { createPropertyRouter, type PropertyRouterDependencies } from './modules/properties/router.js';
+import { createPropertyMediaRouter, type PropertyMediaRouterDependencies } from './modules/media/router.js';
+import { createModerationRouter, type ModerationRouterDependencies } from './modules/moderation/router.js';
+import { createPublicRouter, type PublicRouterDependencies } from './modules/public/router.js';
+import { createPublicSearchRouter, type PublicSearchRouterDependencies } from './modules/search/router.js';
+import { createPublicCompareRouter, type PublicCompareRouterDependencies } from './modules/compare/router.js';
+import { createPublicOrganizationRouter, type PublicOrganizationRouterDependencies } from './modules/organizations/router.js';
+import { createFavoriteRouter, type FavoriteRouterDependencies } from './modules/favorites/router.js';
+import { createNotificationRouter, type NotificationRouterDependencies } from './modules/notifications/router.js';
+import { createRequestRouter, type RequestRouterDependencies } from './modules/requests/router.js';
+import { createViewingRouter, type ViewingRouterDependencies } from './modules/viewings/router.js';
 
 export interface AppDependencies {
   database: DatabaseReadiness;
@@ -37,6 +49,18 @@ export interface AppDependencies {
   locations?: LocationRouterDependencies;
   taxonomy?: TaxonomyRouterDependencies;
   features?: { service: FeatureService; accessTokens: import('./modules/auth/crypto.js').AccessTokenService };
+  projects?: ProjectRouterDependencies;
+  properties?: PropertyRouterDependencies;
+  propertyMedia?: PropertyMediaRouterDependencies;
+  moderation?: ModerationRouterDependencies;
+  publicHomepage?: PublicRouterDependencies;
+  publicSearch?: PublicSearchRouterDependencies;
+  publicCompare?: PublicCompareRouterDependencies;
+  publicOrganizations?: PublicOrganizationRouterDependencies;
+  favorites?: FavoriteRouterDependencies;
+  notifications?: NotificationRouterDependencies;
+  requests?: RequestRouterDependencies;
+  viewings?: ViewingRouterDependencies;
   security?: SecurityOptions;
   observability?: ObservabilityOptions;
 }
@@ -68,6 +92,18 @@ export function createApp(dependencies: AppDependencies): Express {
   if (dependencies.locations) app.use('/api/v1', createLocationRouter(dependencies.locations));
   if (dependencies.taxonomy) app.use('/api/v1', createTaxonomyRouter(dependencies.taxonomy));
   if (dependencies.features) app.use('/api/v1', createFeatureRouter(dependencies.features.service, dependencies.features.accessTokens));
+  if (dependencies.projects) app.use('/api/v1', createProjectRouter(dependencies.projects));
+  if (dependencies.properties) app.use('/api/v1', createPropertyRouter(dependencies.properties));
+  if (dependencies.propertyMedia) app.use('/api/v1', createPropertyMediaRouter(dependencies.propertyMedia));
+  if (dependencies.moderation) app.use('/api/v1', createModerationRouter(dependencies.moderation));
+  if (dependencies.publicHomepage) app.use('/api/v1', createPublicRouter(dependencies.publicHomepage));
+  if (dependencies.publicSearch) app.use('/api/v1', createPublicSearchRouter(dependencies.publicSearch));
+  if (dependencies.publicCompare) app.use('/api/v1', createPublicCompareRouter(dependencies.publicCompare));
+  if (dependencies.publicOrganizations) app.use('/api/v1', createPublicOrganizationRouter(dependencies.publicOrganizations));
+  if (dependencies.favorites) app.use('/api/v1', createFavoriteRouter(dependencies.favorites));
+  if (dependencies.notifications) app.use('/api/v1', createNotificationRouter(dependencies.notifications));
+  if (dependencies.requests) app.use('/api/v1', createRequestRouter(dependencies.requests));
+  if (dependencies.viewings) app.use('/api/v1', createViewingRouter(dependencies.viewings));
   app.use(createSecurityErrorHandler());
   return app;
 }

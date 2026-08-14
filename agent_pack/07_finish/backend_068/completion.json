@@ -1,0 +1,113 @@
+{
+  "taskId": "backend_068",
+  "summary": "Implemented the authenticated seeker notification center with recipient-owned inbox pagination and filters, unread counts, localized safe projections, idempotent mark-read, and read-all transitions. Synchronized runtime integration, contracts, OpenAPI, Postman, inventory, documentation, and deterministic tests.",
+  "filesChanged": [
+    "packages/contracts/src/notifications/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/notifications/service.ts",
+    "apps/api/src/modules/notifications/repository.ts",
+    "apps/api/src/modules/notifications/router.ts",
+    "apps/api/src/modules/notifications/runtime.ts",
+    "apps/api/tests/notifications/service.test.ts",
+    "apps/api/tests/notifications/router.test.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/seeker-notifications.md",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md"
+  ],
+  "verification": [
+    {
+      "command": "npx.cmd tsx --test apps/api/tests/notifications/service.test.ts apps/api/tests/notifications/router.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "5 focused tests passed for localized inbox projections, unread/type filtering, invalid payloads, authentication/role authorization, ownership, mark-read, and read-all idempotency."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Syntax, contracts, and API typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace check and ESLint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All 324 repository tests passed serially."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace, contracts, and API builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "0 vulnerabilities reported."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtZGV2ZWxvcG1lbnQtb25seS1rZXktMzItYnl0ZXM'; npm.cmd run env:check --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Synthetic non-production environment validation passed without reading a .env file."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Inventory includes the three seeker notification routes and operation IDs."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "node -e \"JSON.parse(require('fs').readFileSync('apps/api/openapi/openapi.json','utf8')); JSON.parse(require('fs').readFileSync('apps/api/postman/Sadat-Real-Estate.postman_collection.json','utf8')); JSON.parse(require('fs').readFileSync('agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json','utf8')); console.log('JSON_VALID')\"",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Changed JSON artifacts parsed successfully."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors before closure."
+    }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/notifications/service.ts enforces active seeker authorization, strict parsing, unread counts, and safe localized projections.",
+    "apps/api/src/modules/notifications/repository.ts scopes every read/write by recipientId, uses deterministic pagination/indexes, and excludes storage/internal fields.",
+    "apps/api/src/modules/notifications/router.ts defines GET inbox, POST owned read, and POST read-all routes behind seeker bearer authorization.",
+    "apps/api/tests/notifications/service.test.ts and router.test.ts cover positive, unauthenticated, unauthorized, invalid payload, ownership, replay, pagination/filter, localization, and safe-link behavior.",
+    "apps/api/openapi/openapi.json, apps/api/postman/Sadat-Real-Estate.postman_collection.json, and API_ENDPOINT_BLUEPRINT.json are synchronized.",
+    "SEK-07 source reference in backend_068"
+  ],
+  "knownGaps": [
+    "Live MongoDB replica-set smoke tests were not run because TEST_MONGODB_URI is unavailable; deterministic service/router tests and the repository adapter provide the safe empty-state boundary.",
+    "Production notification producers and seed data are not present; unprovisioned collections safely return an empty inbox and zero unread count without fabricated content.",
+    "The repository declares Node >=24 <25 while this environment provides Node 22.18.0; all available checks passed.",
+    "No security:check script is defined in the repository.",
+    "The task's notification-preference behavior is represented by bounded unread/type inbox filters; no additional unsupported preference route was invented beyond the canonical blueprint."
+  ],
+  "completedAt": "2026-08-14T14:54:05.4740736+03:00"
+}

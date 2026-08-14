@@ -1,0 +1,42 @@
+{
+  "taskId": "backend_053",
+  "summary": "Implemented permission-gated deterministic possible-duplicate detection for properties. Candidates expose only exact slug, same location/transaction, and normalized localized-name signals with bounded explanations; no AI matching or automatic merge behavior is claimed.",
+  "filesChanged": [
+    "packages/contracts/src/properties/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/properties/repository.ts",
+    "apps/api/src/modules/properties/service.ts",
+    "apps/api/src/modules/properties/router.ts",
+    "apps/api/tests/properties/service.test.ts",
+    "apps/api/tests/properties/router.test.ts",
+    "agent_pack/scripts/sync_property_artifacts.mjs",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "docs/api/properties-review-publication.md"
+  ],
+  "verification": [
+    { "command": "npm.cmd run typecheck", "exitCode": 0, "result": "Passed", "notes": "Contracts and API checks passed." },
+    { "command": "npm.cmd run test:unit --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "224 unit/API tests passed, including explainable duplicate signals and review authorization." },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "Passed", "notes": "Workspace and lint checks passed." },
+    { "command": "npm.cmd run build", "exitCode": 0, "result": "Passed", "notes": "Production builds passed." },
+    { "command": "npm.cmd run test:coverage --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "Full API coverage run passed configured thresholds." },
+    { "command": "npm.cmd run api:inventory --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "Possible-duplicates route is present in runtime inventory." },
+    { "command": "npm.cmd run openapi:validate --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "OpenAPI artifact valid." },
+    { "command": "npm.cmd run postman:validate --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "Postman artifact valid." },
+    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "Passed", "notes": "No high or critical vulnerabilities found." },
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "Passed", "notes": "Agent Pack audit reported zero errors." }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/properties/repository.ts",
+    "apps/api/src/modules/properties/service.ts",
+    "apps/api/src/modules/properties/router.ts",
+    "apps/api/tests/properties/service.test.ts",
+    "apps/api/tests/properties/router.test.ts",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (ADM-16)"
+  ],
+  "knownGaps": [
+    "Live MongoDB duplicate-query explain plans were unavailable without an isolated replica set; deterministic repository fixtures and local query contract coverage passed."
+  ],
+  "completedAt": "2026-08-14T02:48:00.000Z"
+}

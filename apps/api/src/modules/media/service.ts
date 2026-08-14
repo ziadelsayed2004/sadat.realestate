@@ -1,0 +1,48 @@
+import { randomUUID } from 'node:crypto';
+import type { Readable } from 'node:stream';
+import { propertyMediaDataSchema, propertyMediaObjectIdSchema, propertyMediaOrderSchema, propertyMediaUpdateSchema, propertyMediaUploadHeadersSchema, type PropertyMediaData, type PropertyMediaOrder, type PropertyMediaUpdate, type PropertyMediaUploadHeaders } from '@sadat-real-estate/contracts';
+import type { AccessTokenClaims } from '../auth/crypto.js';
+import type { MalwareScannerAdapter, StorageAdapter } from '../uploads/adapters.js';
+import { ProviderDocumentValidationTransform, UploadValidationError } from '../uploads/validation.js';
+import type { MediaMutationMetadata, MediaWriteResult, PropertyMediaRepository, StoredPropertyMedia } from './repository.js';
+
+export type PropertyMediaServiceErrorCode = 'MEDIA_FORBIDDEN' | 'MEDIA_PROPERTY_NOT_FOUND' | 'MEDIA_PROPERTY_NOT_EDITABLE' | 'MEDIA_NOT_FOUND' | 'MEDIA_VERSION_CONFLICT' | 'MEDIA_CAPACITY' | 'MEDIA_PROCESSING_FAILED' | 'MEDIA_INVALID_UPLOAD' | 'MEDIA_STORAGE_UNAVAILABLE';
+export class PropertyMediaServiceError extends Error { constructor(readonly code: PropertyMediaServiceErrorCode) { super(code); this.name = 'PropertyMediaServiceError'; } }
+export interface MediaMutationContext { requestId: string; traceId: string }
+export interface PropertyMediaService {
+  upload(claims: AccessTokenClaims, propertyId: string, headers: PropertyMediaUploadHeaders, source: Readable, context: MediaMutationContext): Promise<PropertyMediaData>;
+  list(claims: AccessTokenClaims, propertyId: string): Promise<PropertyMediaData[]>;
+  update(claims: AccessTokenClaims, propertyId: string, mediaId: string, input: unknown, context: MediaMutationContext): Promise<PropertyMediaData>;
+  reorder(claims: AccessTokenClaims, propertyId: string, input: unknown, context: MediaMutationContext): Promise<PropertyMediaData[]>;
+  remove(claims: AccessTokenClaims, propertyId: string, mediaId: string, context: MediaMutationContext): Promise<PropertyMediaData>;
+  listPublic(propertyId: string): Promise<PropertyMediaData[]>;
+}
+function provider(claims: AccessTokenClaims): void { if (claims.role !== 'provider' || claims.status !== 'verified') throw new PropertyMediaServiceError('MEDIA_FORBIDDEN'); }
+function metadata(claims: AccessTokenClaims, reason: string, context: MediaMutationContext, changedAt: Date): MediaMutationMetadata { return { actorId: claims.sub, reason, requestId: context.requestId, traceId: context.traceId, changedAt }; }
+function data(media: StoredPropertyMedia): PropertyMediaData { return propertyMediaDataSchema.parse({ id: media.id, propertyId: media.propertyId, kind: media.kind, originalFilename: media.originalFilename, detectedMime: media.detectedMime, byteSize: media.byteSize, sha256: media.sha256, sortOrder: media.sortOrder, isCover: media.isCover, processingState: media.processingState, ...(media.failureCode ? { failureCode: media.failureCode } : {}), active: media.active, version: media.version, createdAt: media.createdAt.toISOString(), updatedAt: media.updatedAt.toISOString() }); }
+function write(result: MediaWriteResult): StoredPropertyMedia { if (result.kind === 'not_found') throw new PropertyMediaServiceError('MEDIA_NOT_FOUND'); if (result.kind === 'version_conflict') throw new PropertyMediaServiceError('MEDIA_VERSION_CONFLICT'); if (result.kind === 'capacity') throw new PropertyMediaServiceError('MEDIA_CAPACITY'); return result.media; }
+function validationCode(error: unknown): PropertyMediaServiceError { if (error instanceof UploadValidationError) return new PropertyMediaServiceError('MEDIA_INVALID_UPLOAD'); return error instanceof PropertyMediaServiceError ? error : new PropertyMediaServiceError('MEDIA_PROCESSING_FAILED'); }
+
+export function createPropertyMediaService(dependencies: { repository: PropertyMediaRepository; storage: StorageAdapter; scanner: MalwareScannerAdapter; now?: () => Date; createObjectKey?: () => string }): PropertyMediaService {
+  const now = dependencies.now ?? (() => new Date());
+  const createObjectKey = dependencies.createObjectKey ?? (() => `quarantine/${randomUUID().replaceAll('-', '')}`);
+  return {
+    async upload(claims, propertyId, unparsedHeaders, source, context) {
+      provider(claims); propertyMediaObjectIdSchema.parse(propertyId);
+      const owner = await dependencies.repository.findOwnedProperty(claims.sub, propertyId);
+      if (!owner) throw new PropertyMediaServiceError('MEDIA_PROPERTY_NOT_FOUND');
+      if (!owner.active) throw new PropertyMediaServiceError('MEDIA_PROPERTY_NOT_EDITABLE');
+      if (!['draft', 'needs_changes'].includes(owner.status)) throw new PropertyMediaServiceError('MEDIA_PROPERTY_NOT_EDITABLE');
+      const headers = propertyMediaUploadHeadersSchema.parse(unparsedHeaders);
+      if (!await dependencies.storage.isReady() || !await dependencies.scanner.isReady()) throw new PropertyMediaServiceError('MEDIA_STORAGE_UNAVAILABLE');
+      const objectKey = createObjectKey(); const validator = new ProviderDocumentValidationTransform(headers.filename, headers.contentType);
+      try { await dependencies.storage.putPrivateQuarantine(objectKey, source.pipe(validator)); const validated = validator.result(); const created = write(await dependencies.repository.create({ propertyId, providerId: claims.sub, kind: headers.kind, originalFilename: validated.originalFilename, declaredMime: headers.contentType, detectedMime: validated.detectedMime, byteSize: validated.byteSize, sha256: validated.sha256, storageKey: objectKey, metadata: metadata(claims, 'Upload property media', context, now()) })); if (created.processingState === 'ready') return data(created); const scan = await dependencies.scanner.scan(await dependencies.storage.openPrivate(objectKey)); if (scan !== 'clean') { await dependencies.repository.updateProcessing({ providerId: claims.sub, mediaId: created.id, state: 'failed', failureCode: `MEDIA_${scan.toUpperCase()}`, metadata: metadata(claims, 'Record property media processing failure', context, now()) }); throw new PropertyMediaServiceError('MEDIA_PROCESSING_FAILED'); } const ready = await dependencies.repository.updateProcessing({ providerId: claims.sub, mediaId: created.id, state: 'ready', metadata: metadata(claims, 'Mark property media ready', context, now()) }); return data(write(ready)); }
+      catch (error) { if (error instanceof PropertyMediaServiceError) { if (error.code !== 'MEDIA_PROCESSING_FAILED') await dependencies.storage.deletePrivate(objectKey).catch(() => undefined); throw error; } await dependencies.storage.deletePrivate(objectKey).catch(() => undefined); throw validationCode(error); }
+    },
+    async list(claims, propertyId) { provider(claims); propertyMediaObjectIdSchema.parse(propertyId); const owner = await dependencies.repository.findOwnedProperty(claims.sub, propertyId); if (!owner) throw new PropertyMediaServiceError('MEDIA_PROPERTY_NOT_FOUND'); return (await dependencies.repository.listOwned(claims.sub, propertyId)).map(data); },
+    async update(claims, propertyId, mediaId, unparsedInput, context) { provider(claims); propertyMediaObjectIdSchema.parse(propertyId); propertyMediaObjectIdSchema.parse(mediaId); const owner = await dependencies.repository.findOwnedProperty(claims.sub, propertyId); if (!owner) throw new PropertyMediaServiceError('MEDIA_PROPERTY_NOT_FOUND'); if (!owner.active || !['draft', 'needs_changes'].includes(owner.status)) throw new PropertyMediaServiceError('MEDIA_PROPERTY_NOT_EDITABLE'); const input = propertyMediaUpdateSchema.parse(unparsedInput) as PropertyMediaUpdate; const current = (await dependencies.repository.listOwned(claims.sub, propertyId)).find(item => item.id === mediaId); if (!current) throw new PropertyMediaServiceError('MEDIA_NOT_FOUND'); return data(write(await dependencies.repository.update({ providerId: claims.sub, propertyId, mediaId, expectedVersion: input.version, changes: input, before: current, metadata: metadata(claims, input.reason, context, now()) }))); },
+    async reorder(claims, propertyId, unparsedInput, context) { provider(claims); propertyMediaObjectIdSchema.parse(propertyId); const owner = await dependencies.repository.findOwnedProperty(claims.sub, propertyId); if (!owner) throw new PropertyMediaServiceError('MEDIA_PROPERTY_NOT_FOUND'); if (!owner.active || !['draft', 'needs_changes'].includes(owner.status)) throw new PropertyMediaServiceError('MEDIA_PROPERTY_NOT_EDITABLE'); const input = propertyMediaOrderSchema.parse(unparsedInput) as PropertyMediaOrder; const results = await dependencies.repository.reorder({ providerId: claims.sub, propertyId, expectedVersion: input.version, changes: input, metadata: metadata(claims, input.reason, context, now()) }); if (results.some(result => result.kind !== 'written')) throw new PropertyMediaServiceError(results[0]?.kind === 'version_conflict' ? 'MEDIA_VERSION_CONFLICT' : 'MEDIA_NOT_FOUND'); return results.map(result => data(write(result))); },
+    async remove(claims, propertyId, mediaId, context) { provider(claims); propertyMediaObjectIdSchema.parse(propertyId); propertyMediaObjectIdSchema.parse(mediaId); const owner = await dependencies.repository.findOwnedProperty(claims.sub, propertyId); if (!owner) throw new PropertyMediaServiceError('MEDIA_PROPERTY_NOT_FOUND'); if (!owner.active || !['draft', 'needs_changes'].includes(owner.status)) throw new PropertyMediaServiceError('MEDIA_PROPERTY_NOT_EDITABLE'); return data(write(await dependencies.repository.markDeleted({ providerId: claims.sub, propertyId, mediaId, metadata: metadata(claims, 'Delete property media', context, now()) }))); },
+    async listPublic(propertyId) { propertyMediaObjectIdSchema.parse(propertyId); return dependencies.repository.listPublic(propertyId); }
+  };
+}

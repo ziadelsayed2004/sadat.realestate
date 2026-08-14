@@ -1,0 +1,54 @@
+{
+  "taskId": "backend_041",
+  "summary": "Implemented reasoned, optimistic Project submit/review/publish workflow with permission-gated Admin actions, reviewer evidence, audit-backed transitions, strict contracts, tests, and synchronized API artifacts.",
+  "filesChanged": [
+    "packages/contracts/src/projects/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/projects/models.ts",
+    "apps/api/src/modules/projects/repository.ts",
+    "apps/api/src/modules/projects/service.ts",
+    "apps/api/src/modules/projects/router.ts",
+    "apps/api/src/modules/projects/runtime.ts",
+    "apps/api/src/server.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "apps/api/tests/projects/projects.test.ts",
+    "apps/api/tests/projects/router.test.ts",
+    "docs/api/projects.md",
+    "agent_pack/scripts/sync_project_artifacts.mjs",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md"
+  ],
+  "verification": [
+    { "command": "node --test --import tsx apps/api/tests/projects/projects.test.ts apps/api/tests/projects/router.test.ts", "exitCode": 0, "result": "Passed", "notes": "7 focused project workflow and route tests passed." },
+    { "command": "npm.cmd run typecheck", "exitCode": 0, "result": "Passed", "notes": "Contracts and API typechecks passed." },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "Passed", "notes": "Workspace and ESLint checks passed." },
+    { "command": "npm.cmd test -- --runInBand", "exitCode": 0, "result": "Passed", "notes": "All 262 repository tests passed." },
+    { "command": "npm.cmd run build", "exitCode": 0, "result": "Passed", "notes": "Contracts and API builds passed." },
+    { "command": "npm.cmd run test:coverage", "exitCode": 0, "result": "Passed", "notes": "All 262 tests passed with enforced coverage thresholds." },
+    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "Passed", "notes": "0 vulnerabilities found." },
+    { "command": "npm.cmd run env:check", "exitCode": 0, "result": "Passed", "notes": "Synthetic local environment validation passed." },
+    { "command": "npm.cmd run api:inventory", "exitCode": 0, "result": "Passed", "notes": "Inventory includes provider submit and Admin review routes." },
+    { "command": "npm.cmd run openapi:validate", "exitCode": 0, "result": "Passed", "notes": "OPENAPI_VALID." },
+    { "command": "npm.cmd run postman:validate", "exitCode": 0, "result": "Passed", "notes": "POSTMAN_VALID." },
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "Passed", "notes": "Agent Pack audit has zero errors." },
+    { "command": "JSON parse changed OpenAPI/Postman/blueprint files", "exitCode": 0, "result": "Passed", "notes": "All changed JSON files parsed successfully." }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B3_projects_properties/backend_041.md",
+    "agent_pack/01_product/STATE_MACHINES.md",
+    "apps/api/src/modules/projects/service.ts",
+    "apps/api/src/modules/projects/repository.ts",
+    "apps/api/tests/projects/projects.test.ts",
+    "apps/api/tests/projects/router.test.ts"
+  ],
+  "scopeNotes": [
+    "apps/api/src/server.ts was changed only to pass the existing RBAC authorization service into the selected project runtime for admin:projects.review enforcement.",
+    "Provider submit and Admin review are implemented; Admin project listing, revisions, public projection, and later property workflows remain deferred to their canonical tasks.",
+    "Live MongoDB integration was not run because isolated replica-set prerequisites and TEST_MONGODB_URI were unavailable."
+  ],
+  "knownGaps": [
+    "Node v22.18.0 is available while the repository declares Node >=24 <25."
+  ],
+  "completedAt": "2026-08-14T00:47:20.000Z"
+}

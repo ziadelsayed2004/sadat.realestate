@@ -1,0 +1,45 @@
+{
+  "taskId": "backend_074",
+  "summary": "Provider-added customer requests are explicitly attributed to the authenticated provider, validated with strict bounded customer fields, and protected from seeker impersonation and client-controlled state or metadata.",
+  "filesChanged": [
+    "apps/api/tests/requests/service.test.ts",
+    "apps/api/tests/requests/router.test.ts",
+    "docs/api/provider-customer-requests.md"
+  ],
+  "verification": [
+    {
+      "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/requests/service.test.ts apps/api/tests/requests/router.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Provider creation, role rejection, source attribution, ownership, and mass-assignment tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts and API typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace and ESLint checks passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand; npm.cmd run build; npm.cmd audit --audit-level=high; npm.cmd run api:inventory; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Full suite, build, dependency audit, API inventory, OpenAPI/Postman validation, and Agent Pack audit passed."
+    }
+  ],
+  "sourceEvidence": [
+    "packages/contracts/src/requests/index.ts",
+    "apps/api/src/modules/requests/service.ts",
+    "apps/api/src/modules/requests/router.ts",
+    "apps/api/tests/requests/service.test.ts",
+    "apps/api/tests/requests/router.test.ts",
+    "docs/api/provider-customer-requests.md"
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-14T13:00:00.000Z"
+}

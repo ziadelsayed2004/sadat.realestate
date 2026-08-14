@@ -1,0 +1,12 @@
+{
+  "taskId":"backend_091",
+  "summary":"Implemented strict article creation and management lifecycle with localized content, SEO fields, author and cover references, explicit review/publish/archive transitions, and draft privacy coverage.",
+  "filesChanged":["apps/api/src/modules/articles/service.ts","apps/api/tests/articles/article-service.test.ts","docs/api/article-management.md"],
+  "verification":[
+    {"command":"npm.cmd run build --workspace packages/contracts; node --import tsx --test --test-concurrency=1 apps/api/tests/articles/article-service.test.ts","exitCode":0,"result":"Passed","notes":"Category and article lifecycle tests passed."},
+    {"command":"npm.cmd run typecheck; npm.cmd run lint; node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Typecheck, lint, and audit passed."}
+  ],
+  "sourceEvidence":["packages/contracts/src/articles/index.ts","apps/api/src/modules/articles/service.ts","apps/api/tests/articles/article-service.test.ts","docs/api/article-management.md"],
+  "knownGaps":["Route wiring remains outside this service-only increment; no public/admin route inventory was claimed."],
+  "completedAt":"2026-08-14T13:58:00.000Z"
+}

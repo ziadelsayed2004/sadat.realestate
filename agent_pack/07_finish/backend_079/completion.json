@@ -1,0 +1,14 @@
+{
+  "taskId":"backend_079",
+  "summary":"Added request issue/report lifecycle service with request linkage, verified-role creation, administrative paginated review, optimistic resolution or dismissal, and explicit reasons.",
+  "filesChanged":["apps/api/src/modules/moderation/request-issues.ts","apps/api/tests/moderation/request-issues.test.ts","apps/api/src/modules/testing/test-suites.ts","docs/api/request-issues.md"],
+  "verification":[
+    {"command":"node --import tsx --test --test-concurrency=1 apps/api/tests/moderation/request-issues.test.ts","exitCode":0,"result":"Passed","notes":"Issue creation, linkage, admin review, resolution, versioning, and RBAC assertions passed."},
+    {"command":"npm.cmd run typecheck","exitCode":0,"result":"Passed","notes":"Typecheck passed."},
+    {"command":"npm.cmd run lint","exitCode":0,"result":"Passed","notes":"Lint passed after strict type alias correction."},
+    {"command":"node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Agent Pack audit clean; full matrix retained for B5 gate."}
+  ],
+  "sourceEvidence":["packages/contracts/src/requests/index.ts","apps/api/src/modules/moderation/request-issues.ts","apps/api/tests/moderation/request-issues.test.ts","docs/api/request-issues.md"],
+  "knownGaps":["No automated moderation or external notification provider is claimed; full repository matrix is retained for B5 gate."],
+  "completedAt":"2026-08-14T13:28:00.000Z"
+}

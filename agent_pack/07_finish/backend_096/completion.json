@@ -1,0 +1,12 @@
+{
+  "taskId":"backend_096",
+  "summary":"Added public community feed projection combining published posts with visible comments and truthful counts while excluding hidden or removed content.",
+  "filesChanged":["apps/api/src/modules/community/service.ts","apps/api/tests/community/post-service.test.ts","docs/api/public-community.md"],
+  "verification":[
+    {"command":"node --import tsx --test --test-concurrency=1 apps/api/tests/community/post-service.test.ts","exitCode":0,"result":"Passed","notes":"Published-only feed, visible-comment filtering, removal, and count assertions passed."},
+    {"command":"npm.cmd run typecheck; npm.cmd run lint; node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Typecheck, lint, and audit passed."}
+  ],
+  "sourceEvidence":["apps/api/src/modules/community/service.ts","apps/api/tests/community/post-service.test.ts","docs/api/public-community.md"],
+  "knownGaps":["Public HTTP route wiring is not claimed in this service increment."],
+  "completedAt":"2026-08-14T14:41:00.000Z"
+}

@@ -1,0 +1,28 @@
+{
+  "taskId": "backend_050",
+  "summary": "Preserved property revision history through immutable before/after audit snapshots and prevented provider edits from overwriting published, hidden, approved, rejected, or archived public state. Revision boundaries are enforced in both service and repository paths and documented.",
+  "filesChanged": [
+    "apps/api/src/modules/properties/repository.ts",
+    "apps/api/src/modules/properties/service.ts",
+    "apps/api/tests/properties/service.test.ts",
+    "docs/api/properties-review-publication.md"
+  ],
+  "verification": [
+    { "command": "npm.cmd run typecheck", "exitCode": 0, "result": "Passed", "notes": "Contracts and API TypeScript checks passed." },
+    { "command": "npm.cmd run test:unit --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "221 unit/API tests passed, including published-version protection and property audit transition coverage." },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "Passed", "notes": "Workspace and lint checks passed." },
+    { "command": "npm.cmd run build", "exitCode": 0, "result": "Passed", "notes": "Production builds passed." },
+    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "Passed", "notes": "No high or critical vulnerabilities found." },
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "Passed", "notes": "Agent Pack audit reported zero errors." }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/properties/repository.ts (audit-backed before/after writes and state guard)",
+    "apps/api/src/modules/properties/service.ts (provider revision-state boundary)",
+    "apps/api/tests/properties/service.test.ts",
+    "apps/api/src/modules/audit/writer.ts"
+  ],
+  "knownGaps": [
+    "Live MongoDB replica-set integration was unavailable and not run; local transactional adapter paths and deterministic tests passed."
+  ],
+  "completedAt": "2026-08-14T02:27:00.000Z"
+}

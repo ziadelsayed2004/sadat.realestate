@@ -12,26 +12,31 @@ import { toSuccessResponse } from '../contracts/response.js';
 import { getRequestContext } from '../observability/context.js';
 import { createSeekerAuthMiddleware } from './auth.js';
 import { SeekerServiceError, type SeekerService } from './service.js';
+import { SeekerOverviewServiceError, type SeekerOverviewService } from './overview.js';
+import type { SeekerOverviewData } from '@sadat-real-estate/contracts';
 
 export const SEEKER_ROUTE_DEFINITIONS = [
   { method: 'POST', path: '/api/v1/auth/register/seeker', operationId: 'registerSeeker' },
   { method: 'GET', path: '/api/v1/me', operationId: 'getCurrentSeekerProfile' },
   { method: 'PATCH', path: '/api/v1/me', operationId: 'updateCurrentSeekerProfile' },
   { method: 'GET', path: '/api/v1/me/preferences', operationId: 'getCurrentSeekerPreferences' },
-  { method: 'PATCH', path: '/api/v1/me/preferences', operationId: 'updateCurrentSeekerPreferences' }
+  { method: 'PATCH', path: '/api/v1/me/preferences', operationId: 'updateCurrentSeekerPreferences' },
+  { method: 'GET', path: '/api/v1/seeker/overview', operationId: 'getSeekerOverview' }
 ] as const;
 
 export interface SeekerRouterDependencies {
   service: SeekerService;
   accessTokens: AccessTokenService;
   cookie: AuthCookiePolicy;
+  overview?: SeekerOverviewService;
 }
 
 const SEEKER_ERROR_MAP = Object.freeze({
   INVALID_REGISTRATION_TOKEN: { statusCode: 401, messageKey: 'errors.seeker.invalidRegistrationToken' },
   SEEKER_ALREADY_EXISTS: { statusCode: 409, messageKey: 'errors.seeker.alreadyExists' },
   SEEKER_NOT_FOUND: { statusCode: 404, messageKey: 'errors.seeker.notFound' },
-  ACCOUNT_NOT_ACTIVE: { statusCode: 403, messageKey: 'errors.auth.accountNotActive' }
+  ACCOUNT_NOT_ACTIVE: { statusCode: 403, messageKey: 'errors.auth.accountNotActive' },
+  SEEKER_OVERVIEW_FORBIDDEN: { statusCode: 403, messageKey: 'errors.forbidden' }
 });
 
 function requestId(request: Request): string {
@@ -40,7 +45,12 @@ function requestId(request: Request): string {
 
 function sendError(request: Request, response: Response, error: unknown): void {
   const seekerError = error instanceof SeekerServiceError ? error : undefined;
-  const mapped = seekerError ? SEEKER_ERROR_MAP[seekerError.code] : undefined;
+  const overviewError = error instanceof SeekerOverviewServiceError ? error : undefined;
+  const mapped = seekerError
+    ? SEEKER_ERROR_MAP[seekerError.code]
+    : overviewError
+      ? SEEKER_ERROR_MAP[overviewError.code]
+      : undefined;
   const body = toApiErrorResponse(
     mapped
       ? new ApiContractError(seekerError!.code, mapped.messageKey, mapped.statusCode)
@@ -76,6 +86,16 @@ export function createSeekerRouter(dependencies: SeekerRouterDependencies): Rout
   });
 
   router.use(createSeekerAuthMiddleware(dependencies.accessTokens));
+
+  router.get('/seeker/overview', async (request, response) => {
+    try {
+      if (!dependencies.overview) throw new ApiContractError('NOT_IMPLEMENTED', 'errors.notFound', 404);
+      const overview: SeekerOverviewData = await dependencies.overview.get(claims(response));
+      response.status(200).json(toSuccessResponse(overview, requestId(request)));
+    } catch (error) {
+      sendError(request, response, error);
+    }
+  });
 
   router.get('/me', async (request, response) => {
     try {

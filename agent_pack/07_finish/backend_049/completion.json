@@ -1,0 +1,48 @@
+{
+  "taskId": "backend_049",
+  "summary": "Implemented permission-checked administrative property review and visibility transitions with strict versioned payloads, mandatory reasons, optimistic concurrency, audit events, public-safe active state handling, runtime routes, contracts, artifacts, documentation, and regression coverage.",
+  "filesChanged": [
+    "packages/contracts/src/properties/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/properties/models.ts",
+    "apps/api/src/modules/properties/repository.ts",
+    "apps/api/src/modules/properties/service.ts",
+    "apps/api/src/modules/properties/router.ts",
+    "apps/api/src/modules/properties/runtime.ts",
+    "apps/api/src/server.ts",
+    "apps/api/tests/properties/service.test.ts",
+    "apps/api/tests/properties/router.test.ts",
+    "agent_pack/scripts/sync_property_artifacts.mjs",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "docs/api/properties-review-publication.md"
+  ],
+  "verification": [
+    { "command": "npm.cmd run typecheck", "exitCode": 0, "result": "Passed", "notes": "Contracts and API test-aware TypeScript compilation passed." },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "Passed", "notes": "Workspace and ESLint checks passed with zero warnings." },
+    { "command": "npm.cmd run test:unit --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "220 unit/API tests passed, including property review and visibility coverage." },
+    { "command": "npm.cmd test -- --runInBand", "exitCode": 0, "result": "Passed", "notes": "281 repository/API tests passed serially." },
+    { "command": "npm.cmd run build", "exitCode": 0, "result": "Passed", "notes": "Contracts and API production builds passed." },
+    { "command": "npm.cmd run test:coverage --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "Coverage passed configured thresholds: 85.51% lines, 80.46% functions, 85.62% branches." },
+    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "Passed", "notes": "No high or critical vulnerabilities found." },
+    { "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'; npm.cmd run env:check --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "Synthetic test configuration validated without reading a real .env." },
+    { "command": "npm.cmd run api:inventory --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "Runtime inventory includes both admin property routes." },
+    { "command": "npm.cmd run openapi:validate --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "OpenAPI artifact valid." },
+    { "command": "npm.cmd run postman:validate --workspace apps/api", "exitCode": 0, "result": "Passed", "notes": "Postman artifact valid." },
+    { "command": "node -e \"for (const p of ['apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json','agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json']) JSON.parse(require('fs').readFileSync(p,'utf8')); console.log('JSON_PARSE_OK')\"", "exitCode": 0, "result": "Passed", "notes": "Changed JSON artifacts parsed successfully." },
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "Passed", "notes": "Agent Pack audit reported zero errors." }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/properties/router.ts",
+    "apps/api/src/modules/properties/service.ts",
+    "apps/api/src/modules/properties/repository.ts",
+    "apps/api/tests/properties/service.test.ts",
+    "apps/api/tests/properties/router.test.ts",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (PRV-13, PRV-14, ADM-15)"
+  ],
+  "knownGaps": [
+    "Live MongoDB transaction/replica-set integration remains unavailable in this environment and was not run; local deterministic tests and adapters passed."
+  ],
+  "completedAt": "2026-08-14T02:25:00.000Z"
+}
