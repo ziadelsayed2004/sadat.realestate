@@ -20,25 +20,25 @@
 - [x] backend_011 — Login, Sessions, Refresh, and Logout
 - [x] backend_012 — OTP and Phone Verification
 - [x] backend_013 — Seeker Registration, Profile, and Preferences
-- [ ] backend_014 — Provider Types and Registration Application
-- [ ] backend_015 — Private Provider Documents
-- [ ] backend_016 — Admin Login and Administrator Accounts
-- [ ] backend_017 — Roles and Permissions Engine
-- [ ] backend_018 — Ownership, Scopes, and Available Actions
-- [ ] backend_019 — Account States and Restrictions
-- [ ] backend_020 — Sensitive-Action Audit Log
+- [x] backend_014 — Provider Types and Registration Application
+- [x] backend_015 — Private Provider Documents
+- [x] backend_016 — Admin Login and Administrator Accounts
+- [x] backend_017 — Roles and Permissions Engine
+- [x] backend_018 — Ownership, Scopes, and Available Actions
+- [x] backend_019 — Account States and Restrictions
+- [x] backend_020 — Sensitive-Action Audit Log
 ## B2_master_data_localization
 
-- [ ] backend_030 — Multilingual Content Primitives
-- [ ] backend_031 — Locations and Neighborhoods
-- [ ] backend_032 — Property Categories and Types
-- [ ] backend_033 — Features and Services
-- [ ] backend_034 — Developers, Companies, and Source Identity
-- [ ] backend_035 — Platform, Contact, and Social Data
-- [ ] backend_036 — About Content and Team
-- [ ] backend_037 — Population Counter and Real-Estate Tips
-- [ ] backend_038 — Homepage and Display Management
-- [ ] backend_039 — SEO and Public Privacy
+- [x] backend_030 — Multilingual Content Primitives
+- [x] backend_031 — Locations and Neighborhoods
+- [x] backend_032 — Property Categories and Types
+- [x] backend_033 — Features and Services
+- [x] backend_034 — Developers, Companies, and Source Identity
+- [x] backend_035 — Platform, Contact, and Social Data
+- [x] backend_036 — About Content and Team
+- [x] backend_037 — Population Counter and Real-Estate Tips
+- [x] backend_038 — Homepage and Display Management
+- [x] backend_039 — SEO and Public Privacy
 ## B3_projects_properties
 
 - [ ] backend_040 — Project Model and Provider CRUD

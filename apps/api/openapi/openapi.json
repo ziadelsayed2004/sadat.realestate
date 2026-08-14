@@ -262,6 +262,459 @@
           "404": { "$ref": "#/components/responses/SeekerError" }
         }
       }
+    },
+    "/api/v1/provider/application": {
+      "post": {
+        "operationId": "createProviderApplication",
+        "summary": "Create a provider onboarding draft from a verified provider OTP authority",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProviderApplicationCreateRequest" } } }
+        },
+        "responses": {
+          "201": { "$ref": "#/components/responses/ProviderRegistrationSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/ProviderError" },
+          "409": { "$ref": "#/components/responses/ProviderError" },
+          "413": { "$ref": "#/components/responses/ProviderError" },
+          "429": { "$ref": "#/components/responses/ProviderError" },
+          "500": { "$ref": "#/components/responses/ProviderError" }
+        }
+      },
+      "get": {
+        "operationId": "getProviderApplication",
+        "summary": "Read the authenticated provider's own application",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/ProviderApplicationSuccess" },
+          "401": { "$ref": "#/components/responses/ProviderError" },
+          "403": { "$ref": "#/components/responses/ProviderError" },
+          "404": { "$ref": "#/components/responses/ProviderError" }
+        }
+      }
+    },
+    "/api/v1/provider/application/account": {
+      "patch": {
+        "operationId": "updateProviderAccountStep",
+        "summary": "Save allowlisted common fields on an owned editable provider draft",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProviderAccountPatch" } } }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/ProviderApplicationSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/ProviderError" },
+          "403": { "$ref": "#/components/responses/ProviderError" },
+          "404": { "$ref": "#/components/responses/ProviderError" },
+          "409": { "$ref": "#/components/responses/ProviderError" }
+        }
+      }
+    },
+    "/api/v1/provider/application/business": {
+      "patch": {
+        "operationId": "updateProviderBusinessStep",
+        "summary": "Save brokerage-office fields on an owned editable provider draft",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProviderBusinessPatch" } } }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/ProviderApplicationSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/ProviderError" },
+          "403": { "$ref": "#/components/responses/ProviderError" },
+          "404": { "$ref": "#/components/responses/ProviderError" },
+          "409": { "$ref": "#/components/responses/ProviderError" }
+        }
+      }
+    },
+    "/api/v1/provider/application/company": {
+      "patch": {
+        "operationId": "updateProviderCompanyStep",
+        "summary": "Save developer-company fields on an owned editable provider draft",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProviderCompanyPatch" } } }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/ProviderApplicationSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/ProviderError" },
+          "403": { "$ref": "#/components/responses/ProviderError" },
+          "404": { "$ref": "#/components/responses/ProviderError" },
+          "409": { "$ref": "#/components/responses/ProviderError" }
+        }
+      }
+    },
+    "/api/v1/provider/application/submit": {
+      "post": {
+        "operationId": "submitProviderApplication",
+        "summary": "Submit a complete owned draft with an immutable requirement snapshot",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProviderSubmitRequest" } } }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/ProviderApplicationSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/ProviderError" },
+          "403": { "$ref": "#/components/responses/ProviderError" },
+          "404": { "$ref": "#/components/responses/ProviderError" },
+          "409": { "$ref": "#/components/responses/ProviderError" }
+        }
+      }
+    },
+    "/api/v1/provider/application/status": {
+      "get": {
+        "operationId": "getProviderApplicationStatus",
+        "summary": "Read the authenticated provider's application status and available actions",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/ProviderStatusSuccess" },
+          "401": { "$ref": "#/components/responses/ProviderError" },
+          "403": { "$ref": "#/components/responses/ProviderError" },
+          "404": { "$ref": "#/components/responses/ProviderError" }
+        }
+      }
+    },
+    "/api/v1/provider/application/documents": {
+      "post": {
+        "operationId": "uploadProviderDocument",
+        "summary": "Stream an owned provider document into private quarantine",
+        "description": "The filename is display metadata only. The server generates the object key, validates extension/MIME/signature and size, fingerprints the bytes, and fails access closed until malware scanning reports clean.",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "X-Document-Category", "in": "header", "required": true, "schema": { "$ref": "#/components/schemas/ProviderDocumentCategory" } },
+          { "name": "X-File-Name", "in": "header", "required": true, "schema": { "type": "string", "minLength": 1, "maxLength": 512 } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/pdf": { "schema": { "type": "string", "format": "binary", "maxLength": 10485760 } },
+            "image/jpeg": { "schema": { "type": "string", "format": "binary", "maxLength": 10485760 } },
+            "image/png": { "schema": { "type": "string", "format": "binary", "maxLength": 10485760 } }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/ProviderDocumentSuccess" },
+          "201": { "$ref": "#/components/responses/ProviderDocumentSuccess" },
+          "400": { "$ref": "#/components/responses/ProviderDocumentError" },
+          "401": { "$ref": "#/components/responses/ProviderDocumentError" },
+          "403": { "$ref": "#/components/responses/ProviderDocumentError" },
+          "409": { "$ref": "#/components/responses/ProviderDocumentError" },
+          "413": { "$ref": "#/components/responses/ProviderDocumentError" },
+          "429": { "$ref": "#/components/responses/ProviderDocumentError" },
+          "503": { "$ref": "#/components/responses/ProviderDocumentError" }
+        }
+      }
+    },
+    "/api/v1/provider/application/documents/{documentId}/access": {
+      "post": {
+        "operationId": "createProviderDocumentAccess",
+        "summary": "Authorize a 300-second exact-object private download grant",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ProviderDocumentId" }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProviderDocumentAccessRequest" } } }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/ProviderDocumentAccessSuccess" },
+          "400": { "$ref": "#/components/responses/ProviderDocumentError" },
+          "401": { "$ref": "#/components/responses/ProviderDocumentError" },
+          "403": { "$ref": "#/components/responses/ProviderDocumentError" },
+          "404": { "$ref": "#/components/responses/ProviderDocumentError" },
+          "409": { "$ref": "#/components/responses/ProviderDocumentError" }
+        }
+      }
+    },
+    "/api/v1/provider/application/documents/{documentId}": {
+      "delete": {
+        "operationId": "deleteProviderDocument",
+        "summary": "Delete an owned private document and revoke its delivery path",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ProviderDocumentId" }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/ProviderDocumentDeleteSuccess" },
+          "401": { "$ref": "#/components/responses/ProviderDocumentError" },
+          "403": { "$ref": "#/components/responses/ProviderDocumentError" },
+          "404": { "$ref": "#/components/responses/ProviderDocumentError" }
+        }
+      }
+    },
+    "/api/v1/admin/roles": {
+      "get": {
+        "operationId": "listAdminRoles",
+        "summary": "List dynamic administrative roles and the approved capability catalog",
+        "description": "Requires admin:roles.view. The response exposes the caller's effective permissions and derives availableActions server-side.",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/RbacRoleListSuccess" },
+          "401": { "$ref": "#/components/responses/RbacError" },
+          "403": { "$ref": "#/components/responses/RbacError" },
+          "500": { "$ref": "#/components/responses/RbacError" }
+        }
+      },
+      "post": {
+        "operationId": "createAdminRole",
+        "summary": "Create a dynamic administrative role",
+        "description": "Requires admin:roles.manage and a reason. View Only roles accept only .view capabilities; persisted roles never accept wildcards. The mutation and its redacted audit record commit atomically.",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/RbacRoleCreateRequest" } }
+          }
+        },
+        "responses": {
+          "201": { "$ref": "#/components/responses/RbacRoleSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/RbacError" },
+          "403": { "$ref": "#/components/responses/RbacError" },
+          "409": { "$ref": "#/components/responses/RbacError" },
+          "500": { "$ref": "#/components/responses/RbacError" }
+        }
+      }
+    },
+    "/api/v1/admin/roles/{roleId}": {
+      "patch": {
+        "operationId": "updateAdminRole",
+        "summary": "Update a dynamic administrative role with optimistic concurrency",
+        "description": "Requires admin:roles.manage and a reason. Deactivation revokes grants from that role; the request version prevents lost updates. The mutation and its redacted audit record commit atomically.",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/RbacRoleId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/RbacRolePatchRequest" } }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/RbacRoleSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/RbacError" },
+          "403": { "$ref": "#/components/responses/RbacError" },
+          "404": { "$ref": "#/components/responses/RbacError" },
+          "409": { "$ref": "#/components/responses/RbacError" },
+          "500": { "$ref": "#/components/responses/RbacError" }
+        }
+      }
+    },
+    "/api/v1/admin/audit-logs": {
+      "get": {
+        "operationId": "listAuditLogs",
+        "summary": "List append-only sensitive-action audit records",
+        "description": "Requires admin:audit.view. Filters are allowlisted, snapshots are redacted and bounded, and signed URLs, credentials, tokens, and sensitive personal identifiers are never exposed.",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 1000000, "default": 1 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 25 } },
+          { "name": "actorId", "in": "query", "schema": { "type": "string", "pattern": "^[a-f0-9]{24}$" } },
+          { "name": "targetType", "in": "query", "schema": { "type": "string", "minLength": 2, "maxLength": 64, "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$" } },
+          { "name": "targetId", "in": "query", "description": "Requires targetType.", "schema": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$" } },
+          { "name": "action", "in": "query", "schema": { "type": "string", "minLength": 3, "maxLength": 96, "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$" } },
+          { "name": "traceId", "in": "query", "schema": { "type": "string", "pattern": "^[0-9a-f]{32}$" } },
+          { "name": "from", "in": "query", "schema": { "type": "string", "format": "date-time" } },
+          { "name": "to", "in": "query", "schema": { "type": "string", "format": "date-time" } }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/AuditLogListSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/AuditError" },
+          "403": { "$ref": "#/components/responses/AuditError" },
+          "500": { "$ref": "#/components/responses/AuditError" }
+        }
+      }
+    },
+    "/api/v1/admin/audit-logs/{auditId}": {
+      "get": {
+        "operationId": "getAuditLog",
+        "summary": "Get one append-only sensitive-action audit record",
+        "description": "Requires admin:audit.view. Authorization is evaluated for every request and the response remains no-store.",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/AuditLogId" }],
+        "responses": {
+          "200": { "$ref": "#/components/responses/AuditLogSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/AuditError" },
+          "403": { "$ref": "#/components/responses/AuditError" },
+          "404": { "$ref": "#/components/responses/AuditError" },
+          "500": { "$ref": "#/components/responses/AuditError" }
+        }
+      }
+    },
+    "/api/v1/admin/locations": {
+      "get": {
+        "operationId": "listAdminLocations",
+        "summary": "List locations and neighborhoods",
+        "description": "Requires admin:locations.view. Filters and sorting are allowlisted and pagination is bounded.",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "kind", "in": "query", "schema": { "$ref": "#/components/schemas/LocationKind" } },
+          { "name": "parentLocationId", "in": "query", "schema": { "type": "string", "pattern": "^[a-f0-9]{24}$" } },
+          { "name": "active", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "search", "in": "query", "schema": { "type": "string", "minLength": 1, "maxLength": 80 } },
+          { "name": "sort", "in": "query", "schema": { "enum": ["order", "slug", "createdAt"], "default": "order" } },
+          { "name": "direction", "in": "query", "schema": { "enum": ["asc", "desc"], "default": "asc" } },
+          { "name": "page", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 100000, "default": 1 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 } }
+        ],
+        "responses": {
+          "200": { "$ref": "#/components/responses/LocationListSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/LocationError" },
+          "403": { "$ref": "#/components/responses/LocationError" },
+          "500": { "$ref": "#/components/responses/LocationError" }
+        }
+      },
+      "post": {
+        "operationId": "createAdminLocation",
+        "summary": "Create a location or neighborhood",
+        "description": "Requires admin:locations.manage. Uses strict localized names, a unique stable slug, deterministic ordering, optional coordinates, and reason-bearing audit.",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LocationCreateRequest" } } } },
+        "responses": {
+          "201": { "$ref": "#/components/responses/LocationSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/LocationError" },
+          "403": { "$ref": "#/components/responses/LocationError" },
+          "409": { "$ref": "#/components/responses/LocationError" },
+          "500": { "$ref": "#/components/responses/LocationError" }
+        }
+      }
+    },
+    "/api/v1/admin/locations/{locationId}": {
+      "patch": {
+        "operationId": "updateAdminLocation",
+        "summary": "Update, reorder, move, or activate a location resource",
+        "description": "Requires admin:locations.manage, the current optimistic version, and a reason. Neighborhood parents must exist.",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/LocationId" }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LocationPatchRequest" } } } },
+        "responses": {
+          "200": { "$ref": "#/components/responses/LocationSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/LocationError" },
+          "403": { "$ref": "#/components/responses/LocationError" },
+          "404": { "$ref": "#/components/responses/LocationError" },
+          "409": { "$ref": "#/components/responses/LocationError" },
+          "500": { "$ref": "#/components/responses/LocationError" }
+        }
+      },
+      "delete": {
+        "operationId": "deleteAdminLocation",
+        "summary": "Delete an unreferenced location resource",
+        "description": "Requires admin:locations.manage, the current optimistic version, and a reason. Child-neighborhood and Provider references fail closed.",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/LocationId" }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LocationDeleteRequest" } } } },
+        "responses": {
+          "200": { "$ref": "#/components/responses/LocationDeleteSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/LocationError" },
+          "403": { "$ref": "#/components/responses/LocationError" },
+          "404": { "$ref": "#/components/responses/LocationError" },
+          "409": { "$ref": "#/components/responses/LocationError" },
+          "500": { "$ref": "#/components/responses/LocationError" }
+        }
+      }
+    },
+    "/api/v1/admin/features": {
+      "get":{"operationId":"listAdminFeatures","summary":"List features and services","security":[{"bearerAuth":[]}],"responses":{"200":{"description":"Bounded list"},"400":{"$ref":"#/components/responses/ValidationError"},"401":{"$ref":"#/components/responses/RbacError"},"403":{"$ref":"#/components/responses/RbacError"}}},
+      "post":{"operationId":"createAdminFeature","summary":"Create feature or service","security":[{"bearerAuth":[]}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","additionalProperties":false,"required":["kind","groupKey","name","slug","reason"]}}}},"responses":{"201":{"description":"Created"},"400":{"$ref":"#/components/responses/ValidationError"},"401":{"$ref":"#/components/responses/RbacError"},"403":{"$ref":"#/components/responses/RbacError"},"409":{"$ref":"#/components/responses/RbacError"}}}
+    },
+    "/api/v1/admin/features/{featureId}": {
+      "patch":{"operationId":"updateAdminFeature","summary":"Update feature or service","security":[{"bearerAuth":[]}],"parameters":[{"name":"featureId","in":"path","required":true,"schema":{"type":"string","pattern":"^[a-f0-9]{24}$"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","additionalProperties":false,"required":["version","reason"],"minProperties":3}}}},"responses":{"200":{"description":"Updated"},"400":{"$ref":"#/components/responses/ValidationError"},"401":{"$ref":"#/components/responses/RbacError"},"403":{"$ref":"#/components/responses/RbacError"},"404":{"$ref":"#/components/responses/RbacError"},"409":{"$ref":"#/components/responses/RbacError"}}},
+      "delete":{"operationId":"deleteAdminFeature","summary":"Delete unreferenced feature or service","security":[{"bearerAuth":[]}],"parameters":[{"name":"featureId","in":"path","required":true,"schema":{"type":"string","pattern":"^[a-f0-9]{24}$"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"type":"object","additionalProperties":false,"required":["version","reason"]}}}},"responses":{"200":{"description":"Deleted"},"400":{"$ref":"#/components/responses/ValidationError"},"401":{"$ref":"#/components/responses/RbacError"},"403":{"$ref":"#/components/responses/RbacError"},"404":{"$ref":"#/components/responses/RbacError"},"409":{"$ref":"#/components/responses/RbacError"}}}
+    },
+    "/api/v1/admin/property-categories": {
+      "get": { "operationId": "listPropertyTaxonomy", "summary": "List property categories and types", "security": [{ "bearerAuth": [] }], "responses": { "200": { "description": "Bounded taxonomy list", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } } }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/RbacError" }, "403": { "$ref": "#/components/responses/RbacError" } } },
+      "post": { "operationId": "createPropertyTaxonomy", "summary": "Create a property category or type", "security": [{ "bearerAuth": [] }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["kind", "name", "slug", "reason"] } } } }, "responses": { "201": { "description": "Taxonomy created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } } }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/RbacError" }, "403": { "$ref": "#/components/responses/RbacError" }, "409": { "$ref": "#/components/responses/RbacError" } } }
+    },
+    "/api/v1/admin/property-categories/{categoryId}": {
+      "patch": { "operationId": "updatePropertyTaxonomy", "summary": "Update property taxonomy", "security": [{ "bearerAuth": [] }], "parameters": [{ "name": "categoryId", "in": "path", "required": true, "schema": { "type": "string", "pattern": "^[a-f0-9]{24}$" } }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["version", "reason"], "minProperties": 3 } } } }, "responses": { "200": { "description": "Taxonomy updated", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } } }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/RbacError" }, "403": { "$ref": "#/components/responses/RbacError" }, "404": { "$ref": "#/components/responses/RbacError" }, "409": { "$ref": "#/components/responses/RbacError" } } },
+      "delete": { "operationId": "deletePropertyTaxonomy", "summary": "Delete unreferenced property taxonomy", "security": [{ "bearerAuth": [] }], "parameters": [{ "name": "categoryId", "in": "path", "required": true, "schema": { "type": "string", "pattern": "^[a-f0-9]{24}$" } }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["version", "reason"] } } } }, "responses": { "200": { "description": "Taxonomy deleted", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } } }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/RbacError" }, "403": { "$ref": "#/components/responses/RbacError" }, "404": { "$ref": "#/components/responses/RbacError" }, "409": { "$ref": "#/components/responses/RbacError" } } }
+    },
+    "/api/v1/admin/users/{userId}/transitions": {
+      "post": {
+        "operationId": "transitionAdminUserAccount",
+        "summary": "Apply a reason-bearing account state transition",
+        "description": "Requires admin:users.manage. Provider approval, rejection, needs-information, and suspension use the dedicated provider-review route. Admin targets and self-transitions fail closed. Every successful transition revokes active refresh sessions and appends traceable transition evidence.",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/AccountUserId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/AccountTransitionRequest" } }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/AccountTransitionSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/AccountError" },
+          "403": { "$ref": "#/components/responses/AccountError" },
+          "404": { "$ref": "#/components/responses/AccountError" },
+          "409": { "$ref": "#/components/responses/AccountError" },
+          "500": { "$ref": "#/components/responses/AccountError" }
+        }
+      }
+    },
+    "/api/v1/admin/providers/{providerId}/review": {
+      "post": {
+        "operationId": "reviewAdminProviderAccount",
+        "summary": "Review a Provider application and its account state atomically",
+        "description": "Requires admin:providers.review. The providerId is the current Provider application ID. Verification means platform administrative approval only and never government, ownership, registry, OCR, legal, bank, or other automatic verification.",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "$ref": "#/components/parameters/ProviderReviewId" }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/ProviderReviewRequest" } }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/ProviderReviewSuccess" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/AccountError" },
+          "403": { "$ref": "#/components/responses/AccountError" },
+          "404": { "$ref": "#/components/responses/AccountError" },
+          "409": { "$ref": "#/components/responses/AccountError" },
+          "500": { "$ref": "#/components/responses/AccountError" }
+        }
+      }
+    },
+    "/api/v1/private/provider-documents/{documentId}": {
+      "get": {
+        "operationId": "downloadPrivateProviderDocument",
+        "summary": "Redeem a short-lived exact-object private download grant",
+        "parameters": [
+          { "$ref": "#/components/parameters/ProviderDocumentId" },
+          { "name": "expires", "in": "query", "required": true, "schema": { "type": "string", "pattern": "^\\d{10,}$" } },
+          { "name": "signature", "in": "query", "required": true, "description": "Ephemeral bearer signature returned only after fresh authorization; never persist or log it.", "schema": { "type": "string", "pattern": "^[A-Za-z0-9_-]{43}$" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Private attachment; Cache-Control is private, no-store",
+            "headers": {
+              "Cache-Control": { "schema": { "const": "private, no-store, max-age=0" } },
+              "Content-Disposition": { "schema": { "type": "string", "pattern": "^attachment;" } }
+            },
+            "content": {
+              "application/pdf": { "schema": { "type": "string", "format": "binary" } },
+              "image/jpeg": { "schema": { "type": "string", "format": "binary" } },
+              "image/png": { "schema": { "type": "string", "format": "binary" } }
+            }
+          },
+          "401": { "$ref": "#/components/responses/ProviderDocumentError" },
+          "404": { "$ref": "#/components/responses/ProviderDocumentError" },
+          "409": { "$ref": "#/components/responses/ProviderDocumentError" }
+        }
+      }
     }
   },
   "components": {
@@ -389,6 +842,202 @@
         "content": {
           "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } }
         }
+      },
+      "ProviderRegistrationSuccess": {
+        "description": "Provider draft created from verified OTP authority; refresh token is set as an HttpOnly cookie",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" },
+          "Set-Cookie": { "description": "Rotating sadat_refresh cookie", "schema": { "type": "string" } }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProviderRegistrationSuccessEnvelope" } } }
+      },
+      "ProviderApplicationSuccess": {
+        "description": "The authenticated provider's owned application projection",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProviderApplicationSuccessEnvelope" } } }
+      },
+      "ProviderStatusSuccess": {
+        "description": "The authenticated provider's owned application status",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProviderApplicationStatusSuccessEnvelope" } } }
+      },
+      "ProviderError": {
+        "description": "Provider registration, authentication, ownership, completeness, state, or version failure",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } } }
+      },
+      "ProviderDocumentSuccess": {
+        "description": "Safe private-document metadata; no storage key or permanent URL",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProviderDocumentSuccessEnvelope" } } }
+      },
+      "ProviderDocumentAccessSuccess": {
+        "description": "Freshly authorized 300-second GET-only private delivery grant",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProviderDocumentAccessSuccessEnvelope" } } }
+      },
+      "ProviderDocumentDeleteSuccess": {
+        "description": "Private document binary deleted and future delivery revoked",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProviderDocumentDeleteSuccessEnvelope" } } }
+      },
+      "ProviderDocumentError": {
+        "description": "Upload validation, authorization, ownership, scan, state, or readiness failure",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } } }
+      },
+      "RbacRoleListSuccess": {
+        "description": "Dynamic role list and effective capability projection",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/RbacRoleListSuccessEnvelope" } } }
+      },
+      "RbacRoleSuccess": {
+        "description": "Dynamic role projection",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/RbacRoleSuccessEnvelope" } } }
+      },
+      "RbacError": {
+        "description": "RBAC authentication, authorization, validation, lookup, or concurrency failure",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } } }
+      },
+      "AuditLogListSuccess": {
+        "description": "Paginated append-only audit records using explicit redacted projections",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuditLogListSuccessEnvelope" } } }
+      },
+      "AuditLogSuccess": {
+        "description": "One append-only audit record using an explicit redacted projection",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AuditLogSuccessEnvelope" } } }
+      },
+      "AuditError": {
+        "description": "Audit authentication, authorization, validation, lookup, or persistence failure",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } } }
+      },
+      "LocationListSuccess": {
+        "description": "Bounded location and neighborhood list",
+        "headers": { "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" }, "Traceparent": { "$ref": "#/components/headers/Traceparent" } },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LocationListSuccessEnvelope" } } }
+      },
+      "LocationSuccess": {
+        "description": "Explicit location or neighborhood projection",
+        "headers": { "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" }, "Traceparent": { "$ref": "#/components/headers/Traceparent" } },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LocationSuccessEnvelope" } } }
+      },
+      "LocationDeleteSuccess": {
+        "description": "Unreferenced location resource deleted",
+        "headers": { "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" }, "Traceparent": { "$ref": "#/components/headers/Traceparent" } },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LocationDeleteSuccessEnvelope" } } }
+      },
+      "LocationError": {
+        "description": "Location authentication, authorization, validation, hierarchy, lookup, reference, slug, or concurrency failure",
+        "headers": { "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" }, "Traceparent": { "$ref": "#/components/headers/Traceparent" } },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } } }
+      },
+      "AccountTransitionSuccess": {
+        "description": "Reason-bearing account transition projection",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AccountTransitionSuccessEnvelope" } } }
+      },
+      "ProviderReviewSuccess": {
+        "description": "Atomic Provider application and account review projection",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProviderReviewSuccessEnvelope" } } }
+      },
+      "AccountError": {
+        "description": "Account authentication, authorization, lookup, state, or concurrency failure",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorEnvelope" } } }
+      }
+    },
+    "parameters": {
+      "ProviderDocumentId": {
+        "name": "documentId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "pattern": "^[a-f0-9]{24}$" }
+      },
+      "RbacRoleId": {
+        "name": "roleId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "pattern": "^[a-f0-9]{24}$" }
+      },
+      "AuditLogId": {
+        "name": "auditId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "pattern": "^[a-f0-9]{24}$" }
+      },
+      "AccountUserId": {
+        "name": "userId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "pattern": "^[a-f0-9]{24}$" }
+      },
+      "ProviderReviewId": {
+        "name": "providerId",
+        "in": "path",
+        "required": true,
+        "description": "Provider application identifier",
+        "schema": { "type": "string", "pattern": "^[a-f0-9]{24}$" }
+      },
+      "LocationId": {
+        "name": "locationId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "pattern": "^[a-f0-9]{24}$" }
       }
     },
     "headers": {
@@ -598,6 +1247,559 @@
           { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/SeekerPreferencesData" } } }
         ]
       },
+      "ProviderType": {
+        "enum": ["individual_broker", "brokerage_office", "developer_company"]
+      },
+      "ProviderApplicationState": {
+        "enum": ["draft", "pending_review", "needs_information", "approved", "rejected", "suspended"]
+      },
+      "ProviderApplicationCreateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["verificationToken", "providerType"],
+        "properties": {
+          "verificationToken": { "$ref": "#/components/schemas/RegistrationToken" },
+          "providerType": { "$ref": "#/components/schemas/ProviderType" }
+        }
+      },
+      "ProviderAccountPatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["version"],
+        "minProperties": 2,
+        "properties": {
+          "version": { "type": "integer", "minimum": 0 },
+          "accountOwnerFullName": { "type": "string", "minLength": 1, "maxLength": 160 },
+          "displayName": { "type": "string", "minLength": 1, "maxLength": 160 },
+          "email": { "type": "string", "format": "email", "maxLength": 254 },
+          "primaryLocationId": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "serviceAreaIds": { "type": "array", "maxItems": 50, "items": { "type": "string", "pattern": "^[a-f0-9]{24}$" } },
+          "preferredLocale": { "enum": ["ar", "en", "zh-CN"] },
+          "termsAcceptedAt": { "type": "string", "format": "date-time" },
+          "privacyAcceptedAt": { "type": "string", "format": "date-time" },
+          "secondaryPhone": { "$ref": "#/components/schemas/NormalizedPhone" },
+          "whatsappNumber": { "$ref": "#/components/schemas/NormalizedPhone" },
+          "profileAssetId": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "biography": { "type": "string", "minLength": 1, "maxLength": 2000 },
+          "website": { "type": "string", "format": "uri", "maxLength": 2048 },
+          "socialLinks": {
+            "type": "array", "maxItems": 10,
+            "items": {
+              "type": "object", "additionalProperties": false, "required": ["kind", "url"],
+              "properties": {
+                "kind": { "type": "string", "pattern": "^[a-z][a-z0-9_]{1,39}$" },
+                "url": { "type": "string", "format": "uri", "maxLength": 2048 }
+              }
+            }
+          }
+        }
+      },
+      "ProviderBusinessPatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["version"],
+        "minProperties": 2,
+        "properties": {
+          "version": { "type": "integer", "minimum": 0 },
+          "legalBusinessName": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "tradeName": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "businessAddress": { "type": "string", "minLength": 1, "maxLength": 500 },
+          "commercialRegistrationNumber": { "type": "string", "minLength": 1, "maxLength": 100 },
+          "taxRegistrationNumber": { "type": "string", "minLength": 1, "maxLength": 100 },
+          "authorizedRepresentativeFullName": { "type": "string", "minLength": 1, "maxLength": 160 },
+          "authorizedRepresentativeTitle": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "accountOwnerHasRegisteredAuthority": { "type": "boolean" }
+        }
+      },
+      "ProviderCompanyPatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["version"],
+        "minProperties": 2,
+        "properties": {
+          "version": { "type": "integer", "minimum": 0 },
+          "legalCompanyName": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "brandName": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "headOfficeAddress": { "type": "string", "minLength": 1, "maxLength": 500 },
+          "commercialRegistrationNumber": { "type": "string", "minLength": 1, "maxLength": 100 },
+          "taxRegistrationNumber": { "type": "string", "minLength": 1, "maxLength": 100 },
+          "authorizedRepresentativeFullName": { "type": "string", "minLength": 1, "maxLength": 160 },
+          "authorizedRepresentativeTitle": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "accountOwnerHasRegisteredAuthority": { "type": "boolean" }
+        }
+      },
+      "ProviderSubmitRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["version"],
+        "properties": { "version": { "type": "integer", "minimum": 0 } }
+      },
+      "ProviderRequirementSnapshot": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["version", "providerType", "requirements"],
+        "properties": {
+          "version": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}\\.\\d+$" },
+          "providerType": { "$ref": "#/components/schemas/ProviderType" },
+          "requirements": {
+            "type": "array", "minItems": 1, "maxItems": 20,
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["key", "labelKey", "classification", "applies"],
+              "properties": {
+                "key": { "type": "string" },
+                "labelKey": { "type": "string", "pattern": "^provider\\.documents\\.[a-z][a-zA-Z0-9]*$" },
+                "classification": { "enum": ["required", "optional", "conditional"] },
+                "condition": {
+                  "type": "object", "additionalProperties": false,
+                  "required": ["key", "field", "operator", "value"],
+                  "properties": {
+                    "key": { "const": "account_owner_lacks_registered_authority" },
+                    "field": { "const": "accountOwnerHasRegisteredAuthority" },
+                    "operator": { "const": "equals" },
+                    "value": { "const": false }
+                  }
+                },
+                "applies": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      },
+      "ProviderApplicationData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "providerType", "status", "version", "phone", "requirementVersion", "missingFields", "missingDocuments", "availableActions", "createdAt", "updatedAt"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "providerType": { "$ref": "#/components/schemas/ProviderType" },
+          "status": { "$ref": "#/components/schemas/ProviderApplicationState" },
+          "version": { "type": "integer", "minimum": 0 },
+          "phone": { "$ref": "#/components/schemas/NormalizedPhone" },
+          "requirementVersion": { "type": "string" },
+          "accountOwnerFullName": { "type": "string" },
+          "displayName": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "primaryLocationId": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "serviceAreaIds": { "type": "array", "items": { "type": "string", "pattern": "^[a-f0-9]{24}$" } },
+          "preferredLocale": { "enum": ["ar", "en", "zh-CN"] },
+          "termsAcceptedAt": { "type": "string", "format": "date-time" },
+          "privacyAcceptedAt": { "type": "string", "format": "date-time" },
+          "accountOwnerHasRegisteredAuthority": { "type": "boolean" },
+          "requirementsSnapshot": { "$ref": "#/components/schemas/ProviderRequirementSnapshot" },
+          "missingFields": { "type": "array", "items": { "type": "string" } },
+          "missingDocuments": { "type": "array", "items": { "type": "string" } },
+          "availableActions": { "type": "array", "items": { "enum": ["edit_account", "edit_business", "edit_company", "submit", "view_status", "open_dashboard"] } },
+          "submittedAt": { "type": "string", "format": "date-time" },
+          "reviewReason": { "type": "string", "maxLength": 1000 },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ProviderApplicationStatusData": {
+        "type": "object", "additionalProperties": false,
+        "required": ["applicationId", "providerType", "status", "version", "availableActions"],
+        "properties": {
+          "applicationId": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "providerType": { "$ref": "#/components/schemas/ProviderType" },
+          "status": { "$ref": "#/components/schemas/ProviderApplicationState" },
+          "version": { "type": "integer", "minimum": 0 },
+          "submittedAt": { "type": "string", "format": "date-time" },
+          "reviewReason": { "type": "string", "maxLength": 1000 },
+          "availableActions": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "ProviderRegistrationData": {
+        "type": "object", "additionalProperties": false,
+        "required": ["outcome", "session", "application"],
+        "properties": {
+          "outcome": { "const": "registered_draft" },
+          "session": { "$ref": "#/components/schemas/AuthSessionData" },
+          "application": { "$ref": "#/components/schemas/ProviderApplicationData" }
+        }
+      },
+      "ProviderRegistrationSuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/ProviderRegistrationData" } } }
+        ]
+      },
+      "ProviderApplicationSuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/ProviderApplicationData" } } }
+        ]
+      },
+      "ProviderApplicationStatusSuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/ProviderApplicationStatusData" } } }
+        ]
+      },
+      "ProviderDocumentCategory": {
+        "enum": [
+          "government_id_front", "government_id_back", "broker_license", "professional_membership",
+          "commercial_registration", "tax_card", "authorized_representative_id_front",
+          "authorized_representative_id_back", "authorization_letter", "brokerage_license",
+          "company_profile", "developer_license", "additional_supporting_document"
+        ]
+      },
+      "ProviderDocumentData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "applicationId", "category", "requirementVersion", "originalFilename", "normalizedExtension", "detectedMime", "byteSize", "sha256", "version", "securityState", "reviewState", "uploadedAt", "active", "idempotentReplay"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "applicationId": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "category": { "$ref": "#/components/schemas/ProviderDocumentCategory" },
+          "requirementVersion": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}\\.\\d+$" },
+          "originalFilename": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "normalizedExtension": { "enum": [".pdf", ".jpg", ".jpeg", ".png"] },
+          "detectedMime": { "enum": ["application/pdf", "image/jpeg", "image/png"] },
+          "byteSize": { "type": "integer", "minimum": 1, "maximum": 10485760 },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "version": { "type": "integer", "minimum": 1 },
+          "securityState": { "enum": ["quarantined", "scan_pending", "clean", "infected", "scan_failed", "deleted"] },
+          "reviewState": { "enum": ["uploaded", "pending_review", "needs_replacement", "approved", "rejected"] },
+          "uploadedAt": { "type": "string", "format": "date-time" },
+          "active": { "type": "boolean" },
+          "idempotentReplay": { "type": "boolean" }
+        }
+      },
+      "ProviderDocumentAccessRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["purpose"],
+        "properties": { "purpose": { "type": "string", "pattern": "^[a-z][a-z0-9_]{2,63}$" } }
+      },
+      "ProviderDocumentAccessData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["url", "expiresAt", "method"],
+        "properties": {
+          "url": { "type": "string", "maxLength": 4096, "description": "Ephemeral bearer URL; never persist, log, audit, analyze, or list." },
+          "expiresAt": { "type": "string", "format": "date-time" },
+          "method": { "const": "GET" }
+        }
+      },
+      "ProviderDocumentDeleteData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["documentId", "deleted"],
+        "properties": {
+          "documentId": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "deleted": { "const": true }
+        }
+      },
+      "ProviderDocumentSuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/ProviderDocumentData" } } }
+        ]
+      },
+      "ProviderDocumentAccessSuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/ProviderDocumentAccessData" } } }
+        ]
+      },
+      "ProviderDocumentDeleteSuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/ProviderDocumentDeleteData" } } }
+        ]
+      },
+      "RbacPermission": {
+        "type": "string",
+        "enum": [
+          "admin:account-reports.manage", "admin:account-reports.view", "admin:ads.price",
+          "admin:ads.schedule", "admin:ads.view", "admin:audit.view", "admin:banners.manage",
+          "admin:banners.view", "admin:commissions.manage", "admin:commissions.view",
+          "admin:community.moderate", "admin:community.view", "admin:content.manage",
+          "admin:content.publish", "admin:content.view", "admin:documents.review",
+          "admin:features.manage", "admin:features.view", "admin:locations.manage",
+          "admin:locations.view", "admin:overview.view", "admin:payments.review",
+          "admin:projects.review", "admin:projects.view", "admin:properties.manage",
+          "admin:properties.review", "admin:properties.view", "admin:property-reports.manage",
+          "admin:property-reports.view", "admin:providers.review", "admin:providers.view",
+          "admin:request-issues.manage", "admin:request-issues.view", "admin:requests.assign",
+          "admin:requests.manage", "admin:requests.notes", "admin:requests.view",
+          "admin:roles.manage", "admin:roles.view", "admin:settings.manage",
+          "admin:settings.view", "admin:staff.manage", "admin:staff.view",
+          "admin:taxonomy.manage", "admin:taxonomy.view", "admin:users.manage",
+          "admin:users.view", "admin:viewings.view"
+        ]
+      },
+      "RbacRoleCreateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "accessMode", "permissions", "reason"],
+        "properties": {
+          "name": { "type": "string", "minLength": 2, "maxLength": 80 },
+          "description": { "type": "string", "minLength": 1, "maxLength": 500 },
+          "reason": { "type": "string", "minLength": 3, "maxLength": 1000 },
+          "accessMode": { "enum": ["custom", "view_only"] },
+          "permissions": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 48,
+            "uniqueItems": true,
+            "items": { "$ref": "#/components/schemas/RbacPermission" }
+          }
+        }
+      },
+      "RbacRolePatchRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["version", "reason"],
+        "minProperties": 3,
+        "properties": {
+          "version": { "type": "integer", "minimum": 0 },
+          "reason": { "type": "string", "minLength": 3, "maxLength": 1000 },
+          "name": { "type": "string", "minLength": 2, "maxLength": 80 },
+          "description": { "type": ["string", "null"], "minLength": 1, "maxLength": 500 },
+          "accessMode": { "enum": ["custom", "view_only"] },
+          "permissions": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 48,
+            "uniqueItems": true,
+            "items": { "$ref": "#/components/schemas/RbacPermission" }
+          },
+          "active": { "type": "boolean" }
+        }
+      },
+      "RbacRoleData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "accessMode", "permissions", "active", "version", "createdAt", "updatedAt", "availableActions"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "name": { "type": "string", "minLength": 2, "maxLength": 80 },
+          "description": { "type": "string", "minLength": 1, "maxLength": 500 },
+          "accessMode": { "enum": ["custom", "view_only"] },
+          "permissions": { "type": "array", "items": { "$ref": "#/components/schemas/RbacPermission" }, "uniqueItems": true },
+          "active": { "type": "boolean" },
+          "version": { "type": "integer", "minimum": 0 },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "availableActions": { "type": "array", "items": { "enum": ["update"] }, "uniqueItems": true }
+        }
+      },
+      "RbacRoleListData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["items", "permissionCatalog", "effectivePermissions"],
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/RbacRoleData" } },
+          "permissionCatalog": { "type": "array", "items": { "$ref": "#/components/schemas/RbacPermission" }, "uniqueItems": true },
+          "effectivePermissions": { "type": "array", "items": { "$ref": "#/components/schemas/RbacPermission" }, "uniqueItems": true }
+        }
+      },
+      "RbacRoleSuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/RbacRoleData" } } }
+        ]
+      },
+      "RbacRoleListSuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/RbacRoleListData" } } }
+        ]
+      },
+      "AuditActorType": {
+        "type": "string",
+        "enum": ["admin", "provider", "seeker"]
+      },
+      "AuditSnapshot": {
+        "type": "object",
+        "description": "Bounded JSON snapshot redacted before persistence and again before delivery. Secret, token, credential, signed-URL, email, and phone values are not exposed.",
+        "additionalProperties": true,
+        "maxProperties": 100
+      },
+      "AuditLogData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "actorType", "actorId", "targetType", "targetId", "action", "reason", "before", "after", "requestId", "traceId", "createdAt"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "actorType": { "$ref": "#/components/schemas/AuditActorType" },
+          "actorId": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "targetType": { "type": "string", "minLength": 2, "maxLength": 64, "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$" },
+          "targetId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$" },
+          "action": { "type": "string", "minLength": 3, "maxLength": 96, "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$" },
+          "reason": { "type": "string", "minLength": 3, "maxLength": 1000 },
+          "before": { "$ref": "#/components/schemas/AuditSnapshot" },
+          "after": { "$ref": "#/components/schemas/AuditSnapshot" },
+          "requestId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$" },
+          "traceId": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "AuditLogListData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["items"],
+        "properties": { "items": { "type": "array", "items": { "$ref": "#/components/schemas/AuditLogData" } } }
+      },
+      "AuditLogSuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/AuditLogData" } } }
+        ]
+      },
+      "AuditLogListSuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/AuditLogListData" } } }
+        ]
+      },
+      "LocalizedText": {
+        "type": "object", "additionalProperties": false, "minProperties": 1,
+        "properties": {
+          "ar": { "type": "string", "minLength": 1, "maxLength": 20000 },
+          "en": { "type": "string", "minLength": 1, "maxLength": 20000 },
+          "zh-CN": { "type": "string", "minLength": 1, "maxLength": 20000 }
+        }
+      },
+      "LocationKind": { "type": "string", "enum": ["location", "neighborhood"] },
+      "LocationCoordinates": {
+        "type": "object", "additionalProperties": false, "required": ["latitude", "longitude"],
+        "properties": {
+          "latitude": { "type": "number", "minimum": -90, "maximum": 90 },
+          "longitude": { "type": "number", "minimum": -180, "maximum": 180 }
+        }
+      },
+      "LocationCreateRequest": {
+        "type": "object", "additionalProperties": false, "required": ["kind", "name", "slug", "reason"],
+        "properties": {
+          "kind": { "$ref": "#/components/schemas/LocationKind" },
+          "name": { "$ref": "#/components/schemas/LocalizedText" },
+          "slug": { "type": "string", "minLength": 2, "maxLength": 80, "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "parentLocationId": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "coordinates": { "$ref": "#/components/schemas/LocationCoordinates" },
+          "order": { "type": "integer", "minimum": 0, "maximum": 1000000, "default": 0 },
+          "active": { "type": "boolean", "default": true },
+          "reason": { "type": "string", "minLength": 5, "maxLength": 500 }
+        }
+      },
+      "LocationPatchRequest": {
+        "type": "object", "additionalProperties": false, "required": ["version", "reason"], "minProperties": 3,
+        "properties": {
+          "version": { "type": "integer", "minimum": 0 },
+          "name": { "$ref": "#/components/schemas/LocalizedText" },
+          "slug": { "type": "string", "minLength": 2, "maxLength": 80, "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "parentLocationId": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "coordinates": { "oneOf": [{ "$ref": "#/components/schemas/LocationCoordinates" }, { "type": "null" }] },
+          "order": { "type": "integer", "minimum": 0, "maximum": 1000000 },
+          "active": { "type": "boolean" },
+          "reason": { "type": "string", "minLength": 5, "maxLength": 500 }
+        }
+      },
+      "LocationDeleteRequest": {
+        "type": "object", "additionalProperties": false, "required": ["version", "reason"],
+        "properties": { "version": { "type": "integer", "minimum": 0 }, "reason": { "type": "string", "minLength": 5, "maxLength": 500 } }
+      },
+      "LocationData": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "kind", "name", "slug", "order", "active", "version", "createdAt", "updatedAt", "availableActions"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "kind": { "$ref": "#/components/schemas/LocationKind" },
+          "name": { "$ref": "#/components/schemas/LocalizedText" },
+          "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "parentLocationId": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "coordinates": { "$ref": "#/components/schemas/LocationCoordinates" },
+          "order": { "type": "integer", "minimum": 0 },
+          "active": { "type": "boolean" },
+          "version": { "type": "integer", "minimum": 0 },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "availableActions": { "type": "array", "items": { "enum": ["update", "delete"] }, "uniqueItems": true }
+        }
+      },
+      "LocationListData": { "type": "object", "additionalProperties": false, "required": ["items"], "properties": { "items": { "type": "array", "items": { "$ref": "#/components/schemas/LocationData" } } } },
+      "LocationDeleteData": { "type": "object", "additionalProperties": false, "required": ["id", "deleted"], "properties": { "id": { "type": "string", "pattern": "^[a-f0-9]{24}$" }, "deleted": { "const": true } } },
+      "LocationSuccessEnvelope": { "allOf": [{ "$ref": "#/components/schemas/SuccessEnvelope" }, { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/LocationData" } } }] },
+      "LocationListSuccessEnvelope": { "allOf": [{ "$ref": "#/components/schemas/SuccessEnvelope" }, { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/LocationListData" } } }] },
+      "LocationDeleteSuccessEnvelope": { "allOf": [{ "$ref": "#/components/schemas/SuccessEnvelope" }, { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/LocationDeleteData" } } }] },
+      "AccountTransitionAction": {
+        "type": "string",
+        "enum": ["verify", "reject", "needs_information", "suspend", "restrict"]
+      },
+      "ProviderReviewAction": {
+        "type": "string",
+        "enum": ["verify", "reject", "needs_information", "suspend"]
+      },
+      "AccountTransitionRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["action", "reason"],
+        "properties": {
+          "action": { "$ref": "#/components/schemas/AccountTransitionAction" },
+          "reason": { "type": "string", "minLength": 3, "maxLength": 1000 }
+        }
+      },
+      "ProviderReviewRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["action", "reason"],
+        "properties": {
+          "action": { "$ref": "#/components/schemas/ProviderReviewAction" },
+          "reason": { "type": "string", "minLength": 3, "maxLength": 1000 }
+        }
+      },
+      "AccountTransitionData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["transitionId", "userId", "roleType", "action", "fromStatus", "status", "reason", "version", "changedAt", "availableActions"],
+        "properties": {
+          "transitionId": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "userId": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "roleType": { "enum": ["seeker", "provider", "admin"] },
+          "action": { "$ref": "#/components/schemas/AccountTransitionAction" },
+          "fromStatus": { "enum": ["draft", "unverified", "pending_review", "needs_information", "verified", "rejected", "restricted", "suspended"] },
+          "status": { "enum": ["draft", "unverified", "pending_review", "needs_information", "verified", "rejected", "restricted", "suspended"] },
+          "reason": { "type": "string", "minLength": 3, "maxLength": 1000 },
+          "version": { "type": "integer", "minimum": 1 },
+          "changedAt": { "type": "string", "format": "date-time" },
+          "availableActions": { "type": "array", "items": { "$ref": "#/components/schemas/AccountTransitionAction" }, "uniqueItems": true }
+        }
+      },
+      "ProviderReviewData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["transitionId", "providerApplicationId", "userId", "providerType", "action", "fromAccountStatus", "accountStatus", "fromApplicationStatus", "applicationStatus", "reason", "accountVersion", "applicationVersion", "changedAt", "availableActions"],
+        "properties": {
+          "transitionId": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "providerApplicationId": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "userId": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "providerType": { "$ref": "#/components/schemas/ProviderType" },
+          "action": { "$ref": "#/components/schemas/ProviderReviewAction" },
+          "fromAccountStatus": { "enum": ["draft", "unverified", "pending_review", "needs_information", "verified", "rejected", "restricted", "suspended"] },
+          "accountStatus": { "enum": ["draft", "unverified", "pending_review", "needs_information", "verified", "rejected", "restricted", "suspended"] },
+          "fromApplicationStatus": { "$ref": "#/components/schemas/ProviderApplicationState" },
+          "applicationStatus": { "$ref": "#/components/schemas/ProviderApplicationState" },
+          "reason": { "type": "string", "minLength": 3, "maxLength": 1000 },
+          "accountVersion": { "type": "integer", "minimum": 1 },
+          "applicationVersion": { "type": "integer", "minimum": 1 },
+          "changedAt": { "type": "string", "format": "date-time" },
+          "availableActions": { "type": "array", "items": { "$ref": "#/components/schemas/ProviderReviewAction" }, "uniqueItems": true }
+        }
+      },
+      "AccountTransitionSuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/AccountTransitionData" } } }
+        ]
+      },
+      "ProviderReviewSuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/ProviderReviewData" } } }
+        ]
+      },
       "OtpSendData": {
         "type": "object",
         "additionalProperties": false,
@@ -715,6 +1917,10 @@
               "otp": {
                 "enum": ["ready", "not_ready"],
                 "description": "Present when the authentication runtime is installed"
+              },
+              "privateDocuments": {
+                "enum": ["ready", "not_ready"],
+                "description": "Present when the private-document runtime is installed; fails closed when storage or scanning is unavailable"
               }
             }
           }

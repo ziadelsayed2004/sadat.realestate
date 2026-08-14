@@ -13,6 +13,18 @@ import {
 } from './modules/auth/environment.js';
 import { createAuthRuntime } from './modules/auth/runtime.js';
 import { createSeekerRuntime } from './modules/seeker/runtime.js';
+import { createProviderRuntime } from './modules/provider/runtime.js';
+import { parseUploadEnvironment } from './modules/uploads/environment.js';
+import { createUploadRuntime } from './modules/uploads/runtime.js';
+import { createRbacRuntime } from './modules/rbac/runtime.js';
+import { createAccountRuntime } from './modules/accounts/runtime.js';
+import {
+  createAuditInfrastructure,
+  createAuditRuntime
+} from './modules/audit/runtime.js';
+import { createLocationRuntime } from './modules/locations/runtime.js';
+import { createTaxonomyRuntime } from './modules/taxonomy/runtime.js';
+import { createFeatureService } from './modules/taxonomy/features.js';
 
 export interface ApiListenOptions {
   host: string;
@@ -85,14 +97,59 @@ async function runEntrypoint(): Promise<void> {
   const database = createDatabaseConnection(databaseEnvironment, runtimeEnvironment.appEnvironment);
   await database.connect();
   const auth = createAuthRuntime(database.nativeConnection, authEnvironment);
-  if (!auth.accessTokens) throw new Error('Auth access-token verifier is required for seeker routes');
+  if (!auth.accessTokens) throw new Error('Auth access-token verifier is required for product routes');
   const seeker = createSeekerRuntime(
     database.nativeConnection,
     auth.service,
     auth.accessTokens,
     auth.cookie
   );
-  const server = createApiServer({ database, auth, seeker });
+  const provider = createProviderRuntime(
+    database.nativeConnection,
+    auth.service,
+    auth.accessTokens,
+    auth.cookie
+  );
+  const auditInfrastructure = createAuditInfrastructure(database.nativeConnection);
+  const rbac = createRbacRuntime(
+    database.nativeConnection,
+    auth.accessTokens,
+    auditInfrastructure.writer
+  );
+  const audit = createAuditRuntime(auth.accessTokens, rbac.service, auditInfrastructure);
+  const uploads = createUploadRuntime(
+    database.nativeConnection,
+    auth.accessTokens,
+    parseUploadEnvironment(process.env, runtimeEnvironment.appEnvironment),
+    audit.writer
+  );
+  const accounts = createAccountRuntime(
+    database.nativeConnection,
+    auth.accessTokens,
+    audit.writer,
+    rbac.service
+  );
+  const locations = createLocationRuntime(
+    database.nativeConnection,
+    auth.accessTokens,
+    auditInfrastructure.writer,
+    rbac.service
+  );
+  const taxonomy = createTaxonomyRuntime(database.nativeConnection, auth.accessTokens, auditInfrastructure.writer, rbac.service);
+  const features = { accessTokens: auth.accessTokens, service: createFeatureService(database.nativeConnection, auditInfrastructure.writer, rbac.service) };
+  const server = createApiServer({
+    database,
+    auth,
+    seeker,
+    provider,
+    uploads,
+    rbac,
+    accounts,
+    audit,
+    locations,
+    taxonomy,
+    features
+  });
   let shuttingDown = false;
 
   const shutdown = async () => {

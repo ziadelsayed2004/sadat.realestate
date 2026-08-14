@@ -43,7 +43,7 @@ This is a multi-surface real-estate platform, not a simple listing website. It c
 ## Gaps That Must Not Be Invented
 
 - Production OTP vendor selection; approved login identifiers and Admin-only password policy are resolved in Q-001.
-- Exact document requirements for each provider type and final frame-level fields.
+- Provider-type fields and document requirements are resolved by Q-002; Q-003 still governs upload security, storage, MIME and size limits, retention, and authorized private delivery.
 - Commission-trigger event, settlement, and collection method.
 - Media/storage, maps, and notification providers.
 - Advertising currency, taxes, quote validity, upload limits, and retention.

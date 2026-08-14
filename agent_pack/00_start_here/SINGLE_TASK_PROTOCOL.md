@@ -16,4 +16,18 @@
 
 If completion is impossible, mark the task Partial or Blocked with an exact reason, synchronize the pack, and stop. Never force a Complete status.
 
+Before marking a task Blocked, classify and report:
+
+```text
+candidate blocker:
+blocker class:
+domain contract affected:
+security or financial invariant affected:
+why configuration or an adapter is insufficient:
+safe reversible implementation available: yes/no
+decision: continue with gap / block
+```
+
+A missing Production vendor, credential, endpoint, bucket, sandbox account, or external deployment topology is not automatically a blocker when approved invariants and a provider adapter support deterministic Local/Test fakes, Preview/UAT/Production fail closed without configuration, and the external prerequisite can be recorded at Production Readiness. If a safe reversible implementation is available, continue with the selected task and record the readiness gap. Block only when an unresolved decision changes the domain contract, authorization model, security invariant, financial behavior, legal behavior, or irreversible data model and no safe reversible boundary exists.
+
 Forbidden actions include reading a real `.env`, printing secrets, touching production data, skipping dependencies, silently changing product truth, querying package registries for planning, or waiting indefinitely on network commands.

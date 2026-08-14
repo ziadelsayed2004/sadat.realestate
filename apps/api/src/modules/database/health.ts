@@ -10,6 +10,7 @@ export interface ReadinessResponse {
   checks: {
     mongodb: 'ready' | 'not_ready';
     otp?: 'ready' | 'not_ready';
+    privateDocuments?: 'ready' | 'not_ready';
   };
 }
 
@@ -32,20 +33,23 @@ async function readinessState(dependency: DependencyReadiness): Promise<'ready' 
 
 export function createOperationalRouter(
   database: DatabaseReadiness,
-  otp?: DependencyReadiness
+  otp?: DependencyReadiness,
+  privateDocuments?: DependencyReadiness
 ): Router {
   const router = Router();
   router.get('/health', (_request, response: Response<HealthResponse>) => {
     response.status(200).json({ status: 'ok' });
   });
   router.get('/ready', async (_request, response: Response<ReadinessResponse>) => {
-    const [mongodb, otpState] = await Promise.all([
+    const [mongodb, otpState, privateDocumentsState] = await Promise.all([
       readinessState(database),
-      otp ? readinessState(otp) : Promise.resolve(undefined)
+      otp ? readinessState(otp) : Promise.resolve(undefined),
+      privateDocuments ? readinessState(privateDocuments) : Promise.resolve(undefined)
     ]);
     const checks: ReadinessResponse['checks'] = {
       mongodb,
-      ...(otpState ? { otp: otpState } : {})
+      ...(otpState ? { otp: otpState } : {}),
+      ...(privateDocumentsState ? { privateDocuments: privateDocumentsState } : {})
     };
     const ready = Object.values(checks).every((state) => state === 'ready');
     response.status(ready ? 200 : 503).json({

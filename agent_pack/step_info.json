@@ -1,39 +1,31 @@
 {
-  "generatedAt": "2026-08-12T22:23:03.257Z",
-  "selectedTaskId": "backend_014",
+  "generatedAt": "2026-08-14T00:08:36.601Z",
+  "selectedTaskId": "backend_040",
   "selectedTaskStatus": "open",
-  "selectedTaskFile": "04_tracks/backend/B1_identity_access/backend_014.md",
+  "selectedTaskFile": "04_tracks/backend/B3_projects_properties/backend_040.md",
   "selectedTask": {
-    "id": "backend_014",
-    "phase": "B1_identity_access",
-    "area": "provider",
-    "title": "Provider Types and Registration Application",
-    "goal": "Implement provider-type selection and a multi-step onboarding draft with Pending, Needs Information, Approved, and Rejected states.",
+    "id": "backend_040",
+    "phase": "B3_projects_properties",
+    "area": "projects",
+    "title": "Project Model and Provider CRUD",
+    "goal": "Model projects, localized content, locations, developers, and states, and provide ownership-restricted CRUD.",
     "kind": "api",
     "screens": [],
     "sourceRefs": [
-      "AUTH-07",
-      "AUTH-08",
-      "AUTH-09",
-      "AUTH-10",
-      "AUTH-11",
-      "AUTH-13",
-      "AUTH-14",
-      "AUTH-15",
-      "AUTH-16",
-      "AUTH-17"
+      "PRV-15",
+      "ADM-12"
     ],
     "notes": [],
     "track": "backend",
-    "sequence": 15,
+    "sequence": 32,
     "dependsOn": [
-      "backend_013"
+      "backend_039"
     ],
-    "atomicTaskFile": "04_tracks/backend/B1_identity_access/backend_014.md",
+    "atomicTaskFile": "04_tracks/backend/B3_projects_properties/backend_040.md",
     "allowedRoots": [
-      "apps/api/src/modules/provider/**",
-      "apps/api/tests/provider/**",
-      "packages/contracts/src/provider/**",
+      "apps/api/src/modules/projects/**",
+      "apps/api/tests/projects/**",
+      "packages/contracts/src/projects/**",
       "docs/api/**",
       "apps/api/openapi/**",
       "apps/api/postman/**",
@@ -59,11 +51,11 @@
   "counts": {
     "backend": {
       "total": 113,
-      "open": 99,
+      "open": 82,
       "in_progress": 0,
       "partial": 0,
       "blocked": 0,
-      "complete": 14
+      "complete": 31
     },
     "frontend": {
       "total": 75,
@@ -76,159 +68,6 @@
   },
   "blockedTasks": [],
   "blockedByDependencies": [
-    {
-      "taskId": "backend_015",
-      "unresolved": [
-        {
-          "taskId": "backend_014",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_016",
-      "unresolved": [
-        {
-          "taskId": "backend_015",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_017",
-      "unresolved": [
-        {
-          "taskId": "backend_016",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_018",
-      "unresolved": [
-        {
-          "taskId": "backend_017",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_019",
-      "unresolved": [
-        {
-          "taskId": "backend_018",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_020",
-      "unresolved": [
-        {
-          "taskId": "backend_019",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_030",
-      "unresolved": [
-        {
-          "taskId": "backend_020",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_031",
-      "unresolved": [
-        {
-          "taskId": "backend_030",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_032",
-      "unresolved": [
-        {
-          "taskId": "backend_031",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_033",
-      "unresolved": [
-        {
-          "taskId": "backend_032",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_034",
-      "unresolved": [
-        {
-          "taskId": "backend_033",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_035",
-      "unresolved": [
-        {
-          "taskId": "backend_034",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_036",
-      "unresolved": [
-        {
-          "taskId": "backend_035",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_037",
-      "unresolved": [
-        {
-          "taskId": "backend_036",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_038",
-      "unresolved": [
-        {
-          "taskId": "backend_037",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_039",
-      "unresolved": [
-        {
-          "taskId": "backend_038",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_040",
-      "unresolved": [
-        {
-          "taskId": "backend_039",
-          "status": "open"
-        }
-      ]
-    },
     {
       "taskId": "backend_041",
       "unresolved": [

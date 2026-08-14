@@ -1,0 +1,40 @@
+{
+  "taskId": "backend_038",
+  "summary": "Implemented strict localized homepage section and display-setting contracts, versioned persistence models, deterministic ordering, published/visible public projections, and an explicit non-public preview projection.",
+  "filesChanged": [
+    "packages/contracts/src/cms/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/cms/homepage-display.ts",
+    "apps/api/src/modules/cms/homepage-display-models.ts",
+    "apps/api/tests/cms/homepage-display.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/cms-homepage-display.md"
+  ],
+  "verification": [
+    {"command":"npm.cmd run build --workspace packages/contracts; node --test --import tsx apps/api/tests/cms/homepage-display.test.ts","exitCode":0,"result":"passed","notes":"Focused suite passed all 3 tests."},
+    {"command":"npm.cmd run typecheck","exitCode":0,"result":"passed","notes":"Syntax, contracts, and API typechecks passed."},
+    {"command":"npm.cmd run lint","exitCode":0,"result":"passed","notes":"Workspace and ESLint checks passed with zero warnings."},
+    {"command":"npm.cmd test -- --runInBand","exitCode":0,"result":"passed","notes":"Full suite passed all 252 tests."},
+    {"command":"npm.cmd run test:coverage","exitCode":0,"result":"passed","notes":"Coverage: 87.55% lines, 81.85% branches, 87.27% functions."},
+    {"command":"npm.cmd run build","exitCode":0,"result":"passed","notes":"Workspace, contracts, and API builds passed."},
+    {"command":"npm.cmd audit --audit-level=high","exitCode":0,"result":"passed","notes":"No high-severity dependency vulnerabilities found."},
+    {"command":"npm.cmd run api:inventory","exitCode":0,"result":"passed","notes":"API inventory generated successfully."},
+    {"command":"npm.cmd run openapi:validate","exitCode":0,"result":"passed","notes":"OpenAPI artifact valid; no routes were added."},
+    {"command":"npm.cmd run postman:validate","exitCode":0,"result":"passed","notes":"Postman artifact valid; no routes were added."},
+    {"command":"npm.cmd run env:check","exitCode":0,"result":"passed","notes":"Synthetic local environment readiness check passed with generated non-secret test configuration."},
+    {"command":"node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"passed","notes":"Agent Pack audit reported zero errors."}
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B2_master_data_localization/backend_038.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (ADM-49, ADM-58)",
+    "packages/contracts/src/cms/index.ts",
+    "apps/api/src/modules/cms/homepage-display.ts",
+    "apps/api/tests/cms/homepage-display.test.ts"
+  ],
+  "knownGaps": [
+    "Production homepage content and display values are not supplied; draft and empty states remain safe.",
+    "Public homepage aggregation and route ownership remain with the later homepage read-model task.",
+    "Live MongoDB integration remains environment-dependent and was not run without isolated replica-set prerequisites."
+  ],
+  "completedAt": "2026-08-14T00:04:24.4103125Z"
+}

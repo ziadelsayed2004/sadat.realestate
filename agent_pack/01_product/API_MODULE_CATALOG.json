@@ -182,13 +182,21 @@
     "status": "planned"
   },
   {
-    "module": "settings-audit",
+    "module": "audit",
     "routePrefixes": [
-      "/api/v1/admin/settings",
       "/api/v1/admin/audit-logs"
     ],
     "backendTaskIds": [
-      "backend_020",
+      "backend_020"
+    ],
+    "status": "implemented"
+  },
+  {
+    "module": "settings",
+    "routePrefixes": [
+      "/api/v1/admin/settings"
+    ],
+    "backendTaskIds": [
       "backend_123"
     ],
     "status": "planned"

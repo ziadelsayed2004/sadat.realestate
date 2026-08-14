@@ -56,6 +56,24 @@ Do not invent work. Run a verification and truth-synchronization pass, report th
 
 Do not hide the contradiction. Reopen or add only the smallest task allowed by the repository policy, synchronize indexes and the task board, then execute at most one selector-approved item.
 
+### Before marking a task Blocked
+
+A missing Production vendor, credential, endpoint, bucket, sandbox account, or external deployment topology is not automatically a blocker when product and security invariants are approved, a provider adapter isolates the integration, Local/Test use deterministic fakes, Preview/UAT/Production fail closed without configuration, and the external prerequisite can be reported honestly at Production Readiness. In that case, implement the selected task and record the absent external configuration as a readiness gap.
+
+Mark a task Blocked only when the unresolved decision changes the domain contract, authorization model, security invariant, financial behavior, legal behavior, or irreversible data model and no safe reversible implementation boundary exists. Before blocking, output:
+
+```text
+candidate blocker:
+blocker class:
+domain contract affected:
+security or financial invariant affected:
+why configuration or an adapter is insufficient:
+safe reversible implementation available: yes/no
+decision: continue with gap / block
+```
+
+If `safe reversible implementation available` is yes, do not block only because Production credentials or vendor configuration are unavailable.
+
 ## Before Writing Code, Output
 
 ```text

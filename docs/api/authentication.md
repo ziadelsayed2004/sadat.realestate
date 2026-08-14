@@ -1,5 +1,7 @@
 # Authentication and session contracts
 
+Admin authentication uses normalized email addresses and Admin-only Argon2id passwords. The first Super Admin is provisioned through the protected, one-time transactional command documented in `admin-accounts.md`; there is no HTTP bootstrap route and no checked-in bootstrap credential.
+
 `backend_011` implements Admin password login and the shared session lifecycle. `backend_012` adds provider-independent phone OTP authentication for Seekers and Property Providers. The Production OTP vendor remains a release-readiness prerequisite; no vendor behavior or credentials are assumed by this implementation.
 
 ## Implemented routes
@@ -13,7 +15,7 @@
 | `POST /api/v1/auth/refresh` | `sadat_refresh` cookie | Rotates the opaque token exactly once, revokes the predecessor, and detects reuse. |
 | `POST /api/v1/auth/logout` | `sadat_refresh` cookie | Revokes the current session and clears the cookie. |
 
-Provider account creation, password reset, session listing, and per-session management remain planned. OTP registration verification is only an authority; `backend_013` consumes it for Seeker registration, and later provider onboarding owns Provider account creation.
+Password reset, session listing, and per-session management remain planned. OTP registration verification is only an authority: `backend_013` consumes the Seeker grant, while the Provider application creation route implemented by `backend_014` consumes the Provider grant and creates the Provider identity, owned draft application, and shared session atomically.
 
 ## Phone and request contracts
 

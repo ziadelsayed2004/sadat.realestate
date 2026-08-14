@@ -1,11 +1,27 @@
 import { OPERATIONAL_ROUTE_DEFINITIONS } from '../database/health.js';
 import { AUTH_ROUTE_DEFINITIONS } from '../auth/router.js';
 import { SEEKER_ROUTE_DEFINITIONS } from '../seeker/router.js';
+import { PROVIDER_ROUTE_DEFINITIONS } from '../provider/router.js';
+import { UPLOAD_ROUTE_DEFINITIONS } from '../uploads/router.js';
+import { RBAC_ROUTE_DEFINITIONS } from '../rbac/router.js';
+import { ACCOUNT_ROUTE_DEFINITIONS } from '../accounts/router.js';
+import { AUDIT_ROUTE_DEFINITIONS } from '../audit/router.js';
+import { LOCATION_ROUTE_DEFINITIONS } from '../locations/router.js';
+import { TAXONOMY_ROUTE_DEFINITIONS } from '../taxonomy/router.js';
+import { FEATURE_ROUTE_DEFINITIONS } from '../taxonomy/features.js';
 
 export const IMPLEMENTED_ROUTE_DEFINITIONS = Object.freeze([
   ...OPERATIONAL_ROUTE_DEFINITIONS,
   ...AUTH_ROUTE_DEFINITIONS,
-  ...SEEKER_ROUTE_DEFINITIONS
+  ...SEEKER_ROUTE_DEFINITIONS,
+  ...PROVIDER_ROUTE_DEFINITIONS,
+  ...UPLOAD_ROUTE_DEFINITIONS,
+  ...RBAC_ROUTE_DEFINITIONS,
+  ...ACCOUNT_ROUTE_DEFINITIONS,
+  ...AUDIT_ROUTE_DEFINITIONS
+  ,...LOCATION_ROUTE_DEFINITIONS,
+  ...TAXONOMY_ROUTE_DEFINITIONS
+  ,...FEATURE_ROUTE_DEFINITIONS
 ]);
 
 export const PRODUCT_API_BASE_PATH = '/api/v1';
@@ -51,6 +67,10 @@ function routeKey(method: string, routePath: string): string {
   return `${method.toUpperCase()} ${routePath}`;
 }
 
+function normalizePathParameters(routePath: string): string {
+  return routePath.replace(/\{([A-Za-z][A-Za-z0-9_]*)\}/g, ':$1');
+}
+
 function expectedRouteKeys(
   routes: readonly ImplementedRouteDefinition[] = IMPLEMENTED_ROUTE_DEFINITIONS
 ): string[] {
@@ -72,7 +92,7 @@ export function collectOpenApiRoutes(document: unknown): string[] {
     if (!isRecord(pathItem)) return [];
     return Object.keys(pathItem)
       .filter((key) => HTTP_METHODS.has(key.toLowerCase()))
-      .map((method) => routeKey(method, routePath));
+      .map((method) => routeKey(method, normalizePathParameters(routePath)));
   }).sort();
 }
 
@@ -147,11 +167,12 @@ function collectPostmanItems(items: unknown, routes: string[]): void {
     const url = item.request.url;
     if (typeof method !== 'string' || !isRecord(url) || typeof url.raw !== 'string') continue;
     const raw = url.raw;
-    const routePath = raw.startsWith('{{apiV1BaseUrl}}')
+    const routePathWithQuery = raw.startsWith('{{apiV1BaseUrl}}')
       ? `${PRODUCT_API_BASE_PATH}${raw.slice('{{apiV1BaseUrl}}'.length)}`
       : raw.startsWith('{{baseUrl}}')
         ? raw.slice('{{baseUrl}}'.length)
         : '';
+    const routePath = routePathWithQuery.split(/[?#]/, 1)[0] ?? '';
     if (routePath.startsWith('/')) routes.push(routeKey(method, routePath));
   }
 }

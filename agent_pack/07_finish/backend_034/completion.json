@@ -1,0 +1,43 @@
+{
+  "taskId": "backend_034",
+  "summary": "Implemented provider-linked brokerage office and developer organization master data with strict localized contracts, deterministic slugs, review state, immutable provider linkage, and backend-derived source identity. Verified badges require genuine provider and organization approval; public directory routes remain owned by the later public-seeker task.",
+  "filesChanged": [
+    "packages/contracts/src/organizations/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/organizations/models.ts",
+    "apps/api/src/modules/organizations/source-identity.ts",
+    "apps/api/tests/organizations/organizations.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/organizations-source-identity.md",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md"
+  ],
+  "verification": [
+    {"command":"node --test --import tsx apps/api/tests/organizations/organizations.test.ts","exitCode":0,"result":"passed","notes":"4 organization contract, model, source-identity, fallback, approval, and mismatch tests passed."},
+    {"command":"npm.cmd run typecheck","exitCode":0,"result":"passed","notes":"Workspace syntax and TypeScript checks passed."},
+    {"command":"npm.cmd run lint","exitCode":0,"result":"passed","notes":"Workspace policy and ESLint passed with zero warnings."},
+    {"command":"npm.cmd test -- --runInBand","exitCode":0,"result":"passed","notes":"All 240 tests passed serially."},
+    {"command":"npm.cmd run test:coverage","exitCode":0,"result":"passed","notes":"240 tests passed; 87.49% lines, 81.74% branches, 87.19% functions."},
+    {"command":"npm.cmd run build","exitCode":0,"result":"passed","notes":"Contracts and API production builds passed."},
+    {"command":"npm.cmd audit --audit-level=high","exitCode":0,"result":"passed","notes":"Found 0 vulnerabilities."},
+    {"command":"npm.cmd run api:inventory","exitCode":0,"result":"passed","notes":"Existing runtime inventory remained valid; no public organization routes were introduced in this task."},
+    {"command":"npm.cmd run openapi:validate","exitCode":0,"result":"passed","notes":"OPENAPI_VALID."},
+    {"command":"npm.cmd run postman:validate","exitCode":0,"result":"passed","notes":"POSTMAN_VALID."},
+    {"command":"node -e \"JSON.parse(require('fs').readFileSync('apps/api/openapi/openapi.json'));JSON.parse(require('fs').readFileSync('apps/api/postman/Sadat-Real-Estate.postman_collection.json'));console.log('JSON_PARSE_OK')\"","exitCode":0,"result":"passed","notes":"Changed API artifact JSON parsed successfully."},
+    {"command":"node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"passed","notes":"Agent Pack audit reported zero errors."}
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B2_master_data_localization/backend_034.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (PUB-05, PUB-06)",
+    "agent_pack/01_product/PRD.md (approved provider types and genuine approval rule)",
+    "apps/api/src/modules/organizations/source-identity.ts",
+    "apps/api/tests/organizations/organizations.test.ts",
+    "docs/api/organizations-source-identity.md"
+  ],
+  "knownGaps": [
+    "Optional live MongoDB integration remains unavailable without isolated APP_ENV=test credentials and replica-set topology.",
+    "Production organization seed content is not present; runtime supports a safe empty state.",
+    "The repository has no security:check script; applicable security coverage is provided by strict schemas, approval-derived projections, full tests, lint, and dependency audit.",
+    "The executing Node.js 22.18.0 is below the checked-in Node >=24 <25 engine baseline, although all local gates passed."
+  ],
+  "completedAt": "2026-08-13T23:29:00.000Z"
+}

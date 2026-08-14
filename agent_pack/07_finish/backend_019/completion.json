@@ -1,0 +1,121 @@
+{
+  "taskId": "backend_019",
+  "summary": "Implemented reason-bearing account verification, rejection, needs-information, suspension, restriction, and restoration workflows with explicit Admin permissions, provider aggregate synchronization, optimistic concurrency, session revocation, stale-session access enforcement, append-only transition evidence, strict projections, and synchronized runtime/OpenAPI/Postman contracts.",
+  "filesChanged": [
+    "packages/contracts/src/accounts/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/accounts/access-guard.ts",
+    "apps/api/src/modules/accounts/models.ts",
+    "apps/api/src/modules/accounts/repository.ts",
+    "apps/api/src/modules/accounts/router.ts",
+    "apps/api/src/modules/accounts/runtime.ts",
+    "apps/api/src/modules/accounts/service.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/tests/accounts/access-guard.test.ts",
+    "apps/api/tests/accounts/contracts.test.ts",
+    "apps/api/tests/accounts/models.test.ts",
+    "apps/api/tests/accounts/router.test.ts",
+    "apps/api/tests/accounts/service.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/account-states.md",
+    "docs/api/admin-accounts.md",
+    "docs/api/api-artifacts.md",
+    "docs/api/contracts.md",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/07_finish/backend_019/completion.json",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
+    "agent_pack/step_info.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Installed the locked workspace dependency graph; npm reported zero vulnerabilities and an engine warning because the local Node version is 22.18.0 while the repository requires Node 24."
+    },
+    {
+      "command": "npm.cmd exec -- tsx --test apps/api/tests/accounts/contracts.test.ts apps/api/tests/accounts/models.test.ts apps/api/tests/accounts/service.test.ts apps/api/tests/accounts/router.test.ts apps/api/tests/accounts/access-guard.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 16 task-specific contract, model, service, route, authorization, IDOR, validation, replay, concurrency, aggregate-state, session-revocation, and stale-access tests passed."
+    },
+    {
+      "command": "npm.cmd run quality",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository lint, syntax/type checks, workspace tests, coverage thresholds, builds, runtime API inventory, OpenAPI validation, Postman validation, dependency audit, and Agent Pack audit all passed after the final task changes."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The root workspace policy suite and complete API test registry passed."
+    },
+    {
+      "command": "npm.cmd run test:unit && npm.cmd run test:integration && npm.cmd run test:api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All registered unit, integration, and API category suites passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "npm reported zero vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory reported 28 active routes, including both backend_019 routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI JSON and the active runtime route inventory were synchronized."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The Postman collection contains synchronized synthetic requests for both account-state endpoints."
+    },
+    {
+      "command": "$env:APP_ENV='test'; Remove-Item Env:TEST_MONGODB_URI -ErrorAction SilentlyContinue; npm.cmd run test:integration:live",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Blocked — prerequisites unavailable: an isolated TEST_MONGODB_URI was not configured, so MongoDB topology and live transactional behavior were not claimed."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack integrity reported zero errors while backend_019 was the sole in-progress task."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B1_identity_access/backend_019.md",
+    "agent_pack/01_product/STATE_MACHINES.md account and provider-application transitions",
+    "agent_pack/01_product/BUSINESS_RULES.md BR-005 reason requirement and API-side permission truth",
+    "POST /api/v1/admin/users/:userId/transitions runtime, OpenAPI, Postman, and route-test evidence",
+    "POST /api/v1/admin/providers/:providerId/review runtime, OpenAPI, Postman, and route-test evidence",
+    "Files outside Allowed Roots were limited to packages/contracts/src/contracts/index.ts, apps/api/src/app.ts, apps/api/src/server.ts, apps/api/src/modules/docs/api-artifacts.ts, and apps/api/src/modules/testing/test-suites.ts because shared export, runtime composition/mounting, inventory registration, and test registration are necessary to expose and verify the selected task."
+  ],
+  "knownGaps": [
+    "Live MongoDB verification is blocked until an explicitly isolated TEST_MONGODB_URI is supplied; MongoDB topology was not inferred.",
+    "The local runtime is Node 22.18.0 while package engines require Node 24; all checks passed, but Node 24 CI remains the authoritative engine verification.",
+    "Q-012 deletion, privacy-request, and retention behavior remains pending and outside backend_019; no deletion contract was invented."
+  ],
+  "completedAt": "2026-08-13T21:31:29.4630135Z"
+}

@@ -1,0 +1,42 @@
+{
+  "taskId": "backend_036",
+  "summary": "Implemented strict localized About blocks and team members with stable keys, deterministic ordering, activation, draft/published/inactive lifecycle, optimistic versions, model indexes, and published+active-only public projections.",
+  "filesChanged": [
+    "packages/contracts/src/cms/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/cms/about-team.ts",
+    "apps/api/src/modules/cms/about-team-models.ts",
+    "apps/api/tests/cms/about-team.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/cms-about-team.md",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md"
+  ],
+  "verification": [
+    {"command":"node --test --import tsx apps/api/tests/cms/about-team.test.ts","exitCode":0,"result":"passed","notes":"3 focused About/team validation, publication, ordering, and model-index tests passed."},
+    {"command":"npm.cmd run typecheck","exitCode":0,"result":"passed","notes":"Workspace syntax and TypeScript checks passed."},
+    {"command":"npm.cmd run lint","exitCode":0,"result":"passed","notes":"Workspace policy and ESLint passed with zero warnings."},
+    {"command":"npm.cmd test -- --runInBand","exitCode":0,"result":"passed","notes":"All 246 tests passed serially."},
+    {"command":"npm.cmd run test:coverage","exitCode":0,"result":"passed","notes":"246 tests passed; 87.52% lines, 81.75% branches, 87.18% functions."},
+    {"command":"npm.cmd run build","exitCode":0,"result":"passed","notes":"Contracts and API production builds passed."},
+    {"command":"npm.cmd audit --audit-level=high","exitCode":0,"result":"passed","notes":"Found 0 vulnerabilities."},
+    {"command":"npm.cmd run api:inventory","exitCode":0,"result":"passed","notes":"Existing runtime inventory remained valid; public/admin CMS routes remain owned by later canonical tasks."},
+    {"command":"npm.cmd run openapi:validate","exitCode":0,"result":"passed","notes":"OPENAPI_VALID."},
+    {"command":"npm.cmd run postman:validate","exitCode":0,"result":"passed","notes":"POSTMAN_VALID."},
+    {"command":"node -e \"JSON.parse(require('fs').readFileSync('apps/api/openapi/openapi.json'));JSON.parse(require('fs').readFileSync('apps/api/postman/Sadat-Real-Estate.postman_collection.json'));console.log('JSON_PARSE_OK')\"","exitCode":0,"result":"passed","notes":"API artifact JSON parsed successfully."},
+    {"command":"node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"passed","notes":"Agent Pack audit reported zero errors."}
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B2_master_data_localization/backend_036.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (PUB-11, PUB-12, ADM-30, ADM-31)",
+    "apps/api/src/modules/cms/about-team.ts",
+    "apps/api/tests/cms/about-team.test.ts",
+    "docs/api/cms-about-team.md"
+  ],
+  "knownGaps": [
+    "Public and administrative HTTP route ownership remains with later canonical CMS tasks; this task provides the data and projection layer.",
+    "Production About copy, biographies, and imagery are not seeded; empty public projections are safe.",
+    "Optional live MongoDB integration remains unavailable without isolated APP_ENV=test credentials and replica-set topology.",
+    "The executing Node.js 22.18.0 is below the checked-in Node >=24 <25 engine baseline, although all local gates passed."
+  ],
+  "completedAt": "2026-08-13T23:45:00.000Z"
+}

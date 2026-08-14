@@ -194,6 +194,18 @@
     "apiVersion": "v1"
   },
   {
+    "method": "POST",
+    "path": "/api/v1/provider/application",
+    "module": "provider-onboarding",
+    "auth": "provider-otp-grant",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Create provider identity and owned draft application after verified phone OTP",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
     "method": "GET",
     "path": "/api/v1/provider/application",
     "module": "provider-onboarding",
@@ -202,7 +214,7 @@
       "provider"
     ],
     "purpose": "Read owned application",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -214,7 +226,7 @@
       "provider"
     ],
     "purpose": "Save account step",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -226,7 +238,7 @@
       "provider"
     ],
     "purpose": "Save business step",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -238,7 +250,7 @@
       "provider"
     ],
     "purpose": "Save developer company step",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -250,7 +262,7 @@
       "provider"
     ],
     "purpose": "Upload private document",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -262,7 +274,31 @@
       "provider"
     ],
     "purpose": "Delete owned draft document",
-    "status": "planned",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/application/documents/:documentId/access",
+    "module": "provider-onboarding",
+    "auth": "access-token",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Authorize a short-lived exact-object private document download",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/private/provider-documents/:documentId",
+    "module": "provider-onboarding",
+    "auth": "signed-download-grant",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Redeem an authorized 300-second private document download",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -274,7 +310,7 @@
       "provider"
     ],
     "purpose": "Submit application",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -286,7 +322,7 @@
       "provider"
     ],
     "purpose": "Track application",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1030,7 +1066,7 @@
       "admin:users.manage"
     ],
     "purpose": "Account transition/restriction",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1066,7 +1102,7 @@
       "admin:providers.review"
     ],
     "purpose": "Review provider with reason",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1150,7 +1186,7 @@
       "admin:roles.view"
     ],
     "purpose": "Role list",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1162,7 +1198,7 @@
       "admin:roles.manage"
     ],
     "purpose": "Create role",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1174,7 +1210,7 @@
       "admin:roles.manage"
     ],
     "purpose": "Update role permissions",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1186,7 +1222,7 @@
       "admin:locations.view"
     ],
     "purpose": "Locations/neighborhoods",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1198,7 +1234,7 @@
       "admin:locations.manage"
     ],
     "purpose": "Create location",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1210,7 +1246,19 @@
       "admin:locations.manage"
     ],
     "purpose": "Update/reorder/toggle location",
-    "status": "planned",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "DELETE",
+    "path": "/api/v1/admin/locations/:locationId",
+    "module": "master-data",
+    "auth": "access-token",
+    "roles": [
+      "admin:locations.manage"
+    ],
+    "purpose": "Delete unreferenced location",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1222,7 +1270,7 @@
       "admin:taxonomy.view"
     ],
     "purpose": "Property taxonomy",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1234,7 +1282,7 @@
       "admin:taxonomy.manage"
     ],
     "purpose": "Create category/type",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1246,9 +1294,10 @@
       "admin:taxonomy.manage"
     ],
     "purpose": "Update category/type",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
+  {"method":"DELETE","path":"/api/v1/admin/property-categories/:categoryId","module":"master-data","auth":"access-token","roles":["admin:taxonomy.manage"],"purpose":"Delete unreferenced category/type","status":"implemented","apiVersion":"v1"},
   {
     "method": "GET",
     "path": "/api/v1/admin/features",
@@ -1258,7 +1307,7 @@
       "admin:features.view"
     ],
     "purpose": "Features/services",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1270,7 +1319,7 @@
       "admin:features.manage"
     ],
     "purpose": "Create feature/service",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1282,9 +1331,10 @@
       "admin:features.manage"
     ],
     "purpose": "Update feature/service",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
+  {"method":"DELETE","path":"/api/v1/admin/features/:featureId","module":"master-data","auth":"access-token","roles":["admin:features.manage"],"purpose":"Delete unreferenced feature/service","status":"implemented","apiVersion":"v1"},
   {
     "method": "GET",
     "path": "/api/v1/admin/projects",
@@ -1906,7 +1956,7 @@
       "admin:audit.view"
     ],
     "purpose": "Audit search",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1918,7 +1968,7 @@
       "admin:audit.view"
     ],
     "purpose": "Audit details",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   }
 ]

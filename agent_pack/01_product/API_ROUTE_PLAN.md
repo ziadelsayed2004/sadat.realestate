@@ -7,7 +7,7 @@ This is a naming plan, not an implementation claim. Runtime OpenAPI and endpoint
 | Health | `GET /health`, `GET /ready` |
 | Auth | `POST /api/v1/auth/login`, `otp/send`, `otp/verify`, `refresh`, `logout` |
 | Me | `GET/PATCH /api/v1/me`, `GET/PATCH /api/v1/me/preferences` |
-| Provider application | `POST/GET/PATCH /api/v1/provider/application`, `submit`, `documents` |
+| Provider application | `POST/GET/PATCH /api/v1/provider/application`, `submit`, private `documents`, access grants, and exact-object download redemption |
 | Public home | `GET /api/v1/public/home` |
 | Properties | `GET /api/v1/public/properties`, `/:slug`, `POST /compare` |
 | Developers | `GET /api/v1/public/developers`, `/:slug` |

@@ -1,0 +1,43 @@
+{
+  "taskId": "backend_035",
+  "summary": "Implemented strict CMS platform, contact, and social setting contracts and models with localized values, bounded optional social links, URL validation, secret-like field rejection, optimistic reasoned changes, append-only modification history shape, and published-only public eligibility.",
+  "filesChanged": [
+    "packages/contracts/src/cms/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/cms/models.ts",
+    "apps/api/src/modules/cms/settings.ts",
+    "apps/api/tests/cms/settings.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/cms-platform-contact-social.md",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md"
+  ],
+  "verification": [
+    {"command":"node --test --import tsx apps/api/tests/cms/settings.test.ts","exitCode":0,"result":"passed","notes":"3 CMS contract, secret rejection, publication, and history-shape tests passed."},
+    {"command":"npm.cmd run typecheck","exitCode":0,"result":"passed","notes":"Workspace syntax and TypeScript checks passed."},
+    {"command":"npm.cmd run lint","exitCode":0,"result":"passed","notes":"Workspace policy and ESLint passed with zero warnings."},
+    {"command":"npm.cmd test -- --runInBand","exitCode":0,"result":"passed","notes":"All 243 tests passed serially."},
+    {"command":"npm.cmd run test:coverage","exitCode":0,"result":"passed","notes":"243 tests passed; 87.50% lines, 81.70% branches, 87.16% functions."},
+    {"command":"npm.cmd run build","exitCode":0,"result":"passed","notes":"Contracts and API production builds passed."},
+    {"command":"npm.cmd audit --audit-level=high","exitCode":0,"result":"passed","notes":"Found 0 vulnerabilities."},
+    {"command":"npm.cmd run api:inventory","exitCode":0,"result":"passed","notes":"Existing runtime inventory remained valid; route ownership is deferred to later settings tasks."},
+    {"command":"npm.cmd run openapi:validate","exitCode":0,"result":"passed","notes":"OPENAPI_VALID."},
+    {"command":"npm.cmd run postman:validate","exitCode":0,"result":"passed","notes":"POSTMAN_VALID."},
+    {"command":"node -e \"JSON.parse(require('fs').readFileSync('apps/api/openapi/openapi.json'));JSON.parse(require('fs').readFileSync('apps/api/postman/Sadat-Real-Estate.postman_collection.json'));console.log('JSON_PARSE_OK')\"","exitCode":0,"result":"passed","notes":"API artifact JSON parsed successfully."},
+    {"command":"node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"passed","notes":"Agent Pack audit reported zero errors."}
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B2_master_data_localization/backend_035.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (ADM-50, ADM-51, ADM-52)",
+    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md",
+    "apps/api/src/modules/cms/settings.ts",
+    "apps/api/tests/cms/settings.test.ts",
+    "docs/api/cms-platform-contact-social.md"
+  ],
+  "knownGaps": [
+    "Admin settings HTTP routes are owned by later canonical tasks; this task intentionally implements the CMS data layer only.",
+    "Production CMS content and final social URLs are not seeded; safe draft/empty states remain supported.",
+    "Optional live MongoDB integration remains unavailable without isolated APP_ENV=test credentials and replica-set topology.",
+    "The executing Node.js 22.18.0 is below the checked-in Node >=24 <25 engine baseline, although all local gates passed."
+  ],
+  "completedAt": "2026-08-13T23:37:00.000Z"
+}

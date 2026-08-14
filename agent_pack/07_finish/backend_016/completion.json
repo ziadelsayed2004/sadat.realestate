@@ -1,0 +1,162 @@
+{
+  "taskId": "backend_016",
+  "summary": "Preserved the existing normalized-email/Argon2id Admin login and shared rotating-session model, and implemented a protected internal first-Super-Admin bootstrap. The bootstrap uses strict shared contracts, an explicit confirmation, an Argon2id credential, an immutable unique guard, and a MongoDB transaction that atomically creates the verified Admin identity, profile, credential, and bootstrap record. It refuses existing or concurrent bootstrap attempts, exposes no HTTP bootstrap route, and does not introduce credentials or production data.",
+  "filesChanged": [
+    "packages/contracts/src/admin/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/package.json",
+    "apps/api/src/modules/admin/models.ts",
+    "apps/api/src/modules/admin/repository.ts",
+    "apps/api/src/modules/admin/service.ts",
+    "apps/api/src/modules/admin/runtime.ts",
+    "apps/api/src/modules/admin/run-bootstrap.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/tests/admin/contracts.test.ts",
+    "apps/api/tests/admin/models.test.ts",
+    "apps/api/tests/admin/repository.test.ts",
+    "apps/api/tests/admin/service.test.ts",
+    "apps/api/tests/admin/run-bootstrap.test.ts",
+    "docs/api/admin-accounts.md",
+    "docs/api/authentication.md",
+    "agent_pack/01_product/PRD.md",
+    "agent_pack/01_product/BUSINESS_RULES.md",
+    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md",
+    "agent_pack/02_architecture/SECURITY_BASELINE.md",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
+    "agent_pack/07_finish/backend_016/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "node --version",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Executed with Node v22.18.0; the repository-declared Node 24 baseline remains a known environment gap."
+    },
+    {
+      "command": "npm.cmd --version",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "npm 11.6.4."
+    },
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Installed 199 packages from the lockfile; 205 packages audited with zero vulnerabilities. Node engine warning recorded separately."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Syntax check plus strict contracts and API TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy and ESLint completed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "108 unit tests passed, including 16 Admin bootstrap contract, model, transaction, concurrency, validation, and redaction tests."
+    },
+    {
+      "command": "npm.cmd run test:api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "30 API tests passed, including existing Admin login positive, invalid-credential, inactive-account, strict-payload, cookie, refresh, and replay behavior."
+    },
+    {
+      "command": "npm.cmd run test:integration",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "13 artifact, readiness, and integration tests passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 12 workspace-policy tests and all 151 API workspace tests passed."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "151 tests passed with 88.07% line, 82.91% branch, and 87.33% function coverage, above enforced thresholds."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts and API production TypeScript builds passed."
+    },
+    {
+      "command": "PowerShell: load apps/api/.env.example into the temporary process environment, run npm.cmd run env:check, then restore the prior process environment",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Validated the checked-in safe Local example without reading a real .env or printing secret values."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory reports 23 implemented HTTP routes; bootstrap remains internal and no planned Admin-management route was documented as active."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID; the existing Admin login remains synchronized and no bootstrap HTTP route was added."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID with no credential or bootstrap-secret variables."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Zero vulnerabilities."
+    },
+    {
+      "command": "$env:APP_ENV='test'; npm.cmd run test:integration:live",
+      "exitCode": 2,
+      "result": "blocked",
+      "notes": "Blocked — prerequisites unavailable: isolated TEST_MONGODB_URI is not configured, so replica-set topology and a live bootstrap transaction were not tested. No database operation was attempted."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported 188 tasks and zero errors while backend_016 was the sole in-progress task."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B1_identity_access/backend_016.md",
+    "agent_pack/01_product/OPEN_QUESTIONS.md Q-001 approved Admin email/password and shared-session contract",
+    "agent_pack/01_product/ROLES_PERMISSIONS_MATRIX.md Super Admin safeguards and API-enforced permissions boundary",
+    "apps/api/src/modules/auth/router.ts POST /api/v1/auth/login",
+    "apps/api/src/modules/auth/service.ts verified-Admin login and common rotating-session issuance",
+    "apps/api/src/modules/admin/repository.ts atomic one-time first-Super-Admin transaction",
+    "apps/api/src/modules/admin/run-bootstrap.ts internal redacted bootstrap command",
+    "apps/api/tests/admin/*.test.ts bootstrap validation, idempotency, conflict, and redaction evidence",
+    "apps/api/tests/auth/router.test.ts and apps/api/tests/auth/service.test.ts Admin login evidence"
+  ],
+  "knownGaps": [
+    "The local runtime is Node 22.18.0 while the repository and CI require Node 24; authoritative CI must rerun the gates on Node 24.",
+    "The isolated TEST_MONGODB_URI is absent, so live MongoDB replica-set transaction behavior is blocked and topology is unknown.",
+    "Dynamic roles/permissions are intentionally owned by backend_017, and complete administrator CRUD plus self-lockout and last-Super-Admin safeguards are intentionally owned by backend_121."
+  ],
+  "completedAt": "2026-08-13T17:25:40.6141441Z"
+}

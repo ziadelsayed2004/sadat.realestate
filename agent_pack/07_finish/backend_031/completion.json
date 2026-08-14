@@ -1,0 +1,136 @@
+{
+  "taskId": "backend_031",
+  "summary": "Implemented permission-gated, audited Admin CRUD for localized locations and neighborhoods with strict hierarchy and slug validation, optional coordinates, deterministic ordering, activation, bounded search/filter/sort/pagination, optimistic concurrency, query-driven MongoDB indexes, and deletion guards for child and Provider-application references; synchronized contracts, runtime inventory, OpenAPI, Postman, documentation, and tests.",
+  "filesChanged": [
+    "packages/contracts/src/locations/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/locations/models.ts",
+    "apps/api/src/modules/locations/repository.ts",
+    "apps/api/src/modules/locations/service.ts",
+    "apps/api/src/modules/locations/router.ts",
+    "apps/api/src/modules/locations/runtime.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/tests/locations/contracts.test.ts",
+    "apps/api/tests/locations/models.test.ts",
+    "apps/api/tests/locations/service.test.ts",
+    "apps/api/tests/locations/router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/locations.md",
+    "docs/api/contracts.md",
+    "docs/api/api-artifacts.md",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/step_info.json",
+    "agent_pack/07_finish/backend_031/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "node --import tsx --test apps/api/tests/locations/*.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 13 focused contract, model, service, authorization, hierarchy, validation, ordering, activation, replay/concurrency, reference-guard, and HTTP tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository syntax plus strict contracts and API TypeScript checks passed after the final implementation."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy and zero-warning ESLint gate passed."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy tests passed and the complete API TAP matrix reported 228 tests passed, 0 failed."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 228 API tests passed under enforced coverage; overall line coverage was 87.49%, branch 82.28%, and function 87.31%."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace check plus contracts and API production TypeScript builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "npm reported zero vulnerabilities."
+    },
+    {
+      "command": "$env:APP_ENV='local'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_real_estate_local?replicaSet=rs0'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtZGV2ZWxvcG1lbnQtb25seS1rZXktMzItYnl0ZXM'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Environment validation passed with documented synthetic Local values; no real .env or secret was read."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory lists exactly the four implemented Admin location operations under /api/v1."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID with location requests, projections, permissions, errors, and all four runtime operations synchronized."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID with synthetic list/create/update/delete requests and no stored credentials."
+    },
+    {
+      "command": "node -e \"for (const f of ['agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json','apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json']) JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('CHANGED_JSON_OK')\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Every changed JSON, OpenAPI, and Postman artifact parsed successfully."
+    },
+    {
+      "command": "$env:APP_ENV='test'; Remove-Item Env:TEST_MONGODB_URI -ErrorAction SilentlyContinue; npm.cmd run test:integration:live",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Blocked — prerequisites unavailable: the guarded runner refused to execute because no isolated TEST_MONGODB_URI replica set is configured."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack integrity audit reported zero errors before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "packages/contracts/src/locations/index.ts defines strict localized DTOs, hierarchy, slug, coordinate, optimistic-version, mutation-reason, and bounded-list contracts.",
+    "apps/api/src/modules/locations/models.ts defines strict location/neighborhood persistence with unique slug, hierarchy/active/order, localized text-search, and sparse geospatial indexes.",
+    "apps/api/src/modules/locations/repository.ts commits mutations and redacted audit evidence transactionally and rejects deletion while child neighborhoods or Provider applications reference the record.",
+    "apps/api/src/modules/locations/service.ts enforces admin:locations.view/manage, hierarchy, duplicate, optimistic concurrency, action projection, and stable error policies.",
+    "apps/api/tests/locations and synchronized runtime/OpenAPI/Postman artifacts verify positive, unauthenticated, unauthorized-role, View Only, invalid payload, unknown field, unsafe query, hierarchy, duplicate, reference, replay, concurrency, filter, sort, pagination, ordering, and activation behavior.",
+    "ADM-10 identifies the live desktop Locations & Neighborhoods Admin surface for ar/en/zh-CN and RTL/LTR; this backend task implements its supporting API only.",
+    "Necessary integration files outside Allowed Roots were limited to packages/contracts/src/contracts/index.ts, apps/api/src/app.ts, apps/api/src/server.ts, apps/api/src/modules/docs/api-artifacts.ts, and apps/api/src/modules/testing/test-suites.ts for exports, runtime mounting, inventory, and test registration. The endpoint blueprint was updated to mark the three planned operations implemented and add the task-required guarded DELETE operation; no future task was implemented."
+  ],
+  "knownGaps": [
+    "Live MongoDB index creation, localized text/geospatial query behavior, reference checks, and transactional audit persistence require an isolated non-production replica set; TEST_MONGODB_URI is unavailable.",
+    "The local runtime is Node 22.18.0 while the repository and CI declare Node 24; all local verification passed, but the hosted Node 24 quality run remains a CI readiness check.",
+    "No production locations, neighborhoods, coordinates, or seed data were supplied or fabricated; the runtime safely supports empty state and deterministic test fixtures."
+  ],
+  "completedAt": "2026-08-13T22:31:51.967Z"
+}

@@ -277,6 +277,363 @@
         },
         "url": { "raw": "{{apiV1BaseUrl}}/me/preferences", "host": ["{{apiV1BaseUrl}}"], "path": ["me", "preferences"] }
       }
-    }
+    },
+    {
+      "name": "Provider - Create Application",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"providerType\": \"individual_broker\",\n  \"providerOtpGrant\": \"replace-with-isolated-provider-otp-grant\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{apiV1BaseUrl}}/provider/application", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application"] }
+      }
+    },
+    {
+      "name": "Provider - Get Application",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{apiV1BaseUrl}}/provider/application", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application"] }
+      }
+    },
+    {
+      "name": "Provider - Save Account Step",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"version\": 0,\n  \"accountOwnerFullName\": \"Synthetic Provider\",\n  \"displayName\": \"Synthetic Provider Profile\",\n  \"email\": \"provider@example.invalid\",\n  \"primaryLocationId\": \"synthetic-primary-location\",\n  \"serviceAreaIds\": [\"synthetic-service-area\"],\n  \"preferredLocale\": \"ar\",\n  \"termsAcceptedAt\": \"2026-08-13T00:00:00.000Z\",\n  \"privacyAcceptedAt\": \"2026-08-13T00:00:00.000Z\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{apiV1BaseUrl}}/provider/application/account", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application", "account"] }
+      }
+    },
+    {
+      "name": "Provider - Save Business Step",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"version\": 0,\n  \"legalBusinessName\": \"Synthetic Brokerage LLC\",\n  \"tradeName\": \"Synthetic Brokerage\",\n  \"businessAddress\": \"Synthetic business address\",\n  \"commercialRegistrationNumber\": \"SYNTHETIC-CR\",\n  \"taxRegistrationNumber\": \"SYNTHETIC-TAX\",\n  \"authorizedRepresentativeFullName\": \"Synthetic Representative\",\n  \"authorizedRepresentativeTitle\": \"Manager\",\n  \"accountOwnerHasRegisteredAuthority\": true\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{apiV1BaseUrl}}/provider/application/business", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application", "business"] }
+      }
+    },
+    {
+      "name": "Provider - Save Company Step",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"version\": 0,\n  \"legalCompanyName\": \"Synthetic Developer LLC\",\n  \"brandName\": \"Synthetic Developer\",\n  \"headOfficeAddress\": \"Synthetic head-office address\",\n  \"commercialRegistrationNumber\": \"SYNTHETIC-CR\",\n  \"taxRegistrationNumber\": \"SYNTHETIC-TAX\",\n  \"authorizedRepresentativeFullName\": \"Synthetic Representative\",\n  \"authorizedRepresentativeTitle\": \"Manager\",\n  \"accountOwnerHasRegisteredAuthority\": true\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{apiV1BaseUrl}}/provider/application/company", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application", "company"] }
+      }
+    },
+    {
+      "name": "Provider - Submit Application",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"version\": 0\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{apiV1BaseUrl}}/provider/application/submit", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application", "submit"] }
+      }
+    },
+    {
+      "name": "Provider - Application Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{apiV1BaseUrl}}/provider/application/status", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application", "status"] }
+      }
+    },
+    {
+      "name": "Provider - Upload Private Document",
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "pm.test('Private upload never exposes storage internals', function () {",
+            "  pm.expect([200, 201, 400, 401, 403, 409, 413, 429, 503]).to.include(pm.response.code);",
+            "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
+            "  pm.expect(JSON.stringify(pm.response.json())).to.not.include('storageKey');",
+            "});"
+          ]
+        }
+      }],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/pdf", "type": "text" },
+          { "key": "X-Document-Category", "value": "government_id_front", "type": "text" },
+          { "key": "X-File-Name", "value": "synthetic-identity.pdf", "type": "text" }
+        ],
+        "body": { "mode": "file", "file": { "src": "" } },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/application/documents",
+          "host": ["{{apiV1BaseUrl}}"],
+          "path": ["provider", "application", "documents"]
+        },
+        "description": "Select only an isolated synthetic PDF/JPEG/PNG fixture. The runtime requires a provider bearer session; no token or real document is stored in this collection."
+      }
+    },
+    {
+      "name": "Provider - Authorize Private Document Download",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"purpose\": \"provider_review\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/application/documents/:documentId/access",
+          "host": ["{{apiV1BaseUrl}}"],
+          "path": ["provider", "application", "documents", ":documentId", "access"],
+          "variable": [{ "key": "documentId", "value": "000000000000000000000000", "type": "string" }]
+        },
+        "description": "Requires fresh provider ownership authorization and returns a 300-second bearer URL. Do not persist or log the response URL."
+      }
+    },
+    {
+      "name": "Provider - Delete Private Document",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/application/documents/:documentId",
+          "host": ["{{apiV1BaseUrl}}"],
+          "path": ["provider", "application", "documents", ":documentId"],
+          "variable": [{ "key": "documentId", "value": "000000000000000000000000", "type": "string" }]
+        }
+      }
+    },
+    {
+      "name": "Private - Redeem Provider Document Download",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/private/provider-documents/:documentId?expires=0000000000&signature=replace-with-fresh-signed-value",
+          "host": ["{{apiV1BaseUrl}}"],
+          "path": ["private", "provider-documents", ":documentId"],
+          "query": [
+            { "key": "expires", "value": "0000000000" },
+            { "key": "signature", "value": "replace-with-fresh-signed-value" }
+          ],
+          "variable": [{ "key": "documentId", "value": "000000000000000000000000", "type": "string" }]
+        },
+        "description": "Use only the unpersisted URL returned by the access endpoint. The URL is GET-only, exact-object, and expires after 300 seconds."
+      }
+    },
+    {
+      "name": "Admin RBAC - List Roles",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/roles",
+          "host": ["{{apiV1BaseUrl}}"],
+          "path": ["admin", "roles"]
+        },
+        "description": "Requires a transient verified Admin bearer token with admin:roles.view. No token is stored in this collection."
+      }
+    },
+    {
+      "name": "Admin RBAC - Create View Only Role",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Synthetic View Only\",\n  \"description\": \"Synthetic read-only administrative role\",\n  \"accessMode\": \"view_only\",\n  \"permissions\": [\"admin:roles.view\", \"admin:providers.view\"],\n  \"reason\": \"Create a synthetic least-privilege role for isolated testing\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/roles",
+          "host": ["{{apiV1BaseUrl}}"],
+          "path": ["admin", "roles"]
+        },
+        "description": "Requires a transient verified Admin bearer token with admin:roles.manage and a reason. Persisted wildcard permissions are rejected; the mutation and its audit record commit atomically."
+      }
+    },
+    {
+      "name": "Admin RBAC - Update Role",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"version\": 0,\n  \"active\": false,\n  \"reason\": \"Deactivate a synthetic role for isolated testing\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/roles/:roleId",
+          "host": ["{{apiV1BaseUrl}}"],
+          "path": ["admin", "roles", ":roleId"],
+          "variable": [{ "key": "roleId", "value": "000000000000000000000000", "type": "string" }]
+        },
+        "description": "Requires a transient verified Admin bearer token with admin:roles.manage, the current optimistic version, and a reason. The mutation and its audit record commit atomically."
+      }
+    },
+    {
+      "name": "Admin Audit - List Logs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/audit-logs?page=1&limit=25",
+          "host": ["{{apiV1BaseUrl}}"],
+          "path": ["admin", "audit-logs"],
+          "query": [
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "25" }
+          ]
+        },
+        "description": "Requires a transient verified Admin bearer token with admin:audit.view. Results are paginated explicit redacted projections; no token or audit content is stored in this collection."
+      }
+    },
+    {
+      "name": "Admin Audit - Get Log",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/audit-logs/:auditId",
+          "host": ["{{apiV1BaseUrl}}"],
+          "path": ["admin", "audit-logs", ":auditId"],
+          "variable": [{ "key": "auditId", "value": "000000000000000000000000", "type": "string" }]
+        },
+        "description": "Requires a transient verified Admin bearer token with admin:audit.view. Replace the synthetic ID only in an isolated non-production environment."
+      }
+    },
+    {
+      "name": "Admin Accounts - Restrict User",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"action\": \"restrict\",\n  \"reason\": \"Synthetic policy restriction for isolated testing\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/users/:userId/transitions",
+          "host": ["{{apiV1BaseUrl}}"],
+          "path": ["admin", "users", ":userId", "transitions"],
+          "variable": [{ "key": "userId", "value": "000000000000000000000000", "type": "string" }]
+        },
+        "description": "Requires a transient verified Admin bearer token with admin:users.manage. Use only an isolated synthetic non-Admin account. The reason is mandatory; no bearer token is stored in this collection."
+      }
+    },
+    {
+      "name": "Admin Accounts - Review Provider",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"action\": \"verify\",\n  \"reason\": \"Manual platform review completed with synthetic fixtures\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/providers/:providerId/review",
+          "host": ["{{apiV1BaseUrl}}"],
+          "path": ["admin", "providers", ":providerId", "review"],
+          "variable": [{ "key": "providerId", "value": "000000000000000000000000", "type": "string" }]
+        },
+        "description": "Requires a transient verified Admin bearer token with admin:providers.review. providerId is the Provider application ID. Verification means manual platform approval only and makes no government or legal verification claim."
+      }
+    },
+    {
+      "name": "Admin Locations - List",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/locations?active=true&page=1&limit=20",
+          "host": ["{{apiV1BaseUrl}}"],
+          "path": ["admin", "locations"],
+          "query": [
+            { "key": "active", "value": "true" },
+            { "key": "page", "value": "1" },
+            { "key": "limit", "value": "20" }
+          ]
+        },
+        "description": "Requires a transient verified Admin bearer token with admin:locations.view. Filters, sorting, and pagination are bounded and allowlisted."
+      }
+    },
+    {
+      "name": "Admin Locations - Create",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"kind\": \"location\",\n  \"name\": {\n    \"ar\": \"Synthetic location\",\n    \"en\": \"Synthetic location\"\n  },\n  \"slug\": \"synthetic-location\",\n  \"order\": 0,\n  \"active\": true,\n  \"reason\": \"Create synthetic location in isolated testing\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": { "raw": "{{apiV1BaseUrl}}/admin/locations", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "locations"] },
+        "description": "Requires a transient verified Admin bearer token with admin:locations.manage. Uses synthetic values only; localized content, stable slug, and reason are required."
+      }
+    },
+    {
+      "name": "Admin Locations - Update",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"version\": 0,\n  \"order\": 1,\n  \"active\": false,\n  \"reason\": \"Reorder synthetic location in isolated testing\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/locations/:locationId",
+          "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "locations", ":locationId"],
+          "variable": [{ "key": "locationId", "value": "000000000000000000000000", "type": "string" }]
+        },
+        "description": "Requires admin:locations.manage, a transient bearer token, current optimistic version, and reason. Replace the ID only in isolated non-production data."
+      }
+    },
+    {
+      "name": "Admin Locations - Delete Unreferenced",
+      "request": {
+        "method": "DELETE",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"version\": 0,\n  \"reason\": \"Delete unused synthetic location in isolated testing\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/locations/:locationId",
+          "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "locations", ":locationId"],
+          "variable": [{ "key": "locationId", "value": "000000000000000000000000", "type": "string" }]
+        },
+        "description": "Requires admin:locations.manage. Deletion fails closed for child-neighborhood or Provider references and is intended only for isolated synthetic data."
+      }
+    },
+    {"name":"Admin Taxonomy - List","request":{"method":"GET","header":[],"url":{"raw":"{{apiV1BaseUrl}}/admin/property-categories","host":["{{apiV1BaseUrl}}"],"path":["admin","property-categories"]},"description":"Requires admin:taxonomy.view and a transient bearer token."}},
+    {"name":"Admin Taxonomy - Create","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\n  \"kind\": \"category\",\n  \"name\": { \"en\": \"Synthetic category\" },\n  \"slug\": \"synthetic-category\",\n  \"reason\": \"Create synthetic category for isolated testing\"\n}"},"url":{"raw":"{{apiV1BaseUrl}}/admin/property-categories","host":["{{apiV1BaseUrl}}"],"path":["admin","property-categories"]},"description":"Requires admin:taxonomy.manage; synthetic data only."}},
+    {"name":"Admin Taxonomy - Update","request":{"method":"PATCH","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\n  \"version\": 0,\n  \"active\": false,\n  \"reason\": \"Deactivate synthetic taxonomy\"\n}"},"url":{"raw":"{{apiV1BaseUrl}}/admin/property-categories/:categoryId","host":["{{apiV1BaseUrl}}"],"path":["admin","property-categories",":categoryId"],"variable":[{"key":"categoryId","value":"000000000000000000000000"}]},"description":"Requires admin:taxonomy.manage and current version."}},
+    {"name":"Admin Taxonomy - Delete","request":{"method":"DELETE","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\n  \"version\": 0,\n  \"reason\": \"Delete unused synthetic taxonomy\"\n}"},"url":{"raw":"{{apiV1BaseUrl}}/admin/property-categories/:categoryId","host":["{{apiV1BaseUrl}}"],"path":["admin","property-categories",":categoryId"],"variable":[{"key":"categoryId","value":"000000000000000000000000"}]},"description":"Fails closed while referenced; isolated synthetic data only."}},
+    {"name":"Admin Features - List","request":{"method":"GET","url":{"raw":"{{apiV1BaseUrl}}/admin/features","host":["{{apiV1BaseUrl}}"],"path":["admin","features"]}}},
+    {"name":"Admin Features - Create","request":{"method":"POST","body":{"mode":"raw","raw":"{\"kind\":\"feature\",\"groupKey\":\"interior\",\"name\":{\"en\":\"Synthetic\"},\"slug\":\"synthetic-feature\",\"reason\":\"Create synthetic feature\"}"},"url":{"raw":"{{apiV1BaseUrl}}/admin/features","host":["{{apiV1BaseUrl}}"],"path":["admin","features"]}}},
+    {"name":"Admin Features - Update","request":{"method":"PATCH","body":{"mode":"raw","raw":"{\"version\":0,\"active\":false,\"reason\":\"Deactivate synthetic feature\"}"},"url":{"raw":"{{apiV1BaseUrl}}/admin/features/:featureId","host":["{{apiV1BaseUrl}}"],"path":["admin","features",":featureId"]}}},
+    {"name":"Admin Features - Delete","request":{"method":"DELETE","body":{"mode":"raw","raw":"{\"version\":0,\"reason\":\"Delete unused synthetic feature\"}"},"url":{"raw":"{{apiV1BaseUrl}}/admin/features/:featureId","host":["{{apiV1BaseUrl}}"],"path":["admin","features",":featureId"]}}}
   ]
 }

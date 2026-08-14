@@ -62,3 +62,24 @@ test('readiness includes the OTP adapter and fails closed when a required provid
 test('application requires an explicit database readiness boundary', () => {
   assert.throws(() => createApp({ database: undefined as never }));
 });
+
+test('readiness exposes private-document capability and fails closed when adapters are unavailable', async () => {
+  const server = createApiServer({
+    database: { isReady: async () => true },
+    uploads: {
+      service: {} as never,
+      accessTokens: {} as never,
+      readiness: { isReady: () => false }
+    }
+  });
+  const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
+  try {
+    const response = await fetch(`http://127.0.0.1:${address.port}/ready`);
+    assert.equal(response.status, 503);
+    assert.deepEqual(await response.json(), {
+      status: 'not_ready', checks: { mongodb: 'ready', privateDocuments: 'not_ready' }
+    });
+  } finally {
+    await stopApiServer(server);
+  }
+});

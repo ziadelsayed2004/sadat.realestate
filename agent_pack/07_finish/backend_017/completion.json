@@ -1,0 +1,178 @@
+{
+  "taskId": "backend_017",
+  "summary": "Implemented an API-enforced dynamic administrative RBAC engine. It uses a closed stable capability catalog, strict custom and View Only roles, bootstrap-guard-only full access, active-role permission unions, current Admin account-state checks, optimistic role mutation, bounded versioned administrator assignments, explicit response projections, and server-derived availableActions. Activated only the three role routes already present in the endpoint blueprint; administrator CRUD and assignment-route integration remain owned by backend_121.",
+  "filesChanged": [
+    "packages/contracts/src/rbac/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/rbac/auth.ts",
+    "apps/api/src/modules/rbac/models.ts",
+    "apps/api/src/modules/rbac/repository.ts",
+    "apps/api/src/modules/rbac/service.ts",
+    "apps/api/src/modules/rbac/router.ts",
+    "apps/api/src/modules/rbac/runtime.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/tests/rbac/contracts.test.ts",
+    "apps/api/tests/rbac/models.test.ts",
+    "apps/api/tests/rbac/repository.test.ts",
+    "apps/api/tests/rbac/service.test.ts",
+    "apps/api/tests/rbac/router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/rbac.md",
+    "docs/api/admin-accounts.md",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
+    "agent_pack/07_finish/backend_017/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "node -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Executed with Node v22.18.0; the repository-declared Node 24 baseline remains a known environment gap."
+    },
+    {
+      "command": "npm.cmd -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "npm 11.6.4."
+    },
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Installed 199 packages from the lockfile and audited 205 packages with zero vulnerabilities; the expected Node engine warning is recorded separately."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/api tsx -- --test tests/rbac/contracts.test.ts tests/rbac/models.test.ts tests/rbac/repository.test.ts tests/rbac/service.test.ts tests/rbac/router.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 20 selected RBAC contract, model, repository, service, and HTTP tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Syntax check plus strict contracts and API TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy and ESLint completed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:unit",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 124 unit tests passed, including RBAC validation, persistence invariants, authorization, View Only, assignment, duplicate, and optimistic-concurrency cases."
+    },
+    {
+      "command": "npm.cmd run test:integration",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 13 integration and API-artifact tests passed."
+    },
+    {
+      "command": "npm.cmd run test:api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 34 API tests passed, including RBAC unauthenticated, wrong-role, suspended-account, unassigned-Admin, strict-input, positive, and stale-version behavior."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 12 workspace-policy tests and all 171 API workspace tests passed."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 171 tests passed with 88.09% line, 82.67% branch, and 87.26% function coverage, above enforced thresholds."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts and API production TypeScript builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Zero vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Validated an explicitly supplied synthetic Test environment without reading a real .env or recording its access-token test value."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory reports 26 implemented HTTP routes, including exactly the three selected RBAC role routes under /api/v1."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID with strict RBAC schemas, permissions, errors, and route parity."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID with all 26 runtime routes and no stored bearer-token or credential variables."
+    },
+    {
+      "command": "node JSON.parse check for API_ENDPOINT_BLUEPRINT.json, openapi.json, and Sadat-Real-Estate.postman_collection.json",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All changed JSON delivery artifacts parsed successfully."
+    },
+    {
+      "command": "$env:APP_ENV='test'; npm.cmd run test:integration:live",
+      "exitCode": 2,
+      "result": "blocked",
+      "notes": "Blocked - prerequisites unavailable: isolated TEST_MONGODB_URI is not configured, so live server indexes and topology were not tested. No database operation was attempted."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Pre-close Agent Pack audit reported 188 tasks, backend_017 as the sole in-progress task, and zero errors."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B1_identity_access/backend_017.md",
+    "agent_pack/01_product/ROLES_PERMISSIONS_MATRIX.md module.action, View Only, API enforcement, permissions, and availableActions rules",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json implemented GET/POST/PATCH /api/v1/admin/roles routes",
+    "apps/api/src/modules/rbac/service.ts bootstrap-only full catalog, active-role resolution, role mutation, and administrator assignment policy",
+    "apps/api/src/modules/rbac/models.ts unique normalized roles and bounded unique administrator assignments",
+    "apps/api/tests/rbac/*.test.ts positive, negative, authorization, validation, state, replay/concurrency, and regression evidence",
+    "npm.cmd run api:inventory output showing 26 runtime routes",
+    "docs/api/rbac.md selected runtime and backend_121 boundary"
+  ],
+  "knownGaps": [
+    "The local runtime is Node 22.18.0 while the repository and CI require Node 24; authoritative CI must rerun the gates on Node 24.",
+    "The isolated TEST_MONGODB_URI is absent, so live MongoDB indexes and topology remain blocked and unknown.",
+    "Administrator CRUD and the HTTP integration for the implemented role-assignment service remain intentionally owned by backend_121.",
+    "Object-level ownership, assignment scope, and reusable availableActions policy integration remain intentionally owned by dependency-next backend_018.",
+    "Essential integration edits outside the atomic glob were limited to packages/contracts/src/contracts/index.ts, apps/api/src/app.ts, apps/api/src/server.ts, apps/api/src/modules/docs/api-artifacts.ts, and apps/api/src/modules/testing/test-suites.ts so the selected contracts, routes, inventory, and tests are actually reachable."
+  ],
+  "completedAt": "2026-08-13T18:41:24.2112401Z"
+}

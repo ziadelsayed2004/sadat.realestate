@@ -1,0 +1,116 @@
+{
+  "taskId": "backend_030",
+  "summary": "Implemented shared multilingual content primitives for the approved ar, en, and zh-CN locales, strict partial LocalizedText validation, explicit RTL/LTR metadata, deterministic truthful fallback resolution, and a distinct stable UI translation-key contract, with focused tests and documentation and no new HTTP route.",
+  "filesChanged": [
+    "packages/contracts/src/localization/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/localization/content.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/tests/localization/content.test.ts",
+    "docs/api/localization.md",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/step_info.json",
+    "agent_pack/07_finish/backend_030/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Installed the locked workspace dependency graph; npm reported zero vulnerabilities and warned that local Node 22 differs from the declared Node 24 baseline."
+    },
+    {
+      "command": "npm.cmd run build --workspace packages/contracts && node --import tsx --test apps/api/tests/localization/content.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 6 focused locale, direction, strict-validation, fallback, and UI-key separation tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository syntax check plus strict contracts and API TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy and zero-warning ESLint gate passed."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy tests passed and the complete API TAP matrix reported 215 tests passed, 0 failed."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 215 API tests passed under coverage; overall line coverage was 88.16%, branch 82.45%, and function 87.33%, with localization content at 97.83% line coverage."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace check plus contracts and API production TypeScript builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "npm reported zero vulnerabilities."
+    },
+    {
+      "command": "$env:APP_ENV='local'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_real_estate_local?replicaSet=rs0'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtZGV2ZWxvcG1lbnQtb25seS1rZXktMzItYnl0ZXM'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Environment validation passed with documented synthetic Local values; no real .env or secret was read."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory remained synchronized; this route-neutral task added no HTTP operation."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID; no route or DTO artifact change was required."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID; no route collection change was required."
+    },
+    {
+      "command": "node -e \"for (const f of ['apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json']) JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('JSON_PARSE_OK')\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Both affected API artifact formats parsed successfully."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack integrity audit reported zero errors before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "packages/contracts/src/localization/index.ts defines the closed locale/direction catalogs, strict LocalizedText schema, default fallback, and separate UI translation-key schema.",
+    "apps/api/src/modules/localization/content.ts resolves requested content with deterministic fallback and returns the actual locale and direction without fabricating content.",
+    "apps/api/tests/localization/content.test.ts covers all locales, RTL/LTR, strict unknown-field rejection, empty/control-character validation, custom/default fallback, and CMS/UI-key separation.",
+    "docs/api/localization.md documents partial draft content, deterministic fallback order, truthful absent states, and the boundary between CMS values and UI keys.",
+    "Necessary integration files outside the atomic Allowed Roots were limited to packages/contracts/src/contracts/index.ts for public contract exports and apps/api/src/modules/testing/test-suites.ts for focused-test registration. Neither change implements a future task."
+  ],
+  "knownGaps": [
+    "The local runtime is Node 22.18.0 while the repository and CI declare Node 24; all local verification passed, but the hosted Node 24 quality run remains a CI readiness check.",
+    "This primitive intentionally does not backfill or fabricate production CMS translations; owning aggregates may remain Draft, absent, empty, or unavailable until approved content exists."
+  ],
+  "completedAt": "2026-08-13T22:17:02.311Z"
+}

@@ -1,9 +1,15 @@
 # OpenAPI and Postman foundation
 
-The executable API documentation contains implemented routes only. The current runtime surface is:
+The executable API documentation contains implemented routes only. The runtime surface includes:
 
 - `GET /health` for process liveness.
 - `GET /ready` for dependency readiness.
+- shared authentication, seeker self-service, and provider-onboarding routes under `/api/v1`;
+- private provider-document upload, access-grant, deletion, and exact-object signed-download redemption routes.
+- reason-bearing Admin account-transition and atomic Provider-review routes.
+- reason-bearing RBAC mutations and permission-gated Admin audit-log list/detail routes.
+- permission-gated Admin location and neighborhood list/create/update/delete routes with optimistic versions and guarded deletion.
+- permission-gated Admin property-category/type list/create/update/delete routes with hierarchy, optimistic versions, and guarded deletion.
 
 These operational probes intentionally stay at the process root and keep their unwrapped bodies. Product endpoints added by dependency-ready tasks use `/api/v1` exactly once and use the shared success and error envelopes.
 
@@ -15,7 +21,7 @@ When a product route becomes executable, add its complete path beginning with `/
 
 ## Postman
 
-The collection contains only the two operational requests. It defines:
+The collection contains the operational and currently implemented product requests. It defines:
 
 - `baseUrl`, with a safe loopback default for root operational probes.
 - `apiV1BaseUrl`, defined as `{{baseUrl}}/api/v1` for future implemented product requests.

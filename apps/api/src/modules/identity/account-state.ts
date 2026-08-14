@@ -15,8 +15,8 @@ export type AccountState = (typeof ACCOUNT_STATES)[number];
 
 export const PROVIDER_TYPES = [
   'individual_broker',
-  'office',
-  'development_company'
+  'brokerage_office',
+  'developer_company'
 ] as const;
 export type ProviderType = (typeof PROVIDER_TYPES)[number];
 

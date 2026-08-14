@@ -1,0 +1,50 @@
+{
+  "taskId": "backend_033",
+  "summary": "Implemented authenticated multilingual feature and service administration with stable groups and slugs, deterministic ordering and filters, activation, optimistic concurrency, audit evidence, and deletion guards for property/project references. Runtime routes, contracts, tests, inventory, OpenAPI, Postman, and documentation were synchronized.",
+  "filesChanged": [
+    "packages/contracts/src/taxonomy/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/taxonomy/features.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/tests/taxonomy/features.test.ts",
+    "apps/api/tests/taxonomy/features-router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/features-services.md",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md"
+  ],
+  "verification": [
+    {"command":"node --test --import tsx apps/api/tests/taxonomy/features.test.ts apps/api/tests/taxonomy/features-router.test.ts","exitCode":0,"result":"passed","notes":"3 focused contract and HTTP tests passed."},
+    {"command":"npm.cmd run typecheck","exitCode":0,"result":"passed","notes":"Workspace syntax and TypeScript checks passed."},
+    {"command":"npm.cmd run lint","exitCode":0,"result":"passed","notes":"Workspace policy and ESLint passed with zero warnings."},
+    {"command":"npm.cmd test -- --runInBand","exitCode":0,"result":"passed","notes":"All 236 tests passed serially."},
+    {"command":"npm.cmd run test:coverage","exitCode":0,"result":"passed","notes":"236 tests passed; 87.48% lines, 81.73% branches, 87.25% functions."},
+    {"command":"npm.cmd run build","exitCode":0,"result":"passed","notes":"Contracts and API production builds passed."},
+    {"command":"npm.cmd audit --audit-level=high","exitCode":0,"result":"passed","notes":"Found 0 vulnerabilities."},
+    {"command":"npm.cmd run api:inventory","exitCode":0,"result":"passed","notes":"Inventory includes all four feature/service routes."},
+    {"command":"npm.cmd run openapi:validate","exitCode":0,"result":"passed","notes":"OPENAPI_VALID."},
+    {"command":"npm.cmd run postman:validate","exitCode":0,"result":"passed","notes":"POSTMAN_VALID."},
+    {"command":"$env:APP_ENV='local'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_local'; $env:AUTH_ACCESS_TOKEN_SECRET='<deterministic-test-secret>'; npm.cmd run env:check","exitCode":0,"result":"passed","notes":"Synthetic local configuration passed; no real environment file was read."},
+    {"command":"npm.cmd run test:integration:live","exitCode":2,"result":"blocked","notes":"Blocked — prerequisites unavailable: APP_ENV=test and TEST_MONGODB_URI for an isolated live database were not supplied."},
+    {"command":"node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"passed","notes":"Agent Pack audit reported zero errors before completion."}
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B2_master_data_localization/backend_033.md",
+    "agent_pack/06_screen_contracts/ADM-11.md",
+    "apps/api/src/modules/taxonomy/features.ts",
+    "apps/api/tests/taxonomy/features-router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "docs/api/features-services.md"
+  ],
+  "knownGaps": [
+    "Optional live MongoDB integration was not run because isolated test credentials/topology were unavailable.",
+    "Production feature/service seed content remains a content-readiness concern; runtime safely supports an empty collection.",
+    "The repository has no security:check script; security behavior is covered by lint, dependency audit, strict-schema tests, authentication, authorization, and HTTP negative tests.",
+    "The executing Node.js 22.18.0 is below the checked-in Node >=24 <25 engine baseline, although all mandatory local gates passed."
+  ],
+  "completedAt": "2026-08-13T23:06:48.3259372Z"
+}

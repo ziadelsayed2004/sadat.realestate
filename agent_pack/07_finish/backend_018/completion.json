@@ -1,0 +1,167 @@
+{
+  "taskId": "backend_018",
+  "summary": "Implemented a reusable fail-closed object authorization policy and shared stable contracts for owner, assigned, review-scope, and explicit permission-backed global relations. The evaluator combines actor role, Admin capability where applicable, persisted resource state, and server-established object relations; the same policy derives ordered de-duplicated availableActions. Existing Admin role projections now use the policy without adding or changing any HTTP route.",
+  "filesChanged": [
+    "packages/contracts/src/rbac/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/rbac/policy.ts",
+    "apps/api/src/modules/rbac/service.ts",
+    "apps/api/tests/rbac/contracts.test.ts",
+    "apps/api/tests/rbac/service.test.ts",
+    "docs/api/rbac.md",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/07_finish/backend_018/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "node -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Node v22.18.0 executed the checks; the repository-declared Node 24 baseline remains a known environment gap."
+    },
+    {
+      "command": "npm.cmd -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "npm 11.6.4."
+    },
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Installed 199 lockfile packages and audited 205 packages with zero vulnerabilities; npm emitted the expected Node engine warning."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/api -- tsx --test tests/rbac/contracts.test.ts tests/rbac/service.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 15 targeted RBAC contract and service tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository syntax check and strict Contracts/API TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy and ESLint completed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 12 workspace-policy tests and all 175 API workspace tests passed."
+    },
+    {
+      "command": "npm.cmd run test:unit",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 128 unit tests passed, including role, permission, owner, assignment, review-scope, global-scope, state, and fail-closed cases."
+    },
+    {
+      "command": "npm.cmd run test:integration",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 13 integration and API-artifact drift tests passed."
+    },
+    {
+      "command": "npm.cmd run test:api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 34 API tests passed, including unauthenticated, wrong-role, unassigned-Admin, strict-input, IDOR, and no-store behavior."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 175 tests passed with 88.31% line, 82.70% branch, and 87.54% function coverage; the new policy has 100% line and function coverage."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts and API production TypeScript builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Zero vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Validated explicitly supplied synthetic Test configuration without reading a real .env or recording credential material."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory reports 26 implemented routes; backend_018 introduced no route or /api/v1 drift."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID; the unchanged HTTP DTO/route surface remains synchronized."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID; the unchanged route surface remains synchronized."
+    },
+    {
+      "command": "npm.cmd run test:integration:live",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Blocked - prerequisites unavailable: the live harness required APP_ENV=test and isolated live database configuration. The inner workspace lifecycle exited 2, no database operation ran, and this deterministic policy task does not require live MongoDB."
+    },
+    {
+      "command": "node JSON.parse check for 12 changed or canonical Agent Pack, OpenAPI, Postman, and completion JSON files",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "JSON_PARSE_OK 12."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Pre-close audit reported backend_018 as the sole in-progress task and zero errors."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "npm.cmd run quality",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The full composite lint, typecheck, workspace test, coverage, build, inventory, OpenAPI, Postman, dependency-audit, and Agent Pack audit gate passed."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B1_identity_access/backend_018.md",
+    "agent_pack/01_product/ROLES_PERMISSIONS_MATRIX.md API enforcement, object-authorization, View Only, and availableActions rules",
+    "agent_pack/02_architecture/SECURITY_BASELINE.md authentication -> RBAC -> ownership/scope enforcement order",
+    "apps/api/src/modules/rbac/policy.ts shared fail-closed enforcement and availableActions evaluator",
+    "apps/api/src/modules/rbac/service.ts Admin role availableActions integration",
+    "apps/api/tests/rbac/service.test.ts owner, state, permission, assignment, review-scope, global, and denial evidence",
+    "npm.cmd run api:inventory output showing the unchanged 26-route runtime surface",
+    "docs/api/rbac.md trusted relation inputs and domain integration boundary"
+  ],
+  "knownGaps": [
+    "The local runtime is Node 22.18.0 while the repository and CI require Node 24; authoritative CI must rerun the gates on Node 24.",
+    "Isolated live MongoDB configuration and topology remain absent; the optional live integration check was blocked before any database operation.",
+    "Downstream domain tasks must define their own stable actions/states, trusted assignment or review-scope resolvers, repository query scopes, explicit projections, and IDOR-safe error mapping when integrating the shared policy.",
+    "Existing Provider and private-document owner enforcement was preserved rather than refactored because those modules are outside backend_018 allowed roots.",
+    "The only essential implementation edit outside the atomic glob is packages/contracts/src/contracts/index.ts, required to expose the selected shared RBAC contracts through the package's sole public export."
+  ],
+  "completedAt": "2026-08-13T18:59:47.189Z"
+}

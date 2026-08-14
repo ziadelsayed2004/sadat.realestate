@@ -82,7 +82,7 @@ test('validates seeker, provider, and admin profiles with unique user ownership'
   const userId = new mongoose.Types.ObjectId();
   await new SeekerProfile({ userId }).validate();
   await new AdminProfile({ userId }).validate();
-  const provider = new ProviderProfile({ userId, providerType: 'development_company' });
+  const provider = new ProviderProfile({ userId, providerType: 'developer_company' });
   await provider.validate();
   assert.equal(provider.status, 'draft');
   await assert.rejects(

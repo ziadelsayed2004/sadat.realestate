@@ -1,0 +1,81 @@
+{
+  "taskId": "backend_037",
+  "summary": "Implemented CMS population counter and real-estate tips contracts, persistence models, safe public projections, and tests. Population values require explicit source metadata and only available records are publicly projected; tips require published and active status.",
+  "filesChanged": [
+    "packages/contracts/src/cms/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/cms/population-tips.ts",
+    "apps/api/src/modules/cms/population-models.ts",
+    "apps/api/tests/cms/population-tips.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/cms-population-tips.md",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts; node --test --import tsx apps/api/tests/cms/population-tips.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused population and tips suite passed all 3 tests."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full API suite passed all 249 tests."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Coverage: 87.53% lines, 81.76% branches, 87.17% functions."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace, contracts, and API builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API inventory generated successfully."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI artifact valid."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman artifact valid."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B2_master_data_localization/backend_037.md",
+    "packages/contracts/src/cms/index.ts",
+    "apps/api/src/modules/cms/population-tips.ts",
+    "apps/api/tests/cms/population-tips.test.ts"
+  ],
+  "knownGaps": [
+    "Production population data and editorial tip content are not supplied; the runtime safely represents unavailable or empty states.",
+    "Live MongoDB integration remains environment-dependent and was not run without isolated replica-set prerequisites."
+  ],
+  "completedAt": "2026-08-13T23:54:06.9681677Z"
+}

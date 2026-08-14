@@ -8,9 +8,10 @@
 | seeker_profiles | Seeker data and preferences | Unique userId |
 | provider_profiles / applications | Provider type and onboarding | Unique userId, status + updatedAt |
 | provider_documents | Private-document metadata | providerId + type, status |
-| admin_profiles / roles | Administration and RBAC | Unique userId/name |
+| admin_profiles / roles / admin_role_assignments / admin_bootstrap | Administration, one-time first-Super-Admin bootstrap guard, and RBAC | Unique profile userId, bootstrap key/user, normalized role name, and assignment Admin user |
 | admin_credentials | Admin-only Argon2id credential hashes | Unique userId |
-| audit_logs | Append-only audit | actorId + createdAt, targetType + targetId + createdAt |
+| audit_logs | Append-only, reason-bearing, redacted sensitive-action audit | actorId + createdAt, targetType + targetId + createdAt, action + createdAt, traceId + createdAt, createdAt |
+| account_state_transitions | Immutable reason-bearing account and Provider-review transition evidence | targetUserId + createdAt, providerApplicationId + createdAt, actorAdminId + createdAt |
 | organizations | Developer, company, or office | Unique slug, status + name search |
 | locations / neighborhoods | Geographic hierarchy | Unique slug, parent/order/active |
 | property_categories / types | Taxonomy | Unique slug, active + order |

@@ -1,0 +1,181 @@
+{
+  "taskId": "backend_014",
+  "summary": "Implemented the Q-002 Provider onboarding contract: OTP-grant registration, the exact three provider types, owner-scoped multi-step drafts, optimistic concurrency, versioned document requirements, immutable submission snapshots, manual-review states, strict DTO projections, and synchronized runtime/OpenAPI/Postman inventory without implementing document upload or delivery.",
+  "filesChanged": [
+    "packages/contracts/src/provider/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/provider/auth.ts",
+    "apps/api/src/modules/provider/models.ts",
+    "apps/api/src/modules/provider/repository.ts",
+    "apps/api/src/modules/provider/requirements.ts",
+    "apps/api/src/modules/provider/router.ts",
+    "apps/api/src/modules/provider/runtime.ts",
+    "apps/api/src/modules/provider/service.ts",
+    "apps/api/tests/provider/contracts.test.ts",
+    "apps/api/tests/provider/models.test.ts",
+    "apps/api/tests/provider/requirements.test.ts",
+    "apps/api/tests/provider/router.test.ts",
+    "apps/api/tests/provider/service.test.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/identity/account-state.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/tests/identity/models.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/authentication.md",
+    "docs/api/provider-onboarding.md",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "agent_pack/01_product/PROJECT_ANALYSIS.md",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
+    "agent_pack/step_info.json",
+    "agent_pack/07_finish/backend_014/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "node -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported v22.18.0; this is below the declared Node 24 baseline and is retained as a known environment gap."
+    },
+    {
+      "command": "npm.cmd -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported npm 11.6.4."
+    },
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Installed 199 packages from the checked-in lockfile and reported zero vulnerabilities; npm emitted the expected Node-engine warning because the local runtime is Node 22."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository syntax, contracts, and API/test TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy and ESLint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The exact atomic-task command passed: 12 workspace-policy tests and 115 categorized API tests, including Provider positive, validation, authentication, authorization, ownership, optimistic-concurrency, and state-transition coverage."
+    },
+    {
+      "command": "npm.cmd run test:integration --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "12/12 in-process integration and artifact-drift tests passed, including health/readiness regressions."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "25/25 in-process API tests passed; Provider routes covered success, strict validation, unauthenticated requests, unauthorized roles, and subject-owned access."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "115 API tests passed under coverage; aggregate coverage was 89.34% lines, 83.43% branches, and 87.97% functions."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts and API production TypeScript builds passed."
+    },
+    {
+      "command": "$env:APP_ENV='local'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_real_estate_local?replicaSet=rs0'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtZGV2ZWxvcG1lbnQtb25seS1rZXktMzItYnl0ZXM'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Checked-in synthetic Local example values passed validation; no real .env was read and no connection was attempted. The initial bare env:check exited 1 as expected because APP_ENV, API_HOST, and API_PORT were absent."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Executable inventory reported exactly 19 active routes, including seven Provider application routes and no document upload/delete route."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI 3.1 parsed and matched the active runtime route inventory."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman parsed and matched the active runtime route inventory using synthetic placeholders only."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reported zero vulnerabilities."
+    },
+    {
+      "command": "node -e \"for (const file of process.argv.slice(1)) JSON.parse(require('node:fs').readFileSync(file, 'utf8')); console.log('CHANGED_JSON_VALID')\" agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json agent_pack/03_execution/COUNT_SUMMARY.json agent_pack/03_execution/TASK_STATE.json agent_pack/step_info.json apps/api/openapi/openapi.json apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The endpoint blueprint, generated task-state JSON, step selector JSON, OpenAPI, and Postman files all parsed successfully."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors were found."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Pre-closure integrity audit reported 188 tasks, 161 endpoint-blueprint entries, 29 JSON files including completion evidence, only backend_014 in progress, and zero errors."
+    },
+    {
+      "command": "Root script availability check for test:e2e, test:e2e:api, test:e2e:api:full, test:visual, test:a11y, and security:check",
+      "exitCode": 0,
+      "result": "skipped",
+      "notes": "These optional scripts are not configured; none is reported as passed."
+    },
+    {
+      "command": "TEST_MONGODB_URI availability check",
+      "exitCode": 0,
+      "result": "blocked",
+      "notes": "Blocked — prerequisites unavailable: isolated MongoDB replica-set TEST_MONGODB_URI is not configured, so live transaction/index enforcement was not run or reported as passed."
+    }
+  ],
+  "sourceEvidence": [
+    "packages/contracts/src/provider/index.ts is the strict runtime contract for exact Provider types, draft steps, requirement snapshots, review states, and explicit response DTOs.",
+    "apps/api/src/modules/provider/router.ts defines the seven implemented routes; apps/api/src/modules/provider/auth.ts derives ownership from the signed Provider subject.",
+    "apps/api/src/modules/provider/repository.ts creates identity/profile/application records and submits them through transactions with optimistic version checks.",
+    "apps/api/src/modules/provider/requirements.ts keeps requirements in a version registry and evaluates the conditional authorization letter through a machine-readable predicate.",
+    "apps/api/tests/provider/ covers strict contracts, schemas/indexes, provider-type requirements, invalid transitions, replayed authority, role enforcement, ownership, incomplete submissions, and immutable snapshots.",
+    "apps/api/openapi/openapi.json, apps/api/postman/Sadat-Real-Estate.postman_collection.json, API_ENDPOINT_BLUEPRINT.json, and executable inventory are synchronized at 19 active routes."
+  ],
+  "knownGaps": [
+    "Blocked — prerequisites unavailable: TEST_MONGODB_URI is absent, so no isolated live MongoDB replica-set transaction, unique-index, or concurrent persistence test was executed.",
+    "Verification ran on Node v22.18.0 while the repository declares Node >=24 <25; the required Node 24 CI/runtime confirmation remains external.",
+    "Q-003 remains pending and backend_015 remains unexecuted: no document upload, delete, download, storage, MIME/size, retention, or authorized-delivery behavior is implemented or claimed.",
+    "Optional full E2E, visual, accessibility, and standalone security scripts are not configured for this backend task."
+  ],
+  "scopeNotes": [
+    "The Q-002 PRD, business-rule, open-question, decision-log, and generated task-state changes were already present in the dirty baseline and were preserved rather than attributed to this implementation.",
+    "Outside the atomic Allowed Roots, apps/api/src/app.ts and server.ts were necessary to mount/wire the selected module; docs/api-artifacts.ts and testing/test-suites.ts were necessary for executable contract and test discovery; identity/account-state.ts and its regression test removed stale provider enum values; packages/contracts/src/contracts/index.ts was necessary to expose the canonical public Provider contract."
+  ],
+  "completedAt": "2026-08-13T19:11:40.8971565+03:00"
+}

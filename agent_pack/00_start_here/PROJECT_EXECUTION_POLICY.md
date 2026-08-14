@@ -21,7 +21,25 @@
 - The selector chooses the first Open or Partial task whose dependencies are complete.
 - At most one task may be In Progress.
 - The runner must not begin the next task in the same run.
-- A missing external prerequisite becomes Blocked with a precise reason; never invent a substitute that changes product behavior.
+- A missing Production vendor, credential, endpoint, bucket, sandbox account, or external deployment topology is not automatically a task blocker when product and security invariants are approved, an adapter isolates the integration, Local/Test use deterministic fakes, higher environments fail closed, and the missing configuration can be reported honestly at Production Readiness.
+
+## Blocker Classification
+
+Mark a task Blocked only when the unresolved decision changes the domain contract, authorization model, security invariant, financial behavior, legal behavior, or irreversible data model and no safe reversible implementation boundary exists. Missing external configuration is a readiness gap when an approved adapter boundary and fail-closed environment behavior allow safe implementation.
+
+Before marking a task Blocked, report:
+
+```text
+candidate blocker:
+blocker class:
+domain contract affected:
+security or financial invariant affected:
+why configuration or an adapter is insufficient:
+safe reversible implementation available: yes/no
+decision: continue with gap / block
+```
+
+If `safe reversible implementation available` is yes, the task must not be blocked only because Production credentials or vendor configuration are unavailable.
 
 ## Backend Gate
 
