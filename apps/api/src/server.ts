@@ -35,8 +35,10 @@ import { createPublicCompareRuntime } from './modules/compare/runtime.js';
 import { createPublicOrganizationRuntime } from './modules/organizations/runtime.js';
 import { createFavoriteRuntime } from './modules/favorites/runtime.js';
 import { createNotificationRuntime } from './modules/notifications/runtime.js';
+import { createSettingsRuntime } from './modules/settings/runtime.js';
 import { createRequestRuntime } from './modules/requests/runtime.js';
 import { createViewingRuntime } from './modules/viewings/runtime.js';
+import { createGracefulShutdown } from './modules/deployment/runtime.js';
 
 export interface ApiListenOptions {
   host: string;
@@ -159,6 +161,7 @@ async function runEntrypoint(): Promise<void> {
   const publicOrganizations = createPublicOrganizationRuntime(database.nativeConnection);
   const favorites = createFavoriteRuntime(database.nativeConnection, auth.accessTokens);
   const notifications = createNotificationRuntime(database.nativeConnection, auth.accessTokens);
+  const settings = createSettingsRuntime(database.nativeConnection, auth.accessTokens, audit.writer, rbac.service);
   const requests = createRequestRuntime(database.nativeConnection, auth.accessTokens);
   const viewings = createViewingRuntime(database.nativeConnection, auth.accessTokens);
   const server = createApiServer({
@@ -183,23 +186,15 @@ async function runEntrypoint(): Promise<void> {
     publicOrganizations,
     favorites,
     notifications,
+    settings,
     requests,
     viewings
   });
-  let shuttingDown = false;
-
-  const shutdown = async () => {
-    if (shuttingDown) return;
-    shuttingDown = true;
-    try {
-      await stopApiServer(server);
-      await database.disconnect();
-      process.exitCode = 0;
-    } catch (error) {
-      process.stderr.write('API server shutdown failed safely.\n');
-      process.exitCode = 1;
-    }
-  };
+  const shutdown = createGracefulShutdown({
+    stopServer: () => stopApiServer(server),
+    disconnectDatabase: () => database.disconnect(),
+    onExitCode: (code) => { process.exitCode = code; }
+  });
 
   process.once('SIGINT', shutdown);
   process.once('SIGTERM', shutdown);

@@ -19,6 +19,7 @@ import { COMPARE_ROUTE_DEFINITIONS } from '../compare/router.js';
 import { ORGANIZATION_ROUTE_DEFINITIONS } from '../organizations/router.js';
 import { FAVORITE_ROUTE_DEFINITIONS } from '../favorites/router.js';
 import { NOTIFICATION_ROUTE_DEFINITIONS } from '../notifications/router.js';
+import { SETTINGS_ROUTE_DEFINITIONS } from '../settings/router.js';
 import { REQUEST_ROUTE_DEFINITIONS } from '../requests/router.js';
 import { VIEWING_ROUTE_DEFINITIONS } from '../viewings/router.js';
 
@@ -43,8 +44,9 @@ export const IMPLEMENTED_ROUTE_DEFINITIONS = Object.freeze([
   ...COMPARE_ROUTE_DEFINITIONS,
   ...ORGANIZATION_ROUTE_DEFINITIONS,
   ...FAVORITE_ROUTE_DEFINITIONS,
-  ...NOTIFICATION_ROUTE_DEFINITIONS
-  ,...REQUEST_ROUTE_DEFINITIONS,
+  ...NOTIFICATION_ROUTE_DEFINITIONS,
+  ...SETTINGS_ROUTE_DEFINITIONS,
+  ...REQUEST_ROUTE_DEFINITIONS,
   ...VIEWING_ROUTE_DEFINITIONS
 ]);
 
@@ -82,6 +84,8 @@ export interface ApiArtifactValidationInput {
   postmanEnvironment: unknown;
   implementedRoutes?: readonly ImplementedRouteDefinition[];
 }
+
+export const JOURNEY_POSTMAN_GROUPS = ['Public', 'Seeker', 'Provider', 'Admin', 'Setup & Cleanup'] as const;
 
 function isRecord(value: unknown): value is JsonRecord {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -263,6 +267,61 @@ export function validatePostmanEnvironment(environment: unknown): string[] {
   }
   issues.push(...validateNoSecretVariables(values, 'Postman environment'));
   return issues;
+}
+
+function collectJourneyItems(items: unknown, output: JsonRecord[] = []): JsonRecord[] {
+  if (!Array.isArray(items)) return output;
+  for (const item of items) {
+    if (!isRecord(item)) continue;
+    if (Array.isArray(item.item)) collectJourneyItems(item.item, output);
+    if (isRecord(item.request)) output.push(item);
+  }
+  return output;
+}
+
+export function validateJourneyPostmanCollection(
+  collection: unknown,
+  implementedRoutes: readonly ImplementedRouteDefinition[] = IMPLEMENTED_ROUTE_DEFINITIONS
+): string[] {
+  if (!isRecord(collection)) return ['Journey Postman collection must be an object'];
+  const issues: string[] = [];
+  const info = isRecord(collection.info) ? collection.info : undefined;
+  if (info?.schema !== POSTMAN_COLLECTION_SCHEMA) issues.push('Journey Postman collection schema is invalid');
+  const variables = valuesByKey(collection.variable);
+  issues.push(...validateNoSecretVariables(variables, 'Journey Postman collection'));
+  if (variables.get('baseUrl')?.value !== 'http://127.0.0.1:3000') issues.push('Journey Postman baseUrl must use the safe loopback default');
+  if (variables.get('apiV1BaseUrl')?.value !== `{{baseUrl}}${PRODUCT_API_BASE_PATH}`) issues.push(`Journey Postman apiV1BaseUrl must apply ${PRODUCT_API_BASE_PATH} exactly once`);
+  const groups = new Set((Array.isArray(collection.item) ? collection.item : [])
+    .filter(isRecord)
+    .filter(item => Array.isArray(item.item))
+    .map(item => item.name)
+    .filter((name): name is string => typeof name === 'string'));
+  for (const group of JOURNEY_POSTMAN_GROUPS) if (!groups.has(group)) issues.push(`Journey Postman collection is missing group ${group}`);
+  const expected = new Set(expectedRouteKeys(implementedRoutes));
+  const requests = collectJourneyItems(collection.item);
+  if (requests.length === 0) issues.push('Journey Postman collection must contain requests');
+  for (const item of requests) {
+    const request = isRecord(item.request) ? item.request : undefined;
+    const method = request && typeof request.method === 'string' ? request.method : undefined;
+    const url = request && isRecord(request.url) && typeof request.url.raw === 'string' ? request.url.raw : undefined;
+    if (!method || !url) {
+      issues.push(`Journey Postman request ${String(item.name)} is missing method or URL`);
+      continue;
+    }
+    const raw = url.startsWith('{{apiV1BaseUrl}}')
+      ? `${PRODUCT_API_BASE_PATH}${url.slice('{{apiV1BaseUrl}}'.length)}`
+      : url.startsWith('{{baseUrl}}')
+        ? url.slice('{{baseUrl}}'.length)
+        : url;
+    const path = raw.split(/[?#]/, 1)[0] ?? '';
+    const normalizedPath = path.replace(/\{\{([A-Za-z][A-Za-z0-9_]*)\}\}/g, ':$1');
+    const key = routeKey(method, normalizedPath);
+    if (!expected.has(key)) issues.push(`Journey Postman documents unimplemented ${key}`);
+    if (!Array.isArray(item.event) || !item.event.some(event => isRecord(event) && event.listen === 'test')) {
+      issues.push(`Journey Postman request ${String(item.name)} is missing a test script`);
+    }
+  }
+  return [...new Set(issues)];
 }
 
 export function validateApiArtifacts(input: ApiArtifactValidationInput): string[] {

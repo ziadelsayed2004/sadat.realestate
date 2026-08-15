@@ -8,6 +8,7 @@ import {
   collectPostmanRoutes,
   PRODUCT_API_BASE_PATH,
   validateApiArtifacts,
+  validateJourneyPostmanCollection,
   validateOpenApiDocument,
   validatePostmanCollection,
   validatePostmanEnvironment,
@@ -28,6 +29,10 @@ function loadArtifacts() {
   };
 }
 
+function loadJourneyCollection(): unknown {
+  return readJson('postman/Sadat-Real-Estate.journeys.postman_collection.json');
+}
+
 test('current OpenAPI and Postman artifacts match only implemented runtime routes', () => {
   const artifacts = loadArtifacts();
   const expected = IMPLEMENTED_ROUTE_DEFINITIONS
@@ -36,6 +41,10 @@ test('current OpenAPI and Postman artifacts match only implemented runtime route
   assert.deepEqual(validateApiArtifacts(artifacts), []);
   assert.deepEqual(collectOpenApiRoutes(artifacts.openApi), expected);
   assert.deepEqual(collectPostmanRoutes(artifacts.postmanCollection), expected);
+});
+
+test('journey Postman collection has safe groups, test scripts, and only implemented routes', () => {
+  assert.deepEqual(validateJourneyPostmanCollection(loadJourneyCollection()), []);
 });
 
 test('OpenAPI 3.1 declares the future product base without prefixing operational probes', () => {

@@ -1,0 +1,97 @@
+{
+  "taskId": "backend_115",
+  "summary": "Implemented an admin-only commission change-log projection backed by validated, already-redacted audit records, preserving before/after snapshots, actor, reason, effective dates, request/trace metadata, strict filters, pagination, and deterministic ordering.",
+  "filesChanged": [
+    "packages/contracts/src/commissions/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/commissions/change-log-service.ts",
+    "apps/api/tests/commissions/service.test.ts",
+    "docs/api/commission-policies.md"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts compiled with strict change-log query, row, and envelope schemas."
+    },
+    {
+      "command": "node --test --import tsx apps/api/tests/commissions/service.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Six focused commission tests passed, including validated audit projection, effective dates, filtering, authorization, IDOR, and invalid-source handling."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace syntax, contracts, and API test typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace checks and ESLint completed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Full serial suite passed 369 tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace and API production builds succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime API inventory completed; no routes changed because current commission HTTP composition is absent."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI artifacts validated."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman artifacts validated."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B8_commissions/backend_115.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (ADM-41)",
+    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (ADM-41)",
+    "agent_pack/01_product/ROLES_PERMISSIONS_MATRIX.md (audit/admin access rules)",
+    "packages/contracts/src/audit/index.ts (validated audit projection contract)",
+    "apps/api/src/modules/audit/repository.ts (audit source boundary)",
+    "packages/contracts/src/commissions/index.ts",
+    "apps/api/src/modules/commissions/change-log-service.ts",
+    "apps/api/tests/commissions/service.test.ts",
+    "docs/api/commission-policies.md"
+  ],
+  "knownGaps": [
+    "The change-log service requires a runtime adapter to the existing audit repository; current commission services do not yet emit commission audit records or have HTTP route composition.",
+    "No synthetic history is generated when an audit source is absent, and no production commission data was seeded.",
+    "Live database/provider integration checks were not run because no isolated replica-set topology or credentials were available."
+  ],
+  "completedAt": "2026-08-14T17:02:37.1011699Z"
+}

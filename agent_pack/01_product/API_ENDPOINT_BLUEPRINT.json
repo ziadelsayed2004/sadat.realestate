@@ -1930,7 +1930,7 @@
       "admin:settings.view"
     ],
     "purpose": "Read settings namespace",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1942,7 +1942,7 @@
       "admin:settings.manage"
     ],
     "purpose": "Update settings namespace",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1954,7 +1954,19 @@
       "admin"
     ],
     "purpose": "Admin inbox",
-    "status": "planned",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/notifications/:notificationId/read",
+    "module": "notifications",
+    "auth": "access-token",
+    "roles": [
+      "admin"
+    ],
+    "purpose": "Mark one admin notification read",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1966,7 +1978,7 @@
       "admin"
     ],
     "purpose": "Mark admin inbox read",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {

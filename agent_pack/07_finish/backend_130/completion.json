@@ -1,0 +1,120 @@
+{
+  "taskId": "backend_130",
+  "summary": "Added focused upload/media security regression coverage over the existing runtime boundaries. Tests cover traversal-safe display names and opaque namespace keys, strict MIME/magic-byte/encrypted-PDF/size validation, document-bound expiring private grants, and tombstone-before-delete orphan cleanup with legal holds. Documentation records the safe deterministic verification boundary.",
+  "filesChanged": [
+    "apps/api/tests/security/upload-media-security.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/upload-media-security.md"
+  ],
+  "verification": [
+    {
+      "command": "node --test --import tsx apps/api/tests/security/upload-media-security.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Four focused tests passed for traversal-safe names/keys, MIME/magic/encryption/size boundaries, expiring signed grants, and tombstone-first orphan cleanup."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace syntax, contracts, and API typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace checks and ESLint completed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Serialized root suite passed all 407 tests."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Full API coverage run passed configured thresholds; overall lines 85.27%, functions 83.83%, and branches 78.10%."
+    },
+    {
+      "command": "npm.cmd run test:integration --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Integration/artifact subset passed all 18 tests."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "API subset passed all 66 tests, including upload/media router and private-grant coverage."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace, contracts, and API production builds succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime inventory remained implemented and unchanged; no route was added."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI validation passed; upload/media contracts were not changed."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Canonical and journey Postman collections plus environment validation passed; no request changed."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtdGVzdC1zZWNyZXQta2V5LWF0LWxlYXN0LTMyeWJ5dGVz'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Synthetic isolated test configuration validated without reading a real .env or contacting MongoDB."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit was clean while backend_130 was in progress."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B9_admin_system_readiness/backend_130.md",
+    "apps/api/src/modules/uploads/validation.ts",
+    "apps/api/src/modules/uploads/adapters.ts",
+    "apps/api/src/modules/media/governance.ts",
+    "apps/api/tests/security/upload-media-security.test.ts",
+    "apps/api/tests/uploads/validation.test.ts",
+    "apps/api/tests/uploads/service.test.ts",
+    "apps/api/tests/uploads/router.test.ts",
+    "apps/api/tests/media/media.test.ts",
+    "apps/api/tests/media/governance.test.ts",
+    "docs/api/upload-media-security.md"
+  ],
+  "knownGaps": [
+    "No live object storage, malware vendor, MongoDB replica set, production credentials, or external provider calls were used; deterministic in-memory adapters and synthetic bytes provide the safe local boundary.",
+    "The task adds regression coverage and documentation without changing runtime routes or contracts because the inspected runtime already enforced the required security boundaries.",
+    "The repository declares Node >=24 <25 while this environment ran Node 22.18.0; all checked-in local gates passed."
+  ],
+  "completedAt": "2026-08-14T22:30:09.6292487Z"
+}

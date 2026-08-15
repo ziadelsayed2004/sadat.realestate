@@ -1,0 +1,49 @@
+{
+  "taskId": "backend_108",
+  "summary": "Implemented a verified-admin financial review and advertising ledger source-adapter projection with strict filters, bounded pagination, deterministic ordering, quote/payment-proof/schedule separation, redacted private fields, and an explicit not-realized accounting treatment.",
+  "filesChanged": [
+    "packages/contracts/src/reports/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/reports/advertising-ledger.ts",
+    "apps/api/tests/reports/service.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/advertising-financial-review.md"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts; npm.cmd run typecheck --workspace apps/api; node --test --import tsx apps/api/tests/reports/service.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Reports contracts/API typecheck passed and two focused financial-report tests passed."
+    },
+    {
+      "command": "npm.cmd run lint; npm.cmd test -- --runInBand; npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Lint passed; full suite passed 363 tests; build succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high; npm.cmd run api:inventory; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs; git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity vulnerabilities; inventory, OpenAPI, Postman, Agent Pack audit, and whitespace checks passed."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B7_ads_payments/backend_108.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (ADM-38)",
+    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (ADM-38)",
+    "agent_pack/01_product/BUSINESS_RULES.md (payment proof is not bank verification)",
+    "packages/contracts/src/reports/index.ts",
+    "apps/api/src/modules/reports/advertising-ledger.ts",
+    "apps/api/tests/reports/service.test.ts",
+    "docs/api/advertising-financial-review.md"
+  ],
+  "knownGaps": [
+    "The financial report consumes a source adapter because the current runtime has separate in-memory ad/payment services and no persistent cross-module ledger repository.",
+    "No HTTP report route was added because route composition and permission wiring for this new module are not present in the current runtime; OpenAPI/Postman remain unchanged and valid.",
+    "apps/api/src/modules/testing/test-suites.ts was updated only to register the task-local reports test; this is the necessary test-harness integration outside the task runtime roots.",
+    "Live database/provider integration checks were not run because no isolated replica-set topology or credentials were available."
+  ],
+  "completedAt": "2026-08-14T15:48:32.3452850Z"
+}

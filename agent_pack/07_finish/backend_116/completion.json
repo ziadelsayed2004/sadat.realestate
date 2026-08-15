@@ -1,0 +1,98 @@
+{
+  "taskId": "backend_116",
+  "summary": "Implemented a verified-provider-only commission projection backed by a resolver-owned read model. The projection is strict and read-only, preserves explicit source/effective timestamp/version/value semantics, returns source none when no active commission exists, enforces subject ownership, and strips resolver and administrative identifiers.",
+  "filesChanged": [
+    "packages/contracts/src/provider/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/provider/commission.ts",
+    "apps/api/tests/provider/service.test.ts",
+    "docs/api/commission-policies.md"
+  ],
+  "verification": [
+    {
+      "command": "node --test --import tsx apps/api/tests/provider/service.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Nine focused provider tests passed, including applied and none projections, verified-provider authorization, ownership/IDOR, strict source validation, redaction, and no mutation surface."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace syntax, contracts, and API typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace checks and ESLint completed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Full serialized repository suite passed 372 tests within a bounded five-minute verification window."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace, contracts, and API production builds succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime API inventory completed; the planned provider commission route remains uncomposed because the current runtime has no commission HTTP composition."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI artifacts validated; no route artifact changed."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman artifacts validated; no route artifact changed."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors while backend_116 was in progress."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B8_commissions/backend_116.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (PRV-20)",
+    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (PRV-20)",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (planned GET /api/v1/provider/commission)",
+    "agent_pack/01_product/PRD.md (provider read-only commission rule)",
+    "agent_pack/01_product/ROLES_PERMISSIONS_MATRIX.md (verified provider access boundary)",
+    "packages/contracts/src/commissions/index.ts (resolver resolution contract)",
+    "packages/contracts/src/provider/index.ts",
+    "apps/api/src/modules/provider/commission.ts",
+    "apps/api/tests/provider/service.test.ts",
+    "docs/api/commission-policies.md"
+  ],
+  "knownGaps": [
+    "The provider commission HTTP route and persistent resolver adapter are not composed in the current runtime; the service intentionally exposes a narrow adapter boundary and does not add an unconnected route.",
+    "No production commission data was seeded; the explicit source none projection is the safe empty state.",
+    "Live database/provider integration checks were not run because no isolated replica-set topology or credentials were available."
+  ],
+  "completedAt": "2026-08-14T17:18:00.000Z"
+}

@@ -1,0 +1,130 @@
+{
+  "taskId": "backend_134",
+  "summary": "Added bounded in-memory metrics with PII-free label validation, allowlisted error-reporting hooks, provider-neutral alert signals with runbook keys, and middleware integration for request metrics and 5xx correlation reports. Existing AsyncLocalStorage correlation and redacting logs remain authoritative; no public metrics endpoint, vendor, threshold, SLA, or business KPI is invented.",
+  "filesChanged": [
+    "packages/contracts/src/observability/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/observability/metrics.ts",
+    "apps/api/src/modules/observability/error-reporting.ts",
+    "apps/api/src/modules/observability/alerts.ts",
+    "apps/api/src/modules/observability/middleware.ts",
+    "apps/api/tests/observability/metrics.test.ts",
+    "apps/api/tests/observability/error-reporting.test.ts",
+    "apps/api/tests/observability/alerts.test.ts",
+    "apps/api/tests/observability/middleware-monitoring.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/observability.md"
+  ],
+  "verification": [
+    {
+      "command": "node --test --import tsx apps/api/tests/observability/metrics.test.ts apps/api/tests/observability/error-reporting.test.ts apps/api/tests/observability/alerts.test.ts apps/api/tests/observability/middleware-monitoring.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "7/7 focused metrics, error-reporting, alert, and middleware monitoring tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Syntax, contracts, and API TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Repository lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "431/431 serialized root tests passed."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Coverage passed: 85.56% lines, 78.41% functions, 84.33% branches."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace check, contracts build, and API build passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "0 vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime route inventory completed successfully; no route was added."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtdGVzdC1zZWNyZXQta2V5LWF0LWxlYXN0LTMyeWJ5dGVz'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Synthetic test environment validated without reading a real .env."
+    },
+    {
+      "command": "npm.cmd run test:integration --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "18/18 isolated integration checks passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "73/73 API tests passed, including the observability monitoring hook."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors in the worktree diff."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors with backend_134 as the sole in-progress task."
+    }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/observability/context.ts",
+    "apps/api/src/modules/observability/logger.ts",
+    "apps/api/src/modules/observability/middleware.ts",
+    "apps/api/src/modules/observability/metrics.ts",
+    "apps/api/src/modules/observability/error-reporting.ts",
+    "apps/api/src/modules/observability/alerts.ts",
+    "apps/api/tests/observability/observability.test.ts",
+    "apps/api/tests/observability/metrics.test.ts",
+    "apps/api/tests/observability/error-reporting.test.ts",
+    "apps/api/tests/observability/alerts.test.ts",
+    "apps/api/tests/observability/middleware-monitoring.test.ts",
+    "docs/api/observability.md"
+  ],
+  "knownGaps": [
+    "No external metrics exporter, error-reporting vendor, alert manager, or multi-process aggregation is configured; adapters and runbook signals remain provider-neutral.",
+    "No production thresholds, latency SLAs, throughput KPIs, or incident state are claimed; deployment owners must provide approved operational configuration.",
+    "The repository declares Node 24-25 while this environment ran Node 22.18.0."
+  ],
+  "completedAt": "2026-08-14T23:46:16.0470305Z"
+}

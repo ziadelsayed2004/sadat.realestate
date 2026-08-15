@@ -1,0 +1,119 @@
+{
+  "taskId": "backend_126",
+  "summary": "Added a deterministic runtime route inventory derived from the Express route-definition source. The CLI now emits sorted method/path/operationId entries explicitly marked implemented; duplicate, malformed, unsupported, and planned-route claims are rejected by focused tests. OpenAPI and Postman continue to compare against the same executable route source, so planned blueprint rows cannot be presented as active endpoints.",
+  "filesChanged": [
+    "apps/api/src/modules/docs/route-inventory.ts",
+    "apps/api/src/modules/database/api-inventory.ts",
+    "apps/api/tests/docs/route-inventory.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/runtime-route-inventory.md"
+  ],
+  "verification": [
+    {
+      "command": "node --test --import tsx apps/api/tests/docs/api-artifacts.test.ts apps/api/tests/docs/route-inventory.test.ts apps/api/tests/database/artifacts.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Ten focused inventory and artifact tests passed, including exact runtime/OpenAPI/Postman parity, duplicate/planned-route rejection, safe variables, prefix checks, and unresolved-reference rejection."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The runtime inventory CLI emitted deterministic status-labelled route entries."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI route and schema validation passed against the executable route source."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman collection and safe environment validation passed against the executable route source."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace syntax, contracts, and API typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace checks and ESLint completed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The serialized root suite passed with the new inventory tests registered."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The full API coverage run passed its configured thresholds."
+    },
+    {
+      "command": "npm.cmd run test:integration --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The integration/artifact test subset passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The API test subset passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace, contracts, and API production builds succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity vulnerabilities found."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtdGVzdC1zZWNyZXQta2V5LWF0LWxlYXN0LTMyeWJ5dGVz'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Synthetic isolated test configuration validated without reading a real .env or contacting MongoDB."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors while backend_126 was in progress."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B9_admin_system_readiness/backend_126.md",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/docs/route-inventory.ts",
+    "apps/api/tests/docs/api-artifacts.test.ts",
+    "apps/api/tests/docs/route-inventory.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/runtime-route-inventory.md"
+  ],
+  "knownGaps": [
+    "The inventory intentionally reports only executable route definitions; blueprint entries without an Express route are not claimed as implemented. Route-level authorization and ownership truth remains in each owning router/service and its tests.",
+    "A live MongoDB replica set and production credentials were not required for this internal documentation/runtime-inventory task and were not contacted.",
+    "The repository declares Node >=24 <25 while this environment ran Node 22.18.0; checked-in typecheck, lint, tests, coverage, build, and artifact gates passed locally."
+  ],
+  "completedAt": "2026-08-14T21:35:02.8779657Z"
+}

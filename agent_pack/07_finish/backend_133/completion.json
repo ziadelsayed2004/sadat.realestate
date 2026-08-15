@@ -1,0 +1,127 @@
+{
+  "taskId": "backend_133",
+  "summary": "Added a validated Node 24 deployment manifest and bounded graceful-shutdown coordinator, wired the existing API entrypoint to stop HTTP before MongoDB disconnect, and added multi-stage non-root Docker plus development Compose artifacts with liveness/readiness checks and an isolated MongoDB replica-set initializer. Root container artifacts and server wiring are necessary integration changes outside the task's module/test roots and are documented here.",
+  "filesChanged": [
+    "packages/contracts/src/deployment/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/deployment/runtime.ts",
+    "apps/api/src/server.ts",
+    "apps/api/tests/deployment/runtime.test.ts",
+    "apps/api/tests/deployment/artifacts.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "Dockerfile",
+    "docker-compose.yml",
+    ".dockerignore",
+    "docs/api/deployment.md"
+  ],
+  "verification": [
+    {
+      "command": "node --test --import tsx apps/api/tests/deployment/runtime.test.ts apps/api/tests/deployment/artifacts.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "5/5 focused deployment lifecycle and static container-artifact tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Syntax, contracts, and API TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Repository lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "424/424 serialized root tests passed."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Coverage passed: 85.40% lines, 78.37% functions, 84.14% branches."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace check, contracts build, and API build passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "0 vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime route inventory completed successfully; deployment adds no HTTP route."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtdGVzdC1zZWNyZXQta2V5LWF0LWxlYXN0LTMyeWJ5dGVz'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Synthetic test environment validated without reading a real .env."
+    },
+    {
+      "command": "npm.cmd run test:integration --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "18/18 isolated integration checks passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "66/66 API tests passed."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors in the worktree diff."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors with backend_133 as the sole in-progress task."
+    }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/deployment/runtime.ts",
+    "apps/api/tests/deployment/runtime.test.ts",
+    "apps/api/tests/deployment/artifacts.test.ts",
+    "apps/api/src/server.ts",
+    "Dockerfile",
+    "docker-compose.yml",
+    "docs/api/deployment.md",
+    "agent_pack/02_architecture/DEPLOYMENT_PLAN.md",
+    "agent_pack/02_architecture/ENVIRONMENT_MATRIX.md"
+  ],
+  "knownGaps": [
+    "Docker engine execution was not available, so the image build and Compose startup were statically validated but not run live.",
+    "The Compose Mongo image tag is development-only; production must pin approved image digests and use managed secrets, storage, and network policies.",
+    "No live provider, production database, or production traffic behavior is claimed by the container artifacts.",
+    "The repository declares Node 24-25 while this environment ran Node 22.18.0."
+  ],
+  "completedAt": "2026-08-14T23:32:16.4188194Z"
+}

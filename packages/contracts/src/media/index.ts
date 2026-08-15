@@ -54,3 +54,49 @@ export type PropertyMediaUploadHeaders = z.infer<typeof propertyMediaUploadHeade
 export type PropertyMediaUpdate = z.infer<typeof propertyMediaUpdateSchema>;
 export type PropertyMediaOrder = z.infer<typeof propertyMediaOrderSchema>;
 export type PropertyMediaData = z.infer<typeof propertyMediaDataSchema>;
+
+export const MEDIA_ASSET_VISIBILITIES = ['public', 'private'] as const;
+export const mediaAssetVisibilitySchema = z.enum(MEDIA_ASSET_VISIBILITIES);
+export const MEDIA_ASSET_NAMESPACES = ['public', 'private', 'quarantine'] as const;
+export const mediaAssetNamespaceSchema = z.enum(MEDIA_ASSET_NAMESPACES);
+export const MEDIA_ASSET_LIFECYCLE_STATES = [
+  'draft', 'quarantined', 'processing', 'ready', 'active', 'failed', 'archived', 'deleted'
+] as const;
+export const mediaAssetLifecycleStateSchema = z.enum(MEDIA_ASSET_LIFECYCLE_STATES);
+export const MEDIA_RETENTION_REASONS = [
+  'unattached_incomplete', 'infected', 'abandoned_draft', 'superseded',
+  'rejected_withdrawn', 'approved_account_closed'
+] as const;
+export const mediaRetentionReasonSchema = z.enum(MEDIA_RETENTION_REASONS);
+const mediaAssetObjectIdSchema = z.string().regex(/^[a-f0-9]{24}$/);
+export const mediaStorageKeySchema = z.string().regex(/^(?:public|private|quarantine)\/[a-f0-9]{32}$/);
+export const mediaLegalHoldSchema = z.object({
+  actorId: mediaAssetObjectIdSchema,
+  reason: z.string().trim().min(5).max(1_000),
+  startedAt: z.string().datetime({ offset: true })
+}).strict();
+export const mediaCleanupCandidateSchema = z.object({
+  id: mediaAssetObjectIdSchema,
+  storageKey: mediaStorageKeySchema,
+  visibility: mediaAssetVisibilitySchema,
+  namespace: mediaAssetNamespaceSchema,
+  lifecycle: mediaAssetLifecycleStateSchema,
+  attached: z.boolean(),
+  referenceAt: z.string().datetime({ offset: true }),
+  retentionReason: mediaRetentionReasonSchema.optional(),
+  legalHold: mediaLegalHoldSchema.optional()
+}).strict();
+export const mediaCleanupDecisionSchema = z.object({
+  id: mediaAssetObjectIdSchema,
+  action: z.enum(['retain', 'delete']),
+  reason: z.enum(['not_due', 'legal_hold', 'attached', 'missing_retention_reason', 'already_deleted', 'eligible']),
+  retentionReason: mediaRetentionReasonSchema.optional(),
+  deleteAfter: z.string().datetime({ offset: true })
+}).strict();
+export type MediaAssetVisibility = z.infer<typeof mediaAssetVisibilitySchema>;
+export type MediaAssetNamespace = z.infer<typeof mediaAssetNamespaceSchema>;
+export type MediaAssetLifecycleState = z.infer<typeof mediaAssetLifecycleStateSchema>;
+export type MediaRetentionReason = z.infer<typeof mediaRetentionReasonSchema>;
+export type MediaLegalHold = z.infer<typeof mediaLegalHoldSchema>;
+export type MediaCleanupCandidate = z.infer<typeof mediaCleanupCandidateSchema>;
+export type MediaCleanupDecision = z.infer<typeof mediaCleanupDecisionSchema>;

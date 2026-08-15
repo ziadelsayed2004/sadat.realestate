@@ -1,0 +1,12 @@
+{
+  "taskId":"backend_100",
+  "summary":"Implemented strict ad placement and administrative advertising-settings contracts and service behavior with stable placement keys, bounded dimensions/locales, activation and ordering, admin authorization, reasoned optimistic settings updates, and no hardcoded public price.",
+  "filesChanged":["packages/contracts/src/ads/index.ts","packages/contracts/src/contracts/index.ts","apps/api/src/modules/ads/service.ts","apps/api/tests/ads/service.test.ts","apps/api/src/modules/testing/test-suites.ts","docs/api/ads-placements-settings.md"],
+  "verification":[
+    {"command":"npm.cmd run build --workspace packages/contracts; node --import tsx --test --test-concurrency=1 apps/api/tests/ads/service.test.ts","exitCode":0,"result":"Passed","notes":"Placement/settings authorization, duplicate key, strict validation, optimistic version, and no-price assertions passed."},
+    {"command":"npm.cmd run typecheck; npm.cmd run lint; npm.cmd test -- --runInBand; npm.cmd run build; npm.cmd audit --audit-level=high; npm.cmd run api:inventory; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Full repository suite, build, dependency audit, inventory, OpenAPI/Postman validation, and Agent Pack audit passed."}
+  ],
+  "sourceEvidence":["packages/contracts/src/ads/index.ts","apps/api/src/modules/ads/service.ts","apps/api/tests/ads/service.test.ts","docs/api/ads-placements-settings.md"],
+  "knownGaps":["No HTTP route was added because this atomic task establishes the placement/settings service boundary; later B7 tasks own advertising request and public projection routes."],
+  "completedAt":"2026-08-14T15:19:00.000Z"
+}

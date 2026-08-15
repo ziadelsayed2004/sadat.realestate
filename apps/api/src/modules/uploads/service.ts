@@ -7,6 +7,7 @@ import type {
   ProviderDocumentUploadHeaders
 } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims } from '../auth/crypto.js';
+import { retentionDeadlineFor } from '../media/governance.js';
 import { providerRequirementSnapshot } from '../provider/requirements.js';
 import type { MalwareScannerAdapter, PrivateDownloadSigner, StorageAdapter } from './adapters.js';
 import type { ProviderDocumentEntity, ProviderDocumentRepository } from './repository.js';
@@ -205,9 +206,9 @@ export function createProviderDocumentService(
         const completedAt = now();
         const updated = await dependencies.repository.updateSecurity(
           registered.document.id,
-          scan === 'clean' ? 'clean' : 'infected',
-          scan === 'infected'
-            ? { scanCompletedAt: completedAt, deleteAfter: new Date(completedAt.getTime() + 24 * 60 * 60 * 1_000) }
+            scan === 'clean' ? 'clean' : 'infected',
+            scan === 'infected'
+              ? { scanCompletedAt: completedAt, deleteAfter: retentionDeadlineFor('infected', completedAt) }
             : { scanCompletedAt: completedAt }
         );
         if (!updated) throw new Error('PROVIDER_DOCUMENT_NOT_FOUND_AFTER_SCAN');

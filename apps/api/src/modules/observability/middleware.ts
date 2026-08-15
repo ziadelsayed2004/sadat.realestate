@@ -6,11 +6,15 @@ import {
   type RequestContextFactories
 } from './context.js';
 import { createStructuredLogger, type StructuredLogger } from './logger.js';
+import { reportSafeError, type ErrorReporter } from './error-reporting.js';
+import type { MetricsRegistry } from './metrics.js';
 
 export interface ObservabilityOptions {
   logger?: StructuredLogger;
   now?: () => number;
   contextFactories?: Partial<RequestContextFactories>;
+  metrics?: MetricsRegistry;
+  errorReporter?: ErrorReporter;
 }
 
 function routePattern(request: Request): string {
@@ -45,23 +49,43 @@ export function createRequestObservabilityMiddleware(options: ObservabilityOptio
         completed = true;
         const statusCode = response.statusCode;
         const level = statusCode >= 500 ? 'error' : statusCode >= 400 ? 'warn' : 'info';
+        const route = routePattern(request);
+        const durationMs = durationMilliseconds(startedAt, now());
         logger.log(level, 'http.request.completed', {
           method: request.method,
-          route: routePattern(request),
+          route,
           statusCode,
-          durationMs: durationMilliseconds(startedAt, now())
+          durationMs
         }, context);
+        try {
+          options.metrics?.increment('http.requests.total', { method: request.method, route, status: String(statusCode) });
+          options.metrics?.observe('http.request.duration_ms', durationMs, { method: request.method, route });
+        } catch {
+          // Metrics are optional and must never alter an API response.
+        }
+        if (statusCode >= 500) reportSafeError(options.errorReporter, {
+          error: new Error('HTTP server error'),
+          route,
+          statusCode,
+          context
+        });
       });
       response.once('close', () => {
         if (completed) return;
+        const route = routePattern(request);
+        const durationMs = durationMilliseconds(startedAt, now());
         logger.warn('http.request.aborted', {
           method: request.method,
-          route: routePattern(request),
-          durationMs: durationMilliseconds(startedAt, now())
+          route,
+          durationMs
         }, context);
+        try {
+          options.metrics?.increment('http.requests.aborted', { method: request.method, route });
+        } catch {
+          // Metrics are optional and must never alter an API response.
+        }
       });
       next();
     });
   };
 }
-

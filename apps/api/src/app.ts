@@ -34,6 +34,7 @@ import { createPublicCompareRouter, type PublicCompareRouterDependencies } from 
 import { createPublicOrganizationRouter, type PublicOrganizationRouterDependencies } from './modules/organizations/router.js';
 import { createFavoriteRouter, type FavoriteRouterDependencies } from './modules/favorites/router.js';
 import { createNotificationRouter, type NotificationRouterDependencies } from './modules/notifications/router.js';
+import { createSettingsRouter, type SettingsRouterDependencies } from './modules/settings/router.js';
 import { createRequestRouter, type RequestRouterDependencies } from './modules/requests/router.js';
 import { createViewingRouter, type ViewingRouterDependencies } from './modules/viewings/router.js';
 
@@ -59,6 +60,7 @@ export interface AppDependencies {
   publicOrganizations?: PublicOrganizationRouterDependencies;
   favorites?: FavoriteRouterDependencies;
   notifications?: NotificationRouterDependencies;
+  settings?: SettingsRouterDependencies;
   requests?: RequestRouterDependencies;
   viewings?: ViewingRouterDependencies;
   security?: SecurityOptions;
@@ -102,6 +104,7 @@ export function createApp(dependencies: AppDependencies): Express {
   if (dependencies.publicOrganizations) app.use('/api/v1', createPublicOrganizationRouter(dependencies.publicOrganizations));
   if (dependencies.favorites) app.use('/api/v1', createFavoriteRouter(dependencies.favorites));
   if (dependencies.notifications) app.use('/api/v1', createNotificationRouter(dependencies.notifications));
+  if (dependencies.settings) app.use('/api/v1', createSettingsRouter(dependencies.settings));
   if (dependencies.requests) app.use('/api/v1', createRequestRouter(dependencies.requests));
   if (dependencies.viewings) app.use('/api/v1', createViewingRouter(dependencies.viewings));
   app.use(createSecurityErrorHandler());

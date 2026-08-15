@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   validateOpenApiDocument,
+  validateJourneyPostmanCollection,
   validatePostmanCollection,
   validatePostmanEnvironment
 } from './api-artifacts.js';
@@ -18,6 +19,11 @@ const postmanEnvironmentPath = path.join(
   apiRoot,
   'postman',
   'Sadat-Real-Estate.local.postman_environment.json'
+);
+const journeyPostmanPath = path.join(
+  apiRoot,
+  'postman',
+  'Sadat-Real-Estate.journeys.postman_collection.json'
 );
 const mode = process.argv[2];
 
@@ -39,7 +45,8 @@ if (mode === 'openapi') {
 } else if (mode === 'postman') {
   finish('POSTMAN', [
     ...validatePostmanCollection(readJson(postmanCollectionPath)),
-    ...validatePostmanEnvironment(readJson(postmanEnvironmentPath))
+    ...validatePostmanEnvironment(readJson(postmanEnvironmentPath)),
+    ...validateJourneyPostmanCollection(readJson(journeyPostmanPath))
   ]);
 } else {
   process.stderr.write('Usage: validate-api-artifacts.ts <openapi|postman>\n');

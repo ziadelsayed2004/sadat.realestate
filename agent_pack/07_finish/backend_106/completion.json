@@ -1,0 +1,47 @@
+{
+  "taskId": "backend_106",
+  "summary": "Implemented strict administrator-only advertising banner and public-media contracts plus in-memory CRUD, preview, lifecycle scheduling, placement publication filtering, localization fallback, deterministic ordering, optimistic concurrency, and media-in-use protection.",
+  "filesChanged": [
+    "packages/contracts/src/ads/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/ads/service.ts",
+    "apps/api/tests/ads/service.test.ts",
+    "docs/api/ads-placements-settings.md"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts; npm.cmd run typecheck --workspace apps/api; node --test --import tsx apps/api/tests/ads/service.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts and API typecheck passed; five focused ads tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck; npm.cmd run lint; npm.cmd test -- --runInBand; npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Repository typecheck and lint passed; full suite passed 360 tests; production build succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high; npm.cmd run api:inventory; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs; git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Dependency audit reported 0 vulnerabilities; API inventory, OpenAPI, Postman, Agent Pack audit, and whitespace checks passed."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B7_ads_payments/backend_106.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (ADM-46 and ADM-47)",
+    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (ADM-46 and ADM-47)",
+    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md (banners and public media boundary)",
+    "packages/contracts/src/ads/index.ts",
+    "apps/api/src/modules/ads/service.ts",
+    "apps/api/tests/ads/service.test.ts",
+    "docs/api/ads-placements-settings.md"
+  ],
+  "knownGaps": [
+    "Banner/media operations remain an in-memory service boundary; persistent repository and HTTP route wiring are outside this atomic task's existing allowed runtime surface.",
+    "Public media uses explicit HTTPS metadata URLs; no production media seed or vendor credentials are inferred.",
+    "Live database/provider integration checks were not run because no isolated replica-set topology or credentials were available; local deterministic tests cover the contract."
+  ],
+  "completedAt": "2026-08-14T15:32:44.9839123Z"
+}

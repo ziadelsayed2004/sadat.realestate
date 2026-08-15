@@ -509,6 +509,90 @@
         }
       }
     },
+    "/api/v1/admin/notifications": {
+      "get": {
+        "operationId": "listAdminNotifications",
+        "summary": "List the authenticated administrator's recipient-owned notifications",
+        "security": [ { "bearerAuth": [] } ],
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 100000, "default": 1 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 } },
+          { "name": "unreadOnly", "in": "query", "schema": { "type": "boolean", "default": false } },
+          { "name": "type", "in": "query", "schema": { "type": "string", "pattern": "^[a-z][a-z0-9_.-]*$", "minLength": 2, "maxLength": 64 } }
+        ],
+        "responses": {
+          "200": { "description": "Permission-aware administrator notification inbox", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/NotificationListSuccessEnvelope" } } } },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/NotificationError" },
+          "403": { "$ref": "#/components/responses/NotificationError" },
+          "500": { "$ref": "#/components/responses/NotificationError" }
+        }
+      }
+    },
+    "/api/v1/admin/notifications/{notificationId}/read": {
+      "post": {
+        "operationId": "markAdminNotificationRead",
+        "summary": "Mark an owned administrator notification as read",
+        "security": [ { "bearerAuth": [] } ],
+        "parameters": [ { "name": "notificationId", "in": "path", "required": true, "schema": { "type": "string", "pattern": "^[a-f0-9]{24}$" } } ],
+        "responses": {
+          "200": { "description": "Notification read state", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/NotificationReadSuccessEnvelope" } } } },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/NotificationError" },
+          "403": { "$ref": "#/components/responses/NotificationError" },
+          "404": { "$ref": "#/components/responses/NotificationError" },
+          "500": { "$ref": "#/components/responses/NotificationError" }
+        }
+      }
+    },
+    "/api/v1/admin/notifications/read-all": {
+      "post": {
+        "operationId": "markAllAdminNotificationsRead",
+        "summary": "Mark all owned administrator notifications as read",
+        "security": [ { "bearerAuth": [] } ],
+        "responses": {
+          "200": { "description": "Read-all result", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/NotificationReadAllSuccessEnvelope" } } } },
+          "401": { "$ref": "#/components/responses/NotificationError" },
+          "403": { "$ref": "#/components/responses/NotificationError" },
+          "500": { "$ref": "#/components/responses/NotificationError" }
+        }
+      }
+    },
+    "/api/v1/admin/settings/{namespace}": {
+      "get": {
+        "operationId": "getAdminSettings",
+        "summary": "Read a versioned administrator settings namespace",
+        "security": [ { "bearerAuth": [] } ],
+        "parameters": [
+          { "name": "namespace", "in": "path", "required": true, "schema": { "$ref": "#/components/schemas/AdminSettingsNamespace" } }
+        ],
+        "responses": {
+          "200": { "description": "Settings namespace", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminSettingsSuccessEnvelope" } } } },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/SettingsError" },
+          "403": { "$ref": "#/components/responses/SettingsError" },
+          "404": { "$ref": "#/components/responses/SettingsError" },
+          "500": { "$ref": "#/components/responses/SettingsError" }
+        }
+      },
+      "put": {
+        "operationId": "updateAdminSettings",
+        "summary": "Update a settings namespace with optimistic concurrency and audit",
+        "security": [ { "bearerAuth": [] } ],
+        "parameters": [
+          { "name": "namespace", "in": "path", "required": true, "schema": { "$ref": "#/components/schemas/AdminSettingsNamespace" } }
+        ],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminSettingsUpdate" } } } },
+        "responses": {
+          "200": { "description": "Updated settings namespace", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdminSettingsSuccessEnvelope" } } } },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/SettingsError" },
+          "403": { "$ref": "#/components/responses/SettingsError" },
+          "409": { "$ref": "#/components/responses/SettingsError" },
+          "500": { "$ref": "#/components/responses/SettingsError" }
+        }
+      }
+    },
     "/api/v1/seeker/favorites": {
       "get": {
         "operationId": "listSavedProperties",
@@ -4019,6 +4103,24 @@
           }
         }
       },
+      "NotificationError": {
+        "description": "Notification authentication, recipient ownership, permission, or validation failure",
+        "headers": {
+          "X-Request-Id": {
+            "$ref": "#/components/headers/X-Request-Id"
+          },
+          "Traceparent": {
+            "$ref": "#/components/headers/Traceparent"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorEnvelope"
+            }
+          }
+        }
+      },
       "ProviderRegistrationSuccess": {
         "description": "Provider draft created from verified OTP authority; refresh token is set as an HttpOnly cookie",
         "headers": {
@@ -4220,6 +4322,18 @@
             "schema": {
               "$ref": "#/components/schemas/ErrorEnvelope"
             }
+          }
+        }
+      },
+      "SettingsError": {
+        "description": "Administrator settings authentication, authorization, validation, lookup, or concurrency failure",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorEnvelope" }
           }
         }
       },
@@ -8518,6 +8632,50 @@
       "NotificationReadAllData": {
         "type": "object", "additionalProperties": false, "required": ["updatedCount"],
         "properties": { "updatedCount": { "type": "integer", "minimum": 0 } }
+      },
+      "AdminSettingsNamespace": {
+        "type": "string",
+        "enum": ["platform", "contact", "social", "properties", "requests", "advertising", "seo", "privacy-security", "display"]
+      },
+      "AdminSettingsValues": {
+        "type": "object",
+        "additionalProperties": {
+          "oneOf": [
+            { "type": "string", "maxLength": 5000 },
+            { "type": "number", "minimum": -100000000, "maximum": 100000000 },
+            { "type": "boolean" },
+            { "$ref": "#/components/schemas/LocalizedText" },
+            { "type": "array", "maxItems": 100, "items": { "type": "string", "maxLength": 5000 } }
+          ]
+        },
+        "maxProperties": 100
+      },
+      "AdminSettingsUpdate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["schemaVersion", "values", "expectedVersion", "reason"],
+        "properties": {
+          "schemaVersion": { "type": "integer", "minimum": 1, "maximum": 100 },
+          "values": { "$ref": "#/components/schemas/AdminSettingsValues" },
+          "expectedVersion": { "type": "integer", "minimum": 0 },
+          "reason": { "type": "string", "minLength": 3, "maxLength": 500 }
+        }
+      },
+      "AdminSettingsData": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["namespace", "schemaVersion", "values", "version", "updatedBy", "updatedAt"],
+        "properties": {
+          "namespace": { "$ref": "#/components/schemas/AdminSettingsNamespace" },
+          "schemaVersion": { "type": "integer", "minimum": 1, "maximum": 100 },
+          "values": { "$ref": "#/components/schemas/AdminSettingsValues" },
+          "version": { "type": "integer", "minimum": 0 },
+          "updatedBy": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "AdminSettingsSuccessEnvelope": {
+        "allOf": [ { "$ref": "#/components/schemas/SuccessEnvelope" }, { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/AdminSettingsData" } } } ]
       },
       "FavoriteListSuccessEnvelope": {
         "allOf": [ { "$ref": "#/components/schemas/SuccessEnvelope" }, { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/FavoriteListData" } } } ]

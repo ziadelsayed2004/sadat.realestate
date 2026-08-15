@@ -1,0 +1,39 @@
+{
+  "taskId": "backend_102",
+  "summary": "Implemented verified-administrator manual quotes with bounded currency, integer minor-unit line items and totals, future validity, explicit terms, append-only decision history, provider ownership checks, optimistic versioning, idempotent acceptance, and request progression to waiting_payment without claiming payment verification.",
+  "filesChanged": [
+    "packages/contracts/src/ads/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/ads/service.ts",
+    "apps/api/tests/ads/service.test.ts",
+    "docs/api/ads-placements-settings.md"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts; node --test --import tsx apps/api/tests/ads/service.test.ts; npm.cmd run typecheck; npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts build, three focused ads tests, typecheck, and lint passed."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand; npm.cmd run build; npm.cmd audit --audit-level=high; npm.cmd run api:inventory; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "353 tests passed; build succeeded; dependency audit reported 0 vulnerabilities; API inventory, OpenAPI, Postman, and Agent Pack audit passed."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/01_product/OPEN_QUESTIONS.md (Q-006 advertising currency, tax treatment, and quote expiry remain explicit decisions)",
+    "agent_pack/01_product/STATE_MACHINES.md (ad request quote and payment progression)",
+    "packages/contracts/src/ads/index.ts",
+    "apps/api/src/modules/ads/service.ts",
+    "apps/api/tests/ads/service.test.ts",
+    "docs/api/ads-placements-settings.md"
+  ],
+  "knownGaps": [
+    "No HTTP route was added; route-level advertising projections and payment-proof flows are assigned to later B7 tasks.",
+    "Tax treatment remains pending product/finance decision Q-006; quotes carry explicit terms and do not infer tax.",
+    "The service boundary does not claim bank or payment verification."
+  ],
+  "completedAt": "2026-08-14T17:52:49.938+03:00"
+}

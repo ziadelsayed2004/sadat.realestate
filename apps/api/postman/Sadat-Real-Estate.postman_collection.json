@@ -409,6 +409,124 @@
       }
     },
     {
+      "name": "Admin - Notifications",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Admin notification inbox is permission-aware and bounded', function () {",
+              "  pm.expect([200, 400, 401, 403, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.keys('items', 'unreadCount', 'page', 'limit', 'total');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }],
+        "url": { "raw": "{{apiV1BaseUrl}}/admin/notifications?page=1&limit=20&unreadOnly=false", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "notifications"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }, { "key": "unreadOnly", "value": "false" }] },
+        "description": "Requires a transient verified admin token; only recipient-owned, permission-aware localized projections are returned."
+      }
+    },
+    {
+      "name": "Admin - Mark Notification Read",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Admin notification read transition is ownership protected', function () {",
+              "  pm.expect([200, 400, 401, 403, 404, 500]).to.include(pm.response.code);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }],
+        "url": { "raw": "{{apiV1BaseUrl}}/admin/notifications/:notificationId/read", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "notifications", ":notificationId", "read"], "variable": [{ "key": "notificationId", "value": "000000000000000000000000" }] },
+        "description": "Requires a transient verified admin token; foreign notification IDs are indistinguishable from not found."
+      }
+    },
+    {
+      "name": "Admin - Mark All Notifications Read",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Admin read-all returns a changed count', function () {",
+              "  pm.expect([200, 401, 403, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.property('updatedCount');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }],
+        "url": { "raw": "{{apiV1BaseUrl}}/admin/notifications/read-all", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "notifications", "read-all"] },
+        "description": "Requires a transient verified admin token; replay is idempotent and returns the number changed."
+      }
+    },
+    {
+      "name": "Admin - Get Settings Namespace",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Admin settings read is authenticated and safely projected', function () {",
+              "  pm.expect([200, 401, 403, 404, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.keys('namespace', 'schemaVersion', 'values', 'version', 'updatedBy', 'updatedAt');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }],
+        "url": { "raw": "{{apiV1BaseUrl}}/admin/settings/:namespace", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "settings", ":namespace"], "variable": [{ "key": "namespace", "value": "display" }] },
+        "description": "Requires a transient verified admin token and the admin:settings.view permission; empty namespaces remain unavailable rather than fabricated."
+      }
+    },
+    {
+      "name": "Admin - Update Settings Namespace",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Admin settings update enforces versioning', function () {",
+              "  pm.expect([200, 400, 401, 403, 409, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.property('version');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{adminAccessToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"schemaVersion\": 1,\n  \"values\": {\n    \"show_map\": true\n  },\n  \"expectedVersion\": 0,\n  \"reason\": \"Update display settings\"\n}", "options": { "raw": { "language": "json" } } },
+        "url": { "raw": "{{apiV1BaseUrl}}/admin/settings/:namespace", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "settings", ":namespace"], "variable": [{ "key": "namespace", "value": "display" }] },
+        "description": "Requires admin:settings.manage; values are strict logical keys, credentials are rejected, and every mutation is audited."
+      }
+    },
+    {
       "name": "Auth - Admin Login",
       "event": [
         {

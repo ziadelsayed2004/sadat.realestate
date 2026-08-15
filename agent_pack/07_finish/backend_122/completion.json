@@ -1,0 +1,104 @@
+{
+  "taskId": "backend_122",
+  "summary": "Implemented the verified-admin notification center with explicit audience boundaries, bounded inbox queries, unread counts, mark-read and read-all transitions, relative localized deep links, and permission-aware safe projections. Synchronized runtime routes, OpenAPI, Postman, and the endpoint blueprint.",
+  "filesChanged": [
+    "packages/contracts/src/notifications/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/notifications/service.ts",
+    "apps/api/src/modules/notifications/repository.ts",
+    "apps/api/src/modules/notifications/router.ts",
+    "apps/api/tests/notifications/service.test.ts",
+    "apps/api/tests/notifications/router.test.ts",
+    "docs/api/admin-notifications.md",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json"
+  ],
+  "verification": [
+    {
+      "command": "node --test --import tsx apps/api/tests/notifications/service.test.ts apps/api/tests/notifications/router.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Eight focused notification tests passed, covering seeker regression, admin authentication, ownership, permission filtering, safe links, strict queries, mark-read, and read-all behavior."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace syntax, contracts, and API typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace checks and ESLint completed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Full serialized repository suite passed 382 tests within the bounded five-minute verification window."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace, contracts, and API production builds succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime inventory includes the three admin notification routes and existing seeker notification routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI artifacts and local references validated."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman collection and safe local environment validated."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors while backend_122 was in progress."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B9_admin_system_readiness/backend_122.md",
+    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (ADM-65)",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (admin notification inbox/read routes)",
+    "packages/contracts/src/notifications/index.ts",
+    "apps/api/src/modules/notifications/service.ts",
+    "apps/api/src/modules/notifications/repository.ts",
+    "apps/api/src/modules/notifications/router.ts",
+    "apps/api/tests/notifications/service.test.ts",
+    "apps/api/tests/notifications/router.test.ts",
+    "docs/api/admin-notifications.md",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json"
+  ],
+  "knownGaps": [
+    "Production notification generation/seed data and live database integration were not exercised; the Mongoose adapter and empty-state behavior remain deterministic and safe.",
+    "The current runtime does not inject an RBAC permission resolver into the notification runtime. Notifications carrying a required permission fail closed until that adapter is provided; unqualified verified-admin notifications remain available."
+  ],
+  "completedAt": "2026-08-14T18:14:05.2769586Z"
+}

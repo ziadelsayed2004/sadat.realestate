@@ -1,0 +1,120 @@
+{
+  "taskId": "backend_127",
+  "summary": "Added a supplementary journey-based Postman collection with Public, Seeker, Provider, Admin, and Setup & Cleanup groups. Requests use loopback and synthetic placeholders only, include positive/negative/authorization/validation/cleanup assertions, and are structurally checked against executable runtime routes. The canonical all-route collection and OpenAPI remain synchronized and no planned endpoint is presented as implemented.",
+  "filesChanged": [
+    "apps/api/postman/Sadat-Real-Estate.journeys.postman_collection.json",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/docs/validate-api-artifacts.ts",
+    "apps/api/tests/docs/api-artifacts.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/journey-postman.md"
+  ],
+  "verification": [
+    {
+      "command": "node --test --import tsx apps/api/tests/docs/api-artifacts.test.ts apps/api/tests/docs/route-inventory.test.ts apps/api/tests/database/artifacts.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Eleven focused artifact/inventory tests passed, including journey group/test-script checks, safe variables, exact canonical route parity, planned-route rejection, prefix checks, and unresolved-reference rejection."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Canonical collection, synthetic environment, and journey collection all validated."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI paths and schemas remained synchronized with executable routes."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime inventory emitted implemented route definitions successfully."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace syntax, contracts, and API typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace checks and ESLint completed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The serialized root suite passed with the journey validator tests registered."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The full API coverage run passed its configured thresholds."
+    },
+    {
+      "command": "npm.cmd run test:integration --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The integration/artifact test subset passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The API test subset passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace, contracts, and API production builds succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity vulnerabilities found."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtdGVzdC1zZWNyZXQta2V5LWF0LWxlYXN0LTMyeWJ5dGVz'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Synthetic isolated test configuration validated without reading a real .env or contacting MongoDB."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors while backend_127 was in progress."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B9_admin_system_readiness/backend_127.md",
+    "apps/api/postman/Sadat-Real-Estate.journeys.postman_collection.json",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/docs/validate-api-artifacts.ts",
+    "apps/api/tests/docs/api-artifacts.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/journey-postman.md"
+  ],
+  "knownGaps": [
+    "Journey requests use synthetic bearer and ID placeholders; no live Postman/Newman run or production account mutation was performed because isolated credentials and data were unavailable.",
+    "The journey collection is a representative workflow subset; the canonical collection remains the exact all-implemented-route inventory. No production setup or cleanup side effects are claimed.",
+    "The repository declares Node >=24 <25 while this environment ran Node 22.18.0; checked-in typecheck, lint, tests, coverage, build, and artifact gates passed locally."
+  ],
+  "completedAt": "2026-08-14T21:51:01.3590574Z"
+}

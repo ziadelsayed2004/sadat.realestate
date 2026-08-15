@@ -1,0 +1,93 @@
+{
+  "taskId": "backend_117",
+  "summary": "Added a dedicated serialized temporal-state suite covering half-open effective windows, adjacent policy and exception periods, exact resolver precedence boundaries, explicit no-policy fallback, retroactive exception mutation prevention, confirmation supersession, owner binding, and strict confirmation input.",
+  "filesChanged": [
+    "apps/api/tests/testing/commissions-temporal.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts"
+  ],
+  "verification": [
+    {
+      "command": "node --test --import tsx apps/api/tests/testing/commissions-temporal.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Three focused temporal-state tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace syntax, contracts, and API typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace checks and ESLint completed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Full serialized repository suite passed 375 tests within a bounded five-minute verification window."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace, contracts, and API production builds succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime API inventory completed; no routes changed by this testing-only task."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI artifacts validated; no route artifact changed."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman artifacts validated; no route artifact changed."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors while backend_117 was in progress."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B8_commissions/backend_117.md",
+    "agent_pack/01_product/PRD.md (commission effective-date and provider read-only rules)",
+    "agent_pack/01_product/ROLES_PERMISSIONS_MATRIX.md (provider/admin ownership rules)",
+    "apps/api/src/modules/commissions/policy-service.ts",
+    "apps/api/src/modules/commissions/account-service.ts",
+    "apps/api/src/modules/commissions/exception-service.ts",
+    "apps/api/src/modules/commissions/resolver-service.ts",
+    "apps/api/src/modules/commissions/confirmation-service.ts",
+    "apps/api/tests/testing/commissions-temporal.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts"
+  ],
+  "knownGaps": [
+    "Live database/provider integration checks were not run because no isolated replica-set topology or credentials were available; this suite is deterministic unit coverage and does not require them.",
+    "The commission HTTP routes remain uncomposed in the current runtime, so no OpenAPI or Postman route artifacts were added by this testing task."
+  ],
+  "completedAt": "2026-08-14T17:25:09.3240634Z"
+}

@@ -1,0 +1,46 @@
+{
+  "taskId": "backend_105",
+  "summary": "Implemented administrator-controlled Scheduled, Active, and Ended ad-request transitions with Africa/Cairo calendar projections, interval guards, deterministic ordering/filtering, optimistic versions, and same-placement overlap prevention.",
+  "filesChanged": [
+    "packages/contracts/src/ads/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/ads/service.ts",
+    "apps/api/tests/ads/service.test.ts",
+    "docs/api/ads-placements-settings.md"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts; node --test --import tsx apps/api/tests/ads/service.test.ts; npm.cmd run typecheck; npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts build, four focused ads tests, typecheck, and lint passed."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand; npm.cmd run build; npm.cmd audit --audit-level=high; npm.cmd run api:inventory; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "359 tests passed; build succeeded; dependency audit reported 0 vulnerabilities; API inventory, OpenAPI, Postman, and Agent Pack audit passed."
+    },
+    {
+      "command": "git diff --check; node -e \"for (const f of ['agent_pack/03_execution/TASK_STATE.json','agent_pack/03_execution/TASK_BOARD.md']) { require('fs').accessSync(f); } console.log('PACK_FILES_PRESENT')\"",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Changed-file whitespace and pack file integrity checks passed."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/01_product/STATE_MACHINES.md (ad lifecycle and schedule states)",
+    "agent_pack/01_product/PRD.md (advertising lifecycle and no assumed payment/public price)",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (ADM-36 calendar boundary)",
+    "packages/contracts/src/ads/index.ts",
+    "apps/api/src/modules/ads/service.ts",
+    "apps/api/tests/ads/service.test.ts",
+    "docs/api/ads-placements-settings.md"
+  ],
+  "knownGaps": [
+    "No HTTP calendar route or persistent ad-request repository was added; later B7 projection/runtime wiring remains responsible for external integration.",
+    "Intervals are stored as explicit offset instants and projected deterministically into Africa/Cairo; no unsupported DST or production schedule values are inferred.",
+    "Publication/banner rendering remains assigned to later B7 tasks."
+  ],
+  "completedAt": "2026-08-14T18:16:36.408+03:00"
+}

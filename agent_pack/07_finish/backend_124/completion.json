@@ -1,0 +1,125 @@
+{
+  "taskId": "backend_124",
+  "summary": "Implemented shared file and asset governance contracts and an injectable cleanup planner/executor covering public/private/quarantine placement, opaque storage keys, sanitized display names, deterministic retention windows, orphan classification, legal holds, publication-safe lifecycle states, and tombstone-first retry-safe deletion. Provider-document infected and superseded deadlines now consume the shared policy helper; no new HTTP route or public URL behavior was introduced.",
+  "filesChanged": [
+    "packages/contracts/src/media/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/media/governance.ts",
+    "apps/api/tests/media/governance.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/src/modules/uploads/service.ts",
+    "apps/api/src/modules/uploads/repository.ts",
+    "docs/api/media-governance.md",
+    "docs/api/property-media.md",
+    "docs/api/contracts.md"
+  ],
+  "verification": [
+    {
+      "command": "node --test --import tsx apps/api/tests/media/media.test.ts apps/api/tests/media/router.test.ts apps/api/tests/media/governance.test.ts apps/api/tests/uploads/service.test.ts apps/api/tests/uploads/models.test.ts apps/api/tests/uploads/validation.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Fourteen focused media and provider-document tests passed, including namespace/key validation, filename sanitization, retention windows, orphan cleanup, legal holds, tombstone ordering, quarantine/public filtering, and upload regressions."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace syntax, contracts, and API typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace checks and ESLint completed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The serialized root suite passed 12 workspace-policy tests and 389 API tests."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The full API coverage run passed its configured thresholds."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The API test subset passed."
+    },
+    {
+      "command": "npm.cmd run test:integration --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The integration/artifact test subset passed."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtdGVzdC1zZWNyZXQta2V5LWF0LWxlYXN0LTMyeWJ5dGVz'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Synthetic isolated test configuration validated without reading a real .env or contacting MongoDB."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace, contracts, and API production builds succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime inventory remained synchronized; this task adds no HTTP route."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI paths, schemas, responses, and references validated; no new route was required."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman collection and safe local environment validated; no new route was required."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors while backend_124 was in progress."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B9_admin_system_readiness/backend_124.md",
+    "agent_pack/01_product/PRD.md (public/private namespaces, filename rules, retention schedule, legal holds, tombstones)",
+    "agent_pack/01_product/BUSINESS_RULES.md (BR-023, BR-024, BR-028)",
+    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md (assets owner, visibility, and status fields)",
+    "packages/contracts/src/media/index.ts",
+    "apps/api/src/modules/media/governance.ts",
+    "apps/api/tests/media/governance.test.ts",
+    "apps/api/src/modules/uploads/service.ts",
+    "apps/api/src/modules/uploads/repository.ts",
+    "docs/api/media-governance.md"
+  ],
+  "knownGaps": [
+    "Production storage/scanner credentials and an isolated MongoDB replica set were not available; the cleanup executor remains injectable and no destructive production cleanup was attempted.",
+    "The repository declares Node >=24 <25 while this environment ran Node 22.18.0; checked-in typecheck, lint, tests, build, and artifact gates passed locally."
+  ],
+  "completedAt": "2026-08-14T20:55:12.8777316Z"
+}

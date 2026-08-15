@@ -1,60 +1,57 @@
 {
-  "generatedAt": "2026-08-14T14:30:39.460Z",
-  "selectedTaskId": "backend_100",
-  "selectedTaskStatus": "in_progress",
-  "selectedTaskFile": "04_tracks/backend/B7_ads_payments/backend_100.md",
+  "generatedAt": "2026-08-15T00:57:26.579Z",
+  "selectedTaskId": "frontend_000",
+  "selectedTaskStatus": "open",
+  "selectedTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_000.md",
   "selectedTask": {
-    "id": "backend_100",
-    "phase": "B7_ads_payments",
-    "area": "ads",
-    "title": "Ad Placements and Settings",
-    "goal": "Model ad placements, availability, and settings without a hardcoded public price.",
-    "kind": "api",
+    "id": "frontend_000",
+    "phase": "F0_frontend_foundation",
+    "area": "frontend_foundation",
+    "title": "Establish Vite SSR and Frontend Architecture",
+    "goal": "Prepare React, TypeScript, and Vite SSR for the public site with SPA dashboard shells and separate development and production builds.",
+    "kind": "infrastructure",
     "screens": [],
-    "sourceRefs": [
-      "ADM-55"
-    ],
+    "sourceRefs": [],
     "notes": [],
-    "track": "backend",
-    "sequence": 78,
+    "track": "frontend",
+    "sequence": 114,
     "dependsOn": [
-      "backend_097"
+      "backend_138"
     ],
-    "atomicTaskFile": "04_tracks/backend/B7_ads_payments/backend_100.md",
+    "atomicTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_000.md",
     "allowedRoots": [
-      "apps/api/src/modules/ads/**",
-      "apps/api/tests/ads/**",
-      "packages/contracts/src/ads/**",
-      "docs/api/**",
-      "apps/api/openapi/**",
-      "apps/api/postman/**",
+      "apps/web/src/features/frontend_foundation/**",
+      "apps/web/src/routes/**",
+      "apps/web/tests/**",
+      "packages/ui/**",
+      "packages/contracts/**",
       "agent_pack/**"
     ],
     "acceptance": [
       "Inspect the current runtime and never replace existing truth with an assumption.",
       "Implement only the selected scope and document every unresolved dependency or decision.",
       "Do not introduce secrets, production data, or unsupported claims.",
-      "Keep contracts, validation, error codes, permissions, ownership, and runtime behavior synchronized.",
-      "Add applicable positive, negative, authorization, validation, and state-transition tests.",
-      "Update OpenAPI, Postman, and runtime API inventory when routes or DTOs change."
+      "Match every selected Screen ID to its approved frame and record the exact reference in evidence.",
+      "Use implemented backend contracts only; production mocks and invented endpoints are forbidden.",
+      "Complete applicable Loading, Empty, Error, Retry, Success, and permission variants.",
+      "Verify Arabic RTL plus every other supported locale, direction, approved device scope, and applicable UI tests."
     ],
     "verification": [
       "npm run typecheck",
       "npm run lint",
-      "npm run test -- --runInBand",
+      "npm run test",
       "npm run build",
-      "npm audit --audit-level=high",
-      "route/OpenAPI/Postman checks when applicable"
+      "targeted Playwright/visual/a11y checks"
     ]
   },
   "counts": {
     "backend": {
       "total": 113,
-      "open": 35,
-      "in_progress": 1,
+      "open": 0,
+      "in_progress": 0,
       "partial": 0,
       "blocked": 0,
-      "complete": 77
+      "complete": 113
     },
     "frontend": {
       "total": 75,
@@ -67,330 +64,6 @@
   },
   "blockedTasks": [],
   "blockedByDependencies": [
-    {
-      "taskId": "backend_101",
-      "unresolved": [
-        {
-          "taskId": "backend_100",
-          "status": "in_progress"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_102",
-      "unresolved": [
-        {
-          "taskId": "backend_101",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_103",
-      "unresolved": [
-        {
-          "taskId": "backend_102",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_104",
-      "unresolved": [
-        {
-          "taskId": "backend_103",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_105",
-      "unresolved": [
-        {
-          "taskId": "backend_104",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_106",
-      "unresolved": [
-        {
-          "taskId": "backend_105",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_107",
-      "unresolved": [
-        {
-          "taskId": "backend_106",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_108",
-      "unresolved": [
-        {
-          "taskId": "backend_107",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_110",
-      "unresolved": [
-        {
-          "taskId": "backend_108",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_111",
-      "unresolved": [
-        {
-          "taskId": "backend_110",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_112",
-      "unresolved": [
-        {
-          "taskId": "backend_111",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_113",
-      "unresolved": [
-        {
-          "taskId": "backend_112",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_114",
-      "unresolved": [
-        {
-          "taskId": "backend_113",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_115",
-      "unresolved": [
-        {
-          "taskId": "backend_114",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_116",
-      "unresolved": [
-        {
-          "taskId": "backend_115",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_117",
-      "unresolved": [
-        {
-          "taskId": "backend_116",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_120",
-      "unresolved": [
-        {
-          "taskId": "backend_117",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_121",
-      "unresolved": [
-        {
-          "taskId": "backend_120",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_122",
-      "unresolved": [
-        {
-          "taskId": "backend_121",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_123",
-      "unresolved": [
-        {
-          "taskId": "backend_122",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_124",
-      "unresolved": [
-        {
-          "taskId": "backend_123",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_125",
-      "unresolved": [
-        {
-          "taskId": "backend_124",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_126",
-      "unresolved": [
-        {
-          "taskId": "backend_125",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_127",
-      "unresolved": [
-        {
-          "taskId": "backend_126",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_128",
-      "unresolved": [
-        {
-          "taskId": "backend_127",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_129",
-      "unresolved": [
-        {
-          "taskId": "backend_128",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_130",
-      "unresolved": [
-        {
-          "taskId": "backend_129",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_131",
-      "unresolved": [
-        {
-          "taskId": "backend_130",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_132",
-      "unresolved": [
-        {
-          "taskId": "backend_131",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_133",
-      "unresolved": [
-        {
-          "taskId": "backend_132",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_134",
-      "unresolved": [
-        {
-          "taskId": "backend_133",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_135",
-      "unresolved": [
-        {
-          "taskId": "backend_134",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_136",
-      "unresolved": [
-        {
-          "taskId": "backend_135",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_137",
-      "unresolved": [
-        {
-          "taskId": "backend_136",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "backend_138",
-      "unresolved": [
-        {
-          "taskId": "backend_137",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "frontend_000",
-      "unresolved": [
-        {
-          "taskId": "backend_138",
-          "status": "open"
-        }
-      ]
-    },
     {
       "taskId": "frontend_001",
       "unresolved": [

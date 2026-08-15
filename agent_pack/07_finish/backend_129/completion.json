@@ -1,0 +1,118 @@
+{
+  "taskId": "backend_129",
+  "summary": "Added a runtime-derived negative authorization matrix covering every implemented route. The matrix classifies anonymous, refresh-session, role-protected, and signed-grant boundaries; records seeker/provider ownership or assignment scope; and records verified-admin RBAC mode and permission boundaries. Focused tests exercise route coverage plus missing, invalid, cross-role, unverified-admin, and verified-admin middleware cases without production credentials or data.",
+  "filesChanged": [
+    "apps/api/src/modules/security/authorization-matrix.ts",
+    "apps/api/tests/security/authorization-matrix.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/negative-authorization-matrix.md"
+  ],
+  "verification": [
+    {
+      "command": "node --test --import tsx apps/api/tests/security/authorization-matrix.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Three focused tests passed: complete route-derived matrix coverage, seeker/provider negative middleware cases, and all administrative authentication states."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace syntax, contracts, and API typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace checks and ESLint completed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Serialized root suite passed all 403 tests."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Full API coverage run passed configured thresholds; overall lines 85.27%, functions 83.83%, and branches 78.03%."
+    },
+    {
+      "command": "npm.cmd run test:integration --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Integration/artifact subset passed all 18 tests."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "API subset passed all 62 tests, including existing route-level authentication, permission, ownership, and IDOR coverage."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace, contracts, and API production builds succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime inventory emitted the implemented route set used by the matrix; no route was added."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI validation passed; no contract route changed."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Canonical and journey Postman collections plus environment validation passed; no request changed."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtdGVzdC1zZWNyZXQta2V5LWF0LWxlYXN0LTMyeWJ5dGVz'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Synthetic isolated test configuration validated without reading a real .env or contacting MongoDB."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors while backend_129 was in progress."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B9_admin_system_readiness/backend_129.md",
+    "apps/api/src/modules/docs/api-artifacts.ts (canonical implemented route definitions)",
+    "apps/api/src/modules/security/authorization-matrix.ts",
+    "apps/api/tests/security/authorization-matrix.test.ts",
+    "apps/api/tests/security/middleware.test.ts",
+    "apps/api/tests/security/request-projection.test.ts",
+    "apps/api/tests/security/public-projections.test.ts",
+    "docs/api/negative-authorization-matrix.md"
+  ],
+  "knownGaps": [
+    "No live MongoDB replica-set, production credentials, or external provider calls were used; existing deterministic route/service tests and middleware fakes provide the safe local verification boundary.",
+    "The matrix is a derived review/test projection and does not replace resource-specific authorization in each router and service; those existing suites remain the source of IDOR and permission behavior.",
+    "The repository declares Node >=24 <25 while this environment ran Node 22.18.0; all checked-in local gates passed."
+  ],
+  "completedAt": "2026-08-14T22:19:20.2636528Z"
+}

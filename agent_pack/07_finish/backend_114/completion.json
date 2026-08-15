@@ -1,0 +1,96 @@
+{
+  "taskId": "backend_114",
+  "summary": "Implemented account-scoped commission confirmations with verified-provider ownership checks, policy/source version capture, acknowledgement timestamps, deterministic supersession, admin review, revocation, strict uniqueness, and optimistic concurrency.",
+  "filesChanged": [
+    "packages/contracts/src/commissions/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/commissions/confirmation-service.ts",
+    "apps/api/tests/commissions/service.test.ts",
+    "docs/api/commission-policies.md"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts compiled with confirmation schemas and strict state refinements."
+    },
+    {
+      "command": "node --test --import tsx apps/api/tests/commissions/service.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Five focused commission tests passed, including confirmation ownership, uniqueness, supersession, listing, revocation, and replay coverage."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace syntax, contracts, and API test typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace checks and ESLint completed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Full serial suite passed 368 tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace and API production builds succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime API inventory completed; no confirmation routes changed because current commission HTTP composition is absent."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI artifacts validated."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman artifacts validated."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B8_commissions/backend_114.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (ADM-45)",
+    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (ADM-45)",
+    "agent_pack/01_product/PRD.md (commission confirmations and provider read-only policy)",
+    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md (unique accountId + policyVersion confirmation key)",
+    "packages/contracts/src/commissions/index.ts",
+    "apps/api/src/modules/commissions/confirmation-service.ts",
+    "apps/api/tests/commissions/service.test.ts",
+    "docs/api/commission-policies.md"
+  ],
+  "knownGaps": [
+    "The confirmation service is an in-memory boundary; persistent storage, audit/change-log integration, and HTTP composition are later runtime work.",
+    "No production account or commission values were seeded and acknowledgement does not authorize settlement or collection.",
+    "Live database/provider integration checks were not run because no isolated replica-set topology or credentials were available."
+  ],
+  "completedAt": "2026-08-14T16:54:52.9165007Z"
+}

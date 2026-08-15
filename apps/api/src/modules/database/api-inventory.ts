@@ -1,3 +1,3 @@
-import { IMPLEMENTED_ROUTE_DEFINITIONS } from '../docs/api-artifacts.js';
+import { RUNTIME_ROUTE_INVENTORY } from '../docs/route-inventory.js';
 
-console.log(JSON.stringify(IMPLEMENTED_ROUTE_DEFINITIONS, null, 2));
+console.log(JSON.stringify(RUNTIME_ROUTE_INVENTORY, null, 2));

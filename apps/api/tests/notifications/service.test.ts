@@ -7,6 +7,9 @@ const claims: AccessTokenClaims = {
   iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '0123456789abcdef01234567', sid: 'abcdefabcdefabcdefabcdef',
   role: 'seeker', status: 'verified', iat: 1, exp: 9999999999, jti: 'test'
 };
+const adminClaims: AccessTokenClaims = {
+  ...claims, sub: 'fedcba9876543210fedcba98', role: 'admin', status: 'verified'
+};
 const createdAt = new Date('2026-08-01T00:00:00.000Z');
 const source: NotificationSource = {
   id: 'abcdefabcdefabcdefabcdef', type: 'request.updated', title: { ar: 'تحديث الطلب', en: 'Request updated' },
@@ -17,6 +20,7 @@ const source: NotificationSource = {
 function repository(overrides: Partial<NotificationRepository> = {}): NotificationRepository {
   return {
     async list() { return { items: [source], total: 1, unreadCount: 1 }; },
+    async findById() { return source; },
     async markRead(_recipientId, _id, now) { return { ...source, readAt: now }; },
     async markAllRead() { return 1; },
     ...overrides
@@ -59,4 +63,55 @@ test('rejects non-seeker and suspended access without touching the repository', 
   assert.equal(called, false);
   const missing = createNotificationService({ repository: repository({ async markRead() { return undefined; } }) });
   await assert.rejects(() => missing.markRead(claims, source.id), (error: unknown) => error instanceof NotificationServiceError && error.code === 'NOTIFICATION_NOT_FOUND');
+});
+
+test('lists an admin-owned inbox with permission-aware projections and bounded deep links', async () => {
+  const adminSource: NotificationSource = {
+    ...source,
+    audience: 'admin',
+    requiredPermission: 'admin:requests.view',
+    link: '/admin/requests/abcdefabcdefabcdefabcdef'
+  };
+  let listAudience = '';
+  const service = createNotificationService({
+    authorization: {
+      async authorize(_adminId, permission) { return permission === 'admin:requests.view'; },
+      async permissions() { return ['admin:requests.view']; }
+    },
+    repository: repository({
+      async list(_recipientId, _query, audience) { listAudience = audience ?? ''; return { items: [adminSource], total: 1, unreadCount: 1 }; },
+      async findById() { return adminSource; },
+      async markRead(_recipientId, _id, now, audience) { assert.equal(audience, 'admin'); return { ...adminSource, readAt: now }; },
+      async markAllRead(_recipientId, _now, audience) { assert.equal(audience, 'admin'); return 1; }
+    })
+  });
+  const result = await service.listAdmin(adminClaims, { page: '1', limit: '20', unreadOnly: 'true' });
+  assert.equal(listAudience, 'admin');
+  assert.equal(result.unreadCount, 1);
+  assert.equal(result.items[0]?.link, '/admin/requests/abcdefabcdefabcdefabcdef');
+  const read = await service.markAdminRead(adminClaims, adminSource.id);
+  assert.equal(read.id, adminSource.id);
+  assert.equal((await service.markAllAdminRead(adminClaims)).updatedCount, 1);
+});
+
+test('filters admin notifications when the source permission is not granted and rejects non-admins', async () => {
+  const restricted: NotificationSource = { ...source, audience: 'admin', requiredPermission: 'admin:requests.manage' };
+  let called = false;
+  let mutated = false;
+  const service = createNotificationService({
+    authorization: { async authorize() { return false; } },
+    repository: repository({
+      async list() { called = true; return { items: [restricted], total: 1, unreadCount: 1 }; },
+      async findById() { return restricted; },
+      async markRead() { mutated = true; return restricted; }
+    })
+  });
+  const result = await service.listAdmin(adminClaims, { page: '1', limit: '20' });
+  assert.equal(called, true);
+  assert.equal(result.items.length, 0);
+  await assert.rejects(() => service.markAdminRead(adminClaims, restricted.id), (error: unknown) => error instanceof NotificationServiceError && error.code === 'NOTIFICATION_NOT_FOUND');
+  assert.equal(mutated, false);
+  await assert.rejects(() => service.listAdmin({ ...adminClaims, role: 'provider' } as AccessTokenClaims), (error: unknown) => error instanceof NotificationServiceError && error.code === 'NOTIFICATION_FORBIDDEN');
+  await assert.rejects(() => service.listAdmin({ ...adminClaims, status: 'suspended' } as AccessTokenClaims), (error: unknown) => error instanceof NotificationServiceError && error.code === 'NOTIFICATION_FORBIDDEN');
+  await assert.rejects(() => service.listAdmin(adminClaims, { page: '1', unknown: true }), /Unrecognized key/);
 });

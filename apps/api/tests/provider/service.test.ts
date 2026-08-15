@@ -11,6 +11,16 @@ import {
   createProviderService,
   ProviderServiceError
 } from '../../src/modules/provider/service.js';
+import {
+  createProviderAdvertisingProjectionService,
+  ProviderAdvertisingProjectionError,
+  type ProviderAdvertisingRequestRecord
+} from '../../src/modules/provider/advertising.js';
+import {
+  createProviderCommissionProjectionService,
+  ProviderCommissionProjectionError
+} from '../../src/modules/provider/commission.js';
+import type { CommissionResolution } from '@sadat-real-estate/contracts';
 
 const providerId = '0123456789abcdef01234567';
 const applicationId = 'abcdefabcdefabcdefabcdef';
@@ -213,5 +223,131 @@ test('submits complete drafts with an immutable requirement snapshot and no appr
     () => provider.submit(claims, { version: 1 }),
     (error: unknown) => error instanceof ProviderServiceError
       && error.code === 'PROVIDER_APPLICATION_NOT_EDITABLE'
+  );
+});
+
+test('projects provider-owned advertising history, quote, payment, and schedule without admin or storage internals', async () => {
+  const verifiedClaims = { ...claims, status: 'verified' as const };
+  const request = {
+    id: 'aaaaaaaaaaaaaaaaaaaaaaaa', providerId, placementKey: 'homepage.hero', purpose: 'Promote a reviewed project',
+    intervalStart: '2026-09-01T09:00:00+00:00', intervalEnd: '2026-09-02T09:00:00+00:00', status: 'waiting_payment' as const,
+    version: 4, createdAt: '2026-08-13T00:00:00+00:00', updatedAt: '2026-08-13T01:00:00+00:00'
+  };
+  const record: ProviderAdvertisingRequestRecord = {
+    request,
+    history: [
+      { status: 'draft', version: 0, changedAt: '2026-08-13T00:00:00+00:00' },
+      { status: 'waiting_payment', version: 4, reason: 'Quote accepted', changedAt: '2026-08-13T01:00:00+00:00' }
+    ],
+    quote: {
+      id: 'bbbbbbbbbbbbbbbbbbbbbbbb', requestId: request.id, providerId, currency: 'EGP',
+      lineItems: [{ description: 'Placement day', quantity: 1, unitAmountMinor: 1000 }], totalMinor: 1000,
+      validUntil: '2026-10-01T00:00:00+00:00', terms: 'Manual quote', status: 'accepted', issuerId: 'cccccccccccccccccccccccc',
+      version: 1, decisionHistory: [
+        { action: 'issued', actorId: 'cccccccccccccccccccccccc', actorRole: 'admin', version: 0, createdAt: '2026-08-13T00:30:00+00:00' },
+        { action: 'accepted', actorId: providerId, actorRole: 'provider', version: 1, createdAt: '2026-08-13T01:00:00+00:00' }
+      ], createdAt: '2026-08-13T00:30:00+00:00', updatedAt: '2026-08-13T01:00:00+00:00'
+    },
+    paymentProofs: [{
+      id: 'dddddddddddddddddddddddd', adRequestId: request.id, providerId, originalFilename: 'proof.png', normalizedExtension: '.png', detectedMime: 'image/png', byteSize: 100,
+      sha256: 'e'.repeat(64), version: 1, securityState: 'clean', status: 'pending_review', reviewHistory: [], uploadedAt: '2026-08-13T01:00:00+00:00', active: true, idempotentReplay: false
+    }],
+    schedule: { requestId: request.id, placementKey: request.placementKey, providerId, status: 'scheduled', startsAt: request.intervalStart, endsAt: request.intervalEnd, timezone: 'Africa/Cairo', localStart: '2026-09-01T12:00:00', localEnd: '2026-09-02T12:00:00', version: 5 }
+  };
+  const projection = createProviderAdvertisingProjectionService({ source: { listForProvider: async (ownerId) => ownerId === providerId ? [record] : [], findForProvider: async (ownerId, requestId) => ownerId === providerId && requestId === request.id ? record : undefined } });
+  const list = await projection.list(verifiedClaims, { page: 1, limit: 10 });
+  assert.equal(list.total, 1);
+  assert.equal(list.items[0]?.quote?.totalMinor, 1000);
+  assert.equal(list.items[0]?.paymentProofs[0]?.status, 'pending_review');
+  assert.equal(list.items[0]?.schedule?.timezone, 'Africa/Cairo');
+  assert.equal('providerId' in list.items[0]!, false);
+  assert.equal('storageKey' in list.items[0]!, false);
+  const detail = await projection.get(verifiedClaims, request.id);
+  assert.equal(detail.history.length, 2);
+  await assert.rejects(() => projection.list(claims, {}), (error) => error instanceof ProviderAdvertisingProjectionError && error.code === 'PROVIDER_AD_FORBIDDEN');
+  await assert.rejects(() => projection.get(verifiedClaims, 'ffffffffffffffffffffffff'), (error) => error instanceof ProviderAdvertisingProjectionError && error.code === 'PROVIDER_AD_NOT_FOUND');
+  const idor = createProviderAdvertisingProjectionService({ source: { listForProvider: async () => [{ ...record, request: { ...record.request, providerId: '999999999999999999999999' } }] } });
+  await assert.rejects(() => idor.list(verifiedClaims, {}), (error) => error instanceof ProviderAdvertisingProjectionError && error.code === 'PROVIDER_AD_NOT_FOUND');
+});
+
+test('projects the effective commission read-only and strips resolver internals', async () => {
+  const verifiedClaims = { ...claims, status: 'verified' as const };
+  const resolution: CommissionResolution = {
+    accountId: providerId,
+    source: 'exception',
+    effectiveAt: '2026-08-13T00:00:00.000Z',
+    sourceRecordId: 'eeeeeeeeeeeeeeeeeeeeeeee',
+    sourceVersion: 3,
+    exceptionId: 'eeeeeeeeeeeeeeeeeeeeeeee',
+    kind: 'percentage',
+    percentageBps: 275
+  };
+  const projection = createProviderCommissionProjectionService({ source: { getForProvider: async () => resolution } });
+  const result = await projection.get(verifiedClaims);
+  assert.deepEqual(result, {
+    accountId: providerId,
+    source: 'exception',
+    effectiveAt: '2026-08-13T00:00:00.000Z',
+    policyVersion: 3,
+    kind: 'percentage',
+    percentageBps: 275,
+    readOnly: true
+  });
+  assert.equal('sourceRecordId' in result, false);
+  assert.equal('exceptionId' in result, false);
+  assert.equal('update' in projection, false);
+  assert.equal('acknowledge' in projection, false);
+});
+
+test('returns an explicit none projection when no commission is available', async () => {
+  const verifiedClaims = { ...claims, status: 'verified' as const };
+  const projection = createProviderCommissionProjectionService({
+    source: { getForProvider: async () => undefined },
+    now: () => new Date('2026-08-14T00:00:00.000Z')
+  });
+  assert.deepEqual(await projection.getCommission(verifiedClaims), {
+    accountId: providerId,
+    source: 'none',
+    effectiveAt: '2026-08-14T00:00:00.000Z',
+    readOnly: true
+  });
+});
+
+test('enforces verified provider access, owner binding, and strict source validation', async () => {
+  const verifiedClaims = { ...claims, status: 'verified' as const };
+  const resolution: CommissionResolution = {
+    accountId: providerId,
+    source: 'policy',
+    effectiveAt: '2026-08-13T00:00:00.000Z',
+    sourceRecordId: 'ffffffffffffffffffffffff',
+    sourceVersion: 1,
+    policyId: 'ffffffffffffffffffffffff',
+    kind: 'fixed',
+    fixedAmountMinor: 150_000,
+    currency: 'EGP'
+  };
+  const projection = createProviderCommissionProjectionService({ source: { getForProvider: async () => resolution } });
+  await assert.rejects(() => projection.get(claims), (error) => error instanceof ProviderCommissionProjectionError && error.code === 'PROVIDER_COMMISSION_FORBIDDEN');
+  await assert.rejects(
+    () => createProviderCommissionProjectionService({ source: { getForProvider: async () => ({ ...resolution, accountId: '999999999999999999999999' }) } }).get(verifiedClaims),
+    (error) => error instanceof ProviderCommissionProjectionError && error.code === 'PROVIDER_COMMISSION_NOT_FOUND'
+  );
+  await assert.rejects(
+    () => createProviderCommissionProjectionService({ source: { getForProvider: async () => ({ ...resolution, sourceVersion: undefined }) as unknown as CommissionResolution } }).get(verifiedClaims),
+    (error) => error instanceof ProviderCommissionProjectionError && error.code === 'PROVIDER_COMMISSION_SOURCE_INVALID'
+  );
+  assert.throws(
+    () => projection.validateProjection({
+      accountId: providerId,
+      source: 'policy',
+      effectiveAt: '2026-08-13T00:00:00.000Z',
+      policyVersion: 1,
+      kind: 'fixed',
+      fixedAmountMinor: 150_000,
+      currency: 'EGP',
+      readOnly: true,
+      unexpected: true
+    }),
+    /Unrecognized key/
   );
 });

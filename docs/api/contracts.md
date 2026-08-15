@@ -10,6 +10,8 @@ Location contracts use the shared strict `LocalizedText` primitive, stable lower
 
 `@sadat-real-estate/contracts` is the canonical source for transport envelopes and their runtime validation. It exports strict Zod schemas plus inferred TypeScript types from its public package entrypoint.
 
+Media governance contracts separately model public/private namespaces, lifecycle states, opaque storage-key shape, legal holds, retention reasons, and deterministic cleanup decisions. They do not expose binary contents or production storage credentials.
+
 Successful responses use:
 
 ```json

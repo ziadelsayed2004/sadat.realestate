@@ -1,0 +1,118 @@
+{
+  "taskId": "backend_136",
+  "summary": "Added a deterministic backend journey harness covering registration-to-publication, request ownership and state transitions, advertising/payment-proof boundaries, commission resolution, and guaranteed cleanup. Route steps are checked against the executable runtime inventory; ads and commissions remain explicitly service-level until HTTP routes exist.",
+  "filesChanged": [
+    "apps/api/src/modules/testing/journeys.ts",
+    "apps/api/tests/testing/journeys.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/backend-journeys.md"
+  ],
+  "verification": [
+    {
+      "command": "node --test --import tsx apps/api/tests/testing/journeys.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "4 journey tests passed, including route-inventory validation, ordered execution, failure cleanup, and real in-memory ads/payment/commission service boundaries."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts and API TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Repository lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "437 repository tests passed."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Coverage completed: 85.83% lines, 78.58% functions, 84.45% branches."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace, contracts, and API builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "0 vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Deterministic implemented runtime inventory generated successfully."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtdGVzdC1zZWNyZXQta2V5LWF0LWxlYXN0LTMyeWJ5dGVz'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Synthetic test environment validated; no real environment file or credential was read."
+    },
+    {
+      "command": "npm.cmd run test:integration",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "22 integration checks passed, including the journey suite."
+    },
+    {
+      "command": "npm.cmd run test:api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "75 API checks passed."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit clean with backend_136 as the only task in progress."
+    }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/testing/journeys.ts",
+    "apps/api/tests/testing/journeys.test.ts",
+    "apps/api/src/modules/docs/route-inventory.ts",
+    "apps/api/src/modules/ads/service.ts",
+    "apps/api/src/modules/payments/service.ts",
+    "apps/api/src/modules/commissions/resolver-service.ts",
+    "docs/api/backend-journeys.md"
+  ],
+  "knownGaps": [
+    "The registration/publication/request portion is a deterministic synthetic executor because no isolated live MongoDB dataset or external account credentials are available; route paths are still validated against the executable runtime inventory.",
+    "Ads and commissions have service-level implementations but no dedicated HTTP routes, so the journey does not invent or claim unavailable endpoints.",
+    "Live MongoDB, external storage/scanning, payment-provider, and production-account execution remains an optional isolated-environment check.",
+    "The repository declares Node 24-25 while this verification environment runs Node 22.18.0."
+  ],
+  "completedAt": "2026-08-15T00:16:54.8457624Z"
+}

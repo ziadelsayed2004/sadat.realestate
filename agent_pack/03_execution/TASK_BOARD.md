@@ -95,46 +95,46 @@
 - [x] backend_097 — Content and Localization Audit
 ## B7_ads_payments
 
-- [ ] backend_100 — Ad Placements and Settings — IN PROGRESS
-- [ ] backend_101 — Advertising Requests
-- [ ] backend_102 — Manual Pricing and Quotes
-- [ ] backend_103 — Private Payment-Proof Upload
-- [ ] backend_104 — Payment-Proof Review
-- [ ] backend_105 — Ad Scheduling and Calendar
-- [ ] backend_106 — Advertising Banners
-- [ ] backend_107 — Provider Advertising Request Projection
-- [ ] backend_108 — Financial Review and Advertising Ledger
+- [x] backend_100 — Ad Placements and Settings
+- [x] backend_101 — Advertising Requests
+- [x] backend_102 — Manual Pricing and Quotes
+- [x] backend_103 — Private Payment-Proof Upload
+- [x] backend_104 — Payment-Proof Review
+- [x] backend_105 — Ad Scheduling and Calendar
+- [x] backend_106 — Advertising Banners
+- [x] backend_107 — Provider Advertising Request Projection
+- [x] backend_108 — Financial Review and Advertising Ledger
 ## B8_commissions
 
-- [ ] backend_110 — Commission Policies
-- [ ] backend_111 — Account Commission
-- [ ] backend_112 — Commission Exceptions
-- [ ] backend_113 — Commission Policy Resolver and Snapshot
-- [ ] backend_114 — Commission Policy Confirmations
-- [ ] backend_115 — Commission Change Log
-- [ ] backend_116 — Provider Commission Projection
-- [ ] backend_117 — Commission and Temporal-State Tests
+- [x] backend_110 — Commission Policies
+- [x] backend_111 — Account Commission
+- [x] backend_112 — Commission Exceptions
+- [x] backend_113 — Commission Policy Resolver and Snapshot
+- [x] backend_114 — Commission Policy Confirmations
+- [x] backend_115 — Commission Change Log
+- [x] backend_116 — Provider Commission Projection
+- [x] backend_117 — Commission and Temporal-State Tests
 ## B9_admin_system_readiness
 
-- [ ] backend_120 — Admin Overview Statistics
-- [ ] backend_121 — Administrator Account APIs
-- [ ] backend_122 — Admin Notification Center
-- [ ] backend_123 — Unified Admin Settings API
-- [ ] backend_124 — File and Asset Governance
-- [ ] backend_125 — Outbox and Scheduling Worker
-- [ ] backend_126 — Runtime Route and API Contract Inventory
-- [ ] backend_127 — Journey-Based Postman Collections
-- [ ] backend_128 — UAT Seed Data and Fixtures
-- [ ] backend_129 — Negative Authorization Test Matrix
-- [ ] backend_130 — Upload and Media Security Verification
-- [ ] backend_131 — Search and Performance Tests
-- [ ] backend_132 — Migrations, Backup, and Restore
-- [ ] backend_133 — Containers and Production Runtime
-- [ ] backend_134 — Health, Readiness, and Monitoring
-- [ ] backend_135 — Security Assurance Report
-- [ ] backend_136 — Backend End-to-End Journeys
-- [ ] backend_137 — Contract Freeze and Frontend Handoff
-- [ ] backend_138 — Backend Readiness Gate
+- [x] backend_120 — Admin Overview Statistics
+- [x] backend_121 — Administrator Account APIs
+- [x] backend_122 — Admin Notification Center
+- [x] backend_123 — Unified Admin Settings API
+- [x] backend_124 — File and Asset Governance
+- [x] backend_125 — Outbox and Scheduling Worker
+- [x] backend_126 — Runtime Route and API Contract Inventory
+- [x] backend_127 — Journey-Based Postman Collections
+- [x] backend_128 — UAT Seed Data and Fixtures
+- [x] backend_129 — Negative Authorization Test Matrix
+- [x] backend_130 — Upload and Media Security Verification
+- [x] backend_131 — Search and Performance Tests
+- [x] backend_132 — Migrations, Backup, and Restore
+- [x] backend_133 — Containers and Production Runtime
+- [x] backend_134 — Health, Readiness, and Monitoring
+- [x] backend_135 — Security Assurance Report
+- [x] backend_136 — Backend End-to-End Journeys
+- [x] backend_137 — Contract Freeze and Frontend Handoff
+- [x] backend_138 — Backend Readiness Gate
 ## F0_frontend_foundation
 
 - [ ] frontend_000 — Establish Vite SSR and Frontend Architecture

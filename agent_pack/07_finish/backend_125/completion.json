@@ -1,0 +1,122 @@
+{
+  "taskId": "backend_125",
+  "summary": "Implemented the internal durable outbox and scheduling-worker boundary for notifications, SLA, and ads. Strict bounded event contracts reject unknown fields and secret-shaped payloads; Mongo and in-memory repositories provide unique dedupe, optional transaction-session enqueue, atomic worker leases, expiry reclaim, acknowledgement ownership, retry scheduling, and dead-letter persistence. The injected worker dispatches domain handlers, uses deterministic exponential backoff, and fails missing or permanent handlers closed. No HTTP route, production provider, or frontend behavior was invented.",
+  "filesChanged": [
+    "packages/contracts/src/events/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/events/repository.ts",
+    "apps/api/src/modules/events/worker.ts",
+    "apps/api/tests/events/outbox.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/outbox-events.md"
+  ],
+  "verification": [
+    {
+      "command": "node --test --import tsx apps/api/tests/events/outbox.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Six focused tests passed for strict payloads, dedupe replay/conflict, lease ownership and reclaim, retry backoff, dead-lettering, and notification/SLA/ads handler dispatch."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace syntax, contracts, and API typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace checks and ESLint completed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The serialized root suite passed after registering the six new events tests."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The full API coverage run passed its configured thresholds."
+    },
+    {
+      "command": "npm.cmd run test:integration --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The integration/artifact test subset passed; the events boundary is internal and adds no route."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The API test subset passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace, contracts, and API production builds succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime inventory remained synchronized; this task adds no HTTP route."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI paths, schemas, responses, and references validated; no route change was applicable."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman collection and safe local environment validated; no route change was applicable."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtdGVzdC1zZWNyZXQta2V5LWF0LWxlYXN0LTMyeWJ5dGVz'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Synthetic isolated test configuration validated without reading a real .env or contacting MongoDB."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors while backend_125 was in progress."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B9_admin_system_readiness/backend_125.md",
+    "agent_pack/02_architecture/BACKEND_ARCHITECTURE.md (transactional outbox, idempotent workers, retry, dead-letter handling)",
+    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md (outbox_events status, availableAt, unique dedupeKey)",
+    "agent_pack/02_architecture/DEPLOYMENT_PLAN.md (worker process for outbox, schedules, and SLA)",
+    "packages/contracts/src/events/index.ts",
+    "apps/api/src/modules/events/repository.ts",
+    "apps/api/src/modules/events/worker.ts",
+    "apps/api/tests/events/outbox.test.ts",
+    "docs/api/outbox-events.md"
+  ],
+  "knownGaps": [
+    "A live MongoDB replica set and production notification/provider credentials were not available; no live delivery or destructive worker run was attempted. The Mongo repository and worker use injected adapters and deterministic local tests.",
+    "Existing notification, SLA, and advertising domain writes do not yet select concrete production handlers; the module exposes the transactional enqueue and handler-registration boundary without inventing provider behavior or SLA values.",
+    "The repository declares Node >=24 <25 while this environment ran Node 22.18.0; checked-in typecheck, lint, tests, coverage, build, and artifact gates passed locally."
+  ],
+  "completedAt": "2026-08-14T21:18:55.3902752Z"
+}

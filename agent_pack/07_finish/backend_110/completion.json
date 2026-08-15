@@ -1,0 +1,50 @@
+{
+  "taskId": "backend_110",
+  "summary": "Implemented versioned percentage, fixed-minor-unit, and exempt commission policies with explicit scopes, effective windows, strict validation, optimistic mutation reasons, active-window guards, overlap prevention, bounded filters, and deterministic ordering.",
+  "filesChanged": [
+    "packages/contracts/src/commissions/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/commissions/policy-service.ts",
+    "apps/api/tests/commissions/service.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "docs/api/commission-policies.md"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts; npm.cmd run typecheck --workspace apps/api; node --test --import tsx apps/api/tests/commissions/service.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts/API typecheck passed and the focused commission policy test passed."
+    },
+    {
+      "command": "npm.cmd run typecheck; npm.cmd run lint; npm.cmd test -- --runInBand; npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Typecheck and lint passed; full suite passed 364 tests; build succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high; npm.cmd run api:inventory; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs; git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity vulnerabilities; inventory, OpenAPI, Postman, Agent Pack audit, and whitespace checks passed."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B8_commissions/backend_110.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (ADM-39 and ADM-40)",
+    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (ADM-39 and ADM-40)",
+    "agent_pack/01_product/PRD.md (commission policy types and no universal value)",
+    "agent_pack/01_product/STATE_MACHINES.md (effective policy resolution order)",
+    "packages/contracts/src/commissions/index.ts",
+    "apps/api/src/modules/commissions/policy-service.ts",
+    "apps/api/tests/commissions/service.test.ts",
+    "docs/api/commission-policies.md"
+  ],
+  "knownGaps": [
+    "The policy service is an in-memory boundary; persistence, audit repository, resolver snapshots, and HTTP route composition belong to later dependent B8 tasks.",
+    "apps/api/src/modules/testing/test-suites.ts was updated only to register the task-local commission test; this is the necessary test-harness integration outside the commission runtime roots.",
+    "No production policy values were seeded and no universal commission is assumed.",
+    "Live database/provider integration checks were not run because no isolated replica-set topology or credentials were available."
+  ],
+  "completedAt": "2026-08-14T15:56:18.6585870Z"
+}

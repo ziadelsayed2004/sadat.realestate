@@ -5,3 +5,5 @@ Verified providers upload JPEG/PNG images and PDF/JPEG/PNG floor plans through `
 `PATCH /api/v1/provider/properties/:propertyId/media/order` changes bounded deterministic ordering and can select one active ready cover. `DELETE /api/v1/provider/properties/:propertyId/media/:assetId` is owner-scoped and only editable for active draft or needs-changes properties. Processing failures are retained as failed metadata without exposing private storage keys.
 
 Public projections must use only active, ready media belonging to a published and active property. Draft, failed, deleted, and inactive media never enter a public projection.
+
+Storage placement, display-name sanitization, opaque keys, orphan cleanup, legal holds, and binary retention are defined by the shared [media governance](./media-governance.md) boundary. Property-media cleanup is adapter-driven and never fabricates public URLs or production asset data.

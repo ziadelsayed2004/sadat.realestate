@@ -4,10 +4,12 @@ import type { AccessTokenService } from '../../src/modules/auth/crypto.js';
 import { createApiServer, startApiServer, stopApiServer } from '../../src/server.js';
 
 const token = 'header.payload.signature';
+const adminToken = 'admin.header.payload';
 const accessTokens: AccessTokenService = {
   issue: () => token,
   verify(value) {
     if (value === 'provider') return { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '0123456789abcdef01234567', sid: 'abcdefabcdefabcdefabcdef', role: 'provider', status: 'verified', iat: 1, exp: 9999999999, jti: 'test' };
+    if (value === adminToken) return { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: 'fedcba9876543210fedcba98', sid: 'abcdefabcdefabcdefabcdef', role: 'admin', status: 'verified', iat: 1, exp: 9999999999, jti: 'test' };
     if (value !== token) throw new Error('invalid');
     return { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '0123456789abcdef01234567', sid: 'abcdefabcdefabcdefabcdef', role: 'seeker', status: 'verified', iat: 1, exp: 9999999999, jti: 'test' };
   }
@@ -20,7 +22,10 @@ async function withServer(run: (baseUrl: string) => Promise<void>) {
       service: {
         async list() { return { items: [{ id: 'abcdefabcdefabcdefabcdef', type: 'system', title: { en: 'Welcome' }, readAt: null, createdAt: '2026-08-01T00:00:00.000Z' }], unreadCount: 1, page: 1, limit: 20, total: 1 }; },
         async markRead(_claims, id) { return { id: String(id), readAt: '2026-08-02T00:00:00.000Z' }; },
-        async markAllRead() { return { updatedCount: 1 }; }
+        async markAllRead() { return { updatedCount: 1 }; },
+        async listAdmin() { return { items: [{ id: 'abcdefabcdefabcdefabcdef', type: 'system', title: { en: 'Admin alert' }, readAt: null, createdAt: '2026-08-01T00:00:00.000Z', link: '/admin/requests/abcdefabcdefabcdefabcdef' }], unreadCount: 1, page: 1, limit: 20, total: 1 }; },
+        async markAdminRead(_claims, id) { return { id: String(id), readAt: '2026-08-02T00:00:00.000Z' }; },
+        async markAllAdminRead() { return { updatedCount: 1 }; }
       }
     }
   });
@@ -47,5 +52,19 @@ test('rejects unknown notification query fields', async () => {
   await withServer(async baseUrl => {
     const unknown = await fetch(`${baseUrl}/api/v1/seeker/notifications?extra=true`, { headers: { authorization: `Bearer ${token}` } });
     assert.equal(unknown.status, 400);
+  });
+});
+
+test('requires verified admin access for the admin inbox and read transitions', async () => {
+  await withServer(async baseUrl => {
+    assert.equal((await fetch(`${baseUrl}/api/v1/admin/notifications`)).status, 401);
+    assert.equal((await fetch(`${baseUrl}/api/v1/admin/notifications`, { headers: { authorization: `Bearer ${token}` } })).status, 403);
+    const list = await fetch(`${baseUrl}/api/v1/admin/notifications`, { headers: { authorization: `Bearer ${adminToken}` } });
+    assert.equal(list.status, 200);
+    assert.equal((await list.json() as { data: { unreadCount: number } }).data.unreadCount, 1);
+    const read = await fetch(`${baseUrl}/api/v1/admin/notifications/abcdefabcdefabcdefabcdef/read`, { method: 'POST', headers: { authorization: `Bearer ${adminToken}` } });
+    assert.equal(read.status, 200);
+    const all = await fetch(`${baseUrl}/api/v1/admin/notifications/read-all`, { method: 'POST', headers: { authorization: `Bearer ${adminToken}` } });
+    assert.equal(all.status, 200);
   });
 });

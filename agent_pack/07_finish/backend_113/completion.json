@@ -1,0 +1,96 @@
+{
+  "taskId": "backend_113",
+  "summary": "Implemented deterministic commission resolution with active exception, account override, default policy, and explicit none precedence, plus an immutable idempotent snapshot boundary for approved commercial events.",
+  "filesChanged": [
+    "packages/contracts/src/commissions/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/commissions/resolver-service.ts",
+    "apps/api/tests/commissions/service.test.ts",
+    "docs/api/commission-policies.md"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts compiled with resolution, approved-event, and snapshot schemas."
+    },
+    {
+      "command": "node --test --import tsx apps/api/tests/commissions/service.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Four focused commission tests passed, covering precedence, temporal boundaries, approved-event gating, idempotent replay, conflict, and invalid input behavior."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace syntax, contracts, and API test typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace checks and ESLint completed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Full serial suite passed 367 tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace and API production builds succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime API inventory completed; no routes changed because approved commercial-event composition is not present."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI artifacts validated."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman artifacts validated."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B8_commissions/backend_113.md",
+    "agent_pack/01_product/STATE_MACHINES.md (commission resolution precedence and snapshot fields)",
+    "agent_pack/01_product/OPEN_QUESTIONS.md (Q-007: no financial execution until approved)",
+    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md (commission policies and exceptions)",
+    "packages/contracts/src/commissions/index.ts",
+    "apps/api/src/modules/commissions/resolver-service.ts",
+    "apps/api/tests/commissions/service.test.ts",
+    "docs/api/commission-policies.md"
+  ],
+  "knownGaps": [
+    "The resolver and snapshot store are in-memory boundaries; persistent repositories, audit/change-log integration, and transaction wiring are later B8 tasks or runtime work.",
+    "The approved commercial event is represented by a strict adapter contract; no current route defines or executes a commercial approval or settlement event.",
+    "No production account or commission values were seeded and no financial settlement is performed.",
+    "Live database/provider integration checks were not run because no isolated replica-set topology or credentials were available."
+  ],
+  "completedAt": "2026-08-14T16:46:57.5710251Z"
+}

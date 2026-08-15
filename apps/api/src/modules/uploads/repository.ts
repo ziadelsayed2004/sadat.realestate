@@ -10,6 +10,7 @@ import type {
 } from '@sadat-real-estate/contracts';
 import type { UploadModels } from './models.js';
 import { canTransitionProviderDocumentSecurity } from './models.js';
+import { retentionDeadlineFor } from '../media/governance.js';
 
 export interface OwnedProviderApplication {
   id: string;
@@ -199,7 +200,7 @@ export function createMongooseProviderDocumentRepository(
               $set: {
                 active: false,
                 supersededAt: input.uploadedAt,
-                deleteAfter: new Date(input.uploadedAt.getTime() + 30 * 24 * 60 * 60 * 1_000),
+                deleteAfter: retentionDeadlineFor('superseded', input.uploadedAt),
                 retentionReason: 'superseded'
               }
             },

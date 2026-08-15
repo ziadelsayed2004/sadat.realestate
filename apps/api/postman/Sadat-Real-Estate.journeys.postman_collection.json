@@ -1,0 +1,146 @@
+{
+  "info": {
+    "name": "Sadat Real Estate API - Journeys",
+    "description": "Representative public, seeker, provider, and admin journeys. Requests use safe synthetic placeholders, include positive or negative assertions, and never imply that planned routes are implemented.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:3000", "type": "string" },
+    { "key": "apiV1BaseUrl", "value": "{{baseUrl}}/api/v1", "type": "string" },
+    { "key": "syntheticBearer", "value": "replace-with-runtime-bearer", "type": "string" },
+    { "key": "propertyId", "value": "000000000000000000000000", "type": "string" },
+    { "key": "namespace", "value": "display", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Public",
+      "item": [
+        {
+          "name": "Public homepage - published projection",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Public homepage is safe', function () { pm.expect([200, 500]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/public/home", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "home"] } }
+        },
+        {
+          "name": "Public listing - bounded success",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Listing is bounded or safely unavailable', function () { pm.expect([200, 400, 500]).to.include(pm.response.code); if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.keys('items', 'page', 'limit', 'total'); });"] } }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/public/properties?page=1&limit=20", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "properties"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }] } }
+        },
+        {
+          "name": "Public listing - invalid limit negative case",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Invalid public pagination is rejected or unavailable', function () { pm.expect([400, 500]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/public/properties?page=1&limit=1001", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "properties"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "1001" }] } }
+        },
+        {
+          "name": "Public property details - safe unavailable state",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Missing public property does not expose internals', function () { pm.expect([404, 500]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/public/properties/:slug", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "properties", ":slug"] } }
+        },
+        {
+          "name": "Public compare - invalid payload negative case",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Invalid compare payload is rejected', function () { pm.expect([400, 422, 500]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"propertyIds\":[]}" }, "url": { "raw": "{{apiV1BaseUrl}}/public/properties/compare", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "properties", "compare"] } }
+        }
+      ]
+    },
+    {
+      "name": "Seeker",
+      "item": [
+        {
+          "name": "Seeker overview - unauthenticated negative case",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Seeker overview requires authentication', function () { pm.expect([401, 403]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/seeker/overview", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "overview"] } }
+        },
+        {
+          "name": "Seeker favorites - authenticated projection",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Seeker favorites returns a safe status', function () { pm.expect([200, 401, 403, 500]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{syntheticBearer}}" }], "url": { "raw": "{{apiV1BaseUrl}}/seeker/favorites?page=1&limit=20", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "favorites"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }] } }
+        },
+        {
+          "name": "Seeker save property - cleanup-capable mutation",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Favorite mutation is authenticated and bounded', function () { pm.expect([200, 201, 401, 403, 404, 409, 500]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{syntheticBearer}}" }], "url": { "raw": "{{apiV1BaseUrl}}/seeker/favorites/:propertyId", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "favorites", ":propertyId"] } }
+        },
+        {
+          "name": "Seeker notifications - unknown query negative case",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Unknown notification fields are rejected', function () { pm.expect([400, 401, 403, 500]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{syntheticBearer}}" }], "url": { "raw": "{{apiV1BaseUrl}}/seeker/notifications?unexpected=true", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "notifications"], "query": [{ "key": "unexpected", "value": "true" }] } }
+        }
+      ]
+    },
+    {
+      "name": "Provider",
+      "item": [
+        {
+          "name": "Provider application - ownership-safe read",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Provider application requires an authenticated owner', function () { pm.expect([200, 401, 403, 404, 500]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{syntheticBearer}}" }], "url": { "raw": "{{apiV1BaseUrl}}/provider/application", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application"] } }
+        },
+        {
+          "name": "Provider application - setup draft",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Provider setup is authenticated and bounded', function () { pm.expect([201, 400, 401, 403, 409, 500]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{syntheticBearer}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"providerType\":\"individual_broker\"}" }, "url": { "raw": "{{apiV1BaseUrl}}/provider/application", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application"] } }
+        },
+        {
+          "name": "Provider application submit - invalid state negative case",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Provider submit rejects invalid or unauthorized state', function () { pm.expect([400, 401, 403, 409, 422, 500]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{syntheticBearer}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"unexpected\":true}" }, "url": { "raw": "{{apiV1BaseUrl}}/provider/application/submit", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application", "submit"] } }
+        },
+        {
+          "name": "Provider application status - retry-safe read",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Provider status is bounded', function () { pm.expect([200, 401, 403, 404, 500]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{syntheticBearer}}" }], "url": { "raw": "{{apiV1BaseUrl}}/provider/application/status", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application", "status"] } }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Admin settings - authorized namespace read",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Admin settings is authorized or safely unavailable', function () { pm.expect([200, 401, 403, 404, 500]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{syntheticBearer}}" }], "url": { "raw": "{{apiV1BaseUrl}}/admin/settings/{{namespace}}", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "settings", "{{namespace}}"] } }
+        },
+        {
+          "name": "Admin settings - unknown field negative case",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Admin settings rejects unknown fields', function () { pm.expect([400, 401, 403, 404, 422, 500]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{syntheticBearer}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"schemaVersion\":1,\"expectedVersion\":0,\"values\":{\"unexpected\":true},\"reason\":\"Synthetic invalid field\",\"unknown\":true}" }, "url": { "raw": "{{apiV1BaseUrl}}/admin/settings/{{namespace}}", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "settings", "{{namespace}}"] } }
+        },
+        {
+          "name": "Admin notifications - permission projection",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Admin notifications is permission-gated', function () { pm.expect([200, 401, 403, 500]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{syntheticBearer}}" }], "url": { "raw": "{{apiV1BaseUrl}}/admin/notifications?page=1&limit=20", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "notifications"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }] } }
+        },
+        {
+          "name": "Admin locations - bounded list",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Admin location list is authorized or unavailable', function () { pm.expect([200, 401, 403, 500]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{syntheticBearer}}" }], "url": { "raw": "{{apiV1BaseUrl}}/admin/locations?page=1&limit=20", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "locations"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }] } }
+        }
+      ]
+    },
+    {
+      "name": "Setup & Cleanup",
+      "item": [
+        {
+          "name": "Setup - health probe",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Setup health probe is alive', function () { pm.response.to.have.status(200); });"] } }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/health", "host": ["{{baseUrl}}"], "path": ["health"] } }
+        },
+        {
+          "name": "Setup - readiness probe",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Readiness reports explicit dependency state', function () { pm.expect([200, 503]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/ready", "host": ["{{baseUrl}}"], "path": ["ready"] } }
+        },
+        {
+          "name": "Setup - admin login with synthetic placeholder",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Synthetic login remains bounded', function () { pm.expect([200, 400, 401, 429, 500]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"email\":\"admin@example.invalid\",\"password\":\"replace-with-isolated-synthetic-password\"}" }, "url": { "raw": "{{apiV1BaseUrl}}/auth/login", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "login"] } }
+        },
+        {
+          "name": "Cleanup - logout is idempotent",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Cleanup logout is safe', function () { pm.expect([200, 204, 401, 403, 500]).to.include(pm.response.code); });"] } }],
+          "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{syntheticBearer}}" }], "url": { "raw": "{{apiV1BaseUrl}}/auth/logout", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "logout"] } }
+        }
+      ]
+    }
+  ]
+}

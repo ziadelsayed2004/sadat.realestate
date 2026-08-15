@@ -1,0 +1,48 @@
+{
+  "taskId": "backend_111",
+  "summary": "Implemented account-level commission overrides with explicit percentage/fixed/exempt values, effective windows, source-attributed account read models, optimistic versions, deterministic lists, active overlap prevention, and fallback to an effective default policy or none.",
+  "filesChanged": [
+    "packages/contracts/src/commissions/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/commissions/account-service.ts",
+    "apps/api/tests/commissions/service.test.ts",
+    "docs/api/commission-policies.md"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts; npm.cmd run typecheck --workspace apps/api; node --test --import tsx apps/api/tests/commissions/service.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts/API typecheck passed and two focused commission tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck; npm.cmd run lint; npm.cmd test -- --runInBand; npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Typecheck and lint passed; full suite passed 365 tests; build succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high; npm.cmd run api:inventory; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs; git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity vulnerabilities; inventory, OpenAPI, Postman, Agent Pack audit, and whitespace checks passed."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B8_commissions/backend_111.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (ADM-42)",
+    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (ADM-42)",
+    "agent_pack/01_product/STATE_MACHINES.md (commission resolution precedence)",
+    "packages/contracts/src/commissions/index.ts",
+    "apps/api/src/modules/commissions/account-service.ts",
+    "apps/api/tests/commissions/service.test.ts",
+    "docs/api/commission-policies.md"
+  ],
+  "knownGaps": [
+    "The account override service is an in-memory boundary; persistent storage, audit/change-log, and full resolver snapshots are later B8 tasks.",
+    "No provider-facing HTTP route was added; provider read-only projection is a later dependent task.",
+    "No production account or commission values were seeded and no financial settlement is performed.",
+    "Live database/provider integration checks were not run because no isolated replica-set topology or credentials were available."
+  ],
+  "completedAt": "2026-08-14T16:03:34.6395352Z"
+}

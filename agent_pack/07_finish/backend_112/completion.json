@@ -1,0 +1,97 @@
+{
+  "taskId": "backend_112",
+  "summary": "Implemented account-scoped commission exceptions and waivers with explicit values, bounded effective windows, approval metadata, reasoned optimistic mutations, active overlap protection, deterministic lookup, and retroactive-edit guards.",
+  "filesChanged": [
+    "packages/contracts/src/commissions/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/commissions/exception-service.ts",
+    "apps/api/tests/commissions/service.test.ts",
+    "docs/api/commission-policies.md"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts compiled with the new exception schemas and exports."
+    },
+    {
+      "command": "node --test --import tsx apps/api/tests/commissions/service.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Three focused commission tests passed, including authorization, strict validation, approval, overlap, temporal, and replay coverage."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace syntax, contracts, and API test typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace checks and ESLint completed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Full serial suite passed 366 tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace and API production builds succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime API inventory completed; no routes changed because HTTP composition is not present for this service boundary."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI artifacts validated."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman artifacts validated."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B8_commissions/backend_112.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json (ADM-43, ADM-44)",
+    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (ADM-43, ADM-44)",
+    "agent_pack/01_product/STATE_MACHINES.md (commission resolution precedence)",
+    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md (commission_exceptions accountId and active dates)",
+    "packages/contracts/src/commissions/index.ts",
+    "apps/api/src/modules/commissions/exception-service.ts",
+    "apps/api/tests/commissions/service.test.ts",
+    "docs/api/commission-policies.md"
+  ],
+  "knownGaps": [
+    "The exception service is an in-memory boundary; persistent storage, audit/change-log, and resolver snapshots are later B8 tasks.",
+    "No commission exception HTTP routes were added because the current runtime has no commission route composition; the service contract is ready for the dependent resolver and route work.",
+    "No production account or commission values were seeded and no financial settlement is performed.",
+    "Live database/provider integration checks were not run because no isolated replica-set topology or credentials were available."
+  ],
+  "completedAt": "2026-08-14T16:14:53.5163447Z"
+}

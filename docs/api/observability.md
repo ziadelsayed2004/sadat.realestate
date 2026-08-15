@@ -19,3 +19,21 @@ Fields are depth-, count-, and length-bounded. Cycles and unsupported values rec
 ## Extension rules
 
 Later tasks should use fixed event names and structured, allowlisted metadata. They must not log complete domain objects or inbound headers/bodies. Sensitive audit records belong in the append-only audit module; operational logs may carry only its trace/request identifiers. Multi-process aggregation and exporter/provider selection remain deployment concerns and must preserve this redaction boundary.
+
+## Metrics and error-reporting hooks
+
+The observability middleware accepts an optional bounded in-memory `MetricsRegistry` and an optional `ErrorReporter`. It records only method, route pattern, status, abort state, and elapsed duration. Metric series are capped, labels are sorted deterministically, and sensitive label names or values are rejected. Histograms retain the latest bounded observation; no percentile, throughput, or business KPI is inferred.
+
+Server responses in the 5xx range may invoke the error-reporting hook with only an error class name, route pattern, status code, request ID, trace ID, and timestamp. Messages, stacks, headers, bodies, credentials, contact data, and raw URLs never cross this boundary. A reporter or metrics sink failure is swallowed so observability cannot change an API response.
+
+## Alert signals and runbook
+
+The checked-in alert catalog contains three provider-neutral signals: `readiness_not_ready` (critical, `readiness-failure`), `http_server_error` (critical, `api-server-error`), and `dependency_degraded` (warning, `dependency-degraded`). Signals produce a safe runbook key and correlation identifiers only; they do not claim a vendor, threshold, SLA, or production incident. Deployment monitoring must choose thresholds and exporters from approved operational configuration.
+
+Runbook actions are intentionally provider-neutral:
+
+1. For readiness failures, inspect `/ready`'s redacted dependency states, restore the required dependency, and verify a healthy probe before routing traffic.
+2. For server errors, correlate by request/trace ID, inspect sanitized logs, reproduce with synthetic data, and roll back or disable the failing release if the error persists.
+3. For dependency degradation, check the adapter's fail-closed readiness state and provider status, then recover or replace the adapter without exposing credentials.
+
+No alert payload contains a user identifier, email, phone, address, IP, token, secret, request body, or raw provider response.
