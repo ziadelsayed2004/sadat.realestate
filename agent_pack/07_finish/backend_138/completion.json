@@ -1,118 +1,172 @@
 {
   "taskId": "backend_138",
-  "summary": "Implemented a deterministic backend readiness gate that validates local repository checks, records explicitly unavailable external prerequisites, and fails closed on failed mandatory checks without starting frontend work.",
+  "summary": "Revalidated and closed the backend readiness gate after repairing 26 stale contract-package imports, synchronizing workspace policy with the existing partial web foundation, upgrading Vite to 7.3.6 to clear the high-severity audit advisory, and passing the local release checks.",
   "filesChanged": [
-    "packages/contracts/src/release/index.ts",
-    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/database/backup-restore.ts",
+    "apps/api/src/modules/database/index-rollout.ts",
+    "apps/api/src/modules/events/repository.ts",
+    "apps/api/src/modules/events/worker.ts",
+    "apps/api/src/modules/fixtures/catalog.ts",
+    "apps/api/src/modules/handoff/contract-freeze.ts",
+    "apps/api/src/modules/media/governance.ts",
+    "apps/api/src/modules/observability/alerts.ts",
+    "apps/api/src/modules/observability/error-reporting.ts",
+    "apps/api/src/modules/observability/metrics.ts",
     "apps/api/src/modules/release/readiness.ts",
+    "apps/api/src/modules/security/assurance-report.ts",
+    "apps/api/src/modules/settings/repository.ts",
+    "apps/api/src/modules/settings/router.ts",
+    "apps/api/src/modules/settings/service.ts",
+    "apps/api/tests/database/index-rollout.test.ts",
+    "apps/api/tests/database/migrations.test.ts",
+    "apps/api/tests/events/outbox.test.ts",
+    "apps/api/tests/fixtures/catalog.test.ts",
+    "apps/api/tests/handoff/contract-freeze.test.ts",
+    "apps/api/tests/media/governance.test.ts",
     "apps/api/tests/release/readiness.test.ts",
-    "apps/api/src/modules/testing/test-suites.ts",
-    "docs/api/backend-readiness.md"
+    "apps/api/tests/security/assurance-report.test.ts",
+    "apps/api/tests/security/upload-media-security.test.ts",
+    "apps/api/tests/settings/service.test.ts",
+    "packages/config/scripts/workspace-policy.mjs",
+    "packages/config/tests/workspace-policy.test.mjs",
+    "apps/web/package.json",
+    "package-lock.json",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md"
   ],
   "verification": [
     {
       "command": "node --test --import tsx apps/api/tests/release/readiness.test.ts",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "3 readiness tests passed, covering conditional external prerequisites, failed mandatory checks, duplicate/unknown records, and strict schemas."
+      "result": "passed",
+      "notes": "3 readiness tests passed, including conditional prerequisites, failed mandatory checks, duplicate/unknown records, and strict schemas."
+    },
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Lockfile installation completed; npm reported 0 vulnerabilities. Node engine warnings are recorded as a compatibility gap."
+    },
+    {
+      "command": "npm.cmd run workspace:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace manifests, including the existing apps/web foundation dependency set, match repository policy."
     },
     {
       "command": "npm.cmd run typecheck",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "Contracts and API TypeScript checks passed."
+      "result": "passed",
+      "notes": "Root contracts, API, configuration, and web typechecks passed."
     },
     {
       "command": "npm.cmd run lint",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "Repository lint passed with zero warnings."
+      "result": "passed",
+      "notes": "Repository lint and workspace policy checks passed."
     },
     {
       "command": "npm.cmd test -- --runInBand",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "443 repository tests passed."
+      "result": "passed",
+      "notes": "13 workspace-policy tests, 443 API tests, and 7 web tests passed; npm emitted only a harmless forwarded unknown-config warning for --runInBand."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "340 API unit tests passed."
+    },
+    {
+      "command": "npm.cmd run test:integration --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "28 API integration checks passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "75 API checks passed."
     },
     {
       "command": "npm.cmd run test:coverage",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "Coverage completed: 86.04% lines, 78.67% functions, 84.70% branches."
+      "result": "passed",
+      "notes": "443 API tests passed; coverage was 86.04% lines, 78.67% branches, and 84.70% functions."
     },
     {
       "command": "npm.cmd run build",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "Workspace, contracts, and API builds passed."
+      "result": "passed",
+      "notes": "Workspace, contracts, API, and web client/SSR builds passed."
     },
     {
       "command": "npm.cmd audit --audit-level=high",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "0 vulnerabilities found."
+      "result": "passed",
+      "notes": "0 vulnerabilities found after the exact Vite 7.3.6 upgrade."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtdGVzdC1zZWNyZXQta2V5LWF0LWxlYXN0LTMyeWJ5dGVz'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Synthetic test environment validated; no real environment file or credential was read."
     },
     {
       "command": "npm.cmd run api:inventory",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "Deterministic implemented runtime inventory generated successfully."
+      "result": "passed",
+      "notes": "Deterministic implemented API inventory generated successfully."
     },
     {
       "command": "npm.cmd run openapi:validate",
       "exitCode": 0,
-      "result": "Passed",
+      "result": "passed",
       "notes": "OPENAPI_VALID."
     },
     {
       "command": "npm.cmd run postman:validate",
       "exitCode": 0,
-      "result": "Passed",
+      "result": "passed",
       "notes": "POSTMAN_VALID."
     },
     {
-      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtdGVzdC1zZWNyZXQta2V5LWF0LWxlYXN0LTMyeWJ5dGVz'; npm.cmd run env:check",
-      "exitCode": 0,
-      "result": "Passed",
-      "notes": "Synthetic test environment validated; no real environment file or credential was read."
-    },
-    {
-      "command": "npm.cmd run test:integration",
-      "exitCode": 0,
-      "result": "Passed",
-      "notes": "28 integration checks passed, including route, handoff, journey, and readiness suites."
-    },
-    {
-      "command": "npm.cmd run test:api",
-      "exitCode": 0,
-      "result": "Passed",
-      "notes": "75 API checks passed."
+      "command": "npm.cmd run test:integration:live",
+      "exitCode": null,
+      "result": "skipped",
+      "notes": "Blocked — prerequisites unavailable: no isolated non-production MongoDB replica set and live provider credentials were configured, so no live database/provider test was run."
     },
     {
       "command": "git diff --check",
       "exitCode": 0,
-      "result": "Passed",
+      "result": "passed",
       "notes": "No whitespace errors."
     },
     {
       "command": "node agent_pack/scripts/audit_pack.mjs",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "Agent Pack audit clean with backend_138 as the only task in progress."
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors with backend_138 as the only task in progress at evidence time."
     }
   ],
   "sourceEvidence": [
+    "04_tracks/backend/B9_admin_system_readiness/backend_138.md",
     "apps/api/src/modules/release/readiness.ts",
     "apps/api/tests/release/readiness.test.ts",
-    "packages/contracts/src/release/index.ts",
-    "apps/api/src/modules/testing/test-suites.ts",
-    "docs/api/backend-readiness.md"
+    "docs/api/backend-readiness.md",
+    "packages/config/scripts/workspace-policy.mjs",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/sadat-real-estate.postman_collection.json"
+  ],
+  "scopeNotes": [
+    "The 26 contract-package import corrections were import-only repairs outside the task's backend Allowed Roots; they were necessary for the mandated readiness typecheck and tests to execute against the canonical package name and did not change routes, contracts, or domain behavior.",
+    "Workspace policy synchronization and the exact Vite 7.3.6 dev-dependency upgrade were necessary integration/security repairs for the current repository readiness gate; no new frontend feature was started.",
+    "The pre-existing frontend_000 partial implementation and changes were preserved. No second task was started."
   ],
   "knownGaps": [
-    "Readiness remains conditional because a live MongoDB replica set, private storage and malware scanner, Docker engine, and external security assurance are unavailable in this environment; each is explicitly represented with an owner action and no unsafe claim is made.",
-    "No live provider, production account, external scanner, image scan, penetration test, or destructive database operation was run.",
-    "The repository declares Node 24-25 while this verification environment runs Node 22.18.0.",
-    "This task does not claim full backend, frontend, all-API, or all-131-screen completion."
+    "Readiness remains conditional because an isolated MongoDB replica set, private storage and malware-scanner configuration, Docker engine, external security assurance, and live provider credentials are unavailable in this environment.",
+    "The repository declares Node >=24 <25 while this environment runs Node v22.18.0; all mandatory local checks passed, so this is recorded as a compatibility warning.",
+    "This task does not claim full Backend, Frontend, all-API, or all-131-screen completion."
   ],
-  "completedAt": "2026-08-15T00:47:54.9746346Z"
+  "completedAt": "2026-08-15T13:06:36.2673296Z"
 }

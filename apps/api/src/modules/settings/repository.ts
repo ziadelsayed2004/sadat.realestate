@@ -5,7 +5,7 @@ import {
   adminSettingsValuesSchema,
   type AdminSettingsData,
   type AdminSettingsNamespace
-} from '@sadat-realestate/contracts';
+} from '@sadat-real-estate/contracts';
 import type { SettingsRepository, SettingsWriteResult } from './service.js';
 
 type Row = Record<string, unknown>;

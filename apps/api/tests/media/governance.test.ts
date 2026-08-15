@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { mediaCleanupCandidateSchema } from '@sadat-realestate/contracts';
+import { mediaCleanupCandidateSchema } from '@sadat-real-estate/contracts';
 import {
   MEDIA_RETENTION_WINDOWS_MS,
   MediaGovernanceError,
@@ -10,7 +10,7 @@ import {
   planMediaCleanup,
   sanitizeMediaFilename
 } from '../../src/modules/media/governance.js';
-import type { MediaCleanupCandidate } from '@sadat-realestate/contracts';
+import type { MediaCleanupCandidate } from '@sadat-real-estate/contracts';
 
 const now = new Date('2026-08-14T12:00:00.000Z');
 const id = '0123456789abcdef01234567';

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { SECURITY_ASSURANCE_CATEGORIES, securityAssuranceReportSchema } from '@sadat-realestate/contracts';
+import { SECURITY_ASSURANCE_CATEGORIES, securityAssuranceReportSchema } from '@sadat-real-estate/contracts';
 import { buildSecurityAssuranceReport, SECURITY_ASSURANCE_FINDINGS, summarizeSecurityAssurance, validateSecurityAssuranceReport } from '../../src/modules/security/assurance-report.js';
 
 test('builds a complete deterministic assurance matrix with explicit conditional gaps', () => {

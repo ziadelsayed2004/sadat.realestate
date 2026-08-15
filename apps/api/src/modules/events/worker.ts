@@ -3,7 +3,7 @@ import {
   outboxLeaseSchema,
   outboxWorkerIdSchema,
   type OutboxEventDomain
-} from '@sadat-realestate/contracts';
+} from '@sadat-real-estate/contracts';
 import type { OutboxEventRecord, OutboxRepository } from './repository.js';
 
 export const OUTBOX_DEFAULT_LEASE_MS = 30_000;

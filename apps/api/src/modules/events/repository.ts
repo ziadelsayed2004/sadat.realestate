@@ -10,7 +10,7 @@ import {
   type OutboxEventCreate,
   type OutboxFailure,
   type OutboxLease
-} from '@sadat-realestate/contracts';
+} from '@sadat-real-estate/contracts';
 
 export interface OutboxEventRecord {
   id: string;

@@ -137,8 +137,8 @@
 - [x] backend_138 — Backend Readiness Gate
 ## F0_frontend_foundation
 
-- [ ] frontend_000 — Establish Vite SSR and Frontend Architecture
-- [ ] frontend_001 — Extract Design Tokens and Assets
+- [x] frontend_000 — Establish Vite SSR and Frontend Architecture
+- [/] frontend_001 — Extract Design Tokens and Assets
 - [ ] frontend_002 — Core Component Library
 - [ ] frontend_003 — Shells, Routes, and Error Boundaries
 - [ ] frontend_004 — API Client and Data Contracts

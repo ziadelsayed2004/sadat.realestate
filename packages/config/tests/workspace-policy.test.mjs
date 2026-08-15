@@ -72,6 +72,12 @@ test('rejects an unexpected dependency in a non-API workspace', () => {
   assert.ok(validateWorkspaceGraph(graph).some((issue) => issue.includes('packages/ui dependencies')));
 });
 
+test('rejects an unexpected frontend foundation dependency', () => {
+  const graph = graphCopy();
+  graph.workspacePackages['apps/web'].devDependencies.vite = '7.1.3';
+  assert.ok(validateWorkspaceGraph(graph).some((issue) => issue.includes('apps/web devDependencies')));
+});
+
 test('rejects an API lockfile dependency mismatch', () => {
   const graph = graphCopy();
   graph.lockfile.packages['apps/api'].dependencies.express = '5.0.0';

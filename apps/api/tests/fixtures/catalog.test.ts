@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { UAT_FIXTURE_STATES, UAT_FIXTURE_SURFACES, uatFixtureCatalogSchema, uatFixtureSchema } from '@sadat-realestate/contracts';
+import { UAT_FIXTURE_STATES, UAT_FIXTURE_SURFACES, uatFixtureCatalogSchema, uatFixtureSchema } from '@sadat-real-estate/contracts';
 import { assertUatFixtureCatalog, createUatFixtureCatalog, getUatFixture } from '../../src/modules/fixtures/catalog.js';
 
 test('creates a deterministic synthetic catalog for every surface and common screen state', () => {

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { releaseReadinessSchema } from '@sadat-realestate/contracts';
+import { releaseReadinessSchema } from '@sadat-real-estate/contracts';
 import {
   RELEASE_EXTERNAL_PREREQUISITES,
   RELEASE_GATE_CHECKS,
@@ -44,4 +44,3 @@ test('rejects duplicate, unknown, and loose readiness records', () => {
   assert.throws(() => releaseReadinessSchema.parse({ ...report, frontendStarted: true }), /false/);
   assert.throws(() => releaseReadinessSchema.parse({ ...report, unknown: true }), /Unrecognized key/);
 });
-

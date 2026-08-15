@@ -8,7 +8,7 @@ import {
   type MediaCleanupCandidate,
   type MediaCleanupDecision,
   type MediaRetentionReason
-} from '@sadat-realestate/contracts';
+} from '@sadat-real-estate/contracts';
 
 export const MAX_MEDIA_DISPLAY_FILENAME = 120;
 const DAY_MS = 24 * 60 * 60 * 1_000;

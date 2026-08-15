@@ -8,7 +8,7 @@ import {
   loadScreenRegistry,
   toHandoffOperations
 } from '../../src/modules/handoff/contract-freeze.js';
-import { contractFreezeSchema } from '@sadat-realestate/contracts';
+import { contractFreezeSchema } from '@sadat-real-estate/contracts';
 
 const generatedAt = '2026-09-01T12:00:00.000Z';
 

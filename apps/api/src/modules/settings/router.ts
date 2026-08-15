@@ -3,7 +3,7 @@ import {
   adminSettingsNamespaceParamsSchema,
   adminSettingsUpdateSchema,
   type AdminSettingsData
-} from '@sadat-realestate/contracts';
+} from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims, AccessTokenService } from '../auth/crypto.js';
 import { ApiContractError, toApiErrorResponse } from '../contracts/error-boundary.js';
 import { toSuccessResponse } from '../contracts/response.js';

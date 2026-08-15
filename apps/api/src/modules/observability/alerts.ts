@@ -4,7 +4,7 @@ import {
   type ObservabilityAlert,
   type ObservabilityAlertDefinition,
   type ObservabilityAlertSignal
-} from '@sadat-realestate/contracts';
+} from '@sadat-real-estate/contracts';
 import type { RequestContext } from './context.js';
 
 export const OBSERVABILITY_ALERT_DEFINITIONS: readonly ObservabilityAlertDefinition[] = Object.freeze([

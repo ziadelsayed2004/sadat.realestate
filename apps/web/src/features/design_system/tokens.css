@@ -1,0 +1,51 @@
+:root {
+  color-scheme: light;
+
+  --color-page-background: #f6f8fb;
+  --color-surface: #ffffff;
+  --color-text: #1f2937;
+  --color-text-strong: #102f4e;
+  --color-text-muted: #5f6f82;
+  --color-brand: #163c62;
+  --color-brand-interactive: #1d5d8f;
+  --color-brand-soft: #e7eef6;
+  --color-accent-text: #234d73;
+  --color-border: #dbe3ee;
+  --color-border-info: #b8d2e9;
+  --color-border-critical: #e6b7b7;
+  --color-on-brand: #ffffff;
+  --color-focus: #1d5d8f;
+
+  --font-family-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-size-body: 1rem;
+  --font-size-small: 0.875rem;
+  --font-size-display-min: 2rem;
+  --font-size-display-preferred: 5vw;
+  --font-size-display-max: 3.5rem;
+  --line-height-body: 1.65;
+  --line-height-display: 1.1;
+  --font-weight-regular: 400;
+  --font-weight-strong: 700;
+  --letter-spacing-label: 0.04em;
+
+  --space-none: 0;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 0.75rem;
+  --space-lg: 1rem;
+  --space-xl: 1.5rem;
+  --space-2xl: 2rem;
+  --space-2-5xl: 2.5rem;
+  --space-4xl: 4rem;
+  --space-6xl: 6rem;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.4rem;
+  --radius-lg: 0.75rem;
+
+  --shadow-header: 0 1px 2px rgb(16 47 78 / 0.04);
+  --shadow-state: 0 8px 24px rgb(16 47 78 / 0.06);
+
+  --asset-logo-max-inline-size: 12rem;
+  --asset-logo-max-block-size: 2.5rem;
+}

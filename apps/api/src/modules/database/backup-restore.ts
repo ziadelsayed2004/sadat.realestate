@@ -3,7 +3,7 @@ import {
   databaseBackupDrillResultSchema,
   type DatabaseBackupArtifact,
   type DatabaseBackupDrillResult
-} from '@sadat-realestate/contracts';
+} from '@sadat-real-estate/contracts';
 import type { AppEnvironment } from '../config/environment.js';
 
 export interface BackupProvider {

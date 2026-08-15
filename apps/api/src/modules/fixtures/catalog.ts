@@ -7,7 +7,7 @@ import {
   type UatFixtureCatalog,
   type UatFixtureState,
   type UatFixtureSurface
-} from '@sadat-realestate/contracts';
+} from '@sadat-real-estate/contracts';
 
 function payloadFor(state: UatFixtureState): Record<string, unknown> {
   switch (state) {

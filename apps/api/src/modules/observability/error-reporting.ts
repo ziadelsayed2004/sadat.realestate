@@ -2,7 +2,7 @@ import { createRequestContext, type RequestContext } from './context.js';
 import {
   observabilityErrorReportSchema,
   type ObservabilityErrorReport
-} from '@sadat-realestate/contracts';
+} from '@sadat-real-estate/contracts';
 
 export interface ErrorReporter {
   report(report: ObservabilityErrorReport): void;

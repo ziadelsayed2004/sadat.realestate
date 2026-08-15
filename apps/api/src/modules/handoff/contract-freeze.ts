@@ -9,7 +9,7 @@ import {
   type HandoffOperation,
   type HandoffScreen,
   type HandoffUnresolved
-} from '@sadat-realestate/contracts';
+} from '@sadat-real-estate/contracts';
 import { RUNTIME_ROUTE_INVENTORY } from '../docs/route-inventory.js';
 
 export interface HandoffScreenSource {

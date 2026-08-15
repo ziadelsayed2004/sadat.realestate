@@ -6,7 +6,7 @@ import {
   type AdminSettingsData,
   type AdminSettingsNamespace,
   type AdminSettingsUpdate
-} from '@sadat-realestate/contracts';
+} from '@sadat-real-estate/contracts';
 
 export interface SettingsAuthorization {
   authorize(adminId: string, permission: 'admin:settings.view' | 'admin:settings.manage'): Promise<boolean>;

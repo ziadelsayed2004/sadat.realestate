@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
 import { SettingsServiceError, createSettingsService, type SettingsRepository } from '../../src/modules/settings/service.js';
-import type { AdminSettingsData } from '@sadat-realestate/contracts';
+import type { AdminSettingsData } from '@sadat-real-estate/contracts';
 
 const adminClaims: AccessTokenClaims = {
   iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '0123456789abcdef01234567', sid: 'abcdefabcdefabcdefabcdef',

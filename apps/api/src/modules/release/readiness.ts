@@ -3,7 +3,7 @@ import {
   type ReleaseCheck,
   type ReleasePrerequisite,
   type ReleaseReadiness
-} from '@sadat-realestate/contracts';
+} from '@sadat-real-estate/contracts';
 
 export const RELEASE_GATE_CHECKS = Object.freeze([
   { name: 'typecheck', command: 'npm run typecheck' },

@@ -4,7 +4,7 @@ import {
   databaseIndexRolloutResultSchema,
   type DatabaseIndexDefinition,
   type DatabaseIndexRolloutResult
-} from '@sadat-realestate/contracts';
+} from '@sadat-real-estate/contracts';
 import type { AppEnvironment } from '../config/environment.js';
 import { resolveDatabaseIndexPolicy } from './index-policy.js';
 import { PROPERTY_INDEX_CATALOG } from '../performance/property-indexes.js';

@@ -2,7 +2,7 @@ import {
   observabilityMetricSampleSchema,
   type ObservabilityMetricSample,
   type ObservabilityMetricType
-} from '@sadat-realestate/contracts';
+} from '@sadat-real-estate/contracts';
 
 export type MetricLabels = Readonly<Record<string, string>>;
 

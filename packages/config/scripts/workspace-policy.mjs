@@ -32,6 +32,22 @@ export const EXPECTED_CONTRACTS_DEPENDENCIES = {
   peerDependencies: {}
 };
 
+export const EXPECTED_WEB_DEPENDENCIES = {
+  dependencies: {
+    '@sadat-real-estate/contracts': '0.0.0',
+    react: '19.1.1',
+    'react-dom': '19.1.1'
+  },
+  devDependencies: {
+    '@types/node': '24.2.1',
+    '@types/react': '19.1.10',
+    '@types/react-dom': '19.1.7',
+    '@vitejs/plugin-react': '5.0.2',
+    vite: '7.3.6'
+  },
+  peerDependencies: {}
+};
+
 export function loadWorkspaceGraph(rootDir) {
   const read = (relativePath) => JSON.parse(fs.readFileSync(path.join(rootDir, relativePath), 'utf8'));
   const rootPackage = read('package.json');
@@ -94,6 +110,8 @@ export function validateWorkspaceGraph(graph) {
       ? EXPECTED_API_DEPENDENCIES
       : workspacePath === 'packages/contracts'
         ? EXPECTED_CONTRACTS_DEPENDENCIES
+        : workspacePath === 'apps/web'
+          ? EXPECTED_WEB_DEPENDENCIES
         : { dependencies: {}, devDependencies: {}, peerDependencies: {} };
     for (const section of ['dependencies', 'devDependencies', 'peerDependencies']) {
       if (normalizedMap(manifest[section]) !== normalizedMap(expectedDependencies[section])) {

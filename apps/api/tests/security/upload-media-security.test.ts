@@ -5,7 +5,7 @@ import {
   mediaCleanupCandidateSchema,
   propertyMediaUploadHeadersSchema,
   providerDocumentUploadHeadersSchema
-} from '@sadat-realestate/contracts';
+} from '@sadat-real-estate/contracts';
 import {
   createInMemoryStorageAdapter,
   createPrivateDownloadSigner

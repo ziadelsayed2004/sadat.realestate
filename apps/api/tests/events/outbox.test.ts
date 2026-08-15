@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { outboxEventCreateSchema, outboxEventSchema } from '@sadat-realestate/contracts';
+import { outboxEventCreateSchema, outboxEventSchema } from '@sadat-real-estate/contracts';
 import {
   OutboxRepositoryError,
   createInMemoryOutboxRepository

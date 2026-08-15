@@ -3,7 +3,7 @@ import {
   securityAssuranceReportSchema,
   type SecurityAssuranceFinding,
   type SecurityAssuranceReport
-} from '@sadat-realestate/contracts';
+} from '@sadat-real-estate/contracts';
 
 export const SECURITY_ASSURANCE_FINDINGS: readonly SecurityAssuranceFinding[] = Object.freeze([
   {

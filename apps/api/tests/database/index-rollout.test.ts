@@ -7,7 +7,7 @@ import {
   planIndexRollout,
   type IndexRolloutAdapter
 } from '../../src/modules/database/index-rollout.js';
-import type { DatabaseIndexDefinition } from '@sadat-realestate/contracts';
+import type { DatabaseIndexDefinition } from '@sadat-real-estate/contracts';
 
 function adapter(initial: readonly DatabaseIndexDefinition[] = []): IndexRolloutAdapter & { created: DatabaseIndexDefinition[] } {
   const existing = new Map(initial.map((definition) => [`${definition.collection}:${definition.name}`, definition]));

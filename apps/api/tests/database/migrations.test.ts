@@ -8,7 +8,7 @@ import {
   type DatabaseMigrationDefinition,
   type DatabaseMigrationLedger
 } from '../../src/modules/database/migrations.js';
-import type { DatabaseMigrationRecord } from '@sadat-realestate/contracts';
+import type { DatabaseMigrationRecord } from '@sadat-real-estate/contracts';
 
 const checksumA = 'a'.repeat(64);
 const checksumB = 'b'.repeat(64);

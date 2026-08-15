@@ -1,26 +1,26 @@
 {
-  "generatedAt": "2026-08-15T00:57:26.579Z",
-  "selectedTaskId": "frontend_000",
-  "selectedTaskStatus": "open",
-  "selectedTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_000.md",
+  "generatedAt": "2026-08-15T13:58:43.410Z",
+  "selectedTaskId": "frontend_001",
+  "selectedTaskStatus": "partial",
+  "selectedTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_001.md",
   "selectedTask": {
-    "id": "frontend_000",
+    "id": "frontend_001",
     "phase": "F0_frontend_foundation",
-    "area": "frontend_foundation",
-    "title": "Establish Vite SSR and Frontend Architecture",
-    "goal": "Prepare React, TypeScript, and Vite SSR for the public site with SPA dashboard shells and separate development and production builds.",
-    "kind": "infrastructure",
+    "area": "design_system",
+    "title": "Extract Design Tokens and Assets",
+    "goal": "Connect final assets and create color, typography, spacing, radius, and shadow tokens without redrawing logos.",
+    "kind": "frontend",
     "screens": [],
     "sourceRefs": [],
     "notes": [],
     "track": "frontend",
-    "sequence": 114,
+    "sequence": 115,
     "dependsOn": [
-      "backend_138"
+      "frontend_000"
     ],
-    "atomicTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_000.md",
+    "atomicTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_001.md",
     "allowedRoots": [
-      "apps/web/src/features/frontend_foundation/**",
+      "apps/web/src/features/design_system/**",
       "apps/web/src/routes/**",
       "apps/web/tests/**",
       "packages/ui/**",
@@ -55,30 +55,21 @@
     },
     "frontend": {
       "total": 75,
-      "open": 75,
+      "open": 73,
       "in_progress": 0,
-      "partial": 0,
+      "partial": 1,
       "blocked": 0,
-      "complete": 0
+      "complete": 1
     }
   },
   "blockedTasks": [],
   "blockedByDependencies": [
     {
-      "taskId": "frontend_001",
-      "unresolved": [
-        {
-          "taskId": "frontend_000",
-          "status": "open"
-        }
-      ]
-    },
-    {
       "taskId": "frontend_002",
       "unresolved": [
         {
           "taskId": "frontend_001",
-          "status": "open"
+          "status": "partial"
         }
       ]
     },
