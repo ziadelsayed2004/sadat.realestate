@@ -14,9 +14,17 @@
     "start": "node server.mjs --mode production",
     "pretypecheck": "npm run prepare:contracts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "lint": "eslint \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\" \"vite.config.ts\" \"server.mjs\" --max-warnings=0",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\" \"vite.config.ts\" \"vitest.config.ts\" \"playwright.config.ts\" \"server.mjs\" --max-warnings=0",
     "pretest": "npm run build",
-    "test": "tsx --test tests/auth.test.ts tests/components.test.ts tests/contracts.test.ts tests/design-system.test.ts tests/foundation.test.ts tests/localization.test.ts tests/routing.test.ts tests/ssr.test.mjs"
+    "test": "npm run test:vitest && tsx --test tests/accessibility.test.ts tests/auth.test.ts tests/components.test.ts tests/contracts.test.ts tests/design-system.test.ts tests/foundation.test.ts tests/localization.test.ts tests/routing.test.ts tests/ssr.test.mjs tests/ux-states.test.ts",
+    "pretest:vitest": "npm run prepare:contracts",
+    "test:vitest": "vitest run --config vitest.config.ts",
+    "pretest:e2e": "npm run build",
+    "test:e2e": "playwright test --config playwright.config.ts",
+    "pretest:visual": "npm run build",
+    "test:visual": "playwright test --config playwright.config.ts tests/e2e/visual.spec.ts",
+    "pretest:a11y": "npm run build",
+    "test:a11y": "playwright test --config playwright.config.ts tests/e2e/accessibility.spec.ts"
   },
   "dependencies": {
     "@sadat-real-estate/contracts": "0.0.0",
@@ -24,10 +32,16 @@
     "react-dom": "19.1.1"
   },
   "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "@testing-library/jest-dom": "7.0.1",
+    "@testing-library/react": "16.3.2",
     "@types/node": "24.2.1",
     "@types/react": "19.1.10",
     "@types/react-dom": "19.1.7",
     "@vitejs/plugin-react": "5.0.2",
-    "vite": "7.3.6"
+    "jsdom": "29.1.1",
+    "msw": "2.15.0",
+    "vite": "7.3.6",
+    "vitest": "4.1.10"
   }
 }

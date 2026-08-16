@@ -9,3 +9,5 @@ coverage/
 .env.*
 !.env.example
 docs/design_sources
+apps/web/test-results/
+apps/web/playwright-report/

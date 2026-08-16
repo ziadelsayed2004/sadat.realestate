@@ -1,0 +1,118 @@
+{
+  "taskId": "frontend_006",
+  "summary": "Verified the existing ar/en/zh-CN localization foundation and hardened its runtime direction validation. The shared translation catalog, persisted browser locale store, SSR-safe document lang/dir application, client bootstrap integration, and CJK-capable font fallback are covered by focused and full web tests.",
+  "filesChanged": [
+    "apps/web/src/features/localization/runtime.ts",
+    "apps/web/tests/localization.test.ts"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd exec --workspace apps/web -- tsx --test tests/localization.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Six focused tests passed for shared keys, locale normalization, persistence, storage failure handling, document direction, and CJK font wiring."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript and generated contracts typechecked successfully."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source and tests passed ESLint with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The complete web suite passed 51 tests, including SSR, routing, state, design-system, and localization coverage."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR production bundles built successfully."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared contracts, API, and web workspaces typechecked successfully."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy and repository lint checks passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy tests, 443 API tests, and the complete web test suite passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, and web production builds passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The repository API inventory completed successfully; no endpoint was added by this frontend task."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI artifacts validated successfully."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman artifacts validated successfully."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity-or-higher dependency vulnerabilities were reported."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "The API environment checker requires APP_ENV, API_HOST, and API_PORT. This frontend localization task does not require API runtime configuration."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors while frontend_006 was In Progress."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json — approved ar, en, and zh-CN locale scope, RTL/LTR direction scope, and Cairo typography source.",
+    "apps/web/src/features/localization/catalog.ts — one validated translation-key catalog for all supported locales.",
+    "apps/web/src/features/localization/runtime.ts — browser-safe persistence, locale normalization, direction mapping, and document attributes.",
+    "apps/web/src/features/frontend_foundation/entry-client.tsx — persisted locale consumed during hydration.",
+    "apps/web/tests/localization.test.ts — focused localization and CJK fallback coverage."
+  ],
+  "scopeNotes": [
+    "No screen IDs or API routes were assigned to this infrastructure task.",
+    "The current repository already contained the catalog, client bootstrap, font fallback, and most localization tests; this run preserved that truth and added strict runtime direction validation plus its regression assertion.",
+    "Existing integration files outside the task's localization root are retained only as necessary runtime wiring and are documented here rather than silently expanded."
+  ],
+  "knownGaps": [
+    "The API environment check remains unavailable until APP_ENV, API_HOST, and API_PORT are supplied.",
+    "Cairo and the CJK fallback currently use the existing Google Fonts stylesheet; approved self-hosted production font binaries and final CSP/availability validation remain a production-readiness concern.",
+    "No repository-native Playwright, visual, or accessibility commands are defined for this task."
+  ],
+  "completedAt": "2026-08-16T00:23:20Z"
+}

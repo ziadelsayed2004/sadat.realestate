@@ -1,0 +1,94 @@
+.a11y-skip-link {
+  position: fixed;
+  z-index: 100;
+  inset-block-start: var(--space-sm);
+  inset-inline-start: var(--space-sm);
+  transform: translateY(-200%);
+  padding-block: var(--space-sm);
+  padding-inline: var(--space-md);
+  color: var(--color-text-strong);
+  background: var(--color-surface);
+  border: 2px solid var(--color-brand-secondary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+}
+
+.a11y-skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+.a11y-visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+#main-content {
+  scroll-margin-block-start: var(--space-2xl);
+}
+
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-brand-secondary);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px var(--color-surface);
+}
+
+/* Keep semantic action cues while moving button text onto an approved high-contrast surface. */
+.ui-button--danger,
+.ui-button--success {
+  color: var(--color-text-strong);
+  background: var(--color-surface);
+}
+
+.ui-button--danger {
+  border-color: var(--color-status-error);
+}
+
+.ui-button--success {
+  border-color: var(--color-status-success);
+}
+
+.ui-badge--error {
+  color: var(--color-text-strong);
+  border: 1px solid var(--color-status-error);
+}
+
+.ui-field__message[data-tone="error"] {
+  color: var(--color-text-strong);
+  border-inline-start: 3px solid var(--color-status-error);
+  padding-inline-start: var(--space-sm);
+}
+
+.ui-property-card__price,
+.route-status-page__code,
+code {
+  color: var(--color-text-strong);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --color-border: var(--color-border-strong);
+  }
+
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline-width: 4px;
+  }
+}
+

@@ -11,20 +11,20 @@
     },
     "frontend": {
       "total": 75,
-      "open": 68,
-      "in_progress": 1,
+      "open": 65,
+      "in_progress": 0,
       "partial": 0,
       "blocked": 0,
-      "complete": 6
+      "complete": 10
     }
   },
   "byStatus": {
-    "open": 68,
-    "in_progress": 1,
+    "open": 65,
+    "in_progress": 0,
     "partial": 0,
     "blocked": 0,
-    "complete": 119
+    "complete": 123
   },
-  "selectedTaskId": "frontend_006",
-  "updatedAt": "2026-08-16T00:08:56.862Z"
+  "selectedTaskId": "frontend_010",
+  "updatedAt": "2026-08-16T01:31:51.207Z"
 }

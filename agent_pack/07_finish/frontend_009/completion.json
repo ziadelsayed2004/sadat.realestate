@@ -1,0 +1,154 @@
+{
+  "taskId": "frontend_009",
+  "summary": "Added the web testing foundation with Vitest, React Testing Library, jsdom, MSW handlers for the implemented public home contract, and a sequential Playwright matrix covering Arabic, English, and Simplified Chinese across desktop, tablet, and mobile device scopes. Added visual baselines, accessibility checks, and harness tests, then synchronized the workspace dependency policy.",
+  "filesChanged": [
+    ".gitignore",
+    "package-lock.json",
+    "packages/config/scripts/workspace-policy.mjs",
+    "apps/web/package.json",
+    "apps/web/tsconfig.json",
+    "apps/web/vitest.config.ts",
+    "apps/web/playwright.config.ts",
+    "apps/web/src/features/testing/index.ts",
+    "apps/web/src/features/testing/model.ts",
+    "apps/web/src/features/testing/render.tsx",
+    "apps/web/src/features/testing/setup.ts",
+    "apps/web/src/features/testing/msw/handlers.ts",
+    "apps/web/src/features/testing/msw/server.ts",
+    "apps/web/tests/testing-harness.vitest.test.tsx",
+    "apps/web/tests/e2e/accessibility.spec.ts",
+    "apps/web/tests/e2e/visual.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-zh-CN-mobile-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd ci --no-audit --no-fund",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Clean lockfile installation completed; npm reported only the known Node engine warning (local Node v22.18.0 versus the declared >=24 <25 baseline)."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source, Vitest config, and Playwright config typechecked successfully."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source, tests, and harness configuration linted with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "6 harness tests passed, including locale direction, all 9 matrix combinations, UX retry state, and the implemented public home MSW contract."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Vitest harness and the existing web Node test suite passed: 6 Vitest tests and 63 Node tests."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "18 Playwright tests passed across 3 locales and desktop/tablet/mobile projects using one deterministic worker."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "9 visual snapshot comparisons passed across Arabic, English, Simplified Chinese, and all approved device scopes."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "9 accessibility smoke tests passed across the same locale and device matrix."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace policy and ESLint checks passed after approving the task's exact web testing dependencies."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace suite passed: 13 workspace tests, 443 API tests, and 63 web tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, client, and SSR builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity or higher dependency vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory completed without changing API scope."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Local API readiness check requires APP_ENV, API_HOST, and API_PORT; this is an external environment readiness gap and does not affect the deterministic frontend harness."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F0_frontend_foundation/frontend_009.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "apps/web/src/features/testing/",
+    "apps/web/tests/testing-harness.vitest.test.tsx",
+    "apps/web/tests/e2e/",
+    "packages/contracts/src/"
+  ],
+  "scopeNotes": [
+    "MSW intercepts only the implemented GET /api/v1/public/home contract using a same-origin test host; no production mock or invented endpoint was added.",
+    "The workspace dependency allow-list was updated because the repository's root lint gate intentionally rejects unapproved workspace dependencies.",
+    "The Playwright matrix uses Chromium device presets for the approved desktop, tablet, and mobile scopes; no WebKit coverage claim is made."
+  ],
+  "knownGaps": [
+    "Local Node v22.18.0 is below the repository's declared Node >=24 <25 baseline; all mandatory checks passed under the available runtime.",
+    "The API environment check remains blocked until APP_ENV, API_HOST, and API_PORT are supplied.",
+    "A WebKit browser install was unavailable in the environment; the selected task's locale and device-scope coverage is provided by Chromium presets."
+  ],
+  "completedAt": "2026-08-16T01:30:53.2549116Z"
+}

@@ -1,28 +1,31 @@
 {
-  "generatedAt": "2026-08-16T00:08:57.532Z",
-  "selectedTaskId": "frontend_006",
-  "selectedTaskStatus": "in_progress",
-  "selectedTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_006.md",
+  "generatedAt": "2026-08-16T01:31:57.446Z",
+  "selectedTaskId": "frontend_010",
+  "selectedTaskStatus": "open",
+  "selectedTaskFile": "04_tracks/frontend/F1_public_site/frontend_010.md",
   "selectedTask": {
-    "id": "frontend_006",
-    "phase": "F0_frontend_foundation",
-    "area": "localization",
-    "title": "Localization and RTL/LTR",
-    "goal": "Implement ar, en, and zh-CN with unified keys, persisted locale, safe RTL handling, and a CJK-capable font.",
+    "id": "frontend_010",
+    "phase": "F1_public_site",
+    "area": "public",
+    "title": "Public Homepage",
+    "goal": "Implement the homepage from the CMS and read model with SSR and full approved responsiveness.",
     "kind": "frontend",
-    "screens": [],
+    "screens": [
+      "PUB-01"
+    ],
     "sourceRefs": [
-      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PUB-01"
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 120,
+    "sequence": 124,
     "dependsOn": [
-      "frontend_005"
+      "frontend_009"
     ],
-    "atomicTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_006.md",
+    "atomicTaskFile": "04_tracks/frontend/F1_public_site/frontend_010.md",
     "allowedRoots": [
-      "apps/web/src/features/localization/**",
+      "apps/web/src/features/public/**",
       "apps/web/src/routes/**",
       "apps/web/tests/**",
       "packages/ui/**",
@@ -57,51 +60,15 @@
     },
     "frontend": {
       "total": 75,
-      "open": 68,
-      "in_progress": 1,
+      "open": 65,
+      "in_progress": 0,
       "partial": 0,
       "blocked": 0,
-      "complete": 6
+      "complete": 10
     }
   },
   "blockedTasks": [],
   "blockedByDependencies": [
-    {
-      "taskId": "frontend_007",
-      "unresolved": [
-        {
-          "taskId": "frontend_006",
-          "status": "in_progress"
-        }
-      ]
-    },
-    {
-      "taskId": "frontend_008",
-      "unresolved": [
-        {
-          "taskId": "frontend_007",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "frontend_009",
-      "unresolved": [
-        {
-          "taskId": "frontend_008",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "frontend_010",
-      "unresolved": [
-        {
-          "taskId": "frontend_009",
-          "status": "open"
-        }
-      ]
-    },
     {
       "taskId": "frontend_011",
       "unresolved": [

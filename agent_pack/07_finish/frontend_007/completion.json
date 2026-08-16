@@ -1,0 +1,126 @@
+{
+  "taskId": "frontend_007",
+  "summary": "Added a reusable UX-state model and SSR-safe view for loading, empty, error, retry, success, permission, missing-image, and long-text states, with accessible semantics, honest placeholders, safe text wrapping, and focused coverage.",
+  "filesChanged": [
+    "apps/web/src/features/ux_states/model.ts",
+    "apps/web/src/features/ux_states/components.tsx",
+    "apps/web/src/features/ux_states/index.ts",
+    "apps/web/tests/ux-states.test.ts",
+    "apps/web/package.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd exec --workspace apps/web -- tsx --test tests/ux-states.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Five focused UX-state tests passed, covering state semantics, retry affordances, missing-image placeholders, and long-text safety."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript compilation completed without errors."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source and tests passed ESLint with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 56 web tests passed, including the five new UX-state tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR web builds completed successfully."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository contracts, API, and web typechecks completed successfully."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository workspace and lint checks completed successfully."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository API suite passed 443 tests and the web suite passed 56 tests; npm emitted only an unknown --runInBand configuration warning."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository contracts, API, and web production builds completed successfully."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-level or critical dependency vulnerabilities reported."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory completed; this task added no API routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI artifact validation completed successfully; no contract changes were made."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman artifact validation completed successfully; no collection changes were made."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "The shell has no configured APP_ENV, API_HOST, API_PORT, or MONGODB_URI. This API readiness check is outside the frontend task and no environment file was read or changed."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors with only frontend_007 in progress."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors were found in the working diff."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "apps/web/src/features/frontend_foundation/state-model.ts",
+    "apps/web/src/features/ux_states/model.ts",
+    "apps/web/src/features/ux_states/components.tsx",
+    "apps/web/tests/ux-states.test.ts"
+  ],
+  "scopeNotes": [
+    "No screen IDs were assigned to this foundation UX-state task.",
+    "No API routes, contracts, production mocks, fabricated content, or image URLs were added.",
+    "apps/web/package.json was changed only to register the required focused test in the workspace test command."
+  ],
+  "knownGaps": [
+    "The repository does not define test:e2e, test:visual, or test:a11y scripts, so those checks were not run or claimed.",
+    "Live database/provider smoke testing was not applicable; local API environment configuration and MongoDB topology are unavailable in this shell."
+  ],
+  "completedAt": "2026-08-16T00:39:43.5539469Z"
+}

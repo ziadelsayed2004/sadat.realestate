@@ -65,8 +65,10 @@ export function resolveLocale(explicitLocale?: unknown, acceptLanguage?: string 
   return DEFAULT_CONTENT_LOCALE;
 }
 
-export function directionForLocale(locale: SupportedLocale): TextDirection {
-  return LOCALE_DIRECTIONS[locale];
+export function directionForLocale(locale: unknown): TextDirection {
+  const parsed = supportedLocaleSchema.safeParse(locale);
+  if (!parsed.success) throw new RangeError('Unsupported locale');
+  return LOCALE_DIRECTIONS[parsed.data];
 }
 
 function readPersistedLocale(storage: LocaleStorage | null | undefined): SupportedLocale | undefined {

@@ -1,6 +1,7 @@
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 import type { ReactNode } from 'react';
 import { BrandMark, type DesignAssetCatalog } from '../design_system/index.ts';
+import { getAccessibilityCopy, SkipLink } from '../accessibility/index.ts';
 import type { FoundationCopy } from '../frontend_foundation/locale.js';
 import { directionForLocale } from '../frontend_foundation/locale.js';
 import type { RouteMatch } from '../../routes/route-table.js';
@@ -18,8 +19,9 @@ export interface RouteShellProps {
 function ShellFrame({ kind, route, locale, copy, assets, children }: RouteShellProps & { readonly kind: ShellKind }) {
   const dashboard = kind === 'seeker' || kind === 'provider' || kind === 'admin';
   const surfaceLabel = copy.surfaceLabels[route.surface];
+  const accessibilityCopy = getAccessibilityCopy(locale);
   const body = (
-    <main className="app-main">
+    <main id="main-content" className="app-main" tabIndex={-1}>
       {children}
     </main>
   );
@@ -35,6 +37,7 @@ function ShellFrame({ kind, route, locale, copy, assets, children }: RouteShellP
       data-surface={route.surface}
       dir={directionForLocale(locale)}
     >
+      <SkipLink label={accessibilityCopy.skipToContent} />
       <header className="app-header route-shell__header">
         <BrandMark label={copy.brand} assets={assets} />
         <span className="surface-label" data-shell-surface="true">{surfaceLabel}</span>
@@ -42,9 +45,9 @@ function ShellFrame({ kind, route, locale, copy, assets, children }: RouteShellP
       </header>
       {dashboard ? (
         <div className="route-shell__body">
-          <aside className="route-shell__navigation" aria-label={surfaceLabel} data-shell-navigation="true">
+          <nav className="route-shell__navigation" aria-label={surfaceLabel} data-shell-navigation="true">
             <span className="route-shell__navigation-label">{surfaceLabel}</span>
-          </aside>
+          </nav>
           {body}
         </div>
       ) : body}

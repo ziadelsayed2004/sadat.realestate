@@ -143,10 +143,10 @@
 - [x] frontend_003 — Shells, Routes, and Error Boundaries
 - [x] frontend_004 — API Client and Data Contracts
 - [x] frontend_005 — Authentication State, Guards, and Permissions
-- [ ] frontend_006 — Localization and RTL/LTR — IN PROGRESS
-- [ ] frontend_007 — Loading, Empty, Error, and Success States
-- [ ] frontend_008 — Accessibility and Responsive Baseline
-- [ ] frontend_009 — Frontend Tests and Visual Harness
+- [x] frontend_006 — Localization and RTL/LTR
+- [x] frontend_007 — Loading, Empty, Error, and Success States
+- [x] frontend_008 — Accessibility and Responsive Baseline
+- [x] frontend_009 — Frontend Tests and Visual Harness
 ## F1_public_site
 
 - [ ] frontend_010 — Public Homepage

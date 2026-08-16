@@ -1,0 +1,135 @@
+{
+  "taskId": "frontend_008",
+  "summary": "Implemented the frontend accessibility and responsive baseline with localized skip navigation, keyboard roving-tab behavior, modal focus management, focusable-element helpers, contrast safeguards, reduced-motion handling, approved device-scope declarations, and deterministic accessibility tests.",
+  "filesChanged": [
+    "apps/web/src/features/accessibility/model.ts",
+    "apps/web/src/features/accessibility/keyboard.ts",
+    "apps/web/src/features/accessibility/focus.ts",
+    "apps/web/src/features/accessibility/components.tsx",
+    "apps/web/src/features/accessibility/index.ts",
+    "apps/web/src/features/accessibility/styles.css",
+    "apps/web/src/features/design_system/components.tsx",
+    "apps/web/src/features/frontend_foundation/styles.css",
+    "apps/web/src/features/routing/shells.tsx",
+    "apps/web/tests/accessibility.test.ts",
+    "apps/web/package.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd exec --workspace apps/web -- tsx --test tests/accessibility.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "7 deterministic accessibility, locale/direction, device-scope, focus, contrast, and markup tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript verification passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web prebuild and test suite passed with 63 tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR production builds passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace lint passed."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace test run passed; API tests reported 443 passing tests and web tests reported 63 passing tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace build passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Dependency audit found 0 vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Existing API runtime inventory completed; no API runtime or contract changes were made by this task."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Repository environment validation requires APP_ENV, API_HOST, and API_PORT; this frontend task has no safe need to provide runtime or production configuration."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors while frontend_008 was the sole In Progress task."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "apps/web/src/features/accessibility/",
+    "apps/web/src/features/design_system/components.tsx",
+    "apps/web/src/features/routing/shells.tsx",
+    "apps/web/tests/accessibility.test.ts"
+  ],
+  "scopeNotes": [
+    "This task has no Screen IDs; no screen-specific visual source was required.",
+    "Routing shell and design-system integration were directly required to expose skip navigation, main-content targeting, semantic navigation, modal focus handling, and tab keyboard behavior; these files are included as necessary integration changes outside the task's narrow feature directories.",
+    "apps/web/package.json was updated only to register the required accessibility test in the existing web test command.",
+    "No API, OpenAPI, Postman, database, production data, or dependency changes were introduced.",
+    "An earlier full web test attempt exited 1 after exposing an ESM initialization cycle in the new accessibility token import; the import was corrected and the final full web and root test runs passed."
+  ],
+  "knownGaps": [
+    "The repository declares Node 24 while this environment provides Node 22.18.0; all required checks still passed.",
+    "The repository has no Playwright, visual, browser accessibility, full E2E, or security-check scripts, so those checks were not run; deterministic local accessibility coverage is included instead.",
+    "No live database or provider smoke test was applicable to this frontend-only task."
+  ],
+  "completedAt": "2026-08-16T00:58:22.3543711Z"
+}

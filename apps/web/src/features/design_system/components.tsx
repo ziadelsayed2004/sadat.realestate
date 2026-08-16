@@ -1,6 +1,7 @@
 import {
   useEffect,
   useId,
+  useRef,
   useState,
   type ButtonHTMLAttributes,
   type HTMLAttributes,
@@ -9,6 +10,7 @@ import {
   type ReactNode,
   type SelectHTMLAttributes
 } from 'react';
+import { getFocusableElements, getNextRovingTabId } from '../accessibility/index.ts';
 
 export type ComponentState = 'default' | 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission';
 export type NonDefaultComponentState = Exclude<ComponentState, 'default'>;
@@ -206,14 +208,16 @@ export function Tabs({
   ...divProps
 }: TabsProps) {
   const baseId = useId().replaceAll(':', '');
+  const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [internalActiveId, setInternalActiveId] = useState<string | undefined>(() => defaultActiveId ?? items.find(item => !item.disabled)?.id);
   const requestedActiveId = activeId ?? internalActiveId;
   const activeItem = items.find(item => item.id === requestedActiveId && !item.disabled) ?? items.find(item => !item.disabled);
   const selectedId = activeItem?.id;
 
-  const selectTab = (id: string) => {
+  const selectTab = (id: string, moveFocus = false) => {
     setInternalActiveId(id);
     onActiveChange?.(id);
+    if (moveFocus) tabRefs.current[id]?.focus();
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
@@ -221,15 +225,8 @@ export function Tabs({
     const enabledItems = items.filter(item => !item.disabled);
     if (enabledItems.length === 0) return;
     event.preventDefault();
-    const currentIndex = Math.max(0, enabledItems.findIndex(item => item.id === selectedId));
-    const directionMultiplier = direction === 'rtl' ? -1 : 1;
-    const nextIndex = event.key === 'Home'
-      ? 0
-      : event.key === 'End'
-        ? enabledItems.length - 1
-        : (currentIndex + (event.key === 'ArrowRight' ? directionMultiplier : -directionMultiplier) + enabledItems.length) % enabledItems.length;
-    const nextId = enabledItems[nextIndex]?.id;
-    if (nextId !== undefined) selectTab(nextId);
+    const nextId = getNextRovingTabId(enabledItems.map(item => item.id), selectedId, event.key, direction ?? 'ltr');
+    if (nextId !== undefined) selectTab(nextId, true);
   };
 
   return (
@@ -243,6 +240,10 @@ export function Tabs({
             <button
               key={item.id}
               id={tabId}
+              ref={element => {
+                if (element === null) delete tabRefs.current[item.id];
+                else tabRefs.current[item.id] = element;
+              }}
               className="ui-tabs__tab"
               type="button"
               role="tab"
@@ -317,14 +318,56 @@ export interface ModalProps {
 export function Modal({ open, title, description, children, closeLabel, onClose, footer }: ModalProps) {
   const titleId = `ui-modal-title-${useId().replaceAll(':', '')}`;
   const descriptionId = `${titleId}-description`;
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!open) return undefined;
+    previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const dialog = dialogRef.current;
+
+    if (dialog !== null) {
+      const firstFocusable = getFocusableElements(dialog)[0];
+      (firstFocusable ?? dialog).focus();
+    }
+
     const handleKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
+      if (event.key !== 'Tab' || dialog === null) return;
+
+      const focusableElements = getFocusableElements(dialog);
+      if (focusableElements.length === 0) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+
+      const firstFocusable = focusableElements[0];
+      const lastFocusable = focusableElements.at(-1);
+      if (firstFocusable === undefined) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+      const currentElement = document.activeElement;
+      if (currentElement !== null && !dialog.contains(currentElement)) {
+        event.preventDefault();
+        firstFocusable.focus();
+      } else if (event.shiftKey && currentElement === firstFocusable) {
+        event.preventDefault();
+        lastFocusable?.focus();
+      } else if (!event.shiftKey && currentElement === lastFocusable) {
+        event.preventDefault();
+        firstFocusable.focus();
+      }
     };
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      const previousFocus = previousFocusRef.current;
+      previousFocusRef.current = null;
+      if (previousFocus?.isConnected === true) previousFocus.focus();
+    };
   }, [onClose, open]);
 
   if (!open) return null;
@@ -333,9 +376,11 @@ export function Modal({ open, title, description, children, closeLabel, onClose,
     <div className="ui-modal-backdrop" data-state="open">
       <div
         className="ui-modal"
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        tabIndex={-1}
         {...(description === undefined ? {} : { 'aria-describedby': descriptionId })}
       >
         <header className="ui-modal__header">

@@ -39,11 +39,17 @@ export const EXPECTED_WEB_DEPENDENCIES = {
     'react-dom': '19.1.1'
   },
   devDependencies: {
+    '@playwright/test': '1.62.1',
+    '@testing-library/jest-dom': '7.0.1',
+    '@testing-library/react': '16.3.2',
     '@types/node': '24.2.1',
     '@types/react': '19.1.10',
     '@types/react-dom': '19.1.7',
     '@vitejs/plugin-react': '5.0.2',
-    vite: '7.3.6'
+    jsdom: '29.1.1',
+    msw: '2.15.0',
+    vite: '7.3.6',
+    vitest: '4.1.10'
   },
   peerDependencies: {}
 };

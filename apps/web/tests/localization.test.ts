@@ -59,6 +59,7 @@ test('locale normalization preserves approved direction rules and falls back saf
   assert.equal(directionForLocale('ar'), 'rtl');
   assert.equal(directionForLocale('en'), 'ltr');
   assert.equal(directionForLocale('zh-CN'), 'ltr');
+  assert.throws(() => directionForLocale('fr'), /Unsupported locale/);
 });
 
 test('locale store prefers persisted locale, persists safe changes, and notifies subscribers', () => {

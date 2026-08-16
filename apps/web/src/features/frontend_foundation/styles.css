@@ -1,6 +1,7 @@
 @import '../design_system/tokens.css';
 @import '../design_system/components.css';
 @import '../routing/styles.css';
+@import '../accessibility/styles.css';
 
 :root {
   color: var(--color-text);
