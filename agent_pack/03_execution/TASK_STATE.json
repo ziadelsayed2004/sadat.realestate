@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-16T01:31:47.948Z",
+  "updatedAt": "2026-08-16T22:15:30.026Z",
   "tasks": {
     "backend_000": {
       "status": "complete",
@@ -864,45 +864,45 @@
       "evidencePath": "07_finish/frontend_009/completion.json"
     },
     "frontend_010": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-16T16:18:24.354Z",
+      "completedAt": "2026-08-16T17:01:39.726Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_010/completion.json"
     },
     "frontend_011": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-16T17:09:15.825Z",
+      "completedAt": "2026-08-16T19:27:08.584Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_011/completion.json"
     },
     "frontend_012": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-16T19:37:35.005Z",
+      "completedAt": "2026-08-16T20:10:00.967Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_012/completion.json"
     },
     "frontend_013": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-16T20:21:39.084Z",
+      "completedAt": "2026-08-16T20:47:50.200Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_013/completion.json"
     },
     "frontend_014": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-16T20:59:41.915Z",
+      "completedAt": "2026-08-16T21:25:36.071Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_014/completion.json"
     },
     "frontend_015": {
-      "status": "open",
-      "startedAt": null,
+      "status": "partial",
+      "startedAt": "2026-08-16T21:33:16.382Z",
       "completedAt": null,
-      "reason": null,
+      "reason": "The article listing and detail UI, adapter boundary, SSR/client states, localized metadata, and tests are implemented and pass verification, but GET /api/v1/public/articles and GET /api/v1/public/articles/:slug remain marked planned and absent from the authoritative API inventory; public article category metadata is also not exposed by an implemented route, so production article loading and category labels cannot be claimed complete.",
       "evidencePath": null
     },
     "frontend_016": {

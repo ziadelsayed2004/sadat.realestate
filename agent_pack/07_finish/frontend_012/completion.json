@@ -1,0 +1,150 @@
+{
+  "taskId": "frontend_012",
+  "summary": "Implemented the PUB-03 public property-details route with contract-backed localized details, safe media placeholders, source/project/related-property sections, SSR/client hydration, SEO metadata, and protected seeker contact/viewing actions. Added component, SSR, visual, and accessibility coverage across all approved locales and device scopes.",
+  "filesChanged": [
+    "apps/web/server.mjs",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/src/features/frontend_foundation/entry-client.tsx",
+    "apps/web/src/features/frontend_foundation/entry-server.tsx",
+    "apps/web/src/features/public/index.ts",
+    "apps/web/src/features/public/details.tsx",
+    "apps/web/src/features/public/details.css",
+    "apps/web/src/features/public/details-copy.ts",
+    "apps/web/src/features/public/details-data.ts",
+    "apps/web/tests/public-details.vitest.test.tsx",
+    "apps/web/tests/ssr.test.mjs",
+    "apps/web/tests/e2e/visual.spec.ts",
+    "apps/web/tests/e2e/accessibility.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-property-details-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-property-details-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-property-details-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-property-details-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-property-details-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-property-details-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-property-details-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-property-details-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-property-details-zh-CN-mobile-zh-win32.png",
+    "agent_pack/07_finish/frontend_012/completion.json",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/step_info.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and web TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace validation and ESLint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/public-details.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "6 property-details component tests passed, including API prefixing, locale direction, safe projection, action payloads, and loading/retry/permission/not-found states."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full web suite passed: 27 Vitest tests and 66 Node/SSR/foundation tests."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root suite passed: 443 API tests and the full web suite, including the PUB-03 SSR test."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, web client, and web SSR production builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity or higher dependency vulnerabilities reported."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory completed; the details route and existing seeker action routes are implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI artifact validation passed."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman artifact validation passed."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web -- --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Recorded the nine new PUB-03 locale/device baselines; all 27 visual scenarios passed."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final visual rerun passed all 27 scenarios across Arabic, English, Simplified Chinese, desktop, tablet, and mobile."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 36 accessibility scenarios passed, including labeled forms, modal controls, one main landmark, and safe image states for PUB-03."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "API environment check requires APP_ENV, API_HOST, and API_PORT. This frontend task uses deterministic browser fixtures and fail-closed protected actions; no production environment was accessed."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors while frontend_012 was the sole in-progress task."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F1_public_site/frontend_012.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json#PUB-03",
+    "agent_pack/01_product/SCREEN_COVERAGE.json#PUB-03",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json#PUB-03",
+    "docs/design_sources/final_screens/public/PUB-03.png (SHA-256 d1346599fdb04cdc8b217fd99d7323a281810d69c6e6b9265dc3df204735679d)",
+    "packages/contracts/src/public/index.ts#publicPropertyDetailsSuccessEnvelopeSchema",
+    "apps/api/src/modules/public/router.ts#GET /api/v1/public/properties/:slug",
+    "apps/web/tests/public-details.vitest.test.tsx",
+    "apps/web/tests/ssr.test.mjs",
+    "apps/web/tests/e2e/visual.spec.ts",
+    "apps/web/tests/e2e/accessibility.spec.ts"
+  ],
+  "scopeNotes": [
+    "No backend runtime, database model, OpenAPI, or Postman implementation was changed; the task consumes existing contracts only.",
+    "Public property media exposes metadata without a public delivery URL, so the gallery truthfully renders an unavailable-image state instead of inventing a URL.",
+    "Contact and viewing submissions use the existing authenticated seeker endpoints and fail closed to a sign-in permission state when no session is available.",
+    "The approved local PUB-03 export was used because external Figma/Drive references are not available in this environment."
+  ],
+  "knownGaps": [
+    "API environment readiness remains pending until APP_ENV, API_HOST, and API_PORT are supplied for a non-production runtime check.",
+    "Live database/provider smoke checks were not run; they are outside this frontend task and require isolated non-production credentials and topology."
+  ],
+  "completedAt": "2026-08-16T20:08:30.3555659Z"
+}

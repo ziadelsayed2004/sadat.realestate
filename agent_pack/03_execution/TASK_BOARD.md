@@ -149,12 +149,12 @@
 - [x] frontend_009 — Frontend Tests and Visual Harness
 ## F1_public_site
 
-- [ ] frontend_010 — Public Homepage
-- [ ] frontend_011 — Property Listing and Search
-- [ ] frontend_012 — Property Details
-- [ ] frontend_013 — Unit Comparison
-- [ ] frontend_014 — Developers, Companies, and Developer Profiles
-- [ ] frontend_015 — Article Listing and Details
+- [x] frontend_010 — Public Homepage
+- [x] frontend_011 — Property Listing and Search
+- [x] frontend_012 — Property Details
+- [x] frontend_013 — Unit Comparison
+- [x] frontend_014 — Developers, Companies, and Developer Profiles
+- [/] frontend_015 — Article Listing and Details
 - [ ] frontend_016 — Community and Post Creation
 - [ ] frontend_017 — About Platform and Team
 - [ ] frontend_018 — SEO and SSR for Public Routes

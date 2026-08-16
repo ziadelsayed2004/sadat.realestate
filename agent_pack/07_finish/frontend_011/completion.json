@@ -1,0 +1,175 @@
+{
+  "taskId": "frontend_011",
+  "summary": "Implemented the PUB-02 public property listing with strict query parsing, filter and sort controls, pagination, browser URL synchronization, safe public projections, responsive locale-aware rendering, SSR bootstrap support, and loading, empty, error, retry, success, permission, and missing-image states.",
+  "filesChanged": [
+    "apps/web/server.mjs",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/src/features/frontend_foundation/entry-client.tsx",
+    "apps/web/src/features/frontend_foundation/entry-server.tsx",
+    "apps/web/src/features/public/components.tsx",
+    "apps/web/src/features/public/index.ts",
+    "apps/web/src/features/public/listing-copy.ts",
+    "apps/web/src/features/public/listing-data.ts",
+    "apps/web/src/features/public/listing.css",
+    "apps/web/src/features/public/listing.tsx",
+    "apps/web/tests/public-listing.vitest.test.tsx",
+    "apps/web/tests/ssr.test.mjs",
+    "apps/web/tests/e2e/visual.spec.ts",
+    "apps/web/tests/e2e/accessibility.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-zh-CN-tablet-zh-win32.png",
+    "agent_pack/07_finish/frontend_011/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Installed from the existing lockfile; npm reported zero vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace and repository lint completed with zero errors and warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Aggregate backend and web test orchestration passed; API suite passed 443 tests and web suite passed 65 tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, web client, and SSR server bundles built successfully."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/public-listing.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Eight listing tests passed for allowlisted query parsing, localization, public projection, filters, sorting, URL state, pagination, and safe states."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- tsx --test tests/ssr.test.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Five SSR tests passed, including the supplied public listing query and empty data state."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web build and complete workspace test command passed with 21 Vitest tests and 65 Node tests."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web -- --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Generated the nine PUB-02 visual baselines across Arabic, English, and Simplified Chinese desktop, tablet, and mobile projects; all 18 visual cases passed."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Stable rerun passed all 18 visual cases across the approved locale and device matrix."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 27 browser accessibility cases passed, including listing filter labels, query controls, navigation, image state, and safe-state markers."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory completed and includes the implemented GET /api/v1/public/properties route consumed by the listing."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Existing OpenAPI artifacts validated successfully; no route was invented or changed."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Existing Postman artifacts validated successfully."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities were found."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Current shell is missing APP_ENV, API_HOST, and API_PORT. This is an environment readiness gap; the listing fails closed to its loading state without an API origin."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors found in tracked changes."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Pre-close Agent Pack audit reported zero errors with only frontend_011 in progress."
+    },
+    {
+      "command": "live database/provider smoke test",
+      "exitCode": null,
+      "result": "skipped",
+      "notes": "No isolated non-production MongoDB topology, provider credentials, or safe external test data was configured."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json#PUB-02",
+    "docs/design_sources/final_screens/public/PUB-02.png (sha256 d5ac0f6bc48a74c4cb8af9ab458c0b70a79d026b162000bcedf45115b5261e9c; 6308x7924; desktop/tablet/mobile; ar/en/zh-CN)",
+    "packages/contracts/src/search/index.ts#publicPropertySearchQuerySchema",
+    "packages/contracts/src/search/index.ts#publicPropertyListDataSchema",
+    "apps/api/src/modules/search/router.ts#GET /api/v1/public/properties",
+    "apps/api/src/modules/search/properties.ts",
+    "apps/web/src/features/public/listing-data.ts",
+    "apps/web/src/features/public/listing.tsx",
+    "apps/web/tests/public-listing.vitest.test.tsx",
+    "apps/web/tests/ssr.test.mjs",
+    "apps/web/tests/e2e/visual.spec.ts",
+    "apps/web/tests/e2e/accessibility.spec.ts"
+  ],
+  "scopeNotes": [
+    "The exact local PUB-02 export was used as the visual source reference; no reference image was copied into runtime assets and no production content was fabricated.",
+    "The listing consumes only the existing GET /api/v1/public/properties contract and its strict public projection. No mock endpoint or private/provider/audit field is exposed.",
+    "apps/web/server.mjs and apps/web/src/features/frontend_foundation/{app.tsx,entry-client.tsx,entry-server.tsx} are outside the task Allowed Roots but are necessary integration points for the existing SSR/client bootstrap and route rendering; the changes are limited to PUB-02 data and route wiring.",
+    "The visual snapshots are generated test artifacts for the selected PUB-02 screen and were regenerated only through the repository Playwright command.",
+    "Existing frontend_010 homepage changes and evidence were preserved; overlapping shared files were extended without reverting prior behavior."
+  ],
+  "knownGaps": [
+    "Node v22.18.0 is installed while the repository declares Node >=24 <25; all mandatory checks passed on the available runtime, but Node 24 remains unverified.",
+    "env:check is blocked because APP_ENV, API_HOST, and API_PORT are absent from the current shell.",
+    "No isolated non-production MongoDB/provider topology or credentials were available for live smoke testing.",
+    "The public search contract does not provide media URLs, so property cards intentionally render the missing-image state rather than fabricating imagery.",
+    "This task does not establish the all-APIs-tested, all-131-screens, full-Backend, or full-platform release claims."
+  ],
+  "completedAt": "2026-08-16T19:25:32.8224604Z"
+}

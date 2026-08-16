@@ -1,0 +1,183 @@
+{
+  "taskId": "frontend_014",
+  "summary": "Implemented the contract-backed public developer directory and developer profile routes for PUB-05 and PUB-06 with localized RTL/LTR rendering, filtering and pagination, approved projects and published-property projections, safe missing-media and unavailable-contact states, SSR/client hydration, and targeted visual and accessibility coverage.",
+  "filesChanged": [
+    "apps/web/src/features/public/developers-data.ts",
+    "apps/web/src/features/public/developers-copy.ts",
+    "apps/web/src/features/public/developers.tsx",
+    "apps/web/src/features/public/developer-profile.tsx",
+    "apps/web/src/features/public/developers.css",
+    "apps/web/src/features/public/index.ts",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/src/features/frontend_foundation/entry-client.tsx",
+    "apps/web/src/features/frontend_foundation/entry-server.tsx",
+    "apps/web/server.mjs",
+    "apps/web/tests/public-developers.vitest.test.tsx",
+    "apps/web/tests/ssr.test.mjs",
+    "apps/web/tests/e2e/visual.spec.ts",
+    "apps/web/tests/e2e/accessibility.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developer-profile-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developer-profile-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developer-profile-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developer-profile-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developer-profile-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developer-profile-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developer-profile-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developer-profile-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developer-profile-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developers-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developers-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developers-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developers-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developers-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developers-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developers-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developers-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-developers-zh-CN-tablet-zh-win32.png",
+    "agent_pack/07_finish/frontend_014/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "node -v",
+      "exitCode": 0,
+      "result": "passed_with_gap",
+      "notes": "Node v22.18.0 is available; the repository declares Node >=24 <25, so Node 24 remains unverified."
+    },
+    {
+      "command": "npm.cmd -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "npm 11.6.4 is available."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web workspace strict TypeScript check passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source, tests, server, and Playwright configuration lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full web build and test command passed: 42 Vitest tests and 69 Node/TAP tests, including the new developer directory/profile and SSR coverage."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and repository lint passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, web client, and web SSR production builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No vulnerabilities were reported."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory reports GET /api/v1/public/developers and GET /api/v1/public/developers/:slug as implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web -- --grep \"developer\" --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 18 selected visual scenarios passed and recorded Arabic RTL, English LTR, and Simplified Chinese LTR snapshots across desktop, tablet, and mobile."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web -- --grep \"developer\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final non-update visual rerun passed all 18 selected scenarios."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web -- --grep \"developer\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 18 selected accessibility scenarios passed labeled filters, profile navigation, landmarks, and safe media-state checks."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Blocked — prerequisites unavailable: APP_ENV, API_HOST, and API_PORT are not configured. This frontend task uses deterministic local/browser fixtures and does not require production credentials."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "The aggregate root test produced no output or meaningful progress for more than two minutes and was terminated safely. The selected web workspace suite and targeted browser matrices passed independently."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final Agent Pack audit passed with zero errors after synchronization."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F1_public_site/frontend_014.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json#PUB-05",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json#PUB-06",
+    "docs/design_sources/final_screens/public/PUB-05.png (local final export; manifest SHA-256 88114921e9fac4389f4ddc7242cc26b9b099cefd1eafdf801a4922690937fb77)",
+    "docs/design_sources/final_screens/public/PUB-06.png (local final export; manifest SHA-256 5ea3de7f6b83c35e1270b83d76db594d2409fc5d0bf562bedd4db141b71851a1)",
+    "agent_pack/01_product/SCREEN_REGISTRY.json#PUB-05",
+    "agent_pack/01_product/SCREEN_REGISTRY.json#PUB-06",
+    "agent_pack/01_product/SCREEN_COVERAGE.json#PUB-05",
+    "agent_pack/01_product/SCREEN_COVERAGE.json#PUB-06",
+    "apps/web/src/routes/route-table.ts#public-developers",
+    "apps/web/src/routes/route-table.ts#public-developer-profile",
+    "apps/api/src/modules/organizations/router.ts#GET /api/v1/public/developers",
+    "apps/api/src/modules/organizations/router.ts#GET /api/v1/public/developers/:slug",
+    "packages/contracts/src/organizations/index.ts#publicOrganizationDirectoryQuerySchema",
+    "packages/contracts/src/organizations/index.ts#publicOrganizationListSuccessEnvelopeSchema",
+    "packages/contracts/src/organizations/index.ts#publicOrganizationProfileSuccessEnvelopeSchema",
+    "apps/web/tests/public-developers.vitest.test.tsx",
+    "apps/web/tests/ssr.test.mjs",
+    "apps/web/tests/e2e/visual.spec.ts",
+    "apps/web/tests/e2e/accessibility.spec.ts"
+  ],
+  "scopeNotes": [
+    "No backend runtime, database model, OpenAPI, or Postman implementation was changed; the existing public organization contracts and API routes were consumed as implemented.",
+    "The approved local PUB-05 and PUB-06 exports depict media, location, tags, activity metrics, and contact details that are not present in the implemented public organization contracts. The UI uses explicit unavailable states and renders only contract-backed projects, published properties, counts, descriptions, and verified status.",
+    "Existing dirty worktree changes from previous tasks were preserved. No dependency, production data, secret, or unsupported endpoint was introduced."
+  ],
+  "knownGaps": [
+    "Node v22.18.0 is installed while the repository declares Node >=24 <25; Node 24 verification remains pending.",
+    "API environment readiness remains pending until APP_ENV, API_HOST, and API_PORT are supplied for a non-production environment check.",
+    "The aggregate root test was terminated after exceeding the no-progress timebox; selected web tests and targeted visual/accessibility matrices passed independently.",
+    "No live production smoke, live MongoDB/provider test, full E2E matrix, or unrelated API/screen coverage claim is made."
+  ],
+  "completedAt": "2026-08-16T21:24:12.9377943Z"
+}

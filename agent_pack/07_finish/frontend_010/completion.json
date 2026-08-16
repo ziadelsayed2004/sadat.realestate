@@ -1,0 +1,253 @@
+{
+  "taskId": "frontend_010",
+  "summary": "Implemented the SSR-aware CMS-driven Public Homepage for PUB-01, including the existing public homepage contract loader, fail-closed SSR bootstrap, Arabic/English/Simplified Chinese direction handling, responsive desktop/tablet/mobile layout, truthful loading/empty/error/retry/permission states, and automated unit, SSR, visual, accessibility, and E2E coverage.",
+  "filesChanged": [
+    "apps/web/server.mjs",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/src/features/frontend_foundation/entry-client.tsx",
+    "apps/web/src/features/frontend_foundation/entry-server.tsx",
+    "apps/web/src/features/public/components.tsx",
+    "apps/web/src/features/public/copy.ts",
+    "apps/web/src/features/public/data.ts",
+    "apps/web/src/features/public/index.ts",
+    "apps/web/src/features/public/model.ts",
+    "apps/web/src/features/public/styles.css",
+    "apps/web/tests/public-homepage.vitest.test.tsx",
+    "apps/web/tests/ssr.test.mjs",
+    "apps/web/tests/e2e/visual.spec.ts",
+    "apps/web/tests/e2e/accessibility.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-homepage-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-homepage-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-homepage-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-homepage-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-homepage-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-homepage-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-homepage-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-homepage-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-homepage-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-properties-zh-CN-mobile-zh-win32.png",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/07_finish/frontend_010/completion.json",
+    "agent_pack/step_info.json",
+    "agent_pack/07_finish/FINISH_INDEX.json"
+  ],
+  "verification": [
+    {
+      "command": "pwd",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository root confirmed before implementation."
+    },
+    {
+      "command": "git status --short",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Initial dirty worktree was captured and preserved."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Initial and pre-close audits reported zero Agent Pack errors."
+    },
+    {
+      "command": "node agent_pack/scripts/select_next_step.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "frontend_010 was selected from step_info.json with frontend_009 complete."
+    },
+    {
+      "command": "node agent_pack/scripts/set_task_status.mjs frontend_010 in_progress",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Only frontend_010 was marked in progress."
+    },
+    {
+      "command": "node -v; npm.cmd -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Node v22.18.0 and npm 11.6.4 are available; the declared Node >=24 <25 baseline remains an environment gap."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source and tests typechecked successfully."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/public-homepage.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Seven homepage tests passed, covering locales/directions, contract projection, loading/success, empty/retry, network failure, and permission failure."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 13 web Vitest tests passed."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web build, 13 Vitest tests, and 64 Node tests passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint completed with zero errors and zero warnings."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR server bundles built successfully."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web -- --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "18 visual tests passed across the approved locale and desktop/tablet/mobile projects; nine PUB-01 homepage snapshots were generated."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "18 accessibility tests passed across the approved locale and device projects."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "36 web visual/accessibility E2E tests passed across the nine locale/device projects."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace and lint checks passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository-wide backend and web test orchestration completed successfully."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository API coverage command completed with the existing coverage report."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, and web client/SSR builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities were found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory completed successfully; homepage consumes the existing public route only."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Existing OpenAPI artifacts validated successfully; no API contract was changed."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Existing Postman artifacts validated successfully; no API route was invented."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "The current shell lacks the required APP_ENV, API_HOST, and API_PORT values. This is an environment readiness gap and does not block the homepage because WEB_API_ORIGIN is optional and SSR fails closed."
+    },
+    {
+      "command": "live database/provider smoke test",
+      "exitCode": null,
+      "result": "skipped",
+      "notes": "No isolated non-production MongoDB topology, provider credentials, or safe external test data was configured."
+    },
+    {
+      "command": "node agent_pack/scripts/set_task_status.mjs frontend_010 complete",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Task closure command completed after the acceptance and verification evidence was recorded."
+    },
+    {
+      "command": "node agent_pack/scripts/sync_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Canonical state, generated views, finish index, and step information were synchronized."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final Agent Pack audit reported zero errors and no in-progress tasks."
+    },
+    {
+      "command": "node agent_pack/scripts/select_next_step.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The next dependency-ready task was selected for reporting only; it was not started."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json#PUB-01",
+    "docs/design_sources/final_screens/public/PUB-01.png (sha256 bd96e921fa4bfa5ce9cbb7a76d87989b8663621d6975d68d1be1f9b147104dd2; 6196x21509; desktop/tablet/mobile; ar/en/zh-CN)",
+    "packages/contracts/src/public/index.ts#publicHomepageSuccessEnvelopeSchema",
+    "apps/api/src/modules/public/homepage.ts",
+    "apps/api/src/modules/public/router.ts#GET /api/v1/public/home",
+    "apps/web/src/features/public/components.tsx",
+    "apps/web/src/features/public/data.ts",
+    "apps/web/tests/public-homepage.vitest.test.tsx",
+    "apps/web/tests/ssr.test.mjs",
+    "apps/web/tests/e2e/visual.spec.ts",
+    "apps/web/tests/e2e/accessibility.spec.ts"
+  ],
+  "scopeNotes": [
+    "The exact local PUB-01 export was used as the visual source reference; no reference image was copied into runtime assets and no production content was fabricated.",
+    "The homepage consumes only GET /api/v1/public/home and existing /properties navigation. It renders only the public projection and never exposes provider, assignment, audit, moderation, or private-document fields.",
+    "The nine new homepage snapshots verify the current fail-closed SSR shell and responsive structure. Populated CMS visual data is consumed when a configured non-production WEB_API_ORIGIN provides the existing contract.",
+    "The existing public-properties-zh-CN-mobile snapshot was regenerated by the selected visual command and preserved as a generated test artifact."
+  ],
+  "knownGaps": [
+    "Node v22.18.0 is installed while the repository declares Node >=24 <25; all mandatory checks passed on the available runtime, but Node 24 remains unverified.",
+    "The current shell has no APP_ENV/API_HOST/API_PORT values, so env:check remains blocked by missing configuration; the homepage SSR boundary is optional and fails closed without WEB_API_ORIGIN.",
+    "No isolated non-production MongoDB/provider topology or credentials were available for live smoke testing.",
+    "This task does not establish the all-APIs-tested, all-131-screens, full-Backend, or full-platform release claims."
+  ],
+  "mongoDbTopology": {
+    "unit": "Not applicable; homepage tests use deterministic contract fixtures and an injected API client.",
+    "integration": "Not run because no isolated non-production database configuration is available.",
+    "replicaSet": "Blocked — prerequisites unavailable for live database verification."
+  },
+  "blockedOptionalChecks": [
+    "Blocked — prerequisites unavailable: required API environment variables are absent from the current shell.",
+    "Skipped: live database/provider smoke test requires isolated non-production topology and credentials."
+  ],
+  "completedAt": "2026-08-16T16:59:55.3292896Z"
+}

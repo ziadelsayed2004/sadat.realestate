@@ -45,13 +45,125 @@ function escapeHtml(value) {
   })[character]);
 }
 
+function escapeJsonForHtml(value) {
+  return value.replace(/[<>&\u2028\u2029]/g, character => ({
+    '<': '\\u003C',
+    '>': '\\u003E',
+    '&': '\\u0026',
+    '\u2028': '\\u2028',
+    '\u2029': '\\u2029'
+  })[character]);
+}
+
+function renderHomepageBootstrap(data) {
+  if (data === undefined) return '';
+  return '<script id="sadat-public-homepage-data" type="application/json">'
+    + escapeJsonForHtml(JSON.stringify(data))
+    + '</script>';
+}
+
+function renderPropertyListBootstrap(data) {
+  if (data === undefined) return '';
+  return '<script id="sadat-public-property-list-data" type="application/json">'
+    + escapeJsonForHtml(JSON.stringify(data))
+    + '</script>';
+}
+
+function renderPropertyDetailsBootstrap(data, state) {
+  const dataScript = data === undefined ? '' : '<script id="sadat-public-property-details-data" type="application/json">'
+    + escapeJsonForHtml(JSON.stringify(data))
+    + '</script>';
+  const stateScript = state === undefined ? '' : '<script id="sadat-public-property-details-state" type="text/plain">'
+    + escapeHtml(state)
+    + '</script>';
+  return dataScript + stateScript;
+}
+
+function renderPropertyComparisonBootstrap(data, state) {
+  const dataScript = data === undefined ? '' : '<script id="sadat-public-property-comparison-data" type="application/json">'
+    + escapeJsonForHtml(JSON.stringify(data))
+    + '</script>';
+  const stateScript = state === undefined ? '' : '<script id="sadat-public-property-comparison-state" type="text/plain">'
+    + escapeHtml(state)
+    + '</script>';
+  return dataScript + stateScript;
+}
+
+function renderDeveloperListBootstrap(data) {
+  if (data === undefined) return '';
+  return '<script id="sadat-public-developer-list-data" type="application/json">'
+    + escapeJsonForHtml(JSON.stringify(data))
+    + '</script>';
+}
+
+function renderDeveloperProfileBootstrap(data, state) {
+  const dataScript = data === undefined ? '' : '<script id="sadat-public-developer-profile-data" type="application/json">'
+    + escapeJsonForHtml(JSON.stringify(data))
+    + '</script>';
+  const stateScript = state === undefined ? '' : '<script id="sadat-public-developer-profile-state" type="text/plain">'
+    + escapeHtml(state)
+    + '</script>';
+  return dataScript + stateScript;
+}
+
+function renderArticleListBootstrap(data, query, state) {
+  const dataScript = data === undefined ? '' : '<script id="sadat-public-article-list-data" type="application/json">'
+    + escapeJsonForHtml(JSON.stringify(data))
+    + '</script>';
+  const queryScript = query === undefined ? '' : '<script id="sadat-public-article-list-query" type="application/json">'
+    + escapeJsonForHtml(JSON.stringify(query))
+    + '</script>';
+  const stateScript = state === undefined ? '' : '<script id="sadat-public-article-list-state" type="text/plain">'
+    + escapeHtml(state)
+    + '</script>';
+  return dataScript + queryScript + stateScript;
+}
+
+function renderArticleDetailsBootstrap(data, state) {
+  const dataScript = data === undefined ? '' : '<script id="sadat-public-article-details-data" type="application/json">'
+    + escapeJsonForHtml(JSON.stringify(data))
+    + '</script>';
+  const stateScript = state === undefined ? '' : '<script id="sadat-public-article-details-state" type="text/plain">'
+    + escapeHtml(state)
+    + '</script>';
+  return dataScript + stateScript;
+}
+
+function renderSeoMetadata(seo) {
+  if (seo === undefined) return '';
+  const description = seo.description === undefined
+    ? ''
+    : '<meta name="description" content="' + escapeHtml(seo.description) + '" />';
+  const canonical = '<link rel="canonical" href="' + escapeHtml(seo.canonicalPath) + '" />';
+  const alternates = seo.alternatePaths.map(alternate => '<link rel="alternate" hreflang="'
+    + escapeHtml(alternate.hrefLang)
+    + '" href="'
+    + escapeHtml(alternate.href)
+    + '" />').join('');
+  const jsonLd = '<script type="application/ld+json">'
+    + escapeJsonForHtml(JSON.stringify(seo.jsonLd))
+    + '</script>';
+  return description + canonical + alternates + jsonLd;
+}
+
 function renderDocument(template, result) {
-  const metadata = `<html lang="${result.locale}" dir="${result.direction}">`;
-  const title = `<title>${escapeHtml(result.title)}</title>`;
+  const metadata = '<html lang="' + result.locale + '" dir="' + result.direction + '">';
+  const title = '<title>' + escapeHtml(result.title) + '</title>';
+  const homepageBootstrap = renderHomepageBootstrap(result.homepageData);
+  const propertyListBootstrap = renderPropertyListBootstrap(result.propertyListData);
+  const propertyDetailsBootstrap = renderPropertyDetailsBootstrap(result.propertyDetailsData, result.propertyDetailsInitialState);
+  const propertyComparisonBootstrap = renderPropertyComparisonBootstrap(result.propertyComparisonData, result.propertyComparisonInitialState);
+  const developerListBootstrap = renderDeveloperListBootstrap(result.developerListData);
+  const developerProfileBootstrap = renderDeveloperProfileBootstrap(result.developerProfileData, result.developerProfileInitialState);
+  const articleListBootstrap = renderArticleListBootstrap(result.articleListData, result.articleListQuery, result.articleListInitialState);
+  const articleDetailsBootstrap = renderArticleDetailsBootstrap(result.articleDetailsData, result.articleDetailsInitialState);
+  const seoMetadata = renderSeoMetadata(result.seo);
   return template
     .replace(/<html\b[^>]*>/i, metadata)
     .replace(/<title>[\s\S]*?<\/title>/i, title)
-    .replace('<!--ssr-outlet-->', result.html);
+    .replace('</head>', seoMetadata + '</head>')
+    .replace('<!--ssr-outlet-->', result.html)
+    .replace('</body>', homepageBootstrap + propertyListBootstrap + propertyDetailsBootstrap + propertyComparisonBootstrap + developerListBootstrap + developerProfileBootstrap + articleListBootstrap + articleDetailsBootstrap + '</body>');
 }
 
 function sendHtml(response, statusCode, html) {
@@ -79,7 +191,10 @@ async function renderDevelopmentPage(request, response, vite) {
     const requestUrl = request.url ?? '/';
     const template = await readFile(path.resolve(appRoot, 'index.html'), 'utf8');
     const entry = await vite.ssrLoadModule('/src/features/frontend_foundation/entry-server.tsx');
-    const result = entry.render(requestUrl, { acceptLanguage: getAcceptLanguage(request) });
+    const result = await entry.render(requestUrl, {
+      acceptLanguage: getAcceptLanguage(request),
+      apiOrigin: process.env.WEB_API_ORIGIN
+    });
     const transformedTemplate = await vite.transformIndexHtml(requestUrl, template);
     sendHtml(response, result.statusCode, renderDocument(transformedTemplate, result));
   } catch (error) {
@@ -167,7 +282,10 @@ async function createProductionServer() {
     if (await serveAsset(request, response)) return;
     try {
       const requestUrl = request.url ?? '/';
-      const result = render(requestUrl, { acceptLanguage: getAcceptLanguage(request) });
+      const result = await render(requestUrl, {
+        acceptLanguage: getAcceptLanguage(request),
+        apiOrigin: process.env.WEB_API_ORIGIN
+      });
       sendHtml(response, result.statusCode, renderDocument(template, result));
     } catch (error) {
       console.error(error);

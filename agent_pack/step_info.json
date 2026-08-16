@@ -1,31 +1,33 @@
 {
-  "generatedAt": "2026-08-16T01:31:57.446Z",
-  "selectedTaskId": "frontend_010",
-  "selectedTaskStatus": "open",
-  "selectedTaskFile": "04_tracks/frontend/F1_public_site/frontend_010.md",
+  "generatedAt": "2026-08-16T22:20:07.089Z",
+  "selectedTaskId": "frontend_015",
+  "selectedTaskStatus": "partial",
+  "selectedTaskFile": "04_tracks/frontend/F1_public_site/frontend_015.md",
   "selectedTask": {
-    "id": "frontend_010",
+    "id": "frontend_015",
     "phase": "F1_public_site",
-    "area": "public",
-    "title": "Public Homepage",
-    "goal": "Implement the homepage from the CMS and read model with SSR and full approved responsiveness.",
+    "area": "content",
+    "title": "Article Listing and Details",
+    "goal": "Implement article listing, categories, details, and multilingual metadata.",
     "kind": "frontend",
     "screens": [
-      "PUB-01"
+      "PUB-07",
+      "PUB-08"
     ],
     "sourceRefs": [
       "09_sources/DESIGN_SOURCE_MANIFEST.json",
-      "PUB-01"
+      "PUB-07",
+      "PUB-08"
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 124,
+    "sequence": 129,
     "dependsOn": [
-      "frontend_009"
+      "frontend_014"
     ],
-    "atomicTaskFile": "04_tracks/frontend/F1_public_site/frontend_010.md",
+    "atomicTaskFile": "04_tracks/frontend/F1_public_site/frontend_015.md",
     "allowedRoots": [
-      "apps/web/src/features/public/**",
+      "apps/web/src/features/content/**",
       "apps/web/src/routes/**",
       "apps/web/tests/**",
       "packages/ui/**",
@@ -60,66 +62,21 @@
     },
     "frontend": {
       "total": 75,
-      "open": 65,
+      "open": 59,
       "in_progress": 0,
-      "partial": 0,
+      "partial": 1,
       "blocked": 0,
-      "complete": 10
+      "complete": 15
     }
   },
   "blockedTasks": [],
   "blockedByDependencies": [
     {
-      "taskId": "frontend_011",
-      "unresolved": [
-        {
-          "taskId": "frontend_010",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "frontend_012",
-      "unresolved": [
-        {
-          "taskId": "frontend_011",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "frontend_013",
-      "unresolved": [
-        {
-          "taskId": "frontend_012",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "frontend_014",
-      "unresolved": [
-        {
-          "taskId": "frontend_013",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "frontend_015",
-      "unresolved": [
-        {
-          "taskId": "frontend_014",
-          "status": "open"
-        }
-      ]
-    },
-    {
       "taskId": "frontend_016",
       "unresolved": [
         {
           "taskId": "frontend_015",
-          "status": "open"
+          "status": "partial"
         }
       ]
     },

@@ -458,8 +458,8 @@ export {
 export type { OverdueRequestListData, RequestAssignment, RequestCreate, RequestData, RequestEvent, RequestIssue, RequestIssueCreate, RequestIssueListData, RequestIssueResolve, RequestListData, RequestListQuery, RequestNote, RequestNoteData, RequestSource, RequestStatus, RequestTransition, RequestTransitionRequest, RequestType } from '../requests/index.js';
 export { viewingCreateSchema, viewingDataSchema, viewingIdParamsSchema, viewingListDataSchema, viewingListQuerySchema, viewingPatchSchema, viewingStatusSchema, viewingTransitionSchema } from '../viewings/index.js';
 export type { ViewingCreate, ViewingData, ViewingListQuery, ViewingPatch, ViewingStatus, ViewingTransition } from '../viewings/index.js';
-export { articleCategoryCreateSchema, articleCategoryPatchSchema, articleCategorySchema, articleCreateSchema, articleListQuerySchema, articlePatchSchema, articlePublicSchema, articleSchema, articleStatusSchema } from '../articles/index.js';
-export type { Article, ArticleCategory, ArticleCategoryCreate, ArticleCreate, ArticlePublic } from '../articles/index.js';
+export { articleCategoryCreateSchema, articleCategoryPatchSchema, articleCategorySchema, articleCreateSchema, articleListQuerySchema, articlePatchSchema, articlePublicListDataSchema, articlePublicListSuccessEnvelopeSchema, articlePublicSchema, articlePublicSuccessEnvelopeSchema, articleSchema, articleSlugSchema, articleStatusSchema } from '../articles/index.js';
+export type { Article, ArticleCategory, ArticleCategoryCreate, ArticleCreate, ArticleListQuery, ArticlePublic, ArticlePublicListData } from '../articles/index.js';
 export { communityPostCreateSchema, communityPostPatchSchema, communityPostSchema, communityPostStatusSchema } from '../community/index.js';
 export { communityCommentCreateSchema, communityCommentSchema } from '../community/index.js';
 export type { CommunityComment, CommunityPost, CommunityPostCreate } from '../community/index.js';

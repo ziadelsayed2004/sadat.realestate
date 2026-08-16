@@ -1,0 +1,176 @@
+{
+  "taskId": "frontend_013",
+  "summary": "Implemented the public two-item Unit Comparison route using the existing compare contract, with localized RTL/LTR rendering, fixed comparison fields, URL-driven remove/clear actions, safe missing-media handling, SSR/client bootstrap, and loading, empty, error, retry, permission, and unavailable states.",
+  "filesChanged": [
+    "apps/web/src/features/public/compare.tsx",
+    "apps/web/src/features/public/compare.css",
+    "apps/web/src/features/public/compare-copy.ts",
+    "apps/web/src/features/public/compare-data.ts",
+    "apps/web/src/features/public/index.ts",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/src/features/frontend_foundation/entry-client.tsx",
+    "apps/web/src/features/frontend_foundation/entry-server.tsx",
+    "apps/web/server.mjs",
+    "apps/web/tests/public-compare.vitest.test.tsx",
+    "apps/web/tests/ssr.test.mjs",
+    "apps/web/tests/e2e/visual.spec.ts",
+    "apps/web/tests/e2e/accessibility.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-comparison-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-comparison-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-comparison-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-comparison-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-comparison-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-comparison-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-comparison-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-comparison-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/public-comparison-zh-CN-mobile-zh-win32.png",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/07_finish/frontend_013/completion.json",
+    "agent_pack/step_info.json"
+  ],
+  "verification": [
+    {
+      "command": "node -v",
+      "exitCode": 0,
+      "result": "passed_with_gap",
+      "notes": "v22.18.0 is available; the repository declares Node >=24 <25. Verification passed on the available host runtime, while Node 24 remains unverified."
+    },
+    {
+      "command": "npm.cmd -v",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "npm 11.6.4 is available."
+    },
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Clean install completed and reported zero vulnerabilities; npm emitted only the documented Node engine warning."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/public-compare.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused comparison suite passed 8 tests."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web workspace strict TypeScript check passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source, tests, server, and Playwright configuration lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web build, 35 Vitest tests, and 67 Node/SSR tests passed; the comparison SSR test is included."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace and repository lint passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, web client, and web SSR builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-level or greater dependency vulnerabilities reported."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory includes POST /api/v1/public/properties/compare as implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web -- --grep comparison --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 9 approved locale/device projects passed and generated comparison snapshots for Arabic RTL, English LTR, and Simplified Chinese LTR across desktop, tablet, and mobile."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web -- --grep comparison",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 9 approved locale/device projects passed labeled control, table, landmark, and missing-media accessibility checks."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Blocked — prerequisites unavailable: APP_ENV, API_HOST, and API_PORT are not configured. This frontend task remains locally deterministic and does not require production credentials."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "The aggregate root API test emitted no output or progress for approximately two minutes and was terminated safely; no exit code was emitted. The selected web workspace test suite and targeted browser matrices passed independently."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Pre-close audit reported zero Agent Pack errors with frontend_013 as the only in-progress task."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F1_public_site/frontend_013.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json#PUB-04",
+    "docs/design_sources/final_screens/public/PUB-04.png (local final export; manifest SHA-256 9dee0f806a8eea7402ebc536c489ec9e33c591bdddf4482cf3883daace1aff98)",
+    "apps/web/src/routes/route-table.ts#public-compare",
+    "apps/api/src/modules/database/api-inventory.ts#comparePublicProperties",
+    "packages/contracts/src/compare/index.ts",
+    "apps/web/src/features/public/compare.tsx",
+    "apps/web/tests/public-compare.vitest.test.tsx",
+    "apps/web/tests/ssr.test.mjs",
+    "apps/web/tests/e2e/visual.spec.ts",
+    "apps/web/tests/e2e/accessibility.spec.ts"
+  ],
+  "scopeNotes": [
+    "PUB-04 is implemented with the existing public comparison contract and its fixed fields: name, transactionType, price, area, and layout.",
+    "The local approved export depicts media/source details that are not present in the implemented public comparison contract; the UI uses an honest missing-image state and does not fabricate source, location, provider, audit, or private fields.",
+    "The integration and generated-view files listed above were already dirty from prior user-owned tasks; their existing changes were preserved while this task added the comparison route wiring and evidence.",
+    "No new dependency, API route, contract, database model, or production data was introduced."
+  ],
+  "knownGaps": [
+    "Node v22.18.0 is installed while the repository declares Node >=24 <25; Node 24 verification remains pending.",
+    "The environment check is unavailable until APP_ENV, API_HOST, and API_PORT are supplied.",
+    "The aggregate root API test was terminated after no output/progress for approximately two minutes; the selected web workspace suite and targeted browser verification passed.",
+    "No live production smoke, live MongoDB test, full E2E matrix, or unrelated screen/API coverage claim is made."
+  ],
+  "completedAt": "2026-08-16T20:46:08.0508455Z"
+}
