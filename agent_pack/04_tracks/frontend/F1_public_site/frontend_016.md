@@ -20,7 +20,9 @@ Implement the feed, comments, reports, and post-creation modal with authenticati
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `PUB-09` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `PUB-10` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

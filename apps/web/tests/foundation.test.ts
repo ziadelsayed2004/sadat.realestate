@@ -16,6 +16,7 @@ test('locale resolution keeps Arabic RTL and maps supported LTR locales', () => 
   assert.equal(directionForLocale('zh-CN'), 'ltr');
   assert.equal(isSupportedLocale('ar'), true);
   assert.equal(isSupportedLocale('fr'), false);
+  assert.equal(getFoundationCopy('ar').brand, 'عقارات السادات');
 });
 
 test('route foundation maps canonical surfaces without inventing API paths', () => {

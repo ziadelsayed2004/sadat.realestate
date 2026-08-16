@@ -4,7 +4,7 @@
 
 Every file inside `agent_pack/` must use English for instructions, task titles, goals, reports, templates, and generated text. File names must not use locale suffixes such as `_AR`.
 
-The integrity audit enforces this rule by rejecting Arabic-script characters in Agent Pack text files. Original Arabic source artifacts remain external and are referenced by metadata rather than embedded in this English-only pack.
+The integrity audit enforces this rule by rejecting Arabic-script characters in Agent Pack text files. Original Arabic visual and handoff artifacts remain outside `agent_pack/` under `docs/design_sources/` and are referenced by English metadata rather than embedded in this English-only pack.
 
 ## Product Language
 

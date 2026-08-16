@@ -19,7 +19,7 @@ Run the UAT matrix for all 131 screens and close Severity 1/2 defects or record 
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
 
 ## Allowed Roots
 

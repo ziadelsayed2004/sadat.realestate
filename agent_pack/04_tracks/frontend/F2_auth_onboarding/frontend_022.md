@@ -20,7 +20,9 @@ Implement default and selected states and continue to the fields appropriate for
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `AUTH-07` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `AUTH-08` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

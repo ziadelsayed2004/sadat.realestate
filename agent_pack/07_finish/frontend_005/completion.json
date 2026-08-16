@@ -1,0 +1,144 @@
+{
+  "taskId": "frontend_005",
+  "summary": "Implemented the frontend authentication state boundary with in-memory access tokens, strict generated-contract login and OTP flows, refresh deduplication, logout cleanup, role guards, server-provided availableActions, and cross-tab logout synchronization.",
+  "filesChanged": [
+    "apps/web/src/features/auth/client.ts",
+    "apps/web/src/features/auth/index.ts",
+    "apps/web/src/features/auth/store.ts",
+    "apps/web/src/features/auth/sync.ts",
+    "apps/web/tests/auth.test.ts",
+    "apps/web/package.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd exec --workspace apps/web -- tsx --test tests/auth.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "10 focused authentication tests passed, covering login, OTP, refresh, logout, permissions, route guards, and cross-tab synchronization."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript and generated contracts typechecked successfully."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source and tests passed ESLint with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web build prerequisite passed and all 45 web tests passed."
+    },
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Clean lockfile installation completed; npm reported zero vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, and web workspaces typechecked successfully."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy and repository lint passed."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy tests passed, all 443 API tests passed, and all 45 web tests passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, client, and SSR builds completed successfully."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 443 API tests passed with 86.04% line coverage."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity or higher npm vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "The repository intentionally has no real environment values in this workspace; APP_ENV, API_HOST, and API_PORT were absent."
+    },
+    {
+      "command": "$taskBytes = [byte[]](1..32); $taskSecret = [Convert]::ToBase64String($taskBytes).TrimEnd('=').Replace('+','-').Replace('/','_'); $env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='4100'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET=$taskSecret; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Isolated non-production ephemeral values passed environment validation; no real secret or production data was used."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory completed successfully."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI artifact validation returned OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman artifact validation returned POSTMAN_VALID."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit completed with zero errors."
+    },
+    {
+      "command": "npm.cmd run security:check",
+      "exitCode": 1,
+      "result": "skipped",
+      "notes": "The repository does not define a security:check script; npm audit was run instead."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F0_frontend_foundation/frontend_005.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "packages/contracts/src/auth/index.ts",
+    "apps/api/src/modules/auth/router.ts",
+    "apps/web/src/features/routing/guards.ts",
+    "apps/web/src/routes/route-table.ts",
+    "apps/web/src/features/auth/client.ts",
+    "apps/web/src/features/auth/store.ts",
+    "apps/web/src/features/auth/sync.ts",
+    "apps/web/tests/auth.test.ts"
+  ],
+  "scopeNotes": [
+    "No screen IDs were assigned to this foundation task; no visual asset or screen implementation was claimed.",
+    "No new API route, contract, dependency, database model, or production mock was introduced."
+  ],
+  "knownGaps": [
+    "The installed Node runtime is v22.18.0 while the repository declares Node >=24 <25; all executed mandatory checks passed under the available runtime.",
+    "Production credentials and external provider configuration remain readiness concerns; local/test auth uses the existing deterministic boundary.",
+    "Playwright, visual, accessibility, and full E2E scripts are not defined in the repository, so those checks were not run."
+  ],
+  "completedAt": "2026-08-15T23:55:18.1224795Z"
+}

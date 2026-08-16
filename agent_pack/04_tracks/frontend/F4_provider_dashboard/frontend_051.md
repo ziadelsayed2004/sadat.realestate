@@ -19,7 +19,7 @@ Review desktop scope, ownership, uploads, wizard, resume behavior, and every PRV
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
 
 ## Allowed Roots
 

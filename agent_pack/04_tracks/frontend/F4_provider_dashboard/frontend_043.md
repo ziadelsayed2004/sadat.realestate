@@ -21,7 +21,10 @@ Implement wizard steps 03 through 05 with conditional validation.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `PRV-05` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `PRV-06` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `PRV-07` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

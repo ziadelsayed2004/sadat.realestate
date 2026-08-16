@@ -20,7 +20,9 @@ Implement the advertising workflow, payment-proof upload, and read-only commissi
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `PRV-19` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `PRV-20` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

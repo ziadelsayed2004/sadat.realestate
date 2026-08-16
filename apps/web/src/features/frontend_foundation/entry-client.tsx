@@ -1,10 +1,14 @@
 import { hydrateRoot } from 'react-dom/client';
-import type { SupportedLocale } from '@sadat-real-estate/contracts';
 import { App } from './app.js';
-import { resolveLocale } from './locale.js';
+import { applyLocaleToDocument, createBrowserLocaleStore } from '../localization/index.js';
 
 const root = document.getElementById('app');
 if (root === null) throw new Error('SSR root element is missing');
 
-const locale = resolveLocale(document.documentElement.lang, navigator.language) as SupportedLocale;
+const localeStore = createBrowserLocaleStore({
+  explicitLocale: document.documentElement.lang,
+  acceptLanguage: navigator.language
+});
+const { locale } = localeStore.getSnapshot();
+applyLocaleToDocument(locale);
 hydrateRoot(root, <App url={window.location.href} locale={locale} />);

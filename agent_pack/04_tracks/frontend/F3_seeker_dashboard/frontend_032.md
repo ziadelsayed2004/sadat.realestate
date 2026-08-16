@@ -19,7 +19,8 @@ Implement appointments, states, rescheduling, and cancellation according to avai
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `SEK-05` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

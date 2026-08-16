@@ -23,7 +23,12 @@ Implement review, submit, under-review, tracking, needs-information, and approve
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `AUTH-13` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `AUTH-14` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `AUTH-15` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `AUTH-16` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `AUTH-17` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

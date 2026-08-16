@@ -22,7 +22,11 @@ Implement banners, creation, tips, homepage ordering, and preview.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `ADM-46` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-47` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-48` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-49` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

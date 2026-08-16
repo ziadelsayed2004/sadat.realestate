@@ -24,7 +24,13 @@ Implement settings modules with optimistic concurrency and preview.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `ADM-53` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-54` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-55` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-56` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-57` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-58` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

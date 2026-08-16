@@ -1,4 +1,6 @@
 @import '../design_system/tokens.css';
+@import '../design_system/components.css';
+@import '../routing/styles.css';
 
 :root {
   color: var(--color-text);
@@ -41,9 +43,12 @@ a {
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
   box-shadow: var(--shadow-header);
+  min-block-size: var(--header-height-min);
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
   color: var(--color-brand);
   font-weight: var(--font-weight-strong);
   text-decoration: none;
@@ -51,8 +56,9 @@ a {
 
 .brand-image {
   display: block;
+  inline-size: auto;
+  block-size: var(--asset-logo-max-block-size);
   max-inline-size: var(--asset-logo-max-inline-size);
-  max-block-size: var(--asset-logo-max-block-size);
   object-fit: contain;
 }
 
@@ -66,7 +72,7 @@ a {
 .app-main {
   width: min(calc(100% - var(--space-2xl)), 64rem);
   margin-inline: auto;
-  padding-block: clamp(var(--space-2xl), 8vw, var(--space-6xl));
+  padding-block: clamp(var(--space-2xl), 8vw, var(--space-4xl));
 }
 
 .route-heading {

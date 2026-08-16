@@ -138,12 +138,12 @@
 ## F0_frontend_foundation
 
 - [x] frontend_000 — Establish Vite SSR and Frontend Architecture
-- [/] frontend_001 — Extract Design Tokens and Assets
-- [ ] frontend_002 — Core Component Library
-- [ ] frontend_003 — Shells, Routes, and Error Boundaries
-- [ ] frontend_004 — API Client and Data Contracts
-- [ ] frontend_005 — Authentication State, Guards, and Permissions
-- [ ] frontend_006 — Localization and RTL/LTR
+- [x] frontend_001 — Extract Design Tokens and Assets
+- [x] frontend_002 — Core Component Library
+- [x] frontend_003 — Shells, Routes, and Error Boundaries
+- [x] frontend_004 — API Client and Data Contracts
+- [x] frontend_005 — Authentication State, Guards, and Permissions
+- [ ] frontend_006 — Localization and RTL/LTR — IN PROGRESS
 - [ ] frontend_007 — Loading, Empty, Error, and Success States
 - [ ] frontend_008 — Accessibility and Responsive Baseline
 - [ ] frontend_009 — Frontend Tests and Visual Harness

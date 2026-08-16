@@ -19,7 +19,7 @@ Implement keyboard access, focus, labels, contrast, reduced motion, and only the
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
 
 ## Allowed Roots
 

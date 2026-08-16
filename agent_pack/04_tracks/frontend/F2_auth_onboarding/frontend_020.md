@@ -21,7 +21,10 @@ Implement login, OTP send/resend and verification, cooldown behavior, and errors
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `AUTH-01` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `AUTH-04` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `AUTH-05` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

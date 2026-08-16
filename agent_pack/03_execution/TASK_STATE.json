@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-15T13:58:28.704Z",
+  "updatedAt": "2026-08-16T00:08:56.813Z",
   "tasks": {
     "backend_000": {
       "status": "complete",
@@ -796,48 +796,48 @@
     "frontend_000": {
       "status": "complete",
       "startedAt": "2026-08-15T11:29:23.432Z",
-      "completedAt": "2026-08-15T13:32:28.581Z",
+      "completedAt": "2026-08-15T15:41:58.187Z",
       "reason": null,
       "evidencePath": "07_finish/frontend_000/completion.json"
     },
     "frontend_001": {
-      "status": "partial",
+      "status": "complete",
       "startedAt": "2026-08-15T13:38:12.922Z",
-      "completedAt": null,
-      "reason": "Approved final logo and font assets are absent from the current repository and no selected design-system reference supplies them; tokens, CSS integration, a safe asset boundary, and tests are verified, but final-asset connection cannot be claimed.",
-      "evidencePath": null
+      "completedAt": "2026-08-15T15:58:44.519Z",
+      "reason": null,
+      "evidencePath": "07_finish/frontend_001/completion.json"
     },
     "frontend_002": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-15T18:28:23.474Z",
+      "completedAt": "2026-08-15T22:41:27.743Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_002/completion.json"
     },
     "frontend_003": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-15T22:48:44.555Z",
+      "completedAt": "2026-08-15T23:02:03.434Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_003/completion.json"
     },
     "frontend_004": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-15T23:11:54.645Z",
+      "completedAt": "2026-08-15T23:29:35.959Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_004/completion.json"
     },
     "frontend_005": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-15T23:36:48.190Z",
+      "completedAt": "2026-08-15T23:56:11.224Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_005/completion.json"
     },
     "frontend_006": {
-      "status": "open",
-      "startedAt": null,
+      "status": "in_progress",
+      "startedAt": "2026-08-16T00:08:56.813Z",
       "completedAt": null,
       "reason": null,
       "evidencePath": null

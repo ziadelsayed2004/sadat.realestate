@@ -36,7 +36,7 @@ export default tseslint.config(
     }
   },
   {
-    files: ['**/*.ts'],
+    files: ['**/*.{ts,tsx}'],
     rules: {
       'no-undef': 'off'
     }

@@ -21,7 +21,10 @@ Implement multilingual forms and concurrency-safe saves.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `ADM-50` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-51` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-52` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

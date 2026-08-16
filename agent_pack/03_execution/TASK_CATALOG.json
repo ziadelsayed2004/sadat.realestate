@@ -4974,7 +4974,9 @@
     "goal": "Prepare React, TypeScript, and Vite SSR for the public site with SPA dashboard shells and separate development and production builds.",
     "kind": "infrastructure",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 114,
@@ -5015,7 +5017,10 @@
     "goal": "Connect final assets and create color, typography, spacing, radius, and shadow tokens without redrawing logos.",
     "kind": "frontend",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "09_sources/HANDOFF_REFERENCE.md"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 115,
@@ -5056,7 +5061,9 @@
     "goal": "Implement Buttons, Inputs, Selects, Tabs, Badges, Modals, Toasts, Tables, Pagination, and PropertyCard with their required states.",
     "kind": "frontend",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 116,
@@ -5097,7 +5104,9 @@
     "goal": "Implement Public, Seeker, Provider, and Admin shells with route guards, 404/403 pages, and error boundaries.",
     "kind": "frontend",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 117,
@@ -5138,7 +5147,9 @@
     "goal": "Consume generated contracts and client types, and add query caching, request IDs, cancellation, and retry without duplicated types.",
     "kind": "integration",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 118,
@@ -5179,7 +5190,9 @@
     "goal": "Implement in-memory access tokens, the refresh flow, role guards, availableActions, and cross-tab logout.",
     "kind": "security",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 119,
@@ -5220,7 +5233,9 @@
     "goal": "Implement ar, en, and zh-CN with unified keys, persisted locale, safe RTL handling, and a CJK-capable font.",
     "kind": "frontend",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 120,
@@ -5261,7 +5276,9 @@
     "goal": "Create consistent patterns for loading, empty, error, retry, missing-image, and long-text states.",
     "kind": "frontend",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 121,
@@ -5302,7 +5319,9 @@
     "goal": "Implement keyboard access, focus, labels, contrast, reduced motion, and only the approved responsive ranges.",
     "kind": "quality",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 122,
@@ -5343,7 +5362,9 @@
     "goal": "Prepare Vitest, React Testing Library, MSW, Playwright, and visual snapshots across approved viewports and locales.",
     "kind": "quality",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 123,
@@ -5386,7 +5407,10 @@
     "screens": [
       "PUB-01"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PUB-01"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 124,
@@ -5429,7 +5453,10 @@
     "screens": [
       "PUB-02"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PUB-02"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 125,
@@ -5472,7 +5499,10 @@
     "screens": [
       "PUB-03"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PUB-03"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 126,
@@ -5515,7 +5545,10 @@
     "screens": [
       "PUB-04"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PUB-04"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 127,
@@ -5559,7 +5592,11 @@
       "PUB-05",
       "PUB-06"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PUB-05",
+      "PUB-06"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 128,
@@ -5603,7 +5640,11 @@
       "PUB-07",
       "PUB-08"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PUB-07",
+      "PUB-08"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 129,
@@ -5647,7 +5688,11 @@
       "PUB-09",
       "PUB-10"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PUB-09",
+      "PUB-10"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 130,
@@ -5691,7 +5736,11 @@
       "PUB-11",
       "PUB-12"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PUB-11",
+      "PUB-12"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 131,
@@ -5732,7 +5781,9 @@
     "goal": "Implement canonical links, metadata, structured data, sitemap, robots, and hydration, and verify crawlable HTML.",
     "kind": "quality",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 132,
@@ -5773,7 +5824,9 @@
     "goal": "Review desktop, tablet, and mobile behavior, all supported locales, visual fidelity, and states for every PUB screen.",
     "kind": "quality",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 133,
@@ -5818,7 +5871,12 @@
       "AUTH-04",
       "AUTH-05"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "AUTH-01",
+      "AUTH-04",
+      "AUTH-05"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 134,
@@ -5863,7 +5921,12 @@
       "AUTH-03",
       "AUTH-06"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "AUTH-02",
+      "AUTH-03",
+      "AUTH-06"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 135,
@@ -5907,7 +5970,11 @@
       "AUTH-07",
       "AUTH-08"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "AUTH-07",
+      "AUTH-08"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 136,
@@ -5951,7 +6018,11 @@
       "AUTH-09",
       "AUTH-09+"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "AUTH-09",
+      "AUTH-09+"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 137,
@@ -5997,7 +6068,13 @@
       "AUTH-11",
       "AUTH-12"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "AUTH-10",
+      "AUTH-10+",
+      "AUTH-11",
+      "AUTH-12"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 138,
@@ -6044,7 +6121,14 @@
       "AUTH-16",
       "AUTH-17"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "AUTH-13",
+      "AUTH-14",
+      "AUTH-15",
+      "AUTH-16",
+      "AUTH-17"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 139,
@@ -6085,7 +6169,9 @@
     "goal": "Review every AUTH screen across desktop, tablet, mobile, directions, validation, and resume behavior.",
     "kind": "quality",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 140,
@@ -6128,7 +6214,10 @@
     "screens": [
       "SEK-01"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "SEK-01"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 141,
@@ -6173,7 +6262,12 @@
       "SEK-03",
       "SEK-04"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "SEK-02",
+      "SEK-03",
+      "SEK-04"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 142,
@@ -6216,7 +6310,10 @@
     "screens": [
       "SEK-05"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "SEK-05"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 143,
@@ -6259,7 +6356,10 @@
     "screens": [
       "SEK-06"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "SEK-06"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 144,
@@ -6302,7 +6402,10 @@
     "screens": [
       "SEK-07"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "SEK-07"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 145,
@@ -6347,7 +6450,12 @@
       "SEK-09",
       "SEK-10"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "SEK-08",
+      "SEK-09",
+      "SEK-10"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 146,
@@ -6388,7 +6496,9 @@
     "goal": "Review the desktop-only scope, permissions, prevention of internal-data exposure, and all required states.",
     "kind": "quality",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 147,
@@ -6431,7 +6541,10 @@
     "screens": [
       "PRV-01"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PRV-01"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 148,
@@ -6474,7 +6587,10 @@
     "screens": [
       "PRV-02"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PRV-02"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 149,
@@ -6518,7 +6634,11 @@
       "PRV-03",
       "PRV-04"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PRV-03",
+      "PRV-04"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 150,
@@ -6563,7 +6683,12 @@
       "PRV-06",
       "PRV-07"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PRV-05",
+      "PRV-06",
+      "PRV-07"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 151,
@@ -6608,7 +6733,12 @@
       "PRV-09",
       "PRV-10"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PRV-08",
+      "PRV-09",
+      "PRV-10"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 152,
@@ -6654,7 +6784,13 @@
       "PRV-13",
       "PRV-14"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PRV-11",
+      "PRV-12",
+      "PRV-13",
+      "PRV-14"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 153,
@@ -6697,7 +6833,10 @@
     "screens": [
       "PRV-15"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PRV-15"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 154,
@@ -6741,7 +6880,11 @@
       "PRV-16",
       "PRV-17"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PRV-16",
+      "PRV-17"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 155,
@@ -6784,7 +6927,10 @@
     "screens": [
       "PRV-18"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PRV-18"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 156,
@@ -6828,7 +6974,11 @@
       "PRV-19",
       "PRV-20"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PRV-19",
+      "PRV-20"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 157,
@@ -6874,7 +7024,13 @@
       "PRV-22-2",
       "PRV-22-3"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "PRV-21",
+      "PRV-22-1",
+      "PRV-22-2",
+      "PRV-22-3"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 158,
@@ -6915,7 +7071,9 @@
     "goal": "Review desktop scope, ownership, uploads, wizard, resume behavior, and every PRV state.",
     "kind": "quality",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 159,
@@ -6958,7 +7116,10 @@
     "screens": [
       "ADM-01"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "ADM-01"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 160,
@@ -7004,7 +7165,13 @@
       "ADM-04",
       "ADM-05"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "ADM-02",
+      "ADM-03",
+      "ADM-04",
+      "ADM-05"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 161,
@@ -7049,7 +7216,12 @@
       "ADM-07",
       "ADM-08"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "ADM-06",
+      "ADM-07",
+      "ADM-08"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 162,
@@ -7094,7 +7266,12 @@
       "ADM-10",
       "ADM-11"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "ADM-09",
+      "ADM-10",
+      "ADM-11"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 163,
@@ -7138,7 +7315,11 @@
       "ADM-12",
       "ADM-13"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "ADM-12",
+      "ADM-13"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 164,
@@ -7184,7 +7365,13 @@
       "ADM-16",
       "ADM-17"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "ADM-14",
+      "ADM-15",
+      "ADM-16",
+      "ADM-17"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 165,
@@ -7233,7 +7420,16 @@
       "ADM-23",
       "ADM-24"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "ADM-18",
+      "ADM-19",
+      "ADM-20",
+      "ADM-21",
+      "ADM-22",
+      "ADM-23",
+      "ADM-24"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 166,
@@ -7277,7 +7473,11 @@
       "ADM-25",
       "ADM-26"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "ADM-25",
+      "ADM-26"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 167,
@@ -7322,7 +7522,12 @@
       "ADM-28",
       "ADM-29"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "ADM-27",
+      "ADM-28",
+      "ADM-29"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 168,
@@ -7367,7 +7572,12 @@
       "ADM-31",
       "ADM-32"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "ADM-30",
+      "ADM-31",
+      "ADM-32"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 169,
@@ -7415,7 +7625,15 @@
       "ADM-37",
       "ADM-38"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "ADM-33",
+      "ADM-34",
+      "ADM-35",
+      "ADM-36",
+      "ADM-37",
+      "ADM-38"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 170,
@@ -7464,7 +7682,16 @@
       "ADM-44",
       "ADM-45"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "ADM-39",
+      "ADM-40",
+      "ADM-41",
+      "ADM-42",
+      "ADM-43",
+      "ADM-44",
+      "ADM-45"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 171,
@@ -7510,7 +7737,13 @@
       "ADM-48",
       "ADM-49"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "ADM-46",
+      "ADM-47",
+      "ADM-48",
+      "ADM-49"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 172,
@@ -7555,7 +7788,12 @@
       "ADM-51",
       "ADM-52"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "ADM-50",
+      "ADM-51",
+      "ADM-52"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 173,
@@ -7603,7 +7841,15 @@
       "ADM-57",
       "ADM-58"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "ADM-53",
+      "ADM-54",
+      "ADM-55",
+      "ADM-56",
+      "ADM-57",
+      "ADM-58"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 174,
@@ -7651,7 +7897,15 @@
       "ADM-63",
       "ADM-64"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "ADM-59",
+      "ADM-60",
+      "ADM-61",
+      "ADM-62",
+      "ADM-63",
+      "ADM-64"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 175,
@@ -7695,7 +7949,11 @@
       "ADM-65",
       "ADM-66"
     ],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "ADM-65",
+      "ADM-66"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 176,
@@ -7736,7 +7994,9 @@
     "goal": "Test approved roles, View Only, sensitive actions, and desktop fidelity for every ADM screen.",
     "kind": "quality",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 177,
@@ -7777,7 +8037,9 @@
     "goal": "Test registration, publication, search, save, requests, viewings, ads, commissions, and administration.",
     "kind": "quality",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 178,
@@ -7818,7 +8080,9 @@
     "goal": "Compare every Screen ID with its approved reference, record differences, and block acceptance for critical deviations.",
     "kind": "quality",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 179,
@@ -7859,7 +8123,9 @@
     "goal": "Test ar, en, and zh-CN, long text, dates, numbers, currency, and locale persistence.",
     "kind": "quality",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 180,
@@ -7900,7 +8166,9 @@
     "goal": "Run automated and manual WCAG checks for keyboard, focus, screen-reader, and contrast behavior.",
     "kind": "quality",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 181,
@@ -7941,7 +8209,9 @@
     "goal": "Test SSR, hydration, bundles, images, and lazy routes, and document budgets and measured results.",
     "kind": "quality",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 182,
@@ -7982,7 +8252,9 @@
     "goal": "Review CSP, XSS, CSRF, token storage, open redirects, upload UI, and cache privacy.",
     "kind": "security",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 183,
@@ -8023,7 +8295,9 @@
     "goal": "Verify that every screen uses an implemented endpoint and repeatable fixture without production mocks.",
     "kind": "quality",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 184,
@@ -8064,7 +8338,9 @@
     "goal": "Prepare production builds for the API, SSR, and static assets, plus a preview environment with safe configuration and smoke tests.",
     "kind": "release",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 185,
@@ -8105,7 +8381,9 @@
     "goal": "Document local setup, environments, routes, roles, troubleshooting, and rollback.",
     "kind": "docs",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 186,
@@ -8146,7 +8424,9 @@
     "goal": "Run the UAT matrix for all 131 screens and close Severity 1/2 defects or record an approved blocker.",
     "kind": "release",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 187,
@@ -8187,7 +8467,9 @@
     "goal": "Run all quality, security, and readiness gates and lock the release manifest without unsupported claims.",
     "kind": "release",
     "screens": [],
-    "sourceRefs": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
     "notes": [],
     "track": "frontend",
     "sequence": 188,

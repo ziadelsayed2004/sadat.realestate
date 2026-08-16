@@ -21,7 +21,10 @@ Implement moderation actions, reasons, and filters.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `ADM-27` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-28` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-29` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

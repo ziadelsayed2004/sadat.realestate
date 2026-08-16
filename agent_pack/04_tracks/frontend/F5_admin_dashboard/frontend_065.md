@@ -22,7 +22,11 @@ Implement complete operations, filters, decisions, and explainable duplicate/rep
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `ADM-14` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-15` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-16` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-17` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

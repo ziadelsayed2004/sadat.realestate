@@ -1,15 +1,23 @@
 # Risks and Gaps
 
-## Verified repository gaps
+## Repository and source provenance
 
-- Git root, branch, history, and the initial clean-worktree baseline are available; later worktree changes must remain limited to the selected task and generated synchronization.
-- The workspace skeleton, package manifests, lockfile, strict shared config, structural checks, foundation tests, and minimal Express/TypeScript API bootstrap now exist.
-- Strict validation for `APP_ENV`, `API_HOST`, `API_PORT`, redacted `MONGODB_URI`, and the access-token signing secret plus a safe Local-only example now exist. Shared contracts/errors, security middleware, redacted request-context logging, Admin and phone-OTP authentication/session handling, owner-scoped Provider application drafts and submission snapshots, private Provider-document validation/quarantine/scanning/delivery, the protected first-Super-Admin bootstrap, dynamic roles and View Only/API-enforced permission resolution, reason-bearing atomic account/Provider state transitions with stale-session denial, and the permission-gated append-only sensitive-action audit boundary are implemented. Source lint, categorized tests, coverage thresholds, the basic CI quality workflow, and executable inventory/OpenAPI/Postman drift checks are implemented. Live audit persistence and transaction behavior still require an isolated non-production MongoDB replica set and synthetic Admin identities; no such environment was configured in this run. Q-012 account deletion/privacy behavior and complete administrator CRUD/assignment-route integration remain later scope. Concrete Production storage/scanner configuration remains a readiness prerequisite rather than unresolved product behavior.
-- The database boundary, operational routes, identity/account schemas, Admin Argon2id credentials, signed access tokens, opaque refresh lifecycle, and hashed/TTL/bounded OTP challenges are implemented. Local/Test use a deterministic fake OTP adapter; Preview/UAT/Production fail closed until an approved adapter is injected. No external MongoDB replica set, live OTP vendor, storage adapter, notification provider, map provider, payment provider, isolated live data, or synthetic provisioned account exists. Server-enforced unique/TTL OTP/session behavior and end-to-end live login/rotation still require an isolated MongoDB check and explicitly provisioned synthetic account.
-- External database/provider and production-readiness gates remain unavailable until real topology, S3-compatible private storage, scanner deployment, and credentials are configured. Approved adapter-based tasks may proceed with deterministic Local/Test fakes and fail-closed higher environments. No real `.env` or secret has been loaded; production index synchronization remains deployment-managed.
-- Node `v22.18.0` is available while the repository declares Node `>=24 <25` and the CI workflow targets Node 24; the workflow itself cannot be executed by this local Node 22 environment and still requires its first hosted run.
-- Location CRUD and audit transaction behavior are covered by deterministic contract, model, service, and API tests. Live index creation, text/geospatial query behavior, reference checks, and transactional audit persistence still require an isolated non-production MongoDB replica set; no production locations or coordinates are available or required for implementation completion.
+- The supplied repository archive has no `.git/` metadata. Branch, commit history, and exact pre-existing tracked changes cannot be reconstructed from this copy.
+- Local approved exports cover 130 of 131 registered Screen IDs. `ADM-54` has a recorded external reference but no dedicated local PNG export.
+- The Figma prototypes and identity Drive folder were supplied as authoritative external references but could not be opened by this execution environment. Future screen work must use the recorded links and the checked-in final exports, and must report any remaining frame-access limitation honestly.
+- No approved self-hosted Cairo font files were supplied. The runtime currently uses the Google Fonts stylesheet with system fallbacks; a Production privacy, availability, or CSP policy may require approved self-hosted binaries later.
 
-## Product decisions still open
+## Verification and execution environment
 
-See `01_product/OPEN_QUESTIONS.md` and `DECISION_LOG.md`. No temporary default in that register is a production decision. Recompute this file after each relevant task and release gate.
+- Browser visual, Playwright, and accessibility regression gates are not yet repository-native and remain assigned to `frontend_009`. Foundation unit, SSR, asset-integrity, build, locale, and direction checks pass, but this is not a pixel-perfect screen claim.
+- A local production-server smoke attempt was blocked by the execution sandbox before a stable browser connection could be established. The deterministic client build, SSR tests, and Web unit tests passed.
+- `npm ci` and `npm audit` were blocked before execution by the sandbox network-approval boundary. The existing lockfile and installed repository-local toolchain were used for all deterministic checks. No dependency-audit result is claimed for this update.
+- Live MongoDB and full external-provider journeys were not rerun for this Frontend task. They require an isolated non-Production replica set, safe seed data, credentials, and cleanup capability.
+
+## Production readiness dependencies
+
+- Production deployment still requires the environment-specific prerequisites and acceptance evidence recorded by `backend_138`, including a transaction-capable MongoDB topology, private object storage, malware scanning, secrets, provider credentials, monitoring, backup/restore drills, and approved deployment infrastructure.
+- The repository contains deterministic Local/Test adapters and fail-closed higher-environment boundaries. Those boundaries do not prove that Production providers are provisioned.
+- No real `.env`, secret, Production record, or fabricated operational metric was read or added.
+
+See `01_product/OPEN_QUESTIONS.md`, `01_product/DECISION_LOG.md`, and the selected atomic task before making any later product decision.

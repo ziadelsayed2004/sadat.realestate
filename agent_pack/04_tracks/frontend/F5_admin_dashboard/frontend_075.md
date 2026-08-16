@@ -24,7 +24,13 @@ Implement list, create, details, role builder, View Only, and prevention of unau
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `ADM-59` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-60` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-61` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-62` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-63` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-64` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

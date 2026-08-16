@@ -21,7 +21,10 @@ Implement CRUD, ordering, and activation for all three modules.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `ADM-09` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-10` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-11` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

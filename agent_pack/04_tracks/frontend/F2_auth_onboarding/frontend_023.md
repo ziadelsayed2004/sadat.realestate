@@ -20,7 +20,9 @@ Implement AUTH-09 variants, validation, save, and resume behavior.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `AUTH-09` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `AUTH-09+` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

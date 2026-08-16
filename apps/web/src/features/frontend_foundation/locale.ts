@@ -24,7 +24,7 @@ export interface FoundationCopy {
 
 const copyByLocale: Readonly<Record<SupportedLocale, FoundationCopy>> = {
   ar: {
-    brand: 'منصة صادات العقارية',
+    brand: 'عقارات السادات',
     shellTitle: 'واجهة المنصة',
     shellDescription: 'هذه بنية الواجهة الأساسية، وتظهر البيانات الحقيقية عند توفر عقدها الخلفي.',
     unavailable: 'لا توجد بيانات واجهة متاحة لهذا المسار بعد.',

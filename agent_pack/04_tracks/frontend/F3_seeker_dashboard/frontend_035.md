@@ -21,7 +21,10 @@ Implement tabs for preferences, personal data, and account settings.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `SEK-08` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `SEK-09` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `SEK-10` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

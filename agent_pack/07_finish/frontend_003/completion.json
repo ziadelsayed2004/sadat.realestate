@@ -1,0 +1,152 @@
+{
+  "taskId": "frontend_003",
+  "summary": "Implemented explicit Public, Auth, Seeker, Provider, and Admin route shells; role-aware route guards; localized authentication-required, 403, and 404 pages; and a safe React route error boundary. Existing route matching, SSR status behavior, locale direction handling, and protected-data empty states remain intact.",
+  "filesChanged": [
+    "apps/web/src/features/routing/guards.ts",
+    "apps/web/src/features/routing/pages.tsx",
+    "apps/web/src/features/routing/error-boundary.tsx",
+    "apps/web/src/features/routing/shells.tsx",
+    "apps/web/src/features/routing/styles.css",
+    "apps/web/src/features/routing/index.ts",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/src/features/frontend_foundation/styles.css",
+    "apps/web/tests/routing.test.ts",
+    "apps/web/package.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Clean lockfile install completed; npm reported only the declared Node 24 engine warning for the available Node 22 runtime and found zero vulnerabilities."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- tsx --test tests/routing.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "7 focused routing tests passed, covering public/protected guards, role mismatch, all shell kinds, RTL/LTR, 404/403 markers, safe error fallback, and no invented route data."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript and shared-contract preparation passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source and test lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client/SSR build passed and all 29 web tests passed, including the new routing suite and SSR 404/protected-route assertions."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace policy and lint passed."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy 13 tests, API 443 tests, and web 29 tests passed. npm emitted an informational warning that --runInBand is not a recognized npm config; it did not affect the exit code."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, client, and SSR builds passed after the final routing CSS correction."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities reported."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Bare check cannot run without APP_ENV, API_HOST, and API_PORT; no real .env or secret was read."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_real_estate_test?replicaSet=rs0'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtZGV2ZWxvcG1lbnQtb25seS1rZXktMzItYnl0ZXM'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Synthetic test-only values passed environment validation; output was limited to safe configuration metadata."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Implemented API inventory completed without runtime or contract changes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd run test:visual",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Repository has no test:visual script; this infrastructure is assigned to the later visual-regression task."
+    },
+    {
+      "command": "npm.cmd run test:a11y",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Repository has no test:a11y script; no browser accessibility runner is available in this task."
+    },
+    {
+      "command": "npm.cmd run test:e2e",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Repository has no test:e2e script; deterministic SSR and component coverage was used for this infrastructure task."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors in tracked changes."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F0_frontend_foundation/frontend_003.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json (Arabic-first locale, approved brand and surface context)",
+    "agent_pack/01_product/FRONTEND_ROUTE_MAP.md",
+    "apps/web/src/routes/route-table.ts (existing canonical matcher consumed by the guards)",
+    "apps/web/src/features/frontend_foundation/app.tsx and apps/web/src/features/frontend_foundation/entry-server.tsx",
+    "apps/web/tests/routing.test.ts and apps/web/tests/ssr.test.mjs"
+  ],
+  "scopeNotes": [
+    "No Screen IDs are declared by frontend_003, so no individual frame mapping was required.",
+    "The existing foundation app and stylesheet were modified only as the necessary integration seam for the new routing shell and error-boundary modules.",
+    "The web package test script was extended so the selected routing test runs in the normal workspace suite; no dependency was added or upgraded.",
+    "Dashboard shells intentionally remain desktop-only; public and authentication shells retain the existing responsive foundation behavior."
+  ],
+  "knownGaps": [
+    "Visual, accessibility, and browser E2E scripts are not present in the repository and remain blocked with exact command evidence above.",
+    "The available runtime is Node 22.18.0 while the repository declares Node >=24 <25; all mandatory deterministic checks passed, so this remains a compatibility warning rather than a task blocker.",
+    "No live MongoDB, external provider, or production environment check was run; this frontend routing task does not require those external systems."
+  ],
+  "completedAt": "2026-08-16T01:59:24.7813125+03:00"
+}

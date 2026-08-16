@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "project": "Sadat Real Estate Platform",
-  "packVersion": "1.1.0",
-  "generatedAt": "2026-08-11T23:27:35.498Z",
+  "packVersion": "1.2.0",
+  "generatedAt": "2026-08-15T15:47:53.598Z",
   "sourceHandoffDate": "2026-08-09",
   "screenCounts": {
     "PUB": 12,
@@ -11,7 +11,7 @@
     "PRV": 24,
     "ADM": 66
   },
-  "plannedEndpointBlueprintCount": 160,
+  "plannedEndpointBlueprintCount": 167,
   "taskCounts": {
     "total": 188,
     "backend": 113,
@@ -25,7 +25,8 @@
     "screens": "01_product/SCREEN_REGISTRY.json",
     "languagePolicy": "00_start_here/LANGUAGE_POLICY.md",
     "runner": "05_prompts/MASTER_SINGLE_TASK_RUNNER.md",
-    "sourceReference": "09_sources/HANDOFF_REFERENCE.md"
+    "sourceReference": "09_sources/HANDOFF_REFERENCE.md",
+    "designSourceManifest": "09_sources/DESIGN_SOURCE_MANIFEST.json"
   },
   "packLanguage": "en",
   "productLocalization": {
@@ -37,5 +38,14 @@
       "zh-CN"
     ],
     "note": "Agent Pack language is English; product localization requirements are unchanged."
+  },
+  "finalVisualSourceDate": "2026-08-15",
+  "designSources": {
+    "localScreenExportRoot": "../docs/design_sources/final_screens",
+    "localScreenIds": 130,
+    "externalOnlyScreenIds": [
+      "ADM-54"
+    ],
+    "productLogoRuntimePath": "../apps/web/public/assets/sadat-real-estate-logo.png"
   }
 }

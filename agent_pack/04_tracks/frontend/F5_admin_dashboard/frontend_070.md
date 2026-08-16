@@ -24,7 +24,13 @@ Implement the workflow, pricing, proofs, calendar, and review interfaces.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `ADM-33` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-34` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-35` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-36` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-37` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-38` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

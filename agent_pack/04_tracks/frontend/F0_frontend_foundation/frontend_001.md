@@ -19,7 +19,8 @@ Connect final assets and create color, typography, spacing, radius, and shadow t
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- `09_sources/HANDOFF_REFERENCE.md`
 
 ## Allowed Roots
 

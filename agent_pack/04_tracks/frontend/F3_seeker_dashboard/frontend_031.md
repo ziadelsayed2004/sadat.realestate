@@ -21,7 +21,10 @@ Implement the list and under-review/contacted details with safe projections.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `SEK-02` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `SEK-03` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `SEK-04` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

@@ -19,7 +19,7 @@ Consume generated contracts and client types, and add query caching, request IDs
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
 
 ## Allowed Roots
 

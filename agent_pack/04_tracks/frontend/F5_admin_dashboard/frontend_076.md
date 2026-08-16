@@ -20,7 +20,9 @@ Implement inbox plus audit filters, details, and before/after views.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `ADM-65` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-66` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

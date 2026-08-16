@@ -21,7 +21,10 @@ Implement CMS forms, ordering, and preview.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `ADM-30` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-31` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-32` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

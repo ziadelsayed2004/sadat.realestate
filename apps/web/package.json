@@ -4,15 +4,19 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "prepare:contracts": "npm run build --workspace @sadat-real-estate/contracts",
+    "predev": "npm run prepare:contracts",
     "dev": "node server.mjs --mode development",
+    "prebuild": "npm run prepare:contracts",
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build --config vite.config.ts",
     "build:server": "vite build --config vite.config.ts --ssr src/features/frontend_foundation/entry-server.tsx",
     "start": "node server.mjs --mode production",
+    "pretypecheck": "npm run prepare:contracts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" \"vite.config.ts\" \"server.mjs\" --max-warnings=0",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\" \"vite.config.ts\" \"server.mjs\" --max-warnings=0",
     "pretest": "npm run build",
-    "test": "node --experimental-strip-types --test tests/design-system.test.ts tests/foundation.test.ts tests/ssr.test.mjs"
+    "test": "tsx --test tests/auth.test.ts tests/components.test.ts tests/contracts.test.ts tests/design-system.test.ts tests/foundation.test.ts tests/localization.test.ts tests/routing.test.ts tests/ssr.test.mjs"
   },
   "dependencies": {
     "@sadat-real-estate/contracts": "0.0.0",

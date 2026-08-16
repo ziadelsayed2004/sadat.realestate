@@ -22,7 +22,11 @@ Implement business/developer variants and private-document upload with all requi
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `AUTH-10` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `AUTH-10+` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `AUTH-11` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `AUTH-12` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

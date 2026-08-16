@@ -20,7 +20,9 @@ Implement the directory, profiles, and approved properties and projects.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `PUB-05` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `PUB-06` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

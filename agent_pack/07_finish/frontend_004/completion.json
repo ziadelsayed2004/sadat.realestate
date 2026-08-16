@@ -1,0 +1,124 @@
+{
+  "taskId": "frontend_004",
+  "summary": "Implemented the web API client and query cache around generated contract schemas, including one /api/v1 prefix, request IDs, cancellation, safe read retries, error-envelope parsing, bounded caching, deduplication, expiry, invalidation, and deterministic tests.",
+  "filesChanged": [
+    "apps/web/src/features/contracts/api-client.ts",
+    "apps/web/src/features/contracts/query-cache.ts",
+    "apps/web/src/features/contracts/index.ts",
+    "apps/web/tests/contracts.test.ts",
+    "apps/web/package.json",
+    "agent_pack/07_finish/frontend_004/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace dependencies installed; npm reported zero vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web -- --test-name-pattern \"API client|query cache\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contract client and query-cache tests passed through the web test harness."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript and generated-contract preparation passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source and test lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "35 web tests passed, including the new contract client/cache coverage."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace and source lint passed."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Successful bounded rerun completed workspace policy tests, 443 API tests, and the full web suite in 152.1 seconds."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "443 of 443 API tests passed in 134.7 seconds."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, web client, and web SSR builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity or higher vulnerabilities reported."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Implemented API inventory completed; no new endpoint was added."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Existing OpenAPI artifact remains valid."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Existing Postman artifacts remain valid."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors while frontend_004 was in progress."
+    }
+  ],
+  "sourceEvidence": [
+    "09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "packages/contracts/src/contracts/envelopes.ts",
+    "apps/api/src/modules/security/middleware.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/web/src/features/contracts/api-client.ts",
+    "apps/web/src/features/contracts/query-cache.ts",
+    "apps/web/tests/contracts.test.ts"
+  ],
+  "scopeNotes": [
+    "No screen IDs, runtime routes, OpenAPI paths, Postman requests, database models, or production data were added or changed.",
+    "Callers supply an existing generated response schema and an implemented route path without the /api/v1 prefix; mutating methods are not retried by default."
+  ],
+  "knownGaps": [
+    "The default shell has no environment configuration; env:check fails closed without it. A separate ephemeral non-production test configuration passed env:check without reading a .env file.",
+    "Playwright, visual, and accessibility scripts are not defined in the repository; this task has no Screen IDs, so those checks are not applicable here.",
+    "The installed Node runtime is v22.18.0 while the repository declares Node >=24; all executed mandatory gates passed under the installed runtime.",
+    "The first 120-second invocation of npm.cmd test -- --runInBand ended with tool timeout exit 124/EPIPE; the identical command was rerun with a 300-second bound and passed."
+  ],
+  "completedAt": "2026-08-15T23:28:36.0139486Z"
+}

@@ -20,7 +20,9 @@ Implement wizard steps 01 and 02 with draft save and resume.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `PRV-03` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `PRV-04` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

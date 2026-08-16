@@ -25,7 +25,14 @@ Implement policies, history, account settings, exceptions, and confirmations.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `ADM-39` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-40` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-41` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-42` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-43` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-44` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-45` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

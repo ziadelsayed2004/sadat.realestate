@@ -20,7 +20,9 @@ Implement both pages using published CMS content.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `PUB-11` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `PUB-12` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

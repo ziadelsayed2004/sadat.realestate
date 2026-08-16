@@ -19,7 +19,7 @@ Review every AUTH screen across desktop, tablet, mobile, directions, validation,
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
 
 ## Allowed Roots
 

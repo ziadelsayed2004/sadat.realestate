@@ -19,7 +19,7 @@ Test SSR, hydration, bundles, images, and lazy routes, and document budgets and 
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
 
 ## Allowed Roots
 

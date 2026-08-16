@@ -22,7 +22,11 @@ Implement validation errors, submitted, rejected, and published states with next
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `PRV-11` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `PRV-12` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `PRV-13` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `PRV-14` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

@@ -19,7 +19,7 @@ Prepare Vitest, React Testing Library, MSW, Playwright, and visual snapshots acr
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
 
 ## Allowed Roots
 

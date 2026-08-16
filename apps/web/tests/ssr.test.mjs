@@ -10,6 +10,7 @@ test('SSR renders the public shell with requested locale and LTR direction', () 
   assert.equal(result.direction, 'ltr');
   assert.match(result.html, /data-surface="public"/);
   assert.match(result.html, /data-locale="en"/);
+  assert.match(result.html, /src="\/assets\/sadat-real-estate-logo\.png"/);
 });
 
 test('SSR keeps protected dashboard routes in a permission-safe shell', () => {

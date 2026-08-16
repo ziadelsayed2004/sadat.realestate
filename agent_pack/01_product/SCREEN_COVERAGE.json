@@ -24,7 +24,12 @@
     "backendTaskIds": [
       "backend_060"
     ],
-    "localizedNameKey": "screens.pub_01.title"
+    "localizedNameKey": "screens.pub_01.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-10847&viewport=-247%2C-797%2C0.29&t=jO0Is94EyiG394Gy-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A10847&page-id=6017%3A4352",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/public/PUB-01.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PUB-02",
@@ -51,7 +56,12 @@
     "backendTaskIds": [
       "backend_061"
     ],
-    "localizedNameKey": "screens.pub_02.title"
+    "localizedNameKey": "screens.pub_02.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-10847&viewport=-247%2C-797%2C0.29&t=jO0Is94EyiG394Gy-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A10847&page-id=6017%3A4352",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/public/PUB-02.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PUB-03",
@@ -78,7 +88,12 @@
     "backendTaskIds": [
       "backend_062"
     ],
-    "localizedNameKey": "screens.pub_03.title"
+    "localizedNameKey": "screens.pub_03.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-10847&viewport=-247%2C-797%2C0.29&t=jO0Is94EyiG394Gy-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A10847&page-id=6017%3A4352",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/public/PUB-03.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PUB-04",
@@ -105,7 +120,12 @@
     "backendTaskIds": [
       "backend_063"
     ],
-    "localizedNameKey": "screens.pub_04.title"
+    "localizedNameKey": "screens.pub_04.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-10847&viewport=-247%2C-797%2C0.29&t=jO0Is94EyiG394Gy-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A10847&page-id=6017%3A4352",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/public/PUB-04.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PUB-05",
@@ -132,7 +152,12 @@
     "backendTaskIds": [
       "backend_064"
     ],
-    "localizedNameKey": "screens.pub_05.title"
+    "localizedNameKey": "screens.pub_05.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-10847&viewport=-247%2C-797%2C0.29&t=jO0Is94EyiG394Gy-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A10847&page-id=6017%3A4352",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/public/PUB-05.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PUB-06",
@@ -159,7 +184,12 @@
     "backendTaskIds": [
       "backend_064"
     ],
-    "localizedNameKey": "screens.pub_06.title"
+    "localizedNameKey": "screens.pub_06.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-10847&viewport=-247%2C-797%2C0.29&t=jO0Is94EyiG394Gy-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A10847&page-id=6017%3A4352",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/public/PUB-06.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PUB-07",
@@ -186,7 +216,12 @@
     "backendTaskIds": [
       "backend_092"
     ],
-    "localizedNameKey": "screens.pub_07.title"
+    "localizedNameKey": "screens.pub_07.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-10847&viewport=-247%2C-797%2C0.29&t=jO0Is94EyiG394Gy-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A10847&page-id=6017%3A4352",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/public/PUB-07.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PUB-08",
@@ -213,7 +248,12 @@
     "backendTaskIds": [
       "backend_092"
     ],
-    "localizedNameKey": "screens.pub_08.title"
+    "localizedNameKey": "screens.pub_08.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-10847&viewport=-247%2C-797%2C0.29&t=jO0Is94EyiG394Gy-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A10847&page-id=6017%3A4352",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/public/PUB-08.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PUB-09",
@@ -241,7 +281,12 @@
       "backend_093",
       "backend_096"
     ],
-    "localizedNameKey": "screens.pub_09.title"
+    "localizedNameKey": "screens.pub_09.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-10847&viewport=-247%2C-797%2C0.29&t=jO0Is94EyiG394Gy-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A10847&page-id=6017%3A4352",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/public/PUB-09.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PUB-10",
@@ -269,7 +314,12 @@
       "backend_093",
       "backend_096"
     ],
-    "localizedNameKey": "screens.pub_10.title"
+    "localizedNameKey": "screens.pub_10.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-10847&viewport=-247%2C-797%2C0.29&t=jO0Is94EyiG394Gy-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A10847&page-id=6017%3A4352",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/public/PUB-10.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PUB-11",
@@ -296,7 +346,12 @@
     "backendTaskIds": [
       "backend_036"
     ],
-    "localizedNameKey": "screens.pub_11.title"
+    "localizedNameKey": "screens.pub_11.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-10847&viewport=-247%2C-797%2C0.29&t=jO0Is94EyiG394Gy-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A10847&page-id=6017%3A4352",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/public/PUB-11.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PUB-12",
@@ -323,7 +378,12 @@
     "backendTaskIds": [
       "backend_036"
     ],
-    "localizedNameKey": "screens.pub_12.title"
+    "localizedNameKey": "screens.pub_12.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-10847&viewport=-247%2C-797%2C0.29&t=jO0Is94EyiG394Gy-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A10847&page-id=6017%3A4352",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/public/PUB-12.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-01",
@@ -351,7 +411,12 @@
       "backend_011",
       "backend_012"
     ],
-    "localizedNameKey": "screens.auth_01.title"
+    "localizedNameKey": "screens.auth_01.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-01.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-02",
@@ -378,7 +443,12 @@
     "backendTaskIds": [
       "backend_013"
     ],
-    "localizedNameKey": "screens.auth_02.title"
+    "localizedNameKey": "screens.auth_02.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-02.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-03",
@@ -405,7 +475,12 @@
     "backendTaskIds": [
       "backend_013"
     ],
-    "localizedNameKey": "screens.auth_03.title"
+    "localizedNameKey": "screens.auth_03.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-03.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-04",
@@ -433,7 +508,12 @@
       "backend_011",
       "backend_012"
     ],
-    "localizedNameKey": "screens.auth_04.title"
+    "localizedNameKey": "screens.auth_04.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-04.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-05",
@@ -461,7 +541,12 @@
       "backend_011",
       "backend_012"
     ],
-    "localizedNameKey": "screens.auth_05.title"
+    "localizedNameKey": "screens.auth_05.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-05.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-06",
@@ -488,7 +573,12 @@
     "backendTaskIds": [
       "backend_013"
     ],
-    "localizedNameKey": "screens.auth_06.title"
+    "localizedNameKey": "screens.auth_06.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-06.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-07",
@@ -515,7 +605,12 @@
     "backendTaskIds": [
       "backend_014"
     ],
-    "localizedNameKey": "screens.auth_07.title"
+    "localizedNameKey": "screens.auth_07.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-07.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-08",
@@ -542,7 +637,12 @@
     "backendTaskIds": [
       "backend_014"
     ],
-    "localizedNameKey": "screens.auth_08.title"
+    "localizedNameKey": "screens.auth_08.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-08.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-09",
@@ -569,7 +669,12 @@
     "backendTaskIds": [
       "backend_014"
     ],
-    "localizedNameKey": "screens.auth_09.title"
+    "localizedNameKey": "screens.auth_09.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-09.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-09+",
@@ -596,7 +701,12 @@
     "backendTaskIds": [
       "backend_014"
     ],
-    "localizedNameKey": "screens.auth_09_plus.title"
+    "localizedNameKey": "screens.auth_09_plus.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-09-plus.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-10",
@@ -623,7 +733,12 @@
     "backendTaskIds": [
       "backend_014"
     ],
-    "localizedNameKey": "screens.auth_10.title"
+    "localizedNameKey": "screens.auth_10.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-10.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-10+",
@@ -650,7 +765,12 @@
     "backendTaskIds": [
       "backend_014"
     ],
-    "localizedNameKey": "screens.auth_10_plus.title"
+    "localizedNameKey": "screens.auth_10_plus.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-10-plus.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-11",
@@ -677,7 +797,12 @@
     "backendTaskIds": [
       "backend_014"
     ],
-    "localizedNameKey": "screens.auth_11.title"
+    "localizedNameKey": "screens.auth_11.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-11.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-12",
@@ -704,7 +829,12 @@
     "backendTaskIds": [
       "backend_015"
     ],
-    "localizedNameKey": "screens.auth_12.title"
+    "localizedNameKey": "screens.auth_12.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-12.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-13",
@@ -731,7 +861,12 @@
     "backendTaskIds": [
       "backend_014"
     ],
-    "localizedNameKey": "screens.auth_13.title"
+    "localizedNameKey": "screens.auth_13.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-13.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-14",
@@ -758,7 +893,12 @@
     "backendTaskIds": [
       "backend_014"
     ],
-    "localizedNameKey": "screens.auth_14.title"
+    "localizedNameKey": "screens.auth_14.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-14.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-15",
@@ -785,7 +925,12 @@
     "backendTaskIds": [
       "backend_014"
     ],
-    "localizedNameKey": "screens.auth_15.title"
+    "localizedNameKey": "screens.auth_15.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-15.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-16",
@@ -812,7 +957,12 @@
     "backendTaskIds": [
       "backend_014"
     ],
-    "localizedNameKey": "screens.auth_16.title"
+    "localizedNameKey": "screens.auth_16.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-16.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "AUTH-17",
@@ -839,7 +989,12 @@
     "backendTaskIds": [
       "backend_014"
     ],
-    "localizedNameKey": "screens.auth_17.title"
+    "localizedNameKey": "screens.auth_17.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/authentication/AUTH-17.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "SEK-01",
@@ -864,7 +1019,12 @@
     "backendTaskIds": [
       "backend_066"
     ],
-    "localizedNameKey": "screens.sek_01.title"
+    "localizedNameKey": "screens.sek_01.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/seeker/SEK-01.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "SEK-02",
@@ -889,7 +1049,12 @@
     "backendTaskIds": [
       "backend_075"
     ],
-    "localizedNameKey": "screens.sek_02.title"
+    "localizedNameKey": "screens.sek_02.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/seeker/SEK-02.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "SEK-03",
@@ -914,7 +1079,12 @@
     "backendTaskIds": [
       "backend_075"
     ],
-    "localizedNameKey": "screens.sek_03.title"
+    "localizedNameKey": "screens.sek_03.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/seeker/SEK-03.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "SEK-04",
@@ -939,7 +1109,12 @@
     "backendTaskIds": [
       "backend_075"
     ],
-    "localizedNameKey": "screens.sek_04.title"
+    "localizedNameKey": "screens.sek_04.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/seeker/SEK-04.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "SEK-05",
@@ -964,7 +1139,12 @@
     "backendTaskIds": [
       "backend_072"
     ],
-    "localizedNameKey": "screens.sek_05.title"
+    "localizedNameKey": "screens.sek_05.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/seeker/SEK-05.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "SEK-06",
@@ -989,7 +1169,12 @@
     "backendTaskIds": [
       "backend_065"
     ],
-    "localizedNameKey": "screens.sek_06.title"
+    "localizedNameKey": "screens.sek_06.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/seeker/SEK-06.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "SEK-07",
@@ -1014,7 +1199,12 @@
     "backendTaskIds": [
       "backend_068"
     ],
-    "localizedNameKey": "screens.sek_07.title"
+    "localizedNameKey": "screens.sek_07.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/seeker/SEK-07.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "SEK-08",
@@ -1039,7 +1229,12 @@
     "backendTaskIds": [
       "backend_067"
     ],
-    "localizedNameKey": "screens.sek_08.title"
+    "localizedNameKey": "screens.sek_08.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/seeker/SEK-08.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "SEK-09",
@@ -1064,7 +1259,12 @@
     "backendTaskIds": [
       "backend_067"
     ],
-    "localizedNameKey": "screens.sek_09.title"
+    "localizedNameKey": "screens.sek_09.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/seeker/SEK-09.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "SEK-10",
@@ -1089,7 +1289,12 @@
     "backendTaskIds": [
       "backend_067"
     ],
-    "localizedNameKey": "screens.sek_10.title"
+    "localizedNameKey": "screens.sek_10.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/seeker/SEK-10.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-01",
@@ -1115,7 +1320,12 @@
       "backend_051",
       "backend_066"
     ],
-    "localizedNameKey": "screens.prv_01.title"
+    "localizedNameKey": "screens.prv_01.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-01.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-02",
@@ -1140,7 +1350,12 @@
     "backendTaskIds": [
       "backend_051"
     ],
-    "localizedNameKey": "screens.prv_02.title"
+    "localizedNameKey": "screens.prv_02.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-02.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-03",
@@ -1171,7 +1386,12 @@
       "backend_048",
       "backend_049"
     ],
-    "localizedNameKey": "screens.prv_03.title"
+    "localizedNameKey": "screens.prv_03.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-03.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-04",
@@ -1202,7 +1422,12 @@
       "backend_048",
       "backend_049"
     ],
-    "localizedNameKey": "screens.prv_04.title"
+    "localizedNameKey": "screens.prv_04.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-04.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-05",
@@ -1233,7 +1458,12 @@
       "backend_048",
       "backend_049"
     ],
-    "localizedNameKey": "screens.prv_05.title"
+    "localizedNameKey": "screens.prv_05.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-05.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-06",
@@ -1264,7 +1494,12 @@
       "backend_048",
       "backend_049"
     ],
-    "localizedNameKey": "screens.prv_06.title"
+    "localizedNameKey": "screens.prv_06.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-06.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-07",
@@ -1295,7 +1530,12 @@
       "backend_048",
       "backend_049"
     ],
-    "localizedNameKey": "screens.prv_07.title"
+    "localizedNameKey": "screens.prv_07.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-07.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-08",
@@ -1326,7 +1566,12 @@
       "backend_048",
       "backend_049"
     ],
-    "localizedNameKey": "screens.prv_08.title"
+    "localizedNameKey": "screens.prv_08.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-08.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-09",
@@ -1357,7 +1602,12 @@
       "backend_048",
       "backend_049"
     ],
-    "localizedNameKey": "screens.prv_09.title"
+    "localizedNameKey": "screens.prv_09.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-09.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-10",
@@ -1388,7 +1638,12 @@
       "backend_048",
       "backend_049"
     ],
-    "localizedNameKey": "screens.prv_10.title"
+    "localizedNameKey": "screens.prv_10.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-10.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-11",
@@ -1419,7 +1674,12 @@
       "backend_048",
       "backend_049"
     ],
-    "localizedNameKey": "screens.prv_11.title"
+    "localizedNameKey": "screens.prv_11.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-11.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-12",
@@ -1450,7 +1710,12 @@
       "backend_048",
       "backend_049"
     ],
-    "localizedNameKey": "screens.prv_12.title"
+    "localizedNameKey": "screens.prv_12.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-12.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-13",
@@ -1481,7 +1746,12 @@
       "backend_048",
       "backend_049"
     ],
-    "localizedNameKey": "screens.prv_13.title"
+    "localizedNameKey": "screens.prv_13.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-13.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-14",
@@ -1512,7 +1782,12 @@
       "backend_048",
       "backend_049"
     ],
-    "localizedNameKey": "screens.prv_14.title"
+    "localizedNameKey": "screens.prv_14.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-14.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-15",
@@ -1537,7 +1812,12 @@
     "backendTaskIds": [
       "backend_040"
     ],
-    "localizedNameKey": "screens.prv_15.title"
+    "localizedNameKey": "screens.prv_15.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-15.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-16",
@@ -1563,7 +1843,12 @@
       "backend_074",
       "backend_076"
     ],
-    "localizedNameKey": "screens.prv_16.title"
+    "localizedNameKey": "screens.prv_16.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-16.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-17",
@@ -1589,7 +1874,12 @@
       "backend_074",
       "backend_076"
     ],
-    "localizedNameKey": "screens.prv_17.title"
+    "localizedNameKey": "screens.prv_17.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-17.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-18",
@@ -1614,7 +1904,12 @@
     "backendTaskIds": [
       "backend_072"
     ],
-    "localizedNameKey": "screens.prv_18.title"
+    "localizedNameKey": "screens.prv_18.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-18.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-19",
@@ -1640,7 +1935,12 @@
       "backend_101",
       "backend_107"
     ],
-    "localizedNameKey": "screens.prv_19.title"
+    "localizedNameKey": "screens.prv_19.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-19.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-20",
@@ -1665,7 +1965,12 @@
     "backendTaskIds": [
       "backend_116"
     ],
-    "localizedNameKey": "screens.prv_20.title"
+    "localizedNameKey": "screens.prv_20.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-20.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-21",
@@ -1690,7 +1995,12 @@
     "backendTaskIds": [
       "backend_068"
     ],
-    "localizedNameKey": "screens.prv_21.title"
+    "localizedNameKey": "screens.prv_21.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-21.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-22-1",
@@ -1715,7 +2025,12 @@
     "backendTaskIds": [
       "backend_123"
     ],
-    "localizedNameKey": "screens.prv_22_1.title"
+    "localizedNameKey": "screens.prv_22_1.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-22-1.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-22-2",
@@ -1740,7 +2055,12 @@
     "backendTaskIds": [
       "backend_123"
     ],
-    "localizedNameKey": "screens.prv_22_2.title"
+    "localizedNameKey": "screens.prv_22_2.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-22-2.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "PRV-22-3",
@@ -1765,7 +2085,12 @@
     "backendTaskIds": [
       "backend_123"
     ],
-    "localizedNameKey": "screens.prv_22_3.title"
+    "localizedNameKey": "screens.prv_22_3.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/provider/PRV-22-3.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-01",
@@ -1790,7 +2115,12 @@
     "backendTaskIds": [
       "backend_120"
     ],
-    "localizedNameKey": "screens.adm_01.title"
+    "localizedNameKey": "screens.adm_01.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-01.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-02",
@@ -1818,7 +2148,12 @@
       "backend_019",
       "backend_121"
     ],
-    "localizedNameKey": "screens.adm_02.title"
+    "localizedNameKey": "screens.adm_02.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-02.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-03",
@@ -1846,7 +2181,12 @@
       "backend_019",
       "backend_121"
     ],
-    "localizedNameKey": "screens.adm_03.title"
+    "localizedNameKey": "screens.adm_03.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-03.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-04",
@@ -1874,7 +2214,12 @@
       "backend_019",
       "backend_121"
     ],
-    "localizedNameKey": "screens.adm_04.title"
+    "localizedNameKey": "screens.adm_04.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-04.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-05",
@@ -1902,7 +2247,12 @@
       "backend_019",
       "backend_121"
     ],
-    "localizedNameKey": "screens.adm_05.title"
+    "localizedNameKey": "screens.adm_05.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-05.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-06",
@@ -1930,7 +2280,12 @@
       "backend_019",
       "backend_121"
     ],
-    "localizedNameKey": "screens.adm_06.title"
+    "localizedNameKey": "screens.adm_06.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-06.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-07",
@@ -1958,7 +2313,12 @@
       "backend_019",
       "backend_121"
     ],
-    "localizedNameKey": "screens.adm_07.title"
+    "localizedNameKey": "screens.adm_07.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-07.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-08",
@@ -1986,7 +2346,12 @@
       "backend_019",
       "backend_121"
     ],
-    "localizedNameKey": "screens.adm_08.title"
+    "localizedNameKey": "screens.adm_08.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-08.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-09",
@@ -2013,7 +2378,12 @@
       "backend_032",
       "backend_033"
     ],
-    "localizedNameKey": "screens.adm_09.title"
+    "localizedNameKey": "screens.adm_09.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-09.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-10",
@@ -2040,7 +2410,12 @@
       "backend_032",
       "backend_033"
     ],
-    "localizedNameKey": "screens.adm_10.title"
+    "localizedNameKey": "screens.adm_10.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-10.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-11",
@@ -2067,7 +2442,12 @@
       "backend_032",
       "backend_033"
     ],
-    "localizedNameKey": "screens.adm_11.title"
+    "localizedNameKey": "screens.adm_11.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-11.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-12",
@@ -2097,7 +2477,12 @@
       "backend_053",
       "backend_054"
     ],
-    "localizedNameKey": "screens.adm_12.title"
+    "localizedNameKey": "screens.adm_12.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-12.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-13",
@@ -2127,7 +2512,12 @@
       "backend_053",
       "backend_054"
     ],
-    "localizedNameKey": "screens.adm_13.title"
+    "localizedNameKey": "screens.adm_13.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-13.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-14",
@@ -2157,7 +2547,12 @@
       "backend_053",
       "backend_054"
     ],
-    "localizedNameKey": "screens.adm_14.title"
+    "localizedNameKey": "screens.adm_14.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-14.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-15",
@@ -2187,7 +2582,12 @@
       "backend_053",
       "backend_054"
     ],
-    "localizedNameKey": "screens.adm_15.title"
+    "localizedNameKey": "screens.adm_15.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-15.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-16",
@@ -2217,7 +2617,12 @@
       "backend_053",
       "backend_054"
     ],
-    "localizedNameKey": "screens.adm_16.title"
+    "localizedNameKey": "screens.adm_16.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-16.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-17",
@@ -2247,7 +2652,12 @@
       "backend_053",
       "backend_054"
     ],
-    "localizedNameKey": "screens.adm_17.title"
+    "localizedNameKey": "screens.adm_17.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-17.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-18",
@@ -2275,7 +2685,12 @@
       "backend_078",
       "backend_079"
     ],
-    "localizedNameKey": "screens.adm_18.title"
+    "localizedNameKey": "screens.adm_18.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-18.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-19",
@@ -2303,7 +2718,12 @@
       "backend_078",
       "backend_079"
     ],
-    "localizedNameKey": "screens.adm_19.title"
+    "localizedNameKey": "screens.adm_19.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-19.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-20",
@@ -2331,7 +2751,12 @@
       "backend_078",
       "backend_079"
     ],
-    "localizedNameKey": "screens.adm_20.title"
+    "localizedNameKey": "screens.adm_20.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-20.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-21",
@@ -2359,7 +2784,12 @@
       "backend_078",
       "backend_079"
     ],
-    "localizedNameKey": "screens.adm_21.title"
+    "localizedNameKey": "screens.adm_21.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-21.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-22",
@@ -2387,7 +2817,12 @@
       "backend_078",
       "backend_079"
     ],
-    "localizedNameKey": "screens.adm_22.title"
+    "localizedNameKey": "screens.adm_22.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-22.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-23",
@@ -2415,7 +2850,12 @@
       "backend_078",
       "backend_079"
     ],
-    "localizedNameKey": "screens.adm_23.title"
+    "localizedNameKey": "screens.adm_23.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-23.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-24",
@@ -2443,7 +2883,12 @@
       "backend_078",
       "backend_079"
     ],
-    "localizedNameKey": "screens.adm_24.title"
+    "localizedNameKey": "screens.adm_24.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-24.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-25",
@@ -2473,7 +2918,12 @@
       "backend_036",
       "backend_037"
     ],
-    "localizedNameKey": "screens.adm_25.title"
+    "localizedNameKey": "screens.adm_25.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-25.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-26",
@@ -2503,7 +2953,12 @@
       "backend_036",
       "backend_037"
     ],
-    "localizedNameKey": "screens.adm_26.title"
+    "localizedNameKey": "screens.adm_26.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-26.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-27",
@@ -2533,7 +2988,12 @@
       "backend_036",
       "backend_037"
     ],
-    "localizedNameKey": "screens.adm_27.title"
+    "localizedNameKey": "screens.adm_27.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-27.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-28",
@@ -2563,7 +3023,12 @@
       "backend_036",
       "backend_037"
     ],
-    "localizedNameKey": "screens.adm_28.title"
+    "localizedNameKey": "screens.adm_28.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-28.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-29",
@@ -2593,7 +3058,12 @@
       "backend_036",
       "backend_037"
     ],
-    "localizedNameKey": "screens.adm_29.title"
+    "localizedNameKey": "screens.adm_29.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-29.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-30",
@@ -2623,7 +3093,12 @@
       "backend_036",
       "backend_037"
     ],
-    "localizedNameKey": "screens.adm_30.title"
+    "localizedNameKey": "screens.adm_30.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-30.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-31",
@@ -2653,7 +3128,12 @@
       "backend_036",
       "backend_037"
     ],
-    "localizedNameKey": "screens.adm_31.title"
+    "localizedNameKey": "screens.adm_31.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-31.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-32",
@@ -2683,7 +3163,12 @@
       "backend_036",
       "backend_037"
     ],
-    "localizedNameKey": "screens.adm_32.title"
+    "localizedNameKey": "screens.adm_32.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-32.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-33",
@@ -2714,7 +3199,12 @@
       "backend_105",
       "backend_108"
     ],
-    "localizedNameKey": "screens.adm_33.title"
+    "localizedNameKey": "screens.adm_33.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-33.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-34",
@@ -2745,7 +3235,12 @@
       "backend_105",
       "backend_108"
     ],
-    "localizedNameKey": "screens.adm_34.title"
+    "localizedNameKey": "screens.adm_34.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-34.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-35",
@@ -2776,7 +3271,12 @@
       "backend_105",
       "backend_108"
     ],
-    "localizedNameKey": "screens.adm_35.title"
+    "localizedNameKey": "screens.adm_35.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-35.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-36",
@@ -2807,7 +3307,12 @@
       "backend_105",
       "backend_108"
     ],
-    "localizedNameKey": "screens.adm_36.title"
+    "localizedNameKey": "screens.adm_36.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-36.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-37",
@@ -2838,7 +3343,12 @@
       "backend_105",
       "backend_108"
     ],
-    "localizedNameKey": "screens.adm_37.title"
+    "localizedNameKey": "screens.adm_37.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-37.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-38",
@@ -2869,7 +3379,12 @@
       "backend_105",
       "backend_108"
     ],
-    "localizedNameKey": "screens.adm_38.title"
+    "localizedNameKey": "screens.adm_38.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-38.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-39",
@@ -2898,7 +3413,12 @@
       "backend_114",
       "backend_115"
     ],
-    "localizedNameKey": "screens.adm_39.title"
+    "localizedNameKey": "screens.adm_39.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-39.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-40",
@@ -2927,7 +3447,12 @@
       "backend_114",
       "backend_115"
     ],
-    "localizedNameKey": "screens.adm_40.title"
+    "localizedNameKey": "screens.adm_40.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-40.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-41",
@@ -2956,7 +3481,12 @@
       "backend_114",
       "backend_115"
     ],
-    "localizedNameKey": "screens.adm_41.title"
+    "localizedNameKey": "screens.adm_41.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-41.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-42",
@@ -2985,7 +3515,12 @@
       "backend_114",
       "backend_115"
     ],
-    "localizedNameKey": "screens.adm_42.title"
+    "localizedNameKey": "screens.adm_42.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-42.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-43",
@@ -3014,7 +3549,12 @@
       "backend_114",
       "backend_115"
     ],
-    "localizedNameKey": "screens.adm_43.title"
+    "localizedNameKey": "screens.adm_43.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-43.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-44",
@@ -3043,7 +3583,13 @@
       "backend_114",
       "backend_115"
     ],
-    "localizedNameKey": "screens.adm_44.title"
+    "localizedNameKey": "screens.adm_44.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-44-list.png",
+      "docs/design_sources/final_screens/admin/ADM-44-create.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-45",
@@ -3072,7 +3618,12 @@
       "backend_114",
       "backend_115"
     ],
-    "localizedNameKey": "screens.adm_45.title"
+    "localizedNameKey": "screens.adm_45.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-45.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-46",
@@ -3100,7 +3651,12 @@
       "backend_038",
       "backend_106"
     ],
-    "localizedNameKey": "screens.adm_46.title"
+    "localizedNameKey": "screens.adm_46.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-46.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-47",
@@ -3128,7 +3684,12 @@
       "backend_038",
       "backend_106"
     ],
-    "localizedNameKey": "screens.adm_47.title"
+    "localizedNameKey": "screens.adm_47.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-47.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-48",
@@ -3156,7 +3717,12 @@
       "backend_038",
       "backend_106"
     ],
-    "localizedNameKey": "screens.adm_48.title"
+    "localizedNameKey": "screens.adm_48.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-48.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-49",
@@ -3184,7 +3750,12 @@
       "backend_038",
       "backend_106"
     ],
-    "localizedNameKey": "screens.adm_49.title"
+    "localizedNameKey": "screens.adm_49.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-49.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-50",
@@ -3212,7 +3783,12 @@
       "backend_038",
       "backend_106"
     ],
-    "localizedNameKey": "screens.adm_50.title"
+    "localizedNameKey": "screens.adm_50.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-50.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-51",
@@ -3240,7 +3816,12 @@
       "backend_038",
       "backend_106"
     ],
-    "localizedNameKey": "screens.adm_51.title"
+    "localizedNameKey": "screens.adm_51.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-51.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-52",
@@ -3268,7 +3849,12 @@
       "backend_038",
       "backend_106"
     ],
-    "localizedNameKey": "screens.adm_52.title"
+    "localizedNameKey": "screens.adm_52.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-52.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-53",
@@ -3294,7 +3880,12 @@
       "backend_039",
       "backend_123"
     ],
-    "localizedNameKey": "screens.adm_53.title"
+    "localizedNameKey": "screens.adm_53.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-53.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-54",
@@ -3320,7 +3911,10 @@
       "backend_039",
       "backend_123"
     ],
-    "localizedNameKey": "screens.adm_54.title"
+    "localizedNameKey": "screens.adm_54.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [],
+    "visualSourceStatus": "EXTERNAL_GROUP_REFERENCE_ONLY"
   },
   {
     "id": "ADM-55",
@@ -3346,7 +3940,12 @@
       "backend_039",
       "backend_123"
     ],
-    "localizedNameKey": "screens.adm_55.title"
+    "localizedNameKey": "screens.adm_55.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-55.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-56",
@@ -3372,7 +3971,12 @@
       "backend_039",
       "backend_123"
     ],
-    "localizedNameKey": "screens.adm_56.title"
+    "localizedNameKey": "screens.adm_56.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-56.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-57",
@@ -3398,7 +4002,12 @@
       "backend_039",
       "backend_123"
     ],
-    "localizedNameKey": "screens.adm_57.title"
+    "localizedNameKey": "screens.adm_57.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-57.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-58",
@@ -3424,7 +4033,12 @@
       "backend_039",
       "backend_123"
     ],
-    "localizedNameKey": "screens.adm_58.title"
+    "localizedNameKey": "screens.adm_58.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-58.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-59",
@@ -3451,7 +4065,12 @@
       "backend_017",
       "backend_121"
     ],
-    "localizedNameKey": "screens.adm_59.title"
+    "localizedNameKey": "screens.adm_59.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-59.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-60",
@@ -3478,7 +4097,12 @@
       "backend_017",
       "backend_121"
     ],
-    "localizedNameKey": "screens.adm_60.title"
+    "localizedNameKey": "screens.adm_60.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-60.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-61",
@@ -3505,7 +4129,12 @@
       "backend_017",
       "backend_121"
     ],
-    "localizedNameKey": "screens.adm_61.title"
+    "localizedNameKey": "screens.adm_61.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-61.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-62",
@@ -3532,7 +4161,12 @@
       "backend_017",
       "backend_121"
     ],
-    "localizedNameKey": "screens.adm_62.title"
+    "localizedNameKey": "screens.adm_62.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-62.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-63",
@@ -3559,7 +4193,12 @@
       "backend_017",
       "backend_121"
     ],
-    "localizedNameKey": "screens.adm_63.title"
+    "localizedNameKey": "screens.adm_63.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-63.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-64",
@@ -3586,7 +4225,12 @@
       "backend_017",
       "backend_121"
     ],
-    "localizedNameKey": "screens.adm_64.title"
+    "localizedNameKey": "screens.adm_64.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-64.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-65",
@@ -3611,7 +4255,12 @@
     "backendTaskIds": [
       "backend_122"
     ],
-    "localizedNameKey": "screens.adm_65.title"
+    "localizedNameKey": "screens.adm_65.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-65.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   },
   {
     "id": "ADM-66",
@@ -3636,6 +4285,11 @@
     "backendTaskIds": [
       "backend_020"
     ],
-    "localizedNameKey": "screens.adm_66.title"
+    "localizedNameKey": "screens.adm_66.title",
+    "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-66.png"
+    ],
+    "visualSourceStatus": "LOCAL_FINAL_EXPORT"
   }
 ]

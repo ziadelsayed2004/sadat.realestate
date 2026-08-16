@@ -1,6 +1,6 @@
 # Original Developer Handoff Reference
 
-The original developer handoff is an Arabic HTML artifact and is intentionally not embedded in this English-only Agent Pack. The user's original upload remains the authoritative source artifact outside this pack.
+The original developer handoff is an Arabic HTML artifact and is intentionally not embedded in this English-only Agent Pack. A byte-identical copy is stored outside the pack at `docs/design_sources/handoff/developer-handoff.source.html`.
 
 ## Identity
 
@@ -10,10 +10,13 @@ The original developer handoff is an Arabic HTML artifact and is intentionally n
 - Language: Arabic source content with English technical identifiers
 - Screen registry derived from the handoff: `../01_product/SCREEN_REGISTRY.json`
 
-## External Visual Sources
+## Final Visual Sources
 
-- [Figma](https://www.figma.com/design/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI-Preview----%D8%A7%D9%84%D8%AA%D8%B3%D9%84%D9%8A%D9%85-?node-id=2051-1588&t=JIRgAnA9LvwMw1uq-1)
-- [Screen folders](https://drive.google.com/drive/folders/11k5tmOHMnD0MoNDsWNgaMdynEaFnkExo?usp=drive_link)
-- [Design System](https://drive.google.com/file/d/1NXO13A_lTz-f2O6FVt5bgzG2RemJ6Bc0/view?usp=drivesdk)
+- Surface-level final Figma prototype links and the identity Drive folder are recorded in `DESIGN_SOURCE_MANIFEST.json`.
+- The supplied final-screen archive has SHA-256 `ecfa5f0eb4ba5757fc15d370112766e6d8db6141b71c4fcb283eca6ed17faade`.
+- English-only normalized exports are indexed under `docs/design_sources/final_screens/`.
+- The approved design-system board is `docs/design_sources/brand/brand-design-system.png`.
+- The approved product logo is `docs/design_sources/brand/sadat-real-estate-logo.png`; DOT Studio artwork is supplier identity and is explicitly excluded from runtime branding.
+- `ADM-54` has only its approved external group reference; no dedicated local export was supplied. This must remain explicit during that screen task.
 
-Before a visual task closes, the implementer must open the relevant approved frame, record the exact reference in completion evidence, and compare the implemented state against it.
+Before a visual task closes, the implementer must inspect every indexed local export for its Screen ID, open the relevant external frame when accessible, record the exact references in completion evidence, and compare the implemented state against them.

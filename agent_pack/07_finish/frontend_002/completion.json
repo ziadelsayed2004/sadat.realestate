@@ -1,0 +1,84 @@
+{
+  "taskId": "frontend_002",
+  "summary": "Implemented the reusable core design-system component library with accessible state variants, RTL/LTR-safe behavior, approved design tokens, public-data-only PropertyCard projection, and SSR/static-render coverage.",
+  "filesChanged": [
+    "apps/web/src/features/design_system/components.tsx",
+    "apps/web/src/features/design_system/components.css",
+    "apps/web/src/features/design_system/index.ts",
+    "apps/web/src/features/frontend_foundation/styles.css",
+    "apps/web/tests/components.test.ts",
+    "apps/web/package.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd ci",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Clean install completed; npm reported 0 vulnerabilities. Node engine warnings are recorded as a compatibility gap below."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy and repository ESLint checks passed."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "13 workspace tests, 443 API tests, and 22 web tests passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, and web production builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities reported."
+    },
+    {
+      "command": "npm.cmd run test:visual",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Blocked — prerequisites unavailable: the repository does not define a test:visual script."
+    },
+    {
+      "command": "npm.cmd run test:a11y",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Blocked — prerequisites unavailable: the repository does not define a test:a11y script."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before completion."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json — approved Cairo typography, color tokens, spacing/radius/component sizes, and local brand source.",
+    "docs/design_sources/brand/brand-design-system.png — supplied component and state reference board.",
+    "apps/web/src/features/design_system/components.tsx — Button, Input, Select, Tabs, Badge, Modal, Toast, Table, Pagination, PropertyCard, and shared state primitives.",
+    "apps/web/tests/components.test.ts — SSR/static-render coverage for component states, accessibility attributes, public projection boundaries, and RTL/LTR direction."
+  ],
+  "scopeNotes": [
+    "No direct Screen IDs or API contracts belong to this atomic task; no route, endpoint, or production mock was added.",
+    "apps/web/package.json was updated only to include the new TSX test module and use the existing locked tsx runner supplied by the workspace dependency graph; no new dependency was added."
+  ],
+  "knownGaps": [
+    "The in-app browser setup remains unavailable with MCP error -32602: codex/sandbox-state-meta is missing sandboxPolicy; local production HTTP/SSR smoke and static accessibility assertions passed, but browser screenshot/interaction verification is not claimed.",
+    "Node v22.18.0 was used while the repository declares Node >=24 <25; all local gates passed, but Node 24 runtime confirmation remains external.",
+    "This task has no direct Screen IDs, so no pixel-perfect screen coverage claim is made."
+  ],
+  "completedAt": "2026-08-15T22:40:34.964Z"
+}

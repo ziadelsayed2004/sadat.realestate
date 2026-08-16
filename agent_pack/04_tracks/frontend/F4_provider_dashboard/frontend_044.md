@@ -21,7 +21,10 @@ Implement steps 06 through 08 with upload, ordering, and summary behavior.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `PRV-08` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `PRV-09` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `PRV-10` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

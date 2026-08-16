@@ -19,7 +19,7 @@ Test ar, en, and zh-CN, long text, dates, numbers, currency, and locale persiste
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
 
 ## Allowed Roots
 

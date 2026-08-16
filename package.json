@@ -18,7 +18,7 @@
   "scripts": {
     "workspace:check": "node packages/config/scripts/check-workspaces.mjs",
     "typecheck": "node packages/config/scripts/check-syntax.mjs && npm run typecheck --workspace packages/contracts && npm run typecheck --workspace apps/api && npm run typecheck --workspace apps/web",
-    "lint": "npm run workspace:check && eslint \"apps/api/src/**/*.ts\" \"apps/api/tests/**/*.ts\" \"apps/web/src/**/*.ts\" \"apps/web/tests/**/*.ts\" \"apps/web/vite.config.ts\" \"apps/web/server.mjs\" \"packages/contracts/src/**/*.ts\" \"packages/config/**/*.mjs\" \"eslint.config.mjs\" --max-warnings=0",
+    "lint": "npm run workspace:check && eslint \"apps/api/src/**/*.ts\" \"apps/api/tests/**/*.ts\" \"apps/web/src/**/*.{ts,tsx}\" \"apps/web/tests/**/*.{ts,tsx}\" \"apps/web/vite.config.ts\" \"apps/web/server.mjs\" \"packages/contracts/src/**/*.ts\" \"packages/config/**/*.mjs\" \"eslint.config.mjs\" --max-warnings=0",
     "test": "node packages/config/scripts/run-tests.mjs && npm run test --workspace apps/web",
     "test:workspace": "node --test packages/config/tests/workspace-policy.test.mjs",
     "test:unit": "npm run test:unit --workspace apps/api",

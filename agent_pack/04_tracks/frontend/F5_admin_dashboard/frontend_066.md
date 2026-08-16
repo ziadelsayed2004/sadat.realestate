@@ -25,7 +25,14 @@ Implement the shell, lists, overdue requests, contacts, viewings, searches, and 
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `ADM-18` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-19` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-20` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-21` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-22` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-23` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-24` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

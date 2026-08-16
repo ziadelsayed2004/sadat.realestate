@@ -19,7 +19,7 @@ Prepare production builds for the API, SSR, and static assets, plus a preview en
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
 
 ## Allowed Roots
 

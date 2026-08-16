@@ -19,7 +19,7 @@ Compare every Screen ID with its approved reference, record differences, and blo
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
 
 ## Allowed Roots
 

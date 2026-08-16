@@ -22,7 +22,11 @@ Implement administration, lists, details, and document review.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `ADM-02` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-03` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-04` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `ADM-05` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

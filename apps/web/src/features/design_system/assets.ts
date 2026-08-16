@@ -4,6 +4,11 @@ export type DesignAssetSlot = (typeof DESIGN_ASSET_SLOTS)[number];
 export type PublicAssetPath = string & { readonly __publicAssetPath: unique symbol };
 export type DesignAssetCatalog = Partial<Record<DesignAssetSlot, string>>;
 
+export const DEFAULT_DESIGN_ASSETS: Readonly<Record<DesignAssetSlot, string>> = Object.freeze({
+  logo: '/assets/sadat-real-estate-logo.png',
+  favicon: '/assets/sadat-real-estate-favicon.png'
+});
+
 const safeAssetSegment = /^[A-Za-z0-9][A-Za-z0-9._~-]*$/u;
 
 /**

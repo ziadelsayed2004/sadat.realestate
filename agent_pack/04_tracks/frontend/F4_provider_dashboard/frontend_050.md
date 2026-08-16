@@ -22,7 +22,11 @@ Implement notifications and the three settings frames.
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
+- Screen ID `PRV-21` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `PRV-22-1` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `PRV-22-2` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- Screen ID `PRV-22-3` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 
 ## Allowed Roots
 

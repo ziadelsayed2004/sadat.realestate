@@ -19,7 +19,7 @@ Run all quality, security, and readiness gates and lock the release manifest wit
 
 ## Source References
 
-- Product requirements, architecture guidance, and directly related runtime contracts.
+- `09_sources/DESIGN_SOURCE_MANIFEST.json`
 
 ## Allowed Roots
 
