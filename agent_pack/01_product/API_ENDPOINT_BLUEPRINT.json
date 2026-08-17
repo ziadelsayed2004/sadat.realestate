@@ -411,6 +411,18 @@
   },
   {
     "method": "GET",
+    "path": "/api/v1/public/article-categories",
+    "module": "articles",
+    "auth": "none",
+    "roles": [
+      "public"
+    ],
+    "purpose": "Active localized article category metadata",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
     "path": "/api/v1/public/articles",
     "module": "articles",
     "auth": "none",
@@ -418,7 +430,7 @@
       "public"
     ],
     "purpose": "Published articles",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -430,7 +442,7 @@
       "public"
     ],
     "purpose": "Published article details",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -442,7 +454,7 @@
       "public"
     ],
     "purpose": "Moderated community feed",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1582,7 +1594,7 @@
       "admin:content.view"
     ],
     "purpose": "Article categories",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1594,7 +1606,31 @@
       "admin:content.manage"
     ],
     "purpose": "Create article category",
-    "status": "planned",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/admin/article-categories/:categoryId",
+    "module": "articles",
+    "auth": "access-token",
+    "roles": [
+      "admin:content.manage"
+    ],
+    "purpose": "Update article category with optimistic version control",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "DELETE",
+    "path": "/api/v1/admin/article-categories/:categoryId",
+    "module": "articles",
+    "auth": "access-token",
+    "roles": [
+      "admin:content.manage"
+    ],
+    "purpose": "Delete an unreferenced article category",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1606,7 +1642,7 @@
       "admin:content.view"
     ],
     "purpose": "Article list",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1618,7 +1654,7 @@
       "admin:content.manage"
     ],
     "purpose": "Create article",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1630,7 +1666,7 @@
       "admin:content.manage"
     ],
     "purpose": "Update article",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1639,10 +1675,11 @@
     "module": "articles",
     "auth": "access-token",
     "roles": [
+      "admin:content.manage",
       "admin:content.publish"
     ],
-    "purpose": "Publish/archive article",
-    "status": "planned",
+    "purpose": "Submit, review, publish, archive, or restore article",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {

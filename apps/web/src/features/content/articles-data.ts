@@ -1,10 +1,12 @@
 import {
   articleListQuerySchema,
+  articlePublicCategoryListSuccessEnvelopeSchema,
   articlePublicListSuccessEnvelopeSchema,
   articlePublicSuccessEnvelopeSchema,
   articleSlugSchema,
   type ArticleListQuery,
   type ArticlePublic,
+  type ArticlePublicCategory,
   type ArticlePublicListData,
   type LocalizedText,
   type SupportedLocale
@@ -12,13 +14,16 @@ import {
 import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
 
 export const PUBLIC_ARTICLES_ROUTE = '/public/articles' as const;
+export const PUBLIC_ARTICLE_CATEGORIES_ROUTE = '/public/article-categories' as const;
 export const PUBLIC_ARTICLES_PATH = '/articles' as const;
 
 const DEFAULT_QUERY = articleListQuerySchema.parse({});
 
 export interface PublicArticleCategoryOption {
   readonly id: string;
+  readonly slug?: string | undefined;
   readonly name: LocalizedText;
+  readonly description?: LocalizedText | undefined;
 }
 
 export interface PublicArticleListLoadOptions {
@@ -46,6 +51,11 @@ export type PublicArticleDetailsLoader = (
   locale: SupportedLocale,
   signal?: AbortSignal
 ) => Promise<ArticlePublic>;
+
+export type PublicArticleCategoryLoader = (
+  locale: SupportedLocale,
+  signal?: AbortSignal
+) => Promise<readonly PublicArticleCategoryOption[]>;
 
 function clientFor(options: { readonly apiClient?: ApiClient | undefined; readonly apiOrigin?: string | undefined }): ApiClient {
   if (options.apiClient !== undefined) return options.apiClient;
@@ -151,3 +161,29 @@ export function createPublicArticleDetailsLoader(
 }
 
 export const defaultPublicArticleDetailsLoader = createPublicArticleDetailsLoader();
+
+export async function loadPublicArticleCategories(options: {
+  readonly locale: SupportedLocale;
+  readonly apiClient?: ApiClient | undefined;
+  readonly apiOrigin?: string | undefined;
+  readonly signal?: AbortSignal | undefined;
+}): Promise<readonly PublicArticleCategoryOption[]> {
+  const client = clientFor(options);
+  const requestOptions = options.signal === undefined
+    ? { responseSchema: articlePublicCategoryListSuccessEnvelopeSchema, query: { locale: options.locale } }
+    : { responseSchema: articlePublicCategoryListSuccessEnvelopeSchema, query: { locale: options.locale }, signal: options.signal };
+  const response = await client.request(PUBLIC_ARTICLE_CATEGORIES_ROUTE, requestOptions);
+  return response.data.data satisfies ArticlePublicCategory[];
+}
+
+export function createPublicArticleCategoryLoader(
+  options: { readonly apiClient?: ApiClient | undefined; readonly apiOrigin?: string | undefined } = {}
+): PublicArticleCategoryLoader {
+  return (locale, signal) => loadPublicArticleCategories({
+    ...options,
+    locale,
+    ...(signal === undefined ? {} : { signal })
+  });
+}
+
+export const defaultPublicArticleCategoryLoader = createPublicArticleCategoryLoader();

@@ -133,18 +133,32 @@
     "status": "planned"
   },
   {
-    "module": "content-community",
+    "module": "articles",
     "routePrefixes": [
+      "/api/v1/admin/article-categories",
       "/api/v1/admin/articles",
-      "/api/v1/public/articles",
-      "/api/v1/public/community"
+      "/api/v1/public/article-categories",
+      "/api/v1/public/articles"
     ],
     "backendTaskIds": [
       "backend_090",
       "backend_091",
-      "backend_092",
+      "backend_092"
+    ],
+    "status": "implemented"
+  },
+  {
+    "module": "community",
+    "routePrefixes": [
+      "/api/v1/admin/community",
+      "/api/v1/public/community"
+    ],
+    "backendTaskIds": [
       "backend_093",
-      "backend_095"
+      "backend_094",
+      "backend_095",
+      "backend_096",
+      "backend_097"
     ],
     "status": "planned"
   },

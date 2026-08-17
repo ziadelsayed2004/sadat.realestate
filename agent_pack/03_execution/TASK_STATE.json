@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-16T22:15:30.026Z",
+  "updatedAt": "2026-08-17T18:54:09.478Z",
   "tasks": {
     "backend_000": {
       "status": "complete",
@@ -902,7 +902,7 @@
       "status": "partial",
       "startedAt": "2026-08-16T21:33:16.382Z",
       "completedAt": null,
-      "reason": "The article listing and detail UI, adapter boundary, SSR/client states, localized metadata, and tests are implemented and pass verification, but GET /api/v1/public/articles and GET /api/v1/public/articles/:slug remain marked planned and absent from the authoritative API inventory; public article category metadata is also not exposed by an implemented route, so production article loading and category labels cannot be claimed complete.",
+      "reason": "The article listing/detail implementation, public category metadata adapter, contracts, API inventory, API article tests, web checks, and selected visual/accessibility matrices pass, but mandatory API typecheck and root build fail at apps/api/src/modules/articles/repository.ts:346 and :348 with a Mongoose find overload error; the failing backend source is outside frontend_015 allowed roots, so completion cannot be claimed.",
       "evidencePath": null
     },
     "frontend_016": {

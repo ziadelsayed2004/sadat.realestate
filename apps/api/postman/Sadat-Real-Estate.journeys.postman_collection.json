@@ -39,6 +39,21 @@
           "name": "Public compare - invalid payload negative case",
           "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Invalid compare payload is rejected', function () { pm.expect([400, 422, 500]).to.include(pm.response.code); });"] } }],
           "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"propertyIds\":[]}" }, "url": { "raw": "{{apiV1BaseUrl}}/public/properties/compare", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "properties", "compare"] } }
+        },
+        {
+          "name": "Public article categories - active localized metadata",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Article categories use a safe public projection', function () { pm.response.to.have.status(200); const body = pm.response.json(); pm.expect(body.data).to.be.an('array'); if (body.data.length) { pm.expect(body.data[0]).to.not.have.any.keys('active', 'version', 'createdAt', 'updatedAt', 'availableActions'); } });"] } }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/public/article-categories?locale=en", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "article-categories"], "query": [{ "key": "locale", "value": "en" }] } }
+        },
+        {
+          "name": "Public articles - published-only projection",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Public articles never expose workflow internals', function () { pm.response.to.have.status(200); const body = pm.response.json(); pm.expect(body.data).to.be.an('array'); body.data.forEach(function (item) { pm.expect(item).to.not.have.any.keys('authorId', 'status', 'version', 'availableActions', 'audit'); }); });"] } }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/public/articles?locale=en&page=1&limit=20", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "articles"], "query": [{ "key": "locale", "value": "en" }, { "key": "page", "value": "1" }, { "key": "limit", "value": "20" }] } }
+        },
+        {
+          "name": "Public article details - unpublished or missing slug",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Missing public article is safely unavailable', function () { pm.expect([404, 500]).to.include(pm.response.code); if (pm.response.code === 404) pm.expect(pm.response.json()).to.not.have.any.keys('authorId', 'audit', 'storageKey'); });"] } }],
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/public/articles/:slug?locale=en", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "articles", ":slug"], "query": [{ "key": "locale", "value": "en" }], "variable": [{ "key": "slug", "value": "missing-synthetic-article" }] } }
         }
       ]
     },

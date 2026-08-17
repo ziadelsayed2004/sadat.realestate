@@ -11,3 +11,5 @@ The command prints a deterministic list of `{ method, path, operationId, status 
 The same route-definition source is used by the OpenAPI and Postman validators. Their normalized method/path sets must match exactly, including operational `/health` and `/ready` probes. Parameter notation is normalized only between Express `:id` and OpenAPI `{id}`; no `/api/v1` prefix is inferred or duplicated. Authentication, role, ownership, and mutation behavior remain defined by the owning router/service tests rather than being guessed from this documentation projection.
 
 This is a runtime truth artifact, not a roadmap. Missing production data, provider credentials, and unimplemented blueprint rows do not appear as fake endpoints.
+
+The Article module contributes eleven implemented definitions: category list/create/update/delete for administrators, article list/create/update/transition for administrators, and public category/list/detail reads. These definitions are imported by the same inventory used to validate OpenAPI, Postman, authorization coverage, and the frontend handoff.

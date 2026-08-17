@@ -1,22 +1,23 @@
 # Risks and Gaps
 
+## Current verification boundary
+
+- The Article runtime repair has deterministic static parity evidence, but the current modified source has not completed the repository's mandatory dependency-backed gate. This environment contains no `node_modules`, and its network-approval boundary rejected `npm ci` before npm could execute.
+- `frontend_015` must remain partial until `npm ci` and `npm run quality` pass against this exact source. Targeted Article API, Web, visual, and accessibility gates must also run before its completion evidence is created.
+- No current dependency-audit, live MongoDB, full API matrix, browser visual, or accessibility result is claimed. Historical completion evidence remains historical and must not be presented as verification of later modifications.
+- Static verification does not replace TypeScript semantic checking or execution tests. See `docs/api/article-runtime-truth-repair.md` for the exact follow-up commands.
+
 ## Repository and source provenance
 
 - The supplied repository archive has no `.git/` metadata. Branch, commit history, and exact pre-existing tracked changes cannot be reconstructed from this copy.
 - Local approved exports cover 130 of 131 registered Screen IDs. `ADM-54` has a recorded external reference but no dedicated local PNG export.
-- The Figma prototypes and identity Drive folder were supplied as authoritative external references but could not be opened by this execution environment. Future screen work must use the recorded links and the checked-in final exports, and must report any remaining frame-access limitation honestly.
-- No approved self-hosted Cairo font files were supplied. The runtime currently uses the Google Fonts stylesheet with system fallbacks; a Production privacy, availability, or CSP policy may require approved self-hosted binaries later.
+- The Figma prototypes and identity Drive folder are recorded as authoritative external references but could not be opened by this execution environment. Future screen work must use the recorded links and checked-in final exports and report any remaining frame-access limitation honestly.
+- No approved self-hosted Cairo font files were supplied. The runtime uses the Google Fonts stylesheet with system fallbacks; Production privacy, availability, or CSP requirements may require approved self-hosted binaries later.
 
-## Verification and execution environment
+## Runtime and Production dependencies
 
-- Browser visual, Playwright, and accessibility regression gates are not yet repository-native and remain assigned to `frontend_009`. Foundation unit, SSR, asset-integrity, build, locale, and direction checks pass, but this is not a pixel-perfect screen claim.
-- A local production-server smoke attempt was blocked by the execution sandbox before a stable browser connection could be established. The deterministic client build, SSR tests, and Web unit tests passed.
-- `npm ci` and `npm audit` were blocked before execution by the sandbox network-approval boundary. The existing lockfile and installed repository-local toolchain were used for all deterministic checks. No dependency-audit result is claimed for this update.
-- Live MongoDB and full external-provider journeys were not rerun for this Frontend task. They require an isolated non-Production replica set, safe seed data, credentials, and cleanup capability.
-
-## Production readiness dependencies
-
-- Production deployment still requires the environment-specific prerequisites and acceptance evidence recorded by `backend_138`, including a transaction-capable MongoDB topology, private object storage, malware scanning, secrets, provider credentials, monitoring, backup/restore drills, and approved deployment infrastructure.
+- Article mutations use optimistic document versions and bounded audit snapshots. Live race and index behavior still requires an isolated non-Production MongoDB replica set, deterministic fixtures, and safe cleanup.
+- Production deployment still requires the environment-specific prerequisites and acceptance evidence recorded by `backend_138`, including transaction-capable MongoDB, private object storage, malware scanning, secrets, provider credentials, monitoring, backup/restore drills, and approved deployment infrastructure.
 - The repository contains deterministic Local/Test adapters and fail-closed higher-environment boundaries. Those boundaries do not prove that Production providers are provisioned.
 - No real `.env`, secret, Production record, or fabricated operational metric was read or added.
 

@@ -3881,6 +3881,36 @@
     },
     "/api/v1/admin/viewings": {
       "get": { "operationId": "listAdminViewings", "responses": { "200": { "$ref": "#/components/responses/AuthSessionSuccess" }, "403": { "$ref": "#/components/responses/ProviderError" } } }
+    },
+    "/api/v1/admin/article-categories": {
+      "get": { "operationId": "listAdminArticleCategories", "security": [{ "bearerAuth": [] }], "parameters": [{ "name": "active", "in": "query", "schema": { "type": "boolean" } }, { "name": "search", "in": "query", "schema": { "type": "string", "minLength": 1, "maxLength": 120 } }, { "name": "sort", "in": "query", "schema": { "enum": ["displayOrder", "slug", "createdAt"], "default": "displayOrder" } }, { "name": "direction", "in": "query", "schema": { "enum": ["asc", "desc"], "default": "asc" } }, { "name": "page", "in": "query", "schema": { "type": "integer", "minimum": 1, "default": 1 } }, { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 } }], "responses": { "200": { "description": "Paginated article-category administration projection", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } } }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/AuthError" }, "403": { "$ref": "#/components/responses/AuthError" } } },
+      "post": { "operationId": "createAdminArticleCategory", "security": [{ "bearerAuth": [] }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ArticleCategoryCreate" } } } }, "responses": { "201": { "description": "Article category created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } } }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/AuthError" }, "403": { "$ref": "#/components/responses/AuthError" }, "409": { "$ref": "#/components/responses/ArticleError" } } }
+    },
+    "/api/v1/admin/article-categories/{categoryId}": {
+      "parameters": [{ "$ref": "#/components/parameters/ArticleCategoryId" }],
+      "patch": { "operationId": "updateAdminArticleCategory", "security": [{ "bearerAuth": [] }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ArticleCategoryPatch" } } } }, "responses": { "200": { "description": "Article category updated with optimistic version control", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } } }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/AuthError" }, "403": { "$ref": "#/components/responses/AuthError" }, "404": { "$ref": "#/components/responses/ArticleError" }, "409": { "$ref": "#/components/responses/ArticleError" } } },
+      "delete": { "operationId": "deleteAdminArticleCategory", "security": [{ "bearerAuth": [] }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ArticleDeleteRequest" } } } }, "responses": { "200": { "description": "Unreferenced article category deleted", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } } }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/AuthError" }, "403": { "$ref": "#/components/responses/AuthError" }, "404": { "$ref": "#/components/responses/ArticleError" }, "409": { "$ref": "#/components/responses/ArticleError" } } }
+    },
+    "/api/v1/admin/articles": {
+      "get": { "operationId": "listAdminArticles", "security": [{ "bearerAuth": [] }], "parameters": [{ "name": "status", "in": "query", "schema": { "$ref": "#/components/schemas/ArticleStatus" } }, { "name": "categoryId", "in": "query", "schema": { "$ref": "#/components/schemas/ArticleObjectId" } }, { "name": "search", "in": "query", "schema": { "type": "string", "minLength": 1, "maxLength": 120 } }, { "name": "sort", "in": "query", "schema": { "enum": ["updatedAt", "publishedAt", "slug"], "default": "updatedAt" } }, { "name": "direction", "in": "query", "schema": { "enum": ["asc", "desc"], "default": "desc" } }, { "name": "page", "in": "query", "schema": { "type": "integer", "minimum": 1, "default": 1 } }, { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 } }], "responses": { "200": { "description": "Paginated administrator article projection", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } } }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/AuthError" }, "403": { "$ref": "#/components/responses/AuthError" } } },
+      "post": { "operationId": "createAdminArticle", "security": [{ "bearerAuth": [] }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ArticleCreate" } } } }, "responses": { "201": { "description": "Article draft created with server-derived author", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } } }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/AuthError" }, "403": { "$ref": "#/components/responses/AuthError" }, "409": { "$ref": "#/components/responses/ArticleError" } } }
+    },
+    "/api/v1/admin/articles/{articleId}": {
+      "parameters": [{ "$ref": "#/components/parameters/ArticleId" }],
+      "patch": { "operationId": "updateAdminArticle", "security": [{ "bearerAuth": [] }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ArticlePatch" } } } }, "responses": { "200": { "description": "Draft article updated with optimistic version control", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } } }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/AuthError" }, "403": { "$ref": "#/components/responses/AuthError" }, "404": { "$ref": "#/components/responses/ArticleError" }, "409": { "$ref": "#/components/responses/ArticleError" } } }
+    },
+    "/api/v1/admin/articles/{articleId}/transitions": {
+      "parameters": [{ "$ref": "#/components/parameters/ArticleId" }],
+      "post": { "operationId": "transitionAdminArticle", "security": [{ "bearerAuth": [] }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ArticleTransitionRequest" } } } }, "responses": { "200": { "description": "Reason-bearing editorial state transition", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } } }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/AuthError" }, "403": { "$ref": "#/components/responses/AuthError" }, "404": { "$ref": "#/components/responses/ArticleError" }, "409": { "$ref": "#/components/responses/ArticleError" } } }
+    },
+    "/api/v1/public/article-categories": {
+      "get": { "operationId": "listPublicArticleCategories", "parameters": [{ "name": "locale", "in": "query", "schema": { "enum": ["ar", "en", "zh-CN"], "default": "ar" } }], "responses": { "200": { "description": "Active localized article-category metadata", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } } }, "400": { "$ref": "#/components/responses/ValidationError" } } }
+    },
+    "/api/v1/public/articles": {
+      "get": { "operationId": "listPublicArticles", "parameters": [{ "name": "locale", "in": "query", "schema": { "enum": ["ar", "en", "zh-CN"], "default": "ar" } }, { "name": "categoryId", "in": "query", "schema": { "$ref": "#/components/schemas/ArticleObjectId" } }, { "name": "page", "in": "query", "schema": { "type": "integer", "minimum": 1, "default": 1 } }, { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 } }], "responses": { "200": { "description": "Published articles in active categories using an explicit public projection", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } } }, "400": { "$ref": "#/components/responses/ValidationError" } } }
+    },
+    "/api/v1/public/articles/{slug}": {
+      "get": { "operationId": "getPublicArticle", "parameters": [{ "name": "slug", "in": "path", "required": true, "schema": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "minLength": 2, "maxLength": 120 } }, { "name": "locale", "in": "query", "schema": { "enum": ["ar", "en", "zh-CN"], "default": "ar" } }], "responses": { "200": { "description": "One published article in an active category", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } } }, "400": { "$ref": "#/components/responses/ValidationError" }, "404": { "$ref": "#/components/responses/ArticleError" } } }
     }
   },
   "components": {
@@ -4337,6 +4367,18 @@
           }
         }
       },
+      "ArticleError": {
+        "description": "Article authentication, authorization, validation, lookup, state, slug, reference, or concurrency failure",
+        "headers": {
+          "X-Request-Id": { "$ref": "#/components/headers/X-Request-Id" },
+          "Traceparent": { "$ref": "#/components/headers/Traceparent" }
+        },
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorEnvelope" }
+          }
+        }
+      },
       "AuditLogListSuccess": {
         "description": "Paginated append-only audit records using explicit redacted projections",
         "headers": {
@@ -4573,6 +4615,18 @@
           "type": "string",
           "pattern": "^[a-f0-9]{24}$"
         }
+      },
+      "ArticleCategoryId": {
+        "name": "categoryId",
+        "in": "path",
+        "required": true,
+        "schema": { "$ref": "#/components/schemas/ArticleObjectId" }
+      },
+      "ArticleId": {
+        "name": "articleId",
+        "in": "path",
+        "required": true,
+        "schema": { "$ref": "#/components/schemas/ArticleObjectId" }
       }
     },
     "headers": {
@@ -4716,6 +4770,99 @@
           "meta": {
             "$ref": "#/components/schemas/ResponseMeta"
           }
+        }
+      },
+      "ArticleObjectId": {
+        "type": "string",
+        "pattern": "^[a-f0-9]{24}$"
+      },
+      "ArticleStatus": {
+        "type": "string",
+        "enum": ["draft", "pending_review", "published", "archived"]
+      },
+      "ArticleReason": {
+        "type": "string",
+        "minLength": 5,
+        "maxLength": 1000,
+        "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+      },
+      "ArticleCategoryCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["slug", "name", "reason"],
+        "properties": {
+          "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "minLength": 2, "maxLength": 120 },
+          "name": { "$ref": "#/components/schemas/LocalizedText" },
+          "description": { "$ref": "#/components/schemas/LocalizedText" },
+          "displayOrder": { "type": "integer", "minimum": 0, "maximum": 10000, "default": 0 },
+          "active": { "type": "boolean", "default": true },
+          "reason": { "$ref": "#/components/schemas/ArticleReason" }
+        }
+      },
+      "ArticleCategoryPatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["version", "reason"],
+        "minProperties": 3,
+        "properties": {
+          "version": { "type": "integer", "minimum": 0 },
+          "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "minLength": 2, "maxLength": 120 },
+          "name": { "$ref": "#/components/schemas/LocalizedText" },
+          "description": { "oneOf": [{ "$ref": "#/components/schemas/LocalizedText" }, { "type": "null" }] },
+          "displayOrder": { "type": "integer", "minimum": 0, "maximum": 10000 },
+          "active": { "type": "boolean" },
+          "reason": { "$ref": "#/components/schemas/ArticleReason" }
+        }
+      },
+      "ArticleDeleteRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["version", "reason"],
+        "properties": {
+          "version": { "type": "integer", "minimum": 0 },
+          "reason": { "$ref": "#/components/schemas/ArticleReason" }
+        }
+      },
+      "ArticleCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["categoryId", "slug", "title", "body", "reason"],
+        "properties": {
+          "categoryId": { "$ref": "#/components/schemas/ArticleObjectId" },
+          "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "minLength": 2, "maxLength": 120 },
+          "title": { "$ref": "#/components/schemas/LocalizedText" },
+          "body": { "$ref": "#/components/schemas/LocalizedText" },
+          "seoTitle": { "$ref": "#/components/schemas/LocalizedText" },
+          "seoDescription": { "$ref": "#/components/schemas/LocalizedText" },
+          "coverAssetId": { "$ref": "#/components/schemas/ArticleObjectId" },
+          "reason": { "$ref": "#/components/schemas/ArticleReason" }
+        }
+      },
+      "ArticlePatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["version", "reason"],
+        "minProperties": 3,
+        "properties": {
+          "version": { "type": "integer", "minimum": 0 },
+          "categoryId": { "$ref": "#/components/schemas/ArticleObjectId" },
+          "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "minLength": 2, "maxLength": 120 },
+          "title": { "$ref": "#/components/schemas/LocalizedText" },
+          "body": { "$ref": "#/components/schemas/LocalizedText" },
+          "seoTitle": { "oneOf": [{ "$ref": "#/components/schemas/LocalizedText" }, { "type": "null" }] },
+          "seoDescription": { "oneOf": [{ "$ref": "#/components/schemas/LocalizedText" }, { "type": "null" }] },
+          "coverAssetId": { "oneOf": [{ "$ref": "#/components/schemas/ArticleObjectId" }, { "type": "null" }] },
+          "reason": { "$ref": "#/components/schemas/ArticleReason" }
+        }
+      },
+      "ArticleTransitionRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["status", "version", "reason"],
+        "properties": {
+          "status": { "$ref": "#/components/schemas/ArticleStatus" },
+          "version": { "type": "integer", "minimum": 0 },
+          "reason": { "$ref": "#/components/schemas/ArticleReason" }
         }
       },
       "AdminLoginRequest": {

@@ -23,7 +23,7 @@
 | requests / request_events | Request types and history | type + status + updatedAt, seeker/provider/assignee, dueAt |
 | notifications | Inbox | recipientId + readAt + createdAt |
 | outbox_events | Reliable events | status + availableAt, unique dedupeKey |
-| article_categories / articles | Content | slug + locale/status, publishAt |
+| article_categories / articles | Content | unique slug, localized text, category/status, publishedAt, optimistic version, public/admin query indexes |
 | community_posts / comments | Community | status + createdAt, postId + createdAt |
 | moderation_reports | Reports | targetType + targetId + status |
 | ad_placements / ad_requests | Advertising | placement + status + schedule, providerId |

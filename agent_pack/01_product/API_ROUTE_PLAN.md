@@ -11,7 +11,7 @@ This is a naming plan, not an implementation claim. Runtime OpenAPI and endpoint
 | Public home | `GET /api/v1/public/home` |
 | Properties | `GET /api/v1/public/properties`, `/:slug`, `POST /compare` |
 | Developers | `GET /api/v1/public/developers`, `/:slug` |
-| Articles and community | `GET /api/v1/public/articles`, `community/posts`; authenticated mutations under `/me/community` |
+| Articles and community | Implemented Article reads under `/api/v1/public/article-categories` and `/api/v1/public/articles`; implemented Article administration under `/api/v1/admin/article-categories` and `/api/v1/admin/articles`; Community routes remain governed by their owning tasks |
 | Seeker | `/api/v1/seeker/overview`, `requests`, `viewings`, `favorites`, `notifications` |
 | Provider | `/api/v1/provider/properties`, `projects`, `requests`, `viewings`, `ads`, `commission` |
 | Property wizard | `POST /provider/properties`, `PATCH /:id/steps/:step`, `POST /:id/submit`, and media subresources |

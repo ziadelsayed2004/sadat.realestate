@@ -8,12 +8,16 @@ export type {
 export {
   PUBLIC_ARTICLES_PATH,
   PUBLIC_ARTICLES_ROUTE,
+  PUBLIC_ARTICLE_CATEGORIES_ROUTE,
+  createPublicArticleCategoryLoader,
   createPublicArticleDetailsLoader,
   createPublicArticleListLoader,
+  defaultPublicArticleCategoryLoader,
   defaultPublicArticleDetailsLoader,
   defaultPublicArticleListLoader,
   defaultPublicArticleListQuery,
   loadPublicArticleDetails,
+  loadPublicArticleCategories,
   loadPublicArticles,
   parsePublicArticleListQuery,
   publicArticleListParams,
@@ -23,6 +27,7 @@ export {
 } from './articles-data.ts';
 export type {
   PublicArticleCategoryOption,
+  PublicArticleCategoryLoader,
   PublicArticleDetailsLoadOptions,
   PublicArticleDetailsLoader,
   PublicArticleListLoadOptions,

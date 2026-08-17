@@ -38,6 +38,7 @@ import { createNotificationRuntime } from './modules/notifications/runtime.js';
 import { createSettingsRuntime } from './modules/settings/runtime.js';
 import { createRequestRuntime } from './modules/requests/runtime.js';
 import { createViewingRuntime } from './modules/viewings/runtime.js';
+import { createArticleRuntime } from './modules/articles/runtime.js';
 import { createGracefulShutdown } from './modules/deployment/runtime.js';
 
 export interface ApiListenOptions {
@@ -164,6 +165,12 @@ async function runEntrypoint(): Promise<void> {
   const settings = createSettingsRuntime(database.nativeConnection, auth.accessTokens, audit.writer, rbac.service);
   const requests = createRequestRuntime(database.nativeConnection, auth.accessTokens);
   const viewings = createViewingRuntime(database.nativeConnection, auth.accessTokens);
+  const articles = createArticleRuntime(
+    database.nativeConnection,
+    auth.accessTokens,
+    audit.writer,
+    rbac.service
+  );
   const server = createApiServer({
     database,
     auth,
@@ -188,7 +195,8 @@ async function runEntrypoint(): Promise<void> {
     notifications,
     settings,
     requests,
-    viewings
+    viewings,
+    articles
   });
   const shutdown = createGracefulShutdown({
     stopServer: () => stopApiServer(server),

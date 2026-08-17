@@ -14,6 +14,7 @@ import { getPublicHomepageCopy } from '../public/copy.ts';
 import { localizedText } from '../public/model.ts';
 import {
   PUBLIC_ARTICLES_PATH,
+  defaultPublicArticleCategoryLoader,
   defaultPublicArticleDetailsLoader,
   defaultPublicArticleListLoader,
   parsePublicArticleListQuery,
@@ -21,6 +22,7 @@ import {
   publicArticleSlugFromUrl,
   publicArticleUrl,
   type PublicArticleCategoryOption,
+  type PublicArticleCategoryLoader,
   type PublicArticleDetailsLoader,
   type PublicArticleListLoader
 } from './articles-data.ts';
@@ -38,6 +40,7 @@ export interface PublicArticlesProps {
   readonly initialState?: 'loading' | 'retry' | undefined;
   readonly categories?: readonly PublicArticleCategoryOption[] | undefined;
   readonly load?: PublicArticleListLoader | undefined;
+  readonly loadCategories?: PublicArticleCategoryLoader | undefined;
 }
 
 export interface PublicArticleDetailsProps {
@@ -99,6 +102,18 @@ function categoryName(
   return category === undefined ? undefined : localizedText(category.name, locale);
 }
 
+function mergeCategories(
+  supplied: readonly PublicArticleCategoryOption[] | undefined,
+  articles: ArticlePublicListData | undefined
+): readonly PublicArticleCategoryOption[] {
+  const categories = new Map<string, PublicArticleCategoryOption>();
+  for (const category of supplied ?? []) categories.set(category.id, category);
+  for (const article of articles ?? []) {
+    if (article.category !== undefined) categories.set(article.category.id, article.category);
+  }
+  return [...categories.values()];
+}
+
 function StateNotice({
   state,
   copy,
@@ -132,7 +147,9 @@ function ArticleCard({
 }) {
   const title = localizedText(article.title, locale) ?? article.slug;
   const body = localizedText(article.body, locale);
-  const category = categoryName(article.categoryId, locale, categories);
+  const category = article.category === undefined
+    ? categoryName(article.categoryId, locale, categories)
+    : localizedText(article.category.name, locale);
   const publishedAt = formatPublishedAt(article.publishedAt, locale);
   return (
     <article className="public-articles__card" data-article-card>
@@ -187,7 +204,8 @@ export function PublicArticles({
   initialQuery,
   initialState = 'loading',
   categories,
-  load = defaultPublicArticleListLoader
+  load = defaultPublicArticleListLoader,
+  loadCategories = defaultPublicArticleCategoryLoader
 }: PublicArticlesProps) {
   const copy = getPublicArticlesCopy(locale);
   const homepageCopy = getPublicHomepageCopy(locale);
@@ -197,6 +215,25 @@ export function PublicArticles({
   const [view, setView] = useState<PublicArticlesViewState>(initialData === undefined ? initialState : initialData.length === 0 ? 'empty' : 'success');
   const [attempt, setAttempt] = useState(0);
   const [search, setSearch] = useState('');
+  const [loadedCategories, setLoadedCategories] = useState<readonly PublicArticleCategoryOption[] | undefined>(categories);
+
+  useEffect(() => {
+    if (categories !== undefined) {
+      setLoadedCategories(categories);
+      return;
+    }
+    const controller = new AbortController();
+    void loadCategories(locale, controller.signal)
+      .then(nextCategories => {
+        if (!controller.signal.aborted) setLoadedCategories(nextCategories);
+      })
+      .catch(() => {
+        // Article results remain usable because every public article may carry its
+        // safe category projection. Category metadata is an enhancement, not a
+        // reason to replace the primary article state with an error screen.
+      });
+    return () => controller.abort();
+  }, [categories, loadCategories, locale]);
 
   useEffect(() => {
     if (initialData !== undefined && attempt === 0) return;
@@ -225,6 +262,11 @@ export function PublicArticles({
     });
   }, [data, locale, search]);
 
+  const availableCategories = useMemo(
+    () => mergeCategories(loadedCategories, data),
+    [data, loadedCategories]
+  );
+
   const updateCategory = (categoryId: string | undefined) => {
     const parsed = articleListQuerySchema.safeParse({ ...query, categoryId, page: 1 });
     if (!parsed.success) return;
@@ -239,7 +281,7 @@ export function PublicArticles({
     ? hasLocalSearchMismatch
       ? <div className="public-articles__inline-empty" role="status"><p>{copy.searchNoMatch}</p></div>
       : data !== undefined
-        ? <div className="public-articles__grid">{filteredArticles.map(article => <ArticleCard key={article.id} article={article} locale={locale} copy={copy} categories={categories} />)}</div>
+        ? <div className="public-articles__grid">{filteredArticles.map(article => <ArticleCard key={article.id} article={article} locale={locale} copy={copy} categories={availableCategories} />)}</div>
         : null
     : <StateNotice state={view} copy={copy} onRetry={retry} />;
 
@@ -255,7 +297,7 @@ export function PublicArticles({
       </section>
       <nav className="public-articles__categories" aria-label={copy.categoryLabel}>
         <button type="button" className={query.categoryId === undefined ? 'is-active' : ''} aria-pressed={query.categoryId === undefined} onClick={() => updateCategory(undefined)}>{copy.allCategories}</button>
-        {categories?.map(category => {
+        {availableCategories.map(category => {
           const label = localizedText(category.name, locale) ?? category.id;
           return <button key={category.id} type="button" className={query.categoryId === category.id ? 'is-active' : ''} aria-pressed={query.categoryId === category.id} onClick={() => updateCategory(category.id)}>{label}</button>;
         })}
@@ -304,7 +346,9 @@ function ArticleDetailsView({
   readonly relatedArticles: ArticlePublicListData | undefined;
 }) {
   const title = localizedText(article.title, locale) ?? article.slug;
-  const category = categoryName(article.categoryId, locale, categories);
+  const category = article.category === undefined
+    ? categoryName(article.categoryId, locale, categories)
+    : localizedText(article.category.name, locale);
   const publishedAt = formatPublishedAt(article.publishedAt, locale);
   const related = relatedArticles?.filter(item => item.slug !== article.slug).slice(0, 3) ?? [];
   return (

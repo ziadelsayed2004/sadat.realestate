@@ -22,6 +22,7 @@ import { NOTIFICATION_ROUTE_DEFINITIONS } from '../notifications/router.js';
 import { SETTINGS_ROUTE_DEFINITIONS } from '../settings/router.js';
 import { REQUEST_ROUTE_DEFINITIONS } from '../requests/router.js';
 import { VIEWING_ROUTE_DEFINITIONS } from '../viewings/router.js';
+import { ARTICLE_ROUTE_DEFINITIONS } from '../articles/router.js';
 
 export const IMPLEMENTED_ROUTE_DEFINITIONS = Object.freeze([
   ...OPERATIONAL_ROUTE_DEFINITIONS,
@@ -47,7 +48,8 @@ export const IMPLEMENTED_ROUTE_DEFINITIONS = Object.freeze([
   ...NOTIFICATION_ROUTE_DEFINITIONS,
   ...SETTINGS_ROUTE_DEFINITIONS,
   ...REQUEST_ROUTE_DEFINITIONS,
-  ...VIEWING_ROUTE_DEFINITIONS
+  ...VIEWING_ROUTE_DEFINITIONS,
+  ...ARTICLE_ROUTE_DEFINITIONS
 ]);
 
 export const PRODUCT_API_BASE_PATH = '/api/v1';

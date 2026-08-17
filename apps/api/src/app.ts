@@ -37,6 +37,7 @@ import { createNotificationRouter, type NotificationRouterDependencies } from '.
 import { createSettingsRouter, type SettingsRouterDependencies } from './modules/settings/router.js';
 import { createRequestRouter, type RequestRouterDependencies } from './modules/requests/router.js';
 import { createViewingRouter, type ViewingRouterDependencies } from './modules/viewings/router.js';
+import { createArticleRouter, type ArticleRouterDependencies } from './modules/articles/router.js';
 
 export interface AppDependencies {
   database: DatabaseReadiness;
@@ -63,6 +64,7 @@ export interface AppDependencies {
   settings?: SettingsRouterDependencies;
   requests?: RequestRouterDependencies;
   viewings?: ViewingRouterDependencies;
+  articles?: ArticleRouterDependencies;
   security?: SecurityOptions;
   observability?: ObservabilityOptions;
 }
@@ -107,6 +109,7 @@ export function createApp(dependencies: AppDependencies): Express {
   if (dependencies.settings) app.use('/api/v1', createSettingsRouter(dependencies.settings));
   if (dependencies.requests) app.use('/api/v1', createRequestRouter(dependencies.requests));
   if (dependencies.viewings) app.use('/api/v1', createViewingRouter(dependencies.viewings));
+  if (dependencies.articles) app.use('/api/v1', createArticleRouter(dependencies.articles));
   app.use(createSecurityErrorHandler());
   return app;
 }

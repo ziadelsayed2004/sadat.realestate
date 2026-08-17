@@ -47,3 +47,5 @@ The runtime product logo is the approved Sadat Real Estate artwork. DOT Studio a
 ## Current Boundary
 
 Backend task state is complete through the backend readiness gate. Frontend work remains controlled by the selector; completion of foundation tasks does not claim completion of the 131 mapped product screens.
+
+The Article runtime truth repair is connected across contracts, MongoDB models, services, eleven API routes, OpenAPI, Postman, and the public Article adapters. `frontend_015` remains the selected partial task until `npm ci`, `npm run quality`, and its targeted browser checks pass against this exact source; see `docs/api/article-runtime-truth-repair.md`.

@@ -1,11 +1,12 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { articlePublicListDataSchema, articlePublicSchema } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
-import { ApiClientError } from '../src/features/contracts/index.ts';
+import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import {
   PublicArticleDetails,
   PublicArticles,
   getPublicArticlesCopy,
+  loadPublicArticleCategories,
   parsePublicArticleListQuery,
   publicArticleListUrl,
   publicArticleUrl,
@@ -47,6 +48,48 @@ describe('public article listing and details', () => {
     expect(query).toMatchObject({ locale: 'en', categoryId: 'bbbbbbbbbbbbbbbbbbbbbbbb', page: 2, limit: 40 });
     expect(publicArticleListUrl(query)).toBe('/articles?categoryId=bbbbbbbbbbbbbbbbbbbbbbbb&page=2&limit=40');
     expect(publicArticleUrl(article.slug)).toBe('/articles/buying-in-sadat');
+  });
+
+  it('loads active category metadata through the versioned public API contract', async () => {
+    let requestInput = '';
+    const client = new ApiClient({
+      fetcher: async (input) => {
+        requestInput = String(input);
+        return new Response(JSON.stringify({
+          data: [{ id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'buying-tips', name: { en: 'Buying tips' } }],
+          meta: { requestId: 'article-category-request' }
+        }), { status: 200, headers: { 'content-type': 'application/json' } });
+      }
+    });
+
+    await expect(loadPublicArticleCategories({ locale: 'en', apiClient: client })).resolves.toEqual([
+      { id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'buying-tips', name: { en: 'Buying tips' } }
+    ]);
+    expect(requestInput).toBe('/api/v1/public/article-categories?locale=en');
+  });
+
+  it('uses fetched or embedded safe category metadata without blocking article results', async () => {
+    const loadCategories = vi.fn().mockResolvedValue(categories);
+    renderWithLocale(
+      <PublicArticles locale="en" initialData={articleListData} loadCategories={loadCategories} />,
+      { locale: 'en' }
+    );
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Buying tips' })).toBeInTheDocument());
+    expect(loadCategories).toHaveBeenCalledWith('en', expect.any(AbortSignal));
+
+    const embedded = articlePublicSchema.parse({
+      ...article,
+      category: {
+        id: 'bbbbbbbbbbbbbbbbbbbbbbbb',
+        slug: 'buying-tips',
+        name: { en: 'Embedded buying tips' }
+      }
+    });
+    renderWithLocale(
+      <PublicArticleDetails locale="en" url="/articles/buying-in-sadat" initialData={embedded} />,
+      { locale: 'en' }
+    );
+    expect(screen.getByText('Embedded buying tips')).toBeInTheDocument();
   });
 
   it.each(['ar', 'en', 'zh-CN'] as const)('renders the public projection and locale direction for %s', locale => {

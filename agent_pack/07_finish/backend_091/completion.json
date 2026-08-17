@@ -7,6 +7,29 @@
     {"command":"npm.cmd run typecheck; npm.cmd run lint; node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Typecheck, lint, and audit passed."}
   ],
   "sourceEvidence":["packages/contracts/src/articles/index.ts","apps/api/src/modules/articles/service.ts","apps/api/tests/articles/article-service.test.ts","docs/api/article-management.md"],
-  "knownGaps":["Route wiring remains outside this service-only increment; no public/admin route inventory was claimed."],
-  "completedAt":"2026-08-14T13:58:00.000Z"
+  "knownGaps":["The deferred HTTP-wiring gap was repaired on 2026-08-17. The exact repaired source still requires the dependency-backed repository quality gate in an environment where npm ci can execute."],
+  "completedAt":"2026-08-14T13:58:00.000Z",
+  "postCompletionTruthRepair": {
+    "repairedAt": "2026-08-17T00:00:00+02:00",
+    "summary": "Connected article draft, review, publish, archive, restore, author, SEO, cover-asset, optimistic-version, permission, and reason-bearing audit behavior to the real API runtime and persistence layer.",
+    "sourceEvidence": [
+      "apps/api/src/modules/articles/models.ts",
+      "apps/api/src/modules/articles/repository.ts",
+      "apps/api/src/modules/articles/router.ts",
+      "apps/api/src/modules/articles/runtime.ts",
+      "apps/api/tests/articles/article-service.test.ts",
+      "apps/api/tests/articles/router.test.ts",
+      "apps/api/openapi/openapi.json",
+      "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+      "docs/api/article-runtime-truth-repair.md"
+    ],
+    "staticVerification": [
+      "All 468 repository TypeScript/TSX source and test files passed TypeScript transpile syntax diagnostics.",
+      "All 17 changed non-TSX TypeScript files passed Node.js type-stripping syntax checks.",
+      "The 19 changed TypeScript/TSX files passed focused TypeScript-aware unused-variable linting.",
+      "Workspace checks and all 13 workspace-policy tests passed.",
+      "Runtime, OpenAPI, and main Postman route inventories match at 112 unique method/path pairs, including exactly 11 Article routes.",
+      "All repository JSON parsed, all local OpenAPI references resolved, and the Agent Pack audit reported zero errors."
+    ]
+  }
 }

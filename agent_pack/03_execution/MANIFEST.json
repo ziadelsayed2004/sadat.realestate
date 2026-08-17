@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "project": "Sadat Real Estate Platform",
-  "packVersion": "1.2.0",
-  "generatedAt": "2026-08-15T15:47:53.598Z",
+  "packVersion": "1.2.1",
+  "generatedAt": "2026-08-16T23:50:48.000Z",
   "sourceHandoffDate": "2026-08-09",
   "screenCounts": {
     "PUB": 12,
@@ -11,7 +11,12 @@
     "PRV": 24,
     "ADM": 66
   },
-  "plannedEndpointBlueprintCount": 167,
+  "plannedEndpointBlueprintCount": 170,
+  "endpointBlueprintStatusCounts": {
+    "total": 170,
+    "implemented": 111,
+    "planned": 59
+  },
   "taskCounts": {
     "total": 188,
     "backend": 113,
