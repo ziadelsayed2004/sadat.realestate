@@ -1,0 +1,125 @@
+{
+  "taskId": "frontend_045",
+  "summary": "Implemented provider property validation-error, submitted, rejected, approved/published, and hidden-state views for PRV-11 through PRV-14. The UI derives validation issues from the current property contract, uses only the implemented provider property GET route, preserves API availableActions and ownership boundaries, and avoids exposing internal reviewer identifiers, private documents, storage keys, or unsupported view metrics.",
+  "filesChanged": [
+    "apps/web/src/features/provider_property/state-copy.ts",
+    "apps/web/src/features/provider_property/state.tsx",
+    "apps/web/src/features/provider_property/completion.tsx",
+    "apps/web/src/features/provider_property/index.ts",
+    "apps/web/src/features/provider_property/styles.css",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/provider-property-state.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-property-state.spec.ts",
+    "apps/web/tests/e2e/provider-property-completion.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-validation-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-validation-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-validation-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-submitted-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-submitted-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-submitted-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-rejected-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-rejected-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-rejected-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-published-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-published-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-published-zh-CN-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared contracts compiled successfully."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Provider property state routes, components, and contracts typechecked successfully."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source and test lint passed with zero warnings after removing two unused variables without changing runtime behavior."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/provider-property-state.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "9 focused tests passed for PRV-11 validation, PRV-12 submitted, PRV-13 rejected, PRV-14 published, locale direction, safe projections, and permission denial."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full web suite passed: 28 Vitest files, 183 tests, plus 76 Node tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR bundles built successfully; only the existing chunk-size advisory was emitted."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- --grep \"PRV-11 through PRV-14\" --project=desktop-ar --project=desktop-en --project=desktop-zh --workers=1 --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "15 Playwright journeys passed across Arabic RTL, English LTR, and Simplified Chinese LTR desktop projects. Twelve PRV-11 through PRV-14 visual snapshots matched; keyboard focus and permission-denial journeys passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The provider property GET route required by the state pages remains implemented and inventoried."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities found; audit reported 0 vulnerabilities."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "PRV-11 approved local export: docs/design_sources/final_screens/provider/PRV-11.png; SHA-256 48481A68580FB9AFBF5A393F8F8AF14E86D5030824DF723D5CFB39BD88658FAE; Figma prototype node 6017:19032; Drive folder 1LMR8ByJMrmEE5500eTUOTtB0rWcL8G3u",
+    "PRV-12 approved local export: docs/design_sources/final_screens/provider/PRV-12.png; SHA-256 639A23D667A4A22DE0EED819EA7A01E094E2E59BC4701624751D3B5383CDB625; Figma prototype node 6017:19032; Drive folder 1rNEVgpLFKw_zSNpAXndLQfWMyNlT2bhb",
+    "PRV-13 approved local export: docs/design_sources/final_screens/provider/PRV-13.png; SHA-256 7DA1D3350789A70B0C742D194E070E4E225D20C8D3B401D141928135FF88E031; Figma prototype node 6017:19032; Drive folder 1wpWqXwKoSFCkvlGwPQxzjuAt6cti-uxT",
+    "PRV-14 approved local export: docs/design_sources/final_screens/provider/PRV-14.png; SHA-256 EFDFD0BB2B283417E32A19B6089C0E09D78956B42E7F0A585187F0F1455C3AC3; Figma prototype node 6017:19032; Drive folder 19ObqV6wXoya0W2PD0N_lWrTMNGkiGg0A",
+    "Runtime/API inventory operation: GET /api/v1/provider/properties/:propertyId, with provider authentication and ownership enforcement in the API.",
+    "Provider property contract fields used by the state views: status, submittedAt, reviewedAt, reviewReason, publishedAt, active, version, and availableActions.",
+    "Focused Vitest: apps/web/tests/provider-property-state.vitest.test.tsx",
+    "Desktop Playwright visual and accessibility-oriented matrix: apps/web/tests/e2e/provider-property-state.spec.ts"
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was modified as the direct route integration exception required to render the selected state routes.",
+    "The validation view mirrors the current API validation rules for location, price, contact, and draft/needs_changes status; it performs no mutation and links to edit only when availableActions includes update.",
+    "Published view metrics are rendered as unavailable because the current provider property contract exposes no view-count metric; no fabricated operational number was added.",
+    "Approved and hidden provider statuses use the existing published-state route mapping; no unsupported new state screen was invented.",
+    "The adjacent provider-property completion E2E test received a no-behavior unused-variable cleanup required for the repository lint gate.",
+    "The in-app browser connector was unavailable because its sandbox metadata was missing; executable Playwright visual, keyboard, focus, and permission journeys passed."
+  ],
+  "knownGaps": [
+    "No provider support route is implemented, so rejected states without an available update action expose an honest unavailable action rather than an invented destination.",
+    "No direct in-app browser connector evidence was available; this task does not claim a browser-connector pass.",
+    "This task does not claim full API, Backend, screen, or platform completion."
+  ],
+  "completedAt": "2026-08-18T19:21:23.8088498Z"
+}

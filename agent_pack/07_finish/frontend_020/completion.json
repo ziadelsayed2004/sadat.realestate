@@ -1,0 +1,135 @@
+{
+  "taskId": "frontend_020",
+  "summary": "Implemented the localized Login and OTP request/verification surfaces for AUTH-01, AUTH-04, and AUTH-05 using the existing authentication contracts. Added safe validation, server-driven cooldown, retry/error states, OTP focus behavior, token-safe navigation, responsive styling, Vitest coverage, and a 36-test Playwright matrix across Arabic/English/Simplified Chinese and desktop/tablet/mobile.",
+  "filesChanged": [
+    "apps/web/src/features/auth/copy.ts",
+    "apps/web/src/features/auth/pages.tsx",
+    "apps/web/src/features/auth/styles.css",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/auth-ui.vitest.test.tsx",
+    "apps/web/tests/e2e/auth.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-login-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-login-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-login-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-login-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-login-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-login-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-login-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-login-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-login-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-otp-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-otp-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-otp-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-otp-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-otp-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-otp-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-otp-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-otp-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/auth-otp-zh-CN-mobile-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts build and Web TypeScript typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source, tests, Vite, Vitest, Playwright, and server lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web build plus 75 Vitest/Node tests passed, including seven focused auth UI tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR Web builds passed; only the existing large-chunk warning was emitted."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/auth.spec.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "36/36 browser checks passed across desktop/tablet/mobile and ar/en/zh-CN: journeys, keyboard/accessibility assertions, and visual baselines for AUTH-01/AUTH-04/AUTH-05."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory confirms POST /api/v1/auth/login, POST /api/v1/auth/otp/send, and POST /api/v1/auth/otp/verify are implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Found 0 vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax check, contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace check and root lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root configuration/API/Web test pipeline passed, including API suites and 75 Web tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web builds passed."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit passed with zero errors before task close."
+    }
+  ],
+  "sourceEvidence": [
+    "AUTH-01 — docs/design_sources/final_screens/authentication/AUTH-01.png; Drive https://drive.google.com/drive/folders/1f1LbwCBwIm4-7YnGmAid82kTKO6c6sZc; Figma https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353",
+    "AUTH-04 — docs/design_sources/final_screens/authentication/AUTH-04.png; Drive https://drive.google.com/drive/folders/17KO1GaXuTSpVg1YouOfUgcTgJ4j3N8Ax; same approved Figma prototype node 6017-16212",
+    "AUTH-05 — docs/design_sources/final_screens/authentication/AUTH-05.png; Drive https://drive.google.com/drive/folders/1zWpe-X_sOYwJe8WS9T4a18p9sZAfG5Kj; same approved Figma prototype node 6017-16212",
+    "apps/web/src/features/auth/pages.tsx and apps/web/src/features/auth/client.ts use the implemented auth contracts; no production mock is used",
+    "apps/web/tests/auth-ui.vitest.test.tsx",
+    "apps/web/tests/e2e/auth.spec.ts",
+    "API inventory operations POST /api/v1/auth/login, POST /api/v1/auth/otp/send, and POST /api/v1/auth/otp/verify"
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was changed as an explicitly authorized necessity exception because the existing route shell did not mount the selected AuthPage implementation; no unrelated product feature was added.",
+    "AUTH-04 is labeled OTP in the design manifest and route map, while the checked-in AUTH-04 export visually resembles the later registration form. The implementation uses AUTH-04 as the OTP request state and AUTH-05 as the OTP entry state, and intentionally leaves account creation to frontend_021 rather than inventing behavior.",
+    "Playwright API responses are test-only route fixtures; they are not production mocks or runtime data sources.",
+    "No Backend truth repair, dependency, contract, OpenAPI, Postman, or database change was required for this task."
+  ],
+  "knownGaps": [
+    "The AUTH-04 local export/manifest semantic mismatch remains documented for the onboarding task boundary; no safe product behavior was inferred from the conflicting visual content."
+  ],
+  "completedAt": "2026-08-18T01:02:19.5407940Z"
+}

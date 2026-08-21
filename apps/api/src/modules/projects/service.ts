@@ -33,7 +33,9 @@ export class ProjectServiceError extends Error {
 }
 
 export interface ProjectMutationContext { requestId: string; traceId: string; }
-export interface ProjectAuthorization { authorize(adminId: string, permission: 'admin:projects.review'): Promise<boolean>; }
+export interface ProjectAuthorization {
+  authorize(adminId: string, permission: 'admin:projects.view' | 'admin:projects.review'): Promise<boolean>;
+}
 
 export function publicProjectProjection(project: StoredProject, developer: ProjectPublicDeveloper | null = null, linkedProperties: ProjectPublicProperty[] = []): ProjectPublicData | null {
   if (project.status !== 'published') return null;
@@ -96,6 +98,13 @@ export function createProjectService(dependencies: { repository: ProjectReposito
       const parsed = projectListQuerySchema.parse(query);
       const result = await dependencies.repository.list(claims.sub, parsed);
       return { data: { items: result.items.map(project => data(project)) }, page: parsed.page, limit: parsed.limit, total: result.total };
+    },
+    async listAdmin(claims: AccessTokenClaims, query: ProjectListQuery): Promise<{ data: ProjectListData; page: number; limit: number; total: number }> {
+      if (claims.role !== 'admin' || claims.status !== 'verified') throw new ProjectServiceError('PROJECT_FORBIDDEN');
+      const parsed = projectListQuerySchema.parse(query);
+      if (!dependencies.authorization || !await dependencies.authorization.authorize(claims.sub, 'admin:projects.view')) throw new ProjectServiceError('PROJECT_FORBIDDEN');
+      const result = await dependencies.repository.listAll(parsed);
+      return { data: { items: result.items.map(project => data(project, 'admin')) }, page: parsed.page, limit: parsed.limit, total: result.total };
     },
     async create(claims: AccessTokenClaims, input: ProjectCreate, context: ProjectMutationContext): Promise<ProjectData> {
       provider(claims);

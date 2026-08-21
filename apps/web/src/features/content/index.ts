@@ -35,3 +35,18 @@ export type {
 } from './articles-data.ts';
 export { getPublicArticlesCopy } from './articles-copy.ts';
 export type { PublicArticlesCopy } from './articles-copy.ts';
+export { PublicAbout, PublicTeam } from './about-team.tsx';
+export type { PublicAboutProps, PublicTeamProps, PublicAboutTeamViewState } from './about-team.tsx';
+export {
+  PUBLIC_ABOUT_ROUTE,
+  PUBLIC_TEAM_ROUTE,
+  createPublicAboutLoader,
+  createPublicTeamLoader,
+  defaultPublicAboutLoader,
+  defaultPublicTeamLoader,
+  loadPublicAbout,
+  loadPublicTeam
+} from './about-team-data.ts';
+export type { PublicContentListLoadOptions, PublicContentListLoader } from './about-team-data.ts';
+export { getPublicAboutTeamCopy } from './about-team-copy.ts';
+export type { PublicAboutTeamCopy } from './about-team-copy.ts';

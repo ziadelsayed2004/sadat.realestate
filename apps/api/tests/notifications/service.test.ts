@@ -10,6 +10,9 @@ const claims: AccessTokenClaims = {
 const adminClaims: AccessTokenClaims = {
   ...claims, sub: 'fedcba9876543210fedcba98', role: 'admin', status: 'verified'
 };
+const providerClaims: AccessTokenClaims = {
+  ...claims, sub: 'abcdefabcdefabcdefabcdef', role: 'provider', status: 'verified'
+};
 const createdAt = new Date('2026-08-01T00:00:00.000Z');
 const source: NotificationSource = {
   id: 'abcdefabcdefabcdefabcdef', type: 'request.updated', title: { ar: 'تحديث الطلب', en: 'Request updated' },
@@ -63,6 +66,26 @@ test('rejects non-seeker and suspended access without touching the repository', 
   assert.equal(called, false);
   const missing = createNotificationService({ repository: repository({ async markRead() { return undefined; } }) });
   await assert.rejects(() => missing.markRead(claims, source.id), (error: unknown) => error instanceof NotificationServiceError && error.code === 'NOTIFICATION_NOT_FOUND');
+});
+
+test('lists and updates only the verified provider audience', async () => {
+  let listAudience = '';
+  let mutationAudience = '';
+  const service = createNotificationService({
+    repository: repository({
+      async list(_recipientId, _query, audience) { listAudience = audience ?? ''; return { items: [{ ...source, audience: 'provider', link: '/provider/notifications' }], total: 1, unreadCount: 1 }; },
+      async markRead(_recipientId, _id, now, audience) { mutationAudience = audience ?? ''; return { ...source, audience: 'provider', readAt: now }; },
+      async markAllRead(_recipientId, _now, audience) { mutationAudience = audience ?? ''; return 1; }
+    }),
+    now: () => new Date('2026-08-02T00:00:00.000Z')
+  });
+  const result = await service.listProvider(providerClaims, { page: '1', limit: '20', unreadOnly: 'true' });
+  assert.equal(result.total, 1);
+  assert.equal(listAudience, 'provider');
+  assert.equal((await service.markProviderRead(providerClaims, source.id)).id, source.id);
+  assert.equal((await service.markAllProviderRead(providerClaims)).updatedCount, 1);
+  assert.equal(mutationAudience, 'provider');
+  await assert.rejects(() => service.listProvider({ ...providerClaims, status: 'pending' } as AccessTokenClaims, { page: '1', limit: '20' }), (error: unknown) => error instanceof NotificationServiceError && error.code === 'NOTIFICATION_FORBIDDEN');
 });
 
 test('lists an admin-owned inbox with permission-aware projections and bounded deep links', async () => {

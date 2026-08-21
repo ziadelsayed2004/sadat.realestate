@@ -1,0 +1,121 @@
+{
+  "taskId": "frontend_042",
+  "summary": "Implemented the provider Add Property wizard for PRV-03 Basic Information and PRV-04 Location using the implemented provider property create/detail/save-step contracts, authenticated provider ownership, optimistic versions, localized RTL/LTR rendering, draft resume, contract-faithful location fields, and safe loading, error, retry, permission, not-found, and success states.",
+  "filesChanged": [
+    "apps/web/src/features/provider_property/copy.ts",
+    "apps/web/src/features/provider_property/data.ts",
+    "apps/web/src/features/provider_property/index.ts",
+    "apps/web/src/features/provider_property/styles.css",
+    "apps/web/src/features/provider_property/wizard.tsx",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/provider-property-wizard.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-property-wizard.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-basic-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-basic-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-basic-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-location-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-location-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-location-zh-CN-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared contracts compiled successfully."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript and generated contract types passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web runtime, tests, and Playwright files linted successfully."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/provider-property-wizard.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused wizard regression suite passed 7 tests covering exact routes, real schemas, authenticated provider source identity, location payload boundaries, locale direction, and anonymous/forbidden access."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full Web suite passed 26 Vitest files/168 tests and 76 Node checks. An existing non-fatal MSW warning for an unrelated public article-category request remained."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR builds passed; Vite emitted only the existing chunk-size warning."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-property-wizard.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "9/9 provider wizard journeys passed while generating the six PRV-03/PRV-04 desktop locale snapshots."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-property-wizard.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final 9/9 browser journeys passed with committed snapshots matching across Arabic RTL, English LTR, and Simplified Chinese LTR. Assertions covered screen IDs, desktop scope, focus behavior, safe rendered projections, session denial, and provider property permission denial."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory confirmed the implemented createProviderProperty, getProviderProperty, and saveProviderPropertyStep routes; no provider taxonomy/location endpoint was invented or called."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit was clean before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "Screen PRV-03",
+    "docs/design_sources/final_screens/provider/PRV-03.png (approved local final export; SHA-256 82b6e746c740ef4a064a71533b8b025aaafe0bd56bdd2345cd62b40af2463e22)",
+    "Screen PRV-04",
+    "docs/design_sources/final_screens/provider/PRV-04.png (approved local final export; SHA-256 870908c5a0b2ac4d1d0475d0e1552a74e99571487831feec50f11e6b80f37106)",
+    "Figma prototype node 6017:19032",
+    "Drive folder https://drive.google.com/drive/folders/1DdoEN9a92vmsDI0Zk8dSN1Yxk5k37K4R for PRV-03",
+    "Drive folder https://drive.google.com/drive/folders/1cHXSIRo0S4A5f2S16gpanhN4GgYsNDRS for PRV-04",
+    "POST /api/v1/provider/properties (createProviderProperty)",
+    "GET /api/v1/provider/properties/:propertyId (getProviderProperty)",
+    "PATCH /api/v1/provider/properties/:propertyId/steps/:step (saveProviderPropertyStep)",
+    "apps/web/tests/provider-property-wizard.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-property-wizard.spec.ts"
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was modified only for the directly necessary provider wizard route integration; this is the explicitly authorized direct integration exception to the selected task Allowed Roots.",
+    "The implementation uses the authenticated session provider ID, shared propertyCreateSchema/propertyCoreStepSchema/propertyLocationStepSchema contracts, server property version, and existing provider ownership API. No Backend runtime, shared contract, OpenAPI, Postman, dependency, or database file was changed.",
+    "The current runtime exposes no provider-readable location or taxonomy catalog. The UI therefore presents an explicit unavailable-catalog state and submits only supported locationId and coordinates fields; admin-only catalog routes and unsupported address/map fields were not used.",
+    "The approved Provider Dashboard device scope is desktop only. The executable Playwright matrix covered desktop Arabic, English, and Simplified Chinese directions/locales.",
+    "The in-app browser connector could not initialize because its sandbox metadata lacked sandboxPolicy; repository Playwright supplied the executable browser, visual snapshot, focus, locale, and permission evidence."
+  ],
+  "knownGaps": [
+    "Detailed street/building/landmark/address and map URL fields shown in the design export are not present in the current provider location contract, so they remain unavailable rather than fabricated or sent to an unsupported endpoint.",
+    "A provider-specific axe or generic accessibility matrix is not defined for this task; the targeted browser suite covered accessible labels, skip-link and form focus, direction, safe states, and visual snapshots. The repository generic visual/accessibility specs are public-route-only.",
+    "No full-platform completion claim is made."
+  ],
+  "completedAt": "2026-08-18T16:04:48.8004893+03:00"
+}

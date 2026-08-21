@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import type { AccessTokenService } from '../../src/modules/auth/crypto.js';
+import type { ProviderSettingsData } from '@sadat-real-estate/contracts';
 import { createApiServer, startApiServer, stopApiServer } from '../../src/server.js';
 
 const adminToken = 'admin.settings.token';
@@ -15,11 +16,24 @@ const accessTokens: AccessTokenService = {
 };
 
 async function withServer(run: (baseUrl: string) => Promise<void>) {
+  const providerSettings: ProviderSettingsData = {
+    version: 0,
+    email: 'provider@example.test',
+    phone: '+2010998765432',
+    availableActions: ['update_email', 'update_contact']
+  };
   const settings = {
     accessTokens,
     service: {
       async get() { return { namespace: 'display' as const, schemaVersion: 1, values: { show_map: true }, version: 0, updatedBy: '0123456789abcdef01234567', updatedAt: '2026-08-01T00:00:00.000Z' }; },
       async update(_claims: unknown, namespace: unknown, input: unknown) { return { namespace: String(namespace) as 'display', schemaVersion: (input as { schemaVersion: number }).schemaVersion, values: (input as { values: Record<string, unknown> }).values, version: 1, updatedBy: '0123456789abcdef01234567', updatedAt: '2026-08-02T00:00:00.000Z' }; }
+    },
+    provider: {
+      async get() { return providerSettings; },
+      async update(_claims: unknown, input: unknown) {
+        const patch = input as { whatsappNumber?: string | null };
+        return { ...providerSettings, version: 1, ...(patch.whatsappNumber === null ? {} : { whatsappNumber: patch.whatsappNumber }) };
+      }
     }
   };
   const server = createApiServer({ database: { isReady: async () => true }, settings });
@@ -40,6 +54,32 @@ test('protects unified settings routes and validates namespace and payload', asy
     const unknownNamespace = await fetch(`${baseUrl}/api/v1/admin/settings/unknown`, { headers: { authorization: `Bearer ${adminToken}` } });
     assert.equal(unknownNamespace.status, 400);
     const unknownField = await fetch(`${baseUrl}/api/v1/admin/settings/display`, { method: 'PUT', headers: { authorization: `Bearer ${adminToken}`, 'content-type': 'application/json' }, body: JSON.stringify({ schemaVersion: 1, values: {}, expectedVersion: 0, reason: 'Update display', secret: 'x' }) });
+    assert.equal(unknownField.status, 400);
+  });
+});
+
+test('protects provider-owned settings routes and rejects unsafe mutations', async () => {
+  await withServer(async baseUrl => {
+    assert.equal((await fetch(`${baseUrl}/api/v1/provider/settings`)).status, 401);
+    assert.equal((await fetch(`${baseUrl}/api/v1/provider/settings`, { headers: { authorization: `Bearer ${adminToken}` } })).status, 403);
+
+    const read = await fetch(`${baseUrl}/api/v1/provider/settings`, { headers: { authorization: `Bearer ${providerToken}` } });
+    assert.equal(read.status, 200);
+    assert.equal((await read.json() as { data: { email: string; phone: string; availableActions: string[] } }).data.email, 'provider@example.test');
+
+    const write = await fetch(`${baseUrl}/api/v1/provider/settings`, {
+      method: 'PATCH',
+      headers: { authorization: `Bearer ${providerToken}`, 'content-type': 'application/json' },
+      body: JSON.stringify({ expectedVersion: 0, whatsappNumber: '+2010998765433' })
+    });
+    assert.equal(write.status, 200);
+    assert.equal((await write.json() as { data: { whatsappNumber: string } }).data.whatsappNumber, '+2010998765433');
+
+    const unknownField = await fetch(`${baseUrl}/api/v1/provider/settings`, {
+      method: 'PATCH',
+      headers: { authorization: `Bearer ${providerToken}`, 'content-type': 'application/json' },
+      body: JSON.stringify({ expectedVersion: 0, password: 'secret' })
+    });
     assert.equal(unknownField.status, 400);
   });
 });

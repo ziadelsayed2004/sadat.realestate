@@ -1,0 +1,104 @@
+{
+  "taskId": "frontend_041",
+  "summary": "Implemented PRV-02 My Properties with the owner-scoped provider property contract, localized filters and pagination, API-driven actions, safe property projections, and loading, empty, error, retry, and permission states.",
+  "filesChanged": [
+    "apps/web/src/features/provider/data.ts",
+    "apps/web/src/features/provider/copy.ts",
+    "apps/web/src/features/provider/properties.tsx",
+    "apps/web/src/features/provider/styles.css",
+    "apps/web/src/features/provider/index.ts",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/provider-properties.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-properties.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-properties.spec.ts-snapshots/provider-properties-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-properties.spec.ts-snapshots/provider-properties-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-properties.spec.ts-snapshots/provider-properties-zh-CN-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript and generated contracts typechecked successfully."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source, tests, Playwright configuration, and server linted with zero warnings or errors."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/provider-properties.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused PRV-02 component and loader regression suite passed 7 tests, including query construction, locale direction, safe projections, filters, pagination, anonymous/forbidden sessions, and empty state."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full Web suite passed 25 Vitest files/161 tests and 76 Node checks. An existing non-fatal MSW warning for an unhandled public article-category request was unrelated to PRV-02."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, Web client, and Web SSR builds passed; Vite emitted only the existing chunk-size warning."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-properties.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "9/9 PRV-02 desktop journeys passed across Arabic RTL, English LTR, and Simplified Chinese LTR, including owner-scoped rows, server filters, pagination, API availableActions, expired-session fail-closed behavior, API permission failure, focus behavior, and visual snapshots."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-properties.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The committed PRV-02 visual snapshots matched on a second 9/9 browser run."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory contains GET /api/v1/provider/properties as listProviderProperties; no new endpoint was invented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors while frontend_041 was the only task In Progress."
+    }
+  ],
+  "sourceEvidence": [
+    "Screen PRV-02",
+    "docs/design_sources/final_screens/provider/PRV-02.png (approved local final export; SHA-256 2a2b739851e2d3557dda12e8a350228b0fdfb4b40a2242b36298d38d2e8e7738)",
+    "Figma prototype node 6017:19032",
+    "Drive folder https://drive.google.com/drive/folders/1BmLx4tpZxfEGPmnsbQhay7RdCdpvy1hC",
+    "GET /api/v1/provider/properties",
+    "apps/web/tests/provider-properties.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-properties.spec.ts"
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was modified only for the directly necessary /provider/properties route integration; this is an explicitly documented direct integration exception to the selected task Allowed Roots.",
+    "The runtime uses the existing owner-scoped provider properties API, server-provided availableActions, and safe PropertyData projection. No Backend runtime, shared contract, OpenAPI, Postman, dependency, or database file was changed.",
+    "The in-app browser connector could not initialize because its sandbox metadata lacked sandboxPolicy; executable repository Playwright coverage supplied the browser, visual, focus, locale, and permission evidence."
+  ],
+  "knownGaps": [
+    "Provider Dashboard approved device scope remains desktop only.",
+    "The application does not render provider IDs, internal notes, assignments, audit data, storage keys, access tokens, refresh tokens, or other private fields in the PRV-02 projection."
+  ],
+  "completedAt": "2026-08-18T15:40:14.7374132+03:00"
+}

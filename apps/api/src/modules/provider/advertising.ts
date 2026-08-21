@@ -35,6 +35,11 @@ export interface ProviderAdvertisingProjectionDependencies {
 
 export type ProviderAdvertisingProjectionErrorCode = 'PROVIDER_AD_FORBIDDEN' | 'PROVIDER_AD_NOT_FOUND' | 'PROVIDER_AD_SOURCE_INVALID';
 
+export interface ProviderAdvertisingProjectionService {
+  list(claims: AccessTokenClaims, input: unknown): Promise<ProviderAdRequestListData>;
+  get(claims: AccessTokenClaims, requestId: string): Promise<ProviderAdRequestProjection>;
+}
+
 export class ProviderAdvertisingProjectionError extends Error {
   constructor(readonly code: ProviderAdvertisingProjectionErrorCode) {
     super(code);
@@ -111,7 +116,13 @@ function projection(record: ProviderAdvertisingRequestRecord): ProviderAdRequest
   return providerAdRequestProjectionSchema.parse(result);
 }
 
-export function createProviderAdvertisingProjectionService(dependencies: ProviderAdvertisingProjectionDependencies) {
+export function createProviderAdvertisingProjectionService(dependencies: ProviderAdvertisingProjectionDependencies): ProviderAdvertisingProjectionService & {
+  listRequests: ProviderAdvertisingProjectionService['list'];
+  getRequest: ProviderAdvertisingProjectionService['get'];
+  listAdvertisingRequests: ProviderAdvertisingProjectionService['list'];
+  getAdvertisingRequest: ProviderAdvertisingProjectionService['get'];
+  validateProjection: (value: unknown) => ProviderAdRequestProjection;
+} {
   const list = async (claims: AccessTokenClaims, input: unknown): Promise<ProviderAdRequestListData> => {
     providerClaims(claims);
     const query = providerAdRequestListQuerySchema.parse(input) as ProviderAdRequestListQuery;

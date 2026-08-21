@@ -4,6 +4,7 @@ import type { AccessTokenClaims, AccessTokenService } from '../auth/crypto.js';
 import { ApiContractError, toApiErrorResponse } from '../contracts/error-boundary.js';
 import { toSuccessResponse } from '../contracts/response.js';
 import { getRequestContext } from '../observability/context.js';
+import { createProviderAuthMiddleware } from '../provider/auth.js';
 import { createAdminRbacAuthMiddleware } from '../rbac/auth.js';
 import { createSeekerAuthMiddleware } from '../seeker/auth.js';
 import { NotificationServiceError } from './service.js';
@@ -12,6 +13,9 @@ export const NOTIFICATION_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/seeker/notifications', operationId: 'listSeekerNotifications' },
   { method: 'POST', path: '/api/v1/seeker/notifications/:notificationId/read', operationId: 'markSeekerNotificationRead' },
   { method: 'POST', path: '/api/v1/seeker/notifications/read-all', operationId: 'markAllSeekerNotificationsRead' },
+  { method: 'GET', path: '/api/v1/provider/notifications', operationId: 'listProviderNotifications' },
+  { method: 'POST', path: '/api/v1/provider/notifications/:notificationId/read', operationId: 'markProviderNotificationRead' },
+  { method: 'POST', path: '/api/v1/provider/notifications/read-all', operationId: 'markAllProviderNotificationsRead' },
   { method: 'GET', path: '/api/v1/admin/notifications', operationId: 'listAdminNotifications' },
   { method: 'POST', path: '/api/v1/admin/notifications/:notificationId/read', operationId: 'markAdminNotificationRead' },
   { method: 'POST', path: '/api/v1/admin/notifications/read-all', operationId: 'markAllAdminNotificationsRead' }
@@ -22,6 +26,9 @@ export interface NotificationRouterDependencies {
     list(claims: AccessTokenClaims, query: unknown): Promise<NotificationListData>;
     markRead(claims: AccessTokenClaims, id: unknown): Promise<NotificationReadData>;
     markAllRead(claims: AccessTokenClaims): Promise<NotificationReadAllData>;
+    listProvider(claims: AccessTokenClaims, query: unknown): Promise<NotificationListData>;
+    markProviderRead(claims: AccessTokenClaims, id: unknown): Promise<NotificationReadData>;
+    markAllProviderRead(claims: AccessTokenClaims): Promise<NotificationReadAllData>;
     listAdmin(claims: AccessTokenClaims, query: unknown): Promise<NotificationListData>;
     markAdminRead(claims: AccessTokenClaims, id: unknown): Promise<NotificationReadData>;
     markAllAdminRead(claims: AccessTokenClaims): Promise<NotificationReadAllData>;
@@ -61,6 +68,26 @@ export function createNotificationRouter(dependencies: NotificationRouterDepende
   router.post('/seeker/notifications/read-all', createSeekerAuthMiddleware(dependencies.accessTokens), async (request, response) => {
     try {
       const result = await dependencies.service.markAllRead(seekerClaims(response));
+      response.status(200).json(toSuccessResponse(result, requestId(request)));
+    } catch (error) { sendError(request, response, error); }
+  });
+
+  router.use('/provider/notifications', createProviderAuthMiddleware(dependencies.accessTokens));
+  router.get('/provider/notifications', async (request, response) => {
+    try {
+      const result = await dependencies.service.listProvider(response.locals.providerClaims as AccessTokenClaims, notificationListQuerySchema.parse(request.query));
+      response.status(200).json(toSuccessResponse(result, requestId(request), { page: result.page, limit: result.limit, total: result.total }));
+    } catch (error) { sendError(request, response, error); }
+  });
+  router.post('/provider/notifications/:notificationId/read', async (request, response) => {
+    try {
+      const result = await dependencies.service.markProviderRead(response.locals.providerClaims as AccessTokenClaims, request.params.notificationId);
+      response.status(200).json(toSuccessResponse(result, requestId(request)));
+    } catch (error) { sendError(request, response, error); }
+  });
+  router.post('/provider/notifications/read-all', async (request, response) => {
+    try {
+      const result = await dependencies.service.markAllProviderRead(response.locals.providerClaims as AccessTokenClaims);
       response.status(200).json(toSuccessResponse(result, requestId(request)));
     } catch (error) { sendError(request, response, error); }
   });

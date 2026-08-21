@@ -1,0 +1,145 @@
+{
+  "taskId": "frontend_067",
+  "summary": "Implemented ADM-25 and ADM-26 article and category administration with strict runtime API adapters, CRUD/editor/review controls, server-backed article and category filters, localized desktop states, and safe projections.",
+  "filesChanged": [
+    "apps/web/src/features/admin_content/copy.ts",
+    "apps/web/src/features/admin_content/data.ts",
+    "apps/web/src/features/admin_content/index.ts",
+    "apps/web/src/features/admin_content/styles.css",
+    "apps/web/src/features/admin_content/views.tsx",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/admin-content.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-content.fixtures.ts",
+    "apps/web/tests/e2e/admin-content.spec.ts",
+    "apps/web/tests/e2e/admin-content-accessibility.spec.ts",
+    "apps/web/tests/e2e/admin-content-visual.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/admin-content-visual.spec.ts-snapshots/admin-content-ar-articles-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-content-visual.spec.ts-snapshots/admin-content-ar-categories-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-content-visual.spec.ts-snapshots/admin-content-en-articles-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-content-visual.spec.ts-snapshots/admin-content-en-categories-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-content-visual.spec.ts-snapshots/admin-content-zh-CN-articles-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-content-visual.spec.ts-snapshots/admin-content-zh-CN-categories-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared contracts compiled successfully."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript compiled with the strict article/category query contracts."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source and tests passed ESLint with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/admin-content.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused suite passed 7 tests, including article status/search and category search query propagation."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-content.spec.ts tests/e2e/admin-content-accessibility.spec.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "12 desktop Arabic, English, and Simplified Chinese functional/accessibility cases passed; 24 tablet/mobile projects skipped by the approved desktop scope."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-content-visual.spec.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Three desktop locale visual cases passed; six non-desktop projects skipped by the approved desktop scope."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "42 Vitest files and 282 tests passed, plus 76 TAP tests."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace checks, API suite, web suite, and TAP suite passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, client, and SSR builds passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All eight admin article/category operations are implemented, including list, CRUD, and transition routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities found."
+    },
+    {
+      "command": "git diff --check -- apps/web/src/features/admin_content apps/web/src/features/frontend_foundation/app.tsx apps/web/tests/admin-content.vitest.test.tsx apps/web/tests/e2e/admin-content* apps/web/tests/e2e/__snapshots__/admin-content-visual.spec.ts-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors in the task-scoped changes."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors."
+    }
+  ],
+  "sourceEvidence": [
+    "ADM-25 local approved export: docs/design_sources/final_screens/admin/ADM-25.png; SHA-256 0c2e8ffda79e25ce0a04dc182ceb461cff8fdf45b6bf01b6336124b48aab6596; desktop; ar/en/zh-CN.",
+    "ADM-26 local approved export: docs/design_sources/final_screens/admin/ADM-26.png; SHA-256 4cc419d7c4b5074294e9fb939eaa985d63438a5fc43c2101f760d20df452e8ab; desktop; ar/en/zh-CN.",
+    "Admin Figma prototype: https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356; node 6017:61879; page 6017:4356.",
+    "ADM-25 Drive reference: https://drive.google.com/drive/folders/1mtUKZqqDoN5noUYT_XNmTZzm8Bta6VNS.",
+    "ADM-26 Drive reference: https://drive.google.com/drive/folders/1syHK9e5B8eMCKaYcS7Tt-M_Ibtqugyj4.",
+    "Runtime routes: GET/POST/PATCH /api/v1/admin/articles, POST /api/v1/admin/articles/:articleId/transitions, GET/POST /api/v1/admin/article-categories, PATCH/DELETE /api/v1/admin/article-categories/:categoryId.",
+    "API inventory, OpenAPI, and Postman validation confirm the article/category route set is implemented and synchronized.",
+    "Focused unit tests verify strict request schemas, authorization headers, safe projections, reason-bearing mutations, and server-backed filter queries.",
+    "Desktop Arabic, English, and Simplified Chinese Playwright functional, accessibility, and visual evidence passed for ADM-25 and ADM-26."
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was modified as the necessary route-composition exception for /admin/articles and /admin/article-categories.",
+    "The admin dashboard approved device scope is desktop; tablet and mobile Playwright projects were skipped accordingly.",
+    "The three category visual baselines were regenerated after the approved category search control became server-backed; the final no-update visual rerun passed."
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-19T09:39:04.6505454Z"
+}

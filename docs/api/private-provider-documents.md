@@ -6,6 +6,7 @@
 
 - `POST /api/v1/provider/application/documents` accepts one authenticated provider-owned raw binary stream. `Content-Type`, `X-Document-Category`, and `X-File-Name` carry strict request metadata. Supported bodies are PDF, JPEG, and PNG, up to 10 MiB.
 - `POST /api/v1/provider/application/documents/:documentId/access` performs a fresh provider ownership and clean-state check and returns a GET-only exact-document bearer URL that expires after 300 seconds.
+- `GET /api/v1/admin/provider-documents/:documentId/access?purpose=document_review` requires a verified Admin with `admin:documents.review`, checks the active clean document, and returns the same 300-second exact-document grant without provider-ownership leakage.
 - `DELETE /api/v1/provider/application/documents/:documentId` deletes an owned document only while its application is editable. The operation marks the record deleted before idempotently deleting the binary, so no later access grant can be honored.
 - `GET /api/v1/private/provider-documents/:documentId` redeems the ephemeral signed grant. It returns an attachment with `Cache-Control: private, no-store, max-age=0`. The grant is never returned by list or application endpoints.
 
@@ -31,6 +32,6 @@ Only active, `clean` documents are visible to the provider submission inventory.
 
 ## Security notes
 
-The upload endpoint authenticates before applying its provider-keyed rate limit. Private keys and signed URLs are never logged or added to audit payloads. Each successful access-grant decision appends a unified audit record containing actor ID, document ID, action, purpose, time, request ID, and trace ID only; audit persistence failure prevents issuing the grant. Download grants are process-secret HMAC values scoped to one document and expiry; restarting a Local/Test process invalidates outstanding grants safely.
+The upload endpoint authenticates before applying its provider-keyed rate limit. Private keys and signed URLs are never logged or added to audit payloads. Each successful access-grant decision appends a unified audit record containing actor type and ID, document ID, action, purpose, time, request ID, and trace ID only; audit persistence failure prevents issuing the grant. Download grants are process-secret HMAC values scoped to one document and expiry; restarting a Local/Test process invalidates outstanding grants safely.
 
 Production credentials, real documents, and signed URL values do not belong in source control, OpenAPI examples, Postman variables, test fixtures, logs, or completion evidence.

@@ -1,0 +1,175 @@
+{
+  "taskId": "frontend_089",
+  "summary": "Executed the all-screen UAT route and locale matrix for the canonical 131 screens: 393/393 AR RTL, EN LTR, and Simplified Chinese LTR cases passed with safe SSR output and sensitive-projection exclusion. Added a defect register, closed the only repository-owned full-suite harness timeout with a bounded test timeout, and verified the Web/root, targeted journey, visual, accessibility, API artifact, environment, audit, and dependency gates.",
+  "filesChanged": [
+    "apps/web/tests/uat-matrix.vitest.test.ts",
+    "apps/web/tests/uat-binding.vitest.test.ts",
+    "agent_pack/08_reality_sync/UAT_DEFECT_REGISTER.md"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/uat-matrix.vitest.test.ts --run --reporter=dot",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All-screen UAT matrix passed 1 test covering 131 screens across 3 locales and directions, for 393 route-locale cases."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/uat-binding.vitest.test.ts tests/uat-matrix.vitest.test.ts --run --reporter=dot",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "4 focused UAT binding and matrix tests passed."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- --run --reporter=dot",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Complete Web Vitest suite passed 59 files / 366 tests after the bounded inventory parity timeout repair."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full Web test command passed, including Vitest and Node tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR builds passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root test suite passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, Web client, and SSR builds passed."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/critical-journeys.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --workers=1",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Targeted three-locale critical journey Playwright matrix passed 9/9."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "72 configured visual regression tests passed."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "81 configured accessibility tests passed."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "The unfiltered E2E command produced no output/progress for an extended runner window and was safely terminated; no process exit code was emitted. It is not claimed as passed. The required targeted Playwright journey matrix above passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory completed successfully."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities reported."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3001'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET=([Convert]::ToBase64String((1..32 | ForEach-Object {[byte]$_}))).TrimEnd('=').Replace('+','-').Replace('/','_'); npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Safe non-production environment check passed without reading a real .env."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors in the worktree diff."
+    },
+    {
+      "command": "npm.cmd run security:check",
+      "exitCode": 1,
+      "result": "skipped",
+      "notes": "The repository does not define a security:check script; it was not claimed as passed."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors with frontend_089 in progress."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F6_integration_release/frontend_089.md",
+    "agent_pack/01_product/SCREEN_COVERAGE.json",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "agent_pack/08_reality_sync/UAT_DEFECT_REGISTER.md",
+    "apps/web/src/routes/route-table.ts",
+    "apps/web/src/features/frontend_foundation/entry-server.tsx",
+    "apps/web/tests/uat-matrix.vitest.test.ts",
+    "apps/web/tests/uat-binding.vitest.test.ts",
+    "apps/web/tests/e2e/critical-journeys.spec.ts",
+    "apps/api/src/modules/fixtures/catalog.ts",
+    "docs/api/uat-fixtures.md"
+  ],
+  "scopeNotes": [
+    "The UAT matrix uses deterministic route parameters and no API origin, so it exercises safe loading/permission shells without Production data or credentials.",
+    "The existing runtime inventory parity test exceeded Vitest's default 5-second timeout only under the full suite; its timeout was bounded at 30 seconds without changing assertions, request behavior, or production code.",
+    "No runtime API, contract, production data, or authorization behavior changed in this task.",
+    "No direct ADM-54 pixel comparison is claimed; DESIGN-EXCEPTION-ADM-54 remains an explicitly disclosed owner-approved design debt item."
+  ],
+  "knownGaps": [
+    "The unfiltered Web E2E command was safely terminated after no observable progress and has no emitted exit code; targeted critical journeys, visual, accessibility, and all-screen SSR UAT checks passed.",
+    "No live Preview/Production UAT credentials, external provider, managed MongoDB replica set, private storage/scanner, monitoring, or backup/restore drill were available or used.",
+    "The repository does not define npm run security:check; existing browser/API security tests and dependency audit remain the available repository-owned evidence.",
+    "The owner-approved ADM-54 direct-reference waiver remains accepted design debt and is not a passed direct visual comparison."
+  ],
+  "completedAt": "2026-08-21T10:12:41.8686183Z"
+}

@@ -1,0 +1,57 @@
+.admin-community { display: grid; grid-template-columns: minmax(15rem, 18rem) minmax(0, 1fr); min-height: calc(100vh - var(--header-height-min)); overflow: hidden; background: #f5e9cb; color: #1b2942; }
+.admin-community > .admin-dashboard__navigation { padding: 28px 18px; background: #fff; border-inline-end: 1px solid #e4e7ec; }
+.admin-community__content { min-width: 0; padding: 34px clamp(22px, 4vw, 58px) 58px; }
+.admin-community__heading, .admin-community__panel, .admin-community__resolution { max-width: 1320px; margin-inline: auto; border: 1px solid #e3e5e7; border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(50 50 50 / 6%); }
+.admin-community__heading { padding: 28px 32px; }
+.admin-community__heading h1, .admin-community__heading p { margin-block-start: 0; }
+.admin-community__heading h1 { margin-block-end: 10px; color: #1b2942; font-size: clamp(2rem, 3vw, 3rem); letter-spacing: -.03em; }
+.admin-community__heading p:not(.admin-community__eyebrow) { max-width: 760px; color: #6d788b; line-height: 1.7; }
+.admin-community__eyebrow { margin-block-end: 8px; color: #d79a2b; font-size: .74rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.admin-community__direction-note, .admin-community__muted { color: #778399; font-size: .86rem; }
+.admin-community__tabs { display: flex; gap: 10px; max-width: 1320px; margin: 22px auto; padding: 10px; border: 1px solid #e3e5e7; border-radius: 18px; background: #fff; }
+.admin-community__tabs a { padding: 12px 22px; border-radius: 999px; color: #657188; font-weight: 700; text-decoration: none; }
+.admin-community__tabs a[data-active="true"], .admin-community__tabs a[aria-current="page"] { background: #075844; color: #fff; }
+.admin-community__summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; max-width: 1320px; margin: 0 auto 22px; }
+.admin-community__summary-card { min-height: 124px; display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 24px 28px; border: 1px solid #e3e5e7; border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(50 50 50 / 6%); }
+.admin-community__summary-card strong { color: #075844; font-size: 2.2rem; }
+.admin-community__summary-card span { color: #6d788b; }
+.admin-community__filters { display: flex; align-items: end; flex-wrap: wrap; gap: 14px; max-width: 1320px; margin: 0 auto 22px; padding: 18px 22px; border: 1px solid #e3e5e7; border-radius: 18px; background: #fff; }
+.admin-community__filters label, .admin-community__resolution label { display: grid; gap: 7px; min-width: 12rem; color: #4f5d73; font-size: .84rem; font-weight: 700; }
+.admin-community__filters input, .admin-community__filters select, .admin-community__resolution input, .admin-community__resolution select, .admin-community__resolution textarea { min-height: 42px; padding: 10px 12px; border: 1px solid #d8dde5; border-radius: 10px; background: #fff; color: #1b2942; font: inherit; }
+.admin-community__filters input:disabled { background: #f4f5f7; color: #9aa4b2; }
+.admin-community__state { max-width: 760px; margin: 36px auto; padding: 28px; border: 1px solid #e3e5e7; border-radius: 18px; background: #fff; text-align: center; }
+.admin-community__state h2 { margin-block-start: 0; }
+.admin-community__panel { overflow: hidden; }
+.admin-community__panel-heading { display: flex; justify-content: space-between; gap: 16px; padding: 22px 28px; border-block-end: 1px solid #e8ebef; }
+.admin-community__panel-heading h2 { margin: 0 0 6px; }
+.admin-community__panel-heading span { color: #778399; }
+.admin-community__table-wrap { overflow-x: auto; }
+.admin-community__table { width: 100%; min-width: 920px; border-collapse: collapse; text-align: start; }
+.admin-community__table th, .admin-community__table td { padding: 18px 22px; border-block-end: 1px solid #edf0f3; vertical-align: top; }
+.admin-community__table th { background: #fbfaf6; color: #56647a; font-size: .82rem; text-align: inherit; }
+.admin-community__table td strong, .admin-community__table td small { display: block; }
+.admin-community__table td small { max-width: 320px; margin-block-start: 6px; overflow: hidden; color: #6d788b; line-height: 1.5; text-overflow: ellipsis; white-space: nowrap; }
+.admin-community__table code { color: #55647a; font-size: .78rem; overflow-wrap: anywhere; }
+.admin-community__badge { display: inline-flex; align-items: center; min-height: 30px; padding: 5px 12px; border-radius: 999px; font-size: .78rem; font-weight: 800; white-space: nowrap; }
+.admin-community__badge[data-tone="success"] { background: #dcfce7; color: #087b43; }
+.admin-community__badge[data-tone="warning"] { background: #fff2c7; color: #a45b00; }
+.admin-community__badge[data-tone="danger"] { background: #ffe0e0; color: #b42318; }
+.admin-community__badge[data-tone="info"] { background: #e0edff; color: #1558b0; }
+.admin-community__badge[data-tone="neutral"] { background: #eef1f5; color: #56647a; }
+.admin-community__pagination { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 22px; }
+.admin-community__pagination > div, .admin-community__inline-actions { display: flex; gap: 10px; }
+.admin-community__resolution { display: grid; grid-template-columns: minmax(0, 1fr) minmax(18rem, .75fr); gap: 28px; margin-block-start: 22px; padding: 28px 32px; }
+.admin-community__resolution h2 { margin-block-start: 0; }
+.admin-community__resolution dl { display: grid; gap: 12px; }
+.admin-community__resolution dl div { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 14px; }
+.admin-community__resolution dt { color: #778399; }
+.admin-community__resolution dd { margin: 0; overflow-wrap: anywhere; }
+.admin-community__resolution form { display: grid; align-content: start; gap: 16px; }
+.admin-community__resolution textarea { min-height: 130px; resize: vertical; }
+.admin-community__feedback { color: #b42318; font-weight: 700; }
+@media (max-width: 900px) {
+  .admin-community { grid-template-columns: 1fr; }
+  .admin-community > .admin-dashboard__navigation { border-inline-end: 0; border-block-end: 1px solid #e4e7ec; }
+  .admin-community__summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-community__resolution { grid-template-columns: 1fr; }
+}

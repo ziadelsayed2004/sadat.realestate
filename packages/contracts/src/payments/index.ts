@@ -47,11 +47,27 @@ export const paymentProofDataSchema = z.object({
   idempotentReplay: z.boolean()
 }).strict();
 
+const paymentProofAdminListPage = z.preprocess(value => value === undefined ? 1 : Number(value), z.number().int().positive().max(100_000));
+const paymentProofAdminListLimit = z.preprocess(value => value === undefined ? 20 : Number(value), z.number().int().positive().max(100));
+export const paymentProofAdminListQuerySchema = z.object({
+  status: paymentProofStatusSchema.optional(),
+  page: paymentProofAdminListPage,
+  limit: paymentProofAdminListLimit
+}).strict();
+export const paymentProofAdminListDataSchema = z.object({
+  items: z.array(paymentProofDataSchema).max(100),
+  page: z.number().int().positive(),
+  limit: z.number().int().positive(),
+  total: z.number().int().nonnegative()
+}).strict();
 export const paymentProofSuccessEnvelopeSchema = successEnvelopeSchema(paymentProofDataSchema);
+export const paymentProofAdminListSuccessEnvelopeSchema = successEnvelopeSchema(paymentProofAdminListDataSchema);
 
 export type PaymentProofMime = z.infer<typeof paymentProofMimeSchema>;
 export type PaymentProofUploadHeaders = z.infer<typeof paymentProofUploadHeadersSchema>;
 export type PaymentProofData = z.infer<typeof paymentProofDataSchema>;
+export type PaymentProofAdminListQuery = z.infer<typeof paymentProofAdminListQuerySchema>;
+export type PaymentProofAdminListData = z.infer<typeof paymentProofAdminListDataSchema>;
 export type PaymentProofReviewAction = z.infer<typeof paymentProofReviewActionSchema>;
 export type PaymentProofReviewHistory = z.infer<typeof paymentProofReviewHistorySchema>;
 export type PaymentProofReview = z.infer<typeof paymentProofReviewSchema>;

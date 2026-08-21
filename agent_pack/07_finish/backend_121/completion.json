@@ -1,94 +1,145 @@
 {
   "taskId": "backend_121",
-  "summary": "Implemented strict administrator account list, create, update, disable, and enable service behavior with verified-admin permissions, safe projections, optimistic versioning, duplicate-email protection, self-lockout prevention, and last-Super-Admin protection.",
+  "summary": "Repaired the completed administrator-account capability gap by adding strict contracts, persistent Mongo projections, verified-admin RBAC routes, transactional create/update behavior, safe projections, duplicate protection, optimistic version checks, self-lockout and last-Super-Admin safeguards, synchronized API artifacts, and regression coverage. The test-suite discovery invariant was also repaired after the new route test exposed that it was not classified in TEST_SUITES.api.",
   "filesChanged": [
     "packages/contracts/src/admin/index.ts",
     "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/admin/models.ts",
     "apps/api/src/modules/admin/administrator-service.ts",
+    "apps/api/src/modules/admin/administrator-repository.ts",
+    "apps/api/src/modules/admin/administrator-router.ts",
+    "apps/api/src/modules/admin/runtime.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/tests/admin/administrator-router.test.ts",
+    "apps/api/tests/admin/models.test.ts",
     "apps/api/tests/admin/service.test.ts",
-    "docs/api/admin-users.md"
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "docs/api/admin-users.md",
+    "agent_pack/scripts/sync_administrator_artifacts.mjs",
+    "agent_pack/07_finish/backend_121/completion.json"
   ],
   "verification": [
     {
-      "command": "node --test --import tsx apps/api/tests/admin/service.test.ts",
+      "command": "node --test --import tsx tests/testing/harness.test.ts",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "Seven focused admin tests passed, including administrator CRUD, safe projection, duplicate email, self-lockout, last-Super-Admin, stale-version, strict-input, and authorization coverage."
+      "result": "passed",
+      "notes": "The exact previously failing suite-discovery test file passed 4/4 after classifying administrator-router.test.ts in the API suite."
+    },
+    {
+      "command": "for ($i = 1; $i -le 3; $i++) { node --test --import tsx tests/testing/harness.test.ts; ... }",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Three consecutive explicit invocations of the isolated failing test file passed; the focused administrator route/service/model set passed 13/13 in the same verification command."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Complete serialized API unit suite passed 372/372, including the repaired harness invariant."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API route suite passed 104/104, including administrator authentication, permission, strict-input, safe-projection, and stale-update coverage."
+    },
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared contracts compiled successfully."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API source and test typecheck passed."
     },
     {
       "command": "npm.cmd run typecheck",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "Workspace syntax, contracts, and API typechecks passed."
+      "result": "passed",
+      "notes": "Root contracts, API, and Web typecheck passed."
     },
     {
       "command": "npm.cmd run lint",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "Workspace checks and ESLint completed with zero warnings."
-    },
-    {
-      "command": "npm.cmd test -- --runInBand",
-      "exitCode": 0,
-      "result": "Passed",
-      "notes": "Full serialized repository suite passed 379 tests within the bounded five-minute verification window."
+      "result": "passed",
+      "notes": "Root lint passed. The API workspace has no separate lint script."
     },
     {
       "command": "npm.cmd run build",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "Workspace, contracts, and API production builds succeeded."
+      "result": "passed",
+      "notes": "Root production build passed; only the repository's existing large-chunk warning was emitted."
     },
     {
       "command": "npm.cmd audit --audit-level=high",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "No high-severity vulnerabilities found."
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities were reported."
     },
     {
       "command": "npm.cmd run api:inventory",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "Runtime API inventory completed; planned administrator account routes remain uncomposed in the current runtime."
+      "result": "passed",
+      "notes": "Inventory reports implemented GET list, GET detail, POST create, and PATCH update administrator routes under /api/v1/admin/admin-users."
     },
     {
       "command": "npm.cmd run openapi:validate",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "OpenAPI artifacts validated; no route artifact changed."
+      "result": "passed",
+      "notes": "OpenAPI artifacts validated successfully."
     },
     {
       "command": "npm.cmd run postman:validate",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "Postman artifacts validated; no route artifact changed."
+      "result": "passed",
+      "notes": "Postman artifacts validated successfully."
     },
     {
       "command": "git diff --check",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "No whitespace errors."
+      "result": "passed",
+      "notes": "No whitespace errors were found."
     },
     {
       "command": "node agent_pack/scripts/audit_pack.mjs",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "Agent Pack audit reported zero errors while backend_121 was in progress."
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before closure."
     }
   ],
   "sourceEvidence": [
     "agent_pack/04_tracks/backend/B9_admin_system_readiness/backend_121.md",
-    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (ADM-59, ADM-60, ADM-61, ADM-62)",
-    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (planned administrator account endpoints)",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
     "agent_pack/01_product/ROLES_PERMISSIONS_MATRIX.md",
     "packages/contracts/src/admin/index.ts",
-    "apps/api/src/modules/admin/administrator-service.ts",
+    "apps/api/src/modules/admin/administrator-router.ts",
+    "apps/api/src/modules/admin/administrator-repository.ts",
+    "apps/api/tests/admin/administrator-router.test.ts",
     "apps/api/tests/admin/service.test.ts",
-    "docs/api/admin-users.md"
+    "apps/api/tests/admin/models.test.ts",
+    "docs/api/admin-users.md",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json"
+  ],
+  "scopeNotes": [
+    "The runtime wiring and artifact files outside apps/api/src/modules/admin/** were necessary integration points for the selected administrator API capability and are listed explicitly rather than treated as unrelated scope.",
+    "apps/api/src/modules/testing/test-suites.ts was updated only to classify the new administrator route regression test; the harness failure was a real repository-owned discovery invariant, not a weakened assertion.",
+    "No production credentials, secrets, fake administrator records, or production mocks were introduced.",
+    "The persistent repository uses the existing transaction boundary and records optional audit evidence without exposing credentials or storage internals."
   ],
   "knownGaps": [
-    "The persistent administrator repository and HTTP route composition are not present in the current runtime; the service intentionally exposes an adapter boundary and does not fabricate credentials or production records.",
-    "Live database/provider integration checks were not run because no isolated replica-set topology or credentials were available."
+    "A live transaction test was not run because an isolated non-production MongoDB replica-set topology was not available; deterministic repository and route tests cover the transaction boundary and the implementation fails closed when the required topology is unavailable.",
+    "Administrator credential creation and authentication remain owned by the existing identity/authentication boundary; this task exposes only the safe administrator account management projection and mutations defined by its contracts.",
+    "The repository has no separate apps/api lint script; root lint was the applicable lint gate.",
+    "The repository has no security:check script; dependency audit and API authorization/security matrices were run, and the unavailable command was not reported as passed."
   ],
-  "completedAt": "2026-08-14T17:46:29.1904114Z"
+  "completedAt": "2026-08-21T05:00:00+03:00"
 }

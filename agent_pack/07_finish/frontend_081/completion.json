@@ -1,0 +1,148 @@
+{
+  "taskId": "frontend_081",
+  "summary": "Completed the repository-owned visual fidelity source review. The new source matrix verifies all 131 registered Screen IDs against the canonical design manifest and coverage/registry maps, validates every local export checksum and provenance path for the 130 locally exported screens, enforces approved locale/direction/device scopes, and preserves ADM-54 as an explicit owner-approved non-passed waiver.",
+  "filesChanged": [
+    "apps/web/tests/visual-fidelity.vitest.test.ts"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/visual-fidelity.vitest.test.ts --run",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "3 focused source-fidelity tests passed: 131 Screen ID mapping, 130 local export checksum/provenance checks, approved surface scopes, and explicit ADM-54 waiver semantics."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web tests passed: 52 Vitest files and 76 Node tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR production builds passed; existing chunk-size warning only."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root API and Web aggregate tests passed; Web Node suite reported 76 passing tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web production builds passed."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "72 visual tests passed across the configured locale and device projects."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "81 accessibility tests passed across the configured locale and device projects."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory reported implemented routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities reported."
+    },
+    {
+      "command": "npm.cmd run env:check (with process-local test-only values)",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "ENV_CHECK_OK; no real .env or secret was read."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors and no in-progress task."
+    },
+    {
+      "command": "npm.cmd run security:check",
+      "exitCode": 1,
+      "result": "unavailable",
+      "notes": "The repository has no security:check script; this command was not reported as passed."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F6_integration_release/frontend_081.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json — 131 manifest entries, 130 local final exports, and ADM-54 external-only metadata",
+    "agent_pack/01_product/SCREEN_REGISTRY.json — canonical 131 Screen ID registry",
+    "agent_pack/01_product/SCREEN_COVERAGE.json — canonical 131 Screen ID coverage map",
+    "agent_pack/08_reality_sync/DECISION_LOG.md#DESIGN-EXCEPTION-ADM-54 — owner-approved substitute evidence and residual debt",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md — local source/export reality",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md — ADM-54 source gap and release exception",
+    "docs/design_sources/brand/brand-design-system.png — approved token/design-system source referenced by the manifest",
+    "apps/web/tests/visual-fidelity.vitest.test.ts — executable source/provenance matrix",
+    "apps/web/tests/e2e/visual.spec.ts — configured visual regression matrix",
+    "apps/web/tests/e2e/accessibility.spec.ts — configured accessibility matrix",
+    "apps/web/tests/admin-dashboard-qa.vitest.test.ts — Admin source and waiver regression coverage"
+  ],
+  "scopeNotes": [
+    "This quality task required no production runtime, API, contract, dependency, or design asset changes; it added only an executable repository-owned fidelity/source assertion.",
+    "Every local source file was hash-checked against DESIGN_SOURCE_MANIFEST.json. The test rejects runtime snapshots, Playwright output, and dist paths as approved source evidence.",
+    "The first focused run exposed only two test assertion wording/host-shape mistakes; they were corrected to match the canonical Drive host variants and exact decision-log wording before the final 3/3 pass."
+  ],
+  "knownGaps": [
+    "Direct ADM-54 pixel-perfect comparison was not performed. DESIGN-EXCEPTION-ADM-54 is an approved non-blocking owner waiver, not a visual comparison pass; substitute evidence remains required and traceable.",
+    "The repository's security:check script is unavailable and therefore remains an explicit verification gap.",
+    "This task does not claim all APIs, all 131 screens' direct visual comparisons, or full platform release completion."
+  ],
+  "completedAt": "2026-08-21T07:24:09.6144810Z"
+}

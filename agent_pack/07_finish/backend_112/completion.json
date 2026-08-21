@@ -1,11 +1,19 @@
 {
   "taskId": "backend_112",
-  "summary": "Implemented account-scoped commission exceptions and waivers with explicit values, bounded effective windows, approval metadata, reasoned optimistic mutations, active overlap protection, deterministic lookup, and retroactive-edit guards.",
+  "summary": "Repaired the required commission-exception HTTP boundary with persisted Mongo repository wiring, strict list/create validation, Admin permission enforcement, safe projections, OpenAPI/Postman synchronization, runtime inventory coverage, and focused route tests.",
   "filesChanged": [
-    "packages/contracts/src/commissions/index.ts",
-    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/commissions/exception-repository.ts",
     "apps/api/src/modules/commissions/exception-service.ts",
-    "apps/api/tests/commissions/service.test.ts",
+    "apps/api/src/modules/commissions/exception-router.ts",
+    "apps/api/src/modules/commissions/exception-runtime.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/tests/commissions/exception-router.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
     "docs/api/commission-policies.md"
   ],
   "verification": [
@@ -13,19 +21,37 @@
       "command": "npm.cmd run build --workspace packages/contracts",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Contracts compiled with the new exception schemas and exports."
+      "notes": "Shared contracts compiled successfully."
     },
     {
-      "command": "node --test --import tsx apps/api/tests/commissions/service.test.ts",
+      "command": "npm.cmd run typecheck --workspace apps/api",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Three focused commission tests passed, including authorization, strict validation, approval, overlap, temporal, and replay coverage."
+      "notes": "API production and test TypeScript compilation passed after exception repository/runtime wiring."
+    },
+    {
+      "command": "node --test --import tsx apps/api/tests/commissions/exception-router.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Focused exception route coverage passed 2/2 tests, including authentication, permission, strict input, list, create, reason, and safe projection behavior."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "API unit suite passed 367/367 tests."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "API route suite passed 100/100 tests, including the commission-exception route registration."
     },
     {
       "command": "npm.cmd run typecheck",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Workspace syntax, contracts, and API test typechecks passed."
+      "notes": "Root syntax, contracts, API, and Web typechecks passed."
     },
     {
       "command": "npm.cmd run lint",
@@ -37,61 +63,74 @@
       "command": "npm.cmd test -- --runInBand",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Full serial suite passed 366 tests."
+      "notes": "Root serial test runner completed successfully; final TAP summary was 76/76 with zero failures."
     },
     {
       "command": "npm.cmd run build",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Workspace and API production builds succeeded."
-    },
-    {
-      "command": "npm.cmd audit --audit-level=high",
-      "exitCode": 0,
-      "result": "Passed",
-      "notes": "No high-severity vulnerabilities found."
+      "notes": "Contracts, API, Web client, and Web SSR production builds succeeded."
     },
     {
       "command": "npm.cmd run api:inventory",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Runtime API inventory completed; no routes changed because HTTP composition is not present for this service boundary."
+      "notes": "Inventory reports GET /api/v1/admin/commission-exceptions and POST /api/v1/admin/commission-exceptions as implemented."
     },
     {
       "command": "npm.cmd run openapi:validate",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "OpenAPI artifacts validated."
+      "notes": "OpenAPI artifacts validated successfully."
     },
     {
       "command": "npm.cmd run postman:validate",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Postman artifacts validated."
+      "notes": "Postman artifacts validated successfully."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Dependency audit found 0 vulnerabilities."
     },
     {
       "command": "git diff --check",
       "exitCode": 0,
       "result": "Passed",
       "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors; backend_112 was the only task in progress at verification time."
     }
   ],
   "sourceEvidence": [
     "agent_pack/04_tracks/backend/B8_commissions/backend_112.md",
     "agent_pack/01_product/SCREEN_REGISTRY.json (ADM-43, ADM-44)",
     "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (ADM-43, ADM-44)",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (GET/POST /api/v1/admin/commission-exceptions)",
     "agent_pack/01_product/STATE_MACHINES.md (commission resolution precedence)",
-    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md (commission_exceptions accountId and active dates)",
-    "packages/contracts/src/commissions/index.ts",
-    "apps/api/src/modules/commissions/exception-service.ts",
-    "apps/api/tests/commissions/service.test.ts",
-    "docs/api/commission-policies.md"
+    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md (commission_exceptions account and effective-window fields)",
+    "apps/api/src/modules/commissions/exception-repository.ts",
+    "apps/api/src/modules/commissions/exception-router.ts",
+    "apps/api/tests/commissions/exception-router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "npm.cmd run api:inventory"
+  ],
+  "scopeNotes": [
+    "App/server/docs-artifact changes are explicit integration exceptions required to mount and publish the selected commission-exception routes.",
+    "The repository uses a real Mongo collection boundary in runtime and deterministic repository fakes in focused tests; no Production data or credentials were used.",
+    "The implementation exposes list/create boundaries required by the dependent Admin commission UI; resolver snapshots, confirmations, and change-log routes remain separate downstream capabilities."
   ],
   "knownGaps": [
-    "The exception service is an in-memory boundary; persistent storage, audit/change-log, and resolver snapshots are later B8 tasks.",
-    "No commission exception HTTP routes were added because the current runtime has no commission route composition; the service contract is ready for the dependent resolver and route work.",
-    "No production account or commission values were seeded and no financial settlement is performed.",
-    "Live database/provider integration checks were not run because no isolated replica-set topology or credentials were available."
+    "Live MongoDB integration was not run because an isolated non-production replica-set topology and credentials were unavailable; deterministic local route tests cover the implemented boundary.",
+    "No production account, exception, or financial settlement data was seeded.",
+    "Downstream commission resolver, confirmation, and change-log HTTP capabilities remain to be verified or repaired only if required by later frontend tasks."
   ],
-  "completedAt": "2026-08-14T16:14:53.5163447Z"
+  "completedAt": "2026-08-20T02:01:27.7274649Z"
 }

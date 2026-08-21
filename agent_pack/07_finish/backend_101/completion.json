@@ -1,12 +1,70 @@
 {
-  "taskId":"backend_101",
-  "summary":"Implemented provider-owned advertising requests with strict interval and placement validation, explicit draft/review workflow, ownership isolation, optimistic transitions, and no provider-controlled price or approval state.",
-  "filesChanged":["packages/contracts/src/ads/index.ts","packages/contracts/src/contracts/index.ts","apps/api/src/modules/ads/service.ts","apps/api/tests/ads/service.test.ts","docs/api/ads-placements-settings.md"],
-  "verification":[
-    {"command":"npm.cmd run build --workspace packages/contracts; node --import tsx --test --test-concurrency=1 apps/api/tests/ads/service.test.ts","exitCode":0,"result":"Passed","notes":"Placement/settings and provider-owned draft-to-review tests passed."},
-    {"command":"npm.cmd run typecheck; npm.cmd run lint; npm.cmd test -- --runInBand; npm.cmd run build; npm.cmd audit --audit-level=high; node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"352 tests passed; build, dependency audit, and Agent Pack audit passed."}
+  "taskId": "backend_101",
+  "summary": "Repaired the previously incomplete advertising-request task by adding permission-aware persistent administrator list/detail HTTP projections. GET /api/v1/admin/ad-requests and GET /api/v1/admin/ad-requests/:adRequestId now query the Mongoose ad_requests collection with bounded filters, deterministic ordering, pagination, and latest-quote hydration while excluding request history, storage keys, payment-proof data, and unrelated internals.",
+  "filesChanged": [
+    "packages/contracts/src/ads/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/ads/service.ts",
+    "apps/api/src/modules/ads/repository.ts",
+    "apps/api/src/modules/ads/admin-router.ts",
+    "apps/api/src/modules/ads/runtime.ts",
+    "apps/api/src/modules/provider/router.ts",
+    "apps/api/src/modules/provider/runtime.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/tests/ads/service.test.ts",
+    "apps/api/tests/ads/admin-router.test.ts",
+    "apps/api/tests/provider/router.test.ts",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/provider-advertising.md",
+    "docs/api/admin-advertising.md"
   ],
-  "sourceEvidence":["packages/contracts/src/ads/index.ts","apps/api/src/modules/ads/service.ts","apps/api/tests/ads/service.test.ts","docs/api/ads-placements-settings.md"],
-  "knownGaps":["No HTTP route was added; later B7 tasks own route-level advertising request projections and quote workflow."],
-  "completedAt":"2026-08-14T15:43:00.000Z"
+  "verification": [
+    { "command": "npm.cmd run build --workspace packages/contracts", "exitCode": 0, "result": "passed", "notes": "Shared advertising contracts and envelope schemas compiled." },
+    { "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/ads/admin-router.test.ts", "exitCode": 0, "result": "passed", "notes": "Focused list/detail route tests passed: authentication, wrong role, unverified admin, permission denial, strict query/path validation, not-found handling, and safe projection redaction." },
+    { "command": "npm.cmd run typecheck --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "API source and test TypeScript compilation passed." },
+    { "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/ads/service.test.ts apps/api/tests/provider/router.test.ts", "exitCode": 0, "result": "passed", "notes": "Draft repository delegation, strict validation, provider authentication, owner projection, redaction, and route tests passed 12/12." },
+    { "command": "npm.cmd run test:unit --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "Full API unit suite passed, including the advertising service and registered admin route test file." },
+    { "command": "npm.cmd run test:api --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "Full API route suite passed." },
+    { "command": "npm.cmd run typecheck", "exitCode": 0, "result": "passed", "notes": "Contracts, API, and web typechecks passed." },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "passed", "notes": "Workspace check and ESLint passed with zero warnings." },
+    { "command": "npm.cmd run build", "exitCode": 0, "result": "passed", "notes": "Contracts, API, client, and SSR builds passed." },
+    { "command": "npm.cmd test", "exitCode": 0, "result": "passed", "notes": "Root API and web tests passed; web suite passed 76/76 tests." },
+    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "passed", "notes": "No high-severity vulnerabilities reported." },
+    { "command": "npm.cmd run api:inventory --workspace apps/api | Select-String -Pattern 'admin/ad-requests|listAdminAdRequests|getAdminAdRequest'", "exitCode": 0, "result": "passed", "notes": "Runtime inventory contains both new administrator ad-request operations and the existing quote route." },
+    { "command": "npm.cmd run openapi:validate --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "OpenAPI routes and local references validate." },
+    { "command": "npm.cmd run postman:validate --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "Primary and journey Postman artifacts validate." },
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "passed", "notes": "Agent Pack audit reports zero errors and no in-progress tasks." },
+    { "command": "git diff --check", "exitCode": 0, "result": "passed", "notes": "No whitespace errors in tracked changes." }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B7_ads_payments/backend_101.md",
+    "PRV-19 provider advertising request source reference",
+    "ADM-33 manual advertising pricing source reference",
+    "packages/contracts/src/ads/index.ts",
+    "apps/api/src/modules/ads/service.ts",
+    "apps/api/src/modules/ads/repository.ts",
+    "apps/api/src/modules/ads/admin-router.ts",
+    "apps/api/tests/ads/admin-router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/admin-advertising.md",
+    "GET /api/v1/admin/ad-requests",
+    "GET /api/v1/admin/ad-requests/:adRequestId"
+  ],
+  "scopeNotes": [
+    "This task was reopened only because frontend_070 required administrator ad-request list/detail HTTP operations that the prior completion explicitly left absent.",
+    "apps/api/src/app.ts, apps/api/src/server.ts, apps/api/src/modules/docs/api-artifacts.ts, and apps/api/src/modules/testing/test-suites.ts are necessary integration/test-registration exceptions to the original ads-module roots.",
+    "The repair does not implement payment-proof review, ad calendar, scheduling, or financial review routes; those remain separate truth repairs required by later frontend_070 screens.",
+    "No real .env, secret, Production data, or external credential was read."
+  ],
+  "knownGaps": [
+    "Live MongoDB verification was not run because no explicitly isolated non-production replica-set topology and test credentials were configured; deterministic adapter and route tests cover the behavior and production runtime constructs the persistent Mongoose repository.",
+    "The persistent placement lookup reads the approved ad_placements collection; administrative placement-management persistence remains outside this repair."
+  ],
+  "completedAt": "2026-08-19T12:43:00.000Z"
 }

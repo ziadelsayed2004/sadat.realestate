@@ -1,39 +1,147 @@
 {
   "taskId": "backend_102",
-  "summary": "Implemented verified-administrator manual quotes with bounded currency, integer minor-unit line items and totals, future validity, explicit terms, append-only decision history, provider ownership checks, optimistic versioning, idempotent acceptance, and request progression to waiting_payment without claiming payment verification.",
+  "summary": "Repaired manual advertising quotes with persistent transactional issue and provider-accept workflows. Verified administrator pricing permission, owner-scoped provider acceptance, integer minor-unit totals, future validity, strict request validation, append-only decision history, optimistic versions, idempotent acceptance, request progression to waiting_payment, and synchronized runtime/API artifacts. Payment verification and commission operations remain outside this task.",
   "filesChanged": [
     "packages/contracts/src/ads/index.ts",
     "packages/contracts/src/contracts/index.ts",
     "apps/api/src/modules/ads/service.ts",
+    "apps/api/src/modules/ads/repository.ts",
+    "apps/api/src/modules/provider/router.ts",
+    "apps/api/src/modules/provider/runtime.ts",
+    "apps/api/src/server.ts",
     "apps/api/tests/ads/service.test.ts",
-    "docs/api/ads-placements-settings.md"
+    "apps/api/tests/provider/router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "docs/api/ads-placements-settings.md",
+    "docs/api/provider-advertising.md"
   ],
   "verification": [
     {
-      "command": "npm.cmd run build --workspace packages/contracts; node --test --import tsx apps/api/tests/ads/service.test.ts; npm.cmd run typecheck; npm.cmd run lint",
+      "command": "npm.cmd run build --workspace packages/contracts",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Contracts build, three focused ads tests, typecheck, and lint passed."
+      "notes": "Shared contracts compiled, including exported quote issue and decision types."
     },
     {
-      "command": "npm.cmd test -- --runInBand; npm.cmd run build; npm.cmd audit --audit-level=high; npm.cmd run api:inventory; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs",
+      "command": "npm.cmd run typecheck --workspace apps/api",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "353 tests passed; build succeeded; dependency audit reported 0 vulnerabilities; API inventory, OpenAPI, Postman, and Agent Pack audit passed."
+      "notes": "API production and test TypeScript compile passed."
+    },
+    {
+      "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/ads/service.test.ts apps/api/tests/provider/router.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "14 focused tests passed, including persistent-workflow delegation, admin authentication, provider ownership, acceptance, strict validation, and invalid path handling."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All API unit tests passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All API route/security tests passed."
+    },
+    {
+      "command": "npm.cmd run test:integration --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Artifact, route inventory, readiness, journey, and release integration tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace and ESLint checks passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts, API, web client, and web SSR builds passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Root workspace tests passed: API all suites and 76 web tests. The initial 180-second tool cap timed out; the same command was rerun with a 300-second cap and completed successfully."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Dependency audit reported 0 vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Inventory includes issueAdminAdQuote and acceptProviderAdQuote with the exact /api/v1 routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI matches the implemented admin quote and provider acceptance routes and schemas."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman collection contains validated manual quote and provider acceptance requests."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors."
+    },
+    {
+      "command": "node -e \"JSON.parse(require('fs').readFileSync('apps/api/openapi/openapi.json','utf8')); JSON.parse(require('fs').readFileSync('apps/api/postman/Sadat-Real-Estate.postman_collection.json','utf8')); JSON.parse(require('fs').readFileSync('agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json','utf8')); console.log('JSON_VALID')\"",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All changed JSON contract/artifact files parsed successfully."
+    },
+    {
+      "command": "live MongoDB transaction test",
+      "exitCode": null,
+      "result": "Blocked",
+      "notes": "Blocked — prerequisites unavailable: no isolated non-production replica-set MongoDB topology and test credentials were configured. Persistent transaction code is covered by deterministic service/model/API tests; no live provider or production data was used."
     }
   ],
   "sourceEvidence": [
-    "agent_pack/01_product/OPEN_QUESTIONS.md (Q-006 advertising currency, tax treatment, and quote expiry remain explicit decisions)",
-    "agent_pack/01_product/STATE_MACHINES.md (ad request quote and payment progression)",
-    "packages/contracts/src/ads/index.ts",
+    "ADM-33",
+    "agent_pack/04_tracks/backend/B7_ads_payments/backend_102.md",
     "apps/api/src/modules/ads/service.ts",
+    "apps/api/src/modules/ads/repository.ts",
+    "apps/api/src/modules/provider/advertising-models.ts (persistent ad_requests and ad_quotes collections)",
+    "apps/api/src/modules/provider/router.ts",
     "apps/api/tests/ads/service.test.ts",
-    "docs/api/ads-placements-settings.md"
+    "apps/api/tests/provider/router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/ads-placements-settings.md",
+    "docs/api/provider-advertising.md"
+  ],
+  "scopeNotes": [
+    "Provider/admin router and runtime/server wiring were a directly required integration scope exception for exposing the persistent quote workflow.",
+    "No payment-proof, schedule, commission, or frontend feature was implemented in this repair."
   ],
   "knownGaps": [
-    "No HTTP route was added; route-level advertising projections and payment-proof flows are assigned to later B7 tasks.",
-    "Tax treatment remains pending product/finance decision Q-006; quotes carry explicit terms and do not infer tax.",
-    "The service boundary does not claim bank or payment verification."
+    "Live MongoDB transaction verification remains blocked until an isolated non-production replica-set topology and credentials are available.",
+    "Tax treatment remains explicit quote terms rather than an invented universal rule."
   ],
-  "completedAt": "2026-08-14T17:52:49.938+03:00"
+  "completedAt": "2026-08-19T03:58:00+03:00"
 }

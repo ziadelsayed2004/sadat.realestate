@@ -13,4 +13,16 @@ test('request issues link to requests and resolve with optimistic version and re
   const resolved = await service.resolve(admin, issue.id, { action: 'resolve', reason: 'Assigned to support', expectedVersion: 0 });
   assert.equal(resolved.status, 'resolved');
   await assert.rejects(() => service.resolve(seeker, issue.id, { action: 'dismiss', reason: 'x', expectedVersion: 1 }), /FORBIDDEN/);
+  await assert.rejects(() => service.resolve(admin, issue.id, { action: 'dismiss', reason: 'Stale resolution', expectedVersion: 0 }), /VERSION_CONFLICT/);
+  await assert.rejects(() => service.resolve(admin, issue.id, { action: 'dismiss', reason: 'Second resolution', expectedVersion: 1 }), /INVALID_STATE/);
+});
+
+test('request issue administrator permissions are evaluated separately from the role', async () => {
+  const service = createRequestIssueService({
+    repository: createInMemoryRequestIssueRepository(),
+    authorization: { async authorize(_adminId, permission) { return permission === 'admin:request-issues.view'; } }
+  });
+  assert.equal((await service.list(admin)).total, 0);
+  const issue = await service.create(seeker, { requestId: '4123456789abcdef01234567', category: 'other', details: 'Permission boundary' });
+  await assert.rejects(() => service.resolve(admin, issue.id, { action: 'resolve', reason: 'Should be denied', expectedVersion: 0 }), /FORBIDDEN/);
 });

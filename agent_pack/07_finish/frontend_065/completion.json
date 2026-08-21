@@ -1,0 +1,144 @@
+{
+  "taskId": "frontend_065",
+  "summary": "Implemented the admin property management, review, duplicate inspection, and property-report screens using the implemented admin property and moderation contracts. The UI keeps mutations reason-bearing and server-authoritative, renders only safe property/report projections, supports Arabic RTL plus English and Simplified Chinese LTR, and is scoped to approved desktop administration routes.",
+  "filesChanged": [
+    "apps/web/src/features/admin_properties/copy.ts",
+    "apps/web/src/features/admin_properties/data.ts",
+    "apps/web/src/features/admin_properties/index.ts",
+    "apps/web/src/features/admin_properties/views.tsx",
+    "apps/web/src/features/admin_properties/styles.css",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/admin-properties.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-properties.fixtures.ts",
+    "apps/web/tests/e2e/admin-properties.spec.ts",
+    "apps/web/tests/e2e/admin-properties-accessibility.spec.ts",
+    "apps/web/tests/e2e/admin-properties-visual.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-ar-list-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-ar-review-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-ar-duplicates-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-ar-reports-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-en-list-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-en-review-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-en-duplicates-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-en-reports-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-zh-CN-list-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-zh-CN-review-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-zh-CN-duplicates-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-zh-CN-reports-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript compilation passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source and tests passed ESLint with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/admin-properties.vitest.test.tsx --run",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused admin-property contract/view regression suite passed 8/8 tests."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-properties.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Functional list, review, duplicate, report, mutation, safe-projection, and denied-refresh coverage passed 6/6 tests."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-properties-accessibility.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Landmark, label, keyboard focus, desktop scope, and locale direction coverage passed 3/3 tests."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-properties-visual.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Visual matrix passed 3/3 tests covering 12 ADM-14..ADM-17 locale screenshots; the existing 300-pixel native-control variance convention is applied."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web suite passed 40 Vitest files/268 tests and 76 TAP tests. An existing unrelated MSW warning for public article-categories was emitted without a test failure."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR web builds passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, and web root typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root configuration, API, and web test suites passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, and web root build passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The six consumed admin property/review/duplicate/report operations are implemented in the current runtime inventory."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI artifact validation returned OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman artifact validation returned POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Dependency audit found 0 vulnerabilities."
+    }
+  ],
+  "sourceEvidence": [
+    "ADM-14 local approved export: docs/design_sources/final_screens/admin/ADM-14.png; SHA-256 b474ef04f7b2663e23807daf17eb6309a513b5c3004d9c54db4d38e6abadd6aa; Drive folder https://drive.google.com/drive/folders/154nQHf5hLQ4AwXr0b9ig8ld0De2FatIc; Figma page 6017:4356 and node 6017:61879.",
+    "ADM-15 local approved export: docs/design_sources/final_screens/admin/ADM-15.png; SHA-256 87561de6d5c0cf7156e053a171b341d926a0848600ecbc013051691c1a01833a; Drive folder https://drive.google.com/drive/folders/1Q-t49USiJBt--gA6LMDi7_9lXH3FDCBL.",
+    "ADM-16 local approved export: docs/design_sources/final_screens/admin/ADM-16.png; SHA-256 57e62e3435dd7d223feb04487d6222ae4ff734b1330947f5fb9edbb46de19576; Drive folder https://drive.google.com/drive/folders/1q4VnWJnoJZPD28Mso4QQiMfNKjFyWHHp.",
+    "ADM-17 local approved export: docs/design_sources/final_screens/admin/ADM-17.png; SHA-256 e6e182e319f6bb6d0468de1aa95fc35ab5dc547f9cc9523058d9788d037c0373; Drive folder https://drive.google.com/drive/folders/1jSZHxNYJsd2iP9Dxit6LNnH933mmKvsP.",
+    "Runtime operations: GET /api/v1/admin/properties, POST /api/v1/admin/properties/:propertyId/review, POST /api/v1/admin/properties/:propertyId/visibility, GET /api/v1/admin/properties/possible-duplicates, GET /api/v1/admin/property-reports, and POST /api/v1/admin/property-reports/:reportId/resolve.",
+    "Shared contracts: packages/contracts/src/properties/index.ts and packages/contracts/src/moderation/index.ts.",
+    "Focused regression tests: apps/web/tests/admin-properties.vitest.test.tsx; browser tests: apps/web/tests/e2e/admin-properties.spec.ts, admin-properties-accessibility.spec.ts, and admin-properties-visual.spec.ts."
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was modified only for the necessary admin route composition exception required to render ADM-14..ADM-17.",
+    "No Backend runtime, contract, dependency, or production data changes were required for this task."
+  ],
+  "knownGaps": [
+    "The full web suite continues to emit an existing non-failing MSW warning for GET /api/v1/public/article-categories?locale=en in an unrelated public-articles test."
+  ],
+  "completedAt": "2026-08-19T11:09:57.0135035+03:00"
+}

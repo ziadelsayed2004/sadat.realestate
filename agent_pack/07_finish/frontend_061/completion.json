@@ -1,0 +1,154 @@
+{
+  "taskId": "frontend_061",
+  "summary": "Implemented the desktop Admin account, seeker, provider, and provider-document review surfaces for ADM-02 through ADM-05 using the implemented admin account and reviewer document-access contracts. The UI is localized for Arabic, English, and Simplified Chinese, preserves RTL/LTR direction, handles loading, empty, error, retry, not-found, success, and permission states, and opens only clean active documents through a short-lived reviewer grant.",
+  "filesChanged": [
+    "apps/web/src/features/admin_accounts/copy.ts",
+    "apps/web/src/features/admin_accounts/data.ts",
+    "apps/web/src/features/admin_accounts/index.ts",
+    "apps/web/src/features/admin_accounts/styles.css",
+    "apps/web/src/features/admin_accounts/views.tsx",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/admin-accounts.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-accounts.fixtures.ts",
+    "apps/web/tests/e2e/admin-accounts.spec.ts",
+    "apps/web/tests/e2e/admin-accounts-accessibility.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-providers-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-providers-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-providers-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-seekers-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-seekers-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-seekers-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-users-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-users-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-users-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-verification-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-verification-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-verification-zh-CN-desktop-zh-win32.png",
+    "agent_pack/07_finish/frontend_061/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript compilation passed, including the new feature and test files."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web ESLint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/admin-accounts.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused Admin account regression suite passed 6/6 tests, including contract query/auth headers, all three locale directions, reviewer document access, private-field exclusion, and non-admin fail-closed behavior."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/admin-accounts.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Desktop visual and browser matrix passed 9/9 across Arabic, English, and Simplified Chinese. ADM-02 through ADM-05 routes, reviewer access, inactive-document disabling, focus, direction, safe projections, and non-admin access were verified."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/admin-accounts-accessibility.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Accessibility and keyboard matrix passed 6/6 across the three approved desktop locales, including landmarks, table labels, focus order, direction, safe projections, and permission behavior."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full web suite passed: 36 Vitest files / 243 tests and 76 TAP checks."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR builds passed; Vite emitted only the existing large-chunk warning."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root configuration, contracts, API, and web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root configuration, API, and web test matrix passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and web build passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory confirms GET /api/v1/admin/users, GET /api/v1/admin/users/:userId, GET /api/v1/admin/providers, GET /api/v1/admin/providers/:providerId, and GET /api/v1/admin/provider-documents/:documentId/access are implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities found."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors in the worktree diff."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reports zero errors while frontend_061 is the only task in progress."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F5_admin_dashboard/frontend_061.md",
+    "ADM-02 local approved export: docs/design_sources/final_screens/admin/ADM-02.png; SHA-256 b0636cdce357647f5c0c681c89e78615b3a13b32031d619b8aa85b961e89be04; 6308x3884; Drive https://drive.google.com/drive/folders/14vSGg7Ljzv6rcp87XJQN3sk3rDF3oiwh; Figma prototype node 6017:61879.",
+    "ADM-03 local approved export: docs/design_sources/final_screens/admin/ADM-03.png; SHA-256 cb77e6cfaa44ba6506311051558873d9d42d88b4c808fa93ef5abdc97f2be88a; 6308x3776; Drive https://drive.google.com/drive/folders/1Wzt9wRgunYtmiBpNUuiCYBIJ8SkCiUhU; Figma prototype node 6017:61879.",
+    "ADM-04 local approved export: docs/design_sources/final_screens/admin/ADM-04.png; SHA-256 499572bc168ed20b8fd0ea4b8eb37e24efaa4f49a159d6b77f0fd0bee9fec2c2; 6308x3776; Drive https://drive.google.com/drive/folders/1YwgW0GdiDn87ZodQT33xOaCFiwUEFd7T; Figma prototype node 6017:61879.",
+    "ADM-05 local approved export: docs/design_sources/final_screens/admin/ADM-05.png; SHA-256 b188e8f2fb39086f902eabb9f6f85fe18d9b9567cd5a2ebe6119887e12edee89; 6308x3776; Drive https://drive.google.com/drive/folders/1Zm2pM2-ReIbtM6x4SL7M9U5kdUnSQF4Q; Figma prototype node 6017:61879.",
+    "Implemented runtime routes and shared contracts: /api/v1/admin/users, /api/v1/admin/users/:userId, /api/v1/admin/providers, /api/v1/admin/providers/:providerId, and /api/v1/admin/provider-documents/:documentId/access; account and provider envelopes in packages/contracts/src/accounts/index.ts and reviewer access envelope in packages/contracts/src/uploads/index.ts.",
+    "apps/web/tests/admin-accounts.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-accounts.spec.ts and apps/web/tests/e2e/admin-accounts-accessibility.spec.ts",
+    "Desktop visual baselines for ADM-02 through ADM-05 under apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/"
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx is outside the selected task's listed roots and was changed only as the necessary route-composition integration for the new Admin feature; this exception is explicitly recorded rather than silently expanding scope.",
+    "Browser route handlers and fixtures are test-only deterministic contract fixtures; no production mock data, dependencies, contracts, API behavior, or database models were changed by frontend_061.",
+    "The initial browser run exposed and corrected a test-only 22-character document fixture ID; the shared contract requires a 24-character object ID. The final visual and reviewer-access matrices passed after correction."
+  ],
+  "knownGaps": [
+    "Admin dashboard device scope is desktop-only in the approved design manifest; tablet and mobile runs were intentionally skipped and are not claimed.",
+    "No live production or database smoke test was run; deterministic contract/component/browser coverage and the runtime inventory cover this frontend boundary."
+  ],
+  "completedAt": "2026-08-19T07:58:01+03:00"
+}

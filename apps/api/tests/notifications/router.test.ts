@@ -23,6 +23,9 @@ async function withServer(run: (baseUrl: string) => Promise<void>) {
         async list() { return { items: [{ id: 'abcdefabcdefabcdefabcdef', type: 'system', title: { en: 'Welcome' }, readAt: null, createdAt: '2026-08-01T00:00:00.000Z' }], unreadCount: 1, page: 1, limit: 20, total: 1 }; },
         async markRead(_claims, id) { return { id: String(id), readAt: '2026-08-02T00:00:00.000Z' }; },
         async markAllRead() { return { updatedCount: 1 }; },
+        async listProvider() { return { items: [{ id: 'abcdefabcdefabcdefabcdef', type: 'provider.alert', title: { en: 'Provider alert' }, readAt: null, createdAt: '2026-08-01T00:00:00.000Z', link: '/provider/notifications' }], unreadCount: 1, page: 1, limit: 20, total: 1 }; },
+        async markProviderRead(_claims, id) { return { id: String(id), readAt: '2026-08-02T00:00:00.000Z' }; },
+        async markAllProviderRead() { return { updatedCount: 1 }; },
         async listAdmin() { return { items: [{ id: 'abcdefabcdefabcdefabcdef', type: 'system', title: { en: 'Admin alert' }, readAt: null, createdAt: '2026-08-01T00:00:00.000Z', link: '/admin/requests/abcdefabcdefabcdefabcdef' }], unreadCount: 1, page: 1, limit: 20, total: 1 }; },
         async markAdminRead(_claims, id) { return { id: String(id), readAt: '2026-08-02T00:00:00.000Z' }; },
         async markAllAdminRead() { return { updatedCount: 1 }; }
@@ -52,6 +55,21 @@ test('rejects unknown notification query fields', async () => {
   await withServer(async baseUrl => {
     const unknown = await fetch(`${baseUrl}/api/v1/seeker/notifications?extra=true`, { headers: { authorization: `Bearer ${token}` } });
     assert.equal(unknown.status, 400);
+  });
+});
+
+test('requires verified provider access and serves provider-owned inbox/read transitions', async () => {
+  await withServer(async baseUrl => {
+    assert.equal((await fetch(`${baseUrl}/api/v1/provider/notifications`)).status, 401);
+    assert.equal((await fetch(`${baseUrl}/api/v1/provider/notifications`, { headers: { authorization: `Bearer ${token}` } })).status, 403);
+    const list = await fetch(`${baseUrl}/api/v1/provider/notifications?unreadOnly=true`, { headers: { authorization: 'Bearer provider' } });
+    assert.equal(list.status, 200);
+    assert.equal((await list.json() as { data: { unreadCount: number } }).data.unreadCount, 1);
+    const read = await fetch(`${baseUrl}/api/v1/provider/notifications/abcdefabcdefabcdefabcdef/read`, { method: 'POST', headers: { authorization: 'Bearer provider' } });
+    assert.equal(read.status, 200);
+    const all = await fetch(`${baseUrl}/api/v1/provider/notifications/read-all`, { method: 'POST', headers: { authorization: 'Bearer provider' } });
+    assert.equal(all.status, 200);
+    assert.equal((await all.json() as { data: { updatedCount: number } }).data.updatedCount, 1);
   });
 });
 

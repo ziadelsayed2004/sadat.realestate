@@ -1,0 +1,141 @@
+{
+  "taskId": "frontend_047",
+  "summary": "Implemented the provider-owned Customer Requests surface for PRV-16 and the Add Customer Request modal for PRV-17. The implementation uses the existing provider-scoped request list, create, detail, and transition APIs with runtime contract validation, server-authorized availableActions, safe provider projections, localized AR/EN/ZH-CN copy and direction handling, and loading, empty, error, retry, success, not-found, and permission states.",
+  "filesChanged": [
+    "apps/web/src/features/provider/customer-requests-data.ts",
+    "apps/web/src/features/provider/customer-requests-copy.ts",
+    "apps/web/src/features/provider/customer-requests.tsx",
+    "apps/web/src/features/provider/customer-requests.css",
+    "apps/web/src/features/provider/index.ts",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/provider-customer-requests.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-customer-requests.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-requests-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-requests-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-requests-zh-CN-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared contracts TypeScript build passed."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/provider-customer-requests.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused Provider Customer Requests suite passed: 1 file, 8 tests."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript verification passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web ESLint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full web suite passed: 31 Vitest files, 207 tests, and 76 Node tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR builds passed; the existing Vite large-chunk warning remained non-fatal."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API suite passed: 79 tests, including provider request authorization and route coverage."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace checks and ESLint passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, web client, and web SSR build passed; the existing Vite large-chunk warning remained non-fatal."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory passed and includes the provider customer-request list, create, detail, and transition operations."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Found 0 vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- --grep \"PRV-16/PRV-17\" --project=desktop-ar --project=desktop-en --project=desktop-zh --workers=1 --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Targeted executable Playwright matrix passed: 9 tests across Arabic RTL, English LTR, and Simplified Chinese LTR desktop coverage, including visual snapshots, keyboard/focus and accessible-dialog assertions, server-authorized actions, safe projection checks, and expired-session fail-closed behavior."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "Screen PRV-16",
+    "docs/design_sources/final_screens/provider/PRV-16.png; SHA-256 f40fc7db1a5944ef285eaa885d70ee3c2199bf170daf13a158776fc1827ec083",
+    "Drive folder https://drive.google.com/drive/folders/19m_KQKHWSE-l-j3eqvML0W6RygO3tlAj",
+    "Figma prototype node 6017:19032: https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "Screen PRV-17",
+    "docs/design_sources/final_screens/provider/PRV-17.png; SHA-256 c5737bcda9c5771316253f8174c9ea6c372201ff29510a26e2547bfd87f70281",
+    "Drive folder https://drive.google.com/drive/folders/1u6elv1Y8xHFM22yAUsy2iF4WmJiG5wom",
+    "Figma prototype node 6017:19032: https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "packages/contracts/src/requests/index.ts",
+    "apps/api/src/modules/requests/router.ts and apps/api/tests/requests/router.test.ts",
+    "GET /api/v1/provider/customer-requests, POST /api/v1/provider/customer-requests, GET /api/v1/provider/customer-requests/:requestId, and POST /api/v1/provider/customer-requests/:requestId/transitions",
+    "apps/web/tests/provider-customer-requests.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-customer-requests.spec.ts"
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was modified only for the direct route-wiring necessity exception required to expose /provider/customer-requests; no new API was added.",
+    "No Backend truth repair was required. Provider ownership, verified-provider access, strict request schemas, version/reason requirements, and server-authoritative availableActions remain API-owned.",
+    "The approved local exports were used as visual authority. The executable Playwright matrix was used because the in-app browser connector was unavailable with sandbox-state error 'missing field sandboxPolicy'; no external design source was altered.",
+    "The existing request repository accepts the contract-valid search query but does not add new server-side search behavior in this frontend task; no unsupported API behavior was invented."
+  ],
+  "knownGaps": [
+    "Interactive browser-connector verification was unavailable in this environment; executable Playwright verification passed for the required desktop locale matrix.",
+    "No Production data or credentials were used, and no real .env file was read."
+  ],
+  "completedAt": "2026-08-18T20:28:08.578Z"
+}

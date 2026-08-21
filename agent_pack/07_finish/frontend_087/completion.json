@@ -1,0 +1,175 @@
+{
+  "taskId": "frontend_087",
+  "summary": "Added executable secure-preview release smoke coverage. The test validates the existing API/Web production build wiring and secret-free container configuration, then starts the built Web SSR process in a safe local preview environment and verifies Arabic RTL, English LTR, crawler documents, static assets, security headers, and not-found behavior. API deployment/readiness artifacts and all repository quality gates passed.",
+  "filesChanged": [
+    "apps/web/tests/preview-deployment.vitest.test.ts"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/preview-deployment.vitest.test.ts --run --reporter=dot",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Run 1: 2 tests passed. The focused smoke was repeated three consecutive times; runs 1, 2, and 3 each exited 0 with 2 tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full Web test suite passed, including the new preview smoke."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR production builds passed. Existing chunk-size warning is non-fatal."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root test suite passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, Web client, and Web SSR builds passed."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/api -- tsx --test tests/deployment/runtime.test.ts tests/deployment/artifacts.test.ts tests/release/readiness.test.ts tests/database/health.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "13 API deployment, artifact, release-readiness, health, and readiness tests passed."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "72 configured visual regression tests passed."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "81 configured accessibility tests passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory completed successfully."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities reported."
+    },
+    {
+      "command": "$env:APP_ENV='preview'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3001'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_preview'; $env:AUTH_ACCESS_TOKEN_SECRET=([Convert]::ToBase64String((1..32 | ForEach-Object {[byte]$_}))).TrimEnd('=').Replace('+','-').Replace('/','_'); npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Safe non-production preview environment validation passed without reading a real .env; OTP is correctly reported unconfigured for Preview."
+    },
+    {
+      "command": "docker version --format '{{.Server.Version}}'",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Docker is not installed in this environment, so container execution and engine-backed preview smoke could not run."
+    },
+    {
+      "command": "$env:AUTH_ACCESS_TOKEN_SECRET=([Convert]::ToBase64String((1..32 | ForEach-Object {[byte]$_}))).TrimEnd('=').Replace('+','-').Replace('/','_'); docker compose config --quiet",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Docker is not installed; Compose configuration was not claimed as executed. The checked-in Dockerfile/Compose safety assertions passed through the API artifact test."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors in the worktree diff."
+    },
+    {
+      "command": "npm.cmd run security:check",
+      "exitCode": 1,
+      "result": "skipped",
+      "notes": "The repository does not define a security:check script; no result was claimed. Existing frontend_085 browser/session security coverage and API security tests remain available."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F6_integration_release/frontend_087.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "package.json",
+    "apps/web/package.json",
+    "apps/api/package.json",
+    "apps/web/server.mjs",
+    "apps/web/tests/preview-deployment.vitest.test.ts",
+    "Dockerfile",
+    "docker-compose.yml",
+    "packages/contracts/src/deployment/index.ts",
+    "packages/contracts/src/release/index.ts",
+    "apps/api/src/modules/deployment/runtime.ts",
+    "apps/api/src/modules/database/health.ts",
+    "apps/api/src/modules/release/readiness.ts",
+    "apps/api/tests/deployment/runtime.test.ts",
+    "apps/api/tests/deployment/artifacts.test.ts",
+    "apps/api/tests/release/readiness.test.ts",
+    "docs/api/deployment.md",
+    "agent_pack/02_architecture/DEPLOYMENT_PLAN.md"
+  ],
+  "scopeNotes": [
+    "No product runtime route, shared contract, Dockerfile, Compose file, or production deployment was changed by this frontend task; the new test verifies the existing release boundary within the allowed test root.",
+    "The local smoke starts the built SSR server as a child process with APP_ENV=preview, loopback host/port, and an explicit public origin. It does not connect to Production data or credentials.",
+    "This task has no selected Screen IDs; design-source matching is therefore not applicable. The configured visual and accessibility matrices still passed.",
+    "The checked-in Dockerfile and Compose safety assertions remain owned by the existing API deployment artifact tests; no secret value was printed or committed."
+  ],
+  "knownGaps": [
+    "Docker engine is unavailable, so Docker image build, Compose config execution, and container health/readiness smoke were blocked by the environment.",
+    "No external Preview provider, managed MongoDB replica set, private storage/scanner, or deployment platform was configured; no Preview or Production deployment was performed or claimed.",
+    "The repository does not define npm run security:check; the missing script was recorded as skipped.",
+    "This evidence does not claim all APIs tested or full release completion."
+  ],
+  "completedAt": "2026-08-21T09:15:50.5618026Z"
+}

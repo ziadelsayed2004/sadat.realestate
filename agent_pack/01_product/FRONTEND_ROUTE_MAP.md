@@ -106,8 +106,8 @@
 | ADM-37 | `/admin/ads/payments/pending-review` | admin |  |
 | ADM-38 | `/admin/ads/financial-review` | admin |  |
 | ADM-39 | `/admin/commissions` | admin |  |
-| ADM-40 | `/admin/commissions/policies/new` | admin |  |
-| ADM-41 | `/admin/commissions/change-log` | admin |  |
+| ADM-40 | `/admin/commissions/new` | admin |  |
+| ADM-41 | `/admin/commissions/history` | admin |  |
 | ADM-42 | `/admin/commissions/accounts/:id` | admin |  |
 | ADM-43 | `/admin/commissions/exceptions` | admin |  |
 | ADM-44 | `/admin/commissions/exceptions/new` | admin |  |
@@ -132,4 +132,4 @@
 | ADM-63 | `/admin/roles` | admin |  |
 | ADM-64 | `/admin/roles/:id` | admin |  |
 | ADM-65 | `/admin/notifications` | admin |  |
-| ADM-66 | `/admin/audit-log` | admin |  |
+| ADM-66 | `/admin/audit-logs` | admin |  |

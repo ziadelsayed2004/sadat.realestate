@@ -1,0 +1,161 @@
+{
+  "taskId": "frontend_036",
+  "summary": "Completed the Seeker Dashboard QA matrix for the nine implemented F3 routes. The cross-route test verifies the desktop-only scope, Arabic RTL plus English and Simplified Chinese LTR directionality, permission-safe session behavior, loading/empty/error/retry/not-found states, accessible landmarks and focus behavior, and protection against internal-data exposure. The final browser matrix passed 63/63 tests.",
+  "filesChanged": [
+    "apps/web/tests/e2e/seeker-dashboard-qa.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/seeker-overview.spec.ts-snapshots/seeker-overview-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-overview.spec.ts-snapshots/seeker-overview-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-overview.spec.ts-snapshots/seeker-overview-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-requests-list-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-requests-list-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-requests-list-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-under-review-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-under-review-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-under-review-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-contacted-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-contacted-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-contacted-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-viewings.spec.ts-snapshots/seeker-viewings-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-viewings.spec.ts-snapshots/seeker-viewings-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-viewings.spec.ts-snapshots/seeker-viewings-zh-CN-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": ".\\node_modules\\.bin\\playwright.cmd test --config apps/web/playwright.config.ts apps/web/tests/e2e/seeker-dashboard-qa.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --timeout=30000 --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused cross-route QA passed 9/9 tests across Arabic, English, and Simplified Chinese desktop projects."
+    },
+    {
+      "command": ".\\node_modules\\.bin\\playwright.cmd test --config apps/web/playwright.config.ts apps/web/tests/e2e/seeker-overview.spec.ts apps/web/tests/e2e/seeker-requests.spec.ts apps/web/tests/e2e/seeker-viewings.spec.ts apps/web/tests/e2e/seeker-saved.spec.ts apps/web/tests/e2e/seeker-notifications.spec.ts apps/web/tests/e2e/seeker-profile.spec.ts apps/web/tests/e2e/seeker-dashboard-qa.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --timeout=30000 --reporter=dot",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Complete F3 browser matrix passed 63/63 tests for SEK-01 through SEK-10 route coverage, directionality, states, ownership, and visual regression."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web contracts preparation and TypeScript typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source and test lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web suite passed 149 Vitest tests and 76 TAP accessibility, routing, SSR, localization, and UX-state tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR production builds passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy and repository lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace, API, Web component, accessibility, localization, routing, SSR, and UX suites passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, and Web production builds passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Implemented API inventory passed and retained the Seeker overview, requests, viewings, favorites, notifications, profile, and preferences routes used by F3."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Found 0 vulnerabilities."
+    },
+    {
+      "command": "$env:WEB_BASE_URL = 'http://127.0.0.1:4173'; .\\node_modules\\.bin\\playwright.cmd test --config apps/web/playwright.config.ts apps/web/tests/e2e/accessibility.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --timeout=30000 --reporter=dot",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Dedicated browser accessibility matrix passed 27/27 tests across Arabic RTL, English LTR, and Simplified Chinese LTR desktop projects."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before task closure; the final post-closure audit is run during synchronization."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F3_seeker_dashboard/frontend_036.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "docs/design_sources/final_screens/seeker/SEK-01.png",
+    "docs/design_sources/final_screens/seeker/SEK-02.png",
+    "docs/design_sources/final_screens/seeker/SEK-03.png",
+    "docs/design_sources/final_screens/seeker/SEK-04.png",
+    "docs/design_sources/final_screens/seeker/SEK-05.png",
+    "docs/design_sources/final_screens/seeker/SEK-06.png",
+    "docs/design_sources/final_screens/seeker/SEK-07.png",
+    "docs/design_sources/final_screens/seeker/SEK-08.png",
+    "docs/design_sources/final_screens/seeker/SEK-09.png",
+    "docs/design_sources/final_screens/seeker/SEK-10.png",
+    "Figma prototype node 6027:3579: https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354",
+    "SEK-01 Drive source: https://drive.google.com/drive/folders/1EMmNVoMLcOU1Rjv1N0q_4j9tGCOGqvgE",
+    "SEK-02 Drive source: https://drive.google.com/drive/folders/1BZ3kI-A4xUMfK7-ww6pVcaR8E5XDWgGl",
+    "SEK-03 Drive source: https://drive.google.com/drive/folders/1akycehbR3O5_Mgdi6W5VCbJm943kASAe",
+    "SEK-04 Drive source: https://drive.google.com/drive/folders/1hQUpbNKCrw6NQpt3S7ia6jiziY5kdVE2",
+    "SEK-05 Drive source: https://drive.google.com/drive/folders/1UBASEVD4IUBPnJl7hptGqB7Qv9EAlilU",
+    "SEK-06 Drive source: https://drive.google.com/drive/folders/1Vjh9lRx6mBrgJ3YvWTIR1iTT4r3-10M6",
+    "SEK-07 Drive source: https://drive.google.com/drive/folders/1SN0-v9Bf0xsgrPhTJ4Tzfby_6wUyZqrz",
+    "SEK-08 Drive source: https://drive.google.com/drive/folders/1Y80mQORqpi-tGD3pe2ZIyPo2b74SFHx9",
+    "SEK-09 Drive source: https://drive.google.com/drive/folders/1od5yxd_sFEXo8V7FJKJE3YnnBvh4ERXY",
+    "SEK-10 Drive source: https://drive.google.com/drive/folders/1SMtml3vJtyoq2ORxLVXpt_6-5eBobKDc",
+    "apps/web/src/features/seeker/overview.tsx, requests.tsx, viewings.tsx, saved.tsx, notifications.tsx, profile.tsx",
+    "packages/contracts/src/seeker/index.ts, packages/contracts/src/requests/index.ts, packages/contracts/src/viewings/index.ts, packages/contracts/src/favorites/index.ts, packages/contracts/src/notifications/index.ts",
+    "apps/api/src/modules/seeker/runtime.ts, apps/api/src/modules/requests/runtime.ts, apps/api/src/modules/viewings/runtime.ts, apps/api/src/modules/favorites/runtime.ts, apps/api/src/modules/notifications/runtime.ts",
+    "apps/web/tests/e2e/seeker-dashboard-qa.spec.ts and the completed F3 route Playwright suites"
+  ],
+  "scopeNotes": [
+    "This task has no direct Screen IDs; it covers the completed F3 screen set SEK-01 through SEK-10.",
+    "The canonical design manifest declares the Seeker Dashboard device scope as desktop-only. No tablet or mobile dashboard frames or completion claim were added.",
+    "No production runtime, API contract, OpenAPI, Postman, dependency, or database change was made for this QA task. The new route fixtures are test-only deterministic fixtures.",
+    "The initial full matrix exposed 15 stale visual baseline dimension mismatches for SEK-01 through SEK-05. Those baselines were refreshed from the current runtime after inspection against the checked-in local final exports; the final matrix passed without snapshot updates.",
+    "npm ci was not rerun because the lockfile and dependencies were unchanged and were already installed and verified during this phase."
+  ],
+  "knownGaps": [
+    "Later Frontend phases remain outside this F3 run.",
+    "No live database smoke test was required for this isolated browser QA task."
+  ],
+  "completedAt": "2026-08-18T11:35:16.981Z"
+}

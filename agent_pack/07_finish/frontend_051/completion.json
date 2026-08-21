@@ -1,0 +1,174 @@
+{
+  "taskId": "frontend_051",
+  "summary": "Completed Provider Dashboard QA for the implemented F4 provider routes. The deterministic browser matrix covers the provider shell, property states and wizard, projects, customer requests, viewing appointments, advertising and commission, notifications, and settings across Arabic RTL, English LTR, and Simplified Chinese LTR on the approved desktop scope. It verifies provider session denial, API permission denial, safe projections, absence of internal/private fields, keyboard focus, state handling, and visual snapshots.",
+  "filesChanged": [
+    "apps/web/tests/e2e/provider-dashboard-qa.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-requests-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-requests-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-requests-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-published-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-published-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-published-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-rejected-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-rejected-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-rejected-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-submitted-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-submitted-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-submitted-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-validation-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-validation-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-validation-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-zh-CN-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-dashboard-qa.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Provider route QA passed 9/9 across Arabic RTL, English LTR, and Simplified Chinese LTR. It covered 24 provider routes, authenticated and unauthenticated shell behavior, provider API permission denial, safe projection checks, desktop scope, skip-link focus, and navigation focus."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-overview.spec.ts tests/e2e/provider-properties.spec.ts tests/e2e/provider-projects.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Stable provider overview, property list, and projects matrix passed 24/24 with visual, keyboard, locale, permission, and safe-projection assertions."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-property-wizard.spec.ts tests/e2e/provider-property-advanced.spec.ts tests/e2e/provider-property-completion.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Stable provider wizard, advanced property, and completion matrix passed 36/36, including upload/reorder/remove, recovery, submission, permission, version, keyboard, visual, and localized assertions."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-property-state.spec.ts tests/e2e/provider-customer-requests.spec.ts tests/e2e/provider-viewings.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Regenerated the 18 affected desktop visual baselines after confirming the only difference was the shared provider navigation added by frontend_049 and frontend_050; the command itself passed 33/33."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-property-state.spec.ts tests/e2e/provider-customer-requests.spec.ts tests/e2e/provider-viewings.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Stable corrected matrix passed 33/33 across all three locales, covering validation, submitted/rejected/published states, customer request ownership and transitions, viewing transitions, keyboard focus, safe projections, and visual snapshots."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript verification passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web ESLint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full web workspace verification passed: 34 Vitest files, 231 tests, and 76 Node TAP tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR builds passed; the existing non-fatal Vite large-chunk warning remained."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory passed; the provider operations consumed by the existing F4 screens remain implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and ESLint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root test orchestration passed, including the complete web workspace test suite."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and web builds passed; the existing non-fatal Vite large-chunk warning remained."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Dependency audit found 0 vulnerabilities."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors were found."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F4_provider_dashboard/frontend_051.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "Provider QA covers PRV-01 through PRV-22-3; this quality task has no direct Screen IDs and uses the approved provider exports recorded for frontend_040 through frontend_050.",
+    "Approved local export directory: docs/design_sources/final_screens/provider/",
+    "Figma prototype node 6017:19032: https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "apps/web/tests/e2e/provider-dashboard-qa.spec.ts",
+    "apps/web/tests/e2e/provider-overview.spec.ts",
+    "apps/web/tests/e2e/provider-properties.spec.ts",
+    "apps/web/tests/e2e/provider-property-wizard.spec.ts",
+    "apps/web/tests/e2e/provider-property-advanced.spec.ts",
+    "apps/web/tests/e2e/provider-property-completion.spec.ts",
+    "apps/web/tests/e2e/provider-property-state.spec.ts",
+    "apps/web/tests/e2e/provider-projects.spec.ts",
+    "apps/web/tests/e2e/provider-customer-requests.spec.ts",
+    "apps/web/tests/e2e/provider-viewings.spec.ts",
+    "apps/web/tests/e2e/provider-advertising.spec.ts",
+    "apps/web/tests/e2e/provider-notifications-settings.spec.ts",
+    "apps/web/src/features/provider/overview.tsx",
+    "Runtime API inventory, OpenAPI, and Postman validation for the implemented provider contracts"
+  ],
+  "scopeNotes": [
+    "The QA fixture intercepts are test-only deterministic responses; no Production mock or runtime fallback was added.",
+    "No new backend route or contract was required in frontend_051; provider runtime contracts were already implemented and inventoried by the preceding tasks.",
+    "The provider dashboard remains desktop-only. Arabic is RTL; English and Simplified Chinese are LTR.",
+    "The initial combined 45-test diagnostic exited 1 because 18 old visual baselines lacked the provider navigation added by frontend_049 and frontend_050. A diff inspection confirmed navigation-only drift; the affected 18 snapshots were regenerated and the final 33-test batch passed 33/33. The earlier timeout of the larger combined matrix was not counted as a pass.",
+    "No real .env file, secret, Production data, or Production credential was read or used."
+  ],
+  "knownGaps": [
+    "No live provider API or MongoDB smoke was run for this frontend QA task; deterministic contract-boundary and browser fixtures cover the UI safely, while live prerequisites remain a release-readiness concern.",
+    "F4 is complete only; later frontend phases remain open."
+  ],
+  "completedAt": "2026-08-19T06:00:32.9923023+03:00"
+}

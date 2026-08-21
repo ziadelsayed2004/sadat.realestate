@@ -1,0 +1,168 @@
+{
+  "taskId": "frontend_063",
+  "summary": "Implemented the desktop Admin master-data surfaces for ADM-09 Categories, ADM-10 Locations, and ADM-11 Features. The feature uses the implemented taxonomy, location, and feature CRUD contracts, preserves server availableActions and safe projections, validates reason-bearing mutations, covers loading, empty, error, retry, success, and permission states, and supports Arabic RTL, English LTR, and Simplified Chinese LTR.",
+  "filesChanged": [
+    "apps/web/src/features/admin_master_data/copy.ts",
+    "apps/web/src/features/admin_master_data/data.ts",
+    "apps/web/src/features/admin_master_data/index.ts",
+    "apps/web/src/features/admin_master_data/views.tsx",
+    "apps/web/src/features/admin_master_data/styles.css",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/admin-master-data.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-master-data.fixtures.ts",
+    "apps/web/tests/e2e/admin-master-data.spec.ts",
+    "apps/web/tests/e2e/admin-master-data-accessibility.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-categories-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-categories-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-categories-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-locations-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-locations-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-locations-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-features-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-features-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-features-zh-CN-desktop-zh-win32.png",
+    "agent_pack/07_finish/frontend_063/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts prepared and the web TypeScript project compiled with no errors."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source, tests, Vite, Playwright, and server lint passed with max-warnings=0."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/admin-master-data.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused master-data contract, CRUD route, authorization, projection, locale, permission, and mutation-state suite passed 5/5 tests."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-master-data.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final visual/browser matrix passed 9/9 across ADM-09, ADM-10, and ADM-11 in Arabic RTL, English LTR, and Simplified Chinese LTR desktop projects; screenshot baselines matched."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-master-data-accessibility.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused accessibility and keyboard matrix passed 6/6, including landmarks, table semantics, labels, skip-link focus, direction, safe projection, and non-admin behavior."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full web suite passed: 38 Vitest files / 254 tests and 76 TAP checks. Existing MSW output reports one unhandled article-categories request; the command exited 0."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR bundles built successfully; Vite emitted only the existing large-chunk warning."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace policy, API-all, and web test command passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and web builds passed."
+    },
+    {
+      "command": "npm.cmd run test:integration --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API integration suite passed 28/28, including runtime route inventory and artifact consistency checks."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API unit suite passed 357/357."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API route/security suite passed 88/88."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory confirms the implemented GET/POST/PATCH/DELETE routes for /api/v1/admin/property-categories, /api/v1/admin/locations, and /api/v1/admin/features."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities reported."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors in the worktree diff."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit was clean before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "Task file: agent_pack/04_tracks/frontend/F5_admin_dashboard/frontend_063.md",
+    "ADM-09 approved local export: docs/design_sources/final_screens/admin/ADM-09.png; SHA-256 52ae46a190459829731d603b7bb6aa8f9bdd17c7231c7c80404fb5cfc805f73e; Drive https://drive.google.com/drive/folders/1BsuhLY1vb55AY8eokQf0KEeTyIS4g9bw; Figma prototype node 6017:61879, page 6017:4356; approved desktop, ar/en/zh-CN and rtl/ltr scope.",
+    "ADM-10 approved local export: docs/design_sources/final_screens/admin/ADM-10.png; SHA-256 061894c2847d6e6e460c256d63ebec480f5982d3a241b362d9e283251eeb0b86; Drive https://drive.google.com/drive/folders/1qIx1wxB5bBDIjfIYLI-huLuBDNNQIjX-; Figma prototype node 6017:61879, page 6017:4356; approved desktop, ar/en/zh-CN and rtl/ltr scope.",
+    "ADM-11 approved local export: docs/design_sources/final_screens/admin/ADM-11.png; SHA-256 f6eb4f8312ee363f0ac4bd3e6936dbada91b47bf7f11d7c5fc238af7d6f9f6fa; Drive https://drive.google.com/drive/folders/11uMoUTllcJFJ5gV7-B7aynZcQrRkLFjq; Figma prototype node 6017:61879, page 6017:4356; approved desktop, ar/en/zh-CN and rtl/ltr scope.",
+    "Runtime/API evidence: GET/POST/PATCH/DELETE /api/v1/admin/property-categories with admin:taxonomy.view/manage; GET/POST/PATCH/DELETE /api/v1/admin/locations with admin:locations.view/manage; GET/POST/PATCH/DELETE /api/v1/admin/features with admin:features.view/manage.",
+    "apps/web/tests/admin-master-data.vitest.test.tsx and apps/web/tests/e2e/admin-master-data.spec.ts assert strict request paths, authorization headers, reason-bearing mutations, server availableActions, safe projections, locale direction, desktop scope, and non-admin fail-closed behavior.",
+    "apps/web/tests/e2e/admin-master-data-accessibility.spec.ts and the nine checked-in desktop screenshot baselines provide the final accessibility and visual evidence."
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx is outside the task's listed roots and was changed only as the necessary route-composition exception for the three selected admin routes; no unrelated feature behavior was added.",
+    "The shared Feature response schemas and API test registration were repaired and closed under backend_033 before frontend_063 started; this frontend task consumes those implemented contracts and does not change backend behavior.",
+    "The first focused test and lint attempts exposed test-only selector/import issues; those were corrected, and the final focused and full gates above passed. No production runtime behavior was changed by those corrections.",
+    "No real .env, secret, production data, live MongoDB instance, or external provider credential was read or used."
+  ],
+  "knownGaps": [
+    "The approved Admin dashboard device scope is desktop-only; tablet and mobile runs are intentionally not claimed.",
+    "The local runtime is Node 22.18.0 while the repository declares Node >=24 <25; all required local checks passed under the available runtime."
+  ],
+  "completedAt": "2026-08-19T09:38:44+03:00"
+}

@@ -1,0 +1,113 @@
+{
+  "taskId": "frontend_044",
+  "summary": "Implemented provider property media upload/order/remove, contract-backed contact details, and review/submit screens for PRV-08 through PRV-10. The UI uses only implemented provider routes, keeps media session-local because no media-list GET route exists, and excludes private storage identifiers and unsupported internal fields.",
+  "filesChanged": [
+    "apps/web/src/features/provider_property/data.ts",
+    "apps/web/src/features/provider_property/completion-copy.ts",
+    "apps/web/src/features/provider_property/completion.tsx",
+    "apps/web/src/features/provider_property/index.ts",
+    "apps/web/src/features/provider_property/styles.css",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/provider-property-completion.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-property-completion.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-media-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-media-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-media-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-contact-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-contact-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-contact-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-review-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-review-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-review-zh-CN-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared contracts compiled successfully."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Provider completion route, adapters, and tests typechecked successfully."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source and test lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/provider-property-completion.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "7 focused tests passed, including route/auth payloads, local upload validation, safe projections, review gating, and permission denial."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full web suite passed: 28 Vitest files, 183 tests, plus 76 Node tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR bundles built successfully; only the existing chunk-size advisory was emitted."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- --grep \"PRV-08, PRV-09, and PRV-10\" --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "15 browser journeys passed across Arabic RTL, English LTR, and Simplified Chinese LTR desktop projects. Visual snapshots matched for media, contact, and review; keyboard/focus and permission journeys passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Required provider property GET, media POST/PATCH/DELETE, contact step PATCH, and submit POST routes are implemented and inventoried."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "PRV-08 approved local export: docs/design_sources/final_screens/provider/PRV-08.png; SHA-256 d49d11c87ec5544de2ba9b1056860a13b9c57d7bf0b10c5ed53235c89a170021; Figma prototype node 6017:19032; Drive folder 1PTID8nypqLiSrU3-O6cAiXoJdu9hVUi4",
+    "PRV-09 approved local export: docs/design_sources/final_screens/provider/PRV-09.png; SHA-256 fc5b166453e2d9ca35d3706ed1368eb98a30ece3f3eb23f03ee6bdb81c1b8e09; Figma prototype node 6017:19032; Drive folder 1yW0-rmLNBH19aM5xW3l3q0sm51yARrLS",
+    "PRV-10 approved local export: docs/design_sources/final_screens/provider/PRV-10.png; SHA-256 f34bfb0378ffe6c72625f592ea3c1b108c10cdf05273d53d907ced901aa49497; Figma prototype node 6017:19032; Drive folder 1Q4Enn2KDiWVSa3zI_htObrmdyMn4f0WQ",
+    "Runtime/API inventory operations: GET /api/v1/provider/properties/:propertyId, POST/PATCH/DELETE /api/v1/provider/properties/:propertyId/media, PATCH /api/v1/provider/properties/:propertyId/steps/:step, and POST /api/v1/provider/properties/:propertyId/submit",
+    "Shared contracts: propertyMediaUploadHeadersSchema, propertyMediaOrderSchema, propertyContactStepSchema, propertySubmitSchema, propertyMediaSuccessEnvelopeSchema, and propertyMediaListSuccessEnvelopeSchema",
+    "Focused Vitest: apps/web/tests/provider-property-completion.vitest.test.tsx",
+    "Desktop Playwright visual/accessibility matrix: apps/web/tests/e2e/provider-property-completion.spec.ts"
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was modified as the direct route integration exception required to render the selected completion screens.",
+    "The current API exposes media mutations but no provider media-list GET route and PropertyData has no media field; the UI therefore shows only media returned by mutations in the current editor session and states the unavailable prior list honestly.",
+    "The approved design includes fields that are not in the current contact contract; internal notes and unsupported visibility fields were not invented or submitted.",
+    "The review acknowledgement checkboxes are local UI gating only. Server availableActions, version, validation, authorization, and ownership remain authoritative.",
+    "An initial full web-suite invocation exposed an unrelated timing failure in provider-organization-documents; the focused test and complete rerun both passed, and no onboarding file was changed."
+  ],
+  "knownGaps": [
+    "No direct in-app browser connector evidence was available because its sandbox metadata was unavailable; executable Playwright visual and accessibility journeys passed.",
+    "Provider-specific external storage readiness remains an environment concern; local tests use deterministic route fixtures and the runtime fails closed when storage/scanning is unavailable.",
+    "This task does not claim full API, Backend, screen, or platform completion."
+  ],
+  "completedAt": "2026-08-18T18:54:03.1502211Z"
+}

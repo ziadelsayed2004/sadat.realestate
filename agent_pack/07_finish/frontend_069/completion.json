@@ -1,0 +1,148 @@
+{
+  "taskId": "frontend_069",
+  "summary": "Implemented the admin CMS About, Team, and population-counter screens with server-backed forms, ordering, preview, strict namespace contracts, reason/version-gated updates, localized RTL/LTR rendering, permission-safe states, and desktop browser evidence.",
+  "filesChanged": [
+    "apps/web/src/features/admin_content/data.ts",
+    "apps/web/src/features/admin_content/index.ts",
+    "apps/web/src/features/admin_content/copy.ts",
+    "apps/web/src/features/admin_content/views.tsx",
+    "apps/web/src/features/admin_content/styles.css",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/admin-cms-content.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-cms-content.fixtures.ts",
+    "apps/web/tests/e2e/admin-cms-content.spec.ts",
+    "apps/web/tests/e2e/admin-cms-content-visual.spec.ts",
+    "apps/web/tests/e2e/admin-cms-content-accessibility.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-ar-about-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-ar-team-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-ar-population-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-en-about-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-en-team-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-en-population-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-zh-CN-about-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-zh-CN-team-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-zh-CN-population-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/admin-cms-content.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "6 focused Vitest tests passed for namespace routes, strict schemas, localized screen rendering, safe projections, reason/version updates, and non-admin fail-closed behavior."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript check passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web ESLint completed with zero warnings or errors."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full web test suite passed, including Vitest and Node-based accessibility, routing, SSR, and localization tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR builds completed successfully."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-cms-content.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "9 desktop browser tests passed across Arabic RTL, English LTR, and Simplified Chinese LTR; tablet/mobile cases are intentionally outside the approved admin device scope."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web -- tests/e2e/admin-cms-content-visual.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "27 visual tests passed: ADM-30/31/32 baselines plus the existing public visual matrix for the three desktop locales."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web -- tests/e2e/admin-cms-content-accessibility.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "30 accessibility tests passed, including CMS landmarks, labels, focus, direction, and safe projection checks across the three desktop locales."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace policy, API, and web tests passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, web client, and web SSR builds passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Admin CMS namespace GET/PUT operations are present in the runtime inventory."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency audit findings."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "ADM-30 approved local export: docs/design_sources/final_screens/admin/ADM-30.png; SHA256 1006634669cd92a0cbef3ce1aeb6030056d25b60d5aeede44babdbf2ee87f085; Drive https://drive.google.com/drive/folders/1T4o9bQ0ebHJpX-fNIpRKDczlk3F37daH",
+    "ADM-31 approved local export: docs/design_sources/final_screens/admin/ADM-31.png; SHA256 4cf482fc25e19b905ba95eaf1fd7fb2ef550e8674f5ec0ff57500a35ee951bcf; Drive https://drive.google.com/drive/folders/1k7lhpKe1sM8O1hQoLs6fTgY-88f_dlTf",
+    "ADM-32 approved local export: docs/design_sources/final_screens/admin/ADM-32.png; SHA256 c64309a3586633440c3cf32211e4744a1f86bb64c1fefd8f69d0653e8ab8e81a; Drive https://drive.google.com/drive/folders/1JWQ-qEIvxxqHBPnsGz2xDA2_kMG_sq7s",
+    "Figma prototype node 6017:61879, page 6017:4356: https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "Runtime API operations: GET and PUT /api/v1/admin/content/:namespace for about, team, and population namespaces.",
+    "Shared contracts: packages/contracts/src/cms/index.ts and packages/contracts/src/contracts/index.ts.",
+    "Focused implementation and browser evidence: apps/web/tests/admin-cms-content.vitest.test.tsx and apps/web/tests/e2e/admin-cms-content*.spec.ts."
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was an explicitly justified integration exception used only to compose the three selected admin routes.",
+    "No production data, secrets, dependencies, or unsupported endpoints were introduced; browser fixtures are confined to Playwright test files.",
+    "The approved admin scope is desktop-only; tablet/mobile projects were intentionally skipped by the executable browser matrix.",
+    "The in-app browser connector could not initialize because the environment omitted sandboxPolicy metadata; repository Playwright browser verification passed and supplied the recorded visual/accessibility evidence.",
+    "Backend CMS route and population truth repairs were separately implemented and closed as backend_036 and backend_037 before this task; this task consumes their implemented contracts only."
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-19T12:21:28.1079308Z"
+}

@@ -1,11 +1,19 @@
 {
   "taskId": "backend_114",
-  "summary": "Implemented account-scoped commission confirmations with verified-provider ownership checks, policy/source version capture, acknowledgement timestamps, deterministic supersession, admin review, revocation, strict uniqueness, and optimistic concurrency.",
+  "summary": "Repaired the required Admin commission-confirmation boundary with persisted Mongo storage, strict safe projection, verified-admin view authorization, pagination/filter validation, runtime wiring, OpenAPI/Postman synchronization, and focused route coverage.",
   "filesChanged": [
-    "packages/contracts/src/commissions/index.ts",
-    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/commissions/confirmation-repository.ts",
     "apps/api/src/modules/commissions/confirmation-service.ts",
-    "apps/api/tests/commissions/service.test.ts",
+    "apps/api/src/modules/commissions/confirmation-router.ts",
+    "apps/api/src/modules/commissions/confirmation-runtime.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/tests/commissions/confirmation-router.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
     "docs/api/commission-policies.md"
   ],
   "verification": [
@@ -13,19 +21,37 @@
       "command": "npm.cmd run build --workspace packages/contracts",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Contracts compiled with confirmation schemas and strict state refinements."
+      "notes": "Shared contracts compiled successfully."
     },
     {
-      "command": "node --test --import tsx apps/api/tests/commissions/service.test.ts",
+      "command": "npm.cmd run typecheck --workspace apps/api",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Five focused commission tests passed, including confirmation ownership, uniqueness, supersession, listing, revocation, and replay coverage."
+      "notes": "API production and test TypeScript compilation passed after confirmation repository and router wiring."
+    },
+    {
+      "command": "node --test --import tsx apps/api/tests/commissions/confirmation-router.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Focused route coverage passed 2/2 tests, including unauthenticated, wrong-role, strict-query, permission, no-store, safe-projection, and request-id behavior."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "API unit suite passed 367/367 tests."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "API route suite passed 102/102 tests, including the confirmation route suite."
     },
     {
       "command": "npm.cmd run typecheck",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Workspace syntax, contracts, and API test typechecks passed."
+      "notes": "Root syntax, contracts, API, and Web typechecks passed."
     },
     {
       "command": "npm.cmd run lint",
@@ -37,60 +63,74 @@
       "command": "npm.cmd test -- --runInBand",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Full serial suite passed 368 tests."
+      "notes": "Root serial test runner completed successfully; final TAP summary was 76/76 with zero failures."
     },
     {
       "command": "npm.cmd run build",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Workspace and API production builds succeeded."
-    },
-    {
-      "command": "npm.cmd audit --audit-level=high",
-      "exitCode": 0,
-      "result": "Passed",
-      "notes": "No high-severity vulnerabilities found."
+      "notes": "Contracts, API, Web client, and Web SSR production builds succeeded."
     },
     {
       "command": "npm.cmd run api:inventory",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Runtime API inventory completed; no confirmation routes changed because current commission HTTP composition is absent."
+      "notes": "Inventory reports GET /api/v1/admin/commission-confirmations as implemented."
     },
     {
       "command": "npm.cmd run openapi:validate",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "OpenAPI artifacts validated."
+      "notes": "OpenAPI artifacts validated successfully."
     },
     {
       "command": "npm.cmd run postman:validate",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Postman artifacts validated."
+      "notes": "Postman artifacts validated successfully."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Dependency audit found 0 vulnerabilities."
     },
     {
       "command": "git diff --check",
       "exitCode": 0,
       "result": "Passed",
       "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors; backend_114 was the only task in progress at verification time."
     }
   ],
   "sourceEvidence": [
     "agent_pack/04_tracks/backend/B8_commissions/backend_114.md",
     "agent_pack/01_product/SCREEN_REGISTRY.json (ADM-45)",
     "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (ADM-45)",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (GET /api/v1/admin/commission-confirmations)",
     "agent_pack/01_product/PRD.md (commission confirmations and provider read-only policy)",
-    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md (unique accountId + policyVersion confirmation key)",
-    "packages/contracts/src/commissions/index.ts",
-    "apps/api/src/modules/commissions/confirmation-service.ts",
-    "apps/api/tests/commissions/service.test.ts",
-    "docs/api/commission-policies.md"
+    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md (accountId + policyVersion confirmation uniqueness)",
+    "apps/api/src/modules/commissions/confirmation-repository.ts",
+    "apps/api/src/modules/commissions/confirmation-router.ts",
+    "apps/api/tests/commissions/confirmation-router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "npm.cmd run api:inventory"
+  ],
+  "scopeNotes": [
+    "App/server/docs-artifact changes are explicit integration exceptions required to mount and publish the selected confirmation route.",
+    "Runtime uses a real Mongo collection with strict projection and deterministic repository fakes in tests; no Production data or credentials were used.",
+    "The selected blueprint requires the Admin confirmation list route; acknowledgement/revocation service behavior remains available for its owning service boundary and is not exposed as an invented frontend endpoint."
   ],
   "knownGaps": [
-    "The confirmation service is an in-memory boundary; persistent storage, audit/change-log integration, and HTTP composition are later runtime work.",
-    "No production account or commission values were seeded and acknowledgement does not authorize settlement or collection.",
-    "Live database/provider integration checks were not run because no isolated replica-set topology or credentials were available."
+    "Live MongoDB integration was not run because an isolated non-production replica-set topology and credentials were unavailable; deterministic local route tests cover the implemented HTTP boundary.",
+    "No production account or commission values were seeded, and confirmation state does not authorize settlement or collection.",
+    "Commission change-log HTTP composition remains the separate backend_115 repair required by ADM-41."
   ],
-  "completedAt": "2026-08-14T16:54:52.9165007Z"
+  "completedAt": "2026-08-20T13:16:12.2877547Z"
 }

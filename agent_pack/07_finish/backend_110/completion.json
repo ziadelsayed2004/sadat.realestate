@@ -1,32 +1,105 @@
 {
   "taskId": "backend_110",
-  "summary": "Implemented versioned percentage, fixed-minor-unit, and exempt commission policies with explicit scopes, effective windows, strict validation, optimistic mutation reasons, active-window guards, overlap prevention, bounded filters, and deterministic ordering.",
+  "summary": "Repaired backend_110's deferred commission-policy boundary by adding a Mongo-backed repository, strict Admin list/create HTTP routes with view/manage permissions, optimistic persistence, synchronized OpenAPI/Postman/inventory metadata, and regression coverage. Policy behavior remains versioned, scoped, effective-dated, and free of a universal commission hardcode.",
   "filesChanged": [
-    "packages/contracts/src/commissions/index.ts",
-    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/commissions/policy-repository.ts",
     "apps/api/src/modules/commissions/policy-service.ts",
-    "apps/api/tests/commissions/service.test.ts",
+    "apps/api/src/modules/commissions/policy-router.ts",
+    "apps/api/src/modules/commissions/runtime.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/tests/commissions/policy-router.test.ts",
     "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
     "docs/api/commission-policies.md"
   ],
   "verification": [
     {
-      "command": "npm.cmd run build --workspace packages/contracts; npm.cmd run typecheck --workspace apps/api; node --test --import tsx apps/api/tests/commissions/service.test.ts",
+      "command": "npm.cmd run build --workspace packages/contracts",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "Contracts/API typecheck passed and the focused commission policy test passed."
+      "result": "passed",
+      "notes": "Shared contracts compiled successfully."
     },
     {
-      "command": "npm.cmd run typecheck; npm.cmd run lint; npm.cmd test -- --runInBand; npm.cmd run build",
+      "command": "npm.cmd run typecheck --workspace apps/api",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "Typecheck and lint passed; full suite passed 364 tests; build succeeded."
+      "result": "passed",
+      "notes": "API production and test TypeScript compiled successfully with the Mongo-backed policy repository and router wiring."
     },
     {
-      "command": "npm.cmd audit --audit-level=high; npm.cmd run api:inventory; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs; git diff --check",
+      "command": "node --test --import tsx apps/api/tests/commissions/policy-router.test.ts",
       "exitCode": 0,
-      "result": "Passed",
-      "notes": "No high-severity vulnerabilities; inventory, OpenAPI, Postman, Agent Pack audit, and whitespace checks passed."
+      "result": "passed",
+      "notes": "Focused Admin policy route coverage passed: authentication, role/permission separation, strict unknown-field handling, list projection, create response, no-store headers, and request metadata."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Complete API runner passed 491/491 tests, including unit, API, and integration suites."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test -- --runInBand",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root test gate passed; the API runner reported 491/491 and the Web suite reported 301 Vitest tests plus 76 workspace TAP tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, client, and SSR builds succeeded."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Dependency audit found 0 vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory includes GET and POST /api/v1/admin/commission-policies as implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI artifact validated successfully."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman collection validated successfully."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors with only backend_110 in progress before closure."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Changed tracked files contain no whitespace errors."
     }
   ],
   "sourceEvidence": [
@@ -35,16 +108,20 @@
     "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (ADM-39 and ADM-40)",
     "agent_pack/01_product/PRD.md (commission policy types and no universal value)",
     "agent_pack/01_product/STATE_MACHINES.md (effective policy resolution order)",
-    "packages/contracts/src/commissions/index.ts",
-    "apps/api/src/modules/commissions/policy-service.ts",
-    "apps/api/tests/commissions/service.test.ts",
-    "docs/api/commission-policies.md"
+    "apps/api/src/modules/commissions/policy-repository.ts",
+    "apps/api/src/modules/commissions/policy-router.ts",
+    "apps/api/tests/commissions/policy-router.test.ts",
+    "GET /api/v1/admin/commission-policies and POST /api/v1/admin/commission-policies runtime inventory entries",
+    "ADM-39 and ADM-40 approved local design references"
+  ],
+  "scopeNotes": [
+    "apps/api/src/app.ts, apps/api/src/server.ts, and apps/api/src/modules/docs/api-artifacts.ts were modified as explicitly necessary integration exceptions to mount and publish the selected policy routes.",
+    "The repository-backed runtime is real MongoDB infrastructure; deterministic route tests inject a test service and do not seed Production data."
   ],
   "knownGaps": [
-    "The policy service is an in-memory boundary; persistence, audit repository, resolver snapshots, and HTTP route composition belong to later dependent B8 tasks.",
-    "apps/api/src/modules/testing/test-suites.ts was updated only to register the task-local commission test; this is the necessary test-harness integration outside the commission runtime roots.",
-    "No production policy values were seeded and no universal commission is assumed.",
-    "Live database/provider integration checks were not run because no isolated replica-set topology or credentials were available."
+    "The remaining dependent B8 commission capabilities (account overrides, exceptions, confirmations, resolver snapshots, and change-log routes) remain owned by their selected downstream tasks and were not implemented in this repair.",
+    "Live MongoDB integration was not run because an isolated non-production replica-set topology and credentials were unavailable; deterministic route tests and the real Mongo repository boundary were verified by compilation and artifact/inventory checks.",
+    "No production policy values were seeded and no universal commission is assumed."
   ],
-  "completedAt": "2026-08-14T15:56:18.6585870Z"
+  "completedAt": "2026-08-20T01:15:00.000Z"
 }

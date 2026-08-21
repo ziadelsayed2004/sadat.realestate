@@ -14,8 +14,22 @@ export interface AdvertisingFinancialSource {
   list(): Promise<readonly AdvertisingFinancialRecord[]>;
 }
 
+export interface AdvertisingLedgerAuthorization {
+  authorize(adminId: string, permission: 'admin:ads.view'): Promise<boolean>;
+}
+
 export interface AdvertisingLedgerDependencies {
   source: AdvertisingFinancialSource;
+  authorization: AdvertisingLedgerAuthorization;
+}
+
+export interface AdvertisingLedgerService {
+  listFinancialReview(claims: AccessTokenClaims, input: unknown): Promise<AdFinancialReviewListData>;
+  getFinancialReview(claims: AccessTokenClaims, requestId: string): Promise<AdFinancialReviewRow>;
+  listLedger(claims: AccessTokenClaims, input: unknown): Promise<AdLedgerListData>;
+  review(claims: AccessTokenClaims, input: unknown): Promise<AdFinancialReviewListData>;
+  detail(claims: AccessTokenClaims, requestId: string): Promise<AdFinancialReviewRow>;
+  ledger(claims: AccessTokenClaims, input: unknown): Promise<AdLedgerListData>;
 }
 
 export type AdvertisingLedgerServiceErrorCode = 'AD_REPORT_FORBIDDEN' | 'AD_REPORT_NOT_FOUND' | 'AD_REPORT_SOURCE_INVALID';
@@ -29,6 +43,16 @@ export class AdvertisingLedgerServiceError extends Error {
 
 function adminClaims(claims: AccessTokenClaims): void {
   if (claims.role !== 'admin' || claims.status !== 'verified') throw new AdvertisingLedgerServiceError('AD_REPORT_FORBIDDEN');
+}
+
+async function authorizedAdmin(
+  claims: AccessTokenClaims,
+  authorization: AdvertisingLedgerAuthorization
+): Promise<void> {
+  adminClaims(claims);
+  if (!await authorization.authorize(claims.sub, 'admin:ads.view')) {
+    throw new AdvertisingLedgerServiceError('AD_REPORT_FORBIDDEN');
+  }
 }
 
 function eventId(seed: string): string {
@@ -111,7 +135,7 @@ function inRange(value: string, from?: string, to?: string): boolean {
 
 export function createAdvertisingLedgerService(dependencies: AdvertisingLedgerDependencies) {
   const review = async (claims: AccessTokenClaims, input: unknown): Promise<AdFinancialReviewListData> => {
-    adminClaims(claims);
+    await authorizedAdmin(claims, dependencies.authorization);
     const query = adFinancialReviewQuerySchema.parse(input) as AdFinancialReviewQuery;
     const records = await dependencies.source.list();
     const rows = records.map(row).filter(item => (!query.placementKey || item.placementKey === query.placementKey) && (!query.providerId || item.providerId === query.providerId) && (!query.from || inRange(item.updatedAt, query.from, query.to)) && (!query.to || inRange(item.createdAt, query.from, query.to))).filter(item => {
@@ -121,14 +145,14 @@ export function createAdvertisingLedgerService(dependencies: AdvertisingLedgerDe
     return { items: rows.slice((query.page - 1) * query.limit, query.page * query.limit), page: query.page, limit: query.limit, total: rows.length };
   };
   const detail = async (claims: AccessTokenClaims, requestId: string): Promise<AdFinancialReviewRow> => {
-    adminClaims(claims);
+    await authorizedAdmin(claims, dependencies.authorization);
     if (!/^[a-f0-9]{24}$/.test(requestId)) throw new AdvertisingLedgerServiceError('AD_REPORT_NOT_FOUND');
     const record = (await dependencies.source.list()).find(item => item.request.id === requestId);
     if (!record) throw new AdvertisingLedgerServiceError('AD_REPORT_NOT_FOUND');
     return row(record);
   };
   const ledger = async (claims: AccessTokenClaims, input: unknown): Promise<AdLedgerListData> => {
-    adminClaims(claims);
+    await authorizedAdmin(claims, dependencies.authorization);
     const query = adLedgerQuerySchema.parse(input) as AdLedgerQuery;
     const records = await dependencies.source.list();
     const entries = records.flatMap(record => quoteEntries(record).concat(paymentEntries(record), scheduleEntries(record))).filter(item => (!query.kind || item.kind === query.kind) && (!query.source || item.source === query.source) && (!query.placementKey || item.placementKey === query.placementKey) && (!query.providerId || item.providerId === query.providerId) && inRange(item.occurredAt, query.from, query.to)).sort((a, b) => b.occurredAt.localeCompare(a.occurredAt) || b.id.localeCompare(a.id));

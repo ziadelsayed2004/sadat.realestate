@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
-import { AdSettingsServiceError, createAdSettingsService } from '../../src/modules/ads/service.js';
+import { AdSettingsServiceError, createAdCalendarService, createAdSettingsService } from '../../src/modules/ads/service.js';
+import { adCalendarEventSchema, adQuoteSchema, adRequestSchema } from '@sadat-real-estate/contracts';
 
 const admin = { iss: 'sadat-realestate-api', aud: 'sadat-realestate', sub: '3123456789abcdef01234567', sid: '1123456789abcdef01234567', role: 'admin', status: 'verified', iat: 1, exp: 9999999999, jti: 'test' } as AccessTokenClaims;
 const seeker = { ...admin, role: 'seeker' } as AccessTokenClaims;
@@ -24,6 +25,42 @@ test('advertising requests are provider-owned and use explicit draft-to-review w
   await assert.rejects(() => service.transitionRequest({ ...provider, sub: '3123456789abcdef01234567' } as AccessTokenClaims, request.id, { status: 'cancelled', expectedVersion: 1, reason: 'IDOR' }), (error) => error instanceof AdSettingsServiceError && error.code === 'FORBIDDEN');
 });
 
+test('provider draft creation delegates to the configured persistent request repository', async () => {
+  const provider = { ...admin, role: 'provider', sub: '2123456789abcdef01234567' } as AccessTokenClaims;
+  let calledWith: { providerId: string; placementKey: string } | undefined;
+  const service = createAdSettingsService({
+    hasActivePlacement: async (placementKey) => placementKey === 'homepage.hero',
+    requestRepository: {
+      async createProviderRequest(providerId, input) {
+        calledWith = { providerId, placementKey: input.placementKey };
+        return adRequestSchema.parse({
+          id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
+          providerId,
+          ...input,
+          status: 'draft',
+          version: 0,
+          createdAt: '2026-08-13T00:00:00.000Z',
+          updatedAt: '2026-08-13T00:00:00.000Z'
+        });
+      }
+    }
+  });
+  const request = await service.createRequest(provider, {
+    placementKey: 'homepage.hero',
+    purpose: 'Promote a verified provider listing',
+    intervalStart: '2026-09-01T09:00:00+00:00',
+    intervalEnd: '2026-09-02T09:00:00+00:00'
+  });
+  assert.equal(request.status, 'draft');
+  assert.deepEqual(calledWith, { providerId: provider.sub, placementKey: 'homepage.hero' });
+  await assert.rejects(() => service.createRequest(provider, {
+    placementKey: 'missing.placement',
+    purpose: 'No active placement',
+    intervalStart: '2026-09-01T09:00:00+00:00',
+    intervalEnd: '2026-09-02T09:00:00+00:00'
+  }), (error) => error instanceof AdSettingsServiceError && error.code === 'NOT_FOUND');
+});
+
 test('administrative quotes compute integer minor-unit totals and accept idempotently', async () => {
   const service = createAdSettingsService(); const provider = { ...admin, role: 'provider', sub: '2123456789abcdef01234567' } as AccessTokenClaims;
   await service.createPlacement(admin, { key: 'project.hero', surface: 'homepage', label: { en: 'Project' }, width: 900, height: 300, active: true, sortOrder: 1, allowedLocales: ['en'], targetUrlRequired: true });
@@ -40,6 +77,62 @@ test('administrative quotes compute integer minor-unit totals and accept idempot
   await assert.rejects(() => service.decideQuote(seeker, quote.id, { action: 'accept', expectedVersion: 0 }), (error) => error instanceof AdSettingsServiceError && error.code === 'FORBIDDEN');
   const replay = await service.decideQuote(provider, quote.id, { action: 'accept', expectedVersion: 0 }); assert.equal(replay.version, accepted.version); assert.equal(replay.decisionHistory.length, accepted.decisionHistory.length);
   await assert.rejects(() => service.decideQuote(admin, quote.id, { action: 'reject', expectedVersion: accepted.version, reason: 'Too late' }), (error) => error instanceof AdSettingsServiceError && error.code === 'VERSION_CONFLICT');
+});
+
+test('persistent quote workflow is permission-gated and delegates owner acceptance', async () => {
+  const provider = { ...admin, role: 'provider', sub: '2123456789abcdef01234567' } as AccessTokenClaims;
+  let issuedBy: string | undefined;
+  let acceptedBy: string | undefined;
+  const service = createAdSettingsService({
+    authorization: { authorize: async (_adminId, permission) => permission === 'admin:ads.price' },
+    quoteRepository: {
+      async issueAdminQuote(adminId, input) {
+        issuedBy = adminId;
+        return adQuoteSchema.parse({
+          id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
+          ...input,
+          providerId: provider.sub,
+          totalMinor: 2500,
+          status: 'issued',
+          issuerId: adminId,
+          version: 0,
+          decisionHistory: [{ action: 'issued', actorId: adminId, actorRole: 'admin', version: 0, createdAt: '2026-08-13T00:00:00.000Z' }],
+          createdAt: '2026-08-13T00:00:00.000Z',
+          updatedAt: '2026-08-13T00:00:00.000Z'
+        });
+      },
+      async acceptProviderQuote(providerId, requestId, input) {
+        acceptedBy = `${providerId}:${requestId}:${input.expectedVersion}`;
+        return adQuoteSchema.parse({
+          id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
+          requestId,
+          providerId,
+          currency: 'EGP',
+          lineItems: [{ description: 'Homepage placement', quantity: 1, unitAmountMinor: 2500 }],
+          totalMinor: 2500,
+          validUntil: '2026-10-01T00:00:00.000Z',
+          terms: 'Manual quote terms',
+          status: 'accepted',
+          issuerId: admin.sub,
+          version: 1,
+          decisionHistory: [
+            { action: 'issued', actorId: admin.sub, actorRole: 'admin', version: 0, createdAt: '2026-08-13T00:00:00.000Z' },
+            { action: 'accepted', actorId: providerId, actorRole: 'provider', version: 1, createdAt: '2026-08-13T00:00:00.000Z' }
+          ],
+          createdAt: '2026-08-13T00:00:00.000Z',
+          updatedAt: '2026-08-13T00:00:00.000Z'
+        });
+      }
+    }
+  });
+  const input = { requestId: 'aaaaaaaaaaaaaaaaaaaaaaaa', currency: 'EGP', lineItems: [{ description: 'Homepage placement', quantity: 1, unitAmountMinor: 2500 }], validUntil: '2026-10-01T00:00:00+00:00', terms: 'Manual quote terms' };
+  await assert.rejects(() => service.issueQuote(seeker, input), (error) => error instanceof AdSettingsServiceError && error.code === 'FORBIDDEN');
+  const quote = await service.issueQuote(admin, input);
+  assert.equal(quote.status, 'issued');
+  assert.equal(issuedBy, admin.sub);
+  const accepted = await service.acceptQuote(provider, input.requestId, { action: 'accept', expectedVersion: 0 });
+  assert.equal(accepted.status, 'accepted');
+  assert.equal(acceptedBy, `${provider.sub}:${input.requestId}:0`);
 });
 
 test('ad scheduling uses Africa/Cairo projections, lifecycle guards, and placement conflict checks', async () => {
@@ -76,6 +169,44 @@ test('ad scheduling uses Africa/Cairo projections, lifecycle guards, and placeme
   assert.equal(ended.status, 'ended');
   const endedCalendar = await service.listCalendar(admin, { status: 'ended', page: 1, limit: 10 });
   assert.equal(endedCalendar.items[0]?.status, 'ended');
+});
+
+test('persistent calendar service enforces separate view and schedule permissions with strict transitions', async () => {
+  const event = adCalendarEventSchema.parse({
+    requestId: 'aaaaaaaaaaaaaaaaaaaaaaaa',
+    placementKey: 'calendar.hero',
+    providerId: '2123456789abcdef01234567',
+    status: 'scheduled',
+    startsAt: '2026-09-01T06:00:00.000Z',
+    endsAt: '2026-09-01T07:00:00.000Z',
+    timezone: 'Africa/Cairo',
+    localStart: '2026-09-01T09:00:00',
+    localEnd: '2026-09-01T10:00:00',
+    version: 5
+  });
+  let requestedPermission = '';
+  const service = createAdCalendarService({
+    authorization: { authorize: async (_adminId, permission) => { requestedPermission = permission; return true; } },
+    repository: {
+      async listCalendar(query) {
+        assert.equal(query.limit, 50);
+        return { items: [event], total: 1 };
+      },
+      async schedule(requestId, expectedVersion) {
+        assert.equal(requestId, event.requestId);
+        assert.equal(expectedVersion, 4);
+        return event;
+      }
+    }
+  });
+  const listed = await service.list(admin, {});
+  assert.deepEqual(listed.items, [event]);
+  assert.equal(requestedPermission, 'admin:ads.view');
+  const scheduled = await service.schedule(admin, event.requestId, { expectedVersion: 4 });
+  assert.deepEqual(scheduled, event);
+  assert.equal(requestedPermission, 'admin:ads.schedule');
+  await assert.rejects(() => service.schedule(admin, event.requestId, { expectedVersion: 4, unknown: true }));
+  await assert.rejects(() => service.list(seeker, {}), (error) => error instanceof AdSettingsServiceError && error.code === 'FORBIDDEN');
 });
 
 test('banners enforce admin media ownership, lifecycle publication, localization fallback, and deterministic ordering', async () => {

@@ -55,6 +55,67 @@ function escapeJsonForHtml(value) {
   })[character]);
 }
 
+function normalizePublicOrigin(value) {
+  if (typeof value !== 'string' || value.trim() === '') return undefined;
+  try {
+    const url = new URL(value);
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return undefined;
+    if (url.username || url.password || url.search || url.hash) return undefined;
+    return url.origin;
+  } catch {
+    return undefined;
+  }
+}
+
+function applySecurityHeaders(response, html = false) {
+  response.setHeader('X-Content-Type-Options', 'nosniff');
+  response.setHeader('X-Frame-Options', 'DENY');
+  response.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.setHeader('Permissions-Policy', 'camera=(), geolocation=(), microphone=(), payment=()');
+  response.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+  response.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+  if (!html) return;
+
+  const apiOrigin = normalizePublicOrigin(process.env.WEB_API_ORIGIN);
+  const connectSources = apiOrigin === undefined ? "'self'" : `'self' ${apiOrigin}`;
+  const imageSources = apiOrigin === undefined ? "'self' data: blob:" : `'self' ${apiOrigin} data: blob:`;
+  response.setHeader('Content-Security-Policy', [
+    "default-src 'self'",
+    "base-uri 'self'",
+    "object-src 'none'",
+    "frame-ancestors 'none'",
+    "frame-src 'none'",
+    "form-action 'self'",
+    "script-src 'self'",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src 'self' https://fonts.gstatic.com",
+    `img-src ${imageSources}`,
+    `connect-src ${connectSources}`,
+    "worker-src 'self' blob:"
+  ].join('; '));
+}
+
+function requestPublicOrigin(request) {
+  const configured = normalizePublicOrigin(process.env.WEB_PUBLIC_ORIGIN);
+  if (configured !== undefined) return configured;
+  const hostHeader = request.headers.host;
+  const host = Array.isArray(hostHeader) ? hostHeader[0] : hostHeader;
+  if (typeof host !== 'string' || host.trim() === '' || /[\s<>"']/u.test(host)) return undefined;
+  const forwardedProtocol = request.headers['x-forwarded-proto'];
+  const protocol = (Array.isArray(forwardedProtocol) ? forwardedProtocol[0] : forwardedProtocol)?.split(',', 1)[0]?.trim();
+  const scheme = protocol === 'https' ? 'https' : 'http';
+  return normalizePublicOrigin(`${scheme}://${host}`);
+}
+
+function absoluteSeoUrl(origin, pathname) {
+  if (origin === undefined) return pathname;
+  try {
+    return new URL(pathname, `${origin}/`).toString();
+  } catch {
+    return pathname;
+  }
+}
+
 function renderHomepageBootstrap(data) {
   if (data === undefined) return '';
   return '<script id="sadat-public-homepage-data" type="application/json">'
@@ -129,21 +190,44 @@ function renderArticleDetailsBootstrap(data, state) {
   return dataScript + stateScript;
 }
 
-function renderSeoMetadata(seo) {
+function renderCommunityBootstrap(data, state) {
+  const dataScript = data === undefined ? '' : '<script id="sadat-public-community-data" type="application/json">'
+    + escapeJsonForHtml(JSON.stringify(data))
+    + '</script>';
+  const stateScript = state === undefined ? '' : '<script id="sadat-public-community-state" type="text/plain">'
+    + escapeHtml(state)
+    + '</script>';
+  return dataScript + stateScript;
+}
+
+function renderPublicContentBootstrap(id, data, state) {
+  const dataScript = data === undefined ? '' : '<script id="sadat-public-' + id + '-data" type="application/json">'
+    + escapeJsonForHtml(JSON.stringify(data)) + '</script>';
+  const stateScript = state === undefined ? '' : '<script id="sadat-public-' + id + '-state" type="text/plain">'
+    + escapeHtml(state) + '</script>';
+  return dataScript + stateScript;
+}
+
+function renderSeoMetadata(seo, publicOrigin) {
   if (seo === undefined) return '';
   const description = seo.description === undefined
     ? ''
     : '<meta name="description" content="' + escapeHtml(seo.description) + '" />';
-  const canonical = '<link rel="canonical" href="' + escapeHtml(seo.canonicalPath) + '" />';
+  const robots = '<meta name="robots" content="' + escapeHtml(seo.robots) + '" />';
+  const canonical = '<link rel="canonical" href="' + escapeHtml(absoluteSeoUrl(publicOrigin, seo.canonicalPath)) + '" />';
   const alternates = seo.alternatePaths.map(alternate => '<link rel="alternate" hreflang="'
     + escapeHtml(alternate.hrefLang)
     + '" href="'
-    + escapeHtml(alternate.href)
+    + escapeHtml(absoluteSeoUrl(publicOrigin, alternate.href))
     + '" />').join('');
+  const openGraph = '<meta property="og:type" content="' + escapeHtml(seo.openGraph.type) + '" />'
+    + '<meta property="og:title" content="' + escapeHtml(seo.openGraph.title) + '" />'
+    + (seo.openGraph.description === undefined ? '' : '<meta property="og:description" content="' + escapeHtml(seo.openGraph.description) + '" />')
+    + '<meta property="og:url" content="' + escapeHtml(absoluteSeoUrl(publicOrigin, seo.openGraph.url)) + '" />';
   const jsonLd = '<script type="application/ld+json">'
     + escapeJsonForHtml(JSON.stringify(seo.jsonLd))
     + '</script>';
-  return description + canonical + alternates + jsonLd;
+  return description + robots + canonical + alternates + openGraph + jsonLd;
 }
 
 function renderDocument(template, result) {
@@ -157,16 +241,49 @@ function renderDocument(template, result) {
   const developerProfileBootstrap = renderDeveloperProfileBootstrap(result.developerProfileData, result.developerProfileInitialState);
   const articleListBootstrap = renderArticleListBootstrap(result.articleListData, result.articleListQuery, result.articleListInitialState);
   const articleDetailsBootstrap = renderArticleDetailsBootstrap(result.articleDetailsData, result.articleDetailsInitialState);
-  const seoMetadata = renderSeoMetadata(result.seo);
-  return template
+  const communityBootstrap = renderCommunityBootstrap(result.communityData, result.communityInitialState);
+  const aboutBootstrap = renderPublicContentBootstrap('about', result.aboutData, result.aboutInitialState);
+  const teamBootstrap = renderPublicContentBootstrap('team', result.teamData, result.teamInitialState);
+  const seoMetadata = renderSeoMetadata(result.seo, result.publicOrigin);
+  const templateWithoutDefaultDescription = template.replace(/\s*<meta\s+name="description"[^>]*\/?>/i, '');
+  return templateWithoutDefaultDescription
     .replace(/<html\b[^>]*>/i, metadata)
     .replace(/<title>[\s\S]*?<\/title>/i, title)
     .replace('</head>', seoMetadata + '</head>')
     .replace('<!--ssr-outlet-->', result.html)
-    .replace('</body>', homepageBootstrap + propertyListBootstrap + propertyDetailsBootstrap + propertyComparisonBootstrap + developerListBootstrap + developerProfileBootstrap + articleListBootstrap + articleDetailsBootstrap + '</body>');
+    .replace('</body>', homepageBootstrap + propertyListBootstrap + propertyDetailsBootstrap + propertyComparisonBootstrap + developerListBootstrap + developerProfileBootstrap + articleListBootstrap + articleDetailsBootstrap + communityBootstrap + aboutBootstrap + teamBootstrap + '</body>');
+}
+
+function sendCrawlerDocument(request, response, body, contentType) {
+  applySecurityHeaders(response);
+  response.statusCode = 200;
+  response.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+  response.setHeader('Content-Type', contentType);
+  response.end(request.method === 'HEAD' ? undefined : body);
+}
+
+function serveCrawlerDocument(request, response, seoHelpers) {
+  const pathname = new URL(request.url ?? '/', 'http://sadat.local').pathname;
+  if (pathname !== '/robots.txt' && pathname !== '/sitemap.xml') return false;
+  const origin = requestPublicOrigin(request);
+  if (pathname === '/robots.txt') {
+    const sitemapUrl = origin === undefined ? undefined : `${origin}/sitemap.xml`;
+    sendCrawlerDocument(request, response, seoHelpers.createRobotsTxt(sitemapUrl), 'text/plain; charset=utf-8');
+    return true;
+  }
+  if (origin === undefined) {
+    response.statusCode = 503;
+    response.setHeader('Cache-Control', 'no-store');
+    response.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    response.end('Sitemap is unavailable until a valid public origin is available.');
+    return true;
+  }
+  sendCrawlerDocument(request, response, seoHelpers.createSitemapXml(origin), 'application/xml; charset=utf-8');
+  return true;
 }
 
 function sendHtml(response, statusCode, html) {
+  applySecurityHeaders(response, true);
   response.statusCode = statusCode;
   response.setHeader('Cache-Control', 'no-store');
   response.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -179,6 +296,7 @@ function sendServerError(response) {
 }
 
 function rejectUnsupportedMethod(request, response) {
+  applySecurityHeaders(response);
   if (request.method === 'GET' || request.method === 'HEAD') return false;
   response.statusCode = 405;
   response.setHeader('Allow', 'GET, HEAD');
@@ -191,9 +309,12 @@ async function renderDevelopmentPage(request, response, vite) {
     const requestUrl = request.url ?? '/';
     const template = await readFile(path.resolve(appRoot, 'index.html'), 'utf8');
     const entry = await vite.ssrLoadModule('/src/features/frontend_foundation/entry-server.tsx');
+    if (serveCrawlerDocument(request, response, entry)) return;
+    const publicOrigin = requestPublicOrigin(request);
     const result = await entry.render(requestUrl, {
       acceptLanguage: getAcceptLanguage(request),
-      apiOrigin: process.env.WEB_API_ORIGIN
+      apiOrigin: process.env.WEB_API_ORIGIN,
+      ...(publicOrigin === undefined ? {} : { publicOrigin })
     });
     const transformedTemplate = await vite.transformIndexHtml(requestUrl, template);
     sendHtml(response, result.statusCode, renderDocument(transformedTemplate, result));
@@ -276,15 +397,19 @@ async function serveAsset(request, response) {
 
 async function createProductionServer() {
   const template = await readFile(path.resolve(clientRoot, 'index.html'), 'utf8');
-  const { render } = await import(pathToFileURL(entryModulePath).href);
+  const { createRobotsTxt, createSitemapXml, render } = await import(pathToFileURL(entryModulePath).href);
+  const seoHelpers = { createRobotsTxt, createSitemapXml };
   const server = createHttpServer(async (request, response) => {
     if (rejectUnsupportedMethod(request, response)) return;
+    if (serveCrawlerDocument(request, response, seoHelpers)) return;
     if (await serveAsset(request, response)) return;
     try {
       const requestUrl = request.url ?? '/';
+      const publicOrigin = requestPublicOrigin(request);
       const result = await render(requestUrl, {
         acceptLanguage: getAcceptLanguage(request),
-        apiOrigin: process.env.WEB_API_ORIGIN
+        apiOrigin: process.env.WEB_API_ORIGIN,
+        ...(publicOrigin === undefined ? {} : { publicOrigin })
       });
       sendHtml(response, result.statusCode, renderDocument(template, result));
     } catch (error) {

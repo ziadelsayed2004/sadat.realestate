@@ -1,135 +1,162 @@
 {
   "taskId": "backend_123",
-  "summary": "Implemented the unified verified-administrator settings API for the supported logical namespaces, with strict schema-versioned values, optimistic expectedVersion updates, permission checks, safe projections, audit events, Mongo persistence, runtime routes, and synchronized API artifacts. App/server and inventory wiring outside the task roots were limited to the required transport integration.",
+  "summary": "Repaired the provider settings truth gap discovered while preparing frontend_050. The previously admin-only settings module now exposes verified-provider-owned GET/PATCH settings routes with strict shared contracts, safe projections, optimistic versioning, runtime inventory, OpenAPI, Postman, and regression coverage. Legal/trade data, password changes, account deletion, secrets, identifiers, and private metadata remain outside this resource.",
   "filesChanged": [
     "packages/contracts/src/settings/index.ts",
     "packages/contracts/src/contracts/index.ts",
-    "apps/api/src/modules/settings/service.ts",
-    "apps/api/src/modules/settings/repository.ts",
+    "apps/api/src/modules/settings/provider-service.ts",
+    "apps/api/src/modules/settings/provider-repository.ts",
     "apps/api/src/modules/settings/router.ts",
     "apps/api/src/modules/settings/runtime.ts",
-    "apps/api/src/app.ts",
-    "apps/api/src/server.ts",
-    "apps/api/src/modules/docs/api-artifacts.ts",
-    "apps/api/src/modules/testing/test-suites.ts",
     "apps/api/tests/settings/service.test.ts",
     "apps/api/tests/settings/router.test.ts",
-    "docs/api/admin-settings.md",
-    "docs/api/settings-seo-privacy.md",
     "apps/api/openapi/openapi.json",
     "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
-    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json"
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "docs/api/provider-settings.md",
+    "agent_pack/07_finish/backend_123/completion.json"
   ],
   "verification": [
     {
-      "command": "node --test --import tsx apps/api/tests/settings/seo-privacy.test.ts apps/api/tests/settings/service.test.ts apps/api/tests/settings/router.test.ts",
+      "command": "npm.cmd run build --workspace packages/contracts",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Seven focused settings tests passed, covering strict localized settings regression, create/read/update/audit, authorization, stale versions, schema conflicts, secret rejection, unknown namespaces, and route validation."
+      "notes": "Shared provider settings contracts compiled successfully."
     },
     {
-      "command": "npm.cmd run typecheck",
+      "command": "npx.cmd tsx --test apps/api/tests/settings/service.test.ts apps/api/tests/settings/router.test.ts",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Workspace syntax, contracts, and API typechecks passed."
+      "notes": "6 focused settings tests passed, covering verified-provider authorization, wrong-role rejection, safe projection, strict unknown-field rejection, provider PATCH behavior, and version conflict mapping."
     },
     {
-      "command": "npm.cmd run lint",
+      "command": "npm.cmd run typecheck --workspace apps/api",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Workspace checks and ESLint completed with zero warnings."
+      "notes": "API production and test TypeScript compilation passed."
     },
     {
-      "command": "npm.cmd test -- --runInBand",
+      "command": "node -e \"for (const f of ['apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json','agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json']) JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('JSON_VALID')\"",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "The root serialized suite passed its 12 workspace-policy tests and the API suite passed 386 tests."
+      "notes": "Changed OpenAPI, Postman, and endpoint-blueprint JSON files parsed successfully."
     },
     {
-      "command": "npm.cmd run test:coverage",
+      "command": "npm.cmd run api:inventory | Select-String -Pattern 'provider/settings|providerSettings'",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "The 386-test API coverage run passed; aggregate coverage was 85.52% lines, 77.91% branches, and 83.52% functions."
-    },
-    {
-      "command": "npm.cmd run test:api --workspace apps/api",
-      "exitCode": 0,
-      "result": "Passed",
-      "notes": "All 59 API tests passed."
-    },
-    {
-      "command": "npm.cmd run test:integration --workspace apps/api",
-      "exitCode": 0,
-      "result": "Passed",
-      "notes": "All 13 integration/artifact tests passed, including exact runtime/OpenAPI/Postman route parity."
-    },
-    {
-      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtdGVzdC1zZWNyZXQta2V5LWF0LWxlYXN0LTMyeWJ5dGVz'; npm.cmd run env:check",
-      "exitCode": 0,
-      "result": "Passed",
-      "notes": "Synthetic isolated test configuration validated without reading a real .env or contacting MongoDB."
-    },
-    {
-      "command": "npm.cmd run build",
-      "exitCode": 0,
-      "result": "Passed",
-      "notes": "Workspace, contracts, and API production builds succeeded."
-    },
-    {
-      "command": "npm.cmd audit --audit-level=high",
-      "exitCode": 0,
-      "result": "Passed",
-      "notes": "No high-severity vulnerabilities found."
-    },
-    {
-      "command": "npm.cmd run api:inventory",
-      "exitCode": 0,
-      "result": "Passed",
-      "notes": "Runtime inventory includes getAdminSettings and updateAdminSettings."
+      "notes": "Inventory reported GET and PATCH /api/v1/provider/settings with getProviderSettings and updateProviderSettings operation IDs."
     },
     {
       "command": "npm.cmd run openapi:validate",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "OpenAPI paths, schemas, responses, and references validated."
+      "notes": "OpenAPI validation passed with both provider settings operations and strict schemas."
     },
     {
       "command": "npm.cmd run postman:validate",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Postman collection and safe local environment validated."
+      "notes": "Postman validation passed with provider settings requests synchronized to runtime."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All 349 API unit tests passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All 85 API route/security tests passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "API production build passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Workspace and root ESLint checks passed after removing the unused repository type import."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The complete root test suite passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts, API, web client, and SSR builds passed; existing bundle-size warnings were non-failing."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Dependency audit reported 0 vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/api",
+      "exitCode": 1,
+      "result": "Skipped",
+      "notes": "The apps/api workspace does not define a lint script; npm returned Missing script: lint. Root npm run lint passed and covered apps/api source and tests."
     },
     {
       "command": "git diff --check",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "No whitespace errors."
+      "notes": "No whitespace errors in the worktree diff."
     },
     {
       "command": "node agent_pack/scripts/audit_pack.mjs",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Agent Pack audit reported zero errors while backend_123 was in progress."
+      "notes": "Agent Pack audit reported zero errors before closure."
+    },
+    {
+      "command": "isolated non-production MongoDB provider-settings integration test",
+      "exitCode": null,
+      "result": "Blocked",
+      "notes": "Blocked — prerequisites unavailable: no isolated non-production replica-set MongoDB topology and test credentials were configured. Deterministic service/router tests cover provider authorization, strict input, safe projections, and version conflicts."
     }
   ],
   "sourceEvidence": [
     "agent_pack/04_tracks/backend/B9_admin_system_readiness/backend_123.md",
-    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (admin settings GET/PUT)",
-    "packages/contracts/src/settings/index.ts",
-    "apps/api/src/modules/settings/service.ts",
-    "apps/api/src/modules/settings/repository.ts",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (provider settings routes changed from planned to implemented)",
+    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (PRV-22-1, PRV-22-2, PRV-22-3 map the provider settings dependency)",
+    "docs/design_sources/final_screens/provider/PRV-22-1.png (SHA-256 ef79e801604e6450a73ec4fc6e33ea0048c1cd9ed3d0e442b86e3b6a84f2fe43)",
+    "docs/design_sources/final_screens/provider/PRV-22-2.png (SHA-256 9d62741cc4e7283b8fc37ff4b7a65cb0e9c8edb594c4eff7c962ee40bbb75ee4)",
+    "docs/design_sources/final_screens/provider/PRV-22-3.png (SHA-256 0787c460a1dc1b49af2edf4cdaabff290da186f6e3c957aa36337e60f5ed7b5e)",
+    "apps/api/src/modules/settings/provider-service.ts",
+    "apps/api/src/modules/settings/provider-repository.ts",
     "apps/api/src/modules/settings/router.ts",
-    "apps/api/src/modules/settings/runtime.ts",
     "apps/api/tests/settings/service.test.ts",
     "apps/api/tests/settings/router.test.ts",
-    "docs/api/admin-settings.md",
     "apps/api/openapi/openapi.json",
-    "apps/api/postman/Sadat-Real-Estate.postman_collection.json"
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/provider-settings.md"
+  ],
+  "scopeNotes": [
+    "backend_123 was reopened only because the provider settings operations required by frontend_050 and PRV-22-1/2/3 were still planned and absent from runtime; this was a direct Backend truth repair authorized by the recovery runner.",
+    "Provider settings require a provider role and a persisted verified provider identity, derive ownership from the access-token subject, and use a safe provider application fallback when initializing the settings record.",
+    "Legal/trade data is not mutable through this resource. Password change and account deletion routes were not invented because no approved contracts exist.",
+    "No real .env file, secret, Production data, or Production credential was read."
   ],
   "knownGaps": [
-    "Production settings seed content and live MongoDB replica-set integration were not exercised; missing namespaces remain explicit 404/unavailable states and deterministic local fixtures cover behavior.",
-    "The generic namespace value map is the transport boundary; domain-specific validation and publication projections for individual CMS/settings models remain owned by their existing modules.",
-    "The repository declares Node >=24 <25 while this environment ran Node 22.18.0; the checked-in typecheck, lint, test, build, and artifact gates still passed locally."
+    "Live MongoDB verification remains blocked until an isolated non-production replica-set topology and credentials are available.",
+    "Postman provider settings requests use the repository's existing providerAccessToken placeholder; no Production token was used."
   ],
-  "completedAt": "2026-08-14T20:23:52.1668272Z"
+  "completedAt": "2026-08-19T04:52:20+03:00"
 }

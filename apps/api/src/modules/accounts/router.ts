@@ -2,6 +2,8 @@ import { Router, type Request, type RequestHandler, type Response } from 'expres
 import {
   accountTransitionRequestSchema,
   accountUserIdParamsSchema,
+  adminAccountUserListQuerySchema,
+  adminProviderListQuerySchema,
   providerReviewIdParamsSchema,
   providerReviewRequestSchema
 } from '@sadat-real-estate/contracts';
@@ -13,6 +15,26 @@ import { createAdminRbacAuthMiddleware } from '../rbac/auth.js';
 import { AccountServiceError, type AccountService } from './service.js';
 
 export const ACCOUNT_ROUTE_DEFINITIONS = [
+  {
+    method: 'GET',
+    path: '/api/v1/admin/users',
+    operationId: 'listAdminUsers'
+  },
+  {
+    method: 'GET',
+    path: '/api/v1/admin/users/:userId',
+    operationId: 'getAdminUser'
+  },
+  {
+    method: 'GET',
+    path: '/api/v1/admin/providers',
+    operationId: 'listAdminProviders'
+  },
+  {
+    method: 'GET',
+    path: '/api/v1/admin/providers/:providerId',
+    operationId: 'getAdminProvider'
+  },
   {
     method: 'POST',
     path: '/api/v1/admin/users/:userId/transitions',
@@ -99,6 +121,56 @@ export function createAccountRouter(dependencies: AccountRouterDependencies): Ro
   const authenticate = createAdminRbacAuthMiddleware(dependencies.accessTokens);
   router.use('/admin/users', authenticate);
   router.use('/admin/providers', authenticate);
+
+  router.get('/admin/users', async (request, response) => {
+    try {
+      const context = requestContext(request);
+      response.status(200).json(toSuccessResponse(
+        await dependencies.service.listUsers(principal(response), adminAccountUserListQuerySchema.parse(request.query)),
+        context.requestId
+      ));
+    } catch (error) {
+      sendError(request, response, error);
+    }
+  });
+
+  router.get('/admin/users/:userId', async (request, response) => {
+    try {
+      const context = requestContext(request);
+      const { userId } = accountUserIdParamsSchema.parse(request.params);
+      response.status(200).json(toSuccessResponse(
+        await dependencies.service.getUser(principal(response), userId),
+        context.requestId
+      ));
+    } catch (error) {
+      sendError(request, response, error);
+    }
+  });
+
+  router.get('/admin/providers', async (request, response) => {
+    try {
+      const context = requestContext(request);
+      response.status(200).json(toSuccessResponse(
+        await dependencies.service.listProviders(principal(response), adminProviderListQuerySchema.parse(request.query)),
+        context.requestId
+      ));
+    } catch (error) {
+      sendError(request, response, error);
+    }
+  });
+
+  router.get('/admin/providers/:providerId', async (request, response) => {
+    try {
+      const context = requestContext(request);
+      const { providerId } = providerReviewIdParamsSchema.parse(request.params);
+      response.status(200).json(toSuccessResponse(
+        await dependencies.service.getProvider(principal(response), providerId),
+        context.requestId
+      ));
+    } catch (error) {
+      sendError(request, response, error);
+    }
+  });
 
   router.post('/admin/users/:userId/transitions', async (request, response) => {
     try {

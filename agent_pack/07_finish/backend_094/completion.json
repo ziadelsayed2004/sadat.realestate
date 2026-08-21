@@ -1,12 +1,106 @@
 {
-  "taskId":"backend_094",
-  "summary":"Added community comment and reply contracts and service behavior with published-post gating, maximum reply depth two, bounded content, and ownership/admin removal checks.",
-  "filesChanged":["packages/contracts/src/community/index.ts","packages/contracts/src/contracts/index.ts","apps/api/src/modules/community/service.ts","apps/api/tests/community/post-service.test.ts","docs/api/community-comments.md"],
-  "verification":[
-    {"command":"npm.cmd run build --workspace packages/contracts; node --import tsx --test --test-concurrency=1 apps/api/tests/community/post-service.test.ts","exitCode":0,"result":"Passed","notes":"Post and comment ownership, publication gating, depth, and removal tests passed."},
-    {"command":"npm.cmd run typecheck; npm.cmd run lint; node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Typecheck, lint, and audit passed."}
+  "taskId": "backend_094",
+  "summary": "Repaired the disproved ADM-28 backend truth by adding the permission-protected admin community comments list route, strict filters, explicit administrative projections, synchronized contracts and artifacts, and regression coverage.",
+  "filesChanged": [
+    "packages/contracts/src/community/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/community/service.ts",
+    "apps/api/src/modules/community/router.ts",
+    "apps/api/tests/community/router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "docs/api/community-comments.md"
   ],
-  "sourceEvidence":["packages/contracts/src/community/index.ts","apps/api/src/modules/community/service.ts","apps/api/tests/community/post-service.test.ts","docs/api/community-comments.md"],
-  "knownGaps":["HTTP route wiring is not claimed in this service increment."],
-  "completedAt":"2026-08-14T14:24:00.000Z"
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared community contracts compiled successfully."
+    },
+    {
+      "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/community/post-service.test.ts apps/api/tests/community/router.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused community service and router regression suite passed, including authentication, permission, strict query validation, pagination/filtering, and explicit admin-only fields."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API TypeScript test configuration typechecked successfully."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full API suite passed: 476 tests, 0 failures."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API production TypeScript build passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository lint and workspace checks passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory reports GET /api/v1/admin/community/comments as implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI artifact validated successfully."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman artifact validated successfully."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors while the repair was in progress."
+    },
+    {
+      "command": "git diff --check -- agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json apps/api/openapi/openapi.json apps/api/postman/Sadat-Real-Estate.postman_collection.json apps/api/src/modules/community/router.ts apps/api/src/modules/community/service.ts apps/api/tests/community/router.test.ts packages/contracts/src/community/index.ts packages/contracts/src/contracts/index.ts docs/api/community-comments.md",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Changed repair scope has no whitespace errors."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B6_content_community/backend_094.md",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (ADM-28)",
+    "apps/api/src/modules/community/router.ts",
+    "apps/api/src/modules/community/service.ts",
+    "apps/api/tests/community/router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/community-comments.md"
+  ],
+  "scopeNotes": [
+    "This was an authorized direct backend truth repair required before frontend_068 could consume the ADM-28 runtime contract.",
+    "The route is restricted to verified administrators with admin:community.view and returns an explicit administrative projection; public comment projections remain unchanged.",
+    "No production database or provider credentials were used, and no real .env file was read."
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-19T10:05:51.1829610Z"
 }

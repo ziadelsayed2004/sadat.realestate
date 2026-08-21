@@ -7,6 +7,14 @@ import { createMongooseOtpRepository } from '../auth/repository.js';
 import type { AuthService } from '../auth/service.js';
 import { createIdentityModels } from '../identity/models.js';
 import { createProviderModels } from './models.js';
+import { createProviderAdvertisingProjectionService } from './advertising.js';
+import { createMongooseProviderAdvertisingSource } from './advertising-repository.js';
+import { createProviderCommissionProjectionService } from './commission.js';
+import { createMongooseProviderCommissionSource } from './commission-repository.js';
+import { createProviderAdvertisingModels } from './advertising-models.js';
+import { createAdSettingsService } from '../ads/service.js';
+import { createMongooseAdQuoteRepository, createMongooseAdRequestRepository } from '../ads/repository.js';
+import type { RbacService } from '../rbac/service.js';
 import {
   createMongooseProviderDocumentInventory,
   createMongooseProviderRepository
@@ -18,11 +26,24 @@ export function createProviderRuntime(
   connection: Connection,
   authService: Pick<AuthService, 'issueAccount'>,
   accessTokens: AccessTokenService,
-  cookie: AuthCookiePolicy
+  cookie: AuthCookiePolicy,
+  authorization?: Pick<RbacService, 'authorize'>
 ): ProviderRouterDependencies {
   const identityModels = createIdentityModels(connection);
   const authModels = createAuthModels(connection);
   const otpRepository = createMongooseOtpRepository(identityModels, authModels);
+  const advertisingModels = createProviderAdvertisingModels(connection);
+  const advertisingWorkflow = createAdSettingsService({
+    requestRepository: createMongooseAdRequestRepository(connection, advertisingModels),
+    quoteRepository: createMongooseAdQuoteRepository(connection, advertisingModels),
+    ...(authorization ? { authorization } : {}),
+    hasActivePlacement: async (placementKey) => Boolean(
+      await connection.collection('ad_placements').findOne(
+        { key: placementKey, active: true },
+        { projection: { _id: 1 } }
+      )
+    )
+  });
   return {
     service: createProviderService({
       repository: createMongooseProviderRepository(
@@ -44,6 +65,16 @@ export function createProviderRuntime(
       },
       authService
     }),
+    advertisingProjection: createProviderAdvertisingProjectionService({
+      source: createMongooseProviderAdvertisingSource(
+        connection,
+        advertisingModels
+      )
+    }),
+    commissionProjection: createProviderCommissionProjectionService({
+      source: createMongooseProviderCommissionSource(connection)
+    }),
+    advertisingWorkflow,
     accessTokens,
     cookie
   };

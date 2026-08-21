@@ -1,0 +1,155 @@
+{
+  "taskId": "frontend_080",
+  "summary": "Added and verified a deterministic critical cross-surface journey matrix covering OTP registration, public property search/detail, seeker saved/request/viewing flows, provider publication-to-public handoff with advertising and read-only commission, and an Admin commission mutation across Arabic RTL, English LTR, and Simplified Chinese LTR Desktop projects.",
+  "filesChanged": [
+    "apps/web/tests/e2e/critical-journeys.spec.ts"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/critical-journeys.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --workers=1",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "9 passed across the three approved Desktop locale projects; fixtures assert implemented request paths, exact payloads, safe projections, locale direction, and no private fields."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript check passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web workspace tests passed; the command completed with 52 Vitest files/221 tests and 76 Node tests passing."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR production build passed; only the existing chunk-size warning was emitted."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root API and Web test suites passed; API reported 507 passing tests and the Web Node suite reported 76 passing tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web production builds passed."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API TypeScript check passed after building shared contracts."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "372 API unit tests passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "107 API route/integration tests passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory completed with implemented route statuses."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "72 visual tests passed across the repository's configured locale and device projects."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "81 accessibility tests passed across the repository's configured locale and device projects."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities reported."
+    },
+    {
+      "command": "npm.cmd run env:check (with process-local test-only values)",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "ENV_CHECK_OK; no .env file or secret was read."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F6_integration_release/frontend_080.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "apps/web/tests/e2e/critical-journeys.spec.ts",
+    "apps/web/tests/e2e/auth.spec.ts",
+    "apps/web/tests/e2e/public-listing.spec.ts",
+    "apps/web/tests/e2e/seeker-saved.spec.ts",
+    "apps/web/tests/e2e/seeker-requests.spec.ts",
+    "apps/web/tests/e2e/seeker-viewings.spec.ts",
+    "apps/web/tests/e2e/provider-property-state.spec.ts",
+    "apps/web/tests/e2e/provider-advertising.spec.ts",
+    "apps/web/tests/e2e/admin-commissions.spec.ts",
+    "packages/contracts/src/index.ts",
+    "agent_pack/03_execution/API_INVENTORY.json"
+  ],
+  "scopeNotes": [
+    "The first focused journey attempts exposed two fixture-contract defects: list responses contained detail-only fields and the provider advertising fixture omitted the required quote decision history. Both were corrected in the test-only matrix, then the final three-locale run passed 9/9.",
+    "The journey matrix uses only isolated Playwright route fixtures and does not alter Production runtime behavior or API contracts.",
+    "The repository's root security:check script is unavailable; it was not reported as passed."
+  ],
+  "knownGaps": [
+    "This quality task has no direct Screen IDs and does not claim full API coverage, full screen coverage, or release completion.",
+    "Protected dashboard journeys use the approved Desktop-only scope; public/authentication surfaces retain the configured locale/device coverage in their existing matrices.",
+    "DESIGN-EXCEPTION-ADM-54 remains an explicitly disclosed owner-approved direct-comparison waiver for the Admin release gates; this task does not convert it into a visual pass."
+  ],
+  "completedAt": "2026-08-21T07:08:29.6225408Z"
+}

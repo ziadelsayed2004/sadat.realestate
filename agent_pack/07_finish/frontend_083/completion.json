@@ -1,0 +1,146 @@
+{
+  "taskId": "frontend_083",
+  "summary": "Completed the accessibility audit matrix for route/device scope, locale direction, WCAG contrast, keyboard roving behavior, focusable-element filtering, localized screen-reader copy, skip/focus safeguards, reduced motion, and high contrast. The full browser accessibility and visual matrices passed across configured locales and devices.",
+  "filesChanged": [
+    "apps/web/tests/accessibility-audit.vitest.test.ts"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/accessibility-audit.vitest.test.ts --run",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "3 focused accessibility audit tests passed: 131-screen locale/direction/device contract, contrast/focus/keyboard contract, and localized screen-reader/CSS safeguards."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web tests passed: 52 Vitest files and 76 Node tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR production builds passed; existing chunk-size warning only."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root API and Web aggregate tests passed; Web Node suite reported 76 passing tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web production builds passed."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "81 accessibility tests passed across configured locale/device projects, including keyboard, focus, landmarks, labels, dialogs, tables, and safe state checks."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "72 visual tests passed across configured locale/device projects."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory reported implemented routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities reported."
+    },
+    {
+      "command": "npm.cmd run env:check (with process-local test-only values)",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "ENV_CHECK_OK; no real .env or secret was read."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors and no in-progress task."
+    },
+    {
+      "command": "npm.cmd run security:check",
+      "exitCode": 1,
+      "result": "unavailable",
+      "notes": "The repository has no security:check script; this command was not reported as passed."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F6_integration_release/frontend_083.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json — 131 approved screen metadata entries and locale/direction/device scopes",
+    "apps/web/src/features/accessibility/model.ts — accessibility contract, locale directions, approved scopes, contrast pairs",
+    "apps/web/src/features/accessibility/focus.ts — focusable element selector and hidden/aria-hidden filtering",
+    "apps/web/src/features/accessibility/keyboard.ts — RTL/LTR roving-tab behavior",
+    "apps/web/src/features/accessibility/components.tsx — skip-link and visually-hidden semantics",
+    "apps/web/src/features/accessibility/styles.css — focus-visible, reduced-motion, high-contrast safeguards",
+    "apps/web/tests/accessibility-audit.vitest.test.ts — executable release audit matrix",
+    "apps/web/tests/accessibility.test.ts — existing semantic, contrast, modal, tabs, and focus contract tests",
+    "apps/web/tests/e2e/accessibility.spec.ts — browser keyboard, labels, landmarks, dialog, table, locale/device matrix",
+    "apps/web/tests/e2e/visual.spec.ts — browser locale/device visual matrix"
+  ],
+  "scopeNotes": [
+    "No production runtime, API, contract, dependency, or design asset changes were required; the task added only executable QA coverage within apps/web/tests.",
+    "The focused audit treats keyboard/focus/contrast behavior as executable WCAG contract checks; the browser matrix exercises the rendered behavior across configured locale and device projects."
+  ],
+  "knownGaps": [
+    "This quality task has no direct Screen IDs; the manifest-wide locale/direction/device assertion covers all 131 registered screens.",
+    "The repository's security:check script is unavailable and remains an explicit verification gap.",
+    "This task does not claim all APIs, all screens, or full release completion."
+  ],
+  "completedAt": "2026-08-21T07:53:03.0886157Z"
+}

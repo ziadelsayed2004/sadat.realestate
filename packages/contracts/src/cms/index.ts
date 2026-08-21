@@ -1,4 +1,4 @@
-import{z}from'zod';import{localizedTextSchema,supportedLocaleSchema}from'../localization/index.js';
+import{z}from'zod';import{localizedTextSchema,supportedLocaleSchema}from'../localization/index.js';import{successEnvelopeSchema}from'../contracts/envelopes.js';
 const objectId=z.string().regex(/^[a-f0-9]{24}$/);const reason=z.string().trim().min(3).max(500);const safeKey=z.string().regex(/^[a-z][a-z0-9_]{1,63}$/);const url=z.url().max(2048);
 export const cmsSettingNamespaceSchema=z.enum(['platform','contact','social']);export const cmsSettingStatusSchema=z.enum(['draft','published','inactive']);
 const platformValue=z.object({kind:z.literal('platform'),name:localizedTextSchema,tagline:localizedTextSchema.optional(),logoAssetId:objectId.optional(),faviconAssetId:objectId.optional(),defaultLocale:supportedLocaleSchema.default('ar')}).strict();
@@ -10,9 +10,9 @@ export type CmsSettingValue=z.infer<typeof cmsSettingValueSchema>;export type Cm
 const order=z.number().int().nonnegative().max(100000);
 export const aboutBlockCreateSchema=z.object({key:safeKey,title:localizedTextSchema,body:localizedTextSchema,order,active:z.boolean().default(true),status:cmsSettingStatusSchema.default('draft'),reason}).strict();export const aboutBlockPatchSchema=z.object({version:z.number().int().nonnegative(),title:localizedTextSchema.optional(),body:localizedTextSchema.optional(),order,active:z.boolean().optional(),status:cmsSettingStatusSchema.optional(),reason}).strict().refine(v=>Object.keys(v).some(k=>!['version','reason'].includes(k)),{message:'An About block change is required'});
 export const teamMemberCreateSchema=z.object({key:safeKey,name:localizedTextSchema,title:localizedTextSchema,bio:localizedTextSchema.optional(),photoAssetId:objectId.optional(),order,active:z.boolean().default(true),status:cmsSettingStatusSchema.default('draft'),reason}).strict();export const teamMemberPatchSchema=z.object({version:z.number().int().nonnegative(),name:localizedTextSchema.optional(),title:localizedTextSchema.optional(),bio:localizedTextSchema.optional(),photoAssetId:objectId.nullish(),order,active:z.boolean().optional(),status:cmsSettingStatusSchema.optional(),reason}).strict().refine(v=>Object.keys(v).some(k=>!['version','reason'].includes(k)),{message:'A team member change is required'});
-export const cmsPublicContentSchema=z.object({key:safeKey,title:localizedTextSchema,body:localizedTextSchema.optional(),name:localizedTextSchema.optional(),role:localizedTextSchema.optional(),bio:localizedTextSchema.optional(),photoAssetId:objectId.optional(),order}).strict();export type AboutBlockCreate=z.infer<typeof aboutBlockCreateSchema>;export type AboutBlockPatch=z.infer<typeof aboutBlockPatchSchema>;export type TeamMemberCreate=z.infer<typeof teamMemberCreateSchema>;export type TeamMemberPatch=z.infer<typeof teamMemberPatchSchema>;
+export const cmsPublicContentSchema=z.object({key:safeKey,title:localizedTextSchema,body:localizedTextSchema.optional(),name:localizedTextSchema.optional(),role:localizedTextSchema.optional(),bio:localizedTextSchema.optional(),photoAssetId:objectId.optional(),order}).strict();export const cmsPublicContentListDataSchema=z.object({items:z.array(cmsPublicContentSchema).max(100)}).strict();export const cmsPublicContentListSuccessEnvelopeSchema=successEnvelopeSchema(cmsPublicContentListDataSchema);export type CmsPublicContent=z.infer<typeof cmsPublicContentSchema>;export type CmsPublicContentListData=z.infer<typeof cmsPublicContentListDataSchema>;export type AboutBlockCreate=z.infer<typeof aboutBlockCreateSchema>;export type AboutBlockPatch=z.infer<typeof aboutBlockPatchSchema>;export type TeamMemberCreate=z.infer<typeof teamMemberCreateSchema>;export type TeamMemberPatch=z.infer<typeof teamMemberPatchSchema>;
 export const populationValueSchema=z.object({status:z.enum(['available','unavailable','draft']),value:z.number().int().nonnegative().max(100000000).optional(),sourceLabel:localizedTextSchema.optional(),sourceUrl:z.url().max(2048).optional(),asOf:z.string().datetime({offset:true}).optional(),reason}).strict().superRefine((v,c)=>{if(v.status==='available'){if(v.value===undefined)c.addIssue({code:'custom',path:['value'],message:'Available population needs a sourced value'});if(v.sourceLabel===undefined)c.addIssue({code:'custom',path:['sourceLabel'],message:'Available population needs a source label'});if(v.sourceUrl===undefined)c.addIssue({code:'custom',path:['sourceUrl'],message:'Available population needs a source URL'});if(v.asOf===undefined)c.addIssue({code:'custom',path:['asOf'],message:'Available population needs an as-of timestamp'})}if(v.status!=='available'&&v.value!==undefined)c.addIssue({code:'custom',path:['value'],message:'Unavailable or draft population cannot expose a value'})});
-export const tipCreateSchema=z.object({key:safeKey,title:localizedTextSchema,body:localizedTextSchema,order,active:z.boolean().default(true),status:cmsSettingStatusSchema.default('draft'),reason}).strict();export const tipPatchSchema=z.object({version:z.number().int().nonnegative(),title:localizedTextSchema.optional(),body:localizedTextSchema.optional(),order,active:z.boolean().optional(),status:cmsSettingStatusSchema.optional(),reason}).strict().refine(v=>Object.keys(v).some(k=>!['version','reason'].includes(k)),{message:'A tip change is required'});export type PopulationValue=z.infer<typeof populationValueSchema>;export type TipCreate=z.infer<typeof tipCreateSchema>;export type TipPatch=z.infer<typeof tipPatchSchema>;
+export const tipCreateSchema=z.object({key:safeKey,title:localizedTextSchema,body:localizedTextSchema,order,active:z.boolean().default(true),status:cmsSettingStatusSchema.default('draft'),reason}).strict();export const tipPatchSchema=z.object({version:z.number().int().nonnegative(),title:localizedTextSchema.optional(),body:localizedTextSchema.optional(),order:order.optional(),active:z.boolean().optional(),status:cmsSettingStatusSchema.optional(),reason}).strict().refine(v=>Object.keys(v).some(k=>!['version','reason'].includes(k)),{message:'A tip change is required'});export type PopulationValue=z.infer<typeof populationValueSchema>;export type TipCreate=z.infer<typeof tipCreateSchema>;export type TipPatch=z.infer<typeof tipPatchSchema>;
 const displayKey=safeKey;const displayOrder=z.number().int().nonnegative().max(100000);
 export const homepageSectionStatusSchema=cmsSettingStatusSchema;
 export const homepageSectionCreateSchema=z.object({key:safeKey,title:localizedTextSchema,body:localizedTextSchema.optional(),order:displayOrder,visible:z.boolean().default(true),status:homepageSectionStatusSchema.default('draft'),reason}).strict();
@@ -23,3 +23,42 @@ export const displaySettingPatchSchema=z.object({version:z.number().int().nonneg
 export const homepageSectionPublicSchema=z.object({key:safeKey,title:localizedTextSchema,body:localizedTextSchema.optional(),order:displayOrder}).strict();
 export const displaySettingPublicSchema=z.object({key:displayKey,value:displaySettingValueSchema}).strict();
 export type HomepageSectionCreate=z.infer<typeof homepageSectionCreateSchema>;export type HomepageSectionPatch=z.infer<typeof homepageSectionPatchSchema>;export type DisplaySettingValue=z.infer<typeof displaySettingValueSchema>;export type DisplaySettingCreate=z.infer<typeof displaySettingCreateSchema>;export type DisplaySettingPatch=z.infer<typeof displaySettingPatchSchema>;
+
+export const cmsAdminContentNamespaceSchema=z.enum(['about','team','population','tips','homepage','display']);
+export const cmsAdminContentActionSchema=z.enum(['update','publish','deactivate']);
+const cmsAdminRecordFields={id:objectId,version:z.number().int().nonnegative(),updatedBy:objectId,updatedAt:z.string().datetime(),availableActions:z.array(cmsAdminContentActionSchema)};
+export const cmsAdminAboutBlockSchema=z.object({...cmsAdminRecordFields,key:safeKey,title:localizedTextSchema,body:localizedTextSchema,order,active:z.boolean(),status:cmsSettingStatusSchema}).strict();
+export const cmsAdminTeamMemberSchema=z.object({...cmsAdminRecordFields,key:safeKey,name:localizedTextSchema,title:localizedTextSchema,bio:localizedTextSchema.optional(),photoAssetId:objectId.optional(),order,active:z.boolean(),status:cmsSettingStatusSchema}).strict();
+export const cmsAdminPopulationValueSchema=z.object({...cmsAdminRecordFields,status:populationValueSchema.shape.status,value:populationValueSchema.shape.value,sourceLabel:populationValueSchema.shape.sourceLabel,sourceUrl:populationValueSchema.shape.sourceUrl,asOf:populationValueSchema.shape.asOf,reason}).strict();
+export const cmsAdminTipSchema=z.object({...cmsAdminRecordFields,key:safeKey,title:localizedTextSchema,body:localizedTextSchema,order,active:z.boolean(),status:cmsSettingStatusSchema}).strict();
+export const cmsAdminHomepageSectionSchema=z.object({...cmsAdminRecordFields,key:safeKey,title:localizedTextSchema,body:localizedTextSchema.optional(),order:displayOrder,visible:z.boolean(),status:homepageSectionStatusSchema}).strict();
+export const cmsAdminDisplaySettingSchema=z.object({...cmsAdminRecordFields,key:displayKey,value:displaySettingValueSchema,status:cmsSettingStatusSchema}).strict();
+export const cmsAdminContentDataSchema=z.discriminatedUnion('namespace',[
+  z.object({namespace:z.literal('about'),items:z.array(cmsAdminAboutBlockSchema).max(100)}).strict(),
+  z.object({namespace:z.literal('team'),items:z.array(cmsAdminTeamMemberSchema).max(100)}).strict(),
+  z.object({namespace:z.literal('population'),items:z.array(cmsAdminPopulationValueSchema).max(1)}).strict(),
+  z.object({namespace:z.literal('tips'),items:z.array(cmsAdminTipSchema).max(100)}).strict(),
+  z.object({namespace:z.literal('homepage'),items:z.array(cmsAdminHomepageSectionSchema).max(100)}).strict(),
+  z.object({namespace:z.literal('display'),items:z.array(cmsAdminDisplaySettingSchema).max(100)}).strict()
+]);
+export const cmsAdminContentSuccessEnvelopeSchema=successEnvelopeSchema(cmsAdminContentDataSchema);
+export const cmsAdminAboutBlockPutSchema=z.union([aboutBlockCreateSchema,aboutBlockPatchSchema.extend({id:objectId})]);
+export const cmsAdminTeamMemberPutSchema=z.union([teamMemberCreateSchema,teamMemberPatchSchema.extend({id:objectId})]);
+export const cmsAdminPopulationValuePutSchema=z.intersection(populationValueSchema,z.object({version:z.number().int().nonnegative().optional()}));
+export const cmsAdminTipPutSchema=z.union([tipCreateSchema,tipPatchSchema.extend({id:objectId})]);
+export const cmsAdminHomepageSectionPutSchema=z.union([homepageSectionCreateSchema,homepageSectionPatchSchema.extend({id:objectId})]);
+export const cmsAdminDisplaySettingPutSchema=z.union([displaySettingCreateSchema,displaySettingPatchSchema.extend({id:objectId})]);
+export type CmsAdminContentNamespace=z.infer<typeof cmsAdminContentNamespaceSchema>;
+export type CmsAdminAboutBlock=z.infer<typeof cmsAdminAboutBlockSchema>;
+export type CmsAdminTeamMember=z.infer<typeof cmsAdminTeamMemberSchema>;
+export type CmsAdminPopulationValue=z.infer<typeof cmsAdminPopulationValueSchema>;
+export type CmsAdminTip=z.infer<typeof cmsAdminTipSchema>;
+export type CmsAdminHomepageSection=z.infer<typeof cmsAdminHomepageSectionSchema>;
+export type CmsAdminDisplaySetting=z.infer<typeof cmsAdminDisplaySettingSchema>;
+export type CmsAdminContentData=z.infer<typeof cmsAdminContentDataSchema>;
+export type CmsAdminAboutBlockPut=z.infer<typeof cmsAdminAboutBlockPutSchema>;
+export type CmsAdminTeamMemberPut=z.infer<typeof cmsAdminTeamMemberPutSchema>;
+export type CmsAdminPopulationValuePut=z.infer<typeof cmsAdminPopulationValuePutSchema>;
+export type CmsAdminTipPut=z.infer<typeof cmsAdminTipPutSchema>;
+export type CmsAdminHomepageSectionPut=z.infer<typeof cmsAdminHomepageSectionPutSchema>;
+export type CmsAdminDisplaySettingPut=z.infer<typeof cmsAdminDisplaySettingPutSchema>;

@@ -78,6 +78,9 @@ export const adminUserAvailableActionSchema = z.enum(ADMIN_USER_AVAILABLE_ACTION
 const adminUserDisplayNameSchema = z.string().trim().min(2).max(160).refine((value) => !/[\u0000-\u001f\u007f]/.test(value), { message: 'Display name must not contain control characters' });
 const adminUserObjectIdSchema = z.string().regex(/^[a-f0-9]{24}$/);
 const adminUserDateSchema = z.string().datetime({ offset: true });
+export const adminUserIdParamsSchema = z.object({
+  adminId: adminUserObjectIdSchema
+}).strict();
 
 export const adminUserListQuerySchema = z.object({
   status: adminUserStatusSchema.optional(),

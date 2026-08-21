@@ -1,0 +1,99 @@
+{
+  "taskId": "frontend_040",
+  "summary": "Implemented the PRV-01 Provider Shell and Overview using the authenticated provider application-status and owner-scoped property APIs, with localized desktop rendering, safe permission handling, real property metrics, and executable UI regression coverage.",
+  "filesChanged": [
+    "apps/web/src/features/provider/copy.ts",
+    "apps/web/src/features/provider/data.ts",
+    "apps/web/src/features/provider/index.ts",
+    "apps/web/src/features/provider/overview.tsx",
+    "apps/web/src/features/provider/styles.css",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/provider-overview.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-overview.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-overview.spec.ts-snapshots/provider-overview-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-overview.spec.ts-snapshots/provider-overview-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-overview.spec.ts-snapshots/provider-overview-zh-CN-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and Web TypeScript checks passed after the final CSS-only layout adjustment."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace check and repository ESLint completed with zero warnings or errors."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root API and Web suites passed; the Web suite reported 24 Vitest files/154 tests and 76 Node checks. An existing MSW warning for an unhandled article-category request was non-fatal and unrelated."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, Web client, and Web SSR builds passed. Vite emitted only the existing chunk-size warning."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/provider-overview.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused Provider Overview component/data regression suite passed with 5 tests."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-overview.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "6/6 Provider Overview journeys passed across approved Arabic RTL, English LTR, and Simplified Chinese LTR desktop projects, including approved/denied session states, keyboard focus, labels/landmarks, and visual snapshots."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The implemented provider application-status and owner-scoped provider-properties operations were present in the runtime inventory; no overview endpoint was invented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors; frontend_040 was the only In Progress task at evidence creation."
+    }
+  ],
+  "sourceEvidence": [
+    "Screen PRV-01",
+    "docs/design_sources/final_screens/provider/PRV-01.png (approved local final export; SHA-256 1e2b295e6dce82a0b307f4c173a485456d26e713b5950711772cb9ce71b3caed)",
+    "Figma node 6017:19032",
+    "Drive folder https://drive.google.com/drive/folders/1-Jda_ykLlQC3ZwlFG8I-t6sq3B8UOg86",
+    "GET /api/v1/provider/application/status",
+    "GET /api/v1/provider/properties",
+    "apps/web/tests/provider-overview.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-overview.spec.ts"
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was modified only for the directly necessary /provider route integration; this is a direct integration exception within the selected task scope.",
+    "No Backend, shared contract, OpenAPI, Postman, or API runtime files were changed by this task; no provider overview endpoint was invented.",
+    "The in-app browser connector could not initialize because its sandbox metadata was missing sandboxPolicy; executable repository Playwright coverage was used for browser, visual, keyboard, and accessibility evidence."
+  ],
+  "knownGaps": [
+    "The unsupported overview performance/advertising metric remains explicitly unavailable until a real provider contract supplies it.",
+    "The approved Provider Dashboard device scope is desktop only."
+  ],
+  "completedAt": "2026-08-18T15:12:34.6299097+03:00"
+}

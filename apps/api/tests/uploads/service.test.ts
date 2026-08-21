@@ -25,6 +25,10 @@ const claims: AccessTokenClaims = {
   iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: providerId,
   sid: '4'.repeat(24), role: 'provider', status: 'draft', iat: 1, exp: 9_999_999_999, jti: 'test'
 };
+const adminClaims: AccessTokenClaims = {
+  iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: 'a'.repeat(24),
+  sid: 'b'.repeat(24), role: 'admin', status: 'verified', iat: 1, exp: 9_999_999_999, jti: 'admin-test'
+};
 const pdf = Buffer.from('%PDF-1.7\nsynthetic private fixture\n%%EOF');
 
 function repository() {
@@ -96,7 +100,10 @@ function repository() {
   return { repo, documents };
 }
 
-function fixture(scanner = createDeterministicMalwareScanner('clean')) {
+function fixture(
+  scanner = createDeterministicMalwareScanner('clean'),
+  authorize: (adminId: string) => Promise<boolean> = async () => true
+) {
   const state = repository();
   const storage = createInMemoryStorageAdapter();
   const audits: Array<Record<string, unknown>> = [];
@@ -106,6 +113,7 @@ function fixture(scanner = createDeterministicMalwareScanner('clean')) {
     storage,
     scanner,
     signer: createPrivateDownloadSigner(Buffer.alloc(32, 7)),
+    authorization: { authorize: async (adminId) => authorize(adminId) },
     audit: { record(event) { audits.push(event); } },
     now: () => now,
     createObjectKey: (() => {
@@ -144,6 +152,7 @@ test('fails closed for unavailable or failed scanning and never grants non-clean
     storage: createUnavailableStorageAdapter(),
     scanner: createDeterministicMalwareScanner('clean'),
     signer: createPrivateDownloadSigner(Buffer.alloc(32, 1)),
+    authorization: { authorize: async () => true },
     audit: { record() {} }
   });
   await assert.rejects(closed.upload(claims, headers, Readable.from(pdf)), (error: unknown) => (
@@ -193,6 +202,36 @@ test('grants only owner-scoped clean downloads for 300 seconds and audits withou
   ), /DOCUMENT_NOT_FOUND/);
 });
 
+test('grants reviewer-scoped clean downloads without provider ownership leakage', async () => {
+  const value = fixture();
+  const document = await value.service.upload(claims, headers, Readable.from(pdf));
+  const grant = await value.service.createAdminAccessGrant(
+    adminClaims,
+    document.id,
+    'document_review',
+    { requestId: 'admin-request', traceId: 'admin-trace' }
+  );
+  assert.equal(grant.method, 'GET');
+  assert.equal(new Date(grant.expiresAt).getTime() - new Date('2026-08-13T12:00:00.000Z').getTime(), 300_000);
+  assert.equal(value.audits.at(-1)?.actorType, 'admin');
+  assert.equal(value.audits.at(-1)?.actorId, adminClaims.sub);
+  assert.equal(JSON.stringify(value.audits).includes(grant.url), false);
+
+  const denied = fixture(undefined, async () => false);
+  await assert.rejects(
+    denied.service.createAdminAccessGrant(adminClaims, document.id, 'document_review', { requestId: 'r' }),
+    (error: unknown) => error instanceof UploadServiceError && error.code === 'DOCUMENT_REVIEW_FORBIDDEN'
+  );
+
+  const inactive = fixture();
+  const inactiveDocument = await inactive.service.upload(claims, headers, Readable.from(pdf));
+  inactive.documents.get(inactiveDocument.id)!.active = false;
+  await assert.rejects(
+    inactive.service.createAdminAccessGrant(adminClaims, inactiveDocument.id, 'document_review', { requestId: 'r' }),
+    (error: unknown) => error instanceof UploadServiceError && error.code === 'DOCUMENT_NOT_FOUND'
+  );
+});
+
 test('enforces applicable categories and deletion revokes every download path idempotently', async () => {
   const value = fixture();
   await assert.rejects(value.service.upload(claims, {
@@ -227,6 +266,7 @@ test('versions replacements and maps an atomic concurrent loser without leaving 
     storage: conflictStorage,
     scanner: createDeterministicMalwareScanner('clean'),
     signer: createPrivateDownloadSigner(Buffer.alloc(32, 1)),
+    authorization: { authorize: async () => true },
     audit: { record() {} },
     createObjectKey: () => `quarantine/${'f'.repeat(32)}`
   });

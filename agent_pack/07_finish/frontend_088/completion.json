@@ -1,0 +1,154 @@
+{
+  "taskId": "frontend_088",
+  "summary": "Created the English-only repository-grounded Operations and Handoff Guide covering local setup, process and route boundaries, environment fail-closed rules, roles and API-authoritative permissions, health/readiness, troubleshooting, release/rollback constraints, verification commands, and unresolved external readiness prerequisites. Added an executable consistency test that checks the guide remains linked to current runtime sources and does not contain credential-shaped values.",
+  "filesChanged": [
+    "agent_pack/08_reality_sync/OPERATIONS_HANDOFF_GUIDE.md",
+    "apps/web/tests/operations-handoff.vitest.test.ts"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/operations-handoff.vitest.test.ts --run --reporter=dot",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused operations-handoff consistency test passed."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full Web tests passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR builds passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root tests passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, Web client, and Web SSR builds passed."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "72 configured visual tests passed."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "81 configured accessibility tests passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory completed successfully."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities reported."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3001'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET=([Convert]::ToBase64String((1..32 | ForEach-Object {[byte]$_}))).TrimEnd('=').Replace('+','-').Replace('/','_'); npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Safe non-production environment check passed without reading a real .env."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors in the worktree diff."
+    },
+    {
+      "command": "npm.cmd run security:check",
+      "exitCode": 1,
+      "result": "skipped",
+      "notes": "The repository does not define a security:check script; it was not claimed as passed."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors with frontend_088 in progress."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F6_integration_release/frontend_088.md",
+    "agent_pack/08_reality_sync/OPERATIONS_HANDOFF_GUIDE.md",
+    "apps/web/tests/operations-handoff.vitest.test.ts",
+    "apps/web/src/routes/route-table.ts",
+    "apps/api/src/modules/database/api-inventory.ts",
+    "packages/contracts/src/handoff/index.ts",
+    "packages/contracts/src/deployment/index.ts",
+    "packages/contracts/src/release/index.ts",
+    "apps/api/src/modules/database/health.ts",
+    "apps/api/src/modules/release/readiness.ts",
+    "agent_pack/01_product/ROLES_PERMISSIONS_MATRIX.md",
+    "agent_pack/02_architecture/ENVIRONMENT_MATRIX.md",
+    "agent_pack/02_architecture/DEPLOYMENT_PLAN.md",
+    "docs/api/environment.md",
+    "docs/api/deployment.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json"
+  ],
+  "scopeNotes": [
+    "No product runtime route, API contract, production configuration, or deployment artifact was changed; this task added the canonical handoff guide and a documentation consistency test within the allowed roots.",
+    "The task has no selected Screen IDs, so visual-source matching is not applicable. The configured Web visual and accessibility matrices still passed.",
+    "The guide preserves the owner-approved DESIGN-EXCEPTION-ADM-54 disclosure and does not claim direct ADM-54 pixel comparison.",
+    "The guide describes rollback constraints without inventing a provider-specific command or authorizing an irreversible Production action."
+  ],
+  "knownGaps": [
+    "Docker engine, managed Preview/UAT MongoDB, private storage/scanner, OTP provider, monitoring, backup/restore drill, and external security assurance remain external release-readiness prerequisites.",
+    "The repository does not define npm run security:check; existing API/browser security tests and dependency audit remain the available repository-owned evidence.",
+    "No Production data, credential, external provider, or live deployment was used or claimed."
+  ],
+  "completedAt": "2026-08-21T09:34:05.6372369Z"
+}

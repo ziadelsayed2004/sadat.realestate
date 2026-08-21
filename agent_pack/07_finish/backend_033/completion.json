@@ -1,6 +1,6 @@
 {
   "taskId": "backend_033",
-  "summary": "Implemented authenticated multilingual feature and service administration with stable groups and slugs, deterministic ordering and filters, activation, optimistic concurrency, audit evidence, and deletion guards for property/project references. Runtime routes, contracts, tests, inventory, OpenAPI, Postman, and documentation were synchronized.",
+  "summary": "Implemented authenticated multilingual feature and service administration with stable groups and slugs, deterministic ordering and filters, activation, optimistic concurrency, audit evidence, and deletion guards for property/project references. Repaired the shared response boundary by exporting strict FeatureData, list/delete payload, and success-envelope schemas for the implemented feature routes, and registered the focused projection test in the API unit-suite manifest. Runtime routes, contracts, tests, inventory, OpenAPI, Postman, and documentation are synchronized.",
   "filesChanged": [
     "packages/contracts/src/taxonomy/index.ts",
     "packages/contracts/src/contracts/index.ts",
@@ -11,6 +11,7 @@
     "apps/api/src/modules/testing/test-suites.ts",
     "apps/api/tests/taxonomy/features.test.ts",
     "apps/api/tests/taxonomy/features-router.test.ts",
+    "apps/api/tests/taxonomy/feature-contract-projections.test.ts",
     "apps/api/openapi/openapi.json",
     "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
     "docs/api/features-services.md",
@@ -18,7 +19,13 @@
     "agent_pack/08_reality_sync/CURRENT_STATE.md"
   ],
   "verification": [
-    {"command":"node --test --import tsx apps/api/tests/taxonomy/features.test.ts apps/api/tests/taxonomy/features-router.test.ts","exitCode":0,"result":"passed","notes":"3 focused contract and HTTP tests passed."},
+    {"command":"node --test --import tsx apps/api/tests/taxonomy/feature-contract-projections.test.ts apps/api/tests/taxonomy/features.test.ts apps/api/tests/taxonomy/features-router.test.ts","exitCode":0,"result":"passed","notes":"4 focused response-contract, validation, and HTTP tests passed."},
+    {"command":"npm.cmd run build --workspace packages/contracts","exitCode":0,"result":"passed","notes":"Shared contracts build passed with the FeatureData/list/delete response schemas and envelope exports."},
+    {"command":"npm.cmd run typecheck --workspace apps/api","exitCode":0,"result":"passed","notes":"API TypeScript checks passed against the repaired shared contract barrel."},
+    {"command":"node --test --import tsx apps/api/tests/testing/harness.test.ts apps/api/tests/taxonomy/feature-contract-projections.test.ts apps/api/tests/taxonomy/features.test.ts apps/api/tests/taxonomy/features-router.test.ts","exitCode":0,"result":"passed","notes":"8 focused contract, feature, router, and test-inventory assertions passed."},
+    {"command":"npm.cmd run test:unit --workspace apps/api","exitCode":0,"result":"passed","notes":"357 API unit tests passed serially after registering the focused projection test."},
+    {"command":"npm.cmd run test:api --workspace apps/api","exitCode":0,"result":"passed","notes":"88 API route tests passed, including feature CRUD authorization and strict projections."},
+    {"command":"npm.cmd run build --workspace apps/api","exitCode":0,"result":"passed","notes":"API TypeScript production build passed after the contract repair."},
     {"command":"npm.cmd run typecheck","exitCode":0,"result":"passed","notes":"Workspace syntax and TypeScript checks passed."},
     {"command":"npm.cmd run lint","exitCode":0,"result":"passed","notes":"Workspace policy and ESLint passed with zero warnings."},
     {"command":"npm.cmd test -- --runInBand","exitCode":0,"result":"passed","notes":"All 236 tests passed serially."},
@@ -37,6 +44,8 @@
     "agent_pack/06_screen_contracts/ADM-11.md",
     "apps/api/src/modules/taxonomy/features.ts",
     "apps/api/tests/taxonomy/features-router.test.ts",
+    "apps/api/tests/taxonomy/feature-contract-projections.test.ts verifies the runtime projection, list/delete payloads, success envelopes, and rejection of a private storageKey field.",
+    "packages/contracts/src/taxonomy/index.ts and packages/contracts/src/contracts/index.ts now export the strict FeatureData response boundary consumed by frontend_063.",
     "apps/api/openapi/openapi.json",
     "docs/api/features-services.md"
   ],
@@ -46,5 +55,5 @@
     "The repository has no security:check script; security behavior is covered by lint, dependency audit, strict-schema tests, authentication, authorization, and HTTP negative tests.",
     "The executing Node.js 22.18.0 is below the checked-in Node >=24 <25 engine baseline, although all mandatory local gates passed."
   ],
-  "completedAt": "2026-08-13T23:06:48.3259372Z"
+  "completedAt": "2026-08-19T08:53:30+03:00"
 }

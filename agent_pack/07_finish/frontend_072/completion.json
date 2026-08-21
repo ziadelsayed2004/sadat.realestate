@@ -1,0 +1,190 @@
+{
+  "taskId": "frontend_072",
+  "summary": "Implemented the Admin banners, banner creation and preview, localized tips, and homepage section administration surfaces for ADM-46 through ADM-49. The UI consumes the implemented banner and CMS contracts, keeps banner ordering placement-scoped, preserves optimistic versions and sensitive change reasons, renders safe loading/empty/error/retry/permission/success states, and supports Arabic RTL plus English and Simplified Chinese LTR on the approved Admin Desktop scope.",
+  "filesChanged": [
+    "apps/web/src/features/admin_home/data.ts",
+    "apps/web/src/features/admin_home/copy.ts",
+    "apps/web/src/features/admin_home/views.tsx",
+    "apps/web/src/features/admin_home/styles.css",
+    "apps/web/src/features/admin_home/index.ts",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/admin-home.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-home.fixtures.ts",
+    "apps/web/tests/e2e/admin-home.spec.ts",
+    "apps/web/tests/e2e/admin-home-accessibility.spec.ts",
+    "apps/web/tests/e2e/admin-home-visual.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-ar-banner-create-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-ar-banners-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-ar-homepage-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-ar-tips-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-en-banner-create-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-en-banners-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-en-homepage-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-en-tips-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-zh-CN-banner-create-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-zh-CN-banners-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-zh-CN-homepage-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-zh-CN-tips-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/admin-home.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused Admin Home component and contract suite passed 7/7 tests."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript typecheck passed after the placement-scoped reorder repair."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed with max warnings set to zero."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-home.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Admin Home functional journeys passed 9/9 across Arabic, English, and Simplified Chinese Admin Desktop projects."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-home-accessibility.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Admin Home accessibility journeys passed 3/3 across the three approved desktop locales."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/admin-home-visual.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Clean Admin Home visual regression passed 3/3 project tests covering four routes and twelve approved desktop locale snapshots."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Complete Web gate passed with zero Vitest or TAP failures."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR production builds passed; only the existing large-chunk warning was emitted."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository visual matrix passed 72/72."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository accessibility matrix passed 81/81."
+    },
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared contracts compiled successfully."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API typecheck passed for the banner and CMS runtime contracts consumed by this task."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API unit suite passed 371/371 tests."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API route suite passed 104/104 tests."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace checks and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root repository test command passed with zero failures."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, Web client, and Web SSR builds passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory completed and included the implemented Admin banner and CMS routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Dependency audit found 0 vulnerabilities."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "Screen ADM-46 approved local export: docs/design_sources/final_screens/admin/ADM-46.png; SHA-256 8c725c910055fb970869873fce6d93555af922e5dc45d8d1d040d372eb7ce318; Drive reference: https://drive.google.com/drive/folders/1bt_4Eee608KYDLwS1DDAyYRFefQ0gV2X; Figma prototype node: 6017:61879.",
+    "Screen ADM-47 approved local export: docs/design_sources/final_screens/admin/ADM-47.png; SHA-256 077f6d300b7897fe8daaa8119aff376e1f709002a414321f57d54cef35c0ea93; Drive reference: https://drive.google.com/drive/folders/1e0FVw_SDl2cKAr7KXwRKL3jAMnNUQh23; Figma prototype node: 6017:61879.",
+    "Screen ADM-48 approved local export: docs/design_sources/final_screens/admin/ADM-48.png; SHA-256 8a1249d5cbb982cd7aec945f6bd50f2a35db1768509397bd9967f328f31d6400; Drive reference: https://drive.google.com/drive/folders/16zSWznfKZOkXuYUg7oB1774r--fAbF9f; Figma prototype node: 6017:61879.",
+    "Screen ADM-49 approved local export: docs/design_sources/final_screens/admin/ADM-49.png; SHA-256 702d4b019edd01d45b2355cb9cb9971444aa37619530d27826aaab6f72934176; Drive reference: https://drive.google.com/drive/folders/1hzPMW4k_59AQRZpD_9nBmAMI7pV67f9d; Figma prototype node: 6017:61879.",
+    "Runtime API evidence: GET/POST /api/v1/admin/banners, PATCH /api/v1/admin/banners/:bannerId, GET /api/v1/admin/banners/:bannerId/preview, GET/POST /api/v1/admin/banners/:bannerId/media, PATCH/DELETE /api/v1/admin/banner-media/:mediaId, POST /api/v1/admin/banners/order, and GET/PUT /api/v1/admin/content/:namespace for tips and homepage namespaces.",
+    "Shared contract evidence: packages/contracts/src/ads/index.ts and packages/contracts/src/cms/index.ts.",
+    "Runtime implementation evidence: apps/web/src/features/admin_home/data.ts, apps/web/src/features/admin_home/views.tsx, apps/web/src/features/admin_home/copy.ts, apps/web/src/features/admin_home/styles.css, and apps/web/src/features/frontend_foundation/app.tsx.",
+    "Test evidence: apps/web/tests/admin-home.vitest.test.tsx, apps/web/tests/e2e/admin-home.fixtures.ts, apps/web/tests/e2e/admin-home.spec.ts, apps/web/tests/e2e/admin-home-visual.spec.ts, and apps/web/tests/e2e/admin-home-accessibility.spec.ts.",
+    "API inventory, OpenAPI, and Postman validation evidence for the implemented Admin banner and CMS routes."
+  ],
+  "scopeNotes": [
+    "Admin Dashboard scope is approved Desktop-only; Arabic is RTL and English/Simplified Chinese are LTR. Tablet/mobile Admin projects were not claimed.",
+    "apps/web/src/features/frontend_foundation/app.tsx was modified outside the selected task Allowed Roots solely to wire ADM-46 through ADM-49 into the existing runtime shell; no unrelated route behavior was changed.",
+    "Banner reordering is placement-scoped to the server contract and preserves other placement groups in the client projection.",
+    "The banner contract does not provide per-record availableActions; API authentication, authorization, validation, versions, and safe error projections remain authoritative.",
+    "The UI does not hardcode a universal advertising price, does not expose storage keys or permanent private URLs, and does not imply automatic bank verification.",
+    "Backend CMS runtime truth repair backend_038 was completed as a separate authorized prerequisite before this task; no Backend runtime code was changed for frontend_072."
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-20T18:27:46.5953232Z"
+}

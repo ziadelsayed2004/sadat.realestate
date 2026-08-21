@@ -14,6 +14,7 @@ import {
 import { createAuthRouter, type AuthRouterDependencies } from './modules/auth/router.js';
 import { createSeekerRouter, type SeekerRouterDependencies } from './modules/seeker/router.js';
 import { createProviderRouter, type ProviderRouterDependencies } from './modules/provider/router.js';
+import { createPaymentProofRouter, type PaymentProofRouterDependencies } from './modules/payments/router.js';
 import { createUploadRouter, type UploadRouterDependencies } from './modules/uploads/router.js';
 import { createRbacRouter, type RbacRouterDependencies } from './modules/rbac/router.js';
 import {
@@ -38,12 +39,26 @@ import { createSettingsRouter, type SettingsRouterDependencies } from './modules
 import { createRequestRouter, type RequestRouterDependencies } from './modules/requests/router.js';
 import { createViewingRouter, type ViewingRouterDependencies } from './modules/viewings/router.js';
 import { createArticleRouter, type ArticleRouterDependencies } from './modules/articles/router.js';
+import { createCommunityRouter, type CommunityRouterDependencies } from './modules/community/router.js';
+import { createPublicAboutTeamRouter, type PublicAboutTeamRouterDependencies } from './modules/cms/public-router.js';
+import { createCmsAdminContentRouter, type CmsAdminContentRouterDependencies } from './modules/cms/admin-content-router.js';
+import { createAdminOverviewRouter, type AdminOverviewRouterDependencies } from './modules/admin/overview-router.js';
+import { createAdministratorRouter, type AdministratorRouterDependencies } from './modules/admin/administrator-router.js';
+import { createAdminAdsRouter, type AdminAdsRouterDependencies } from './modules/ads/admin-router.js';
+import { createAdminBannerRouter, type AdminBannerRouterDependencies } from './modules/ads/banner-router.js';
+import { createAdvertisingLedgerRouter, type AdvertisingLedgerRouterDependencies } from './modules/reports/advertising-ledger-router.js';
+import { createCommissionPolicyRouter, type CommissionPolicyRouterDependencies } from './modules/commissions/policy-router.js';
+import { createCommissionAccountRouter, type CommissionAccountRouterDependencies } from './modules/commissions/account-router.js';
+import { createCommissionExceptionRouter, type CommissionExceptionRouterDependencies } from './modules/commissions/exception-router.js';
+import { createCommissionConfirmationRouter, type CommissionConfirmationRouterDependencies } from './modules/commissions/confirmation-router.js';
+import { createCommissionChangeLogRouter, type CommissionChangeLogRouterDependencies } from './modules/commissions/change-log-router.js';
 
 export interface AppDependencies {
   database: DatabaseReadiness;
   auth?: AuthRouterDependencies;
   seeker?: SeekerRouterDependencies;
   provider?: ProviderRouterDependencies;
+  payments?: PaymentProofRouterDependencies;
   uploads?: UploadRouterDependencies & { readiness?: { isReady(): boolean | Promise<boolean> } };
   rbac?: RbacRouterDependencies;
   accounts?: AccountRouterDependencies;
@@ -65,6 +80,19 @@ export interface AppDependencies {
   requests?: RequestRouterDependencies;
   viewings?: ViewingRouterDependencies;
   articles?: ArticleRouterDependencies;
+  community?: CommunityRouterDependencies;
+  publicAboutTeam?: PublicAboutTeamRouterDependencies;
+  cmsAdminContent?: CmsAdminContentRouterDependencies;
+  adminOverview?: AdminOverviewRouterDependencies;
+  administrators?: AdministratorRouterDependencies;
+  adminAds?: AdminAdsRouterDependencies;
+  adminBanners?: AdminBannerRouterDependencies;
+  advertisingLedger?: AdvertisingLedgerRouterDependencies;
+  commissionPolicies?: CommissionPolicyRouterDependencies;
+  commissionAccounts?: CommissionAccountRouterDependencies;
+  commissionExceptions?: CommissionExceptionRouterDependencies;
+  commissionConfirmations?: CommissionConfirmationRouterDependencies;
+  commissionChangeLog?: CommissionChangeLogRouterDependencies;
   security?: SecurityOptions;
   observability?: ObservabilityOptions;
 }
@@ -89,6 +117,9 @@ export function createApp(dependencies: AppDependencies): Express {
   }
   if (dependencies.seeker) app.use('/api/v1', createSeekerRouter(dependencies.seeker));
   if (dependencies.provider) app.use('/api/v1', createProviderRouter(dependencies.provider));
+  if (dependencies.adminAds) app.use('/api/v1', createAdminAdsRouter(dependencies.adminAds));
+  if (dependencies.adminBanners) app.use('/api/v1', createAdminBannerRouter(dependencies.adminBanners));
+  if (dependencies.payments) app.use('/api/v1', createPaymentProofRouter(dependencies.payments));
   if (dependencies.uploads) app.use('/api/v1', createUploadRouter(dependencies.uploads));
   if (dependencies.rbac) app.use('/api/v1', createRbacRouter(dependencies.rbac));
   if (dependencies.accounts) app.use('/api/v1', createAccountRouter(dependencies.accounts));
@@ -110,6 +141,17 @@ export function createApp(dependencies: AppDependencies): Express {
   if (dependencies.requests) app.use('/api/v1', createRequestRouter(dependencies.requests));
   if (dependencies.viewings) app.use('/api/v1', createViewingRouter(dependencies.viewings));
   if (dependencies.articles) app.use('/api/v1', createArticleRouter(dependencies.articles));
+  if (dependencies.community) app.use('/api/v1', createCommunityRouter(dependencies.community));
+  if (dependencies.publicAboutTeam) app.use('/api/v1', createPublicAboutTeamRouter(dependencies.publicAboutTeam));
+  if (dependencies.cmsAdminContent) app.use('/api/v1', createCmsAdminContentRouter(dependencies.cmsAdminContent));
+  if (dependencies.adminOverview) app.use('/api/v1', createAdminOverviewRouter(dependencies.adminOverview));
+  if (dependencies.administrators) app.use('/api/v1', createAdministratorRouter(dependencies.administrators));
+  if (dependencies.advertisingLedger) app.use('/api/v1', createAdvertisingLedgerRouter(dependencies.advertisingLedger));
+  if (dependencies.commissionPolicies) app.use('/api/v1', createCommissionPolicyRouter(dependencies.commissionPolicies));
+  if (dependencies.commissionAccounts) app.use('/api/v1', createCommissionAccountRouter(dependencies.commissionAccounts));
+  if (dependencies.commissionExceptions) app.use('/api/v1', createCommissionExceptionRouter(dependencies.commissionExceptions));
+  if (dependencies.commissionConfirmations) app.use('/api/v1', createCommissionConfirmationRouter(dependencies.commissionConfirmations));
+  if (dependencies.commissionChangeLog) app.use('/api/v1', createCommissionChangeLogRouter(dependencies.commissionChangeLog));
   app.use(createSecurityErrorHandler());
   return app;
 }

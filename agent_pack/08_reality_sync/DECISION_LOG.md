@@ -4,6 +4,18 @@ Q-001 through Q-003 have been approved as recorded below. No other product decis
 
 Q-004 through Q-012 remain explicitly pending in `01_product/OPEN_QUESTIONS.md`. Their listed defaults are planning placeholders only; they must not be used as production behavior, hardcoded prices, provider integrations, or compliance policy.
 
+## DESIGN-EXCEPTION-ADM-54 - Owner-approved visual-source waiver
+
+- **Status:** Approved non-blocking release exception
+- **Approved by:** Project Owner
+- **Screen:** `ADM-54` - Request Settings
+- **Reason:** The exact approved local export is unavailable, and the mapped external Figma/Drive source remained inaccessible after documented recovery and access attempts.
+- **Original provenance retained:** Drive group `https://drive.google.com/drive/folders/1qunt0uMMz1Q3EyNrLY1DJgmexvnOp_24`; Figma prototype page `6017:4356`, node `6017:61879`.
+- **Allowed substitute evidence:** Approved Admin design tokens and brand system, approved sibling Admin settings frames, shared Admin shell patterns, current runtime visual baselines, AR/EN/zh-CN locale and direction checks, the approved Admin Desktop matrix, functional tests, route tests, RBAC/permission tests, and accessibility tests.
+- **Forbidden claim:** Direct ADM-54 pixel-perfect comparison was not performed and must never be reported as passed.
+- **Release effect:** `frontend_074`, `frontend_077`, `frontend_081`, `frontend_089`, and `frontend_090` may close when every other mandatory criterion passes and this exception is referenced in their completion evidence.
+- **Residual debt:** Replace this waiver with direct source comparison if an approved ADM-54 export becomes available later.
+
 ## Q-001 — Authentication identifiers and methods
 
 - **Date:** 2026-08-12

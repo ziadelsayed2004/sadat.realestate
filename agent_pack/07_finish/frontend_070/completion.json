@@ -1,0 +1,171 @@
+{
+  "taskId": "frontend_070",
+  "summary": "Implemented the Admin Ads workflow for advertising requests, quote review/history, private payment-proof review, calendar scheduling, and financial projections across the approved Arabic, English, and Simplified Chinese Admin Desktop routes. Added safe projections and permission-aware states, repaired review feedback persistence across refetch, and replaced the provider-organization regression test's timing-coupled fetch-count assertion with semantic ready-state assertions.",
+  "filesChanged": [
+    "apps/web/src/features/admin_ads/copy.ts",
+    "apps/web/src/features/admin_ads/data.ts",
+    "apps/web/src/features/admin_ads/index.ts",
+    "apps/web/src/features/admin_ads/styles.css",
+    "apps/web/src/features/admin_ads/views.tsx",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/admin-ads.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-ads.fixtures.ts",
+    "apps/web/tests/e2e/admin-ads.spec.ts",
+    "apps/web/tests/e2e/admin-ads-visual.spec.ts",
+    "apps/web/tests/e2e/admin-ads-accessibility.spec.ts",
+    "apps/web/tests/provider-organization-documents.vitest.test.tsx",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-ar-approved-proofs-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-ar-calendar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-ar-financial-review-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-ar-pending-proofs-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-ar-pending-review-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-ar-requests-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-en-approved-proofs-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-en-calendar-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-en-financial-review-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-en-pending-proofs-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-en-pending-review-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-en-requests-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-zh-CN-approved-proofs-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-zh-CN-calendar-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-zh-CN-financial-review-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-zh-CN-pending-proofs-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-zh-CN-pending-review-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-zh-CN-requests-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- --run tests/provider-organization-documents.vitest.test.tsx -t \"advances the authenticated provider flow from account to organization to documents\" --reporter verbose",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused diagnostic flow passed after the semantic assertion repair; one test passed and the remaining nine were skipped by the name filter. The command was executed three consecutive times with exit codes 0, 0, and 0."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- --run tests/provider-organization-documents.vitest.test.tsx tests/admin-ads.vitest.test.tsx --reporter verbose",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Provider organization/documents and Admin Ads focused suites passed: 16 tests across 2 files."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Complete Web gate passed: production client/server pretest build, 45 Vitest files with 301 tests, and 76 TAP tests."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web production client/server build passed; only the existing large-chunk warning was emitted."
+    },
+    {
+      "command": "$env:WEB_BASE_URL='http://127.0.0.1:4173'; & '..\\..\\node_modules\\.bin\\playwright.cmd' test --config playwright.config.ts tests/e2e/admin-ads.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --grep 'requires a reason' --timeout=60000 --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Sensitive review/rejection reason journey passed in all three approved locales: 3 tests."
+    },
+    {
+      "command": "$env:WEB_BASE_URL='http://127.0.0.1:4173'; & '..\\..\\node_modules\\.bin\\playwright.cmd' test --config playwright.config.ts tests/e2e/admin-ads.spec.ts tests/e2e/admin-ads-accessibility.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --timeout=60000 --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Admin Ads functional and accessibility browser suites passed in Arabic, English, and Simplified Chinese: 15 tests."
+    },
+    {
+      "command": "$env:WEB_BASE_URL='http://127.0.0.1:4173'; & '..\\..\\node_modules\\.bin\\playwright.cmd' test --config playwright.config.ts tests/e2e/admin-ads-visual.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --timeout=60000 --update-snapshots --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Approved Admin Ads visual baselines were generated for six routes across three locales: 18 snapshots."
+    },
+    {
+      "command": "$env:WEB_BASE_URL='http://127.0.0.1:4173'; & '..\\..\\node_modules\\.bin\\playwright.cmd' test --config playwright.config.ts tests/e2e/admin-ads-visual.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --timeout=60000 --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Clean Admin Ads visual regression rerun passed for all 18 route/locale snapshots."
+    },
+    {
+      "command": "$env:WEB_BASE_URL='http://127.0.0.1:4173'; npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository visual matrix passed: 72/72 across approved device and locale projects."
+    },
+    {
+      "command": "$env:WEB_BASE_URL='http://127.0.0.1:4173'; npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository accessibility matrix passed: 81/81 across device and locale projects."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Relevant API TypeScript typecheck passed, including the backend_104 payment-proof projection repair."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API unit test suite passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API route/integration suite passed with 96 TAP tests."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory confirmed the Admin Ads request, payment-proof, calendar, financial-review, and ledger routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI validation returned OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman validation returned POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Dependency audit found 0 vulnerabilities."
+    }
+  ],
+  "sourceEvidence": [
+    "Screen ADM-33 approved local export: docs/design_sources/final_screens/admin/ADM-33.png; Drive reference: https://drive.google.com/drive/folders/1vodkGQoNGThb-UrzVNR-N7uA3Of9_6c-; shared Figma prototype node: 6017:61879",
+    "Screen ADM-34 approved local export: docs/design_sources/final_screens/admin/ADM-34.png; Drive reference: https://drive.google.com/drive/folders/1X7DQgPePHd2vGNbXdW9qdwNqluX-rvmQ; shared Figma prototype node: 6017:61879",
+    "Screen ADM-35 approved local export: docs/design_sources/final_screens/admin/ADM-35.png; Drive reference: https://drive.google.com/drive/folders/1-CkxHZ4zDc4rnmBlVOqG2cjpNv0cKgkI; shared Figma prototype node: 6017:61879",
+    "Screen ADM-36 approved local export: docs/design_sources/final_screens/admin/ADM-36.png; Drive reference: https://drive.google.com/drive/folders/1NU5LwfOuUFPZBwQDwPQGblfi8Z4Iiwhj; shared Figma prototype node: 6017:61879",
+    "Screen ADM-37 approved local export: docs/design_sources/final_screens/admin/ADM-37.png; Drive reference: https://drive.google.com/drive/folders/102cwmkS9hhuqd6ED-V5x-SNOu-E4o-5d; shared Figma prototype node: 6017:61879",
+    "Screen ADM-38 approved local export: docs/design_sources/final_screens/admin/ADM-38.png; Drive reference: https://drive.google.com/drive/folders/1Zt7UFy_7uDnJKHmBNFq4ErTkrECPQaL8; shared Figma prototype node: 6017:61879",
+    "Admin Ads runtime and shared contract evidence: GET /api/v1/admin/ad-requests, GET /api/v1/admin/ad-requests/:id, GET /api/v1/admin/payment-proofs, POST /api/v1/admin/payment-proofs/:proofId/review, GET /api/v1/admin/ad-calendar, GET /api/v1/admin/ad-financial-review, GET /api/v1/admin/ad-financial-review/:requestId, and GET /api/v1/admin/ad-ledger",
+    "API inventory, OpenAPI validation, and Postman validation completed successfully for the Admin Ads routes.",
+    "Runtime evidence: apps/web/src/features/admin_ads/data.ts, apps/web/src/features/admin_ads/views.tsx, apps/web/src/features/admin_ads/copy.ts, and apps/web/src/features/frontend_foundation/app.tsx.",
+    "Test evidence: apps/web/tests/admin-ads.vitest.test.tsx, apps/web/tests/e2e/admin-ads.spec.ts, apps/web/tests/e2e/admin-ads-accessibility.spec.ts, apps/web/tests/e2e/admin-ads-visual.spec.ts, and apps/web/tests/provider-organization-documents.vitest.test.tsx."
+  ],
+  "scopeNotes": [
+    "The provider-organization-documents failure was a narrow verification-repair scope exception. The runtime correctly performs account, organization, and documents loading; the test previously asserted an incidental third-call count while the documents surface was still in its loading mount. The assertion now waits for the ready state and verifies the rendered documents content. frontend_024 was not reopened because no runtime contract or behavior defect was found.",
+    "The Admin Ads review-feedback persistence change is within frontend_070 runtime scope and keeps refetch/invalidation behavior while preserving the visible success state.",
+    "Approved Admin Dashboard scope is Desktop-only; Arabic is RTL and English/Simplified Chinese are LTR. No Production data, secrets, or permanent private-file URLs were used."
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-20T03:18:25.8755630+03:00"
+}

@@ -1,0 +1,109 @@
+{
+  "taskId": "frontend_035",
+  "summary": "Implemented the Seeker preferences, personal information, and account settings screens using the existing /api/v1/me and /api/v1/me/preferences contracts. Added strict client validation, authenticated loading and mutation adapters, safe unavailable states for unsupported account operations, Arabic/English/Simplified Chinese copy and direction handling, keyboard-safe navigation, regression tests, and desktop visual baselines.",
+  "filesChanged": [
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/src/features/seeker/data.ts",
+    "apps/web/src/features/seeker/index.ts",
+    "apps/web/src/features/seeker/profile-copy.ts",
+    "apps/web/src/features/seeker/profile.tsx",
+    "apps/web/src/features/seeker/styles.css",
+    "apps/web/tests/seeker-profile.vitest.test.tsx",
+    "apps/web/tests/e2e/seeker-profile.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-preferences-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-preferences-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-preferences-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-personal-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-personal-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-personal-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-settings-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-settings-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-settings-zh-CN-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts build and Web TypeScript typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source, tests, Playwright configuration, and server lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/seeker-profile.vitest.test.tsx --reporter=dot",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused profile test file passed 7 tests, including contract-shaped API requests, validation, locale direction, retry, and anonymous permission behavior."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full Web test gate passed: 23 Vitest files with 149 tests and 76 Node/TAP tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR Web builds passed. Vite emitted only its existing chunk-size advisory."
+    },
+    {
+      "command": "$env:WEB_BASE_URL='http://127.0.0.1:4173'; .\\node_modules\\.bin\\playwright.cmd test --config apps/web/playwright.config.ts apps/web/tests/e2e/seeker-profile.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --timeout=30000 --reporter=line --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Created the nine approved desktop visual baselines across Arabic RTL, English LTR, and Simplified Chinese LTR; all 9 journeys passed."
+    },
+    {
+      "command": "$env:WEB_BASE_URL='http://127.0.0.1:4173'; .\\node_modules\\.bin\\playwright.cmd test --config apps/web/playwright.config.ts apps/web/tests/e2e/seeker-profile.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --timeout=30000 --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Regression browser run passed 9/9 profile, preferences, settings, save, focus, safe-projection, and denied-session journeys."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory contains GET/PATCH /api/v1/me and GET/PATCH /api/v1/me/preferences as implemented operations."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit returned zero errors before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F3_seeker_dashboard/frontend_035.md",
+    "SEK-08: docs/design_sources/final_screens/seeker/SEK-08.png; SHA-256 a2b15e512d63a115e2098d87ce91fcd6051669d7a149e1f381d30bec805ab987; Drive https://drive.google.com/drive/folders/1Y80mQORqpi-tGD3pe2ZIyPo2b74SFHx9; Figma node 6027:3579",
+    "SEK-09: docs/design_sources/final_screens/seeker/SEK-09.png; SHA-256 e7f02b852ddcfa1013678e9424f1049fbccfc8124e5db71a2f73092e889bfced; Drive https://drive.google.com/drive/folders/1od5yxd_sFEXo8V7FJKJE3YnnBvh4ERXY; Figma node 6027:3579",
+    "SEK-10: docs/design_sources/final_screens/seeker/SEK-10.png; SHA-256 877ca8719aa1323159068e121fa6f1c820f7305239cb25260fc4e4dec51ed3e7; Drive https://drive.google.com/drive/folders/1SMtml3vJtyoq2ORxLVXpt_6-5eBobKDc; Figma node 6027:3579",
+    "packages/contracts/src/seeker/index.ts: strict seeker profile and preferences request/response schemas",
+    "apps/api/src/modules/seeker/router.ts: authenticated /api/v1/me and /api/v1/me/preferences routes",
+    "apps/web/src/features/seeker/profile.tsx and apps/web/src/features/seeker/data.ts: runtime UI and contract adapters",
+    "apps/web/tests/seeker-profile.vitest.test.tsx and apps/web/tests/e2e/seeker-profile.spec.ts: component, contract, ownership-safe projection, locale, focus, visual, and permission evidence"
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was modified as an explicitly necessary integration exception to route /seeker/profile and /seeker/settings to the selected feature.",
+    "The current runtime has no approved password/security, session-management, notification-settings, or account-deletion contracts; Account Settings therefore exposes truthful unavailable or disabled states and only uses implemented profile locale and logout behavior."
+  ],
+  "knownGaps": [
+    "Unsupported account operations remain unavailable until their backend contracts are approved and implemented."
+  ],
+  "completedAt": "2026-08-18T11:07:10.0196803Z"
+}

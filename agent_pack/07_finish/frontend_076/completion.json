@@ -1,0 +1,207 @@
+{
+  "taskId": "frontend_076",
+  "summary": "Implemented the Admin notifications inbox and audit-log list/detail surfaces for ADM-65 and ADM-66 using the implemented API contracts. The UI provides localized Admin Desktop navigation, loading, empty, error, retry, forbidden, not-found, success, unread/read, pagination, audit filters, safe detail projections, and role-aware mutation behavior without exposing internal data. A narrow accessibility-test repair replaced incidental label/call-shape coupling with semantic assertions for the current runtime.",
+  "filesChanged": [
+    "apps/web/src/features/admin/notifications-audit-data.ts",
+    "apps/web/src/features/admin/notifications-audit-copy.ts",
+    "apps/web/src/features/admin/notifications-audit.tsx",
+    "apps/web/src/features/admin/notifications-audit.css",
+    "apps/web/src/features/admin/copy.ts",
+    "apps/web/src/features/admin/overview.tsx",
+    "apps/web/src/features/admin/index.ts",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/admin-notifications-audit.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-notifications-audit.fixtures.ts",
+    "apps/web/tests/e2e/admin-notifications-audit.spec.ts",
+    "apps/web/tests/e2e/admin-notifications-audit-accessibility.spec.ts",
+    "apps/web/tests/e2e/admin-notifications-audit-visual.spec.ts",
+    "apps/web/tests/e2e/admin-overview-accessibility.spec.ts",
+    "apps/web/tests/e2e/admin-rbac-accessibility.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/admin-notifications-audit-visual.spec.ts-snapshots/",
+    "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/admin-notifications-audit.vitest.test.tsx --reporter=verbose",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused Admin notifications/audit contract and view tests: 5 passed."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-notifications-audit.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "ADM-65/ADM-66 functional browser matrix: 9 passed across Arabic, English, and Simplified Chinese Admin Desktop projects."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-notifications-audit-accessibility.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "ADM-65/ADM-66 accessibility browser matrix: 3 passed."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-notifications-audit-visual.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "ADM-65/ADM-66 implementation visual matrix: 3 passed across the approved Admin Desktop locale projects."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- --workers=1",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Deterministic full Web browser suite: 801 passed and 810 skipped."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full Web test suite: 51 Vitest files / 348 tests and 76 Node tests passed; one existing MSW warning for an unrelated public article-categories request did not fail the suite."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript check passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Production Web client and SSR builds passed."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Configured Web visual matrix: 72 passed across available locale/device projects."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Configured Web accessibility matrix: 81 passed across available locale/device projects."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace, API, and Web test suites passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web build passed."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API typecheck passed with the completed backend truth-repair prerequisite in place."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API unit suite: 372 passed, 0 failed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API route suite: 107 passed, 0 failed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory includes GET /api/v1/admin/notifications, POST notification read/read-all actions, GET /api/v1/admin/audit-logs, and GET /api/v1/admin/audit-logs/:auditId as implemented routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Safe process-local non-production environment validation passed; no .env was read or printed."
+    },
+    {
+      "command": "npm.cmd run security:check",
+      "exitCode": 1,
+      "result": "skipped",
+      "notes": "The current repository has no security:check script. Dependency audit plus API and browser permission/security coverage ran; the unavailable command was not reported as passed."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors in tracked changes."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before closure."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json: ADM-65 maps to docs/design_sources/final_screens/admin/ADM-65.png, sha256 b242610cf4a178dfa11b7dc8c4f19f2bdffa6f32d4536c402bf0e76af22ff9bf, 6308x4996, Admin Desktop, ar/en/zh-CN.",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json: ADM-66 maps to docs/design_sources/final_screens/admin/ADM-66.png, sha256 b1c6ba29bf170804299f2f4ae6b967a615885d3f96b73c19653259cf0c662cc7, 6308x3776, Admin Desktop, ar/en/zh-CN.",
+    "ADM-65 Drive source: https://drive.google.com/drive/folders/16zLyUMI_IPh4w-n4mt_-B6nFmSreYDj_; shared Figma page 6017:4356 and node 6017:61879 retained in the manifest.",
+    "ADM-66 Drive source: https://drive.google.com/drive/folders/1-7uwvvFg0Y3J1jeuF3Jj6-Td4Y03fIpL; shared Figma page 6017:4356 and node 6017:61879 retained in the manifest.",
+    "apps/web/src/features/admin/notifications-audit-data.ts: API-backed loaders and mutations for the implemented notification and audit-log routes.",
+    "apps/web/src/features/admin/notifications-audit.tsx: localized Admin Desktop route views with safe projections and state handling.",
+    "apps/web/tests/admin-notifications-audit.vitest.test.tsx and apps/web/tests/e2e/admin-notifications-audit*.spec.ts: contract, functional, locale, permission, visual, and accessibility evidence.",
+    "Runtime API routes: /api/v1/admin/notifications, /api/v1/admin/notifications/:notificationId/read, /api/v1/admin/notifications/read-all, /api/v1/admin/audit-logs, and /api/v1/admin/audit-logs/:auditId."
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was modified as the necessary route integration point; this is an explicit outside-Allowed-Roots integration exception required to expose the selected routes.",
+    "The Admin navigation addition changed the rendered shared shell height. The affected account-reports visual baseline was updated only after inspecting the 1280x816-to-1280x873 growth as correct navigation layout growth; the exact test passed three consecutive times and the affected file passed.",
+    "The accessibility assertions use semantic current behavior rather than incidental label counts; no runtime request was added to satisfy a test.",
+    "Admin Dashboard is Desktop-only under the approved scope. Test fixtures are test-only and no Production mock or credential was used.",
+    "DESIGN-EXCEPTION-ADM-54 remains an active project-level owner waiver for ADM-54 only; it is not used as design evidence for ADM-65 or ADM-66."
+  ],
+  "knownGaps": [
+    "There is no implemented notification-preference or audit-export endpoint in the current runtime contract, so the Web UI does not invent those controls.",
+    "The implementation PNGs under apps/web/tests/e2e/__snapshots__ are runtime baselines and are not approved design-source exports.",
+    "The current repository does not define npm run security:check; it was recorded as skipped/unavailable with exit code 1. npm audit and implemented permission/security coverage passed.",
+    "A parallel four-worker browser run produced non-reproducible Provider Dashboard security-route timing and Provider Wizard Chinese screenshot artifacts; the exact isolated tests passed, the affected wizard file passed, and the deterministic one-worker full suite passed. No unrelated Provider baseline was changed.",
+    "One existing MSW unhandled-request warning for public article-categories appeared during the full Web Vitest suite; all tests passed.",
+    "This evidence closes frontend_076 only and does not claim F5, F6, all APIs, all screens, Backend, or full-platform completion."
+  ],
+  "completedAt": "2026-08-21T08:37:08.6811661+03:00"
+}

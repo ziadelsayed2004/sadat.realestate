@@ -255,6 +255,34 @@ test('OTP verification stores authenticated sessions without exposing access tok
   client.dispose();
 });
 
+test('seeker registration uses the implemented contract and keeps verification and access tokens out of the snapshot', async () => {
+  const apiClient = new FakeApiClient(async (path, options) => {
+    assert.equal(path, '/auth/register/seeker');
+    assert.equal(options.method, 'POST');
+    assert.deepEqual(options.json, {
+      verificationToken: 'A'.repeat(43),
+      firstName: 'Mona',
+      lastName: 'Hassan',
+      locale: 'ar'
+    });
+    return response({ outcome: 'registered', session: session('seeker', 'registration.payload.signature') });
+  });
+  const client = new AuthClient({ apiClient, store: new AuthStore({ sync: new TestSync() }) });
+
+  const snapshot = await client.registerSeeker({
+    verificationToken: 'A'.repeat(43),
+    firstName: ' Mona ',
+    lastName: ' Hassan ',
+    locale: 'ar'
+  });
+
+  assert.equal(snapshot.status, 'authenticated');
+  assert.equal(snapshot.user?.roleType, 'seeker');
+  assert.equal('accessToken' in snapshot, false);
+  assert.equal(client.getAccessToken(), 'registration.payload.signature');
+  client.dispose();
+});
+
 test('logout calls the implemented route and clears memory even when the request fails', async () => {
   const sync = new TestSync();
   const apiClient = new FakeApiClient(async (path, options) => {

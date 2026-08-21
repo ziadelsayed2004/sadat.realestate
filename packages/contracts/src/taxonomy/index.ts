@@ -54,4 +54,22 @@ export const featurePatchSchema = z.object({ version: z.number().int().nonnegati
 export const featureDeleteSchema = taxonomyDeleteSchema;
 export const featureParamsSchema = z.object({ featureId: taxonomyIdSchema }).strict();
 export const featureListQuerySchema = z.object({ kind: featureKindSchema.optional(), groupKey: featureGroupKeySchema.optional(), active: z.preprocess(v=>v==='true'?true:v==='false'?false:v,z.boolean().optional()), search:z.string().trim().min(1).max(80).optional(), page:numberQuery(1,100_000),limit:numberQuery(20,100) }).strict();
-export type FeatureCreate=z.infer<typeof featureCreateSchema>;export type FeaturePatch=z.infer<typeof featurePatchSchema>;export type FeatureQuery=z.infer<typeof featureListQuerySchema>;
+export const featureDataSchema = z.object({
+  id: taxonomyIdSchema,
+  kind: featureKindSchema,
+  groupKey: featureGroupKeySchema,
+  name: localizedTextSchema,
+  slug: taxonomySlugSchema,
+  order: z.number().int().nonnegative(),
+  active: z.boolean(),
+  version: z.number().int().nonnegative(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+  availableActions: z.array(z.enum(['update', 'delete'])).max(2)
+}).strict();
+export const featureListDataSchema = z.object({ items: z.array(featureDataSchema) }).strict();
+export const featureDeleteDataSchema = z.object({ id: taxonomyIdSchema, deleted: z.literal(true) }).strict();
+export const featureSuccessEnvelopeSchema = successEnvelopeSchema(featureDataSchema);
+export const featureListSuccessEnvelopeSchema = successEnvelopeSchema(featureListDataSchema);
+export const featureDeleteSuccessEnvelopeSchema = successEnvelopeSchema(featureDeleteDataSchema);
+export type FeatureCreate=z.infer<typeof featureCreateSchema>;export type FeaturePatch=z.infer<typeof featurePatchSchema>;export type FeatureQuery=z.infer<typeof featureListQuerySchema>;export type FeatureData=z.infer<typeof featureDataSchema>;export type FeatureListData=z.infer<typeof featureListDataSchema>;export type FeatureDeleteData=z.infer<typeof featureDeleteDataSchema>;

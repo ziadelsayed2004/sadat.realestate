@@ -14,8 +14,17 @@ export interface AdminBootstrapRecord {
   updatedAt: Date;
 }
 
+export interface AdminAccountRecord {
+  userId: Types.ObjectId;
+  displayName: string;
+  accessLevel: AdminAccessLevel;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface AdminModels {
   AdminBootstrap: Model<AdminBootstrapRecord>;
+  AdminAccount: Model<AdminAccountRecord>;
 }
 
 const adminBootstrapSchema = new Schema<AdminBootstrapRecord>(
@@ -57,10 +66,55 @@ adminBootstrapSchema.index(
   { name: 'admin_bootstrap_user_unique', unique: true }
 );
 
+const adminAccountSchema = new Schema<AdminAccountRecord>(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      immutable: true,
+      ref: 'User'
+    },
+    displayName: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 2,
+      maxlength: 160,
+      validate: {
+        validator: (value: string) => !/[\u0000-\u001f\u007f]/.test(value),
+        message: 'Display name must not contain control characters'
+      }
+    },
+    accessLevel: {
+      type: String,
+      required: true,
+      enum: ADMIN_ACCESS_LEVELS
+    }
+  },
+  {
+    collection: 'admin_accounts',
+    strict: 'throw',
+    timestamps: true,
+    versionKey: 'version'
+  }
+);
+
+adminAccountSchema.index(
+  { userId: 1 },
+  { name: 'admin_accounts_user_unique', unique: true }
+);
+adminAccountSchema.index(
+  { accessLevel: 1 },
+  { name: 'admin_accounts_access_level' }
+);
+
 export function createAdminModels(connection: Connection): AdminModels {
   return {
     AdminBootstrap:
       (connection.models.AdminBootstrap as Model<AdminBootstrapRecord> | undefined)
-      ?? connection.model<AdminBootstrapRecord>('AdminBootstrap', adminBootstrapSchema)
+      ?? connection.model<AdminBootstrapRecord>('AdminBootstrap', adminBootstrapSchema),
+    AdminAccount:
+      (connection.models.AdminAccount as Model<AdminAccountRecord> | undefined)
+      ?? connection.model<AdminAccountRecord>('AdminAccount', adminAccountSchema)
   };
 }

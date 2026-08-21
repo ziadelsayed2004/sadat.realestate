@@ -23,12 +23,43 @@ export type AdministratorWriteResult =
   | { kind: 'not_found' }
   | { kind: 'version_conflict' };
 
+export interface AdministratorMutationContext {
+  requestId: string;
+  traceId: string;
+}
+
 export interface AdministratorRepository {
   list(): Promise<readonly AdminUserData[]>;
   findById(id: string): Promise<AdminUserData | undefined>;
   countActiveSuperAdmins(): Promise<number>;
-  create(input: { actorId: string; data: AdminUserCreate; now: string }): Promise<AdministratorWriteResult>;
-  update(input: { actorId: string; id: string; expectedVersion: number; patch: AdminUserPatch; now: string }): Promise<AdministratorWriteResult>;
+  create(input: {
+    actorId: string;
+    data: AdminUserCreate;
+    now: string;
+    requestId: string;
+    traceId: string;
+  }): Promise<AdministratorWriteResult>;
+  update(input: {
+    actorId: string;
+    id: string;
+    expectedVersion: number;
+    patch: AdminUserPatch;
+    now: string;
+    requestId: string;
+    traceId: string;
+  }): Promise<AdministratorWriteResult>;
+}
+
+export interface AdministratorService {
+  list(adminId: string, input: unknown): Promise<AdminUserListData>;
+  listAdministrators(adminId: string, input: unknown): Promise<AdminUserListData>;
+  get(adminId: string, id: string): Promise<AdminUserData>;
+  getAdministrator(adminId: string, id: string): Promise<AdminUserData>;
+  create(adminId: string, input: unknown, context?: AdministratorMutationContext): Promise<AdminUserData>;
+  createAdministrator(adminId: string, input: unknown, context?: AdministratorMutationContext): Promise<AdminUserData>;
+  update(adminId: string, id: string, input: unknown, context?: AdministratorMutationContext): Promise<AdminUserData>;
+  updateAdministrator(adminId: string, id: string, input: unknown, context?: AdministratorMutationContext): Promise<AdminUserData>;
+  disable(adminId: string, id: string, input: unknown, context?: AdministratorMutationContext): Promise<AdminUserData>;
 }
 
 export interface AdministratorServiceDependencies {
@@ -77,6 +108,10 @@ function output(value: AdminUserData, actorId?: string): AdminUserData {
 
 export function createAdministratorService(dependencies: AdministratorServiceDependencies) {
   const clock = dependencies.now ?? (() => new Date());
+  const defaultMutationContext: AdministratorMutationContext = {
+    requestId: 'administrator-management',
+    traceId: '0'.repeat(32)
+  };
   const list = async (adminId: string, input: unknown): Promise<AdminUserListData> => {
     await requirePermission(dependencies, adminId, 'admin:staff.view');
     const query = adminUserListQuerySchema.parse(input) as AdminUserListQuery;
@@ -93,15 +128,30 @@ export function createAdministratorService(dependencies: AdministratorServiceDep
     if (!value) throw new AdministratorServiceError('ADMINISTRATOR_NOT_FOUND');
     return output(value, adminId);
   };
-  const create = async (adminId: string, input: unknown): Promise<AdminUserData> => {
+  const create = async (
+    adminId: string,
+    input: unknown,
+    context: AdministratorMutationContext = defaultMutationContext
+  ): Promise<AdminUserData> => {
     await requirePermission(dependencies, adminId, 'admin:staff.manage');
     const data = adminUserCreateSchema.parse(input);
-    const result = await dependencies.repository.create({ actorId: adminId, data, now: clock().toISOString() });
+    const result = await dependencies.repository.create({
+      actorId: adminId,
+      data,
+      now: clock().toISOString(),
+      requestId: context.requestId,
+      traceId: context.traceId
+    });
     if (result.kind === 'email_conflict') throw new AdministratorServiceError('ADMINISTRATOR_EMAIL_CONFLICT');
     if (result.kind !== 'created') throw new AdministratorServiceError('ADMINISTRATOR_NOT_FOUND');
     return output(result.administrator, adminId);
   };
-  const update = async (adminId: string, id: string, input: unknown): Promise<AdminUserData> => {
+  const update = async (
+    adminId: string,
+    id: string,
+    input: unknown,
+    context: AdministratorMutationContext = defaultMutationContext
+  ): Promise<AdminUserData> => {
     await requirePermission(dependencies, adminId, 'admin:staff.manage');
     if (!objectId(id)) throw new AdministratorServiceError('ADMINISTRATOR_NOT_FOUND');
     const patch = adminUserPatchSchema.parse(input) as AdminUserPatch;
@@ -115,7 +165,15 @@ export function createAdministratorService(dependencies: AdministratorServiceDep
     if (current.accessLevel === 'super_admin' && current.status === 'active' && (nextStatus !== 'active' || nextAccessLevel !== 'super_admin') && await dependencies.repository.countActiveSuperAdmins() <= 1) {
       throw new AdministratorServiceError('ADMINISTRATOR_LAST_SUPER_ADMIN');
     }
-    const result = await dependencies.repository.update({ actorId: adminId, id, expectedVersion: patch.expectedVersion, patch, now: clock().toISOString() });
+    const result = await dependencies.repository.update({
+      actorId: adminId,
+      id,
+      expectedVersion: patch.expectedVersion,
+      patch,
+      now: clock().toISOString(),
+      requestId: context.requestId,
+      traceId: context.traceId
+    });
     if (result.kind === 'email_conflict') throw new AdministratorServiceError('ADMINISTRATOR_EMAIL_CONFLICT');
     if (result.kind === 'version_conflict') throw new AdministratorServiceError('ADMINISTRATOR_VERSION_CONFLICT');
     if (result.kind !== 'updated') throw new AdministratorServiceError('ADMINISTRATOR_NOT_FOUND');

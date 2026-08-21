@@ -1,0 +1,210 @@
+{
+  "taskId": "frontend_071",
+  "summary": "Implemented the Admin commission policies, account overrides, exception, history, and confirmation surfaces for ADM-39 through ADM-45. The implementation uses the current API contracts and localized Arabic, English, and Simplified Chinese projections, enforces Admin Desktop-only scope and view-only mutation restrictions, preserves sensitive reason requirements, and exposes only redacted commission history and provider-safe account data.",
+  "filesChanged": [
+    "apps/web/src/features/admin_commissions/copy.ts",
+    "apps/web/src/features/admin_commissions/data.ts",
+    "apps/web/src/features/admin_commissions/index.ts",
+    "apps/web/src/features/admin_commissions/styles.css",
+    "apps/web/src/features/admin_commissions/views.tsx",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/src/features/admin/copy.ts",
+    "apps/web/src/features/admin/overview.tsx",
+    "packages/contracts/src/commissions/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/web/tests/admin-commissions.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-commissions.fixtures.ts",
+    "apps/web/tests/e2e/admin-commissions.spec.ts",
+    "apps/web/tests/e2e/admin-commissions-visual.spec.ts",
+    "apps/web/tests/e2e/admin-commissions-accessibility.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-ar-account-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-ar-confirmations-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-ar-exceptions-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-ar-history-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-ar-new-exception-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-ar-new-policy-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-ar-policies-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-en-account-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-en-confirmations-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-en-exceptions-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-en-history-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-en-new-exception-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-en-new-policy-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-en-policies-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-zh-CN-account-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-zh-CN-confirmations-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-zh-CN-exceptions-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-zh-CN-history-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-zh-CN-new-exception-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-zh-CN-new-policy-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-zh-CN-policies-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- --run tests/admin-commissions.vitest.test.tsx --reporter dot",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused commission component and loader suite passed 10/10 tests."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-commissions.spec.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Admin commission functional journeys passed 9 desktop tests across Arabic, English, and Simplified Chinese; 18 tablet/mobile projects were skipped because the approved Admin Dashboard scope is Desktop-only."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-commissions-visual.spec.ts --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Generated the approved 21 Admin commission desktop snapshots: seven screens across three locales."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-commissions-visual.spec.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Clean visual regression passed for all 21 Admin commission desktop snapshots; the native select rendering tolerance is narrowly bounded to 256 pixels."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-commissions-accessibility.spec.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Admin commission accessibility journeys passed in all three desktop locales; tablet/mobile projects were skipped by approved Desktop-only scope."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Complete Web gate passed: production client/server pretest build, 46 Vitest files with 311 tests, and 76 TAP tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web production client and server build passed; only the existing large-chunk warning was emitted."
+    },
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared commission contracts compiled successfully."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API typecheck passed for the commission route truth used by this task."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API unit suite passed 367/367 tests."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API route suite passed 104/104 tests, including commission policy, account, exception, confirmation, and change-log routes."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace checks and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final root test invocation passed after the bounded wrapper timeout was rerun with a longer limit; the repository test matrix completed with zero failures, including Web 46/311 and TAP 76/76."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, Web client, and Web SSR production builds passed."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository visual matrix passed 72/72."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository accessibility matrix passed 81/81."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory confirmed the commission policy, account override, exception, confirmation, and change-log routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Dependency audit found 0 vulnerabilities."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "Screen ADM-39 approved local export: docs/design_sources/final_screens/admin/ADM-39.png; Drive reference: https://drive.google.com/drive/folders/1t9KQogo6BKdm9zCLSagbFR_5c27xnTrH; shared Figma prototype node: 6017:61879",
+    "Screen ADM-40 approved local export: docs/design_sources/final_screens/admin/ADM-40.png; Drive reference: https://drive.google.com/drive/folders/1re3_Mj3yrCDf6zOry5acvfH-nvLt90f4; shared Figma prototype node: 6017:61879",
+    "Screen ADM-41 approved local export: docs/design_sources/final_screens/admin/ADM-41.png; Drive reference: https://drive.google.com/drive/folders/1KAstGvgXaS2lFM3Rtki1Ueae-BkIMfP0; shared Figma prototype node: 6017:61879",
+    "Screen ADM-42 approved local export: docs/design_sources/final_screens/admin/ADM-42.png; Drive reference: https://drive.google.com/drive/folders/1EnlY-JZIiN2qTUNiCPoEpbn7KoojtuR6; shared Figma prototype node: 6017:61879",
+    "Screen ADM-43 approved local export: docs/design_sources/final_screens/admin/ADM-43.png; Drive reference: https://drive.google.com/drive/folders/1ephF31UhqOBDeqVWS5jggCJruKlDqfBB; shared Figma prototype node: 6017:61879",
+    "Screen ADM-44 approved local exports: docs/design_sources/final_screens/admin/ADM-44-list.png and docs/design_sources/final_screens/admin/ADM-44-create.png; Drive reference: https://drive.google.com/drive/folders/1omJ-4MUy3SMnkCygfxwVA5UBST4UAWo-; shared Figma prototype node: 6017:61879",
+    "Screen ADM-45 approved local export: docs/design_sources/final_screens/admin/ADM-45.png; Drive reference: https://drive.google.com/drive/folders/1kKKdCYENuH3RIB7rLEZ4-sNsuht9ewhB; shared Figma prototype node: 6017:61879",
+    "Runtime API evidence: GET /api/v1/admin/commission-policies, POST /api/v1/admin/commission-policies, GET /api/v1/admin/account-commissions/:accountId, PUT /api/v1/admin/account-commissions/:accountId, GET /api/v1/admin/commission-exceptions, POST /api/v1/admin/commission-exceptions, GET /api/v1/admin/commission-confirmations, and GET /api/v1/admin/commission-change-log.",
+    "Shared contract evidence: packages/contracts/src/commissions/index.ts and packages/contracts/src/contracts/index.ts.",
+    "Runtime implementation evidence: apps/web/src/features/admin_commissions/data.ts, apps/web/src/features/admin_commissions/views.tsx, apps/web/src/features/admin_commissions/copy.ts, apps/web/src/features/admin_commissions/styles.css, and apps/web/src/features/frontend_foundation/app.tsx.",
+    "Test evidence: apps/web/tests/admin-commissions.vitest.test.tsx, apps/web/tests/e2e/admin-commissions.fixtures.ts, apps/web/tests/e2e/admin-commissions.spec.ts, apps/web/tests/e2e/admin-commissions-visual.spec.ts, and apps/web/tests/e2e/admin-commissions-accessibility.spec.ts.",
+    "API inventory, OpenAPI, and Postman validation evidence for the implemented commission routes."
+  ],
+  "scopeNotes": [
+    "Admin Dashboard scope is approved Desktop-only; Arabic is RTL and English/Simplified Chinese are LTR. Tablet/mobile browser projects were intentionally skipped for this task.",
+    "The UI does not hardcode a universal commission or advertising price, does not imply automatic bank verification, and does not expose raw audit snapshots, private data, or provider-internal metadata.",
+    "View-only Admin sessions keep policy, account-override, and exception mutations disabled; API authentication and RBAC remain authoritative.",
+    "Backend commission route truth repairs were completed as separate authorized prerequisites and are not included as frontend_071 runtime changes."
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-20T14:49:40.4316954Z"
+}

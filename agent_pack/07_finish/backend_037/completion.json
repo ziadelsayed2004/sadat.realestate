@@ -1,81 +1,63 @@
 {
   "taskId": "backend_037",
-  "summary": "Implemented CMS population counter and real-estate tips contracts, persistence models, safe public projections, and tests. Population values require explicit source metadata and only available records are publicly projected; tips require published and active status.",
+  "summary": "Repaired the completed CMS task's missing administrative real-estate-tip boundary discovered by frontend_072. Tips now use the existing authenticated versioned CMS namespace with strict localized contracts, persistent Mongo repository methods, permission-derived actions, reason-bearing publish transitions, optimistic version checks, safe public-only projection behavior, and synchronized API artifacts. The earlier sourced population behavior remains intact.",
   "filesChanged": [
     "packages/contracts/src/cms/index.ts",
     "packages/contracts/src/contracts/index.ts",
-    "apps/api/src/modules/cms/population-tips.ts",
     "apps/api/src/modules/cms/population-models.ts",
-    "apps/api/tests/cms/population-tips.test.ts",
-    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/src/modules/cms/admin-content-repository.ts",
+    "apps/api/src/modules/cms/admin-content-service.ts",
+    "apps/api/src/modules/cms/admin-content-runtime.ts",
+    "apps/api/tests/cms/admin-content.test.ts",
+    "apps/api/tests/cms/admin-content-router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
     "docs/api/cms-population-tips.md",
-    "agent_pack/08_reality_sync/CURRENT_STATE.md"
+    "apps/web/src/features/admin_content/copy.ts"
   ],
   "verification": [
-    {
-      "command": "npm.cmd run build --workspace packages/contracts; node --test --import tsx apps/api/tests/cms/population-tips.test.ts",
-      "exitCode": 0,
-      "result": "passed",
-      "notes": "Focused population and tips suite passed all 3 tests."
-    },
-    {
-      "command": "npm.cmd test -- --runInBand",
-      "exitCode": 0,
-      "result": "passed",
-      "notes": "Full API suite passed all 249 tests."
-    },
-    {
-      "command": "npm.cmd run test:coverage",
-      "exitCode": 0,
-      "result": "passed",
-      "notes": "Coverage: 87.53% lines, 81.76% branches, 87.17% functions."
-    },
-    {
-      "command": "npm.cmd run build",
-      "exitCode": 0,
-      "result": "passed",
-      "notes": "Workspace, contracts, and API builds passed."
-    },
-    {
-      "command": "npm.cmd audit --audit-level=high",
-      "exitCode": 0,
-      "result": "passed",
-      "notes": "No high-severity dependency vulnerabilities found."
-    },
-    {
-      "command": "npm.cmd run api:inventory",
-      "exitCode": 0,
-      "result": "passed",
-      "notes": "API inventory generated successfully."
-    },
-    {
-      "command": "npm.cmd run openapi:validate",
-      "exitCode": 0,
-      "result": "passed",
-      "notes": "OpenAPI artifact valid."
-    },
-    {
-      "command": "npm.cmd run postman:validate",
-      "exitCode": 0,
-      "result": "passed",
-      "notes": "Postman artifact valid."
-    },
-    {
-      "command": "node agent_pack/scripts/audit_pack.mjs",
-      "exitCode": 0,
-      "result": "passed",
-      "notes": "Agent Pack audit reported zero errors."
-    }
+    { "command": "npm.cmd run build --workspace packages/contracts", "exitCode": 0, "result": "passed", "notes": "Shared CMS contracts compiled." },
+    { "command": "npm.cmd run typecheck --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "API runtime and test TypeScript passed." },
+    { "command": "node --test --import tsx apps/api/tests/cms/admin-content.test.ts apps/api/tests/cms/admin-content-router.test.ts apps/api/tests/cms/population-tips.test.ts", "exitCode": 0, "result": "passed", "notes": "Nine focused CMS, router, population, and tip tests passed, including admin authorization, strict input, localized projection, publish transition, and stale-version behavior." },
+    { "command": "npm.cmd run test:unit --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "API unit suite passed 370/370." },
+    { "command": "npm.cmd run test:api --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "API route suite passed 104/104." },
+    { "command": "npm.cmd run build --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "API production TypeScript build passed." },
+    { "command": "npm.cmd run typecheck", "exitCode": 0, "result": "passed", "notes": "Root contracts, API, and Web typecheck passed after the direct compatibility type repair." },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "passed", "notes": "Workspace and ESLint checks passed." },
+    { "command": "npm.cmd test", "exitCode": 0, "result": "passed", "notes": "Root config, API, and Web tests passed; Web suite reported 76/76." },
+    { "command": "npm.cmd run build", "exitCode": 0, "result": "passed", "notes": "Root contracts, API, client, and SSR builds passed." },
+    { "command": "npm.cmd run api:inventory", "exitCode": 0, "result": "passed", "notes": "Inventory reports the existing GET/PUT /api/v1/admin/content/:namespace route as implemented; the synchronized namespace contract includes tips." },
+    { "command": "npm.cmd run openapi:validate --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "OpenAPI route and CMS schema references validate." },
+    { "command": "npm.cmd run postman:validate --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "Postman collection validates against the implemented route inventory." },
+    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "passed", "notes": "No high-severity dependency vulnerabilities reported." },
+    { "command": "git diff --check", "exitCode": 0, "result": "passed", "notes": "No whitespace errors in the dirty worktree diff." },
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "passed", "notes": "Agent Pack audit reported zero errors." }
   ],
   "sourceEvidence": [
     "agent_pack/04_tracks/backend/B2_master_data_localization/backend_037.md",
+    "agent_pack/04_tracks/frontend/F5_admin_dashboard/frontend_072.md",
     "packages/contracts/src/cms/index.ts",
     "apps/api/src/modules/cms/population-tips.ts",
-    "apps/api/tests/cms/population-tips.test.ts"
+    "apps/api/src/modules/cms/population-models.ts",
+    "apps/api/src/modules/cms/admin-content-router.ts",
+    "apps/api/src/modules/cms/admin-content-service.ts",
+    "apps/api/src/modules/cms/admin-content-repository.ts",
+    "apps/api/src/modules/public/homepage.ts",
+    "apps/api/tests/cms/population-tips.test.ts",
+    "apps/api/tests/cms/admin-content.test.ts",
+    "apps/api/tests/cms/admin-content-router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json"
+  ],
+  "scopeNotes": [
+    "The frontend_072 dependency exposed that backend_037's existing tip contracts and Mongo model had no administrative runtime boundary. The smallest owning Backend task was reopened and repaired; no unrelated Backend task was changed.",
+    "The existing generic /api/v1/admin/content/:namespace route remains the single versioned CMS route and is now explicitly synchronized for the tips namespace.",
+    "apps/web/src/features/admin_content/copy.ts received only a type-compatibility widening required by the shared namespace union; it adds no runtime route or fabricated product copy.",
+    "No real .env, credential, production data, or external provider was read or used."
   ],
   "knownGaps": [
-    "Production population data and editorial tip content are not supplied; the runtime safely represents unavailable or empty states.",
-    "Live MongoDB integration remains environment-dependent and was not run without isolated replica-set prerequisites."
+    "Live MongoDB integration was not run because an isolated non-production replica-set topology and credentials were not configured; deterministic service and route tests cover the repaired behavior."
   ],
-  "completedAt": "2026-08-13T23:54:06.9681677Z"
+  "completedAt": "2026-08-20T16:08:13.0701300Z"
 }

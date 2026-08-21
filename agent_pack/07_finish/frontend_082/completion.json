@@ -1,0 +1,145 @@
+{
+  "taskId": "frontend_082",
+  "summary": "Completed the three-locale and direction QA matrix for Arabic RTL, English LTR, and Simplified Chinese LTR. Added executable coverage for localized long text, date/number/currency/area formatting, locale persistence, safe fallback behavior, and SSR-safe document language/direction application, then reran the full Web/root and browser matrices.",
+  "filesChanged": [
+    "apps/web/tests/locale-direction.vitest.test.ts"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/locale-direction.vitest.test.ts --run",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "3 focused locale/direction tests passed across ar, en, and zh-CN, covering long text, dates, numbers, currency, area, persistence, and HTML direction."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web tests passed: 52 Vitest files and 76 Node tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR production builds passed; existing chunk-size warning only."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root API and Web aggregate tests passed; Web Node suite reported 76 passing tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web production builds passed."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "72 visual tests passed across configured locale/device projects, including explicit HTML lang/dir assertions."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "81 accessibility tests passed across configured locale/device projects."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory reported implemented routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities reported."
+    },
+    {
+      "command": "npm.cmd run env:check (with process-local test-only values)",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "ENV_CHECK_OK; no real .env or secret was read."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors and no in-progress task."
+    },
+    {
+      "command": "npm.cmd run security:check",
+      "exitCode": 1,
+      "result": "unavailable",
+      "notes": "The repository has no security:check script; this command was not reported as passed."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F6_integration_release/frontend_082.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json — supported locale, direction, and device metadata",
+    "apps/web/src/features/localization/catalog.ts — validated ar/en/zh-CN translation catalogs",
+    "apps/web/src/features/localization/runtime.ts — locale normalization, direction, persistence, and SSR-safe document application",
+    "apps/web/src/features/public/model.ts — implemented localized text, money, and area formatters",
+    "apps/web/tests/locale-direction.vitest.test.ts — executable locale/date/number/currency/persistence matrix",
+    "apps/web/tests/localization.test.ts — existing catalog, fallback, persistence, and direction coverage",
+    "apps/web/tests/e2e/visual.spec.ts — browser lang/dir assertions and locale visual matrix",
+    "apps/web/tests/e2e/accessibility.spec.ts — configured locale/device accessibility matrix",
+    "apps/web/tests/ssr.test.mjs — SSR locale and direction evidence"
+  ],
+  "scopeNotes": [
+    "No production runtime, API, contract, dependency, or design asset changes were needed; the task added only executable QA coverage within apps/web/tests.",
+    "Locale formatting assertions validate non-empty, non-corrupt runtime output without hardcoding ICU-specific punctuation or digit glyphs that vary by platform."
+  ],
+  "knownGaps": [
+    "This quality task has no direct Screen IDs; source metadata is verified through DESIGN_SOURCE_MANIFEST.json and the existing visual matrix.",
+    "The repository's security:check script is unavailable and remains an explicit verification gap.",
+    "This task does not claim all APIs, all screens, or full release completion."
+  ],
+  "completedAt": "2026-08-21T07:38:31.8288757Z"
+}

@@ -1,0 +1,151 @@
+{
+  "taskId": "frontend_024",
+  "summary": "Implemented provider business/developer organization details and private document requirements for AUTH-10, AUTH-10+, AUTH-11, and AUTH-12. The frontend uses the existing strict provider application contracts, sends document uploads as the API-required raw file stream with validated metadata headers, renders server-authoritative requirements and available actions, and keeps private document URLs and storage keys out of the UI.",
+  "filesChanged": [
+    "apps/web/src/features/auth/client.ts",
+    "apps/web/src/features/auth/pages.tsx",
+    "apps/web/src/features/provider_auth/account.tsx",
+    "apps/web/src/features/provider_auth/index.ts",
+    "apps/web/src/features/provider_auth/styles.css",
+    "apps/web/src/features/provider_auth/organization-copy.ts",
+    "apps/web/src/features/provider_auth/organization.tsx",
+    "apps/web/src/features/provider_auth/documents-copy.ts",
+    "apps/web/src/features/provider_auth/documents.tsx",
+    "apps/web/tests/provider-organization-documents.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-organization-documents.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-business-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-business-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-business-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-business-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-business-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-business-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-business-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-business-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-business-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-company-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-company-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-company-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-company-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-company-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-company-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-company-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-company-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-organization-company-zh-CN-tablet-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript compilation passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed with zero warnings permitted by the repository gate."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/provider-organization-documents.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused provider organization/document suite: 1 file, 10 tests passed."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full web test command completed successfully; the focused suite provides the task-specific test count."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-organization-documents.spec.ts --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Article-style task matrix completed 18/18 checks across desktop, tablet, mobile, Arabic, English, and Simplified Chinese; visual snapshots and accessibility assertions passed."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository accessibility matrix completed 81/81 checks."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR web builds passed; Vite reported only the existing large-chunk warning."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Provider application business, company, document upload, and document delete routes are implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace and ESLint gate passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, client, and SSR builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities found."
+    }
+  ],
+  "sourceEvidence": [
+    "AUTH-10: docs/design_sources/final_screens/authentication/AUTH-10.png (SHA-256 04672e3ae29900dd63fc53cd1fc736bb42f0555629b3edc90d519fffd6d4278b); Drive https://drive.google.com/drive/folders/1Gc5u4F3x_6NTHjZfyA7gZlHWR_lEuhmG; Figma authentication prototype node 6017-16212.",
+    "AUTH-10+: docs/design_sources/final_screens/authentication/AUTH-10-plus.png (SHA-256 d351ce1854b83efd920290486138a0427bcb92585e4a73dfce55898d62df6b32); Drive https://drive.google.com/drive/folders/1i9zhjfFxAQk4fLrqhA7QAjpJIscXAAcq; Figma authentication prototype node 6017-16212.",
+    "AUTH-11: docs/design_sources/final_screens/authentication/AUTH-11.png (SHA-256 9523fe69a0c5a301012dc917fecb989b2a8f3ed15bd77604b271838f05552a5e); Drive https://drive.google.com/drive/folders/1Bk7CqnHocflKdAvDrjrh2B2kXSyoteRk; Figma authentication prototype node 6017-16212.",
+    "AUTH-12: docs/design_sources/final_screens/authentication/AUTH-12.png (SHA-256 68bf1cfa7e2f78048d1f48c69a28203864044e2e990b2730f2633a755a45709); Drive https://drive.google.com/drive/folders/1gVQgJgzilt4hpDgQF7_2LHLaMe1Hhkz7; Figma authentication prototype node 6017-16212.",
+    "Runtime contracts: PATCH /api/v1/provider/application/business, PATCH /api/v1/provider/application/company, POST /api/v1/provider/application/documents, DELETE /api/v1/provider/application/documents/:documentId, and GET /api/v1/provider/application.",
+    "Shared contract schemas in packages/contracts/src/provider/index.ts; provider application routes and projections in apps/api/src/modules/provider/router.ts, apps/api/src/modules/provider/service.ts, and apps/api/src/modules/uploads/router.ts.",
+    "Focused regression tests: apps/web/tests/provider-organization-documents.vitest.test.tsx and apps/web/tests/e2e/provider-organization-documents.spec.ts."
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/auth/client.ts and apps/web/src/features/auth/pages.tsx were modified as explicitly authorized direct integration exceptions so the existing provider onboarding flow can reach the new organization and document screens.",
+    "The raw upload uses the existing API contract: file bytes in the request body plus validated content type, X-Document-Category, and X-File-Name headers.",
+    "The API does not expose a document list in ProviderApplicationData; the UI keeps local upload records until the next application refresh and never fabricates private URLs or storage keys.",
+    "Unsupported product fields such as service areas and property types are intentionally not rendered because they are absent from the current contract."
+  ],
+  "knownGaps": [
+    "No production credentials, provider data, external storage, or live database were used; deterministic route fixtures cover the browser matrix.",
+    "The repository declares Node >=24 <25 while this environment runs Node 22.18.0; all mandatory checks passed under the available runtime.",
+    "Vite emits the existing large-chunk warning; it does not fail the build."
+  ],
+  "completedAt": "2026-08-18T03:04:40.2856981Z"
+}

@@ -20,7 +20,7 @@ test('route guards keep public routes open and protect each dashboard surface by
   const publicRoute = resolveRoute('/properties');
   const seekerRoute = resolveRoute('/seeker/requests');
   const providerRoute = resolveRoute('/provider/properties');
-  const adminRoute = resolveRoute('/admin/audit-log');
+  const adminRoute = resolveRoute('/admin/audit-logs');
 
   assert.equal(guardRoute(publicRoute, ANONYMOUS_ROUTE_SESSION).allowed, true);
   const anonymousSeeker = guardRoute(seekerRoute, ANONYMOUS_ROUTE_SESSION);
@@ -52,7 +52,7 @@ test('shell selection maps public, auth, seeker, provider, and admin surfaces ex
 
 test('dashboard shells expose a scoped navigation landmark and preserve locale direction', () => {
   const copy = getFoundationCopy('ar');
-  const route = resolveRoute('/admin/audit-log');
+  const route = resolveRoute('/admin/audit-logs');
   const markup = renderToStaticMarkup(createElement(AdminShell, {
     route,
     locale: 'ar',

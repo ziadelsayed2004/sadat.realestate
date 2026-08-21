@@ -31,6 +31,7 @@ Implement settings modules with optimistic concurrency and preview.
 - Screen ID `ADM-56` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 - Screen ID `ADM-57` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
 - Screen ID `ADM-58` through `09_sources/DESIGN_SOURCE_MANIFEST.json`.
+- The Project Owner-approved `DESIGN-EXCEPTION-ADM-54` in `08_reality_sync/DECISION_LOG.md` waives only the unavailable direct ADM-54 comparison; its original external provenance remains authoritative and the approved substitute Admin design-system, sibling-frame, locale/direction, Desktop, functional, permission, visual-regression, and accessibility evidence is mandatory.
 
 ## Allowed Roots
 
@@ -48,7 +49,7 @@ Any file outside these roots requires an explicit necessity note in completion e
 - [ ] Inspect the current runtime and never replace existing truth with an assumption.
 - [ ] Implement only the selected scope and document every unresolved dependency or decision.
 - [ ] Do not introduce secrets, production data, or unsupported claims.
-- [ ] Match every selected Screen ID to its approved frame and record the exact reference in evidence.
+- [ ] Match every selected Screen ID to its approved frame and record the exact reference in evidence; for ADM-54 only, apply `DESIGN-EXCEPTION-ADM-54`, record that direct comparison was not performed, and provide the approved substitute evidence without claiming pixel-perfect fidelity.
 - [ ] Use implemented backend contracts only; production mocks and invented endpoints are forbidden.
 - [ ] Complete applicable Loading, Empty, Error, Retry, Success, and permission variants.
 - [ ] Verify Arabic RTL plus every other supported locale, direction, approved device scope, and applicable UI tests.

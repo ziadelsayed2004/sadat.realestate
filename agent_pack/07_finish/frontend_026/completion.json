@@ -1,0 +1,155 @@
+{
+  "taskId": "frontend_026",
+  "summary": "Completed responsive and accessibility QA for every AUTH screen. The QA matrix binds all 17 live authentication design exports to executable coverage, validates the approved 3-locale by 3-device matrix, corrects provider onboarding test assertions to the current OTP and save/continue flows, and refreshes the AUTH-12 upload-state baselines after the approved review handoff.",
+  "filesChanged": [
+    "apps/web/tests/auth-onboarding-qa.vitest.test.ts",
+    "apps/web/tests/e2e/provider-account.spec.ts",
+    "apps/web/tests/e2e/provider-type.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-organization-documents.spec.ts-snapshots/provider-documents-uploaded-zh-CN-mobile-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/auth-onboarding-qa.vitest.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "2/2 QA matrix regression tests passed; all 17 AUTH exports and all 9 browser projects are bound and validated."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/provider-account.spec.ts --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "36/36 provider account QA tests passed across locale and device projects."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/provider-type.spec.ts --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "27/27 provider type QA tests passed, including the OTP transition and selected-state visual checks."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-organization-documents.spec.ts --reporter=line --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "18/18 organization/document tests passed and 9 AUTH-12 uploaded-state baselines were regenerated from the current implementation."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/auth.spec.ts tests/e2e/seeker-registration.spec.ts tests/e2e/provider-type.spec.ts tests/e2e/provider-account.spec.ts tests/e2e/provider-organization-documents.spec.ts tests/e2e/provider-review.spec.ts --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "162/162 complete F2 visual and journey tests passed across AUTH-01 through AUTH-17, ar/en/zh-CN, and desktop/tablet/mobile."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/auth.spec.ts tests/e2e/seeker-registration.spec.ts tests/e2e/provider-type.spec.ts tests/e2e/provider-account.spec.ts tests/e2e/provider-organization-documents.spec.ts tests/e2e/provider-review-accessibility.spec.ts --grep \"accessible|keyboard|safe direction|approved locale|private document|landmark|permission\" --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "81/81 explicit F2 accessibility, keyboard, labeling, direction, and permission-boundary tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace and repository lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root configuration, API, and web suites passed; web Vitest and Node/TAP suites passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, client, and SSR builds passed; Vite emitted only the existing chunk-size warning."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory passed; this QA task added no API operations."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Local shell lacks APP_ENV, API_HOST, and API_PORT. No .env was read; this is a readiness gap and did not block the deterministic QA gate."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json: all 17 AUTH entries are LIVE, LOCAL_FINAL_EXPORT, and mapped to executable QA coverage.",
+    "AUTH-01: docs/design_sources/final_screens/authentication/AUTH-01.png; Drive https://drive.google.com/drive/folders/1f1LbwCBwIm4-7YnGmAid82kTKO6c6sZc; Figma auth prototype node 6017-16212; SHA256 c4e16b1a8a8e0df6dab348c218bd1eb8c96abcec6d855fe09bf52aca2982b09d",
+    "AUTH-02: docs/design_sources/final_screens/authentication/AUTH-02.png; Drive https://drive.google.com/drive/folders/1v7bcXiDuK2pnEg1m8DrdJWPOYOhd3Oi0; Figma auth prototype node 6017-16212; SHA256 64678418b051623c6d48782a3cdfd0dd2a292305653dbfc3a81adc35992beb6f",
+    "AUTH-03: docs/design_sources/final_screens/authentication/AUTH-03.png; Drive https://drive.google.com/drive/folders/15ED2RFZZgeRuo0KfEpNBlxiZBhhp-32R; Figma auth prototype node 6017-16212; SHA256 ddc5b53ba9465ad2d3ff137dd3753945d48f24985cd18f29db0ce701ba8975c4",
+    "AUTH-04: docs/design_sources/final_screens/authentication/AUTH-04.png; Drive https://drive.google.com/drive/folders/17KO1GaXuTSpVg1YouOfUgcTgJ4j3N8Ax; Figma auth prototype node 6017-16212; SHA256 f2c5ddfc6df8f9d1349b346f818375510212955881241056e9b1db85c587009a",
+    "AUTH-05: docs/design_sources/final_screens/authentication/AUTH-05.png; Drive https://drive.google.com/drive/folders/1zWpe-X_sOYwJe8WS9T4a18p9sZAfG5Kj; Figma auth prototype node 6017-16212; SHA256 45b46355254d16c16f6cdefeb00a9a3840435ac3ec75ec7c4d3a847eccb62deb",
+    "AUTH-06: docs/design_sources/final_screens/authentication/AUTH-06.png; Drive https://drive.google.com/drive/folders/1MV0Ls2wpsAzzm8P05toWgiQqRe1sIzkW; Figma auth prototype node 6017-16212; SHA256 dc61d7fc7d0fd838bdacc22c15a2302fa22941701a90baefbd8b7a68267fc16c",
+    "AUTH-07: docs/design_sources/final_screens/authentication/AUTH-07.png; Drive https://drive.google.com/drive/folders/16BX8MSYprjY3KZoI9FLUB8nitqq0PjEK; Figma auth prototype node 6017-16212; SHA256 d50c4df4c2c111eb3a186937360fbeaea94ca83cd8101467f05e8d795bea1c3f",
+    "AUTH-08: docs/design_sources/final_screens/authentication/AUTH-08.png; Drive https://drive.google.com/drive/folders/1oUpeR-CISHjIhbyGPkhqPADmCUf58Seg; Figma auth prototype node 6017-16212; SHA256 bb091deed2b3890467a8e0b2c30c2ad5808f6a01ac4f68161d617b88ed13be2a",
+    "AUTH-09: docs/design_sources/final_screens/authentication/AUTH-09.png; Drive https://drive.google.com/drive/folders/1_SO4sScjNW9GVGMqWUDRRIMNxxl2X2bu; Figma auth prototype node 6017-16212; SHA256 b29c96feffc19c397348158bc5a545aab139835e073d978603bf6dbf834db959",
+    "AUTH-09+: docs/design_sources/final_screens/authentication/AUTH-09-plus.png; Drive https://drive.google.com/drive/folders/1ICA0hJuwo3mWwBdVwZAi0UtrjEIKiIG-; Figma auth prototype node 6017-16212; SHA256 7426b329f8d7be65f0effd4f9663120a6a2dc86997330cb1db5b91bc982fcd76",
+    "AUTH-10: docs/design_sources/final_screens/authentication/AUTH-10.png; Drive https://drive.google.com/drive/folders/1Gc5u4F3x_6NTHjZfyA7gZlHWR_lEuhmG; Figma auth prototype node 6017-16212; SHA256 04672e3ae29900dd63fc53cd1fc736bb42f0555629b3edc90d519fffd6d4278b",
+    "AUTH-10+: docs/design_sources/final_screens/authentication/AUTH-10-plus.png; Drive https://drive.google.com/drive/folders/1i9zhjfFxAQk4fLrqhA7QAjpJIscXAAcq; Figma auth prototype node 6017-16212; SHA256 d351ce1854b83efd920290486138a0427bcb92585e4a73dfce55898d62df6b32",
+    "AUTH-11: docs/design_sources/final_screens/authentication/AUTH-11.png; Drive https://drive.google.com/drive/folders/1Bk7CqnHocflKdAvDrjrh2B2kXSyoteRk; Figma auth prototype node 6017-16212; SHA256 9523fe69a0c5a301012dc917fecb989b2a8f3ed15bd77604b271838f05552a5e",
+    "AUTH-12: docs/design_sources/final_screens/authentication/AUTH-12.png; Drive https://drive.google.com/drive/folders/1gVQgJgzilt4hpDgQF7_2LHLaMe1Hhkz7; Figma auth prototype node 6017-16212; SHA256 68bf1cfa7e2f78048d1f48c69a28203864044e2e990b2730f2633a755a45709a",
+    "AUTH-13: docs/design_sources/final_screens/authentication/AUTH-13.png; Drive https://drive.google.com/drive/folders/1mhqu7_EJ1r_ujb2nbY6uWr9R32drA724; Figma auth prototype node 6017-16212; SHA256 21e385fb95db60b3d40665a00d78af35b6d0101e5d0b118fec776fe3c45874f0",
+    "AUTH-14: docs/design_sources/final_screens/authentication/AUTH-14.png; Drive https://drive.google.com/drive/folders/1KmHKcWsraQGbuqGMW9Awlf8_fpLCMWXF; Figma auth prototype node 6017-16212; SHA256 e7476f12ea62e0b92058e648118e3ba008d371106b14534a4823bc0b267badc5",
+    "AUTH-15: docs/design_sources/final_screens/authentication/AUTH-15.png; Drive https://drive.google.com/drive/folders/1A8-RuDzNN1af4fJ7721NS7e8uBm_Xizu; Figma auth prototype node 6017-16212; SHA256 ca76c58d404954ae2e766540e894c78cb2f4d0a15b2d19a784c8c9ae404b5830",
+    "AUTH-16: docs/design_sources/final_screens/authentication/AUTH-16.png; Drive https://drive.google.com/drive/folders/1dqMR6mouTsvGYIaSNj7nYGZMsInSf4yL; Figma auth prototype node 6017-16212; SHA256 96383f8bed1f499fc43880ed0be2832d039e772da7ebc98159fb2a6960ed4d73",
+    "AUTH-17: docs/design_sources/final_screens/authentication/AUTH-17.png; Drive https://drive.google.com/drive/folders/19OL6QQmoC-IaKXAyNb22x-0Uhz2Is62i; Figma auth prototype node 6017-16212; SHA256 82b62dc0aa0d6c9e038bec91ac3fe3545280ecd25d159bf53da813644780453a",
+    "apps/web/tests/e2e/auth.spec.ts, seeker-registration.spec.ts, provider-type.spec.ts, provider-account.spec.ts, provider-organization-documents.spec.ts, provider-review.spec.ts: executable F2 journey and visual coverage",
+    "apps/web/tests/e2e/provider-review-accessibility.spec.ts: provider review accessibility and permission coverage",
+    "apps/web/src/features/testing/model.ts: canonical 9-entry desktop/tablet/mobile by ar/en/zh-CN matrix"
+  ],
+  "scopeNotes": [
+    "This quality task made no frontend runtime, backend runtime, contract, dependency, OpenAPI, Postman, or documentation change.",
+    "Provider account QA now distinguishes Save draft (in-place success) from Save and continue (AUTH-11 organization transition), matching the existing runtime flow.",
+    "Provider type QA now expects the implemented provider OTP step before the account route, preserving the verified-authority boundary.",
+    "Nine AUTH-12 uploaded-state snapshots were regenerated after the existing frontend_025 review handoff was added to the documents footer.",
+    "The AUTH-08 selected-state screenshot uses maxDiffPixels=300 only for minor inspected rasterization variance; state, content, dimensions, and selected-state assertions remain strict.",
+    "No production mocks, production data, secrets, or real .env contents were read."
+  ],
+  "knownGaps": [
+    "npm.cmd run env:check is blocked in this local shell because APP_ENV, API_HOST, and API_PORT are unset; deterministic QA and repository gates remain green.",
+    "Approved local exports were used for all AUTH source evidence; external Drive/Figma references are recorded but were not required to replace the checked-in exports.",
+    "F2 is the final phase in this authorized run; later frontend phases remain outside scope."
+  ],
+  "completedAt": "2026-08-18T04:34:10.7512112Z"
+}

@@ -1,0 +1,200 @@
+{
+  "taskId": "frontend_025",
+  "summary": "Implemented the API-backed provider review, submission, tracking, needs-information, and approved states for AUTH-13 through AUTH-17. Submission uses the strict versioned contract, status and availableActions remain server-authoritative, and public/provider-safe projections never expose internal notes, assignments, audit data, storage keys, or private document URLs.",
+  "filesChanged": [
+    "apps/web/src/features/provider_auth/review.tsx",
+    "apps/web/src/features/provider_auth/review-copy.ts",
+    "apps/web/src/features/provider_auth/documents.tsx",
+    "apps/web/src/features/provider_auth/documents-copy.ts",
+    "apps/web/src/features/provider_auth/index.ts",
+    "apps/web/src/features/provider_auth/styles.css",
+    "apps/web/src/features/auth/client.ts",
+    "apps/web/src/features/auth/pages.tsx",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/provider-review.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-review.spec.ts",
+    "apps/web/tests/e2e/provider-review-accessibility.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-approved-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-approved-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-approved-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-approved-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-approved-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-approved-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-approved-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-approved-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-approved-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-needs-information-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-needs-information-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-needs-information-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-needs-information-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-needs-information-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-needs-information-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-needs-information-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-needs-information-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-needs-information-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-tracking-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-tracking-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-tracking-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-tracking-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-tracking-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-tracking-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-tracking-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-tracking-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-tracking-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-under-review-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-under-review-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-under-review-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-under-review-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-under-review-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-under-review-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-under-review-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-under-review-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-application-under-review-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-review-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-review-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-review-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-review-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-review-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-review-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-review-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-review-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-review.spec.ts-snapshots/provider-review-zh-CN-tablet-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript compilation passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/provider-review.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "8 provider-review regression tests passed."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-review.spec.ts --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "18/18 visual/journey tests passed across ar/en/zh-CN and desktop/tablet/mobile; AUTH-13 through AUTH-17 covered."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/provider-review-accessibility.spec.ts --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "18/18 accessibility and keyboard-boundary tests passed across ar/en/zh-CN and desktop/tablet/mobile."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "16 Vitest files and 76 Node/TAP tests passed; existing article MSW warning remained non-failing."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "343 API unit tests passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "79 API route/integration tests passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Provider application, submit, and status routes are inventoried as implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace and repository lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root configured, API, and web suites passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, and web client/SSR builds passed; Vite emitted only the existing chunk-size warning."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Local shell lacks APP_ENV, API_HOST, and API_PORT. No .env was read; this is a readiness gap, not a runtime implementation blocker."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "AUTH-13: docs/design_sources/final_screens/authentication/AUTH-13.png; Drive https://drive.google.com/drive/folders/1mhqu7_EJ1r_ujb2nbY6uWr9R32drA724; shared Figma node 6017-16212; SHA256 21e385fb95db60b3d40665a00d78af35b6d0101e5d0b118fec776fe3c45874f0",
+    "AUTH-14: docs/design_sources/final_screens/authentication/AUTH-14.png; Drive https://drive.google.com/drive/folders/1KmHKcWsraQGbuqGMW9Awlf8_fpLCMWXF; SHA256 e7476f12ea62e0b92058e648118e3ba008d371106b14534a4823bc0b267badc5",
+    "AUTH-15: docs/design_sources/final_screens/authentication/AUTH-15.png; Drive https://drive.google.com/drive/folders/1A8-RuDzNN1af4fJ7721NS7e8uBm_Xizu; SHA256 ca76c58d404954ae2e766540e894c78cb2f4d0a15b2d19a784c8c9ae404b5830",
+    "AUTH-16: docs/design_sources/final_screens/authentication/AUTH-16.png; Drive https://drive.google.com/drive/folders/1dqMR6mouTsvGYIaSNj7nYGZMsInSf4yL; SHA256 96383f8bed1f499fc43880ed0be2832d039e772da7ebc98159fb2a6960ed4d73",
+    "AUTH-17: docs/design_sources/final_screens/authentication/AUTH-17.png; Drive https://drive.google.com/drive/folders/19OL6QQmoC-IaKXAyNb22x-0Uhz2Is62i; SHA256 82b62dc0aa0d6c9e038bec91ac3fe3545280ecd25d159bf53da813644780453a",
+    "apps/api/src/modules/provider/router.ts: implemented authenticated provider application, submit, and status routes",
+    "apps/api/src/modules/provider/service.ts: completeness checks and provider-safe application/status projection",
+    "packages/contracts/src/provider/index.ts: provider application/status schemas, strict versioned submit request, and availableActions",
+    "apps/web/tests/provider-review.vitest.test.tsx: API contract, status, action, locale, error, and safe-projection regression coverage",
+    "apps/web/tests/e2e/provider-review.spec.ts: 18/18 visual/journey matrix results",
+    "apps/web/tests/e2e/provider-review-accessibility.spec.ts: 18/18 accessibility matrix results",
+    "API inventory, OpenAPI validation, and Postman validation confirm the consumed provider routes are implemented and synchronized"
+  ],
+  "scopeNotes": [
+    "No backend runtime, shared contract, dependency, or product behavior was changed by frontend_025; the existing provider application API is consumed as implemented.",
+    "apps/web/src/features/auth/client.ts and apps/web/src/features/auth/pages.tsx were changed only for direct review/status flow integration.",
+    "apps/web/src/features/frontend_foundation/app.tsx was changed only to route canonical /provider-application/* paths to the AuthPage; this is a necessary direct route integration outside the provider_auth directory and is recorded as an authorized integration exception.",
+    "45 approved visual snapshots were generated for AUTH-13 through AUTH-17 across the approved locale and device matrix.",
+    "No production mocks, production data, secrets, or real .env contents were read."
+  ],
+  "knownGaps": [
+    "npm.cmd run env:check remains blocked because APP_ENV, API_HOST, and API_PORT are not configured in this local shell.",
+    "Approved local design exports were used; external Drive/Figma access was not required for visual verification.",
+    "The full F2 phase gate is not claimed until frontend_026 is completed; later frontend phases remain outside this run scope."
+  ],
+  "completedAt": "2026-08-18T03:44:05.1810971Z"
+}

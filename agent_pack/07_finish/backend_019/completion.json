@@ -1,71 +1,126 @@
 {
   "taskId": "backend_019",
-  "summary": "Implemented reason-bearing account verification, rejection, needs-information, suspension, restriction, and restoration workflows with explicit Admin permissions, provider aggregate synchronization, optimistic concurrency, session revocation, stale-session access enforcement, append-only transition evidence, strict projections, and synchronized runtime/OpenAPI/Postman contracts.",
+  "summary": "Implemented and synchronized the Admin account/provider read boundary required by ADM-02 through ADM-04 and repaired the directly required ADM-06 through ADM-08 account-report moderation boundary: bounded paginated reports, safe reporter projection, reason-bearing optimistic resolution, synchronized runtime contracts, OpenAPI, Postman, inventory, and account-report model persistence. Existing reason-bearing account restrictions and Provider review transitions remain unchanged.",
   "filesChanged": [
     "packages/contracts/src/accounts/index.ts",
     "packages/contracts/src/contracts/index.ts",
-    "apps/api/src/modules/accounts/access-guard.ts",
-    "apps/api/src/modules/accounts/models.ts",
     "apps/api/src/modules/accounts/repository.ts",
     "apps/api/src/modules/accounts/router.ts",
-    "apps/api/src/modules/accounts/runtime.ts",
     "apps/api/src/modules/accounts/service.ts",
-    "apps/api/src/app.ts",
-    "apps/api/src/server.ts",
-    "apps/api/src/modules/docs/api-artifacts.ts",
     "apps/api/src/modules/testing/test-suites.ts",
-    "apps/api/tests/accounts/access-guard.test.ts",
-    "apps/api/tests/accounts/contracts.test.ts",
-    "apps/api/tests/accounts/models.test.ts",
     "apps/api/tests/accounts/router.test.ts",
     "apps/api/tests/accounts/service.test.ts",
+    "apps/api/tests/accounts/read-router.test.ts",
+    "packages/contracts/src/moderation/index.ts",
+    "apps/api/src/modules/moderation/models.ts",
+    "apps/api/src/modules/moderation/repository.ts",
+    "apps/api/src/modules/moderation/router.ts",
+    "apps/api/src/modules/moderation/service.ts",
+    "apps/api/tests/moderation/service.test.ts",
+    "apps/api/tests/moderation/router.test.ts",
+    "docs/api/account-states.md",
     "apps/api/openapi/openapi.json",
     "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
     "docs/api/account-states.md",
-    "docs/api/admin-accounts.md",
-    "docs/api/api-artifacts.md",
-    "docs/api/contracts.md",
     "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
-    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md",
-    "agent_pack/03_execution/COUNT_SUMMARY.json",
-    "agent_pack/03_execution/TASK_BOARD.md",
-    "agent_pack/03_execution/TASK_STATE.json",
-    "agent_pack/07_finish/FINISH_INDEX.json",
-    "agent_pack/07_finish/backend_019/completion.json",
-    "agent_pack/08_reality_sync/CURRENT_STATE.md",
-    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
-    "agent_pack/step_info.json"
+    "agent_pack/07_finish/backend_019/completion.json"
   ],
   "verification": [
     {
-      "command": "npm.cmd ci",
+      "command": "npm.cmd run build --workspace packages/contracts",
       "exitCode": 0,
       "result": "passed",
-      "notes": "Installed the locked workspace dependency graph; npm reported zero vulnerabilities and an engine warning because the local Node version is 22.18.0 while the repository requires Node 24."
+      "notes": "Contracts compile with the strict account/provider list and detail schemas."
     },
     {
-      "command": "npm.cmd exec -- tsx --test apps/api/tests/accounts/contracts.test.ts apps/api/tests/accounts/models.test.ts apps/api/tests/accounts/service.test.ts apps/api/tests/accounts/router.test.ts apps/api/tests/accounts/access-guard.test.ts",
+      "command": "npm.cmd run typecheck --workspace apps/api",
       "exitCode": 0,
       "result": "passed",
-      "notes": "All 16 task-specific contract, model, service, route, authorization, IDOR, validation, replay, concurrency, aggregate-state, session-revocation, and stale-access tests passed."
+      "notes": "API production and test TypeScript compile successfully."
     },
     {
-      "command": "npm.cmd run quality",
+      "command": "npm.cmd exec -- tsx --test apps/api/tests/accounts/contracts.test.ts apps/api/tests/accounts/service.test.ts apps/api/tests/accounts/router.test.ts apps/api/tests/accounts/read-router.test.ts",
       "exitCode": 0,
       "result": "passed",
-      "notes": "Repository lint, syntax/type checks, workspace tests, coverage thresholds, builds, runtime API inventory, OpenAPI validation, Postman validation, dependency audit, and Agent Pack audit all passed after the final task changes."
+      "notes": "Focused account contract, service, mutation-route, read-route, authorization, validation, safe-projection, and IDOR tests passed."
     },
     {
-      "command": "npm.cmd test -- --runInBand",
+      "command": "npm.cmd run lint",
       "exitCode": 0,
       "result": "passed",
-      "notes": "The root workspace policy suite and complete API test registry passed."
+      "notes": "Workspace check and repository ESLint passed with zero warnings."
     },
     {
-      "command": "npm.cmd run test:unit && npm.cmd run test:integration && npm.cmd run test:api",
+      "command": "npm.cmd run typecheck",
       "exitCode": 0,
       "result": "passed",
-      "notes": "All registered unit, integration, and API category suites passed."
+      "notes": "Contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run test:unit",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 354 registered unit tests passed, including the registered account read-router regression suite."
+    },
+    {
+      "command": "npm.cmd run test:integration",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 28 integration/artifact/readiness tests passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 87 API route/security tests passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, and Web client/SSR builds passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory includes GET /api/v1/admin/users, GET /api/v1/admin/users/:userId, GET /api/v1/admin/providers, and GET /api/v1/admin/providers/:providerId."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI routes and all local references match the implemented runtime inventory."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman collection contains synchronized synthetic requests for all four read routes and has no secret variables."
+    },
+    {
+      "command": "node -e \"JSON.parse(require('fs').readFileSync('apps/api/openapi/openapi.json','utf8')); JSON.parse(require('fs').readFileSync('apps/api/postman/Sadat-Real-Estate.postman_collection.json','utf8')); JSON.parse(require('fs').readFileSync('agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json','utf8')); console.log('JSON_VALID')\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Changed OpenAPI, Postman, and endpoint blueprint JSON artifacts parsed successfully."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 356 API unit tests passed, including account-report permission, safe-projection, optimistic-resolution, and model-related moderation coverage."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 88 API route tests passed, including account-report authentication, admin authorization, strict input, list, and resolve route coverage."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API and shared contracts production builds passed after the account-report repair."
     },
     {
       "command": "npm.cmd audit --audit-level=high",
@@ -74,48 +129,38 @@
       "notes": "npm reported zero vulnerabilities."
     },
     {
-      "command": "npm.cmd run api:inventory",
-      "exitCode": 0,
-      "result": "passed",
-      "notes": "Runtime inventory reported 28 active routes, including both backend_019 routes."
-    },
-    {
-      "command": "npm.cmd run openapi:validate",
-      "exitCode": 0,
-      "result": "passed",
-      "notes": "OpenAPI JSON and the active runtime route inventory were synchronized."
-    },
-    {
-      "command": "npm.cmd run postman:validate",
-      "exitCode": 0,
-      "result": "passed",
-      "notes": "The Postman collection contains synchronized synthetic requests for both account-state endpoints."
-    },
-    {
-      "command": "$env:APP_ENV='test'; Remove-Item Env:TEST_MONGODB_URI -ErrorAction SilentlyContinue; npm.cmd run test:integration:live",
-      "exitCode": 1,
-      "result": "blocked",
-      "notes": "Blocked — prerequisites unavailable: an isolated TEST_MONGODB_URI was not configured, so MongoDB topology and live transactional behavior were not claimed."
-    },
-    {
       "command": "node agent_pack/scripts/audit_pack.mjs",
       "exitCode": 0,
       "result": "passed",
-      "notes": "Agent Pack integrity reported zero errors while backend_019 was the sole in-progress task."
+      "notes": "Agent Pack audit reported zero errors after the repair."
+    },
+    {
+      "command": "npm.cmd run test:integration:live",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "Blocked — prerequisites unavailable: no explicitly isolated non-production TEST_MONGODB_URI/replica-set topology was configured; no live mutation or transactional claim was made."
     }
   ],
   "sourceEvidence": [
     "agent_pack/04_tracks/backend/B1_identity_access/backend_019.md",
-    "agent_pack/01_product/STATE_MACHINES.md account and provider-application transitions",
-    "agent_pack/01_product/BUSINESS_RULES.md BR-005 reason requirement and API-side permission truth",
-    "POST /api/v1/admin/users/:userId/transitions runtime, OpenAPI, Postman, and route-test evidence",
-    "POST /api/v1/admin/providers/:providerId/review runtime, OpenAPI, Postman, and route-test evidence",
-    "Files outside Allowed Roots were limited to packages/contracts/src/contracts/index.ts, apps/api/src/app.ts, apps/api/src/server.ts, apps/api/src/modules/docs/api-artifacts.ts, and apps/api/src/modules/testing/test-suites.ts because shared export, runtime composition/mounting, inventory registration, and test registration are necessary to expose and verify the selected task."
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json entries for the four Admin account/provider read routes and the two implemented account-report routes",
+    "ADM-02, ADM-03, and ADM-04 source references in backend_019 and frontend_061",
+    "GET /api/v1/admin/users and GET /api/v1/admin/users/:userId runtime routes plus apps/api/tests/accounts/read-router.test.ts",
+    "GET /api/v1/admin/providers and GET /api/v1/admin/providers/:providerId runtime routes plus apps/api/tests/accounts/read-router.test.ts",
+    "GET /api/v1/admin/account-reports and POST /api/v1/admin/account-reports/:reportId/resolve runtime routes plus apps/api/tests/moderation/router.test.ts",
+    "ADM-06, ADM-07, and ADM-08 approved local exports under docs/design_sources/final_screens/admin/",
+    "apps/api/openapi/openapi.json and apps/api/postman/Sadat-Real-Estate.postman_collection.json synchronized to the runtime inventory",
+    "docs/api/account-states.md safe projection and permission documentation"
+  ],
+  "scopeNotes": [
+    "The account/provider read routes were a direct Backend truth repair required by frontend_061; no unrelated Frontend feature was started.",
+    "The account-report routes were a direct Backend truth repair required by frontend_062. The existing moderation module was extended as an explicitly authorized integration scope exception because the blueprint assigns these operations to moderation; no account-report creation route or unsupported restriction API was added.",
+    "An earlier combined shell gate exceeded its 120-second command cap during the API suite; the API suite was rerun independently and passed all 87 tests, and the remaining root gates were rerun independently and passed."
   ],
   "knownGaps": [
-    "Live MongoDB verification is blocked until an explicitly isolated TEST_MONGODB_URI is supplied; MongoDB topology was not inferred.",
-    "The local runtime is Node 22.18.0 while package engines require Node 24; all checks passed, but Node 24 CI remains the authoritative engine verification.",
-    "Q-012 deletion, privacy-request, and retention behavior remains pending and outside backend_019; no deletion contract was invented."
+    "Live MongoDB verification remains blocked until an explicitly isolated non-production TEST_MONGODB_URI and replica-set topology are available.",
+    "The local Node runtime is 22.18.0 while repository engines require Node 24; all local checks passed and Node 24 CI remains authoritative.",
+    "Q-012 account deletion, privacy-request, and retention behavior remains outside this task."
   ],
-  "completedAt": "2026-08-13T21:31:29.4630135Z"
+  "completedAt": "2026-08-19T08:12:00+03:00"
 }

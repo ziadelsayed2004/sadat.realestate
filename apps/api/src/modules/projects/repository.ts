@@ -49,6 +49,7 @@ export type ProjectChanges = {
 
 export interface ProjectRepository {
   list(providerId: string, q: ProjectListQuery): Promise<{ items: StoredProject[]; total: number }>;
+  listAll(q: ProjectListQuery): Promise<{ items: StoredProject[]; total: number }>;
   findById(providerId: string, id: string): Promise<StoredProject | null>;
   findByIdAny(id: string): Promise<StoredProject | null>;
   create(input: { project: Omit<StoredProject, 'id' | 'version' | 'createdAt' | 'updatedAt'>; metadata: ProjectMutationMetadata }): Promise<ProjectWriteResult>;
@@ -91,6 +92,18 @@ export function createMongooseProjectRepository(connection: Connection, models: 
     await audit.record({ actorType, actorId: metadata.actorId, targetType: 'project', targetId: id, action, reason: metadata.reason, before, after, requestId: metadata.requestId, traceId: metadata.traceId, occurredAt: metadata.changedAt }, session);
   }
 
+  async function listProjects(filter: Record<string, unknown>, query: ProjectListQuery): Promise<{ items: StoredProject[]; total: number }> {
+    if (query.status) filter.status = query.status;
+    if (query.search) filter.$text = { $search: query.search };
+    const direction: 1 | -1 = query.direction === 'asc' ? 1 : -1;
+    const sort: Record<string, 1 | -1> = query.sort === 'name' ? { 'name.en': direction, slug: 1 } : { [query.sort]: direction, slug: 1 };
+    const [rows, total] = await Promise.all([
+      models.Project.find(filter).sort(sort).skip((query.page - 1) * query.limit).limit(query.limit).lean(),
+      models.Project.countDocuments(filter)
+    ]);
+    return { items: rows.map(row => stored(row as ProjectRecord & { _id: Types.ObjectId })), total };
+  }
+
   async function transitionState(input: { id: string; expectedVersion: number; filter: Record<string, unknown>; set: Record<string, unknown>; metadata: ProjectMutationMetadata; before: StoredProject; auditAction: string; actorType: 'admin' | 'provider' }): Promise<ProjectWriteResult> {
     try {
       return await tx(async session => {
@@ -117,16 +130,10 @@ export function createMongooseProjectRepository(connection: Connection, models: 
 
   return {
     async list(providerId, query) {
-      const filter: Record<string, unknown> = { providerId: new Types.ObjectId(providerId) };
-      if (query.status) filter.status = query.status;
-      if (query.search) filter.$text = { $search: query.search };
-      const direction: 1 | -1 = query.direction === 'asc' ? 1 : -1;
-      const sort: Record<string, 1 | -1> = query.sort === 'name' ? { 'name.en': direction, slug: 1 } : { [query.sort]: direction, slug: 1 };
-      const [rows, total] = await Promise.all([
-        models.Project.find(filter).sort(sort).skip((query.page - 1) * query.limit).limit(query.limit).lean(),
-        models.Project.countDocuments(filter)
-      ]);
-      return { items: rows.map(row => stored(row as ProjectRecord & { _id: Types.ObjectId })), total };
+      return listProjects({ providerId: new Types.ObjectId(providerId) }, query);
+    },
+    async listAll(query) {
+      return listProjects({}, query);
     },
     async findById(providerId, id) {
       const result = await models.Project.findOne({ _id: id, providerId }).lean();

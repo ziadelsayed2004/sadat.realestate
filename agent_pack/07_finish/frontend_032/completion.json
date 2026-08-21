@@ -1,0 +1,125 @@
+{
+  "taskId": "frontend_032",
+  "summary": "Implemented the desktop Seeker viewing-appointments surface for SEK-05. The feature consumes the implemented seeker viewing list, create, reschedule, and cancel contracts, preserves server ownership and optimistic-version rules, renders localized safe projections, and covers loading, empty, error, retry, permission, validation, conflict, success, and confirmation states.",
+  "filesChanged": [
+    "apps/web/src/features/seeker/data.ts",
+    "apps/web/src/features/seeker/viewings-copy.ts",
+    "apps/web/src/features/seeker/viewings.tsx",
+    "apps/web/src/features/seeker/index.ts",
+    "apps/web/src/features/seeker/styles.css",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "packages/contracts/src/viewings/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/web/tests/seeker-viewings.vitest.test.tsx",
+    "apps/web/tests/e2e/seeker-viewings.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/seeker-viewings.spec.ts-snapshots/seeker-viewings-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-viewings.spec.ts-snapshots/seeker-viewings-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-viewings.spec.ts-snapshots/seeker-viewings-zh-CN-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared contracts compiled successfully, including the exported ViewingListData type required by the web loader."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source, tests, server, and Playwright configuration linted with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/seeker-viewings.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "6/6 focused loader, mutation, strict validation, localized direction, safe-projection, and permission tests passed."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "20 Vitest files and 130 tests passed; the additional Node/TAP web suite passed 76/76 tests."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- --project=desktop-ar --project=desktop-en --project=desktop-zh tests/e2e/seeker-viewings.spec.ts --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "9/9 desktop Arabic, English, and Simplified Chinese tests passed. Coverage includes localized tabs, safe projection, session failure, create validation, reschedule, confirmed cancellation, keyboard focus, accessible labels, direction, and visual snapshots."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR web builds passed; only the existing Vite chunk-size warning was emitted."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API TypeScript typecheck passed after the shared contract type export."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "343/343 API unit tests passed, including viewing service ownership, optimistic concurrency, and state behavior."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "79/79 API route tests passed, including authenticated seeker viewing route coverage."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "GET/POST/PATCH/cancel seeker viewing operations are implemented and inventoried under /api/v1; no endpoint was invented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "SEK-05 local approved export: docs/design_sources/final_screens/seeker/SEK-05.png; LIVE LOCAL_FINAL_EXPORT; SHA256 1f242f5aee8e92464d210a89cb8cd9adec004e3c87494aa7f3bf99621f630b6e; 6204x3448.",
+    "SEK-05 design references: https://drive.google.com/drive/folders/1UBASEVD4IUBPnJl7hptGqB7Qv9EAlilU and https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354.",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json: SEK-05 is approved for ar RTL, en LTR, zh-CN LTR, and desktop scope.",
+    "packages/contracts/src/viewings/index.ts and apps/api/src/modules/viewings/router.ts: strict viewing list, create, reschedule, and cancel contracts and routes.",
+    "apps/api/src/modules/viewings/service.ts and apps/api/tests/viewings/router.test.ts: authenticated seeker ownership, future-date validation, valid transition rules, and optimistic version enforcement.",
+    "apps/web/tests/seeker-viewings.vitest.test.tsx and apps/web/tests/e2e/seeker-viewings.spec.ts: executable localized, permission, mutation, focus, safe-projection, visual, and error-state coverage."
+  ],
+  "scopeNotes": [
+    "No backend runtime behavior, database model, dependency, OpenAPI route, or Postman route was changed; the shared contracts change only exports the existing ViewingListData schema type for type-safe frontend consumption.",
+    "The apps/web/src/features/frontend_foundation/app.tsx change is an authorized direct integration exception required to connect /seeker/viewings to the protected route shell.",
+    "The viewing contract does not expose availableActions. The UI therefore renders only actions supported by the implemented seeker routes and status rules; it does not infer or invent unsupported transitions.",
+    "The approved SEK-05 device scope is desktop only. Arabic, English, and Simplified Chinese were verified with their repository direction rules.",
+    "The in-app browser connector could not initialize because its environment metadata lacked sandboxPolicy; the repository-configured Playwright desktop matrix was used for executable visual and accessibility assertions."
+  ],
+  "knownGaps": [
+    "The required full F3 visual/accessibility and root release gates remain phase-gated until frontend_036.",
+    "frontend_033 through frontend_036 remain open and are outside this task's completion evidence."
+  ],
+  "completedAt": "2026-08-18T12:52:29.5245790+03:00"
+}

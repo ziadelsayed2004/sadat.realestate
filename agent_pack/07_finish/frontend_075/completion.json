@@ -1,0 +1,205 @@
+{
+  "taskId": "frontend_075",
+  "summary": "Implemented the Admin users, administrator detail, roles, and permissions surfaces for ADM-59 through ADM-64. The Web UI consumes the repaired administrator and role contracts and real API routes, uses server-provided availableActions and effective permissions, enforces View Only mutation restrictions in the UI while leaving authorization to the API, and covers loading, empty, error, retry, success, forbidden, validation, stale-version, and permission states across Arabic, English, and Simplified Chinese Admin Desktop routes.",
+  "filesChanged": [
+    "apps/web/src/features/admin_rbac/data.ts",
+    "apps/web/src/features/admin_rbac/copy.ts",
+    "apps/web/src/features/admin_rbac/views.tsx",
+    "apps/web/src/features/admin_rbac/styles.css",
+    "apps/web/src/features/admin_rbac/index.ts",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/admin-rbac.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-rbac.fixtures.ts",
+    "apps/web/tests/e2e/admin-rbac.spec.ts",
+    "apps/web/tests/e2e/admin-rbac-accessibility.spec.ts",
+    "apps/web/tests/e2e/admin-rbac-visual.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-users-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-users-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-users-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-create-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-create-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-create-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-detail-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-detail-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-detail-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-roles-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-roles-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-roles-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-role-detail-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-role-detail-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-role-detail-zh-CN-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/admin-rbac.vitest.test.tsx --reporter=dot",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused contract and UI tests: 1 file, 9 tests passed, including API shape, strict unknown-role rejection, availableActions, version/reason mutations, and View Only behavior."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-rbac.spec.ts --project=desktop-en",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Admin user, create, detail, roles, and View Only browser journeys: 3 passed."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-rbac-accessibility.spec.ts --project=desktop-en",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Admin RBAC landmark, label, focus, and direction checks: 1 passed."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-rbac-visual.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "ADM-59 through ADM-64 implementation visual matrix: 3 locale projects passed and 15 implementation baselines were reviewed. These are runtime baselines, not design-source replacements."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript check passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full Web suite passed: 50 Vitest files / 343 tests and 76 TAP tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Production Web client and SSR builds passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace policy, API, and Web suites passed: 13 workspace tests, 507 API tests, 343 Web Vitest tests, and 76 Web TAP tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web build passed."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API typecheck passed after the prerequisite backend_121 administrator route repair."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API unit suite passed: 372 tests."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API route suite passed: 107 tests."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory includes GET/POST/PATCH /api/v1/admin/admin-users and GET/POST/PATCH /api/v1/admin/roles."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Passed with explicit non-production process-local test values; no .env was read or printed."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Configured Web visual matrix: 72 passed across the available locale and device projects."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Configured Web accessibility matrix: 81 passed across the available locale and device projects."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors in tracked changes."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json: ADM-59 through ADM-64 are mapped to approved local final exports, Admin Desktop scope, ar/en/zh-CN locales, and RTL/LTR directions.",
+    "docs/design_sources/final_screens/admin/ADM-59.png (sha256 1478edc0a29205d022c7d8a229dca0e39bf17d6c942d6c2a86ae21f07b131f3d)",
+    "docs/design_sources/final_screens/admin/ADM-60.png (sha256 3de13f6732d956ca46a89dbe7b4a67152f3525e391e73bc1492b73a840f83027)",
+    "docs/design_sources/final_screens/admin/ADM-61.png (sha256 87c0db281772cefbdc1e5369e8b0c66d019cec84ac09cbefb2f4a521267c82b1)",
+    "docs/design_sources/final_screens/admin/ADM-62.png (sha256 e0be7cd1959283e160853c21549a14385d49da432c097f386e158c90c72eed31)",
+    "docs/design_sources/final_screens/admin/ADM-63.png (sha256 a7806604ad0c7733eff656a61fc6321048e15056331b956755134761b98f4857)",
+    "docs/design_sources/final_screens/admin/ADM-64.png (sha256 8353450c81dac7ec86944941c40a5f4c844a9afb8636b022d76552804e2c5258)",
+    "Figma page 6017:4356, node 6017:61879 and the per-screen Drive references preserved in agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json.",
+    "packages/contracts/src/admin/index.ts: strict administrator and role contracts.",
+    "apps/api/src/modules/admin/administrator-router.ts and apps/api/tests/admin/administrator-router.test.ts: implemented route and authorization evidence.",
+    "apps/web/src/features/admin_rbac/data.ts: API-backed loaders/mutations for administrator and role routes.",
+    "apps/web/tests/admin-rbac.vitest.test.tsx and apps/web/tests/e2e/admin-rbac*.spec.ts: route, contract, locale, permission, accessibility, and visual evidence."
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was modified as the necessary route integration point; this is an explicit outside-Allowed-Roots integration exception.",
+    "backend_121 was a completed prerequisite truth repair for the administrator HTTP/API artifacts; no Backend runtime files were changed in frontend_075.",
+    "The API has no role-assignment HTTP operation in the current contract/inventory, so the UI does not invent an assignment endpoint.",
+    "Admin Dashboard is Desktop-only under the approved scope; the visual tests intentionally use Admin Desktop projects only.",
+    "E2E data is test-only and browser requests are intercepted by test fixtures; no Production mock or real credential was used."
+  ],
+  "knownGaps": [
+    "No mobile or tablet Admin Dashboard frame exists in the approved scope; no such layout is claimed.",
+    "The visual PNGs under apps/web/tests/e2e/__snapshots__ are implementation baselines and must not be treated as approved design-source exports.",
+    "This evidence closes frontend_075 only; it does not claim completion of F5, F6, all APIs, all screens, Backend, or the full platform."
+  ],
+  "completedAt": "2026-08-21T05:53:20.4430039+03:00"
+}

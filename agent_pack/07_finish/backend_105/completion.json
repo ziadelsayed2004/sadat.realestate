@@ -1,46 +1,129 @@
 {
   "taskId": "backend_105",
-  "summary": "Implemented administrator-controlled Scheduled, Active, and Ended ad-request transitions with Africa/Cairo calendar projections, interval guards, deterministic ordering/filtering, optimistic versions, and same-placement overlap prevention.",
+  "summary": "Repaired the administrator advertising calendar boundary. Verified administrators with the ads view permission can list bounded scheduled, active, and ended calendar projections, while verified administrators with the ads scheduling permission can schedule a waiting-payment request through a strict optimistic-version boundary. Persistent scheduling now validates request state, interval expiry, same-placement overlap, and atomically persists the Cairo projection and request history.",
   "filesChanged": [
     "packages/contracts/src/ads/index.ts",
     "packages/contracts/src/contracts/index.ts",
     "apps/api/src/modules/ads/service.ts",
+    "apps/api/src/modules/ads/repository.ts",
+    "apps/api/src/modules/ads/admin-router.ts",
+    "apps/api/src/modules/ads/runtime.ts",
     "apps/api/tests/ads/service.test.ts",
+    "apps/api/tests/ads/admin-router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
     "docs/api/ads-placements-settings.md"
   ],
   "verification": [
     {
-      "command": "npm.cmd run build --workspace packages/contracts; node --test --import tsx apps/api/tests/ads/service.test.ts; npm.cmd run typecheck; npm.cmd run lint",
+      "command": "npm.cmd run build --workspace packages/contracts",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Contracts build, four focused ads tests, typecheck, and lint passed."
+      "notes": "Shared advertising calendar and scheduling contracts compiled successfully."
     },
     {
-      "command": "npm.cmd test -- --runInBand; npm.cmd run build; npm.cmd audit --audit-level=high; npm.cmd run api:inventory; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs",
+      "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/ads/service.test.ts apps/api/tests/ads/admin-router.test.ts",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "359 tests passed; build succeeded; dependency audit reported 0 vulnerabilities; API inventory, OpenAPI, Postman, and Agent Pack audit passed."
+      "notes": "11 focused tests passed, including separate view/schedule permissions, strict unknown-field rejection, unauthenticated and wrong-role route denial, bounded calendar listing, scheduling success, malformed IDs, Cairo projections, optimistic versions, lifecycle guards, and placement conflicts."
     },
     {
-      "command": "git diff --check; node -e \"for (const f of ['agent_pack/03_execution/TASK_STATE.json','agent_pack/03_execution/TASK_BOARD.md']) { require('fs').accessSync(f); } console.log('PACK_FILES_PRESENT')\"",
+      "command": "npm.cmd run typecheck --workspace apps/api",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Changed-file whitespace and pack file integrity checks passed."
+      "notes": "API TypeScript compilation passed with the persistent calendar repository, router, runtime, and contract integration."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Repository workspace checks and lint passed."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "365 API unit tests passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "93 API route and security tests passed, including the administrator calendar and schedule routes."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Root contracts, API, and web production builds passed; Vite emitted only the existing chunk-size warning."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity dependency vulnerabilities were reported."
+    },
+    {
+      "command": "npm.cmd run api:inventory --workspace apps/api | Select-String -Pattern 'admin/ad-calendar|scheduleAdminAdRequest'",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime inventory contains the administrator advertising calendar route and scheduleAdminAdRequest operation."
+    },
+    {
+      "command": "npm.cmd run openapi:validate --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI route and local-reference validation passed for the new schemas and paths."
+    },
+    {
+      "command": "npm.cmd run postman:validate --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman route synchronization validation passed for the calendar and schedule requests."
+    },
+    {
+      "command": "node -e \"for (const file of ['apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json','agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json']) JSON.parse(require('fs').readFileSync(file,'utf8')); console.log('CHANGED_JSON_VALID')\"",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All changed JSON contract, OpenAPI, Postman, and blueprint files parsed successfully."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors were found."
     }
   ],
   "sourceEvidence": [
-    "agent_pack/01_product/STATE_MACHINES.md (ad lifecycle and schedule states)",
-    "agent_pack/01_product/PRD.md (advertising lifecycle and no assumed payment/public price)",
-    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (ADM-36 calendar boundary)",
+    "agent_pack/01_product/STATE_MACHINES.md (advertising request lifecycle and schedule states)",
+    "agent_pack/01_product/PRD.md (administrative advertising lifecycle and no assumed payment/public price)",
+    "agent_pack/01_product/BUSINESS_RULES.md (permission, optimistic-version, audit, and payment-proof invariants)",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (implemented administrator calendar and scheduling boundaries)",
     "packages/contracts/src/ads/index.ts",
     "apps/api/src/modules/ads/service.ts",
+    "apps/api/src/modules/ads/repository.ts",
+    "apps/api/src/modules/ads/admin-router.ts",
     "apps/api/tests/ads/service.test.ts",
+    "apps/api/tests/ads/admin-router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
     "docs/api/ads-placements-settings.md"
   ],
-  "knownGaps": [
-    "No HTTP calendar route or persistent ad-request repository was added; later B7 projection/runtime wiring remains responsible for external integration.",
-    "Intervals are stored as explicit offset instants and projected deterministically into Africa/Cairo; no unsupported DST or production schedule values are inferred.",
-    "Publication/banner rendering remains assigned to later B7 tasks."
+  "scopeNotes": [
+    "This is an authorized Backend truth repair directly required by the administrator advertising screens in frontend_070; it adds the missing HTTP and persistent boundary without starting a frontend task.",
+    "The schedule request intentionally accepts only expectedVersion; the server derives the scheduled state from the route semantics.",
+    "Calendar and scheduling responses are explicit safe projections and do not expose payment-proof storage keys, private documents, internal notes, or bank-verification claims."
   ],
-  "completedAt": "2026-08-14T18:16:36.408+03:00"
+  "knownGaps": [
+    "Live MongoDB persistence verification was not run because no isolated non-production replica-set test topology was configured; deterministic repository/service and HTTP tests cover the boundary locally.",
+    "Banner publication and financial-review HTTP projections remain separate later B7 boundaries and are not part of this repair."
+  ],
+  "completedAt": "2026-08-19T13:12:00.000Z"
 }

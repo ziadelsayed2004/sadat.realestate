@@ -10,16 +10,21 @@ const admin = '3123456789abcdef01234567';
 const id = '2123456789abcdef01234567';
 const now = new Date('2026-08-14T08:00:00.000Z');
 const claims = (sub = provider, status: 'verified' | 'pending_review' = 'verified') => ({ sub, role: 'provider', status, iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sid: '4123456789abcdef01234567', iat: 1, exp: 2, jti: 'j' } as AccessTokenClaims);
+const adminClaims = (sub = admin) => ({ sub, role: 'admin', status: 'verified', iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sid: '4123456789abcdef01234567', iat: 1, exp: 2, jti: 'j' } as AccessTokenClaims);
 
 function record(overrides: Partial<StoredProject> = {}): StoredProject {
   return { id, providerId: provider, name: { en: 'Project' }, slug: 'project', status: 'draft', version: 0, createdAt: now, updatedAt: now, ...overrides };
 }
 
-function fixture() {
+function fixture(allowProjectView = true) {
   const rows = new Map([[id, record()]]);
   const repository: ProjectRepository = {
     async list(owner, query) {
       const items = [...rows.values()].filter(project => project.providerId === owner && (!query.status || project.status === query.status));
+      return { items, total: items.length };
+    },
+    async listAll(query) {
+      const items = [...rows.values()].filter(project => !query.status || project.status === query.status);
       return { items, total: items.length };
     },
     async findById(owner, target) { const project = rows.get(target); return project?.providerId === owner ? project : null; },
@@ -57,7 +62,7 @@ function fixture() {
       return { kind: 'written', project: next };
     }
   };
-  return { service: createProjectService({ repository, authorization: { authorize: async actor => actor === admin }, now: () => now }), rows };
+  return { service: createProjectService({ repository, authorization: { authorize: async (actor, permission) => actor === admin && (permission === 'admin:projects.review' || (allowProjectView && permission === 'admin:projects.view')) }, now: () => now }), rows };
 }
 
 test('creates and lists only provider-owned localized drafts with safe projections', async () => {
@@ -76,6 +81,18 @@ test('rejects pending providers, cross-provider access, unknown fields, and stal
   await assert.rejects(fixtureData.service.update(claims(other), id, { version: 0, slug: 'other', reason: 'Cross provider update' }, { requestId: 'project-2', traceId: 'b'.repeat(32) }), error => error instanceof ProjectServiceError && error.code === 'PROJECT_NOT_FOUND');
   await assert.rejects(fixtureData.service.create(claims(), { name: { en: 'Invalid' }, slug: 'invalid', reason: 'Valid reason', extra: true } as never, { requestId: 'project-3', traceId: 'c'.repeat(32) }));
   await assert.rejects(fixtureData.service.update(claims(), id, { version: 9, slug: 'new-slug', reason: 'Stale project update' }, { requestId: 'project-4', traceId: 'd'.repeat(32) }), error => error instanceof ProjectServiceError && error.code === 'PROJECT_VERSION_CONFLICT');
+});
+
+test('lists all projects for an authorized admin with review-safe projections', async () => {
+  const fixtureData = fixture();
+  fixtureData.rows.set('5123456789abcdef01234567', record({ id: '5123456789abcdef01234567', providerId: other, status: 'pending_review', reviewedBy: admin, reviewReason: 'Needs more details' }));
+  const result = await fixtureData.service.listAdmin(adminClaims(), { page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' });
+  assert.equal(result.total, 2);
+  assert.deepEqual(result.data.items.map(project => project.providerId), [provider, other]);
+  assert.equal(result.data.items[1]?.availableActions.includes('approve'), true);
+  assert.equal('audit' in (result.data.items[1] ?? {}), false);
+  await assert.rejects(fixtureData.service.listAdmin(claims(), { page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' }), error => error instanceof ProjectServiceError && error.code === 'PROJECT_FORBIDDEN');
+  await assert.rejects(fixture(false).service.listAdmin(adminClaims(), { page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' }), error => error instanceof ProjectServiceError && error.code === 'PROJECT_FORBIDDEN');
 });
 
 test('updates with optimistic version and rejects duplicate project slugs', async () => {

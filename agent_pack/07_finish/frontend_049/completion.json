@@ -1,0 +1,158 @@
+{
+  "taskId": "frontend_049",
+  "summary": "Implemented the provider advertising requests and read-only commission surfaces for PRV-19 and PRV-20. The UI consumes the implemented provider advertising and commission contracts, preserves owner-scoped safe projections, supports request creation, administrative quote acceptance, private payment-proof upload state, pagination/filtering, loading/empty/error/retry/not-found/permission states, and renders Arabic RTL plus English and Simplified Chinese LTR on the approved desktop scope.",
+  "filesChanged": [
+    "apps/web/src/features/provider/advertising-data.ts",
+    "apps/web/src/features/provider/advertising-copy.ts",
+    "apps/web/src/features/provider/advertising.tsx",
+    "apps/web/src/features/provider/advertising.css",
+    "apps/web/src/features/provider/copy.ts",
+    "apps/web/src/features/provider/index.ts",
+    "apps/web/src/features/provider/overview.tsx",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/provider-advertising.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-advertising.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-advertising-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-advertising-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-advertising-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-commission-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-commission-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-commission-zh-CN-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared contracts TypeScript build passed."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/provider-advertising.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused suite passed: 1 file, 7 tests, covering strict routes, private upload headers, permission state, quote-version gating, safe projection, and read-only commission behavior."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript verification passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web ESLint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full web workspace verification passed: 33 Vitest files, 222 tests, and 76 Node TAP tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR builds passed; the existing non-fatal Vite large-chunk warning remained."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-advertising.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Targeted visual/accessibility Playwright matrix passed 6/6 and created six desktop locale snapshots for PRV-19 and PRV-20."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-advertising.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Stable targeted visual/accessibility rerun passed 6/6 with locale direction, provider navigation landmark, keyboard focus, safe projection, protected-field absence, and snapshot assertions."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory passed and includes provider ad list/detail/create, quote acceptance, payment-proof upload, and commission routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace checks and ESLint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace test gate passed, including API suite, workspace tests, full web suites, and SSR checks."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, web client, and web SSR builds passed; the existing non-fatal Vite large-chunk warning remained."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Found 0 vulnerabilities."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "Screen PRV-19",
+    "Screen PRV-20",
+    "docs/design_sources/final_screens/provider/PRV-19.png; SHA-256 051c9cfcf1ecb5e492c570e4abc4aade211944656b758b64fe47e8c5d83d11be; 6308x3776",
+    "docs/design_sources/final_screens/provider/PRV-20.png; SHA-256 4af704419b4f1ccd544c5bd0af8f1cef28aef9a03570ed23c7de7739c5db9e7c; 6308x4140",
+    "Drive folder https://drive.google.com/drive/folders/1KCTXCjiPpyefVI2qnLBwQB1pI87MuCw3",
+    "Drive folder https://drive.google.com/drive/folders/1FyRkPx1NM9yneEO-rbVV1hzunmUgjTmb",
+    "Figma prototype node 6017:19032: https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "GET /api/v1/provider/ads",
+    "GET /api/v1/provider/ads/:adRequestId",
+    "POST /api/v1/provider/ads",
+    "POST /api/v1/provider/ads/:adRequestId/accept-quote",
+    "POST /api/v1/provider/ads/:adRequestId/payment-proof",
+    "GET /api/v1/provider/commission",
+    "packages/contracts/src/ads/index.ts",
+    "packages/contracts/src/commissions/index.ts",
+    "packages/contracts/src/uploads/index.ts",
+    "packages/contracts/src/provider/index.ts",
+    "apps/web/tests/provider-advertising.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-advertising.spec.ts"
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was modified only for the direct route-composition necessity required to expose /provider/ads and /provider/commission; this is outside the selected task Allowed Roots and is explicitly recorded as the authorized integration exception.",
+    "The provider advertising UI consumes runtime contracts only. It does not hardcode a universal advertising price or commission, and it never renders storage keys, permanent private-file URLs, internal review fields, or bank-verification claims.",
+    "The Playwright route fixtures are test-only injected responses; no Production mock or runtime fallback data was added.",
+    "No Backend truth repair was required in this task because the required routes, shared contracts, API inventory, OpenAPI, Postman collection, ownership enforcement, and private upload boundary were already implemented and verified."
+  ],
+  "knownGaps": [
+    "No live MongoDB/private-storage/scanner smoke was run; the existing Backend evidence records those non-production prerequisites as unavailable. Deterministic contract and UI tests cover the frontend boundary safely.",
+    "No real .env file, secret, Production data, or Production credential was read or used."
+  ],
+  "completedAt": "2026-08-19T04:09:28.2237629+03:00"
+}

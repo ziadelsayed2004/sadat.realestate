@@ -1,0 +1,143 @@
+{
+  "taskId": "frontend_015",
+  "summary": "Repaired the widened public-article MongoDB filter status type with a literal narrowing (`status: 'published' as const`) so Mongoose find/countDocuments compile without changing runtime filtering, ordering, pagination, active-category enforcement, or public projection.",
+  "filesChanged": [
+    "apps/api/src/modules/articles/repository.ts",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/step_info.json",
+    "agent_pack/07_finish/frontend_015/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts package built successfully."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API TypeScript compilation passes after the ArticleRecord status literal narrowing."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and web typechecks pass."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace lint completed with WORKSPACE_CHECK_OK."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "341 API unit tests passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "77 API route tests passed, including public and admin Article route tests."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root test command passed: API suites 13 and 446, web Vitest 51, and web TAP 72 tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and web build completed; Vite emitted only non-fatal chunk-size warnings."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Implemented Article routes remain inventoried: /api/v1/public/article-categories, /api/v1/public/articles, and /api/v1/public/articles/:slug."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Selected Frontend workspace typecheck passes."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web tests passed: 51 Vitest tests and 72 TAP tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Selected Frontend workspace build completed; only non-fatal chunk-size warnings were emitted."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web -- --grep \"public article\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Article visual matrix passed 18/18 across desktop, tablet, and mobile for ar, en, and zh."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web -- --grep \"public article\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Article accessibility matrix passed 18/18 across desktop, tablet, and mobile for ar, en, and zh."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Initial Agent Pack audit reported zero errors; final audit is rerun after task synchronization."
+    }
+  ],
+  "sourceEvidence": [
+    "apps/api/src/modules/articles/repository.ts: the public list filter narrows status to the ArticleRecord literal without changing query behavior.",
+    "apps/api/tests/articles/router.test.ts: public Article/category route projection and security tests.",
+    "apps/web/src/features/content/articles.tsx and apps/web/src/features/content/articles-data.ts: existing Article listing/details/category adapter.",
+    "apps/web/tests/public-articles.vitest.test.tsx: localized metadata and state coverage.",
+    "apps/web/tests/e2e/visual.spec.ts: PUB-07/PUB-08 Article visual matrix, 18/18.",
+    "apps/web/tests/e2e/accessibility.spec.ts: PUB-07/PUB-08 accessibility matrix, 18/18.",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json#PUB-07: docs/design_sources/final_screens/public/PUB-07.png; sha256 2c7da5d5dd9e8f6cecd51856ec7046b746fa608bbbf68b67c1e35348cf6385e5; Figma node 6017-10847; Drive https://drive.google.com/drive/folders/1TNZyuSMv5lqL847yqnjJJzedmEhycR2Z.",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json#PUB-08: docs/design_sources/final_screens/public/PUB-08.png; sha256 06814379fbb850bdd15ef3a1fbd1e6172463282585a11cd14e9d207d6e99fdff; Figma node 6017-10847; Drive https://drive.google.com/drive/folders/1kTANteLpbcB5kmw8yLPGoZvwh4CVCLAr.",
+    "npm.cmd run api:inventory: implemented /api/v1/public/article-categories, /api/v1/public/articles, and /api/v1/public/articles/:slug.",
+    "Authorized integration scope exception: apps/api/src/modules/articles/repository.ts only; no other backend modules or product behavior changed."
+  ],
+  "scopeNotes": [
+    "The only runtime change is the explicitly authorized type-only narrowing in the Article repository.",
+    "No frontend runtime, public projection, route behavior, dependency, schema, or database behavior changed in this repair.",
+    "No real .env file or secret was read.",
+    "This completion evidence closes frontend_015 only and makes no full Backend or full-platform claim."
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-17T21:34:36.568Z"
+}

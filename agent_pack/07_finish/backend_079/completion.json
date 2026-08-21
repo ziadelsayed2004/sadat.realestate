@@ -1,14 +1,110 @@
 {
-  "taskId":"backend_079",
-  "summary":"Added request issue/report lifecycle service with request linkage, verified-role creation, administrative paginated review, optimistic resolution or dismissal, and explicit reasons.",
-  "filesChanged":["apps/api/src/modules/moderation/request-issues.ts","apps/api/tests/moderation/request-issues.test.ts","apps/api/src/modules/testing/test-suites.ts","docs/api/request-issues.md"],
-  "verification":[
-    {"command":"node --import tsx --test --test-concurrency=1 apps/api/tests/moderation/request-issues.test.ts","exitCode":0,"result":"Passed","notes":"Issue creation, linkage, admin review, resolution, versioning, and RBAC assertions passed."},
-    {"command":"npm.cmd run typecheck","exitCode":0,"result":"Passed","notes":"Typecheck passed."},
-    {"command":"npm.cmd run lint","exitCode":0,"result":"Passed","notes":"Lint passed after strict type alias correction."},
-    {"command":"node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Agent Pack audit clean; full matrix retained for B5 gate."}
+  "taskId": "backend_079",
+  "summary": "Repaired the missing administrative request-issue API boundary. Request issues now have a strict Mongoose persistence model and indexes, verified-admin permission checks, paginated listing, reason-bearing optimistic resolution or dismissal, runtime route definitions, tests, OpenAPI, Postman, blueprint, and API documentation.",
+  "filesChanged": [
+    "apps/api/src/modules/moderation/models.ts",
+    "apps/api/src/modules/moderation/request-issues.ts",
+    "apps/api/src/modules/moderation/router.ts",
+    "apps/api/src/modules/moderation/runtime.ts",
+    "apps/api/tests/moderation/request-issues.test.ts",
+    "apps/api/tests/moderation/router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "docs/api/request-issues.md"
   ],
-  "sourceEvidence":["packages/contracts/src/requests/index.ts","apps/api/src/modules/moderation/request-issues.ts","apps/api/tests/moderation/request-issues.test.ts","docs/api/request-issues.md"],
-  "knownGaps":["No automated moderation or external notification provider is claimed; full repository matrix is retained for B5 gate."],
-  "completedAt":"2026-08-14T13:28:00.000Z"
+  "verification": [
+    {
+      "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/moderation/request-issues.test.ts apps/api/tests/moderation/router.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused service and router tests passed, including admin RBAC separation, authentication, strict input, optimistic version conflict, invalid-state handling, and request-issue routes."
+    },
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared contracts compiled successfully."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API production and test TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Complete API test suite passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API production build passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root lint covered API, web, contracts, and configuration sources."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/api",
+      "exitCode": 1,
+      "result": "skipped",
+      "notes": "The API workspace has no lint script; the applicable root lint command passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory includes GET /api/v1/admin/request-issues and POST /api/v1/admin/request-issues/:issueId/resolve as implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI contains both request-issue operations and validation passed."
+    },
+    {
+      "command": "npm.cmd run postman:validate --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman contains list and resolve request-issue examples and validation passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Dependency audit reported zero vulnerabilities."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors."
+    }
+  ],
+  "sourceEvidence": [
+    "packages/contracts/src/requests/index.ts",
+    "apps/api/src/modules/moderation/request-issues.ts",
+    "apps/api/src/modules/moderation/models.ts",
+    "apps/api/src/modules/moderation/router.ts",
+    "apps/api/tests/moderation/request-issues.test.ts",
+    "apps/api/tests/moderation/router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/request-issues.md",
+    "ADM-24"
+  ],
+  "scopeNotes": [
+    "This repair was authorized because frontend_066 requires ADM-24 and the completed Backend task had no runtime request-issue routes.",
+    "The existing frontend task remains open and was not closed by this Backend repair."
+  ],
+  "knownGaps": [
+    "No external moderation or notification provider is claimed; request-issue state and reasoned resolution are local runtime behavior."
+  ],
+  "completedAt": "2026-08-19T11:28:56.9680241+03:00"
 }

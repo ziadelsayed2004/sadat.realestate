@@ -1,0 +1,133 @@
+{
+  "taskId": "frontend_021",
+  "summary": "Implemented the seeker registration flow with in-memory OTP authority, strict seeker registration contract submission, localized role/form/success screens, safe deep-link restart behavior, and responsive browser coverage.",
+  "filesChanged": [
+    "apps/web/src/features/auth/client.ts",
+    "apps/web/src/features/auth/copy.ts",
+    "apps/web/src/features/auth/pages.tsx",
+    "apps/web/src/features/auth/styles.css",
+    "apps/web/tests/auth-ui.vitest.test.tsx",
+    "apps/web/tests/auth.test.ts",
+    "apps/web/tests/seeker-registration.vitest.test.tsx",
+    "apps/web/tests/e2e/seeker-registration.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-form-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-form-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-form-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-form-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-form-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-form-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-form-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-form-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-form-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-role-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-role-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-role-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-role-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-role-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-role-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-role-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-role-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-role-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-success-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-success-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-success-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-success-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-success-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-success-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-success-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-success-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-registration.spec.ts-snapshots/seeker-registration-success-zh-CN-tablet-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript and contracts build passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source and test lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/seeker-registration.vitest.test.tsx tests/auth-ui.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "14 focused registration/auth UI tests passed."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- tsx --test tests/auth.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "11 auth adapter/store tests passed, including strict seeker registration request and token-safe snapshot coverage."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/seeker-registration.spec.ts --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "27 browser checks passed across desktop/tablet/mobile and ar/en/zh-CN while creating the 27 new role/form/success snapshots."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/seeker-registration.spec.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "27 browser checks passed again without snapshot updates; journey, keyboard/label, and visual assertions are stable."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "82 Vitest tests and 76 Node tests passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR production builds passed; only the existing chunk-size warning was emitted."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "79 API suite tests passed, including the implemented seeker registration route."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory includes POST /api/v1/auth/register/seeker as operationId registerSeeker."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID; registration route remains synchronized."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID; registration route remains synchronized."
+    }
+  ],
+  "sourceEvidence": [
+    "AUTH-02: docs/design_sources/final_screens/authentication/AUTH-02.png; Drive https://drive.google.com/drive/folders/1v7bcXiDuK2pnEg1m8DrdJWPOYOhd3Oi0; Figma node 6017-16212",
+    "AUTH-03: docs/design_sources/final_screens/authentication/AUTH-03.png; Drive https://drive.google.com/drive/folders/15ED2RFZZgeRuo0KfEpNBlxiZBhhp-32R; Figma node 6017-16212",
+    "AUTH-06: docs/design_sources/final_screens/authentication/AUTH-06.png; Drive https://drive.google.com/drive/folders/1MV0Ls2wpsAzzm8P05toWgiQqRe1sIzkW; Figma node 6017-16212",
+    "packages/contracts/src/seeker/index.ts: seekerRegistrationRequestSchema and seekerRegistrationSuccessEnvelopeSchema",
+    "apps/api/src/modules/seeker/router.ts: POST /api/v1/auth/register/seeker",
+    "apps/web/src/features/auth/client.ts: in-memory registerSeeker adapter",
+    "apps/web/tests/e2e/seeker-registration.spec.ts: 27-check locale/device journey, keyboard, and visual matrix"
+  ],
+  "scopeNotes": [
+    "Registration authority and access tokens remain in component/AuthStore memory only; no token is placed in URL, localStorage, HTML, logs, or user-facing copy.",
+    "The provider card links to the next authorized provider onboarding route without implementing provider behavior in this task.",
+    "No Backend truth repair was required; the existing seeker registration route, contract, OpenAPI, Postman collection, inventory, and API tests were already synchronized."
+  ],
+  "knownGaps": [
+    "The approved AUTH-03 export includes email/password/terms fields that are not present in the current strict seekerRegistrationRequestSchema; those unsupported fields were intentionally omitted rather than inventing runtime behavior."
+  ],
+  "completedAt": "2026-08-18T01:22:46.2708993Z"
+}

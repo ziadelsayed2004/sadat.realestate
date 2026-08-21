@@ -1,41 +1,134 @@
 {
   "taskId": "backend_104",
-  "summary": "Implemented manual payment-proof approve/reject review with explicit admin RBAC, mandatory bounded reasons, optimistic version checks, terminal-state protection, idempotent replay, append-only review history, and mandatory audit persistence before state mutation.",
+  "summary": "Repaired the payment-proof review boundary and its missing administrator read projection. Verified administrators with admin:payments.review can list active proofs with bounded status filtering and pagination, approve or reject pending proofs with strict reason/version input, replay terminal decisions idempotently, and receive only redacted metadata without private storage details or bank-verification claims.",
   "filesChanged": [
     "packages/contracts/src/payments/index.ts",
     "packages/contracts/src/contracts/index.ts",
     "apps/api/src/modules/payments/service.ts",
+    "apps/api/src/modules/payments/repository.ts",
+    "apps/api/src/modules/payments/router.ts",
+    "apps/api/src/modules/payments/runtime.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
     "apps/api/tests/payments/service.test.ts",
+    "apps/api/tests/payments/router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
     "docs/api/payment-proofs.md"
   ],
   "verification": [
     {
-      "command": "npm.cmd run build --workspace packages/contracts; node --test --import tsx apps/api/tests/payments/service.test.ts; npm.cmd run typecheck; npm.cmd run lint",
+      "command": "npm.cmd run build --workspace packages/contracts",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Contracts build, five focused upload/review tests, typecheck, and lint passed."
+      "notes": "Shared payment-proof contracts compiled successfully."
     },
     {
-      "command": "npm.cmd test -- --runInBand; npm.cmd run build; npm.cmd audit --audit-level=high; npm.cmd run api:inventory; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs",
+      "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/payments/service.test.ts apps/api/tests/payments/router.test.ts",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "358 tests passed; build succeeded; dependency audit reported 0 vulnerabilities; API inventory, OpenAPI, Postman, and Agent Pack audit passed."
+      "notes": "9 focused tests passed, including admin authentication, payment-review permission, strict query/reason/version validation, pagination and status filtering, redaction, idempotent replay, and conflicting transition behavior."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "API TypeScript compilation passed with exact optional property checks enabled."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Repository lint and workspace checks passed."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "365 API unit tests passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "96 API route and security tests passed, including payment-proof listing and review."
+    },
+    {
+      "command": "npm.cmd run test:integration --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "28 API integration and artifact synchronization tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Root contracts, API, and web production builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity dependency vulnerabilities were reported."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime inventory contains GET /api/v1/admin/payment-proofs (listAdminPaymentProofs) and the existing POST review route."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI route and local-reference validation passed."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman route synchronization validation passed."
+    },
+    {
+      "command": "node -e \"JSON.parse(require('fs').readFileSync('apps/api/openapi/openapi.json','utf8')); JSON.parse(require('fs').readFileSync('apps/api/postman/Sadat-Real-Estate.postman_collection.json','utf8')); JSON.parse(require('fs').readFileSync('agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json','utf8')); console.log('CHANGED_JSON_VALID')\"",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All changed JSON contract/artifact files parsed successfully."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors were found."
     }
   ],
   "sourceEvidence": [
     "agent_pack/01_product/BUSINESS_RULES.md (BR-007, BR-011, BR-023)",
     "agent_pack/01_product/PRD.md (manual payment-proof review and sensitive-action audit requirements)",
     "agent_pack/01_product/STATE_MACHINES.md (uploaded -> pending_review -> approved | rejected)",
-    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (payment-proof review boundary)",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (implemented payment-proof list and review boundaries)",
     "packages/contracts/src/payments/index.ts",
     "apps/api/src/modules/payments/service.ts",
+    "apps/api/src/modules/payments/repository.ts",
+    "apps/api/src/modules/payments/router.ts",
     "apps/api/tests/payments/service.test.ts",
+    "apps/api/tests/payments/router.test.ts",
     "docs/api/payment-proofs.md"
   ],
-  "knownGaps": [
-    "No HTTP route or persistent payment_proofs repository was added; route and persistence wiring remain later B7 integration work.",
-    "A real AuditWriter/RBAC adapter must be supplied by runtime wiring; the service fails closed when either review authorization or audit persistence is unavailable.",
-    "Approval is manual platform review only and never claims bank verification or realized revenue."
+  "scopeNotes": [
+    "The administrator list route is an explicitly authorized truth repair required by frontend_070 screens ADM-34, ADM-35, and ADM-37: the existing review mutation required proofId and version, but no implemented admin read route exposed them.",
+    "The contracts barrel export, OpenAPI, Postman, runtime inventory, and documentation updates are direct synchronization required by the new route; no unrelated product feature was added.",
+    "Review remains manual platform review and never claims bank verification or realized revenue."
   ],
-  "completedAt": "2026-08-14T18:08:45.680+03:00"
+  "knownGaps": [
+    "Live MongoDB persistence verification was not run because no isolated non-production replica-set test topology was configured; deterministic repository/service and HTTP tests cover the boundary locally."
+  ],
+  "completedAt": "2026-08-19T16:44:19.9676207+03:00"
 }

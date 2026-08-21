@@ -10,6 +10,7 @@ import {
   type CommissionConfirmationListData,
   type CommissionConfirmationListQuery
 } from '@sadat-real-estate/contracts';
+import type { CommissionConfirmationRepository } from './confirmation-repository.js';
 
 type CommissionConfirmationErrorCode =
   | 'COMMISSION_CONFIRMATION_FORBIDDEN'
@@ -35,12 +36,14 @@ const providerOwner = (claims: AccessTokenClaims, accountId: string) => {
   if (claims.role !== 'provider' || !verified(claims) || claims.sub !== accountId) throw new CommissionConfirmationServiceError('COMMISSION_CONFIRMATION_FORBIDDEN');
 };
 
-export function createCommissionConfirmationService(seed: { confirmations?: CommissionConfirmation[]; now?: () => Date } = {}) {
+export function createCommissionConfirmationService(seed: { confirmations?: CommissionConfirmation[]; now?: () => Date; repository?: CommissionConfirmationRepository } = {}) {
   const confirmations = new Map((seed.confirmations ?? []).map(item => [item.id, item]));
+  const repository = seed.repository;
   const clock = seed.now ?? (() => new Date());
   const now = () => clock().toISOString();
-  const get = (confirmationId: string) => {
-    const confirmation = confirmations.get(confirmationId);
+  const allConfirmations = async (): Promise<CommissionConfirmation[]> => repository ? repository.list() : [...confirmations.values()];
+  const get = async (confirmationId: string) => {
+    const confirmation = repository ? await repository.findById(confirmationId) : confirmations.get(confirmationId);
     if (!confirmation) throw new CommissionConfirmationServiceError('COMMISSION_CONFIRMATION_NOT_FOUND');
     return confirmation;
   };
@@ -55,15 +58,21 @@ export function createCommissionConfirmationService(seed: { confirmations?: Comm
       const { acknowledge: _acknowledge, ...confirmationInput } = parsed;
       void _acknowledge;
       const key = eventKey(parsed.accountId, parsed.policyVersion);
-      const existing = [...confirmations.values()].find(item => eventKey(item.accountId, item.policyVersion) === key);
+      const existing = (await allConfirmations()).find(item => eventKey(item.accountId, item.policyVersion) === key);
       if (existing) {
         if (existing.status === 'acknowledged' && sameSource(existing, confirmationInput)) return existing;
         throw new CommissionConfirmationServiceError(existing.status === 'revoked' ? 'COMMISSION_CONFIRMATION_INVALID_STATE' : 'COMMISSION_CONFIRMATION_CONFLICT');
       }
       const stamp = now();
-      for (const item of confirmations.values()) {
+      for (const item of await allConfirmations()) {
         if (item.accountId === parsed.accountId && item.status === 'acknowledged') {
-          confirmations.set(item.id, commissionConfirmationSchema.parse({ ...item, status: 'superseded', version: item.version + 1, updatedAt: stamp }));
+          const superseded = commissionConfirmationSchema.parse({ ...item, status: 'superseded', version: item.version + 1, updatedAt: stamp });
+          if (repository) {
+            const result = await repository.replace(superseded, item.version);
+            if (result.kind === 'not_found' || result.kind === 'version_conflict') throw new CommissionConfirmationServiceError('COMMISSION_CONFIRMATION_CONFLICT');
+          } else {
+            confirmations.set(item.id, superseded);
+          }
         }
       }
       const confirmation = commissionConfirmationSchema.parse({
@@ -76,11 +85,16 @@ export function createCommissionConfirmationService(seed: { confirmations?: Comm
         createdAt: stamp,
         updatedAt: stamp
       });
-      confirmations.set(confirmation.id, confirmation);
+      if (repository) {
+        const result = await repository.insert(confirmation);
+        if (result.kind === 'duplicate') throw new CommissionConfirmationServiceError('COMMISSION_CONFIRMATION_DUPLICATE');
+      } else {
+        confirmations.set(confirmation.id, confirmation);
+      }
       return confirmation;
     },
     async getConfirmation(claims: AccessTokenClaims, confirmationId: string) {
-      const confirmation = get(confirmationId);
+      const confirmation = await get(confirmationId);
       if (claims.role === 'admin' && verified(claims)) return confirmation;
       providerOwner(claims, confirmation.accountId);
       return confirmation;
@@ -93,21 +107,29 @@ export function createCommissionConfirmationService(seed: { confirmations?: Comm
       } else {
         providerOwner(claims, scopedAccountId ?? '');
       }
-      const values = [...confirmations.values()]
+      const values = (await allConfirmations())
         .filter(item => (!scopedAccountId || item.accountId === scopedAccountId) && (!query.source || item.source === query.source) && (!query.status || item.status === query.status) && (claims.role === 'admin' || item.accountId === claims.sub))
         .sort((a, b) => b.acknowledgedAt.localeCompare(a.acknowledgedAt) || b.policyVersion - a.policyVersion || a.id.localeCompare(b.id));
       return commissionConfirmationListDataSchema.parse({ items: values.slice((query.page - 1) * query.limit, query.page * query.limit), page: query.page, limit: query.limit, total: values.length });
     },
     async revoke(claims: AccessTokenClaims, confirmationId: string, input: unknown) {
       admin(claims);
-      const current = get(confirmationId);
+      const current = await get(confirmationId);
       const parsed = commissionConfirmationRevokeSchema.parse(input);
       if (parsed.expectedVersion !== current.version) throw new CommissionConfirmationServiceError('COMMISSION_CONFIRMATION_VERSION_CONFLICT');
       if (current.status === 'revoked') throw new CommissionConfirmationServiceError('COMMISSION_CONFIRMATION_INVALID_STATE');
       const stamp = now();
       const next = commissionConfirmationSchema.parse({ ...current, status: 'revoked', revokedAt: stamp, revokedBy: claims.sub, revokeReason: parsed.reason, version: current.version + 1, updatedAt: stamp });
-      confirmations.set(next.id, next);
+      if (repository) {
+        const result = await repository.replace(next, current.version);
+        if (result.kind === 'not_found') throw new CommissionConfirmationServiceError('COMMISSION_CONFIRMATION_NOT_FOUND');
+        if (result.kind === 'version_conflict') throw new CommissionConfirmationServiceError('COMMISSION_CONFIRMATION_VERSION_CONFLICT');
+      } else {
+        confirmations.set(next.id, next);
+      }
       return next;
     }
   };
 }
+
+export type CommissionConfirmationService = ReturnType<typeof createCommissionConfirmationService>;

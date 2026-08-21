@@ -1,0 +1,183 @@
+{
+  "taskId": "frontend_016",
+  "summary": "Implemented the public Community feed, safe post detail projection, comments, reports, authenticated post-creation modal, SSR bootstrap, localized RTL/LTR rendering, and responsive state handling for PUB-09 and PUB-10. The required community API prerequisite was implemented and separately evidenced under backend_093.",
+  "filesChanged": [
+    "apps/web/src/features/community/components.tsx",
+    "apps/web/src/features/community/copy.ts",
+    "apps/web/src/features/community/data.ts",
+    "apps/web/src/features/community/index.ts",
+    "apps/web/src/features/community/styles.css",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/src/features/frontend_foundation/entry-client.tsx",
+    "apps/web/src/features/frontend_foundation/entry-server.tsx",
+    "apps/web/server.mjs",
+    "apps/web/tests/community.vitest.test.tsx",
+    "apps/web/tests/e2e/community.spec.ts",
+    "apps/web/tests/ssr.test.mjs",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-create-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-create-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-create-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-create-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-create-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-create-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-create-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-create-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots/public-community-create-zh-CN-mobile-zh-win32.png",
+    "packages/contracts/src/community/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/community/models.ts",
+    "apps/api/src/modules/community/repository.ts",
+    "apps/api/src/modules/community/report-service.ts",
+    "apps/api/src/modules/community/router.ts",
+    "apps/api/src/modules/community/runtime.ts",
+    "apps/api/src/modules/community/service.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/tests/community/router.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "docs/api/community-comments.md",
+    "docs/api/community-moderation.md",
+    "docs/api/community-posts.md",
+    "docs/api/public-community.md",
+    "docs/api/frontend-handoff.md"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript passed with the community feature and SSR/client integration."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source and test lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/community.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "7 focused community component/data tests passed, including safe projection, locale direction, retry/empty, auth guard, comments, and reports."
+    },
+    {
+      "command": "node --test apps/web/tests/ssr.test.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "13 SSR tests passed, including the community projection and create guard."
+    },
+    {
+      "command": "npm.cmd exec -- playwright test tests/e2e/community.spec.ts --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Generated the corrected approved community visual baselines after the primary-button specificity repair; 18 tests passed."
+    },
+    {
+      "command": "npm.cmd exec -- playwright test tests/e2e/community.spec.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "18/18 targeted community visual and accessibility cases passed across Arabic RTL, English LTR, Simplified Chinese LTR, desktop, tablet, and mobile."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web build and 73 unit/component/SSR tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace check and repository lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The complete API and web test command passed when run with a 300-second bounded timeout; the initial 120-second wrapper attempt timed out before completion."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, client, and SSR builds passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Community list/detail/post/comment/report routes are inventoried as implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI artifacts validated."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman artifacts validated."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities reported."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "81/81 repository accessibility cases passed."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors with frontend_016 as the only in-progress task before closure."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "The repository-wide 72-case public visual matrix had 70 passes and two unrelated existing mobile baseline mismatches for public-property-details-ar and public-developer-profile-en. The selected PUB-09/PUB-10 targeted matrix passed 18/18; the full F1 matrix is owned by frontend_019."
+    }
+  ],
+  "sourceEvidence": [
+    "Screen PUB-09: docs/design_sources/final_screens/public/PUB-09.png; SHA-256 bb57550933a7b7687316465022e85b30d817ea4bafb605f0700de11ecb1197c7; Drive https://drive.google.com/drive/folders/113EnHTq_O-sfoNJYbelWyoPi1hcdvk3J; Figma prototype node 6017-10847.",
+    "Screen PUB-10: docs/design_sources/final_screens/public/PUB-10.png; SHA-256 3fa4aa55d8d1058453a194e1ad14ceaafbcf6bd922b9a209d3dda9b8ef9d02ec; Drive https://drive.google.com/drive/folders/1FyJqHCqwTdzzPa4y4e7UGsV6IH5laGOd; Figma prototype node 6017-10847.",
+    "Runtime API inventory: GET /api/v1/public/community/posts, GET /api/v1/public/community/posts/:postId, POST /api/v1/public/community/posts, POST /api/v1/public/community/posts/:postId/comments, POST /api/v1/public/community/posts/:postId/reports.",
+    "apps/web/tests/community.vitest.test.tsx",
+    "apps/web/tests/ssr.test.mjs",
+    "apps/web/tests/e2e/community.spec.ts"
+  ],
+  "scopeNotes": [
+    "The community API was a directly required missing runtime prerequisite and was repaired under the explicitly authorized Backend truth-repair exception; backend_093 has its own completion evidence and remains Complete.",
+    "The primary community action needed a scoped CSS specificity correction so the approved design-system brand variant could not be overwritten by generic public button rules.",
+    "No production mock data, secrets, real .env file, private projection fields, or permanent private-document URL was introduced or read."
+  ],
+  "knownGaps": [
+    "The repository-wide visual script is not green yet because two unrelated public mobile baselines fail; this is deferred to the explicit frontend_019 F1 responsive QA gate."
+  ],
+  "completedAt": "2026-08-17T22:59:47.5778927Z"
+}

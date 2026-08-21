@@ -66,6 +66,10 @@ function activeAdmin(claims: AccessTokenClaims): boolean {
   return claims.role === 'admin' && claims.status === 'verified';
 }
 
+function activeProvider(claims: AccessTokenClaims): boolean {
+  return claims.role === 'provider' && claims.status === 'verified';
+}
+
 function project(source: NotificationSource): NotificationData | undefined {
   const parsed = notificationDataSchema.safeParse({
     id: source.id,
@@ -81,6 +85,10 @@ function project(source: NotificationSource): NotificationData | undefined {
 
 function authorize(claims: AccessTokenClaims): void {
   if (!activeSeeker(claims)) throw new NotificationServiceError('NOTIFICATION_FORBIDDEN');
+}
+
+function authorizeProvider(claims: AccessTokenClaims): void {
+  if (!activeProvider(claims)) throw new NotificationServiceError('NOTIFICATION_FORBIDDEN');
 }
 
 export function createNotificationService(dependencies: NotificationServiceDependencies) {
@@ -122,6 +130,31 @@ export function createNotificationService(dependencies: NotificationServiceDepen
     async markAllRead(claims: AccessTokenClaims): Promise<NotificationReadAllData> {
       authorize(claims);
       return notificationReadAllDataSchema.parse({ updatedCount: await dependencies.repository.markAllRead(claims.sub, now(), 'seeker') });
+    },
+
+    async listProvider(claims: AccessTokenClaims, unparsedQuery: unknown): Promise<NotificationListData> {
+      authorizeProvider(claims);
+      const query = notificationListQuerySchema.parse(unparsedQuery);
+      const result = await dependencies.repository.list(claims.sub, query, 'provider');
+      const items = result.items.flatMap(item => {
+        const value = project(item);
+        return value ? [value] : [];
+      });
+      return notificationListDataSchema.parse({ items, unreadCount: result.unreadCount, page: query.page, limit: query.limit, total: result.total });
+    },
+
+    async markProviderRead(claims: AccessTokenClaims, unparsedId: unknown): Promise<NotificationReadData> {
+      authorizeProvider(claims);
+      const id = notificationIdSchema.parse(unparsedId);
+      const changedAt = now();
+      const source = await dependencies.repository.markRead(claims.sub, id, changedAt, 'provider');
+      if (!source) throw new NotificationServiceError('NOTIFICATION_NOT_FOUND');
+      return notificationReadDataSchema.parse({ id, readAt: source.readAt?.toISOString() ?? changedAt.toISOString() });
+    },
+
+    async markAllProviderRead(claims: AccessTokenClaims): Promise<NotificationReadAllData> {
+      authorizeProvider(claims);
+      return notificationReadAllDataSchema.parse({ updatedCount: await dependencies.repository.markAllRead(claims.sub, now(), 'provider') });
     },
 
     async listAdmin(claims: AccessTokenClaims, unparsedQuery: unknown): Promise<NotificationListData> {

@@ -1,40 +1,143 @@
 {
   "taskId": "backend_038",
-  "summary": "Implemented strict localized homepage section and display-setting contracts, versioned persistence models, deterministic ordering, published/visible public projections, and an explicit non-public preview projection.",
+  "summary": "Repaired the false completion by wiring homepage sections and display settings through the authenticated generic CMS admin GET/PUT boundary, with strict shared contracts, persistent Mongo repositories, optimistic version checks, permission-derived actions, reason-bearing audited writes, deterministic ordering, and safe published/visible public projections.",
   "filesChanged": [
     "packages/contracts/src/cms/index.ts",
     "packages/contracts/src/contracts/index.ts",
     "apps/api/src/modules/cms/homepage-display.ts",
     "apps/api/src/modules/cms/homepage-display-models.ts",
+    "apps/api/src/modules/cms/admin-content-repository.ts",
+    "apps/api/src/modules/cms/admin-content-service.ts",
+    "apps/api/src/modules/cms/admin-content-runtime.ts",
+    "apps/api/src/modules/cms/admin-content-router.ts",
     "apps/api/tests/cms/homepage-display.test.ts",
-    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/tests/cms/admin-content.test.ts",
+    "apps/api/tests/cms/admin-content-router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
     "docs/api/cms-homepage-display.md"
   ],
   "verification": [
-    {"command":"npm.cmd run build --workspace packages/contracts; node --test --import tsx apps/api/tests/cms/homepage-display.test.ts","exitCode":0,"result":"passed","notes":"Focused suite passed all 3 tests."},
-    {"command":"npm.cmd run typecheck","exitCode":0,"result":"passed","notes":"Syntax, contracts, and API typechecks passed."},
-    {"command":"npm.cmd run lint","exitCode":0,"result":"passed","notes":"Workspace and ESLint checks passed with zero warnings."},
-    {"command":"npm.cmd test -- --runInBand","exitCode":0,"result":"passed","notes":"Full suite passed all 252 tests."},
-    {"command":"npm.cmd run test:coverage","exitCode":0,"result":"passed","notes":"Coverage: 87.55% lines, 81.85% branches, 87.27% functions."},
-    {"command":"npm.cmd run build","exitCode":0,"result":"passed","notes":"Workspace, contracts, and API builds passed."},
-    {"command":"npm.cmd audit --audit-level=high","exitCode":0,"result":"passed","notes":"No high-severity dependency vulnerabilities found."},
-    {"command":"npm.cmd run api:inventory","exitCode":0,"result":"passed","notes":"API inventory generated successfully."},
-    {"command":"npm.cmd run openapi:validate","exitCode":0,"result":"passed","notes":"OpenAPI artifact valid; no routes were added."},
-    {"command":"npm.cmd run postman:validate","exitCode":0,"result":"passed","notes":"Postman artifact valid; no routes were added."},
-    {"command":"npm.cmd run env:check","exitCode":0,"result":"passed","notes":"Synthetic local environment readiness check passed with generated non-secret test configuration."},
-    {"command":"node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"passed","notes":"Agent Pack audit reported zero errors."}
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts compiled successfully, including the homepage/display namespace and strict PUT unions."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API source and test TypeScript compilation passed after the service result-helper repair."
+    },
+    {
+      "command": "node --test --import tsx apps/api/tests/cms/admin-content.test.ts apps/api/tests/cms/admin-content-router.test.ts apps/api/tests/cms/homepage-display.test.ts apps/api/tests/cms/population-tips.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused CMS suite passed 13/13, including authenticated homepage/display namespace reads, versioned writes, strict projection behavior, and published/visible public filtering."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API unit suite passed 371/371."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API route suite passed 104/104."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API production TypeScript build passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace validation and ESLint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root configuration tests, complete API suite, and Web suite passed; Web reported 76/76 tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, client, and SSR builds passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory reports the implemented generic GET and PUT CMS content routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI is valid and enumerates homepage/display CMS namespaces and payload projections."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman collection is valid and retains the generic CMS namespace route."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities were reported."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors in the changed diff."
+    }
   ],
   "sourceEvidence": [
     "agent_pack/04_tracks/backend/B2_master_data_localization/backend_038.md",
     "agent_pack/01_product/SCREEN_REGISTRY.json (ADM-49, ADM-58)",
     "packages/contracts/src/cms/index.ts",
+    "apps/api/src/modules/cms/admin-content-router.ts",
+    "apps/api/src/modules/cms/admin-content-service.ts",
+    "apps/api/src/modules/cms/admin-content-repository.ts",
     "apps/api/src/modules/cms/homepage-display.ts",
-    "apps/api/tests/cms/homepage-display.test.ts"
+    "apps/api/tests/cms/admin-content.test.ts",
+    "apps/api/tests/cms/admin-content-router.test.ts",
+    "apps/api/tests/cms/homepage-display.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "npm.cmd run api:inventory"
+  ],
+  "scopeNotes": [
+    "This was a bounded Backend truth repair directly required by frontend_072: the prior completion exposed contracts/models/helpers but no authenticated admin runtime boundary or persistence for homepage/display management.",
+    "No production data, secrets, or real .env file was read."
   ],
   "knownGaps": [
-    "Production homepage content and display values are not supplied; draft and empty states remain safe.",
-    "Public homepage aggregation and route ownership remain with the later homepage read-model task.",
-    "Live MongoDB integration remains environment-dependent and was not run without isolated replica-set prerequisites."
+    "Production homepage content and display values are not seeded; empty and draft states remain safe until editorial data is supplied.",
+    "Public homepage aggregation remains owned by the existing public homepage read model and only publishes explicit published/visible records.",
+    "Live MongoDB integration was not run because no isolated non-production replica-set topology and credentials were available; deterministic local service/model/router coverage passed."
   ],
-  "completedAt": "2026-08-14T00:04:24.4103125Z"
+  "completedAt": "2026-08-20T16:30:25.6087967Z"
 }

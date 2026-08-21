@@ -1,9 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import type {
-  AccountTransitionData,
-  ProviderReviewData
-} from '@sadat-real-estate/contracts';
+import type { AccountTransitionData, ProviderReviewData } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims, AccessTokenService } from '../../src/modules/auth/crypto.js';
 import {
   AccountServiceError,
@@ -52,6 +49,14 @@ function accessTokens(): AccessTokenService {
 
 function service(): AccountService {
   return {
+    async listUsers() {
+      return { items: [], page: 1, limit: 20, total: 0 };
+    },
+    async getUser() { throw new AccountServiceError('ACCOUNT_NOT_FOUND'); },
+    async listProviders() {
+      return { items: [], page: 1, limit: 20, total: 0 };
+    },
+    async getProvider() { throw new AccountServiceError('ACCOUNT_NOT_FOUND'); },
     async transitionAccount(principal, userId, input) {
       if (principal.userId === viewerId) throw new AccountServiceError('ACCOUNT_FORBIDDEN');
       if (userId !== seekerId) throw new AccountServiceError('ACCOUNT_NOT_FOUND');

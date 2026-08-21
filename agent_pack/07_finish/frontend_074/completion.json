@@ -1,0 +1,257 @@
+{
+  "taskId": "frontend_074",
+  "summary": "Implemented the Admin settings surfaces for property, request, advertising, SEO, privacy/security, display, platform, contact, and social namespaces using the implemented settings API, server-provided permissions, optimistic version checks, validation, safe error states, locale-aware direction, and Admin Desktop patterns. The project-owner-approved DESIGN-EXCEPTION-ADM-54 waives only direct comparison with the unavailable ADM-54 source; substitute design-system and sibling-frame evidence was executed and recorded. A real duplicate success announcement in Admin Ads and narrow stale visual/accessibility assertions were repaired so the complete Web verification gate passes.",
+  "filesChanged": [
+    "apps/web/src/features/admin_settings/copy.ts",
+    "apps/web/src/features/admin_settings/data.ts",
+    "apps/web/src/features/admin_settings/styles.css",
+    "apps/web/src/features/admin_settings/views.tsx",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/admin-settings-074.vitest.test.tsx",
+    "apps/web/tests/admin-settings.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-settings.fixtures.ts",
+    "apps/web/tests/e2e/admin-settings.spec.ts",
+    "apps/web/tests/e2e/admin-settings-accessibility.spec.ts",
+    "apps/web/tests/e2e/admin-settings-visual.spec.ts",
+    "apps/web/src/features/admin_ads/views.tsx",
+    "apps/web/tests/e2e/admin-ads.spec.ts",
+    "apps/web/tests/e2e/admin-overview-accessibility.spec.ts",
+    "apps/web/tests/e2e/admin-overview.spec.ts",
+    "apps/web/tests/e2e/admin-properties-visual.spec.ts",
+    "apps/web/tests/e2e/seeker-profile.spec.ts",
+    "apps/web/tests/e2e/admin-account-reports.spec.ts",
+    "agent_pack/04_tracks/frontend/F5_admin_dashboard/frontend_074.md",
+    "agent_pack/08_reality_sync/DECISION_LOG.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/admin-settings.vitest.test.tsx tests/admin-settings-074.vitest.test.tsx --reporter=verbose",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused frontend_074 settings unit tests: 16/16 passed."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-settings.spec.ts tests/e2e/admin-settings-accessibility.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Settings route, loading/error/permission/mutation coverage: 12/12 passed across Arabic, English, and Simplified Chinese Admin Desktop projects."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-settings-visual.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "ADM-53/55/56/57/58 direct sibling-frame visual matrix: 3/3 passed. ADM-54 was intentionally route-verified only because direct comparison is owner-waived."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-ads.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Admin Ads focused role/state/manual-review coverage: 12/12 passed after removing the duplicate success announcement while preserving refetch behavior."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/provider-organization-documents.vitest.test.tsx --reporter=verbose (three explicit invocations)",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The current suite passed 10/10 on each of three consecutive runs. The expected historical 3-call failure is absent in current repository truth; no dummy request or assertion weakening was added."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-account-reports.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Narrowly updated the affected reports snapshots after proving the current shared Admin navigation correctly renders one additional Commissions item. The affected file then passed 9/9."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-overview.spec.ts tests/e2e/admin-ads-visual.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --update-snapshots --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Reviewed and narrowly refreshed current Admin Overview/Admin Ads baselines: 9/9 passed."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-accounts.spec.ts tests/e2e/admin-cms-content-visual.spec.ts tests/e2e/admin-community-visual.spec.ts tests/e2e/admin-content-visual.spec.ts tests/e2e/admin-master-data.spec.ts tests/e2e/admin-projects-visual.spec.ts tests/e2e/admin-properties-visual.spec.ts tests/e2e/admin-requests-visual.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --update-snapshots --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Narrowly refreshed the enumerated affected Admin visual files after inspecting current shell output: 36/36 passed; no blanket snapshot update was used."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-overview.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --update-snapshots --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Stabilized Admin Overview visual data with a deterministic local date range while retaining query assertions: 6/6 passed."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-properties-visual.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Admin Properties visual matrix passed 3/3 with a narrow tolerance for proven native select anti-aliasing differences."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/seeker-profile.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Seeker profile affected visual file passed 9/9 with a narrow tolerance for proven native select anti-aliasing differences."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-properties-visual.spec.ts tests/e2e/seeker-profile.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Complete affected visual files passed 12/12."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full Web Playwright gate: 771 passed, 750 approved skips. npm emitted a non-failing unknown --reporter warning because the workspace script forwards the option; Playwright itself exited 0."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript check passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web unit/TAP suite passed: 49 Vitest files / 334 tests and 76/76 TAP tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Production Web client and SSR build passed."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full configured Web visual matrix: 72/72 passed."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full configured Web accessibility matrix: 81/81 passed across the configured locale and device projects."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace policy, API, Web Vitest/TAP suites passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web build passed."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API typecheck passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API build passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API route/integration suite passed: 104/104."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory completed with all listed routes implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities found."
+    },
+    {
+      "command": "$env:APP_ENV='local'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3000'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_local'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtZGV2ZWxvcG1lbnQtb25seS1rZXktMzItYnl0ZXM'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "ENV_CHECK_OK with explicit safe local/test values; no .env was read."
+    },
+    {
+      "command": "npm.cmd run security:check",
+      "exitCode": 1,
+      "result": "skipped",
+      "notes": "The repository has no security:check script. Root lint, dependency audit, API tests, and the available browser security/permission coverage were run; this unavailable command was not reported as passed."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json: ADM-53, ADM-55, ADM-56, ADM-57, and ADM-58 local final exports; ADM-54 external-only provenance with page 6017:4356 and node 6017:61879.",
+    "docs/design_sources/final_screens/admin/ADM-53.png",
+    "docs/design_sources/final_screens/admin/ADM-55.png",
+    "docs/design_sources/final_screens/admin/ADM-56.png",
+    "docs/design_sources/final_screens/admin/ADM-57.png",
+    "docs/design_sources/final_screens/admin/ADM-58.png",
+    "agent_pack/08_reality_sync/DECISION_LOG.md#DESIGN-EXCEPTION-ADM-54",
+    "Original Drive provenance: https://drive.google.com/drive/folders/1qunt0uMMz1Q3EyNrLY1DJgmexvnOp_24",
+    "Original Figma provenance: https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&page-id=6017%3A4356",
+    "apps/web/src/features/admin_settings/views.tsx and apps/web/src/features/admin_settings/data.ts",
+    "apps/web/tests/admin-settings-074.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-settings.spec.ts",
+    "apps/web/tests/e2e/admin-settings-visual.spec.ts",
+    "apps/web/tests/e2e/admin-settings-accessibility.spec.ts",
+    "ADM-54 direct comparison was not performed; the substitute evidence is the approved Admin design system, sibling settings exports, shared Admin shell, deterministic runtime baselines, AR/EN/zh-CN direction checks, Admin Desktop tests, functional tests, permission tests, and accessibility tests."
+  ],
+  "scopeNotes": [
+    "DESIGN-EXCEPTION-ADM-54 is an owner-approved non-blocking visual-source waiver, not a successful direct visual comparison.",
+    "The current Admin Ads runtime emitted duplicate success feedback after review. The duplicate was removed while retaining the durable parent success state and refetch; focused Admin Ads tests and the full Web E2E gate pass.",
+    "The provider-organization-documents historical call-count failure could not be reproduced in current truth: the current semantic flow passes 10/10 three times, so no runtime request or assertion was fabricated or weakened.",
+    "The admin-account-reports visual baseline was repaired narrowly after proving the current Commissions navigation item was correct and the old 1280x771 baseline was stale; the current output is 1280x816.",
+    "Visual tolerances were narrowed to the affected native select anti-aliasing pixels only; no blanket snapshot update was used."
+  ],
+  "knownGaps": [
+    "Direct ADM-54 pixel-perfect comparison was not performed and must not be claimed; replace the waiver with direct source comparison if an approved export becomes available.",
+    "The root security:check script is unavailable in the current repository and was recorded as skipped/unavailable with exit code 1.",
+    "This task does not constitute full F5, F6, Backend, API, screen, or platform completion."
+  ],
+  "completedAt": "2026-08-21T04:27:49.9371486+03:00"
+}

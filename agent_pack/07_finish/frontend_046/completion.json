@@ -1,0 +1,116 @@
+{
+  "taskId": "frontend_046",
+  "summary": "Implemented the provider-owned PRV-15 Projects surface with authenticated list loading, status/search filters, pagination, localized safe projections, contract-validated create/update/submit mutations, server-owned availableActions, and loading, empty, error, retry, success, and permission states. Corrected the provider-scoped Button state-style collision found during visual verification.",
+  "filesChanged": [
+    "apps/web/src/features/provider/projects-data.ts",
+    "apps/web/src/features/provider/projects-copy.ts",
+    "apps/web/src/features/provider/projects.tsx",
+    "apps/web/src/features/provider/projects.css",
+    "apps/web/src/features/provider/index.ts",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/provider-projects.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-projects.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-projects.spec.ts-snapshots/provider-projects-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-projects.spec.ts-snapshots/provider-projects-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-projects.spec.ts-snapshots/provider-projects-zh-CN-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts TypeScript build passed."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/provider-projects.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused Provider Projects suite passed: 1 file, 7 tests."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript verification passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web ESLint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full web suite passed: 30 Vitest files, 199 tests, and 76 Node tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR builds passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Existing API suite passed: 79 tests, including provider authorization and strict project route coverage."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory includes GET /api/v1/provider/projects, POST /api/v1/provider/projects, PATCH /api/v1/provider/projects/:projectId, and POST /api/v1/provider/projects/:projectId/submit."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Found 0 vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- --grep \"PRV-15 Provider Projects\" --project=desktop-ar --project=desktop-en --project=desktop-zh --workers=1 --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Targeted browser matrix passed: 9 tests across Arabic RTL, English LTR, and Simplified Chinese LTR desktop projects, including visual snapshots, keyboard focus, server-authorized mutations, safe projection assertions, and expired-session fail-closed behavior."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors while frontend_046 was the only task in progress."
+    }
+  ],
+  "sourceEvidence": [
+    "Screen PRV-15",
+    "docs/design_sources/final_screens/provider/PRV-15.png; SHA-256 1856d403d730c82c4793ebbb3ddf7dc4482ecc272b19327411a832c9dcf006ac",
+    "Figma prototype node 6017:19032: https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "Drive folder 1JM9TjIqqsFhXnObamIdFGepIPeLUf0ml: https://drive.google.com/drive/folders/1JM9TjIqqsFhXnObamIdFGepIPeLUf0ml",
+    "packages/contracts/src/projects/index.ts",
+    "apps/api/src/modules/projects/router.ts and apps/api/tests/projects/router.test.ts",
+    "apps/web/src/features/provider/projects.tsx",
+    "apps/web/tests/provider-projects.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-projects.spec.ts"
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was modified only as the direct route-wiring necessity exception required to expose /provider/projects; the exception is within the selected task scope and does not add a new API.",
+    "No Backend truth repair was required. Provider ownership, verified-provider access, strict request schemas, optimistic version/reason requirements, and availableActions remain API-owned.",
+    "The approved local design export is the visual authority. The executable Playwright matrix was used because the in-app browser connector was unavailable in this environment; no external design source was altered.",
+    "Project detail, media, and metric operations were not invented because the current runtime exposes only provider project list/create/update/submit operations. Fields without runtime truth remain unavailable rather than fabricated."
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-18T19:57:22.8871456Z"
+}

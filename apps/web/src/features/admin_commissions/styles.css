@@ -1,0 +1,243 @@
+.admin-commissions {
+  display: grid;
+  grid-template-columns: minmax(14rem, 18rem) minmax(0, 1fr);
+  min-height: 42rem;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: var(--color-surface-subtle, #f5f7f8);
+  color: var(--color-text-primary, #15232b);
+}
+
+.admin-commissions__content {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+}
+
+.admin-commissions__heading,
+.admin-commissions__panel-heading,
+.admin-commissions__detail-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.admin-commissions__heading h1,
+.admin-commissions__panel h2,
+.admin-commissions__subpanel h2 {
+  margin: 0;
+}
+
+.admin-commissions__heading p,
+.admin-commissions__panel-heading p,
+.admin-commissions__form-note {
+  margin: 0.35rem 0 0;
+  color: var(--color-text-secondary, #5c6c73);
+}
+
+.admin-commissions__eyebrow,
+.admin-commissions__scope-note {
+  color: var(--color-accent, #a76b2b);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-commissions__scope-note {
+  padding: 0.3rem 0.55rem;
+  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+  border-radius: 999px;
+}
+
+.admin-commissions__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  padding: 0.35rem;
+  border: 1px solid var(--color-border, #d6dee1);
+  border-radius: 0.85rem;
+  background: var(--color-surface, #fff);
+}
+
+.admin-commissions__tabs a {
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.6rem;
+  color: inherit;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.admin-commissions__tabs a[data-active='true'],
+.admin-commissions__tabs a:focus-visible {
+  background: var(--color-accent, #a76b2b);
+  color: #fff;
+}
+
+.admin-commissions__panel,
+.admin-commissions__subpanel,
+.admin-commissions__state,
+.admin-commissions__form,
+.admin-commissions__filters,
+.admin-commissions__account-search {
+  display: grid;
+  gap: 1rem;
+  padding: 1.1rem;
+  border: 1px solid var(--color-border, #d6dee1);
+  border-radius: 0.9rem;
+  background: var(--color-surface, #fff);
+  box-shadow: 0 0.35rem 1.25rem rgb(21 35 43 / 5%);
+}
+
+.admin-commissions__subpanel {
+  margin-top: 1rem;
+}
+
+.admin-commissions__filters,
+.admin-commissions__account-search {
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  align-items: end;
+}
+
+.admin-commissions__filters .ui-button,
+.admin-commissions__account-search .ui-button {
+  justify-self: start;
+}
+
+.admin-commissions__table-wrap {
+  overflow-x: auto;
+}
+
+.admin-commissions__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.admin-commissions__table th,
+.admin-commissions__table td {
+  padding: 0.75rem 0.65rem;
+  border-bottom: 1px solid var(--color-border, #e3e8ea);
+  text-align: start;
+  vertical-align: top;
+}
+
+.admin-commissions__table th {
+  color: var(--color-text-secondary, #5c6c73);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.admin-commissions__badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.2rem 0.5rem;
+  background: #edf1f3;
+  color: #40545d;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.admin-commissions__badge[data-tone='success'] { background: #e5f5eb; color: #176a38; }
+.admin-commissions__badge[data-tone='warning'] { background: #fff3d6; color: #7d5312; }
+.admin-commissions__badge[data-tone='danger'] { background: #fde8e8; color: #a52424; }
+.admin-commissions__badge[data-tone='info'] { background: #e7f0fb; color: #245985; }
+
+.admin-commissions__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.admin-commissions__pagination span {
+  min-width: 7rem;
+  color: var(--color-text-secondary, #5c6c73);
+  text-align: center;
+}
+
+.admin-commissions__form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.admin-commissions__field {
+  display: grid;
+  gap: 0.4rem;
+  color: var(--color-text-secondary, #5c6c73);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.admin-commissions__field input,
+.admin-commissions__field select,
+.admin-commissions__field textarea {
+  width: 100%;
+  min-height: 2.7rem;
+  padding: 0.65rem 0.7rem;
+  border: 1px solid var(--color-border, #cbd6da);
+  border-radius: 0.55rem;
+  background: var(--color-surface, #fff);
+  color: var(--color-text-primary, #15232b);
+  font: inherit;
+}
+
+.admin-commissions__field textarea {
+  min-height: 6rem;
+  resize: vertical;
+}
+
+.admin-commissions__field input:focus-visible,
+.admin-commissions__field select:focus-visible,
+.admin-commissions__field textarea:focus-visible {
+  outline: 0.18rem solid color-mix(in srgb, var(--color-accent, #a76b2b) 42%, transparent);
+  outline-offset: 0.1rem;
+}
+
+.admin-commissions__feedback {
+  margin: 0;
+  color: #176a38;
+  font-weight: 700;
+}
+
+.admin-commissions__feedback[data-tone='error'] { color: #a52424; }
+
+.admin-commissions__details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin: 0;
+}
+
+.admin-commissions__details div {
+  padding: 0.75rem;
+  border: 1px solid var(--color-border, #e3e8ea);
+  border-radius: 0.6rem;
+}
+
+.admin-commissions__details dt {
+  color: var(--color-text-secondary, #5c6c73);
+  font-size: 0.75rem;
+}
+
+.admin-commissions__details dd {
+  margin: 0.3rem 0 0;
+  font-weight: 700;
+}
+
+@media (max-width: 70rem) {
+  .admin-commissions { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 48rem) {
+  .admin-commissions { padding: 0.8rem; }
+  .admin-commissions__form-grid,
+  .admin-commissions__details { grid-template-columns: 1fr; }
+  .admin-commissions__heading { flex-direction: column; }
+}

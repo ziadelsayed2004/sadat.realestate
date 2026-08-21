@@ -95,3 +95,5 @@ export function createProviderCommissionProjectionService(dependencies: Provider
     validateProjection: (value: unknown) => providerCommissionProjectionSchema.parse(value)
   };
 }
+
+export type ProviderCommissionProjectionService = ReturnType<typeof createProviderCommissionProjectionService>;

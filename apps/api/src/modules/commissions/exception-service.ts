@@ -9,6 +9,7 @@ import {
   type CommissionExceptionListData,
   type CommissionExceptionListQuery
 } from '@sadat-real-estate/contracts';
+import type { CommissionExceptionRepository } from './exception-repository.js';
 
 type CommissionExceptionErrorCode =
   | 'COMMISSION_EXCEPTION_FORBIDDEN'
@@ -35,20 +36,22 @@ const overlaps = (left: { effectiveFrom: string; effectiveTo?: string | undefine
 const applies = (item: { effectiveFrom: string; effectiveTo?: string | undefined; status: string }, at: Date) =>
   item.status === 'active' && new Date(item.effectiveFrom).getTime() <= at.getTime() && (!item.effectiveTo || new Date(item.effectiveTo).getTime() > at.getTime());
 
-export function createCommissionExceptionService(seed: { exceptions?: CommissionException[]; now?: () => Date } = {}) {
+export function createCommissionExceptionService(seed: { exceptions?: CommissionException[]; now?: () => Date; repository?: CommissionExceptionRepository } = {}) {
   const exceptions = new Map((seed.exceptions ?? []).map(item => [item.id, item]));
+  const repository = seed.repository;
   const clock = seed.now ?? (() => new Date());
   const now = () => clock().toISOString();
-  const get = (exceptionId: string) => {
-    const exception = exceptions.get(exceptionId);
+  const all = async (): Promise<CommissionException[]> => repository ? repository.list() : [...exceptions.values()];
+  const get = async (exceptionId: string) => {
+    const exception = repository ? await repository.findById(exceptionId) : exceptions.get(exceptionId);
     if (!exception) throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_NOT_FOUND');
     return exception;
   };
-  const validateActive = (exception: CommissionException) => {
+  const validateActive = async (exception: CommissionException, existing: readonly CommissionException[]) => {
     if (exception.status !== 'active') return;
     const current = clock();
     if (!applies(exception, current)) throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_INVALID_STATE');
-    if ([...exceptions.values()].some(item => item.id !== exception.id && item.accountId === exception.accountId && item.status === 'active' && overlaps(item, exception))) {
+    if (existing.some(item => item.id !== exception.id && item.accountId === exception.accountId && item.status === 'active' && overlaps(item, exception))) {
       throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_OVERLAP');
     }
   };
@@ -87,7 +90,7 @@ export function createCommissionExceptionService(seed: { exceptions?: Commission
       admin(claims);
       const parsed = commissionExceptionCreateSchema.parse(input);
       if (!validAccountId(parsed.accountId)) throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_NOT_FOUND');
-      if ([...exceptions.values()].some(item => item.accountId === parsed.accountId && item.effectiveFrom === parsed.effectiveFrom)) throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_DUPLICATE');
+      if ((await all()).some(item => item.accountId === parsed.accountId && item.effectiveFrom === parsed.effectiveFrom)) throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_DUPLICATE');
       const stamp = now();
       const exception = commissionExceptionSchema.parse({
         id: id(),
@@ -101,7 +104,12 @@ export function createCommissionExceptionService(seed: { exceptions?: Commission
         updatedAt: stamp,
         lastMutationReason: parsed.reason
       });
-      exceptions.set(exception.id, exception);
+      if (repository) {
+        const result = await repository.insert(exception);
+        if (result.kind === 'duplicate') throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_DUPLICATE');
+      } else {
+        exceptions.set(exception.id, exception);
+      }
       return exception;
     },
     async getException(claims: AccessTokenClaims, exceptionId: string) {
@@ -112,22 +120,28 @@ export function createCommissionExceptionService(seed: { exceptions?: Commission
       admin(claims);
       const query = commissionExceptionListQuerySchema.parse(input) as CommissionExceptionListQuery;
       const at = query.at ? new Date(query.at) : undefined;
-      const values = [...exceptions.values()]
+      const values = (await all())
         .filter(item => (!query.accountId || item.accountId === query.accountId) && (!query.status || item.status === query.status) && (!at || applies(item, at)))
         .sort((a, b) => b.effectiveFrom.localeCompare(a.effectiveFrom) || a.accountId.localeCompare(b.accountId) || a.id.localeCompare(b.id));
       return { items: values.slice((query.page - 1) * query.limit, query.page * query.limit), page: query.page, limit: query.limit, total: values.length };
     },
     async updateException(claims: AccessTokenClaims, exceptionId: string, input: unknown) {
       admin(claims);
-      const current = get(exceptionId);
+      const current = await get(exceptionId);
       const parsed = commissionExceptionPatchSchema.parse(input);
       if (parsed.expectedVersion !== current.version) throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_VERSION_CONFLICT');
       const { expectedVersion: _expectedVersion, reason: mutationReason, ...patch } = parsed;
       void _expectedVersion;
       const next = materialize(current, patch, claims.sub, mutationReason);
       validateMutation(current, next);
-      validateActive(next);
-      exceptions.set(next.id, next);
+      await validateActive(next, await all());
+      if (repository) {
+        const result = await repository.replace(next, current.version);
+        if (result.kind === 'not_found') throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_NOT_FOUND');
+        if (result.kind === 'version_conflict') throw new CommissionExceptionServiceError('COMMISSION_EXCEPTION_VERSION_CONFLICT');
+      } else {
+        exceptions.set(next.id, next);
+      }
       return next;
     },
     async activateException(claims: AccessTokenClaims, exceptionId: string, expectedVersion: number, reason: string) {
@@ -135,10 +149,11 @@ export function createCommissionExceptionService(seed: { exceptions?: Commission
     },
     async findActiveException(accountId: string, at: Date = clock()) {
       if (!validAccountId(accountId)) return undefined;
-      return [...exceptions.values()]
+      return (await all())
         .filter(item => item.accountId === accountId && applies(item, at))
         .sort((a, b) => b.effectiveFrom.localeCompare(a.effectiveFrom) || b.version - a.version || b.id.localeCompare(a.id))[0];
     }
   };
 }
 
+export type CommissionExceptionService = ReturnType<typeof createCommissionExceptionService>;

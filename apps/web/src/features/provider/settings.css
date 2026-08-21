@@ -1,0 +1,115 @@
+.provider-settings__state,
+.provider-settings__empty {
+  display: grid;
+  max-width: 760px;
+  gap: 16px;
+  margin: 0 auto;
+  padding: 56px 24px;
+  text-align: center;
+}
+
+.provider-settings__empty h1,
+.provider-settings__panel h2 {
+  color: #1b2942;
+}
+
+.provider-settings__empty h1,
+.provider-settings__empty p {
+  margin: 0;
+}
+
+.provider-settings__empty p,
+.provider-settings__notice,
+.provider-settings__panel > p {
+  color: #63718b;
+  line-height: 1.7;
+}
+
+.provider-settings__tabs {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 24px;
+  padding: 0 0 10px;
+  border-bottom: 1px solid #dfe6f1;
+}
+
+.provider-settings__tabs a {
+  padding: 10px 16px;
+  border-radius: 10px;
+  color: #63718b;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.provider-settings__tabs a:hover,
+.provider-settings__tabs a:focus-visible,
+.provider-settings__tabs a[data-active='true'] {
+  background: #eef4ff;
+  color: #2555aa;
+}
+
+.provider-settings__tabs a:focus-visible {
+  outline: 3px solid #89b4ff;
+  outline-offset: 2px;
+}
+
+.provider-settings__panel {
+  display: grid;
+  max-width: 760px;
+  gap: 18px;
+  padding: 26px;
+  border: 1px solid #e2e8f2;
+  border-radius: 18px;
+  background: #fff;
+}
+
+.provider-settings__panel h2 {
+  margin: 0 0 2px;
+  font-size: 1.25rem;
+}
+
+.provider-settings__notice {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #f4f7fb;
+  font-size: 0.9rem;
+}
+
+.provider-settings__feedback {
+  max-width: 760px;
+  margin: 0 0 18px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #e8f7ef;
+  color: #197244;
+}
+
+.provider-settings__feedback[data-state='validation'],
+.provider-settings__feedback[data-state='conflict'],
+.provider-settings__feedback[data-state='permission'],
+.provider-settings__feedback[data-state='error'] {
+  background: #fff0f0;
+  color: #a12c36;
+}
+
+.provider-settings__security-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+}
+
+.provider-settings__panel[data-state='unavailable'] {
+  border-style: dashed;
+  background: #fbfcfe;
+}
+
+.provider-settings__panel--danger {
+  border-color: #f0c8cc;
+}
+
+@media (max-width: 900px) {
+  .provider-settings__security-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

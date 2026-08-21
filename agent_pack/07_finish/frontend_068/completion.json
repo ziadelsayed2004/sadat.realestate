@@ -1,0 +1,123 @@
+{
+  "taskId": "frontend_068",
+  "summary": "Implemented the desktop admin community, comments, and reports views using the implemented community contracts. Added server-backed pagination and filters, safe projections, permission and retry states, Arabic/English/Simplified Chinese direction support, and reason/version-gated report resolution.",
+  "filesChanged": [
+    "apps/web/src/features/admin_community/data.ts",
+    "apps/web/src/features/admin_community/copy.ts",
+    "apps/web/src/features/admin_community/index.ts",
+    "apps/web/src/features/admin_community/views.tsx",
+    "apps/web/src/features/admin_community/styles.css",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/admin-community.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-community.fixtures.ts",
+    "apps/web/tests/e2e/admin-community.spec.ts",
+    "apps/web/tests/e2e/admin-community-accessibility.spec.ts",
+    "apps/web/tests/e2e/admin-community-visual.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-ar-posts-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-ar-comments-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-ar-reports-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-en-posts-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-en-comments-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-en-reports-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-zh-CN-posts-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-zh-CN-comments-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-zh-CN-reports-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/admin-community.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "7 focused Vitest tests passed: contract routes, safe projections, all supported directions, filters, reason/version resolution, and permission failure."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, and web TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace check and repository ESLint completed with zero warnings or errors."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "13 workspace-policy tests, 476 API tests, and 76 web tests passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, client, and SSR builds completed successfully."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Community post list, comment list, report list, and report resolve routes are all reported implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/admin-community.spec.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "6 desktop locale tests passed; 12 tablet/mobile tests skipped because the approved admin device scope is desktop-only."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/admin-community-visual.spec.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "ADM-27, ADM-28, and ADM-29 visual snapshots passed for ar, en, and zh-CN desktop projects; non-approved tablet/mobile projects skipped."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/admin-community-accessibility.spec.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Accessibility-focused landmark, label, focus, and direction checks passed for ar, en, and zh-CN desktop projects."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "ADM-27 local approved export: docs/design_sources/final_screens/admin/ADM-27.png; SHA256 3ae38d58b4f4b5d8fcee859ebd18ab8b72b76c1d441e30e985a021debe184292; Drive https://drive.google.com/drive/folders/1v-dhWpWpgDMJJK_J7QMX4KJrQ1LX2Hzw",
+    "ADM-28 local approved export: docs/design_sources/final_screens/admin/ADM-28.png; SHA256 f69093f269413bd9a55a53fc81da8c8e9d4060a13ac0cb5210a6c5e8b5ce2211; Drive https://drive.google.com/drive/folders/1rf8YWR6oo3MlcWiksOyoJQkbP3bTpHpJ",
+    "ADM-29 local approved export: docs/design_sources/final_screens/admin/ADM-29.png; SHA256 de5f52e9b2bf7aefb5e81756f2a3e682f2a60a4246a43ffb59915742bc96a796; Drive https://drive.google.com/drive/folders/1un9tRaMEbov-zH_Pl7JgOlk5TvvcHR-K",
+    "Figma prototype node 6017:61879, page 6017:4356: https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+    "Runtime API inventory: GET /api/v1/admin/community/posts, GET /api/v1/admin/community/comments, GET /api/v1/admin/community/reports, POST /api/v1/admin/community/reports/:reportId/resolve",
+    "Shared contracts: packages/contracts/src/community/index.ts and packages/contracts/src/contracts/index.ts",
+    "Focused implementation and browser evidence: apps/web/tests/admin-community.vitest.test.tsx and apps/web/tests/e2e/admin-community*.spec.ts",
+    "Authorized integration scope exception: apps/web/src/features/frontend_foundation/app.tsx was changed only to compose the three approved admin community screen routes."
+  ],
+  "scopeNotes": [
+    "No contracts, dependencies, API runtime modules, production data, or secrets were changed or read for this frontend task.",
+    "The post screen route is /admin/community while its implemented API route is /api/v1/admin/community/posts; the route constants keep those concerns separate.",
+    "Admin dashboard verification is desktop-only per the approved screen manifest; tablet/mobile browser cases were intentionally skipped."
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-19T10:57:19.4386876Z"
+}

@@ -1,0 +1,170 @@
+{
+  "taskId": "frontend_073",
+  "summary": "Implemented the Admin Platform, Contact, and Social settings surfaces with strict runtime contracts, multilingual RTL/LTR forms, safe unavailable and permission states, optimistic versioned saves, mandatory reasons, and desktop visual/accessibility coverage.",
+  "filesChanged": [
+    "apps/web/src/features/admin_settings/copy.ts",
+    "apps/web/src/features/admin_settings/data.ts",
+    "apps/web/src/features/admin_settings/index.ts",
+    "apps/web/src/features/admin_settings/styles.css",
+    "apps/web/src/features/admin_settings/views.tsx",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/admin-settings.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-settings.fixtures.ts",
+    "apps/web/tests/e2e/admin-settings.spec.ts",
+    "apps/web/tests/e2e/admin-settings-accessibility.spec.ts",
+    "apps/web/tests/e2e/admin-settings-visual.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-ar-platform-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-ar-contact-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-ar-social-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-en-platform-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-en-contact-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-en-social-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-zh-CN-platform-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-zh-CN-contact-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-zh-CN-social-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript compilation passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed with no warnings."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/admin-settings.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "8/8 focused settings contract, projection, permission, unavailable, version, and conflict tests passed."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-settings.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "9/9 Admin settings route, locale, permission, and mutation journeys passed."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-settings-accessibility.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "3/3 Admin settings accessibility journeys passed across Arabic, English, and Simplified Chinese."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/admin-settings-visual.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "3/3 visual regression projects passed against the 9 approved locale/screen baselines."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "48 Web Vitest files passed with 326 tests; auxiliary TAP checks passed 76/76."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Complete Web visual matrix passed 72/72."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Complete Web accessibility matrix passed 81/81."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API TypeScript compilation passed for the consumed settings contract."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API unit suite passed 371/371."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API route suite passed 104/104, including unified admin settings authorization and strict versioned mutation behavior."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and Web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root quality tests passed: 13 config tests, 503 API tests, 326 Web Vitest tests, and 76 auxiliary Web tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, Web client, and Web SSR production build passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory contains GET and PUT /api/v1/admin/settings/:namespace as implemented routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities found."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit returned zero errors with frontend_073 in progress before closure."
+    }
+  ],
+  "sourceEvidence": [
+    "ADM-50: apps/web/approved local export docs/design_sources/final_screens/admin/ADM-50.png; sha256 6cb1eeb034a606b789c0abaa4be84c3c493f7a80f537c395c8c8d997e69e28a6; Drive https://drive.google.com/drive/folders/1kU-ZltMai1vFLk-_W8IhdAnJMrnCIw7J; Figma shared node 6017:61879.",
+    "ADM-51: docs/design_sources/final_screens/admin/ADM-51.png; sha256 c42687833b1ba9d4922e2347ff69e991b8f507e709e746ae10ebb1f5bb6a89f9; Drive https://drive.google.com/drive/folders/1_1LBD4BnQ3pFWe3OAiMziiw9eKbQ51Zm.",
+    "ADM-52: docs/design_sources/final_screens/admin/ADM-52.png; sha256 6d46faa82f768e15b1b312c95497c66dafa78948de806029cb436addd82aa8a9; Drive https://drive.google.com/drive/folders/1GYULMZZDXwyqfI2GOBMJavvzlLNLRfLX.",
+    "Runtime contract: GET /api/v1/admin/settings/:namespace and PUT /api/v1/admin/settings/:namespace with admin:settings.view/manage, strict schemaVersion, expectedVersion, and reason validation; confirmed by API inventory, OpenAPI, Postman, and API tests.",
+    "Focused runtime evidence: apps/web/tests/admin-settings.vitest.test.tsx and apps/web/tests/e2e/admin-settings.spec.ts.",
+    "Locale/direction evidence: Arabic RTL plus English and Simplified Chinese LTR in focused E2E and accessibility projects.",
+    "The earlier provider-organization-documents cross-suite failure remains repaired semantically through a stable async state assertion; the isolated test passed three consecutive times, the source file passed, the full Web suite passed, and the root suite passed."
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was modified as an explicitly documented integration exception because the approved settings routes must be wired into the existing shell; no unrelated feature or Backend module was changed.",
+    "The legacy cms_settings model/helpers were not used because they are not runtime-wired; the implementation consumes only the active unified admin settings contract.",
+    "A root strict-indexing error in the new focused test was repaired by narrowing the captured request before assertions; runtime behavior was unchanged."
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-20T19:15:15.7143696Z"
+}

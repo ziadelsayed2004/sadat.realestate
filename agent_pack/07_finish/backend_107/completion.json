@@ -1,46 +1,57 @@
 {
   "taskId": "backend_107",
-  "summary": "Implemented a verified-provider, owner-only advertising request projection with strict state, history, quote, payment-proof, and Africa/Cairo schedule projections, bounded filters/pagination, deterministic ordering, IDOR protection, and redacted administrative/storage fields.",
+  "summary": "Repaired the previously completed provider advertising projection boundary by adding persistent Mongoose read models/source wiring, owner-scoped GET /api/v1/provider/ads and GET /api/v1/provider/ads/:adRequestId routes, explicit redacted projections, synchronized OpenAPI/Postman artifacts, and regression coverage. The repair preserves provider ownership, deterministic pagination/order, private payment metadata redaction, and Africa/Cairo schedule projection rules.",
   "filesChanged": [
-    "packages/contracts/src/provider/index.ts",
-    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/provider/advertising-models.ts",
+    "apps/api/src/modules/provider/advertising-repository.ts",
     "apps/api/src/modules/provider/advertising.ts",
-    "apps/api/tests/provider/service.test.ts",
+    "apps/api/src/modules/provider/router.ts",
+    "apps/api/src/modules/provider/runtime.ts",
+    "apps/api/tests/provider/advertising-models.test.ts",
+    "apps/api/tests/provider/router.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
     "docs/api/provider-advertising.md"
   ],
   "verification": [
-    {
-      "command": "npm.cmd run build --workspace packages/contracts; npm.cmd run typecheck --workspace apps/api; node --test --import tsx apps/api/tests/provider/service.test.ts",
-      "exitCode": 0,
-      "result": "Passed",
-      "notes": "Contracts/API typecheck passed and six focused provider tests passed."
-    },
-    {
-      "command": "npm.cmd run lint; npm.cmd test -- --runInBand; npm.cmd run build",
-      "exitCode": 0,
-      "result": "Passed",
-      "notes": "Lint passed; full suite passed 361 tests; build succeeded."
-    },
-    {
-      "command": "npm.cmd audit --audit-level=high; npm.cmd run api:inventory; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs; git diff --check",
-      "exitCode": 0,
-      "result": "Passed",
-      "notes": "No high-severity vulnerabilities; inventory, OpenAPI, Postman, Agent Pack audit, and whitespace checks passed."
-    }
+    { "command": "npm.cmd run build --workspace packages/contracts", "exitCode": 0, "result": "passed", "notes": "Shared contracts compiled successfully." },
+    { "command": "npm.cmd run typecheck --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "API source and test TypeScript compilation passed after the repair." },
+    { "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/provider/advertising-models.test.ts apps/api/tests/provider/router.test.ts", "exitCode": 0, "result": "passed", "notes": "Persistent model/index, authenticated list/detail, redaction, missing-record, unauthenticated, and wrong-role tests passed." },
+    { "command": "npm.cmd run test:unit --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "API unit suite passed 344/344 tests, including the new advertising model regression test." },
+    { "command": "npm.cmd run test:api --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "API route suite passed 81/81 tests." },
+    { "command": "npm.cmd run typecheck", "exitCode": 0, "result": "passed", "notes": "Contracts, API, and web typechecks passed." },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "passed", "notes": "Workspace check and ESLint passed with zero warnings." },
+    { "command": "npm.cmd test", "exitCode": 0, "result": "passed", "notes": "Root API and web test command passed; web suite passed 76/76 tests." },
+    { "command": "npm.cmd run build", "exitCode": 0, "result": "passed", "notes": "Contracts, API, client, and SSR builds passed." },
+    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "passed", "notes": "No high-severity vulnerabilities reported." },
+    { "command": "npm.cmd run api:inventory --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "Inventory contains both provider advertising routes as implemented." },
+    { "command": "npm.cmd run openapi:validate --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "OpenAPI route set and local references validate." },
+    { "command": "npm.cmd run postman:validate --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "Primary and journey Postman artifacts validate." },
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "passed", "notes": "Agent Pack audit reports zero errors and no in-progress tasks." },
+    { "command": "git diff --check", "exitCode": 0, "result": "passed", "notes": "No whitespace errors in tracked changes." }
   ],
   "sourceEvidence": [
     "agent_pack/04_tracks/backend/B7_ads_payments/backend_107.md",
-    "agent_pack/01_product/SCREEN_REGISTRY.json (PRV-19)",
-    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (PRV-19)",
+    "PRV-19 provider advertising projection source reference",
     "packages/contracts/src/provider/index.ts",
     "apps/api/src/modules/provider/advertising.ts",
-    "apps/api/tests/provider/service.test.ts",
+    "apps/api/src/modules/provider/advertising-models.ts",
+    "apps/api/src/modules/provider/advertising-repository.ts",
+    "apps/api/tests/provider/advertising-models.test.ts",
+    "apps/api/tests/provider/router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
     "docs/api/provider-advertising.md"
   ],
-  "knownGaps": [
-    "The projection consumes a source adapter; persistent cross-module advertising repository and HTTP route composition are not available in this atomic provider boundary.",
-    "Payment proof and schedule values are projected only from their authoritative services; this task does not infer payment, bank, approval, or provider verification.",
-    "Live database/provider integration checks were not run because no isolated replica-set topology or credentials were available."
+  "scopeNotes": [
+    "This task was reopened only because its previous completion was disproved by the absent owner-scoped HTTP routes and persistent source boundary; no unrelated Backend task was reopened.",
+    "The authorized integration repair added provider-module runtime composition, persistent read models, route inventory, OpenAPI, Postman, and focused tests. It did not implement provider ad mutations, payment-proof upload/review, or commission routes owned by later Backend repairs.",
+    "No real .env, secret, Production data, or external credential was read."
   ],
-  "completedAt": "2026-08-14T15:41:02.2946018Z"
+  "knownGaps": [
+    "Live MongoDB verification was not run because no explicitly isolated non-production replica-set topology and test credentials were configured; the production path now constructs the persistent Mongoose source and deterministic model/router tests cover the boundary.",
+    "Provider ad mutation, quote acceptance, payment-proof upload/review, and commission HTTP operations remain separate missing Backend truth repairs and must be handled one owning task at a time before frontend_049 can close."
+  ],
+  "completedAt": "2026-08-18T23:19:29.3333064Z"
 }

@@ -1,6 +1,6 @@
 {
   "taskId": "backend_040",
-  "summary": "Implemented verified-provider-owned Project CRUD with strict localized contracts, optimistic concurrency, ownership-safe projections, audit-backed repository writes, runtime wiring, tests, and synchronized API artifacts.",
+  "summary": "Repaired the previously incomplete Project API by adding the verified-admin GET /api/v1/admin/projects list route with strict query validation, admin:projects.view authorization, deterministic pagination/sorting, and an explicit review-safe projection. Provider ownership CRUD and the existing review workflow remain unchanged and all local backend/root gates pass.",
   "filesChanged": [
     "packages/contracts/src/projects/index.ts",
     "packages/contracts/src/contracts/index.ts",
@@ -20,39 +20,55 @@
     "docs/api/projects.md",
     "agent_pack/scripts/sync_project_artifacts.mjs",
     "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
-    "agent_pack/08_reality_sync/CURRENT_STATE.md"
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/07_finish/backend_040/completion.json"
   ],
   "verification": [
-    { "command": "node --test --import tsx apps/api/tests/projects/projects.test.ts apps/api/tests/projects/router.test.ts", "exitCode": 0, "result": "Passed", "notes": "5 focused project service/router tests passed." },
-    { "command": "npm.cmd run typecheck", "exitCode": 0, "result": "Passed", "notes": "Contracts and API typechecks passed." },
-    { "command": "npm.cmd run lint", "exitCode": 0, "result": "Passed", "notes": "Workspace and ESLint checks passed." },
-    { "command": "npm.cmd test -- --runInBand", "exitCode": 0, "result": "Passed", "notes": "All 260 repository tests passed." },
-    { "command": "npm.cmd run build", "exitCode": 0, "result": "Passed", "notes": "Contracts and API builds passed." },
-    { "command": "npm.cmd run test:coverage", "exitCode": 0, "result": "Passed", "notes": "All 260 tests passed with enforced coverage thresholds." },
-    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "Passed", "notes": "0 vulnerabilities found." },
-    { "command": "npm.cmd run env:check", "exitCode": 0, "result": "Passed", "notes": "Synthetic local environment validation passed." },
-    { "command": "npm.cmd run api:inventory", "exitCode": 0, "result": "Passed", "notes": "Inventory includes project GET/POST/PATCH routes." },
-    { "command": "npm.cmd run openapi:validate", "exitCode": 0, "result": "Passed", "notes": "OPENAPI_VALID." },
-    { "command": "npm.cmd run postman:validate", "exitCode": 0, "result": "Passed", "notes": "POSTMAN_VALID." },
-    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "Passed", "notes": "Agent Pack audit has zero errors." },
-    { "command": "JSON parse changed OpenAPI/Postman/blueprint files", "exitCode": 0, "result": "Passed", "notes": "All changed JSON files parsed successfully." }
+    { "command": "npm.cmd run build --workspace packages/contracts", "exitCode": 0, "result": "passed", "notes": "Shared project contracts build successfully." },
+    { "command": "npm.cmd run typecheck --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "API source and test TypeScript compile successfully." },
+    { "command": "node --test --import tsx apps/api/tests/projects/projects.test.ts apps/api/tests/projects/router.test.ts", "exitCode": 0, "result": "passed", "notes": "9 focused project service/router tests passed, including admin list authorization, strict query rejection, safe projection, and wrong-role behavior." },
+    { "command": "npm.cmd run lint --workspace apps/api", "exitCode": 1, "result": "skipped", "notes": "The exact command ran but apps/api/package.json has no lint script; the applicable repository root lint command passed below." },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "passed", "notes": "Workspace and ESLint checks passed with zero warnings." },
+    { "command": "npm.cmd run test:unit --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "358 API unit tests passed." },
+    { "command": "npm.cmd run test:api --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "API route suite passed, including project route authentication and validation coverage." },
+    { "command": "npm.cmd run test:integration", "exitCode": 0, "result": "passed", "notes": "28 integration/artifact and journey tests passed." },
+    { "command": "npm.cmd run test:coverage", "exitCode": 0, "result": "passed", "notes": "Complete API suite passed with enforced coverage thresholds." },
+    { "command": "npm.cmd run typecheck", "exitCode": 0, "result": "passed", "notes": "Contracts, API, and Web root typechecks passed." },
+    { "command": "npm.cmd test", "exitCode": 0, "result": "passed", "notes": "Workspace policy, complete API test suite, Web Vitest (254 tests), and Web TAP checks (76) passed." },
+    { "command": "npm.cmd run build --workspace apps/api", "exitCode": 0, "result": "passed", "notes": "API production TypeScript build passed." },
+    { "command": "npm.cmd run build", "exitCode": 0, "result": "passed", "notes": "Root contracts, API, and Web client/SSR builds passed." },
+    { "command": "npm.cmd run api:inventory", "exitCode": 0, "result": "passed", "notes": "Inventory includes GET /api/v1/admin/projects as listAdminProjects." },
+    { "command": "npm.cmd run openapi:validate", "exitCode": 0, "result": "passed", "notes": "OPENAPI_VALID with the new admin project list path." },
+    { "command": "npm.cmd run postman:validate", "exitCode": 0, "result": "passed", "notes": "POSTMAN_VALID with the new Admin Projects request." },
+    { "command": "npm.cmd audit --audit-level=high", "exitCode": 0, "result": "passed", "notes": "0 vulnerabilities found." },
+    { "command": "node agent_pack/scripts/sync_project_artifacts.mjs", "exitCode": 0, "result": "passed", "notes": "OpenAPI and Postman project artifacts regenerated from the bounded project sync script." },
+    { "command": "node -e \"for (const p of ['agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json','apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json']) JSON.parse(require('fs').readFileSync(p,'utf8')); console.log('JSON_PARSE_OK')\"", "exitCode": 0, "result": "passed", "notes": "Blueprint, OpenAPI, and Postman JSON parsed successfully." },
+    { "command": "git diff --check", "exitCode": 0, "result": "passed", "notes": "No whitespace errors in the worktree diff." },
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "passed", "notes": "Agent Pack audit reports zero errors." }
   ],
   "sourceEvidence": [
     "agent_pack/04_tracks/backend/B3_projects_properties/backend_040.md",
-    "apps/api/src/modules/projects/router.ts",
+    "agent_pack/04_tracks/frontend/F5_admin_dashboard/frontend_064.md (direct dependency requiring the repaired admin list)",
+    "apps/api/src/modules/projects/repository.ts",
     "apps/api/src/modules/projects/service.ts",
+    "apps/api/src/modules/projects/router.ts",
     "apps/api/tests/projects/projects.test.ts",
     "apps/api/tests/projects/router.test.ts",
-    "apps/api/src/modules/docs/api-artifacts.ts"
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/projects.md",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json"
   ],
   "scopeNotes": [
-    "apps/api/src/app.ts and apps/api/src/server.ts were changed only to wire the selected project runtime.",
-    "apps/api/src/modules/docs/api-artifacts.ts and apps/api/src/modules/testing/test-suites.ts were changed only to synchronize route inventory and test discovery.",
-    "OpenAPI, Postman, product blueprint, and reality snapshot were synchronized for the three implemented CRUD routes; review submission and administrative review remain deferred."
+    "This task was reopened as the smallest owning Backend truth repair after frontend_064 required GET /api/v1/admin/projects and the prior completion evidence incorrectly treated provider-only GET coverage as the admin list.",
+    "The repair adds only the admin list read boundary; provider ownership filtering, review transitions, optimistic concurrency, and public projection behavior remain unchanged.",
+    "The generated artifact sync script, OpenAPI, Postman collection, product blueprint, project docs, and inventory are synchronized for the added route.",
+    "No package dependency, data-model, TypeScript configuration, or real environment file was changed or read."
   ],
   "knownGaps": [
     "Node v22.18.0 is available while the repository declares Node >=24 <25.",
+    "apps/api has no workspace lint script; the root lint gate passed.",
     "Live MongoDB integration was not run because isolated replica-set prerequisites and TEST_MONGODB_URI were unavailable."
   ],
-  "completedAt": "2026-08-14T00:34:48.6334459Z"
+  "completedAt": "2026-08-19T10:00:48.9959662+03:00"
 }

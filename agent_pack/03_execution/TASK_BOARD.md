@@ -154,73 +154,73 @@
 - [x] frontend_012 — Property Details
 - [x] frontend_013 — Unit Comparison
 - [x] frontend_014 — Developers, Companies, and Developer Profiles
-- [/] frontend_015 — Article Listing and Details
-- [ ] frontend_016 — Community and Post Creation
-- [ ] frontend_017 — About Platform and Team
-- [ ] frontend_018 — SEO and SSR for Public Routes
-- [ ] frontend_019 — Responsive QA for the Public Site
+- [x] frontend_015 — Article Listing and Details
+- [x] frontend_016 — Community and Post Creation
+- [x] frontend_017 — About Platform and Team
+- [x] frontend_018 — SEO and SSR for Public Routes
+- [x] frontend_019 — Responsive QA for the Public Site
 ## F2_auth_onboarding
 
-- [ ] frontend_020 — Login and OTP
-- [ ] frontend_021 — Seeker Registration and Account Success
-- [ ] frontend_022 — Provider Type Selection
-- [ ] frontend_023 — Provider Account Details
-- [ ] frontend_024 — Business, Company, and Document Details
-- [ ] frontend_025 — Provider Review and Application Tracking
-- [ ] frontend_026 — Responsive Registration QA
+- [x] frontend_020 — Login and OTP
+- [x] frontend_021 — Seeker Registration and Account Success
+- [x] frontend_022 — Provider Type Selection
+- [x] frontend_023 — Provider Account Details
+- [x] frontend_024 — Business, Company, and Document Details
+- [x] frontend_025 — Provider Review and Application Tracking
+- [x] frontend_026 — Responsive Registration QA
 ## F3_seeker_dashboard
 
-- [ ] frontend_030 — Seeker Shell and Overview
-- [ ] frontend_031 — Seeker Requests and Details
-- [ ] frontend_032 — Viewing Requests
-- [ ] frontend_033 — Saved Properties
-- [ ] frontend_034 — Seeker Notifications
-- [ ] frontend_035 — Profile, Preferences, and Settings
-- [ ] frontend_036 — Seeker Dashboard QA
+- [x] frontend_030 — Seeker Shell and Overview
+- [x] frontend_031 — Seeker Requests and Details
+- [x] frontend_032 — Viewing Requests
+- [x] frontend_033 — Saved Properties
+- [x] frontend_034 — Seeker Notifications
+- [x] frontend_035 — Profile, Preferences, and Settings
+- [x] frontend_036 — Seeker Dashboard QA
 ## F4_provider_dashboard
 
-- [ ] frontend_040 — Provider Shell and Overview
-- [ ] frontend_041 — My Properties
-- [ ] frontend_042 — Add Property: Core Data and Location
-- [ ] frontend_043 — Add Property: Details, Price, and Features
-- [ ] frontend_044 — Add Property: Media, Contact, and Review
-- [ ] frontend_045 — Submission Errors and Property States
-- [ ] frontend_046 — Projects
-- [ ] frontend_047 — Customer Requests and Request Creation
-- [ ] frontend_048 — Viewing Appointments
-- [ ] frontend_049 — Advertising Requests and Commission
-- [ ] frontend_050 — Notifications and Settings
-- [ ] frontend_051 — Provider Dashboard QA
+- [x] frontend_040 — Provider Shell and Overview
+- [x] frontend_041 — My Properties
+- [x] frontend_042 — Add Property: Core Data and Location
+- [x] frontend_043 — Add Property: Details, Price, and Features
+- [x] frontend_044 — Add Property: Media, Contact, and Review
+- [x] frontend_045 — Submission Errors and Property States
+- [x] frontend_046 — Projects
+- [x] frontend_047 — Customer Requests and Request Creation
+- [x] frontend_048 — Viewing Appointments
+- [x] frontend_049 — Advertising Requests and Commission
+- [x] frontend_050 — Notifications and Settings
+- [x] frontend_051 — Provider Dashboard QA
 ## F5_admin_dashboard
 
-- [ ] frontend_060 — Admin Shell and Overview
-- [ ] frontend_061 — Users, Seekers, Providers, and Verification
-- [ ] frontend_062 — Reports and Account Restrictions
-- [ ] frontend_063 — Categories, Locations, and Features
-- [ ] frontend_064 — Project Management and Review
-- [ ] frontend_065 — Property Management, Review, Duplicates, and Reports
-- [ ] frontend_066 — All Request-Type Administration
-- [ ] frontend_067 — Article and Category Management
-- [ ] frontend_068 — Community, Comment, and Report Administration
-- [ ] frontend_069 — About, Team, and Population Counter
-- [ ] frontend_070 — Ads, Payments, Calendar, and Financial Review
-- [ ] frontend_071 — Commission Policies, Exceptions, and Confirmations
-- [ ] frontend_072 — Banners, Tips, and Homepage
-- [ ] frontend_073 — Platform, Contact, and Social Data
-- [ ] frontend_074 — Property, Request, Ad, SEO, Privacy, and Display Settings
-- [ ] frontend_075 — Administrator Users, Roles, and Permissions
-- [ ] frontend_076 — Admin Notifications and Audit Log
-- [ ] frontend_077 — Admin Dashboard and Permission QA
+- [x] frontend_060 — Admin Shell and Overview
+- [x] frontend_061 — Users, Seekers, Providers, and Verification
+- [x] frontend_062 — Reports and Account Restrictions
+- [x] frontend_063 — Categories, Locations, and Features
+- [x] frontend_064 — Project Management and Review
+- [x] frontend_065 — Property Management, Review, Duplicates, and Reports
+- [x] frontend_066 — All Request-Type Administration
+- [x] frontend_067 — Article and Category Management
+- [x] frontend_068 — Community, Comment, and Report Administration
+- [x] frontend_069 — About, Team, and Population Counter
+- [x] frontend_070 — Ads, Payments, Calendar, and Financial Review
+- [x] frontend_071 — Commission Policies, Exceptions, and Confirmations
+- [x] frontend_072 — Banners, Tips, and Homepage
+- [x] frontend_073 — Platform, Contact, and Social Data
+- [x] frontend_074 — Property, Request, Ad, SEO, Privacy, and Display Settings
+- [x] frontend_075 — Administrator Users, Roles, and Permissions
+- [x] frontend_076 — Admin Notifications and Audit Log
+- [x] frontend_077 — Admin Dashboard and Permission QA
 ## F6_integration_release
 
-- [ ] frontend_080 — Critical End-to-End Journeys
-- [ ] frontend_081 — Visual Fidelity Review
-- [ ] frontend_082 — Three-Locale and Direction QA
-- [ ] frontend_083 — Accessibility Audit
-- [ ] frontend_084 — Performance and Core Web Vitals
-- [ ] frontend_085 — Browser and Session Security
-- [ ] frontend_086 — UAT, Postman, and Screen-State Data Binding
-- [ ] frontend_087 — Secure Preview Build and Deployment
-- [ ] frontend_088 — Operations and Handoff Guide
-- [ ] frontend_089 — UAT and Defect Closure
-- [ ] frontend_090 — Final Release Gate
+- [x] frontend_080 — Critical End-to-End Journeys
+- [x] frontend_081 — Visual Fidelity Review
+- [x] frontend_082 — Three-Locale and Direction QA
+- [x] frontend_083 — Accessibility Audit
+- [x] frontend_084 — Performance and Core Web Vitals
+- [x] frontend_085 — Browser and Session Security
+- [x] frontend_086 — UAT, Postman, and Screen-State Data Binding
+- [x] frontend_087 — Secure Preview Build and Deployment
+- [x] frontend_088 — Operations and Handoff Guide
+- [x] frontend_089 — UAT and Defect Closure
+- [x] frontend_090 — Final Release Gate

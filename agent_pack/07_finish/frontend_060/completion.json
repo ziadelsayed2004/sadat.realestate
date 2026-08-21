@@ -1,0 +1,142 @@
+{
+  "taskId": "frontend_060",
+  "summary": "Implemented the desktop Admin Shell and ADM-01 overview using the implemented admin overview contract, localized copy, safe state handling, and an explicit seven-metric projection.",
+  "filesChanged": [
+    "apps/web/src/features/admin/copy.ts",
+    "apps/web/src/features/admin/data.ts",
+    "apps/web/src/features/admin/index.ts",
+    "apps/web/src/features/admin/overview.tsx",
+    "apps/web/src/features/admin/styles.css",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/admin-overview.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-overview.spec.ts",
+    "apps/web/tests/e2e/admin-overview-accessibility.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/admin-overview.spec.ts-snapshots/admin-overview-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-overview.spec.ts-snapshots/admin-overview-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-overview.spec.ts-snapshots/admin-overview-zh-CN-desktop-zh-win32.png",
+    "agent_pack/07_finish/frontend_060/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript compilation passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web ESLint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- admin-overview.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused Admin data and component suite: 6 tests passed."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- admin-overview.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "ADM-01 desktop browser matrix passed 6/6 across Arabic, English, and Simplified Chinese; visual baselines were created for the approved desktop projects."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web -- admin-overview-accessibility.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Accessibility command passed 30/30, including ADM-01 landmark, label, focus, direction, and sensitive-field assertions for all three desktop locales."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full web suite passed: 35 Vitest files / 237 tests and 76 TAP checks."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR builds passed; Vite emitted only the existing large-chunk warning."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root API and web test matrix passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and web build passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory contains implemented GET /api/v1/admin/overview with operationId getAdminOverview."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities found."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors in the worktree diff."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reports zero errors."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F5_admin_dashboard/frontend_060.md",
+    "ADM-01 local approved export: docs/design_sources/final_screens/admin/ADM-01.png; SHA-256 a497edfd4695cc2d97abe3db20e3835acd394504d88d9fec6564a5d6076d1ffa; 6308x12468",
+    "ADM-01 Figma prototype node 6017:61879",
+    "ADM-01 Drive folder https://drive.google.com/drive/folders/1s72HBu89r_FpVR9NWqyiN5N9kFfGfZJAa",
+    "Implemented runtime route GET /api/v1/admin/overview with shared adminOverviewSuccessEnvelopeSchema and admin:overview.view authorization",
+    "apps/web/src/features/admin/data.ts and apps/web/tests/admin-overview.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-overview.spec.ts and apps/web/tests/e2e/admin-overview-accessibility.spec.ts",
+    "Desktop visual baselines: admin-overview-ar-desktop-ar-win32.png SHA-256 5444E2C5A6CFB4962CCA02385D8AA5D84E93D0FCE6A6A440C916A728327CDDA2; admin-overview-en-desktop-en-win32.png SHA-256 1A64C19AEBC25F1DBC2AD82DE65FBEE4DD9A0C1C1DCC943886A6E1E2E72EC6E1; admin-overview-zh-CN-desktop-zh-win32.png SHA-256 4A0A95AC385CDB0E0BC61DA9D15E9EAEB7B43B08B077E4BD6F0C3D32E32688E1"
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx is outside the selected task's listed roots and was changed only as the necessary route-composition integration for the new Admin feature; this exception is explicitly recorded rather than silently expanding scope.",
+    "No contracts, dependencies, API behavior, or production data were changed by frontend_060. Browser route handlers are test-only fixtures for deterministic contract verification."
+  ],
+  "knownGaps": [
+    "Admin dashboard device scope remains desktop-only as approved; tablet and mobile visual runs were not claimed.",
+    "No live production or database smoke test was run; the implemented API contract and deterministic browser/component tests cover this frontend boundary."
+  ],
+  "completedAt": "2026-08-19T06:45:00+03:00"
+}

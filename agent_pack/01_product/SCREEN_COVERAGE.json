@@ -3438,7 +3438,7 @@
       "en",
       "zh-CN"
     ],
-    "route": "/admin/commissions/policies/new",
+    "route": "/admin/commissions/new",
     "frontendTaskId": "frontend_071",
     "backendTaskIds": [
       "backend_110",
@@ -3472,7 +3472,7 @@
       "en",
       "zh-CN"
     ],
-    "route": "/admin/commissions/change-log",
+    "route": "/admin/commissions/history",
     "frontendTaskId": "frontend_071",
     "backendTaskIds": [
       "backend_110",
@@ -4280,7 +4280,7 @@
       "en",
       "zh-CN"
     ],
-    "route": "/admin/audit-log",
+    "route": "/admin/audit-logs",
     "frontendTaskId": "frontend_076",
     "backendTaskIds": [
       "backend_020"

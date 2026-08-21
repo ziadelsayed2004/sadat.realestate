@@ -1,0 +1,212 @@
+{
+  "taskId": "frontend_077",
+  "summary": "Completed the integrated Admin Dashboard and Permission QA matrix for ADM-01 through ADM-66. The task adds deterministic route, locale, direction, Desktop-scope, permission, projection-safety, keyboard-focus, visual, and accessibility coverage; it also synchronizes stale Admin route truth in the canonical route map and plain route tests. ADM-54 direct design-source comparison remains explicitly owner-waived under DESIGN-EXCEPTION-ADM-54 and is not represented as a passed pixel comparison.",
+  "filesChanged": [
+    "apps/web/tests/e2e/admin-dashboard-qa.spec.ts",
+    "apps/web/tests/admin-dashboard-qa.vitest.test.ts",
+    "apps/web/tests/foundation.test.ts",
+    "apps/web/tests/routing.test.ts",
+    "apps/web/tests/ssr.test.mjs",
+    "agent_pack/01_product/SCREEN_COVERAGE.json",
+    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md",
+    "agent_pack/01_product/FRONTEND_ROUTE_MAP.md"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/admin-dashboard-qa.vitest.test.ts --reporter=verbose",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Task-state, screen-coverage, design-manifest, ADM-54 waiver, and source-checksum regression tests: 2 passed."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- tsx --test tests/routing.test.ts tests/foundation.test.ts tests/ssr.test.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Corrected Admin route and SSR truth tests: 28 passed."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-dashboard-qa.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --workers=1",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Integrated Admin route and permission matrix: 6 passed across Arabic, English, and Simplified Chinese Admin Desktop projects."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-accounts.spec.ts tests/e2e/admin-ads-visual.spec.ts tests/e2e/admin-cms-content-visual.spec.ts tests/e2e/admin-commissions-visual.spec.ts tests/e2e/admin-community-visual.spec.ts tests/e2e/admin-content-visual.spec.ts tests/e2e/admin-home-visual.spec.ts tests/e2e/admin-master-data.spec.ts tests/e2e/admin-overview.spec.ts tests/e2e/admin-projects-visual.spec.ts tests/e2e/admin-properties-visual.spec.ts tests/e2e/admin-rbac-visual.spec.ts tests/e2e/admin-requests-visual.spec.ts tests/e2e/admin-settings-visual.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --workers=1",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Admin visual matrix for completed Admin tasks: 57 passed across the approved Desktop locale projects."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-account-reports-accessibility.spec.ts tests/e2e/admin-accounts-accessibility.spec.ts tests/e2e/admin-ads-accessibility.spec.ts tests/e2e/admin-cms-content-accessibility.spec.ts tests/e2e/admin-commissions-accessibility.spec.ts tests/e2e/admin-community-accessibility.spec.ts tests/e2e/admin-content-accessibility.spec.ts tests/e2e/admin-home-accessibility.spec.ts tests/e2e/admin-master-data-accessibility.spec.ts tests/e2e/admin-notifications-audit-accessibility.spec.ts tests/e2e/admin-overview-accessibility.spec.ts tests/e2e/admin-projects-accessibility.spec.ts tests/e2e/admin-properties-accessibility.spec.ts tests/e2e/admin-rbac-accessibility.spec.ts tests/e2e/admin-requests-accessibility.spec.ts tests/e2e/admin-settings-accessibility.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --workers=1",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Admin accessibility matrix: 57 passed across the approved Desktop locale projects."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-account-reports.spec.ts --grep \"covers ADM-06\" --project=desktop-ar --project=desktop-en --project=desktop-zh --workers=1",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The affected Admin account-reports list baseline test passed in each of three consecutive isolated runs: 3 passed per run. The current checked-in runtime baseline is 1280x873."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-account-reports.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --workers=1",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The complete affected account-reports browser file passed: 9 passed across list, detail, and restriction routes. The prior 1280x771/1280x816 discrepancy was a stale baseline after the shared Admin shell height change; no new snapshot was needed in this task."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full Web tests: 52 Vitest files / 350 tests and 76 Node tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web production client and SSR build passed."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Configured Web visual matrix: 72 passed."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Configured Web accessibility matrix: 81 passed."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- --workers=4",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Broad Web E2E matrix completed with 807 passed and 822 repository-annotated skipped tests."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace, API, and Web test suites passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web build passed."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API typecheck passed with the existing backend truth-repair prerequisite."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API unit suite: 372 passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API route suite: 107 passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory passed and includes the synchronized Admin audit-log route."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Safe process-local non-production environment validation passed; no real .env was read or printed."
+    },
+    {
+      "command": "npm.cmd run security:check",
+      "exitCode": 1,
+      "result": "skipped",
+      "notes": "The current repository has no security:check script. The unavailable command was not reported as passed."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors in tracked changes."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before closure."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/01_product/SCREEN_COVERAGE.json — ADM-01 through ADM-66 canonical screen mappings",
+    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md — Admin Desktop coverage and state matrix",
+    "agent_pack/01_product/FRONTEND_ROUTE_MAP.md — synchronized implemented Admin routes, including /admin/audit-logs and commission history routes",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json — approved local Admin exports and checksums; ADM-54 remains EXTERNAL_GROUP_REFERENCE_ONLY with no local export",
+    "agent_pack/08_reality_sync/DECISION_LOG.md — DESIGN-EXCEPTION-ADM-54 owner-approved non-blocking visual-source waiver",
+    "apps/web/tests/e2e/admin-dashboard-qa.spec.ts — deterministic three-locale Admin route, permission, projection, keyboard, and Desktop matrix",
+    "apps/web/tests/admin-dashboard-qa.vitest.test.ts — task, source, waiver, and coverage consistency checks",
+    "apps/web/tests/e2e/admin-*-visual.spec.ts and admin-*-accessibility.spec.ts — Admin visual and accessibility evidence"
+  ],
+  "scopeNotes": [
+    "This task added QA and canonical route-truth coverage; no production runtime source was changed.",
+    "Admin Dashboard device scope remains the approved Desktop scope.",
+    "The account-reports baseline repair was already truthfully completed in frontend_076 after inspection of the 1280x771 to 1280x816 to 1280x873 shell-height changes; this task reran the affected test three times and the complete file.",
+    "ADM-54 direct design comparison is covered by the owner-approved DESIGN-EXCEPTION-ADM-54 substitute evidence and is not claimed as a direct comparison."
+  ],
+  "knownGaps": [
+    "Direct ADM-54 pixel-perfect comparison was not performed because the exact approved export is unavailable and the mapped external Figma/Drive source is inaccessible; this is an accepted owner-approved release exception, not a passed visual comparison.",
+    "The current repository has no npm run security:check script; dependency audit and implemented API/browser permission coverage passed.",
+    "This evidence closes frontend_077 only and does not claim F5, F6, all APIs, all screens, Backend, or full-platform completion."
+  ],
+  "completedAt": "2026-08-21T06:41:15.625Z"
+}

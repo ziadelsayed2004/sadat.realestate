@@ -142,7 +142,9 @@ export const commissionAccountCommissionSchema = z.object({
   fixedAmountMinor: moneyMinorSchema.optional(),
   currency: z.string().regex(/^[A-Z]{3}$/).optional()
 }).strict();
+export const commissionAccountReadQuerySchema = z.object({ at: dateSchema.optional() }).strict();
 export const commissionAccountCommissionSuccessEnvelopeSchema = successEnvelopeSchema(commissionAccountCommissionSchema);
+export const commissionAccountOverrideSuccessEnvelopeSchema = successEnvelopeSchema(commissionAccountOverrideSchema);
 export const commissionAccountOverrideListSuccessEnvelopeSchema = successEnvelopeSchema(commissionAccountOverrideListDataSchema);
 export type CommissionPolicyKind = z.infer<typeof commissionPolicyKindSchema>;
 export type CommissionPolicyStatus = z.infer<typeof commissionPolicyStatusSchema>;
@@ -158,6 +160,7 @@ export type CommissionAccountOverridePatch = z.infer<typeof commissionAccountOve
 export type CommissionAccountOverrideListQuery = z.infer<typeof commissionAccountOverrideListQuerySchema>;
 export type CommissionAccountOverrideListData = z.infer<typeof commissionAccountOverrideListDataSchema>;
 export type CommissionAccountCommission = z.infer<typeof commissionAccountCommissionSchema>;
+export type CommissionAccountReadQuery = z.infer<typeof commissionAccountReadQuerySchema>;
 
 export const COMMISSION_EXCEPTION_STATUSES = COMMISSION_POLICY_STATUSES;
 export const commissionExceptionStatusSchema = commissionPolicyStatusSchema;

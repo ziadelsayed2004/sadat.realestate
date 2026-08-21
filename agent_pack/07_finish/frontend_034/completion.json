@@ -1,0 +1,128 @@
+{
+  "taskId": "frontend_034",
+  "summary": "Implemented the authenticated API-backed SEK-07 seeker notifications screen with server-owned unread counts, pagination, unread filtering, mark-as-read and mark-all-read actions, safe deep links, localized Arabic/English/Simplified Chinese rendering, and desktop visual/accessibility interaction coverage.",
+  "filesChanged": [
+    "apps/web/src/features/seeker/data.ts",
+    "apps/web/src/features/seeker/index.ts",
+    "apps/web/src/features/seeker/notifications-copy.ts",
+    "apps/web/src/features/seeker/notifications.tsx",
+    "apps/web/src/features/seeker/styles.css",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/seeker-notifications.vitest.test.tsx",
+    "apps/web/tests/e2e/seeker-notifications.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/seeker-notifications.spec.ts-snapshots/seeker-notifications-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-notifications.spec.ts-snapshots/seeker-notifications-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-notifications.spec.ts-snapshots/seeker-notifications-zh-CN-desktop-zh-win32.png",
+    "agent_pack/07_finish/frontend_034/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared notification contracts compiled successfully."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source and test lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/seeker-notifications.vitest.test.tsx --reporter=dot",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused notification component/adapter suite passed 6/6 tests, including all supported directions, safe projection, query serialization, read/read-all actions, empty, and anonymous states."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Complete web suite passed: 22 Vitest files/142 tests and 76 TAP tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR production bundles built successfully; Vite emitted only the existing chunk-size advisory."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/seeker-notifications.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Generated the three SEK-07 localized desktop visual baselines; notification list, filtering, read/read-all, empty, permission, deep-link, focus, and safe-projection flows passed 9/9."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/seeker-notifications.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Clean visual and interaction verification passed 9/9 across Arabic RTL, English LTR, and Simplified Chinese LTR at the approved Desktop scope."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Notification API and shared contract typecheck passed."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API unit suite passed 343/343 tests, including notification ownership and safe projection coverage."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API route suite passed 79/79 tests, including seeker notification authentication, unread filtering, read/read-all, and strict query coverage."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "GET /api/v1/seeker/notifications, POST /api/v1/seeker/notifications/:notificationId/read, and POST /api/v1/seeker/notifications/read-all are inventoried as implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit was clean before closure; frontend_034 was the only in-progress task."
+    }
+  ],
+  "sourceEvidence": [
+    "Screen SEK-07.",
+    "Approved local export docs/design_sources/final_screens/seeker/SEK-07.png; SHA256 cd761da7c995b7206ecff097cff2701469c44dfef40fcb46c0862306de466b87; 6204x4040.",
+    "Approved Drive source https://drive.google.com/drive/folders/1SN0-v9Bf0xsgrPhTJ4Tzfby_6wUyZqrz.",
+    "Approved Figma prototype node 6027-3579: https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354.",
+    "Runtime routes GET/POST /api/v1/seeker/notifications, /api/v1/seeker/notifications/:notificationId/read, and /api/v1/seeker/notifications/read-all with operation IDs listSeekerNotifications, markSeekerNotificationRead, and markAllSeekerNotificationsRead.",
+    "Shared contracts packages/contracts/src/notifications/index.ts and packages/contracts/src/contracts/index.ts.",
+    "API authentication, recipient ownership, safe projection, and no-store behavior apps/api/src/modules/notifications/router.ts, apps/api/src/modules/notifications/service.ts, and apps/api/src/modules/notifications/repository.ts.",
+    "Focused regression tests apps/web/tests/seeker-notifications.vitest.test.tsx and apps/web/tests/e2e/seeker-notifications.spec.ts."
+  ],
+  "scopeNotes": [
+    "The direct route integration in apps/web/src/features/frontend_foundation/app.tsx is the necessary integration exception outside the task's listed Allowed Roots.",
+    "The dashboard is implemented for the approved Desktop-only SEK-07 scope; no Tablet or Mobile dashboard frame or behavior was invented.",
+    "The component renders only the notification contract's localized title/message, safe link, type, readAt, and createdAt fields; icons are bounded type cues and do not fabricate provider, user, avatar, audit, or moderation data.",
+    "The visual checks used deterministic test-only route fixtures and never changed Production runtime data or API behavior."
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-18T13:37:15.4856568+03:00"
+}

@@ -1,6 +1,6 @@
 {
   "taskId": "backend_015",
-  "summary": "Implemented private provider-document streaming upload, generated-key quarantine storage, deterministic scanner and fail-closed adapter boundaries, strict type/size/signature validation, independent security and manual-review states, replacement/idempotency/concurrency controls, lifecycle metadata, provider ownership enforcement, 300-second signed exact-object delivery, readiness reporting, and synchronized runtime/OpenAPI/Postman contracts.",
+  "summary": "Implemented private provider-document upload and authorized delivery, then repaired the directly required ADM-05 reviewer boundary with a verified Admin-only GET access route. Reviewer grants require admin:documents.review, active clean documents, strict purpose input, short-lived exact-object delivery, and redacted actor-aware audit evidence; provider ownership behavior remains unchanged.",
   "filesChanged": [
     "apps/api/src/modules/uploads/adapters.ts",
     "apps/api/src/modules/uploads/environment.ts",
@@ -19,58 +19,67 @@
     "apps/api/tests/uploads/validation.test.ts",
     "packages/contracts/src/uploads/index.ts",
     "packages/contracts/src/contracts/index.ts",
-    "apps/api/src/app.ts",
     "apps/api/src/server.ts",
-    "apps/api/src/modules/database/health.ts",
-    "apps/api/src/modules/docs/api-artifacts.ts",
-    "apps/api/src/modules/provider/repository.ts",
-    "apps/api/src/modules/security/middleware.ts",
-    "apps/api/src/modules/testing/test-suites.ts",
-    "apps/api/tests/database/health.test.ts",
     "apps/api/openapi/openapi.json",
     "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
-    "docs/api/api-artifacts.md",
-    "docs/api/contracts.md",
     "docs/api/private-provider-documents.md",
     "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
-    "agent_pack/01_product/API_ROUTE_PLAN.md"
+    "agent_pack/07_finish/backend_015/completion.json"
   ],
   "verification": [
     {
-      "command": "npm.cmd ci",
+      "command": "npm.cmd run build --workspace packages/contracts",
       "exitCode": 0,
       "result": "passed",
-      "notes": "Installed the pinned workspace graph; npm reported zero vulnerabilities and an expected engine warning because the host is Node 22 while the repository baseline is Node 24."
+      "notes": "Shared upload/access contract package compiled successfully."
     },
     {
-      "command": "npm.cmd run typecheck",
+      "command": "npm.cmd run typecheck --workspace apps/api",
       "exitCode": 0,
       "result": "passed",
-      "notes": "Root syntax check plus contracts and API strict TypeScript checks passed."
+      "notes": "API production and test TypeScript compile successfully after the Admin reviewer boundary was added."
+    },
+    {
+      "command": "npm.cmd exec -- tsx --test apps/api/tests/uploads/service.test.ts apps/api/tests/uploads/router.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 12 focused upload tests passed, including Admin authentication, strict query validation, reviewer authorization, active/clean checks, 300-second grants, audit redaction, provider ownership, IDOR, upload, scan, replay, and deletion behavior."
     },
     {
       "command": "npm.cmd run lint",
       "exitCode": 0,
       "result": "passed",
-      "notes": "Workspace policy and ESLint passed with zero warnings."
+      "notes": "Workspace policy and repository ESLint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, and Web typechecks passed."
     },
     {
       "command": "npm.cmd test",
       "exitCode": 0,
       "result": "passed",
-      "notes": "12 workspace-policy tests and 135 serial API tests passed, including positive upload, authentication, role denial, ownership/IDOR, payload validation, size/signature rejection, scan failure, replay, replacement/concurrency, private delivery, deletion, and regression coverage."
+      "notes": "Root workspace policy and current Web test suite passed; the registered API suites were separately run below."
     },
     {
-      "command": "npm.cmd run test:coverage",
+      "command": "npm.cmd run test:unit --workspace apps/api",
       "exitCode": 0,
       "result": "passed",
-      "notes": "Coverage gate passed at 87.82% lines, 82.32% branches, and 87.11% functions."
+      "notes": "All registered API unit tests passed, including upload service regression coverage."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All registered API route tests passed, including the Admin reviewer document-access route."
     },
     {
       "command": "npm.cmd run build",
       "exitCode": 0,
       "result": "passed",
-      "notes": "Contracts and API production TypeScript builds passed."
+      "notes": "Contracts, API, and Web client/SSR builds passed."
     },
     {
       "command": "npm.cmd audit --audit-level=high",
@@ -82,51 +91,56 @@
       "command": "npm.cmd run api:inventory",
       "exitCode": 0,
       "result": "passed",
-      "notes": "Runtime inventory includes 23 implemented routes, including four private-document routes, with /api/v1 applied exactly once."
+      "notes": "Inventory includes GET /api/v1/admin/provider-documents/:documentId/access alongside the existing provider upload, owner-access, delete, and private-download routes."
     },
     {
       "command": "npm.cmd run openapi:validate",
       "exitCode": 0,
       "result": "passed",
-      "notes": "OpenAPI 3.1 artifact matched the implemented runtime route inventory and resolved every local reference."
+      "notes": "OpenAPI route/method parity and local references are valid."
     },
     {
       "command": "npm.cmd run postman:validate",
       "exitCode": 0,
       "result": "passed",
-      "notes": "Postman collection matched runtime routes and contained no checked-in secret variables."
+      "notes": "Postman contains a synthetic reviewer-access request with no stored bearer token, secret, storage key, or permanent URL."
     },
     {
-      "command": "node -e \"for (const f of ['apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json','agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json']) JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('CHANGED_JSON_VALID')\"",
+      "command": "node -e \"for (const f of ['apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json','agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json','agent_pack/07_finish/backend_015/completion.json']) JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('CHANGED_JSON_VALID')\"",
       "exitCode": 0,
       "result": "passed",
-      "notes": "All changed contract and inventory JSON parsed successfully."
+      "notes": "All changed JSON artifacts parse successfully."
     },
     {
       "command": "node agent_pack/scripts/audit_pack.mjs",
       "exitCode": 0,
       "result": "passed",
-      "notes": "Agent Pack audit reported zero errors with backend_015 as the sole in-progress task before closure."
+      "notes": "Agent Pack audit reported zero errors after the repair."
     },
     {
-      "command": "$env:APP_ENV='test'; npm.cmd run test:integration:live",
-      "exitCode": 2,
+      "command": "npm.cmd run test:integration:live",
+      "exitCode": 1,
       "result": "blocked",
-      "notes": "Blocked — prerequisites unavailable: isolated TEST_MONGODB_URI is not configured, so MongoDB topology and transaction support cannot be proven safely. No live database operation ran."
+      "notes": "Blocked — prerequisites unavailable: no explicitly isolated non-production TEST_MONGODB_URI/replica-set topology was configured; no live database operation ran."
     }
   ],
   "sourceEvidence": [
-    "Approved Q-003 in agent_pack/01_product/PRD.md and agent_pack/01_product/BUSINESS_RULES.md",
-    "Runtime boundary apps/api/src/modules/uploads/**",
-    "Strict shared contracts packages/contracts/src/uploads/index.ts",
-    "Executable route inventory from npm.cmd run api:inventory",
-    "Focused tests apps/api/tests/uploads/** and readiness regression apps/api/tests/database/health.test.ts",
-    "Synchronized apps/api/openapi/openapi.json and apps/api/postman/Sadat-Real-Estate.postman_collection.json"
+    "agent_pack/04_tracks/backend/B1_identity_access/backend_015.md",
+    "AUTH-12 and ADM-05 source references",
+    "apps/api/src/modules/uploads/** private storage, scanning, ownership, and delivery boundary",
+    "GET /api/v1/admin/provider-documents/:documentId/access runtime route and apps/api/tests/uploads/router.test.ts",
+    "createAdminAccessGrant reviewer authorization and apps/api/tests/uploads/service.test.ts",
+    "apps/api/openapi/openapi.json and apps/api/postman/Sadat-Real-Estate.postman_collection.json synchronized to runtime inventory",
+    "docs/api/private-provider-documents.md security and readiness contract"
+  ],
+  "scopeNotes": [
+    "apps/api/src/server.ts was modified as an explicit integration exception because the selected upload runtime must receive the existing RBAC authorization service; no unrelated module or feature was changed.",
+    "The reviewer route reuses the existing strict purpose/access-grant contract and signer; it does not introduce a permanent URL or automatic verification claim."
   ],
   "knownGaps": [
-    "The host uses Node v22.18.0 while the repository requires Node >=24 <25; all mandatory checks passed, but CI on Node 24 remains the authoritative engine verification.",
-    "Concrete Preview/UAT/Production private S3-compatible storage and approved scanner deployments are not configured; those environments fail readiness and upload capability closed with no local fallback.",
-    "Live MongoDB verification is blocked because no isolated TEST_MONGODB_URI is configured; topology and transaction support are unknown."
+    "The host uses Node 22.18.0 while the repository requires Node >=24 <25; all local mandatory checks passed and Node 24 CI remains authoritative.",
+    "Preview/UAT/Production private storage and approved malware scanner adapters remain fail-closed readiness prerequisites.",
+    "Live MongoDB verification is blocked because no isolated TEST_MONGODB_URI/replica-set topology was configured."
   ],
-  "completedAt": "2026-08-13T17:07:02.870Z"
+  "completedAt": "2026-08-19T04:22:00.000Z"
 }

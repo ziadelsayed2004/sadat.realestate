@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-17T18:54:09.478Z",
+  "updatedAt": "2026-08-21T10:41:19.939Z",
   "tasks": {
     "backend_000": {
       "status": "complete",
@@ -110,7 +110,7 @@
     "backend_015": {
       "status": "complete",
       "startedAt": "2026-08-13T16:42:34.919Z",
-      "completedAt": "2026-08-13T17:07:49.700Z",
+      "completedAt": "2026-08-19T04:25:12.229Z",
       "reason": null,
       "evidencePath": "07_finish/backend_015/completion.json"
     },
@@ -138,7 +138,7 @@
     "backend_019": {
       "status": "complete",
       "startedAt": "2026-08-13T21:08:46.397Z",
-      "completedAt": "2026-08-13T21:32:39.861Z",
+      "completedAt": "2026-08-19T05:13:46.879Z",
       "reason": null,
       "evidencePath": "07_finish/backend_019/completion.json"
     },
@@ -173,7 +173,7 @@
     "backend_033": {
       "status": "complete",
       "startedAt": "2026-08-13T22:42:05.555Z",
-      "completedAt": "2026-08-13T23:07:44.862Z",
+      "completedAt": "2026-08-19T06:04:27.008Z",
       "reason": null,
       "evidencePath": "07_finish/backend_033/completion.json"
     },
@@ -194,21 +194,21 @@
     "backend_036": {
       "status": "complete",
       "startedAt": "2026-08-13T23:39:02.980Z",
-      "completedAt": "2026-08-13T23:44:57.514Z",
+      "completedAt": "2026-08-19T11:33:01.774Z",
       "reason": null,
       "evidencePath": "07_finish/backend_036/completion.json"
     },
     "backend_037": {
       "status": "complete",
       "startedAt": "2026-08-13T23:45:05.573Z",
-      "completedAt": "2026-08-13T23:54:15.287Z",
+      "completedAt": "2026-08-20T16:08:34.624Z",
       "reason": null,
       "evidencePath": "07_finish/backend_037/completion.json"
     },
     "backend_038": {
       "status": "complete",
       "startedAt": "2026-08-14T00:04:55.312Z",
-      "completedAt": "2026-08-14T00:04:55.608Z",
+      "completedAt": "2026-08-20T16:31:29.319Z",
       "reason": null,
       "evidencePath": "07_finish/backend_038/completion.json"
     },
@@ -222,7 +222,7 @@
     "backend_040": {
       "status": "complete",
       "startedAt": "2026-08-14T00:13:56.833Z",
-      "completedAt": "2026-08-14T00:35:31.486Z",
+      "completedAt": "2026-08-19T07:02:25.887Z",
       "reason": null,
       "evidencePath": "07_finish/backend_040/completion.json"
     },
@@ -390,7 +390,7 @@
     "backend_068": {
       "status": "complete",
       "startedAt": "2026-08-14T11:44:06.996Z",
-      "completedAt": "2026-08-14T11:54:46.926Z",
+      "completedAt": "2026-08-19T01:29:20.712Z",
       "reason": null,
       "evidencePath": "07_finish/backend_068/completion.json"
     },
@@ -467,7 +467,7 @@
     "backend_079": {
       "status": "complete",
       "startedAt": "2026-08-14T13:11:06.953Z",
-      "completedAt": "2026-08-14T13:12:44.234Z",
+      "completedAt": "2026-08-19T08:29:36.694Z",
       "reason": null,
       "evidencePath": "07_finish/backend_079/completion.json"
     },
@@ -509,21 +509,21 @@
     "backend_093": {
       "status": "complete",
       "startedAt": "2026-08-14T13:26:04.378Z",
-      "completedAt": "2026-08-14T13:27:23.194Z",
+      "completedAt": "2026-08-19T09:53:36.351Z",
       "reason": null,
       "evidencePath": "07_finish/backend_093/completion.json"
     },
     "backend_094": {
       "status": "complete",
       "startedAt": "2026-08-14T13:27:29.748Z",
-      "completedAt": "2026-08-14T13:28:50.485Z",
+      "completedAt": "2026-08-19T10:06:01.476Z",
       "reason": null,
       "evidencePath": "07_finish/backend_094/completion.json"
     },
     "backend_095": {
       "status": "complete",
       "startedAt": "2026-08-14T13:28:57.903Z",
-      "completedAt": "2026-08-14T13:30:00.863Z",
+      "completedAt": "2026-08-19T10:20:25.564Z",
       "reason": null,
       "evidencePath": "07_finish/backend_095/completion.json"
     },
@@ -551,77 +551,77 @@
     "backend_101": {
       "status": "complete",
       "startedAt": "2026-08-14T14:36:07.975Z",
-      "completedAt": "2026-08-14T14:40:01.804Z",
+      "completedAt": "2026-08-19T12:44:55.918Z",
       "reason": null,
       "evidencePath": "07_finish/backend_101/completion.json"
     },
     "backend_102": {
       "status": "complete",
       "startedAt": "2026-08-14T14:40:11.540Z",
-      "completedAt": "2026-08-14T14:53:02.055Z",
+      "completedAt": "2026-08-18T23:57:46.213Z",
       "reason": null,
       "evidencePath": "07_finish/backend_102/completion.json"
     },
     "backend_103": {
       "status": "complete",
       "startedAt": "2026-08-14T14:54:25.424Z",
-      "completedAt": "2026-08-14T15:02:13.068Z",
+      "completedAt": "2026-08-19T00:24:07.035Z",
       "reason": null,
       "evidencePath": "07_finish/backend_103/completion.json"
     },
     "backend_104": {
       "status": "complete",
       "startedAt": "2026-08-14T15:03:38.436Z",
-      "completedAt": "2026-08-14T15:08:58.767Z",
+      "completedAt": "2026-08-19T13:45:33.740Z",
       "reason": null,
       "evidencePath": "07_finish/backend_104/completion.json"
     },
     "backend_105": {
       "status": "complete",
       "startedAt": "2026-08-14T15:16:02.038Z",
-      "completedAt": "2026-08-14T15:16:50.038Z",
+      "completedAt": "2026-08-19T13:13:28.512Z",
       "reason": null,
       "evidencePath": "07_finish/backend_105/completion.json"
     },
     "backend_106": {
       "status": "complete",
       "startedAt": "2026-08-14T15:20:05.488Z",
-      "completedAt": "2026-08-14T15:33:37.172Z",
+      "completedAt": "2026-08-20T15:32:20.037Z",
       "reason": null,
       "evidencePath": "07_finish/backend_106/completion.json"
     },
     "backend_107": {
       "status": "complete",
       "startedAt": "2026-08-14T15:34:36.228Z",
-      "completedAt": "2026-08-14T15:41:26.033Z",
+      "completedAt": "2026-08-18T23:20:51.410Z",
       "reason": null,
       "evidencePath": "07_finish/backend_107/completion.json"
     },
     "backend_108": {
       "status": "complete",
       "startedAt": "2026-08-14T15:42:13.946Z",
-      "completedAt": "2026-08-14T15:49:01.184Z",
+      "completedAt": "2026-08-19T13:26:18.107Z",
       "reason": null,
       "evidencePath": "07_finish/backend_108/completion.json"
     },
     "backend_110": {
       "status": "complete",
       "startedAt": "2026-08-14T15:49:46.710Z",
-      "completedAt": "2026-08-14T15:56:47.718Z",
+      "completedAt": "2026-08-20T01:23:05.622Z",
       "reason": null,
       "evidencePath": "07_finish/backend_110/completion.json"
     },
     "backend_111": {
       "status": "complete",
       "startedAt": "2026-08-14T15:57:10.323Z",
-      "completedAt": "2026-08-14T16:04:12.229Z",
+      "completedAt": "2026-08-20T01:42:58.675Z",
       "reason": null,
       "evidencePath": "07_finish/backend_111/completion.json"
     },
     "backend_112": {
       "status": "complete",
       "startedAt": "2026-08-14T16:06:14.984Z",
-      "completedAt": "2026-08-14T16:15:29.742Z",
+      "completedAt": "2026-08-20T02:02:34.167Z",
       "reason": null,
       "evidencePath": "07_finish/backend_112/completion.json"
     },
@@ -635,21 +635,21 @@
     "backend_114": {
       "status": "complete",
       "startedAt": "2026-08-14T16:47:50.286Z",
-      "completedAt": "2026-08-14T16:55:22.414Z",
+      "completedAt": "2026-08-20T13:17:23.915Z",
       "reason": null,
       "evidencePath": "07_finish/backend_114/completion.json"
     },
     "backend_115": {
       "status": "complete",
       "startedAt": "2026-08-14T16:56:26.441Z",
-      "completedAt": "2026-08-14T17:03:13.700Z",
+      "completedAt": "2026-08-20T13:44:35.322Z",
       "reason": null,
       "evidencePath": "07_finish/backend_115/completion.json"
     },
     "backend_116": {
       "status": "complete",
       "startedAt": "2026-08-14T17:05:35.568Z",
-      "completedAt": "2026-08-14T17:18:35.826Z",
+      "completedAt": "2026-08-19T00:38:13.329Z",
       "reason": null,
       "evidencePath": "07_finish/backend_116/completion.json"
     },
@@ -663,14 +663,14 @@
     "backend_120": {
       "status": "complete",
       "startedAt": "2026-08-14T17:27:05.474Z",
-      "completedAt": "2026-08-14T17:33:37.967Z",
+      "completedAt": "2026-08-19T03:25:00.236Z",
       "reason": null,
       "evidencePath": "07_finish/backend_120/completion.json"
     },
     "backend_121": {
       "status": "complete",
       "startedAt": "2026-08-14T17:47:51.940Z",
-      "completedAt": "2026-08-14T17:48:00.877Z",
+      "completedAt": "2026-08-21T02:05:14.464Z",
       "reason": null,
       "evidencePath": "07_finish/backend_121/completion.json"
     },
@@ -684,7 +684,7 @@
     "backend_123": {
       "status": "complete",
       "startedAt": "2026-08-14T18:17:38.572Z",
-      "completedAt": "2026-08-14T20:24:52.012Z",
+      "completedAt": "2026-08-19T01:53:16.472Z",
       "reason": null,
       "evidencePath": "07_finish/backend_123/completion.json"
     },
@@ -899,424 +899,424 @@
       "evidencePath": "07_finish/frontend_014/completion.json"
     },
     "frontend_015": {
-      "status": "partial",
+      "status": "complete",
       "startedAt": "2026-08-16T21:33:16.382Z",
-      "completedAt": null,
-      "reason": "The article listing/detail implementation, public category metadata adapter, contracts, API inventory, API article tests, web checks, and selected visual/accessibility matrices pass, but mandatory API typecheck and root build fail at apps/api/src/modules/articles/repository.ts:346 and :348 with a Mongoose find overload error; the failing backend source is outside frontend_015 allowed roots, so completion cannot be claimed.",
-      "evidencePath": null
+      "completedAt": "2026-08-17T21:36:56.458Z",
+      "reason": null,
+      "evidencePath": "07_finish/frontend_015/completion.json"
     },
     "frontend_016": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-17T22:19:09.094Z",
+      "completedAt": "2026-08-17T23:01:08.850Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_016/completion.json"
     },
     "frontend_017": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-17T23:19:30.723Z",
+      "completedAt": "2026-08-17T23:39:00.595Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_017/completion.json"
     },
     "frontend_018": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-17T23:44:46.942Z",
+      "completedAt": "2026-08-18T00:05:01.110Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_018/completion.json"
     },
     "frontend_019": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T00:06:19.774Z",
+      "completedAt": "2026-08-18T00:27:40.929Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_019/completion.json"
     },
     "frontend_020": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T00:34:21.004Z",
+      "completedAt": "2026-08-18T01:03:21.754Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_020/completion.json"
     },
     "frontend_021": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T01:05:29.621Z",
+      "completedAt": "2026-08-18T01:23:51.657Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_021/completion.json"
     },
     "frontend_022": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T01:27:12.537Z",
+      "completedAt": "2026-08-18T01:44:54.177Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_022/completion.json"
     },
     "frontend_023": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T01:49:45.929Z",
+      "completedAt": "2026-08-18T02:24:14.217Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_023/completion.json"
     },
     "frontend_024": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T02:29:41.647Z",
+      "completedAt": "2026-08-18T03:06:11.780Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_024/completion.json"
     },
     "frontend_025": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T03:08:04.964Z",
+      "completedAt": "2026-08-18T03:45:44.913Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_025/completion.json"
     },
     "frontend_026": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T04:36:09.601Z",
+      "completedAt": "2026-08-18T04:36:12.593Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_026/completion.json"
     },
     "frontend_030": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T08:48:21.280Z",
+      "completedAt": "2026-08-18T09:02:38.951Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_030/completion.json"
     },
     "frontend_031": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T09:03:49.139Z",
+      "completedAt": "2026-08-18T09:19:45.749Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_031/completion.json"
     },
     "frontend_032": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T09:20:48.327Z",
+      "completedAt": "2026-08-18T09:53:34.110Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_032/completion.json"
     },
     "frontend_033": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T09:56:26.876Z",
+      "completedAt": "2026-08-18T10:19:26.911Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_033/completion.json"
     },
     "frontend_034": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T10:22:47.650Z",
+      "completedAt": "2026-08-18T10:38:13.721Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_034/completion.json"
     },
     "frontend_035": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T10:42:58.108Z",
+      "completedAt": "2026-08-18T11:08:21.897Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_035/completion.json"
     },
     "frontend_036": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T11:11:58.319Z",
+      "completedAt": "2026-08-18T11:32:12.703Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_036/completion.json"
     },
     "frontend_040": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T11:46:47.496Z",
+      "completedAt": "2026-08-18T12:13:19.414Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_040/completion.json"
     },
     "frontend_041": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T12:15:36.038Z",
+      "completedAt": "2026-08-18T12:41:04.285Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_041/completion.json"
     },
     "frontend_042": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T12:45:02.137Z",
+      "completedAt": "2026-08-18T13:05:40.896Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_042/completion.json"
     },
     "frontend_043": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T13:08:28.335Z",
+      "completedAt": "2026-08-18T13:28:01.070Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_043/completion.json"
     },
     "frontend_044": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T13:29:11.984Z",
+      "completedAt": "2026-08-18T18:55:12.433Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_044/completion.json"
     },
     "frontend_045": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T19:01:19.910Z",
+      "completedAt": "2026-08-18T19:22:21.002Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_045/completion.json"
     },
     "frontend_046": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T19:25:06.041Z",
+      "completedAt": "2026-08-18T19:58:54.464Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_046/completion.json"
     },
     "frontend_047": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T20:02:36.396Z",
+      "completedAt": "2026-08-18T20:29:12.728Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_047/completion.json"
     },
     "frontend_048": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-18T20:30:17.891Z",
+      "completedAt": "2026-08-18T22:24:09.534Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_048/completion.json"
     },
     "frontend_049": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-19T00:42:18.439Z",
+      "completedAt": "2026-08-19T01:13:55.722Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_049/completion.json"
     },
     "frontend_050": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-19T01:54:24.466Z",
+      "completedAt": "2026-08-19T02:14:44.745Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_050/completion.json"
     },
     "frontend_051": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-19T03:00:11.715Z",
+      "completedAt": "2026-08-19T03:03:16.965Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_051/completion.json"
     },
     "frontend_060": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-19T03:27:38.929Z",
+      "completedAt": "2026-08-19T03:43:33.320Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_060/completion.json"
     },
     "frontend_061": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-19T04:26:52.654Z",
+      "completedAt": "2026-08-19T04:59:20.334Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_061/completion.json"
     },
     "frontend_062": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-19T05:16:11.326Z",
+      "completedAt": "2026-08-19T05:50:19.671Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_062/completion.json"
     },
     "frontend_063": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-19T06:05:52.171Z",
+      "completedAt": "2026-08-19T06:40:14.237Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_063/completion.json"
     },
     "frontend_064": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-19T07:05:38.631Z",
+      "completedAt": "2026-08-19T07:32:03.083Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_064/completion.json"
     },
     "frontend_065": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-19T07:33:49.636Z",
+      "completedAt": "2026-08-19T08:11:35.038Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_065/completion.json"
     },
     "frontend_066": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-19T08:33:12.532Z",
+      "completedAt": "2026-08-19T08:56:56.292Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_066/completion.json"
     },
     "frontend_067": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-19T08:59:48.923Z",
+      "completedAt": "2026-08-19T09:40:17.671Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_067/completion.json"
     },
     "frontend_068": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-19T10:24:54.241Z",
+      "completedAt": "2026-08-19T10:59:52.414Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_068/completion.json"
     },
     "frontend_069": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-19T12:20:46.816Z",
+      "completedAt": "2026-08-19T12:22:27.099Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_069/completion.json"
     },
     "frontend_070": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-19T13:31:04.152Z",
+      "completedAt": "2026-08-20T00:20:34.800Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_070/completion.json"
     },
     "frontend_071": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-20T13:48:31.691Z",
+      "completedAt": "2026-08-20T14:51:23.530Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_071/completion.json"
     },
     "frontend_072": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-20T16:35:20.609Z",
+      "completedAt": "2026-08-20T18:36:08.711Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_072/completion.json"
     },
     "frontend_073": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-20T18:41:05.624Z",
+      "completedAt": "2026-08-20T19:16:21.416Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_073/completion.json"
     },
     "frontend_074": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-20T19:30:43.111Z",
+      "completedAt": "2026-08-21T01:29:39.600Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_074/completion.json"
     },
     "frontend_075": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-21T02:09:20.163Z",
+      "completedAt": "2026-08-21T02:54:54.834Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_075/completion.json"
     },
     "frontend_076": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-21T03:00:34.333Z",
+      "completedAt": "2026-08-21T05:37:20.695Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_076/completion.json"
     },
     "frontend_077": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-21T05:39:25.354Z",
+      "completedAt": "2026-08-21T06:42:37.006Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_077/completion.json"
     },
     "frontend_080": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-21T07:09:32.885Z",
+      "completedAt": "2026-08-21T07:09:33.251Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_080/completion.json"
     },
     "frontend_081": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-21T07:25:01.677Z",
+      "completedAt": "2026-08-21T07:25:02.021Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_081/completion.json"
     },
     "frontend_082": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-21T07:39:16.324Z",
+      "completedAt": "2026-08-21T07:39:16.677Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_082/completion.json"
     },
     "frontend_083": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-21T07:53:49.035Z",
+      "completedAt": "2026-08-21T07:53:49.393Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_083/completion.json"
     },
     "frontend_084": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-21T07:57:09.407Z",
+      "completedAt": "2026-08-21T08:13:24.696Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_084/completion.json"
     },
     "frontend_085": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-21T08:16:33.574Z",
+      "completedAt": "2026-08-21T08:33:56.198Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_085/completion.json"
     },
     "frontend_086": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-21T08:35:50.194Z",
+      "completedAt": "2026-08-21T08:57:28.636Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_086/completion.json"
     },
     "frontend_087": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-21T09:17:00.640Z",
+      "completedAt": "2026-08-21T09:17:01.716Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_087/completion.json"
     },
     "frontend_088": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-21T09:22:20.112Z",
+      "completedAt": "2026-08-21T09:34:50.793Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_088/completion.json"
     },
     "frontend_089": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-21T09:37:12.597Z",
+      "completedAt": "2026-08-21T10:13:55.063Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_089/completion.json"
     },
     "frontend_090": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-21T10:19:40.580Z",
+      "completedAt": "2026-08-21T10:41:19.939Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_090/completion.json"
     }
   }
 }

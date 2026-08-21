@@ -1,12 +1,108 @@
 {
-  "taskId":"backend_093",
-  "summary":"Implemented strict owned community post creation, edit, removal, moderation state, and public filtering with bounded body validation and IDOR coverage.",
-  "filesChanged":["packages/contracts/src/community/index.ts","packages/contracts/src/contracts/index.ts","apps/api/src/modules/community/service.ts","apps/api/tests/community/post-service.test.ts","apps/api/src/modules/testing/test-suites.ts","docs/api/community-posts.md"],
-  "verification":[
-    {"command":"npm.cmd run build --workspace packages/contracts; node --import tsx --test --test-concurrency=1 apps/api/tests/community/post-service.test.ts","exitCode":0,"result":"Passed","notes":"Ownership, moderation, removal, public filtering, and IDOR tests passed."},
-    {"command":"npm.cmd run typecheck; npm.cmd run lint; node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Typecheck, lint, and audit passed."}
+  "taskId": "backend_093",
+  "summary": "Repaired the disproved ADM-27 backend truth by adding a permission-checked, paginated admin community-post listing with strict filters and an explicit administrative projection. Public community projections and behavior remain unchanged.",
+  "filesChanged": [
+    "packages/contracts/src/community/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/community/service.ts",
+    "apps/api/src/modules/community/router.ts",
+    "apps/api/src/modules/community/runtime.ts",
+    "apps/api/src/server.ts",
+    "apps/api/tests/community/router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "docs/api/community-posts.md"
   ],
-  "sourceEvidence":["packages/contracts/src/community/index.ts","apps/api/src/modules/community/service.ts","apps/api/tests/community/post-service.test.ts","docs/api/community-posts.md"],
-  "knownGaps":["HTTP route wiring is not claimed in this service increment."],
-  "completedAt":"2026-08-14T14:16:00.000Z"
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Strict admin community post query, projection, list data, and success-envelope contracts compiled."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API production and test TypeScript compiled successfully."
+    },
+    {
+      "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/community/post-service.test.ts apps/api/tests/community/router.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Six focused tests passed, including unauthenticated, wrong-role, missing-permission, strict-filter, pagination, safe-projection, ownership, and public-regression coverage."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "All 476 API tests passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API production build passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root lint and workspace checks passed with zero warnings; apps/api does not expose a separate lint script."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory contains GET /api/v1/admin/community/posts as listAdminCommunityPosts."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI contains the admin post path and resolvable strict projection references."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman contains the permission-documented admin community post request and validates."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities reported."
+    },
+    {
+      "command": "node -e \"JSON.parse(require('fs').readFileSync('apps/api/openapi/openapi.json','utf8')); JSON.parse(require('fs').readFileSync('apps/api/postman/Sadat-Real-Estate.postman_collection.json','utf8')); console.log('JSON_VALID')\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Changed OpenAPI and Postman JSON artifacts parsed successfully."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors while backend_093 was in progress."
+    }
+  ],
+  "sourceEvidence": [
+    "ADM-27",
+    "apps/api/src/modules/community/router.ts",
+    "apps/api/src/modules/community/service.ts",
+    "apps/api/tests/community/router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/community-posts.md"
+  ],
+  "scopeNotes": [
+    "This is an authorized direct Backend truth repair required by the selected frontend_068 ADM-27 surface: the endpoint blueprint declared GET /api/v1/admin/community/posts, but runtime, contracts, inventory, OpenAPI, and Postman were missing it.",
+    "apps/api/src/server.ts is an explicitly justified integration exception required to pass the existing RBAC service into the persistent community runtime; no unrelated Backend feature was added.",
+    "The administrative projection includes authorId and moderation status only behind verified Admin authentication and admin:community.view authorization. Public responses continue to omit those fields.",
+    "No live MongoDB or provider test was run; the deterministic memory adapter and focused HTTP tests cover this repair boundary."
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-19T09:52:55.0936284Z"
 }

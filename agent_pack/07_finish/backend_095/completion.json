@@ -1,12 +1,120 @@
 {
-  "taskId":"backend_095",
-  "summary":"Added community reporting and moderation service behavior with bounded reasons/details, verified-role reporting, administrative review, reasoned resolve/dismiss actions, and optimistic version checks.",
-  "filesChanged":["apps/api/src/modules/moderation/community-reports.ts","apps/api/tests/moderation/community-reports.test.ts","apps/api/src/modules/testing/test-suites.ts","docs/api/community-moderation.md"],
-  "verification":[
-    {"command":"node --import tsx --test --test-concurrency=1 apps/api/tests/moderation/community-reports.test.ts","exitCode":0,"result":"Passed","notes":"Report creation, queue visibility, admin action, reason, and RBAC tests passed."},
-    {"command":"npm.cmd run typecheck; npm.cmd run lint; node agent_pack/scripts/audit_pack.mjs","exitCode":0,"result":"Passed","notes":"Typecheck, lint, and audit passed."}
+  "taskId": "backend_095",
+  "summary": "Repaired the disproved ADM-29 backend truth by wiring permission-protected community report queue and resolution routes to the persisted public report boundary, with strict projections, mandatory reasons, optimistic version checks, audit integration, and synchronized API artifacts.",
+  "filesChanged": [
+    "apps/api/src/modules/moderation/community-reports.ts",
+    "apps/api/tests/moderation/community-reports.test.ts",
+    "apps/api/src/modules/testing/test-suites.ts",
+    "packages/contracts/src/community/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/community/report-service.ts",
+    "apps/api/src/modules/community/router.ts",
+    "apps/api/src/modules/community/runtime.ts",
+    "apps/api/src/modules/community/service.ts",
+    "apps/api/src/server.ts",
+    "apps/api/tests/community/router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+    "docs/api/community-moderation.md"
   ],
-  "sourceEvidence":["apps/api/src/modules/moderation/community-reports.ts","apps/api/tests/moderation/community-reports.test.ts","docs/api/community-moderation.md"],
-  "knownGaps":["Community report HTTP route wiring is not claimed in this service increment."],
-  "completedAt":"2026-08-14T14:33:00.000Z"
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared community report contracts compiled successfully."
+    },
+    {
+      "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/community/post-service.test.ts apps/api/tests/community/router.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused community suite passed 6 tests, including public projection safety, admin permission boundaries, strict filters, report pagination, reasoned resolution, stale-version rejection, and invalid identifiers."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API TypeScript test configuration typechecked successfully."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full API suite passed: 476 tests, 0 failures."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API production TypeScript build passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository lint and workspace checks passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory reports GET /api/v1/admin/community/reports and POST /api/v1/admin/community/reports/:reportId/resolve as implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI route and schema artifact validated successfully."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman route collection and environment validated successfully."
+    },
+    {
+      "command": "node -e \"JSON.parse(require('fs').readFileSync('agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json','utf8')); JSON.parse(require('fs').readFileSync('apps/api/openapi/openapi.json','utf8')); JSON.parse(require('fs').readFileSync('apps/api/postman/Sadat-Real-Estate.postman_collection.json','utf8')); console.log('JSON_VALID')\"",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Changed JSON artifacts parse successfully."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors while the repair was in progress."
+    },
+    {
+      "command": "git diff --check -- agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json apps/api/openapi/openapi.json apps/api/postman/Sadat-Real-Estate.postman_collection.json apps/api/src/modules/community/report-service.ts apps/api/src/modules/community/router.ts apps/api/src/modules/community/runtime.ts apps/api/src/modules/community/service.ts apps/api/src/server.ts apps/api/tests/community/router.test.ts packages/contracts/src/community/index.ts packages/contracts/src/contracts/index.ts docs/api/community-moderation.md",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Backend truth repair scope has no whitespace errors."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/backend/B6_content_community/backend_095.md",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (ADM-29)",
+    "docs/design_sources/final_screens/admin/ADM-29.png",
+    "apps/api/src/modules/community/report-service.ts",
+    "apps/api/src/modules/community/router.ts",
+    "apps/api/tests/community/router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/community-moderation.md"
+  ],
+  "scopeNotes": [
+    "This was an authorized direct backend truth repair required before frontend_068 could consume ADM-29 report routes.",
+    "The existing public community report boundary remains the source of persisted report data; the prior isolated moderation helper is preserved for its existing focused tests but is not used as a second production route boundary.",
+    "Community contracts, report service/router/runtime, and server audit-writer wiring are explicit integration exceptions because the cataloged route belongs to the community runtime while backend_095 owns the moderation behavior.",
+    "No production database or provider credentials were used, and no real .env file was read."
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-19T10:19:40.0959696Z"
 }

@@ -14,6 +14,11 @@
       "key": "apiV1BaseUrl",
       "value": "{{baseUrl}}/api/v1",
       "type": "string"
+    },
+    {
+      "key": "syntheticBearer",
+      "value": "synthetic-admin-token",
+      "type": "string"
     }
   ],
   "event": [
@@ -113,8 +118,13 @@
         "header": [],
         "url": {
           "raw": "{{apiV1BaseUrl}}/public/home",
-          "host": ["{{apiV1BaseUrl}}"],
-          "path": ["public", "home"]
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "public",
+            "home"
+          ]
         },
         "description": "Unauthenticated published-only homepage feed. Draft, inactive, and sensitive workflow fields are excluded."
       }
@@ -140,13 +150,30 @@
         "header": [],
         "url": {
           "raw": "{{apiV1BaseUrl}}/public/properties?sort=publishedAt&direction=desc&page=1&limit=20",
-          "host": ["{{apiV1BaseUrl}}"],
-          "path": ["public", "properties"],
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "public",
+            "properties"
+          ],
           "query": [
-            { "key": "sort", "value": "publishedAt" },
-            { "key": "direction", "value": "desc" },
-            { "key": "page", "value": "1" },
-            { "key": "limit", "value": "20" }
+            {
+              "key": "sort",
+              "value": "publishedAt"
+            },
+            {
+              "key": "direction",
+              "value": "desc"
+            },
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "20"
+            }
           ]
         },
         "description": "Unauthenticated published and active property listing with allowlisted filters and deterministic pagination."
@@ -173,9 +200,20 @@
         "header": [],
         "url": {
           "raw": "{{apiV1BaseUrl}}/public/properties/:slug",
-          "host": ["{{apiV1BaseUrl}}"],
-          "path": ["public", "properties", ":slug"],
-          "variable": [{ "key": "slug", "value": "synthetic-apartment" }]
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "public",
+            "properties",
+            ":slug"
+          ],
+          "variable": [
+            {
+              "key": "slug",
+              "value": "synthetic-apartment"
+            }
+          ]
         },
         "description": "Unauthenticated published property details; draft, inactive, workflow, and storage-internal fields are excluded."
       }
@@ -198,9 +236,32 @@
       ],
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"propertyIds\": [\"000000000000000000000000\"]\n}", "options": { "raw": { "language": "json" } } },
-        "url": { "raw": "{{apiV1BaseUrl}}/public/properties/compare", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "properties", "compare"] },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"propertyIds\": [\"000000000000000000000000\"]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/public/properties/compare",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "public",
+            "properties",
+            "compare"
+          ]
+        },
         "description": "Unauthenticated comparison for one or two published active properties; unknown/draft items fail closed."
       }
     },
@@ -223,7 +284,22 @@
       "request": {
         "method": "GET",
         "header": [],
-        "url": { "raw": "{{apiV1BaseUrl}}/public/developers?kind=developer_company", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "developers"], "query": [{ "key": "kind", "value": "developer_company" }] },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/public/developers?kind=developer_company",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "public",
+            "developers"
+          ],
+          "query": [
+            {
+              "key": "kind",
+              "value": "developer_company"
+            }
+          ]
+        },
         "description": "Unauthenticated approved developer/company directory with bounded filters."
       }
     },
@@ -246,8 +322,88 @@
       "request": {
         "method": "GET",
         "header": [],
-        "url": { "raw": "{{apiV1BaseUrl}}/public/developers/:slug", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "developers", ":slug"], "variable": [{ "key": "slug", "value": "trusted-company" }] },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/public/developers/:slug",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "public",
+            "developers",
+            ":slug"
+          ],
+          "variable": [
+            {
+              "key": "slug",
+              "value": "trusted-company"
+            }
+          ]
+        },
         "description": "Unauthenticated approved organization profile with published projects and active properties only."
+      }
+    },
+    {
+      "name": "Public - About",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Public About returns a safe published projection', function () {",
+              "  pm.expect([200, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.property('items');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/public/about",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "public",
+            "about"
+          ]
+        },
+        "description": "Unauthenticated published and active About blocks; workflow and updater fields are excluded."
+      }
+    },
+    {
+      "name": "Public - Team",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Public Team returns a safe published projection', function () {",
+              "  pm.expect([200, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.property('items');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/public/team",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "public",
+            "team"
+          ]
+        },
+        "description": "Unauthenticated published and active team projection; workflow and updater fields are excluded."
       }
     },
     {
@@ -268,8 +424,32 @@
       ],
       "request": {
         "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{seekerAccessToken}}" }],
-        "url": { "raw": "{{apiV1BaseUrl}}/seeker/favorites?page=1&limit=20", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "favorites"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }] },
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{seekerAccessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/seeker/favorites?page=1&limit=20",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "seeker",
+            "favorites"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "20"
+            }
+          ]
+        },
         "description": "Requires a transient verified seeker bearer token; stale properties are omitted from the projection."
       }
     },
@@ -290,8 +470,29 @@
       ],
       "request": {
         "method": "PUT",
-        "header": [{ "key": "Authorization", "value": "Bearer {{seekerAccessToken}}" }],
-        "url": { "raw": "{{apiV1BaseUrl}}/seeker/favorites/:propertyId", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "favorites", ":propertyId"], "variable": [{ "key": "propertyId", "value": "000000000000000000000000" }] },
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{seekerAccessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/seeker/favorites/:propertyId",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "seeker",
+            "favorites",
+            ":propertyId"
+          ],
+          "variable": [
+            {
+              "key": "propertyId",
+              "value": "000000000000000000000000"
+            }
+          ]
+        },
         "description": "Requires a transient verified seeker token and a published active property; replay is idempotent."
       }
     },
@@ -312,8 +513,29 @@
       ],
       "request": {
         "method": "DELETE",
-        "header": [{ "key": "Authorization", "value": "Bearer {{seekerAccessToken}}" }],
-        "url": { "raw": "{{apiV1BaseUrl}}/seeker/favorites/:propertyId", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "favorites", ":propertyId"], "variable": [{ "key": "propertyId", "value": "000000000000000000000000" }] },
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{seekerAccessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/seeker/favorites/:propertyId",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "seeker",
+            "favorites",
+            ":propertyId"
+          ],
+          "variable": [
+            {
+              "key": "propertyId",
+              "value": "000000000000000000000000"
+            }
+          ]
+        },
         "description": "Requires a transient verified seeker token; removing a missing save is safe and idempotent."
       }
     },
@@ -335,8 +557,22 @@
       ],
       "request": {
         "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{seekerAccessToken}}" }],
-        "url": { "raw": "{{apiV1BaseUrl}}/seeker/overview", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "overview"] },
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{seekerAccessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/seeker/overview",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "seeker",
+            "overview"
+          ]
+        },
         "description": "Requires a transient verified seeker token. Counts are sourced from available seeker-owned aggregates and safely return zero when empty."
       }
     },
@@ -358,8 +594,36 @@
       ],
       "request": {
         "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{seekerAccessToken}}" }],
-        "url": { "raw": "{{apiV1BaseUrl}}/seeker/notifications?page=1&limit=20&unreadOnly=false", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "notifications"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }, { "key": "unreadOnly", "value": "false" }] },
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{seekerAccessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/seeker/notifications?page=1&limit=20&unreadOnly=false",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "seeker",
+            "notifications"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "20"
+            },
+            {
+              "key": "unreadOnly",
+              "value": "false"
+            }
+          ]
+        },
         "description": "Requires a transient verified seeker token; only localized safe notification projections are returned."
       }
     },
@@ -380,8 +644,30 @@
       ],
       "request": {
         "method": "POST",
-        "header": [{ "key": "Authorization", "value": "Bearer {{seekerAccessToken}}" }],
-        "url": { "raw": "{{apiV1BaseUrl}}/seeker/notifications/:notificationId/read", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "notifications", ":notificationId", "read"], "variable": [{ "key": "notificationId", "value": "000000000000000000000000" }] },
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{seekerAccessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/seeker/notifications/:notificationId/read",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "seeker",
+            "notifications",
+            ":notificationId",
+            "read"
+          ],
+          "variable": [
+            {
+              "key": "notificationId",
+              "value": "000000000000000000000000"
+            }
+          ]
+        },
         "description": "Requires a transient verified seeker token; foreign notification IDs are indistinguishable from not found."
       }
     },
@@ -403,9 +689,367 @@
       ],
       "request": {
         "method": "POST",
-        "header": [{ "key": "Authorization", "value": "Bearer {{seekerAccessToken}}" }],
-        "url": { "raw": "{{apiV1BaseUrl}}/seeker/notifications/read-all", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "notifications", "read-all"] },
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{seekerAccessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/seeker/notifications/read-all",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "seeker",
+            "notifications",
+            "read-all"
+          ]
+        },
         "description": "Requires a transient verified seeker token; replay is idempotent and returns the number changed."
+      }
+    },
+    {
+      "name": "Provider - Notifications",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Provider notification inbox is bounded and recipient-owned', function () {",
+              "  pm.expect([200, 400, 401, 403, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.keys('items', 'unreadCount', 'page', 'limit', 'total');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{providerAccessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/notifications?page=1&limit=20&unreadOnly=false",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "notifications"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "20"
+            },
+            {
+              "key": "unreadOnly",
+              "value": "false"
+            }
+          ]
+        },
+        "description": "Requires a transient verified provider token; only localized safe notification projections are returned."
+      }
+    },
+    {
+      "name": "Provider - Mark Notification Read",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Provider notification read transition is ownership protected', function () {",
+              "  pm.expect([200, 400, 401, 403, 404, 500]).to.include(pm.response.code);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{providerAccessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/notifications/:notificationId/read",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "notifications",
+            ":notificationId",
+            "read"
+          ],
+          "variable": [
+            {
+              "key": "notificationId",
+              "value": "000000000000000000000000"
+            }
+          ]
+        },
+        "description": "Requires a transient verified provider token; foreign notification IDs are indistinguishable from not found."
+      }
+    },
+    {
+      "name": "Provider - Mark All Notifications Read",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Provider read-all returns a changed count', function () {",
+              "  pm.expect([200, 401, 403, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.property('updatedCount');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{providerAccessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/notifications/read-all",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "notifications",
+            "read-all"
+          ]
+        },
+        "description": "Requires a transient verified provider token; replay is idempotent and returns the number changed."
+      }
+    },
+    {
+      "name": "Provider - Get Settings",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Provider settings are safely projected', function () {",
+              "  pm.expect([200, 401, 403, 404, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.keys('version', 'phone', 'availableActions');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{providerAccessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/settings",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "settings"
+          ]
+        },
+        "description": "Requires a transient verified provider token; only the provider's safe contact projection is returned."
+      }
+    },
+    {
+      "name": "Provider - Update Settings",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Provider settings update is versioned and strict', function () {",
+              "  pm.expect([200, 400, 401, 403, 404, 409, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.property('version');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{providerAccessToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"expectedVersion\": 0,\n  \"whatsappNumber\": \"+2010998765433\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/settings",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "settings"
+          ]
+        },
+        "description": "Updates only mutable provider-owned contact settings and requires the current version."
+      }
+    },
+    {
+      "name": "Admin CMS - Get Content Namespace",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Admin CMS namespace read is authorized or safely unavailable', function () { pm.expect([200, 401, 403, 404, 500]).to.include(pm.response.code); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{syntheticBearer}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/content/:namespace",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "content",
+            ":namespace"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Admin CMS - Update Tips Namespace",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Admin CMS namespace update is authorized or safely rejected', function () { pm.expect([200, 400, 401, 403, 404, 409, 500]).to.include(pm.response.code); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{syntheticBearer}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"key\":\"buying_safely\",\"title\":{\"en\":\"Buying safely\"},\"body\":{\"en\":\"Review the source before paying.\"},\"order\":0,\"status\":\"draft\",\"reason\":\"Create a reviewed tip draft\"}"
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/content/:namespace",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "content",
+            ":namespace"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Admin - Overview",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Admin overview is authenticated, bounded, and projection-safe', function () {",
+              "  pm.expect([200, 400, 401, 403, 503]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.keys('range', 'metrics', 'generatedAt');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminAccessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/overview?from=2026-08-01T00%3A00%3A00%2B00%3A00&to=2026-08-14T00%3A00%3A00%2B00%3A00",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "overview"
+          ],
+          "query": [
+            {
+              "key": "from",
+              "value": "2026-08-01T00:00:00+00:00"
+            },
+            {
+              "key": "to",
+              "value": "2026-08-14T00:00:00+00:00"
+            }
+          ]
+        },
+        "description": "Requires a transient verified admin token and admin:overview.view; metrics come from persistent bounded collection counts and never from seeded or fabricated values."
       }
     },
     {
@@ -426,8 +1070,36 @@
       ],
       "request": {
         "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }],
-        "url": { "raw": "{{apiV1BaseUrl}}/admin/notifications?page=1&limit=20&unreadOnly=false", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "notifications"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }, { "key": "unreadOnly", "value": "false" }] },
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminAccessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/notifications?page=1&limit=20&unreadOnly=false",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "notifications"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "20"
+            },
+            {
+              "key": "unreadOnly",
+              "value": "false"
+            }
+          ]
+        },
         "description": "Requires a transient verified admin token; only recipient-owned, permission-aware localized projections are returned."
       }
     },
@@ -448,8 +1120,30 @@
       ],
       "request": {
         "method": "POST",
-        "header": [{ "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }],
-        "url": { "raw": "{{apiV1BaseUrl}}/admin/notifications/:notificationId/read", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "notifications", ":notificationId", "read"], "variable": [{ "key": "notificationId", "value": "000000000000000000000000" }] },
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminAccessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/notifications/:notificationId/read",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "notifications",
+            ":notificationId",
+            "read"
+          ],
+          "variable": [
+            {
+              "key": "notificationId",
+              "value": "000000000000000000000000"
+            }
+          ]
+        },
         "description": "Requires a transient verified admin token; foreign notification IDs are indistinguishable from not found."
       }
     },
@@ -471,8 +1165,23 @@
       ],
       "request": {
         "method": "POST",
-        "header": [{ "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }],
-        "url": { "raw": "{{apiV1BaseUrl}}/admin/notifications/read-all", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "notifications", "read-all"] },
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminAccessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/notifications/read-all",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "notifications",
+            "read-all"
+          ]
+        },
         "description": "Requires a transient verified admin token; replay is idempotent and returns the number changed."
       }
     },
@@ -494,8 +1203,29 @@
       ],
       "request": {
         "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }],
-        "url": { "raw": "{{apiV1BaseUrl}}/admin/settings/:namespace", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "settings", ":namespace"], "variable": [{ "key": "namespace", "value": "display" }] },
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminAccessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/settings/:namespace",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "settings",
+            ":namespace"
+          ],
+          "variable": [
+            {
+              "key": "namespace",
+              "value": "display"
+            }
+          ]
+        },
         "description": "Requires a transient verified admin token and the admin:settings.view permission; empty namespaces remain unavailable rather than fabricated."
       }
     },
@@ -518,11 +1248,41 @@
       "request": {
         "method": "PUT",
         "header": [
-          { "key": "Authorization", "value": "Bearer {{adminAccessToken}}" },
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminAccessToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
-        "body": { "mode": "raw", "raw": "{\n  \"schemaVersion\": 1,\n  \"values\": {\n    \"show_map\": true\n  },\n  \"expectedVersion\": 0,\n  \"reason\": \"Update display settings\"\n}", "options": { "raw": { "language": "json" } } },
-        "url": { "raw": "{{apiV1BaseUrl}}/admin/settings/:namespace", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "settings", ":namespace"], "variable": [{ "key": "namespace", "value": "display" }] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"schemaVersion\": 1,\n  \"values\": {\n    \"show_map\": true\n  },\n  \"expectedVersion\": 0,\n  \"reason\": \"Update display settings\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/settings/:namespace",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "settings",
+            ":namespace"
+          ],
+          "variable": [
+            {
+              "key": "namespace",
+              "value": "display"
+            }
+          ]
+        },
         "description": "Requires admin:settings.manage; values are strict logical keys, credentials are rejected, and every mutation is audited."
       }
     },
@@ -1190,6 +1950,54 @@
       }
     },
     {
+      "name": "Admin - Authorize Provider Document Review",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Reviewer document grant remains ephemeral and private', function () {",
+              "  pm.expect([200, 400, 401, 403, 404, 409, 500]).to.include(pm.response.code);",
+              "  pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
+              "  pm.expect(JSON.stringify(pm.response.json())).to.not.include('storageKey');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/provider-documents/:documentId/access?purpose=document_review",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "provider-documents",
+            ":documentId",
+            "access"
+          ],
+          "query": [
+            {
+              "key": "purpose",
+              "value": "document_review"
+            }
+          ],
+          "variable": [
+            {
+              "key": "documentId",
+              "value": "000000000000000000000000",
+              "type": "string"
+            }
+          ]
+        },
+        "description": "Requires a transient verified Admin bearer token with admin:documents.review. Use an isolated synthetic clean document only; the short-lived response URL must never be persisted or logged."
+      }
+    },
+    {
       "name": "Provider - Delete Private Document",
       "request": {
         "method": "DELETE",
@@ -1395,6 +2203,114 @@
           ]
         },
         "description": "Requires a transient verified Admin bearer token with admin:audit.view. Replace the synthetic ID only in an isolated non-production environment."
+      }
+    },
+    {
+      "name": "Admin Accounts - List Users",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/users?page=1&limit=20",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "users"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "20"
+            }
+          ]
+        },
+        "description": "Requires a transient verified Admin bearer token with admin:users.view. Results are paginated safe account projections; no bearer token is stored in this collection."
+      }
+    },
+    {
+      "name": "Admin Accounts - Get User",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/users/:userId",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "users",
+            ":userId"
+          ],
+          "variable": [
+            {
+              "key": "userId",
+              "value": "000000000000000000000000",
+              "type": "string"
+            }
+          ]
+        },
+        "description": "Requires a transient verified Admin bearer token with admin:users.view. Use only an isolated synthetic non-Admin account; no bearer token is stored in this collection."
+      }
+    },
+    {
+      "name": "Admin Accounts - List Providers",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/providers?page=1&limit=20",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "providers"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "20"
+            }
+          ]
+        },
+        "description": "Requires a transient verified Admin bearer token with admin:providers.view. Results exclude private document delivery data; no bearer token is stored in this collection."
+      }
+    },
+    {
+      "name": "Admin Accounts - Get Provider",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/providers/:providerId",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "providers",
+            ":providerId"
+          ],
+          "variable": [
+            {
+              "key": "providerId",
+              "value": "000000000000000000000000",
+              "type": "string"
+            }
+          ]
+        },
+        "description": "Requires a transient verified Admin bearer token with admin:providers.view. Document metadata excludes storage keys and permanent URLs; no bearer token is stored in this collection."
       }
     },
     {
@@ -1820,190 +2736,6 @@
       }
     },
     {
-      "name": "Provider Projects",
-      "item": [
-        {
-          "name": "List Owned Projects",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{apiV1BaseUrl}}/provider/projects?page=1&limit=20",
-              "host": [
-                "{{apiV1BaseUrl}}"
-              ],
-              "path": [
-                "provider",
-                "projects"
-              ],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "20"
-                }
-              ]
-            },
-            "description": "Requires a transient verified provider bearer token. Results are owned-project projections only."
-          }
-        },
-        {
-          "name": "Create Project Draft",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": { \"ar\": \"Synthetic project\", \"en\": \"Synthetic project\" },\n  \"slug\": \"synthetic-project\",\n  \"reason\": \"Create synthetic project draft\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{apiV1BaseUrl}}/provider/projects",
-              "host": [
-                "{{apiV1BaseUrl}}"
-              ],
-              "path": [
-                "provider",
-                "projects"
-              ]
-            },
-            "description": "Requires an isolated verified provider session; ownership is derived from the bearer identity."
-          }
-        },
-        {
-          "name": "Update Project Draft",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"version\": 0,\n  \"name\": { \"en\": \"Updated synthetic project\" },\n  \"reason\": \"Update synthetic project draft\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{apiV1BaseUrl}}/provider/projects/:projectId",
-              "host": [
-                "{{apiV1BaseUrl}}"
-              ],
-              "path": [
-                "provider",
-                "projects",
-                ":projectId"
-              ],
-              "variable": [
-                {
-                  "key": "projectId",
-                  "value": "000000000000000000000000"
-                }
-              ]
-            },
-            "description": "Requires a verified provider bearer token and current optimistic version."
-          }
-        },
-        {
-          "name": "Submit Project",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"version\": 0,\n  \"reason\": \"Submit synthetic project for review\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{apiV1BaseUrl}}/provider/projects/:projectId/submit",
-              "host": [
-                "{{apiV1BaseUrl}}"
-              ],
-              "path": [
-                "provider",
-                "projects",
-                ":projectId",
-                "submit"
-              ],
-              "variable": [
-                {
-                  "key": "projectId",
-                  "value": "000000000000000000000000"
-                }
-              ]
-            },
-            "description": "Requires a verified provider bearer token and current optimistic version."
-          }
-        },
-        {
-          "name": "Review Project",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"version\": 1,\n  \"action\": \"approve\",\n  \"reason\": \"Approve synthetic project\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{apiV1BaseUrl}}/admin/projects/:projectId/review",
-              "host": [
-                "{{apiV1BaseUrl}}"
-              ],
-              "path": [
-                "admin",
-                "projects",
-                ":projectId",
-                "review"
-              ],
-              "variable": [
-                {
-                  "key": "projectId",
-                  "value": "000000000000000000000000"
-                }
-              ]
-            },
-            "description": "Requires an isolated verified admin session with admin:projects.review."
-          }
-        }
-      ]
-    },
-    {
       "name": "Provider Property Media",
       "item": [
         {
@@ -2117,6 +2849,260 @@
               ]
             }
           }
+        },
+        {
+          "name": "Banner administration",
+          "item": [
+            {
+              "name": "List administrative banners",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{apiV1BaseUrl}}/admin/banners?placement=homepage&status=all&page=1&limit=20"
+                }
+              }
+            },
+            {
+              "name": "Create administrative banner",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"placementKey\": \"homepage_primary\",\n  \"title\": {\"ar\": \"عنوان\", \"en\": \"Title\", \"zh-CN\": \"标题\"},\n  \"startAt\": \"2026-09-01T00:00:00+00:00\",\n  \"endAt\": \"2026-10-01T00:00:00+00:00\",\n  \"sortOrder\": 0\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiV1BaseUrl}}/admin/banners"
+                }
+              }
+            },
+            {
+              "name": "Update administrative banner",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"expectedVersion\": 1,\n  \"status\": \"draft\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiV1BaseUrl}}/admin/banners/:bannerId",
+                  "variable": [
+                    {
+                      "key": "bannerId",
+                      "value": "000000000000000000000000"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Preview administrative banner",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{apiV1BaseUrl}}/admin/banners/:bannerId/preview",
+                  "variable": [
+                    {
+                      "key": "bannerId",
+                      "value": "000000000000000000000000"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "List administrative banner media",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{apiV1BaseUrl}}/admin/banners/:bannerId/media",
+                  "variable": [
+                    {
+                      "key": "bannerId",
+                      "value": "000000000000000000000000"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create administrative banner media",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"url\": \"https://example.com/banner.jpg\",\n  \"mime\": \"image/jpeg\",\n  \"width\": 1200,\n  \"height\": 400\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiV1BaseUrl}}/admin/banners/:bannerId/media",
+                  "variable": [
+                    {
+                      "key": "bannerId",
+                      "value": "000000000000000000000000"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Update administrative banner media",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"expectedVersion\": 1,\n  \"reason\": \"Correcting the banner media metadata\",\n  \"url\": \"https://example.com/banner-updated.jpg\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiV1BaseUrl}}/admin/banner-media/:mediaId",
+                  "variable": [
+                    {
+                      "key": "mediaId",
+                      "value": "000000000000000000000000"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Delete administrative banner media",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"expectedVersion\": 1,\n  \"reason\": \"Removing the unused banner media\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiV1BaseUrl}}/admin/banner-media/:mediaId",
+                  "variable": [
+                    {
+                      "key": "mediaId",
+                      "value": "000000000000000000000000"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Reorder administrative banners",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminAccessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"placementKey\": \"homepage_primary\",\n  \"items\": [{\"bannerId\": \"000000000000000000000000\", \"sortOrder\": 0, \"expectedVersion\": 1}],\n  \"reason\": \"Applying the approved homepage order\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiV1BaseUrl}}/admin/banners/order"
+                }
+              }
+            }
+          ]
         }
       ]
     },
@@ -2530,6 +3516,78 @@
             },
             "description": "Requires admin:property-reports.manage and the current optimistic version."
           }
+        },
+        {
+          "name": "List Account Reports",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/account-reports?status=open&page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "account-reports"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "open"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Requires admin:account-reports.view. Reporter identity is included only for administrators with manage permission."
+          }
+        },
+        {
+          "name": "Resolve Account Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"action\": \"resolve\",\n  \"reason\": \"Reviewed account report safely\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/account-reports/:reportId/resolve",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "account-reports",
+                ":reportId",
+                "resolve"
+              ],
+              "variable": [
+                {
+                  "key": "reportId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires admin:account-reports.manage and the current optimistic version."
+          }
         }
       ]
     },
@@ -2581,48 +3639,2397 @@
     {
       "name": "Requests CRM",
       "item": [
-        { "name": "Create seeker contact request", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/seeker/contact-requests", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "contact-requests"] } } },
-        { "name": "Create seeker search request", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/seeker/search-requests", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "search-requests"] } } },
-        { "name": "List seeker requests", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/seeker/requests", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "requests"] } } },
-        { "name": "Get seeker request", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/seeker/requests/:requestId", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "requests", ":requestId"] } } },
-        { "name": "Create provider customer request", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/provider/customer-requests", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "customer-requests"] } } },
-        { "name": "List provider customer requests", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/provider/customer-requests", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "customer-requests"] } } },
-        { "name": "Get provider customer request", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/provider/customer-requests/:requestId", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "customer-requests", ":requestId"] } } },
-        { "name": "Transition provider customer request", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/provider/customer-requests/:requestId/transitions", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "customer-requests", ":requestId", "transitions"] } } },
-        { "name": "List admin requests", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/admin/requests", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "requests"] } } },
-        { "name": "List overdue admin requests", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/admin/requests/overdue", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "requests", "overdue"] } } },
-        { "name": "Get admin request", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/admin/requests/:requestId", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "requests", ":requestId"] } } },
-        { "name": "Assign admin request", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/admin/requests/:requestId/assign", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "requests", ":requestId", "assign"] } } },
-        { "name": "Add admin request note", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/admin/requests/:requestId/notes", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "requests", ":requestId", "notes"] } } },
-        { "name": "Transition admin request", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/admin/requests/:requestId/transitions", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "requests", ":requestId", "transitions"] } } }
+        {
+          "name": "Create seeker contact request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/seeker/contact-requests",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "seeker",
+                "contact-requests"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create seeker search request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/seeker/search-requests",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "seeker",
+                "search-requests"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List seeker requests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/seeker/requests",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "seeker",
+                "requests"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get seeker request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/seeker/requests/:requestId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "seeker",
+                "requests",
+                ":requestId"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create provider customer request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/customer-requests",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "customer-requests"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List provider customer requests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/customer-requests",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "customer-requests"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get provider customer request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/customer-requests/:requestId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "customer-requests",
+                ":requestId"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Transition provider customer request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/customer-requests/:requestId/transitions",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "customer-requests",
+                ":requestId",
+                "transitions"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List admin requests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/requests",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "requests"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List overdue admin requests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/requests/overdue",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "requests",
+                "overdue"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get admin request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/requests/:requestId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "requests",
+                ":requestId"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Assign admin request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/requests/:requestId/assign",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "requests",
+                ":requestId",
+                "assign"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add admin request note",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/requests/:requestId/notes",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "requests",
+                ":requestId",
+                "notes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Transition admin request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/requests/:requestId/transitions",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "requests",
+                ":requestId",
+                "transitions"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List admin request issues",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/request-issues?page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "request-issues"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Resolve admin request issue",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"resolve\",\n  \"reason\": \"Resolve request issue\",\n  \"expectedVersion\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/request-issues/:issueId/resolve",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "request-issues",
+                ":issueId",
+                "resolve"
+              ]
+            }
+          }
+        }
       ]
     },
     {
       "name": "Viewings",
       "item": [
-        { "name": "List seeker viewings", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/seeker/viewings", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "viewings"] } } },
-        { "name": "Create seeker viewing", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/seeker/viewings", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "viewings"] } } },
-        { "name": "Reschedule seeker viewing", "request": { "method": "PATCH", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/seeker/viewings/:viewingId", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "viewings", ":viewingId"] } } },
-        { "name": "Cancel seeker viewing", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/seeker/viewings/:viewingId/cancel", "host": ["{{apiV1BaseUrl}}"], "path": ["seeker", "viewings", ":viewingId", "cancel"] } } },
-        { "name": "List provider viewings", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/provider/viewings", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "viewings"] } } },
-        { "name": "Transition provider viewing", "request": { "method": "POST", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/provider/viewings/:viewingId/transitions", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "viewings", ":viewingId", "transitions"] } } },
-        { "name": "List admin viewings", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/admin/viewings", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "viewings"] } } }
+        {
+          "name": "List seeker viewings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/seeker/viewings",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "seeker",
+                "viewings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create seeker viewing",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/seeker/viewings",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "seeker",
+                "viewings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reschedule seeker viewing",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/seeker/viewings/:viewingId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "seeker",
+                "viewings",
+                ":viewingId"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cancel seeker viewing",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/seeker/viewings/:viewingId/cancel",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "seeker",
+                "viewings",
+                ":viewingId",
+                "cancel"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List provider viewings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/viewings",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "viewings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Transition provider viewing",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/viewings/:viewingId/transitions",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "viewings",
+                ":viewingId",
+                "transitions"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List admin viewings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/viewings",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "viewings"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Provider advertising",
+      "item": [
+        {
+          "name": "List provider advertising requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/ads?page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "ads"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Owner-scoped provider advertising projection. The API returns no provider, storage, or administrative internals."
+          }
+        },
+        {
+          "name": "Create provider advertising request draft",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"placementKey\": \"homepage.hero\",\n  \"purpose\": \"Promote a verified provider listing\",\n  \"intervalStart\": \"2026-09-01T09:00:00+00:00\",\n  \"intervalEnd\": \"2026-09-02T09:00:00+00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/ads",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "ads"
+              ]
+            },
+            "description": "Creates a provider-owned draft. Placement activation, request ownership, and validation are enforced by the API; no price is fabricated."
+          }
+        },
+        {
+          "name": "Get provider advertising request",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/ads/:adRequestId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "ads",
+                ":adRequestId"
+              ],
+              "variable": [
+                {
+                  "key": "adRequestId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Owner-scoped provider advertising detail. Cross-provider or missing requests return the same not-found boundary."
+          }
+        },
+        {
+          "name": "Accept provider advertising quote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"accept\",\n  \"expectedVersion\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/ads/:adRequestId/accept-quote",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "ads",
+                ":adRequestId",
+                "accept-quote"
+              ],
+              "variable": [
+                {
+                  "key": "adRequestId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "A verified provider may accept only the quote attached to its own advertising request; acceptance advances the request to payment review and is not bank verification."
+          }
+        },
+        {
+          "name": "Upload provider payment proof",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/pdf"
+              },
+              {
+                "key": "X-File-Name",
+                "value": "payment-proof.pdf"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "%PDF-1.7\\nsynthetic payment proof\\n%%EOF"
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/ads/:adRequestId/payment-proof",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "ads",
+                ":adRequestId",
+                "payment-proof"
+              ],
+              "variable": [
+                {
+                  "key": "adRequestId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Streams a private provider-owned proof. The response exposes only redacted metadata; upload is not bank verification."
+          }
+        },
+        {
+          "name": "Get provider commission projection",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/commission",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "commission"
+              ]
+            },
+            "description": "Reads the verified provider's effective commission policy as a read-only projection. The API returns source none when no approved active commission exists; no universal value is fabricated."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Advertising administration",
+      "item": [
+        {
+          "name": "List administrative advertising requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/ad-requests?status=waiting_pricing&page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "ad-requests"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "waiting_pricing"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with the ads view permission. Returns only the bounded administrative request and latest quote projection."
+          }
+        },
+        {
+          "name": "Get administrative advertising request",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/ad-requests/:adRequestId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "ad-requests",
+                ":adRequestId"
+              ],
+              "variable": [
+                {
+                  "key": "adRequestId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with the ads view permission and excludes private payment-proof storage details."
+          }
+        },
+        {
+          "name": "List administrative payment proofs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/payment-proofs?status=pending_review&page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "payment-proofs"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "pending_review"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with admin:payments.review. Returns active payment-proof metadata for manual review without storage keys, permanent URLs, or bank-verification claims."
+          }
+        },
+        {
+          "name": "Review administrative payment proof",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"approve\",\n  \"expectedVersion\": 2,\n  \"reason\": \"Receipt matches the issued quote\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/payment-proofs/:proofId/review",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "payment-proofs",
+                ":proofId",
+                "review"
+              ],
+              "variable": [
+                {
+                  "key": "proofId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with admin:payments.review. Approval or rejection is manual, reasoned, version-checked, and never bank verification."
+          }
+        },
+        {
+          "name": "List administrative advertising calendar",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/ad-calendar?status=scheduled&page=1&limit=50",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "ad-calendar"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "scheduled"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with admin:ads.view. Calendar events use deterministic Africa/Cairo local projections and bounded pagination."
+          }
+        },
+        {
+          "name": "Schedule administrative advertising request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"expectedVersion\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/ad-requests/:adRequestId/schedule",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "ad-requests",
+                ":adRequestId",
+                "schedule"
+              ],
+              "variable": [
+                {
+                  "key": "adRequestId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with admin:ads.schedule. Scheduling is version-checked, rejects placement overlaps, and returns a Cairo calendar projection."
+          }
+        },
+        {
+          "name": "List administrative advertising financial review",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/ad-financial-review?status=all&page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "ad-financial-review"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "all"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with admin:ads.view. Returns safe quote, payment-proof state, and schedule projections without bank verification or realized-revenue claims."
+          }
+        },
+        {
+          "name": "Get administrative advertising financial review",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/ad-financial-review/:requestId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "ad-financial-review",
+                ":requestId"
+              ],
+              "variable": [
+                {
+                  "key": "requestId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with admin:ads.view and returns one safe financial review projection without private storage or internal audit data."
+          }
+        },
+        {
+          "name": "List administrative advertising ledger",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/ad-ledger?source=quote&page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "ad-ledger"
+              ],
+              "query": [
+                {
+                  "key": "source",
+                  "value": "quote"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with admin:ads.view. Ledger entries identify quote, payment-proof, or schedule source and remain accountingTreatment not_realized."
+          }
+        },
+        {
+          "name": "Issue manual advertising quote",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currency\": \"EGP\",\n  \"lineItems\": [{ \"description\": \"Homepage placement\", \"quantity\": 1, \"unitAmountMinor\": 2500 }],\n  \"validUntil\": \"2026-10-01T00:00:00+00:00\",\n  \"terms\": \"Manual quote; payment proof is reviewed separately.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/ad-requests/:adRequestId/quote",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "ad-requests",
+                ":adRequestId",
+                "quote"
+              ],
+              "variable": [
+                {
+                  "key": "adRequestId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with the pricing permission. The quote is manually issued in integer minor units with a future expiry; no universal advertising price is used."
+          }
+        }
       ]
     },
     {
       "name": "Articles",
       "item": [
-        { "name": "List public article categories", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/public/article-categories?locale=en", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "article-categories"], "query": [{ "key": "locale", "value": "en" }] }, "description": "Returns active localized category metadata without authentication." } },
-        { "name": "List public articles", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/public/articles?locale=en&page=1&limit=20", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "articles"], "query": [{ "key": "locale", "value": "en" }, { "key": "page", "value": "1" }, { "key": "limit", "value": "20" }] }, "description": "Returns published articles only, with a safe category projection." } },
-        { "name": "Get public article", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/public/articles/:slug?locale=en", "host": ["{{apiV1BaseUrl}}"], "path": ["public", "articles", ":slug"], "query": [{ "key": "locale", "value": "en" }], "variable": [{ "key": "slug", "value": "synthetic-article" }] }, "description": "Returns one published article in an active category." } },
-        { "name": "List admin article categories", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/admin/article-categories?page=1&limit=20", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "article-categories"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }] }, "description": "Requires a transient verified administrator token with admin:content.view." } },
-        { "name": "Create admin article category", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"slug\": \"synthetic-guides\",\n  \"name\": { \"en\": \"Synthetic guides\" },\n  \"displayOrder\": 1,\n  \"active\": true,\n  \"reason\": \"Create an isolated synthetic category\"\n}", "options": { "raw": { "language": "json" } } }, "url": { "raw": "{{apiV1BaseUrl}}/admin/article-categories", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "article-categories"] }, "description": "Requires admin:content.manage. Use isolated non-production data only." } },
-        { "name": "Update admin article category", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"version\": 0,\n  \"displayOrder\": 2,\n  \"reason\": \"Update isolated category order\"\n}", "options": { "raw": { "language": "json" } } }, "url": { "raw": "{{apiV1BaseUrl}}/admin/article-categories/:categoryId", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "article-categories", ":categoryId"], "variable": [{ "key": "categoryId", "value": "000000000000000000000000" }] }, "description": "Requires admin:content.manage and the current optimistic version." } },
-        { "name": "Delete admin article category", "request": { "method": "DELETE", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"version\": 0,\n  \"reason\": \"Delete an unreferenced synthetic category\"\n}", "options": { "raw": { "language": "json" } } }, "url": { "raw": "{{apiV1BaseUrl}}/admin/article-categories/:categoryId", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "article-categories", ":categoryId"], "variable": [{ "key": "categoryId", "value": "000000000000000000000000" }] }, "description": "Deletion fails while any article references the category." } },
-        { "name": "List admin articles", "request": { "method": "GET", "header": [], "url": { "raw": "{{apiV1BaseUrl}}/admin/articles?page=1&limit=20", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "articles"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "20" }] }, "description": "Requires a transient verified administrator token with admin:content.view." } },
-        { "name": "Create admin article draft", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"categoryId\": \"000000000000000000000000\",\n  \"slug\": \"synthetic-article\",\n  \"title\": { \"en\": \"Synthetic article\" },\n  \"body\": { \"en\": \"Isolated non-production editorial content.\" },\n  \"reason\": \"Create an isolated editorial draft\"\n}", "options": { "raw": { "language": "json" } } }, "url": { "raw": "{{apiV1BaseUrl}}/admin/articles", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "articles"] }, "description": "Requires admin:content.manage. The author is derived from the authenticated administrator." } },
-        { "name": "Update admin article draft", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"version\": 0,\n  \"title\": { \"en\": \"Updated synthetic article\" },\n  \"reason\": \"Update isolated editorial content\"\n}", "options": { "raw": { "language": "json" } } }, "url": { "raw": "{{apiV1BaseUrl}}/admin/articles/:articleId", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "articles", ":articleId"], "variable": [{ "key": "articleId", "value": "000000000000000000000000" }] }, "description": "Only draft articles are editable; the current optimistic version is required." } },
-        { "name": "Transition admin article", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"status\": \"pending_review\",\n  \"version\": 0,\n  \"reason\": \"Submit isolated content for editorial review\"\n}", "options": { "raw": { "language": "json" } } }, "url": { "raw": "{{apiV1BaseUrl}}/admin/articles/:articleId/transitions", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "articles", ":articleId", "transitions"], "variable": [{ "key": "articleId", "value": "000000000000000000000000" }] }, "description": "Draft submission requires admin:content.manage; review/publication transitions require admin:content.publish. A reason and current optimistic version are always required." } }
+        {
+          "name": "List public article categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/public/article-categories?locale=en",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "public",
+                "article-categories"
+              ],
+              "query": [
+                {
+                  "key": "locale",
+                  "value": "en"
+                }
+              ]
+            },
+            "description": "Returns active localized category metadata without authentication."
+          }
+        },
+        {
+          "name": "List public articles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/public/articles?locale=en&page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "public",
+                "articles"
+              ],
+              "query": [
+                {
+                  "key": "locale",
+                  "value": "en"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Returns published articles only, with a safe category projection."
+          }
+        },
+        {
+          "name": "Get public article",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/public/articles/:slug?locale=en",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "public",
+                "articles",
+                ":slug"
+              ],
+              "query": [
+                {
+                  "key": "locale",
+                  "value": "en"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": "synthetic-article"
+                }
+              ]
+            },
+            "description": "Returns one published article in an active category."
+          }
+        },
+        {
+          "name": "List admin article categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/article-categories?page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "article-categories"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Requires a transient verified administrator token with admin:content.view."
+          }
+        },
+        {
+          "name": "Create admin article category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"slug\": \"synthetic-guides\",\n  \"name\": { \"en\": \"Synthetic guides\" },\n  \"displayOrder\": 1,\n  \"active\": true,\n  \"reason\": \"Create an isolated synthetic category\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/article-categories",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "article-categories"
+              ]
+            },
+            "description": "Requires admin:content.manage. Use isolated non-production data only."
+          }
+        },
+        {
+          "name": "Update admin article category",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"displayOrder\": 2,\n  \"reason\": \"Update isolated category order\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/article-categories/:categoryId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "article-categories",
+                ":categoryId"
+              ],
+              "variable": [
+                {
+                  "key": "categoryId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires admin:content.manage and the current optimistic version."
+          }
+        },
+        {
+          "name": "Delete admin article category",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"reason\": \"Delete an unreferenced synthetic category\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/article-categories/:categoryId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "article-categories",
+                ":categoryId"
+              ],
+              "variable": [
+                {
+                  "key": "categoryId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Deletion fails while any article references the category."
+          }
+        },
+        {
+          "name": "List admin articles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/articles?page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "articles"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Requires a transient verified administrator token with admin:content.view."
+          }
+        },
+        {
+          "name": "Create admin article draft",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"categoryId\": \"000000000000000000000000\",\n  \"slug\": \"synthetic-article\",\n  \"title\": { \"en\": \"Synthetic article\" },\n  \"body\": { \"en\": \"Isolated non-production editorial content.\" },\n  \"reason\": \"Create an isolated editorial draft\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/articles",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "articles"
+              ]
+            },
+            "description": "Requires admin:content.manage. The author is derived from the authenticated administrator."
+          }
+        },
+        {
+          "name": "Update admin article draft",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"title\": { \"en\": \"Updated synthetic article\" },\n  \"reason\": \"Update isolated editorial content\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/articles/:articleId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "articles",
+                ":articleId"
+              ],
+              "variable": [
+                {
+                  "key": "articleId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Only draft articles are editable; the current optimistic version is required."
+          }
+        },
+        {
+          "name": "Transition admin article",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"pending_review\",\n  \"version\": 0,\n  \"reason\": \"Submit isolated content for editorial review\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/articles/:articleId/transitions",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "articles",
+                ":articleId",
+                "transitions"
+              ],
+              "variable": [
+                {
+                  "key": "articleId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Draft submission requires admin:content.manage; review/publication transitions require admin:content.publish. A reason and current optimistic version are always required."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Community",
+      "item": [
+        {
+          "name": "List public community posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/public/community/posts?page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "public",
+                "community",
+                "posts"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get public community post",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/public/community/posts/:postId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "public",
+                "community",
+                "posts",
+                ":postId"
+              ],
+              "variable": [
+                {
+                  "key": "postId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create community post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"A community post\",\n  \"body\": \"A bounded draft for non-production verification.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/public/community/posts",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "public",
+                "community",
+                "posts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create community comment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"A bounded public comment.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/public/community/posts/:postId/comments",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "public",
+                "community",
+                "posts",
+                ":postId",
+                "comments"
+              ],
+              "variable": [
+                {
+                  "key": "postId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Report community post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"spam\",\n  \"details\": \"A bounded report reason.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/public/community/posts/:postId/reports",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "public",
+                "community",
+                "posts",
+                ":postId",
+                "reports"
+              ],
+              "variable": [
+                {
+                  "key": "postId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin - List community posts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/community/posts?page=1&limit=20&status=published",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "community",
+                "posts"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "published"
+                }
+              ]
+            },
+            "description": "Requires a transient verified Admin bearer token with admin:community.view. The response is an explicit paginated administrative projection and no token is stored in this collection."
+          }
+        },
+        {
+          "name": "Admin - List community comments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/community/comments?page=1&limit=20&status=visible",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "community",
+                "comments"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "visible"
+                }
+              ]
+            },
+            "description": "Requires a transient verified Admin bearer token with admin:community.view. The response is an explicit paginated administrative projection and no token is stored in this collection."
+          }
+        },
+        {
+          "name": "Admin - List community reports",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/community/reports?page=1&limit=20&status=open",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "community",
+                "reports"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "open"
+                }
+              ]
+            },
+            "description": "Requires a transient verified Admin bearer token with admin:community.moderate. Reporter identity and moderation fields are available only inside this permission-protected projection."
+          }
+        },
+        {
+          "name": "Admin - Resolve community report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"action\": \"resolve\",\n  \"reason\": \"Reviewed community report safely\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/community/reports/:reportId/resolve",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "community",
+                "reports",
+                ":reportId",
+                "resolve"
+              ],
+              "variable": [
+                {
+                  "key": "reportId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires admin:community.moderate, a current report version, and a reason of at least five characters. Transitions are optimistic-concurrency guarded."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Provider Projects",
+      "item": [
+        {
+          "name": "List Owned Projects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/projects?page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "projects"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Requires a transient verified provider bearer token. Results are owned-project projections only."
+          }
+        },
+        {
+          "name": "Create Project Draft",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": { \"ar\": \"Synthetic project\", \"en\": \"Synthetic project\" },\n  \"slug\": \"synthetic-project\",\n  \"reason\": \"Create synthetic project draft\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/projects",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "projects"
+              ]
+            },
+            "description": "Requires an isolated verified provider session; ownership is derived from the bearer identity."
+          }
+        },
+        {
+          "name": "Update Project Draft",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"name\": { \"en\": \"Updated synthetic project\" },\n  \"reason\": \"Update synthetic project draft\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/projects/:projectId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "projects",
+                ":projectId"
+              ],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires a verified provider bearer token and current optimistic version."
+          }
+        },
+        {
+          "name": "Submit Project",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 0,\n  \"reason\": \"Submit synthetic project for review\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/projects/:projectId/submit",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "provider",
+                "projects",
+                ":projectId",
+                "submit"
+              ],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires a verified provider bearer token and current optimistic version."
+          }
+        },
+        {
+          "name": "Review Project",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 1,\n  \"action\": \"approve\",\n  \"reason\": \"Approve synthetic project\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/projects/:projectId/review",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "projects",
+                ":projectId",
+                "review"
+              ],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "description": "Requires an isolated verified admin session with admin:projects.review."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Projects",
+      "item": [
+        {
+          "name": "List All Projects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/projects?page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "projects"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Requires an isolated verified admin session with admin:projects.view. The response is an administrative projection and never accepts a client provider filter."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Commission Policies",
+      "item": [
+        {
+          "name": "List Commission Policies",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/commission-policies?page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "commission-policies"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with admin:commissions.view. The response contains persisted policy metadata only and never assumes a universal commission."
+          }
+        },
+        {
+          "name": "Create Commission Policy",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key\": \"default-policy\",\n  \"label\": \"Default policy\",\n  \"kind\": \"percentage\",\n  \"scope\": {\n    \"kind\": \"default\"\n  },\n  \"percentageBps\": 250,\n  \"effectiveFrom\": \"2030-01-01T00:00:00.000Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/commission-policies",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "commission-policies"
+              ]
+            },
+            "description": "Requires a verified administrator with admin:commissions.manage. Creates a draft policy; no bank, settlement, or universal-rate claim is made."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Account Commissions",
+      "item": [
+        {
+          "name": "Get Effective Account Commission",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/account-commissions/:accountId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "account-commissions",
+                ":accountId"
+              ],
+              "variable": [
+                {
+                  "key": "accountId",
+                  "value": "000000000000000000000000",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with admin:commissions.view. Returns account_override, policy, or none with no universal commission or internal metadata."
+          }
+        },
+        {
+          "name": "Create Draft Account Commission Override",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"kind\": \"fixed\",\n  \"fixedAmountMinor\": 7500,\n  \"currency\": \"EGP\",\n  \"effectiveFrom\": \"2030-01-01T00:00:00.000Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/account-commissions/:accountId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "account-commissions",
+                ":accountId"
+              ],
+              "variable": [
+                {
+                  "key": "accountId",
+                  "value": "000000000000000000000000",
+                  "type": "string"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with admin:commissions.manage. Creates a draft override with strict value and effective-window validation; no settlement or universal-rate claim is made."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Commission Exceptions",
+      "item": [
+        {
+          "name": "List Commission Exceptions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/commission-exceptions?page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "commission-exceptions"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with admin:commissions.view. Exception rows retain their required reasons and contain no storage internals or settlement claims."
+          }
+        },
+        {
+          "name": "Create Draft Commission Exception",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountId\": \"000000000000000000000000\",\n  \"kind\": \"percentage\",\n  \"percentageBps\": 0,\n  \"reason\": \"Approved launch-period waiver\",\n  \"effectiveFrom\": \"2030-01-01T00:00:00.000Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/commission-exceptions",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "commission-exceptions"
+              ]
+            },
+            "description": "Requires a verified administrator with admin:commissions.manage. Creates a draft exception with a required reason; no bank verification, settlement, or universal commission is implied."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Commission Confirmations",
+      "item": [
+        {
+          "name": "List Commission Confirmations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/commission-confirmations?page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "commission-confirmations"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with admin:commissions.view. Returns acknowledgement state and policy version only; no private documents, storage keys, or settlement claims are exposed."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Commission Change Log",
+      "item": [
+        {
+          "name": "List Commission Change Log",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminAccessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/commission-change-log?targetType=commission_policy&page=1&limit=25",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "commission-change-log"
+              ],
+              "query": [
+                {
+                  "key": "targetType",
+                  "value": "commission_policy"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "25"
+                }
+              ]
+            },
+            "description": "Requires a verified administrator with admin:commissions.view. Returns redacted before/after commission audit projections with actor, reason, request, trace, and effective-date metadata."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Administrator Accounts",
+      "item": [
+        {
+          "name": "List Administrator Accounts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{syntheticBearer}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/admin-users?page=1&limit=20",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "admin-users"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Administrator Account",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{syntheticBearer}}"
+              }
+            ],
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/admin-users/:adminId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "admin-users",
+                ":adminId"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Administrator Account",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{syntheticBearer}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"synthetic.admin@example.com\",\n  \"displayName\": \"Synthetic Admin\",\n  \"accessLevel\": \"standard_admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/admin-users",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "admin-users"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Administrator Account",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{syntheticBearer}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"expectedVersion\": 0,\n  \"status\": \"disabled\",\n  \"reason\": \"Disable a synthetic administrator\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/admin-users/:adminId",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "admin-users",
+                ":adminId"
+              ]
+            }
+          }
+        }
       ]
     }
   ]

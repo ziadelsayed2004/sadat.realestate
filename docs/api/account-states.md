@@ -2,10 +2,16 @@
 
 `backend_019` implements two reason-bearing Admin mutations:
 
+- `GET /api/v1/admin/users` requires `admin:users.view` and returns a bounded, paginated list of non-Admin account projections.
+- `GET /api/v1/admin/users/:userId` requires `admin:users.view` and returns one non-Admin account projection.
+- `GET /api/v1/admin/providers` requires `admin:providers.view` and returns a bounded, paginated list of Provider application projections.
+- `GET /api/v1/admin/providers/:providerId` requires `admin:providers.view` and returns one Provider application projection.
 - `POST /api/v1/admin/users/:userId/transitions` requires `admin:users.manage`.
 - `POST /api/v1/admin/providers/:providerId/review` requires `admin:providers.review`; `providerId` is the Provider application identifier exposed by the onboarding contract.
+- `GET /api/v1/admin/account-reports` requires `admin:account-reports.view` and returns bounded account-targeted moderation records. Reporter identity is included only when the same verified Admin also has `admin:account-reports.manage`.
+- `POST /api/v1/admin/account-reports/:reportId/resolve` requires `admin:account-reports.manage`, a current report version, and a reason of at least five characters. It resolves or dismisses only reports in `open` or `in_review` state.
 
-Both routes require a verified Admin bearer session, return `Cache-Control: no-store`, validate strict JSON, and expose only explicit projections. View Only and unassigned Admin accounts fail closed. A target is returned as not found without leaking unrelated account data. Admin targets and self-transitions are rejected because complete administrator lifecycle and last-Super-Admin safeguards remain owned by `backend_121`.
+All read and mutation routes require a verified Admin bearer session, return `Cache-Control: no-store`, validate strict query/JSON input, and expose only explicit projections. List ordering is deterministic and pagination is bounded. Provider document metadata excludes storage keys and URLs. View Only and unassigned Admin accounts fail closed. A target is returned as not found without leaking unrelated account data. Admin targets and self-transitions are rejected because complete administrator lifecycle and last-Super-Admin safeguards remain owned by `backend_121`.
 
 ## State policy
 
@@ -24,6 +30,8 @@ Provider approval, rejection, needs-information, and suspension cannot be bypass
 For Provider review, `verify` maps application/profile `approved` to account `verified`. This means manual platform administrative approval only. It is not government, ownership, registry, OCR, legal, bank, or any automatic verification. A generic Provider `restrict` changes only the account from `verified` to `restricted`; restoring that restriction uses `verify` and does not alter the already-approved application.
 
 Undefined jumps, aggregate-state mismatches, stale concurrent writes, duplicate replays, and cross-route Provider-review bypasses return conflict without a partial write. Every successful mutation uses optimistic state/version predicates inside one MongoDB transaction, appends both the domain-specific immutable account-state transition and the unified redacted audit record with actor, reason, before/after states, request ID, and trace ID, and revokes all active refresh sessions for the target. Audit persistence failure aborts the sensitive mutation.
+
+Account reports are a moderation read/resolve boundary. Their projection contains only the account target, optional role type, bounded reason/details, report status, related-report count, optional authorized reporter identity, resolution reason, version, and timestamps. It does not expose internal notes, assignments, audit records, storage keys, or private documents. Report resolution uses the same optimistic version and mandatory-reason policy as property reports; account restrictions remain owned by the generic account transition route above.
 
 ## Immediate session enforcement
 

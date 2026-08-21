@@ -1,48 +1,157 @@
 {
   "taskId": "backend_103",
-  "summary": "Implemented private provider-owned payment-proof upload with strict file metadata and streaming signature/size validation, private quarantine storage, scanner readiness and fail-closed outcomes, checksum idempotency, Uploaded-to-pending_review state progression, and projections that never expose storage keys, permanent URLs, or bank-verification claims.",
+  "summary": "Implemented the private provider-owned payment-proof upload boundary with persistent PaymentProof storage, owner-scoped waiting_payment authorization, raw-stream file validation, private quarantine and scanner outcomes, checksum idempotency, optimistic scan updates, and redacted Uploaded or pending_review projections without storage keys, permanent URLs, or bank-verification claims.",
   "filesChanged": [
-    "packages/contracts/src/payments/index.ts",
-    "packages/contracts/src/contracts/index.ts",
     "apps/api/src/modules/payments/service.ts",
-    "apps/api/tests/payments/service.test.ts",
+    "apps/api/src/modules/payments/repository.ts",
+    "apps/api/src/modules/payments/router.ts",
+    "apps/api/src/modules/payments/runtime.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/tests/payments/router.test.ts",
     "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
     "docs/api/payment-proofs.md"
   ],
   "verification": [
     {
-      "command": "npm.cmd run build --workspace packages/contracts; node --test --import tsx apps/api/tests/payments/service.test.ts; npm.cmd run typecheck; npm.cmd run lint",
+      "command": "npm.cmd run build --workspace packages/contracts",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Contracts build, three focused payment-proof tests, typecheck, and lint passed."
+      "notes": "Shared payment contracts compiled successfully."
     },
     {
-      "command": "npm.cmd test -- --runInBand; npm.cmd run build; npm.cmd audit --audit-level=high; npm.cmd run api:inventory; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs",
+      "command": "npm.cmd run typecheck --workspace apps/api",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "356 tests passed; build succeeded; dependency audit reported 0 vulnerabilities; API inventory, OpenAPI, Postman, and Agent Pack audit passed."
+      "notes": "API production and test TypeScript compile passed after adding the persistent payment-proof repository and route composition."
     },
     {
-      "command": "git diff --check; node -e \"for (const f of ['packages/contracts/src/payments/index.ts','agent_pack/07_finish/backend_102/completion.json']) { if (f.endsWith('.json')) JSON.parse(require('fs').readFileSync(f,'utf8')); } console.log('CHANGED_FILES_PARSE_OK')\"",
+      "command": "node --test --import tsx apps/api/tests/payments/service.test.ts apps/api/tests/payments/router.test.ts",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Changed text/JSON integrity checks passed."
+      "notes": "Focused payment-proof service and HTTP tests passed, covering authentication, role rejection, owner scope, malformed IDs, upload validation, redacted projections, checksum replay, and missing or cross-owner requests."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All API unit tests passed."
+    },
+    {
+      "command": "npm.cmd run test:integration --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All 28 API integration and artifact/readiness tests passed, including the payment-proof runtime boundary."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All 83 API route and security tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Repository lint checks passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts, API, web client, and SSR builds passed; existing bundle-size warnings remain non-failing."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "The complete root test suite passed; the long-running command completed with an explicit exit code of 0."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Dependency audit reported 0 vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime inventory includes POST /api/v1/provider/ads/:adRequestId/payment-proof with operationId uploadProviderPaymentProof and implemented status."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI contains the provider payment-proof request, response, authorization, binary-body, and error definitions synchronized with runtime."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman contains the provider payment-proof request in the Provider advertising group and validates successfully."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Changed-file whitespace and patch integrity check passed."
+    },
+    {
+      "command": "node -e \"const fs=require('fs'); for (const f of ['apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json','agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json']) JSON.parse(fs.readFileSync(f,'utf8')); console.log('JSON_VALID')\"",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All changed OpenAPI, Postman, and endpoint-blueprint JSON files parsed successfully."
+    },
+    {
+      "command": "isolated non-production MongoDB transaction test",
+      "exitCode": null,
+      "result": "Blocked",
+      "notes": "Blocked — prerequisites unavailable: no isolated non-production replica-set MongoDB topology, private storage, scanner, and test credentials were configured. Persistent transaction and adapter behavior is covered by deterministic local tests; no production data or credentials were used."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Agent Pack audit reported zero errors before task closure."
     }
   ],
   "sourceEvidence": [
-    "agent_pack/01_product/BUSINESS_RULES.md (BR-007, BR-011, BR-023)",
-    "agent_pack/01_product/PRD.md (private storage, manual review, and no bank-verification claim)",
-    "agent_pack/01_product/STATE_MACHINES.md (uploaded -> pending_review -> approved | rejected)",
-    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (provider payment-proof upload boundary)",
+    "ADM-34",
+    "agent_pack/04_tracks/backend/B7_ads_payments/backend_103.md",
     "packages/contracts/src/payments/index.ts",
     "apps/api/src/modules/payments/service.ts",
+    "apps/api/src/modules/payments/repository.ts",
+    "apps/api/src/modules/payments/router.ts",
+    "apps/api/src/modules/payments/runtime.ts",
+    "apps/api/src/modules/provider/advertising-models.ts (persistent payment_proofs collection and private storageKey field)",
     "apps/api/tests/payments/service.test.ts",
+    "apps/api/tests/payments/router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
     "docs/api/payment-proofs.md"
   ],
-  "knownGaps": [
-    "No HTTP route or persistent payment_proofs repository was added; this atomic boundary supplies the adapter-backed service, while route/review and persistence wiring belong to later B7 tasks.",
-    "Production storage and malware-scanner configuration remains an environment readiness prerequisite; unavailable capability fails closed.",
-    "Manual approval/rejection and audit history are assigned to backend_104; pending_review never implies approval."
+  "scopeNotes": [
+    "apps/api/src/app.ts and apps/api/src/server.ts were directly required integration scope exceptions to expose the authorized provider route and persistent runtime.",
+    "apps/api/src/modules/docs/api-artifacts.ts and the synchronized OpenAPI, Postman, endpoint blueprint, and documentation artifacts were required by the runtime contract change.",
+    "The pre-existing provider advertising Mongoose model is reused; no unrelated model redesign was introduced.",
+    "Manual proof review and financial review persistence remain outside this upload task and are not represented as completed here.",
+    "No frontend feature was implemented in this Backend truth repair."
   ],
-  "completedAt": "2026-08-14T18:01:56.487+03:00"
+  "knownGaps": [
+    "Live MongoDB transaction verification remains blocked until an isolated non-production replica-set topology and credentials are available.",
+    "Production private storage and scanner configuration remains a readiness prerequisite; unavailable capabilities fail closed.",
+    "Payment-proof review and approval/rejection persistence remains the responsibility of the later owning Backend task; pending_review never implies bank verification."
+  ],
+  "completedAt": "2026-08-19T00:22:00+03:00"
 }

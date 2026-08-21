@@ -1,0 +1,120 @@
+{
+  "taskId": "frontend_023",
+  "summary": "Implemented the AUTH-09 and AUTH-09+ provider account details flow using the existing provider application contracts, including in-memory OTP/session handoff, authenticated load/resume, strict versioned account updates, validation, localized directions, safe unavailable-location handling, responsive states, and focused browser/unit coverage.",
+  "filesChanged": [
+    "apps/web/src/features/auth/client.ts",
+    "apps/web/src/features/auth/pages.tsx",
+    "apps/web/src/features/provider_auth/account-copy.ts",
+    "apps/web/src/features/provider_auth/account.tsx",
+    "apps/web/src/features/provider_auth/index.ts",
+    "apps/web/src/features/provider_auth/pages.tsx",
+    "apps/web/src/features/provider_auth/styles.css",
+    "apps/web/tests/provider-account.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-account.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-default-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-default-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-default-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-default-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-default-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-default-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-default-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-default-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-default-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-filled-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-filled-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-filled-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-filled-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-filled-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-filled-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-filled-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-filled-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-account.spec.ts-snapshots/provider-account-filled-zh-CN-mobile-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript typecheck passed; the contracts package preparation also passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source, tests, server, and configuration lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web test suite passed: 14 Vitest files / 94 tests and 76 Node TAP tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR web builds passed. Vite emitted only the existing chunk-size warning."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-account.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "12/12 desktop checks passed, including functional, visual no-update, deep-link fail-closed, and accessibility assertions."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-account.spec.ts --project=tablet-ar --project=tablet-en --project=tablet-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "12/12 tablet checks passed across Arabic, English, and Simplified Chinese."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-account.spec.ts --project=mobile-ar --project=mobile-en --project=mobile-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "12/12 mobile checks passed across Arabic, English, and Simplified Chinese."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository accessibility matrix passed 81/81 checks across all locale and device projects."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Provider application create, read, and account-patch routes are reported implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    }
+  ],
+  "sourceEvidence": [
+    "Screen AUTH-09: docs/design_sources/final_screens/authentication/AUTH-09.png; SHA-256 b29c96feffc19c397348158bc5a545aab139835e073d978603bf6dbf834db959; Drive https://drive.google.com/drive/folders/1_SO4sScjNW9GVGMqWUDRRIMNxxl2X2bu; Figma prototype node 6017-16212.",
+    "Screen AUTH-09+: docs/design_sources/final_screens/authentication/AUTH-09-plus.png; SHA-256 7426b329f8d7be65f0effd4f9663120a6a2dc86997330cb1db5b91bc982fcd76; Drive https://drive.google.com/drive/folders/1ICA0hJuwo3mWwBdVwZAi0UtrjEIKiIG-; Figma prototype node 6017-16212.",
+    "Runtime contracts: packages/contracts/src/provider/index.ts provider application create, read, and strict versioned account patch schemas.",
+    "Runtime routes: POST /api/v1/provider/application, GET /api/v1/provider/application, and PATCH /api/v1/provider/application/account.",
+    "Unit regression: apps/web/tests/provider-account.vitest.test.tsx.",
+    "Browser journey, responsive visual snapshots, token-safety checks, deep-link permission behavior, keyboard order, and validation semantics: apps/web/tests/e2e/provider-account.spec.ts."
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/auth/client.ts and apps/web/src/features/auth/pages.tsx were modified under the task's explicit integration exception to carry the verified provider OTP/session handoff in memory and route the provider account flow.",
+    "The current runtime has no public location/service-area lookup route. The UI reports the missing location fields truthfully and does not fabricate identifiers or endpoints.",
+    "The approved AUTH-09 reference includes password/contact-preference controls that are not present in the current provider contract. The implementation preserves the current phone-OTP authority and does not invent unsupported fields.",
+    "Playwright API responses are intercepted only inside tests; no Production mock or fallback data was added."
+  ],
+  "knownGaps": [
+    "The repository declares Node >=24 <25 while this environment is Node v22.18.0; all mandatory checks passed under the available runtime.",
+    "The provider application remains incomplete until the existing backend supplies primary location and service-area selection behavior in a later approved scope."
+  ],
+  "completedAt": "2026-08-18T02:23:11.8186979Z"
+}

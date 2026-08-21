@@ -1,0 +1,142 @@
+{
+  "taskId": "frontend_050",
+  "summary": "Implemented the provider notification inbox and provider account/contact/security settings surfaces for PRV-21, PRV-22-1, PRV-22-2, and PRV-22-3. The UI consumes the implemented provider notification and provider settings contracts, preserves provider-scoped safe projections and versioned updates, supports loading, empty, error, retry, success, permission, disabled, and unavailable states, and renders Arabic RTL plus English and Simplified Chinese LTR on the approved desktop scope.",
+  "filesChanged": [
+    "apps/web/src/features/provider/notifications-data.ts",
+    "apps/web/src/features/provider/notifications-copy.ts",
+    "apps/web/src/features/provider/notifications.tsx",
+    "apps/web/src/features/provider/notifications.css",
+    "apps/web/src/features/provider/settings-data.ts",
+    "apps/web/src/features/provider/settings-copy.ts",
+    "apps/web/src/features/provider/settings.tsx",
+    "apps/web/src/features/provider/settings.css",
+    "apps/web/src/features/provider/index.ts",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/provider-notifications-settings.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-notifications-settings.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-notifications-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-notifications-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-notifications-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-account-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-account-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-account-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-contact-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-contact-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-contact-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-security-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-security-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-security-zh-CN-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript verification passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web ESLint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- provider-notifications-settings.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused provider notification/settings suite passed: 1 file, 9 tests, covering safe projections, provider permissions, notification mutations, strict settings patching, optimistic versioning, validation, and unavailable security actions."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-notifications-settings.spec.ts --project=desktop-zh --grep \"notification inbox\" --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Generated the missing approved Simplified Chinese PRV-21 desktop visual baseline after the initial diagnostic run stopped before the screenshot assertion."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-notifications-settings.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Stable targeted browser matrix passed 6/6 across Arabic RTL, English LTR, and Simplified Chinese LTR. It covered PRV-21 and PRV-22 screenshots, keyboard focus, safe-field absence, contact update, and disabled security actions."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full web workspace verification passed: 34 Vitest files, 231 tests, and 76 Node TAP tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR builds passed; the existing non-fatal Vite large-chunk warning remained."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory passed and includes provider notification list/read/read-all plus provider settings GET/PATCH routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before task closure."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors in the tracked task diff."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F4_provider_dashboard/frontend_050.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "Screen PRV-21: docs/design_sources/final_screens/provider/PRV-21.png; SHA-256 a7904d0b5e7651dff0a33510d1f618837ca0154c1dcd175f619dde33e0ae71f; 6308px-wide approved desktop export",
+    "Screen PRV-22-1: docs/design_sources/final_screens/provider/PRV-22-1.png; SHA-256 ef79e801604e6450a73ec4fc6e33ea0048c1cd9ed3d0e442b86e3b6a84f2fe43; 6308px-wide approved desktop export",
+    "Screen PRV-22-2: docs/design_sources/final_screens/provider/PRV-22-2.png; SHA-256 9d62741cc4e7283b8fc37ff4b7a65cb0e9c8edb594c4eff7c962ee40bbb75ee4; 6308px-wide approved desktop export",
+    "Screen PRV-22-3: docs/design_sources/final_screens/provider/PRV-22-3.png; SHA-256 0787c460a1dc1b49af2edf4cdaabff290da186f6e3c957aa36337e60f5ed7b5e; 6308px-wide approved desktop export",
+    "Drive folder PRV-21: https://drive.google.com/drive/folders/1zDmZ5xczx2W_0TqF1eCdgn42SrlmwVDW",
+    "Drive folder PRV-22-1: https://drive.google.com/drive/folders/16sjluzJbRkAkORle4X--TNoVN01yXTv_",
+    "Drive folder PRV-22-2: https://drive.google.com/drive/folders/1H1alNI_tQb1hlFv7VBeosfrmghm6sfq9",
+    "Drive folder PRV-22-3: https://drive.google.com/drive/folders/1BrEClGr2UVWzR4s0p2Yt7Oce5eheWW8i",
+    "Figma prototype node 6017:19032: https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "GET /api/v1/provider/notifications",
+    "POST /api/v1/provider/notifications/:notificationId/read",
+    "POST /api/v1/provider/notifications/read-all",
+    "GET /api/v1/provider/settings",
+    "PATCH /api/v1/provider/settings",
+    "packages/contracts/src/notifications/index.ts",
+    "packages/contracts/src/settings/index.ts",
+    "apps/web/src/features/provider/notifications-data.ts",
+    "apps/web/src/features/provider/settings-data.ts",
+    "apps/web/tests/provider-notifications-settings.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-notifications-settings.spec.ts",
+    "backend_068 provider notification truth repair and backend_123 provider settings truth repair were separately closed before this frontend task"
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was modified only for the direct route-composition necessity required to expose /provider/notifications and /provider/settings; this is recorded as the direct integration exception for the selected task.",
+    "The backend provider settings route and contract repair was separately completed as backend_123 before frontend_050. No Backend runtime change was made in this frontend task.",
+    "The Security tab password-change and account-deletion controls remain disabled/unavailable because no approved runtime contracts exist; no unsupported endpoint was invented.",
+    "The provider dashboard remains desktop-only. Arabic is RTL; English and Simplified Chinese are LTR.",
+    "The Playwright route fixtures are test-only injected responses; no Production mock or runtime fallback data was added.",
+    "The first stable browser attempt exposed a locale-independent strict locator ambiguity and exited 1; the row-scoped locator was corrected, the missing ZH-CN baseline was generated, and the final stable matrix passed 6/6."
+  ],
+  "knownGaps": [
+    "No live provider API or MongoDB smoke was run for this frontend task; the backend evidence records live non-production topology and credential prerequisites as unavailable. Deterministic contract-boundary and browser tests cover the UI safely.",
+    "No real .env file, secret, Production data, or Production credential was read or used."
+  ],
+  "completedAt": "2026-08-19T05:14:29.4786966+03:00"
+}

@@ -46,7 +46,9 @@ export const SCREEN_OPERATION_MAP: Readonly<Record<string, readonly string[]>> =
   'PRV-09': ['saveProviderPropertyStep'], 'PRV-10': ['submitProviderProperty'], 'PRV-11': ['submitProviderProperty'],
   'PRV-12': ['submitProviderProperty'], 'PRV-13': ['getProviderProperty'], 'PRV-14': ['getProviderProperty'],
   'PRV-15': ['listProviderProjects'], 'PRV-16': ['listProviderCustomerRequests'], 'PRV-17': ['createProviderCustomerRequest'],
-  'PRV-18': ['listProviderViewings'], 'PRV-21': ['getProviderApplicationStatus'],
+  'PRV-18': ['listProviderViewings'],
+  'PRV-19': ['listProviderAds', 'createProviderAdRequest', 'getProviderAd', 'acceptProviderAdQuote', 'uploadProviderPaymentProof'],
+  'PRV-20': ['getProviderCommission'], 'PRV-21': ['getProviderApplicationStatus'],
   'ADM-02': ['transitionAdminUserAccount'], 'ADM-04': ['reviewAdminProviderAccount'], 'ADM-05': ['downloadPrivateProviderDocument'],
   'ADM-09': ['listPropertyTaxonomy', 'createPropertyTaxonomy', 'updatePropertyTaxonomy', 'deletePropertyTaxonomy'],
   'ADM-10': ['listAdminLocations', 'createAdminLocation', 'updateAdminLocation', 'deleteAdminLocation'],
@@ -138,7 +140,7 @@ export function buildContractFreeze(input: ContractFreezeInput): ContractFreeze 
   const missingScreenCount = screens.filter(screen => screen.coverage === 'unmapped').length;
   const unresolved = input.unresolved ? [...input.unresolved] : [
     { kind: 'missing_runtime_endpoint' as const, message: `${missingScreenCount} registered screens have no implemented HTTP operation mapping.` },
-    { kind: 'service_boundary' as const, message: 'Advertising and commission capabilities remain service-level contracts without invented HTTP routes.' },
+    { kind: 'service_boundary' as const, message: 'Some advertising and commission capabilities remain service-level contracts; the frozen inventory references only implemented HTTP routes.' },
     { kind: 'external_prerequisite' as const, message: 'No frontend runtime or external client generation service is started by this backend handoff task.' }
   ];
   return contractFreezeSchema.parse({

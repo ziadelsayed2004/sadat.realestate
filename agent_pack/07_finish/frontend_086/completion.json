@@ -1,0 +1,169 @@
+{
+  "taskId": "frontend_086",
+  "summary": "Added an executable UAT binding regression suite covering the canonical 131-screen map, owning task evidence, route resolution, runtime API inventory, OpenAPI, Postman, deterministic fixture catalog, and sensitive-data exclusion. The repository-wide Web, API, root, visual, accessibility, and artifact gates passed.",
+  "filesChanged": [
+    "apps/web/tests/uat-binding.vitest.test.ts"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/uat-binding.vitest.test.ts --run --reporter=dot",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "3 UAT binding tests passed, including 131-screen/task/source coverage, runtime/OpenAPI/Postman parity, and deterministic fixture safety."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript verification passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full Web test suite passed, including 55 Vitest files / 315 tests and 76 Node tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Production client and SSR Web builds passed; existing chunk-size warning is non-fatal."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API TypeScript verification passed."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "372 API unit tests passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "107 API route/integration tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root test suite passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root client and SSR build passed."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "72 visual regression tests passed across the repository’s configured matrix."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "81 accessibility tests passed across the repository’s configured matrix."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory completed successfully and was consumed by the binding test."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities reported."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3001'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET=([Convert]::ToBase64String((1..32 | ForEach-Object {[byte]$_}))).TrimEnd('=').Replace('+','-').Replace('/','_'); npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Safe non-production environment check passed without reading a real .env."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors in the worktree diff."
+    },
+    {
+      "command": "npm.cmd run security:check",
+      "exitCode": 1,
+      "result": "skipped",
+      "notes": "The repository has no security:check script. Browser/session security coverage is carried by the existing frontend_085 security matrix and root/API security tests."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors with exactly frontend_086 in progress before closure."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F6_integration_release/frontend_086.md",
+    "agent_pack/01_product/SCREEN_COVERAGE.json",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "apps/web/src/routes/route-table.ts",
+    "apps/api/src/modules/database/api-inventory.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_environment.json",
+    "apps/api/src/modules/fixtures/catalog.ts",
+    "packages/contracts/src/fixtures/index.ts",
+    "docs/api/uat-fixtures.md",
+    "apps/web/tests/uat-binding.vitest.test.ts"
+  ],
+  "scopeNotes": [
+    "This task adds test-only UAT binding verification; no production runtime route, contract, or data behavior changed.",
+    "The screen binding uses canonical 131-screen coverage, route resolution, source existence, owning completed-task evidence, and deterministic fixture checks rather than requiring screen-ID text in every implementation file.",
+    "Postman variable paths are normalized only for artifact parity comparison; the collection itself is unchanged.",
+    "ADM-54 remains covered by the owner-approved DESIGN-EXCEPTION-ADM-54 waiver and is not represented as a direct visual comparison.",
+    "Fixture catalog assertions reject credentials and other sensitive keys and do not represent Production data."
+  ],
+  "knownGaps": [
+    "The repository does not define npm run security:check; the command was executed and recorded as unavailable rather than passed.",
+    "No live Production or external UAT credentials/data were used; verification is local and deterministic by design.",
+    "This task does not authorize a claim that every API has complete positive, negative, RBAC, ownership, state, upload, replay, concurrency, and journey coverage."
+  ],
+  "completedAt": "2026-08-21T08:56:30.6362352Z"
+}

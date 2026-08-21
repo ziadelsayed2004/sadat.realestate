@@ -7,6 +7,10 @@ import type {
   ProviderReviewTarget,
   ProviderReviewWriteInput
 } from '../../src/modules/accounts/repository.js';
+import type {
+  AdminAccountUserListQuery,
+  AdminProviderListQuery
+} from '@sadat-real-estate/contracts';
 import {
   AccountServiceError,
   createAccountService
@@ -28,6 +32,14 @@ class MemoryRepository implements AccountRepository {
   writes: Array<AccountTransitionWriteInput | ProviderReviewWriteInput> = [];
   conflict = false;
 
+  async listUsers(query: AdminAccountUserListQuery) {
+    return { items: [], page: query.page, limit: query.limit, total: 0 };
+  }
+  async findUser() { return undefined; }
+  async listProviders(query: AdminProviderListQuery) {
+    return { items: [], page: query.page, limit: query.limit, total: 0 };
+  }
+  async findProvider() { return undefined; }
   async findAccount(userId: string) { return this.accounts.get(userId); }
   async findProviderReviewTarget(id: string) { return this.providers.get(id); }
   async isAccessSessionCurrent() { return true; }

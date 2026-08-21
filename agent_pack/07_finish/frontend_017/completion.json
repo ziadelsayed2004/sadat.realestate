@@ -1,0 +1,155 @@
+{
+  "taskId": "frontend_017",
+  "summary": "Implemented the public About and Team routes using the implemented published CMS projections, with localized RTL/LTR rendering, SSR-safe data loading and bootstrap, truthful empty/error/retry/permission states, responsive layouts, and focused component, SSR, visual, and accessibility coverage.",
+  "filesChanged": [
+    "apps/web/src/features/content/about-team-data.ts",
+    "apps/web/src/features/content/about-team-copy.ts",
+    "apps/web/src/features/content/about-team.tsx",
+    "apps/web/src/features/content/about-team.css",
+    "apps/web/src/features/content/index.ts",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/src/features/frontend_foundation/entry-server.tsx",
+    "apps/web/src/features/frontend_foundation/entry-client.tsx",
+    "apps/web/server.mjs",
+    "apps/web/tests/about-team.vitest.test.tsx",
+    "apps/web/tests/ssr.test.mjs",
+    "apps/web/tests/e2e/about-team.spec.ts",
+    "apps/web/tests/e2e/about-team-accessibility.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-about-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-team-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-about-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-team-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-about-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-team-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-about-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-team-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-about-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-team-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-about-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-team-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-about-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-team-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-about-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-team-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-about-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-team-zh-CN-mobile-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript source and tests typechecked successfully."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source, tests, server, and configuration linted with zero warnings."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/about-team.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "6 focused About/Team component and loader tests passed."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- tsx --test tests/ssr.test.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "15 SSR tests passed, including About/Team safe bootstrap and projection checks."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full Web unit/component and SSR suite passed: 75 tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR Web bundles built successfully; Vite emitted only the existing chunk-size warning."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/about-team.spec.ts --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "About and Team visual matrix passed 18/18 across Arabic RTL, English LTR, Simplified Chinese LTR, desktop, tablet, and mobile."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/about-team-accessibility.spec.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused About and Team accessibility matrix passed 18/18 with landmark, labeling, keyboard focus, and truthful media checks."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Existing public accessibility matrix passed 81/81."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web build passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory includes GET /api/v1/public/about and GET /api/v1/public/team as implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities found."
+    }
+  ],
+  "sourceEvidence": [
+    "PUB-11 approved local export: docs/design_sources/final_screens/public/PUB-11.png; SHA-256 ec8167472868578a5606b57e0e40e8db8dea1568e2c1180b2689e66298320faf; Drive folder https://drive.google.com/drive/folders/1YfgHS3imL4ebIizEII7GFR418HXGpkY7; Figma prototype node 6017-10847.",
+    "PUB-12 approved local export: docs/design_sources/final_screens/public/PUB-12.png; SHA-256 ea3b4cfd469a7e96db3b10f3ee62eebef46ccc2c14eafa20a9b206857fa13b19; Drive folder https://drive.google.com/drive/folders/1WwO7cVz_vckLwjzW4SZ87nlliGI0W8if; Figma prototype node 6017-10847.",
+    "Runtime operations consumed: GET /api/v1/public/about and GET /api/v1/public/team.",
+    "Shared contract: cmsPublicContentListSuccessEnvelopeSchema and cmsPublicContentListDataSchema.",
+    "Focused test: apps/web/tests/about-team.vitest.test.tsx.",
+    "SSR test: apps/web/tests/ssr.test.mjs.",
+    "Visual matrix: apps/web/tests/e2e/about-team.spec.ts.",
+    "Accessibility matrix: apps/web/tests/e2e/about-team-accessibility.spec.ts."
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx, entry-server.tsx, entry-client.tsx, apps/web/server.mjs, and apps/web/tests/ssr.test.mjs were modified only for the direct route, SSR, and hydration integration required by this task.",
+    "backend_036 was separately reopened and repaired as the explicitly authorized direct prerequisite truth repair because the required About and Team runtime routes were absent; its own completion evidence records that repair.",
+    "No production CMS records, private documents, credentials, or real .env files were read."
+  ],
+  "knownGaps": [
+    "The current public Team contract exposes photoAssetId but no approved public image URL or asset-delivery operation; Team cards therefore render the truthful missing-image state and never invent a URL.",
+    "Production content availability remains dependent on published CMS records; empty and unavailable states are implemented and tested."
+  ],
+  "completedAt": "2026-08-17T23:37:57.3493534Z"
+}

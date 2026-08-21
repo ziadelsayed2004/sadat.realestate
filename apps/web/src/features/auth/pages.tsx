@@ -1,0 +1,1130 @@
+import {
+  AUTH_ERROR_CODES,
+  adminLoginRequestSchema,
+  normalizedPhoneSchema,
+  seekerRegistrationRequestSchema,
+  type AdminLoginRequest,
+  type OtpPurpose,
+  type OtpRoleType,
+  type OtpSendData,
+  type OtpVerifyRequest,
+  type ProviderAccountPatch,
+  type ProviderApplicationCreateRequest,
+  type ProviderApplicationData,
+  type ProviderBusinessPatch,
+  type ProviderCompanyPatch,
+  type ProviderDocumentCategory,
+  type ProviderDocumentData,
+  type ProviderDocumentDeleteData,
+  type ProviderRegistrationData,
+  type ProviderApplicationStatusData,
+  type ProviderSubmitRequest,
+  type SeekerRegistrationRequest,
+  type ProviderType,
+  type SupportedLocale
+} from '@sadat-real-estate/contracts';
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
+import { ApiClientError } from '../contracts/index.ts';
+import { Button, Input, Select, StateMessage } from '../design_system/index.ts';
+import {
+  AuthClient,
+  type AuthOtpVerifyResult,
+  type AuthSnapshot
+} from './index.ts';
+import {
+  ProviderAccountPage,
+  ProviderDocumentsPage,
+  ProviderOrganizationPage,
+  ProviderReviewPage,
+  ProviderTypePage,
+  getProviderAccountCopy,
+  providerTypeFromUrl
+} from '../provider_auth/index.ts';
+import { getAuthCopy, type AuthCopy } from './copy.ts';
+import './styles.css';
+
+const OTP_COOLDOWN_FALLBACK_SECONDS = 60;
+const OTP_LENGTH = 6;
+
+export interface AuthFlowClient {
+  loginAdmin(input: AdminLoginRequest): Promise<AuthSnapshot>;
+  sendOtp(input: {
+    readonly phone: string;
+    readonly roleType: OtpRoleType;
+    readonly purpose: OtpPurpose;
+  }): Promise<OtpSendData>;
+  verifyOtp(input: OtpVerifyRequest): Promise<AuthOtpVerifyResult>;
+  registerSeeker(input: SeekerRegistrationRequest): Promise<AuthSnapshot>;
+  registerProvider?: ((input: ProviderApplicationCreateRequest) => Promise<ProviderRegistrationData>) | undefined;
+  getProviderApplication?: (() => Promise<ProviderApplicationData>) | undefined;
+  updateProviderAccount?: ((input: ProviderAccountPatch) => Promise<ProviderApplicationData>) | undefined;
+  updateProviderBusiness?: ((input: ProviderBusinessPatch) => Promise<ProviderApplicationData>) | undefined;
+  updateProviderCompany?: ((input: ProviderCompanyPatch) => Promise<ProviderApplicationData>) | undefined;
+  uploadProviderDocument?: ((category: ProviderDocumentCategory, file: File) => Promise<ProviderDocumentData>) | undefined;
+  deleteProviderDocument?: ((documentId: string) => Promise<ProviderDocumentDeleteData>) | undefined;
+  submitProviderApplication?: ((input: ProviderSubmitRequest) => Promise<ProviderApplicationData>) | undefined;
+  getProviderApplicationStatus?: (() => Promise<ProviderApplicationStatusData>) | undefined;
+  refresh?: (() => Promise<AuthSnapshot>) | undefined;
+  dispose?: () => void;
+}
+
+export interface AuthPageProps {
+  readonly url: string;
+  readonly locale: SupportedLocale;
+  readonly client?: AuthFlowClient | undefined;
+  readonly onAuthenticated?: ((snapshot: AuthSnapshot) => void) | undefined;
+}
+
+type RequestState = 'idle' | 'loading' | 'error' | 'retry' | 'success';
+
+interface AuthUiError {
+  readonly state: 'error' | 'retry';
+  readonly title: string;
+  readonly message: string;
+}
+
+interface AuthLocation {
+  readonly pathname: string;
+  readonly roleType: OtpRoleType;
+  readonly purpose: OtpPurpose;
+  readonly returnTo: string;
+}
+
+function parseAuthLocation(url: string): AuthLocation {
+  let parsed: URL;
+  try {
+    parsed = new URL(url, 'http://sadat.local');
+  } catch {
+    parsed = new URL('/auth/login', 'http://sadat.local');
+  }
+
+  const pathname = parsed.pathname.replace(/\/+$/u, '') || '/';
+  const roleType = parsed.searchParams.get('roleType') === 'provider' ? 'provider' : 'seeker';
+  const purpose = parsed.searchParams.get('purpose') === 'registration' || pathname.startsWith('/auth/register')
+    ? 'registration'
+    : 'login';
+  const candidateReturnTo = parsed.searchParams.get('returnTo');
+  const returnTo = candidateReturnTo !== null && candidateReturnTo.startsWith('/') && !candidateReturnTo.startsWith('//')
+    ? candidateReturnTo
+    : '/';
+
+  return { pathname, roleType, purpose, returnTo };
+}
+
+function navigateAfterAuthentication(returnTo: string): void {
+  if (typeof window === 'undefined') return;
+  window.location.assign(returnTo);
+}
+
+function getApiErrorCode(error: unknown): string | undefined {
+  return error instanceof ApiClientError ? error.apiError?.code : undefined;
+}
+
+function authError(error: unknown, copy: AuthCopy): AuthUiError {
+  const code = getApiErrorCode(error);
+  if (code === 'INVALID_REGISTRATION_TOKEN' || code === 'SEEKER_NOT_FOUND') {
+    return { state: 'error', title: copy.invalidRegistrationTokenTitle, message: copy.invalidRegistrationTokenBody };
+  }
+  if (code === 'SEEKER_ALREADY_EXISTS') {
+    return { state: 'error', title: copy.duplicateRegistrationTitle, message: copy.duplicateRegistrationBody };
+  }
+  if (code === AUTH_ERROR_CODES.INVALID_CREDENTIALS) {
+    return { state: 'error', title: copy.invalidCredentialsTitle, message: copy.invalidCredentialsBody };
+  }
+  if (code === AUTH_ERROR_CODES.ACCOUNT_NOT_ACTIVE) {
+    return { state: 'error', title: copy.accountNotActiveTitle, message: copy.accountNotActiveBody };
+  }
+  if (code === AUTH_ERROR_CODES.INVALID_OTP) {
+    return { state: 'error', title: copy.invalidOtpTitle, message: copy.invalidOtpBody };
+  }
+  if (code === AUTH_ERROR_CODES.OTP_ATTEMPTS_EXCEEDED) {
+    return { state: 'error', title: copy.otpAttemptsTitle, message: copy.otpAttemptsBody };
+  }
+  if (code === AUTH_ERROR_CODES.OTP_SEND_RATE_LIMITED) {
+    return { state: 'retry', title: copy.otpRateLimitedTitle, message: copy.otpRateLimitedBody };
+  }
+  if (code === AUTH_ERROR_CODES.OTP_PROVIDER_UNAVAILABLE) {
+    return { state: 'retry', title: copy.otpProviderTitle, message: copy.otpProviderBody };
+  }
+  if (error instanceof ApiClientError && (error.code === 'NETWORK_ERROR' || error.status === 503)) {
+    return { state: 'retry', title: copy.networkTitle, message: copy.networkBody };
+  }
+  return { state: 'error', title: copy.genericErrorTitle, message: copy.genericErrorBody };
+}
+
+function inputError(copy: AuthCopy): AuthUiError {
+  return { state: 'error', title: copy.invalidFormTitle, message: copy.invalidFormBody };
+}
+
+function StateNotice({ error, copy, onRetry }: { readonly error: AuthUiError; readonly copy: AuthCopy; readonly onRetry?: (() => void) | undefined }) {
+  return (
+    <StateMessage
+      state={error.state}
+      title={error.title}
+      message={error.message}
+      retryLabel={copy.retryAction}
+      onRetry={error.state === 'retry' ? onRetry : undefined}
+    />
+  );
+}
+
+function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthFlowClient; readonly locale: SupportedLocale; readonly onAuthenticated: (snapshot: AuthSnapshot) => void }) {
+  const copy = getAuthCopy(locale);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [state, setState] = useState<RequestState>('idle');
+  const [error, setError] = useState<AuthUiError | undefined>();
+
+  const submit = useCallback(async () => {
+    const parsed = adminLoginRequestSchema.safeParse({ email, password });
+    if (!parsed.success) {
+      setState('error');
+      setError(inputError(copy));
+      return;
+    }
+
+    setState('loading');
+    setError(undefined);
+    try {
+      const snapshot = await client.loginAdmin(parsed.data);
+      setState('success');
+      onAuthenticated(snapshot);
+    } catch (requestError: unknown) {
+      const nextError = authError(requestError, copy);
+      setState(nextError.state);
+      setError(nextError);
+    }
+  }, [client, copy, email, onAuthenticated, password]);
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+    event.preventDefault();
+    void submit();
+  }
+
+  return (
+    <section className="auth-page auth-page--login" data-screen-id="AUTH-01" data-state={state}>
+      <div className="auth-card">
+        <header className="auth-card__hero">
+          <img className="auth-card__logo" src="/assets/sadat-real-estate-logo.png" alt="" width="636" height="557" />
+          <h1>{copy.loginTitle}</h1>
+          <p>{copy.loginDescription}</p>
+        </header>
+        <div className="auth-card__body">
+          {error === undefined ? null : <StateNotice error={error} copy={copy} onRetry={() => void submit()} />}
+          {state === 'success' ? <StateMessage state="success" title={copy.loginSuccessTitle} message={copy.loginSuccessBody} /> : null}
+          <form className="auth-form" onSubmit={handleSubmit} noValidate>
+            <Input
+              id="auth-login-email"
+              label={copy.identifierLabel}
+              type="email"
+              name="email"
+              autoComplete="email"
+              inputMode="email"
+              placeholder={copy.identifierPlaceholder}
+              value={email}
+              onChange={event => setEmail(event.currentTarget.value)}
+              required
+              state={state === 'error' && email.trim() === '' ? 'error' : 'default'}
+            />
+            <div className="auth-password-field">
+              <Input
+                id="auth-login-password"
+                label={copy.passwordLabel}
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                autoComplete="current-password"
+                placeholder={copy.passwordPlaceholder}
+                value={password}
+                onChange={event => setPassword(event.currentTarget.value)}
+                required
+                state={state === 'error' && password === '' ? 'error' : 'default'}
+              />
+              <button
+                className="auth-password-field__toggle"
+                type="button"
+                onClick={() => setShowPassword(value => !value)}
+                aria-pressed={showPassword}
+              >
+                {showPassword ? copy.hidePassword : copy.showPassword}
+              </button>
+            </div>
+            <Button type="submit" fullWidth size="lg" loading={state === 'loading'}>
+              {state === 'loading' ? copy.loggingIn : copy.loginAction}
+            </Button>
+          </form>
+          <div className="auth-card__divider" aria-hidden="true" />
+          <p className="auth-card__prompt">
+            {copy.phoneLoginPrompt} <a href="/auth/verify-phone?purpose=login&roleType=seeker">{copy.phoneLoginAction}</a>
+          </p>
+          <p className="auth-card__prompt">
+            {copy.createAccountPrompt} <a href="/auth/register">{copy.createAccountAction}</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+interface OtpPageProps {
+  readonly client: AuthFlowClient;
+  readonly locale: SupportedLocale;
+  readonly roleType: OtpRoleType;
+  readonly purpose: OtpPurpose;
+  readonly onAuthenticated: (snapshot: AuthSnapshot) => void;
+  readonly onRegistrationVerified?: ((verificationToken: string, phone: string) => void) | undefined;
+  readonly lockRoleType?: boolean | undefined;
+}
+
+function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthenticated, onRegistrationVerified, lockRoleType = false }: OtpPageProps) {
+  const copy = getAuthCopy(locale);
+  const [phone, setPhone] = useState('');
+  const [roleType, setRoleType] = useState<OtpRoleType>(initialRoleType);
+  const [stage, setStage] = useState<'request' | 'verify'>('request');
+  const [challenge, setChallenge] = useState<OtpSendData | undefined>();
+  const [code, setCode] = useState<string[]>(() => Array.from({ length: OTP_LENGTH }, () => ''));
+  const [cooldownUntil, setCooldownUntil] = useState<number>(0);
+  const [now, setNow] = useState(() => Date.now());
+  const [state, setState] = useState<RequestState>('idle');
+  const [error, setError] = useState<AuthUiError | undefined>();
+  const [verified, setVerified] = useState(false);
+  const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const cooldownSeconds = Math.max(0, Math.ceil((cooldownUntil - now) / 1000));
+  const normalizedPhone = normalizedPhoneSchema.safeParse(phone).success
+    ? normalizedPhoneSchema.parse(phone)
+    : undefined;
+
+  useEffect(() => {
+    if (cooldownUntil <= Date.now()) {
+      setNow(Date.now());
+      return undefined;
+    }
+    const timer = window.setInterval(() => setNow(Date.now()), 1_000);
+    return () => window.clearInterval(timer);
+  }, [cooldownUntil]);
+
+  useEffect(() => {
+    if (stage === 'verify') inputRefs.current[0]?.focus();
+  }, [stage]);
+
+  const sendCode = useCallback(async () => {
+    if (cooldownSeconds > 0) return;
+    const parsedPhone = normalizedPhoneSchema.safeParse(phone);
+    if (!parsedPhone.success) {
+      setState('error');
+      setError(inputError(copy));
+      return;
+    }
+
+    setState('loading');
+    setError(undefined);
+    try {
+      const response = await client.sendOtp({ phone: parsedPhone.data, roleType, purpose });
+      setPhone(parsedPhone.data);
+      setChallenge(response);
+      setCode(Array.from({ length: OTP_LENGTH }, () => ''));
+      setCooldownUntil(Date.now() + response.retryAfterSeconds * 1_000);
+      setNow(Date.now());
+      setStage('verify');
+      setState('success');
+    } catch (requestError: unknown) {
+      const nextError = authError(requestError, copy);
+      setState(nextError.state);
+      setError(nextError);
+      if (getApiErrorCode(requestError) === AUTH_ERROR_CODES.OTP_SEND_RATE_LIMITED) {
+        setCooldownUntil(Date.now() + OTP_COOLDOWN_FALLBACK_SECONDS * 1_000);
+        setNow(Date.now());
+      }
+    }
+  }, [client, copy, cooldownSeconds, phone, purpose, roleType]);
+
+  const verifyCode = useCallback(async () => {
+    if (challenge === undefined || normalizedPhone === undefined || code.join('').length !== OTP_LENGTH) {
+      setState('error');
+      setError(inputError(copy));
+      return;
+    }
+
+    setState('loading');
+    setError(undefined);
+    const request: OtpVerifyRequest = {
+      phone: normalizedPhone,
+      roleType,
+      purpose,
+      challengeId: challenge.challengeId,
+      code: code.join('')
+    };
+    try {
+      const result = await client.verifyOtp(request);
+      setState('success');
+      setVerified(true);
+      if (result.outcome === 'authenticated') onAuthenticated(result.snapshot);
+      if (result.outcome === 'verified' && onRegistrationVerified !== undefined) {
+        onRegistrationVerified(result.verificationToken, normalizedPhone);
+      }
+    } catch (requestError: unknown) {
+      const nextError = authError(requestError, copy);
+      setState(nextError.state);
+      setError(nextError);
+    }
+  }, [challenge, client, code, copy, normalizedPhone, onAuthenticated, onRegistrationVerified, purpose, roleType]);
+
+  function handleRequestSubmit(event: FormEvent<HTMLFormElement>): void {
+    event.preventDefault();
+    void sendCode();
+  }
+
+  function handleVerifySubmit(event: FormEvent<HTMLFormElement>): void {
+    event.preventDefault();
+    void verifyCode();
+  }
+
+  function updateCodeDigit(position: number, value: string): void {
+    const digit = value.replace(/\D/gu, '').slice(-1);
+    setCode(previous => {
+      const next = [...previous];
+      next[position] = digit;
+      return next;
+    });
+    if (digit !== '' && position < OTP_LENGTH - 1) inputRefs.current[position + 1]?.focus();
+  }
+
+  function handleCodeKeyDown(position: number, event: KeyboardEvent<HTMLInputElement>): void {
+    if (event.key === 'Backspace' && code[position] === '' && position > 0) {
+      inputRefs.current[position - 1]?.focus();
+    }
+    if (event.key === 'ArrowLeft' && position > 0) inputRefs.current[position - 1]?.focus();
+    if (event.key === 'ArrowRight' && position < OTP_LENGTH - 1) inputRefs.current[position + 1]?.focus();
+  }
+
+  function changePhone(): void {
+    setStage('request');
+    setChallenge(undefined);
+    setCode(Array.from({ length: OTP_LENGTH }, () => ''));
+    setCooldownUntil(0);
+    setNow(Date.now());
+    setState('idle');
+    setError(undefined);
+    setVerified(false);
+  }
+
+  if (stage === 'request') {
+    return (
+      <section className="auth-page auth-page--phone" data-screen-id="AUTH-04" data-state={state}>
+        <div className="auth-card auth-card--form">
+          <header className="auth-card__heading">
+            <span className="auth-card__icon" aria-hidden="true">☎</span>
+            <h1>{copy.phoneTitle}</h1>
+            <p>{purpose === 'registration' ? copy.registrationPurpose : copy.phoneDescription}</p>
+          </header>
+          <div className="auth-card__body">
+            {error === undefined ? null : <StateNotice error={error} copy={copy} onRetry={() => void sendCode()} />}
+            <form className="auth-form" onSubmit={handleRequestSubmit} noValidate>
+              <Input
+                id="auth-phone"
+                label={copy.phoneLabel}
+                type="tel"
+                name="phone"
+                autoComplete="tel"
+                inputMode="tel"
+                placeholder={copy.phonePlaceholder}
+                value={phone}
+                onChange={event => setPhone(event.currentTarget.value)}
+                required
+                state={state === 'error' && normalizedPhone === undefined ? 'error' : 'default'}
+              />
+              <Select
+                id="auth-role-type"
+                label={copy.roleLabel}
+                name="roleType"
+                value={roleType}
+                disabled={lockRoleType}
+                onChange={event => setRoleType(event.currentTarget.value as OtpRoleType)}
+                options={[
+                  { value: 'seeker', label: copy.roleSeeker },
+                  { value: 'provider', label: copy.roleProvider }
+                ]}
+              />
+              <Button type="submit" fullWidth size="lg" loading={state === 'loading'} disabled={cooldownSeconds > 0}>
+                {state === 'loading' ? copy.sendingCode : copy.sendCodeAction}
+              </Button>
+            </form>
+            <p className="auth-card__prompt"><a href="/auth/login">{copy.loginAction}</a></p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="auth-page auth-page--otp" data-screen-id="AUTH-05" data-state={state}>
+      <div className="auth-card auth-card--form">
+        <header className="auth-card__heading">
+          <span className="auth-card__icon" aria-hidden="true">☎</span>
+          <h1>{copy.otpTitle}</h1>
+          <p>{copy.otpDescription} <strong dir="ltr">{phone}</strong></p>
+        </header>
+        <div className="auth-card__body">
+          {error === undefined ? null : <StateNotice error={error} copy={copy} onRetry={() => void verifyCode()} />}
+          {state === 'success' && verified ? <StateMessage state="success" title={purpose === 'login' ? copy.loginSuccessTitle : copy.verificationSuccessTitle} message={purpose === 'login' ? copy.loginSuccessBody : copy.verificationSuccessBody} /> : null}
+          {state === 'success' && !verified ? <StateMessage state="success" title={copy.codeSentTitle} message={copy.codeSentBody} /> : null}
+          <form className="auth-form auth-form--otp" onSubmit={handleVerifySubmit} noValidate>
+            <fieldset className="auth-otp-fieldset">
+              <legend>{copy.codeLabel}</legend>
+              <div className="auth-otp__digits" dir="ltr">
+                {code.map((digit, position) => (
+                  <input
+                    key={position}
+                    ref={element => { inputRefs.current[position] = element; }}
+                    className="auth-otp__digit"
+                    aria-label={copy.codeDigitLabel(position + 1)}
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    autoComplete={position === 0 ? 'one-time-code' : 'off'}
+                    maxLength={1}
+                    value={digit}
+                    onChange={event => updateCodeDigit(position, event.currentTarget.value)}
+                    onKeyDown={event => handleCodeKeyDown(position, event)}
+                    aria-invalid={error !== undefined || undefined}
+                  />
+                ))}
+              </div>
+            </fieldset>
+            <Button type="submit" fullWidth size="lg" loading={state === 'loading'} disabled={verified}>
+              {state === 'loading' ? copy.verifyingCode : copy.verifyAction}
+            </Button>
+          </form>
+          <div className="auth-otp__actions">
+            <Button type="button" variant="ghost" size="sm" onClick={() => void sendCode()} disabled={cooldownSeconds > 0 || state === 'loading' || verified}>
+              {cooldownSeconds > 0 ? copy.resendIn(cooldownSeconds) : copy.resendAction}
+            </Button>
+            <Button type="button" variant="ghost" size="sm" onClick={changePhone} disabled={state === 'loading'}>
+              {copy.changePhoneAction}
+            </Button>
+          </div>
+          <p className="auth-card__prompt"><a href="/auth/login">{copy.loginAction}</a></p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function replaceAuthUrl(path: string): void {
+  if (typeof window === 'undefined') return;
+  window.history.replaceState({}, '', path);
+}
+
+interface RegistrationRolePageProps {
+  readonly copy: AuthCopy;
+  readonly restartRequired: boolean;
+  readonly onSelectSeeker: () => void;
+}
+
+function RegistrationRolePage({ copy, restartRequired, onSelectSeeker }: RegistrationRolePageProps) {
+  const [selected, setSelected] = useState(false);
+
+  function selectSeeker(): void {
+    setSelected(true);
+  }
+
+  function continueToPhone(): void {
+    if (!selected) return;
+    onSelectSeeker();
+  }
+
+  return (
+    <section className="auth-page auth-page--registration-role" data-screen-id="AUTH-02" data-state={selected ? 'success' : 'idle'}>
+      <div className="auth-card auth-card--form">
+        <header className="auth-card__heading">
+          <span className="auth-card__icon" aria-hidden="true">＋</span>
+          <h1>{copy.accountSelectionTitle}</h1>
+          <p>{copy.accountSelectionBody}</p>
+        </header>
+        <div className="auth-card__body">
+          {restartRequired ? (
+            <StateMessage
+              state="error"
+              title={copy.registrationUnavailableTitle}
+              message={copy.registrationUnavailableBody}
+            />
+          ) : null}
+          <div className="auth-role-options" aria-label={copy.roleLabel}>
+            <button
+              className={`auth-role-card${selected ? ' auth-role-card--selected' : ''}`}
+              type="button"
+              aria-pressed={selected}
+              onClick={selectSeeker}
+            >
+              <span className="auth-role-card__icon" aria-hidden="true">⌂</span>
+              <span className="auth-role-card__title">{copy.seekerAccountTitle}</span>
+              <span className="auth-role-card__body">{copy.seekerAccountBody}</span>
+            </button>
+            <a className="auth-role-card auth-role-card--link" href="/auth/register/provider/type">
+              <span className="auth-role-card__icon" aria-hidden="true">▣</span>
+              <span className="auth-role-card__title">{copy.providerAccountTitle}</span>
+              <span className="auth-role-card__body">{copy.providerAccountBody}</span>
+            </a>
+          </div>
+          <Button type="button" fullWidth size="lg" disabled={!selected} onClick={continueToPhone}>
+            {copy.continueAction}
+          </Button>
+          <p className="auth-card__prompt"><a href="/auth/login">{copy.backAction}</a></p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+interface SeekerRegistrationFormProps {
+  readonly client: AuthFlowClient;
+  readonly locale: SupportedLocale;
+  readonly phone: string;
+  readonly verificationToken: string;
+  readonly onRegistered: (snapshot: AuthSnapshot) => void;
+  readonly onRestart: () => void;
+}
+
+function SeekerRegistrationForm({ client, locale, phone, verificationToken, onRegistered, onRestart }: SeekerRegistrationFormProps) {
+  const copy = getAuthCopy(locale);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [state, setState] = useState<RequestState>('idle');
+  const [error, setError] = useState<AuthUiError | undefined>();
+
+  const submit = useCallback(async () => {
+    const parsed = seekerRegistrationRequestSchema.safeParse({
+      verificationToken,
+      firstName,
+      lastName,
+      locale
+    });
+    if (!parsed.success) {
+      setState('error');
+      setError(inputError(copy));
+      return;
+    }
+
+    setState('loading');
+    setError(undefined);
+    try {
+      const snapshot = await client.registerSeeker(parsed.data);
+      setState('success');
+      onRegistered(snapshot);
+    } catch (requestError: unknown) {
+      const nextError = authError(requestError, copy);
+      setState(nextError.state);
+      setError(nextError);
+    }
+  }, [client, copy, firstName, lastName, locale, onRegistered, verificationToken]);
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+    event.preventDefault();
+    void submit();
+  }
+
+  return (
+    <section className="auth-page auth-page--registration-form" data-screen-id="AUTH-03" data-state={state}>
+      <div className="auth-card auth-card--form">
+        <header className="auth-card__heading">
+          <span className="auth-card__icon" aria-hidden="true">✓</span>
+          <h1>{copy.registrationFormTitle}</h1>
+          <p>{copy.registrationFormBody}</p>
+        </header>
+        <div className="auth-card__body">
+          {error === undefined ? null : <StateNotice error={error} copy={copy} onRetry={() => void submit()} />}
+          <form className="auth-form" onSubmit={handleSubmit} noValidate>
+            <Input
+              id="auth-registration-first-name"
+              label={copy.firstNameLabel}
+              name="firstName"
+              autoComplete="given-name"
+              placeholder={copy.firstNamePlaceholder}
+              value={firstName}
+              onChange={event => setFirstName(event.currentTarget.value)}
+              required
+              state={state === 'error' && firstName.trim() === '' ? 'error' : 'default'}
+            />
+            <Input
+              id="auth-registration-last-name"
+              label={copy.lastNameLabel}
+              name="lastName"
+              autoComplete="family-name"
+              placeholder={copy.lastNamePlaceholder}
+              value={lastName}
+              onChange={event => setLastName(event.currentTarget.value)}
+              required
+              state={state === 'error' && lastName.trim() === '' ? 'error' : 'default'}
+            />
+            <Input
+              id="auth-registration-phone"
+              label={copy.verifiedPhoneLabel}
+              name="phone"
+              type="tel"
+              autoComplete="tel"
+              value={phone}
+              readOnly
+              dir="ltr"
+              state="success"
+            />
+            <Button type="submit" fullWidth size="lg" loading={state === 'loading'}>
+              {state === 'loading' ? copy.registering : copy.registerAction}
+            </Button>
+          </form>
+          {error?.state === 'error' ? (
+            <Button type="button" variant="ghost" onClick={onRestart}>
+              {copy.restartRegistrationAction}
+            </Button>
+          ) : null}
+          <p className="auth-card__prompt"><button className="auth-inline-button" type="button" onClick={onRestart}>{copy.backAction}</button></p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+interface SeekerRegistrationSuccessProps {
+  readonly copy: AuthCopy;
+  readonly snapshot: AuthSnapshot;
+  readonly onContinue: (snapshot: AuthSnapshot) => void;
+}
+
+function SeekerRegistrationSuccess({ copy, snapshot, onContinue }: SeekerRegistrationSuccessProps) {
+  return (
+    <section className="auth-page auth-page--registration-success" data-screen-id="AUTH-06" data-state="success">
+      <div className="auth-card auth-card--success">
+        <div className="auth-success-mark" aria-hidden="true">✓</div>
+        <div className="auth-success-content" role="status" aria-live="polite">
+          <h1>{copy.registrationSuccessTitle}</h1>
+          <p>{copy.registrationSuccessBody}</p>
+        </div>
+        <div className="auth-success-actions">
+          <Button type="button" fullWidth size="lg" onClick={() => onContinue(snapshot)}>
+            {copy.registrationNextAction}
+          </Button>
+          <a href="/auth/login">{copy.loginAction}</a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+interface SeekerRegistrationFlowProps {
+  readonly client: AuthFlowClient;
+  readonly locale: SupportedLocale;
+  readonly onAuthenticated: (snapshot: AuthSnapshot) => void;
+  readonly restartRequired: boolean;
+}
+
+function SeekerRegistrationFlow({ client, locale, onAuthenticated, restartRequired }: SeekerRegistrationFlowProps) {
+  const [step, setStep] = useState<'role' | 'otp' | 'form' | 'success'>('role');
+  const [showRestartNotice, setShowRestartNotice] = useState(restartRequired);
+  const [verificationToken, setVerificationToken] = useState<string | undefined>();
+  const [phone, setPhone] = useState<string | undefined>();
+  const [snapshot, setSnapshot] = useState<AuthSnapshot | undefined>();
+  const copy = getAuthCopy(locale);
+
+  function startSeekerRegistration(): void {
+    setShowRestartNotice(false);
+    replaceAuthUrl('/auth/verify-phone?purpose=registration&roleType=seeker');
+    setStep('otp');
+  }
+
+  const handleRegistrationVerified = useCallback((token: string, verifiedPhone: string) => {
+    setVerificationToken(token);
+    setPhone(verifiedPhone);
+    replaceAuthUrl('/auth/register/seeker');
+    setStep('form');
+  }, []);
+
+  const restart = useCallback(() => {
+    setVerificationToken(undefined);
+    setPhone(undefined);
+    setSnapshot(undefined);
+    setShowRestartNotice(false);
+    replaceAuthUrl('/auth/register');
+    setStep('role');
+  }, []);
+
+  const handleRegistered = useCallback((nextSnapshot: AuthSnapshot) => {
+    setSnapshot(nextSnapshot);
+    replaceAuthUrl('/auth/register/seeker/success');
+    setStep('success');
+  }, []);
+
+  if (step === 'role') {
+    return <RegistrationRolePage copy={copy} restartRequired={showRestartNotice} onSelectSeeker={startSeekerRegistration} />;
+  }
+  if (step === 'otp') {
+    return (
+      <OtpPage
+        client={client}
+        locale={locale}
+        roleType="seeker"
+        purpose="registration"
+        onAuthenticated={onAuthenticated}
+        onRegistrationVerified={handleRegistrationVerified}
+      />
+    );
+  }
+  if (step === 'form' && verificationToken !== undefined && phone !== undefined) {
+    return (
+      <SeekerRegistrationForm
+        client={client}
+        locale={locale}
+        phone={phone}
+        verificationToken={verificationToken}
+        onRegistered={handleRegistered}
+        onRestart={restart}
+      />
+    );
+  }
+  if (step === 'success' && snapshot !== undefined) {
+    return <SeekerRegistrationSuccess copy={copy} snapshot={snapshot} onContinue={onAuthenticated} />;
+  }
+  return <RegistrationRolePage copy={copy} restartRequired onSelectSeeker={startSeekerRegistration} />;
+}
+
+type ProviderRegistrationStep = 'type' | 'otp' | 'registering' | 'account' | 'organization' | 'documents' | 'review' | 'registration-error';
+
+interface ProviderRegistrationFlowProps {
+  readonly client: AuthFlowClient;
+  readonly locale: SupportedLocale;
+  readonly url: string;
+  readonly initialStep: ProviderRegistrationStep;
+  readonly onAuthenticated: (snapshot: AuthSnapshot) => void;
+}
+
+interface ProviderRegistrationUiError {
+  readonly state: 'error' | 'retry';
+  readonly title: string;
+  readonly message: string;
+}
+
+function providerRegistrationError(error: unknown, locale: SupportedLocale): ProviderRegistrationUiError {
+  const copy = getProviderAccountCopy(locale);
+  const code = error instanceof ApiClientError ? error.apiError?.code : undefined;
+  if (code === 'INVALID_REGISTRATION_TOKEN') {
+    return { state: 'error', title: copy.invalidRegistrationTitle, message: copy.invalidRegistrationBody };
+  }
+  if (code === 'PROVIDER_ALREADY_EXISTS') {
+    return { state: 'error', title: copy.duplicateRegistrationTitle, message: copy.duplicateRegistrationBody };
+  }
+  if (error instanceof ApiClientError && (error.code === 'NETWORK_ERROR' || error.status === 503)) {
+    return { state: 'retry', title: copy.networkTitle, message: copy.networkBody };
+  }
+  return { state: 'error', title: copy.unavailableTitle, message: copy.unavailableBody };
+}
+
+function providerTypePath(providerType: ProviderType | undefined, locale: SupportedLocale): string {
+  const query = new URLSearchParams({ lang: locale });
+  if (providerType !== undefined) query.set('providerType', providerType);
+  return `/auth/register/provider/type?${query.toString()}`;
+}
+
+function providerOtpPath(providerType: ProviderType | undefined, locale: SupportedLocale): string {
+  const query = new URLSearchParams({ purpose: 'registration', roleType: 'provider', lang: locale });
+  if (providerType !== undefined) query.set('providerType', providerType);
+  return `/auth/verify-phone?${query.toString()}`;
+}
+
+function providerProgressPath(providerType: ProviderType, locale: SupportedLocale, step: 'account' | 'organization' | 'documents' | 'review'): string {
+  if (step === 'review') {
+    const query = new URLSearchParams({ providerType, lang: locale });
+    return `/auth/register/provider/review?${query.toString()}`;
+  }
+  const query = new URLSearchParams({ providerType, lang: locale, step });
+  return `/auth/register/provider/account?${query.toString()}`;
+}
+
+function providerRegistrationStepFromUrl(url: string): ProviderRegistrationStep {
+  try {
+    const parsed = new URL(url, 'http://sadat.local');
+    if (parsed.pathname === '/auth/register/provider/review') return 'review';
+    const step = parsed.searchParams.get('step');
+    if (step === 'review') return 'review';
+    if (step === 'organization' || step === 'documents') return step;
+  } catch {
+    // The route will fall back to the account step when the URL is malformed.
+  }
+  return 'account';
+}
+
+function ProviderRegistrationState({
+  locale,
+  error,
+  onRetry,
+  onBack
+}: {
+  readonly locale: SupportedLocale;
+  readonly error?: ProviderRegistrationUiError | undefined;
+  readonly onRetry?: (() => void) | undefined;
+  readonly onBack: () => void;
+}) {
+  const copy = getProviderAccountCopy(locale);
+  return (
+    <section className="auth-page provider-account-page" data-testid="provider-registration-state" data-screen-id="AUTH-09" data-state={error?.state ?? 'loading'}>
+      <div className="auth-card auth-card--form provider-account-card">
+        <div className="provider-account-state">
+          {error === undefined
+            ? <StateMessage state="loading" title={copy.loadingTitle} message={copy.loadingBody} />
+            : <StateMessage state={error.state} title={error.title} message={error.message} retryLabel={copy.retryAction} onRetry={error.state === 'retry' ? onRetry : undefined} />}
+          <Button type="button" variant="ghost" onClick={onBack}>{copy.backAction}</Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProviderRegistrationFlow({ client, locale, url, initialStep, onAuthenticated }: ProviderRegistrationFlowProps) {
+  const initialProviderType = useMemo(() => providerTypeFromUrl(url), [url]);
+  const [step, setStep] = useState<ProviderRegistrationStep>(initialStep);
+  const [providerType, setProviderType] = useState<ProviderType | undefined>(initialProviderType);
+  const [verificationToken, setVerificationToken] = useState<string | undefined>();
+  const [application, setApplication] = useState<ProviderApplicationData | undefined>();
+  const [error, setError] = useState<ProviderRegistrationUiError | undefined>();
+
+  const restart = useCallback(() => {
+    setStep('type');
+    setProviderType(undefined);
+    setVerificationToken(undefined);
+    setApplication(undefined);
+    setError(undefined);
+    replaceAuthUrl(providerTypePath(undefined, locale));
+  }, [locale]);
+
+  const backToType = useCallback(() => {
+    setStep('type');
+    setError(undefined);
+    replaceAuthUrl(providerTypePath(providerType, locale));
+  }, [locale, providerType]);
+
+  const createDraft = useCallback(async (nextProviderType: ProviderType, token: string) => {
+    if (client.registerProvider === undefined) {
+      setError({
+        state: 'error',
+        title: getProviderAccountCopy(locale).unavailableTitle,
+        message: getProviderAccountCopy(locale).unavailableBody
+      });
+      setStep('registration-error');
+      return;
+    }
+    setError(undefined);
+    setStep('registering');
+    try {
+      const registration = await client.registerProvider({ verificationToken: token, providerType: nextProviderType });
+      setApplication(registration.application);
+      setProviderType(nextProviderType);
+      setStep('account');
+      replaceAuthUrl(`/auth/register/provider/account?providerType=${encodeURIComponent(nextProviderType)}&lang=${encodeURIComponent(locale)}`);
+    } catch (requestError: unknown) {
+      setError(providerRegistrationError(requestError, locale));
+      setStep('registration-error');
+    }
+  }, [client, locale]);
+
+  const handleTypeContinue = useCallback((nextProviderType: ProviderType) => {
+    setProviderType(nextProviderType);
+    if (application !== undefined && application.providerType === nextProviderType) {
+      setStep('account');
+      replaceAuthUrl(`/auth/register/provider/account?providerType=${encodeURIComponent(nextProviderType)}&lang=${encodeURIComponent(locale)}`);
+      return;
+    }
+    if (verificationToken !== undefined) {
+      void createDraft(nextProviderType, verificationToken);
+      return;
+    }
+    setStep('otp');
+    replaceAuthUrl(providerOtpPath(nextProviderType, locale));
+  }, [application, createDraft, locale, verificationToken]);
+
+  const handleRegistrationVerified = useCallback((token: string, verifiedPhone: string) => {
+    setVerificationToken(token);
+    void verifiedPhone;
+    if (providerType === undefined) {
+      setStep('type');
+      replaceAuthUrl(providerTypePath(undefined, locale));
+      return;
+    }
+    void createDraft(providerType, token);
+  }, [createDraft, locale, providerType]);
+
+  const handleAccountContinue = useCallback((updated: ProviderApplicationData) => {
+    if (providerType === undefined) return;
+    setApplication(updated);
+    if (providerType === 'individual_broker') {
+      setStep('documents');
+      replaceAuthUrl(providerProgressPath(providerType, locale, 'documents'));
+      return;
+    }
+    setStep('organization');
+    replaceAuthUrl(providerProgressPath(providerType, locale, 'organization'));
+  }, [locale, providerType]);
+
+  const backToAccount = useCallback(() => {
+    setStep('account');
+    setError(undefined);
+    if (providerType !== undefined) replaceAuthUrl(providerProgressPath(providerType, locale, 'account'));
+  }, [locale, providerType]);
+
+  const handleOrganizationContinue = useCallback((updated: ProviderApplicationData) => {
+    if (providerType === undefined) return;
+    setApplication(updated);
+    setStep('documents');
+    replaceAuthUrl(providerProgressPath(providerType, locale, 'documents'));
+  }, [locale, providerType]);
+
+  const backToOrganization = useCallback(() => {
+    if (providerType === undefined || providerType === 'individual_broker') {
+      backToAccount();
+      return;
+    }
+    setStep('organization');
+    setError(undefined);
+    replaceAuthUrl(providerProgressPath(providerType, locale, 'organization'));
+  }, [backToAccount, locale, providerType]);
+
+  const handleDocumentsContinue = useCallback((updated: ProviderApplicationData) => {
+    setApplication(updated);
+    setProviderType(updated.providerType);
+    setStep('review');
+    replaceAuthUrl(providerProgressPath(updated.providerType, locale, 'review'));
+  }, [locale]);
+
+  const backToDocuments = useCallback((updated?: ProviderApplicationData) => {
+    const nextApplication = updated ?? application;
+    const nextProviderType = nextApplication?.providerType ?? providerType;
+    if (nextApplication !== undefined) setApplication(nextApplication);
+    if (nextProviderType === undefined) {
+      restart();
+      return;
+    }
+    setProviderType(nextProviderType);
+    setStep('documents');
+    replaceAuthUrl(providerProgressPath(nextProviderType, locale, 'documents'));
+  }, [application, locale, providerType, restart]);
+
+  if (step === 'type') {
+    return (
+      <ProviderTypePage
+        url={providerTypePath(providerType, locale)}
+        locale={locale}
+        onContinue={handleTypeContinue}
+      />
+    );
+  }
+  if (step === 'otp') {
+    return (
+      <OtpPage
+        client={client}
+        locale={locale}
+        roleType="provider"
+        purpose="registration"
+        onAuthenticated={onAuthenticated}
+        onRegistrationVerified={handleRegistrationVerified}
+        lockRoleType
+      />
+    );
+  }
+  if (step === 'registering') {
+    return <ProviderRegistrationState locale={locale} onBack={backToType} />;
+  }
+  if (step === 'registration-error') {
+    return <ProviderRegistrationState locale={locale} error={error} onRetry={verificationToken !== undefined && providerType !== undefined ? () => void createDraft(providerType, verificationToken) : undefined} onBack={restart} />;
+  }
+  if (step === 'account' && providerType !== undefined) {
+    return (
+      <ProviderAccountPage
+        client={client}
+        locale={locale}
+        providerType={providerType}
+        initialApplication={application}
+        onBack={backToType}
+        onContinue={handleAccountContinue}
+      />
+    );
+  }
+  if (step === 'organization' && providerType !== undefined && providerType !== 'individual_broker') {
+    return (
+      <ProviderOrganizationPage
+        client={client}
+        locale={locale}
+        providerType={providerType}
+        initialApplication={application}
+        onBack={backToAccount}
+        onContinue={handleOrganizationContinue}
+      />
+    );
+  }
+  if (step === 'documents' && providerType !== undefined) {
+    return (
+      <ProviderDocumentsPage
+        client={client}
+        locale={locale}
+        providerType={providerType}
+        initialApplication={application}
+        onBack={providerType === 'individual_broker' ? backToAccount : backToOrganization}
+        onContinue={handleDocumentsContinue}
+      />
+    );
+  }
+  if (step === 'review') {
+    return (
+      <ProviderReviewPage
+        client={client}
+        locale={locale}
+        providerType={providerType}
+        initialApplication={application}
+        onBack={backToDocuments}
+        onEdit={updated => backToDocuments(updated)}
+      />
+    );
+  }
+  return <ProviderRegistrationState locale={locale} error={error} onBack={restart} />;
+}
+
+export function AuthPage({ url, locale, client: providedClient, onAuthenticated: providedOnAuthenticated }: AuthPageProps) {
+  const client = useMemo<AuthFlowClient>(() => providedClient ?? new AuthClient(), [providedClient]);
+  const location = useMemo(() => parseAuthLocation(url), [url]);
+  const copy = getAuthCopy(locale);
+  const onAuthenticated = providedOnAuthenticated ?? (() => navigateAfterAuthentication(location.returnTo));
+
+  useEffect(() => {
+    if (providedClient !== undefined) return undefined;
+    return () => client.dispose?.();
+  }, [client, providedClient]);
+
+  if (location.pathname === '/auth/login') {
+    return <LoginPage client={client} locale={locale} onAuthenticated={onAuthenticated} />;
+  }
+  if (location.pathname === '/auth/verify-phone') {
+    if (location.roleType === 'provider' && location.purpose === 'registration') {
+      return <ProviderRegistrationFlow client={client} locale={locale} url={url} initialStep="otp" onAuthenticated={onAuthenticated} />;
+    }
+    return <OtpPage client={client} locale={locale} roleType={location.roleType} purpose={location.purpose} onAuthenticated={onAuthenticated} />;
+  }
+  if (location.pathname === '/auth/register/provider/type') {
+    return <ProviderRegistrationFlow client={client} locale={locale} url={url} initialStep="type" onAuthenticated={onAuthenticated} />;
+  }
+  if (location.pathname === '/auth/register/provider/account') {
+    return <ProviderRegistrationFlow client={client} locale={locale} url={url} initialStep={providerRegistrationStepFromUrl(url)} onAuthenticated={onAuthenticated} />;
+  }
+  if (location.pathname === '/auth/register/provider/review' || location.pathname === '/provider-application/status' || location.pathname === '/provider-application/needs-information' || location.pathname === '/provider-application/approved') {
+    return <ProviderRegistrationFlow client={client} locale={locale} url={url} initialStep="review" onAuthenticated={onAuthenticated} />;
+  }
+  if (location.pathname === '/auth/register' || location.pathname.startsWith('/auth/register/seeker')) {
+    return (
+      <SeekerRegistrationFlow
+        client={client}
+        locale={locale}
+        onAuthenticated={onAuthenticated}
+        restartRequired={location.pathname !== '/auth/register'}
+      />
+    );
+  }
+  return (
+    <section className="auth-page auth-page--unavailable" data-state="error">
+      <StateMessage state="error" title={copy.unknownRouteTitle} message={copy.unknownRouteBody} />
+    </section>
+  );
+}

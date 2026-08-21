@@ -1,3 +1,4 @@
 # Community Comments
 
-Comments are allowed only on published posts, use bounded body text, and support replies to a maximum depth of two. Comment removal is ownership-checked (or administrative), and hidden/removed comments are excluded from public lists.
+Comments are allowed only on published posts through `POST /api/v1/public/community/posts/:postId/comments`, use bounded body text, and support replies to a maximum depth of two. Comment removal is ownership-checked (or administrative), and hidden/removed comments are excluded from public lists. Mutation responses expose only the comment identifier, post identifier, depth, and creation time.
+Authenticated comments are restricted to published posts and replies are bounded to depth two. Public responses include only visible comment content. Verified administrators with `admin:community.view` can review a paginated explicit comment projection through `GET /api/v1/admin/community/comments` using strict status, post, and text filters; author identity and moderation state remain inside that permission-checked administrative boundary.

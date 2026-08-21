@@ -13,7 +13,7 @@ import type { UploadEnvironment } from './environment.js';
 import { createUploadModels } from './models.js';
 import { createMongooseProviderDocumentRepository } from './repository.js';
 import type { UploadRouterDependencies } from './router.js';
-import { createProviderDocumentService } from './service.js';
+import { createProviderDocumentService, type AdminDocumentAuthorization } from './service.js';
 
 export interface UploadRuntime extends UploadRouterDependencies {
   readiness: { isReady(): Promise<boolean> };
@@ -23,7 +23,8 @@ export function createUploadRuntime(
   connection: Connection,
   accessTokens: AccessTokenService,
   environment: UploadEnvironment,
-  auditWriter: AuditWriter
+  auditWriter: AuditWriter,
+  authorization: AdminDocumentAuthorization
 ): UploadRuntime {
   const storage = environment.mode === 'memory'
     ? createInMemoryStorageAdapter()
@@ -38,11 +39,12 @@ export function createUploadRuntime(
     storage,
     scanner,
     signer: createPrivateDownloadSigner(),
+    authorization,
     audit: {
       async record(event) {
         if (!event.traceId) throw new Error('AUDIT_TRACE_REQUIRED');
         await auditWriter.record({
-          actorType: 'provider',
+          actorType: event.actorType,
           actorId: event.actorId,
           targetType: 'provider_document',
           targetId: event.documentId,

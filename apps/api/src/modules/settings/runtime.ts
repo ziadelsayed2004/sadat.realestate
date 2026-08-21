@@ -3,6 +3,8 @@ import type { AccessTokenService } from '../auth/crypto.js';
 import type { AuditWriter } from '../audit/writer.js';
 import type { RbacService } from '../rbac/service.js';
 import type { SettingsRouterDependencies } from './router.js';
+import { createMongooseProviderSettingsRepository } from './provider-repository.js';
+import { createProviderSettingsService } from './provider-service.js';
 import { createMongooseSettingsRepository } from './repository.js';
 import { createSettingsService } from './service.js';
 
@@ -18,6 +20,9 @@ export function createSettingsRuntime(
       repository: createMongooseSettingsRepository(connection),
       authorization,
       audit
+    }),
+    provider: createProviderSettingsService({
+      repository: createMongooseProviderSettingsRepository(connection)
     })
   };
 }

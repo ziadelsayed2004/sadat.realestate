@@ -16,6 +16,18 @@ import {
   canTransitionAccountState,
   canTransitionProviderProfileState
 } from '../identity/account-state.js';
+import {
+  adminAccountUserListDataSchema,
+  adminAccountUserListQuerySchema,
+  adminProviderListDataSchema,
+  adminProviderListQuerySchema,
+  accountUserIdParamsSchema,
+  providerReviewIdParamsSchema,
+  type AdminAccountUserData,
+  type AdminAccountUserListData,
+  type AdminProviderData,
+  type AdminProviderListData
+} from '@sadat-real-estate/contracts';
 import type {
   AccountRepository,
   AccountTarget,
@@ -62,6 +74,10 @@ export interface AccountServiceDependencies {
 }
 
 export interface AccountService {
+  listUsers(principal: AccountPrincipal, input: unknown): Promise<AdminAccountUserListData>;
+  getUser(principal: AccountPrincipal, userId: string): Promise<AdminAccountUserData>;
+  listProviders(principal: AccountPrincipal, input: unknown): Promise<AdminProviderListData>;
+  getProvider(principal: AccountPrincipal, providerId: string): Promise<AdminProviderData>;
   transitionAccount(
     principal: AccountPrincipal,
     userId: string,
@@ -150,6 +166,34 @@ export function createAccountService(
   }
 
   return {
+    async listUsers(principal, input) {
+      const query = adminAccountUserListQuerySchema.parse(input);
+      await requirePermission(principal.userId, 'admin:users.view');
+      return adminAccountUserListDataSchema.parse(await dependencies.repository.listUsers(query));
+    },
+
+    async getUser(principal, unparsedUserId) {
+      const userId = accountUserIdParamsSchema.parse({ userId: unparsedUserId }).userId;
+      await requirePermission(principal.userId, 'admin:users.view');
+      const result = await dependencies.repository.findUser(userId);
+      if (!result) throw new AccountServiceError('ACCOUNT_NOT_FOUND');
+      return result;
+    },
+
+    async listProviders(principal, input) {
+      const query = adminProviderListQuerySchema.parse(input);
+      await requirePermission(principal.userId, 'admin:providers.view');
+      return adminProviderListDataSchema.parse(await dependencies.repository.listProviders(query));
+    },
+
+    async getProvider(principal, unparsedProviderId) {
+      const providerId = providerReviewIdParamsSchema.parse({ providerId: unparsedProviderId }).providerId;
+      await requirePermission(principal.userId, 'admin:providers.view');
+      const result = await dependencies.repository.findProvider(providerId);
+      if (!result) throw new AccountServiceError('ACCOUNT_NOT_FOUND');
+      return result;
+    },
+
     async transitionAccount(principal, unparsedUserId, unparsedRequest, context) {
       const userId = accountObjectIdSchema.parse(unparsedUserId);
       const request = accountTransitionRequestSchema.parse(unparsedRequest);

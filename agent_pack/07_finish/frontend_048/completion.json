@@ -1,0 +1,143 @@
+{
+  "taskId": "frontend_048",
+  "summary": "Implemented the provider-owned PRV-18 Viewing Appointments surface with authenticated provider-scoped list loading, status filtering, deterministic date/time rendering, safe customer/property references, contract-defined confirm/reschedule/cancel/complete actions, optimistic version and reason validation, loading/empty/error/retry/success/permission states, and AR/EN/ZH-CN desktop direction support.",
+  "filesChanged": [
+    "apps/web/src/features/provider/viewings-data.ts",
+    "apps/web/src/features/provider/viewings-copy.ts",
+    "apps/web/src/features/provider/viewings.tsx",
+    "apps/web/src/features/provider/viewings.css",
+    "apps/web/src/features/provider/index.ts",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/provider-viewings.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-viewings.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-zh-CN-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace packages/contracts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shared contracts TypeScript build passed."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/provider-viewings.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused Provider Viewing Appointments suite passed: 1 file, 8 tests."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript verification passed after the adapter query was narrowed to the required API request type."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web ESLint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full web workspace test passed, including the Vitest suite and 76 Node TAP tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR builds passed; the existing Vite large-chunk warning remained non-fatal."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API suite passed: 79 tests, including viewing authentication, validation, provider scope, and transition coverage."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace checks and ESLint passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, web client, and web SSR build passed; the existing Vite large-chunk warning remained non-fatal."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- --grep \"PRV-18 Provider Viewing Appointments\" --project=desktop-ar --project=desktop-en --project=desktop-zh --workers=1 --reporter=line --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Executable Playwright matrix passed 9/9 and generated the three approved desktop locale snapshots."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- --grep \"PRV-18 Provider Viewing Appointments\" --project=desktop-ar --project=desktop-en --project=desktop-zh --workers=1 --reporter=line",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Stable visual, keyboard/focus, accessibility-label, filter, versioned transition, safe projection, locale/direction, and expired-session matrix passed 9/9."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory passed and includes listProviderViewings and transitionProviderViewing."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Found 0 vulnerabilities."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors reported."
+    }
+  ],
+  "sourceEvidence": [
+    "Screen PRV-18",
+    "docs/design_sources/final_screens/provider/PRV-18.png; SHA-256 9a7b859c90236e892de44f81fadf1f5e3484ec13f6a173e497bddbf3e2690c57",
+    "Drive folder https://drive.google.com/drive/folders/1wV5wYwgV1HV8sSBohdBqbIKP6qwztZgP",
+    "Figma prototype node 6017:19032: https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355",
+    "packages/contracts/src/viewings/index.ts",
+    "apps/api/src/modules/viewings/router.ts and apps/api/src/modules/viewings/service.ts",
+    "GET /api/v1/provider/viewings and POST /api/v1/provider/viewings/:viewingId/transitions",
+    "apps/web/tests/provider-viewings.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-viewings.spec.ts"
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was modified only for the direct route-wiring necessity exception required to expose /provider/viewings; no API or product contract was changed.",
+    "No Backend truth repair was required. API authentication, provider ownership scope, invalid transition handling, and optimistic version enforcement remain authoritative in the existing viewing service and router.",
+    "The approved local PRV-18 export was used as visual authority. The executable Playwright matrix was used because the in-app browser connector was unavailable with sandbox-state error 'missing field sandboxPolicy'; no external design source was altered.",
+    "The current viewing contract provides a list with date/time and status transitions rather than a separate calendar endpoint or display-name projection. The UI therefore uses deterministic date rendering and safe truncated references instead of fabricating calendar records, customer names, or property titles."
+  ],
+  "knownGaps": [
+    "Interactive browser-connector verification was unavailable in this environment; executable Playwright visual and accessibility assertions passed for all approved desktop locales.",
+    "No Production data or credentials were used, and no real .env file was read."
+  ],
+  "completedAt": "2026-08-18T22:23:17.951Z"
+}

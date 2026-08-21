@@ -1,98 +1,156 @@
 {
   "taskId": "backend_116",
-  "summary": "Implemented a verified-provider-only commission projection backed by a resolver-owned read model. The projection is strict and read-only, preserves explicit source/effective timestamp/version/value semantics, returns source none when no active commission exists, enforces subject ownership, and strips resolver and administrative identifiers.",
+  "summary": "Repaired the disproven provider commission completion claim by composing GET /api/v1/provider/commission for verified providers, reading active persisted exception, account-override, and default-policy sources in precedence order, returning an explicit none projection when no policy is available, and preserving a strict read-only projection with no resolver or administrative identifiers.",
   "filesChanged": [
-    "packages/contracts/src/provider/index.ts",
-    "packages/contracts/src/contracts/index.ts",
     "apps/api/src/modules/provider/commission.ts",
-    "apps/api/tests/provider/service.test.ts",
+    "apps/api/src/modules/provider/commission-repository.ts",
+    "apps/api/src/modules/provider/router.ts",
+    "apps/api/src/modules/provider/runtime.ts",
+    "apps/api/src/modules/handoff/contract-freeze.ts",
+    "apps/api/tests/provider/router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
     "docs/api/commission-policies.md"
   ],
   "verification": [
     {
-      "command": "node --test --import tsx apps/api/tests/provider/service.test.ts",
+      "command": "npm.cmd run build --workspace packages/contracts",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Nine focused provider tests passed, including applied and none projections, verified-provider authorization, ownership/IDOR, strict source validation, redaction, and no mutation surface."
+      "notes": "Shared provider commission projection contracts compiled successfully."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "API production and test TypeScript compile passed with the persistent commission source and provider route."
+    },
+    {
+      "command": "node --test --import tsx apps/api/tests/provider/router.test.ts apps/api/tests/provider/service.test.ts",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "17 focused provider tests passed, including verified-provider authorization, wrong-role and unauthenticated rejection, owner-bound projection, strict redaction, none state, and source validation."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All 348 API unit tests passed."
+    },
+    {
+      "command": "npm.cmd run test:integration --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All 28 API integration, artifact, inventory, readiness, journey, and handoff tests passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "All 84 API route and security tests passed."
     },
     {
       "command": "npm.cmd run typecheck",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Workspace syntax, contracts, and API typechecks passed."
+      "notes": "Contracts, API, and web typechecks passed."
     },
     {
       "command": "npm.cmd run lint",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Workspace checks and ESLint completed with zero warnings."
+      "notes": "Workspace lint and ESLint checks passed."
     },
     {
-      "command": "npm.cmd test -- --runInBand",
+      "command": "npm.cmd test",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Full serialized repository suite passed 372 tests within a bounded five-minute verification window."
+      "notes": "The complete root test suite passed; the long-running command completed with an explicit exit code of 0."
     },
     {
       "command": "npm.cmd run build",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Workspace, contracts, and API production builds succeeded."
+      "notes": "Contracts, API, web client, and SSR builds passed; existing bundle-size warnings remain non-failing."
     },
     {
       "command": "npm.cmd audit --audit-level=high",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "No high-severity vulnerabilities found."
+      "notes": "Dependency audit reported 0 vulnerabilities."
     },
     {
       "command": "npm.cmd run api:inventory",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Runtime API inventory completed; the planned provider commission route remains uncomposed because the current runtime has no commission HTTP composition."
+      "notes": "Inventory includes GET /api/v1/provider/commission with operationId getProviderCommission and implemented status."
     },
     {
       "command": "npm.cmd run openapi:validate",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "OpenAPI artifacts validated; no route artifact changed."
+      "notes": "OpenAPI includes the verified-provider commission route, strict projection envelope, security, and error responses."
     },
     {
       "command": "npm.cmd run postman:validate",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Postman artifacts validated; no route artifact changed."
+      "notes": "Postman includes the provider commission projection request and validates against the implemented route inventory."
     },
     {
       "command": "git diff --check",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "No whitespace errors."
+      "notes": "Changed-file whitespace and patch integrity check passed."
+    },
+    {
+      "command": "node -e \"const fs=require('fs'); for (const f of ['apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json','agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json']) JSON.parse(fs.readFileSync(f,'utf8')); console.log('JSON_VALID')\"",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Changed OpenAPI, Postman, and endpoint-blueprint JSON files parsed successfully."
+    },
+    {
+      "command": "isolated non-production MongoDB commission projection test",
+      "exitCode": null,
+      "result": "Blocked",
+      "notes": "Blocked — prerequisites unavailable: no isolated non-production replica-set MongoDB topology or test credentials were configured. The deterministic route and projection tests cover authorization and redaction; the runtime adapter fails safely to the explicit none state when no persisted source exists."
     },
     {
       "command": "node agent_pack/scripts/audit_pack.mjs",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Agent Pack audit reported zero errors while backend_116 was in progress."
+      "notes": "Agent Pack audit reported zero errors after implementation and before task closure."
     }
   ],
   "sourceEvidence": [
+    "PRV-20",
     "agent_pack/04_tracks/backend/B8_commissions/backend_116.md",
-    "agent_pack/01_product/SCREEN_REGISTRY.json (PRV-20)",
-    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (PRV-20)",
-    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (planned GET /api/v1/provider/commission)",
-    "agent_pack/01_product/PRD.md (provider read-only commission rule)",
-    "agent_pack/01_product/ROLES_PERMISSIONS_MATRIX.md (verified provider access boundary)",
-    "packages/contracts/src/commissions/index.ts (resolver resolution contract)",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (GET /api/v1/provider/commission implemented)",
+    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (PRV-20 provider commission screen)",
+    "agent_pack/01_product/PRD.md (provider read-only commission rule and no universal value)",
+    "agent_pack/01_product/ROLES_PERMISSIONS_MATRIX.md (verified provider boundary)",
+    "agent_pack/02_architecture/DATABASE_SCHEMA_PLAN.md (commission policy and exception collections)",
     "packages/contracts/src/provider/index.ts",
+    "packages/contracts/src/commissions/index.ts",
     "apps/api/src/modules/provider/commission.ts",
-    "apps/api/tests/provider/service.test.ts",
+    "apps/api/src/modules/provider/commission-repository.ts",
+    "apps/api/tests/provider/router.test.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
     "docs/api/commission-policies.md"
   ],
-  "knownGaps": [
-    "The provider commission HTTP route and persistent resolver adapter are not composed in the current runtime; the service intentionally exposes a narrow adapter boundary and does not add an unconnected route.",
-    "No production commission data was seeded; the explicit source none projection is the safe empty state.",
-    "Live database/provider integration checks were not run because no isolated replica-set topology or credentials were available."
+  "scopeNotes": [
+    "The provider router/runtime, OpenAPI, Postman, runtime inventory, and handoff operation map were directly required integration scope for repairing the false completed Backend boundary.",
+    "The Mongo source reads only validated active commission records and returns a provider-facing projection; it never exposes source record IDs, approval actors, reasons, storage keys, or mutation operations.",
+    "The handoff contract-freeze text was narrowed and PRV-19/PRV-20 mappings were synchronized because the prior service-only statement was disproven by this implemented route.",
+    "No confirmation acknowledgement or administrative commission mutation route was added; those operations remain outside the provider read-only scope.",
+    "No frontend feature was implemented in this Backend truth repair."
   ],
-  "completedAt": "2026-08-14T17:18:00.000Z"
+  "knownGaps": [
+    "Live MongoDB projection verification remains blocked until an isolated non-production replica-set topology and credentials are available.",
+    "No production commission records were seeded; the empty state is explicitly source none rather than a fabricated value.",
+    "The provider commission route is read-only and does not acknowledge, settle, collect, or imply bank or financial verification."
+  ],
+  "completedAt": "2026-08-19T00:40:00+03:00"
 }

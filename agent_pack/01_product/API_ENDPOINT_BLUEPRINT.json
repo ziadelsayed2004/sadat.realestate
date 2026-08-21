@@ -106,7 +106,7 @@
       "eligible-users"
     ],
     "purpose": "Finish password reset",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -178,7 +178,7 @@
       "authenticated"
     ],
     "purpose": "List sessions",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -190,7 +190,7 @@
       "authenticated"
     ],
     "purpose": "Revoke owned session",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -334,7 +334,7 @@
       "public"
     ],
     "purpose": "Locale/display bootstrap",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -466,7 +466,49 @@
       "public"
     ],
     "purpose": "Post and visible comments",
-    "status": "planned",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/public/community/posts",
+    "module": "community",
+    "auth": "access-token",
+    "roles": [
+      "verified seeker",
+      "verified provider",
+      "verified admin"
+    ],
+    "purpose": "Create an owned community post draft",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/public/community/posts/:postId/comments",
+    "module": "community",
+    "auth": "access-token",
+    "roles": [
+      "verified seeker",
+      "verified provider",
+      "verified admin"
+    ],
+    "purpose": "Create a bounded comment on a published post",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/public/community/posts/:postId/reports",
+    "module": "moderation",
+    "auth": "access-token",
+    "roles": [
+      "verified seeker",
+      "verified provider",
+      "verified admin"
+    ],
+    "purpose": "Report a community post with an explicit reason",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -478,7 +520,7 @@
       "public"
     ],
     "purpose": "Published about content",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -490,7 +532,7 @@
       "public"
     ],
     "purpose": "Published team",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -502,7 +544,7 @@
       "crawler"
     ],
     "purpose": "Sitemap data projection",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -694,7 +736,7 @@
       "approved-provider"
     ],
     "purpose": "Provider KPIs",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -922,7 +964,7 @@
       "approved-provider"
     ],
     "purpose": "Owned ad requests",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -934,7 +976,7 @@
       "approved-provider"
     ],
     "purpose": "Create ad request",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -946,7 +988,7 @@
       "approved-provider"
     ],
     "purpose": "Owned ad details/quote",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -958,7 +1000,7 @@
       "approved-provider"
     ],
     "purpose": "Accept valid quote",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -970,7 +1012,7 @@
       "approved-provider"
     ],
     "purpose": "Upload private proof",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -982,7 +1024,7 @@
       "approved-provider"
     ],
     "purpose": "Effective commission read-only",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1006,7 +1048,31 @@
       "provider"
     ],
     "purpose": "Provider inbox",
-    "status": "planned",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/notifications/:notificationId/read",
+    "module": "notifications",
+    "auth": "access-token",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Mark owned provider notification read",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/notifications/read-all",
+    "module": "notifications",
+    "auth": "access-token",
+    "roles": [
+      "provider"
+    ],
+    "purpose": "Mark all owned provider notifications read",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1018,7 +1084,7 @@
       "provider"
     ],
     "purpose": "Provider settings",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1030,7 +1096,7 @@
       "provider"
     ],
     "purpose": "Update owned settings",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1042,7 +1108,7 @@
       "admin:overview.view"
     ],
     "purpose": "Admin KPIs",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1054,7 +1120,7 @@
       "admin:users.view"
     ],
     "purpose": "User list",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1066,7 +1132,7 @@
       "admin:users.view"
     ],
     "purpose": "User details",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1090,7 +1156,7 @@
       "admin:providers.view"
     ],
     "purpose": "Provider applications",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1102,7 +1168,7 @@
       "admin:providers.view"
     ],
     "purpose": "Provider/application details",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1126,7 +1192,7 @@
       "admin:documents.review"
     ],
     "purpose": "Authorized short-lived document access",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1138,7 +1204,7 @@
       "admin:account-reports.view"
     ],
     "purpose": "Account reports",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1150,7 +1216,7 @@
       "admin:account-reports.manage"
     ],
     "purpose": "Resolve account report",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1162,7 +1228,7 @@
       "admin:staff.view"
     ],
     "purpose": "Admin user list",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1174,7 +1240,7 @@
       "admin:staff.manage"
     ],
     "purpose": "Create admin user",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1186,7 +1252,7 @@
       "admin:staff.manage"
     ],
     "purpose": "Update/disable admin user",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1378,7 +1444,7 @@
       "admin:projects.view"
     ],
     "purpose": "Project list",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1534,19 +1600,19 @@
       "admin:requests.notes"
     ],
     "purpose": "Internal note",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
     "method": "GET",
-    "path": "/api/v1/admin/overdue-requests",
+    "path": "/api/v1/admin/requests/overdue",
     "module": "requests",
     "auth": "access-token",
     "roles": [
       "admin:requests.view"
     ],
     "purpose": "Overdue read model",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1570,7 +1636,7 @@
       "admin:request-issues.view"
     ],
     "purpose": "Request issues/reports",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1582,7 +1648,7 @@
       "admin:request-issues.manage"
     ],
     "purpose": "Resolve issue",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1691,7 +1757,7 @@
       "admin:community.view"
     ],
     "purpose": "Community posts",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1703,7 +1769,7 @@
       "admin:community.view"
     ],
     "purpose": "Community comments",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1715,7 +1781,7 @@
       "admin:community.moderate"
     ],
     "purpose": "Community reports",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1727,7 +1793,7 @@
       "admin:community.moderate"
     ],
     "purpose": "Moderation action",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1738,8 +1804,8 @@
     "roles": [
       "admin:content.view"
     ],
-    "purpose": "Versioned CMS content",
-    "status": "planned",
+    "purpose": "Versioned CMS content (about, team, population, tips, homepage, display)",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1750,8 +1816,8 @@
     "roles": [
       "admin:content.manage"
     ],
-    "purpose": "Update CMS content",
-    "status": "planned",
+    "purpose": "Update CMS content (about, team, population, tips, homepage, display)",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1763,7 +1829,7 @@
       "admin:ads.view"
     ],
     "purpose": "Ad request list",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1775,7 +1841,7 @@
       "admin:ads.view"
     ],
     "purpose": "Ad request details",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1787,7 +1853,7 @@
       "admin:ads.price"
     ],
     "purpose": "Issue manual quote",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1799,7 +1865,19 @@
       "admin:payments.review"
     ],
     "purpose": "Approve/reject proof",
-    "status": "planned",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/payment-proofs",
+    "module": "payments",
+    "auth": "access-token",
+    "roles": [
+      "admin:payments.review"
+    ],
+    "purpose": "List active payment proofs for manual review",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1811,7 +1889,7 @@
       "admin:ads.view"
     ],
     "purpose": "Scheduled ads calendar",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1823,7 +1901,43 @@
       "admin:ads.schedule"
     ],
     "purpose": "Schedule approved ad",
-    "status": "planned",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/ad-financial-review",
+    "module": "reports",
+    "auth": "access-token",
+    "roles": [
+      "admin:ads.view"
+    ],
+    "purpose": "Advertising financial review list",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/ad-financial-review/:requestId",
+    "module": "reports",
+    "auth": "access-token",
+    "roles": [
+      "admin:ads.view"
+    ],
+    "purpose": "Advertising financial review detail",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/ad-ledger",
+    "module": "reports",
+    "auth": "access-token",
+    "roles": [
+      "admin:ads.view"
+    ],
+    "purpose": "Advertising ledger review",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1835,7 +1949,7 @@
       "admin:banners.view"
     ],
     "purpose": "Banner list",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1847,7 +1961,7 @@
       "admin:banners.manage"
     ],
     "purpose": "Create banner",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1859,7 +1973,79 @@
       "admin:banners.manage"
     ],
     "purpose": "Update/schedule banner",
-    "status": "planned",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/banners/:bannerId/preview",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "admin:banners.view"
+    ],
+    "purpose": "Preview banner and approved media projection",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/banners/:bannerId/media",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "admin:banners.view"
+    ],
+    "purpose": "List active banner media",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/banners/:bannerId/media",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "admin:banners.manage"
+    ],
+    "purpose": "Create banner media metadata",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/admin/banner-media/:mediaId",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "admin:banners.manage"
+    ],
+    "purpose": "Update banner media metadata",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "DELETE",
+    "path": "/api/v1/admin/banner-media/:mediaId",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "admin:banners.manage"
+    ],
+    "purpose": "Deactivate banner media",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/banners/order",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "admin:banners.manage"
+    ],
+    "purpose": "Reorder banners within a placement",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1871,7 +2057,7 @@
       "admin:commissions.view"
     ],
     "purpose": "Policy list",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1883,7 +2069,7 @@
       "admin:commissions.manage"
     ],
     "purpose": "Create versioned policy",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1895,7 +2081,7 @@
       "admin:commissions.view"
     ],
     "purpose": "Effective account commission",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1907,7 +2093,7 @@
       "admin:commissions.manage"
     ],
     "purpose": "Set account override",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1919,7 +2105,7 @@
       "admin:commissions.view"
     ],
     "purpose": "Exception list",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1931,7 +2117,7 @@
       "admin:commissions.manage"
     ],
     "purpose": "Create exception",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1943,7 +2129,7 @@
       "admin:commissions.view"
     ],
     "purpose": "Confirmation states",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
@@ -1955,7 +2141,7 @@
       "admin:commissions.view"
     ],
     "purpose": "Commission audit projection",
-    "status": "planned",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {

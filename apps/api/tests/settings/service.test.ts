@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
+import { ProviderSettingsServiceError, createProviderSettingsService, type ProviderSettingsRepository } from '../../src/modules/settings/provider-service.js';
 import { SettingsServiceError, createSettingsService, type SettingsRepository } from '../../src/modules/settings/service.js';
-import type { AdminSettingsData } from '@sadat-real-estate/contracts';
+import type { AdminSettingsData, ProviderSettingsData } from '@sadat-real-estate/contracts';
 
 const adminClaims: AccessTokenClaims = {
   iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '0123456789abcdef01234567', sid: 'abcdefabcdefabcdefabcdef',
@@ -11,6 +12,19 @@ const adminClaims: AccessTokenClaims = {
 const initial: AdminSettingsData = {
   namespace: 'properties', schemaVersion: 1, values: { max_images: 20, allow_drafts: true }, version: 0,
   updatedBy: adminClaims.sub, updatedAt: '2026-08-01T00:00:00.000Z'
+};
+
+const providerClaims: AccessTokenClaims = {
+  ...adminClaims,
+  role: 'provider',
+  sub: '0123456789abcdef01234567'
+};
+
+const providerSettings: ProviderSettingsData = {
+  version: 0,
+  email: 'provider@example.test',
+  phone: '+2010998765432',
+  availableActions: ['update_email', 'update_contact']
 };
 
 function repository(): SettingsRepository {
@@ -71,4 +85,29 @@ test('rejects unauthorized, stale, schema-mismatched, unknown, and secret-bearin
 test('returns unavailable for a missing namespace without fabricating settings', async () => {
   const service = createSettingsService({ authorization: { async authorize() { return true; } }, repository: { async find() { return undefined; }, async upsert() { return { kind: 'version_conflict' as const }; } }, audit: { async record() { return 'audit-id'; } } });
   await assert.rejects(() => service.get(adminClaims, 'display'), (error: unknown) => error instanceof SettingsServiceError && error.code === 'SETTINGS_NOT_FOUND');
+});
+
+function providerRepository(result: { kind: 'updated'; settings: ProviderSettingsData } | { kind: 'not_found' } | { kind: 'version_conflict' } = { kind: 'updated', settings: providerSettings }): ProviderSettingsRepository {
+  return {
+    async find() { return providerSettings; },
+    async update() { return result; }
+  };
+}
+
+test('restricts provider settings to verified providers and returns safe versioned updates', async () => {
+  const service = createProviderSettingsService({ repository: providerRepository() });
+  assert.deepEqual(await service.get(providerClaims), providerSettings);
+  await assert.rejects(() => service.get({ ...providerClaims, status: 'pending' } as AccessTokenClaims), (error: unknown) => error instanceof ProviderSettingsServiceError && error.code === 'PROVIDER_SETTINGS_FORBIDDEN');
+  await assert.rejects(() => service.get({ ...providerClaims, role: 'admin' } as AccessTokenClaims), (error: unknown) => error instanceof ProviderSettingsServiceError && error.code === 'PROVIDER_SETTINGS_FORBIDDEN');
+  const updated = await service.update(providerClaims, { expectedVersion: 0, whatsappNumber: '+2010998765433' });
+  assert.equal(updated.email, providerSettings.email);
+
+  await assert.rejects(
+    () => service.update(providerClaims, { expectedVersion: 0, password: 'secret' }),
+    /Unrecognized key|unrecognized_keys/i
+  );
+  await assert.rejects(
+    () => createProviderSettingsService({ repository: providerRepository({ kind: 'version_conflict' }) }).update(providerClaims, { expectedVersion: 0, website: 'https://example.test' }),
+    (error: unknown) => error instanceof ProviderSettingsServiceError && error.code === 'PROVIDER_SETTINGS_VERSION_CONFLICT'
+  );
 });

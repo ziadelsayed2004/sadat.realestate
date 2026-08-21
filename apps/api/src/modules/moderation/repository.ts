@@ -1,16 +1,21 @@
 import { Types, type ClientSession, type Connection } from 'mongoose';
-import type { PropertyReportAction, PropertyReportCreate, PropertyReportListQuery, PropertyReportReason, PropertyReportStatus } from '@sadat-real-estate/contracts';
+import type { AccountReportAction, AccountReportListQuery, AccountReportStatus, PropertyReportAction, PropertyReportCreate, PropertyReportListQuery, PropertyReportReason, PropertyReportStatus } from '@sadat-real-estate/contracts';
 import type { AuditWriter } from '../audit/writer.js';
-import type { ModerationModels, PropertyReportRecord } from './models.js';
+import type { AccountReportRecord, ModerationModels, PropertyReportRecord } from './models.js';
 
 export interface StoredPropertyReport { id: string; propertyId: string; reporterId?: string; reason: PropertyReportReason; details?: string; status: PropertyReportStatus; resolutionReason?: string; resolvedBy?: string; resolvedAt?: Date; version: number; createdAt: Date; updatedAt: Date; }
 export type ReportWriteResult = { kind: 'written'; report: StoredPropertyReport } | { kind: 'duplicate' } | { kind: 'not_found' } | { kind: 'version_conflict' } | { kind: 'invalid_state' };
+export interface StoredAccountReport { id: string; accountId: string; accountRoleType?: 'seeker' | 'provider' | 'admin'; reporterId?: string; reason: string; details?: string; status: AccountReportStatus; resolutionReason?: string; relatedReports: number; version: number; createdAt: Date; updatedAt: Date; }
+export type AccountReportWriteResult = { kind: 'written'; report: StoredAccountReport } | { kind: 'not_found' } | { kind: 'version_conflict' } | { kind: 'invalid_state' };
 export interface ModerationRepository {
   create(input: { propertyId: string; reporterId: string; report: PropertyReportCreate; actorType: 'seeker' | 'provider' | 'admin'; requestId: string; traceId: string; now: Date }): Promise<ReportWriteResult>;
   list(query: PropertyReportListQuery): Promise<{ items: StoredPropertyReport[]; total: number }>;
   resolve(input: { reportId: string; expectedVersion: number; action: PropertyReportAction; adminId: string; reason: string; requestId: string; traceId: string; now: Date }): Promise<ReportWriteResult>;
+  listAccountReports(query: AccountReportListQuery): Promise<{ items: StoredAccountReport[]; total: number }>;
+  resolveAccountReport(input: { reportId: string; expectedVersion: number; action: AccountReportAction; adminId: string; reason: string; requestId: string; traceId: string; now: Date }): Promise<AccountReportWriteResult>;
 }
 function stored(record: PropertyReportRecord & { _id: Types.ObjectId }): StoredPropertyReport { return { id: record._id.toHexString(), propertyId: record.propertyId.toHexString(), ...(record.reporterId ? { reporterId: record.reporterId.toHexString() } : {}), reason: record.reason, ...(record.details ? { details: record.details } : {}), status: record.status, ...(record.resolutionReason ? { resolutionReason: record.resolutionReason } : {}), ...(record.resolvedBy ? { resolvedBy: record.resolvedBy.toHexString() } : {}), ...(record.resolvedAt ? { resolvedAt: record.resolvedAt } : {}), version: record.version, createdAt: record.createdAt, updatedAt: record.updatedAt }; }
+function storedAccount(record: AccountReportRecord & { _id: Types.ObjectId }): StoredAccountReport { return { id: record._id.toHexString(), accountId: record.accountId.toHexString(), ...(record.accountRoleType ? { accountRoleType: record.accountRoleType } : {}), ...(record.reporterId ? { reporterId: record.reporterId.toHexString() } : {}), reason: record.reason, ...(record.details ? { details: record.details } : {}), status: record.status, ...(record.resolutionReason ? { resolutionReason: record.resolutionReason } : {}), relatedReports: record.relatedReports, version: record.version, createdAt: record.createdAt, updatedAt: record.updatedAt }; }
 function duplicate(error: unknown): boolean { return typeof error === 'object' && error !== null && 'code' in error && (error as { code?: unknown }).code === 11000; }
 
 export function createMongooseModerationRepository(connection: Connection, models: ModerationModels, audit: AuditWriter): ModerationRepository {
@@ -30,6 +35,35 @@ export function createMongooseModerationRepository(connection: Connection, model
         const result = await models.PropertyReport.findOneAndUpdate({ _id: input.reportId, version: input.expectedVersion, status: { $in: ['open', 'in_review'] } }, { $set: { status: target, resolutionReason: input.reason, resolvedBy: new Types.ObjectId(input.adminId), resolvedAt: input.now, updatedAt: input.now }, $inc: { version: 1 } }, { new: true, runValidators: true, lean: true, session });
         if (!result) { const current = await models.PropertyReport.findById(input.reportId).lean().session(session); if (!current) return { kind: 'not_found' as const }; if (current.version !== input.expectedVersion) return { kind: 'version_conflict' as const }; return { kind: 'invalid_state' as const }; }
         const report = stored(result as PropertyReportRecord & { _id: Types.ObjectId }); await audit.record({ actorType: 'admin', actorId: input.adminId, targetType: 'property_report', targetId: report.id, action: `property_report.${input.action}`, reason: input.reason, before: null, after: report, requestId: input.requestId, traceId: input.traceId, occurredAt: input.now }, session); return { kind: 'written', report };
+      });
+    },
+    async listAccountReports(query) {
+      const filter: Record<string, unknown> = {};
+      if (query.status) filter.status = query.status;
+      if (query.accountId) filter.accountId = new Types.ObjectId(query.accountId);
+      const [rows, total] = await Promise.all([
+        models.AccountReport.find(filter).sort({ createdAt: -1, _id: -1 }).skip((query.page - 1) * query.limit).limit(query.limit).lean(),
+        models.AccountReport.countDocuments(filter)
+      ]);
+      return { items: rows.map(row => storedAccount(row as AccountReportRecord & { _id: Types.ObjectId })), total };
+    },
+    async resolveAccountReport(input) {
+      return transaction(async session => {
+        const target = input.action === 'resolve' ? 'resolved' : 'dismissed';
+        const result = await models.AccountReport.findOneAndUpdate(
+          { _id: input.reportId, version: input.expectedVersion, status: { $in: ['open', 'in_review'] } },
+          { $set: { status: target, resolutionReason: input.reason, resolvedBy: new Types.ObjectId(input.adminId), resolvedAt: input.now, updatedAt: input.now }, $inc: { version: 1 } },
+          { new: true, runValidators: true, lean: true, session }
+        );
+        if (!result) {
+          const current = await models.AccountReport.findById(input.reportId).lean().session(session);
+          if (!current) return { kind: 'not_found' as const };
+          if (current.version !== input.expectedVersion) return { kind: 'version_conflict' as const };
+          return { kind: 'invalid_state' as const };
+        }
+        const report = storedAccount(result as AccountReportRecord & { _id: Types.ObjectId });
+        await audit.record({ actorType: 'admin', actorId: input.adminId, targetType: 'account_report', targetId: report.id, action: `account_report.${input.action}`, reason: input.reason, before: null, after: report, requestId: input.requestId, traceId: input.traceId, occurredAt: input.now }, session);
+        return { kind: 'written' as const, report };
       });
     }
   };

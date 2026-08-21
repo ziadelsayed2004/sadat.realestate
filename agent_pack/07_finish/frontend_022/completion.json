@@ -1,0 +1,118 @@
+{
+  "taskId": "frontend_022",
+  "summary": "Implemented the localized provider type selection surface for AUTH-07 and AUTH-08. The UI derives its three options from the approved provider contract, supports default and selected states, keyboard focus, responsive layouts, Arabic RTL and English/Simplified Chinese LTR, and hands off only a validated providerType to the next onboarding route without exposing OTP or session authority.",
+  "filesChanged": [
+    "apps/web/src/features/provider_auth/copy.ts",
+    "apps/web/src/features/provider_auth/pages.tsx",
+    "apps/web/src/features/provider_auth/styles.css",
+    "apps/web/src/features/provider_auth/index.ts",
+    "apps/web/src/features/auth/pages.tsx",
+    "apps/web/tests/provider-type.vitest.test.tsx",
+    "apps/web/tests/e2e/provider-type.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-default-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-default-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-default-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-default-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-default-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-default-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-default-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-default-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-default-zh-CN-tablet-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-selected-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-selected-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-selected-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-selected-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-selected-en-mobile-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-selected-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-selected-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-selected-zh-CN-mobile-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-type.spec.ts-snapshots/provider-type-selected-zh-CN-tablet-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts build and Web TypeScript typecheck passed after the final implementation."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source and test lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/provider-type.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Six focused provider type and route integration tests passed."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "88 Vitest tests and 76 Node tests passed after the final implementation."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR Web builds passed; the existing large-chunk warning remained non-fatal."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-type.spec.ts --update-snapshots",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "27 browser checks passed across desktop/tablet/mobile and ar/en/zh-CN while creating the 18 AUTH-07/AUTH-08 visual snapshots."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-type.spec.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "27 browser checks passed again without snapshot updates, covering default/selected journeys, keyboard semantics, safe handoff, locale direction, and visual baselines."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "81 repository accessibility checks passed across all approved locale/device projects; provider-specific keyboard and semantic assertions are included in the 27-check targeted Playwright suite."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory confirms POST /api/v1/provider/application as createProviderApplication and the provider account/business/company operations owned by subsequent onboarding tasks."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID; no route or contract artifact was changed by this selection-only task."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID; no route or collection artifact was changed by this selection-only task."
+    }
+  ],
+  "sourceEvidence": [
+    "AUTH-07 local approved export: docs/design_sources/final_screens/authentication/AUTH-07.png; SHA-256 d50c4df4c2c111eb3a186937360fbeaea94ca83cd8101467f05e8d795bea1c3f; Drive https://drive.google.com/drive/folders/16BX8MSYprjY3KZoI9FLUB8nitqq0PjEK; Figma prototype node 6017-16212",
+    "AUTH-08 local approved export: docs/design_sources/final_screens/authentication/AUTH-08.png; SHA-256 bb091deed2b3890467a8e0b2c30c2ad5808f6a01ac4f68161d617b88ed13be2a; Drive https://drive.google.com/drive/folders/1oUpeR-CISHjIhbyGPkhqPADmCUf58Seg; Figma prototype node 6017-16212",
+    "packages/contracts/src/provider/index.ts: PROVIDER_TYPES and providerTypeSchema define the only supported provider types; providerApplicationCreateRequestSchema requires a verified registration token for the later API boundary",
+    "apps/api/src/modules/provider/router.ts and API inventory: POST /api/v1/provider/application is implemented and synchronized, but is intentionally not called by type selection",
+    "apps/web/src/features/provider_auth/pages.tsx and apps/web/tests/provider-type.vitest.test.tsx: validated selection, query handoff, direction, and token-safe route behavior",
+    "apps/web/tests/e2e/provider-type.spec.ts: 27-check responsive locale/device journey and 18 visual baselines"
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/auth/pages.tsx is outside the task's feature root and was changed only as an explicit necessity exception: the existing /auth/* dispatcher rendered an unavailable state for /auth/register/provider/type, so the selected provider page could not be reached without this one-path integration.",
+    "The next route carries only providerType and the existing locale query. OTP verificationToken, access tokens, refresh cookies, and private application data are not submitted, stored, placed in URLs, or rendered by frontend_022.",
+    "Provider account creation remains at the implemented API boundary and is owned by the subsequent onboarding task; no production mock or invented endpoint was added.",
+    "No Backend truth repair, dependency, contract, OpenAPI, Postman, database, or root truth change was required for this task."
+  ],
+  "knownGaps": [
+    "The provider account fields reached through /auth/register/provider/account are owned by frontend_023 and are intentionally not implemented in frontend_022.",
+    "The local design exports were used as the visual source of truth; the recorded Drive/Figma references remain the external design provenance."
+  ],
+  "completedAt": "2026-08-18T01:43:39.9564513Z"
+}

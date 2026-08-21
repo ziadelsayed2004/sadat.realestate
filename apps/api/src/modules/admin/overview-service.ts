@@ -15,6 +15,12 @@ export interface AdminOverviewAggregationSource {
   aggregate(range: AdminOverviewQuery): Promise<AdminOverviewMetrics>;
 }
 
+export interface AdminOverviewService {
+  get(claims: AccessTokenClaims, input: unknown): Promise<AdminOverviewData>;
+  getOverview(claims: AccessTokenClaims, input: unknown): Promise<AdminOverviewData>;
+  read(claims: AccessTokenClaims, input: unknown): Promise<AdminOverviewData>;
+}
+
 export interface AdminOverviewServiceDependencies {
   authorization: AdminOverviewAuthorization;
   source: AdminOverviewAggregationSource;

@@ -1,5 +1,18 @@
 # Current Reality Snapshot
 
+## Release gate refresh — 2026-08-21
+
+- The repository has completed the authorized frontend sequence through `frontend_089`; `frontend_090` is the selected final gate and is currently being verified.
+- All 113 Backend task records are Complete. The frontend graph has 74 Complete tasks before closing `frontend_090`; no unrelated task is In Progress.
+- Web, API, root, UAT, visual, accessibility, performance, browser/session security, API inventory, OpenAPI, Postman, dependency, environment, and Agent Pack checks have current local evidence in `agent_pack/07_finish/`.
+- The all-screen UAT route/locale matrix passed 393/393 cases for 131 canonical screens across Arabic RTL, English LTR, and Simplified Chinese LTR.
+- Release readiness is conditional, not Production-ready: Docker, live isolated MongoDB, private storage/scanner, OTP/Preview providers, monitoring, backup/restore, and external security assurance remain external prerequisites.
+- `DESIGN-EXCEPTION-ADM-54` is an approved owner waiver for the unavailable direct comparison only. Direct ADM-54 pixel comparison was not performed.
+- The unfiltered Web E2E runner was not claimed after it produced no observable progress and was safely terminated; the targeted critical-journey matrix passed 9/9.
+- `agent_pack/08_reality_sync/FINAL_RELEASE_MANIFEST.json` is the canonical final-gate manifest and must be updated to `graphStatus: complete_conditional` only after `frontend_090` is closed.
+
+The historical snapshot below predates the current dependency-backed verification and is retained for provenance only; it is not current release evidence.
+
 - Snapshot date: 2026-08-17.
 - The delivered source archive does not contain `.git/`; branch, commit history, and an original clean-worktree baseline cannot be proven from this copy. The original uploaded archive remains unchanged outside this extracted working copy.
 - The repository is an npm workspace monorepo using Node.js 24, TypeScript, Express, React, and Vite. The available runtime is Node.js `v24.19.0` with npm `11.9.0`, which matches the declared engine range.

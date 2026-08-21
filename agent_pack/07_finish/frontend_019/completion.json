@@ -1,0 +1,149 @@
+{
+  "taskId": "frontend_019",
+  "summary": "Completed the Public Site responsive QA task by executing the full approved public visual, accessibility, keyboard, locale, direction, and device matrices. The existing public runtime met the acceptance criteria, so no runtime defect or justified code change was found.",
+  "filesChanged": [
+    "agent_pack/07_finish/frontend_019/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "72/72 visual tests passed across desktop, tablet, and mobile for ar, en, and zh-CN."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/visual.spec.ts tests/e2e/community.spec.ts tests/e2e/about-team.spec.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "108/108 public visual tests passed for PUB-01 through PUB-12 across all nine locale/device projects, including community create-post, About, and Team."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/accessibility.spec.ts tests/e2e/about-team-accessibility.spec.ts tests/e2e/community.spec.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "117/117 public accessibility and keyboard tests passed across all nine locale/device projects."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript verification passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "68 Vitest tests and 75 Node/TAP tests passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR web builds passed; Vite emitted only the existing non-blocking large-chunk warning."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root configuration, API, and web test suites passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and web builds passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory passed and public routes remained implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities reported."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F1_public_site/frontend_019.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "apps/web/src/routes/route-table.ts",
+    "apps/web/src/features/testing/model.ts",
+    "apps/web/tests/e2e/visual.spec.ts",
+    "apps/web/tests/e2e/community.spec.ts",
+    "apps/web/tests/e2e/about-team.spec.ts",
+    "apps/web/tests/e2e/accessibility.spec.ts",
+    "apps/web/tests/e2e/about-team-accessibility.spec.ts",
+    "PUB-01 local export: docs/design_sources/final_screens/public/PUB-01.png",
+    "PUB-02 local export: docs/design_sources/final_screens/public/PUB-02.png",
+    "PUB-03 local export: docs/design_sources/final_screens/public/PUB-03.png",
+    "PUB-04 local export: docs/design_sources/final_screens/public/PUB-04.png",
+    "PUB-05 local export: docs/design_sources/final_screens/public/PUB-05.png",
+    "PUB-06 local export: docs/design_sources/final_screens/public/PUB-06.png",
+    "PUB-07 local export: docs/design_sources/final_screens/public/PUB-07.png",
+    "PUB-08 local export: docs/design_sources/final_screens/public/PUB-08.png",
+    "PUB-09 local export: docs/design_sources/final_screens/public/PUB-09.png",
+    "PUB-10 local export: docs/design_sources/final_screens/public/PUB-10.png",
+    "PUB-11 local export: docs/design_sources/final_screens/public/PUB-11.png",
+    "PUB-12 local export: docs/design_sources/final_screens/public/PUB-12.png",
+    "Public Figma prototype: https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-10847&viewport=-247%2C-797%2C0.29&t=jO0Is94EyiG394Gy-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A10847&page-id=6017%3A4352",
+    "PUB-01 Drive source: https://drive.google.com/drive/folders/1RDaXkGyrC4p2ycy_wHR7gNssJS7sNU7O",
+    "PUB-02 Drive source: https://drive.google.com/drive/folders/1qQzXJ32c1YuOBvx88oZBRezWmEqJ_VOI",
+    "PUB-03 Drive source: https://drive.google.com/drive/folders/1YKuQuflPrwhW_YzDuLL8cqc748ZEDtoQ",
+    "PUB-04 Drive source: https://drive.google.com/drive/folders/133Vb7i7iA6aqf96cKafQaq4zXfn6VRw8",
+    "PUB-05 Drive source: https://drive.google.com/drive/folders/1Hx02nn7Ll4Rv4fbR8Xea8uPKL0ChEkLM",
+    "PUB-06 Drive source: https://drive.google.com/drive/folders/1tZHKw4xEPyQY2ICmRdXz5CwrYbucNoo1",
+    "PUB-07 Drive source: https://drive.google.com/drive/folders/1TNZyuSMv5lqL847yqnjJJzedmEhycR2Z",
+    "PUB-08 Drive source: https://drive.google.com/drive/folders/1kTANteLpbcB5kmw8yLPGoZvwh4CVCLAr",
+    "PUB-09 Drive source: https://drive.google.com/drive/folders/113EnHTq_O-sfoNJYbelWyoPi1hcdvk3J",
+    "PUB-10 Drive source: https://drive.google.com/drive/folders/1FyJqHCqwTdzzPa4y4e7UGsV6IH5laGOd",
+    "PUB-11 Drive source: https://drive.google.com/drive/folders/1YfgHS3imL4ebIizEII7GFR418HXGpkY7",
+    "PUB-12 Drive source: https://drive.google.com/drive/folders/1WwO7cVz_vckLwjzW4SZ87nlliGI0W8if"
+  ],
+  "scopeNotes": [
+    "The task has no direct Screen IDs; its QA target was resolved from the public route table and design manifest to PUB-01 through PUB-12.",
+    "All approved local public exports were present and inspected; the local exports were used as the approved visual sources while the external references were recorded.",
+    "No runtime, contract, test, dependency, asset, or documentation change was justified because the existing implementation passed the complete QA and phase gates.",
+    "The task-specific QA evidence is the only file created for this task; prior dirty changes and prior-task files were preserved."
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-18T00:26:45.3020235Z"
+}

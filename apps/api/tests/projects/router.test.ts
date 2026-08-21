@@ -16,6 +16,7 @@ const tokens: AccessTokenService = {
 };
 const service: ProjectRouterDependencies['service'] = {
   async list() { return { data: { items: [project] }, page: 1, limit: 20, total: 1 }; },
+  async listAdmin() { return { data: { items: [{ ...project, availableActions: ['approve' as const] }] }, page: 1, limit: 20, total: 1 }; },
   async create() { return project; },
   async update() { return project; },
   async submit() { return { ...project, status: 'pending_review' as const, availableActions: [] }; },
@@ -36,15 +37,19 @@ test('project routes require provider/admin authentication and reject unauthoriz
   assert.equal((await request(url, 'GET', '/api/v1/provider/projects', 'pending')).status, 403);
   assert.equal((await request(url, 'POST', `/api/v1/provider/projects/${projectId}/submit`, 'admin', { version: 0, reason: 'Submit project' })).status, 403);
   assert.equal((await request(url, 'POST', `/api/v1/admin/projects/${projectId}/review`, 'provider', { version: 0, action: 'approve', reason: 'Approve project' })).status, 403);
+  assert.equal((await request(url, 'GET', '/api/v1/admin/projects', 'provider')).status, 403);
+  assert.equal((await request(url, 'GET', '/api/v1/admin/projects', 'admin')).status, 200);
   assert.equal((await request(url, 'GET', '/api/v1/provider/projects?limit=101', 'provider')).status, 400);
 }));
 
 test('project routes expose strict CRUD, submit, and review envelopes', async () => run(async url => {
   assert.equal((await request(url, 'GET', '/api/v1/provider/projects', 'provider')).status, 200);
+  assert.equal((await request(url, 'GET', '/api/v1/admin/projects?page=1&limit=20', 'admin')).status, 200);
   assert.equal((await request(url, 'POST', '/api/v1/provider/projects', 'provider', { name: { en: 'Project' }, slug: 'project', reason: 'Create project' })).status, 201);
   assert.equal((await request(url, 'PATCH', `/api/v1/provider/projects/${projectId}`, 'provider', { version: 0, name: { en: 'Updated' }, reason: 'Update project' })).status, 200);
   assert.equal((await request(url, 'POST', `/api/v1/provider/projects/${projectId}/submit`, 'provider', { version: 0, reason: 'Submit project for review' })).status, 200);
   assert.equal((await request(url, 'POST', `/api/v1/admin/projects/${projectId}/review`, 'admin', { version: 1, action: 'approve', reason: 'Approve project review' })).status, 200);
   assert.equal((await request(url, 'POST', '/api/v1/provider/projects', 'provider', { name: { en: 'Project' }, slug: 'project', reason: 'Create project', extra: true })).status, 400);
   assert.equal((await request(url, 'POST', `/api/v1/admin/projects/${projectId}/review`, 'admin', { version: 1, action: 'approve', reason: 'no' })).status, 400);
+  assert.equal((await request(url, 'GET', '/api/v1/admin/projects?limit=101', 'admin')).status, 400);
 }));

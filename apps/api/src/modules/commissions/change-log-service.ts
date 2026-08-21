@@ -105,3 +105,4 @@ export function createCommissionChangeLogService(dependencies: { source: Commiss
   };
 }
 
+export type CommissionChangeLogService = ReturnType<typeof createCommissionChangeLogService>;

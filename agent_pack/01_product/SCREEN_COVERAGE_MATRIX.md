@@ -109,8 +109,8 @@
 | ADM-37 | admin | Pending Payments Review | ar/en/zh-CN | rtl/ltr | desktop | `/admin/ads/payments/pending-review` | `backend_100`<br>`backend_101`<br>`backend_102`<br>`backend_103`<br>`backend_104`<br>`backend_105`<br>`backend_108` | `frontend_070` |
 | ADM-38 | admin | Financial Review | ar/en/zh-CN | rtl/ltr | desktop | `/admin/ads/financial-review` | `backend_100`<br>`backend_101`<br>`backend_102`<br>`backend_103`<br>`backend_104`<br>`backend_105`<br>`backend_108` | `frontend_070` |
 | ADM-39 | admin | Commissions Management | ar/en/zh-CN | rtl/ltr | desktop | `/admin/commissions` | `backend_110`<br>`backend_111`<br>`backend_112`<br>`backend_114`<br>`backend_115` | `frontend_071` |
-| ADM-40 | admin | Create Commission Policy | ar/en/zh-CN | rtl/ltr | desktop | `/admin/commissions/policies/new` | `backend_110`<br>`backend_111`<br>`backend_112`<br>`backend_114`<br>`backend_115` | `frontend_071` |
-| ADM-41 | admin | Commission Change Log | ar/en/zh-CN | rtl/ltr | desktop | `/admin/commissions/change-log` | `backend_110`<br>`backend_111`<br>`backend_112`<br>`backend_114`<br>`backend_115` | `frontend_071` |
+| ADM-40 | admin | Create Commission Policy | ar/en/zh-CN | rtl/ltr | desktop | `/admin/commissions/new` | `backend_110`<br>`backend_111`<br>`backend_112`<br>`backend_114`<br>`backend_115` | `frontend_071` |
+| ADM-41 | admin | Commission Change Log | ar/en/zh-CN | rtl/ltr | desktop | `/admin/commissions/history` | `backend_110`<br>`backend_111`<br>`backend_112`<br>`backend_114`<br>`backend_115` | `frontend_071` |
 | ADM-42 | admin | Account Commission | ar/en/zh-CN | rtl/ltr | desktop | `/admin/commissions/accounts/:id` | `backend_110`<br>`backend_111`<br>`backend_112`<br>`backend_114`<br>`backend_115` | `frontend_071` |
 | ADM-43 | admin | Commission Exceptions | ar/en/zh-CN | rtl/ltr | desktop | `/admin/commissions/exceptions` | `backend_110`<br>`backend_111`<br>`backend_112`<br>`backend_114`<br>`backend_115` | `frontend_071` |
 | ADM-44 | admin | Create Commission Exception | ar/en/zh-CN | rtl/ltr | desktop | `/admin/commissions/exceptions/new` | `backend_110`<br>`backend_111`<br>`backend_112`<br>`backend_114`<br>`backend_115` | `frontend_071` |
@@ -135,4 +135,4 @@
 | ADM-63 | admin | Roles & Permissions | ar/en/zh-CN | rtl/ltr | desktop | `/admin/roles` | `backend_016`<br>`backend_017`<br>`backend_121` | `frontend_075` |
 | ADM-64 | admin | Role Details & Permissions | ar/en/zh-CN | rtl/ltr | desktop | `/admin/roles/:id` | `backend_016`<br>`backend_017`<br>`backend_121` | `frontend_075` |
 | ADM-65 | admin | Admin Notifications | ar/en/zh-CN | rtl/ltr | desktop | `/admin/notifications` | `backend_122` | `frontend_076` |
-| ADM-66 | admin | Audit Log | ar/en/zh-CN | rtl/ltr | desktop | `/admin/audit-log` | `backend_020` | `frontend_076` |
+| ADM-66 | admin | Audit Log | ar/en/zh-CN | rtl/ltr | desktop | `/admin/audit-logs` | `backend_020` | `frontend_076` |

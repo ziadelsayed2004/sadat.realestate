@@ -27,7 +27,7 @@ test('route foundation maps canonical surfaces without inventing API paths', () 
   assert.equal(resolveRoute('/provider-application/status').requiresAuthentication, true);
   assert.equal(resolveRoute('/seeker/requests').requiresAuthentication, true);
   assert.equal(resolveRoute('/provider/properties/new/basic').deviceScope, 'desktop');
-  assert.equal(resolveRoute('/admin/audit-log').surface, 'admin');
+  assert.equal(resolveRoute('/admin/audit-logs').surface, 'admin');
 });
 
 test('unknown URLs remain a truthful 404 shell', () => {

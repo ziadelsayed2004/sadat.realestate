@@ -113,6 +113,27 @@ const articleListData = [
 
 const articleDetailsData = articleListData[0];
 
+const communityData = {
+  items: [{
+    id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
+    title: 'Published community question',
+    body: 'A safe community body.',
+    createdAt: '2026-08-01T10:00:00+00:00',
+    commentCount: 0
+  }],
+  page: 1,
+  limit: 20,
+  total: 1
+};
+
+const aboutData = {
+  items: [{ key: 'mission', title: { en: 'Our mission' }, body: { en: 'A published mission.' }, order: 0 }]
+};
+
+const teamData = {
+  items: [{ key: 'leader', title: { en: 'Platform lead' }, name: { en: 'Published team member' }, role: { en: 'Platform lead' }, bio: { en: 'A public biography.' }, order: 0 }]
+};
+
 test('SSR renders the public shell with requested locale and LTR direction', async () => {
   const result = await render('/properties?lang=en', { acceptLanguage: 'ar' });
   assert.equal(result.statusCode, 200);
@@ -121,10 +142,13 @@ test('SSR renders the public shell with requested locale and LTR direction', asy
   assert.match(result.html, /data-surface="public"/);
   assert.match(result.html, /data-locale="en"/);
   assert.match(result.html, /src="\/assets\/sadat-real-estate-logo\.png"/);
+  assert.equal(result.seo?.canonicalPath, '/properties');
+  assert.equal(result.seo?.robots, 'index,follow');
+  assert.equal(result.seo?.alternatePaths.at(-1)?.hrefLang, 'x-default');
 });
 
 test('SSR keeps protected dashboard routes in a permission-safe shell', async () => {
-  const result = await render('/admin/audit-log', { acceptLanguage: 'ar' });
+  const result = await render('/admin/audit-logs', { acceptLanguage: 'ar' });
   assert.equal(result.statusCode, 200);
   assert.equal(result.locale, 'ar');
   assert.equal(result.direction, 'rtl');
@@ -137,10 +161,12 @@ test('SSR returns a real 404 result for unknown routes', async () => {
   assert.equal(result.statusCode, 404);
   assert.equal(result.locale, 'zh-CN');
   assert.match(result.html, /data-state="error"/);
+  assert.equal(result.seo?.robots, 'noindex,nofollow');
+  assert.equal(result.seo?.canonicalPath, '/missing-route');
 });
 
 test('SSR renders the homepage shell and hydrates CMS data only when supplied', async () => {
-  const result = await render('/', {
+  const result = await render('/?lang=en', {
     homepageData: {
       sections: [{ key: 'hero', title: { en: 'Published homes' }, order: 0 }],
       properties: [],
@@ -153,6 +179,8 @@ test('SSR renders the homepage shell and hydrates CMS data only when supplied', 
   assert.match(result.html, /data-page="public-home"/);
   assert.match(result.html, /Published homes/);
   assert.deepEqual(result.homepageData?.sections[0]?.title, { en: 'Published homes' });
+  assert.equal(result.seo?.canonicalPath, '/');
+  assert.equal(result.seo?.description, 'Browse published properties from the approved platform data.');
 });
 
 test('SSR renders the property listing with the implemented query and safe list data', async () => {
@@ -181,6 +209,8 @@ test('SSR renders property details with localized SEO evidence and safe bootstra
   assert.match(result.html, /Published home/);
   assert.equal(result.seo?.canonicalPath, '/properties/published-home');
   assert.equal(result.seo?.description, 'Search description');
+  assert.equal(result.seo?.robots, 'index,follow');
+  assert.equal(result.seo?.openGraph.type, 'website');
   assert.equal(result.seo?.jsonLd.name, 'Published home details');
   assert.equal(result.seo?.jsonLd.identifier, 'published-home');
   assert.deepEqual(result.propertyDetailsData?.seo.slug, 'published-home');
@@ -222,6 +252,8 @@ test('SSR renders the public developer profile and truthful profile projection',
   assert.match(result.html, /Central project/);
   assert.match(result.html, /Published home/);
   assert.equal(result.developerProfileInitialState, undefined);
+  assert.equal(result.seo?.canonicalPath, '/developers/approved-builder');
+  assert.equal(result.seo?.jsonLd['@type'], 'Organization');
 });
 
 test('SSR renders the public article listing with query and safe public projection', async () => {
@@ -238,6 +270,43 @@ test('SSR renders the public article listing with query and safe public projecti
   assert.deepEqual(result.articleListData?.map(item => item.slug), ['buying-in-sadat', 'rental-tips']);
 });
 
+test('SSR renders the public community projection and create guard without private fields', async () => {
+  const result = await render('/community?lang=en&create=1', { communityData });
+  assert.equal(result.statusCode, 200);
+  assert.equal(result.locale, 'en');
+  assert.equal(result.direction, 'ltr');
+  assert.match(result.html, /data-page="public-community"/);
+  assert.match(result.html, /Published community question/);
+  assert.match(result.html, /data-page="public-community"/);
+  assert.match(result.html, /Sign-in required/);
+  assert.doesNotMatch(result.html, /authorId/);
+  assert.deepEqual(result.communityData?.items.map(item => item.id), ['aaaaaaaaaaaaaaaaaaaaaaaa']);
+});
+
+test('SSR renders the public About projection and safe bootstrap', async () => {
+  const result = await render('/about?lang=en', { aboutData });
+  assert.equal(result.statusCode, 200);
+  assert.equal(result.locale, 'en');
+  assert.equal(result.direction, 'ltr');
+  assert.match(result.html, /data-page="public-about"/);
+  assert.match(result.html, /data-about-state="success"/);
+  assert.match(result.html, /Our mission/);
+  assert.doesNotMatch(result.html, /updatedBy|status|active/);
+  assert.deepEqual(result.aboutData?.items.map(item => item.key), ['mission']);
+});
+
+test('SSR renders the public Team projection without private fields or asset URLs', async () => {
+  const result = await render('/team?lang=en', { teamData });
+  assert.equal(result.statusCode, 200);
+  assert.equal(result.locale, 'en');
+  assert.equal(result.direction, 'ltr');
+  assert.match(result.html, /data-page="public-team"/);
+  assert.match(result.html, /data-team-state="success"/);
+  assert.match(result.html, /Published team member/);
+  assert.doesNotMatch(result.html, /updatedBy|photoAssetId/);
+  assert.deepEqual(result.teamData?.items.map(item => item.key), ['leader']);
+});
+
 test('SSR renders article details with localized SEO and related-content bootstrap', async () => {
   const result = await render('/articles/buying-in-sadat?lang=en', { articleDetailsData, relatedArticles: articleListData });
   assert.equal(result.statusCode, 200);
@@ -249,6 +318,8 @@ test('SSR renders article details with localized SEO and related-content bootstr
   assert.match(result.html, /Rental tips/);
   assert.equal(result.seo?.canonicalPath, '/articles/buying-in-sadat');
   assert.equal(result.seo?.description, 'A practical buying guide.');
+  assert.equal(result.seo?.robots, 'index,follow');
+  assert.equal(result.seo?.openGraph.type, 'article');
   assert.equal(result.seo?.jsonLd['@type'], 'Article');
   assert.equal(result.seo?.jsonLd.headline, 'Buying in Sadat City');
   assert.deepEqual(result.relatedArticles?.map(item => item.slug), ['buying-in-sadat', 'rental-tips']);
@@ -259,4 +330,5 @@ test('SSR returns 404 for an article slug that does not match the safe slug cont
   assert.equal(result.statusCode, 404);
   assert.equal(result.articleDetailsInitialState, 'not_found');
   assert.match(result.html, /data-state="not_found"/);
+  assert.equal(result.seo?.robots, 'noindex,follow');
 });

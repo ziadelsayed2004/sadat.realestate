@@ -1,0 +1,176 @@
+{
+  "taskId": "frontend_085",
+  "summary": "Completed the browser and session security review. The web server now emits baseline security headers and an origin-scoped CSP for HTML responses, while the browser matrix verifies cache privacy, token non-persistence, hostile redirect rejection, protected-route denial, locale/direction behavior, and absence of sensitive values in rendered pages. Existing in-memory access-token storage, refresh deduplication, logout clearing, and API cookie security were verified by focused Web and API tests.",
+  "filesChanged": [
+    "apps/web/server.mjs",
+    "apps/web/tests/e2e/security.spec.ts"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/security.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --project=tablet-ar --project=tablet-en --project=tablet-zh --project=mobile-ar --project=mobile-en --project=mobile-zh --workers=1",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "27 browser security cases passed across Arabic, English, Simplified Chinese, Desktop, Tablet, and Mobile projects."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- tsx --test tests/auth.test.ts tests/routing.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "18 focused auth and routing tests passed, including in-memory token handling, refresh deduplication, invalid-refresh logout, remote logout, safe availableActions, and role guards."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web tests passed: 55 Vitest files / 315 tests and the Node suite with 76 passing tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR production builds passed; existing large-chunk warning only."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root aggregate tests passed, including 507 API tests and the Web Vitest/Node suites."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web production builds passed; existing large-chunk warning only."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API typecheck passed."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "372 API unit tests passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "107 API tests passed, including auth cookie, refresh/logout, upload, private-document, and authorization coverage."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "72 visual tests passed across the configured browser matrix."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "81 accessibility tests passed across the configured browser matrix."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory completed successfully."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities reported."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3001'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET=([Convert]::ToBase64String((1..32 | ForEach-Object {[byte]$_}))).TrimEnd('=').Replace('+','-').Replace('/','_'); npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "ENV_CHECK_OK with process-local test-only values; no real .env or secret was read."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors and only frontend_085 in progress before closure."
+    },
+    {
+      "command": "npm.cmd run security:check",
+      "exitCode": 1,
+      "result": "unavailable",
+      "notes": "The repository has no security:check script; this command was not reported as passed."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F6_integration_release/frontend_085.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "apps/web/server.mjs",
+    "apps/web/src/features/auth/client.ts",
+    "apps/web/src/features/auth/store.ts",
+    "apps/web/src/features/auth/sync.ts",
+    "apps/web/src/features/contracts/api-client.ts",
+    "apps/web/src/features/routing/guards.ts",
+    "apps/web/src/routes/route-table.ts",
+    "apps/web/tests/e2e/security.spec.ts",
+    "apps/web/tests/auth.test.ts",
+    "apps/web/tests/routing.test.ts",
+    "apps/api/tests/auth/router.test.ts",
+    "apps/api/tests/auth/service.test.ts"
+  ],
+  "scopeNotes": [
+    "The direct server.mjs edit is an explicitly necessary security-boundary exception to the task's listed Web source roots: it adds response headers only and does not change product routes or API contracts.",
+    "HTML responses remain no-store; immutable static assets retain their existing public immutable caching behavior.",
+    "CSP is origin-scoped for the configured Web API, allows the existing approved Google font resources, blocks objects and framing, and keeps form actions same-origin.",
+    "No Screen IDs apply to this infrastructure/security task, so the design manifest was used as the applicable source reference."
+  ],
+  "knownGaps": [
+    "npm.cmd run security:check is unavailable because the repository has no script with that name.",
+    "No live Production credentials, data, or browser security telemetry were used.",
+    "This task does not claim full release completion or that all APIs have been exhaustively tested."
+  ],
+  "completedAt": "2026-08-21T08:33:04.6063803Z"
+}

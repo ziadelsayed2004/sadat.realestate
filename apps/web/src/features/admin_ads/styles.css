@@ -1,0 +1,102 @@
+.admin-ads {
+  display: grid;
+  grid-template-columns: minmax(15rem, 18rem) minmax(0, 1fr);
+  min-height: calc(100vh - var(--header-height-min));
+  overflow: hidden;
+  background: #f5e9cb;
+  color: #1b2942;
+}
+
+.admin-ads > .admin-dashboard__navigation { padding: 28px 18px; background: #fff; border-inline-end: 1px solid #e4e7ec; }
+.admin-ads__content { min-width: 0; padding: 34px clamp(22px, 4vw, 58px) 58px; }
+.admin-ads__heading,
+.admin-ads__detail-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; max-width: 1320px; margin: 0 auto 22px; padding: 28px 32px; border: 1px solid #e3e5e7; border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(50 50 50 / 6%); }
+.admin-ads__heading h1,
+.admin-ads__detail-heading h2 { margin: 0 0 10px; color: #1b2942; font-size: clamp(2rem, 3vw, 3rem); letter-spacing: -.03em; }
+.admin-ads__heading p:not(.admin-ads__eyebrow) { max-width: 780px; margin: 0; color: #6d788b; line-height: 1.7; }
+.admin-ads__eyebrow { margin: 0 0 8px; color: #d79a2b; font-size: .74rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.admin-ads__tabs { display: flex; flex-wrap: wrap; gap: 8px; max-width: 1320px; margin: 0 auto 24px; padding: 8px; border: 1px solid #e3e5e7; border-radius: 16px; background: #fff; box-shadow: 0 6px 16px rgb(50 50 50 / 4%); }
+.admin-ads__tabs a { min-height: 42px; padding: 10px 14px; border-radius: 10px; color: #516079; font-size: .88rem; font-weight: 800; text-decoration: none; }
+.admin-ads__tabs a:hover,
+.admin-ads__tabs a:focus-visible,
+.admin-ads__tabs a[data-active='true'] { background: #0e5849; color: #fff; }
+.admin-ads__filters { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 12px; max-width: 1320px; margin: 0 auto 24px; padding: 18px 22px; border: 1px solid #e3e5e7; border-radius: 18px; background: #fff; box-shadow: 0 6px 16px rgb(50 50 50 / 4%); }
+.admin-ads__filters label { display: grid; gap: 6px; min-width: min(18rem, 100%); color: #5e6b80; font-size: .85rem; font-weight: 800; }
+.admin-ads__filters input,
+.admin-ads__filters select,
+.admin-ads__field textarea { min-height: 44px; padding: 10px 12px; border: 1px solid #dbe0e6; border-radius: 10px; background: #fff; color: #1b2942; font: inherit; }
+.admin-ads__filters input:focus-visible,
+.admin-ads__filters select:focus-visible,
+.admin-ads__field textarea:focus-visible,
+.admin-ads__tabs a:focus-visible,
+.admin-ads__table button:focus-visible { outline: 3px solid #5a8cf1; outline-offset: 3px; }
+.admin-ads__filter-error { flex-basis: 100%; margin: 0; color: #a32129; font-size: .86rem; }
+.admin-ads__panel { max-width: 1320px; margin: 0 auto 24px; overflow: hidden; border: 1px solid #e3e5e7; border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(50 50 50 / 6%); }
+.admin-ads__panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 22px 26px; border-block-end: 1px solid #eceff3; background: #fffdf8; }
+.admin-ads__panel-heading h2,
+.admin-ads__panel-heading p { margin: 0; }
+.admin-ads__panel-heading h2 { color: #1b2942; font-size: 1.25rem; }
+.admin-ads__panel-heading p,
+.admin-ads__note { margin-block-start: 5px; color: #7e8999; font-size: .86rem; }
+.admin-ads__note { max-width: 30rem; text-align: end; }
+.admin-ads__table-wrap { overflow-x: auto; }
+.admin-ads__table { width: 100%; min-width: 1040px; border-collapse: collapse; color: #1b2942; }
+.admin-ads__table th,
+.admin-ads__table td { padding: 15px 16px; border-block-end: 1px solid #eef0f3; text-align: start; vertical-align: middle; }
+.admin-ads__table th { background: #fffdf8; color: #5e6b80; font-size: .82rem; font-weight: 800; white-space: nowrap; }
+.admin-ads__table tbody tr:hover { background: #fffdf8; }
+.admin-ads__table code { color: #68768b; font-size: .78rem; }
+.admin-ads__table small,
+.admin-ads__stacked-value { display: block; margin-block-start: 5px; color: #68768b; font-size: .78rem; }
+.admin-ads__badge { display: inline-flex; align-items: center; min-height: 28px; padding: 5px 10px; border-radius: 999px; font-size: .78rem; font-weight: 800; white-space: nowrap; }
+.admin-ads__badge[data-tone='success'] { background: #d8f8e5; color: #07883e; }
+.admin-ads__badge[data-tone='warning'] { background: #fff1bd; color: #ac5c00; }
+.admin-ads__badge[data-tone='info'] { background: #e1edff; color: #1c5ce0; }
+.admin-ads__badge[data-tone='error'] { background: #ffe1e1; color: #c62d35; }
+.admin-ads__badge[data-tone='neutral'] { background: #edf0f4; color: #657286; }
+.admin-ads__pagination { display: flex; align-items: center; justify-content: center; gap: 20px; padding: 18px; }
+.admin-ads__pagination span { min-width: 130px; color: #68768b; text-align: center; font-weight: 700; }
+.admin-ads__state { max-width: 760px; margin: 40px auto; padding: 34px; border: 1px solid #e1e5eb; border-radius: 18px; background: #fff; box-shadow: 0 10px 28px rgb(50 50 50 / 6%); }
+.admin-ads__state > h2 { margin-block-start: 0; }
+.admin-ads__state > p { color: #69768b; line-height: 1.7; }
+.admin-ads__detail { max-width: 960px; margin: 0 auto; }
+.admin-ads__detail-heading { align-items: center; margin-inline: 0; }
+.admin-ads__detail-heading h2 { margin: 0; font-size: clamp(1.5rem, 2vw, 2.2rem); }
+.admin-ads__detail-list { display: grid; gap: 0; margin: 0 0 24px; padding: 24px 28px; border: 1px solid #e3e5e7; border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(50 50 50 / 6%); }
+.admin-ads__detail-list > div { display: flex; justify-content: space-between; gap: 24px; padding: 13px 0; border-block-end: 1px solid #eef0f3; }
+.admin-ads__detail-list > div:last-child { border-block-end: 0; }
+.admin-ads__detail-list dt { color: #68768b; font-weight: 800; }
+.admin-ads__detail-list dd { max-width: 70%; margin: 0; text-align: end; }
+.admin-ads__quote-lines,
+.admin-ads__review-card { margin-block-end: 24px; padding: 24px 28px; border: 1px solid #e3e5e7; border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(50 50 50 / 6%); }
+.admin-ads__quote-lines h3,
+.admin-ads__review-card h3 { margin-block-start: 0; }
+.admin-ads__quote-lines ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.admin-ads__quote-lines li { display: flex; justify-content: space-between; gap: 20px; padding-block-end: 10px; border-block-end: 1px solid #eef0f3; }
+.admin-ads__review-card { max-width: 960px; margin-inline: auto; }
+.admin-ads__review-card fieldset { display: grid; gap: 16px; padding: 0; border: 0; }
+.admin-ads__review-card legend { margin-block-end: 6px; color: #5e6b80; font-weight: 800; }
+.admin-ads__action-list { display: flex; flex-wrap: wrap; gap: 12px; }
+.admin-ads__action-list label { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 8px 12px; border: 1px solid #dbe0e6; border-radius: 10px; font-weight: 700; }
+.admin-ads__field { display: grid; gap: 7px; color: #5e6b80; font-weight: 800; }
+.admin-ads__field textarea { min-height: 130px; resize: vertical; line-height: 1.6; }
+.admin-ads__feedback { padding: 12px 16px; border-radius: 10px; font-weight: 700; }
+.admin-ads__feedback[data-tone='success'] { background: #d8f8e5; color: #08783b; }
+.admin-ads__feedback[data-tone='error'] { background: #ffe1e1; color: #a32129; }
+.admin-ads__muted { color: #68768b; }
+.admin-ads__notice { margin: 0 auto 24px; padding: 14px 18px; border-inline-start: 4px solid #d79a2b; border-radius: 10px; background: #fff7df; color: #6f541b; line-height: 1.6; }
+
+@media (max-width: 980px) {
+  .admin-ads { grid-template-columns: 1fr; }
+  .admin-ads > .admin-dashboard__navigation { border-inline-end: 0; border-block-end: 1px solid #e4e7ec; }
+  .admin-ads__content { padding-inline: 18px; }
+  .admin-ads__heading { padding: 24px; }
+}
+
+@media (max-width: 640px) {
+  .admin-ads__tabs a { flex: 1 1 calc(50% - 8px); text-align: center; }
+  .admin-ads__panel-heading { align-items: flex-start; flex-direction: column; }
+  .admin-ads__note { text-align: start; }
+  .admin-ads__detail-list > div { align-items: flex-start; flex-direction: column; gap: 6px; }
+  .admin-ads__detail-list dd { max-width: none; text-align: start; }
+}

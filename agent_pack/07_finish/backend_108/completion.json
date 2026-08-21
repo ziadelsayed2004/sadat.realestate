@@ -1,49 +1,130 @@
 {
   "taskId": "backend_108",
-  "summary": "Implemented a verified-admin financial review and advertising ledger source-adapter projection with strict filters, bounded pagination, deterministic ordering, quote/payment-proof/schedule separation, redacted private fields, and an explicit not-realized accounting treatment.",
+  "summary": "Repaired the missing HTTP truth boundary for ADM-38. Verified administrators with the existing admin:ads.view permission can list and read safe advertising financial-review projections and bounded not-realized ledger events. The runtime now reads persisted advertising request, quote, payment-proof, and schedule records through a redacting source adapter; strict filters, route authentication, safe errors, OpenAPI, Postman, and API inventory are synchronized.",
   "filesChanged": [
-    "packages/contracts/src/reports/index.ts",
-    "packages/contracts/src/contracts/index.ts",
     "apps/api/src/modules/reports/advertising-ledger.ts",
+    "apps/api/src/modules/reports/advertising-ledger-repository.ts",
+    "apps/api/src/modules/reports/advertising-ledger-router.ts",
+    "apps/api/src/modules/reports/advertising-ledger-runtime.ts",
     "apps/api/tests/reports/service.test.ts",
+    "apps/api/tests/reports/router.test.ts",
     "apps/api/src/modules/testing/test-suites.ts",
+    "apps/api/src/app.ts",
+    "apps/api/src/server.ts",
+    "apps/api/src/modules/docs/api-artifacts.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
     "docs/api/advertising-financial-review.md"
   ],
   "verification": [
     {
-      "command": "npm.cmd run build --workspace packages/contracts; npm.cmd run typecheck --workspace apps/api; node --test --import tsx apps/api/tests/reports/service.test.ts",
+      "command": "npm.cmd run build --workspace packages/contracts",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Reports contracts/API typecheck passed and two focused financial-report tests passed."
+      "notes": "Shared contracts compiled successfully."
     },
     {
-      "command": "npm.cmd run lint; npm.cmd test -- --runInBand; npm.cmd run build",
+      "command": "npm.cmd run typecheck --workspace apps/api",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "Lint passed; full suite passed 363 tests; build succeeded."
+      "notes": "API TypeScript compilation passed with report service, persistent source adapter, router, runtime, and app integration."
     },
     {
-      "command": "npm.cmd audit --audit-level=high; npm.cmd run api:inventory; npm.cmd run openapi:validate; npm.cmd run postman:validate; node agent_pack/scripts/audit_pack.mjs; git diff --check",
+      "command": "node --import tsx --test --test-concurrency=1 apps/api/tests/reports/service.test.ts apps/api/tests/reports/router.test.ts",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "No high-severity vulnerabilities; inventory, OpenAPI, Postman, Agent Pack audit, and whitespace checks passed."
+      "notes": "4 focused tests passed, covering verified-admin permission denial, unauthenticated and wrong-role route denial, strict filters, safe projections, detail not-found behavior, and not-realized ledger access."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Repository workspace checks and lint passed."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "365 API unit tests passed."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "95 API route and security tests passed, including all three advertising report routes."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Root contracts, API, and web production builds passed; Vite emitted only the existing chunk-size warning."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No high-severity dependency vulnerabilities were reported."
+    },
+    {
+      "command": "npm.cmd run api:inventory --workspace apps/api | Select-String -Pattern 'ad-financial-review|ad-ledger|listAdminAdvertisingFinancialReview|getAdminAdvertisingFinancialReview|listAdminAdvertisingLedger'",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Runtime inventory contains GET /api/v1/admin/ad-financial-review, GET /api/v1/admin/ad-financial-review/:requestId, and GET /api/v1/admin/ad-ledger with the expected operation IDs."
+    },
+    {
+      "command": "npm.cmd run openapi:validate --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "OpenAPI route, schema, and local-reference validation passed."
+    },
+    {
+      "command": "npm.cmd run postman:validate --workspace apps/api",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Postman route synchronization validation passed."
+    },
+    {
+      "command": "node -e \"for (const file of ['apps/api/openapi/openapi.json','apps/api/postman/Sadat-Real-Estate.postman_collection.json','agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json']) JSON.parse(require('fs').readFileSync(file,'utf8')); console.log('CHANGED_JSON_VALID')\"",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "Changed OpenAPI, Postman, and blueprint JSON files parsed successfully."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "Passed",
+      "notes": "No whitespace errors were found."
     }
   ],
   "sourceEvidence": [
-    "agent_pack/04_tracks/backend/B7_ads_payments/backend_108.md",
+    "agent_pack/04_tracks/backend/B7_ads_payments/backend_108.md (ADM-38 financial-review scope)",
     "agent_pack/01_product/SCREEN_REGISTRY.json (ADM-38)",
-    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (ADM-38)",
-    "agent_pack/01_product/BUSINESS_RULES.md (payment proof is not bank verification)",
+    "agent_pack/01_product/SCREEN_COVERAGE_MATRIX.md (ADM-38 -> backend_108 -> frontend_070)",
+    "agent_pack/01_product/BUSINESS_RULES.md (payment proof is not bank verification; no realized-revenue claim)",
+    "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json (implemented report boundaries)",
     "packages/contracts/src/reports/index.ts",
     "apps/api/src/modules/reports/advertising-ledger.ts",
+    "apps/api/src/modules/reports/advertising-ledger-repository.ts",
+    "apps/api/src/modules/reports/advertising-ledger-router.ts",
     "apps/api/tests/reports/service.test.ts",
+    "apps/api/tests/reports/router.test.ts",
     "docs/api/advertising-financial-review.md"
   ],
-  "knownGaps": [
-    "The financial report consumes a source adapter because the current runtime has separate in-memory ad/payment services and no persistent cross-module ledger repository.",
-    "No HTTP report route was added because route composition and permission wiring for this new module are not present in the current runtime; OpenAPI/Postman remain unchanged and valid.",
-    "apps/api/src/modules/testing/test-suites.ts was updated only to register the task-local reports test; this is the necessary test-harness integration outside the task runtime roots.",
-    "Live database/provider integration checks were not run because no isolated replica-set topology or credentials were available."
+  "scopeNotes": [
+    "This is an authorized Backend truth repair directly required by the ADM-38 financial-review screen in frontend_070; app/server and API-artifact wiring are explicitly included integration changes.",
+    "The existing admin:ads.view permission is reused; no new financial permission, settlement operation, bank-verification claim, or realized-revenue field was introduced.",
+    "The source adapter projects only safe fields and excludes payment-proof storage keys, private URLs, credentials, internal notes, and administrator-only audit data."
   ],
-  "completedAt": "2026-08-14T15:48:32.3452850Z"
+  "knownGaps": [
+    "Live MongoDB persistence verification was not run because no isolated non-production replica-set topology was configured; deterministic source/service and HTTP tests cover the boundary locally.",
+    "The routes are read-only review projections and do not perform financial settlement, collection, or approval beyond exposing existing payment-proof status."
+  ],
+  "completedAt": "2026-08-19T13:25:29.980Z"
 }

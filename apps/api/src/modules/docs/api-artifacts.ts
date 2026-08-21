@@ -2,6 +2,7 @@ import { OPERATIONAL_ROUTE_DEFINITIONS } from '../database/health.js';
 import { AUTH_ROUTE_DEFINITIONS } from '../auth/router.js';
 import { SEEKER_ROUTE_DEFINITIONS } from '../seeker/router.js';
 import { PROVIDER_ROUTE_DEFINITIONS } from '../provider/router.js';
+import { PAYMENT_ROUTE_DEFINITIONS } from '../payments/router.js';
 import { UPLOAD_ROUTE_DEFINITIONS } from '../uploads/router.js';
 import { RBAC_ROUTE_DEFINITIONS } from '../rbac/router.js';
 import { ACCOUNT_ROUTE_DEFINITIONS } from '../accounts/router.js';
@@ -23,12 +24,26 @@ import { SETTINGS_ROUTE_DEFINITIONS } from '../settings/router.js';
 import { REQUEST_ROUTE_DEFINITIONS } from '../requests/router.js';
 import { VIEWING_ROUTE_DEFINITIONS } from '../viewings/router.js';
 import { ARTICLE_ROUTE_DEFINITIONS } from '../articles/router.js';
+import { COMMUNITY_ROUTE_DEFINITIONS } from '../community/router.js';
+import { CMS_PUBLIC_ROUTE_DEFINITIONS } from '../cms/public-router.js';
+import { CMS_ADMIN_ROUTE_DEFINITIONS } from '../cms/admin-content-router.js';
+import { ADMIN_OVERVIEW_ROUTE_DEFINITIONS } from '../admin/overview-router.js';
+import { ADMINISTRATOR_ROUTE_DEFINITIONS } from '../admin/administrator-router.js';
+import { ADMIN_ADS_ROUTE_DEFINITIONS } from '../ads/admin-router.js';
+import { ADMIN_BANNER_ROUTE_DEFINITIONS } from '../ads/banner-router.js';
+import { ADMIN_ADVERTISING_REPORT_ROUTE_DEFINITIONS } from '../reports/advertising-ledger-router.js';
+import { ADMIN_COMMISSION_POLICY_ROUTE_DEFINITIONS } from '../commissions/policy-router.js';
+import { ADMIN_COMMISSION_ACCOUNT_ROUTE_DEFINITIONS } from '../commissions/account-router.js';
+import { ADMIN_COMMISSION_EXCEPTION_ROUTE_DEFINITIONS } from '../commissions/exception-router.js';
+import { ADMIN_COMMISSION_CONFIRMATION_ROUTE_DEFINITIONS } from '../commissions/confirmation-router.js';
+import { ADMIN_COMMISSION_CHANGE_LOG_ROUTE_DEFINITIONS } from '../commissions/change-log-router.js';
 
 export const IMPLEMENTED_ROUTE_DEFINITIONS = Object.freeze([
   ...OPERATIONAL_ROUTE_DEFINITIONS,
   ...AUTH_ROUTE_DEFINITIONS,
   ...SEEKER_ROUTE_DEFINITIONS,
   ...PROVIDER_ROUTE_DEFINITIONS,
+  ...PAYMENT_ROUTE_DEFINITIONS,
   ...UPLOAD_ROUTE_DEFINITIONS,
   ...RBAC_ROUTE_DEFINITIONS,
   ...ACCOUNT_ROUTE_DEFINITIONS,
@@ -49,7 +64,20 @@ export const IMPLEMENTED_ROUTE_DEFINITIONS = Object.freeze([
   ...SETTINGS_ROUTE_DEFINITIONS,
   ...REQUEST_ROUTE_DEFINITIONS,
   ...VIEWING_ROUTE_DEFINITIONS,
-  ...ARTICLE_ROUTE_DEFINITIONS
+  ...ARTICLE_ROUTE_DEFINITIONS,
+  ...COMMUNITY_ROUTE_DEFINITIONS,
+  ...CMS_PUBLIC_ROUTE_DEFINITIONS,
+  ...CMS_ADMIN_ROUTE_DEFINITIONS,
+  ...ADMIN_OVERVIEW_ROUTE_DEFINITIONS,
+  ...ADMINISTRATOR_ROUTE_DEFINITIONS,
+  ...ADMIN_ADS_ROUTE_DEFINITIONS,
+  ...ADMIN_BANNER_ROUTE_DEFINITIONS,
+  ...ADMIN_ADVERTISING_REPORT_ROUTE_DEFINITIONS,
+  ...ADMIN_COMMISSION_POLICY_ROUTE_DEFINITIONS,
+  ...ADMIN_COMMISSION_ACCOUNT_ROUTE_DEFINITIONS,
+  ...ADMIN_COMMISSION_EXCEPTION_ROUTE_DEFINITIONS,
+  ...ADMIN_COMMISSION_CONFIRMATION_ROUTE_DEFINITIONS,
+  ...ADMIN_COMMISSION_CHANGE_LOG_ROUTE_DEFINITIONS
 ]);
 
 export const PRODUCT_API_BASE_PATH = '/api/v1';

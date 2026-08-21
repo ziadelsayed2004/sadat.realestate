@@ -8,15 +8,17 @@ import { createApiServer, startApiServer, stopApiServer } from '../../src/server
 
 const providerToken = 'provider.header.signature';
 const seekerToken = 'seeker.header.signature';
+const adminToken = 'admin.header.signature';
 const documentId = '5'.repeat(24);
 const accessTokens: AccessTokenService = {
   issue: () => providerToken,
   verify(value) {
-    if (value !== providerToken && value !== seekerToken) throw new Error('invalid');
+    if (value !== providerToken && value !== seekerToken && value !== adminToken) throw new Error('invalid');
     return {
-      iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '1'.repeat(24),
-      sid: '2'.repeat(24), role: value === providerToken ? 'provider' : 'seeker',
-      status: 'draft', iat: 1, exp: 9_999_999_999, jti: 'test'
+      iss: 'sadat-real-estate-api', aud: 'sadat-real-estate',
+      sub: value === adminToken ? 'a'.repeat(24) : '1'.repeat(24),
+      sid: '2'.repeat(24), role: value === providerToken ? 'provider' : value === adminToken ? 'admin' : 'seeker',
+      status: value === adminToken ? 'verified' : 'draft', iat: 1, exp: 9_999_999_999, jti: 'test'
     };
   }
 };
@@ -36,6 +38,13 @@ function service(): ProviderDocumentService {
       };
     },
     async createAccessGrant(_claims, id) {
+      if (id !== documentId) throw new UploadServiceError('DOCUMENT_NOT_FOUND');
+      return {
+        url: `/api/v1/private/provider-documents/${documentId}?expires=9999999999&signature=${'a'.repeat(43)}`,
+        expiresAt: '2286-11-20T17:46:39.000Z', method: 'GET'
+      };
+    },
+    async createAdminAccessGrant(_claims, id) {
       if (id !== documentId) throw new UploadServiceError('DOCUMENT_NOT_FOUND');
       return {
         url: `/api/v1/private/provider-documents/${documentId}?expires=9999999999&signature=${'a'.repeat(43)}`,
@@ -152,5 +161,28 @@ test('creates owner-checked grants, rejects IDOR, streams private attachments, a
       method: 'DELETE', headers: { Authorization: `Bearer ${providerToken}` }
     });
     assert.equal(deletion.status, 200);
+  });
+});
+
+test('protects the Admin reviewer document-access route with permission-shaped query input', async () => {
+  await withServer(async (baseUrl) => {
+    const missing = await fetch(`${baseUrl}/api/v1/admin/provider-documents/${documentId}/access?purpose=document_review`);
+    assert.equal(missing.status, 401);
+    const seeker = await fetch(`${baseUrl}/api/v1/admin/provider-documents/${documentId}/access?purpose=document_review`, {
+      headers: { Authorization: `Bearer ${seekerToken}` }
+    });
+    assert.equal(seeker.status, 403);
+    const unknownQuery = await fetch(`${baseUrl}/api/v1/admin/provider-documents/${documentId}/access?purpose=document_review&storageKey=secret`, {
+      headers: { Authorization: `Bearer ${adminToken}` }
+    });
+    assert.equal(unknownQuery.status, 400);
+    const grant = await fetch(`${baseUrl}/api/v1/admin/provider-documents/${documentId}/access?purpose=document_review`, {
+      headers: { Authorization: `Bearer ${adminToken}` }
+    });
+    assert.equal(grant.status, 200);
+    assert.equal(grant.headers.get('cache-control'), 'no-store');
+    const body = await grant.json() as { data?: Record<string, unknown> };
+    assert.equal(body.data?.method, 'GET');
+    assert.equal('storageKey' in (body.data ?? {}), false);
   });
 });

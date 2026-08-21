@@ -23,6 +23,7 @@ export type UploadServiceErrorCode =
   | 'DOCUMENT_CONCURRENT_UPLOAD'
   | 'DOCUMENT_NOT_FOUND'
   | 'DOCUMENT_NOT_CLEAN'
+  | 'DOCUMENT_REVIEW_FORBIDDEN'
   | 'INVALID_DOWNLOAD_GRANT'
   | 'MALWARE_SCAN_FAILED'
   | 'INVALID_FILENAME'
@@ -43,6 +44,7 @@ export class UploadServiceError extends Error {
 export interface PrivateDocumentAccessAudit {
   record(event: {
     actorId: string;
+    actorType: 'provider' | 'admin';
     documentId: string;
     action: 'private_document_download_granted';
     purpose: string;
@@ -52,12 +54,17 @@ export interface PrivateDocumentAccessAudit {
   }): void | Promise<void>;
 }
 
+export interface AdminDocumentAuthorization {
+  authorize(adminId: string, permission: 'admin:documents.review'): Promise<boolean>;
+}
+
 export interface ProviderDocumentServiceDependencies {
   repository: ProviderDocumentRepository;
   storage: StorageAdapter;
   scanner: MalwareScannerAdapter;
   signer: PrivateDownloadSigner;
   audit: PrivateDocumentAccessAudit;
+  authorization: AdminDocumentAuthorization;
   now?: () => Date;
   createObjectKey?: () => string;
 }
@@ -74,6 +81,12 @@ export interface ProviderDocumentService {
     purpose: string,
     context: { requestId: string; traceId?: string }
   ): Promise<ProviderDocumentAccessData>;
+  createAdminAccessGrant(
+    claims: AccessTokenClaims,
+    documentId: string,
+    purpose: string,
+    context: { requestId: string; traceId?: string }
+  ): Promise<ProviderDocumentAccessData>;
   resolveDownload(
     documentId: string,
     expires: string,
@@ -85,6 +98,13 @@ export interface ProviderDocumentService {
 
 function providerId(claims: AccessTokenClaims): string {
   if (claims.role !== 'provider') throw new UploadServiceError('PROVIDER_APPLICATION_NOT_FOUND');
+  return claims.sub;
+}
+
+function adminId(claims: AccessTokenClaims): string {
+  if (claims.role !== 'admin' || claims.status !== 'verified') {
+    throw new UploadServiceError('DOCUMENT_REVIEW_FORBIDDEN');
+  }
   return claims.sub;
 }
 
@@ -133,6 +153,29 @@ export function createProviderDocumentService(
   const now = dependencies.now ?? (() => new Date());
   const createObjectKey = dependencies.createObjectKey
     ?? (() => `quarantine/${randomUUID().replaceAll('-', '')}`);
+
+  async function issueAccessGrant(
+    document: ProviderDocumentEntity,
+    actorId: string,
+    actorType: 'provider' | 'admin',
+    purpose: string,
+    context: { requestId: string; traceId?: string }
+  ): Promise<ProviderDocumentAccessData> {
+    const occurredAt = now();
+    const expiresAt = new Date(occurredAt.getTime() + 300 * 1_000);
+    const url = dependencies.signer.issue(document.id, expiresAt);
+    await dependencies.audit.record({
+      actorId,
+      actorType,
+      documentId: document.id,
+      action: 'private_document_download_granted',
+      purpose,
+      occurredAt,
+      requestId: context.requestId,
+      ...(context.traceId ? { traceId: context.traceId } : {})
+    });
+    return { url, expiresAt: expiresAt.toISOString(), method: 'GET' };
+  }
 
   return {
     async isReady() {
@@ -229,19 +272,20 @@ export function createProviderDocumentService(
         throw new UploadServiceError('DOCUMENT_NOT_FOUND');
       }
       if (document.securityState !== 'clean') throw new UploadServiceError('DOCUMENT_NOT_CLEAN');
-      const occurredAt = now();
-      const expiresAt = new Date(occurredAt.getTime() + 300 * 1_000);
-      const url = dependencies.signer.issue(document.id, expiresAt);
-      await dependencies.audit.record({
-        actorId: ownerId,
-        documentId: document.id,
-        action: 'private_document_download_granted',
-        purpose,
-        occurredAt,
-        requestId: context.requestId,
-        ...(context.traceId ? { traceId: context.traceId } : {})
-      });
-      return { url, expiresAt: expiresAt.toISOString(), method: 'GET' };
+      return issueAccessGrant(document, ownerId, 'provider', purpose, context);
+    },
+
+    async createAdminAccessGrant(claims, documentId, purpose, context) {
+      const reviewerId = adminId(claims);
+      if (!await dependencies.authorization.authorize(reviewerId, 'admin:documents.review')) {
+        throw new UploadServiceError('DOCUMENT_REVIEW_FORBIDDEN');
+      }
+      const document = await dependencies.repository.findById(documentId);
+      if (!document || !document.active || document.securityState === 'deleted') {
+        throw new UploadServiceError('DOCUMENT_NOT_FOUND');
+      }
+      if (document.securityState !== 'clean') throw new UploadServiceError('DOCUMENT_NOT_CLEAN');
+      return issueAccessGrant(document, reviewerId, 'admin', purpose, context);
     },
 
     async resolveDownload(documentId, expires, signature) {

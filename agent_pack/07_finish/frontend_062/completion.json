@@ -1,0 +1,152 @@
+{
+  "taskId": "frontend_062",
+  "summary": "Implemented the Admin account reports, report details, and account restrictions surfaces for ADM-06, ADM-07, and ADM-08 using the implemented account-report moderation and account-transition contracts. The UI keeps projections safe, requires reasons for sensitive actions, consumes server-provided account actions, supports loading/empty/error/retry/success/not-found/permission states, and renders Arabic RTL, English LTR, and Simplified Chinese LTR on the approved desktop scope.",
+  "filesChanged": [
+    "apps/web/src/features/admin_accounts/data.ts",
+    "apps/web/src/features/admin_accounts/index.ts",
+    "apps/web/src/features/admin_accounts/reports-copy.ts",
+    "apps/web/src/features/admin_accounts/reports.tsx",
+    "apps/web/src/features/admin_accounts/styles.css",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/admin-account-reports.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-account-reports.fixtures.ts",
+    "apps/web/tests/e2e/admin-account-reports.spec.ts",
+    "apps/web/tests/e2e/admin-account-reports-accessibility.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-reports-list-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-reports-list-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-reports-list-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-reports-detail-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-reports-detail-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-reports-detail-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-restrictions-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-restrictions-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-restrictions-zh-CN-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts prepared and the web TypeScript project compiled with no errors."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web source, tests, Vite, Playwright, and server lint passed with max-warnings=0."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/admin-account-reports.vitest.test.tsx",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused account-report loader, resolver, transition, projection, locale, permission, and reason-validation tests passed: 6/6."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web suite passed: 37 Vitest files / 249 tests and 76 TAP checks. Existing MSW output only reports an unhandled article-categories request; the command exited 0."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR web bundles built successfully."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/admin-account-reports.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused ADM-06/07/08 visual, locale/direction, safe-projection, keyboard-focus, mutation-reason, and non-admin tests passed: 9/9."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/admin-account-reports-accessibility.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused ADM-06/07/08 accessibility landmarks, table/detail semantics, labels, focus, direction, safe-projection, and non-admin tests passed: 6/6."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test --config playwright.config.ts tests/e2e/admin-account-reports.spec.ts tests/e2e/admin-account-reports-accessibility.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final post-fix visual/accessibility matrix passed all 15 tests across Arabic RTL, English LTR, and Simplified Chinese LTR desktop projects."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root configuration/API/web test command passed; API suite and web suite completed successfully."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and web build passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Inventory includes GET /api/v1/admin/account-reports and POST /api/v1/admin/account-reports/:reportId/resolve as implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities reported."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors in the worktree diff."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors while frontend_062 was In Progress."
+    }
+  ],
+  "sourceEvidence": [
+    "Task file: agent_pack/04_tracks/frontend/F5_admin_dashboard/frontend_062.md",
+    "ADM-06 approved local export: docs/design_sources/final_screens/admin/ADM-06.png; SHA-256 9631d0e9adc4fd897c3190c549a75a04ec17969ba933060c9f552ab893d79cbd; 6308x3776; Drive https://drive.google.com/drive/folders/1Evyazld_AFFdEYHEzGlM48Z6GnxG-UYV; Figma node 6017:61879.",
+    "ADM-07 approved local export: docs/design_sources/final_screens/admin/ADM-07.png; SHA-256 01b86cdf11b66172500931c4319623965eb6bb0f31561ec8cf9ef5b1cff38956; 6308x3776; Drive https://drive.google.com/drive/folders/19Pa0NzUKpbvpY0Kh460QB6Jj8kxe14ut; Figma node 6017:61879.",
+    "ADM-08 approved local export: docs/design_sources/final_screens/admin/ADM-08.png; SHA-256 52c5515bfd5f53c993dd83dfecf841f829ddad26971557b8040373223a575d91; 6308x3776; Drive https://drive.google.com/drive/folders/1HbA-ztHzERThbWC88U68QQINzCTiLSNQ; Figma node 6017:61879.",
+    "Runtime route evidence: GET /api/v1/admin/account-reports with admin:account-reports.view and POST /api/v1/admin/account-reports/:reportId/resolve with admin:account-reports.manage; account restrictions consume GET /api/v1/admin/users/:userId and POST /api/v1/admin/users/:userId/transitions with server-provided availableActions.",
+    "Focused Vitest and Playwright fixtures assert authorization headers, strict query/body/path boundaries, reason-required mutations, safe projections, and non-admin fail-closed behavior without storage keys, private URLs, tokens, internal notes, assignments, or audit data."
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was changed as the explicitly necessary route-composition exception to render the selected admin routes; no unrelated feature behavior was added.",
+    "The account-report API and contracts were repaired and closed under backend_019 before this task; frontend_062 consumes those implemented contracts and does not change them.",
+    "Admin navigation remains anchored to the existing Users and accounts section because the selected task's approved route composition uses the existing admin navigation boundary.",
+    "The approved design manifest defines ADM-06 through ADM-08 as desktop-only; Arabic, English, and Simplified Chinese direction/locale coverage was verified in the desktop matrix.",
+    "No real .env, secret, production data, live database, or external provider credential was read or used."
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-19T08:49:15+03:00"
+}

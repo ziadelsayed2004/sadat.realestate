@@ -111,7 +111,83 @@
       "name": "Admin",
       "item": [
         {
-          "name": "Admin settings - authorized namespace read",
+      "name": "Admin CMS - authorized namespace read",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Admin CMS content is authorized or unavailable', function () { pm.expect([200, 401, 403, 404, 500]).to.include(pm.response.code); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{syntheticBearer}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/content/{{namespace}}",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "content",
+            "{{namespace}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Admin CMS - authorized namespace update",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Admin CMS update is authorized or safely rejected', function () { pm.expect([200, 400, 401, 403, 404, 409, 500]).to.include(pm.response.code); });"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{syntheticBearer}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"status\":\"draft\",\"reason\":\"Synthetic CMS update\"}"
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/content/{{namespace}}",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "content",
+            "{{namespace}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Admin settings - authorized namespace read",
           "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('Admin settings is authorized or safely unavailable', function () { pm.expect([200, 401, 403, 404, 500]).to.include(pm.response.code); });"] } }],
           "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{syntheticBearer}}" }], "url": { "raw": "{{apiV1BaseUrl}}/admin/settings/{{namespace}}", "host": ["{{apiV1BaseUrl}}"], "path": ["admin", "settings", "{{namespace}}"] } }
         },

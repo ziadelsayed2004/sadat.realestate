@@ -1,0 +1,144 @@
+{
+  "taskId": "frontend_084",
+  "summary": "Added a measured non-production Playwright performance matrix for representative public SSR routes. The matrix verifies SSR status and route markers, hydration shell visibility, navigation timing budgets, JavaScript and stylesheet transfer budgets, image completeness, locale direction, and route identity across Arabic, English, and Simplified Chinese Desktop, Tablet, and Mobile projects.",
+  "filesChanged": [
+    "apps/web/tests/e2e/performance.spec.ts"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/performance.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --project=tablet-ar --project=tablet-en --project=tablet-zh --project=mobile-ar --project=mobile-en --project=mobile-zh --workers=1",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "18 performance cases passed. Maximum observed TTFB was 7 ms, DOMContentLoaded was 601 ms, load event was 1,220 ms, JavaScript was 1,497,908 bytes, and stylesheets were 434,343 bytes or less. Both public routes rendered complete images and correct locale, direction, and SSR route markers."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web tests passed: 55 Vitest files / 315 tests plus the Node suite with 76 passing tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR production builds passed; the existing large-chunk warning remained non-fatal."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root aggregate tests passed: 507 API tests and the Web Vitest/Node suites passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web production builds passed; the existing large-chunk warning remained non-fatal."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "72 visual tests passed across the configured browser matrix."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "81 accessibility tests passed across the configured browser matrix."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory completed successfully."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities were reported; audit reported 0 vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run env:check (with process-local test-only values)",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "ENV_CHECK_OK. No real .env or secret was read."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors."
+    },
+    {
+      "command": "npm.cmd run security:check",
+      "exitCode": 1,
+      "result": "unavailable",
+      "notes": "The repository has no security:check script; this verification command was not reported as passed."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F6_integration_release/frontend_084.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "apps/web/src/features/frontend_foundation/entry-server.tsx",
+    "apps/web/src/features/frontend_foundation/entry-client.tsx",
+    "apps/web/vite.config.ts",
+    "apps/web/playwright.config.ts",
+    "apps/web/tests/ssr.test.mjs",
+    "apps/web/tests/e2e/performance.spec.ts"
+  ],
+  "scopeNotes": [
+    "This quality task has no direct Screen IDs; the measured matrix covers representative public SSR routes / and /properties across all configured locales and devices.",
+    "The budgets are explicit local non-production budgets for TTFB, DOMContentLoaded, load event, script bytes, and stylesheet bytes. The run does not claim Lighthouse, production, or real-user Core Web Vitals scores.",
+    "The current production build emits one large JavaScript chunk and the runtime search did not identify a separate lazy route import; this is recorded as runtime truth rather than hidden by the test."
+  ],
+  "knownGaps": [
+    "npm.cmd run security:check is unavailable because the repository has no script with that name.",
+    "No live Production or field-performance data was used.",
+    "No separate lazy-route resource budget was asserted because the current runtime does not expose a distinct lazy route chunk in the inspected build."
+  ],
+  "completedAt": "2026-08-21T08:15:00.000Z"
+}

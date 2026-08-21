@@ -15,7 +15,10 @@ const record: AdvertisingFinancialRecord = {
 };
 
 test('financial review separates quote and payment-proof states and emits non-realized ledger entries', async () => {
-  const service = createAdvertisingLedgerService({ source: { list: async () => [record] } });
+  const service = createAdvertisingLedgerService({
+    source: { list: async () => [record] },
+    authorization: { authorize: async () => true }
+  });
   const result = await service.listFinancialReview(admin, { page: 1, limit: 10 });
   assert.equal(result.total, 1);
   assert.equal(result.items[0]?.financialState, 'payment_proof_approved');
@@ -31,11 +34,19 @@ test('financial review separates quote and payment-proof states and emits non-re
 });
 
 test('financial reports require verified admins, reject unsafe filters, and fail closed for source ownership', async () => {
-  const service = createAdvertisingLedgerService({ source: { list: async () => [record] } });
+  const service = createAdvertisingLedgerService({
+    source: { list: async () => [record] },
+    authorization: { authorize: async () => true }
+  });
   await assert.rejects(() => service.listFinancialReview(seeker, {}), (error) => error instanceof AdvertisingLedgerServiceError && error.code === 'AD_REPORT_FORBIDDEN');
+  const denied = createAdvertisingLedgerService({ source: { list: async () => [record] }, authorization: { authorize: async () => false } });
+  await assert.rejects(() => denied.listFinancialReview(admin, {}), (error) => error instanceof AdvertisingLedgerServiceError && error.code === 'AD_REPORT_FORBIDDEN');
   await assert.rejects(() => service.listFinancialReview(admin, { from: '2026-09-02T00:00:00+00:00', to: '2026-09-01T00:00:00+00:00' }), /to must be after from/);
   await assert.rejects(() => service.listLedger(admin, { unknown: true }), /Unrecognized key/);
-  const invalid = createAdvertisingLedgerService({ source: { list: async () => [{ ...record, quote: { ...record.quote!, providerId: '999999999999999999999999' } }] } });
+  const invalid = createAdvertisingLedgerService({
+    source: { list: async () => [{ ...record, quote: { ...record.quote!, providerId: '999999999999999999999999' } }] },
+    authorization: { authorize: async () => true }
+  });
   await assert.rejects(() => invalid.listFinancialReview(admin, {}), (error) => error instanceof AdvertisingLedgerServiceError && error.code === 'AD_REPORT_SOURCE_INVALID');
   await assert.rejects(() => service.getFinancialReview(admin, 'ffffffffffffffffffffffff'), (error) => error instanceof AdvertisingLedgerServiceError && error.code === 'AD_REPORT_NOT_FOUND');
 });

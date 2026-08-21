@@ -341,7 +341,7 @@ export function createMongooseArticleRepository(models: ArticleModels): ArticleR
         ? [new Types.ObjectId(query.categoryId)]
         : [...categories.keys()].map((id) => new Types.ObjectId(id));
       if (!categoryIds.length) return { items: [], total: 0 };
-      const filter = { status: 'published', categoryId: { $in: categoryIds } };
+      const filter = { status: 'published' as const, categoryId: { $in: categoryIds } };
       const [rows, total] = await Promise.all([
         models.Article.find(filter).sort({ publishedAt: -1, _id: 1 })
           .skip((query.page - 1) * query.limit).limit(query.limit).lean(),

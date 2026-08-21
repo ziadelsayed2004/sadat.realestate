@@ -8,12 +8,14 @@ import { ApiContractError, toApiErrorResponse } from '../contracts/error-boundar
 import { toSuccessResponse } from '../contracts/response.js';
 import { getRequestContext } from '../observability/context.js';
 import { createProviderAuthMiddleware } from '../provider/auth.js';
+import { createAdminRbacAuthMiddleware } from '../rbac/auth.js';
 import { UploadServiceError, type ProviderDocumentService } from './service.js';
 import { MAX_PROVIDER_DOCUMENT_BYTES } from './validation.js';
 
 export const UPLOAD_ROUTE_DEFINITIONS = [
   { method: 'POST', path: '/api/v1/provider/application/documents', operationId: 'uploadProviderDocument' },
   { method: 'POST', path: '/api/v1/provider/application/documents/:documentId/access', operationId: 'createProviderDocumentAccess' },
+  { method: 'GET', path: '/api/v1/admin/provider-documents/:documentId/access', operationId: 'createAdminProviderDocumentAccess' },
   { method: 'DELETE', path: '/api/v1/provider/application/documents/:documentId', operationId: 'deleteProviderDocument' },
   { method: 'GET', path: '/api/v1/private/provider-documents/:documentId', operationId: 'downloadPrivateProviderDocument' }
 ] as const;
@@ -34,6 +36,7 @@ const ERROR_MAP: Readonly<Record<string, { statusCode: number; messageKey: strin
   DOCUMENT_CONCURRENT_UPLOAD: { statusCode: 409, messageKey: 'errors.upload.concurrentUpload' },
   DOCUMENT_NOT_FOUND: { statusCode: 404, messageKey: 'errors.upload.documentNotFound' },
   DOCUMENT_NOT_CLEAN: { statusCode: 409, messageKey: 'errors.upload.documentNotClean' },
+  DOCUMENT_REVIEW_FORBIDDEN: { statusCode: 403, messageKey: 'errors.upload.documentReviewForbidden' },
   INVALID_DOWNLOAD_GRANT: { statusCode: 401, messageKey: 'errors.upload.invalidDownloadGrant' },
   MALWARE_SCAN_FAILED: { statusCode: 503, messageKey: 'errors.upload.scanFailed' },
   INVALID_FILENAME: { statusCode: 400, messageKey: 'errors.upload.invalidFilename' },
@@ -63,6 +66,10 @@ function sendError(request: Request, response: Response, error: unknown): void {
 
 function claims(response: Response): AccessTokenClaims {
   return response.locals.providerClaims as AccessTokenClaims;
+}
+
+function adminClaims(response: Response): AccessTokenClaims {
+  return response.locals.adminRbacClaims as AccessTokenClaims;
 }
 
 function contentLength(request: Request): number | undefined {
@@ -103,6 +110,7 @@ function createAuthenticatedRateLimit(options: { windowMs: number; max: number }
 export function createUploadRouter(dependencies: UploadRouterDependencies): Router {
   const router = Router();
   const providerAuth = createProviderAuthMiddleware(dependencies.accessTokens);
+  const adminAuth = createAdminRbacAuthMiddleware(dependencies.accessTokens);
   const uploadRateLimit = createAuthenticatedRateLimit(
     dependencies.uploadRateLimit ?? { windowMs: 60_000, max: 100 }
   );
@@ -147,6 +155,29 @@ export function createUploadRouter(dependencies: UploadRouterDependencies): Rout
         const context = getRequestContext();
         const result = await dependencies.service.createAccessGrant(
           claims(response),
+          pathParameter(request.params.documentId),
+          input.purpose,
+          {
+            requestId: context?.requestId ?? requestId(request),
+            ...(context?.traceId ? { traceId: context.traceId } : {})
+          }
+        );
+        response.status(200).json(toSuccessResponse(result, requestId(request)));
+      } catch (error) {
+        sendError(request, response, error);
+      }
+    }
+  );
+
+  router.get(
+    '/admin/provider-documents/:documentId/access',
+    adminAuth,
+    async (request, response) => {
+      try {
+        const input = providerDocumentAccessRequestSchema.parse(request.query);
+        const context = getRequestContext();
+        const result = await dependencies.service.createAdminAccessGrant(
+          adminClaims(response),
           pathParameter(request.params.documentId),
           input.purpose,
           {

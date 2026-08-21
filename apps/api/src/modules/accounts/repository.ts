@@ -1,5 +1,12 @@
-import { Types, type Connection } from 'mongoose';
+import { Types, type Connection, type QueryFilter } from 'mongoose';
 import type {
+  AdminAccountUserData,
+  AdminAccountUserListData,
+  AdminAccountUserListQuery,
+  AdminProviderData,
+  AdminProviderDocumentData,
+  AdminProviderListData,
+  AdminProviderListQuery,
   AccountTransitionAction,
   AuthAccountState,
   AuthRoleType,
@@ -7,8 +14,15 @@ import type {
   ProviderReviewAction,
   ProviderType
 } from '@sadat-real-estate/contracts';
-import type { IdentityModels } from '../identity/models.js';
-import type { ProviderModels } from '../provider/models.js';
+import {
+  adminAccountUserDataSchema,
+  adminAccountUserListDataSchema,
+  adminProviderDataSchema,
+  adminProviderDocumentDataSchema,
+  adminProviderListDataSchema
+} from '@sadat-real-estate/contracts';
+import type { IdentityModels, UserRecord } from '../identity/models.js';
+import type { ProviderApplicationRecord, ProviderModels } from '../provider/models.js';
 import type { AuditWriter } from '../audit/writer.js';
 import type { AccountModels } from './models.js';
 
@@ -66,6 +80,10 @@ export type ProviderReviewWriteResult =
   | { kind: 'conflict' };
 
 export interface AccountRepository {
+  listUsers(query: AdminAccountUserListQuery): Promise<AdminAccountUserListData>;
+  findUser(userId: string): Promise<AdminAccountUserData | undefined>;
+  listProviders(query: AdminProviderListQuery): Promise<AdminProviderListData>;
+  findProvider(providerId: string): Promise<AdminProviderData | undefined>;
   findAccount(userId: string): Promise<AccountTarget | undefined>;
   findProviderReviewTarget(providerApplicationId: string): Promise<ProviderReviewTarget | undefined>;
   isAccessSessionCurrent(input: {
@@ -81,17 +99,45 @@ export interface AccountRepository {
 
 interface LeanUser {
   _id: Types.ObjectId;
+  normalizedEmail?: string;
+  normalizedPhone?: string;
   roleType: AuthRoleType;
   status: AuthAccountState;
+  locale: 'ar' | 'en' | 'zh-CN';
+  statusChangedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
   version?: number;
 }
 
-interface LeanProviderApplication {
+interface LeanUserProfile {
+  userId: Types.ObjectId;
+  firstName?: string;
+  lastName?: string;
+}
+
+interface LeanProviderApplication extends Partial<ProviderApplicationRecord> {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
   providerType: ProviderType;
   status: ProviderApplicationState;
+  createdAt: Date;
+  updatedAt: Date;
   version?: number;
+}
+
+interface LeanProviderDocument {
+  _id: Types.ObjectId;
+  applicationId: Types.ObjectId;
+  category: string;
+  originalFilename: string;
+  detectedMime: string;
+  byteSize: number;
+  version: number;
+  securityState: string;
+  reviewState: string;
+  uploadedAt: Date;
+  active: boolean;
 }
 
 interface LeanProviderProfile {
@@ -131,6 +177,95 @@ function accountTarget(user: LeanUser): AccountTarget {
   };
 }
 
+function accountActions(roleType: AuthRoleType, status: AuthAccountState): AccountTransitionAction[] {
+  if (roleType === 'provider') {
+    if (status === 'verified') return ['restrict'];
+    if (status === 'restricted') return ['verify'];
+    return [];
+  }
+  if (status === 'pending_review') return ['verify', 'reject', 'needs_information'];
+  if (status === 'verified') return ['suspend', 'restrict'];
+  if (status === 'restricted' || status === 'suspended') return ['verify'];
+  return [];
+}
+
+function userData(
+  user: LeanUser,
+  displayName?: string
+): AdminAccountUserData {
+  return adminAccountUserDataSchema.parse({
+    id: user._id.toHexString(),
+    roleType: user.roleType,
+    status: user.status,
+    ...(user.normalizedEmail ? { email: user.normalizedEmail } : {}),
+    ...(user.normalizedPhone ? { phone: user.normalizedPhone } : {}),
+    locale: user.locale,
+    ...(displayName ? { displayName } : {}),
+    version: user.version ?? 0,
+    statusChangedAt: user.statusChangedAt.toISOString(),
+    createdAt: user.createdAt.toISOString(),
+    updatedAt: user.updatedAt.toISOString(),
+    availableActions: accountActions(user.roleType, user.status)
+  });
+}
+
+function providerActions(status: ProviderApplicationState): ProviderReviewAction[] {
+  if (status === 'pending_review') return ['verify', 'reject', 'needs_information'];
+  if (status === 'approved') return ['suspend'];
+  if (status === 'suspended') return ['verify'];
+  return [];
+}
+
+function providerDocument(value: LeanProviderDocument): AdminProviderDocumentData | undefined {
+  try {
+    return adminProviderDocumentDataSchema.parse({
+      id: value._id.toHexString(),
+      applicationId: value.applicationId.toHexString(),
+      category: value.category,
+      originalFilename: value.originalFilename,
+      detectedMime: value.detectedMime,
+      byteSize: value.byteSize,
+      version: value.version,
+      securityState: value.securityState,
+      reviewState: value.reviewState,
+      uploadedAt: value.uploadedAt.toISOString(),
+      active: value.active
+    });
+  } catch {
+    return undefined;
+  }
+}
+
+function providerData(
+  application: LeanProviderApplication,
+  user: LeanUser,
+  documents: readonly AdminProviderDocumentData[]
+): AdminProviderData {
+  return adminProviderDataSchema.parse({
+    id: application._id.toHexString(),
+    userId: application.userId.toHexString(),
+    providerType: application.providerType,
+    applicationStatus: application.status,
+    accountStatus: user.status,
+    accountVersion: user.version ?? 0,
+    applicationVersion: application.version ?? 0,
+    ...(user.normalizedPhone ? { phone: user.normalizedPhone } : {}),
+    ...(user.normalizedEmail ? { email: user.normalizedEmail } : {}),
+    ...(application.accountOwnerFullName ? { accountOwnerFullName: application.accountOwnerFullName } : {}),
+    ...(application.displayName ? { displayName: application.displayName } : {}),
+    ...(application.legalBusinessName ? { legalBusinessName: application.legalBusinessName } : {}),
+    ...(application.tradeName ? { tradeName: application.tradeName } : {}),
+    ...(application.legalCompanyName ? { legalCompanyName: application.legalCompanyName } : {}),
+    ...(application.brandName ? { brandName: application.brandName } : {}),
+    ...(application.reviewReason ? { reviewReason: application.reviewReason } : {}),
+    ...(application.submittedAt ? { submittedAt: application.submittedAt.toISOString() } : {}),
+    createdAt: application.createdAt.toISOString(),
+    updatedAt: application.updatedAt.toISOString(),
+    documents,
+    availableActions: providerActions(application.status)
+  });
+}
+
 export function createMongooseAccountRepository(
   connection: Connection,
   identityModels: IdentityModels,
@@ -142,7 +277,135 @@ export function createMongooseAccountRepository(
   const { ProviderApplication } = providerModels;
   const { AccountStateTransition } = accountModels;
 
+  async function providerDocuments(applicationId: string): Promise<AdminProviderDocumentData[]> {
+    const documents = await connection.collection('provider_documents')
+      .find({ applicationId: new Types.ObjectId(applicationId), active: true })
+      .sort({ uploadedAt: -1, _id: 1 })
+      .toArray();
+    return documents.flatMap((document) => {
+      const value = Object.fromEntries(Object.entries(document)) as LeanProviderDocument;
+      const projected = providerDocument(value);
+      return projected ? [projected] : [];
+    });
+  }
+
+  async function usersFor(userIds: readonly Types.ObjectId[]): Promise<Map<string, LeanUser>> {
+    const users = await User.find({ _id: { $in: userIds } })
+      .select('_id normalizedEmail normalizedPhone roleType status locale statusChangedAt createdAt updatedAt version')
+      .lean<LeanUser[]>()
+      .exec();
+    return new Map(users.map((user) => [user._id.toHexString(), user]));
+  }
+
   return {
+    async listUsers(query) {
+      const filter: QueryFilter<UserRecord> = {
+        roleType: query.roleType ? query.roleType : { $in: ['seeker', 'provider'] },
+        ...(query.status ? { status: query.status } : {})
+      };
+      const [users, total] = await Promise.all([
+        User.find(filter)
+          .sort({ createdAt: -1, _id: 1 })
+          .skip((query.page - 1) * query.limit)
+          .limit(query.limit)
+          .select('_id normalizedEmail normalizedPhone roleType status locale statusChangedAt createdAt updatedAt version')
+          .lean<LeanUser[]>()
+          .exec(),
+        User.countDocuments(filter).exec()
+      ]);
+      const ids = users.map((user) => user._id);
+      const [seekers, applications] = await Promise.all([
+        identityModels.SeekerProfile.find({ userId: { $in: ids } })
+          .select('userId firstName lastName')
+          .lean<LeanUserProfile[]>()
+          .exec(),
+        ProviderApplication.find({ userId: { $in: ids } })
+          .select('userId displayName')
+          .lean<Array<Pick<LeanProviderApplication, 'userId' | 'displayName'>>>()
+          .exec()
+      ]);
+      const names = new Map<string, string>();
+      for (const profile of seekers) {
+        const name = [profile.firstName, profile.lastName].filter(Boolean).join(' ').trim();
+        if (name) names.set(profile.userId.toHexString(), name);
+      }
+      for (const application of applications) {
+        if (application.displayName) names.set(application.userId.toHexString(), application.displayName);
+      }
+      return adminAccountUserListDataSchema.parse({
+        items: users.map((user) => userData(user, names.get(user._id.toHexString()))),
+        page: query.page,
+        limit: query.limit,
+        total
+      });
+    },
+
+    async findUser(userId) {
+      if (!validObjectId(userId)) return undefined;
+      const user = await User.findOne({
+        _id: objectId(userId),
+        roleType: { $in: ['seeker', 'provider'] }
+      })
+        .select('_id normalizedEmail normalizedPhone roleType status locale statusChangedAt createdAt updatedAt version')
+        .lean<LeanUser | null>()
+        .exec();
+      if (!user) return undefined;
+      const [seeker, application] = await Promise.all([
+        identityModels.SeekerProfile.findOne({ userId: user._id })
+          .select('firstName lastName')
+          .lean<Pick<LeanUserProfile, 'firstName' | 'lastName'> | null>()
+          .exec(),
+        ProviderApplication.findOne({ userId: user._id })
+          .select('displayName')
+          .lean<Pick<LeanProviderApplication, 'displayName'> | null>()
+          .exec()
+      ]);
+      const displayName = application?.displayName
+        ?? [seeker?.firstName, seeker?.lastName].filter(Boolean).join(' ').trim();
+      return userData(user, displayName || undefined);
+    },
+
+    async listProviders(query) {
+      const filter = {
+        ...(query.status ? { status: query.status } : {}),
+        ...(query.providerType ? { providerType: query.providerType } : {})
+      };
+      const [applications, total] = await Promise.all([
+        ProviderApplication.find(filter)
+          .sort({ updatedAt: -1, _id: 1 })
+          .skip((query.page - 1) * query.limit)
+          .limit(query.limit)
+          .lean<LeanProviderApplication[]>()
+          .exec(),
+        ProviderApplication.countDocuments(filter).exec()
+      ]);
+      const users = await usersFor(applications.map((application) => application.userId));
+      return adminProviderListDataSchema.parse({
+        items: applications.flatMap((application) => {
+          const user = users.get(application.userId.toHexString());
+          if (!user) return [];
+          return [providerData(application, user, [])];
+        }),
+        page: query.page,
+        limit: query.limit,
+        total
+      });
+    },
+
+    async findProvider(providerId) {
+      if (!validObjectId(providerId)) return undefined;
+      const application = await ProviderApplication.findById(objectId(providerId))
+        .lean<LeanProviderApplication | null>()
+        .exec();
+      if (!application) return undefined;
+      const user = await User.findOne({ _id: application.userId, roleType: 'provider' })
+        .select('_id normalizedEmail normalizedPhone roleType status locale statusChangedAt createdAt updatedAt version')
+        .lean<LeanUser | null>()
+        .exec();
+      if (!user) return undefined;
+      return providerData(application, user, await providerDocuments(providerId));
+    },
+
     async findAccount(userId) {
       if (!validObjectId(userId)) return undefined;
       const user = await User.findById(userId)

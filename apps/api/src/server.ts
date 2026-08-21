@@ -14,6 +14,7 @@ import {
 import { createAuthRuntime } from './modules/auth/runtime.js';
 import { createSeekerRuntime } from './modules/seeker/runtime.js';
 import { createProviderRuntime } from './modules/provider/runtime.js';
+import { createPaymentProofRuntime } from './modules/payments/runtime.js';
 import { parseUploadEnvironment } from './modules/uploads/environment.js';
 import { createUploadRuntime } from './modules/uploads/runtime.js';
 import { createRbacRuntime } from './modules/rbac/runtime.js';
@@ -39,6 +40,17 @@ import { createSettingsRuntime } from './modules/settings/runtime.js';
 import { createRequestRuntime } from './modules/requests/runtime.js';
 import { createViewingRuntime } from './modules/viewings/runtime.js';
 import { createArticleRuntime } from './modules/articles/runtime.js';
+import { createCommunityRuntime } from './modules/community/runtime.js';
+import { createPublicAboutTeamRuntime } from './modules/cms/public-runtime.js';
+import { createCmsAdminContentRuntime } from './modules/cms/admin-content-runtime.js';
+import { createAdminOverviewRuntime, createAdministratorRuntime } from './modules/admin/runtime.js';
+import { createAdminAdsRuntime, createAdminBannersRuntime } from './modules/ads/runtime.js';
+import { createAdvertisingLedgerRuntime } from './modules/reports/advertising-ledger-runtime.js';
+import { createCommissionPolicyRuntime } from './modules/commissions/runtime.js';
+import { createCommissionAccountRuntime } from './modules/commissions/account-runtime.js';
+import { createCommissionExceptionRuntime } from './modules/commissions/exception-runtime.js';
+import { createCommissionConfirmationRuntime } from './modules/commissions/confirmation-runtime.js';
+import { createCommissionChangeLogRuntime } from './modules/commissions/change-log-runtime.js';
 import { createGracefulShutdown } from './modules/deployment/runtime.js';
 
 export interface ApiListenOptions {
@@ -119,23 +131,48 @@ async function runEntrypoint(): Promise<void> {
     auth.accessTokens,
     auth.cookie
   );
-  const provider = createProviderRuntime(
-    database.nativeConnection,
-    auth.service,
-    auth.accessTokens,
-    auth.cookie
-  );
   const auditInfrastructure = createAuditInfrastructure(database.nativeConnection);
   const rbac = createRbacRuntime(
     database.nativeConnection,
     auth.accessTokens,
     auditInfrastructure.writer
   );
+  const adminOverview = createAdminOverviewRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
+  const administrators = createAdministratorRuntime(
+    database.nativeConnection,
+    auth.accessTokens,
+    rbac.service,
+    auditInfrastructure.writer
+  );
+  const adminAds = createAdminAdsRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
+  const adminBanners = createAdminBannersRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
+  const advertisingLedger = createAdvertisingLedgerRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
+  const commissionPolicies = createCommissionPolicyRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
+  const commissionAccounts = createCommissionAccountRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
+  const commissionExceptions = createCommissionExceptionRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
+  const commissionConfirmations = createCommissionConfirmationRuntime(database.nativeConnection, auth.accessTokens, rbac.service);
+  const commissionChangeLog = createCommissionChangeLogRuntime(auditInfrastructure.repository, auth.accessTokens, rbac.service);
+  const provider = createProviderRuntime(
+    database.nativeConnection,
+    auth.service,
+    auth.accessTokens,
+    auth.cookie,
+    rbac.service
+  );
   const audit = createAuditRuntime(auth.accessTokens, rbac.service, auditInfrastructure);
+  const uploadEnvironment = parseUploadEnvironment(process.env, runtimeEnvironment.appEnvironment);
   const uploads = createUploadRuntime(
     database.nativeConnection,
     auth.accessTokens,
-    parseUploadEnvironment(process.env, runtimeEnvironment.appEnvironment),
+    uploadEnvironment,
+    audit.writer,
+    rbac.service
+  );
+  const payments = createPaymentProofRuntime(
+    database.nativeConnection,
+    auth.accessTokens,
+    uploadEnvironment,
+    rbac.service,
     audit.writer
   );
   const accounts = createAccountRuntime(
@@ -171,11 +208,20 @@ async function runEntrypoint(): Promise<void> {
     audit.writer,
     rbac.service
   );
+  const community = createCommunityRuntime(database.nativeConnection, auth.accessTokens, rbac.service, audit.writer);
+  const publicAboutTeam = createPublicAboutTeamRuntime(database.nativeConnection);
+  const cmsAdminContent = createCmsAdminContentRuntime(
+    database.nativeConnection,
+    auth.accessTokens,
+    audit.writer,
+    rbac.service
+  );
   const server = createApiServer({
     database,
     auth,
     seeker,
     provider,
+    payments,
     uploads,
     rbac,
     accounts,
@@ -196,7 +242,20 @@ async function runEntrypoint(): Promise<void> {
     settings,
     requests,
     viewings,
-    articles
+    articles,
+    community,
+    publicAboutTeam,
+    cmsAdminContent,
+    adminOverview,
+    administrators,
+    adminAds,
+    adminBanners,
+    advertisingLedger,
+    commissionPolicies,
+    commissionAccounts,
+    commissionExceptions,
+    commissionConfirmations,
+    commissionChangeLog
   });
   const shutdown = createGracefulShutdown({
     stopServer: () => stopApiServer(server),

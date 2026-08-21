@@ -1,0 +1,199 @@
+{
+  "taskId": "frontend_090",
+  "summary": "Completed the final repository release gate as a conditional, non-production release decision. Locked the canonical manifest to the completed task graph, preserved the owner-approved ADM-54 visual waiver without claiming direct comparison, and recorded every passed repository-owned gate plus the external/tooling readiness gaps that remain conditional.",
+  "filesChanged": [
+    "agent_pack/08_reality_sync/FINAL_RELEASE_MANIFEST.json",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/RISKS_AND_GAPS.md",
+    "apps/web/tests/final-release-gate.vitest.test.ts"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/final-release-gate.vitest.test.ts --run --reporter=dot",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The release manifest checkpoint was structurally valid before task closure."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/final-release-gate.vitest.test.ts --run --reporter=dot",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The final-state release gate passed after frontend_090 was marked complete: 1 file / 1 test, with graphStatus complete_conditional and all 113 Backend plus 75 Frontend tasks complete."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web Vitest passed 60 files / 367 tests and the Node test suite passed 76 tests."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root API and Web suites passed; the API suite reported 507 passing tests and the Web suite passed 60 files / 367 tests plus 76 Node tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, Web client, and SSR production builds passed."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The configured visual matrix passed 72/72."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The configured accessibility matrix passed 81/81."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API typecheck passed."
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API unit suite passed 372/372."
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API route suite passed 107/107."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/critical-journeys.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --workers=1",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Targeted three-locale critical journey matrix passed 9/9."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/performance.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --project=tablet-ar --project=tablet-en --project=tablet-zh --project=mobile-ar --project=mobile-en --project=mobile-zh --workers=1",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The measured performance matrix passed 18/18; no production or field-performance score is claimed."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/security.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --project=tablet-ar --project=tablet-en --project=tablet-zh --project=mobile-ar --project=mobile-en --project=mobile-zh --workers=1",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Browser/session security matrix passed 27/27."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web",
+      "exitCode": null,
+      "result": "blocked",
+      "notes": "The unfiltered runner produced no observable progress and was safely terminated; no exit code was emitted. It is not claimed as passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory completed successfully."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities reported."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='4100'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtZGV2ZWxvcG1lbnQtb25seS1rZXktMzItYnl0ZXM'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "ENV_CHECK_OK with process-local non-production values; no real .env or secret was read."
+    },
+    {
+      "command": "npm.cmd run security:check",
+      "exitCode": 1,
+      "result": "unavailable",
+      "notes": "The repository does not define this script; it was not reported as passed."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No whitespace errors in the worktree diff."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors after the final synchronization."
+    },
+    {
+      "command": "node agent_pack/scripts/sync_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Canonical state and generated views synchronized with graphComplete true and 113 Backend / 75 Frontend tasks complete."
+    },
+    {
+      "command": "node agent_pack/scripts/select_next_step.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Selector returned selectedTaskId null and graphComplete true; no next task was started."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/04_tracks/frontend/F6_integration_release/frontend_090.md",
+    "agent_pack/08_reality_sync/FINAL_RELEASE_MANIFEST.json",
+    "agent_pack/08_reality_sync/DECISION_LOG.md: DESIGN-EXCEPTION-ADM-54",
+    "agent_pack/08_reality_sync/UAT_DEFECT_REGISTER.md",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "apps/web/tests/final-release-gate.vitest.test.ts",
+    "agent_pack/07_finish/frontend_084/completion.json",
+    "agent_pack/07_finish/frontend_085/completion.json",
+    "agent_pack/07_finish/frontend_089/completion.json"
+  ],
+  "scopeNotes": [
+    "The final manifest is conditional: repository-owned quality and evidence gates passed, but production/Preview readiness is not claimed.",
+    "DESIGN-EXCEPTION-ADM-54 is an owner-approved non-blocking waiver. Direct ADM-54 pixel comparison was not performed; sibling Admin design-system consistency and the implemented visual/accessibility matrices are the substitute evidence.",
+    "The final-release-gate test accepts only the honest pending checkpoint before closure or the final complete_conditional graph state after closure."
+  ],
+  "knownGaps": [
+    "Direct ADM-54 source comparison remains unperformed under the approved owner waiver.",
+    "All APIs tested is not claimed because the complete required positive, negative, RBAC, ownership, state, upload, replay, concurrency, and journey matrix is not proven by this run.",
+    "All 131 screens complete is not claimed because route-locale UAT coverage does not convert the waived ADM-54 direct comparison into a direct-comparison claim.",
+    "The unfiltered Web E2E runner produced no progress and was safely terminated; targeted critical journeys passed 9/9.",
+    "The repository does not define npm run security:check.",
+    "Docker, a live MongoDB replica set, private storage/scanner providers, Preview providers, monitoring, backup/restore, and external security assurance were unavailable; no Production deployment was performed."
+  ],
+  "completedAt": "2026-08-21T10:45:43.8912376Z"
+}

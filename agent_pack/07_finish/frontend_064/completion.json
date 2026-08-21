@@ -1,0 +1,136 @@
+{
+  "taskId": "frontend_064",
+  "summary": "Implemented the Admin Project Management and Review screens for ADM-12 and ADM-13 using the implemented admin project list and review contracts. The UI uses safe project projections, server-provided availableActions, strict reason validation, locale-aware Arabic/English/Simplified Chinese copy and direction, desktop scope, and loading, empty, error, retry, not-found, success, and permission states.",
+  "filesChanged": [
+    "apps/web/src/features/admin_projects/copy.ts",
+    "apps/web/src/features/admin_projects/data.ts",
+    "apps/web/src/features/admin_projects/index.ts",
+    "apps/web/src/features/admin_projects/styles.css",
+    "apps/web/src/features/admin_projects/views.tsx",
+    "apps/web/src/features/frontend_foundation/app.tsx",
+    "apps/web/tests/admin-projects.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-projects.fixtures.ts",
+    "apps/web/tests/e2e/admin-projects.spec.ts",
+    "apps/web/tests/e2e/admin-projects-accessibility.spec.ts",
+    "apps/web/tests/e2e/admin-projects-visual.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/admin-projects-visual.spec.ts-snapshots/admin-projects-ar-list-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-projects-visual.spec.ts-snapshots/admin-projects-ar-review-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-projects-visual.spec.ts-snapshots/admin-projects-en-list-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-projects-visual.spec.ts-snapshots/admin-projects-en-review-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-projects-visual.spec.ts-snapshots/admin-projects-zh-CN-list-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-projects-visual.spec.ts-snapshots/admin-projects-zh-CN-review-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript compilation passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/admin-projects.vitest.test.tsx --run",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused Admin Projects Vitest regression suite passed: 6 tests."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-projects.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Admin project list/review and authorization journeys passed: 6/6 tests across Arabic, English, and Simplified Chinese desktop projects."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-projects-accessibility.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Admin project accessibility matrix passed: 3/3 locale checks."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-projects-visual.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Visual regression passed: 3 tests and 6 screenshot assertions against the committed ADM-12/ADM-13 snapshots."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web build, 39 Vitest files/260 tests, and 76 TAP checks passed. The existing non-failing MSW warning for an unrelated public article-category request remains in stderr."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR builds passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and web typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root API and web test orchestration passed; API and web suites completed successfully."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and web builds passed."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory includes GET /api/v1/admin/projects and POST /api/v1/admin/projects/:projectId/review as implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI artifact validated."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman artifact validated."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "No high-severity dependency vulnerabilities reported."
+    }
+  ],
+  "sourceEvidence": [
+    "ADM-12 approved local export: docs/design_sources/final_screens/admin/ADM-12.png (SHA-256 409e8098249046550711febdcb4bf19ac03ee3360a1580ea5ff0911e0ce11d1f)",
+    "ADM-13 approved local export: docs/design_sources/final_screens/admin/ADM-13.png (SHA-256 a2a18c9d2a1670a559279d033f2a49ce089476ea04cbd749b2c27e6aa6cac1ec)",
+    "Approved design references: Drive folders https://drive.google.com/drive/folders/1HhR6X0VfCdBj3zARqW0KuYqivJLhL3Zk and https://drive.google.com/drive/folders/1fp0z0D1aD_uyZjYeb-5GGUkPDaFlK0R2; Figma prototype node 6017:61879 on page 6017:4356.",
+    "Runtime contracts: GET /api/v1/admin/projects (listAdminProjects, admin:projects.view) and POST /api/v1/admin/projects/:projectId/review (reviewAdminProject, admin:projects.review).",
+    "Shared contract source: packages/contracts/src/projects/index.ts project list, project data, and project review schemas.",
+    "Runtime/API evidence: apps/api/src/modules/projects/router.ts and the passing api:inventory, openapi:validate, and postman:validate commands.",
+    "Frontend regression evidence: apps/web/tests/admin-projects.vitest.test.tsx, apps/web/tests/e2e/admin-projects.spec.ts, apps/web/tests/e2e/admin-projects-accessibility.spec.ts, and apps/web/tests/e2e/admin-projects-visual.spec.ts."
+  ],
+  "scopeNotes": [
+    "apps/web/src/features/frontend_foundation/app.tsx was modified as an explicitly necessary route-composition integration exception to expose /admin/projects and /admin/projects/review; no unrelated feature or contract scope was changed.",
+    "Backend project-list truth was repaired and closed in backend_040 before frontend_064 began; this task did not modify backend runtime behavior."
+  ],
+  "knownGaps": [],
+  "completedAt": "2026-08-19T10:31:54.5083163+03:00"
+}
