@@ -57,6 +57,7 @@ test('public About renders published CMS content across approved locales and dev
   await expect(page.locator('.route-shell')).toHaveAttribute('data-device-scope', 'desktop/tablet/mobile');
   const about = page.locator('[data-page="public-about"]');
   await expect(about).toHaveAttribute('data-about-state', 'success');
+  await expect(about.locator('.public-about__hero-media')).toHaveAttribute('data-media-state', 'unavailable');
   await expect(about.locator('h1')).toBeVisible();
   await expect(about.locator('.public-about__block')).toHaveCount(2);
   await expect(page).toHaveScreenshot(`public-about-${locale}.png`, { fullPage: true });

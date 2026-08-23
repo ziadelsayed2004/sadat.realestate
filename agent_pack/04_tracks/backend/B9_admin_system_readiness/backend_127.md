@@ -6,7 +6,7 @@
 | Phase | B9_admin_system_readiness |
 | Area | postman |
 | Kind | docs |
-| Sequence | 102 / 188 |
+| Sequence | 102 / 197 |
 | Depends on | `backend_126` |
 
 ## Goal

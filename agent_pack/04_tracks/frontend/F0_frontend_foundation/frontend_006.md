@@ -6,7 +6,7 @@
 | Phase | F0_frontend_foundation |
 | Area | localization |
 | Kind | frontend |
-| Sequence | 120 / 188 |
+| Sequence | 121 / 197 |
 | Depends on | `frontend_005` |
 
 ## Goal

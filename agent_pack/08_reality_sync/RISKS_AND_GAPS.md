@@ -1,5 +1,19 @@
 # Risks and Gaps
 
+## Post-release audit risks — 2026-08-22
+
+- Full UI fidelity is unproven. Existing saved snapshots compare current runtime output with earlier runtime output; they do not prove direct parity with all approved design-source exports.
+- The official visual command covers only one public-site spec, although the repository has 42 screenshot-bearing Playwright specs and 80 screenshot assertions.
+- Public homepage and property-listing visual coverage can pass on an error state because no populated API fixture or required success-state assertion exists in those cases.
+- Sampled Public, Authentication, and Admin screens have material design-to-runtime differences. Surface-by-surface remediation is tracked by `frontend_092` through `frontend_095`.
+- ADM-54 remains external-only. `frontend_096` must stay Blocked until its exact approved source is available.
+- A fresh Playwright matrix could not start because the audit environment had no browser executable and its browser download failed. This is an environment blocker, not a passing result.
+- The Web client build emits a JavaScript chunk around 1.50 MB minified and warns above 500 kB. `frontend_097` owns a justified enforced bundle budget and performance remediation.
+- Complete live API, infrastructure, provider, container, backup/restore, monitoring, and external security evidence remains unavailable. `backend_139` must stay Blocked until those prerequisites exist.
+- The final platform claim is owned by `frontend_098` and remains False until every expanded dependency is Complete with valid evidence.
+
+The release risks below are retained for provenance. Where they conflict with the post-release audit, the 2026-08-22 risks are current truth.
+
 ## Current release risks — 2026-08-21
 
 - Release readiness is conditional because the environment has no Docker executable and no configured isolated Preview/UAT MongoDB, private storage/scanner, OTP provider, monitoring, backup/restore drill, or external security assurance.

@@ -1,5 +1,7 @@
 # Repository Inventory — through `backend_010`
 
+> Historical snapshot only. The submitted 2026-08-22 archive contains no `.git/`, the current Agent Pack contains 197 tasks and 185 endpoint-blueprint rows, and the current completion decision is in `agent_pack/08_reality_sync/PLATFORM_COMPLETION_AUDIT.json`. Do not use the counts, runtime gaps, or worktree statement below as current truth.
+
 Inventory date: 2026-08-12  
 Inventory root: `D:\Projects\$current.projects\sadat.realestate`
 

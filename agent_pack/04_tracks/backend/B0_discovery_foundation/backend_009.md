@@ -6,7 +6,7 @@
 | Phase | B0_discovery_foundation |
 | Area | docs |
 | Kind | docs |
-| Sequence | 10 / 188 |
+| Sequence | 10 / 197 |
 | Depends on | `backend_008` |
 
 ## Goal

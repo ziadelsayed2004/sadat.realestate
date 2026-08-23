@@ -123,7 +123,7 @@ test.describe('PRV-01 Provider Overview', () => {
   test('fails closed when the provider session cannot be refreshed', async ({ page }) => {
     const locale = localeForProject();
     await routeProviderSession(page, false);
-    await page.goto(`/provider?lang=${encodeURIComponent(locale)}`);
+    await page.goto(`/provider?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-access="authentication-required"]')).toBeVisible();
     await expect(page.locator('[data-screen-id="PRV-01"]')).toHaveCount(0);
   });

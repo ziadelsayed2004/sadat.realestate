@@ -6,7 +6,7 @@
 | Phase | F2_auth_onboarding |
 | Area | qa |
 | Kind | quality |
-| Sequence | 140 / 188 |
+| Sequence | 141 / 197 |
 | Depends on | `frontend_025` |
 
 ## Goal

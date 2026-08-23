@@ -6,7 +6,7 @@
 | Phase | B3_projects_properties |
 | Area | media |
 | Kind | security |
-| Sequence | 39 / 188 |
+| Sequence | 39 / 197 |
 | Depends on | `backend_046` |
 
 ## Goal

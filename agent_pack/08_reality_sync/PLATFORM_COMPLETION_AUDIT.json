@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-08-22",
+  "overallStatus": "remediation_required",
+  "completionClaims": {
+    "repositoryGraphHistoricallyClosed": true,
+    "allImplementedApisFullyLiveTested": false,
+    "all131ScreensDirectlyComparedWithApprovedSources": false,
+    "productionParityInfrastructureProven": false,
+    "fullPlatformComplete": false
+  },
+  "repositoryEvidence": {
+    "canonicalScreens": 131,
+    "locallyExportedScreenIds": 130,
+    "externalOnlyScreenIds": [
+      "ADM-54"
+    ],
+    "restoredCanonicalSourceFiles": 136,
+    "endpointBlueprint": {
+      "total": 185,
+      "implemented": 183,
+      "planned": 2
+    },
+    "runtimeRouteInventory": 183,
+    "playwrightSpecFiles": 80,
+    "screenshotSpecFiles": 42,
+    "screenshotAssertionSites": 80,
+    "officialVisualScriptScope": "apps/web/tests/e2e/visual.spec.ts only",
+    "directApprovedSourceToRuntimePixelComparisonProven": false
+  },
+  "verifiedGates": {
+    "agentPackAudit": "passed after canonical design-source restoration",
+    "typecheck": "passed",
+    "lint": "passed",
+    "apiUnitAndIntegrationTests": "passed: 507 of 507 through the direct tsx loader",
+    "webVitest": "passed: 367 of 367",
+    "webAuxiliaryTests": "passed: 76 of 76",
+    "webBuild": "passed",
+    "apiInventory": "passed: 183 implemented routes",
+    "openApiValidation": "passed",
+    "postmanValidation": "passed",
+    "freshBrowserMatrix": "blocked: no Playwright browser executable and browser download failed in the audit environment"
+  },
+  "materialFindings": [
+    {
+      "id": "UI-001",
+      "severity": "critical",
+      "finding": "The official test:visual command covers one public visual spec instead of the full screenshot-bearing Playwright suite."
+    },
+    {
+      "id": "UI-002",
+      "severity": "critical",
+      "finding": "Saved visual baselines are runtime-to-runtime snapshots and do not prove direct fidelity against the approved design-source exports."
+    },
+    {
+      "id": "UI-003",
+      "severity": "critical",
+      "finding": "The public homepage and property-listing visual cases do not supply populated API fixtures, so an error state can satisfy the visual gate."
+    },
+    {
+      "id": "UI-004",
+      "severity": "high",
+      "finding": "Material visual differences were observed between approved PUB-01, AUTH-01, and ADM-01 sources and the current saved runtime baselines."
+    },
+    {
+      "id": "UI-005",
+      "severity": "high",
+      "finding": "ADM-54 is external-only and cannot be directly verified without an approved local export or authenticated access to the exact source frame."
+    },
+    {
+      "id": "PERF-001",
+      "severity": "medium",
+      "finding": "The Web client build emits a JavaScript chunk around 1.50 MB minified and warns that it exceeds 500 kB; no enforced justified bundle budget is proven."
+    },
+    {
+      "id": "OPS-001",
+      "severity": "critical",
+      "finding": "Live production-parity MongoDB, private storage and scanning, OTP, monitoring, container, backup/restore, and external security evidence remains unavailable."
+    }
+  ],
+  "postReleaseTasks": [
+    "backend_139",
+    "frontend_091",
+    "frontend_092",
+    "frontend_093",
+    "frontend_094",
+    "frontend_095",
+    "frontend_096",
+    "frontend_097",
+    "frontend_098"
+  ],
+  "decision": "Do not claim that all APIs, all 131 screens, production readiness, or the full platform are complete. Continue from the selector and close the post-release assurance graph with real evidence."
+}

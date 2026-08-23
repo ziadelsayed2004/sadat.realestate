@@ -33,8 +33,18 @@ describe('final release manifest', () => {
 
     expect(manifest.manifestVersion).toBe('sadat-release-v1');
     expect(manifest.releaseStatus).toBe('conditional');
-    expect(['pending_frontend_090_close', 'complete_conditional']).toContain(manifest.graphStatus);
-    if (manifest.graphStatus === 'complete_conditional') {
+    expect(['pending_frontend_090_close', 'complete_conditional', 'pending_post_release_assurance']).toContain(manifest.graphStatus);
+    if (manifest.graphStatus === 'pending_post_release_assurance') {
+      expect(manifest.taskCounts).toMatchObject({
+        backendTotal: 114,
+        backendComplete: 113,
+        frontendTotal: 83,
+        frontendComplete: 76,
+        frontendInProgress: 'frontend_092'
+      });
+      expect(taskState.tasks.frontend_092?.status).toBe('in_progress');
+      expect(finishIndex).toContain('frontend_090');
+    } else if (manifest.graphStatus === 'complete_conditional') {
       expect(manifest.taskCounts).toEqual({ backendComplete: 113, frontendComplete: 75 });
       expect(Object.values(taskState.tasks).every(task => task.status === 'complete')).toBe(true);
       expect(finishIndex).toContain('frontend_090');

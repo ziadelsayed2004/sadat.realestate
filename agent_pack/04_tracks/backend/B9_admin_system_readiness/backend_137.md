@@ -6,7 +6,7 @@
 | Phase | B9_admin_system_readiness |
 | Area | handoff |
 | Kind | docs |
-| Sequence | 112 / 188 |
+| Sequence | 112 / 197 |
 | Depends on | `backend_136` |
 
 ## Goal

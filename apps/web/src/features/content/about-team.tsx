@@ -151,9 +151,12 @@ function AboutContent({ locale, copy, data }: { readonly locale: SupportedLocale
   return (
     <>
       <section className="public-about__hero" aria-labelledby="public-about-title">
-        <p className="public-about__eyebrow">{copy.aboutEyebrow}</p>
-        <h1 id="public-about-title">{copy.aboutTitle}</h1>
-        <p>{copy.aboutSubtitle}</p>
+        <div className="public-about__hero-media" data-media-state="unavailable" aria-hidden="true" />
+        <div className="public-about__hero-content">
+          <p className="public-about__eyebrow">{copy.aboutEyebrow}</p>
+          <h1 id="public-about-title">{copy.aboutTitle}</h1>
+          <p>{copy.aboutSubtitle}</p>
+        </div>
       </section>
       <section className="public-about__content" aria-label={copy.aboutTitle}>
         <AboutBlocks locale={locale} items={data.items} />

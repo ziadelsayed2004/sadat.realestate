@@ -6,7 +6,7 @@
 | Phase | B9_admin_system_readiness |
 | Area | admin |
 | Kind | api |
-| Sequence | 95 / 188 |
+| Sequence | 95 / 197 |
 | Depends on | `backend_117` |
 
 ## Goal

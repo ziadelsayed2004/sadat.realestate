@@ -28,16 +28,34 @@
 }
 
 .public-about__hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   width: 100%;
   margin-inline: 0;
   display: grid;
-  justify-items: start;
+  justify-items: center;
   min-height: clamp(24rem, 48vw, 38rem);
   align-content: center;
   padding: clamp(var(--space-2xl), 8vw, var(--space-4xl));
   color: var(--color-on-brand);
   background: linear-gradient(135deg, #162541 0%, #203b5c 55%, #356a67 100%);
-  text-align: start;
+  text-align: center;
+}
+
+.public-about__hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 78% 24%, rgb(214 169 93 / 25%), transparent 28%),
+    linear-gradient(135deg, #162541 0%, #203b5c 55%, #356a67 100%);
+}
+
+.public-about__hero-content {
+  position: relative;
+  z-index: 1;
+  max-inline-size: 60rem;
 }
 
 .public-about__eyebrow,
@@ -69,6 +87,10 @@
   color: var(--color-text-secondary);
   font-size: clamp(1.05rem, 2vw, 1.45rem);
   line-height: var(--line-height-body);
+}
+
+.public-about__hero-content > p:last-child {
+  margin-inline: auto;
 }
 
 .public-about__hero > p:last-child {

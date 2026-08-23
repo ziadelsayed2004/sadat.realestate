@@ -6,7 +6,7 @@
 | Phase | F6_integration_release |
 | Area | release |
 | Kind | release |
-| Sequence | 187 / 188 |
+| Sequence | 188 / 197 |
 | Depends on | `frontend_088` |
 
 ## Goal

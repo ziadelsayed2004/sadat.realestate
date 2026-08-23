@@ -228,7 +228,7 @@ test.describe('F3 Seeker Dashboard QA', () => {
     await page.unroute('**/api/v1/auth/refresh');
     await routeSession(page, false);
     for (const routeCase of completedRoutes) {
-      await page.goto(localizedPath(routeCase.path, locale));
+      await page.goto(localizedPath(routeCase.path, locale), { waitUntil: 'domcontentloaded' });
       await expect(page.locator('[data-access="authentication-required"]')).toBeVisible();
       await expect(page.locator('[data-screen-id]')).toHaveCount(0);
     }

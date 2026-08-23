@@ -6,7 +6,7 @@
 | Phase | F0_frontend_foundation |
 | Area | testing |
 | Kind | quality |
-| Sequence | 123 / 188 |
+| Sequence | 124 / 197 |
 | Depends on | `frontend_008` |
 
 ## Goal

@@ -46,6 +46,8 @@ The runtime product logo is the approved Sadat Real Estate artwork. DOT Studio a
 
 ## Current Boundary
 
-Backend task state is complete through the backend readiness gate. Frontend work remains controlled by the selector; completion of foundation tasks does not claim completion of the 131 mapped product screens.
+The historical implementation graph is preserved, but the post-release completion audit found that complete visual parity, a full live API matrix, and production-parity infrastructure are not yet proven. The Agent Pack now contains 197 tasks, including a dedicated post-release assurance phase. Run the selector for the current dependency-ready task; do not use old task counts or chat memory.
 
-The Article runtime truth repair is connected across contracts, MongoDB models, services, eleven API routes, OpenAPI, Postman, and the public Article adapters. `frontend_015` remains the selected partial task until `npm ci`, `npm run quality`, and its targeted browser checks pass against this exact source; see `docs/api/article-runtime-truth-repair.md`.
+Canonical approved sources have been restored and checksum-verified for 130 of 131 Screen IDs. `ADM-54` remains external-only. The current decision and detailed evidence are recorded in `agent_pack/08_reality_sync/PLATFORM_COMPLETION_AUDIT.json` and `docs/audits/PLATFORM_COMPLETION_AUDIT_AR.md`.
+
+Current completion claims remain intentionally false for all APIs tested, all 131 screens complete, production-parity readiness, and the full platform until the expanded graph closes with real evidence.

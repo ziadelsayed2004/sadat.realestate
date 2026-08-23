@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { routePublicHomepageApi, routePublicPropertyListApi } from './public-fixtures';
 
 function localeForProject(): 'ar' | 'en' | 'zh-CN' {
   const projectName = test.info().project.name;
@@ -162,6 +163,7 @@ async function routeArticleApi(page: import('@playwright/test').Page) {
 
 test('public route shell has a locale-aware visual snapshot', async ({ page }) => {
   const locale = localeForProject();
+  await routePublicPropertyListApi(page);
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
   const response = await page.goto(`/properties?lang=${encodeURIComponent(locale)}`);
 
@@ -174,7 +176,7 @@ test('public route shell has a locale-aware visual snapshot', async ({ page }) =
   await expect(listing).toBeVisible();
   await expect(listing.locator('.public-homepage__header')).toBeVisible();
   await expect(listing.locator('form[aria-label]')).toBeVisible();
-  await expect(listing).toHaveAttribute('data-listing-state', /.+/);
+  await expect(listing).toHaveAttribute('data-listing-state', 'success');
   const logo = listing.locator('.public-homepage__brand img');
   await expect(logo).toBeVisible();
   await expect(logo).toHaveJSProperty('complete', true);
@@ -184,6 +186,7 @@ test('public route shell has a locale-aware visual snapshot', async ({ page }) =
 
 test('public homepage renders its SSR shell across approved locales and devices', async ({ page }) => {
   const locale = localeForProject();
+  await routePublicHomepageApi(page);
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
   const response = await page.goto('/?lang=' + encodeURIComponent(locale));
 
@@ -198,7 +201,10 @@ test('public homepage renders its SSR shell across approved locales and devices'
   await expect(logo).toHaveAttribute('src', '/assets/sadat-real-estate-logo.png');
   await expect(logo).toHaveJSProperty('complete', true);
   await expect(logo).toHaveJSProperty('naturalWidth', 636);
-  await expect(homepage).toHaveAttribute('data-homepage-state', /.+/);
+  await expect(homepage).toHaveAttribute('data-homepage-state', 'success');
+  const heroImage = homepage.locator('.public-homepage__hero-media img');
+  await expect(heroImage).toBeVisible();
+  await expect(heroImage).toHaveAttribute('src', 'http://127.0.0.1:4173/__test-fixtures/homepage-banner.svg');
   await expect(page).toHaveScreenshot('public-homepage-' + locale + '.png', { fullPage: true });
 });
 
@@ -302,6 +308,7 @@ test('public article listing renders published cards across locales and devices'
   await expect(listing.locator('input[type="search"]')).toBeVisible();
   await expect(listing.locator('[data-article-card]')).toHaveCount(2);
   await expect(listing.locator('[data-state="missing_image"]')).toHaveCount(2);
+  await page.evaluate(() => document.fonts.ready);
   await expect(page).toHaveScreenshot(`public-articles-${locale}.png`, { fullPage: true });
 });
 

@@ -6,7 +6,7 @@
 | Phase | F6_integration_release |
 | Area | accessibility |
 | Kind | quality |
-| Sequence | 181 / 188 |
+| Sequence | 182 / 197 |
 | Depends on | `frontend_082` |
 
 ## Goal

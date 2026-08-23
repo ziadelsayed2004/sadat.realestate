@@ -236,6 +236,91 @@ function PropertyGrid({
   );
 }
 
+function HomepageSummary({
+  locale,
+  properties,
+  developers,
+  content
+}: {
+  readonly locale: SupportedLocale;
+  readonly properties: readonly PublicHomepageProperty[];
+  readonly developers: readonly PublicHomepageDeveloper[];
+  readonly content: readonly PublicHomepageContent[];
+}) {
+  const labels = locale === 'ar'
+    ? ['عقار منشور', 'مصدر معتمد', 'محتوى منشور']
+    : locale === 'zh-CN'
+      ? ['已发布房产', '已批准来源', '已发布内容']
+      : ['Published properties', 'Approved sources', 'Published content'];
+  const values = [properties.length, developers.length, content.length];
+
+  return (
+    <section className="public-homepage__summary" aria-label={labels.join(', ')} data-homepage-summary="data-backed">
+      {labels.map((label, index) => (
+        <article className="public-homepage__summary-item" key={label}>
+          <strong>{new Intl.NumberFormat(locale).format(values[index] ?? 0)}</strong>
+          <span>{label}</span>
+        </article>
+      ))}
+    </section>
+  );
+}
+
+function HomepageCategoryRail({
+  locale,
+  copy,
+  properties
+}: {
+  readonly locale: SupportedLocale;
+  readonly copy: PublicHomepageCopy;
+  readonly properties: readonly PublicHomepageProperty[];
+}) {
+  const counts = new Map<string, number>();
+  for (const property of properties) counts.set(property.kind, (counts.get(property.kind) ?? 0) + 1);
+  const items = [...counts.entries()];
+  if (items.length === 0) return null;
+
+  const title = locale === 'ar' ? 'تصفح حسب النوع' : locale === 'zh-CN' ? '按类型浏览' : 'Browse by type';
+  return (
+    <section className="public-homepage__category-section" aria-labelledby="public-homepage-categories">
+      <SectionHeading eyebrow={copy.featuredProperties} id="public-homepage-categories" title={title} />
+      <div className="public-homepage__category-rail">
+        {items.map(([kind, count]) => (
+          <a className="public-homepage__category-card" href={'/properties?kind=' + encodeURIComponent(kind)} key={kind}>
+            <span className="public-homepage__category-icon" aria-hidden="true">◆</span>
+            <strong>{kind}</strong>
+            <small>{new Intl.NumberFormat(locale).format(count)}</small>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function PlatformCallout({ locale, copy }: { readonly locale: SupportedLocale; readonly copy: PublicHomepageCopy }) {
+  const title = locale === 'ar'
+    ? 'ابدأ رحلتك العقارية بثقة'
+    : locale === 'zh-CN'
+      ? '开始安心的房产之旅'
+      : 'Start your property journey with confidence';
+  const body = locale === 'ar'
+    ? 'استخدم البيانات المنشورة من مصادر معتمدة للوصول إلى الخطوة التالية.'
+    : locale === 'zh-CN'
+      ? '使用来自已批准来源的已发布数据，继续您的下一步。'
+      : 'Use published data from approved sources to take the next step.';
+
+  return (
+    <section className="public-homepage__platform-callout" aria-labelledby="public-homepage-platform-callout">
+      <div>
+        <p className="public-homepage__eyebrow">{copy.about}</p>
+        <h2 id="public-homepage-platform-callout">{title}</h2>
+        <p>{body}</p>
+      </div>
+      <a className="public-homepage__primary-action" href="/properties">{copy.browseProperties}</a>
+    </section>
+  );
+}
+
 function DeveloperGrid({
   locale,
   developers
@@ -341,6 +426,9 @@ function HomepageContent({
   return (
     <div className="public-homepage__content">
       <Hero locale={locale} copy={copy} sections={sections} banners={data.banners} />
+      <HomepageSummary locale={locale} properties={data.properties} developers={data.developers} content={data.content} />
+      <HomepageCategoryRail locale={locale} copy={copy} properties={data.properties} />
+      <BannerGrid locale={locale} copy={copy} banners={data.banners} />
       {data.properties.length === 0 ? null : (
         <section className="public-homepage__section public-homepage__section--properties" aria-labelledby="public-homepage-properties">
           <SectionHeading id="public-homepage-properties" title={copy.featuredProperties} action={<a href="/properties">{copy.viewAll}</a>} />
@@ -355,9 +443,9 @@ function HomepageContent({
       )}
       <ContentGrid locale={locale} copy={copy} type="article" content={data.content} />
       <ContentGrid locale={locale} copy={copy} type="community" content={data.content} />
+      <PlatformCallout locale={locale} copy={copy} />
       <ContentGrid locale={locale} copy={copy} type="about" content={data.content} />
       <ContentGrid locale={locale} copy={copy} type="tip" content={data.content} />
-      <BannerGrid locale={locale} copy={copy} banners={data.banners} />
       {sections.length <= 1 ? null : (
         <section className="public-homepage__section public-homepage__section--editorial" aria-labelledby="public-homepage-editorial">
           <SectionHeading id="public-homepage-editorial" title={copy.about} />

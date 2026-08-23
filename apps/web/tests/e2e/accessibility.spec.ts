@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { routePublicHomepageApi } from './public-fixtures';
 
 function localeForProject(): 'ar' | 'en' | 'zh-CN' {
   const projectName = test.info().project.name;
@@ -128,7 +129,7 @@ function articleDetailsFixture() {
 
 test('public route shell exposes skip navigation and main landmark', async ({ page }) => {
   const locale = localeForProject();
-  await page.goto(`/properties?lang=${encodeURIComponent(locale)}`);
+  await page.goto(`/properties?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
 
   const skipLink = page.locator('.a11y-skip-link');
   await expect(skipLink).toHaveAttribute('href', '#main-content');
@@ -142,13 +143,14 @@ test('public route shell exposes skip navigation and main landmark', async ({ pa
 
 test('public homepage exposes a labeled navigation, search form, and image states', async ({ page }) => {
   const locale = localeForProject();
-  await page.goto('/?lang=' + encodeURIComponent(locale));
+  await routePublicHomepageApi(page);
+  await page.goto('/?lang=' + encodeURIComponent(locale), { waitUntil: 'domcontentloaded' });
 
   await expect(page.locator('[data-page="public-home"]')).toBeVisible();
   await expect(page.locator('.public-homepage__nav')).toHaveAttribute('aria-label', /.+/);
   const homepage = page.locator('[data-page="public-home"]');
   const state = await homepage.getAttribute('data-homepage-state');
-  expect(state).toMatch(/^(loading|empty|error|retry|permission|success)$/);
+  expect(state).toBe('success');
   const searchForm = page.locator('form.public-homepage__search');
   if (await searchForm.count() > 0) {
     await expect(searchForm).toHaveAttribute('aria-label', /.+/);
@@ -159,7 +161,7 @@ test('public homepage exposes a labeled navigation, search form, and image state
 
 test('public property listing exposes labeled filters, query controls, and safe states', async ({ page }) => {
   const locale = localeForProject();
-  await page.goto('/properties?lang=' + encodeURIComponent(locale));
+  await page.goto('/properties?lang=' + encodeURIComponent(locale), { waitUntil: 'domcontentloaded' });
 
   const listing = page.locator('[data-page="public-properties"]');
   await expect(listing).toBeVisible();
@@ -184,7 +186,7 @@ test('public property details exposes one main landmark, labeled actions, and sa
     });
   });
 
-  await page.goto(`/properties/published-home?lang=${encodeURIComponent(locale)}`);
+  await page.goto(`/properties/published-home?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
   const details = page.locator('[data-page="public-property-details"]');
   await expect(details).toBeVisible();
   await expect(details).toHaveAttribute('data-details-state', 'success');
@@ -210,7 +212,7 @@ test('public property comparison exposes labeled controls, tables, and safe medi
     });
   });
 
-  await page.goto(`/compare?lang=${encodeURIComponent(locale)}&propertyIds=aaaaaaaaaaaaaaaaaaaaaaaa&propertyIds=bbbbbbbbbbbbbbbbbbbbbbbb`);
+  await page.goto(`/compare?lang=${encodeURIComponent(locale)}&propertyIds=aaaaaaaaaaaaaaaaaaaaaaaa&propertyIds=bbbbbbbbbbbbbbbbbbbbbbbb`, { waitUntil: 'domcontentloaded' });
   const comparison = page.locator('[data-page="public-comparison"]');
   await expect(comparison).toBeVisible();
   await expect(comparison).toHaveAttribute('data-comparison-state', 'success');
@@ -229,7 +231,7 @@ test('public developer directory exposes labeled filters and safe media states',
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(developerDirectoryFixture()) });
   });
 
-  await page.goto(`/developers?lang=${encodeURIComponent(locale)}`);
+  await page.goto(`/developers?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
   const directory = page.locator('[data-page="public-developers"]');
   await expect(directory).toBeVisible();
   await expect(directory).toHaveAttribute('data-developers-state', 'success');
@@ -249,7 +251,7 @@ test('public developer profile exposes tab navigation, project links, and safe m
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(developerProfileFixture()) });
   });
 
-  await page.goto(`/developers/approved-builder?lang=${encodeURIComponent(locale)}`);
+  await page.goto(`/developers/approved-builder?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
   const profile = page.locator('[data-page="public-developer-profile"]');
   await expect(profile).toBeVisible();
   await expect(profile).toHaveAttribute('data-developer-profile-state', 'success');
@@ -267,7 +269,7 @@ test('public article listing exposes labeled search, navigation, and safe media 
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(articleListFixture()) });
   });
 
-  await page.goto(`/articles?lang=${encodeURIComponent(locale)}`);
+  await page.goto(`/articles?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
   const listing = page.locator('[data-page="public-articles"]');
   await expect(listing).toBeVisible();
   await expect(listing).toHaveAttribute('data-articles-state', 'success');
@@ -289,7 +291,7 @@ test('public article details exposes a main landmark, content heading, and safe 
     });
   });
 
-  await page.goto(`/articles/buying-in-sadat?lang=${encodeURIComponent(locale)}`);
+  await page.goto(`/articles/buying-in-sadat?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
   const details = page.locator('[data-page="public-article-details"]');
   await expect(details).toBeVisible();
   await expect(details).toHaveAttribute('data-article-details-state', 'success');

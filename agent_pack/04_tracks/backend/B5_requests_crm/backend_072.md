@@ -6,7 +6,7 @@
 | Phase | B5_requests_crm |
 | Area | viewings |
 | Kind | api |
-| Sequence | 60 / 188 |
+| Sequence | 60 / 197 |
 | Depends on | `backend_071` |
 
 ## Goal

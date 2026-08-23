@@ -1,5 +1,21 @@
 # Current Reality Snapshot
 
+## Post-release completion audit — 2026-08-22
+
+- The previously closed 188-task graph was historical execution evidence, not proof of complete visual parity or production-parity readiness.
+- The graph now contains 197 tasks: 114 Backend and 83 Frontend. The nine added post-release assurance tasks preserve historical completion while tracking the gaps discovered by this audit.
+- `frontend_091` is Complete after restoring 136 canonical approved design-source files and verifying their existing SHA-256 records. Local approved exports cover 130 of 131 Screen IDs; ADM-54 remains external-only.
+- `frontend_092` is the next dependency-ready task. It owns direct Public and Authentication design parity and populated success-state verification.
+- `backend_139` is Blocked by missing non-production production-parity infrastructure and external assurance prerequisites.
+- `frontend_096` is Blocked until an approved ADM-54 export or authenticated exact-frame access is available.
+- The official Web `test:visual` script currently runs only `tests/e2e/visual.spec.ts`. The repository has 80 Playwright specs, 42 screenshot-bearing specs, and 80 screenshot assertion sites, but no proven full 131-screen direct approved-source comparison.
+- Public homepage and property-listing visual cases do not provide populated success fixtures. Their current assertion permits any asynchronous state, so an error-state baseline can satisfy the visual command.
+- Sampled approved-source comparisons found material differences on Public, Authentication, and Admin surfaces. The platform must not be reported as visually complete.
+- Repository-owned TypeScript, lint, API tests, Web tests, Web build, API inventory, OpenAPI, and Postman checks passed. A fresh browser matrix was blocked because no Playwright executable was available and browser download failed in the audit environment.
+- The canonical audit decision is `08_reality_sync/PLATFORM_COMPLETION_AUDIT.json`: all-APIs-tested, all-131-screens-complete, production-parity, and full-platform claims remain False.
+
+The release-gate snapshot below is retained for provenance. Where it conflicts with the post-release audit, the 2026-08-22 audit is current truth.
+
 ## Release gate refresh — 2026-08-21
 
 - The repository has completed the authorized frontend sequence through `frontend_089`; `frontend_090` is the selected final gate and is currently being verified.

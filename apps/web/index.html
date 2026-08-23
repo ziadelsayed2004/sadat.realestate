@@ -7,7 +7,22 @@
     <link rel="icon" type="image/png" href="/assets/sadat-real-estate-favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+    <link id="sadat-font-stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+    <script>
+      (() => {
+        const link = document.getElementById('sadat-font-stylesheet');
+        if (!(link instanceof HTMLLinkElement)) return;
+        window.setTimeout(() => {
+          const fonts = document.fonts;
+          const settled = fonts === undefined || (
+            fonts.check('400 16px Cairo', 'Search preferences') &&
+            fonts.check('400 16px "Noto Sans SC"', '搜索偏好')
+          );
+          if (!settled) link.remove();
+        }, 2500);
+      })();
+    </script>
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&amp;family=Noto+Sans+SC:wght@400;500;600;700&amp;display=swap" rel="stylesheet" /></noscript>
     <title>Sadat Real Estate</title>
   </head>
   <body>

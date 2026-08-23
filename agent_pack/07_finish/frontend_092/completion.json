@@ -1,0 +1,189 @@
+{
+  "taskId": "frontend_092",
+  "summary": "Completed Public and Authentication parity remediation. Repaired the full-suite Playwright font-readiness isolation failure, verified all 31 approved local screens, classified all 12 Public media findings as narrowly masked dynamic content, reviewed 108 changed Public snapshots, and passed the required Web, API, repository, visual, accessibility, locale, and device gates.",
+  "filesChanged": [
+    "apps/web/index.html",
+    "apps/web/src/features/content/about-team.css",
+    "apps/web/src/features/content/about-team.tsx",
+    "apps/web/src/features/public/components.tsx",
+    "apps/web/src/features/public/styles.css",
+    "apps/web/tests/e2e/about-team.spec.ts",
+    "apps/web/tests/e2e/accessibility.spec.ts",
+    "apps/web/tests/e2e/admin-notifications-audit-visual.spec.ts",
+    "apps/web/tests/e2e/provider-overview.spec.ts",
+    "apps/web/tests/e2e/provider-property-wizard.spec.ts",
+    "apps/web/tests/e2e/public-fixtures.ts",
+    "apps/web/tests/e2e/seeker-dashboard-qa.spec.ts",
+    "apps/web/tests/e2e/seeker-profile.spec.ts",
+    "apps/web/tests/e2e/seeker-requests.spec.ts",
+    "apps/web/tests/e2e/visual.spec.ts",
+    "apps/web/tests/frontend-092-parity.vitest.test.ts",
+    "agent_pack/07_finish/frontend_092/design-comparison.json",
+    "agent_pack/07_finish/frontend_092/snapshot-review.json"
+  ],
+  "verification": [
+    {
+      "command": "npx.cmd playwright test --config apps/web/playwright.config.ts apps/web/tests/e2e/seeker-profile.spec.ts --workers=1 --repeat-each=3",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "27 passed, 54 skipped, 81 total."
+    },
+    {
+      "command": "npx.cmd playwright test --config apps/web/playwright.config.ts apps/web/tests/e2e/seeker-profile.spec.ts --repeat-each=3",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "27 passed, 54 skipped, 81 total with normal configured workers."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full Playwright run 1: 861 passed, 840 skipped, 1,701 total."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full Playwright run 2: 861 passed, 840 skipped, 1,701 total."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- frontend-092-parity",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "31-screen ledger integrity and approved-source checksum/dimension checks passed: 1 file, 3 tests."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript check passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "61 Vitest files and 370 tests passed; 76 auxiliary Node tests passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Client and SSR production builds passed; the existing frontend_097 large-client-chunk warning remains documented."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "72/72 runtime visual regression tests passed across Arabic RTL, English LTR, Simplified Chinese LTR, Desktop, Tablet, and Mobile."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "81/81 accessibility tests passed across the approved locale and device projects."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root tests passed: API 507/507 and Web 370 Vitest plus 76 auxiliary tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, client, and SSR builds passed."
+    },
+    {
+      "command": "npm.cmd run test:coverage",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "API coverage suite passed 507/507; coverage report completed at 80.88% lines, 78.91% branches, and 81.60% functions."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities found."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 1,
+      "result": "blocked",
+      "notes": "The unconfigured shell lacks APP_ENV, API_HOST, and API_PORT. No .env was read."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='4010'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='bG9jYWwtZGV2ZWxvcG1lbnRtb25seS1rZXktMzItYnl0ZXM'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Explicit non-production test configuration passed ENV_CHECK_OK; no real .env or secret was read."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory completed successfully."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/07_finish/frontend_092/design-comparison.json — 31 entries: 12 Public and 19 Authentication, all with approved local source paths, SHA-256 checksums, dimensions, route/state mappings, and verified comparisons.",
+    "agent_pack/07_finish/frontend_092/snapshot-review.json — 108 changed Public snapshots inventoried and reviewed; all are populated success-state snapshots with explicit route, locale, direction, device, and Screen ID mappings.",
+    "docs/design_sources/final_screens/public/PUB-01.png through PUB-12.png",
+    "docs/design_sources/final_screens/authentication/AUTH-01.png through AUTH-17.png, including AUTH-09-plus and AUTH-10-plus variants.",
+    "apps/web/src/features/public/components.tsx and apps/web/src/features/public/styles.css — API-backed homepage hierarchy, dynamic media containers, stable fallbacks, and responsive layout.",
+    "apps/web/src/features/content/about-team.tsx and apps/web/src/features/content/about-team.css — safe unavailable About media behavior.",
+    "apps/web/tests/e2e/public-fixtures.ts — deterministic Test-only populated media fixtures and API route fulfillment.",
+    "apps/web/tests/e2e/visual.spec.ts and apps/web/tests/e2e/about-team.spec.ts — explicit success-state and safe media visual coverage.",
+    "apps/web/tests/e2e/seeker-profile.spec.ts and apps/web/tests/e2e/admin-notifications-audit-visual.spec.ts — state-based font readiness synchronization before visual assertions.",
+    "apps/web/index.html — bounded fail-closed handling for an unsettled external font stylesheet."
+  ],
+  "scopeNotes": [
+    "The provider-organization-documents full-suite failure was a shared browser navigation/font-readiness synchronization defect, not a product contract defect.",
+    "The repair uses DOMContentLoaded navigation plus awaited document.fonts.ready at screenshot boundaries; it does not add retries, sleeps, weakened assertions, or fake requests.",
+    "All 12 Public media findings are content_dynamic. Masks cover only variable image-pixel regions; container geometry, crop, aspect ratio, object-fit, overlays, labels, actions, and layout remain verified.",
+    "No Backend runtime, shared contract, API route, or Production behavior changed in this task.",
+    "The 108 snapshot files are enumerated in snapshot-review.json; error and success baselines remain separate."
+  ],
+  "knownGaps": [
+    "The Web production build continues to emit the existing frontend_097 large-client-chunk warning (1,500.64 kB); this task did not worsen or claim to resolve it.",
+    "Optional scripts test:locale, test:performance, test:security, and test:uat are not defined in the current repository package scripts.",
+    "This evidence does not claim all APIs tested, all 131 screens complete, production parity, F7 completion, or full platform completion."
+  ],
+  "completedAt": "2026-08-23T05:13:12.2822465+03:00"
+}

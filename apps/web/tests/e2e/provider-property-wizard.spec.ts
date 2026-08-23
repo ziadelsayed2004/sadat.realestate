@@ -101,7 +101,7 @@ test.describe('PRV-03 and PRV-04 Add Property wizard', () => {
     const locale = localeForProject();
     await routeProviderSession(page);
     await routeProviderProperty(page);
-    const response = await page.goto(`/provider/properties/new/basic?lang=${encodeURIComponent(locale)}`);
+    const response = await page.goto(`/provider/properties/new/basic?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     expect(response?.ok()).toBeTruthy();
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
@@ -125,7 +125,7 @@ test.describe('PRV-03 and PRV-04 Add Property wizard', () => {
     const locale = localeForProject();
     await routeProviderSession(page);
     await routeProviderProperty(page);
-    const response = await page.goto(`/provider/properties/${propertyId}/location?lang=${encodeURIComponent(locale)}`);
+    const response = await page.goto(`/provider/properties/${propertyId}/location?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     expect(response?.ok()).toBeTruthy();
     await expect(page.locator('[data-screen-id="PRV-04"]')).toBeVisible();
     await expect(page.getByText(/provider location catalog is unavailable|دليل المواقع غير متاح|位置目录不可用/u)).toBeVisible();

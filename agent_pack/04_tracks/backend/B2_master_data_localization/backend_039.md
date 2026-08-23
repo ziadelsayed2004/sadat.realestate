@@ -6,7 +6,7 @@
 | Phase | B2_master_data_localization |
 | Area | settings |
 | Kind | security |
-| Sequence | 31 / 188 |
+| Sequence | 31 / 197 |
 | Depends on | `backend_038` |
 
 ## Goal

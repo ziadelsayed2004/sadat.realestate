@@ -100,7 +100,7 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
     const copy = getSeekerProfileCopy(locale);
     const query = `lang=${encodeURIComponent(locale)}`;
 
-    await page.goto(`/seeker/profile?tab=preferences&${query}`);
+    await page.goto(`/seeker/profile?tab=preferences&${query}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-screen-id="SEK-08"]')).toBeVisible();
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
@@ -110,29 +110,38 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
     await expect(page.locator('.a11y-skip-link')).toBeFocused();
     await page.getByRole('link', { name: copy.tabs.profile }).focus();
     await expect(page.getByRole('link', { name: copy.tabs.profile })).toBeFocused();
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+    });
     await expect(page).toHaveScreenshot(`seeker-profile-preferences-${locale}.png`, { fullPage: true });
 
-    await page.goto(`/seeker/profile?tab=profile&${query}`);
+    await page.goto(`/seeker/profile?tab=profile&${query}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-screen-id="SEK-09"]')).toBeVisible();
     await expect(page.getByLabel(copy.profile.phone)).toBeDisabled();
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+    });
     await expect(page).toHaveScreenshot(`seeker-profile-personal-${locale}.png`, { fullPage: true, maxDiffPixels: 300 });
 
-    await page.goto(`/seeker/settings?${query}`);
+    await page.goto(`/seeker/settings?${query}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-screen-id="SEK-10"]')).toBeVisible();
     await expect(page.locator('.seeker-profile__settings-card[data-state="unavailable"]')).toHaveCount(3);
     await expect(page.locator('body')).not.toContainText(/accessToken|refreshToken|internalNote|providerDocument|m\.salem@email\.com/u);
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+    });
     await expect(page).toHaveScreenshot(`seeker-profile-settings-${locale}.png`, { fullPage: true, maxDiffPixels: 300 });
   });
 
   test('saves only contract-shaped profile and preference changes', async ({ page }) => {
     const locale = localeForProject();
     const copy = getSeekerProfileCopy(locale);
-    await page.goto(`/seeker/profile?tab=preferences&lang=${encodeURIComponent(locale)}`);
+    await page.goto(`/seeker/profile?tab=preferences&lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await page.getByLabel(copy.preferences.maxPrice).fill('2500000');
     await page.getByRole('button', { name: copy.preferences.save }).click();
     await expect(page.locator('.seeker-profile__feedback[data-state="success"]')).toContainText(copy.preferences.saved);
 
-    await page.goto(`/seeker/profile?tab=profile&lang=${encodeURIComponent(locale)}`);
+    await page.goto(`/seeker/profile?tab=profile&lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await page.getByLabel(copy.profile.firstName).fill('Mariam');
     await page.getByRole('button', { name: copy.profile.save }).click();
     await expect(page.locator('.seeker-profile__feedback[data-state="success"]')).toContainText(copy.profile.saved);
@@ -143,7 +152,7 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
     const locale = localeForProject();
     await page.unroute('**/api/v1/auth/refresh');
     await routeSession(page, false);
-    await page.goto(`/seeker/settings?lang=${encodeURIComponent(locale)}`);
+    await page.goto(`/seeker/settings?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-access="authentication-required"]')).toBeVisible();
     await expect(page.locator('[data-screen-id="SEK-10"]')).toHaveCount(0);
   });

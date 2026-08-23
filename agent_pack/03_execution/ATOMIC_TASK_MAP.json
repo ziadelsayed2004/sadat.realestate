@@ -791,528 +791,591 @@
     "atomicTaskFile": "04_tracks/backend/B9_admin_system_readiness/backend_138.md"
   },
   {
+    "taskId": "backend_139",
+    "track": "backend",
+    "phase": "B10_post_release_assurance",
+    "sequence": 114,
+    "atomicTaskFile": "04_tracks/backend/B10_post_release_assurance/backend_139.md"
+  },
+  {
     "taskId": "frontend_000",
     "track": "frontend",
     "phase": "F0_frontend_foundation",
-    "sequence": 114,
+    "sequence": 115,
     "atomicTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_000.md"
   },
   {
     "taskId": "frontend_001",
     "track": "frontend",
     "phase": "F0_frontend_foundation",
-    "sequence": 115,
+    "sequence": 116,
     "atomicTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_001.md"
   },
   {
     "taskId": "frontend_002",
     "track": "frontend",
     "phase": "F0_frontend_foundation",
-    "sequence": 116,
+    "sequence": 117,
     "atomicTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_002.md"
   },
   {
     "taskId": "frontend_003",
     "track": "frontend",
     "phase": "F0_frontend_foundation",
-    "sequence": 117,
+    "sequence": 118,
     "atomicTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_003.md"
   },
   {
     "taskId": "frontend_004",
     "track": "frontend",
     "phase": "F0_frontend_foundation",
-    "sequence": 118,
+    "sequence": 119,
     "atomicTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_004.md"
   },
   {
     "taskId": "frontend_005",
     "track": "frontend",
     "phase": "F0_frontend_foundation",
-    "sequence": 119,
+    "sequence": 120,
     "atomicTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_005.md"
   },
   {
     "taskId": "frontend_006",
     "track": "frontend",
     "phase": "F0_frontend_foundation",
-    "sequence": 120,
+    "sequence": 121,
     "atomicTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_006.md"
   },
   {
     "taskId": "frontend_007",
     "track": "frontend",
     "phase": "F0_frontend_foundation",
-    "sequence": 121,
+    "sequence": 122,
     "atomicTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_007.md"
   },
   {
     "taskId": "frontend_008",
     "track": "frontend",
     "phase": "F0_frontend_foundation",
-    "sequence": 122,
+    "sequence": 123,
     "atomicTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_008.md"
   },
   {
     "taskId": "frontend_009",
     "track": "frontend",
     "phase": "F0_frontend_foundation",
-    "sequence": 123,
+    "sequence": 124,
     "atomicTaskFile": "04_tracks/frontend/F0_frontend_foundation/frontend_009.md"
   },
   {
     "taskId": "frontend_010",
     "track": "frontend",
     "phase": "F1_public_site",
-    "sequence": 124,
+    "sequence": 125,
     "atomicTaskFile": "04_tracks/frontend/F1_public_site/frontend_010.md"
   },
   {
     "taskId": "frontend_011",
     "track": "frontend",
     "phase": "F1_public_site",
-    "sequence": 125,
+    "sequence": 126,
     "atomicTaskFile": "04_tracks/frontend/F1_public_site/frontend_011.md"
   },
   {
     "taskId": "frontend_012",
     "track": "frontend",
     "phase": "F1_public_site",
-    "sequence": 126,
+    "sequence": 127,
     "atomicTaskFile": "04_tracks/frontend/F1_public_site/frontend_012.md"
   },
   {
     "taskId": "frontend_013",
     "track": "frontend",
     "phase": "F1_public_site",
-    "sequence": 127,
+    "sequence": 128,
     "atomicTaskFile": "04_tracks/frontend/F1_public_site/frontend_013.md"
   },
   {
     "taskId": "frontend_014",
     "track": "frontend",
     "phase": "F1_public_site",
-    "sequence": 128,
+    "sequence": 129,
     "atomicTaskFile": "04_tracks/frontend/F1_public_site/frontend_014.md"
   },
   {
     "taskId": "frontend_015",
     "track": "frontend",
     "phase": "F1_public_site",
-    "sequence": 129,
+    "sequence": 130,
     "atomicTaskFile": "04_tracks/frontend/F1_public_site/frontend_015.md"
   },
   {
     "taskId": "frontend_016",
     "track": "frontend",
     "phase": "F1_public_site",
-    "sequence": 130,
+    "sequence": 131,
     "atomicTaskFile": "04_tracks/frontend/F1_public_site/frontend_016.md"
   },
   {
     "taskId": "frontend_017",
     "track": "frontend",
     "phase": "F1_public_site",
-    "sequence": 131,
+    "sequence": 132,
     "atomicTaskFile": "04_tracks/frontend/F1_public_site/frontend_017.md"
   },
   {
     "taskId": "frontend_018",
     "track": "frontend",
     "phase": "F1_public_site",
-    "sequence": 132,
+    "sequence": 133,
     "atomicTaskFile": "04_tracks/frontend/F1_public_site/frontend_018.md"
   },
   {
     "taskId": "frontend_019",
     "track": "frontend",
     "phase": "F1_public_site",
-    "sequence": 133,
+    "sequence": 134,
     "atomicTaskFile": "04_tracks/frontend/F1_public_site/frontend_019.md"
   },
   {
     "taskId": "frontend_020",
     "track": "frontend",
     "phase": "F2_auth_onboarding",
-    "sequence": 134,
+    "sequence": 135,
     "atomicTaskFile": "04_tracks/frontend/F2_auth_onboarding/frontend_020.md"
   },
   {
     "taskId": "frontend_021",
     "track": "frontend",
     "phase": "F2_auth_onboarding",
-    "sequence": 135,
+    "sequence": 136,
     "atomicTaskFile": "04_tracks/frontend/F2_auth_onboarding/frontend_021.md"
   },
   {
     "taskId": "frontend_022",
     "track": "frontend",
     "phase": "F2_auth_onboarding",
-    "sequence": 136,
+    "sequence": 137,
     "atomicTaskFile": "04_tracks/frontend/F2_auth_onboarding/frontend_022.md"
   },
   {
     "taskId": "frontend_023",
     "track": "frontend",
     "phase": "F2_auth_onboarding",
-    "sequence": 137,
+    "sequence": 138,
     "atomicTaskFile": "04_tracks/frontend/F2_auth_onboarding/frontend_023.md"
   },
   {
     "taskId": "frontend_024",
     "track": "frontend",
     "phase": "F2_auth_onboarding",
-    "sequence": 138,
+    "sequence": 139,
     "atomicTaskFile": "04_tracks/frontend/F2_auth_onboarding/frontend_024.md"
   },
   {
     "taskId": "frontend_025",
     "track": "frontend",
     "phase": "F2_auth_onboarding",
-    "sequence": 139,
+    "sequence": 140,
     "atomicTaskFile": "04_tracks/frontend/F2_auth_onboarding/frontend_025.md"
   },
   {
     "taskId": "frontend_026",
     "track": "frontend",
     "phase": "F2_auth_onboarding",
-    "sequence": 140,
+    "sequence": 141,
     "atomicTaskFile": "04_tracks/frontend/F2_auth_onboarding/frontend_026.md"
   },
   {
     "taskId": "frontend_030",
     "track": "frontend",
     "phase": "F3_seeker_dashboard",
-    "sequence": 141,
+    "sequence": 142,
     "atomicTaskFile": "04_tracks/frontend/F3_seeker_dashboard/frontend_030.md"
   },
   {
     "taskId": "frontend_031",
     "track": "frontend",
     "phase": "F3_seeker_dashboard",
-    "sequence": 142,
+    "sequence": 143,
     "atomicTaskFile": "04_tracks/frontend/F3_seeker_dashboard/frontend_031.md"
   },
   {
     "taskId": "frontend_032",
     "track": "frontend",
     "phase": "F3_seeker_dashboard",
-    "sequence": 143,
+    "sequence": 144,
     "atomicTaskFile": "04_tracks/frontend/F3_seeker_dashboard/frontend_032.md"
   },
   {
     "taskId": "frontend_033",
     "track": "frontend",
     "phase": "F3_seeker_dashboard",
-    "sequence": 144,
+    "sequence": 145,
     "atomicTaskFile": "04_tracks/frontend/F3_seeker_dashboard/frontend_033.md"
   },
   {
     "taskId": "frontend_034",
     "track": "frontend",
     "phase": "F3_seeker_dashboard",
-    "sequence": 145,
+    "sequence": 146,
     "atomicTaskFile": "04_tracks/frontend/F3_seeker_dashboard/frontend_034.md"
   },
   {
     "taskId": "frontend_035",
     "track": "frontend",
     "phase": "F3_seeker_dashboard",
-    "sequence": 146,
+    "sequence": 147,
     "atomicTaskFile": "04_tracks/frontend/F3_seeker_dashboard/frontend_035.md"
   },
   {
     "taskId": "frontend_036",
     "track": "frontend",
     "phase": "F3_seeker_dashboard",
-    "sequence": 147,
+    "sequence": 148,
     "atomicTaskFile": "04_tracks/frontend/F3_seeker_dashboard/frontend_036.md"
   },
   {
     "taskId": "frontend_040",
     "track": "frontend",
     "phase": "F4_provider_dashboard",
-    "sequence": 148,
+    "sequence": 149,
     "atomicTaskFile": "04_tracks/frontend/F4_provider_dashboard/frontend_040.md"
   },
   {
     "taskId": "frontend_041",
     "track": "frontend",
     "phase": "F4_provider_dashboard",
-    "sequence": 149,
+    "sequence": 150,
     "atomicTaskFile": "04_tracks/frontend/F4_provider_dashboard/frontend_041.md"
   },
   {
     "taskId": "frontend_042",
     "track": "frontend",
     "phase": "F4_provider_dashboard",
-    "sequence": 150,
+    "sequence": 151,
     "atomicTaskFile": "04_tracks/frontend/F4_provider_dashboard/frontend_042.md"
   },
   {
     "taskId": "frontend_043",
     "track": "frontend",
     "phase": "F4_provider_dashboard",
-    "sequence": 151,
+    "sequence": 152,
     "atomicTaskFile": "04_tracks/frontend/F4_provider_dashboard/frontend_043.md"
   },
   {
     "taskId": "frontend_044",
     "track": "frontend",
     "phase": "F4_provider_dashboard",
-    "sequence": 152,
+    "sequence": 153,
     "atomicTaskFile": "04_tracks/frontend/F4_provider_dashboard/frontend_044.md"
   },
   {
     "taskId": "frontend_045",
     "track": "frontend",
     "phase": "F4_provider_dashboard",
-    "sequence": 153,
+    "sequence": 154,
     "atomicTaskFile": "04_tracks/frontend/F4_provider_dashboard/frontend_045.md"
   },
   {
     "taskId": "frontend_046",
     "track": "frontend",
     "phase": "F4_provider_dashboard",
-    "sequence": 154,
+    "sequence": 155,
     "atomicTaskFile": "04_tracks/frontend/F4_provider_dashboard/frontend_046.md"
   },
   {
     "taskId": "frontend_047",
     "track": "frontend",
     "phase": "F4_provider_dashboard",
-    "sequence": 155,
+    "sequence": 156,
     "atomicTaskFile": "04_tracks/frontend/F4_provider_dashboard/frontend_047.md"
   },
   {
     "taskId": "frontend_048",
     "track": "frontend",
     "phase": "F4_provider_dashboard",
-    "sequence": 156,
+    "sequence": 157,
     "atomicTaskFile": "04_tracks/frontend/F4_provider_dashboard/frontend_048.md"
   },
   {
     "taskId": "frontend_049",
     "track": "frontend",
     "phase": "F4_provider_dashboard",
-    "sequence": 157,
+    "sequence": 158,
     "atomicTaskFile": "04_tracks/frontend/F4_provider_dashboard/frontend_049.md"
   },
   {
     "taskId": "frontend_050",
     "track": "frontend",
     "phase": "F4_provider_dashboard",
-    "sequence": 158,
+    "sequence": 159,
     "atomicTaskFile": "04_tracks/frontend/F4_provider_dashboard/frontend_050.md"
   },
   {
     "taskId": "frontend_051",
     "track": "frontend",
     "phase": "F4_provider_dashboard",
-    "sequence": 159,
+    "sequence": 160,
     "atomicTaskFile": "04_tracks/frontend/F4_provider_dashboard/frontend_051.md"
   },
   {
     "taskId": "frontend_060",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 160,
+    "sequence": 161,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_060.md"
   },
   {
     "taskId": "frontend_061",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 161,
+    "sequence": 162,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_061.md"
   },
   {
     "taskId": "frontend_062",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 162,
+    "sequence": 163,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_062.md"
   },
   {
     "taskId": "frontend_063",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 163,
+    "sequence": 164,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_063.md"
   },
   {
     "taskId": "frontend_064",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 164,
+    "sequence": 165,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_064.md"
   },
   {
     "taskId": "frontend_065",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 165,
+    "sequence": 166,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_065.md"
   },
   {
     "taskId": "frontend_066",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 166,
+    "sequence": 167,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_066.md"
   },
   {
     "taskId": "frontend_067",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 167,
+    "sequence": 168,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_067.md"
   },
   {
     "taskId": "frontend_068",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 168,
+    "sequence": 169,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_068.md"
   },
   {
     "taskId": "frontend_069",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 169,
+    "sequence": 170,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_069.md"
   },
   {
     "taskId": "frontend_070",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 170,
+    "sequence": 171,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_070.md"
   },
   {
     "taskId": "frontend_071",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 171,
+    "sequence": 172,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_071.md"
   },
   {
     "taskId": "frontend_072",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 172,
+    "sequence": 173,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_072.md"
   },
   {
     "taskId": "frontend_073",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 173,
+    "sequence": 174,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_073.md"
   },
   {
     "taskId": "frontend_074",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 174,
+    "sequence": 175,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_074.md"
   },
   {
     "taskId": "frontend_075",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 175,
+    "sequence": 176,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_075.md"
   },
   {
     "taskId": "frontend_076",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 176,
+    "sequence": 177,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_076.md"
   },
   {
     "taskId": "frontend_077",
     "track": "frontend",
     "phase": "F5_admin_dashboard",
-    "sequence": 177,
+    "sequence": 178,
     "atomicTaskFile": "04_tracks/frontend/F5_admin_dashboard/frontend_077.md"
   },
   {
     "taskId": "frontend_080",
     "track": "frontend",
     "phase": "F6_integration_release",
-    "sequence": 178,
+    "sequence": 179,
     "atomicTaskFile": "04_tracks/frontend/F6_integration_release/frontend_080.md"
   },
   {
     "taskId": "frontend_081",
     "track": "frontend",
     "phase": "F6_integration_release",
-    "sequence": 179,
+    "sequence": 180,
     "atomicTaskFile": "04_tracks/frontend/F6_integration_release/frontend_081.md"
   },
   {
     "taskId": "frontend_082",
     "track": "frontend",
     "phase": "F6_integration_release",
-    "sequence": 180,
+    "sequence": 181,
     "atomicTaskFile": "04_tracks/frontend/F6_integration_release/frontend_082.md"
   },
   {
     "taskId": "frontend_083",
     "track": "frontend",
     "phase": "F6_integration_release",
-    "sequence": 181,
+    "sequence": 182,
     "atomicTaskFile": "04_tracks/frontend/F6_integration_release/frontend_083.md"
   },
   {
     "taskId": "frontend_084",
     "track": "frontend",
     "phase": "F6_integration_release",
-    "sequence": 182,
+    "sequence": 183,
     "atomicTaskFile": "04_tracks/frontend/F6_integration_release/frontend_084.md"
   },
   {
     "taskId": "frontend_085",
     "track": "frontend",
     "phase": "F6_integration_release",
-    "sequence": 183,
+    "sequence": 184,
     "atomicTaskFile": "04_tracks/frontend/F6_integration_release/frontend_085.md"
   },
   {
     "taskId": "frontend_086",
     "track": "frontend",
     "phase": "F6_integration_release",
-    "sequence": 184,
+    "sequence": 185,
     "atomicTaskFile": "04_tracks/frontend/F6_integration_release/frontend_086.md"
   },
   {
     "taskId": "frontend_087",
     "track": "frontend",
     "phase": "F6_integration_release",
-    "sequence": 185,
+    "sequence": 186,
     "atomicTaskFile": "04_tracks/frontend/F6_integration_release/frontend_087.md"
   },
   {
     "taskId": "frontend_088",
     "track": "frontend",
     "phase": "F6_integration_release",
-    "sequence": 186,
+    "sequence": 187,
     "atomicTaskFile": "04_tracks/frontend/F6_integration_release/frontend_088.md"
   },
   {
     "taskId": "frontend_089",
     "track": "frontend",
     "phase": "F6_integration_release",
-    "sequence": 187,
+    "sequence": 188,
     "atomicTaskFile": "04_tracks/frontend/F6_integration_release/frontend_089.md"
   },
   {
     "taskId": "frontend_090",
     "track": "frontend",
     "phase": "F6_integration_release",
-    "sequence": 188,
+    "sequence": 189,
     "atomicTaskFile": "04_tracks/frontend/F6_integration_release/frontend_090.md"
+  },
+  {
+    "taskId": "frontend_091",
+    "track": "frontend",
+    "phase": "F7_post_release_assurance",
+    "sequence": 190,
+    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_091.md"
+  },
+  {
+    "taskId": "frontend_092",
+    "track": "frontend",
+    "phase": "F7_post_release_assurance",
+    "sequence": 191,
+    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_092.md"
+  },
+  {
+    "taskId": "frontend_093",
+    "track": "frontend",
+    "phase": "F7_post_release_assurance",
+    "sequence": 192,
+    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_093.md"
+  },
+  {
+    "taskId": "frontend_094",
+    "track": "frontend",
+    "phase": "F7_post_release_assurance",
+    "sequence": 193,
+    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_094.md"
+  },
+  {
+    "taskId": "frontend_095",
+    "track": "frontend",
+    "phase": "F7_post_release_assurance",
+    "sequence": 194,
+    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_095.md"
+  },
+  {
+    "taskId": "frontend_096",
+    "track": "frontend",
+    "phase": "F7_post_release_assurance",
+    "sequence": 195,
+    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_096.md"
+  },
+  {
+    "taskId": "frontend_097",
+    "track": "frontend",
+    "phase": "F7_post_release_assurance",
+    "sequence": 196,
+    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_097.md"
+  },
+  {
+    "taskId": "frontend_098",
+    "track": "frontend",
+    "phase": "F7_post_release_assurance",
+    "sequence": 197,
+    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_098.md"
   }
 ]

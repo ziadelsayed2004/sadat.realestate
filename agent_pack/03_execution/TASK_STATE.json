@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-21T10:41:19.939Z",
+  "updatedAt": "2026-08-23T02:15:15.678Z",
   "tasks": {
     "backend_000": {
       "status": "complete",
@@ -1317,6 +1317,69 @@
       "completedAt": "2026-08-21T10:41:19.939Z",
       "reason": null,
       "evidencePath": "07_finish/frontend_090/completion.json"
+    },
+    "backend_139": {
+      "status": "blocked",
+      "startedAt": "2026-08-22T02:32:46.881Z",
+      "completedAt": null,
+      "reason": "Blocked pending an isolated non-production MongoDB replica set, approved private storage and malware scanner, OTP and monitoring providers, runnable container infrastructure, backup/restore target, and external security-assurance prerequisites.",
+      "evidencePath": null
+    },
+    "frontend_091": {
+      "status": "complete",
+      "startedAt": "2026-08-22T02:32:46.881Z",
+      "completedAt": "2026-08-22T02:32:46.881Z",
+      "reason": null,
+      "evidencePath": "07_finish/frontend_091/completion.json"
+    },
+    "frontend_092": {
+      "status": "complete",
+      "startedAt": "2026-08-22T12:18:39.639Z",
+      "completedAt": "2026-08-23T02:15:15.678Z",
+      "reason": null,
+      "evidencePath": "07_finish/frontend_092/completion.json"
+    },
+    "frontend_093": {
+      "status": "open",
+      "startedAt": null,
+      "completedAt": null,
+      "reason": null,
+      "evidencePath": null
+    },
+    "frontend_094": {
+      "status": "open",
+      "startedAt": null,
+      "completedAt": null,
+      "reason": null,
+      "evidencePath": null
+    },
+    "frontend_095": {
+      "status": "open",
+      "startedAt": null,
+      "completedAt": null,
+      "reason": null,
+      "evidencePath": null
+    },
+    "frontend_096": {
+      "status": "blocked",
+      "startedAt": "2026-08-22T02:32:46.881Z",
+      "completedAt": null,
+      "reason": "Blocked because ADM-54 is external-only and the exact approved Figma frame or a checksum-verifiable local export is unavailable. Provide docs/design_sources/final_screens/admin/ADM-54.png or authenticated access to the mapped source frame.",
+      "evidencePath": null
+    },
+    "frontend_097": {
+      "status": "open",
+      "startedAt": null,
+      "completedAt": null,
+      "reason": null,
+      "evidencePath": null
+    },
+    "frontend_098": {
+      "status": "open",
+      "startedAt": null,
+      "completedAt": null,
+      "reason": null,
+      "evidencePath": null
     }
   }
 }

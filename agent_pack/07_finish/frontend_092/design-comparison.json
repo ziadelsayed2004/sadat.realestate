@@ -1,0 +1,1615 @@
+{
+  "taskId": "frontend_092",
+  "comparisonBasis": "direct approved local export comparison; runtime snapshots are regression evidence only",
+  "screens": [
+    {
+      "screenId": "PUB-01",
+      "surface": "public",
+      "route": "/",
+      "approvedSourcePath": "docs/design_sources/final_screens/public/PUB-01.png",
+      "approvedSourceSha256": "bd96e921fa4bfa5ce9cbb7a76d87989b8663621d6975d68d1be1f9b147104dd2",
+      "sourceDimensions": {
+        "width": 6196,
+        "height": 21509
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "mediaClassification": "content_dynamic",
+      "mediaSource": "Dynamic public content projection; the homepage banner test fixture supplies a deterministic media URL where the contract permits it.",
+      "mediaContract": "Current public projections do not expose permanent public media URLs for property, organization, article, community, or team records; safe fallback media is intentional.",
+      "requiresExactPixelMatch": false,
+      "dynamicMediaMask": true,
+      "maskBoundary": ".public-homepage__hero-media, .public-homepage__banner-card img, .ui-property-card__media; container geometry, aspect ratio, overlays, labels, and actions remain unmasked.",
+      "layoutVerified": true,
+      "cropVerified": true,
+      "aspectRatioVerified": true,
+      "overlayVerified": true,
+      "altTextVerified": true,
+      "fallbackVerified": true,
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/visual.spec.ts",
+          "route": "/",
+          "fixtureAndState": "Deterministic routePublicHomepageApi success fixture; separate error route coverage remains in the public visual spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Expanded the live homepage hierarchy with data-backed summary, category navigation, and platform callout sections; preserved safe missing-media behavior.",
+        "Added deterministic populated property-list API fixture and success-state assertion."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "PUB-02",
+      "surface": "public",
+      "route": "/properties",
+      "approvedSourcePath": "docs/design_sources/final_screens/public/PUB-02.png",
+      "approvedSourceSha256": "d5ac0f6bc48a74c4cb8af9ab458c0b70a79d026b162000bcedf45115b5261e9c",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 7924
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "mediaClassification": "content_dynamic",
+      "mediaSource": "Dynamic public content projection; the homepage banner test fixture supplies a deterministic media URL where the contract permits it.",
+      "mediaContract": "Current public projections do not expose permanent public media URLs for property, organization, article, community, or team records; safe fallback media is intentional.",
+      "requiresExactPixelMatch": false,
+      "dynamicMediaMask": true,
+      "maskBoundary": ".public-property-listing__card .ui-property-card__media; container geometry, aspect ratio, overlays, labels, and actions remain unmasked.",
+      "layoutVerified": true,
+      "cropVerified": true,
+      "aspectRatioVerified": true,
+      "overlayVerified": true,
+      "altTextVerified": true,
+      "fallbackVerified": true,
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/visual.spec.ts",
+          "route": "/properties",
+          "fixtureAndState": "Deterministic routePublicPropertyListApi success fixture; separate error route coverage remains in the public visual spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "PUB-03",
+      "surface": "public",
+      "route": "/properties/:slug",
+      "approvedSourcePath": "docs/design_sources/final_screens/public/PUB-03.png",
+      "approvedSourceSha256": "d1346599fdb04cdc8b217fd99d7323a281810d69c6e6b9265dc3df204735679d",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 12184
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "mediaClassification": "content_dynamic",
+      "mediaSource": "Dynamic public content projection; the homepage banner test fixture supplies a deterministic media URL where the contract permits it.",
+      "mediaContract": "Current public projections do not expose permanent public media URLs for property, organization, article, community, or team records; safe fallback media is intentional.",
+      "requiresExactPixelMatch": false,
+      "dynamicMediaMask": true,
+      "maskBoundary": "[data-gallery], .public-property-details__related .ui-property-card__media; container geometry, aspect ratio, overlays, labels, and actions remain unmasked.",
+      "layoutVerified": true,
+      "cropVerified": true,
+      "aspectRatioVerified": true,
+      "overlayVerified": true,
+      "altTextVerified": true,
+      "fallbackVerified": true,
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/visual.spec.ts",
+          "route": "/properties/:slug",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "PUB-04",
+      "surface": "public",
+      "route": "/compare",
+      "approvedSourcePath": "docs/design_sources/final_screens/public/PUB-04.png",
+      "approvedSourceSha256": "9dee0f806a8eea7402ebc536c489ec9e33c591bdddf4482cf3883daace1aff98",
+      "sourceDimensions": {
+        "width": 6612,
+        "height": 9256
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "mediaClassification": "content_dynamic",
+      "mediaSource": "Dynamic public content projection; the homepage banner test fixture supplies a deterministic media URL where the contract permits it.",
+      "mediaContract": "Current public projections do not expose permanent public media URLs for property, organization, article, community, or team records; safe fallback media is intentional.",
+      "requiresExactPixelMatch": false,
+      "dynamicMediaMask": true,
+      "maskBoundary": "[data-comparison-card] .ui-property-card__media; container geometry, aspect ratio, overlays, labels, and actions remain unmasked.",
+      "layoutVerified": true,
+      "cropVerified": true,
+      "aspectRatioVerified": true,
+      "overlayVerified": true,
+      "altTextVerified": true,
+      "fallbackVerified": true,
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/visual.spec.ts",
+          "route": "/compare",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "PUB-05",
+      "surface": "public",
+      "route": "/developers",
+      "approvedSourcePath": "docs/design_sources/final_screens/public/PUB-05.png",
+      "approvedSourceSha256": "88114921e9fac4389f4ddc7242cc26b9b099cefd1eafdf801a4922690937fb77",
+      "sourceDimensions": {
+        "width": 6092,
+        "height": 6144
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "mediaClassification": "content_dynamic",
+      "mediaSource": "Dynamic public content projection; the homepage banner test fixture supplies a deterministic media URL where the contract permits it.",
+      "mediaContract": "Current public projections do not expose permanent public media URLs for property, organization, article, community, or team records; safe fallback media is intentional.",
+      "requiresExactPixelMatch": false,
+      "dynamicMediaMask": true,
+      "maskBoundary": ".public-developer-directory__card-media; container geometry, aspect ratio, overlays, labels, and actions remain unmasked.",
+      "layoutVerified": true,
+      "cropVerified": true,
+      "aspectRatioVerified": true,
+      "overlayVerified": true,
+      "altTextVerified": true,
+      "fallbackVerified": true,
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/visual.spec.ts",
+          "route": "/developers",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "PUB-06",
+      "surface": "public",
+      "route": "/developers/:slug",
+      "approvedSourcePath": "docs/design_sources/final_screens/public/PUB-06.png",
+      "approvedSourceSha256": "5ea3de7f6b83c35e1270b83d76db594d2409fc5d0bf562bedd4db141b71851a1",
+      "sourceDimensions": {
+        "width": 6136,
+        "height": 11938
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "mediaClassification": "content_dynamic",
+      "mediaSource": "Dynamic public content projection; the homepage banner test fixture supplies a deterministic media URL where the contract permits it.",
+      "mediaContract": "Current public projections do not expose permanent public media URLs for property, organization, article, community, or team records; safe fallback media is intentional.",
+      "requiresExactPixelMatch": false,
+      "dynamicMediaMask": true,
+      "maskBoundary": ".public-developer-profile__hero-media; container geometry, aspect ratio, overlays, labels, and actions remain unmasked.",
+      "layoutVerified": true,
+      "cropVerified": true,
+      "aspectRatioVerified": true,
+      "overlayVerified": true,
+      "altTextVerified": true,
+      "fallbackVerified": true,
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/visual.spec.ts",
+          "route": "/developers/:slug",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "PUB-07",
+      "surface": "public",
+      "route": "/articles",
+      "approvedSourcePath": "docs/design_sources/final_screens/public/PUB-07.png",
+      "approvedSourceSha256": "2c7da5d5dd9e8f6cecd51856ec7046b746fa608bbbf68b67c1e35348cf6385e5",
+      "sourceDimensions": {
+        "width": 6092,
+        "height": 7129
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "mediaClassification": "content_dynamic",
+      "mediaSource": "Dynamic public content projection; the homepage banner test fixture supplies a deterministic media URL where the contract permits it.",
+      "mediaContract": "Current public projections do not expose permanent public media URLs for property, organization, article, community, or team records; safe fallback media is intentional.",
+      "requiresExactPixelMatch": false,
+      "dynamicMediaMask": true,
+      "maskBoundary": ".public-articles__card-media; container geometry, aspect ratio, overlays, labels, and actions remain unmasked.",
+      "layoutVerified": true,
+      "cropVerified": true,
+      "aspectRatioVerified": true,
+      "overlayVerified": true,
+      "altTextVerified": true,
+      "fallbackVerified": true,
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/visual.spec.ts",
+          "route": "/articles",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "PUB-08",
+      "surface": "public",
+      "route": "/articles/:slug",
+      "approvedSourcePath": "docs/design_sources/final_screens/public/PUB-08.png",
+      "approvedSourceSha256": "06814379fbb850bdd15ef3a1fbd1e6172463282585a11cd14e9d207d6e99fdff",
+      "sourceDimensions": {
+        "width": 6092,
+        "height": 7036
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "mediaClassification": "content_dynamic",
+      "mediaSource": "Dynamic public content projection; the homepage banner test fixture supplies a deterministic media URL where the contract permits it.",
+      "mediaContract": "Current public projections do not expose permanent public media URLs for property, organization, article, community, or team records; safe fallback media is intentional.",
+      "requiresExactPixelMatch": false,
+      "dynamicMediaMask": true,
+      "maskBoundary": ".public-article-details__hero-media; container geometry, aspect ratio, overlays, labels, and actions remain unmasked.",
+      "layoutVerified": true,
+      "cropVerified": true,
+      "aspectRatioVerified": true,
+      "overlayVerified": true,
+      "altTextVerified": true,
+      "fallbackVerified": true,
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/visual.spec.ts",
+          "route": "/articles/:slug",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "PUB-09",
+      "surface": "public",
+      "route": "/community",
+      "approvedSourcePath": "docs/design_sources/final_screens/public/PUB-09.png",
+      "approvedSourceSha256": "bb57550933a7b7687316465022e85b30d817ea4bafb605f0700de11ecb1197c7",
+      "sourceDimensions": {
+        "width": 6096,
+        "height": 7996
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "mediaClassification": "content_dynamic",
+      "mediaSource": "Dynamic public content projection; the homepage banner test fixture supplies a deterministic media URL where the contract permits it.",
+      "mediaContract": "Current public projections do not expose permanent public media URLs for property, organization, article, community, or team records; safe fallback media is intentional.",
+      "requiresExactPixelMatch": false,
+      "dynamicMediaMask": true,
+      "maskBoundary": ".public-community__card-media; container geometry, aspect ratio, overlays, labels, and actions remain unmasked.",
+      "layoutVerified": true,
+      "cropVerified": true,
+      "aspectRatioVerified": true,
+      "overlayVerified": true,
+      "altTextVerified": true,
+      "fallbackVerified": true,
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/community.spec.ts",
+          "route": "/community",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "PUB-10",
+      "surface": "public",
+      "route": "/community?create=1",
+      "approvedSourcePath": "docs/design_sources/final_screens/public/PUB-10.png",
+      "approvedSourceSha256": "3fa4aa55d8d1058453a194e1ad14ceaafbcf6bd922b9a209d3dda9b8ef9d02ec",
+      "sourceDimensions": {
+        "width": 6096,
+        "height": 7996
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "mediaClassification": "content_dynamic",
+      "mediaSource": "Dynamic public content projection; the homepage banner test fixture supplies a deterministic media URL where the contract permits it.",
+      "mediaContract": "Current public projections do not expose permanent public media URLs for property, organization, article, community, or team records; safe fallback media is intentional.",
+      "requiresExactPixelMatch": false,
+      "dynamicMediaMask": true,
+      "maskBoundary": ".public-community__card-media; container geometry, aspect ratio, overlays, labels, and actions remain unmasked.",
+      "layoutVerified": true,
+      "cropVerified": true,
+      "aspectRatioVerified": true,
+      "overlayVerified": true,
+      "altTextVerified": true,
+      "fallbackVerified": true,
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/community.spec.ts",
+          "route": "/community?create=1",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "PUB-11",
+      "surface": "public",
+      "route": "/about",
+      "approvedSourcePath": "docs/design_sources/final_screens/public/PUB-11.png",
+      "approvedSourceSha256": "ec8167472868578a5606b57e0e40e8db8dea1568e2c1180b2689e66298320faf",
+      "sourceDimensions": {
+        "width": 6096,
+        "height": 8856
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "mediaClassification": "content_dynamic",
+      "mediaSource": "Dynamic public content projection; the homepage banner test fixture supplies a deterministic media URL where the contract permits it.",
+      "mediaContract": "Current public projections do not expose permanent public media URLs for property, organization, article, community, or team records; safe fallback media is intentional.",
+      "requiresExactPixelMatch": false,
+      "dynamicMediaMask": true,
+      "maskBoundary": ".public-about__hero-media; container geometry, aspect ratio, overlays, labels, and actions remain unmasked.",
+      "layoutVerified": true,
+      "cropVerified": true,
+      "aspectRatioVerified": true,
+      "overlayVerified": true,
+      "altTextVerified": true,
+      "fallbackVerified": true,
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/about-team.spec.ts",
+          "route": "/about",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "PUB-12",
+      "surface": "public",
+      "route": "/team",
+      "approvedSourcePath": "docs/design_sources/final_screens/public/PUB-12.png",
+      "approvedSourceSha256": "ea3b4cfd469a7e96db3b10f3ee62eebef46ccc2c14eafa20a9b206857fa13b19",
+      "sourceDimensions": {
+        "width": 6092,
+        "height": 6240
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "mediaClassification": "content_dynamic",
+      "mediaSource": "Dynamic public content projection; the homepage banner test fixture supplies a deterministic media URL where the contract permits it.",
+      "mediaContract": "Current public projections do not expose permanent public media URLs for property, organization, article, community, or team records; safe fallback media is intentional.",
+      "requiresExactPixelMatch": false,
+      "dynamicMediaMask": true,
+      "maskBoundary": ".public-team__media; container geometry, aspect ratio, overlays, labels, and actions remain unmasked.",
+      "layoutVerified": true,
+      "cropVerified": true,
+      "aspectRatioVerified": true,
+      "overlayVerified": true,
+      "altTextVerified": true,
+      "fallbackVerified": true,
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/about-team.spec.ts",
+          "route": "/team",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-01",
+      "surface": "auth",
+      "route": "/auth/login",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-01.png",
+      "approvedSourceSha256": "c4e16b1a8a8e0df6dab348c218bd1eb8c96abcec6d855fe09bf52aca2982b09d",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/auth.spec.ts",
+          "route": "/auth/login",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-02",
+      "surface": "auth",
+      "route": "/auth/register/seeker",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-02.png",
+      "approvedSourceSha256": "64678418b051623c6d48782a3cdfd0dd2a292305653dbfc3a81adc35992beb6f",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/seeker-registration.spec.ts",
+          "route": "/auth/register/seeker",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-03",
+      "surface": "auth",
+      "route": "/auth/register/seeker",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-03.png",
+      "approvedSourceSha256": "ddc5b53ba9465ad2d3ff137dd3753945d48f24985cd18f29db0ce701ba8975c4",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3916
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/seeker-registration.spec.ts",
+          "route": "/auth/register/seeker",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-04",
+      "surface": "auth",
+      "route": "/auth/verify-phone",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-04.png",
+      "approvedSourceSha256": "f2c5ddfc6df8f9d1349b346f818375510212955881241056e9b1db85c587009a",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 4132
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/auth.spec.ts",
+          "route": "/auth/verify-phone",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-05",
+      "surface": "auth",
+      "route": "/auth/verify-phone",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-05.png",
+      "approvedSourceSha256": "45b46355254d16c16f6cdefeb00a9a3840435ac3ec75ec7c4d3a847eccb62deb",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/auth.spec.ts",
+          "route": "/auth/verify-phone",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-06",
+      "surface": "auth",
+      "route": "/auth/register/seeker/success",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-06.png",
+      "approvedSourceSha256": "dc61d7fc7d0fd838bdacc22c15a2302fa22941701a90baefbd8b7a68267fc16c",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/seeker-registration.spec.ts",
+          "route": "/auth/register/seeker/success",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-07",
+      "surface": "auth",
+      "route": "/auth/register/provider/type",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-07.png",
+      "approvedSourceSha256": "d50c4df4c2c111eb3a186937360fbeaea94ca83cd8101467f05e8d795bea1c3f",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/provider-type.spec.ts",
+          "route": "/auth/register/provider/type",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-08",
+      "surface": "auth",
+      "route": "/auth/register/provider/type",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-08.png",
+      "approvedSourceSha256": "bb091deed2b3890467a8e0b2c30c2ad5808f6a01ac4f68161d617b88ed13be2a",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/provider-type.spec.ts",
+          "route": "/auth/register/provider/type",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-09",
+      "surface": "auth",
+      "route": "/auth/register/provider/account",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-09.png",
+      "approvedSourceSha256": "b29c96feffc19c397348158bc5a545aab139835e073d978603bf6dbf834db959",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 4432
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/provider-account.spec.ts",
+          "route": "/auth/register/provider/account",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-09+",
+      "surface": "auth",
+      "route": "/auth/register/provider/account",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-09-plus.png",
+      "approvedSourceSha256": "7426b329f8d7be65f0effd4f9663120a6a2dc86997330cb1db5b91bc982fcd76",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 4560
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/provider-account.spec.ts",
+          "route": "/auth/register/provider/account",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-10",
+      "surface": "auth",
+      "route": "/auth/register/provider/business",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-10.png",
+      "approvedSourceSha256": "04672e3ae29900dd63fc53cd1fc736bb42f0555629b3edc90d519fffd6d4278b",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 7840
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/provider-organization-documents.spec.ts",
+          "route": "/auth/register/provider/business",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-10+",
+      "surface": "auth",
+      "route": "/auth/register/provider/business",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-10-plus.png",
+      "approvedSourceSha256": "d351ce1854b83efd920290486138a0427bcb92585e4a73dfce55898d62df6b32",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 8080
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/provider-organization-documents.spec.ts",
+          "route": "/auth/register/provider/business",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-11",
+      "surface": "auth",
+      "route": "/auth/register/provider/company",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-11.png",
+      "approvedSourceSha256": "9523fe69a0c5a301012dc917fecb989b2a8f3ed15bd77604b271838f05552a5e",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 6444
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/provider-organization-documents.spec.ts",
+          "route": "/auth/register/provider/company",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-12",
+      "surface": "auth",
+      "route": "/auth/register/provider/documents",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-12.png",
+      "approvedSourceSha256": "68bf1cfa7e2f78048d1f48c69a28203864044e2e990b2730f2633a755a45709a",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 8376
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/provider-organization-documents.spec.ts",
+          "route": "/auth/register/provider/documents",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-13",
+      "surface": "auth",
+      "route": "/auth/register/provider/review",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-13.png",
+      "approvedSourceSha256": "21e385fb95db60b3d40665a00d78af35b6d0101e5d0b118fec776fe3c45874f0",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 9304
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/provider-review.spec.ts",
+          "route": "/auth/register/provider/review",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-14",
+      "surface": "auth",
+      "route": "/provider-application/status",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-14.png",
+      "approvedSourceSha256": "e7476f12ea62e0b92058e648118e3ba008d371106b14534a4823bc0b267badc5",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 5216
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/provider-review.spec.ts",
+          "route": "/provider-application/status",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-15",
+      "surface": "auth",
+      "route": "/provider-application/status",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-15.png",
+      "approvedSourceSha256": "ca76c58d404954ae2e766540e894c78cb2f4d0a15b2d19a784c8c9ae404b5830",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 4668
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/provider-review.spec.ts",
+          "route": "/provider-application/status",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-16",
+      "surface": "auth",
+      "route": "/provider-application/needs-information",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-16.png",
+      "approvedSourceSha256": "96383f8bed1f499fc43880ed0be2832d039e772da7ebc98159fb2a6960ed4d73",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 5826
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/provider-review.spec.ts",
+          "route": "/provider-application/needs-information",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "AUTH-17",
+      "surface": "auth",
+      "route": "/provider-application/approved",
+      "approvedSourcePath": "docs/design_sources/final_screens/authentication/AUTH-17.png",
+      "approvedSourceSha256": "82b62dc0aa0d6c9e038bec91ac3fe3545280ecd25d159bf53da813644780453a",
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 4772
+      },
+      "approvedDevices": [
+        "desktop",
+        "tablet",
+        "mobile"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "disabled",
+        "permission"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "verified",
+      "runtimeEvidence": [
+        {
+          "testSpec": "apps/web/tests/e2e/provider-review.spec.ts",
+          "route": "/provider-application/approved",
+          "fixtureAndState": "Deterministic API/test fixture or seeded route state is exercised by the mapped browser spec.",
+          "matrix": "desktop/tablet/mobile × ar/rtl, en/ltr, zh-CN/ltr",
+          "comparisonMethod": "Direct structured comparison with the exact approved local export; Playwright snapshots are regression evidence only.",
+          "result": "passed"
+        }
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Revalidated the existing route implementation, localized state handling, responsive layout, and safe media/document fallback against the approved export and browser matrix."
+      ],
+      "remainingGaps": []
+    }
+  ],
+  "verification": {
+    "approvedSourceIntegrity": "All 31 local export paths, SHA-256 values, and dimensions are verified by apps/web/tests/frontend-092-parity.vitest.test.ts.",
+    "browserCoverage": "Public visual/community/about-team and authentication/onboarding Playwright suites passed across the 9 locale-direction-device projects.",
+    "successFixtureRule": "PUB-01 and PUB-02 populated success states are explicitly asserted; error-state screenshots remain separate.",
+    "directComparisonStatus": "All 31 local exports were directly inspected and compared structurally. The 19 Authentication and 12 Public screens are verified for structure, state, and responsive behavior; Public dynamic media pixels are classified and narrowly masked rather than claimed as exact pixel matches.",
+    "mediaTruth": "No production image or provider/team asset was invented. The homepage banner exercises the implemented imageUrl contract with a Test-only fixture; property, organization, article, community, About, and team media remain contract-backed dynamic content or explicit safe fallbacks."
+  }
+}

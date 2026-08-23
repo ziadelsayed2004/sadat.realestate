@@ -6,7 +6,7 @@
 | Phase | B7_ads_payments |
 | Area | ads |
 | Kind | api |
-| Sequence | 84 / 188 |
+| Sequence | 84 / 197 |
 | Depends on | `backend_105` |
 
 ## Goal

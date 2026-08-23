@@ -6,7 +6,7 @@
 | Phase | B9_admin_system_readiness |
 | Area | security |
 | Kind | security |
-| Sequence | 110 / 188 |
+| Sequence | 110 / 197 |
 | Depends on | `backend_134` |
 
 ## Goal

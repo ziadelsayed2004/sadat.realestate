@@ -88,7 +88,7 @@ test.describe('SEK-02/03/04 Seeker Requests', () => {
     const locale = localeForProject();
     await routeSession(page);
     await routeRequests(page);
-    await page.goto(`/seeker/requests?lang=${encodeURIComponent(locale)}`);
+    await page.goto(`/seeker/requests?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-screen-id="SEK-02"]')).toBeVisible();
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
@@ -110,7 +110,7 @@ test.describe('SEK-02/03/04 Seeker Requests', () => {
     const locale = localeForProject();
     await routeSession(page);
     await routeRequests(page);
-    await page.goto(`/seeker/requests/${ownRequestId}?lang=${encodeURIComponent(locale)}`);
+    await page.goto(`/seeker/requests/${ownRequestId}?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-screen-id="SEK-03"]')).toHaveAttribute('data-request-status', 'under_review');
     await expect(page.locator('.seeker-request-detail h1')).toBeVisible();
     await expect(page.getByText('Please call me')).toBeVisible();
@@ -122,7 +122,7 @@ test.describe('SEK-02/03/04 Seeker Requests', () => {
     const locale = localeForProject();
     await routeSession(page);
     await routeRequests(page);
-    await page.goto(`/seeker/requests/${contactedRequestId}?lang=${encodeURIComponent(locale)}`);
+    await page.goto(`/seeker/requests/${contactedRequestId}?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-screen-id="SEK-04"]')).toHaveAttribute('data-request-status', 'contacted');
     await expect(page.locator('.seeker-request-detail h1')).toBeVisible();
     await expect(page.getByText('Please call after 5 PM')).toBeVisible();
@@ -134,14 +134,14 @@ test.describe('SEK-02/03/04 Seeker Requests', () => {
     const locale = localeForProject();
     await routeSession(page);
     await routeRequests(page);
-    await page.goto(`/seeker/requests/${forbiddenRequestId}?lang=${encodeURIComponent(locale)}`);
+    await page.goto(`/seeker/requests/${forbiddenRequestId}?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-request-state="not_found"]')).toBeVisible();
     await expect(page.locator('[data-screen-id="SEK-03"]')).toHaveCount(0);
-    await page.reload();
+    await page.reload({ waitUntil: 'domcontentloaded' });
 
     await page.unroute('**/api/v1/auth/refresh');
     await routeSession(page, false);
-    await page.goto(`/seeker/requests?lang=${encodeURIComponent(locale)}`);
+    await page.goto(`/seeker/requests?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-access="authentication-required"]')).toBeVisible();
     await expect(page.locator('[data-screen-id="SEK-02"]')).toHaveCount(0);
   });

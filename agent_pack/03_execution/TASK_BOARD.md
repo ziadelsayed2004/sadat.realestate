@@ -135,6 +135,9 @@
 - [x] backend_136 — Backend End-to-End Journeys
 - [x] backend_137 — Contract Freeze and Frontend Handoff
 - [x] backend_138 — Backend Readiness Gate
+## B10_post_release_assurance
+
+- [!] backend_139 — Live Production-Parity Infrastructure and API Assurance
 ## F0_frontend_foundation
 
 - [x] frontend_000 — Establish Vite SSR and Frontend Architecture
@@ -224,3 +227,13 @@
 - [x] frontend_088 — Operations and Handoff Guide
 - [x] frontend_089 — UAT and Defect Closure
 - [x] frontend_090 — Final Release Gate
+## F7_post_release_assurance
+
+- [x] frontend_091 — Restore and Verify the Approved Design Source Bundle
+- [x] frontend_092 — Public and Authentication Design Parity Remediation
+- [ ] frontend_093 — Seeker Dashboard Design Parity Remediation
+- [ ] frontend_094 — Provider Dashboard Design Parity Remediation
+- [ ] frontend_095 — Admin Dashboard Design Parity Remediation
+- [!] frontend_096 — Recover and Verify ADM-54 Request Settings Design Source
+- [ ] frontend_097 — Full Success-State Browser and Defect-Closure Matrix
+- [ ] frontend_098 — Final Production-Parity Platform Gate

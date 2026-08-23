@@ -1,11 +1,14 @@
 {
   "manifestVersion": "sadat-release-v1",
-  "generatedAt": "2026-08-21T10:39:40.0818967Z",
+  "generatedAt": "2026-08-22T12:31:56.1088093Z",
   "releaseStatus": "conditional",
-  "graphStatus": "complete_conditional",
+  "graphStatus": "pending_post_release_assurance",
   "taskCounts": {
+    "backendTotal": 114,
     "backendComplete": 113,
-    "frontendComplete": 75
+    "frontendTotal": 83,
+    "frontendComplete": 76,
+    "frontendInProgress": "frontend_092"
   },
   "qualityGates": {
     "webTypecheck": "passed",

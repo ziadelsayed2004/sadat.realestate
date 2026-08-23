@@ -6,7 +6,7 @@
 | Phase | B9_admin_system_readiness |
 | Area | events |
 | Kind | infrastructure |
-| Sequence | 100 / 188 |
+| Sequence | 100 / 197 |
 | Depends on | `backend_124` |
 
 ## Goal

@@ -1356,6 +1356,17 @@
     ]
   },
   {
+    "taskId": "backend_139",
+    "allowedRoots": [
+      "apps/api/**",
+      "packages/contracts/**",
+      "packages/config/**",
+      "docs/api/**",
+      "docs/operations/**",
+      "agent_pack/**"
+    ]
+  },
+  {
     "taskId": "frontend_000",
     "allowedRoots": [
       "apps/web/src/features/frontend_foundation/**",
@@ -2177,6 +2188,82 @@
       "apps/web/tests/**",
       "packages/ui/**",
       "packages/contracts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_091",
+    "allowedRoots": [
+      "docs/design_sources/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_092",
+    "allowedRoots": [
+      "apps/web/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "docs/design_sources/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_093",
+    "allowedRoots": [
+      "apps/web/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "docs/design_sources/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_094",
+    "allowedRoots": [
+      "apps/web/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "docs/design_sources/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_095",
+    "allowedRoots": [
+      "apps/web/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "docs/design_sources/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_096",
+    "allowedRoots": [
+      "apps/web/**",
+      "packages/ui/**",
+      "docs/design_sources/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_097",
+    "allowedRoots": [
+      "apps/web/**",
+      "packages/ui/**",
+      "packages/contracts/**",
+      "docs/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_098",
+    "allowedRoots": [
+      "apps/api/**",
+      "apps/web/**",
+      "packages/**",
+      "docs/**",
       "agent_pack/**"
     ]
   }
