@@ -115,7 +115,11 @@ describe('UAT, Postman, and screen-state data binding', () => {
       expect(completion.verification.length, screen.frontendTaskId).toBeGreaterThan(0);
       if (source === undefined) continue;
       if (screen.id === 'ADM-54') {
-        expect(source.visualSourceStatus).toBe('EXTERNAL_GROUP_REFERENCE_ONLY');
+        expect(source.visualSourceStatus).toBe('OWNER_AUTHORED_LOCAL_REVIEW_PENDING');
+        expect(source.localSources.map(localSource => localSource.localPath)).toEqual([
+          'docs/design_sources/final_screens/admin/ADM-54.owner-authored.html',
+          'docs/design_sources/final_screens/admin/ADM-54.owner-authored.png'
+        ]);
       } else {
         expect(source.localSources.length, screen.id).toBeGreaterThan(0);
         for (const localSource of source.localSources) {

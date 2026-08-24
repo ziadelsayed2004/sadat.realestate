@@ -67,6 +67,15 @@ describe('frontend_074 settings namespaces', () => {
     });
   });
 
+  it('makes an unconfigured request namespace explicit without inventing fields', async () => {
+    const result = renderWithLocale(<AdminSettings path="/admin/settings/requests" locale="ar" session={session} initialData={settings('requests')} />, { locale: 'ar' });
+    await waitFor(() => expect(screen.getByTestId('admin-settings-requests-form')).toBeInTheDocument());
+    expect(screen.getByTestId('admin-settings-requests-form').querySelector('[data-state="empty-values"]')).not.toBeNull();
+    expect(screen.getByText('لا توجد إعدادات طلبات مهيّأة بعد')).toBeInTheDocument();
+    expect(result.container.querySelectorAll('input, select').length).toBe(0);
+    result.unmount();
+  });
+
   it('does not load a settings namespace for a non-admin session', async () => {
     let calls = 0;
     renderWithLocale(<AdminSettings path="/admin/settings/requests" locale="en" session={{ status: 'authenticated', role: 'provider' }} load={async () => { calls += 1; return settings('requests'); }} />, { locale: 'en' });

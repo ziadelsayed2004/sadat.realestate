@@ -51,6 +51,9 @@
     "externalOnlyScreenIds": [
       "ADM-54"
     ],
+    "ownerAuthoredPendingReviewScreenIds": [
+      "ADM-54"
+    ],
     "productLogoRuntimePath": "../apps/web/public/assets/sadat-real-estate-logo.png"
   }
 }

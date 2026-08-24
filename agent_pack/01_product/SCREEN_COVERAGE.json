@@ -2663,7 +2663,7 @@
     "id": "ADM-18",
     "surface": "admin",
     "englishName": "Requests Management",
-    "sourceStatus": "GROUP LINK",
+    "sourceStatus": "OWNER AUTHORED PENDING REVIEW",
     "driveUrl": "https://drive.google.com/drive/folders/1qunt0uMMz1Q3EyNrLY1DJgmexvnOp_24",
     "deviceScope": [
       "desktop"
@@ -3913,8 +3913,11 @@
     ],
     "localizedNameKey": "screens.adm_54.title",
     "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
-    "localSourcePaths": [],
-    "visualSourceStatus": "EXTERNAL_GROUP_REFERENCE_ONLY"
+    "localSourcePaths": [
+      "docs/design_sources/final_screens/admin/ADM-54.owner-authored.html",
+      "docs/design_sources/final_screens/admin/ADM-54.owner-authored.png"
+    ],
+    "visualSourceStatus": "OWNER_AUTHORED_LOCAL_REVIEW_PENDING"
   },
   {
     "id": "ADM-55",

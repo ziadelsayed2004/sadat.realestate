@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-24T00:34:06.215Z",
+  "updatedAt": "2026-08-24T17:17:52.935Z",
   "tasks": {
     "backend_000": {
       "status": "complete",
@@ -1361,10 +1361,10 @@
       "evidencePath": "07_finish/frontend_095/completion.json"
     },
     "frontend_096": {
-      "status": "blocked",
+      "status": "partial",
       "startedAt": "2026-08-22T02:32:46.881Z",
       "completedAt": null,
-      "reason": "Blocked because ADM-54 is external-only and the exact approved Figma frame or a checksum-verifiable local export is unavailable. Provide docs/design_sources/final_screens/admin/ADM-54.png or authenticated access to the mapped source frame.",
+      "reason": "Owner-authored ADM-54 HTML/PNG source and deterministic Arabic Desktop runtime comparison are prepared; historical Figma/Drive source remains unrecovered, and explicit Project Owner review/approval of the new source plus the recorded runtime shell-width and tab-wrapping differences is still required before completion.",
       "evidencePath": null
     },
     "frontend_097": {

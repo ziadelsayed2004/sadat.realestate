@@ -136,6 +136,21 @@ function fieldsForValues(namespace: SettingsNamespace, values: DraftValues): rea
   return [...known, ...dynamic];
 }
 
+function emptyValuesCopy(locale: SupportedLocale): { readonly title: string; readonly body: string } {
+  if (locale === 'ar') return {
+    title: 'لا توجد إعدادات طلبات مهيّأة بعد',
+    body: 'سيتم عرض القيم التي يرسلها API فقط. لا تُضاف قواعد تشغيلية أو قيم إنتاجية غير موثقة من واجهة المستخدم.'
+  };
+  if (locale === 'zh-CN') return {
+    title: '请求设置尚未配置',
+    body: '这里只显示 API 返回的值。界面不会添加未经验证的运营规则或生产值。'
+  };
+  return {
+    title: 'No request settings are configured yet',
+    body: 'Only values returned by the API are shown. The interface does not add unverified operational rules or production values.'
+  };
+}
+
 function localePath(locale: SupportedLocale, path: string): string {
   const url = new URL(path, 'http://sadat.local');
   url.searchParams.set('lang', locale);
@@ -176,6 +191,8 @@ function SettingsForm({ namespace, data, values, locale, saving, onChangeText, o
   const [reason, setReason] = useState('');
   const [error, setError] = useState<string | undefined>();
   const fields = fieldsForValues(namespace, values);
+  const emptyValues = emptyValuesCopy(locale);
+  const showEmptyValues = namespace === 'requests' && fields.length === 0;
 
   async function submit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
@@ -186,7 +203,7 @@ function SettingsForm({ namespace, data, values, locale, saving, onChangeText, o
     if (saved) setReason('');
   }
 
-  return <section className="admin-settings__editor" data-testid={`admin-settings-${namespace}-form`}><div className="admin-settings__editor-heading"><div><h2>{copy.labels[namespace]}</h2><p>{copy.descriptions[namespace]}</p></div><span className="admin-settings__version">{copy.version}: {data?.version ?? 0} · {copy.schemaVersion}: {data?.schemaVersion ?? 1}</span></div><form onSubmit={event => { void submit(event); }}><div className="admin-settings__fields">{fields.map(field => field.kind === 'localized' ? <LocalizedField key={field.key} field={field} values={values} locale={locale} copy={copy} onChange={(language, value) => onChangeLocalized(field.key, language, value)} /> : <PrimitiveField key={field.key} field={field} values={values} copy={copy} onChangeText={onChangeText} onChangeArray={onChangeArray} onChangeNumber={onChangeNumber} onChangeBoolean={onChangeBoolean} />)}</div><p className="admin-settings__hint">{copy.preservedValues}</p><label htmlFor={`admin-settings-${namespace}-reason`}>{copy.reason}<textarea id={`admin-settings-${namespace}-reason`} minLength={3} maxLength={500} required value={reason} onChange={event => setReason(event.target.value)} placeholder={copy.reasonPlaceholder} /></label><div className="admin-settings__actions"><Button type="submit" loading={saving} disabled={saving}>{saving ? copy.saving : copy.save}</Button></div>{error ? <p className="admin-settings__feedback" role="alert">{error}</p> : null}</form></section>;
+  return <section className="admin-settings__editor" data-testid={`admin-settings-${namespace}-form`}><div className="admin-settings__editor-heading"><div><h2>{copy.labels[namespace]}</h2><p>{copy.descriptions[namespace]}</p></div><span className="admin-settings__version">{copy.version}: {data?.version ?? 0} · {copy.schemaVersion}: {data?.schemaVersion ?? 1}</span></div><form onSubmit={event => { void submit(event); }}><div className="admin-settings__fields">{showEmptyValues ? <div className="admin-settings__empty-values" data-state="empty-values" role="status"><div className="admin-settings__empty-icon" aria-hidden="true">⌁</div><div><h3>{emptyValues.title}</h3><p>{emptyValues.body}</p></div></div> : fields.map(field => field.kind === 'localized' ? <LocalizedField key={field.key} field={field} values={values} locale={locale} copy={copy} onChange={(language, value) => onChangeLocalized(field.key, language, value)} /> : <PrimitiveField key={field.key} field={field} values={values} copy={copy} onChangeText={onChangeText} onChangeArray={onChangeArray} onChangeNumber={onChangeNumber} onChangeBoolean={onChangeBoolean} />)}</div><p className="admin-settings__hint">{copy.preservedValues}</p><label htmlFor={`admin-settings-${namespace}-reason`}>{copy.reason}<textarea id={`admin-settings-${namespace}-reason`} minLength={3} maxLength={500} required value={reason} onChange={event => setReason(event.target.value)} placeholder={copy.reasonPlaceholder} /></label><div className="admin-settings__actions"><Button type="submit" loading={saving} disabled={saving}>{saving ? copy.saving : copy.save}</Button></div>{error ? <p className="admin-settings__feedback" role="alert">{error}</p> : null}</form></section>;
 }
 
 export interface AdminSettingsProps {

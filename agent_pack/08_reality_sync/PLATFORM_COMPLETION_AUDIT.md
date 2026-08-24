@@ -26,7 +26,7 @@ The canonical source bundle has now been restored and checksum-verified. A post-
 
 - Canonical registry: 131 screens.
 - Local approved-source coverage: 130 screen IDs.
-- External-only source: ADM-54.
+- Historical external-only source: ADM-54. A new owner-authored local HTML/PNG review source exists, but it is not recovered Figma evidence and remains pending explicit owner review.
 - Playwright specs: 80.
 - Specs with screenshot assertions: 42.
 - Screenshot assertion sites: 80.
@@ -47,7 +47,7 @@ The Public homepage and property-listing visual tests accept any state and do no
 - `backend_139`: blocked external production-parity and full API assurance.
 - `frontend_091`: restored and verified design evidence.
 - `frontend_092` through `frontend_095`: surface-by-surface direct design parity remediation.
-- `frontend_096`: blocked ADM-54 source recovery and verification.
+- `frontend_096`: in progress for owner-authored ADM-54 source and runtime comparison; explicit Project Owner approval is still required.
 - `frontend_097`: full success-state browser, direct visual, accessibility, performance, security, and defect-closure matrix.
 - `frontend_098`: final production-parity platform gate.
 

@@ -49,7 +49,7 @@ function sha256(filePath: string): string {
 }
 
 describe('release visual fidelity source matrix', () => {
-  it('maps every registered Screen ID to a verified approved source or the recorded waiver', () => {
+  it('maps every registered Screen ID to an approved source, owner-authored pending source, or recorded waiver', () => {
     const manifest = readJson<DesignSourceManifest>(manifestPath);
     const registry = readJson<Array<{ id: string }>>(registryPath);
     const coverage = readJson<Array<{ id: string }>>(coveragePath);
@@ -70,9 +70,19 @@ describe('release visual fidelity source matrix', () => {
       expect(screen.locales, screen.id).toEqual(['ar', 'en', 'zh-CN']);
 
       if (screen.id === 'ADM-54') {
-        expect(screen.visualSourceStatus).toBe('EXTERNAL_GROUP_REFERENCE_ONLY');
-        expect(screen.sourceStatus).toBe('GROUP LINK');
-        expect(screen.localSources).toEqual([]);
+        expect(screen.visualSourceStatus).toBe('OWNER_AUTHORED_LOCAL_REVIEW_PENDING');
+        expect(screen.sourceStatus).toBe('OWNER_AUTHORED_PENDING_REVIEW');
+        expect(screen.localSources.map(source => source.localPath)).toEqual([
+          'docs/design_sources/final_screens/admin/ADM-54.owner-authored.html',
+          'docs/design_sources/final_screens/admin/ADM-54.owner-authored.png'
+        ]);
+        for (const localSource of screen.localSources) {
+          const absolutePath = path.join(repositoryRoot, localSource.localPath);
+          expect(existsSync(absolutePath), localSource.localPath).toBe(true);
+          expect(localSource.sha256, localSource.localPath).toBe(sha256(absolutePath));
+          expect(localSource.width, localSource.localPath).toBeGreaterThan(0);
+          expect(localSource.height, localSource.localPath).toBeGreaterThan(0);
+        }
         continue;
       }
 

@@ -18,6 +18,10 @@
 .admin-settings__version { color: #7e8999; font-size: .84rem; font-weight: 800; white-space: nowrap; }
 .admin-settings__editor form { display: grid; gap: 18px; padding: 24px 26px 30px; }
 .admin-settings__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.admin-settings__empty-values { grid-column: 1 / -1; min-height: 156px; display: grid; place-items: center; grid-template-columns: auto minmax(0, 1fr); gap: 14px; padding: 22px 26px; border: 1px dashed #d8d7d1; border-radius: 16px; background: #faf8f2; text-align: start; }
+.admin-settings__empty-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; background: #e8f2ee; color: #0e5849; font-size: 1.35rem; font-weight: 800; }
+.admin-settings__empty-values h3 { margin: 0; color: #1b2942; font-size: 1rem; }
+.admin-settings__empty-values p { max-width: 620px; margin: 6px 0 0; color: #7e8999; font-size: .82rem; line-height: 1.7; }
 .admin-settings__fields > label, .admin-settings__editor form > label, .admin-settings__localized-field label { display: grid; gap: 6px; color: #5e6b80; font-size: .85rem; font-weight: 800; }
 .admin-settings__boolean { grid-template-columns: 1fr auto; align-items: center; }
 .admin-settings__boolean input { min-height: 20px; width: 20px; accent-color: #0e5849; }
@@ -29,6 +33,8 @@
 .admin-settings__localized-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .admin-settings__localized-grid textarea { min-height: 96px; resize: vertical; }
 .admin-settings__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__actions .ui-button--primary { color: #fff; background: #0e5849; border-color: #0e5849; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__actions .ui-button--primary:hover:not(:disabled) { background: #084538; border-color: #084538; }
 .admin-settings__feedback { margin: 0; color: #a32129; font-weight: 700; }
 .admin-settings__direction-note { max-width: 1320px; margin: 24px auto 0; color: #7e8999; font-size: .84rem; }
 .admin-settings input:focus-visible, .admin-settings textarea:focus-visible, .admin-settings__tabs a:focus-visible, .admin-settings button:focus-visible { outline: 3px solid #5a8cf1; outline-offset: 3px; }

@@ -15,6 +15,9 @@
     "externalOnlyScreenIds": [
       "ADM-54"
     ],
+    "ownerAuthoredPendingReviewScreenIds": [
+      "ADM-54"
+    ],
     "restoredCanonicalSourceFiles": 136,
     "endpointBlueprint": {
       "total": 185,
@@ -65,7 +68,7 @@
     {
       "id": "UI-005",
       "severity": "high",
-      "finding": "ADM-54 is external-only and cannot be directly verified without an approved local export or authenticated access to the exact source frame."
+      "finding": "ADM-54 has no recovered historical export. A new owner-authored local HTML/PNG source and runtime comparison exist under DESIGN-DECISION-ADM-54-AUTHOR-001, but explicit Project Owner review is pending and direct historical Figma comparison was not performed."
     },
     {
       "id": "PERF-001",

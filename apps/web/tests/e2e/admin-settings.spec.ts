@@ -8,7 +8,7 @@ function localeForProject(): 'ar' | 'en' | 'zh-CN' {
 
 test.describe('ADM-50 through ADM-58 admin settings', () => {
   test.beforeEach(async ({ page }, testInfo) => {
-    testInfo.annotations.push({ type: 'design-source', description: 'ADM-50 through ADM-53 and ADM-55 through ADM-58 use the checked-in Admin Desktop exports under docs/design_sources/final_screens/admin. ADM-54 remains an external group reference only with no local export.' });
+    testInfo.annotations.push({ type: 'design-source', description: 'ADM-50 through ADM-53 and ADM-55 through ADM-58 use checked-in Admin Desktop exports under docs/design_sources/final_screens/admin. ADM-54 uses the owner-authorized local review source ADM-54.owner-authored.html/.png; historical Figma/Drive provenance remains unresolved and explicit owner approval is pending.' });
     test.skip(!testInfo.project.name.includes('desktop'), 'Admin dashboard is approved for desktop only.');
     await routeAdminSettingsApis(page);
   });
@@ -53,5 +53,14 @@ test.describe('ADM-50 through ADM-58 admin settings', () => {
     await routeAdminSettingsApis(page, false);
     await page.goto('/admin/settings/requests?lang=en');
     await expect(page.locator('[data-state="permission"]')).toBeVisible();
+  });
+
+  test('renders the owner-authored Request Settings empty projection without fabricated controls', async ({ page }) => {
+    const locale = localeForProject();
+    await page.goto(`/admin/settings/requests?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('[data-screen-id="ADM-54"]')).toBeVisible();
+    await expect(page.locator('[data-state="empty-values"]')).toBeVisible();
+    await expect(page.getByTestId('admin-settings-requests-form').locator('input, select')).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /save changes|حفظ التغييرات|保存更改/iu })).toBeVisible();
   });
 });

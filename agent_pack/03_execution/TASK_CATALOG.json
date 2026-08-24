@@ -8766,8 +8766,8 @@
     "id": "frontend_096",
     "phase": "F7_post_release_assurance",
     "area": "admin design evidence",
-    "title": "Recover and Verify ADM-54 Request Settings Design Source",
-    "goal": "Obtain the approved ADM-54 source and complete its direct visual, state, locale, direction, and permission comparison.",
+    "title": "Author and Verify ADM-54 Request Settings Design",
+    "goal": "Create an owner-reviewable new ADM-54 source and complete its runtime, state, locale, direction, permission, and design-system comparison.",
     "kind": "quality",
     "screens": [],
     "sourceRefs": [
@@ -8775,7 +8775,9 @@
       "01_product/SCREEN_COVERAGE.json"
     ],
     "notes": [
-      "The current repository proves that ADM-54 is external-only."
+      "The historical ADM-54 Figma/Drive source was not recovered.",
+      "DESIGN-DECISION-ADM-54-AUTHOR-001 authorizes a new local design; explicit owner review is required before completion.",
+      "The new source must not be represented as recovered historical evidence."
     ],
     "track": "frontend",
     "dependsOn": [
@@ -8789,11 +8791,11 @@
       "agent_pack/**"
     ],
     "acceptance": [
-      "Obtain an approved local ADM-54 export or authenticated access to the exact mapped source frame.",
-      "Record immutable source provenance and checksum without inventing design details.",
-      "Complete direct visual comparison and remediate material differences.",
-      "Verify supported locale, direction, Desktop, state, and permission variants.",
-      "Remove the external-only exception only after authoritative evidence exists."
+      "Create a deterministic owner-authored ADM-54 local source from the approved Design System, Admin shell, ADM-53/ADM-55 sibling patterns, implemented Request Settings API, and current PRD.",
+      "Record the owner authorization, source type, provenance, locale, direction, Desktop viewport, and immutable checksums without claiming historical recovery.",
+      "Complete runtime comparison and remediate material Request Settings differences within the allowed roots.",
+      "Verify supported locale, direction, Desktop, state, permission, dynamic-projection, and accessibility behavior.",
+      "Obtain explicit owner approval of the authored source and comparison before marking the task Complete."
     ],
     "verification": [
       "npm run typecheck --workspace apps/web",

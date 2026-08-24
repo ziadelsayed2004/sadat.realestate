@@ -149,6 +149,9 @@
     "externalOnlyScreenIds": [
       "ADM-54"
     ],
+    "ownerAuthoredPendingReviewScreenIds": [
+      "ADM-54"
+    ],
     "supplementaryExportCount": 1
   },
   "screens": [
@@ -3646,9 +3649,39 @@
       "id": "ADM-54",
       "surface": "admin",
       "englishName": "Request Settings",
-      "sourceStatus": "GROUP LINK",
-      "visualSourceStatus": "EXTERNAL_GROUP_REFERENCE_ONLY",
-      "localSources": [],
+      "sourceStatus": "OWNER_AUTHORED_PENDING_REVIEW",
+      "visualSourceStatus": "OWNER_AUTHORED_LOCAL_REVIEW_PENDING",
+      "localSources": [
+        {
+          "localPath": "docs/design_sources/final_screens/admin/ADM-54.owner-authored.html",
+          "sha256": "db4b978a09f1d0487f2bcd253c9de61ee587b0cf4bf690fe4b7aaf3d491c12d0",
+          "width": 1440,
+          "height": 1080
+        },
+        {
+          "localPath": "docs/design_sources/final_screens/admin/ADM-54.owner-authored.png",
+          "sha256": "7d9ee8a2cc7552c6a02031af888c1981c50928bcfc25591c121d33950674a364",
+          "width": 1440,
+          "height": 1080
+        }
+      ],
+      "ownerAuthoredSource": {
+        "decisionId": "DESIGN-DECISION-ADM-54-AUTHOR-001",
+        "authorizationStatus": "AUTHORIZED_PENDING_EXPLICIT_REVIEW",
+        "approvedBy": "Project Owner",
+        "sourceKind": "new-local-design-not-recovered-history",
+        "primaryLocale": "ar",
+        "direction": "rtl",
+        "device": "desktop",
+        "basis": [
+          "Sadat Design System",
+          "Admin shell and navigation",
+          "ADM-53 sibling reference",
+          "ADM-55 sibling reference",
+          "Implemented Request Settings API",
+          "Current PRD"
+        ]
+      },
       "driveUrl": "https://drive.google.com/drive/folders/1qunt0uMMz1Q3EyNrLY1DJgmexvnOp_24",
       "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
       "deviceScope": [

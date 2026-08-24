@@ -8,7 +8,7 @@ function localeForProject(): 'ar' | 'en' | 'zh-CN' {
 
 test('ADM-50 through ADM-58 render the Admin Desktop settings visual regression matrix', async ({ page }) => {
   test.skip(!test.info().project.name.includes('desktop'), 'Admin dashboard is approved for desktop only.');
-  test.info().annotations.push({ type: 'design-source', description: 'ADM-50 through ADM-53 and ADM-55 through ADM-58 use checked-in Admin Desktop exports under docs/design_sources/final_screens/admin. ADM-54 is rendered for implementation regression only because its approved source remains an inaccessible external group reference with no local export.' });
+  test.info().annotations.push({ type: 'design-source', description: 'ADM-50 through ADM-53 and ADM-55 through ADM-58 use checked-in Admin Desktop exports under docs/design_sources/final_screens/admin. ADM-54 is rendered against the owner-authorized local review source ADM-54.owner-authored.html/.png; direct historical source comparison remains pending owner approval.' });
   await routeAdminSettingsApis(page);
   const locale = localeForProject();
   const routes = [

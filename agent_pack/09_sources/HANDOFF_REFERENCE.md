@@ -17,6 +17,6 @@ The original developer handoff is an Arabic HTML artifact and is intentionally n
 - English-only normalized exports are indexed under `docs/design_sources/final_screens/`.
 - The approved design-system board is `docs/design_sources/brand/brand-design-system.png`.
 - The approved product logo is `docs/design_sources/brand/sadat-real-estate-logo.png`; DOT Studio artwork is supplier identity and is explicitly excluded from runtime branding.
-- `ADM-54` has only its approved external group reference; no dedicated local export was supplied. This must remain explicit during that screen task.
+- `ADM-54` has no recovered historical local export. A new owner-authored local review source is present at `docs/design_sources/final_screens/admin/ADM-54.owner-authored.html` and `.png` under `DESIGN-DECISION-ADM-54-AUTHOR-001`; it remains pending explicit owner review and must not be described as recovered Figma evidence.
 
 Before a visual task closes, the implementer must inspect every indexed local export for its Screen ID, open the relevant external frame when accessible, record the exact references in completion evidence, and compare the implemented state against them.

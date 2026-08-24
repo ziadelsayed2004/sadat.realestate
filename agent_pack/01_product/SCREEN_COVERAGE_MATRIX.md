@@ -1,7 +1,7 @@
 # Screen Coverage Matrix
 
 > English Agent Pack references are listed below. Product UI copy remains localized at runtime, with Arabic as the primary RTL locale.
-> Final local exports, checksums, Figma prototypes, Drive references, and the explicit `ADM-54` external-only gap are recorded in `../09_sources/DESIGN_SOURCE_MANIFEST.json`.
+> Final local exports, checksums, Figma prototypes, Drive references, and the explicit `ADM-54` historical-source gap are recorded in `../09_sources/DESIGN_SOURCE_MANIFEST.json`. A new owner-authored local source is review-pending under `DESIGN-DECISION-ADM-54-AUTHOR-001`.
 
 | Screen | Surface | English Reference Name | Locales | Direction | Devices | Route | Backend Tasks | Frontend Task |
 |---|---|---|---|---|---|---|---|---|

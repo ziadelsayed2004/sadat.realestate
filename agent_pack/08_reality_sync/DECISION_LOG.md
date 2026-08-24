@@ -16,6 +16,19 @@ Q-004 through Q-012 remain explicitly pending in `01_product/OPEN_QUESTIONS.md`.
 - **Release effect:** `frontend_074`, `frontend_077`, `frontend_081`, `frontend_089`, and `frontend_090` may close when every other mandatory criterion passes and this exception is referenced in their completion evidence.
 - **Residual debt:** Replace this waiver with direct source comparison if an approved ADM-54 export becomes available later.
 
+## DESIGN-DECISION-ADM-54-AUTHOR-001 - Owner authorization for a new local design
+
+- **Status:** Authoring authorized; explicit design review and approval pending
+- **Approved by:** Project Owner
+- **Screen:** `ADM-54` - Request Settings
+- **Decision:** Author a new official local ADM-54 design instead of recovering or fabricating the unavailable historical Figma frame.
+- **Design basis:** Existing Sadat Design System, Admin shell and navigation, adjacent `ADM-53` and `ADM-55` references, implemented Request Settings API, and current PRD.
+- **Primary scope:** Arabic RTL and Admin Desktop. English and Simplified Chinese LTR remain supported by the runtime.
+- **Required source:** `docs/design_sources/final_screens/admin/ADM-54.owner-authored.html` and its deterministic PNG review export.
+- **Functional constraint:** The design and runtime may expose only values returned by the implemented Request Settings API; no unsupported operational rules or fabricated production values may be added.
+- **Historical provenance retained:** The original Drive group and Figma prototype references remain recorded in the design-source manifest. This local source is not a recovered historical Figma artifact.
+- **Completion gate:** `frontend_096` must remain Partial until the Project Owner explicitly approves the authored source and runtime comparison. Direct comparison against the unavailable historical frame must not be claimed.
+
 ## Q-001 — Authentication identifiers and methods
 
 - **Date:** 2026-08-12

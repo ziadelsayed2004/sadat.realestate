@@ -1,0 +1,212 @@
+{
+  "taskId": "frontend_096",
+  "phase": "F7_post_release_assurance",
+  "screenCount": 1,
+  "sourceType": "owner-authored-new-design",
+  "historicalSourceStatus": "unavailable-not-recovered",
+  "ownerDecisionId": "DESIGN-DECISION-ADM-54-AUTHOR-001",
+  "ownerReviewStatus": "pending-explicit-review",
+  "comparisonPolicy": "This is a new local design authorized by the Project Owner. It is not a recovered historical Figma or Drive source. The runtime comparison is structured evidence for owner review and does not claim direct historical pixel comparison.",
+  "entries": [
+    {
+      "screenId": "ADM-54",
+      "surface": "admin",
+      "englishName": "Request Settings",
+      "route": "/admin/settings/requests",
+      "sourceStatus": "owner-authored-pending-review",
+      "ownerDecisionId": "DESIGN-DECISION-ADM-54-AUTHOR-001",
+      "ownerAuthoredSource": {
+        "htmlPath": "docs/design_sources/final_screens/admin/ADM-54.owner-authored.html",
+        "htmlSha256": "db4b978a09f1d0487f2bcd253c9de61ee587b0cf4bf690fe4b7aaf3d491c12d0",
+        "renderPath": "docs/design_sources/final_screens/admin/ADM-54.owner-authored.png",
+        "renderSha256": "7d9ee8a2cc7552c6a02031af888c1981c50928bcfc25591c121d33950674a364",
+        "dimensions": {
+          "width": 1440,
+          "height": 1080
+        },
+        "locale": "ar",
+        "direction": "rtl",
+        "device": "desktop",
+        "viewport": "1440x1080",
+        "sourceKind": "new-local-design-not-recovered-history",
+        "basis": [
+          "Sadat Design System",
+          "Admin shell and navigation",
+          "ADM-53 sibling reference",
+          "ADM-55 sibling reference",
+          "Implemented Request Settings API",
+          "Current PRD"
+        ],
+        "provenance": "Created locally under the owner authorization recorded in agent_pack/08_reality_sync/DECISION_LOG.md. The original Figma and Drive references remain retained in the source manifest and were not relabeled as recovered."
+      },
+      "originalExternalProvenance": {
+        "driveUrl": "https://drive.google.com/drive/folders/1qunt0uMMz1Q3EyNrLY1DJgmexvnOp_24",
+        "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
+        "status": "historical-source-unavailable-retained-for-provenance"
+      },
+      "approvedDevices": ["desktop"],
+      "locales": ["ar", "en", "zh-CN"],
+      "directions": ["rtl", "ltr"],
+      "runtimeStatesRequired": [
+        "loading",
+        "success",
+        "empty-values",
+        "error",
+        "retry",
+        "permission",
+        "conflict",
+        "validation",
+        "disabled"
+      ],
+      "implementationStatus": "implemented",
+      "comparisonStatus": "pending-owner-review",
+      "comparisonMethod": "Rendered the owner-authored HTML source at 1440x1080 and captured the implemented route with deterministic test-only API responses at the same browser viewport. Because the runtime uses the existing application shell and produces a taller full-page document, differences are recorded structurally; no pixel-difference percentage is asserted.",
+      "runtimeEvidence": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-54.runtime-ar.png",
+          "sha256": "7ee120f7009aac967007949e05f283614a84b510a9285874cb7fb734e2fcca3b",
+          "dimensions": {
+            "width": 1440,
+            "height": 1399
+          },
+          "locale": "ar",
+          "direction": "rtl",
+          "device": "desktop",
+          "state": "success with empty dynamic projection",
+          "fixture": "apps/web/tests/e2e/admin-settings.fixtures.ts"
+        },
+        {
+          "path": "apps/web/src/features/admin_settings/views.tsx",
+          "evidence": "The Request Settings namespace renders API-backed values only and an explicit safe empty-values state when the API returns an empty object."
+        },
+        {
+          "path": "apps/web/tests/admin-settings-074.vitest.test.tsx",
+          "evidence": "Focused regression coverage verifies the empty projection does not invent input or select controls."
+        },
+        {
+          "path": "apps/web/tests/e2e/admin-settings.spec.ts",
+          "evidence": "Route, locale/direction, permission, projection-safety, and owner-authored empty-projection checks."
+        },
+        {
+          "path": "apps/web/tests/e2e/admin-settings-accessibility.spec.ts",
+          "evidence": "Admin settings accessibility coverage includes ADM-54."
+        }
+      ],
+      "runtimeCaptureGeometry": {
+        "viewport": "1440x1080",
+        "documentDimensions": {
+          "width": 1440,
+          "height": 1399
+        },
+        "routeShell": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 1256.96875
+        },
+        "applicationHeader": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 89
+        },
+        "settingsRoot": {
+          "x": 208,
+          "y": 89,
+          "width": 1024,
+          "height": 1167.96875
+        },
+        "navigation": {
+          "x": 944,
+          "y": 89,
+          "width": 288,
+          "height": 1167.96875
+        },
+        "content": {
+          "x": 208,
+          "y": 89,
+          "width": 736,
+          "height": 1167.96875
+        },
+        "tabs": {
+          "x": 265.59375,
+          "y": 323.1875,
+          "width": 620.8125,
+          "height": 149
+        },
+        "editor": {
+          "x": 265.59375,
+          "y": 496.1875,
+          "width": 620.8125,
+          "height": 660.78125
+        }
+      },
+      "structuredComparison": {
+        "localeAndDirection": {
+          "result": "matched",
+          "details": "Arabic primary review render uses lang=ar and dir=rtl. The implementation retains en and zh-CN LTR routes through the existing locale path."
+        },
+        "deviceScope": {
+          "result": "matched",
+          "details": "The task and source are Desktop-only; the runtime was captured at 1440x1080."
+        },
+        "shellAndNavigation": {
+          "result": "partially-matched",
+          "details": "Both source and runtime use a right-side Admin navigation, Sadat logo, pale sand canvas, white surfaces, deep green active navigation, and gold accent. The runtime inherits the existing centered application shell: settings root width 1024 with a 288px navigation column, while the owner-authored source presents a full 1440px frame with a 240px navigation column."
+        },
+        "headerAndTabs": {
+          "result": "partially-matched",
+          "details": "The runtime preserves the intended heading and active Request Settings treatment, but the narrower inherited content column wraps the nine namespace tabs to three rows (149px high) instead of the source single-row tab bar."
+        },
+        "settingsEditor": {
+          "result": "matched-structure-with-runtime-width-difference",
+          "details": "Both views show the Request Settings heading, version context, safe empty API projection, change-reason field, and save action. The runtime editor is narrower and taller because of the existing shell width and form spacing."
+        },
+        "dynamicProjection": {
+          "result": "matched",
+          "details": "The empty API response renders a clear empty-values message and no invented request-setting controls or production values."
+        },
+        "primaryAction": {
+          "result": "matched-after-repair",
+          "details": "The runtime primary save action now uses the Sadat deep-green token with white text; the prior white-on-white computed style was corrected by the ADM-54 route-specific rule."
+        },
+        "privacyAndSecurity": {
+          "result": "matched",
+          "details": "No private document URLs, storage keys, tokens, internal notes, audit data, or unsupported operational values are rendered."
+        }
+      },
+      "repairs": [
+        "Added an explicit API-backed empty-values state for an unconfigured Request Settings namespace without inventing fields.",
+        "Added a focused regression test proving the empty projection has no input or select controls.",
+        "Added an ADM-54-specific primary action style so the save control remains legible against the white editor surface.",
+        "Updated the local source manifest with the final owner-authored HTML and PNG checksums."
+      ],
+      "materialDifferences": [
+        {
+          "severity": "medium",
+          "area": "application shell width",
+          "details": "Current runtime inherits a centered 1024px settings root and 288px navigation column; the owner-authored review frame uses the full 1440px canvas and 240px navigation column.",
+          "resolution": "Recorded for explicit owner review; no unrelated shared Admin shell refactor was made in this source-authoring pass."
+        },
+        {
+          "severity": "medium",
+          "area": "namespace tab wrapping",
+          "details": "Runtime tabs wrap across three rows because of the inherited 621px content width; the owner-authored source shows one row.",
+          "resolution": "Recorded for explicit owner review and subsequent runtime-design decision."
+        }
+      ],
+      "media": {
+        "classification": "brand_static",
+        "source": "docs/design_sources/brand/sadat-real-estate-logo.png",
+        "sourceSha256": "0ce8b25786617c56bd862a46d16978a0446d6b1eb2ffa09cb169d69ae06c1bdb",
+        "result": "matched-approved-brand-asset",
+        "fallbackVerified": true
+      },
+      "remainingGaps": [
+        "Explicit Project Owner review and approval of the new local ADM-54 design and this runtime comparison are pending.",
+        "The historical Figma/Drive ADM-54 source remains unavailable; no direct historical pixel comparison was performed.",
+        "The documented shell-width and tab-wrapping differences require owner direction before frontend_096 can be marked Complete."
+      ]
+    }
+  ]
+}

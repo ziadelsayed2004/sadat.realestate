@@ -18,6 +18,7 @@ interface ScreenCoverageEntry {
 }
 
 interface DesignSourceEntry {
+  sourceStatus: string;
   id: string;
   visualSourceStatus: string;
   localSources: Array<{ localPath: string; sha256: string }>;
@@ -54,8 +55,17 @@ describe('Admin Dashboard QA source and completion matrix', () => {
       expect(source.locales, screen.id).toEqual(['ar', 'en', 'zh-CN']);
 
       if (screen.id === 'ADM-54') {
-        expect(source.visualSourceStatus).toBe('EXTERNAL_GROUP_REFERENCE_ONLY');
-        expect(source.localSources).toHaveLength(0);
+        expect(source.sourceStatus).toBe('OWNER_AUTHORED_PENDING_REVIEW');
+        expect(source.visualSourceStatus).toBe('OWNER_AUTHORED_LOCAL_REVIEW_PENDING');
+        expect(source.localSources.map(localSource => localSource.localPath)).toEqual([
+          'docs/design_sources/final_screens/admin/ADM-54.owner-authored.html',
+          'docs/design_sources/final_screens/admin/ADM-54.owner-authored.png'
+        ]);
+        for (const localSource of source.localSources) {
+          const absolutePath = path.join(repositoryRoot, localSource.localPath);
+          expect(existsSync(absolutePath), localSource.localPath).toBe(true);
+          expect(sha256(absolutePath), localSource.localPath).toBe(localSource.sha256);
+        }
         continue;
       }
 
