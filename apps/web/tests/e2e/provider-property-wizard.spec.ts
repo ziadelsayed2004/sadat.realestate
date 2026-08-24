@@ -118,6 +118,9 @@ test.describe('PRV-03 and PRV-04 Add Property wizard', () => {
     await page.locator('#provider-property-name').focus();
     await expect(page.locator('#provider-property-name')).toBeFocused();
     await page.locator('.a11y-skip-link').evaluate(element => { (element as HTMLElement).style.visibility = 'hidden'; });
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+    });
     await expect(page).toHaveScreenshot(`provider-property-basic-${locale}.png`, { fullPage: true });
   });
 
@@ -135,6 +138,9 @@ test.describe('PRV-03 and PRV-04 Add Property wizard', () => {
     await page.getByRole('button', { name: /Save draft|حفظ المسودة|保存草稿/u }).click();
     await expect(page.locator('.provider-property-wizard__form-message--success')).toContainText(/Draft saved|تم حفظ المسودة|草稿已保存/u);
     await page.locator('.a11y-skip-link').evaluate(element => { (element as HTMLElement).style.visibility = 'hidden'; });
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+    });
     await expect(page).toHaveScreenshot(`provider-property-location-${locale}.png`, { fullPage: true });
   });
 

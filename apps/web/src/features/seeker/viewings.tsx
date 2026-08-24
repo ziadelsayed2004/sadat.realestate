@@ -12,7 +12,6 @@ import {
 import { ApiClientError } from '../contracts/index.ts';
 import { Badge, Button, Input, StateMessage } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
-import { getSeekerCopy } from './copy.ts';
 import {
   createSeekerViewingActions,
   createSeekerViewingsLoader,
@@ -247,7 +246,6 @@ function ViewingCard({
 
 export function SeekerViewings({ locale, session, authClient, apiOrigin, load, actions }: SeekerViewingsProps) {
   const copy = getSeekerViewingsCopy(locale);
-  const overviewCopy = getSeekerCopy(locale);
   const [tab, setTab] = useState<SeekerViewingTab>('upcoming');
   const [state, setState] = useState<SeekerViewingsViewState>('loading');
   const [data, setData] = useState<ViewingListData | undefined>();
@@ -306,7 +304,6 @@ export function SeekerViewings({ locale, session, authClient, apiOrigin, load, a
             <p>{copy.description}</p>
           </div>
           <div className="seeker-viewings__heading-actions">
-            <Badge tone="brand">{overviewCopy.active}</Badge>
             <Button onClick={() => { setCreateOpen(value => !value); setMutationError(undefined); setMutationSuccess(undefined); }}>{copy.requestViewing}</Button>
           </div>
         </div>

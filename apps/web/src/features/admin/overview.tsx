@@ -109,9 +109,9 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<AdminO
 const platformMetrics: readonly AdminMetricKey[] = ['users', 'seekers', 'providers', 'verifiedProviders'];
 const operationMetrics: readonly AdminMetricKey[] = ['publishedProperties', 'openRequests', 'pendingReviews'];
 
-function MetricCard({ metric, value, label }: { readonly metric: AdminMetricKey; readonly value: number; readonly label: string }) {
+function MetricCard({ value, label, testId }: { readonly value: number; readonly label: string; readonly testId?: string }) {
   return (
-    <article className="admin-dashboard__metric" data-testid={`admin-metric-${metric}`}>
+    <article className="admin-dashboard__metric" {...(testId === undefined ? {} : { 'data-testid': testId })}>
       <span className="admin-dashboard__metric-icon" aria-hidden="true">•</span>
       <strong>{new Intl.NumberFormat().format(value)}</strong>
       <span>{label}</span>
@@ -127,9 +127,94 @@ function MetricSection({ title, metrics, data, locale }: { readonly title: strin
         <h2 id={`admin-${title.replaceAll(' ', '-').toLowerCase()}-title`}>{title}</h2>
       </div>
       <div className="admin-dashboard__metric-grid">
-        {metrics.map(metric => <MetricCard key={metric} metric={metric} value={data[metric]} label={copy.overview.metrics[metric]} />)}
+        {metrics.map(metric => <MetricCard key={metric} value={data[metric]} label={copy.overview.metrics[metric]} testId={`admin-metric-${metric}`} />)}
       </div>
     </section>
+  );
+}
+
+function UnavailableCard({ label, unavailable }: { readonly label: string; readonly unavailable: string }) {
+  return (
+    <article className="admin-dashboard__metric admin-dashboard__metric--unavailable" data-state="unavailable">
+      <span className="admin-dashboard__metric-icon" aria-hidden="true">â€”</span>
+      <strong aria-label={unavailable}>â€”</strong>
+      <span>{label}</span>
+      <small>{unavailable}</small>
+    </article>
+  );
+}
+
+function ExtendedOverview({ data, locale }: { readonly data: AdminOverviewData; readonly locale: SupportedLocale }) {
+  const copy = getAdminCopy(locale);
+  const sections = [
+    {
+      title: copy.nav.properties,
+      cards: [
+        { label: copy.overview.metrics.publishedProperties, value: data.metrics.publishedProperties },
+        { label: copy.overview.metrics.pendingReviews, value: data.metrics.pendingReviews },
+        { label: copy.nav.providers },
+        { label: copy.nav.properties }
+      ]
+    },
+    {
+      title: copy.nav.content,
+      cards: [
+        { label: copy.nav.content },
+        { label: copy.nav.notifications },
+        { label: copy.nav.audit },
+        { label: copy.overview.metrics.pendingReviews, value: data.metrics.pendingReviews }
+      ]
+    },
+    {
+      title: copy.nav.advertising,
+      cards: [
+        { label: copy.nav.advertising },
+        { label: copy.nav.commissions },
+        { label: copy.overview.metrics.openRequests, value: data.metrics.openRequests },
+        { label: copy.overview.metrics.pendingReviews, value: data.metrics.pendingReviews }
+      ]
+    }
+  ] as const;
+
+  return (
+    <div className="admin-dashboard__extended" data-testid="admin-overview-extended">
+      <div className="admin-dashboard__extended-grid">
+        {sections.map(section => (
+          <section className="admin-dashboard__extended-section" key={section.title} aria-labelledby={`admin-extended-${section.title.replaceAll(' ', '-').toLowerCase()}`}>
+            <div className="admin-dashboard__section-heading">
+              <h2 id={`admin-extended-${section.title.replaceAll(' ', '-').toLowerCase()}`}>{section.title}</h2>
+            </div>
+            <div className="admin-dashboard__metric-grid admin-dashboard__metric-grid--compact">
+              {section.cards.map((card, index) => !('value' in card) ? (
+                <UnavailableCard key={`${section.title}-${index}`} label={card.label} unavailable={copy.unavailable} />
+              ) : (
+                <MetricCard key={`${section.title}-${index}`} value={card.value} label={card.label} />
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+      <div className="admin-dashboard__activity-grid">
+        {[copy.nav.requests, copy.nav.notifications, copy.nav.audit].map(title => (
+          <section className="admin-dashboard__activity-panel" key={title} aria-labelledby={`admin-activity-${title.replaceAll(' ', '-').toLowerCase()}`}>
+            <div className="admin-dashboard__section-heading">
+              <h2 id={`admin-activity-${title.replaceAll(' ', '-').toLowerCase()}`}>{title}</h2>
+            </div>
+            <p className="admin-dashboard__unavailable-message" data-state="unavailable">{copy.unavailable}</p>
+          </section>
+        ))}
+      </div>
+      <section className="admin-dashboard__quick-actions" aria-labelledby="admin-quick-actions-title">
+        <div className="admin-dashboard__section-heading">
+          <h2 id="admin-quick-actions-title">{copy.overview.operationsTitle}</h2>
+        </div>
+        <div className="admin-dashboard__quick-actions-list">
+          {navigationItems.slice(1, 8).map(([id, path]) => (
+            <a key={id} href={localePath(locale, path)}>{copy.nav[id]}</a>
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -155,6 +240,7 @@ function OverviewContent({ data, locale }: { readonly data: AdminOverviewData; r
       </div>
       <MetricSection title={copy.overview.platformTitle} metrics={platformMetrics} data={data.metrics} locale={locale} />
       <MetricSection title={copy.overview.operationsTitle} metrics={operationMetrics} data={data.metrics} locale={locale} />
+      <ExtendedOverview data={data} locale={locale} />
     </div>
   );
 }

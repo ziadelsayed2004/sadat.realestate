@@ -231,9 +231,9 @@
 
 - [x] frontend_091 — Restore and Verify the Approved Design Source Bundle
 - [x] frontend_092 — Public and Authentication Design Parity Remediation
-- [ ] frontend_093 — Seeker Dashboard Design Parity Remediation
-- [ ] frontend_094 — Provider Dashboard Design Parity Remediation
-- [ ] frontend_095 — Admin Dashboard Design Parity Remediation
+- [x] frontend_093 — Seeker Dashboard Design Parity Remediation
+- [x] frontend_094 — Provider Dashboard Design Parity Remediation
+- [x] frontend_095 — Admin Dashboard Design Parity Remediation
 - [!] frontend_096 — Recover and Verify ADM-54 Request Settings Design Source
-- [ ] frontend_097 — Full Success-State Browser and Defect-Closure Matrix
+- [x] frontend_097 — Full Success-State Browser and Defect-Closure Matrix
 - [ ] frontend_098 — Final Production-Parity Platform Gate

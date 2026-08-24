@@ -1,0 +1,159 @@
+{
+  "taskId": "frontend_095",
+  "summary": "Completed Admin Dashboard design parity remediation for all 65 locally sourced Admin screens, excluding ADM-54 which is owned by frontend_096. Added the contract-backed extended Admin overview with explicit unavailable states for data not supplied by the current API, separated the super-admin detail fixture for ADM-61, and verified the full Admin locale and permission matrix.",
+  "filesChanged": [
+    "apps/web/src/features/admin/overview.tsx",
+    "apps/web/src/features/admin/styles.css",
+    "apps/web/tests/admin-overview.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-rbac.fixtures.ts",
+    "apps/web/tests/e2e/admin-rbac-visual.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/admin-overview.spec.ts-snapshots/admin-overview-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-overview.spec.ts-snapshots/admin-overview-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-overview.spec.ts-snapshots/admin-overview-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-detail-super-admin-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-detail-super-admin-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-detail-super-admin-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/frontend-095-parity.vitest.test.ts",
+    "agent_pack/07_finish/frontend_095/design-comparison.json",
+    "agent_pack/08_reality_sync/FINAL_RELEASE_MANIFEST.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript typecheck passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- frontend-095-parity",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Frontend 095 parity checks passed: 2 tests. The ledger contains 65 local Admin Screen IDs and excludes ADM-54."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- admin",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Admin-focused Vitest run passed: 18 files and 119 tests."
+    },
+    {
+      "command": "npx.cmd playwright test --config apps/web/playwright.config.ts apps/web/tests/e2e/admin-overview.spec.ts apps/web/tests/e2e/admin-accounts.spec.ts apps/web/tests/e2e/admin-account-reports.spec.ts apps/web/tests/e2e/admin-master-data.spec.ts apps/web/tests/e2e/admin-projects-visual.spec.ts apps/web/tests/e2e/admin-properties-visual.spec.ts apps/web/tests/e2e/admin-requests-visual.spec.ts apps/web/tests/e2e/admin-content-visual.spec.ts apps/web/tests/e2e/admin-community-visual.spec.ts apps/web/tests/e2e/admin-cms-content-visual.spec.ts apps/web/tests/e2e/admin-ads-visual.spec.ts apps/web/tests/e2e/admin-commissions-visual.spec.ts apps/web/tests/e2e/admin-home-visual.spec.ts apps/web/tests/e2e/admin-settings-visual.spec.ts apps/web/tests/e2e/admin-rbac-visual.spec.ts apps/web/tests/e2e/admin-notifications-audit-visual.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --workers=1",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Admin browser matrix passed: 102 tests across all 65 local Admin sources, Arabic/English/Simplified Chinese, Desktop, role/permission flows, and ADM-61 super-admin detail evidence."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Full Web suite passed: 64 Vitest files/378 tests and 76 auxiliary tests."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR builds passed. The existing client bundle warning remains documented under frontend_097 scope."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime visual regression matrix passed: 72/72."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Accessibility matrix passed: 81/81."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace typecheck passed for contracts, API, and Web."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root test gate passed: 507 API tests, 64 Web Vitest files/378 tests, and 76 auxiliary tests."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web production builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Dependency audit found 0 vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Environment contract passed with process-local non-production values; no .env or secret file was read."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory completed and Admin routes were reported implemented."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors with frontend_095 as the only task in progress."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/07_finish/frontend_095/design-comparison.json",
+    "agent_pack/04_tracks/frontend/F7_post_release_assurance/frontend_095.md",
+    "docs/design_sources/final_screens/admin/ADM-01.png (SHA-256 a497edfd...d6076d1ffa; 6308x12468)",
+    "docs/design_sources/final_screens/admin/ADM-61.png",
+    "docs/design_sources/final_screens/admin/ADM-01 through ADM-66 local source manifest entries, excluding ADM-54",
+    "apps/web/tests/e2e/admin-overview.spec.ts",
+    "apps/web/tests/e2e/admin-rbac-visual.spec.ts",
+    "apps/web/tests/frontend-095-parity.vitest.test.ts",
+    "Runtime Admin API inventory, OpenAPI, and Postman validation"
+  ],
+  "scopeNotes": [
+    "ADM-54 is intentionally excluded from this task and remains owned by frontend_096.",
+    "The current Admin overview API exposes seven real KPI values. Source-only queues and operational details are represented as explicit unavailable states rather than fabricated counters.",
+    "ADM-61 uses a distinct super-admin test fixture and evidence path so the local source is not conflated with the standard administrator detail route.",
+    "An initial parallel visual invocation encountered a Windows dist/server EBUSY caused by concurrent builds; the required serial visual command passed 72/72.",
+    "The client build retains the pre-existing large-chunk warning tracked by frontend_097."
+  ],
+  "knownGaps": [
+    "ADM-54 direct design comparison remains pending in frontend_096 and is not claimed here.",
+    "backend_139 remains blocked by its external production-parity prerequisites; this does not block the local Admin parity task."
+  ],
+  "completedAt": "2026-08-23T22:48:03.5988885Z"
+}

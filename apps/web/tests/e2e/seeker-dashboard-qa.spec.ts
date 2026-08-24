@@ -168,10 +168,10 @@ test.describe('F3 Seeker Dashboard QA', () => {
     await routeSeekerApis(page);
   });
 
-  test('covers every completed route, locale direction, desktop scope, focus, and safe projection', async ({ page }) => {
-    const locale = localeForProject();
-    for (const routeCase of completedRoutes) {
-      const response = await page.goto(localizedPath(routeCase.path, locale));
+  for (const routeCase of completedRoutes) {
+    test(`covers ${routeCase.path} with locale direction, desktop scope, focus, and safe projection`, async ({ page }) => {
+      const locale = localeForProject();
+      const response = await page.goto(localizedPath(routeCase.path, locale), { waitUntil: 'domcontentloaded' });
       expect(response?.status()).toBe(200);
       await expect(page.locator('html')).toHaveAttribute('lang', locale);
       await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
@@ -185,19 +185,19 @@ test.describe('F3 Seeker Dashboard QA', () => {
       await expect(page.locator('.a11y-skip-link')).toBeFocused();
       await page.locator('.seeker-dashboard__nav a').first().focus();
       await expect(page.locator('.seeker-dashboard__nav a').first()).toBeFocused();
-    }
-  });
+    });
+  }
 
-  test('preserves truthful empty and error-retry states across owned surfaces', async ({ page }) => {
-    const locale = localeForProject();
-    for (const path of ['/seeker', '/seeker/requests', '/seeker/viewings', '/seeker/saved', '/seeker/notifications']) {
-      await page.goto(localizedPath(path, locale));
+  for (const path of ['/seeker', '/seeker/requests', '/seeker/viewings', '/seeker/saved', '/seeker/notifications', '/seeker/profile?tab=preferences']) {
+    test(`preserves the truthful empty state for ${path}`, async ({ page }) => {
+      const locale = localeForProject();
+      await page.goto(localizedPath(path, locale), { waitUntil: 'domcontentloaded' });
       await expect(page.locator('[data-state="empty"]').first()).toBeVisible();
-    }
+    });
+  }
 
-    await page.goto(localizedPath('/seeker/profile?tab=preferences', locale));
-    await expect(page.locator('[data-state="empty"]').first()).toBeVisible();
-
+  test('recovers the overview from a truthful error state through retry', async ({ page }) => {
+    const locale = localeForProject();
     await page.unroute('**/api/v1/seeker/overview');
     let failed = true;
     await page.route('**/api/v1/seeker/overview', async route => {
@@ -217,20 +217,20 @@ test.describe('F3 Seeker Dashboard QA', () => {
         body: JSON.stringify({ data: { requests: 0, viewings: 0, savedProperties: 0, notifications: 0, unreadNotifications: 0 }, ...successMeta('seeker-dashboard-qa-retry-success') })
       });
     });
-    await page.goto(localizedPath('/seeker', locale));
+    await page.goto(localizedPath('/seeker', locale), { waitUntil: 'domcontentloaded' });
     await expect(page.locator('.seeker-dashboard__state[data-state="error"]')).toBeVisible();
     await page.locator('.seeker-dashboard__state button').click();
     await expect(page.locator('[data-state="empty"]')).toBeVisible();
   });
 
-  test('fails closed for every dashboard route when the session is denied', async ({ page }) => {
-    const locale = localeForProject();
-    await page.unroute('**/api/v1/auth/refresh');
-    await routeSession(page, false);
-    for (const routeCase of completedRoutes) {
+  for (const routeCase of completedRoutes) {
+    test(`fails closed for ${routeCase.path} when the session is denied`, async ({ page }) => {
+      const locale = localeForProject();
+      await page.unroute('**/api/v1/auth/refresh');
+      await routeSession(page, false);
       await page.goto(localizedPath(routeCase.path, locale), { waitUntil: 'domcontentloaded' });
       await expect(page.locator('[data-access="authentication-required"]')).toBeVisible();
       await expect(page.locator('[data-screen-id]')).toHaveCount(0);
-    }
-  });
+    });
+  }
 });

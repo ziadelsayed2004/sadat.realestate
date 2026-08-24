@@ -14,6 +14,7 @@ import type { ProviderPropertyAuthClient, ProviderPropertyLoadAction, ProviderPr
 import { loadProviderProperty, saveProviderPropertyStep, type ProviderPropertyStep } from './data.ts';
 import { getProviderPropertyCopy, type ProviderPropertyCopy, type ProviderPropertyWizardState } from './copy.ts';
 import { getProviderPropertyAdvancedCopy, type ProviderPropertyAdvancedCopy, type ProviderPropertyAdvancedStep } from './steps-copy.ts';
+import { getProviderPropertyRailLabels, PROVIDER_PROPERTY_RAIL_STEPS } from './steps.ts';
 import './styles.css';
 
 export interface ProviderPropertyAdvancedWizardProps {
@@ -61,7 +62,6 @@ type AdvancedForm = DetailsForm | PricingForm | FeaturesForm;
 type MutationState = 'idle' | 'saving' | 'success' | 'error' | 'permission';
 
 const LOCALES: readonly SupportedLocale[] = ['ar', 'en', 'zh-CN'];
-const ADVANCED_STEPS: readonly ProviderPropertyAdvancedStep[] = ['details', 'price-payment', 'features-services'];
 
 function emptyLocalized(): Record<SupportedLocale, string> {
   return { ar: '', en: '', 'zh-CN': '' };
@@ -158,22 +158,18 @@ function stateForStep(): ProviderPropertyWizardState {
   return 'loading';
 }
 
-function stepLabel(step: ProviderPropertyAdvancedStep, copy: ProviderPropertyCopy, advancedCopy: ProviderPropertyAdvancedCopy): string {
-  return advancedCopy.steps[step] ?? copy.wizard.steps.location;
-}
-
-function WizardSteps({ step, copy, advancedCopy }: { readonly step: ProviderPropertyAdvancedStep; readonly copy: ProviderPropertyCopy; readonly advancedCopy: ProviderPropertyAdvancedCopy }) {
-  const currentIndex = ADVANCED_STEPS.indexOf(step) + 2;
-  const labels = [copy.wizard.steps.basic, copy.wizard.steps.location, ...ADVANCED_STEPS.map(item => stepLabel(item, copy, advancedCopy))];
+function WizardSteps({ step, locale, copy }: { readonly step: ProviderPropertyAdvancedStep; readonly locale: SupportedLocale; readonly copy: ProviderPropertyCopy }) {
+  const currentIndex = PROVIDER_PROPERTY_RAIL_STEPS.indexOf(step);
+  const labels = getProviderPropertyRailLabels(locale);
   return (
     <ol className="provider-property-wizard__steps" aria-label={copy.wizard.eyebrow}>
-      {labels.map((label, index) => {
+      {PROVIDER_PROPERTY_RAIL_STEPS.map((item, index) => {
         const complete = index < currentIndex;
         const active = index === currentIndex;
         return (
-          <li key={label} data-active={active || undefined} data-complete={complete || undefined}>
+          <li key={item} aria-current={active ? 'step' : undefined} data-active={active || undefined} data-complete={complete || undefined}>
             <span aria-hidden="true">{complete ? '✓' : index + 1}</span>
-            <strong>{label}</strong>
+            <strong>{labels[item]}</strong>
           </li>
         );
       })}
@@ -411,14 +407,14 @@ export function ProviderPropertyAdvancedWizard({ locale, session, step, property
   };
 
   if (state !== 'success') {
-    return <section className="provider-dashboard provider-property-wizard" data-screen-id={screenId(step)} data-route={`/provider/properties/${propertyId}/${step}`} data-device-scope="desktop"><ProviderNavigation locale={locale} activePath="/provider/properties" /><div className="provider-dashboard__content provider-property-wizard__content"><WizardSteps step={step} copy={copy} advancedCopy={advancedCopy} /><StatePanel state={state} copy={copy} onRetry={onRetry} /></div></section>;
+    return <section className="provider-dashboard provider-property-wizard" data-screen-id={screenId(step)} data-route={`/provider/properties/${propertyId}/${step}`} data-device-scope="desktop"><ProviderNavigation locale={locale} activePath="/provider/properties" /><div className="provider-dashboard__content provider-property-wizard__content"><WizardSteps step={step} locale={locale} copy={copy} /><StatePanel state={state} copy={copy} onRetry={onRetry} /></div></section>;
   }
 
   return (
     <section className="provider-dashboard provider-property-wizard" data-screen-id={screenId(step)} data-route={`/provider/properties/${propertyId}/${step}`} data-device-scope="desktop">
       <ProviderNavigation locale={locale} activePath="/provider/properties" />
       <div className="provider-dashboard__content provider-property-wizard__content">
-        <WizardSteps step={step} copy={copy} advancedCopy={advancedCopy} />
+        <WizardSteps step={step} locale={locale} copy={copy} />
         {step === 'details' ? <DetailsFormView locale={locale} copy={copy} advancedCopy={advancedCopy} form={form as DetailsForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : null}
         {step === 'price-payment' ? <PricingFormView locale={locale} copy={copy} advancedCopy={advancedCopy} form={form as PricingForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : null}
         {step === 'features-services' ? <FeaturesFormView copy={copy} advancedCopy={advancedCopy} form={form as FeaturesForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : null}

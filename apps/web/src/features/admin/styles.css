@@ -195,6 +195,95 @@
   line-height: 1.5;
 }
 
+.admin-dashboard__extended {
+  display: grid;
+  gap: 28px;
+  margin-block-start: 28px;
+}
+
+.admin-dashboard__extended-grid,
+.admin-dashboard__activity-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.admin-dashboard__extended-section,
+.admin-dashboard__activity-panel,
+.admin-dashboard__quick-actions {
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid #e3e5e7;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 6px 16px rgb(50 50 50 / 5%);
+}
+
+.admin-dashboard__extended-section .admin-dashboard__section-heading,
+.admin-dashboard__activity-panel .admin-dashboard__section-heading,
+.admin-dashboard__quick-actions .admin-dashboard__section-heading {
+  margin-block-end: 18px;
+}
+
+.admin-dashboard__extended-section h2,
+.admin-dashboard__activity-panel h2,
+.admin-dashboard__quick-actions h2 {
+  margin-block-end: 0;
+}
+
+.admin-dashboard__metric-grid--compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-dashboard__metric--unavailable {
+  min-height: 126px;
+  background: #fbfaf7;
+}
+
+.admin-dashboard__metric--unavailable small,
+.admin-dashboard__unavailable-message {
+  color: #9aa4b3;
+  font-size: .78rem;
+}
+
+.admin-dashboard__unavailable-message {
+  min-height: 86px;
+  display: grid;
+  margin: 0;
+  place-items: center;
+  border: 1px dashed #d9dee7;
+  border-radius: 12px;
+  background: #fbfaf7;
+}
+
+.admin-dashboard__quick-actions-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-dashboard__quick-actions-list a {
+  display: grid;
+  min-height: 58px;
+  place-items: center;
+  padding: 10px;
+  border: 1px solid #e3e5e7;
+  border-radius: 12px;
+  color: #155b4f;
+  font-size: .84rem;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+}
+
+.admin-dashboard__quick-actions-list a:hover,
+.admin-dashboard__quick-actions-list a:focus-visible {
+  border-color: #155b4f;
+  outline: 3px solid #5a8cf1;
+  outline-offset: 2px;
+}
+
 .admin-dashboard__state,
 .admin-dashboard__empty {
   max-width: 760px;
@@ -229,6 +318,11 @@
 
   .admin-dashboard__metric-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-dashboard__extended-grid,
+  .admin-dashboard__activity-grid {
+    grid-template-columns: 1fr;
   }
 }
 

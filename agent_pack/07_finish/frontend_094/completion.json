@@ -1,0 +1,227 @@
+{
+  "taskId": "frontend_094",
+  "summary": "Implemented and verified Provider Dashboard design parity across all 24 Provider screen entries. The Provider shell now uses the approved full Desktop canvas, the property workflow exposes the complete eight-step progress rail, primary actions have explicit readable contrast, and the customer-request modal has direct runtime evidence. Provider projections remain contract-backed, ownership-safe, permission-aware, and truthful for unavailable fields.",
+  "filesChanged": [
+    "apps/web/src/features/provider/styles.css",
+    "apps/web/src/features/provider_property/steps.ts",
+    "apps/web/src/features/provider_property/wizard.tsx",
+    "apps/web/src/features/provider_property/advanced.tsx",
+    "apps/web/src/features/provider_property/completion.tsx",
+    "apps/web/src/features/provider_property/styles.css",
+    "apps/web/tests/e2e/provider-customer-requests.spec.ts",
+    "apps/web/tests/e2e/provider-property-advanced.spec.ts",
+    "apps/web/tests/frontend-094-parity.vitest.test.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-advertising-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-advertising-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-advertising-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-commission-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-commission-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-commission-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-requests-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-requests-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-requests-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-request-modal-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-request-modal-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-request-modal-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-notifications-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-notifications-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-notifications-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-account-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-account-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-account-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-contact-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-contact-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-contact-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-security-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-security-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-security-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-overview.spec.ts-snapshots/provider-overview-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-overview.spec.ts-snapshots/provider-overview-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-overview.spec.ts-snapshots/provider-overview-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-projects.spec.ts-snapshots/provider-projects-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-projects.spec.ts-snapshots/provider-projects-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-projects.spec.ts-snapshots/provider-projects-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-properties.spec.ts-snapshots/provider-properties-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-properties.spec.ts-snapshots/provider-properties-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-properties.spec.ts-snapshots/provider-properties-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-details-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-details-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-details-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-features-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-features-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-features-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-price-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-price-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-price-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-contact-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-contact-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-contact-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-media-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-media-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-media-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-review-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-review-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-review-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-published-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-published-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-published-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-rejected-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-rejected-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-rejected-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-submitted-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-submitted-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-submitted-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-validation-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-validation-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-validation-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-basic-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-basic-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-basic-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-location-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-location-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-location-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-zh-CN-desktop-zh-win32.png",
+    "agent_pack/07_finish/frontend_094/design-comparison.json",
+    "agent_pack/08_reality_sync/FINAL_RELEASE_MANIFEST.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- provider",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "15 Provider Vitest files and 112 tests passed, including ownership, permission, state, upload, and private-file boundaries."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- frontend-094-parity",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "The 24-entry Provider design ledger, approved source hashes/dimensions, Desktop scope, locale evidence, and verified statuses passed."
+    },
+    {
+      "command": "npx.cmd playwright test --config apps/web/playwright.config.ts apps/web/tests/e2e/provider-advertising.spec.ts apps/web/tests/e2e/provider-customer-requests.spec.ts apps/web/tests/e2e/provider-notifications-settings.spec.ts apps/web/tests/e2e/provider-overview.spec.ts apps/web/tests/e2e/provider-projects.spec.ts apps/web/tests/e2e/provider-properties.spec.ts apps/web/tests/e2e/provider-property-advanced.spec.ts apps/web/tests/e2e/provider-property-completion.spec.ts apps/web/tests/e2e/provider-property-state.spec.ts apps/web/tests/e2e/provider-property-wizard.spec.ts apps/web/tests/e2e/provider-viewings.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh --workers=1",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "105 Provider Desktop journeys passed across Arabic RTL, English LTR, and Simplified Chinese LTR; no snapshot update was used for the clean run."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "63 Web Vitest files/376 tests and 76 auxiliary Node tests passed."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript check passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR production builds passed; the existing large-client-chunk warning remains owned by frontend_097."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "72/72 configured runtime visual regression cases passed."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "81/81 configured accessibility cases passed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace and lint checks passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root API suite passed 507/507; Web and auxiliary suites also passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, Web client, and Web SSR builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities found."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3001'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='<documented-local-test-secret>'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Explicit process-local non-production values returned ENV_CHECK_OK; no .env was read."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory completed with implemented routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors before task closure."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/07_finish/frontend_094/design-comparison.json — 24 Provider entries PRV-01 through PRV-22-3 with exact approved local source paths, SHA-256 checksums, dimensions, routes, state mappings, and locale runtime evidence.",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "docs/design_sources/final_screens/provider/PRV-01.png through PRV-22-3.png — approved Provider Desktop exports verified by the ledger.",
+    "apps/web/src/features/provider/** and apps/web/src/features/provider_property/** — runtime shell, property workflow, state, and ownership implementation.",
+    "apps/web/tests/frontend-094-parity.vitest.test.ts",
+    "apps/web/tests/e2e/provider-*.spec.ts — Provider route, workflow, permission, upload, private-file, and locale journeys.",
+    "apps/web/tests/e2e/__snapshots__/provider-*.png — bounded Provider Desktop runtime regression evidence; PRV-17 modal captures are included."
+  ],
+  "scopeNotes": [
+    "Provider Dashboard remains Desktop-only under the approved scope; no unsupported mobile or tablet design claim is made.",
+    "The checked-in FINAL_RELEASE_MANIFEST frontendInProgress field was synchronized to frontend_094 because the release-gate test correctly requires canonical task state and release manifest to agree.",
+    "Provider source-only fields absent from live safe projections remain explicitly unavailable or omitted; no fake data, permissions, prices, commissions, or private URLs were introduced.",
+    "Provider snapshots were updated only in the bounded Provider suites after direct source/runtime review; no blanket snapshot update was used."
+  ],
+  "knownGaps": [
+    "The Web production build continues to emit the existing approximately 1.5 MB client-chunk warning owned by frontend_097; this task did not worsen or resolve it.",
+    "backend_139 remains blocked by external production-parity infrastructure prerequisites; this task does not claim production parity.",
+    "Optional test:locale, test:performance, test:security, and test:uat scripts are not defined in the current repository package scripts.",
+    "This evidence does not claim all APIs tested, all 131 screens complete, F7 completion, or full platform completion."
+  ],
+  "completedAt": "2026-08-23T22:01:58.947Z"
+}

@@ -4,23 +4,36 @@
 
 .route-shell--provider .route-shell__body {
   grid-template-columns: minmax(0, 1fr);
+  min-height: calc(100vh - var(--header-height-min));
 }
 
+.route-shell--provider .route-shell__body > .app-main,
 .route-shell--provider .app-main {
-  width: min(calc(100% - 3rem), 112rem);
-  padding-block: 0;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Provider exports use the dark navy action treatment. Keep the action
+   contrast explicit because route-level themes may override design tokens. */
+.route-shell--provider .ui-button--primary {
+  border-color: #17233d;
+  background: #17233d;
+  color: #fff;
 }
 
 .provider-dashboard {
   display: grid;
+  width: 100%;
   grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
-  min-height: 680px;
+  min-height: calc(100vh - var(--header-height-min));
   overflow: hidden;
-  border: 1px solid var(--border-subtle, #e5e7eb);
-  border-radius: 24px;
+  border: 0;
+  border-radius: 0;
   background: var(--surface-primary, #ffffff);
   color: var(--text-primary, #172033);
-  box-shadow: 0 18px 48px rgb(35 48 73 / 8%);
+  box-shadow: none;
 }
 
 .provider-dashboard__navigation {

@@ -58,6 +58,8 @@ describe('Admin overview', () => {
     expect(screen.getByTestId('admin-metric-users')).toHaveTextContent('2,847');
     expect(screen.getByTestId('admin-metric-publishedProperties')).toHaveTextContent('1,089');
     expect(screen.getByTestId('admin-metric-pendingReviews')).toHaveTextContent('23');
+    expect(screen.getByTestId('admin-overview-extended')).toBeInTheDocument();
+    expect(screen.getAllByText(copy.unavailable).length).toBeGreaterThan(0);
     expect(result.container.querySelector('[data-screen-id="ADM-01"]')).not.toBeNull();
     expect(result.container.textContent).not.toMatch(/internalNotes|assignedTo|auditData|storageKey|accessToken|refreshToken/u);
     result.unmount();

@@ -1,0 +1,216 @@
+{
+  "taskId": "frontend_093",
+  "summary": "Implemented and verified the Seeker Dashboard parity remediation across all 10 Seeker screens. The Seeker shell, overview, requests, viewings, saved properties, notifications, and profile surfaces now use the approved Desktop hierarchy, real API-backed projections, Arabic RTL and English/Simplified Chinese LTR direction, and truthful loading, empty, error, retry, permission, and ownership states. A narrow full-suite visual harness repair synchronizes font readiness before two Admin visual assertions; it changes no production behavior.",
+  "filesChanged": [
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/08_reality_sync/FINAL_RELEASE_MANIFEST.json",
+    "agent_pack/step_info.json",
+    "agent_pack/07_finish/frontend_093/design-comparison.json",
+    "apps/web/src/features/seeker/overview.tsx",
+    "apps/web/src/features/seeker/requests.tsx",
+    "apps/web/src/features/seeker/styles.css",
+    "apps/web/src/features/seeker/viewings.tsx",
+    "apps/web/tests/frontend-093-parity.vitest.test.ts",
+    "apps/web/tests/final-release-gate.vitest.test.ts",
+    "apps/web/tests/e2e/admin-commissions-visual.spec.ts",
+    "apps/web/tests/e2e/admin-dashboard-qa.spec.ts",
+    "apps/web/tests/e2e/admin-rbac-visual.spec.ts",
+    "apps/web/tests/e2e/provider-dashboard-qa.spec.ts",
+    "apps/web/tests/e2e/provider-property-advanced.spec.ts",
+    "apps/web/tests/e2e/provider-property-wizard.spec.ts",
+    "apps/web/tests/e2e/seeker-dashboard-qa.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-details-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-details-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-details-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-notifications.spec.ts-snapshots/seeker-notifications-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-notifications.spec.ts-snapshots/seeker-notifications-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-notifications.spec.ts-snapshots/seeker-notifications-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-overview.spec.ts-snapshots/seeker-overview-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-overview.spec.ts-snapshots/seeker-overview-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-overview.spec.ts-snapshots/seeker-overview-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-personal-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-personal-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-personal-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-preferences-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-preferences-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-preferences-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-settings-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-settings-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-profile.spec.ts-snapshots/seeker-profile-settings-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-contacted-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-contacted-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-contacted-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-under-review-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-under-review-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-request-under-review-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-requests-list-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-requests-list-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-requests.spec.ts-snapshots/seeker-requests-list-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-saved.spec.ts-snapshots/seeker-saved-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-saved.spec.ts-snapshots/seeker-saved-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-saved.spec.ts-snapshots/seeker-saved-zh-CN-desktop-zh-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-viewings.spec.ts-snapshots/seeker-viewings-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-viewings.spec.ts-snapshots/seeker-viewings-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/seeker-viewings.spec.ts-snapshots/seeker-viewings-zh-CN-desktop-zh-win32.png"
+  ],
+  "verification": [
+    {
+      "command": "npx.cmd playwright test --config apps/web/playwright.config.ts apps/web/tests/e2e/admin-commissions-visual.spec.ts --project=desktop-zh --grep \"ADM-40\" --workers=1 --repeat-each=3",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "3/3 isolated repetitions passed after the font-readiness synchronization repair."
+    },
+    {
+      "command": "npx.cmd playwright test --config apps/web/playwright.config.ts apps/web/tests/e2e/admin-rbac-visual.spec.ts --project=desktop-zh --grep \"ADM-64\" --workers=1 --repeat-each=3",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "3/3 isolated repetitions passed after the font-readiness synchronization repair."
+    },
+    {
+      "command": "npx.cmd playwright test --config apps/web/playwright.config.ts apps/web/tests/e2e/admin-commissions-visual.spec.ts apps/web/tests/e2e/admin-rbac-visual.spec.ts --workers=1",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "36 executed desktop visual cases passed; 72 non-desktop cases were intentionally skipped by the approved Admin Desktop scope."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- frontend-093-parity",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "1 parity test file and 3 tests passed; the 10-screen ledger, approved source checksums, dimensions, and locale evidence are valid."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Final unfiltered Web matrix: 1290 passed, 1698 expected device-scope skips, 0 failed, 2988 total."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript check passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web Vitest and auxiliary Node test suites passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web client and SSR production builds passed; the existing frontend_097 large-client-chunk warning remains."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root syntax, contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root workspace check and lint passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root API suite passed 507/507; Web tests and auxiliary tests passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, client, and SSR builds passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 vulnerabilities found."
+    },
+    {
+      "command": "$env:APP_ENV='test'; $env:API_HOST='127.0.0.1'; $env:API_PORT='3001'; $env:MONGODB_URI='mongodb://127.0.0.1:27017/sadat_test'; $env:AUTH_ACCESS_TOKEN_SECRET='<documented-local-test-secret>'; npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Explicit non-production process-local values passed ENV_CHECK_OK; no .env was read."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime inventory completed with implemented routes."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "POSTMAN_VALID."
+    },
+    {
+      "command": "npm.cmd run test:visual --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "72/72 runtime visual regression cases passed across the configured locale and device projects."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "81/81 accessibility cases passed across the configured locale and device projects."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors with one selected task in progress before closure."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/07_finish/frontend_093/design-comparison.json — 10 entries SEK-01 through SEK-10, all verified with approved source paths, SHA-256 checksums, dimensions, runtime route/state mappings, and AR/EN/ZH-CN desktop evidence.",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "docs/design_sources/final_screens/seeker/SEK-01.png",
+    "docs/design_sources/final_screens/seeker/SEK-02.png",
+    "docs/design_sources/final_screens/seeker/SEK-03.png",
+    "docs/design_sources/final_screens/seeker/SEK-04.png",
+    "docs/design_sources/final_screens/seeker/SEK-05.png",
+    "docs/design_sources/final_screens/seeker/SEK-06.png",
+    "docs/design_sources/final_screens/seeker/SEK-07.png",
+    "docs/design_sources/final_screens/seeker/SEK-08.png",
+    "docs/design_sources/final_screens/seeker/SEK-09.png",
+    "docs/design_sources/final_screens/seeker/SEK-10.png",
+    "apps/web/src/features/seeker/overview.tsx, requests.tsx, viewings.tsx, and styles.css",
+    "apps/web/tests/frontend-093-parity.vitest.test.ts",
+    "apps/web/tests/e2e/seeker-overview.spec.ts, seeker-requests.spec.ts, seeker-viewings.spec.ts, seeker-saved.spec.ts, seeker-notifications.spec.ts, seeker-profile.spec.ts, seeker-dashboard-qa.spec.ts",
+    "apps/web/tests/e2e/__snapshots__/seeker-*.png — 30 locale-specific Desktop runtime regression snapshots."
+  ],
+  "scopeNotes": [
+    "The first post-change full Playwright diagnostic run exited 1 with 1288 passed, 1698 expected skips, and two screenshot stabilization timeouts at desktop-zh ADM-40 and ADM-64. Both exact cases passed three isolated repetitions; the narrow repair awaited document.fonts.ready before screenshot assertions. The final unfiltered run then passed 1290/1290 executed cases.",
+    "The additional Admin, Provider, and Seeker E2E file changes are repository-owned verification-boundary repairs within the selected task's apps/web/tests scope. They split long aggregate route loops or synchronize deterministic navigation/font state; no production behavior or API contract changed.",
+    "The Seeker Dashboard is approved for Desktop only; the full Playwright matrix records responsive dashboard/provider cases as intentional skips while Public/Auth cases execute across Desktop, Tablet, and Mobile.",
+    "No Backend runtime, shared contract, API route, or Production behavior changed in this task."
+  ],
+  "knownGaps": [
+    "The Web production build continues to emit the existing frontend_097 large-client-chunk warning (~1.5 MB); this task did not worsen or claim to resolve it.",
+    "Optional scripts test:locale, test:performance, test:security, and test:uat are not defined in the current repository package scripts.",
+    "This evidence does not claim all APIs tested, all 131 screens complete, production parity, F7 completion, or full platform completion."
+  ],
+  "completedAt": "2026-08-23T20:59:14.3586974Z"
+}

@@ -1,14 +1,14 @@
 {
   "manifestVersion": "sadat-release-v1",
-  "generatedAt": "2026-08-22T12:31:56.1088093Z",
+  "generatedAt": "2026-08-24T00:33:08.1152458Z",
   "releaseStatus": "conditional",
   "graphStatus": "pending_post_release_assurance",
   "taskCounts": {
     "backendTotal": 114,
     "backendComplete": 113,
     "frontendTotal": 83,
-    "frontendComplete": 76,
-    "frontendInProgress": "frontend_092"
+    "frontendComplete": 81,
+    "frontendInProgress": null
   },
   "qualityGates": {
     "webTypecheck": "passed",
@@ -28,11 +28,17 @@
     },
     "visualCases": {
       "status": "passed",
-      "count": 72
+      "count": 531,
+      "total": 1053,
+      "skipped": 522,
+      "reason": "Official visual runner executed all 42 screenshot-bearing Playwright specs; approved Desktop-only dashboard cases were skipped outside Desktop projects."
     },
     "accessibilityCases": {
       "status": "passed",
-      "count": 81
+      "count": 174,
+      "total": 288,
+      "skipped": 114,
+      "reason": "Official accessibility runner executed all 19 accessibility specs; approved Desktop-only dashboard cases were skipped outside Desktop projects."
     },
     "performanceCases": {
       "status": "passed",
@@ -49,8 +55,11 @@
     "environmentCheck": "passed",
     "agentPackAudit": "passed",
     "unfilteredWebE2E": {
-      "status": "not_claimed",
-      "reason": "The unfiltered runner produced no observable progress and was safely terminated; targeted critical journeys passed 9/9."
+      "status": "passed",
+      "passed": 1293,
+      "skipped": 1704,
+      "total": 2997,
+      "reason": "Final unfiltered Web Playwright matrix passed after the frontend-097 bundle-budget and official visual/accessibility matrix harness changes."
     },
     "securityCheckScript": {
       "status": "unavailable",
@@ -67,10 +76,10 @@
   "claims": {
     "allApisTested": false,
     "all131ScreensComplete": false,
-    "backendComplete": true,
+    "backendComplete": false,
     "fullPlatformComplete": false,
     "reasonAllApisTested": "Runtime inventory and selected matrices passed, but the complete positive, negative, RBAC, ownership, state, upload, replay, concurrency, and journey matrix is not proven by this release run.",
-    "reasonAll131ScreensComplete": "All 131 routes have UAT route-locale evidence, but the repository does not define a policy that converts the owner-waived ADM-54 direct visual comparison into a direct-comparison claim.",
+    "reasonAll131ScreensComplete": "All 131 routes have UAT route-locale evidence, but ADM-54 lacks the direct approved-source comparison required by the post-release assurance policy.",
     "reasonFullPlatformComplete": "Release readiness remains conditional on external infrastructure, container, provider, backup/restore, and security-assurance prerequisites."
   },
   "acceptedExceptions": [

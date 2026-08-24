@@ -106,6 +106,7 @@ test.describe('PRV-16/PRV-17 Provider Customer Requests', () => {
     await expect(page.getByTestId(`provider-customer-request-${REQUEST_ID}`)).toBeVisible();
     await page.getByRole('button', { name: /Add customer request|إضافة طلب يدوي|添加客户请求/u }).click();
     await expect(page.locator('[data-screen-id="PRV-17"] .ui-modal')).toBeVisible();
+    await expect(page).toHaveScreenshot(`provider-customer-request-modal-${locale}.png`, { fullPage: true });
     await page.getByLabel(/First name|الاسم الأول|名字/u).fill('New');
     await page.getByLabel(/Last name|اسم العائلة|姓氏/u).fill('Customer');
     await page.getByLabel(/Phone number|رقم الهاتف|电话号码/u).fill('01198765432');

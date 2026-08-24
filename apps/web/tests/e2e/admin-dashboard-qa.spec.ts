@@ -160,18 +160,16 @@ async function routeAdminApi(page: Page, mode: QaMode): Promise<void> {
 }
 
 test.describe('F5 Admin Dashboard QA', () => {
-  test.describe.configure({ timeout: 180_000 });
-
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'design-source', description: 'ADM-01 through ADM-66 approved local Admin exports and shared Admin Desktop patterns recorded in DESIGN_SOURCE_MANIFEST.json; ADM-54 uses the owner-approved DESIGN-EXCEPTION-ADM-54 waiver and is never claimed as direct pixel comparison.' });
     test.skip(!testInfo.project.name.startsWith('desktop-'), 'Admin Dashboard is approved for desktop only.');
     await routeAdminApi(page, { role: 'admin', adminStatus: 200 });
   });
 
-  test('covers every Admin route with locale direction, Desktop scope, keyboard focus, safe projection, and screen identity', async ({ page }) => {
-    const locale = localeForProject();
-    for (const [screenId, path] of adminRoutes) {
-      const response = await page.goto(localizedPath(path, locale));
+  for (const [screenId, path] of adminRoutes) {
+    test(`covers ${screenId} with locale direction, Desktop scope, keyboard focus, safe projection, and screen identity`, async ({ page }) => {
+      const locale = localeForProject();
+      const response = await page.goto(localizedPath(path, locale), { waitUntil: 'domcontentloaded' });
       expect(response?.status(), `${screenId} ${path}`).toBe(200);
       await expect(page.locator('html'), screenId).toHaveAttribute('lang', locale);
       await expect(page.locator('html'), screenId).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
@@ -188,8 +186,8 @@ test.describe('F5 Admin Dashboard QA', () => {
       const firstNavigationLink = page.locator('.admin-dashboard__navigation a').first();
       await firstNavigationLink.focus();
       await expect(firstNavigationLink, `${screenId} first navigation link`).toBeFocused();
-    }
-  });
+    });
+  }
 
   test('fails closed for non-admin sessions and preserves permission states when Admin APIs deny access', async ({ page }) => {
     const locale = localeForProject();

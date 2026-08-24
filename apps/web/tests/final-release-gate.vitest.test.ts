@@ -34,15 +34,25 @@ describe('final release manifest', () => {
     expect(manifest.manifestVersion).toBe('sadat-release-v1');
     expect(manifest.releaseStatus).toBe('conditional');
     expect(['pending_frontend_090_close', 'complete_conditional', 'pending_post_release_assurance']).toContain(manifest.graphStatus);
+    const taskEntries = Object.entries(taskState.tasks);
+    const backendEntries = taskEntries.filter(([taskId]) => taskId.startsWith('backend_'));
+    const frontendEntries = taskEntries.filter(([taskId]) => taskId.startsWith('frontend_'));
+    const frontendInProgress = frontendEntries.filter(([, task]) => task.status === 'in_progress').map(([taskId]) => taskId);
+
+    expect(manifest.taskCounts).toMatchObject({
+      backendTotal: backendEntries.length,
+      backendComplete: backendEntries.filter(([, task]) => task.status === 'complete').length,
+      frontendTotal: frontendEntries.length,
+      frontendComplete: frontendEntries.filter(([, task]) => task.status === 'complete').length,
+      frontendInProgress: frontendInProgress[0] ?? null
+    });
     if (manifest.graphStatus === 'pending_post_release_assurance') {
-      expect(manifest.taskCounts).toMatchObject({
-        backendTotal: 114,
-        backendComplete: 113,
-        frontendTotal: 83,
-        frontendComplete: 76,
-        frontendInProgress: 'frontend_092'
-      });
-      expect(taskState.tasks.frontend_092?.status).toBe('in_progress');
+      if (frontendInProgress.length === 0) {
+        expect(Object.values(taskState.tasks).some(task => task.status === 'blocked')).toBe(true);
+      } else {
+        expect(frontendInProgress).toHaveLength(1);
+        expect(taskState.tasks[frontendInProgress[0] ?? '']?.status).toBe('in_progress');
+      }
       expect(finishIndex).toContain('frontend_090');
     } else if (manifest.graphStatus === 'complete_conditional') {
       expect(manifest.taskCounts).toEqual({ backendComplete: 113, frontendComplete: 75 });
@@ -69,7 +79,7 @@ describe('final release manifest', () => {
     expect(manifest.claims).toEqual({
       allApisTested: false,
       all131ScreensComplete: false,
-      backendComplete: true,
+      backendComplete: backendEntries.every(([, task]) => task.status === 'complete'),
       fullPlatformComplete: false,
       reasonAllApisTested: expect.any(String),
       reasonAll131ScreensComplete: expect.any(String),

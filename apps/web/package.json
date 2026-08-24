@@ -9,7 +9,7 @@
     "dev": "node server.mjs --mode development",
     "prebuild": "npm run prepare:contracts",
     "build": "npm run build:client && npm run build:server",
-    "build:client": "vite build --config vite.config.ts",
+    "build:client": "vite build --config vite.config.ts && node scripts/check-bundle-budget.mjs",
     "build:server": "vite build --config vite.config.ts --ssr src/features/frontend_foundation/entry-server.tsx",
     "start": "node server.mjs --mode production",
     "pretypecheck": "npm run prepare:contracts",
@@ -22,9 +22,14 @@
     "pretest:e2e": "npm run build",
     "test:e2e": "playwright test --config playwright.config.ts",
     "pretest:visual": "npm run build",
-    "test:visual": "playwright test --config playwright.config.ts tests/e2e/visual.spec.ts",
+    "test:visual": "node scripts/run-visual-matrix.mjs",
     "pretest:a11y": "npm run build",
-    "test:a11y": "playwright test --config playwright.config.ts tests/e2e/accessibility.spec.ts"
+    "test:a11y": "node scripts/run-accessibility-matrix.mjs",
+    "test:performance": "playwright test --config playwright.config.ts tests/e2e/performance.spec.ts",
+    "test:security": "playwright test --config playwright.config.ts tests/e2e/security.spec.ts",
+    "test:locale": "vitest run --config vitest.config.ts tests/locale-direction.vitest.test.ts",
+    "test:uat": "vitest run --config vitest.config.ts tests/uat-binding.vitest.test.ts tests/uat-matrix.vitest.test.ts",
+    "test:bundle": "node scripts/check-bundle-budget.mjs"
   },
   "dependencies": {
     "@sadat-real-estate/contracts": "0.0.0",

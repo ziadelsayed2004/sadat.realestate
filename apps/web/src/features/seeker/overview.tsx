@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { SeekerOverviewData, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
-import { Badge, Button, StateMessage } from '../design_system/index.ts';
+import { Button, StateMessage } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
 import { getSeekerCopy } from './copy.ts';
 import { createSeekerOverviewLoader, localeForSeekerPath, type SeekerAuthorizationSource, type SeekerOverviewLoader } from './data.ts';
@@ -46,6 +46,9 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<Seeker
 
 export function SeekerNavigation({ locale, activePath }: { readonly locale: SupportedLocale; readonly activePath: string }) {
   const copy = getSeekerCopy(locale);
+  const searchLabel = locale === 'ar' ? 'ابحث عن عقار في السادات...' : locale === 'zh-CN' ? '搜索萨达特市房源…' : 'Search properties in Sadat City…';
+  const menuLabel = locale === 'ar' ? 'قائمة لوحة الباحث' : locale === 'zh-CN' ? '购房者面板菜单' : 'Seeker dashboard menu';
+  const websiteLabel = locale === 'ar' ? 'عرض الموقع' : locale === 'zh-CN' ? '查看网站' : 'View website';
   const items = [
     ['overview', '/seeker'],
     ['requests', '/seeker/requests'],
@@ -56,22 +59,43 @@ export function SeekerNavigation({ locale, activePath }: { readonly locale: Supp
     ['settings', '/seeker/settings']
   ] as const;
   return (
-    <nav className="seeker-dashboard__nav" aria-label={copy.overview.eyebrow}>
-      <span className="seeker-dashboard__nav-title">{copy.overview.eyebrow}</span>
-      <ul>
-        {items.map(([id, path]) => {
-          const active = activePath === path || (id === 'profile' && activePath.startsWith('/seeker/profile'));
-          return (
-            <li key={id}>
-              <a href={localeForSeekerPath(locale, path)} aria-current={active ? 'page' : undefined} data-active={active || undefined}>
-                <span aria-hidden="true" className="seeker-dashboard__nav-icon">{id === 'overview' ? '⌂' : id === 'requests' ? '▤' : id === 'viewings' ? '◷' : id === 'saved' ? '♡' : id === 'notifications' ? '♧' : id === 'profile' ? '♙' : '⚙'}</span>
-                <span>{copy.nav[id]}</span>
-              </a>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
+    <>
+      <header className="seeker-dashboard__topbar">
+        <button className="seeker-dashboard__menu-button" type="button" aria-label={menuLabel}><span aria-hidden="true">☰</span></button>
+        <label className="seeker-dashboard__search">
+          <span className="sr-only">{searchLabel}</span>
+          <span aria-hidden="true">⌕</span>
+          <input type="search" placeholder={searchLabel} aria-label={searchLabel} />
+        </label>
+        <a className="seeker-dashboard__topbar-profile" href={localeForSeekerPath(locale, '/seeker/profile?tab=personal')}>
+          <span className="seeker-dashboard__avatar" aria-hidden="true">S</span>
+          <span><strong>{copy.overview.eyebrow}</strong><small>{copy.nav.profile}</small></span>
+        </a>
+      </header>
+      <nav className="seeker-dashboard__nav" aria-label={copy.overview.eyebrow}>
+        <a className="seeker-dashboard__brand" href={localeForSeekerPath(locale, '/')} aria-label={websiteLabel}>
+          <img src="/assets/sadat-real-estate-logo.png" alt="" />
+        </a>
+        <ul>
+          {items.map(([id, path]) => {
+            const active = activePath === path || (id === 'profile' && activePath.startsWith('/seeker/profile'));
+            return (
+              <li key={id}>
+                <a href={localeForSeekerPath(locale, path)} aria-current={active ? 'page' : undefined} data-active={active || undefined}>
+                  <span aria-hidden="true" className="seeker-dashboard__nav-icon">{id === 'overview' ? '▦' : id === 'requests' ? '▤' : id === 'viewings' ? '◷' : id === 'saved' ? '♡' : id === 'notifications' ? '♧' : id === 'profile' ? '♙' : '⚙'}</span>
+                  <span>{copy.nav[id]}</span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+        <div className="seeker-dashboard__nav-footer">
+          <span className="seeker-dashboard__avatar" aria-hidden="true">S</span>
+          <span><strong>{copy.overview.eyebrow}</strong><small>{copy.nav.profile}</small></span>
+          <a href={localeForSeekerPath(locale, '/')}>{websiteLabel}<span aria-hidden="true">↗</span></a>
+        </div>
+      </nav>
+    </>
   );
 }
 
@@ -102,7 +126,7 @@ function OverviewContent({ data, locale }: { readonly data: SeekerOverviewData; 
         </a>
       </div>
       <section className="seeker-dashboard__summary" aria-labelledby="seeker-summary-title">
-        <div className="seeker-dashboard__section-heading"><h2 id="seeker-summary-title">{copy.overview.summaryTitle}</h2><Badge tone="brand">{copy.active}</Badge></div>
+        <div className="seeker-dashboard__section-heading"><h2 id="seeker-summary-title">{copy.overview.summaryTitle}</h2></div>
         <div className="seeker-dashboard__summary-grid">
           <SummaryCard label={copy.overview.cards.requests} value={data.requests} tone="requests" testId="seeker-summary-requests" />
           <SummaryCard label={copy.overview.cards.viewings} value={data.viewings} tone="viewings" testId="seeker-summary-viewings" />
@@ -115,10 +139,19 @@ function OverviewContent({ data, locale }: { readonly data: SeekerOverviewData; 
         {empty ? (
           <div className="seeker-dashboard__empty" data-state="empty"><h3>{copy.overview.emptyTitle}</h3><p>{copy.overview.emptyBody}</p></div>
         ) : (
-          <div className="seeker-dashboard__unavailable" data-state="success">
-            <h3>{copy.overview.unavailableTitle}</h3>
-            <p>{copy.overview.unavailableBody}</p>
-            <p className="seeker-dashboard__activity-note">{copy.overview.activityBody}</p>
+          <div className="seeker-dashboard__overview-grid" data-state="success">
+            <a href={localeForSeekerPath(locale, '/seeker/requests')} className="seeker-dashboard__overview-panel seeker-dashboard__overview-panel--requests">
+              <span aria-hidden="true">▤</span><div><strong>{copy.nav.requests}</strong><small>{data.requests} {copy.overview.cards.requests}</small></div><b>{data.requests}</b>
+            </a>
+            <a href={localeForSeekerPath(locale, '/seeker/viewings')} className="seeker-dashboard__overview-panel seeker-dashboard__overview-panel--viewings">
+              <span aria-hidden="true">◷</span><div><strong>{copy.nav.viewings}</strong><small>{data.viewings} {copy.overview.cards.viewings}</small></div><b>{data.viewings}</b>
+            </a>
+            <a href={localeForSeekerPath(locale, '/seeker/notifications')} className="seeker-dashboard__overview-panel seeker-dashboard__overview-panel--notifications">
+              <span aria-hidden="true">♧</span><div><strong>{copy.nav.notifications}</strong><small>{data.unreadNotifications} {copy.overview.cards.notifications}</small></div><b>{data.unreadNotifications}</b>
+            </a>
+            <a href={localeForSeekerPath(locale, '/seeker/saved')} className="seeker-dashboard__overview-panel seeker-dashboard__overview-panel--wide">
+              <span aria-hidden="true">♡</span><div><strong>{copy.nav.saved}</strong><small>{copy.overview.activityBody}</small></div><b>{data.savedProperties}</b>
+            </a>
           </div>
         )}
       </section>

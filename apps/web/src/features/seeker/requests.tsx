@@ -3,7 +3,6 @@ import type { RequestData, RequestListData, RequestStatus, SupportedLocale } fro
 import { ApiClientError } from '../contracts/index.ts';
 import { Badge, Button, Pagination, StateMessage } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
-import { getSeekerCopy } from './copy.ts';
 import {
   createSeekerRequestLoader,
   createSeekerRequestsLoader,
@@ -164,7 +163,6 @@ function RequestDetailContent({ request, locale }: { readonly request: RequestDa
 
 export function SeekerRequests({ locale, session, authClient, apiOrigin, requestId, listLoad, detailLoad }: SeekerRequestsProps) {
   const copy = getSeekerRequestsCopy(locale);
-  const overviewCopy = getSeekerCopy(locale);
   const isDetail = requestId !== undefined;
   const [page, setPage] = useState(1);
   const [state, setState] = useState<SeekerRequestsViewState>('loading');
@@ -208,7 +206,7 @@ export function SeekerRequests({ locale, session, authClient, apiOrigin, request
       <div className="seeker-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {state === 'not_found' ? <section className="seeker-dashboard__state" data-state="not_found" data-request-state="not_found" role="alert"><StateMessage state="error" title={copy.states.notFound.title} message={copy.states.notFound.body} /><a className="seeker-dashboard__back-link" href={localeForSeekerPath(locale, '/seeker/requests')}>‹ {copy.detail.back}</a></section> : null}
-        {!isDetail && (state === 'success' || state === 'empty') && listData !== undefined ? <main aria-labelledby="seeker-requests-list-title"><div className="seeker-dashboard__heading-row"><div><p className="seeker-dashboard__eyebrow">{copy.list.eyebrow}</p><h1>{copy.list.title}</h1><p>{copy.list.description}</p></div><Badge tone="brand">{overviewCopy.active}</Badge></div><section className="seeker-requests__panel"><RequestListContent data={listData} locale={locale} onPageChange={setPage} /></section></main> : null}
+        {!isDetail && (state === 'success' || state === 'empty') && listData !== undefined ? <main aria-labelledby="seeker-requests-list-title"><div className="seeker-dashboard__heading-row"><div><p className="seeker-dashboard__eyebrow">{copy.list.eyebrow}</p><h1>{copy.list.title}</h1><p>{copy.list.description}</p></div></div><section className="seeker-requests__panel"><RequestListContent data={listData} locale={locale} onPageChange={setPage} /></section></main> : null}
         {isDetail && state === 'success' && detailData !== undefined ? <main aria-label={copy.detail.title}><RequestDetailContent request={detailData} locale={locale} /></main> : null}
       </div>
     </section>

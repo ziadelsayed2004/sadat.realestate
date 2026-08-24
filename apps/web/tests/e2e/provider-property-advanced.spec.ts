@@ -95,12 +95,17 @@ test.describe('PRV-05, PRV-06, and PRV-07 advanced property wizard', () => {
     await page.locator('#provider-property-bathrooms').fill('2');
     await page.locator('#provider-property-floor').fill('4');
     await page.locator('#provider-property-total-floors').fill('8');
-    await page.locator('button[value="save"]').click();
+    const saveButton = page.locator('button[value="save"]');
+    await saveButton.focus();
+    await expect(saveButton).toBeFocused();
+    await saveButton.press('Enter');
     await expect(page.locator('.provider-property-wizard__form-message--success')).toBeVisible();
-    await expect(page.locator('button[value="save"]')).toHaveText(/\S/u);
+    await expect(saveButton).toHaveText(/\S/u);
+    await expect(saveButton).toHaveCSS('background-color', 'rgb(23, 35, 61)');
     await expect(page.locator('body')).not.toContainText(/aaaaaaaaaaaaaaaaaaaaaaaa|accessToken|refreshToken|storageKey|internalNotes|assignedTo|auditData/u);
     await page.locator('.a11y-skip-link').focus();
     await expect(page.locator('.a11y-skip-link')).toBeFocused();
+    await page.evaluate(() => window.scrollTo(0, 0));
     await expect(page).toHaveScreenshot(`provider-property-details-${locale}.png`, { fullPage: true });
   });
 

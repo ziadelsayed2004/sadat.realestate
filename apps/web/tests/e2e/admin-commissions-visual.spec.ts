@@ -16,12 +16,12 @@ const visualRoutes = [
   ['confirmations', '/admin/commissions/confirmations', 'ADM-45']
 ] as const;
 
-test('ADM-39 through ADM-45 match the approved desktop visual matrix', async ({ page }) => {
-  test.skip(!test.info().project.name.includes('desktop'), 'Admin dashboard is approved for desktop only.');
-  test.info().annotations.push({ type: 'design-source', description: 'Checked-in local final exports docs/design_sources/final_screens/admin/ADM-39.png through ADM-45.png; per-screen Drive references in DESIGN_SOURCE_MANIFEST.json; shared Figma prototype node 6017:61879.' });
-  await routeAdminCommissionApis(page);
-  const locale = localeForProject();
-  for (const [name, path, screenId] of visualRoutes) {
+for (const [name, path, screenId] of visualRoutes) {
+  test(`${screenId} matches the approved desktop visual matrix`, async ({ page }) => {
+    test.skip(!test.info().project.name.includes('desktop'), 'Admin dashboard is approved for desktop only.');
+    test.info().annotations.push({ type: 'design-source', description: `Checked-in local final export docs/design_sources/final_screens/admin/${screenId}.png; per-screen Drive reference in DESIGN_SOURCE_MANIFEST.json; shared Figma prototype node 6017:61879.` });
+    await routeAdminCommissionApis(page);
+    const locale = localeForProject();
     await page.goto(`${path}${path.includes('?') ? '&' : '?'}lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator(`[data-screen-id="${screenId}"]`)).toBeVisible();
     await page.evaluate(() => {
@@ -29,6 +29,9 @@ test('ADM-39 through ADM-45 match the approved desktop visual matrix', async ({ 
       if (active instanceof HTMLElement) active.blur();
       for (const select of document.querySelectorAll('select')) select.blur();
     });
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+    });
     await expect(page).toHaveScreenshot(`admin-commissions-${locale}-${name}.png`, { fullPage: true, maxDiffPixels: 256 });
-  }
-});
+  });
+}

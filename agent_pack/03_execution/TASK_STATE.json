@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-23T02:15:15.678Z",
+  "updatedAt": "2026-08-24T00:34:06.215Z",
   "tasks": {
     "backend_000": {
       "status": "complete",
@@ -1340,25 +1340,25 @@
       "evidencePath": "07_finish/frontend_092/completion.json"
     },
     "frontend_093": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-23T12:58:25.143Z",
+      "completedAt": "2026-08-23T21:00:48.139Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_093/completion.json"
     },
     "frontend_094": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-23T21:01:57.835Z",
+      "completedAt": "2026-08-23T22:02:06.396Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_094/completion.json"
     },
     "frontend_095": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-23T22:02:55.942Z",
+      "completedAt": "2026-08-23T22:49:19.256Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_095/completion.json"
     },
     "frontend_096": {
       "status": "blocked",
@@ -1368,11 +1368,11 @@
       "evidencePath": null
     },
     "frontend_097": {
-      "status": "open",
-      "startedAt": null,
-      "completedAt": null,
+      "status": "complete",
+      "startedAt": "2026-08-23T22:50:34.214Z",
+      "completedAt": "2026-08-24T00:34:06.215Z",
       "reason": null,
-      "evidencePath": null
+      "evidencePath": "07_finish/frontend_097/completion.json"
     },
     "frontend_098": {
       "status": "open",

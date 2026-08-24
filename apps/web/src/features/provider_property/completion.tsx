@@ -30,12 +30,11 @@ import {
 import { getProviderPropertyCompletionCopy, type ProviderPropertyCompletionStep } from './completion-copy.ts';
 import { getProviderPropertyCopy } from './copy.ts';
 import { getProviderPropertyStateCopy, getProviderPropertyValidationIssues, type ProviderPropertyValidationIssue } from './state-copy.ts';
+import { getProviderPropertyRailLabels, PROVIDER_PROPERTY_RAIL_STEPS } from './steps.ts';
 import './styles.css';
 
 const MAX_MEDIA_BYTES = 10 * 1024 * 1024;
 const MEDIA_MIMES: readonly PropertyMediaMime[] = ['application/pdf', 'image/jpeg', 'image/png'];
-const COMPLETION_STEPS: readonly ProviderPropertyCompletionStep[] = ['media', 'contact', 'review'];
-
 type ViewState = 'loading' | 'success' | 'retry' | 'error' | 'permission' | 'not_found';
 type MutationState = 'idle' | 'saving' | 'success' | 'error' | 'permission';
 
@@ -152,15 +151,21 @@ function StatePanel({ state, onRetry, copy }: { readonly state: ViewState; reado
   );
 }
 
-function StepRail({ step, labels }: { readonly step: ProviderPropertyCompletionStep; readonly labels: ReturnType<typeof getProviderPropertyCompletionCopy>['steps'] }) {
+function StepRail({ step, locale }: { readonly step: ProviderPropertyCompletionStep; readonly locale: SupportedLocale }) {
+  const labels = getProviderPropertyRailLabels(locale);
+  const currentIndex = PROVIDER_PROPERTY_RAIL_STEPS.indexOf(step);
   return (
     <ol className="provider-property-completion__steps" aria-label="Property completion steps">
-      {COMPLETION_STEPS.map((item, index) => (
-        <li key={item} data-active={step === item || undefined} data-complete={(COMPLETION_STEPS.indexOf(step) > index) || undefined}>
-          <span aria-hidden="true">{COMPLETION_STEPS.indexOf(step) > index ? '✓' : index + 1}</span>
+      {PROVIDER_PROPERTY_RAIL_STEPS.map((item, index) => {
+        const complete = index < currentIndex;
+        const active = index === currentIndex;
+        return (
+        <li key={item} aria-current={active ? 'step' : undefined} data-active={active || undefined} data-complete={complete || undefined}>
+          <span aria-hidden="true">{complete ? '✓' : index + 1}</span>
           <strong>{labels[item]}</strong>
         </li>
-      ))}
+        );
+      })}
     </ol>
   );
 }
@@ -584,7 +589,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
     <section className="provider-dashboard provider-property-completion" data-screen-id={step === 'media' ? 'PRV-08' : step === 'contact' ? 'PRV-09' : validationState ? 'PRV-11' : 'PRV-10'} data-route={`/provider/properties/${propertyId}/${step}`} data-device-scope="desktop">
       <ProviderNavigation locale={locale} activePath="/provider/properties" />
       <div className="provider-dashboard__content provider-property-wizard__content">
-        <StepRail step={step} labels={copy.steps} />
+        <StepRail step={step} locale={locale} />
         <StatePanel state={state} onRetry={retry} copy={propertyCopy} />
         {content}
       </div>

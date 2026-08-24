@@ -89,10 +89,10 @@ test.describe('F4 Provider Dashboard QA', () => {
     await routeProviderApis(page);
   });
 
-  test('covers every provider dashboard route, locale direction, desktop scope, keyboard landmarks, and safe projection', async ({ page }) => {
-    const locale = localeForProject();
-    for (const routeCase of providerRoutes) {
-      const response = await page.goto(localizedPath(routeCase.path, locale));
+  for (const routeCase of providerRoutes) {
+    test(`covers the ${routeCase.label} route, locale direction, desktop scope, keyboard landmarks, and safe projection`, async ({ page }) => {
+      const locale = localeForProject();
+      const response = await page.goto(localizedPath(routeCase.path, locale), { waitUntil: 'domcontentloaded' });
       expect(response?.status(), routeCase.label).toBe(200);
       await expect(page.locator('html')).toHaveAttribute('lang', locale);
       await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
@@ -109,33 +109,33 @@ test.describe('F4 Provider Dashboard QA', () => {
       const firstNavigationLink = page.locator('.provider-dashboard__navigation a').first();
       await firstNavigationLink.focus();
       await expect(firstNavigationLink).toBeFocused();
-    }
-  });
+    });
+  }
 
-  test('fails closed for every provider dashboard route when authentication is denied', async ({ page }) => {
-    const locale = localeForProject();
-    await page.unroute('**/api/v1/auth/refresh');
-    await routeSession(page, false);
-    for (const routeCase of providerRoutes) {
-      await page.goto(localizedPath(routeCase.path, locale));
+  for (const routeCase of providerRoutes) {
+    test(`fails closed for the ${routeCase.label} route when authentication is denied`, async ({ page }) => {
+      const locale = localeForProject();
+      await page.unroute('**/api/v1/auth/refresh');
+      await routeSession(page, false);
+      await page.goto(localizedPath(routeCase.path, locale), { waitUntil: 'domcontentloaded' });
       await expect(page.locator('[data-access="authentication-required"]'), routeCase.label).toBeVisible();
       await expect(page.locator('[data-screen-id]'), routeCase.label).toHaveCount(0);
       await expect(page.locator('body')).not.toContainText(/accessToken|refreshToken|internalNotes|assignedTo|auditData|storageKey/u);
-    }
-  });
+    });
+  }
 
   test('renders safe permission states for provider API denial and keeps upload/private boundaries closed', async ({ page }) => {
     const locale = localeForProject();
     await page.unroute('**/api/v1/provider/**');
     await routeProviderApis(page, 403);
 
-    await page.goto(localizedPath(`/provider/properties/${propertyId}/media`, locale));
+    await page.goto(localizedPath(`/provider/properties/${propertyId}/media`, locale), { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-screen-id="PRV-08"]')).toBeVisible();
     await expect(page.locator('[data-screen-id="PRV-08"] [data-state="permission"]').first()).toBeVisible();
     await expect(page.locator('input[type="file"]')).toHaveCount(0);
     await expect(page.locator('body')).not.toContainText(/storageKey|temporaryUrl|privateUrl|providerDocument|paymentProof/u);
 
-    await page.goto(localizedPath('/provider/ads', locale));
+    await page.goto(localizedPath('/provider/ads', locale), { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-screen-id="PRV-19"]')).toBeVisible();
     await expect(page.locator('[data-screen-id="PRV-19"] [data-state="permission"]').first()).toBeVisible();
     await expect(page.locator('body')).not.toContainText(/commissionRate|paymentProof|bankVerified|internalNotes|assignedTo/u);

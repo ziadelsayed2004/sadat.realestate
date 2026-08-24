@@ -14,6 +14,7 @@ import {
   type ProviderPropertyStepInput
 } from './data.ts';
 import { getProviderPropertyCopy, type ProviderPropertyCopy, type ProviderPropertySourceType, type ProviderPropertyWizardState } from './copy.ts';
+import { getProviderPropertyRailLabels, PROVIDER_PROPERTY_RAIL_STEPS } from './steps.ts';
 import './styles.css';
 
 export interface ProviderPropertyAuthClient extends ProviderAuthorizationSource {
@@ -149,16 +150,21 @@ function StatePanel({ state, copy, onRetry }: { readonly state: Exclude<Provider
   );
 }
 
-function WizardSteps({ step, copy }: { readonly step: ProviderPropertyStep; readonly copy: ProviderPropertyCopy }) {
+function WizardSteps({ step, locale, copy }: { readonly step: ProviderPropertyStep; readonly locale: SupportedLocale; readonly copy: ProviderPropertyCopy }) {
+  const labels = getProviderPropertyRailLabels(locale);
+  const currentIndex = PROVIDER_PROPERTY_RAIL_STEPS.indexOf(step);
   return (
     <ol className="provider-property-wizard__steps" aria-label={copy.wizard.eyebrow}>
-      {(['basic', 'location'] as const).map((item, index) => (
-        <li key={item} data-active={step === item || undefined} data-complete={step === 'location' && item === 'basic' || undefined}>
-          <span aria-hidden="true">{step === 'location' && item === 'basic' ? '✓' : index + 1}</span>
-          <strong>{copy.wizard.steps[item]}</strong>
+      {PROVIDER_PROPERTY_RAIL_STEPS.map((item, index) => {
+        const complete = index < currentIndex;
+        const active = index === currentIndex;
+        return (
+        <li key={item} aria-current={active ? 'step' : undefined} data-active={active || undefined} data-complete={complete || undefined}>
+          <span aria-hidden="true">{complete ? '✓' : index + 1}</span>
+          <strong>{labels[item]}</strong>
         </li>
-      ))}
-      <li className="provider-property-wizard__steps-more" aria-hidden="true">…</li>
+        );
+      })}
     </ol>
   );
 }
@@ -404,7 +410,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
     <section className="provider-dashboard provider-property-wizard" data-screen-id={step === 'basic' ? 'PRV-03' : 'PRV-04'} data-route={step === 'basic' ? '/provider/properties/new/basic' : `/provider/properties/${propertyId ?? ''}/location`} data-device-scope="desktop">
       <ProviderNavigation locale={locale} activePath={path} />
       <div className="provider-dashboard__content provider-property-wizard__content">
-        <WizardSteps step={step} copy={copy} />
+        <WizardSteps step={step} locale={locale} copy={copy} />
         {state !== 'success' ? <StatePanel state={state} copy={copy} onRetry={onRetry} /> : null}
         {state === 'success' ? (
           step === 'basic' ? <BasicFormView locale={locale} copy={copy} form={basic} setForm={setBasic} onSubmit={onBasicSubmit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : <LocationFormView copy={copy} form={location} setForm={setLocation} onSubmit={onLocationSubmit} onBack={() => { if (propertyId !== undefined) setBrowserPath(statusPath(locale, propertyId, 'basic'), false); }} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} />

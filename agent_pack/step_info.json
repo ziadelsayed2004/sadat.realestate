@@ -1,50 +1,9 @@
 {
-  "generatedAt": "2026-08-23T02:15:34.688Z",
-  "selectedTaskId": "frontend_093",
-  "selectedTaskStatus": "open",
-  "selectedTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_093.md",
-  "selectedTask": {
-    "id": "frontend_093",
-    "phase": "F7_post_release_assurance",
-    "area": "seeker UI",
-    "title": "Seeker Dashboard Design Parity Remediation",
-    "goal": "Compare all Seeker dashboard screens with approved sources and close visual, data-binding, state, locale, permission, and interaction gaps.",
-    "kind": "quality",
-    "screens": [],
-    "sourceRefs": [
-      "09_sources/DESIGN_SOURCE_MANIFEST.json",
-      "01_product/SCREEN_COVERAGE.json"
-    ],
-    "notes": [],
-    "track": "frontend",
-    "dependsOn": [
-      "frontend_092"
-    ],
-    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_093.md",
-    "allowedRoots": [
-      "apps/web/**",
-      "packages/ui/**",
-      "packages/contracts/**",
-      "docs/design_sources/**",
-      "agent_pack/**"
-    ],
-    "acceptance": [
-      "Create a traceable direct comparison for all 10 Seeker screen IDs.",
-      "Exercise real implemented contracts and all meaningful asynchronous and permission states.",
-      "Remediate material design and interaction differences at the approved Desktop scope.",
-      "Verify Arabic RTL and English and Simplified Chinese LTR.",
-      "Add focused and regression evidence for every affected route."
-    ],
-    "verification": [
-      "npm run typecheck --workspace apps/web",
-      "npm run lint --workspace apps/web",
-      "npm run test --workspace apps/web",
-      "npm run build --workspace apps/web",
-      "targeted Playwright, visual, accessibility, locale, direction, and device checks",
-      "node agent_pack/scripts/audit_pack.mjs"
-    ],
-    "sequence": 192
-  },
+  "generatedAt": "2026-08-24T00:36:23.425Z",
+  "selectedTaskId": null,
+  "selectedTaskStatus": null,
+  "selectedTaskFile": null,
+  "selectedTask": null,
   "counts": {
     "backend": {
       "total": 114,
@@ -56,11 +15,11 @@
     },
     "frontend": {
       "total": 83,
-      "open": 5,
+      "open": 1,
       "in_progress": 0,
       "partial": 0,
       "blocked": 1,
-      "complete": 77
+      "complete": 81
     }
   },
   "blockedTasks": [
@@ -75,33 +34,6 @@
   ],
   "blockedByDependencies": [
     {
-      "taskId": "frontend_094",
-      "unresolved": [
-        {
-          "taskId": "frontend_093",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "frontend_095",
-      "unresolved": [
-        {
-          "taskId": "frontend_094",
-          "status": "open"
-        }
-      ]
-    },
-    {
-      "taskId": "frontend_097",
-      "unresolved": [
-        {
-          "taskId": "frontend_095",
-          "status": "open"
-        }
-      ]
-    },
-    {
       "taskId": "frontend_098",
       "unresolved": [
         {
@@ -111,10 +43,6 @@
         {
           "taskId": "frontend_096",
           "status": "blocked"
-        },
-        {
-          "taskId": "frontend_097",
-          "status": "open"
         }
       ]
     }

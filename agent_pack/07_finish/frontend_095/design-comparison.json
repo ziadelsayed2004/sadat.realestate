@@ -1,0 +1,3535 @@
+{
+  "taskId": "frontend_095",
+  "phase": "F7_post_release_assurance",
+  "screenCount": 65,
+  "excludedScreenIds": [
+    "ADM-54"
+  ],
+  "comparisonPolicy": "Approved local exports are compared directly; runtime snapshots are regression evidence, and contract-absent data is rendered unavailable rather than invented.",
+  "entries": [
+    {
+      "screenId": "ADM-01",
+      "surface": "admin",
+      "route": "/admin",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-01.png",
+      "approvedSourceSha256": "a497edfd4695cc2d97abe3db20e3835acd394504d88d9fec6564a5d6076d1ffa",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-01.png",
+          "sha256": "a497edfd4695cc2d97abe3db20e3835acd394504d88d9fec6564a5d6076d1ffa",
+          "dimensions": {
+            "width": 6308,
+            "height": 12468
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 12468
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-overview.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-overview.spec.ts-snapshots/admin-overview-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-overview.spec.ts-snapshots/admin-overview-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-overview.spec.ts-snapshots/admin-overview-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Expanded the overview into the approved dashboard hierarchy while retaining contract-backed KPI values and explicit unavailable states for unimplemented overview projections."
+      ],
+      "contractBoundaryNotes": [
+        "The current AdminOverviewData contract exposes seven KPIs only; source-only queues, content, advertising, notification, and audit records are represented as unavailable rather than fabricated."
+      ],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-02",
+      "surface": "admin",
+      "route": "/admin/users",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-02.png",
+      "approvedSourceSha256": "b0636cdce357647f5c0c681c89e78615b3a13b32031d619b8aa85b961e89be04",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-02.png",
+          "sha256": "b0636cdce357647f5c0c681c89e78615b3a13b32031d619b8aa85b961e89be04",
+          "dimensions": {
+            "width": 6308,
+            "height": 3884
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3884
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-accounts.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-users-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-users-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-users-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-03",
+      "surface": "admin",
+      "route": "/admin/property-seekers",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-03.png",
+      "approvedSourceSha256": "cb77e6cfaa44ba6506311051558873d9d42d88b4c808fa93ef5abdc97f2be88a",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-03.png",
+          "sha256": "cb77e6cfaa44ba6506311051558873d9d42d88b4c808fa93ef5abdc97f2be88a",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-accounts.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-seekers-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-seekers-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-seekers-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-04",
+      "surface": "admin",
+      "route": "/admin/providers",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-04.png",
+      "approvedSourceSha256": "499572bc168ed20b8fd0ea4b8eb37e24efaa4f49a159d6b77f0fd0bee9fec2c2",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-04.png",
+          "sha256": "499572bc168ed20b8fd0ea4b8eb37e24efaa4f49a159d6b77f0fd0bee9fec2c2",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-accounts.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-providers-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-providers-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-providers-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-05",
+      "surface": "admin",
+      "route": "/admin/verification",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-05.png",
+      "approvedSourceSha256": "b188e8f2fb39086f902eabb9f6f85fe18d9b9567cd5a2ebe6119887e12edee89",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-05.png",
+          "sha256": "b188e8f2fb39086f902eabb9f6f85fe18d9b9567cd5a2ebe6119887e12edee89",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-accounts.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-verification-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-verification-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-accounts.spec.ts-snapshots/admin-accounts-verification-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-06",
+      "surface": "admin",
+      "route": "/admin/account-reports",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-06.png",
+      "approvedSourceSha256": "9631d0e9adc4fd897c3190c549a75a04ec17969ba933060c9f552ab893d79cbd",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-06.png",
+          "sha256": "9631d0e9adc4fd897c3190c549a75a04ec17969ba933060c9f552ab893d79cbd",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-account-reports.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-reports-list-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-reports-list-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-reports-list-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-07",
+      "surface": "admin",
+      "route": "/admin/account-reports/:id",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-07.png",
+      "approvedSourceSha256": "01b86cdf11b66172500931c4319623965eb6bb0f31561ec8cf9ef5b1cff38956",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-07.png",
+          "sha256": "01b86cdf11b66172500931c4319623965eb6bb0f31561ec8cf9ef5b1cff38956",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-account-reports.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-reports-detail-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-reports-detail-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-reports-detail-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-08",
+      "surface": "admin",
+      "route": "/admin/account-restrictions",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-08.png",
+      "approvedSourceSha256": "52c5515bfd5f53c993dd83dfecf841f829ddad26971557b8040373223a575d91",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-08.png",
+          "sha256": "52c5515bfd5f53c993dd83dfecf841f829ddad26971557b8040373223a575d91",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-account-reports.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-restrictions-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-restrictions-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-account-reports.spec.ts-snapshots/admin-account-restrictions-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-09",
+      "surface": "admin",
+      "route": "/admin/property-categories",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-09.png",
+      "approvedSourceSha256": "52ae46a190459829731d603b7bb6aa8f9bdd17c7231c7c80404fb5cfc805f73e",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-09.png",
+          "sha256": "52ae46a190459829731d603b7bb6aa8f9bdd17c7231c7c80404fb5cfc805f73e",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-master-data.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-categories-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-categories-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-categories-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-10",
+      "surface": "admin",
+      "route": "/admin/locations",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-10.png",
+      "approvedSourceSha256": "061894c2847d6e6e460c256d63ebec480f5982d3a241b362d9e283251eeb0b86",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-10.png",
+          "sha256": "061894c2847d6e6e460c256d63ebec480f5982d3a241b362d9e283251eeb0b86",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-master-data.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-locations-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-locations-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-locations-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-11",
+      "surface": "admin",
+      "route": "/admin/features",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-11.png",
+      "approvedSourceSha256": "f6eb4f8312ee363f0ac4bd3e6936dbada91b47bf7f11d7c5fc238af7d6f9f6fa",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-11.png",
+          "sha256": "f6eb4f8312ee363f0ac4bd3e6936dbada91b47bf7f11d7c5fc238af7d6f9f6fa",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-master-data.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-features-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-features-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-master-data.spec.ts-snapshots/admin-master-data-features-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-12",
+      "surface": "admin",
+      "route": "/admin/projects",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-12.png",
+      "approvedSourceSha256": "409e8098249046550711febdcb4bf19ac03ee3360a1580ea5ff0911e0ce11d1f",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-12.png",
+          "sha256": "409e8098249046550711febdcb4bf19ac03ee3360a1580ea5ff0911e0ce11d1f",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-projects-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-projects-visual.spec.ts-snapshots/admin-projects-ar-list-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-projects-visual.spec.ts-snapshots/admin-projects-en-list-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-projects-visual.spec.ts-snapshots/admin-projects-zh-CN-list-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-13",
+      "surface": "admin",
+      "route": "/admin/projects/review",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-13.png",
+      "approvedSourceSha256": "a2a18c9d2a1670a559279d033f2a49ce089476ea04cbd749b2c27e6aa6cac1ec",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-13.png",
+          "sha256": "a2a18c9d2a1670a559279d033f2a49ce089476ea04cbd749b2c27e6aa6cac1ec",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-projects-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-projects-visual.spec.ts-snapshots/admin-projects-ar-review-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-projects-visual.spec.ts-snapshots/admin-projects-en-review-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-projects-visual.spec.ts-snapshots/admin-projects-zh-CN-review-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-14",
+      "surface": "admin",
+      "route": "/admin/properties",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-14.png",
+      "approvedSourceSha256": "b474ef04f7b2663e23807daf17eb6309a513b5c3004d9c54db4d38e6abadd6aa",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-14.png",
+          "sha256": "b474ef04f7b2663e23807daf17eb6309a513b5c3004d9c54db4d38e6abadd6aa",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-properties-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-ar-list-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-en-list-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-zh-CN-list-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-15",
+      "surface": "admin",
+      "route": "/admin/properties/review",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-15.png",
+      "approvedSourceSha256": "87561de6d5c0cf7156e053a171b341d926a0848600ecbc013051691c1a01833a",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-15.png",
+          "sha256": "87561de6d5c0cf7156e053a171b341d926a0848600ecbc013051691c1a01833a",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-properties-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-ar-review-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-en-review-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-zh-CN-review-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-16",
+      "surface": "admin",
+      "route": "/admin/properties/possible-duplicates",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-16.png",
+      "approvedSourceSha256": "57e62e3435dd7d223feb04487d6222ae4ff734b1330947f5fb9edbb46de19576",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-16.png",
+          "sha256": "57e62e3435dd7d223feb04487d6222ae4ff734b1330947f5fb9edbb46de19576",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-properties-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-ar-duplicates-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-en-duplicates-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-zh-CN-duplicates-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-17",
+      "surface": "admin",
+      "route": "/admin/property-reports",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-17.png",
+      "approvedSourceSha256": "e6e182e319f6bb6d0468de1aa95fc35ab5dc547f9cc9523058d9788d037c0373",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-17.png",
+          "sha256": "e6e182e319f6bb6d0468de1aa95fc35ab5dc547f9cc9523058d9788d037c0373",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-properties-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-ar-reports-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-en-reports-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-properties-visual.spec.ts-snapshots/admin-properties-zh-CN-reports-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-18",
+      "surface": "admin",
+      "route": "/admin/requests",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-18.png",
+      "approvedSourceSha256": "adc81afb271d913ee62121c9f36b34d85bd3ba71b908ea57f1323c546a0b5884",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-18.png",
+          "sha256": "adc81afb271d913ee62121c9f36b34d85bd3ba71b908ea57f1323c546a0b5884",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-requests-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-ar-all-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-en-all-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-zh-CN-all-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-19",
+      "surface": "admin",
+      "route": "/admin/customer-requests",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-19.png",
+      "approvedSourceSha256": "a4e6a54967f2387c1ed9923683ceeba4df9812296c142f14607db947fccd008e",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-19.png",
+          "sha256": "a4e6a54967f2387c1ed9923683ceeba4df9812296c142f14607db947fccd008e",
+          "dimensions": {
+            "width": 6308,
+            "height": 4260
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 4260
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-requests-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-ar-customer-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-en-customer-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-zh-CN-customer-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-20",
+      "surface": "admin",
+      "route": "/admin/overdue-requests",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-20.png",
+      "approvedSourceSha256": "a24226c1ea43a4127eb09e5d15069a52337752dbfee1c4e81752e6155d74311b",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-20.png",
+          "sha256": "a24226c1ea43a4127eb09e5d15069a52337752dbfee1c4e81752e6155d74311b",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-requests-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-ar-overdue-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-en-overdue-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-zh-CN-overdue-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-21",
+      "surface": "admin",
+      "route": "/admin/contact-requests",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-21.png",
+      "approvedSourceSha256": "3cc7296d9e6270ffee9f80b3a199e03098bba2f58bb973650771e193b2bac836",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-21.png",
+          "sha256": "3cc7296d9e6270ffee9f80b3a199e03098bba2f58bb973650771e193b2bac836",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-requests-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-ar-contact-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-en-contact-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-zh-CN-contact-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-22",
+      "surface": "admin",
+      "route": "/admin/viewing-requests",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-22.png",
+      "approvedSourceSha256": "f8395b9179bc36f4e0e4235350dda5d060ee6c4649ed14003a6a10e7cb4a5bbd",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-22.png",
+          "sha256": "f8395b9179bc36f4e0e4235350dda5d060ee6c4649ed14003a6a10e7cb4a5bbd",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-requests-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-ar-viewing-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-en-viewing-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-zh-CN-viewing-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-23",
+      "surface": "admin",
+      "route": "/admin/search-requests",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-23.png",
+      "approvedSourceSha256": "a0574ad295ce401bcdfe2117553a4e87344469491934726984f3fcd62a83a31f",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-23.png",
+          "sha256": "a0574ad295ce401bcdfe2117553a4e87344469491934726984f3fcd62a83a31f",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-requests-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-ar-search-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-en-search-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-zh-CN-search-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-24",
+      "surface": "admin",
+      "route": "/admin/request-issues",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-24.png",
+      "approvedSourceSha256": "a548e1c01a1f7b66711490e825ec0cbb6e3c7e27288607c632e603cc8a0faa9e",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-24.png",
+          "sha256": "a548e1c01a1f7b66711490e825ec0cbb6e3c7e27288607c632e603cc8a0faa9e",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-requests-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-ar-issues-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-en-issues-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-requests-visual.spec.ts-snapshots/admin-requests-zh-CN-issues-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-25",
+      "surface": "admin",
+      "route": "/admin/articles",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-25.png",
+      "approvedSourceSha256": "0c2e8ffda79e25ce0a04dc182ceb461cff8fdf45b6bf01b6336124b48aab6596",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-25.png",
+          "sha256": "0c2e8ffda79e25ce0a04dc182ceb461cff8fdf45b6bf01b6336124b48aab6596",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-content-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-content-visual.spec.ts-snapshots/admin-content-ar-articles-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-content-visual.spec.ts-snapshots/admin-content-en-articles-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-content-visual.spec.ts-snapshots/admin-content-zh-CN-articles-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-26",
+      "surface": "admin",
+      "route": "/admin/article-categories",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-26.png",
+      "approvedSourceSha256": "4cc419d7c4b5074294e9fb939eaa985d63438a5fc43c2101f760d20df452e8ab",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-26.png",
+          "sha256": "4cc419d7c4b5074294e9fb939eaa985d63438a5fc43c2101f760d20df452e8ab",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-content-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-content-visual.spec.ts-snapshots/admin-content-ar-categories-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-content-visual.spec.ts-snapshots/admin-content-en-categories-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-content-visual.spec.ts-snapshots/admin-content-zh-CN-categories-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-27",
+      "surface": "admin",
+      "route": "/admin/community",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-27.png",
+      "approvedSourceSha256": "3ae38d58b4f4b5d8fcee859ebd18ab8b72b76c1d441e30e985a021debe184292",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-27.png",
+          "sha256": "3ae38d58b4f4b5d8fcee859ebd18ab8b72b76c1d441e30e985a021debe184292",
+          "dimensions": {
+            "width": 6308,
+            "height": 3944
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3944
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-community-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-ar-posts-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-en-posts-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-zh-CN-posts-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-28",
+      "surface": "admin",
+      "route": "/admin/community/comments",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-28.png",
+      "approvedSourceSha256": "f69093f269413bd9a55a53fc81da8c8e9d4060a13ac0cb5210a6c5e8b5ce2211",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-28.png",
+          "sha256": "f69093f269413bd9a55a53fc81da8c8e9d4060a13ac0cb5210a6c5e8b5ce2211",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-community-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-ar-comments-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-en-comments-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-zh-CN-comments-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-29",
+      "surface": "admin",
+      "route": "/admin/community/moderation",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-29.png",
+      "approvedSourceSha256": "de5f52e9b2bf7aefb5e81756f2a3e682f2a60a4246a43ffb59915742bc96a796",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-29.png",
+          "sha256": "de5f52e9b2bf7aefb5e81756f2a3e682f2a60a4246a43ffb59915742bc96a796",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-community-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-ar-reports-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-en-reports-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-community-visual.spec.ts-snapshots/admin-community-zh-CN-reports-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-30",
+      "surface": "admin",
+      "route": "/admin/content/about",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-30.png",
+      "approvedSourceSha256": "1006634669cd92a0cbef3ce1aeb6030056d25b60d5aeede44babdbf2ee87f085",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-30.png",
+          "sha256": "1006634669cd92a0cbef3ce1aeb6030056d25b60d5aeede44babdbf2ee87f085",
+          "dimensions": {
+            "width": 6308,
+            "height": 6060
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 6060
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-cms-content-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-ar-about-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-en-about-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-zh-CN-about-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-31",
+      "surface": "admin",
+      "route": "/admin/content/team",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-31.png",
+      "approvedSourceSha256": "4cf482fc25e19b905ba95eaf1fd7fb2ef550e8674f5ec0ff57500a35ee951bcf",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-31.png",
+          "sha256": "4cf482fc25e19b905ba95eaf1fd7fb2ef550e8674f5ec0ff57500a35ee951bcf",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-cms-content-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-ar-team-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-en-team-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-zh-CN-team-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-32",
+      "surface": "admin",
+      "route": "/admin/content/population-counter",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-32.png",
+      "approvedSourceSha256": "c64309a3586633440c3cf32211e4744a1f86bb64c1fefd8f69d0653e8ab8e81a",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-32.png",
+          "sha256": "c64309a3586633440c3cf32211e4744a1f86bb64c1fefd8f69d0653e8ab8e81a",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-cms-content-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-ar-population-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-en-population-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-cms-content-visual.spec.ts-snapshots/admin-cms-content-zh-CN-population-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-33",
+      "surface": "admin",
+      "route": "/admin/ads/requests",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-33.png",
+      "approvedSourceSha256": "0a7fb9320b70c7ff9fd9bed2320e3f6b42a978f3bd782f9b031136853bd4de75",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-33.png",
+          "sha256": "0a7fb9320b70c7ff9fd9bed2320e3f6b42a978f3bd782f9b031136853bd4de75",
+          "dimensions": {
+            "width": 6308,
+            "height": 3824
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3824
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-ads-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-ar-requests-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-en-requests-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-zh-CN-requests-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-34",
+      "surface": "admin",
+      "route": "/admin/ads/payment-proofs/pending",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-34.png",
+      "approvedSourceSha256": "df16992078ffc3231918c6e7eac41e701cdaa88c90c0d7e81e43ac609ca9c97c",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-34.png",
+          "sha256": "df16992078ffc3231918c6e7eac41e701cdaa88c90c0d7e81e43ac609ca9c97c",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-ads-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-ar-pending-proofs-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-en-pending-proofs-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-zh-CN-pending-proofs-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-35",
+      "surface": "admin",
+      "route": "/admin/ads/payment-proofs/approved",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-35.png",
+      "approvedSourceSha256": "af7a00b09750988488ebc5300701f7542067b16659358861d658fe06a831f55d",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-35.png",
+          "sha256": "af7a00b09750988488ebc5300701f7542067b16659358861d658fe06a831f55d",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-ads-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-ar-approved-proofs-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-en-approved-proofs-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-zh-CN-approved-proofs-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-36",
+      "surface": "admin",
+      "route": "/admin/ads/calendar",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-36.png",
+      "approvedSourceSha256": "c98f7c55786349fae97023e8a6a8f585a0924b21d190fd9bce67aa7c5bd0d494",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-36.png",
+          "sha256": "c98f7c55786349fae97023e8a6a8f585a0924b21d190fd9bce67aa7c5bd0d494",
+          "dimensions": {
+            "width": 6308,
+            "height": 4392
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 4392
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-ads-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-ar-calendar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-en-calendar-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-zh-CN-calendar-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-37",
+      "surface": "admin",
+      "route": "/admin/ads/payments/pending-review",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-37.png",
+      "approvedSourceSha256": "5c9df6f25fa29613d6c252591d5827d2b108c3e91665aa4b1fbef8e06bd7cf32",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-37.png",
+          "sha256": "5c9df6f25fa29613d6c252591d5827d2b108c3e91665aa4b1fbef8e06bd7cf32",
+          "dimensions": {
+            "width": 6308,
+            "height": 3848
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3848
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-ads-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-ar-pending-review-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-en-pending-review-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-zh-CN-pending-review-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-38",
+      "surface": "admin",
+      "route": "/admin/ads/financial-review",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-38.png",
+      "approvedSourceSha256": "07351c58874047eb6f759edc591e32d407b70a0bb6c7aa26f4f9954278e6eb44",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-38.png",
+          "sha256": "07351c58874047eb6f759edc591e32d407b70a0bb6c7aa26f4f9954278e6eb44",
+          "dimensions": {
+            "width": 6308,
+            "height": 4520
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 4520
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-ads-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-ar-financial-review-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-en-financial-review-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-ads-visual.spec.ts-snapshots/admin-ads-zh-CN-financial-review-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-39",
+      "surface": "admin",
+      "route": "/admin/commissions",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-39.png",
+      "approvedSourceSha256": "baaa179ae8b2a084f9acf147776a9055701da6cc08ab55eb2cdb7b6e09f2357f",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-39.png",
+          "sha256": "baaa179ae8b2a084f9acf147776a9055701da6cc08ab55eb2cdb7b6e09f2357f",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-commissions-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-ar-policies-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-en-policies-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-zh-CN-policies-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-40",
+      "surface": "admin",
+      "route": "/admin/commissions/new",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-40.png",
+      "approvedSourceSha256": "4a8984abd08a2dce1ffe8a7ae25d52230e753d05a56da8086291f3c876e91612",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-40.png",
+          "sha256": "4a8984abd08a2dce1ffe8a7ae25d52230e753d05a56da8086291f3c876e91612",
+          "dimensions": {
+            "width": 6308,
+            "height": 3976
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3976
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-commissions-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-ar-new-policy-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-en-new-policy-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-zh-CN-new-policy-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-41",
+      "surface": "admin",
+      "route": "/admin/commissions/history",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-41.png",
+      "approvedSourceSha256": "b95131f4c0f53570478262e451280ea3a8a90d38264cb0ddc8c9a22d71b0b636",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-41.png",
+          "sha256": "b95131f4c0f53570478262e451280ea3a8a90d38264cb0ddc8c9a22d71b0b636",
+          "dimensions": {
+            "width": 6308,
+            "height": 4460
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 4460
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-commissions-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-ar-history-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-en-history-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-zh-CN-history-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-42",
+      "surface": "admin",
+      "route": "/admin/commissions/accounts/:id",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-42.png",
+      "approvedSourceSha256": "b01fab6f545970d0283a5b6b28e6e7c2435af46316d26c8a540762ab54cbf127",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-42.png",
+          "sha256": "b01fab6f545970d0283a5b6b28e6e7c2435af46316d26c8a540762ab54cbf127",
+          "dimensions": {
+            "width": 6308,
+            "height": 4528
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 4528
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-commissions-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-ar-account-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-en-account-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-zh-CN-account-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-43",
+      "surface": "admin",
+      "route": "/admin/commissions/exceptions",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-43.png",
+      "approvedSourceSha256": "43c11ca9a0b4d2d0f0450cbbecbbed343019d63835c4d173b3b7b167629f890c",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-43.png",
+          "sha256": "43c11ca9a0b4d2d0f0450cbbecbbed343019d63835c4d173b3b7b167629f890c",
+          "dimensions": {
+            "width": 6308,
+            "height": 3792
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3792
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-commissions-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-ar-exceptions-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-en-exceptions-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-zh-CN-exceptions-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-44",
+      "surface": "admin",
+      "route": "/admin/commissions/exceptions/new",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-44-list.png",
+      "approvedSourceSha256": "78895fad366fb1fab27171651cd65cbf0cf1f5efa22476878bbd0679da86e096",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-44-list.png",
+          "sha256": "78895fad366fb1fab27171651cd65cbf0cf1f5efa22476878bbd0679da86e096",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        },
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-44-create.png",
+          "sha256": "8375ce91056fdcad81aaf10b8a43c74532027dbcebeda2ac6ac52e8b21515cce",
+          "dimensions": {
+            "width": 6308,
+            "height": 3924
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-commissions-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-ar-new-exception-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-en-new-exception-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-zh-CN-new-exception-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-45",
+      "surface": "admin",
+      "route": "/admin/commissions/confirmations",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-45.png",
+      "approvedSourceSha256": "36ad104651c102f2c1bd5c19350d2f418396d8f6b92c4c86c0691c30bcc92368",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-45.png",
+          "sha256": "36ad104651c102f2c1bd5c19350d2f418396d8f6b92c4c86c0691c30bcc92368",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-commissions-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-ar-confirmations-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-en-confirmations-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-commissions-visual.spec.ts-snapshots/admin-commissions-zh-CN-confirmations-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-46",
+      "surface": "admin",
+      "route": "/admin/banners",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-46.png",
+      "approvedSourceSha256": "8c725c910055fb970869873fce6d93555af922e5dc45d8d1d040d372eb7ce318",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-46.png",
+          "sha256": "8c725c910055fb970869873fce6d93555af922e5dc45d8d1d040d372eb7ce318",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-home-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-ar-banners-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-en-banners-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-zh-CN-banners-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-47",
+      "surface": "admin",
+      "route": "/admin/banners/new",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-47.png",
+      "approvedSourceSha256": "077f6d300b7897fe8daaa8119aff376e1f709002a414321f57d54cef35c0ea93",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-47.png",
+          "sha256": "077f6d300b7897fe8daaa8119aff376e1f709002a414321f57d54cef35c0ea93",
+          "dimensions": {
+            "width": 6308,
+            "height": 4184
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 4184
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-home-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-ar-banner-create-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-en-banner-create-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-zh-CN-banner-create-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-48",
+      "surface": "admin",
+      "route": "/admin/content/tips",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-48.png",
+      "approvedSourceSha256": "8a1249d5cbb982cd7aec945f6bd50f2a35db1768509397bd9967f328f31d6400",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-48.png",
+          "sha256": "8a1249d5cbb982cd7aec945f6bd50f2a35db1768509397bd9967f328f31d6400",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-home-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-ar-tips-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-en-tips-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-zh-CN-tips-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-49",
+      "surface": "admin",
+      "route": "/admin/content/homepage",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-49.png",
+      "approvedSourceSha256": "702d4b019edd01d45b2355cb9cb9971444aa37619530d27826aaab6f72934176",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-49.png",
+          "sha256": "702d4b019edd01d45b2355cb9cb9971444aa37619530d27826aaab6f72934176",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-home-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-ar-homepage-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-en-homepage-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-home-visual.spec.ts-snapshots/admin-home-zh-CN-homepage-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-50",
+      "surface": "admin",
+      "route": "/admin/settings/platform",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-50.png",
+      "approvedSourceSha256": "6cb1eeb034a606b789c0abaa4be84c3c493f7a80f537c395c8c8d997e69e28a6",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-50.png",
+          "sha256": "6cb1eeb034a606b789c0abaa4be84c3c493f7a80f537c395c8c8d997e69e28a6",
+          "dimensions": {
+            "width": 6308,
+            "height": 5464
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 5464
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-settings-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-ar-platform-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-en-platform-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-zh-CN-platform-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-51",
+      "surface": "admin",
+      "route": "/admin/settings/contact",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-51.png",
+      "approvedSourceSha256": "c42687833b1ba9d4922e2347ff69e991b8f507e709e746ae10ebb1f5bb6a89f9",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-51.png",
+          "sha256": "c42687833b1ba9d4922e2347ff69e991b8f507e709e746ae10ebb1f5bb6a89f9",
+          "dimensions": {
+            "width": 6308,
+            "height": 4432
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 4432
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-settings-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-ar-contact-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-en-contact-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-zh-CN-contact-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-52",
+      "surface": "admin",
+      "route": "/admin/settings/social",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-52.png",
+      "approvedSourceSha256": "6d46faa82f768e15b1b312c95497c66dafa78948de806029cb436addd82aa8a9",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-52.png",
+          "sha256": "6d46faa82f768e15b1b312c95497c66dafa78948de806029cb436addd82aa8a9",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-settings-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-ar-social-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-en-social-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-zh-CN-social-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-53",
+      "surface": "admin",
+      "route": "/admin/settings/properties",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-53.png",
+      "approvedSourceSha256": "6998e173644f7044a7568d45735d74af115beca79eda31847005b0bf37618bc9",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-53.png",
+          "sha256": "6998e173644f7044a7568d45735d74af115beca79eda31847005b0bf37618bc9",
+          "dimensions": {
+            "width": 6308,
+            "height": 4672
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 4672
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-settings-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-ar-properties-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-en-properties-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-zh-CN-properties-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-55",
+      "surface": "admin",
+      "route": "/admin/settings/advertising",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-55.png",
+      "approvedSourceSha256": "1d397c30f51a2e7ff0aada432a99fac703ac593ac6b274f91d756f981e71705c",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-55.png",
+          "sha256": "1d397c30f51a2e7ff0aada432a99fac703ac593ac6b274f91d756f981e71705c",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-settings-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-ar-advertising-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-en-advertising-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-zh-CN-advertising-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-56",
+      "surface": "admin",
+      "route": "/admin/settings/seo",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-56.png",
+      "approvedSourceSha256": "2a22b48aec042d2377be2fc6e9308dd7de1716808cd05e0484e2282218a29b59",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-56.png",
+          "sha256": "2a22b48aec042d2377be2fc6e9308dd7de1716808cd05e0484e2282218a29b59",
+          "dimensions": {
+            "width": 6308,
+            "height": 4816
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 4816
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-settings-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-ar-seo-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-en-seo-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-zh-CN-seo-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-57",
+      "surface": "admin",
+      "route": "/admin/settings/privacy-security",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-57.png",
+      "approvedSourceSha256": "dd66b470135439c3b63f5e8d45acdfc4b079ce9136919f31fb45af6223279342",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-57.png",
+          "sha256": "dd66b470135439c3b63f5e8d45acdfc4b079ce9136919f31fb45af6223279342",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-settings-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-ar-privacy-security-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-en-privacy-security-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-zh-CN-privacy-security-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-58",
+      "surface": "admin",
+      "route": "/admin/settings/display",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-58.png",
+      "approvedSourceSha256": "a1b4895e151603d86d80ae1e434bc72b76a7cfa718ca2515c04d4f0741404992",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-58.png",
+          "sha256": "a1b4895e151603d86d80ae1e434bc72b76a7cfa718ca2515c04d4f0741404992",
+          "dimensions": {
+            "width": 6308,
+            "height": 6064
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 6064
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-settings-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-ar-display-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-en-display-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-settings-visual.spec.ts-snapshots/admin-settings-zh-CN-display-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-59",
+      "surface": "admin",
+      "route": "/admin/admin-users",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-59.png",
+      "approvedSourceSha256": "1478edc0a29205d022c7d8a229dca0e39bf17d6c942d6c2a86ae21f07b131f3d",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-59.png",
+          "sha256": "1478edc0a29205d022c7d8a229dca0e39bf17d6c942d6c2a86ae21f07b131f3d",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-rbac-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-users-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-users-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-users-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-60",
+      "surface": "admin",
+      "route": "/admin/admin-users/new",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-60.png",
+      "approvedSourceSha256": "3de13f6732d956ca46a89dbe7b4a67152f3525e391e73bc1492b73a840f83027",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-60.png",
+          "sha256": "3de13f6732d956ca46a89dbe7b4a67152f3525e391e73bc1492b73a840f83027",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-rbac-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-create-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-create-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-create-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-61",
+      "surface": "admin",
+      "route": "/admin/admin-users/:id",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-61.png",
+      "approvedSourceSha256": "87c0db281772cefbdc1e5369e8b0c66d019cec84ac09cbefb2f4a521267c82b1",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-61.png",
+          "sha256": "87c0db281772cefbdc1e5369e8b0c66d019cec84ac09cbefb2f4a521267c82b1",
+          "dimensions": {
+            "width": 6308,
+            "height": 3888
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3888
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-rbac-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-detail-super-admin-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-detail-super-admin-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-detail-super-admin-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [
+        "Added a dedicated super-admin detail visual fixture and evidence path so the role-specific source is not represented by the standard-role baseline."
+      ],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-62",
+      "surface": "admin",
+      "route": "/admin/admin-users/:id",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-62.png",
+      "approvedSourceSha256": "e0be7cd1959283e160853c21549a14385d49da432c097f386e158c90c72eed31",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-62.png",
+          "sha256": "e0be7cd1959283e160853c21549a14385d49da432c097f386e158c90c72eed31",
+          "dimensions": {
+            "width": 6308,
+            "height": 3888
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3888
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-rbac-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-detail-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-detail-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-user-detail-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-63",
+      "surface": "admin",
+      "route": "/admin/roles",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-63.png",
+      "approvedSourceSha256": "a7806604ad0c7733eff656a61fc6321048e15056331b956755134761b98f4857",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-63.png",
+          "sha256": "a7806604ad0c7733eff656a61fc6321048e15056331b956755134761b98f4857",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-rbac-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-roles-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-roles-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-roles-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-64",
+      "surface": "admin",
+      "route": "/admin/roles/:id",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-64.png",
+      "approvedSourceSha256": "8353450c81dac7ec86944941c40a5f4c844a9afb8636b022d76552804e2c5258",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-64.png",
+          "sha256": "8353450c81dac7ec86944941c40a5f4c844a9afb8636b022d76552804e2c5258",
+          "dimensions": {
+            "width": 6308,
+            "height": 12452
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 12452
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-rbac-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-role-detail-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-role-detail-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-rbac-visual.spec.ts-snapshots/admin-rbac-role-detail-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-65",
+      "surface": "admin",
+      "route": "/admin/notifications",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-65.png",
+      "approvedSourceSha256": "b242610cf4a178dfa11b7dc8c4f19f2bdffa6f32d4536c402bf0e76af22ff9bf",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-65.png",
+          "sha256": "b242610cf4a178dfa11b7dc8c4f19f2bdffa6f32d4536c402bf0e76af22ff9bf",
+          "dimensions": {
+            "width": 6308,
+            "height": 4996
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 4996
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-notifications-audit-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-notifications-audit-visual.spec.ts-snapshots/admin-notifications-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-notifications-audit-visual.spec.ts-snapshots/admin-notifications-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-notifications-audit-visual.spec.ts-snapshots/admin-notifications-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    },
+    {
+      "screenId": "ADM-66",
+      "surface": "admin",
+      "route": "/admin/audit-logs",
+      "approvedSourcePath": "docs/design_sources/final_screens/admin/ADM-66.png",
+      "approvedSourceSha256": "b1c6ba29bf170804299f2f4ae6b967a615885d3f96b73c19653259cf0c662cc7",
+      "approvedSources": [
+        {
+          "path": "docs/design_sources/final_screens/admin/ADM-66.png",
+          "sha256": "b1c6ba29bf170804299f2f4ae6b967a615885d3f96b73c19653259cf0c662cc7",
+          "dimensions": {
+            "width": 6308,
+            "height": 3776
+          }
+        }
+      ],
+      "sourceDimensions": {
+        "width": 6308,
+        "height": 3776
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "runtimeStatesRequired": [
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "success"
+      ],
+      "implementationStatus": "verified",
+      "comparisonStatus": "verified",
+      "comparisonMethod": "Direct source inspection plus deterministic Admin Desktop locale visual regression and route/RBAC assertions.",
+      "runtimeEvidence": [
+        "apps/web/tests/e2e/admin-notifications-audit-visual.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/admin-notifications-audit-visual.spec.ts-snapshots/admin-audit-log-ar-desktop-ar-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-notifications-audit-visual.spec.ts-snapshots/admin-audit-log-en-desktop-en-win32.png",
+        "apps/web/tests/e2e/__snapshots__/admin-notifications-audit-visual.spec.ts-snapshots/admin-audit-log-zh-CN-desktop-zh-win32.png"
+      ],
+      "materialDifferences": [],
+      "repairs": [],
+      "contractBoundaryNotes": [],
+      "remainingGaps": []
+    }
+  ]
+}

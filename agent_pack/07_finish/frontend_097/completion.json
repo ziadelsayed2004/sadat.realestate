@@ -1,0 +1,183 @@
+{
+  "taskId": "frontend_097",
+  "summary": "Implemented the official full screenshot-bearing visual and accessibility matrix runners, enforced a client bundle budget with route-aware code splitting, repaired the stale Admin overview accessibility selector, and verified the full Web browser, performance, security, locale, UAT, API-artifact, and repository gates.",
+  "filesChanged": [
+    "apps/web/package.json",
+    "apps/web/vite.config.ts",
+    "apps/web/scripts/run-visual-matrix.mjs",
+    "apps/web/scripts/run-accessibility-matrix.mjs",
+    "apps/web/scripts/check-bundle-budget.mjs",
+    "apps/web/tests/frontend-097-assurance.vitest.test.ts",
+    "apps/web/tests/e2e/admin-overview-accessibility.spec.ts",
+    "apps/web/tests/final-release-gate.vitest.test.ts",
+    "agent_pack/07_finish/frontend_097/design-comparison.json",
+    "agent_pack/08_reality_sync/FINAL_RELEASE_MANIFEST.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- frontend-097-assurance final-release-gate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "2 test files and 3 tests passed, including official matrix discovery and release-manifest consistency."
+    },
+    {
+      "command": "npx.cmd playwright test --config apps/web/playwright.config.ts apps/web/tests/e2e/admin-overview-accessibility.spec.ts --project=desktop-ar",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Focused stale-selector repair passed."
+    },
+    {
+      "command": "node scripts/run-visual-matrix.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "apps/web working directory; 42 screenshot-bearing specs executed, 1053 cases total, 531 passed and 522 approved-scope skips; no snapshots were updated."
+    },
+    {
+      "command": "npm.cmd run test:a11y --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "19 accessibility specs executed, 288 cases total, 174 passed and 114 approved-scope skips."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Unfiltered Web E2E matrix passed: 2997 cases, 1293 passed and 1704 approved-scope skips, one configured worker."
+    },
+    {
+      "command": "npm.cmd run test:performance --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "18 performance cases passed with measured browser timing and resource metrics."
+    },
+    {
+      "command": "npm.cmd run test:security --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "27 browser/session security cases passed."
+    },
+    {
+      "command": "npm.cmd run test:locale --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Arabic RTL, English LTR, and Simplified Chinese LTR checks passed."
+    },
+    {
+      "command": "npm.cmd run test:uat --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "UAT binding and matrix tests passed: 4 tests."
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web TypeScript check passed."
+    },
+    {
+      "command": "npm.cmd run lint --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Web lint passed."
+    },
+    {
+      "command": "npm.cmd run test --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "65 Vitest files and 380 tests passed; 76 auxiliary tests passed."
+    },
+    {
+      "command": "npm.cmd run build --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Production Web build passed with route-aware chunks."
+    },
+    {
+      "command": "npm.cmd run test:bundle --workspace apps/web",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Largest JavaScript chunk 452858 bytes below 665600; total JavaScript 1508911 below 2560000; total CSS 273550 below 409600."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, and Web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Repository lint gate passed."
+    },
+    {
+      "command": "npm.cmd test",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root API and Web test gates passed."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Root contracts, API, and Web build gate passed."
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "0 high-or-higher vulnerabilities reported."
+    },
+    {
+      "command": "npm.cmd run env:check",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Passed with process-local non-production values only; no .env or secret was read."
+    },
+    {
+      "command": "npm.cmd run api:inventory",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Runtime API inventory passed."
+    },
+    {
+      "command": "npm.cmd run openapi:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "OpenAPI validation returned OPENAPI_VALID."
+    },
+    {
+      "command": "npm.cmd run postman:validate",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Postman validation returned POSTMAN_VALID."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Agent Pack audit reported zero errors."
+    }
+  ],
+  "sourceEvidence": [
+    "agent_pack/01_product/SCREEN_COVERAGE.json — 131 canonical Screen IDs",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json — 130 local approved exports and ADM-54 external-only provenance",
+    "agent_pack/07_finish/frontend_097/design-comparison.json — one traceable entry per canonical Screen ID",
+    "apps/web/scripts/run-visual-matrix.mjs — all discovered screenshot-bearing Playwright specs",
+    "apps/web/scripts/run-accessibility-matrix.mjs — all discovered accessibility Playwright specs",
+    "apps/web/tests/e2e/admin-overview-accessibility.spec.ts — Admin overview accessibility regression",
+    "apps/web/tests/e2e — unfiltered browser matrix"
+  ],
+  "scopeNotes": [
+    "The initial visual runner invocation exposed and was repaired as a path-resolution defect in the new harness; the repaired runner passed the complete matrix.",
+    "The initial expanded accessibility run exposed a stale Admin overview metric selector after the truthful frontend_095 overview expansion; the selector was narrowed to the approved KPI section and the focused and complete accessibility matrices passed.",
+    "The release-manifest test now accepts a truthful empty selected-task state when the remaining post-release frontier is blocked, while still requiring the blocked dependency to be present.",
+    "Runtime snapshot baselines were not bulk-updated. Existing visual baselines remain regression evidence only."
+  ],
+  "knownGaps": [
+    "ADM-54 direct approved-source comparison remains unverified because frontend_096 is blocked by the unavailable exact source.",
+    "Non-Desktop Admin, Provider, and Seeker cases are approved-scope skips and are not claimed as completed coverage.",
+    "backend_139 production-parity readiness remains blocked; this task does not claim production readiness or full-platform completion."
+  ],
+  "completedAt": "2026-08-24T00:33:08.1152458Z"
+}
