@@ -1,6 +1,7 @@
 import {
   AUTH_ERROR_CODES,
   adminLoginRequestSchema,
+  normalizedEmailSchema,
   normalizedPhoneSchema,
   seekerRegistrationRequestSchema,
   type AdminLoginRequest,
@@ -50,6 +51,7 @@ export interface AuthFlowClient {
   loginAdmin(input: AdminLoginRequest): Promise<AuthSnapshot>;
   sendOtp(input: {
     readonly phone: string;
+    readonly email: string;
     readonly roleType: OtpRoleType;
     readonly purpose: OtpPurpose;
   }): Promise<OtpSendData>;
@@ -272,13 +274,18 @@ interface OtpPageProps {
   readonly roleType: OtpRoleType;
   readonly purpose: OtpPurpose;
   readonly onAuthenticated: (snapshot: AuthSnapshot) => void;
-  readonly onRegistrationVerified?: ((verificationToken: string, phone: string) => void) | undefined;
+  readonly onRegistrationVerified?: ((
+    verificationToken: string,
+    phone: string,
+    email: string
+  ) => void) | undefined;
   readonly lockRoleType?: boolean | undefined;
 }
 
 function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthenticated, onRegistrationVerified, lockRoleType = false }: OtpPageProps) {
   const copy = getAuthCopy(locale);
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [roleType, setRoleType] = useState<OtpRoleType>(initialRoleType);
   const [stage, setStage] = useState<'request' | 'verify'>('request');
   const [challenge, setChallenge] = useState<OtpSendData | undefined>();
@@ -292,6 +299,9 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
   const cooldownSeconds = Math.max(0, Math.ceil((cooldownUntil - now) / 1000));
   const normalizedPhone = normalizedPhoneSchema.safeParse(phone).success
     ? normalizedPhoneSchema.parse(phone)
+    : undefined;
+  const normalizedEmail = normalizedEmailSchema.safeParse(email).success
+    ? normalizedEmailSchema.parse(email)
     : undefined;
 
   useEffect(() => {
@@ -310,7 +320,8 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
   const sendCode = useCallback(async () => {
     if (cooldownSeconds > 0) return;
     const parsedPhone = normalizedPhoneSchema.safeParse(phone);
-    if (!parsedPhone.success) {
+    const parsedEmail = normalizedEmailSchema.safeParse(email);
+    if (!parsedPhone.success || !parsedEmail.success) {
       setState('error');
       setError(inputError(copy));
       return;
@@ -319,8 +330,14 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
     setState('loading');
     setError(undefined);
     try {
-      const response = await client.sendOtp({ phone: parsedPhone.data, roleType, purpose });
+      const response = await client.sendOtp({
+        phone: parsedPhone.data,
+        email: parsedEmail.data,
+        roleType,
+        purpose
+      });
       setPhone(parsedPhone.data);
+      setEmail(parsedEmail.data);
       setChallenge(response);
       setCode(Array.from({ length: OTP_LENGTH }, () => ''));
       setCooldownUntil(Date.now() + response.retryAfterSeconds * 1_000);
@@ -336,10 +353,15 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
         setNow(Date.now());
       }
     }
-  }, [client, copy, cooldownSeconds, phone, purpose, roleType]);
+  }, [client, copy, cooldownSeconds, email, phone, purpose, roleType]);
 
   const verifyCode = useCallback(async () => {
-    if (challenge === undefined || normalizedPhone === undefined || code.join('').length !== OTP_LENGTH) {
+    if (
+      challenge === undefined
+      || normalizedPhone === undefined
+      || normalizedEmail === undefined
+      || code.join('').length !== OTP_LENGTH
+    ) {
       setState('error');
       setError(inputError(copy));
       return;
@@ -349,6 +371,7 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
     setError(undefined);
     const request: OtpVerifyRequest = {
       phone: normalizedPhone,
+      email: normalizedEmail,
       roleType,
       purpose,
       challengeId: challenge.challengeId,
@@ -360,14 +383,14 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
       setVerified(true);
       if (result.outcome === 'authenticated') onAuthenticated(result.snapshot);
       if (result.outcome === 'verified' && onRegistrationVerified !== undefined) {
-        onRegistrationVerified(result.verificationToken, normalizedPhone);
+        onRegistrationVerified(result.verificationToken, normalizedPhone, normalizedEmail);
       }
     } catch (requestError: unknown) {
       const nextError = authError(requestError, copy);
       setState(nextError.state);
       setError(nextError);
     }
-  }, [challenge, client, code, copy, normalizedPhone, onAuthenticated, onRegistrationVerified, purpose, roleType]);
+  }, [challenge, client, code, copy, normalizedEmail, normalizedPhone, onAuthenticated, onRegistrationVerified, purpose, roleType]);
 
   function handleRequestSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
@@ -421,6 +444,19 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
             {error === undefined ? null : <StateNotice error={error} copy={copy} onRetry={() => void sendCode()} />}
             <form className="auth-form" onSubmit={handleRequestSubmit} noValidate>
               <Input
+                id="auth-otp-email"
+                label={copy.identifierLabel}
+                type="email"
+                name="email"
+                autoComplete="email"
+                inputMode="email"
+                placeholder={copy.identifierPlaceholder}
+                value={email}
+                onChange={event => setEmail(event.currentTarget.value)}
+                required
+                state={state === 'error' && normalizedEmail === undefined ? 'error' : 'default'}
+              />
+              <Input
                 id="auth-phone"
                 label={copy.phoneLabel}
                 type="tel"
@@ -460,9 +496,9 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
     <section className="auth-page auth-page--otp" data-screen-id="AUTH-05" data-state={state}>
       <div className="auth-card auth-card--form">
         <header className="auth-card__heading">
-          <span className="auth-card__icon" aria-hidden="true">☎</span>
+          <span className="auth-card__icon" aria-hidden="true">✉</span>
           <h1>{copy.otpTitle}</h1>
-          <p>{copy.otpDescription} <strong dir="ltr">{phone}</strong></p>
+          <p>{copy.otpDescription} <strong dir="ltr">{email}</strong></p>
         </header>
         <div className="auth-card__body">
           {error === undefined ? null : <StateNotice error={error} copy={copy} onRetry={() => void verifyCode()} />}
@@ -580,12 +616,13 @@ interface SeekerRegistrationFormProps {
   readonly client: AuthFlowClient;
   readonly locale: SupportedLocale;
   readonly phone: string;
+  readonly email: string;
   readonly verificationToken: string;
   readonly onRegistered: (snapshot: AuthSnapshot) => void;
   readonly onRestart: () => void;
 }
 
-function SeekerRegistrationForm({ client, locale, phone, verificationToken, onRegistered, onRestart }: SeekerRegistrationFormProps) {
+function SeekerRegistrationForm({ client, locale, phone, email, verificationToken, onRegistered, onRestart }: SeekerRegistrationFormProps) {
   const copy = getAuthCopy(locale);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -657,6 +694,17 @@ function SeekerRegistrationForm({ client, locale, phone, verificationToken, onRe
               state={state === 'error' && lastName.trim() === '' ? 'error' : 'default'}
             />
             <Input
+              id="auth-registration-email"
+              label={copy.identifierLabel}
+              name="email"
+              type="email"
+              autoComplete="email"
+              value={email}
+              readOnly
+              dir="ltr"
+              state="success"
+            />
+            <Input
               id="auth-registration-phone"
               label={copy.verifiedPhoneLabel}
               name="phone"
@@ -721,6 +769,7 @@ function SeekerRegistrationFlow({ client, locale, onAuthenticated, restartRequir
   const [showRestartNotice, setShowRestartNotice] = useState(restartRequired);
   const [verificationToken, setVerificationToken] = useState<string | undefined>();
   const [phone, setPhone] = useState<string | undefined>();
+  const [email, setEmail] = useState<string | undefined>();
   const [snapshot, setSnapshot] = useState<AuthSnapshot | undefined>();
   const copy = getAuthCopy(locale);
 
@@ -730,9 +779,14 @@ function SeekerRegistrationFlow({ client, locale, onAuthenticated, restartRequir
     setStep('otp');
   }
 
-  const handleRegistrationVerified = useCallback((token: string, verifiedPhone: string) => {
+  const handleRegistrationVerified = useCallback((
+    token: string,
+    verifiedPhone: string,
+    verifiedEmail: string
+  ) => {
     setVerificationToken(token);
     setPhone(verifiedPhone);
+    setEmail(verifiedEmail);
     replaceAuthUrl('/auth/register/seeker');
     setStep('form');
   }, []);
@@ -740,6 +794,7 @@ function SeekerRegistrationFlow({ client, locale, onAuthenticated, restartRequir
   const restart = useCallback(() => {
     setVerificationToken(undefined);
     setPhone(undefined);
+    setEmail(undefined);
     setSnapshot(undefined);
     setShowRestartNotice(false);
     replaceAuthUrl('/auth/register');
@@ -767,12 +822,18 @@ function SeekerRegistrationFlow({ client, locale, onAuthenticated, restartRequir
       />
     );
   }
-  if (step === 'form' && verificationToken !== undefined && phone !== undefined) {
+  if (
+    step === 'form'
+    && verificationToken !== undefined
+    && phone !== undefined
+    && email !== undefined
+  ) {
     return (
       <SeekerRegistrationForm
         client={client}
         locale={locale}
         phone={phone}
+        email={email}
         verificationToken={verificationToken}
         onRegistered={handleRegistered}
         onRestart={restart}

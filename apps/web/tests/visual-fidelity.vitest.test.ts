@@ -49,7 +49,7 @@ function sha256(filePath: string): string {
 }
 
 describe('release visual fidelity source matrix', () => {
-  it('maps every registered Screen ID to an approved source, owner-authored pending source, or recorded waiver', () => {
+  it('maps every registered Screen ID to an approved source, owner-authored approved source, or recorded waiver', () => {
     const manifest = readJson<DesignSourceManifest>(manifestPath);
     const registry = readJson<Array<{ id: string }>>(registryPath);
     const coverage = readJson<Array<{ id: string }>>(coveragePath);
@@ -70,7 +70,7 @@ describe('release visual fidelity source matrix', () => {
       expect(screen.locales, screen.id).toEqual(['ar', 'en', 'zh-CN']);
 
       if (screen.id === 'ADM-54') {
-        expect(screen.visualSourceStatus).toBe('OWNER_AUTHORED_LOCAL_REVIEW_PENDING');
+        expect(screen.visualSourceStatus).toBe('OWNER_AUTHORED_LOCAL_REVIEW_APPROVED');
         expect(screen.sourceStatus).toBe('OWNER_AUTHORED_PENDING_REVIEW');
         expect(screen.localSources.map(source => source.localPath)).toEqual([
           'docs/design_sources/final_screens/admin/ADM-54.owner-authored.html',

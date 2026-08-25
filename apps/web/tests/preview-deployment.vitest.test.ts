@@ -75,12 +75,12 @@ async function stopPreviewServer(child: ChildProcess): Promise<void> {
 }
 
 describe('secure preview build and deployment', () => {
-  it('keeps API, Web client, SSR, and container release surfaces explicit and secret-free', () => {
+  it('keeps API, Web client, SSR, and native release surfaces explicit and secret-free', () => {
     const rootPackage = readJson<PackageManifest>(rootPackagePath);
     const webPackage = readJson<PackageManifest>(webPackagePath);
     const apiPackage = readJson<PackageManifest>(apiPackagePath);
-    const dockerfile = readText(path.join(repositoryRoot, 'Dockerfile'));
-    const compose = readText(path.join(repositoryRoot, 'docker-compose.yml'));
+    const apiService = readText(path.join(repositoryRoot, 'deploy/systemd/elsadat-api.service'));
+    const nginx = readText(path.join(repositoryRoot, 'deploy/nginx/elsadatrealestate.conf'));
 
     expect(rootPackage.scripts?.build).toContain('build --workspace apps/api');
     expect(rootPackage.scripts?.build).toContain('build --workspace apps/web');
@@ -90,14 +90,13 @@ describe('secure preview build and deployment', () => {
     expect(apiPackage.scripts?.build).toBe('tsc -p tsconfig.json');
     expect(apiPackage.scripts?.start).toBe('node dist/server.js');
 
-    expect(dockerfile).toMatch(/FROM node:24-bookworm-slim AS dependencies/u);
-    expect(dockerfile).toMatch(/FROM dependencies AS build/u);
-    expect(dockerfile).toMatch(/FROM node:24-bookworm-slim AS runtime/u);
-    expect(dockerfile).toMatch(/USER node/u);
-    expect(dockerfile).toMatch(/HEALTHCHECK/u);
-    expect(dockerfile).not.toMatch(/AUTH_ACCESS_TOKEN_SECRET\s*=/u);
-    expect(compose).toMatch(/AUTH_ACCESS_TOKEN_SECRET:\s*"\$\{AUTH_ACCESS_TOKEN_SECRET:\?/u);
-    expect(compose).not.toMatch(/AUTH_ACCESS_TOKEN_SECRET:\s*"(?!\$\{)/u);
+    expect(apiService).toMatch(/User=elsadat/u);
+    expect(apiService).toMatch(/NoNewPrivileges=true/u);
+    expect(apiService).toMatch(/ExecStart=\/usr\/bin\/node apps\/api\/dist\/server\.js/u);
+    expect(apiService).not.toMatch(/AUTH_ACCESS_TOKEN_SECRET\s*=/u);
+    expect(nginx).toMatch(/proxy_pass http:\/\/127\.0\.0\.1:3000;/u);
+    expect(nginx).toMatch(/proxy_pass http:\/\/127\.0\.0\.1:4173;/u);
+    expect(nginx).not.toMatch(/SMTP_PASSWORD|AUTH_ACCESS_TOKEN_SECRET/u);
   });
 
   it('serves the built SSR shell, locale direction, crawler documents, and static assets from a preview-safe process', async () => {
@@ -161,6 +160,35 @@ describe('secure preview build and deployment', () => {
       await missing.text();
       expect(missing.status).toBe(404);
       expect(missing.headers.get('x-frame-options')).toBe('DENY');
+    } finally {
+      await stopPreviewServer(child);
+      server.listen({ onUnhandledRequest: 'error' });
+    }
+  }, 15_000);
+
+  it('keeps the development CSP compatible with Vite hydration and HMR', async () => {
+    const port = await unusedPort();
+    const origin = `http://127.0.0.1:${port}`;
+    const child = spawn(process.execPath, ['server.mjs', '--mode', 'development'], {
+      cwd: webRoot,
+      env: {
+        ...process.env,
+        WEB_HOST: '127.0.0.1',
+        WEB_PORT: String(port),
+        WEB_DISABLE_HMR: 'true'
+      },
+      stdio: ['ignore', 'pipe', 'pipe'],
+      windowsHide: true
+    });
+
+    server.close();
+    try {
+      await waitForPreviewServer(child, `${origin}/`);
+      const response = await fetch(`${origin}/`);
+      const csp = response.headers.get('content-security-policy') ?? '';
+      expect(response.status).toBe(200);
+      expect(csp).toContain("script-src 'self' 'unsafe-inline'");
+      expect(csp).toContain("connect-src 'self' ws: wss:");
     } finally {
       await stopPreviewServer(child);
       server.listen({ onUnhandledRequest: 'error' });

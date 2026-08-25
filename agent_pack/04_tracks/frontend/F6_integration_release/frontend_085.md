@@ -6,7 +6,7 @@
 | Phase | F6_integration_release |
 | Area | security |
 | Kind | security |
-| Sequence | 184 / 197 |
+| Sequence | 185 / 198 |
 | Depends on | `frontend_084` |
 
 ## Goal

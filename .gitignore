@@ -8,6 +8,8 @@ coverage/
 .env
 .env.*
 !.env.example
-docs/design_sources
+!/.env.local.example
+!/.env.production.example
 apps/web/test-results/
 apps/web/playwright-report/
+.local/

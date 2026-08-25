@@ -5,15 +5,17 @@
   "sourceType": "owner-authored-new-design",
   "historicalSourceStatus": "unavailable-not-recovered",
   "ownerDecisionId": "DESIGN-DECISION-ADM-54-AUTHOR-001",
-  "ownerReviewStatus": "pending-explicit-review",
-  "comparisonPolicy": "This is a new local design authorized by the Project Owner. It is not a recovered historical Figma or Drive source. The runtime comparison is structured evidence for owner review and does not claim direct historical pixel comparison.",
+  "ownerReviewStatus": "approved",
+  "ownerApprovalRecordedAt": "2026-08-25",
+  "ownerApprovalEvidence": "OWNER_DECISION_ADM_54: I approve docs/design_sources/final_screens/admin/ADM-54.owner-authored.png and ADM-54.owner-authored.html as the new authoritative ADM-54 Request Settings design source. The historical frame is confirmed absent from Figma, and no historical pixel-parity claim is made.",
+  "comparisonPolicy": "This is a new local design authorized by the Project Owner. It is not a recovered historical Figma or Drive source. The deterministic runtime comparison is verified as structured evidence under the approved source; documented shell-width and tab-wrapping differences are not converted into a historical pixel-parity claim.",
   "entries": [
     {
       "screenId": "ADM-54",
       "surface": "admin",
       "englishName": "Request Settings",
       "route": "/admin/settings/requests",
-      "sourceStatus": "owner-authored-pending-review",
+      "sourceStatus": "owner-authored-approved",
       "ownerDecisionId": "DESIGN-DECISION-ADM-54-AUTHOR-001",
       "ownerAuthoredSource": {
         "htmlPath": "docs/design_sources/final_screens/admin/ADM-54.owner-authored.html",
@@ -59,7 +61,7 @@
         "disabled"
       ],
       "implementationStatus": "implemented",
-      "comparisonStatus": "pending-owner-review",
+      "comparisonStatus": "verified-owner-approved-structured",
       "comparisonMethod": "Rendered the owner-authored HTML source at 1440x1080 and captured the implemented route with deterministic test-only API responses at the same browser viewport. Because the runtime uses the existing application shell and produces a taller full-page document, differences are recorded structurally; no pixel-difference percentage is asserted.",
       "runtimeEvidence": [
         {
@@ -203,9 +205,9 @@
         "fallbackVerified": true
       },
       "remainingGaps": [
-        "Explicit Project Owner review and approval of the new local ADM-54 design and this runtime comparison are pending.",
+        "The Project Owner approved the owner-authored source; the runtime comparison remains structured evidence rather than a historical pixel-parity claim.",
         "The historical Figma/Drive ADM-54 source remains unavailable; no direct historical pixel comparison was performed.",
-        "The documented shell-width and tab-wrapping differences require owner direction before frontend_096 can be marked Complete."
+        "The documented shell-width and tab-wrapping differences remain visible structural debt for any future shared-shell refinement."
       ]
     }
   ]

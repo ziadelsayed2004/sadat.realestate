@@ -73,10 +73,10 @@ export const SECURITY_ASSURANCE_FINDINGS: readonly SecurityAssuranceFinding[] = 
   },
   {
     id: 'platform-supply-chain', domain: 'platform', category: 'platform_supply_chain', status: 'partial',
-    title: 'Lockfile, dependency audit, static checks, and non-root image guidance are present',
-    evidence: ['package-lock.json', 'Dockerfile', 'docs/api/deployment.md'],
-    gap: 'External image scanning, signature verification, and registry policy are deployment checks rather than repository runtime behavior',
-    ownerAction: 'Pin approved image digests and run registry/image scanning in CI before release'
+    title: 'Lockfile, dependency audit, static checks, restricted system services, and atomic release guidance are present',
+    evidence: ['package-lock.json', 'deploy/systemd/elsadat-api.service', 'deploy/native/deploy-release.sh', 'docs/api/deployment.md'],
+    gap: 'Target-host package provenance and operating-system security updates require live Ubuntu verification',
+    ownerAction: 'Record target package versions, security updates, and release checks before approval'
   },
   {
     id: 'platform-availability', domain: 'platform', category: 'platform_availability', status: 'partial',

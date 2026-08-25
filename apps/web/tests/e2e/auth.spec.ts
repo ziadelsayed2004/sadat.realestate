@@ -32,8 +32,10 @@ async function routeAuthApi(page: import('@playwright/test').Page) {
   });
   await page.route('**/api/v1/auth/otp/send', async route => {
     expect(route.request().method()).toBe('POST');
-    const body = route.request().postDataJSON() as { phone?: string; roleType?: string; purpose?: string };
-    expect(body).toEqual({ phone: '+201000000000', roleType: 'seeker', purpose: 'registration' });
+    const body = route.request().postDataJSON() as { phone?: string; email?: string; roleType?: string; purpose?: string };
+    expect(body).toEqual({
+      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'registration'
+    });
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -45,9 +47,10 @@ async function routeAuthApi(page: import('@playwright/test').Page) {
   });
   await page.route('**/api/v1/auth/otp/verify', async route => {
     expect(route.request().method()).toBe('POST');
-    const body = route.request().postDataJSON() as { phone?: string; roleType?: string; purpose?: string; challengeId?: string; code?: string };
+    const body = route.request().postDataJSON() as { phone?: string; email?: string; roleType?: string; purpose?: string; challengeId?: string; code?: string };
     expect(body).toEqual({
       phone: '+201000000000',
+      email: 'seeker@example.com',
       roleType: 'seeker',
       purpose: 'registration',
       challengeId: '00000000-0000-4000-8000-000000000001',
@@ -91,6 +94,7 @@ test('phone verification sends, cools down, focuses digits, and verifies without
   await routeAuthApi(page);
   await page.goto(`/auth/verify-phone?lang=${encodeURIComponent(locale)}&purpose=registration&roleType=seeker`);
 
+  await page.locator('#auth-otp-email').fill('seeker@example.com');
   const phone = page.locator('#auth-phone');
   await phone.fill('+20 100 000 0000');
   await page.locator('[data-screen-id="AUTH-04"] button[type="submit"]').click();
@@ -118,6 +122,7 @@ test('auth controls expose keyboard focus and accessible labels', async ({ page 
   await expect(page.locator('.a11y-skip-link')).toBeFocused();
   await expect(page.locator('main#main-content')).toBeVisible();
   await expect(page.locator('#auth-phone')).toHaveAttribute('autocomplete', 'tel');
+  await expect(page.locator('#auth-otp-email')).toHaveAttribute('autocomplete', 'email');
   await expect(page.locator('#auth-role-type')).toHaveAttribute('name', 'roleType');
   await expect(page.locator('.auth-card__prompt a')).toHaveAttribute('href', '/auth/login');
 });
@@ -129,6 +134,7 @@ test('auth login and OTP approved states have responsive visual baselines', asyn
   await expect(page).toHaveScreenshot(`auth-login-${locale}.png`, { fullPage: true });
 
   await page.goto(`/auth/verify-phone?lang=${encodeURIComponent(locale)}&purpose=registration&roleType=seeker`);
+  await page.locator('#auth-otp-email').fill('seeker@example.com');
   await page.locator('#auth-phone').fill('+20 100 000 0000');
   await page.locator('[data-screen-id="AUTH-04"] button[type="submit"]').click();
   await expect(page.locator('[data-screen-id="AUTH-05"]')).toBeVisible();

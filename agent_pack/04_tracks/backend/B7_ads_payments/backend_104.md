@@ -6,7 +6,7 @@
 | Phase | B7_ads_payments |
 | Area | payments |
 | Kind | security |
-| Sequence | 82 / 197 |
+| Sequence | 82 / 198 |
 | Depends on | `backend_103` |
 
 ## Goal

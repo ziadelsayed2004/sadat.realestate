@@ -5,6 +5,7 @@ import type { RbacService } from '../rbac/service.js';
 import type { UploadEnvironment } from '../uploads/environment.js';
 import {
   createDeterministicMalwareScanner,
+  createClamAvMalwareScanner,
   createInMemoryStorageAdapter,
   createLocalFilesystemStorageAdapter,
   createUnavailableMalwareScanner,
@@ -31,9 +32,11 @@ export function createPaymentProofRuntime(
     : environment.mode === 'local-filesystem'
       ? createLocalFilesystemStorageAdapter(environment.localRoot!)
       : createUnavailableStorageAdapter();
-  const scanner = environment.mode === 's3-compatible-unavailable'
-    ? createUnavailableMalwareScanner()
-    : createDeterministicMalwareScanner('clean');
+  const scanner = environment.scannerMode === 'clamav' && environment.clamav
+    ? createClamAvMalwareScanner(environment.clamav)
+    : environment.scannerMode === 'deterministic-fake'
+      ? createDeterministicMalwareScanner('clean')
+      : createUnavailableMalwareScanner();
   return {
     accessTokens,
     service: createPaymentProofService({

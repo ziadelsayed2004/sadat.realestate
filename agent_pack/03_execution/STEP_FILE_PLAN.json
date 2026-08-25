@@ -1367,6 +1367,20 @@
     ]
   },
   {
+    "taskId": "backend_140",
+    "allowedRoots": [
+      "package.json",
+      "package-lock.json",
+      ".env.local.example",
+      "scripts/**",
+      "apps/api/**",
+      "apps/web/**",
+      "docs/operations/**",
+      "docs/api/**",
+      "agent_pack/**"
+    ]
+  },
+  {
     "taskId": "frontend_000",
     "allowedRoots": [
       "apps/web/src/features/frontend_foundation/**",

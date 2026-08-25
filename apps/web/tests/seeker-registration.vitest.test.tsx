@@ -35,6 +35,7 @@ function createClient(overrides: Partial<AuthFlowClient> = {}): AuthFlowClient {
 }
 
 async function completePhoneVerification(copy: ReturnType<typeof getAuthCopy>): Promise<void> {
+  fireEvent.change(screen.getByLabelText(copy.identifierLabel), { target: { value: 'seeker@example.com' } });
   fireEvent.change(screen.getByLabelText(copy.phoneLabel), { target: { value: '+20 100 000 0000' } });
   fireEvent.click(screen.getByRole('button', { name: copy.sendCodeAction }));
   await waitFor(() => expect(screen.getByRole('heading', { name: copy.otpTitle, level: 1 })).toBeInTheDocument());

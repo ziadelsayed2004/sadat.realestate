@@ -48,6 +48,7 @@ export interface OpaqueTokenService {
 
 export interface OtpCodeContext {
   phone: string;
+  email: string;
   roleType: 'seeker' | 'provider';
   purpose: 'login' | 'registration';
 }
@@ -213,7 +214,10 @@ export function createHmacOtpCodeHasher(secret: Uint8Array): OtpCodeHasher {
 
   function digest(context: OtpCodeContext, code: string): Buffer {
     return createHmac('sha256', key)
-      .update(`${context.roleType}\u0000${context.purpose}\u0000${context.phone}\u0000${code}`, 'utf8')
+      .update(
+        `${context.roleType}\u0000${context.purpose}\u0000${context.phone}\u0000${context.email}\u0000${code}`,
+        'utf8'
+      )
       .digest();
   }
 

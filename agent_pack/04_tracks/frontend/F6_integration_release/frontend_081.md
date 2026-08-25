@@ -6,7 +6,7 @@
 | Phase | F6_integration_release |
 | Area | visual |
 | Kind | quality |
-| Sequence | 180 / 197 |
+| Sequence | 181 / 198 |
 | Depends on | `frontend_080` |
 
 ## Goal

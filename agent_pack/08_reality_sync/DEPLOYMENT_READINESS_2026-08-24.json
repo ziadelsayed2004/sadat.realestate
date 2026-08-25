@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-08-25T12:00:00.000Z",
+  "mode": "native-local-and-ubuntu-production-candidate",
+  "domain": "elsadatrealestate.com",
+  "productionSender": "info@elsadatrealestate.com",
+  "decision": {
+    "nativeLocalPreviewImplemented": true,
+    "productionReady": false,
+    "allApisTested": false,
+    "allScreensVerifiedInCurrentArchive": false,
+    "fullPlatformComplete": false
+  },
+  "verification": {
+    "apiTests": {
+      "passed": 513,
+      "failed": 0,
+      "skipped": 0
+    },
+    "implementedRouteInventory": 178,
+    "functionalWebVitest": {
+      "passed": 373,
+      "failed": 0,
+      "excludedDesignIntegrityFiles": 3
+    },
+    "fullWebVitest": {
+      "passed": 378,
+      "failed": 3,
+      "failureBoundary": "pub01-checksum-and-adm54-source-pair-only"
+    },
+    "auxiliaryWebTests": {
+      "passed": 76,
+      "failed": 0
+    },
+    "typecheck": "passed",
+    "lint": "passed",
+    "clientAndSsrBuild": "passed",
+    "bundleBudget": "passed",
+    "openapi": "passed",
+    "postman": "passed",
+    "dependencyAudit": "passed-zero-vulnerabilities-after-nodemailer-9.0.5-upgrade",
+    "localEnvironmentValidation": "passed-with-non-secret-test-values",
+    "productionEnvironmentValidation": "passed-with-non-secret-test-values",
+    "productionPreflight": "passed-with-generated-test-only-values",
+    "nativeLocalRuntime": "pending-current-source-live-run",
+    "nginxSystemdMongoClamav": "blocked-target-ubuntu-unavailable",
+    "browserMatrix": "blocked-playwright-browser-executable-unavailable",
+    "realHostingerSmtp": "blocked-mailbox-password-not-supplied"
+  },
+  "designSourceIntegrity": {
+    "manifestScreenRecords": 131,
+    "manifestPerScreenLocalSources": 133,
+    "uniqueReferencedFiles": 138,
+    "exactChecksumMatches": 135,
+    "missingFiles": 2,
+    "checksumMismatches": 1,
+    "status": "partial-pub01-digest-and-adm54-source-pair-unresolved"
+  },
+  "taskState": {
+    "frontend_091": "partial",
+    "frontend_096": "partial",
+    "frontend_097": "complete",
+    "backend_139": "blocked",
+    "frontend_098": "open"
+  },
+  "blockingActions": [
+    "Restore the canonical PUB-01 file and the owner-authored ADM-54 HTML/PNG pair, then verify all 138 recorded SHA-256 digests.",
+    "Record explicit Project Owner approval for the owner-authored ADM-54 source and runtime comparison.",
+    "Resolve the Q-003 production private-storage decision or implement and verify the approved S3-compatible adapter.",
+    "Run the native Local supervisor on Windows and Unix, verify automatic synthetic seed, email OTP capture, and runtime smoke checks.",
+    "Inject the Hostinger mailbox password on the target host and pass SMTP verify plus an explicitly confirmed test delivery.",
+    "Run the isolated native Ubuntu, MongoDB, Nginx, systemd, ClamAV, backup/restore, security, and complete live API matrices."
+  ]
+}

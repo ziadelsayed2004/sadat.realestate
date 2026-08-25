@@ -21,6 +21,7 @@ const profile = seekerProfileDataSchema.parse({
   roleType: 'seeker',
   status: 'verified',
   phone: '+201012345678',
+  email: 'mohamed.salem@example.com',
   firstName: 'Mohamed',
   lastName: 'Salem',
   locale: 'ar'

@@ -35,6 +35,7 @@ export interface OtpChallengeRecord {
   publicId: string;
   activeKey?: string;
   normalizedPhone: string;
+  normalizedEmail: string;
   roleType: OtpRoleType;
   purpose: OtpPurpose;
   codeHash: string;
@@ -96,6 +97,15 @@ const otpChallengeSchema = new Schema<OtpChallengeRecord>(
       maxlength: 16,
       match: /^\+[1-9]\d{7,14}$/
     },
+    normalizedEmail: {
+      type: String,
+      required: true,
+      immutable: true,
+      lowercase: true,
+      trim: true,
+      minlength: 3,
+      maxlength: 254
+    },
     roleType: { type: String, enum: OTP_ROLE_TYPES, required: true, immutable: true },
     purpose: { type: String, enum: OTP_PURPOSES, required: true, immutable: true },
     codeHash: {
@@ -141,7 +151,7 @@ otpChallengeSchema.index(
   }
 );
 otpChallengeSchema.index(
-  { normalizedPhone: 1, roleType: 1, purpose: 1, createdAt: -1 },
+  { normalizedPhone: 1, normalizedEmail: 1, roleType: 1, purpose: 1, createdAt: -1 },
   { name: 'otp_challenges_target_created' }
 );
 otpChallengeSchema.index(

@@ -1,13 +1,13 @@
 {
   "manifestVersion": "sadat-release-v1",
-  "generatedAt": "2026-08-24T00:33:08.1152458Z",
+  "generatedAt": "2026-08-25T15:46:35.565Z",
   "releaseStatus": "conditional",
   "graphStatus": "pending_post_release_assurance",
   "taskCounts": {
-    "backendTotal": 114,
-    "backendComplete": 113,
+    "backendTotal": 115,
+    "backendComplete": 114,
     "frontendTotal": 83,
-    "frontendComplete": 81,
+    "frontendComplete": 82,
     "frontendInProgress": null
   },
   "qualityGates": {
@@ -79,8 +79,8 @@
     "backendComplete": false,
     "fullPlatformComplete": false,
     "reasonAllApisTested": "Runtime inventory and selected matrices passed, but the complete positive, negative, RBAC, ownership, state, upload, replay, concurrency, and journey matrix is not proven by this release run.",
-    "reasonAll131ScreensComplete": "All 131 routes have UAT route-locale evidence, but ADM-54 lacks the direct approved-source comparison required by the post-release assurance policy.",
-    "reasonFullPlatformComplete": "Release readiness remains conditional on external infrastructure, container, provider, backup/restore, and security-assurance prerequisites."
+    "reasonAll131ScreensComplete": "Historical route-locale evidence exists, but fresh direct parity is not proven for the refreshed PUB-01 source and the absent historical ADM-54 frame remains covered only by an owner-approved structured comparison.",
+    "reasonFullPlatformComplete": "Release readiness remains conditional on external native infrastructure, provider, backup/restore, and security-assurance prerequisites."
   },
   "acceptedExceptions": [
     {
@@ -103,9 +103,9 @@
       "ownerAction": "Configure approved non-production private storage and malware-scanner adapters, then rerun readiness."
     },
     {
-      "name": "docker-engine",
+      "name": "native-ubuntu-runtime",
       "status": "blocked",
-      "ownerAction": "Run checked-in container artifacts with an approved Docker engine and record health/readiness."
+      "ownerAction": "Run Nginx, systemd, MongoDB rs0, ClamAV, TLS, backup, restore, and rollback on an isolated Ubuntu host and record health/readiness."
     },
     {
       "name": "external-security-assurance",
@@ -120,6 +120,7 @@
   ],
   "productionDeployment": "not_performed",
   "unsupportedClaims": [
+    "The refreshed PUB-01 source and owner-authored ADM-54 source pair match their recorded checksums; historical visual evidence still cannot prove direct parity for the refreshed PUB-01 source or the absent historical ADM-54 frame.",
     "Direct ADM-54 pixel-perfect comparison was not performed.",
     "No Production deployment, Production data, Production credential, or live external provider success is claimed.",
     "Conditional release readiness is not a claim that the full platform is Production-ready."

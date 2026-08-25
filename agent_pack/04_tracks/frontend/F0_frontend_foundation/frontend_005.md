@@ -6,7 +6,7 @@
 | Phase | F0_frontend_foundation |
 | Area | auth |
 | Kind | security |
-| Sequence | 120 / 197 |
+| Sequence | 121 / 198 |
 | Depends on | `frontend_004` |
 
 ## Goal

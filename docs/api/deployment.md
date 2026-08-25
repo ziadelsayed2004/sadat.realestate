@@ -1,13 +1,14 @@
-# Container and runtime deployment
+# Native runtime deployment
 
-The checked-in [`Dockerfile`](../../Dockerfile) uses separate dependency, build, and runtime stages on the repository's Node 24 baseline. The runtime image runs as the non-root `node` user, exposes port `3000`, starts only the built API entrypoint, and has a liveness health check against `/health`. The API's `/ready` endpoint remains the dependency-aware probe for orchestration and deployment gates.
+Production runs two restricted Node.js system services behind Nginx:
 
-`apps/api/src/modules/deployment/runtime.ts` is the runtime lifecycle boundary. It publishes the health/readiness paths and a 10-second shutdown grace period, and its coordinator stops the HTTP server before disconnecting MongoDB. Shutdown is idempotent; dependency errors and timeouts set a failure exit code without serializing private error details.
+- API: `127.0.0.1:3000`
+- Web SSR: `127.0.0.1:4173`
+- MongoDB: `127.0.0.1:27017`, authenticated single-node `rs0`
+- ClamAV: `127.0.0.1:3310`
 
-## Local Compose
+Nginx owns the public ports and preserves `/api/v1` exactly once. Certbot manages public TLS. systemd owns process restart, shutdown, timers, and journal logs. `apps/api/src/modules/deployment/runtime.ts` retains the application shutdown boundary.
 
-[`docker-compose.yml`](../../docker-compose.yml) is development-only. It starts the API, a MongoDB replica-set process, and a one-shot replica-set initializer. The API waits for initialization, uses the `local` environment, and receives `AUTH_ACCESS_TOKEN_SECRET` only from the caller's environment; no secret or production data is checked in. The named Mongo volume is local development state and must not be reused as a production backup.
+Local preview is implemented by `scripts/native-local.mjs`: it builds the repository, verifies the externally supplied non-production `MONGODB_URI`, starts the local SMTP catcher, API, Web SSR, and loopback reverse proxy, then inserts synthetic showcase data. It never downloads or starts MongoDB, uses Docker, or uses Production credentials. `local:status` performs live API, Web, proxy, and MongoDB-backed readiness checks.
 
-Run `docker compose config` and `docker compose up --build` only with a local-only base64url secret supplied out of band. Docker-engine execution is not claimed by repository tests in environments without Docker. Before preview/UAT/production, pin approved image digests, provide the managed MongoDB replica set and private providers, run migrations/index checks and a verified isolated backup/restore drill, and configure resource, network, secret, and rolling-deployment policies outside this repository.
-
-The Compose health check is intentionally stricter than the image liveness check: it calls `/ready`, so the API remains unhealthy until MongoDB and all installed required adapters are ready. No HTTP route or public container metadata is added by this task.
+Production artifacts are under `deploy/nginx`, `deploy/systemd`, `deploy/mongodb`, `deploy/clamav`, and `deploy/native`. Follow `docs/deployment/HOSTINGER_UBUNTU_RUNBOOK.md`. Native host startup, public TLS, real SMTP, scanner freshness, backup/restore, and rollback remain live gates rather than source-only claims.

@@ -653,7 +653,7 @@ export type {
 
 export {
   DEPLOYMENT_HEALTH_PATH,
-  DEPLOYMENT_IMAGE_STAGES,
+  DEPLOYMENT_NATIVE_SERVICES,
   DEPLOYMENT_READINESS_PATH,
   deploymentManifestSchema
 } from '../deployment/index.js';

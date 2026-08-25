@@ -18,6 +18,7 @@ async function routeRegistrationApi(page: import('@playwright/test').Page) {
     expect(route.request().method()).toBe('POST');
     expect(route.request().postDataJSON()).toEqual({
       phone: '+201000000000',
+      email: 'seeker@example.com',
       roleType: 'seeker',
       purpose: 'registration'
     });
@@ -35,6 +36,7 @@ async function routeRegistrationApi(page: import('@playwright/test').Page) {
     expect(route.request().method()).toBe('POST');
     expect(route.request().postDataJSON()).toEqual({
       phone: '+201000000000',
+      email: 'seeker@example.com',
       roleType: 'seeker',
       purpose: 'registration',
       challengeId: '00000000-0000-4000-8000-000000000001',
@@ -91,6 +93,7 @@ async function chooseSeeker(page: import('@playwright/test').Page): Promise<void
 }
 
 async function completeVerification(page: import('@playwright/test').Page, locale: 'ar' | 'en' | 'zh-CN'): Promise<void> {
+  await page.locator('#auth-otp-email').fill('seeker@example.com');
   await page.getByLabel(/phone number|رقم الهاتف|手机号/iu).fill('+20 100 000 0000');
   await page.getByRole('button', { name: /send code|إرسال الرمز|发送验证码/iu }).click();
   await expect(page.locator('[data-screen-id="AUTH-05"]')).toBeVisible();
@@ -104,6 +107,7 @@ async function completeVerification(page: import('@playwright/test').Page, local
   await expect(page.locator('[data-screen-id="AUTH-03"]')).toBeVisible();
   await expect(page).toHaveURL(/\/auth\/register\/seeker$/u);
   await expect(page.getByLabel(/verified phone|رقم الهاتف المؤكد|已验证手机号/iu)).toHaveValue('+201000000000');
+  await expect(page.locator('#auth-registration-email')).toHaveValue('seeker@example.com');
   await expect(page.locator('body')).not.toContainText(VERIFICATION_TOKEN);
   await expect(page.locator('body')).not.toContainText('verificationToken');
   await expect(page).toHaveTitle(/.+/u);

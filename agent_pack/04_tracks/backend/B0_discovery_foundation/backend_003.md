@@ -6,7 +6,7 @@
 | Phase | B0_discovery_foundation |
 | Area | config |
 | Kind | security |
-| Sequence | 4 / 197 |
+| Sequence | 4 / 198 |
 | Depends on | `backend_002` |
 
 ## Goal

@@ -1,0 +1,72 @@
+{
+  "taskId": "frontend_091",
+  "status": "complete",
+  "observedAt": "2026-08-25T15:05:00.000Z",
+  "summary": "Replaced the incomplete PUB-01 recovery candidate with a stable direct export of the approved current Figma frame, preserved the candidate and historical checksum lineage, added the 131-screen direct-page frame inventory, restored a clean Agent Pack source audit, and passed the focused Web parity suite under Node.js 24.",
+  "source": {
+    "figmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4352",
+    "frameNodeId": "6017:10847",
+  "frameName": "PUB-01 - Home",
+    "retrievalMethod": "Figma MCP download_assets using configured export settings",
+    "repeatRetrievalCount": 2,
+    "sha256": "fcaf4e5ebebd29e85373b2562350f997a52d41c99031b630e3f7e7ac1592d190",
+    "width": 6196,
+    "height": 21509,
+    "historicalManifestSha256": "bd96e921fa4bfa5ce9cbb7a76d87989b8663621d6975d68d1be1f9b147104dd2",
+    "historicalParityClaim": false
+  },
+  "preservedCandidate": {
+    "path": "docs/design_sources/recovery_candidates/public/PUB-01.recovered-incomplete.sha256-1a742ce1.png",
+    "sha256": "1a742ce16db23081e74bac4d2e23151d6b5308de6b61332d3bfdfe3e0f599c4d",
+    "finding": "The candidate omitted the lower homepage regions and contained a black tail."
+  },
+  "filesChanged": [
+    "docs/design_sources/final_screens/public/PUB-01.png",
+    "docs/design_sources/recovery_candidates/public/PUB-01.recovered-incomplete.sha256-1a742ce1.png",
+    "docs/design_sources/figma/SCREEN_FRAME_INVENTORY.json",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "agent_pack/04_tracks/frontend/F7_post_release_assurance/frontend_091.md",
+    "agent_pack/07_finish/frontend_091/revalidation-2026-08-25.json",
+    "agent_pack/07_finish/frontend_092/design-comparison.json",
+    "agent_pack/07_finish/frontend_092/snapshot-review.json"
+  ],
+  "verification": [
+    {
+      "command": "Figma MCP get_metadata on pages 6017:4352 through 6017:4357",
+      "result": "passed",
+      "evidence": "All six direct pages were accessible; inventory contains 131 unique canonical Screen IDs and 129 unique historical owning-frame node IDs."
+    },
+    {
+      "command": "Figma MCP download_assets for frame 6017:10847, repeated twice",
+      "result": "passed",
+      "evidence": "Both exports were 27,162,811 bytes with identical SHA-256 fcaf4e5ebebd29e85373b2562350f997a52d41c99031b630e3f7e7ac1592d190."
+    },
+    {
+      "command": "node inventory validation",
+      "result": "passed",
+      "evidence": "131 rows, 131 unique IDs, 129 unique owning-frame node IDs, and no missing required fields."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "result": "passed",
+      "evidence": "Zero errors with frontend_091 as the only In Progress task."
+    },
+    {
+      "command": "npm run test:vitest --workspace apps/web",
+      "result": "passed",
+      "evidence": "Focused frontend-092 parity run passed all 3 tests under Node.js 24.19.0 after npm ci restored workspace dependencies."
+    },
+    {
+      "command": "node -v && npm.cmd -v",
+      "result": "passed",
+      "evidence": "Node.js 24.19.0 and npm 11.6.4 satisfy the repository support range."
+    },
+    {
+      "command": "npm.cmd ci",
+      "result": "passed",
+      "evidence": "Clean install added 431 packages and reported zero vulnerabilities."
+    }
+  ],
+  "scopeNote": "This task closes source-bundle integrity only. Full visual parity remains governed by the dependent surface tasks and is not claimed here."
+}

@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-03",
+  "classification": "PARTIAL",
+  "classificationReason": "Fresh source and runtime capture completed; direct repair/parity confirmation is not complete.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4352",
+    "nodeId": "6017:12693",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-12693&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4352&starting-point-node-id=6017%3A10847",
+    "screenshot": {
+      "path": "docs/quality/figma_parity/screens/PUB-03/figma.png",
+      "width": 1577,
+      "height": 3046,
+      "reviewed": true
+    },
+    "getDesignContext": {
+      "tool": "mcp__figma__get_design_context",
+      "skill": "resource:figma-design-to-code",
+      "resultStatus": "FULL_REFERENCE_CODE_RETURNED",
+      "root": {
+        "id": "6017:12693",
+        "name": "Property Details",
+        "width": 1577,
+        "height": 3046
+      },
+      "retrievedRegions": [
+        "header",
+        "back link",
+        "media/gallery",
+        "property summary",
+        "amenities",
+        "provider/project details",
+        "actions",
+        "related properties",
+        "footer"
+      ],
+      "reviewed": true,
+      "note": "The tool returned a full React/Tailwind reference with canonical asset URLs; it was adapted as reference evidence only, not pasted as implementation."
+    }
+  },
+  "runtime": {
+    "route": "/properties/published-home",
+    "role": "public",
+    "permissions": {
+      "requiredRole": "public",
+      "ownership": "public",
+      "availableActionsObserved": {
+        "links": [
+          {
+            "text": "تخطي إلى المحتوى الرئيسي",
+            "href": "#main-content"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "الرئيسية",
+            "href": "/"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "المقالات",
+            "href": "/articles"
+          },
+          {
+            "text": "المجتمع",
+            "href": "/community"
+          },
+          {
+            "text": "عن المنصة",
+            "href": "/about"
+          },
+          {
+            "text": "فريقنا",
+            "href": "/team"
+          },
+          {
+            "text": "تسجيل الدخول",
+            "href": "/auth/login"
+          },
+          {
+            "text": "إنشاء حساب",
+            "href": "/auth/register"
+          },
+          {
+            "text": "العودة إلى النتائج",
+            "href": "/properties"
+          },
+          {
+            "text": "الرئيسية",
+            "href": "/"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "عن المنصة",
+            "href": "/about"
+          }
+        ],
+        "buttons": [
+          {
+            "text": "أرسل الطلب",
+            "aria": null
+          },
+          {
+            "text": "طلب معاينة",
+            "aria": null
+          }
+        ]
+      },
+      "source": "runtime DOM and route contract"
+    },
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "deterministicState": {
+      "path": "docs/quality/figma_parity/screens/PUB-03/deterministic-state.json",
+      "seedId": "fresh-audit-PUB-03-ar-v1",
+      "responseSha256": "72687aaa1cfec1526a47205f406a8d0f3eebd24b23cbbbcfcfd97f6b66c46789"
+    },
+    "response": {
+      "status": 200,
+      "ok": true
+    },
+    "apiRequests": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/properties/published-home"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/properties/published-home",
+        "status": 200
+      }
+    ],
+    "before": {
+      "path": "docs/quality/figma_parity/screens/PUB-03/runtime-before.png",
+      "sha256": "9dbd074542650cb7e54fd186bce70913fb61ec60fe414b66d51d892c85f57ff1"
+    },
+    "after": {
+      "path": "docs/quality/figma_parity/screens/PUB-03/runtime-after.png",
+      "sha256": "9dbd074542650cb7e54fd186bce70913fb61ec60fe414b66d51d892c85f57ff1"
+    }
+  },
+  "structuredVisualComparison": {
+    "reviewed": true,
+    "diffPath": "docs/quality/figma_parity/screens/PUB-03/diff.png",
+    "sourceDimensions": [
+      {
+        "width": 1577,
+        "height": 3046
+      },
+      {
+        "width": 1280,
+        "height": 2230
+      },
+      {
+        "width": 1280,
+        "height": 2230
+      }
+    ],
+    "observations": [
+      "Figma source is 1577px wide and 3046px high for PUB-03.",
+      "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 2230px document height.",
+      "The clone has a populated image gallery, compact property summary, provider card, description, feature chips, nearby-services panel, advisory banner, related card, and contact form.",
+      "Runtime preserves the main detail summary, provider/project/description blocks, related card, and contact form, but uses missing-media state and omits or materially reduces the clone's feature, service, advisory, and gallery content.",
+      "The side-by-side diff is evidence for review only; no baseline was updated.",
+      "Exact typography, spacing, imagery, control states, responsive variants, and prototype transitions remain to be checked against focused fixtures."
+    ]
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "requestProjection": "GET /api/v1/public/properties/published-home",
+    "responseProjection": "public-details fixture captured and hashed",
+    "outcome": "route loaded with a public-details fixture; complete CTA/prototype/API projection comparison remains pending"
+  },
+  "defects": [
+    "Full per-screen parity review is incomplete.",
+    "Runtime media is in the safe missing-image state instead of the clone's approved property image.",
+    "Feature chips, nearby services, advisory content, and gallery behavior are not equivalent to the clone.",
+    "Exact CTA/prototype transitions, ownership actions, and responsive/detail states remain unverified."
+  ],
+  "filesRepaired": [],
+  "focusedTests": [
+    { "name": "apps/web typecheck", "command": "npm.cmd run typecheck --workspace apps/web", "exitCode": 0 },
+    { "name": "public feature lint", "command": "npm.cmd exec --workspace apps/web -- eslint src/features/public tests/e2e/public-fixtures.ts --max-warnings=0", "exitCode": 0 },
+    { "name": "API contract tests", "command": "node --import tsx --test apps/web/tests/contracts.test.ts", "exitCode": 0 },
+    { "name": "focused Playwright visual", "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public property details renders the implemented projection\"", "exitCode": 0 },
+    { "name": "focused Playwright accessibility", "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public property details exposes one main landmark\"", "exitCode": 0 }
+  ],
+  "accessibility": {
+    "focusedCheck": "public property details exposes one main landmark, labeled actions, and safe media states",
+    "exitCode": 0
+  },
+  "evidencePaths": {
+    "figma": "docs/quality/figma_parity/screens/PUB-03/figma.png",
+    "runtimeBefore": "docs/quality/figma_parity/screens/PUB-03/runtime-before.png",
+    "runtimeAfter": "docs/quality/figma_parity/screens/PUB-03/runtime-after.png",
+    "diff": "docs/quality/figma_parity/screens/PUB-03/diff.png",
+    "review": "docs/quality/figma_parity/screens/PUB-03/review.json"
+  }
+}

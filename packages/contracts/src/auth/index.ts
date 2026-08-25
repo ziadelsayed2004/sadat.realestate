@@ -42,11 +42,20 @@ export const normalizedPhoneSchema = phoneInputSchema.pipe(
   z.string().regex(/^\+[1-9]\d{7,14}$/)
 );
 
+export const normalizedEmailSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .min(3)
+  .max(254)
+  .email();
+
 export const otpPurposeSchema = z.enum(OTP_PURPOSES);
 export const otpRoleTypeSchema = z.enum(OTP_ROLE_TYPES);
 
 const otpRequestIdentityShape = {
   phone: normalizedPhoneSchema,
+  email: normalizedEmailSchema,
   roleType: otpRoleTypeSchema,
   purpose: otpPurposeSchema
 };
@@ -72,14 +81,6 @@ export const otpVerifiedDataSchema = z.object({
   expiresInSeconds: z.number().int().positive(),
   roleType: otpRoleTypeSchema
 }).strict();
-
-export const normalizedEmailSchema = z
-  .string()
-  .trim()
-  .toLowerCase()
-  .min(3)
-  .max(254)
-  .email();
 
 export const adminLoginRequestSchema = z.object({
   email: normalizedEmailSchema,

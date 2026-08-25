@@ -1,0 +1,18 @@
+[Unit]
+Description=Elsadat Real Estate private local backup set
+After=mongod.service
+Requires=mongod.service
+
+[Service]
+Type=oneshot
+User=elsadat
+Group=elsadat
+WorkingDirectory=/opt/elsadatrealestate/current
+EnvironmentFile=/etc/elsadatrealestate/production.env
+ExecStart=/opt/elsadatrealestate/current/deploy/native/backup.sh
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/backups/elsadatrealestate /var/lib/elsadatrealestate/private

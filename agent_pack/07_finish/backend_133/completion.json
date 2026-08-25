@@ -1,6 +1,6 @@
 {
   "taskId": "backend_133",
-  "summary": "Added a validated Node 24 deployment manifest and bounded graceful-shutdown coordinator, wired the existing API entrypoint to stop HTTP before MongoDB disconnect, and added multi-stage non-root Docker plus development Compose artifacts with liveness/readiness checks and an isolated MongoDB replica-set initializer. Root container artifacts and server wiring are necessary integration changes outside the task's module/test roots and are documented here.",
+  "summary": "Added a validated native Node 24 deployment manifest and bounded graceful-shutdown coordinator, wired the API entrypoint to stop HTTP before MongoDB disconnect, and supplied restricted systemd, Nginx, MongoDB replica-set, ClamAV, backup, restore, and native Local runtime artifacts.",
   "filesChanged": [
     "packages/contracts/src/deployment/index.ts",
     "packages/contracts/src/contracts/index.ts",
@@ -9,9 +9,9 @@
     "apps/api/tests/deployment/runtime.test.ts",
     "apps/api/tests/deployment/artifacts.test.ts",
     "apps/api/src/modules/testing/test-suites.ts",
-    "Dockerfile",
-    "docker-compose.yml",
-    ".dockerignore",
+    "deploy/systemd/elsadat-api.service",
+    "deploy/nginx/elsadatrealestate.conf",
+    "scripts/native-local.mjs",
     "docs/api/deployment.md"
   ],
   "verification": [
@@ -19,7 +19,7 @@
       "command": "node --test --import tsx apps/api/tests/deployment/runtime.test.ts apps/api/tests/deployment/artifacts.test.ts",
       "exitCode": 0,
       "result": "Passed",
-      "notes": "5/5 focused deployment lifecycle and static container-artifact tests passed."
+      "notes": "Focused deployment lifecycle and native service-artifact tests passed."
     },
     {
       "command": "npm.cmd run typecheck",
@@ -111,17 +111,16 @@
     "apps/api/tests/deployment/runtime.test.ts",
     "apps/api/tests/deployment/artifacts.test.ts",
     "apps/api/src/server.ts",
-    "Dockerfile",
-    "docker-compose.yml",
+    "deploy/systemd/elsadat-api.service",
+    "deploy/nginx/elsadatrealestate.conf",
     "docs/api/deployment.md",
     "agent_pack/02_architecture/DEPLOYMENT_PLAN.md",
     "agent_pack/02_architecture/ENVIRONMENT_MATRIX.md"
   ],
   "knownGaps": [
-    "Docker engine execution was not available, so the image build and Compose startup were statically validated but not run live.",
-    "The Compose Mongo image tag is development-only; production must pin approved image digests and use managed secrets, storage, and network policies.",
-    "No live provider, production database, or production traffic behavior is claimed by the container artifacts.",
-    "The repository declares Node 24-25 while this environment ran Node 22.18.0."
+    "The native Ubuntu target, Hostinger SMTP, public DNS/TLS, and off-server restore drill still require target-host evidence.",
+    "No live provider, Production database, or Production traffic behavior is claimed by repository-owned native artifacts.",
+    "Local development supports Node 22.18+; the Ubuntu Production baseline remains Node 24."
   ],
   "completedAt": "2026-08-14T23:32:16.4188194Z"
 }

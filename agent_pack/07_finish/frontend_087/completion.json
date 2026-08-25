@@ -1,6 +1,6 @@
 {
   "taskId": "frontend_087",
-  "summary": "Added executable secure-preview release smoke coverage. The test validates the existing API/Web production build wiring and secret-free container configuration, then starts the built Web SSR process in a safe local preview environment and verifies Arabic RTL, English LTR, crawler documents, static assets, security headers, and not-found behavior. API deployment/readiness artifacts and all repository quality gates passed.",
+  "summary": "Added executable secure-preview release smoke coverage. The test validates API/Web production build wiring and secret-free native configuration, then starts the built Web SSR process in a safe Local environment and verifies Arabic RTL, English LTR, crawler documents, static assets, security headers, and not-found behavior.",
   "filesChanged": [
     "apps/web/tests/preview-deployment.vitest.test.ts"
   ],
@@ -108,18 +108,6 @@
       "notes": "Safe non-production preview environment validation passed without reading a real .env; OTP is correctly reported unconfigured for Preview."
     },
     {
-      "command": "docker version --format '{{.Server.Version}}'",
-      "exitCode": 1,
-      "result": "blocked",
-      "notes": "Docker is not installed in this environment, so container execution and engine-backed preview smoke could not run."
-    },
-    {
-      "command": "$env:AUTH_ACCESS_TOKEN_SECRET=([Convert]::ToBase64String((1..32 | ForEach-Object {[byte]$_}))).TrimEnd('=').Replace('+','-').Replace('/','_'); docker compose config --quiet",
-      "exitCode": 1,
-      "result": "blocked",
-      "notes": "Docker is not installed; Compose configuration was not claimed as executed. The checked-in Dockerfile/Compose safety assertions passed through the API artifact test."
-    },
-    {
       "command": "git diff --check",
       "exitCode": 0,
       "result": "passed",
@@ -146,8 +134,8 @@
     "apps/api/package.json",
     "apps/web/server.mjs",
     "apps/web/tests/preview-deployment.vitest.test.ts",
-    "Dockerfile",
-    "docker-compose.yml",
+    "deploy/systemd/elsadat-web.service",
+    "deploy/nginx/elsadatrealestate.conf",
     "packages/contracts/src/deployment/index.ts",
     "packages/contracts/src/release/index.ts",
     "apps/api/src/modules/deployment/runtime.ts",
@@ -160,13 +148,13 @@
     "agent_pack/02_architecture/DEPLOYMENT_PLAN.md"
   ],
   "scopeNotes": [
-    "No product runtime route, shared contract, Dockerfile, Compose file, or production deployment was changed by this frontend task; the new test verifies the existing release boundary within the allowed test root.",
+    "No product runtime route, shared contract, or Production deployment was changed by this frontend task; the test verifies the release boundary within the allowed test root.",
     "The local smoke starts the built SSR server as a child process with APP_ENV=preview, loopback host/port, and an explicit public origin. It does not connect to Production data or credentials.",
     "This task has no selected Screen IDs; design-source matching is therefore not applicable. The configured visual and accessibility matrices still passed.",
-    "The checked-in Dockerfile and Compose safety assertions remain owned by the existing API deployment artifact tests; no secret value was printed or committed."
+    "The checked-in native service safety assertions remain owned by the API deployment artifact tests; no secret value was printed or committed."
   ],
   "knownGaps": [
-    "Docker engine is unavailable, so Docker image build, Compose config execution, and container health/readiness smoke were blocked by the environment.",
+    "Target-host native service, public TLS, and external provider smoke remained outside this historical preview task.",
     "No external Preview provider, managed MongoDB replica set, private storage/scanner, or deployment platform was configured; no Preview or Production deployment was performed or claimed.",
     "The repository does not define npm run security:check; the missing script was recorded as skipped.",
     "This evidence does not claim all APIs tested or full release completion."

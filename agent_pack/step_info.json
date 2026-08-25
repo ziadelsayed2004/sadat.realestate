@@ -1,75 +1,31 @@
 {
-  "generatedAt": "2026-08-24T17:18:42.184Z",
-  "selectedTaskId": "frontend_096",
-  "selectedTaskStatus": "partial",
-  "selectedTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_096.md",
-  "selectedTask": {
-    "id": "frontend_096",
-    "phase": "F7_post_release_assurance",
-    "area": "admin design evidence",
-    "title": "Author and Verify ADM-54 Request Settings Design",
-    "goal": "Create an owner-reviewable new ADM-54 source and complete its runtime, state, locale, direction, permission, and design-system comparison.",
-    "kind": "quality",
-    "screens": [],
-    "sourceRefs": [
-      "09_sources/DESIGN_SOURCE_MANIFEST.json",
-      "01_product/SCREEN_COVERAGE.json"
-    ],
-    "notes": [
-      "The historical ADM-54 Figma/Drive source was not recovered.",
-      "DESIGN-DECISION-ADM-54-AUTHOR-001 authorizes a new local design; explicit owner review is required before completion.",
-      "The new source must not be represented as recovered historical evidence."
-    ],
-    "track": "frontend",
-    "dependsOn": [
-      "frontend_091"
-    ],
-    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_096.md",
-    "allowedRoots": [
-      "apps/web/**",
-      "packages/ui/**",
-      "docs/design_sources/**",
-      "agent_pack/**"
-    ],
-    "acceptance": [
-      "Create a deterministic owner-authored ADM-54 local source from the approved Design System, Admin shell, ADM-53/ADM-55 sibling patterns, implemented Request Settings API, and current PRD.",
-      "Record the owner authorization, source type, provenance, locale, direction, Desktop viewport, and immutable checksums without claiming historical recovery.",
-      "Complete runtime comparison and remediate material Request Settings differences within the allowed roots.",
-      "Verify supported locale, direction, Desktop, state, permission, dynamic-projection, and accessibility behavior.",
-      "Obtain explicit owner approval of the authored source and comparison before marking the task Complete."
-    ],
-    "verification": [
-      "npm run typecheck --workspace apps/web",
-      "npm run lint --workspace apps/web",
-      "npm run test --workspace apps/web",
-      "npm run build --workspace apps/web",
-      "targeted Playwright, visual, accessibility, locale, direction, and device checks",
-      "node agent_pack/scripts/audit_pack.mjs"
-    ],
-    "sequence": 195
-  },
+  "generatedAt": "2026-08-25T18:43:55.599Z",
+  "selectedTaskId": null,
+  "selectedTaskStatus": null,
+  "selectedTaskFile": null,
+  "selectedTask": null,
   "counts": {
     "backend": {
-      "total": 114,
+      "total": 115,
       "open": 0,
       "in_progress": 0,
       "partial": 0,
       "blocked": 1,
-      "complete": 113
+      "complete": 114
     },
     "frontend": {
       "total": 83,
-      "open": 1,
+      "open": 0,
       "in_progress": 0,
       "partial": 1,
       "blocked": 0,
-      "complete": 81
+      "complete": 82
     }
   },
   "blockedTasks": [
     {
       "taskId": "backend_139",
-      "reason": "Blocked pending an isolated non-production MongoDB replica set, approved private storage and malware scanner, OTP and monitoring providers, runnable container infrastructure, backup/restore target, and external security-assurance prerequisites."
+      "reason": "Blocked pending an isolated non-production MongoDB replica set, approved private storage and malware scanner, OTP and monitoring providers, a provisioned native Ubuntu target, backup/restore target, and external security-assurance prerequisites."
     }
   ],
   "blockedByDependencies": [
@@ -79,10 +35,6 @@
         {
           "taskId": "backend_139",
           "status": "blocked"
-        },
-        {
-          "taskId": "frontend_096",
-          "status": "partial"
         }
       ]
     }

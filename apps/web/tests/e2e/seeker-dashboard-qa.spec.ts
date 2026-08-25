@@ -132,6 +132,7 @@ async function routeSeekerApis(page: import('@playwright/test').Page): Promise<v
           roleType: 'seeker',
           status: 'verified',
           phone: '+201012345678',
+          email: 'seeker@example.com',
           firstName: 'QA',
           lastName: 'Seeker',
           locale: localeForProject()

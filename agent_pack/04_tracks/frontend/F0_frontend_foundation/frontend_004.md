@@ -6,7 +6,7 @@
 | Phase | F0_frontend_foundation |
 | Area | contracts |
 | Kind | integration |
-| Sequence | 119 / 197 |
+| Sequence | 120 / 198 |
 | Depends on | `frontend_003` |
 
 ## Goal

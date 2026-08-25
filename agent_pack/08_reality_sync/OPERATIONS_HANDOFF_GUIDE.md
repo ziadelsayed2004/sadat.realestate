@@ -13,16 +13,16 @@ Use these current files as source of truth when this guide and a generated artif
 - Postman: apps/api/postman/.
 - Roles and permissions: agent_pack/01_product/ROLES_PERMISSIONS_MATRIX.md.
 - Environment policy: docs/api/environment.md and agent_pack/02_architecture/ENVIRONMENT_MATRIX.md.
-- Deployment artifacts: Dockerfile, docker-compose.yml, and docs/api/deployment.md.
+- Deployment artifacts: `deploy/nginx/elsadatrealestate-http.conf`, `deploy/nginx/elsadatrealestate.conf`, `deploy/systemd/elsadat-api.service`, `deploy/systemd/elsadat-web.service`, `deploy/native/deploy-release.sh`, `deploy/mongodb`, `deploy/clamav`, and `docs/api/deployment.md`.
 - Release readiness policy: packages/contracts/src/release/index.ts and apps/api/src/modules/release/readiness.ts.
 
 The Agent Pack remains English-only. Product UI content remains Arabic-first: Arabic is RTL; English and Simplified Chinese are LTR.
 
 ## Prerequisites
 
-- Node.js 24 and npm 11 are the repository baseline from the root manifest. A different local runtime may be useful for diagnostics, but it is not Production compatibility evidence.
-- A MongoDB replica set is required for transactional API paths. Local Compose provisions an isolated replica-set process; Preview/UAT require an isolated non-Production replica set.
-- Docker is optional for source-level Web development but required to execute the checked-in container artifacts. The current environment has no Docker executable, so container execution is a readiness task rather than a passed check.
+- Node.js 22.18 through 24.x and npm 11 are supported by the root manifest. Production should pin one tested Node major for the lifetime of a release rather than switching it in place.
+- A MongoDB replica set is required for transactional API paths. The native Local supervisor provisions an isolated replica-set process; Preview/UAT require an isolated non-Production replica set.
+- Native Local execution requires Node.js 22.18+ or Node.js 24. The first start downloads a disposable MongoDB development binary and retains it only under the ignored `.local` directory.
 - Never read a real .env, use Production data, or copy credentials into a command, fixture, log, Postman file, or evidence record.
 
 ## Local setup
@@ -44,13 +44,15 @@ In a second terminal, build and start the Web SSR process:
     $env:WEB_PUBLIC_ORIGIN = 'http://127.0.0.1:4173'
     npm.cmd run dev --workspace apps/web
 
-For an isolated local database, use the checked-in Compose topology only with a local-only secret supplied out of band:
+For an isolated local database and SMTP catcher, use the checked-in native supervisor:
 
     $env:AUTH_ACCESS_TOKEN_SECRET = '<local-only base64url secret supplied out of band>'
-    docker compose config
-    docker compose up --build
+    npm run local:prepare
+    npm run local:check
+    npm run local:up
+    npm run local:smoke
 
-The named Compose volume is local development state, not a Production backup. Stop the local topology with the normal Compose lifecycle after verification; do not run destructive database commands against a shared or Production target.
+The ignored `.local` directory is disposable development state, not a Production backup. Stop it with `npm run local:down`; do not run destructive database commands against a shared or Production target.
 
 ## Environments and fail-closed boundaries
 
@@ -61,7 +63,7 @@ The named Compose volume is local development state, not a Production backup. St
 | Preview/UAT | Synthetic UAT | Isolated replica set | Encrypted private non-Production namespace and approved sandbox scanner | Sandbox providers |
 | Production | Real approved data | Managed or approved replica set | Encrypted private storage and approved scanner | Approved live providers |
 
-Preview, UAT, and Production must not fall back to local storage or bypass malware scanning when configuration is absent. OTP delivery remains unavailable until an approved provider adapter is configured outside the repository. Missing external configuration makes readiness conditional or blocked; it is never replaced with a fabricated success value.
+Preview, UAT, and Production must not fall back to local storage or bypass malware scanning when configuration is absent. The repository implements the SMTP OTP adapter; Production delivery remains unavailable until the Hostinger mailbox credentials and DNS records are configured outside source control and a real delivery test succeeds. Missing external configuration makes readiness conditional or blocked; it is never replaced with a fabricated success value.
 
 Required API configuration names are APP_ENV, API_HOST, API_PORT, MONGODB_URI, and AUTH_ACCESS_TOKEN_SECRET. Web configuration names used by the SSR server are WEB_HOST, WEB_PORT, WEB_API_ORIGIN, and WEB_PUBLIC_ORIGIN. Values are supplied by the process manager or shell and must not be committed.
 
@@ -158,7 +160,7 @@ The intended release sequence is:
 
 Rollback means redeploying the last known-good immutable application artifact and restoring the documented deployment configuration. Database rollback is not an automatic destructive reversal: use the approved backup/restore drill and migration policy against an isolated target first. Never delete Production data, rewrite audit history, rotate secrets through source control, or run a rollback command without an identified target, owner, and recovery point.
 
-The repository currently does not prove a live Docker engine, managed MongoDB replica set, private storage/scanner, OTP provider, monitoring system, backup/restore drill, or external security assurance. Those are release-readiness prerequisites, not claims made by local tests.
+The repository currently does not prove a deployed native Ubuntu host, managed MongoDB replica set, private storage/scanner, real OTP provider, monitoring system, backup/restore drill, or external security assurance. Those are release-readiness prerequisites, not claims made by local tests.
 
 ## Verification handoff
 

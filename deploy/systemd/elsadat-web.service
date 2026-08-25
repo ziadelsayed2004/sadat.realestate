@@ -1,0 +1,32 @@
+[Unit]
+Description=Elsadat Real Estate Web SSR
+After=network-online.target elsadat-api.service
+Wants=network-online.target
+Requires=elsadat-api.service
+
+[Service]
+Type=simple
+User=elsadat
+Group=elsadat
+WorkingDirectory=/opt/elsadatrealestate/current
+EnvironmentFile=/etc/elsadatrealestate/production.env
+ExecStart=/usr/bin/node apps/web/server.mjs --mode production
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+KillSignal=SIGTERM
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+[Install]
+WantedBy=multi-user.target
+

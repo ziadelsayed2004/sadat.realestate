@@ -1,0 +1,81 @@
+{
+  "seedId": "fresh-audit-PUB-03-ar-v1",
+  "fixtureKind": "public-details",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/public/properties/published-home",
+    "locale": "ar",
+    "direction": "rtl"
+  },
+  "responseRequestId": "fresh-audit-public-details",
+  "responseSha256": "72687aaa1cfec1526a47205f406a8d0f3eebd24b23cbbbcfcfd97f6b66c46789",
+  "response": {
+    "data": {
+      "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
+      "slug": "published-home",
+      "kind": "property",
+      "name": {
+        "ar": "منزل منشور",
+        "en": "Published home",
+        "zh-CN": "已发布房产"
+      },
+      "transactionType": "sale",
+      "description": {
+        "ar": "وصف المنزل المنشور",
+        "en": "A published home description",
+        "zh-CN": "已发布房产描述"
+      },
+      "area": {
+        "value": 120,
+        "unit": "sqm"
+      },
+      "layout": {
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "floor": 4
+      },
+      "price": {
+        "amount": 1250000,
+        "currency": "EGP"
+      },
+      "source": {
+        "sourceType": "developer_company",
+        "organizationId": "bbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "seo": {
+        "title": {
+          "ar": "تفاصيل منزل منشور",
+          "en": "Published home details",
+          "zh-CN": "已发布房产详情"
+        },
+        "description": {
+          "ar": "وصف محرك البحث",
+          "en": "Search description",
+          "zh-CN": "搜索描述"
+        },
+        "slug": "published-home"
+      },
+      "project": {
+        "id": "bbbbbbbbbbbbbbbbbbbbbbbb",
+        "slug": "central-project",
+        "name": {
+          "ar": "المشروع المركزي",
+          "en": "Central project",
+          "zh-CN": "中央项目"
+        },
+        "description": {
+          "ar": "نبذة المشروع",
+          "en": "Project description",
+          "zh-CN": "项目简介"
+        }
+      },
+      "media": [],
+      "relatedProperties": []
+    },
+    "meta": {
+      "requestId": "fresh-audit-public-details"
+    }
+  },
+  "authSession": null,
+  "ownership": "public"
+}

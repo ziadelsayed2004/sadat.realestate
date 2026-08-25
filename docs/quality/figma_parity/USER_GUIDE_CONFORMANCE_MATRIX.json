@@ -1,0 +1,926 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-25T18:00:00.000Z",
+  "guidePath": null,
+  "guideAvailable": false,
+  "status": "BLOCKED_GUIDE_FILE_MISSING",
+  "rows": [
+    {
+      "screenId": "PUB-01",
+      "route": "/",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PUB-02",
+      "route": "/properties",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PUB-03",
+      "route": "/properties/:slug",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PUB-04",
+      "route": "/compare",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PUB-05",
+      "route": "/developers",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PUB-06",
+      "route": "/developers/:slug",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PUB-07",
+      "route": "/articles",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PUB-08",
+      "route": "/articles/:slug",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PUB-09",
+      "route": "/community",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PUB-10",
+      "route": "/community?create=1",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PUB-11",
+      "route": "/about",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PUB-12",
+      "route": "/team",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-01",
+      "route": "/auth/login",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-02",
+      "route": "/auth/register/seeker",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-03",
+      "route": "/auth/register/seeker",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-04",
+      "route": "/auth/verify-phone",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-05",
+      "route": "/auth/verify-phone",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-06",
+      "route": "/auth/register/seeker/success",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-07",
+      "route": "/auth/register/provider/type",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-08",
+      "route": "/auth/register/provider/type",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-09",
+      "route": "/auth/register/provider/account",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-09+",
+      "route": "/auth/register/provider/account",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-10",
+      "route": "/auth/register/provider/business",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-10+",
+      "route": "/auth/register/provider/business",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-11",
+      "route": "/auth/register/provider/company",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-12",
+      "route": "/auth/register/provider/documents",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-13",
+      "route": "/auth/register/provider/review",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-14",
+      "route": "/provider-application/status",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-15",
+      "route": "/provider-application/status",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-16",
+      "route": "/provider-application/needs-information",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "AUTH-17",
+      "route": "/provider-application/approved",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "SEK-01",
+      "route": "/seeker",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "SEK-02",
+      "route": "/seeker/requests",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "SEK-03",
+      "route": "/seeker/requests/:id",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "SEK-04",
+      "route": "/seeker/requests/:id",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "SEK-05",
+      "route": "/seeker/viewings",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "SEK-06",
+      "route": "/seeker/saved",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "SEK-07",
+      "route": "/seeker/notifications",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "SEK-08",
+      "route": "/seeker/profile?tab=preferences",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "SEK-09",
+      "route": "/seeker/profile?tab=personal",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "SEK-10",
+      "route": "/seeker/settings",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-01",
+      "route": "/provider",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-02",
+      "route": "/provider/properties",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-03",
+      "route": "/provider/properties/new/basic",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-04",
+      "route": "/provider/properties/:id/location",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-05",
+      "route": "/provider/properties/:id/details",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-06",
+      "route": "/provider/properties/:id/price-payment",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-07",
+      "route": "/provider/properties/:id/features",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-08",
+      "route": "/provider/properties/:id/media",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-09",
+      "route": "/provider/properties/:id/contact",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-10",
+      "route": "/provider/properties/:id/review",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-11",
+      "route": "/provider/properties/:id/review",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-12",
+      "route": "/provider/properties/:id/submitted",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-13",
+      "route": "/provider/properties/:id/rejected",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-14",
+      "route": "/provider/properties/:id/published",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-15",
+      "route": "/provider/projects",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-16",
+      "route": "/provider/customer-requests",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-17",
+      "route": "/provider/customer-requests?create=1",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-18",
+      "route": "/provider/viewings",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-19",
+      "route": "/provider/ads",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-20",
+      "route": "/provider/commission",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-21",
+      "route": "/provider/notifications",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-22-1",
+      "route": "/provider/settings",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-22-2",
+      "route": "/provider/settings",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "PRV-22-3",
+      "route": "/provider/settings",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-01",
+      "route": "/admin",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-02",
+      "route": "/admin/users",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-03",
+      "route": "/admin/property-seekers",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-04",
+      "route": "/admin/providers",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-05",
+      "route": "/admin/verification",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-06",
+      "route": "/admin/account-reports",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-07",
+      "route": "/admin/account-reports/:id",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-08",
+      "route": "/admin/account-restrictions",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-09",
+      "route": "/admin/property-categories",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-10",
+      "route": "/admin/locations",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-11",
+      "route": "/admin/features",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-12",
+      "route": "/admin/projects",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-13",
+      "route": "/admin/projects/review",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-14",
+      "route": "/admin/properties",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-15",
+      "route": "/admin/properties/review",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-16",
+      "route": "/admin/properties/possible-duplicates",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-17",
+      "route": "/admin/property-reports",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-18",
+      "route": "/admin/requests",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-19",
+      "route": "/admin/customer-requests",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-20",
+      "route": "/admin/overdue-requests",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-21",
+      "route": "/admin/contact-requests",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-22",
+      "route": "/admin/viewing-requests",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-23",
+      "route": "/admin/search-requests",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-24",
+      "route": "/admin/request-issues",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-25",
+      "route": "/admin/articles",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-26",
+      "route": "/admin/article-categories",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-27",
+      "route": "/admin/community",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-28",
+      "route": "/admin/community/comments",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-29",
+      "route": "/admin/community/moderation",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-30",
+      "route": "/admin/content/about",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-31",
+      "route": "/admin/content/team",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-32",
+      "route": "/admin/content/population-counter",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-33",
+      "route": "/admin/ads/requests",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-34",
+      "route": "/admin/ads/payment-proofs/pending",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-35",
+      "route": "/admin/ads/payment-proofs/approved",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-36",
+      "route": "/admin/ads/calendar",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-37",
+      "route": "/admin/ads/payments/pending-review",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-38",
+      "route": "/admin/ads/financial-review",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-39",
+      "route": "/admin/commissions",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-40",
+      "route": "/admin/commissions/new",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-41",
+      "route": "/admin/commissions/history",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-42",
+      "route": "/admin/commissions/accounts/:id",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-43",
+      "route": "/admin/commissions/exceptions",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-44",
+      "route": "/admin/commissions/exceptions/new",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-45",
+      "route": "/admin/commissions/confirmations",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-46",
+      "route": "/admin/banners",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-47",
+      "route": "/admin/banners/new",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-48",
+      "route": "/admin/content/tips",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-49",
+      "route": "/admin/content/homepage",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-50",
+      "route": "/admin/settings/platform",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-51",
+      "route": "/admin/settings/contact",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-52",
+      "route": "/admin/settings/social",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-53",
+      "route": "/admin/settings/properties",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-54",
+      "route": "/admin/settings/requests",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-55",
+      "route": "/admin/settings/advertising",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-56",
+      "route": "/admin/settings/seo",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-57",
+      "route": "/admin/settings/privacy-security",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-58",
+      "route": "/admin/settings/display",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-59",
+      "route": "/admin/admin-users",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-60",
+      "route": "/admin/admin-users/new",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-61",
+      "route": "/admin/admin-users/:id",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-62",
+      "route": "/admin/admin-users/:id",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-63",
+      "route": "/admin/roles",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-64",
+      "route": "/admin/roles/:id",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-65",
+      "route": "/admin/notifications",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    },
+    {
+      "screenId": "ADM-66",
+      "route": "/admin/audit-logs",
+      "guidePath": null,
+      "guideJourneyReferences": [],
+      "status": "BLOCKED_GUIDE_FILE_MISSING"
+    }
+  ]
+}

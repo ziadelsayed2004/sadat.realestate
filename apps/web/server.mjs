@@ -67,7 +67,7 @@ function normalizePublicOrigin(value) {
   }
 }
 
-function applySecurityHeaders(response, html = false) {
+function applySecurityHeaders(response, html = false, development = false) {
   response.setHeader('X-Content-Type-Options', 'nosniff');
   response.setHeader('X-Frame-Options', 'DENY');
   response.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -79,6 +79,8 @@ function applySecurityHeaders(response, html = false) {
   const apiOrigin = normalizePublicOrigin(process.env.WEB_API_ORIGIN);
   const connectSources = apiOrigin === undefined ? "'self'" : `'self' ${apiOrigin}`;
   const imageSources = apiOrigin === undefined ? "'self' data: blob:" : `'self' ${apiOrigin} data: blob:`;
+  const scriptSources = development ? "'self' 'unsafe-inline'" : "'self'";
+  const developmentConnectSources = development ? `${connectSources} ws: wss:` : connectSources;
   response.setHeader('Content-Security-Policy', [
     "default-src 'self'",
     "base-uri 'self'",
@@ -86,11 +88,11 @@ function applySecurityHeaders(response, html = false) {
     "frame-ancestors 'none'",
     "frame-src 'none'",
     "form-action 'self'",
-    "script-src 'self'",
+    `script-src ${scriptSources}`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     `img-src ${imageSources}`,
-    `connect-src ${connectSources}`,
+    `connect-src ${developmentConnectSources}`,
     "worker-src 'self' blob:"
   ].join('; '));
 }
@@ -282,8 +284,8 @@ function serveCrawlerDocument(request, response, seoHelpers) {
   return true;
 }
 
-function sendHtml(response, statusCode, html) {
-  applySecurityHeaders(response, true);
+function sendHtml(response, statusCode, html, development = false) {
+  applySecurityHeaders(response, true, development);
   response.statusCode = statusCode;
   response.setHeader('Cache-Control', 'no-store');
   response.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -304,6 +306,17 @@ function rejectUnsupportedMethod(request, response) {
   return true;
 }
 
+function serveHealth(request, response) {
+  const pathname = new URL(request.url ?? '/', 'http://sadat.local').pathname;
+  if (pathname !== '/health') return false;
+  applySecurityHeaders(response);
+  response.statusCode = 200;
+  response.setHeader('Cache-Control', 'no-store');
+  response.setHeader('Content-Type', 'application/json; charset=utf-8');
+  response.end(request.method === 'HEAD' ? undefined : JSON.stringify({ status: 'ok', service: 'web' }));
+  return true;
+}
+
 async function renderDevelopmentPage(request, response, vite) {
   try {
     const requestUrl = request.url ?? '/';
@@ -317,7 +330,7 @@ async function renderDevelopmentPage(request, response, vite) {
       ...(publicOrigin === undefined ? {} : { publicOrigin })
     });
     const transformedTemplate = await vite.transformIndexHtml(requestUrl, template);
-    sendHtml(response, result.statusCode, renderDocument(transformedTemplate, result));
+    sendHtml(response, result.statusCode, renderDocument(transformedTemplate, result), true);
   } catch (error) {
     vite.ssrFixStacktrace(error);
     console.error(error);
@@ -329,10 +342,14 @@ async function createDevelopmentServer() {
   const vite = await createViteServer({
     root: appRoot,
     appType: 'custom',
-    server: { middlewareMode: true }
+    server: {
+      middlewareMode: true,
+      hmr: process.env.WEB_DISABLE_HMR === 'true' ? false : undefined
+    }
   });
   const server = createHttpServer((request, response) => {
     if (rejectUnsupportedMethod(request, response)) return;
+    if (serveHealth(request, response)) return;
     vite.middlewares(request, response, error => {
       if (error) {
         vite.ssrFixStacktrace(error);
@@ -401,6 +418,7 @@ async function createProductionServer() {
   const seoHelpers = { createRobotsTxt, createSitemapXml };
   const server = createHttpServer(async (request, response) => {
     if (rejectUnsupportedMethod(request, response)) return;
+    if (serveHealth(request, response)) return;
     if (serveCrawlerDocument(request, response, seoHelpers)) return;
     if (await serveAsset(request, response)) return;
     try {

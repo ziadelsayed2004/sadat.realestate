@@ -1,0 +1,12 @@
+[Unit]
+Description=Periodic Elsadat Real Estate health check
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+AccuracySec=30s
+Unit=elsadat-healthcheck.service
+
+[Install]
+WantedBy=timers.target
+

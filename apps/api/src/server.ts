@@ -15,7 +15,10 @@ import { createAuthRuntime } from './modules/auth/runtime.js';
 import { createSeekerRuntime } from './modules/seeker/runtime.js';
 import { createProviderRuntime } from './modules/provider/runtime.js';
 import { createPaymentProofRuntime } from './modules/payments/runtime.js';
-import { parseUploadEnvironment } from './modules/uploads/environment.js';
+import {
+  parseUploadEnvironment,
+  UploadEnvironmentValidationError
+} from './modules/uploads/environment.js';
 import { createUploadRuntime } from './modules/uploads/runtime.js';
 import { createRbacRuntime } from './modules/rbac/runtime.js';
 import { createAccountRuntime } from './modules/accounts/runtime.js';
@@ -279,6 +282,7 @@ async function runEntrypoint(): Promise<void> {
 function safeStartupMessage(error: unknown): string {
   if (error instanceof DatabaseEnvironmentValidationError) return error.message;
   if (error instanceof AuthEnvironmentValidationError) return error.message;
+  if (error instanceof UploadEnvironmentValidationError) return error.message;
   return error instanceof Error && error.name === 'EnvironmentValidationError'
     ? error.message
     : 'API server failed to start safely; database details were not emitted.';

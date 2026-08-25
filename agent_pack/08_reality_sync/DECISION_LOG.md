@@ -18,16 +18,19 @@ Q-004 through Q-012 remain explicitly pending in `01_product/OPEN_QUESTIONS.md`.
 
 ## DESIGN-DECISION-ADM-54-AUTHOR-001 - Owner authorization for a new local design
 
-- **Status:** Authoring authorized; explicit design review and approval pending
+- **Status:** Owner-authored source and structured runtime comparison approved
 - **Approved by:** Project Owner
+- **Approved on:** 2026-08-25
 - **Screen:** `ADM-54` - Request Settings
-- **Decision:** Author a new official local ADM-54 design instead of recovering or fabricating the unavailable historical Figma frame.
+- **Decision record:** `OWNER_DECISION_ADM_54: I approve docs/design_sources/final_screens/admin/ADM-54.owner-authored.png and ADM-54.owner-authored.html as the new authoritative ADM-54 Request Settings design source. The historical frame is confirmed absent from Figma, and no historical pixel-parity claim is made.`
+- **Decision:** Use the reviewed owner-authored HTML and PNG as the authoritative local ADM-54 source instead of recovering or fabricating the unavailable historical Figma frame.
 - **Design basis:** Existing Sadat Design System, Admin shell and navigation, adjacent `ADM-53` and `ADM-55` references, implemented Request Settings API, and current PRD.
 - **Primary scope:** Arabic RTL and Admin Desktop. English and Simplified Chinese LTR remain supported by the runtime.
 - **Required source:** `docs/design_sources/final_screens/admin/ADM-54.owner-authored.html` and its deterministic PNG review export.
 - **Functional constraint:** The design and runtime may expose only values returned by the implemented Request Settings API; no unsupported operational rules or fabricated production values may be added.
 - **Historical provenance retained:** The original Drive group and Figma prototype references remain recorded in the design-source manifest. This local source is not a recovered historical Figma artifact.
-- **Completion gate:** `frontend_096` must remain Partial until the Project Owner explicitly approves the authored source and runtime comparison. Direct comparison against the unavailable historical frame must not be claimed.
+- **Verified source hashes:** HTML `db4b978a09f1d0487f2bcd253c9de61ee587b0cf4bf690fe4b7aaf3d491c12d0`; PNG `7d9ee8a2cc7552c6a02031af888c1981c50928bcfc25591c121d33950674a364`.
+- **Completion gate:** The source-review decision, deterministic runtime comparison, focused locale, permission, state, accessibility, and build verification passed. `frontend_096` may close with the documented shell-width and tab-wrapping differences retained as structured debt. Direct comparison against the unavailable historical frame must not be claimed.
 
 ## Q-001 — Authentication identifiers and methods
 

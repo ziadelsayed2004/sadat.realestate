@@ -3,6 +3,7 @@ import type { AccessTokenService } from '../auth/crypto.js';
 import type { AuditWriter } from '../audit/writer.js';
 import {
   createDeterministicMalwareScanner,
+  createClamAvMalwareScanner,
   createInMemoryStorageAdapter,
   createLocalFilesystemStorageAdapter,
   createPrivateDownloadSigner,
@@ -31,14 +32,16 @@ export function createUploadRuntime(
     : environment.mode === 'local-filesystem'
       ? createLocalFilesystemStorageAdapter(environment.localRoot!)
       : createUnavailableStorageAdapter();
-  const scanner = environment.mode === 's3-compatible-unavailable'
-    ? createUnavailableMalwareScanner()
-    : createDeterministicMalwareScanner('clean');
+  const scanner = environment.scannerMode === 'clamav' && environment.clamav
+    ? createClamAvMalwareScanner(environment.clamav)
+    : environment.scannerMode === 'deterministic-fake'
+      ? createDeterministicMalwareScanner('clean')
+      : createUnavailableMalwareScanner();
   const service = createProviderDocumentService({
     repository: createMongooseProviderDocumentRepository(connection, createUploadModels(connection)),
     storage,
     scanner,
-    signer: createPrivateDownloadSigner(),
+    signer: createPrivateDownloadSigner(environment.downloadSigningSecret),
     authorization,
     audit: {
       async record(event) {

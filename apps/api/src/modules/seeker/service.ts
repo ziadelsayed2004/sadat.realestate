@@ -39,7 +39,12 @@ export interface SeekerServiceDependencies {
     verificationTokenHash: string,
     roleType: 'seeker',
     now: Date
-  ) => Promise<{ phone: string; roleType: 'seeker'; purpose: 'registration' } | undefined>;
+  ) => Promise<{
+    phone: string;
+    email: string;
+    roleType: 'seeker';
+    purpose: 'registration';
+  } | undefined>;
   authService: Pick<AuthService, 'issueAccount'>;
   now?: () => Date;
 }
@@ -66,6 +71,7 @@ function profileData(account: SeekerAccount): SeekerProfileData {
     roleType: 'seeker',
     status: account.status,
     phone: account.phone,
+    email: account.email,
     firstName: account.firstName,
     lastName: account.lastName,
     locale: account.locale
@@ -101,6 +107,7 @@ export function createSeekerService(dependencies: SeekerServiceDependencies): Se
       try {
         const createInput: CreateSeekerInput = {
           phone: grant.phone,
+          email: grant.email,
           firstName: input.firstName,
           lastName: input.lastName,
           locale: input.locale ?? 'ar'

@@ -1,0 +1,2407 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-25T18:00:00.000Z",
+  "canonicalScreenCount": 131,
+  "guidePath": null,
+  "guideAvailable": false,
+  "rows": [
+    {
+      "screenId": "PUB-01",
+      "surface": "public",
+      "route": "/",
+      "requiredRole": "public",
+      "backendTaskIds": [
+        "backend_060"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PUB-02",
+      "surface": "public",
+      "route": "/properties",
+      "requiredRole": "public",
+      "backendTaskIds": [
+        "backend_061"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PUB-03",
+      "surface": "public",
+      "route": "/properties/:slug",
+      "requiredRole": "public",
+      "backendTaskIds": [
+        "backend_062"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PUB-04",
+      "surface": "public",
+      "route": "/compare",
+      "requiredRole": "public",
+      "backendTaskIds": [
+        "backend_063"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PUB-05",
+      "surface": "public",
+      "route": "/developers",
+      "requiredRole": "public",
+      "backendTaskIds": [
+        "backend_064"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PUB-06",
+      "surface": "public",
+      "route": "/developers/:slug",
+      "requiredRole": "public",
+      "backendTaskIds": [
+        "backend_064"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PUB-07",
+      "surface": "public",
+      "route": "/articles",
+      "requiredRole": "public",
+      "backendTaskIds": [
+        "backend_092"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PUB-08",
+      "surface": "public",
+      "route": "/articles/:slug",
+      "requiredRole": "public",
+      "backendTaskIds": [
+        "backend_092"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PUB-09",
+      "surface": "public",
+      "route": "/community",
+      "requiredRole": "public",
+      "backendTaskIds": [
+        "backend_093",
+        "backend_096"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PUB-10",
+      "surface": "public",
+      "route": "/community?create=1",
+      "requiredRole": "public",
+      "backendTaskIds": [
+        "backend_093",
+        "backend_096"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PUB-11",
+      "surface": "public",
+      "route": "/about",
+      "requiredRole": "public",
+      "backendTaskIds": [
+        "backend_036"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PUB-12",
+      "surface": "public",
+      "route": "/team",
+      "requiredRole": "public",
+      "backendTaskIds": [
+        "backend_036"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-01",
+      "surface": "auth",
+      "route": "/auth/login",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_011",
+        "backend_012"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-02",
+      "surface": "auth",
+      "route": "/auth/register/seeker",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_013"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-03",
+      "surface": "auth",
+      "route": "/auth/register/seeker",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_013"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-04",
+      "surface": "auth",
+      "route": "/auth/verify-phone",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_011",
+        "backend_012"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-05",
+      "surface": "auth",
+      "route": "/auth/verify-phone",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_011",
+        "backend_012"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-06",
+      "surface": "auth",
+      "route": "/auth/register/seeker/success",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_013"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-07",
+      "surface": "auth",
+      "route": "/auth/register/provider/type",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_014"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-08",
+      "surface": "auth",
+      "route": "/auth/register/provider/type",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_014"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-09",
+      "surface": "auth",
+      "route": "/auth/register/provider/account",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_014"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-09+",
+      "surface": "auth",
+      "route": "/auth/register/provider/account",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_014"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-10",
+      "surface": "auth",
+      "route": "/auth/register/provider/business",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_014"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-10+",
+      "surface": "auth",
+      "route": "/auth/register/provider/business",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_014"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-11",
+      "surface": "auth",
+      "route": "/auth/register/provider/company",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_014"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-12",
+      "surface": "auth",
+      "route": "/auth/register/provider/documents",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_015"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-13",
+      "surface": "auth",
+      "route": "/auth/register/provider/review",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_014"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-14",
+      "surface": "auth",
+      "route": "/provider-application/status",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_014"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-15",
+      "surface": "auth",
+      "route": "/provider-application/status",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_014"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-16",
+      "surface": "auth",
+      "route": "/provider-application/needs-information",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_014"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "AUTH-17",
+      "surface": "auth",
+      "route": "/provider-application/approved",
+      "requiredRole": "anonymous",
+      "backendTaskIds": [
+        "backend_014"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "SEK-01",
+      "surface": "seeker",
+      "route": "/seeker",
+      "requiredRole": "seeker",
+      "backendTaskIds": [
+        "backend_066"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "SEK-02",
+      "surface": "seeker",
+      "route": "/seeker/requests",
+      "requiredRole": "seeker",
+      "backendTaskIds": [
+        "backend_075"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "SEK-03",
+      "surface": "seeker",
+      "route": "/seeker/requests/:id",
+      "requiredRole": "seeker",
+      "backendTaskIds": [
+        "backend_075"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "SEK-04",
+      "surface": "seeker",
+      "route": "/seeker/requests/:id",
+      "requiredRole": "seeker",
+      "backendTaskIds": [
+        "backend_075"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "SEK-05",
+      "surface": "seeker",
+      "route": "/seeker/viewings",
+      "requiredRole": "seeker",
+      "backendTaskIds": [
+        "backend_072"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "SEK-06",
+      "surface": "seeker",
+      "route": "/seeker/saved",
+      "requiredRole": "seeker",
+      "backendTaskIds": [
+        "backend_065"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "SEK-07",
+      "surface": "seeker",
+      "route": "/seeker/notifications",
+      "requiredRole": "seeker",
+      "backendTaskIds": [
+        "backend_068"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "SEK-08",
+      "surface": "seeker",
+      "route": "/seeker/profile?tab=preferences",
+      "requiredRole": "seeker",
+      "backendTaskIds": [
+        "backend_067"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "SEK-09",
+      "surface": "seeker",
+      "route": "/seeker/profile?tab=personal",
+      "requiredRole": "seeker",
+      "backendTaskIds": [
+        "backend_067"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "SEK-10",
+      "surface": "seeker",
+      "route": "/seeker/settings",
+      "requiredRole": "seeker",
+      "backendTaskIds": [
+        "backend_067"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-01",
+      "surface": "provider",
+      "route": "/provider",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_051",
+        "backend_066"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-02",
+      "surface": "provider",
+      "route": "/provider/properties",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_051"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-03",
+      "surface": "provider",
+      "route": "/provider/properties/new/basic",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_043",
+        "backend_044",
+        "backend_045",
+        "backend_046",
+        "backend_047",
+        "backend_048",
+        "backend_049"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-04",
+      "surface": "provider",
+      "route": "/provider/properties/:id/location",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_043",
+        "backend_044",
+        "backend_045",
+        "backend_046",
+        "backend_047",
+        "backend_048",
+        "backend_049"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-05",
+      "surface": "provider",
+      "route": "/provider/properties/:id/details",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_043",
+        "backend_044",
+        "backend_045",
+        "backend_046",
+        "backend_047",
+        "backend_048",
+        "backend_049"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-06",
+      "surface": "provider",
+      "route": "/provider/properties/:id/price-payment",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_043",
+        "backend_044",
+        "backend_045",
+        "backend_046",
+        "backend_047",
+        "backend_048",
+        "backend_049"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-07",
+      "surface": "provider",
+      "route": "/provider/properties/:id/features",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_043",
+        "backend_044",
+        "backend_045",
+        "backend_046",
+        "backend_047",
+        "backend_048",
+        "backend_049"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-08",
+      "surface": "provider",
+      "route": "/provider/properties/:id/media",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_043",
+        "backend_044",
+        "backend_045",
+        "backend_046",
+        "backend_047",
+        "backend_048",
+        "backend_049"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-09",
+      "surface": "provider",
+      "route": "/provider/properties/:id/contact",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_043",
+        "backend_044",
+        "backend_045",
+        "backend_046",
+        "backend_047",
+        "backend_048",
+        "backend_049"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-10",
+      "surface": "provider",
+      "route": "/provider/properties/:id/review",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_043",
+        "backend_044",
+        "backend_045",
+        "backend_046",
+        "backend_047",
+        "backend_048",
+        "backend_049"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-11",
+      "surface": "provider",
+      "route": "/provider/properties/:id/review",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_043",
+        "backend_044",
+        "backend_045",
+        "backend_046",
+        "backend_047",
+        "backend_048",
+        "backend_049"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-12",
+      "surface": "provider",
+      "route": "/provider/properties/:id/submitted",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_043",
+        "backend_044",
+        "backend_045",
+        "backend_046",
+        "backend_047",
+        "backend_048",
+        "backend_049"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-13",
+      "surface": "provider",
+      "route": "/provider/properties/:id/rejected",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_043",
+        "backend_044",
+        "backend_045",
+        "backend_046",
+        "backend_047",
+        "backend_048",
+        "backend_049"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-14",
+      "surface": "provider",
+      "route": "/provider/properties/:id/published",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_043",
+        "backend_044",
+        "backend_045",
+        "backend_046",
+        "backend_047",
+        "backend_048",
+        "backend_049"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-15",
+      "surface": "provider",
+      "route": "/provider/projects",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_040"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-16",
+      "surface": "provider",
+      "route": "/provider/customer-requests",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_074",
+        "backend_076"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-17",
+      "surface": "provider",
+      "route": "/provider/customer-requests?create=1",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_074",
+        "backend_076"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-18",
+      "surface": "provider",
+      "route": "/provider/viewings",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_072"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-19",
+      "surface": "provider",
+      "route": "/provider/ads",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_101",
+        "backend_107"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-20",
+      "surface": "provider",
+      "route": "/provider/commission",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_116"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-21",
+      "surface": "provider",
+      "route": "/provider/notifications",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_068"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-22-1",
+      "surface": "provider",
+      "route": "/provider/settings",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_123"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-22-2",
+      "surface": "provider",
+      "route": "/provider/settings",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_123"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "PRV-22-3",
+      "surface": "provider",
+      "route": "/provider/settings",
+      "requiredRole": "provider",
+      "backendTaskIds": [
+        "backend_123"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-01",
+      "surface": "admin",
+      "route": "/admin",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_120"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-02",
+      "surface": "admin",
+      "route": "/admin/users",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_016",
+        "backend_017",
+        "backend_019",
+        "backend_121"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-03",
+      "surface": "admin",
+      "route": "/admin/property-seekers",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_016",
+        "backend_017",
+        "backend_019",
+        "backend_121"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-04",
+      "surface": "admin",
+      "route": "/admin/providers",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_016",
+        "backend_017",
+        "backend_019",
+        "backend_121"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-05",
+      "surface": "admin",
+      "route": "/admin/verification",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_016",
+        "backend_017",
+        "backend_019",
+        "backend_121"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-06",
+      "surface": "admin",
+      "route": "/admin/account-reports",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_016",
+        "backend_017",
+        "backend_019",
+        "backend_121"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-07",
+      "surface": "admin",
+      "route": "/admin/account-reports/:id",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_016",
+        "backend_017",
+        "backend_019",
+        "backend_121"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-08",
+      "surface": "admin",
+      "route": "/admin/account-restrictions",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_016",
+        "backend_017",
+        "backend_019",
+        "backend_121"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-09",
+      "surface": "admin",
+      "route": "/admin/property-categories",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_031",
+        "backend_032",
+        "backend_033"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-10",
+      "surface": "admin",
+      "route": "/admin/locations",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_031",
+        "backend_032",
+        "backend_033"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-11",
+      "surface": "admin",
+      "route": "/admin/features",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_031",
+        "backend_032",
+        "backend_033"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-12",
+      "surface": "admin",
+      "route": "/admin/projects",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_040",
+        "backend_041",
+        "backend_049",
+        "backend_052",
+        "backend_053",
+        "backend_054"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-13",
+      "surface": "admin",
+      "route": "/admin/projects/review",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_040",
+        "backend_041",
+        "backend_049",
+        "backend_052",
+        "backend_053",
+        "backend_054"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-14",
+      "surface": "admin",
+      "route": "/admin/properties",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_040",
+        "backend_041",
+        "backend_049",
+        "backend_052",
+        "backend_053",
+        "backend_054"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-15",
+      "surface": "admin",
+      "route": "/admin/properties/review",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_040",
+        "backend_041",
+        "backend_049",
+        "backend_052",
+        "backend_053",
+        "backend_054"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-16",
+      "surface": "admin",
+      "route": "/admin/properties/possible-duplicates",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_040",
+        "backend_041",
+        "backend_049",
+        "backend_052",
+        "backend_053",
+        "backend_054"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-17",
+      "surface": "admin",
+      "route": "/admin/property-reports",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_040",
+        "backend_041",
+        "backend_049",
+        "backend_052",
+        "backend_053",
+        "backend_054"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-18",
+      "surface": "admin",
+      "route": "/admin/requests",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_070",
+        "backend_077",
+        "backend_078",
+        "backend_079"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-19",
+      "surface": "admin",
+      "route": "/admin/customer-requests",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_070",
+        "backend_077",
+        "backend_078",
+        "backend_079"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-20",
+      "surface": "admin",
+      "route": "/admin/overdue-requests",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_070",
+        "backend_077",
+        "backend_078",
+        "backend_079"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-21",
+      "surface": "admin",
+      "route": "/admin/contact-requests",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_070",
+        "backend_077",
+        "backend_078",
+        "backend_079"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-22",
+      "surface": "admin",
+      "route": "/admin/viewing-requests",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_070",
+        "backend_077",
+        "backend_078",
+        "backend_079"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-23",
+      "surface": "admin",
+      "route": "/admin/search-requests",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_070",
+        "backend_077",
+        "backend_078",
+        "backend_079"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-24",
+      "surface": "admin",
+      "route": "/admin/request-issues",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_070",
+        "backend_077",
+        "backend_078",
+        "backend_079"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-25",
+      "surface": "admin",
+      "route": "/admin/articles",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_090",
+        "backend_091",
+        "backend_095",
+        "backend_035",
+        "backend_036",
+        "backend_037"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-26",
+      "surface": "admin",
+      "route": "/admin/article-categories",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_090",
+        "backend_091",
+        "backend_095",
+        "backend_035",
+        "backend_036",
+        "backend_037"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-27",
+      "surface": "admin",
+      "route": "/admin/community",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_090",
+        "backend_091",
+        "backend_095",
+        "backend_035",
+        "backend_036",
+        "backend_037"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-28",
+      "surface": "admin",
+      "route": "/admin/community/comments",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_090",
+        "backend_091",
+        "backend_095",
+        "backend_035",
+        "backend_036",
+        "backend_037"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-29",
+      "surface": "admin",
+      "route": "/admin/community/moderation",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_090",
+        "backend_091",
+        "backend_095",
+        "backend_035",
+        "backend_036",
+        "backend_037"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-30",
+      "surface": "admin",
+      "route": "/admin/content/about",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_090",
+        "backend_091",
+        "backend_095",
+        "backend_035",
+        "backend_036",
+        "backend_037"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-31",
+      "surface": "admin",
+      "route": "/admin/content/team",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_090",
+        "backend_091",
+        "backend_095",
+        "backend_035",
+        "backend_036",
+        "backend_037"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-32",
+      "surface": "admin",
+      "route": "/admin/content/population-counter",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_090",
+        "backend_091",
+        "backend_095",
+        "backend_035",
+        "backend_036",
+        "backend_037"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-33",
+      "surface": "admin",
+      "route": "/admin/ads/requests",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_100",
+        "backend_101",
+        "backend_102",
+        "backend_103",
+        "backend_104",
+        "backend_105",
+        "backend_108"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-34",
+      "surface": "admin",
+      "route": "/admin/ads/payment-proofs/pending",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_100",
+        "backend_101",
+        "backend_102",
+        "backend_103",
+        "backend_104",
+        "backend_105",
+        "backend_108"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-35",
+      "surface": "admin",
+      "route": "/admin/ads/payment-proofs/approved",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_100",
+        "backend_101",
+        "backend_102",
+        "backend_103",
+        "backend_104",
+        "backend_105",
+        "backend_108"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-36",
+      "surface": "admin",
+      "route": "/admin/ads/calendar",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_100",
+        "backend_101",
+        "backend_102",
+        "backend_103",
+        "backend_104",
+        "backend_105",
+        "backend_108"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-37",
+      "surface": "admin",
+      "route": "/admin/ads/payments/pending-review",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_100",
+        "backend_101",
+        "backend_102",
+        "backend_103",
+        "backend_104",
+        "backend_105",
+        "backend_108"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-38",
+      "surface": "admin",
+      "route": "/admin/ads/financial-review",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_100",
+        "backend_101",
+        "backend_102",
+        "backend_103",
+        "backend_104",
+        "backend_105",
+        "backend_108"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-39",
+      "surface": "admin",
+      "route": "/admin/commissions",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_110",
+        "backend_111",
+        "backend_112",
+        "backend_114",
+        "backend_115"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-40",
+      "surface": "admin",
+      "route": "/admin/commissions/new",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_110",
+        "backend_111",
+        "backend_112",
+        "backend_114",
+        "backend_115"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-41",
+      "surface": "admin",
+      "route": "/admin/commissions/history",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_110",
+        "backend_111",
+        "backend_112",
+        "backend_114",
+        "backend_115"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-42",
+      "surface": "admin",
+      "route": "/admin/commissions/accounts/:id",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_110",
+        "backend_111",
+        "backend_112",
+        "backend_114",
+        "backend_115"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-43",
+      "surface": "admin",
+      "route": "/admin/commissions/exceptions",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_110",
+        "backend_111",
+        "backend_112",
+        "backend_114",
+        "backend_115"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-44",
+      "surface": "admin",
+      "route": "/admin/commissions/exceptions/new",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_110",
+        "backend_111",
+        "backend_112",
+        "backend_114",
+        "backend_115"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-45",
+      "surface": "admin",
+      "route": "/admin/commissions/confirmations",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_110",
+        "backend_111",
+        "backend_112",
+        "backend_114",
+        "backend_115"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-46",
+      "surface": "admin",
+      "route": "/admin/banners",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_035",
+        "backend_037",
+        "backend_038",
+        "backend_106"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-47",
+      "surface": "admin",
+      "route": "/admin/banners/new",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_035",
+        "backend_037",
+        "backend_038",
+        "backend_106"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-48",
+      "surface": "admin",
+      "route": "/admin/content/tips",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_035",
+        "backend_037",
+        "backend_038",
+        "backend_106"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-49",
+      "surface": "admin",
+      "route": "/admin/content/homepage",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_035",
+        "backend_037",
+        "backend_038",
+        "backend_106"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-50",
+      "surface": "admin",
+      "route": "/admin/settings/platform",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_035",
+        "backend_037",
+        "backend_038",
+        "backend_106"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-51",
+      "surface": "admin",
+      "route": "/admin/settings/contact",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_035",
+        "backend_037",
+        "backend_038",
+        "backend_106"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-52",
+      "surface": "admin",
+      "route": "/admin/settings/social",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_035",
+        "backend_037",
+        "backend_038",
+        "backend_106"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-53",
+      "surface": "admin",
+      "route": "/admin/settings/properties",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_039",
+        "backend_123"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-54",
+      "surface": "admin",
+      "route": "/admin/settings/requests",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_039",
+        "backend_123"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-55",
+      "surface": "admin",
+      "route": "/admin/settings/advertising",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_039",
+        "backend_123"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-56",
+      "surface": "admin",
+      "route": "/admin/settings/seo",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_039",
+        "backend_123"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-57",
+      "surface": "admin",
+      "route": "/admin/settings/privacy-security",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_039",
+        "backend_123"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-58",
+      "surface": "admin",
+      "route": "/admin/settings/display",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_039",
+        "backend_123"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-59",
+      "surface": "admin",
+      "route": "/admin/admin-users",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_016",
+        "backend_017",
+        "backend_121"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-60",
+      "surface": "admin",
+      "route": "/admin/admin-users/new",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_016",
+        "backend_017",
+        "backend_121"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-61",
+      "surface": "admin",
+      "route": "/admin/admin-users/:id",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_016",
+        "backend_017",
+        "backend_121"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-62",
+      "surface": "admin",
+      "route": "/admin/admin-users/:id",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_016",
+        "backend_017",
+        "backend_121"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-63",
+      "surface": "admin",
+      "route": "/admin/roles",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_016",
+        "backend_017",
+        "backend_121"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-64",
+      "surface": "admin",
+      "route": "/admin/roles/:id",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_016",
+        "backend_017",
+        "backend_121"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-65",
+      "surface": "admin",
+      "route": "/admin/notifications",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_122"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    },
+    {
+      "screenId": "ADM-66",
+      "surface": "admin",
+      "route": "/admin/audit-logs",
+      "requiredRole": "administrator",
+      "backendTaskIds": [
+        "backend_020"
+      ],
+      "apiDependencies": [],
+      "userGuideJourneyReferences": [],
+      "guideStatus": "BLOCKED_GUIDE_FILE_MISSING",
+      "supportedStates": [
+        "default"
+      ],
+      "verificationStatus": "PENDING_RUNTIME_MATRIX"
+    }
+  ]
+}

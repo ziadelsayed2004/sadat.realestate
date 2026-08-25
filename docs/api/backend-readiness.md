@@ -1,6 +1,17 @@
 # Backend readiness gate
 
-`apps/api/src/modules/release/readiness.ts` records the final backend gate as structured data. Local commands are represented individually (`typecheck`, lint, serial tests, coverage, build, dependency audit, inventory, OpenAPI, Postman, environment, integration, API, and Agent Pack audit). A failed local check produces `blocked`; a clean local matrix with unavailable external prerequisites produces `conditional`.
+`apps/api/src/modules/release/readiness.ts` represents typecheck, lint, tests, coverage, build, dependency audit, API inventory, OpenAPI, Postman, environment, integration, API, and Agent Pack checks individually.
 
-The checked-in external prerequisite list is intentionally blocked until an owner supplies an isolated MongoDB replica set, approved private storage/scanning adapters, a Docker engine run, and external security assurance. These are not silently reported as passed, and no production readiness, security certification, or frontend-started claim is made. `frontendStarted` is a contract literal set to `false` for this backend phase.
+External readiness remains conditional until an isolated native Ubuntu host proves:
+
+- Authenticated MongoDB `rs0` transactions and concurrency.
+- Nginx and Certbot public behavior.
+- systemd restart and graceful shutdown.
+- Hostinger SMTP authentication and real OTP delivery.
+- Native ClamAV signature freshness and infected-file rejection.
+- Private-storage authorization.
+- Encrypted off-server backup and isolated restore.
+- Monitoring, resource capacity, rollback, and external security assurance.
+
+Unavailable prerequisites are recorded as blocked, never passed.
 

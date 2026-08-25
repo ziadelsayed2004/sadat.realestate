@@ -44,12 +44,16 @@ function publishedProperty() {
 async function routeRegistration(page: Page): Promise<void> {
   await page.route('**/api/v1/auth/otp/send', async route => {
     expect(route.request().method()).toBe('POST');
-    expect(route.request().postDataJSON()).toEqual({ phone: '+201000000000', roleType: 'seeker', purpose: 'registration' });
+    expect(route.request().postDataJSON()).toEqual({
+      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'registration'
+    });
     await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ accepted: true, challengeId: '00000000-0000-4000-8000-000000000001', expiresInSeconds: 300, retryAfterSeconds: 30 }, 'critical-otp-send') });
   });
   await page.route('**/api/v1/auth/otp/verify', async route => {
     expect(route.request().method()).toBe('POST');
-    expect(route.request().postDataJSON()).toEqual({ phone: '+201000000000', roleType: 'seeker', purpose: 'registration', challengeId: '00000000-0000-4000-8000-000000000001', code: '123456' });
+    expect(route.request().postDataJSON()).toEqual({
+      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'registration', challengeId: '00000000-0000-4000-8000-000000000001', code: '123456'
+    });
     await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ outcome: 'verified', verificationToken: 'A'.repeat(43), expiresInSeconds: 600, roleType: 'seeker' }, 'critical-otp-verify') });
   });
 }
@@ -124,6 +128,7 @@ test.describe('F6 critical cross-surface journeys', () => {
     const locale = localeForProject();
     await routeRegistration(page);
     await page.goto(`/auth/verify-phone?lang=${encodeURIComponent(locale)}&purpose=registration&roleType=seeker`);
+    await page.locator('#auth-otp-email').fill('seeker@example.com');
     await page.locator('#auth-phone').fill('+20 100 000 0000');
     await page.locator('[data-screen-id="AUTH-04"] button[type="submit"]').click();
     await expect(page.locator('[data-screen-id="AUTH-05"]')).toBeVisible();

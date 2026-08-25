@@ -60,7 +60,12 @@ export function createProviderRuntime(
           now
         );
         return grant?.roleType === 'provider'
-          ? { phone: grant.phone, roleType: 'provider', purpose: 'registration' }
+          ? {
+              phone: grant.phone,
+              email: grant.email,
+              roleType: 'provider',
+              purpose: 'registration'
+            }
           : undefined;
       },
       authService

@@ -128,8 +128,8 @@
     },
     "/api/v1/auth/otp/send": {
       "post": {
-        "operationId": "sendPhoneOtp",
-        "summary": "Create and deliver a bounded phone OTP challenge",
+        "operationId": "sendEmailOtp",
+        "summary": "Create a phone-and-email-bound challenge and deliver its OTP by email",
         "requestBody": {
           "required": true,
           "content": {
@@ -164,8 +164,8 @@
     },
     "/api/v1/auth/otp/verify": {
       "post": {
-        "operationId": "verifyPhoneOtp",
-        "summary": "Verify a phone OTP for login or a one-time registration authority",
+        "operationId": "verifyEmailOtp",
+        "summary": "Verify an email-delivered OTP for login or a one-time registration authority",
         "requestBody": {
           "required": true,
           "content": {
@@ -12159,17 +12159,28 @@
         "maxLength": 16,
         "description": "Canonical E.164 phone number after removing allowed presentation separators or converting a 00 prefix"
       },
+      "NormalizedEmail": {
+        "type": "string",
+        "format": "email",
+        "minLength": 3,
+        "maxLength": 254,
+        "description": "Trimmed lowercase mailbox bound to the OTP challenge and account"
+      },
       "OtpSendRequest": {
         "type": "object",
         "additionalProperties": false,
         "required": [
           "phone",
+          "email",
           "roleType",
           "purpose"
         ],
         "properties": {
           "phone": {
             "$ref": "#/components/schemas/NormalizedPhone"
+          },
+          "email": {
+            "$ref": "#/components/schemas/NormalizedEmail"
           },
           "roleType": {
             "enum": [
@@ -12190,6 +12201,7 @@
         "additionalProperties": false,
         "required": [
           "phone",
+          "email",
           "roleType",
           "purpose",
           "challengeId",
@@ -12198,6 +12210,9 @@
         "properties": {
           "phone": {
             "$ref": "#/components/schemas/NormalizedPhone"
+          },
+          "email": {
+            "$ref": "#/components/schemas/NormalizedEmail"
           },
           "roleType": {
             "enum": [
@@ -12341,6 +12356,7 @@
           "roleType",
           "status",
           "phone",
+          "email",
           "firstName",
           "lastName",
           "locale"
@@ -12367,6 +12383,9 @@
           },
           "phone": {
             "$ref": "#/components/schemas/NormalizedPhone"
+          },
+          "email": {
+            "$ref": "#/components/schemas/NormalizedEmail"
           },
           "firstName": {
             "type": "string",

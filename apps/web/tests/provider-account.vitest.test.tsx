@@ -164,6 +164,7 @@ describe('provider account details', () => {
     fireEvent.click(screen.getByRole('button', { name: /developer company/iu }));
     fireEvent.click(screen.getByRole('button', { name: authCopy.continueAction }));
     await waitFor(() => expect(screen.getByRole('heading', { name: authCopy.phoneTitle, level: 1 })).toBeInTheDocument());
+    fireEvent.change(screen.getByLabelText(authCopy.identifierLabel), { target: { value: 'provider@example.com' } });
     fireEvent.change(screen.getByLabelText(authCopy.phoneLabel), { target: { value: '+20 100 000 0000' } });
     fireEvent.click(screen.getByRole('button', { name: authCopy.sendCodeAction }));
     await waitFor(() => expect(screen.getByRole('heading', { name: authCopy.otpTitle, level: 1 })).toBeInTheDocument());

@@ -56,7 +56,12 @@ export interface ProviderServiceDependencies {
     verificationTokenHash: string,
     roleType: 'provider',
     now: Date
-  ) => Promise<{ phone: string; roleType: 'provider'; purpose: 'registration' } | undefined>;
+  ) => Promise<{
+    phone: string;
+    email: string;
+    roleType: 'provider';
+    purpose: 'registration';
+  } | undefined>;
   authService: Pick<AuthService, 'issueAccount'>;
   now?: () => Date;
 }
@@ -238,6 +243,7 @@ export function createProviderService(dependencies: ProviderServiceDependencies)
       try {
         application = await dependencies.repository.createDraft({
           phone: grant.phone,
+          email: grant.email,
           providerType: input.providerType,
           requirementVersion: PROVIDER_REQUIREMENT_VERSION
         });

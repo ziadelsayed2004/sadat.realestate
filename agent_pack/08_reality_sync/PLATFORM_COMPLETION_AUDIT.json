@@ -78,7 +78,7 @@
     {
       "id": "OPS-001",
       "severity": "critical",
-      "finding": "Live production-parity MongoDB, private storage and scanning, OTP, monitoring, container, backup/restore, and external security evidence remains unavailable."
+      "finding": "Live production-parity MongoDB, private storage and scanning, OTP, monitoring, native Ubuntu services, backup/restore, and external security evidence remains unavailable."
     }
   ],
   "postReleaseTasks": [

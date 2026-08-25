@@ -85,7 +85,7 @@ export function createSeekerRouter(dependencies: SeekerRouterDependencies): Rout
     }
   });
 
-  router.use(createSeekerAuthMiddleware(dependencies.accessTokens));
+  router.use(['/seeker', '/me'], createSeekerAuthMiddleware(dependencies.accessTokens));
 
   router.get('/seeker/overview', async (request, response) => {
     try {

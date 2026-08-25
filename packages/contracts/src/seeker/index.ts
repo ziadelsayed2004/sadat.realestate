@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { authSessionDataSchema } from '../auth/index.js';
+import { authSessionDataSchema, normalizedEmailSchema } from '../auth/index.js';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
 
 export const seekerLocaleSchema = z.enum(['ar', 'en', 'zh-CN']);
@@ -49,6 +49,7 @@ export const seekerProfileDataSchema = z.object({
   roleType: z.literal('seeker'),
   status: z.enum(['draft', 'unverified', 'pending_review', 'needs_information', 'verified', 'rejected', 'restricted', 'suspended']),
   phone: z.string().regex(/^\+[1-9]\d{7,14}$/),
+  email: normalizedEmailSchema,
   firstName: nameSchema,
   lastName: nameSchema,
   locale: seekerLocaleSchema

@@ -6,7 +6,7 @@
 | Phase | F4_provider_dashboard |
 | Area | qa |
 | Kind | quality |
-| Sequence | 160 / 197 |
+| Sequence | 161 / 198 |
 | Depends on | `frontend_050` |
 
 ## Goal

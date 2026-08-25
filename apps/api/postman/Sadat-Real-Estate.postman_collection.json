@@ -1335,7 +1335,7 @@
       }
     },
     {
-      "name": "Auth - Send Phone OTP",
+      "name": "Auth - Send Email OTP",
       "event": [
         {
           "listen": "test",
@@ -1363,7 +1363,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"phone\": \"+201000000000\",\n  \"roleType\": \"seeker\",\n  \"purpose\": \"login\"\n}",
+          "raw": "{\n  \"phone\": \"+201000000000\",\n  \"email\": \"seeker@example.com\",\n  \"roleType\": \"seeker\",\n  \"purpose\": \"login\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -1384,7 +1384,7 @@
       }
     },
     {
-      "name": "Auth - Verify Phone OTP",
+      "name": "Auth - Verify Email OTP",
       "event": [
         {
           "listen": "test",
@@ -1411,7 +1411,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"phone\": \"+201000000000\",\n  \"roleType\": \"seeker\",\n  \"purpose\": \"login\",\n  \"challengeId\": \"replace-with-send-response-challenge-id\",\n  \"code\": \"000000\"\n}",
+          "raw": "{\n  \"phone\": \"+201000000000\",\n  \"email\": \"seeker@example.com\",\n  \"roleType\": \"seeker\",\n  \"purpose\": \"login\",\n  \"challengeId\": \"replace-with-send-response-challenge-id\",\n  \"code\": \"000000\"\n}",
           "options": {
             "raw": {
               "language": "json"

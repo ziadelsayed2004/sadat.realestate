@@ -6,7 +6,7 @@
 | Phase | B8_commissions |
 | Area | commissions |
 | Kind | api |
-| Sequence | 88 / 197 |
+| Sequence | 88 / 198 |
 | Depends on | `backend_110` |
 
 ## Goal

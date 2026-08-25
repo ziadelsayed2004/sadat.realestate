@@ -5,12 +5,14 @@ import {
 
 export const DEPLOYMENT_MANIFEST: DeploymentManifest = Object.freeze(deploymentManifestSchema.parse({
   nodeMajor: 24,
-  nonRootUser: 'node',
+  runtime: 'native-systemd',
+  reverseProxy: 'nginx',
+  nonRootUser: 'elsadat',
   healthPath: '/health',
   readinessPath: '/ready',
   shutdownGraceMs: 10_000,
-  imageStages: ['dependencies', 'build', 'runtime'],
-  composeServices: ['api', 'mongo', 'mongo-init']
+  databaseTopology: 'single-node-replica-set',
+  services: ['elsadat-api', 'elsadat-web', 'mongod', 'clamav-daemon']
 }));
 
 export function validateDeploymentManifest(input: unknown): DeploymentManifest {

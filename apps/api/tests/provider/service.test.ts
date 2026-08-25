@@ -42,6 +42,7 @@ function baseApplication(
     id: applicationId,
     userId: providerId,
     phone: '+201000000000',
+    email: 'provider@example.com',
     providerType: 'individual_broker',
     status: 'draft',
     version: 0,
@@ -74,7 +75,11 @@ function repository(initial = baseApplication()): ProviderRepository {
   let current = initial;
   return {
     async createDraft(input) {
-      current = baseApplication({ providerType: input.providerType, phone: input.phone });
+      current = baseApplication({
+        providerType: input.providerType,
+        phone: input.phone,
+        email: input.email
+      });
       return current;
     },
     async findByUserId(userId) {
@@ -128,7 +133,7 @@ function service(
     documentInventory: documents,
     registrationTokens: tokenService(),
     redeemRegistrationGrant: async () => ({
-      phone: '+201000000000', roleType: 'provider', purpose: 'registration'
+      phone: '+201000000000', email: 'provider@example.com', roleType: 'provider', purpose: 'registration'
     }),
     authService: { issueAccount: async () => session() } as Pick<AuthService, 'issueAccount'>,
     now: () => new Date('2026-08-13T02:00:00.000Z')
@@ -154,7 +159,12 @@ test('registers a provider draft from a one-time provider OTP authority and issu
     registrationTokens: tokenService(),
     redeemRegistrationGrant: async (hash) => {
       redeemed = hash;
-      return { phone: '+201000000000', roleType: 'provider', purpose: 'registration' };
+      return {
+        phone: '+201000000000',
+        email: 'provider@example.com',
+        roleType: 'provider',
+        purpose: 'registration'
+      };
     },
     authService: { issueAccount: async () => session() }
   }).registerDraft({ verificationToken: 'T'.repeat(43), providerType: 'brokerage_office' });
@@ -184,7 +194,8 @@ test('saves incomplete drafts, enforces step type, and detects stale versions', 
   const provider = service();
   const updated = await provider.updateAccount(claims, { version: 0, displayName: 'Updated Name' });
   assert.equal(updated.version, 1);
-  assert.ok(updated.missingFields.includes('email'));
+  assert.equal(updated.email, 'provider@example.com');
+  assert.equal(updated.missingFields.includes('email'), false);
   await assert.rejects(
     () => provider.updateAccount(claims, { version: 0, displayName: 'Stale' }),
     (error: unknown) => error instanceof ProviderServiceError

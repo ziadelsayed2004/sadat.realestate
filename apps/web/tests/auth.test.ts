@@ -175,12 +175,13 @@ test('invalid refresh clears the in-memory session and broadcasts logout', async
   client.dispose();
 });
 
-test('OTP send uses the implemented route and normalized phone contract', async () => {
+test('OTP send uses the implemented route and normalized phone-plus-email contract', async () => {
   const apiClient = new FakeApiClient(async (path, options) => {
     assert.equal(path, '/auth/otp/send');
     assert.equal(options.method, 'POST');
     assert.deepEqual(options.json, {
       phone: '+201000000000',
+      email: 'provider@example.com',
       roleType: 'provider',
       purpose: 'registration'
     });
@@ -195,6 +196,7 @@ test('OTP send uses the implemented route and normalized phone contract', async 
 
   const result = await client.sendOtp({
     phone: '+20 100 000 0000',
+    email: ' PROVIDER@EXAMPLE.COM ',
     roleType: 'provider',
     purpose: 'registration'
   });
@@ -229,6 +231,7 @@ test('OTP verification stores authenticated sessions without exposing access tok
     assert.equal(path, '/auth/otp/verify');
     assert.deepEqual(options.json, {
       phone: '+201000000000',
+      email: 'seeker@example.com',
       roleType: 'seeker',
       purpose: 'login',
       challengeId: '00000000-0000-4000-8000-000000000000',
@@ -240,6 +243,7 @@ test('OTP verification stores authenticated sessions without exposing access tok
 
   const result = await client.verifyOtp({
     phone: ' +20 100 000 0000 ',
+    email: ' SEEKER@EXAMPLE.COM ',
     roleType: 'seeker',
     purpose: 'login',
     challengeId: '00000000-0000-4000-8000-000000000000',

@@ -1,0 +1,98 @@
+{
+  "taskId": "backend_140",
+  "summary": "Replaced the stale embedded-Mongo local supervisor with a cross-platform native Node runtime that requires an external non-production MONGODB_URI, performs live API/Web/Mongo readiness checks, owns and cleans only its child processes, rotates logs, and applies deterministic idempotent v1/v2 synthetic showcase seeds without public private-file URLs. Updated local documentation and environment guidance to remove active Docker/download assumptions.",
+  "filesChanged": [
+    "package.json",
+    "package-lock.json",
+    ".env.local.example",
+    "README.md",
+    "scripts/local-runtime.mjs",
+    "scripts/native-local.mjs",
+    "scripts/native-local-supervisor.mjs",
+    "scripts/runtime-smoke.mjs",
+    "apps/api/src/modules/database/seed.ts",
+    "apps/api/tests/database/seed.test.ts",
+    "packages/config/scripts/workspace-policy.mjs",
+    "packages/config/tests/native-runtime.test.mjs",
+    "packages/config/tests/workspace-policy.test.mjs",
+    "docs/api/deployment.md",
+    "docs/api/environment.md",
+    "docs/api/uat-fixtures.md",
+    "docs/deployment/LOCAL_PREVIEW.md",
+    "docs/deployment/NATIVE_RUNTIME_MIGRATION_REPORT_2026-08-25.md",
+    "docs/deployment/DELIVERY_STATUS_2026-08-24.md",
+    "agent_pack/04_tracks/backend/B10_post_release_assurance/backend_140.md",
+    "agent_pack/scripts/add_post_release_assurance_tasks.mjs",
+    "agent_pack/03_execution/TASK_CATALOG.json",
+    "agent_pack/07_finish/backend_140/completion.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd ci --ignore-scripts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Clean install completed with 397 packages, 403 audited, and zero reported vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run local:prepare",
+      "exitCode": 1,
+      "result": "passed",
+      "notes": "Expected safe refusal because an existing user-owned .env.local was present; the command did not overwrite it."
+    },
+    {
+      "command": "npm.cmd run local:doctor with a process-only external MongoDB URI override",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Verified Node 24.19.0, npm 11.x, reachable standalone non-production MongoDB, writable runtime paths, dependency state, and free application ports without printing the URI or reading real .env contents."
+    },
+    {
+      "command": "npm.cmd run local:up && npm.cmd run local:status && npm.cmd run local:seed && npm.cmd run local:smoke",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Native API, Web SSR, SMTP catcher, and proxy reached ready state; status performed live checks; seed reapplied with applied=0; smoke passed twice with populated counts, API readiness, invalid API 404, private-file denial, and security headers."
+    },
+    {
+      "command": "npm.cmd run local:down; npm.cmd run local:status; npm.cmd run local:up; npm.cmd run local:status; npm.cmd run local:smoke",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Shutdown left the repository-owned runtime stopped, restart reached ready again, and post-restart smoke passed."
+    },
+    {
+      "command": "node --import tsx --test apps/api/tests/deployment/runtime.test.ts apps/api/tests/deployment/artifacts.test.ts packages/config/tests/native-runtime.test.mjs apps/api/tests/database/seed.test.ts",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "15 focused runtime/artifact tests and 6 seed tests passed, including readiness failure behavior, native process ownership, standalone Mongo guard, idempotence, workflow coverage, and private payment-proof metadata safety."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, and Web TypeScript checks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Workspace policy and ESLint completed with zero warnings/errors."
+    },
+    {
+      "command": "npm.cmd run build",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "Contracts, API, client, SSR, and bundle-budget checks passed."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "result": "passed",
+      "notes": "131 screens, 198 tasks, source checksums, English-only Agent Pack policy, and the single in-progress-task rule were valid before closure."
+    }
+  ],
+  "knownLimitations": [
+    "The existing user-owned .env.local was not opened, printed, or rewritten; it must be pointed at the intended installed service or isolated Atlas URI before an ordinary local start.",
+    "Automatic administrator bootstrap remains disabled for standalone MongoDB because transactions require a replica set or Atlas; this is intentional fail-closed behavior.",
+    "A live database-loss drill was not performed by stopping a privileged MongoDB service; readiness failure behavior is covered by focused API tests and the supervisor tears down on dependency loss.",
+    "Production SMTP, native Ubuntu/Nginx/systemd execution, backup/restore, external scanner/storage, and remote deployment remain outside this repository-only task."
+  ],
+  "completedAt": "2026-08-25T15:46:27.3227054Z"
+}

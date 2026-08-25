@@ -1,53 +1,79 @@
 # Sadat Real Estate Platform
 
-MERN monorepo for the Arabic-first Sadat Real Estate public site, authentication and onboarding, Seeker workspace, Property Provider dashboard, and Admin dashboard.
+Arabic-first MERN platform covering the public website, authentication and onboarding, Seeker workspace, Property Provider dashboard, and Admin dashboard.
 
-## Runtime
+## Supported runtime
 
-- Node.js `>=24 <25`
+- Node.js `24.x`
 - npm `>=11 <12`
 - TypeScript, Express, MongoDB/Mongoose, React 19, and Vite SSR
-- Arabic (`ar`) is the primary RTL locale; English (`en`) and Simplified Chinese (`zh-CN`) are LTR locales.
+- Arabic (`ar`) is RTL; English (`en`) and Simplified Chinese (`zh-CN`) are LTR.
 
-## Workspaces
+The supported deployment is native: Node.js processes managed by systemd behind Nginx, an authenticated loopback MongoDB replica set, native ClamAV, Certbot TLS, and Hostinger SMTP.
 
-- `apps/api` — versioned Express API
-- `apps/web` — Vite SSR frontend and protected SPA surfaces
-- `packages/contracts` — shared runtime and TypeScript contracts
-- `packages/ui` — reusable UI package boundary
-- `packages/config` — workspace policy and quality tooling
+## Local preview on Windows, Ubuntu, or macOS
 
-## Start
+Local preview uses an externally supplied non-production `MONGODB_URI` (an installed MongoDB service or isolated Atlas deployment). The repository starts only its own local SMTP catcher, API, Web SSR, and unified-origin proxy; it never downloads or starts MongoDB and never uses Docker.
 
 ```bash
 npm ci
-npm run env:check
-npm run quality
+npm run local:prepare
+npm run local:check
+npm run local:up
+npm run local:smoke
 ```
 
-Use `.env.example` files only as templates. Never read, commit, or print a real `.env`.
+Open:
 
-## Agent Pack
+- Platform: `http://localhost:8080`
+- Captured OTP email: `http://localhost:8025`
 
-The English-only execution graph is in `agent_pack/`. Run:
+The Local/UAT seed creates synthetic users and permission variants. The local-only administrator credential is documented in `docs/deployment/LOCAL_PREVIEW.md`; it exists only in the Local example and must never be reused on a VPS. Automatic administrator bootstrap is disabled for standalone MongoDB unless an operator explicitly supplies a replica set/Atlas configuration.
+
+Synthetic showcase data is inserted automatically and can be re-applied idempotently with `npm run local:seed`. Stop everything with `npm run local:down`; inspect startup output with `npm run local:logs`.
+
+If `.env.local` came from an earlier release, delete only that generated file and run `npm run local:prepare` again. Never commit a real environment file.
+
+See [`docs/deployment/LOCAL_PREVIEW.md`](docs/deployment/LOCAL_PREVIEW.md).
+
+## Hostinger Ubuntu VPS
+
+Production uses:
+
+- Nginx on ports 80/443.
+- API on loopback port 3000.
+- Web SSR on loopback port 4173.
+- MongoDB on loopback port 27017 in authenticated `rs0` mode.
+- ClamAV on loopback port 3310.
+- systemd services and timers.
+- Certbot certificates.
+- Hostinger SMTP from `info@elsadatrealestate.com`.
+
+Prepare secrets locally or on the target host:
 
 ```bash
+npm run production:prepare
+# Install it as root:elsadat mode 0640 and replace SMTP_PASSWORD.
+sudo -u elsadat env PRODUCTION_ENV_FILE=/etc/elsadatrealestate/production.env node scripts/production-preflight.mjs
+sudo -u elsadat env PRODUCTION_ENV_FILE=/etc/elsadatrealestate/production.env node scripts/native-production-check.mjs
+```
+
+Do not run synthetic seed data in Production. Follow [`docs/deployment/HOSTINGER_UBUNTU_RUNBOOK.md`](docs/deployment/HOSTINGER_UBUNTU_RUNBOOK.md) before switching DNS.
+
+The native single-VPS private-storage boundary still requires explicit Project Owner and Security approval or an approved S3-compatible adapter. Source-level readiness is not a Production approval.
+
+## Quality and Agent Pack
+
+```bash
+npm run typecheck
+npm run lint
+npm test
+npm run build
+npm run api:inventory
+npm run openapi:validate
+npm run postman:validate
 node agent_pack/scripts/audit_pack.mjs
 node agent_pack/scripts/select_next_step.mjs
 ```
 
-Read `agent_pack/step_info.json`, execute one dependency-ready task, verify it, create completion evidence, synchronize the pack, and stop.
-
-## Design Sources
-
-Approved visual exports and source artifacts are stored outside the English-only Agent Pack under `docs/design_sources/`. Their immutable checksums, Figma prototype references, Drive reference, Screen ID mappings, and availability state are recorded in `agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json`.
-
-The runtime product logo is the approved Sadat Real Estate artwork. DOT Studio artwork is supplier identity and must not be used as the product brand.
-
-## Current Boundary
-
-The historical implementation graph is preserved, but the post-release completion audit found that complete visual parity, a full live API matrix, and production-parity infrastructure are not yet proven. The Agent Pack now contains 197 tasks, including a dedicated post-release assurance phase. Run the selector for the current dependency-ready task; do not use old task counts or chat memory.
-
-Canonical approved sources have been restored and checksum-verified for 130 of 131 Screen IDs. `ADM-54` remains external-only. The current decision and detailed evidence are recorded in `agent_pack/08_reality_sync/PLATFORM_COMPLETION_AUDIT.json` and `docs/audits/PLATFORM_COMPLETION_AUDIT_AR.md`.
-
-Current completion claims remain intentionally false for all APIs tested, all 131 screens complete, production-parity readiness, and the full platform until the expanded graph closes with real evidence.
+The English-only execution graph is in `agent_pack/`. Design sources remain under `docs/design_sources/`; missing or mismatched source evidence must not be represented as verified.

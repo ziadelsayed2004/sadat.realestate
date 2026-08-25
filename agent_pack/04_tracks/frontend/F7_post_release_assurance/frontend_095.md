@@ -6,7 +6,7 @@
 | Phase | F7_post_release_assurance |
 | Area | admin UI |
 | Kind | visual quality |
-| Sequence | 194 / 197 |
+| Sequence | 195 / 198 |
 | Depends on | `frontend_094` |
 
 ## Goal

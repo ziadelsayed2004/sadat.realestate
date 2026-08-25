@@ -6,7 +6,7 @@
 | Phase | F7_post_release_assurance |
 | Area | final release |
 | Kind | release |
-| Sequence | 197 / 197 |
+| Sequence | 198 / 198 |
 | Depends on | `backend_139`, `frontend_096`, `frontend_097` |
 
 ## Goal
@@ -37,7 +37,7 @@ Re-run every repository-owned and external readiness gate and issue the final pl
 - [ ] Agent Pack audit, selector, manifests, counts, finish index, and truth docs are synchronized.
 - [ ] Every implemented API has the required matrix evidence or the all-APIs claim remains false.
 - [ ] Every canonical screen has direct approved-source evidence or the all-screens claim remains false.
-- [ ] Production-parity infrastructure, providers, backup/restore, monitoring, containers, and security assurance are proven.
+- [ ] Production-parity infrastructure, providers, backup/restore, monitoring, native services, and security assurance are proven.
 - [ ] Full platform completion is claimed only when the entire expanded graph is complete and all mandatory gates pass.
 
 ## Verification
@@ -45,4 +45,3 @@ Re-run every repository-owned and external readiness gate and issue the final pl
 - all root and workspace typecheck, lint, test, build, audit, inventory, contract, browser, visual, accessibility, performance, security, live-provider, and infrastructure gates
 - `node agent_pack/scripts/audit_pack.mjs`
 - `node agent_pack/scripts/select_next_step.mjs`
-

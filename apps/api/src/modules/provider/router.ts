@@ -158,7 +158,7 @@ export function createProviderRouter(dependencies: ProviderRouterDependencies): 
     }
   });
 
-  router.use(createProviderAuthMiddleware(dependencies.accessTokens));
+  router.use('/provider', createProviderAuthMiddleware(dependencies.accessTokens));
 
   router.get('/provider/application', async (request, response) => {
     try {

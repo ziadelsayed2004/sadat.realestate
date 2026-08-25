@@ -9,7 +9,7 @@ The identity module registers five connection-scoped Mongoose models: `User`, `S
 - Email is trimmed and lowercased.
 - Phone uses an E.164-shaped value.
 - Each identifier has a partial unique index, so uniqueness applies when that identifier exists.
-- At least one identifier is required. Resolved Q-001 assigns normalized E.164 phone plus OTP to Seekers and Property Providers, and normalized email plus password to Admin users.
+- At least one identifier is required. Current product truth requires both normalized E.164 phone and normalized email for Seekers and Property Providers; the OTP is delivered only to that email. Admin users use normalized email plus password.
 
 No password, OTP, raw session token, provider credential, or production account is included in these shared identity records. Admin password hashes are isolated in `admin_credentials`. OTP challenges are isolated in `otp_challenges`, store only keyed code and opaque verification-token hashes, and use explicit active-target, lookup, uniqueness, and TTL indexes.
 
@@ -17,7 +17,7 @@ No password, OTP, raw session token, provider credential, or production account 
 
 Each profile has a unique immutable `userId`. Provider type supports the three approved product categories: individual broker, office, and development company. Account and provider-review state constants and transition guards mirror the current state-machine document; undefined jumps such as unverified directly to verified or draft directly to approved are rejected by policy.
 
-Cross-document role/profile consistency is enforced by identity application services in later tasks. Admin login, seeker/provider phone OTP login, refresh rotation, reuse detection, logout, and one-time registration verification authority are implemented. Account registration, downstream bearer authorization, and public projections remain later scope.
+Cross-document role/profile consistency is enforced by identity application services in later tasks. Admin login, seeker/provider phone-and-email-bound OTP login, refresh rotation, reuse detection, logout, and one-time registration verification authority are implemented. Account registration, downstream bearer authorization, and public projections remain later scope.
 
 ## Sessions and indexes
 

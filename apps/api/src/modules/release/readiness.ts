@@ -33,9 +33,9 @@ export const RELEASE_EXTERNAL_PREREQUISITES: readonly ReleasePrerequisite[] = Ob
     ownerAction: 'Configure approved non-production private storage and malware-scanner adapters, then rerun readiness.'
   },
   {
-    name: 'docker-engine',
+    name: 'native-ubuntu-runtime',
     status: 'blocked',
-    ownerAction: 'Run the checked-in container artifacts with an approved Docker engine and record the health/readiness result.'
+    ownerAction: 'Provision the checked-in Nginx, systemd, MongoDB, ClamAV, backup, restore, and TLS artifacts on an isolated Ubuntu host and record readiness.'
   },
   {
     name: 'external-security-assurance',

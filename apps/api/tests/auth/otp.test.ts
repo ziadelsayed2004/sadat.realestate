@@ -4,8 +4,10 @@ import type { OpaqueTokenService, OtpCodeHasher } from '../../src/modules/auth/c
 import {
   createDeterministicFakeOtpProvider,
   createDeterministicOtpCodeGenerator,
+  createSmtpOtpProvider,
   createUnconfiguredOtpProvider,
-  type OtpDelivery
+  type OtpDelivery,
+  type SmtpTransport
 } from '../../src/modules/auth/otp-provider.js';
 import {
   createOtpService,
@@ -21,6 +23,7 @@ const challengeId = '123e4567-e89b-42d3-a456-426614174000';
 const challenge: OtpChallenge = {
   id: '0123456789abcdef01234567',
   phone: '+201000000000',
+  email: 'seeker@example.com',
   roleType: 'seeker',
   purpose: 'login',
   codeHash: 'hash:000000',
@@ -46,7 +49,7 @@ function repository(overrides: Partial<OtpRepository> = {}): OtpRepository {
     async recordFailedAttempt() { return { kind: 'retry', attemptsRemaining: 4 }; },
     async consumeLoginChallenge() { return true; },
     async verifyRegistrationChallenge() { return true; },
-    async findPhoneAccount() {
+    async findOtpAccount() {
       return { id: '0123456789abcdef01234567', roleType: 'seeker', status: 'verified' };
     },
     async redeemRegistrationGrant() { return undefined; },
@@ -97,7 +100,9 @@ test('uses deterministic Local/Test adapters without logging or returning the ra
       return { kind: 'created' };
     }
   }), createDeterministicFakeOtpProvider((delivery) => { delivered = delivery; }));
-  const result = await otp.send({ phone: '+201000000000', roleType: 'seeker', purpose: 'login' });
+  const result = await otp.send({
+    phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login'
+  });
   assert.deepEqual(result, {
     accepted: true,
     challengeId,
@@ -109,10 +114,60 @@ test('uses deterministic Local/Test adapters without logging or returning the ra
   assert.equal(JSON.stringify(result).includes('000000'), false);
 });
 
+test('delivers an Arabic-first OTP email through SMTP without using the phone as destination', async () => {
+  let message: Parameters<SmtpTransport['sendMail']>[0] | undefined;
+  const transport: SmtpTransport = {
+    async verify() { return true; },
+    async sendMail(value) { message = value; return { accepted: [value.to] }; }
+  };
+  const provider = createSmtpOtpProvider({
+    host: 'smtp.hostinger.com',
+    port: 465,
+    tls: 'implicit',
+    user: 'info@elsadatrealestate.com',
+    password: 'synthetic',
+    from: 'Elsadat Real Estate <info@elsadatrealestate.com>'
+  }, transport);
+  await provider.send({
+    phone: '+201000000000',
+    email: 'seeker@example.com',
+    roleType: 'seeker',
+    purpose: 'login',
+    code: '123456',
+    expiresAt: new Date(Date.now() + 300_000)
+  });
+  assert.equal(provider.kind, 'smtp');
+  assert.equal(await provider.isReady(), true);
+  assert.equal(await provider.verify(), true);
+  assert.equal(message?.to, 'seeker@example.com');
+  assert.equal(message?.from, 'Elsadat Real Estate <info@elsadatrealestate.com>');
+  assert.doesNotMatch(message?.subject ?? '', /123456/);
+  assert.match(message?.html ?? '', /رمز التحقق/);
+  assert.match(message?.text ?? '', /Never share this code/);
+  assert.equal(JSON.stringify(message).includes('+201000000000'), false);
+});
+
+test('SMTP readiness verifies credentials and fails closed without exposing transport errors', async () => {
+  const provider = createSmtpOtpProvider({
+    host: 'smtp.hostinger.com',
+    port: 465,
+    tls: 'implicit',
+    user: 'info@elsadatrealestate.com',
+    password: 'synthetic',
+    from: 'Elsadat Real Estate <info@elsadatrealestate.com>'
+  }, {
+    async verify() { throw new Error('synthetic credential detail'); },
+    async sendMail() { throw new Error('must not send'); }
+  });
+
+  assert.equal(await provider.isReady(), false);
+  assert.equal(await provider.verify(), false);
+});
+
 test('fails closed for unconfigured or failed providers and invalidates failed delivery', async () => {
   await rejectsWithCode(
     () => service(repository(), createUnconfiguredOtpProvider()).send({
-      phone: '+201000000000', roleType: 'seeker', purpose: 'login'
+      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login'
     }),
     'OTP_PROVIDER_UNAVAILABLE'
   );
@@ -120,7 +175,9 @@ test('fails closed for unconfigured or failed providers and invalidates failed d
   await rejectsWithCode(
     () => service(repository({ async cancelChallenge() { cancelled = true; } }), {
       kind: 'external', isReady: () => true, async send() { throw new Error('synthetic failure'); }
-    }).send({ phone: '+201000000000', roleType: 'seeker', purpose: 'login' }),
+    }).send({
+      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login'
+    }),
     'OTP_PROVIDER_UNAVAILABLE'
   );
   assert.equal(cancelled, true);
@@ -130,12 +187,14 @@ test('enforces target resend cooldown and a bounded invalid-attempt state', asyn
   await rejectsWithCode(
     () => service(repository({
       async createChallenge() { return { kind: 'cooldown', retryAfterSeconds: 42 }; }
-    })).send({ phone: '+201000000000', roleType: 'seeker', purpose: 'login' }),
+    })).send({
+      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login'
+    }),
     'OTP_SEND_RATE_LIMITED'
   );
   await rejectsWithCode(
     () => service(repository()).verify({
-      phone: '+201000000000', roleType: 'seeker', purpose: 'login', challengeId, code: '111111'
+      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '111111'
     }),
     'INVALID_OTP'
   );
@@ -143,7 +202,7 @@ test('enforces target resend cooldown and a bounded invalid-attempt state', asyn
     () => service(repository({
       async recordFailedAttempt() { return { kind: 'exhausted' }; }
     })).verify({
-      phone: '+201000000000', roleType: 'seeker', purpose: 'login', challengeId, code: '111111'
+      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '111111'
     }),
     'OTP_ATTEMPTS_EXCEEDED'
   );
@@ -151,7 +210,7 @@ test('enforces target resend cooldown and a bounded invalid-attempt state', asyn
 
 test('authenticates an existing phone account through the shared rotating-session boundary', async () => {
   const result = await service(repository()).verify({
-    phone: '+201000000000', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
+    phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
   });
   assert.equal(result.data.outcome, 'authenticated');
   if (result.data.outcome === 'authenticated' && 'refreshToken' in result) {
@@ -183,7 +242,7 @@ test('returns a hashed, one-time registration authority without creating an acco
     createChallengeId: () => challengeId
   });
   const result = await otp.verify({
-    phone: '+201000000000', roleType: 'seeker', purpose: 'registration', challengeId, code: '000000'
+    phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'registration', challengeId, code: '000000'
   });
   assert.deepEqual(result.data, {
     outcome: 'verified',
@@ -198,29 +257,29 @@ test('returns a hashed, one-time registration authority without creating an acco
 test('rejects expired, replayed, missing, or inactive login challenges without account enumeration', async () => {
   await rejectsWithCode(
     () => service(repository({ async findChallenge() { return undefined; } })).verify({
-      phone: '+201000000000', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
+      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
     }),
     'INVALID_OTP'
   );
   await rejectsWithCode(
     () => service(repository({ async consumeLoginChallenge() { return false; } })).verify({
-      phone: '+201000000000', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
+      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
     }),
     'INVALID_OTP'
   );
   await rejectsWithCode(
-    () => service(repository({ async findPhoneAccount() { return undefined; } })).verify({
-      phone: '+201000000000', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
+    () => service(repository({ async findOtpAccount() { return undefined; } })).verify({
+      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
     }),
     'INVALID_OTP'
   );
   await rejectsWithCode(
     () => service(repository({
-      async findPhoneAccount() {
+      async findOtpAccount() {
         return { id: '0123456789abcdef01234567', roleType: 'seeker', status: 'suspended' };
       }
     })).verify({
-      phone: '+201000000000', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
+      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
     }),
     'ACCOUNT_NOT_ACTIVE'
   );

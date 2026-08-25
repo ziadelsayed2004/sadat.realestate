@@ -1,0 +1,52 @@
+{
+  "taskId": "frontend_096",
+  "summary": "Completed ADM-54 as the Project Owner approved owner-authored Request Settings source. Verified source provenance and hashes, deterministic runtime comparison, API-backed empty projection safety, locale direction, Admin Desktop scope, permissions, accessibility, and focused browser coverage. No historical Figma frame or historical pixel-parity claim is made.",
+  "filesChanged": [
+    "docs/design_sources/final_screens/admin/ADM-54.owner-authored.html",
+    "docs/design_sources/final_screens/admin/ADM-54.owner-authored.png",
+    "docs/design_sources/final_screens/admin/ADM-54.runtime-ar.png",
+    "apps/web/src/features/admin_settings/views.tsx",
+    "apps/web/src/features/admin_settings/styles.css",
+    "apps/web/tests/admin-settings-074.vitest.test.tsx",
+    "apps/web/tests/e2e/admin-settings.spec.ts",
+    "apps/web/tests/e2e/admin-settings-accessibility.spec.ts",
+    "agent_pack/07_finish/frontend_096/design-comparison.json",
+    "agent_pack/04_tracks/frontend/F7_post_release_assurance/frontend_096.md",
+    "agent_pack/08_reality_sync/DECISION_LOG.md",
+    "agent_pack/01_product/SCREEN_REGISTRY.json",
+    "agent_pack/01_product/SCREEN_COVERAGE.json",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "apps/web/tests/admin-dashboard-qa.vitest.test.ts",
+    "apps/web/tests/uat-binding.vitest.test.ts",
+    "apps/web/tests/visual-fidelity.vitest.test.ts"
+  ],
+  "verification": [
+    {
+      "command": "SHA-256 verification for the owner-authored HTML and PNG",
+      "result": "passed",
+      "evidence": "HTML db4b978a09f1d0487f2bcd253c9de61ee587b0cf4bf690fe4b7aaf3d491c12d0 and PNG 7d9ee8a2cc7552c6a02031af888c1981c50928bcfc25591c121d33950674a364 match the recorded decision and comparison ledger."
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- admin-settings-074 admin-settings frontend-095-parity admin-dashboard-qa visual-fidelity uat-binding",
+      "result": "passed",
+      "evidence": "Six focused files and 27 tests passed, including API projection safety, RBAC, owner-source binding, Admin coverage, and UAT route bindings."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/admin-settings.spec.ts tests/e2e/admin-settings-accessibility.spec.ts --project=desktop-ar --project=desktop-en --project=desktop-zh",
+      "result": "passed",
+      "evidence": "All 15 Admin settings route, permission, mutation, empty-projection, locale, direction, focus, and accessibility cases passed across Arabic, English, and Simplified Chinese Desktop projects."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "result": "passed",
+      "evidence": "Agent Pack audit reports zero errors and no more than one in-progress task before this task is closed."
+    }
+  ],
+  "ownerDecision": "OWNER_DECISION_ADM_54: I approve docs/design_sources/final_screens/admin/ADM-54.owner-authored.png and ADM-54.owner-authored.html as the new authoritative ADM-54 Request Settings design source. The historical frame is confirmed absent from Figma, and no historical pixel-parity claim is made.",
+  "comparisonStatus": "verified-owner-approved-structured",
+  "knownLimitations": [
+    "The historical ADM-54 Figma/Drive frame is absent and remains unavailable for direct comparison.",
+    "The runtime inherits a narrower application shell and wraps the namespace tabs; these differences are recorded as structural debt and are not represented as historical pixel parity."
+  ],
+  "completedAt": "2026-08-25T15:10:00.000Z"
+}

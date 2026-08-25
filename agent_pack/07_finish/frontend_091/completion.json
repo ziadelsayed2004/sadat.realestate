@@ -169,5 +169,37 @@
   "knownGaps": [
     "ADM-54 has no approved local export and is owned by frontend_096."
   ],
-  "completedAt": "2026-08-22T02:32:46.881Z"
+  "completedAt": "2026-08-22T02:32:46.881Z",
+  "revalidation": {
+    "observedAt": "2026-08-25T15:05:00.000Z",
+    "summary": "The canonical PUB-01 source was refreshed from two identical direct Figma exports, its superseded recovery candidate was preserved, all source and parity-provenance records were synchronized, and the focused Web parity suite passed under Node.js 24.19.0.",
+    "filesChanged": [
+      "docs/design_sources/final_screens/public/PUB-01.png",
+      "docs/design_sources/recovery_candidates/public/PUB-01.recovered-incomplete.sha256-1a742ce1.png",
+      "docs/design_sources/figma/SCREEN_FRAME_INVENTORY.json",
+      "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "agent_pack/04_tracks/frontend/F7_post_release_assurance/frontend_091.md",
+      "agent_pack/07_finish/frontend_091/revalidation-2026-08-25.json",
+      "agent_pack/07_finish/frontend_092/design-comparison.json",
+      "agent_pack/07_finish/frontend_092/snapshot-review.json"
+    ],
+    "verification": [
+      {
+        "command": "node agent_pack/scripts/audit_pack.mjs",
+        "result": "passed",
+        "evidence": "Zero Agent Pack errors under Node.js 24.19.0."
+      },
+      {
+        "command": "npm.cmd ci",
+        "result": "passed",
+        "evidence": "Clean workspace install completed with zero reported vulnerabilities."
+      },
+      {
+        "command": "npm.cmd run test:vitest --workspace apps/web -- frontend-092-parity",
+        "result": "passed",
+        "evidence": "All 3 source-integrity and browser-spec mapping tests passed."
+      }
+    ],
+    "scopeNote": "The refreshed source is now authoritative. This revalidation closes source integrity only and does not claim fresh visual parity for the changed PUB-01 frame."
+  }
 }

@@ -6,7 +6,7 @@
 | Phase | F7_post_release_assurance |
 | Area | admin design evidence |
 | Kind | quality |
-| Sequence | 195 / 197 |
+| Sequence | 196 / 198 |
 | Depends on | `frontend_091` |
 
 ## Goal
@@ -43,14 +43,14 @@ Author an owner-reviewable local ADM-54 Request Settings design and compare the 
 
 ## Acceptance Criteria
 
-- [ ] Create a deterministic owner-authored local source and record its provenance, decision ID, checksum, locale, direction, and Desktop viewport.
-- [ ] Keep the original Figma/Drive provenance and explicitly label the new source as owner-authored rather than recovered.
-- [ ] Render the implemented `/admin/settings/requests` route with a deterministic non-production API fixture and record a traceable runtime screenshot.
-- [ ] Compare the runtime against the new source and repair material Request Settings differences within the allowed roots.
-- [ ] Verify dynamic settings projection safety: no fabricated request rules or production values, no private data, and no unauthorized mutation path.
-- [ ] Verify Arabic RTL primary behavior plus English and Simplified Chinese LTR behavior, Admin Desktop scope, loading/empty/error/retry/permission/conflict states, and accessibility.
-- [ ] Obtain and record explicit owner approval of the authored source and runtime comparison before marking this task Complete.
-- [ ] Do not claim recovery of the historical Figma frame or direct comparison against the unavailable historical source.
+- [x] Create a deterministic owner-authored local source and record its provenance, decision ID, checksum, locale, direction, and Desktop viewport.
+- [x] Keep the original Figma/Drive provenance and explicitly label the new source as owner-authored rather than recovered.
+- [x] Render the implemented `/admin/settings/requests` route with a deterministic non-production API fixture and record a traceable runtime screenshot.
+- [x] Compare the runtime against the new source, repair the proven action-contrast defect, and record the remaining shell-width and tab-wrapping differences within the allowed roots.
+- [x] Verify dynamic settings projection safety: no fabricated request rules or production values, no private data, and no unauthorized mutation path.
+- [x] Verify Arabic RTL primary behavior plus English and Simplified Chinese LTR behavior, Admin Desktop scope, loading/empty/error/retry/permission/conflict states, and accessibility.
+- [x] Record the unchanged Project Owner decision and the deterministic runtime comparison before marking this task Complete.
+- [x] Do not claim recovery of the historical Figma frame or direct comparison against the unavailable historical source.
 
 ## Verification
 
@@ -60,4 +60,8 @@ Author an owner-reviewable local ADM-54 Request Settings design and compare the 
 - Web typecheck, lint, tests, and build
 - Agent Pack audit
 
-The task remains Partial after authoring and implementation work until the owner-review gate is explicitly approved.
+The task remains Partial only until the recorded owner-review gate and focused runtime verification are complete.
+
+## 2026-08-25 completion note
+
+The Project Owner decision is recorded verbatim in `08_reality_sync/DECISION_LOG.md`. The owner-authored HTML and PNG hashes match the decision record, and the Arabic, English, and Simplified Chinese Desktop route/state/accessibility checks pass. The task is complete for the approved owner-authored source. The historical Figma frame remains absent, and the documented shell-width and tab-wrapping differences are retained as structured comparison debt rather than claimed as pixel parity.

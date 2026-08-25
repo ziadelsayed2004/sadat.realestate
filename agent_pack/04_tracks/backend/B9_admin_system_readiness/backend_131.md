@@ -6,7 +6,7 @@
 | Phase | B9_admin_system_readiness |
 | Area | performance |
 | Kind | quality |
-| Sequence | 106 / 197 |
+| Sequence | 106 / 198 |
 | Depends on | `backend_130` |
 
 ## Goal

@@ -14,7 +14,7 @@ Inventory root: `D:\Projects\$current.projects\sadat.realestate`
 - Runtime configuration covers `APP_ENV`, `API_HOST`, `API_PORT`, and a redacted `MONGODB_URI`; no authentication, provider, or payment secret names are invented.
 - The API exposes operational `/health` and `/ready` plus implemented Admin login, refresh rotation, and logout under `/api/v1/auth`. OpenAPI and Postman apply `/api/v1` exactly once and document only these active routes.
 - Agent Pack audit passes with 188 tasks, 131 screens, 160 planned endpoint entries, and zero errors. Mutable task state and selector output remain canonical in `agent_pack/03_execution/TASK_STATE.json` and `agent_pack/step_info.json`.
-- Node.js is `v22.18.0`; npm is `11.6.4`. The repository declares Node `>=24 <25` and npm `>=11 <12`.
+- Node.js 22.18 through 24.x and npm 11 are supported by the root manifest. CI currently pins Node 24; Windows Local may use the user's Node 22.18/npm 11.6.4 without engine warnings.
 
 ## Remaining runtime gaps
 

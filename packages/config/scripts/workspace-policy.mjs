@@ -16,10 +16,18 @@ export const EXPECTED_ROOT_DEV_DEPENDENCIES = {
 };
 
 export const EXPECTED_API_DEPENDENCIES = {
-  dependencies: { '@sadat-real-estate/contracts': '0.0.0', argon2: '0.45.1', express: '5.2.1', helmet: '8.3.0', mongoose: '9.9.2' },
+  dependencies: {
+    '@sadat-real-estate/contracts': '0.0.0',
+    argon2: '0.45.1',
+    express: '5.2.1',
+    helmet: '8.3.0',
+    mongoose: '9.9.2',
+    nodemailer: '9.0.5'
+  },
   devDependencies: {
     '@types/express': '5.0.6',
     '@types/node': '24.13.3',
+    '@types/nodemailer': '8.0.1',
     tsx: '4.23.12',
     typescript: '7.0.2'
   },

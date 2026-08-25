@@ -6,7 +6,7 @@
 | Phase | F5_admin_dashboard |
 | Area | qa |
 | Kind | quality |
-| Sequence | 178 / 197 |
+| Sequence | 179 / 198 |
 | Depends on | `frontend_076` |
 
 ## Goal

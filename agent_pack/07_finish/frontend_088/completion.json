@@ -146,7 +146,7 @@
     "The guide describes rollback constraints without inventing a provider-specific command or authorizing an irreversible Production action."
   ],
   "knownGaps": [
-    "Docker engine, managed Preview/UAT MongoDB, private storage/scanner, OTP provider, monitoring, backup/restore drill, and external security assurance remain external release-readiness prerequisites.",
+    "Native Ubuntu target, managed Preview/UAT MongoDB, private storage/scanner, OTP provider, monitoring, backup/restore drill, and external security assurance remain external release-readiness prerequisites.",
     "The repository does not define npm run security:check; existing API/browser security tests and dependency audit remain the available repository-owned evidence.",
     "No Production data, credential, external provider, or live deployment was used or claimed."
   ],

@@ -115,7 +115,7 @@ describe('UAT, Postman, and screen-state data binding', () => {
       expect(completion.verification.length, screen.frontendTaskId).toBeGreaterThan(0);
       if (source === undefined) continue;
       if (screen.id === 'ADM-54') {
-        expect(source.visualSourceStatus).toBe('OWNER_AUTHORED_LOCAL_REVIEW_PENDING');
+        expect(source.visualSourceStatus).toBe('OWNER_AUTHORED_LOCAL_REVIEW_APPROVED');
         expect(source.localSources.map(localSource => localSource.localPath)).toEqual([
           'docs/design_sources/final_screens/admin/ADM-54.owner-authored.html',
           'docs/design_sources/final_screens/admin/ADM-54.owner-authored.png'

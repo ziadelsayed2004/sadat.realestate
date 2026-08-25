@@ -32,6 +32,7 @@ export function createSeekerRuntime(
         );
         return grant?.roleType === 'seeker' ? {
           phone: grant.phone,
+          email: grant.email,
           roleType: 'seeker' as const,
           purpose: 'registration' as const
         } : undefined;

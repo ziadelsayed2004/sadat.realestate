@@ -70,6 +70,7 @@ export type ProviderWriteResult =
 export interface ProviderRepository {
   createDraft(input: {
     phone: string;
+    email: string;
     providerType: ProviderType;
     requirementVersion: string;
   }): Promise<ProviderApplicationEntity>;
@@ -192,6 +193,7 @@ export function createMongooseProviderRepository(
         const userId = await connection.transaction(async (session) => {
           const [user] = await User.create([{
             normalizedPhone: input.phone,
+            normalizedEmail: input.email,
             roleType: 'provider',
             status: 'draft',
             locale: 'ar'
@@ -206,7 +208,8 @@ export function createMongooseProviderRepository(
             userId: user._id,
             providerType: input.providerType,
             status: 'draft',
-            requirementVersion: input.requirementVersion
+            requirementVersion: input.requirementVersion,
+            email: input.email
           }], { session });
           return user._id.toHexString();
         });

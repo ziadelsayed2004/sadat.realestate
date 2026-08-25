@@ -42,3 +42,52 @@ test('rejects missing, short, malformed, or non-canonical access secrets without
     AuthEnvironmentValidationError
   );
 });
+
+test('parses Hostinger SMTP without exposing mailbox credentials', () => {
+  const password = 'synthetic-mailbox-password';
+  const environment = parseAuthEnvironment({
+    AUTH_ACCESS_TOKEN_SECRET: secret,
+    OTP_PROVIDER: 'smtp',
+    SMTP_HOST: 'smtp.hostinger.com',
+    SMTP_PORT: '465',
+    SMTP_TLS: 'implicit',
+    SMTP_USER: 'info@elsadatrealestate.com',
+    SMTP_PASSWORD: password,
+    SMTP_FROM: 'Elsadat Real Estate <info@elsadatrealestate.com>',
+    SMTP_PRODUCT_NAME: 'Elsadat Real Estate'
+  }, 'production');
+
+  assert.equal(environment.otpProviderMode, 'smtp');
+  assert.equal(environment.smtp?.port, 465);
+  assert.equal(environment.smtp?.tls, 'implicit');
+  const summary = toSafeAuthEnvironmentSummary(environment);
+  assert.equal(summary.smtp?.authenticated, true);
+  assert.equal(JSON.stringify(summary).includes(password), false);
+  assert.equal(JSON.stringify(summary).includes('SMTP_PASSWORD'), false);
+});
+
+test('allows local Mailpit but rejects insecure or incomplete protected SMTP settings', () => {
+  const mailpit = parseAuthEnvironment({
+    AUTH_ACCESS_TOKEN_SECRET: secret,
+    OTP_PROVIDER: 'smtp',
+    SMTP_HOST: 'mailpit',
+    SMTP_PORT: '1025',
+    SMTP_TLS: 'none',
+    SMTP_FROM: 'Elsadat Local <no-reply@elsadat.local>'
+  }, 'local');
+  assert.equal(mailpit.smtp?.user, undefined);
+  assert.throws(() => parseAuthEnvironment({
+    AUTH_ACCESS_TOKEN_SECRET: secret,
+    OTP_PROVIDER: 'smtp',
+    SMTP_HOST: 'smtp.hostinger.com',
+    SMTP_PORT: '587',
+    SMTP_TLS: 'none',
+    SMTP_USER: 'info@elsadatrealestate.com',
+    SMTP_PASSWORD: 'synthetic',
+    SMTP_FROM: 'info@elsadatrealestate.com'
+  }, 'production'), AuthEnvironmentValidationError);
+  assert.throws(() => parseAuthEnvironment({
+    AUTH_ACCESS_TOKEN_SECRET: secret,
+    OTP_PROVIDER: 'deterministic-fake'
+  }, 'production'), AuthEnvironmentValidationError);
+});

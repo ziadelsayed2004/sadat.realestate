@@ -16,7 +16,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\" \"vite.config.ts\" \"vitest.config.ts\" \"playwright.config.ts\" \"server.mjs\" --max-warnings=0",
     "pretest": "npm run build",
-    "test": "npm run test:vitest && tsx --test tests/accessibility.test.ts tests/auth.test.ts tests/components.test.ts tests/contracts.test.ts tests/design-system.test.ts tests/foundation.test.ts tests/localization.test.ts tests/routing.test.ts tests/ssr.test.mjs tests/ux-states.test.ts",
+    "test": "npm run test:vitest && node --import tsx --test tests/accessibility.test.ts tests/auth.test.ts tests/components.test.ts tests/contracts.test.ts tests/design-system.test.ts tests/foundation.test.ts tests/localization.test.ts tests/routing.test.ts tests/ssr.test.mjs tests/ux-states.test.ts",
     "pretest:vitest": "npm run prepare:contracts",
     "test:vitest": "vitest run --config vitest.config.ts",
     "pretest:e2e": "npm run build",

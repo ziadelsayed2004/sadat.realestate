@@ -6,7 +6,7 @@
 | Phase | F1_public_site |
 | Area | seo |
 | Kind | quality |
-| Sequence | 133 / 197 |
+| Sequence | 134 / 198 |
 | Depends on | `frontend_017` |
 
 ## Goal

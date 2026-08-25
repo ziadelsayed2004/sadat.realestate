@@ -36,8 +36,9 @@ test('registers private OTP challenges with explicit active, target, grant, and 
   const models = createAuthModels(connection);
   const challenge = new models.OtpChallenge({
     publicId: '123e4567-e89b-42d3-a456-426614174000',
-    activeKey: 'seeker:login:+201000000000',
+    activeKey: 'seeker:login:+201000000000:seeker@example.com',
     normalizedPhone: '+201000000000',
+    normalizedEmail: 'seeker@example.com',
     roleType: 'seeker',
     purpose: 'login',
     codeHash: 'H'.repeat(43),
@@ -55,14 +56,14 @@ test('registers private OTP challenges with explicit active, target, grant, and 
   assert.equal(indexes.get('otp_challenges_public_id_unique')?.options.unique, true);
   assert.equal(indexes.get('otp_challenges_active_key_unique')?.options.unique, true);
   assert.deepEqual(indexes.get('otp_challenges_target_created')?.keys, {
-    normalizedPhone: 1, roleType: 1, purpose: 1, createdAt: -1
+    normalizedPhone: 1, normalizedEmail: 1, roleType: 1, purpose: 1, createdAt: -1
   });
   assert.equal(indexes.get('otp_challenges_verification_token_unique')?.options.unique, true);
   assert.equal(indexes.get('otp_challenges_expiry_ttl')?.options.expireAfterSeconds, 0);
   assert.throws(
     () => new models.OtpChallenge({
       publicId: '123e4567-e89b-42d3-a456-426614174000',
-      normalizedPhone: '+201000000000', roleType: 'seeker', purpose: 'login',
+      normalizedPhone: '+201000000000', normalizedEmail: 'seeker@example.com', roleType: 'seeker', purpose: 'login',
       codeHash: 'H'.repeat(43), attemptsRemaining: 5, status: 'pending',
       expiresAt: new Date(), rawCode: '000000'
     }),

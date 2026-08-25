@@ -6,7 +6,7 @@
 | Phase | B5_requests_crm |
 | Area | notifications |
 | Kind | infrastructure |
-| Sequence | 69 / 197 |
+| Sequence | 69 / 198 |
 | Depends on | `backend_080` |
 
 ## Goal

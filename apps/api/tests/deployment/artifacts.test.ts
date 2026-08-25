@@ -6,25 +6,27 @@ import test from 'node:test';
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../..');
 
-test('checked-in container artifacts describe a multi-stage non-root runtime and safe health checks', async () => {
-  const dockerfile = await fs.readFile(path.join(repositoryRoot, 'Dockerfile'), 'utf8');
-  assert.match(dockerfile, /FROM node:24-bookworm-slim AS dependencies/);
-  assert.match(dockerfile, /FROM dependencies AS build/);
-  assert.match(dockerfile, /FROM node:24-bookworm-slim AS runtime/);
-  assert.match(dockerfile, /USER node/);
-  assert.match(dockerfile, /HEALTHCHECK/);
-  assert.match(dockerfile, /CMD \["node", "apps\/api\/dist\/server\.js"\]/);
-  assert.doesNotMatch(dockerfile, /AUTH_ACCESS_TOKEN_SECRET\s*=/);
+test('checked-in system services run API and Web as a restricted non-root account', async () => {
+  const api = await fs.readFile(path.join(repositoryRoot, 'deploy/systemd/elsadat-api.service'), 'utf8');
+  const web = await fs.readFile(path.join(repositoryRoot, 'deploy/systemd/elsadat-web.service'), 'utf8');
+  for (const unit of [api, web]) {
+    assert.match(unit, /User=elsadat/);
+    assert.match(unit, /EnvironmentFile=\/etc\/elsadatrealestate\/production\.env/);
+    assert.match(unit, /NoNewPrivileges=true/);
+    assert.match(unit, /ProtectSystem=strict/);
+    assert.doesNotMatch(unit, /AUTH_ACCESS_TOKEN_SECRET\s*=/);
+  }
+  assert.match(api, /ExecStart=\/usr\/bin\/node apps\/api\/dist\/server\.js/);
+  assert.match(web, /ExecStart=\/usr\/bin\/node apps\/web\/server\.mjs --mode production/);
 });
 
-test('development Compose provisions an isolated Mongo replica set without checked-in secrets', async () => {
-  const compose = await fs.readFile(path.join(repositoryRoot, 'docker-compose.yml'), 'utf8');
-  assert.match(compose, /services:/);
-  assert.match(compose, /\n\s{2}api:/);
-  assert.match(compose, /\n\s{2}mongo:/);
-  assert.match(compose, /\n\s{2}mongo-init:/);
-  assert.match(compose, /replicaSet=rs0/);
-  assert.match(compose, /service_completed_successfully/);
-  assert.match(compose, /\$\{AUTH_ACCESS_TOKEN_SECRET:\?/);
-  assert.doesNotMatch(compose, /AUTH_ACCESS_TOKEN_SECRET:\s*['"]?[A-Za-z0-9_-]{43,}['"]?/);
+test('native MongoDB and Nginx artifacts use loopback boundaries and an authenticated replica set', async () => {
+  const mongo = await fs.readFile(path.join(repositoryRoot, 'deploy/mongodb/mongod-production.conf'), 'utf8');
+  const nginx = await fs.readFile(path.join(repositoryRoot, 'deploy/nginx/elsadatrealestate.conf'), 'utf8');
+  assert.match(mongo, /bindIp: 127\.0\.0\.1/);
+  assert.match(mongo, /replSetName: rs0/);
+  assert.match(mongo, /authorization: enabled/);
+  assert.match(nginx, /proxy_pass http:\/\/127\.0\.0\.1:3000;/);
+  assert.match(nginx, /proxy_pass http:\/\/127\.0\.0\.1:4173;/);
+  assert.doesNotMatch(nginx, /PRIVATE_DOWNLOAD_SIGNING_SECRET|SMTP_PASSWORD/);
 });

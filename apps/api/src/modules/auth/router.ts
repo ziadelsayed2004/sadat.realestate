@@ -16,8 +16,8 @@ import type { AccessTokenService } from './crypto.js';
 
 export const AUTH_ROUTE_DEFINITIONS = [
   { method: 'POST', path: '/api/v1/auth/login', operationId: 'loginAdmin' },
-  { method: 'POST', path: '/api/v1/auth/otp/send', operationId: 'sendPhoneOtp' },
-  { method: 'POST', path: '/api/v1/auth/otp/verify', operationId: 'verifyPhoneOtp' },
+  { method: 'POST', path: '/api/v1/auth/otp/send', operationId: 'sendEmailOtp' },
+  { method: 'POST', path: '/api/v1/auth/otp/verify', operationId: 'verifyEmailOtp' },
   { method: 'POST', path: '/api/v1/auth/refresh', operationId: 'refreshSession' },
   { method: 'POST', path: '/api/v1/auth/logout', operationId: 'logoutSession' }
 ] as const;

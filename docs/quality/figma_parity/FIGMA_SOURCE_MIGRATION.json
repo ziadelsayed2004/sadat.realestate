@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-25T18:00:00.000Z",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "canonicalDesignUrl": "https://www.figma.com/design/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?m=auto&t=5p22yTz0XefwFXqg-6",
+  "forbiddenFigmaKeyUsedByActiveSources": false,
+  "activeReferenceRootsChecked": [
+    "agent_pack/00_start_here",
+    "agent_pack/01_product",
+    "agent_pack/09_sources",
+    "docs/design_sources/handoff"
+  ],
+  "migratedFiles": [
+    "agent_pack/00_start_here/SOURCE_OF_TRUTH.md",
+    "agent_pack/01_product/SCREEN_COVERAGE.json",
+    "agent_pack/01_product/SCREEN_REGISTRY.json",
+    "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "docs/design_sources/handoff/developer-handoff.source.html",
+    "docs/design_sources/handoff/prototype-flow-hub.source.html"
+  ],
+  "canonicalPrototypes": {
+    "public": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-10847&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4352&starting-point-node-id=6017%3A10847",
+    "auth": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-16212&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "seeker": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6027-3579&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4354&starting-point-node-id=6027%3A3579",
+    "provider": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-19032&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4355&starting-point-node-id=6017%3A19032",
+    "admin": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-61879&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4356&starting-point-node-id=6017%3A61879&show-proto-sidebar=1",
+    "responsivePrimary": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-112299&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4357&starting-point-node-id=6017%3A110431&show-proto-sidebar=1",
+    "responsiveSecondary": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-110792&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4357&starting-point-node-id=6017%3A110792&show-proto-sidebar=1"
+  },
+  "historicalEvidencePolicy": "Retired finish evidence may retain old external provenance only when explicitly labeled historical and excluded from current verification.",
+  "historicalEvidenceRoots": [
+    "agent_pack/07_finish/**"
+  ]
+}

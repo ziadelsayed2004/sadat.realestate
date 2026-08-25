@@ -1,0 +1,259 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-01",
+  "classification": "PARTIAL",
+  "classificationReason": "Fresh source and runtime capture completed; direct comparison found major structural/content/media differences and repair/parity confirmation is not complete.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4352",
+    "nodeId": "6017:10847",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-10847&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4352&starting-point-node-id=6017%3A10847",
+    "screenshot": {
+      "path": "docs/quality/figma_parity/screens/PUB-01/figma.png",
+      "width": 1549,
+      "height": 5378,
+      "reviewed": true
+    },
+    "getDesignContext": {
+      "tool": "mcp__figma__get_design_context",
+      "skill": "resource:figma-design-to-code",
+      "resultStatus": "SPARSE_METADATA_DUE_TO_CONTEXT_LIMIT",
+      "root": {
+        "id": "6017:10847",
+        "name": "PUB-01 — Home / الرئيسية",
+        "width": 1549,
+        "height": 5284
+      },
+      "retrievedRegions": [
+        "header",
+        "hero/search",
+        "advertising banner",
+        "population counter",
+        "property categories",
+        "featured properties",
+        "articles",
+        "community",
+        "about",
+        "CTA",
+        "footer"
+      ],
+      "reviewed": true,
+      "note": "The tool explicitly returned sparse metadata and instructed sublayer retrieval for full code; this is recorded as an incomplete context result, not treated as parity proof."
+    }
+  },
+  "runtime": {
+    "route": "/",
+    "role": "public",
+    "permissions": {
+      "requiredRole": "public",
+      "ownership": "public",
+      "availableActionsObserved": {
+        "links": [
+          {
+            "text": "تخطي إلى المحتوى الرئيسي",
+            "href": "#main-content"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "الرئيسية",
+            "href": "/"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "المقالات",
+            "href": "/articles"
+          },
+          {
+            "text": "المجتمع",
+            "href": "/community"
+          },
+          {
+            "text": "عن المنصة",
+            "href": "/about"
+          },
+          {
+            "text": "فريقنا",
+            "href": "/team"
+          },
+          {
+            "text": "تسجيل الدخول",
+            "href": "/auth/login"
+          },
+          {
+            "text": "إنشاء حساب",
+            "href": "/auth/register"
+          },
+          {
+            "text": "تصفح العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون والشركات",
+            "href": "/developers"
+          },
+          {
+            "text": "◆property1",
+            "href": "/properties?kind=property"
+          },
+          {
+            "text": "عرض الكل",
+            "href": "/properties"
+          },
+          {
+            "text": "منزل منشور",
+            "href": "/properties/published-home"
+          },
+          {
+            "text": "عرض الكل",
+            "href": "/developers"
+          },
+          {
+            "text": "المطور المعتمد",
+            "href": "/developers/approved-builder"
+          },
+          {
+            "text": "اقرأ المزيد",
+            "href": "/articles"
+          },
+          {
+            "text": "تصفح العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "المقالات",
+            "href": "/articles"
+          },
+          {
+            "text": "عن المنصة",
+            "href": "/about"
+          }
+        ],
+        "buttons": [
+          {
+            "text": "بحث",
+            "aria": null
+          }
+        ]
+      },
+      "source": "runtime DOM and route contract"
+    },
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "deterministicState": {
+      "path": "docs/quality/figma_parity/screens/PUB-01/deterministic-state.json",
+      "seedId": "fresh-audit-public-home-ar-v1",
+      "responseSha256": "2b9d567e2d78a7902b7d17284f00d7e4f24cda62088428635608a329f9b24a97"
+    },
+    "response": {
+      "status": 200,
+      "ok": true
+    },
+    "apiRequests": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/home"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/home",
+        "status": 200
+      }
+    ],
+    "before": {
+      "path": "docs/quality/figma_parity/screens/PUB-01/runtime-before.png",
+      "sha256": "775ed3ca971ead2112ab9ee5441005a21f50acbec3f35cd4475eb2678d7bcbd6"
+    },
+    "after": {
+      "path": "docs/quality/figma_parity/screens/PUB-01/runtime-after.png",
+      "sha256": "775ed3ca971ead2112ab9ee5441005a21f50acbec3f35cd4475eb2678d7bcbd6"
+    }
+  },
+  "structuredVisualComparison": {
+    "reviewed": true,
+    "diffPath": "docs/quality/figma_parity/screens/PUB-01/diff.png",
+    "sourceDimensions": [
+      {
+        "width": 1549,
+        "height": 5378
+      },
+      {
+        "width": 1280,
+        "height": 4712
+      },
+      {
+        "width": 1280,
+        "height": 4712
+      }
+    ],
+      "observations": [
+      "Figma source is a 1549px-wide, 5378px rendered Arabic homepage reference.",
+      "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 4712px document height.",
+      "Runtime has the public shell and success state, but the seeded content renders one property, one developer, and sparse content cards instead of the clone's complete multi-card sections.",
+      "The Figma hero uses the approved Sadat city image and centered search composition; runtime uses the current geometric fallback artwork and a different control arrangement.",
+      "The clone contains populated categories, featured properties, articles, community cards, an about/media panel, CTA, and footer details that are absent or materially reduced in the runtime capture.",
+      "The side-by-side diff is evidence for review only; no baseline was updated.",
+      "Exact typography, spacing, imagery, control states, responsive variants, and prototype transitions remain to be checked against focused fixtures."
+    ]
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "requestProjection": "GET /api/v1/public/home -> publicHomepageSuccessEnvelopeSchema",
+    "responseProjection": "deterministic fixture captured and hashed",
+    "outcome": "route loaded with a public success fixture; complete CTA/prototype/API projection comparison remains pending"
+  },
+  "defects": [
+    "Full per-screen parity review is incomplete.",
+    "Figma get_design_context returned sparse metadata because the full frame exceeded context limits.",
+    "Runtime hero imagery and search composition do not match the canonical clone.",
+    "Runtime deterministic content does not populate the complete clone hierarchy (categories, featured properties, articles, community, and about/media content).",
+    "Exact typography, spacing, state variants, transitions, and responsive behavior remain unverified."
+  ],
+  "filesRepaired": [],
+  "focusedTests": [
+    { "name": "apps/web typecheck", "command": "npm.cmd run typecheck --workspace apps/web", "exitCode": 0 },
+    { "name": "public feature lint", "command": "npm.cmd exec --workspace apps/web -- eslint src/features/public tests/e2e/public-fixtures.ts --max-warnings=0", "exitCode": 0 },
+    { "name": "API contract tests", "command": "node --import tsx --test apps/web/tests/contracts.test.ts", "exitCode": 0 },
+    { "name": "focused Playwright visual", "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public homepage renders its SSR shell\"", "exitCode": 0 },
+    { "name": "focused Playwright accessibility", "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public homepage exposes a labeled navigation\"", "exitCode": 0 }
+  ],
+  "accessibility": {
+    "focusedCheck": "public homepage exposes a labeled navigation, search form, and image states",
+    "exitCode": 0
+  },
+  "evidencePaths": {
+    "figma": "docs/quality/figma_parity/screens/PUB-01/figma.png",
+    "runtimeBefore": "docs/quality/figma_parity/screens/PUB-01/runtime-before.png",
+    "runtimeAfter": "docs/quality/figma_parity/screens/PUB-01/runtime-after.png",
+    "diff": "docs/quality/figma_parity/screens/PUB-01/diff.png",
+    "review": "docs/quality/figma_parity/screens/PUB-01/review.json"
+  }
+}

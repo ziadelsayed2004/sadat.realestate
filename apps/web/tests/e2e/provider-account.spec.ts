@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 const VERIFICATION_TOKEN = 'V'.repeat(43);
 const ACCESS_TOKEN = 'header.payload.signature';
 const PHONE = '+201000000000';
+const EMAIL = 'provider@example.com';
 const APPLICATION_ID = 'a'.repeat(24);
 const USER_ID = 'b'.repeat(24);
 
@@ -45,7 +46,7 @@ async function mockProviderApplicationApi(page: import('@playwright/test').Page)
 
   await page.route('**/api/v1/auth/otp/send', async route => {
     const body = route.request().postDataJSON() as Record<string, unknown>;
-    expect(body).toMatchObject({ roleType: 'provider', purpose: 'registration', phone: PHONE });
+    expect(body).toMatchObject({ roleType: 'provider', purpose: 'registration', phone: PHONE, email: EMAIL });
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -60,7 +61,7 @@ async function mockProviderApplicationApi(page: import('@playwright/test').Page)
 
   await page.route('**/api/v1/auth/otp/verify', async route => {
     const body = route.request().postDataJSON() as Record<string, unknown>;
-    expect(body).toMatchObject({ roleType: 'provider', purpose: 'registration', phone: PHONE, code: '123456' });
+    expect(body).toMatchObject({ roleType: 'provider', purpose: 'registration', phone: PHONE, email: EMAIL, code: '123456' });
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -124,6 +125,7 @@ async function reachAccountDetails(page: import('@playwright/test').Page, locale
   await page.locator('[data-provider-type="developer_company"]').click();
   await page.getByRole('button', { name: /continue|متابعة|继续/iu }).click();
   await expect(page.locator('[data-screen-id="AUTH-04"]')).toBeVisible();
+  await page.locator('#auth-otp-email').fill(EMAIL);
   await page.locator('#auth-phone').fill(PHONE);
   await page.locator('[data-screen-id="AUTH-04"] button[type="submit"]').click();
   await expect(page.locator('[data-screen-id="AUTH-05"]')).toBeVisible();

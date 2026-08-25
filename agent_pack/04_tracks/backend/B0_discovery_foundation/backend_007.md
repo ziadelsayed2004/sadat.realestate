@@ -6,7 +6,7 @@
 | Phase | B0_discovery_foundation |
 | Area | observability |
 | Kind | infrastructure |
-| Sequence | 8 / 197 |
+| Sequence | 8 / 198 |
 | Depends on | `backend_006` |
 
 ## Goal

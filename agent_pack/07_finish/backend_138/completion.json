@@ -164,7 +164,7 @@
     "The pre-existing frontend_000 partial implementation and changes were preserved. No second task was started."
   ],
   "knownGaps": [
-    "Readiness remains conditional because an isolated MongoDB replica set, private storage and malware-scanner configuration, Docker engine, external security assurance, and live provider credentials are unavailable in this environment.",
+    "Readiness remains conditional because target-host MongoDB, private storage and malware-scanner configuration, native Ubuntu services, external security assurance, and live provider credentials are unavailable in this environment.",
     "The repository declares Node >=24 <25 while this environment runs Node v22.18.0; all mandatory local checks passed, so this is recorded as a compatibility warning.",
     "This task does not claim full Backend, Frontend, all-API, or all-131-screen completion."
   ],

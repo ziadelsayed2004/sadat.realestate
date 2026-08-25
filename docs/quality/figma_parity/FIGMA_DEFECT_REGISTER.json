@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-25T18:00:00.000Z",
+  "defects": [
+    {
+      "id": "FIGMA-SOURCE-001",
+      "severity": "P1",
+      "status": "resolved",
+      "area": "source-integrity",
+      "description": "Active prototype, registry, coverage, source manifest, and handoff references migrated to the canonical clone.",
+      "evidence": "FIGMA_SOURCE_MIGRATION.json"
+    },
+    {
+      "id": "FIGMA-MAP-ADM-18",
+      "severity": "P1",
+      "status": "open",
+      "area": "source-mapping",
+      "screenId": "ADM-18",
+      "description": "The canonical Admin page metadata does not expose an ADM-18 frame; the local export remains unverified against clone truth.",
+      "evidence": "FIGMA_SCREEN_INVENTORY.json"
+    },
+    {
+      "id": "FIGMA-MAP-ADM-54",
+      "severity": "P1",
+      "status": "accepted-owner-fallback",
+      "area": "source-mapping",
+      "screenId": "ADM-54",
+      "description": "Historical ADM-54 frame was not recovered; the approved owner-authored local source is explicitly not a Figma recovery.",
+      "evidence": "docs/design_sources/final_screens/admin/ADM-54.owner-authored.html"
+    },
+    {
+      "id": "FIGMA-GUIDE-001",
+      "severity": "P1",
+      "status": "blocked",
+      "area": "user-guide",
+      "description": "Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html is absent from the repository and docs/.",
+      "evidence": "USER_GUIDE_CONFORMANCE_MATRIX.json"
+    },
+    {
+      "id": "WEB-DEV-CSP-001",
+      "severity": "P1",
+      "status": "resolved",
+      "area": "runtime",
+      "description": "Development CSP blocked Vite hydration and HMR, producing an unstyled SSR shell; development-only CSP allowances and a no-HMR test mode now keep production CSP strict.",
+      "evidence": "apps/web/server.mjs; apps/web/tests/preview-deployment.vitest.test.ts"
+    },
+    {
+      "id": "FIGMA-RUNTIME-001",
+      "severity": "P1",
+      "status": "open",
+      "area": "visual-verification",
+      "description": "PUB-01 runtime evidence is an error/retry state without a populated API fixture and is therefore not comparable to the canonical Figma success state; the remaining direct runtime comparison matrix is not claimed complete.",
+      "evidence": "FIGMA_PARITY_LEDGER.json"
+    },
+    {
+      "id": "PLATFORM-EXTERNAL-001",
+      "severity": "P1",
+      "status": "blocked",
+      "area": "release-gate",
+      "description": "backend_139 remains blocked on external production-like infrastructure and providers, so frontend_098 cannot be closed honestly.",
+      "evidence": "agent_pack/03_execution/TASK_STATE.json"
+    }
+  ]
+}

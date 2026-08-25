@@ -6,7 +6,7 @@
 | Phase | F6_integration_release |
 | Area | uat |
 | Kind | quality |
-| Sequence | 185 / 197 |
+| Sequence | 186 / 198 |
 | Depends on | `frontend_085` |
 
 ## Goal

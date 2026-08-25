@@ -31,7 +31,7 @@ export const SCREEN_OPERATION_MAP: Readonly<Record<string, readonly string[]>> =
   'PUB-04': ['comparePublicProperties'], 'PUB-05': ['listPublicDevelopers'], 'PUB-06': ['getPublicDeveloper'],
   'PUB-07': ['listPublicArticleCategories', 'listPublicArticles'], 'PUB-08': ['getPublicArticle', 'listPublicArticles'],
   'AUTH-01': ['loginAdmin'], 'AUTH-02': ['registerSeeker'], 'AUTH-03': ['registerSeeker'],
-  'AUTH-04': ['sendPhoneOtp', 'verifyPhoneOtp'], 'AUTH-05': ['sendPhoneOtp', 'verifyPhoneOtp'], 'AUTH-06': ['registerSeeker'],
+  'AUTH-04': ['sendEmailOtp', 'verifyEmailOtp'], 'AUTH-05': ['sendEmailOtp', 'verifyEmailOtp'], 'AUTH-06': ['registerSeeker'],
   'AUTH-07': ['createProviderApplication'], 'AUTH-08': ['createProviderApplication'], 'AUTH-09': ['updateProviderAccountStep'],
   'AUTH-09+': ['updateProviderAccountStep'], 'AUTH-10': ['updateProviderBusinessStep'], 'AUTH-10+': ['updateProviderBusinessStep'],
   'AUTH-11': ['updateProviderCompanyStep'], 'AUTH-12': ['uploadProviderDocument'], 'AUTH-13': ['submitProviderApplication'],

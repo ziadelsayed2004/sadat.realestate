@@ -7,7 +7,7 @@ if (unsupported.length > 0) {
   process.exit(1);
 }
 
-const result = spawnSync(process.execPath, ['--test', 'packages/config/tests/workspace-policy.test.mjs'], { stdio: 'inherit' });
+const result = spawnSync(process.execPath, ['--test', 'packages/config/tests/workspace-policy.test.mjs', 'packages/config/tests/native-runtime.test.mjs'], { stdio: 'inherit' });
 if (result.status !== 0) process.exit(result.status ?? 1);
 
 const npmExecPath = process.env.npm_execpath;

@@ -40,13 +40,13 @@ const service: SeekerService = {
   async getProfile() {
     return {
       id: '0123456789abcdef01234567', roleType: 'seeker', status: 'verified',
-      phone: '+201000000000', firstName: 'Salma', lastName: 'Hassan', locale: 'ar'
+      phone: '+201000000000', email: 'seeker@example.com', firstName: 'Salma', lastName: 'Hassan', locale: 'ar'
     };
   },
   async updateProfile(_claims, patch) {
     return {
       id: '0123456789abcdef01234567', roleType: 'seeker', status: 'verified',
-      phone: '+201000000000', firstName: patch.firstName ?? 'Salma',
+      phone: '+201000000000', email: 'seeker@example.com', firstName: patch.firstName ?? 'Salma',
       lastName: patch.lastName ?? 'Hassan', locale: patch.locale ?? 'ar'
     };
   },

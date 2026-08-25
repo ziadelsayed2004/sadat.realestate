@@ -6,7 +6,7 @@
 | Phase | B6_content_community |
 | Area | articles |
 | Kind | api |
-| Sequence | 70 / 197 |
+| Sequence | 70 / 198 |
 | Depends on | `backend_081` |
 
 ## Goal

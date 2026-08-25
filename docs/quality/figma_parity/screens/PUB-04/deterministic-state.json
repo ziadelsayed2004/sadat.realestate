@@ -1,0 +1,78 @@
+{
+  "seedId": "fresh-audit-PUB-04-ar-v1",
+  "fixtureKind": "public-comparison",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/public/properties/compare",
+    "locale": "ar",
+    "direction": "rtl"
+  },
+  "responseRequestId": "fresh-audit-public-comparison",
+  "responseSha256": "4b5eb6a4e42005edad1496b2f772bd34a3b3fe46ef353f7e8815c54d12df46ec",
+  "response": {
+    "data": {
+      "items": [
+        {
+          "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
+          "slug": "garden-villa",
+          "kind": "property",
+          "name": {
+            "ar": "فيلا مستقلة بالمنطقة الراقية",
+            "en": "Garden villa",
+            "zh-CN": "Garden villa"
+          },
+          "transactionType": "sale",
+          "area": {
+            "value": 180,
+            "unit": "sqm"
+          },
+          "layout": {
+            "bedrooms": 4,
+            "bathrooms": 3,
+            "floor": 1
+          },
+          "price": {
+            "amount": 2500000,
+            "currency": "EGP"
+          }
+        },
+        {
+          "id": "bbbbbbbbbbbbbbbbbbbbbbbb",
+          "slug": "city-apartment",
+          "kind": "unit",
+          "name": {
+            "ar": "شقة فاخرة في الحي الأول",
+            "en": "City apartment",
+            "zh-CN": "City apartment"
+          },
+          "transactionType": "rent",
+          "area": {
+            "value": 120,
+            "unit": "sqm"
+          },
+          "layout": {
+            "bedrooms": 3,
+            "bathrooms": 2,
+            "floor": 8
+          },
+          "price": {
+            "amount": 20000,
+            "currency": "EGP"
+          }
+        }
+      ],
+      "fields": [
+        "name",
+        "transactionType",
+        "price",
+        "area",
+        "layout"
+      ]
+    },
+    "meta": {
+      "requestId": "fresh-audit-public-comparison"
+    }
+  },
+  "authSession": null,
+  "ownership": "public"
+}

@@ -44,7 +44,7 @@
       "seeker",
       "provider"
     ],
-    "purpose": "Send OTP",
+    "purpose": "Send an email OTP bound to the normalized phone and email",
     "status": "implemented",
     "apiVersion": "v1"
   },
@@ -57,7 +57,7 @@
       "seeker",
       "provider"
     ],
-    "purpose": "Verify OTP",
+    "purpose": "Verify the email-delivered OTP against the bound phone and email",
     "status": "implemented",
     "apiVersion": "v1"
   },
@@ -201,7 +201,7 @@
     "roles": [
       "provider"
     ],
-    "purpose": "Create provider identity and owned draft application after verified phone OTP",
+    "purpose": "Create provider identity and owned draft application after verified phone-and-email OTP",
     "status": "implemented",
     "apiVersion": "v1"
   },

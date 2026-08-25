@@ -30,7 +30,11 @@ repo/
 |  |- security/
 |  `- runbooks/
 |- infra/
-|  |- docker/
+|  |- native/
+|  |- nginx/
+|  |- systemd/
+|  |- mongodb/
+|  `- clamav/
 |  `- deployment/
 |- agent_pack/
 |- package.json

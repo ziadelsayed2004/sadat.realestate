@@ -2,7 +2,11 @@ import assert from 'node:assert/strict';
 import { EventEmitter } from 'node:events';
 import test from 'node:test';
 import type { Connection } from 'mongoose';
-import { runDevelopmentSeed } from '../../src/modules/database/seed.js';
+import {
+  runDevelopmentSeed,
+  SYNTHETIC_SHOWCASE_SEED_STEP,
+  SYNTHETIC_WORKFLOW_SEED_STEP
+} from '../../src/modules/database/seed.js';
 import { runSeedCommand } from '../../src/modules/database/run-seed.js';
 
 test('development seed refuses non-local environments before writing', async () => {
@@ -54,4 +58,63 @@ test('seed ledger makes approved synthetic steps idempotent across repeated runs
   assert.equal(await runDevelopmentSeed('uat', connection, steps), 1);
   assert.equal(await runDevelopmentSeed('uat', connection, steps), 0);
   assert.equal(executions, 1);
+});
+
+test('approved showcase seed writes only explicit synthetic local-preview documents', async () => {
+  const writes: Array<{ collection: string; document: Record<string, unknown> }> = [];
+  const connection = {
+    collection(name: string) {
+      return {
+        async updateOne(_filter: unknown, update: { $setOnInsert: Record<string, unknown> }) {
+          writes.push({ collection: name, document: update.$setOnInsert });
+          return { acknowledged: true };
+        }
+      };
+    }
+  } as unknown as Connection;
+
+  await SYNTHETIC_SHOWCASE_SEED_STEP.run(connection);
+
+  assert.ok(writes.length >= 15);
+  assert.ok(writes.some((write) => write.collection === 'properties'));
+  assert.ok(writes.some((write) => write.collection === 'articles'));
+  assert.ok(writes.some((write) => write.collection === 'community_posts'));
+  assert.ok(writes.every((write) => write.document.synthetic === true));
+  assert.ok(writes.every((write) => write.document.seedKey === 'local-showcase-v1'));
+  assert.equal(
+    writes.some((write) => Object.keys(write.document).some((key) => /password|token|secret/i.test(key))),
+    false
+  );
+});
+
+test('workflow showcase seed covers authenticated surfaces without public private-file URLs', async () => {
+  const writes: Array<{ collection: string; document: Record<string, unknown> }> = [];
+  const connection = {
+    collection(name: string) {
+      return {
+        async updateOne(_filter: unknown, update: { $setOnInsert: Record<string, unknown> }) {
+          writes.push({ collection: name, document: update.$setOnInsert });
+          return { acknowledged: true };
+        }
+      };
+    }
+  } as unknown as Connection;
+
+  await SYNTHETIC_WORKFLOW_SEED_STEP.run(connection);
+  const collections = new Set(writes.map((write) => write.collection));
+  for (const required of [
+    'seeker_profiles', 'provider_profiles', 'admin_accounts', 'roles',
+    'requests', 'viewings', 'favorites', 'notifications', 'ad_requests',
+    'ad_quotes', 'payment_proofs', 'commission_policies',
+    'commission_confirmations', 'commission_snapshots'
+  ]) assert.ok(collections.has(required), `missing ${required}`);
+  assert.ok(writes.some((write) => write.collection === 'provider_profiles' && write.document.providerType === 'individual_broker'));
+  assert.ok(writes.some((write) => write.collection === 'provider_profiles' && write.document.providerType === 'brokerage_office'));
+  assert.ok(writes.some((write) => write.collection === 'roles' && write.document.accessMode === 'view_only'));
+  const proof = writes.find((write) => write.collection === 'payment_proofs')?.document;
+  assert.ok(proof);
+  assert.equal('url' in proof, false);
+  assert.equal(typeof proof.storageKey, 'string');
+  assert.equal(typeof proof.passwordHash, 'undefined');
+  assert.ok(writes.every((write) => write.document.synthetic === true && write.document.seedKey === 'local-showcase-v2'));
 });

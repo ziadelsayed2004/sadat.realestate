@@ -12,7 +12,7 @@ const backendAcceptance = [
   'Use an isolated non-production MongoDB replica set and run the live integration, transaction, migration, index, seed, backup, and restore matrix.',
   'Configure approved non-production private storage, malware scanning, OTP, monitoring, and scheduling providers and prove fail-closed readiness.',
   'Run the complete positive, negative, RBAC, ownership/IDOR, validation, state, upload, replay, concurrency, and journey matrix for every implemented route.',
-  'Run checked-in container artifacts with health, readiness, graceful shutdown, and rollback evidence.',
+  'Run checked-in native Ubuntu service artifacts with health, readiness, graceful shutdown, and rollback evidence.',
   'Produce external security-assurance evidence without claiming Production penetration testing unless it actually occurred.',
   'Keep runtime inventory, OpenAPI, Postman, environment examples, and evidence synchronized.'
 ];
@@ -38,7 +38,29 @@ const additions = [
     atomicTaskFile: '04_tracks/backend/B10_post_release_assurance/backend_139.md',
     allowedRoots: ['apps/api/**', 'packages/contracts/**', 'packages/config/**', 'docs/api/**', 'docs/operations/**', 'agent_pack/**'],
     acceptance: backendAcceptance,
-    verification: ['npm run typecheck', 'npm run lint', 'npm test', 'npm run build', 'npm run api:inventory', 'npm run openapi:validate', 'npm run postman:validate', 'live API, provider, infrastructure, container, backup/restore, and security matrices', 'node agent_pack/scripts/audit_pack.mjs']
+    verification: ['npm run typecheck', 'npm run lint', 'npm test', 'npm run build', 'npm run api:inventory', 'npm run openapi:validate', 'npm run postman:validate', 'live API, provider, native infrastructure, backup/restore, and security matrices', 'node agent_pack/scripts/audit_pack.mjs']
+  },
+  {
+    id: 'backend_140', phase: 'B10_post_release_assurance', area: 'local runtime',
+    title: 'Native Non-Docker Local Runtime Recovery',
+    goal: 'Replace the stale embedded-database local supervisor with a cross-platform Node.js runtime that uses an external non-production MONGODB_URI, truthful health and readiness, deterministic local seed data, and repository-owned process control.',
+    kind: 'infrastructure', screens: [],
+    sourceRefs: ['08_reality_sync/CURRENT_STATE.md', '02_architecture/ENVIRONMENT_MATRIX.md', '02_architecture/DEPLOYMENT_PLAN.md', '09_sources/DESIGN_SOURCE_MANIFEST.json'],
+    notes: ['This task is dependency-ready independently of the blocked external production-parity task backend_139.', 'Production deployment, real SMTP delivery, and remote VPS actions remain separately gated.'],
+    track: 'backend', dependsOn: ['backend_138'],
+    atomicTaskFile: '04_tracks/backend/B10_post_release_assurance/backend_140.md',
+    allowedRoots: ['package.json', 'package-lock.json', '.env.local.example', 'scripts/**', 'apps/api/**', 'apps/web/**', 'README.md', 'docs/operations/**', 'docs/api/**', 'docs/deployment/**', 'agent_pack/**'],
+    acceptance: [
+      'Remove active Docker and embedded MongoDB assumptions from local startup and use MONGODB_URI for Local and Test.',
+      'Implement local:doctor, local:prepare, local:up, local:status, local:seed, local:smoke, and local:down as cross-platform repository-owned commands.',
+      'Make status and readiness perform real API and MongoDB liveness checks, report degraded database loss, prevent duplicate startup, and clean stale state.',
+      'Bound or rotate supervisor logs and stop only child processes started by this repository.',
+      'Make seed data deterministic and idempotent across the required non-production domain fixtures without private public-file URLs.',
+      'Verify populated homepage/API success, restart, shutdown, database-loss truthfulness, and two consecutive clean smoke passes.',
+      'Document local credentials and deterministic OTP behavior without exposing Production secrets.',
+      'Keep the local runtime, environment examples, health/readiness contracts, and Agent Pack evidence synchronized.'
+    ],
+    verification: ['npm run local:doctor', 'npm run local:prepare', 'npm run local:up', 'npm run local:status', 'npm run local:seed', 'npm run local:smoke twice from clean startup', 'npm run local:down', 'focused runtime and seed tests', 'npm run typecheck', 'npm run lint', 'npm run build', 'node agent_pack/scripts/audit_pack.mjs']
   },
   {
     id: 'frontend_091', phase: 'F7_post_release_assurance', area: 'design evidence',
@@ -141,7 +163,7 @@ const additions = [
     track: 'frontend', dependsOn: ['backend_139', 'frontend_096', 'frontend_097'],
     atomicTaskFile: '04_tracks/frontend/F7_post_release_assurance/frontend_098.md',
     allowedRoots: ['apps/api/**', 'apps/web/**', 'packages/**', 'docs/**', 'agent_pack/**'],
-    acceptance: ['All prior remediation and assurance tasks are complete with valid evidence.', 'Agent Pack audit, selector, manifests, counts, finish index, and truth documents are synchronized.', 'Every implemented API has the required matrix evidence or the all-APIs claim remains false.', 'Every canonical screen has direct approved-source evidence or the all-screens claim remains false.', 'Production-parity infrastructure, providers, backup/restore, monitoring, containers, and security assurance are proven.', 'Full platform completion is claimed only when the entire expanded graph is complete and all mandatory gates pass.'],
+    acceptance: ['All prior remediation and assurance tasks are complete with valid evidence.', 'Agent Pack audit, selector, manifests, counts, finish index, and truth documents are synchronized.', 'Every implemented API has the required matrix evidence or the all-APIs claim remains false.', 'Every canonical screen has direct approved-source evidence or the all-screens claim remains false.', 'Production-parity infrastructure, providers, backup/restore, monitoring, native services, and security assurance are proven.', 'Full platform completion is claimed only when the entire expanded graph is complete and all mandatory gates pass.'],
     verification: ['all root and workspace typecheck, lint, test, build, audit, inventory, contract, browser, visual, accessibility, performance, security, live-provider, and infrastructure gates', 'node agent_pack/scripts/audit_pack.mjs', 'node agent_pack/scripts/select_next_step.mjs']
   }
 ];
@@ -172,9 +194,10 @@ state.updatedAt = now;
 const newState = {
   backend_139: {
     status: 'blocked', startedAt: now, completedAt: null,
-    reason: 'Blocked pending an isolated non-production MongoDB replica set, approved private storage and malware scanner, OTP and monitoring providers, runnable container infrastructure, backup/restore target, and external security-assurance prerequisites.',
+    reason: 'Blocked pending an isolated non-production MongoDB replica set, approved private storage and malware scanner, OTP and monitoring providers, a provisioned native Ubuntu target, backup/restore target, and external security-assurance prerequisites.',
     evidencePath: null
   },
+  backend_140: { status: 'open', startedAt: null, completedAt: null, reason: null, evidencePath: null },
   frontend_091: {
     status: 'complete', startedAt: now, completedAt: now, reason: null,
     evidencePath: '07_finish/frontend_091/completion.json'

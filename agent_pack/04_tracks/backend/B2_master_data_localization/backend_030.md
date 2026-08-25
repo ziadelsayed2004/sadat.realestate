@@ -6,7 +6,7 @@
 | Phase | B2_master_data_localization |
 | Area | localization |
 | Kind | architecture |
-| Sequence | 22 / 197 |
+| Sequence | 22 / 198 |
 | Depends on | `backend_020` |
 
 ## Goal

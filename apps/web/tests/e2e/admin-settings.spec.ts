@@ -8,7 +8,7 @@ function localeForProject(): 'ar' | 'en' | 'zh-CN' {
 
 test.describe('ADM-50 through ADM-58 admin settings', () => {
   test.beforeEach(async ({ page }, testInfo) => {
-    testInfo.annotations.push({ type: 'design-source', description: 'ADM-50 through ADM-53 and ADM-55 through ADM-58 use checked-in Admin Desktop exports under docs/design_sources/final_screens/admin. ADM-54 uses the owner-authorized local review source ADM-54.owner-authored.html/.png; historical Figma/Drive provenance remains unresolved and explicit owner approval is pending.' });
+    testInfo.annotations.push({ type: 'design-source', description: 'ADM-50 through ADM-53 and ADM-55 through ADM-58 use checked-in Admin Desktop exports under docs/design_sources/final_screens/admin. ADM-54 uses the Project Owner-approved local source ADM-54.owner-authored.html/.png; the historical Figma/Drive frame remains unavailable and no historical pixel parity is claimed.' });
     test.skip(!testInfo.project.name.includes('desktop'), 'Admin dashboard is approved for desktop only.');
     await routeAdminSettingsApis(page);
   });

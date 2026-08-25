@@ -1,22 +1,31 @@
 # Risks and Gaps
 
+## Deployment preparation risks — 2026-08-24
+
+- All manifest-referenced design-source files now exist and the source-integrity audit passes. This does not authorize full visual parity: PUB-01 and 129 other historical owning frames still require current direct-Figma revalidation, ADM-18 has no independent historical owning frame, and ADM-54 is covered by an owner-approved structured comparison without a historical parity claim.
+- Hostinger SMTP parsing, adapter behavior, readiness failure, TLS configuration, and message projection are tested, but real authentication and delivery from `info@elsadatrealestate.com` were not run because no mailbox password was supplied. SPF, DKIM, DMARC, PTR/reputation, spam placement, throttling, and outbound VPS port access require live verification.
+- Native runtime migration replaced the previous orchestration path. Local supervisor startup, MongoDB replica-set behavior, ClamAV readiness, filesystem permissions, Nginx/Certbot, systemd restart behavior, backup, restore, and rollback require fresh evidence and remain `backend_139` gaps until run.
+- The current single-VPS candidate uses a private local filesystem directory. Q-003 still states that Preview/UAT/Production require approved S3-compatible private storage. This candidate is suitable for Local/pre-deployment evaluation only until the Project Owner and Security approve the durable single-VPS storage/backup boundary or an S3-compatible adapter is implemented and verified.
+- The 513 passing API tests are deterministic repository-owned evidence. They do not authorize an “all APIs tested” claim because the 178-route live positive/negative/RBAC/IDOR/state/upload/replay/concurrency matrix has not run against isolated production-parity providers.
+- The repository contains no real `.env`, SMTP password, Production data, or bootstrap credential. Production startup must remain blocked until secrets are generated on the VPS, the Hostinger mailbox password is inserted there, the first Super Admin is bootstrapped once, and the release checklist passes.
+
 ## Post-release audit risks — 2026-08-22
 
 - Full UI fidelity is unproven. Existing saved snapshots compare current runtime output with earlier runtime output; they do not prove direct parity with all approved design-source exports.
 - The official visual command covers only one public-site spec, although the repository has 42 screenshot-bearing Playwright specs and 80 screenshot assertions.
 - Public homepage and property-listing visual coverage can pass on an error state because no populated API fixture or required success-state assertion exists in those cases.
 - Sampled Public, Authentication, and Admin screens have material design-to-runtime differences. Surface-by-surface remediation is tracked by `frontend_092` through `frontend_095`.
-- ADM-54 has no recovered historical export. A new owner-authored local source is available for review under `DESIGN-DECISION-ADM-54-AUTHOR-001`; `frontend_096` remains incomplete until the Project Owner explicitly approves that source and its runtime comparison.
+- ADM-54 has no recovered historical export. The owner-authored local source and structured runtime comparison are approved under `DESIGN-DECISION-ADM-54-AUTHOR-001`; the historical direct-comparison waiver remains active.
 - A fresh Playwright matrix could not start because the audit environment had no browser executable and its browser download failed. This is an environment blocker, not a passing result.
 - The Web client build emits a JavaScript chunk around 1.50 MB minified and warns above 500 kB. `frontend_097` owns a justified enforced bundle budget and performance remediation.
-- Complete live API, infrastructure, provider, container, backup/restore, monitoring, and external security evidence remains unavailable. `backend_139` must stay Blocked until those prerequisites exist.
+- Complete live API, infrastructure, provider, backup/restore, monitoring, and external security evidence remains unavailable. `backend_139` must stay Blocked until those prerequisites exist.
 - The final platform claim is owned by `frontend_098` and remains False until every expanded dependency is Complete with valid evidence.
 
 The release risks below are retained for provenance. Where they conflict with the post-release audit, the 2026-08-22 risks are current truth.
 
 ## Current release risks — 2026-08-21
 
-- Release readiness is conditional because the environment has no Docker executable and no configured isolated Preview/UAT MongoDB, private storage/scanner, OTP provider, monitoring, backup/restore drill, or external security assurance.
+- Release readiness is conditional because no configured isolated Preview/UAT MongoDB, native Nginx/systemd host, private storage/scanner, OTP provider, monitoring, backup/restore drill, or external security assurance has current live evidence.
 - The repository does not define `npm run security:check`; that missing script is not represented as a pass. Existing API/browser security tests, artifact assertions, and dependency audit are the available repository-owned evidence.
 - The unfiltered Web E2E runner was safely terminated after no observable progress and is not claimed as passed. Targeted critical journeys passed 9/9, and the configured 72 visual and 81 accessibility tests passed.
 - `DESIGN-EXCEPTION-ADM-54` remains the historical-source waiver: the exact direct reference is unavailable and direct historical comparison was not performed. The newer `DESIGN-DECISION-ADM-54-AUTHOR-001` source is pending explicit owner review.

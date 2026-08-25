@@ -1,6 +1,8 @@
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 import { createReadStream, createWriteStream } from 'node:fs';
 import { mkdir, rm } from 'node:fs/promises';
+import { createConnection, type Socket } from 'node:net';
+import { once } from 'node:events';
 import path from 'node:path';
 import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
@@ -16,7 +18,7 @@ export interface StorageAdapter {
 export type MalwareScanOutcome = 'clean' | 'infected' | 'timeout' | 'failed';
 
 export interface MalwareScannerAdapter {
-  readonly kind: 'deterministic-fake' | 'unavailable';
+  readonly kind: 'deterministic-fake' | 'clamav' | 'unavailable';
   isReady(): boolean | Promise<boolean>;
   scan(source: Readable): Promise<MalwareScanOutcome>;
 }
@@ -128,6 +130,107 @@ export function createUnavailableMalwareScanner(): MalwareScannerAdapter {
     kind: 'unavailable',
     isReady: () => false,
     async scan() { throw new Error('MALWARE_SCANNER_UNAVAILABLE'); }
+  };
+}
+
+export interface ClamAvConfiguration {
+  host: string;
+  port: number;
+  timeoutMs: number;
+}
+
+async function socketWrite(socket: Socket, value: Buffer | string): Promise<void> {
+  if (!socket.write(value)) await once(socket, 'drain');
+}
+
+function readClamdReply(socket: Socket, timeoutMs: number): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    let total = 0;
+    const cleanup = () => {
+      socket.off('data', onData);
+      socket.off('error', onError);
+      socket.off('timeout', onTimeout);
+      socket.off('close', onClose);
+    };
+    const fail = (error: Error) => {
+      cleanup();
+      reject(error);
+    };
+    const onData = (chunk: Buffer) => {
+      chunks.push(chunk);
+      total += chunk.byteLength;
+      if (total > 16_384) {
+        fail(new Error('CLAMAV_RESPONSE_TOO_LARGE'));
+        return;
+      }
+      const combined = Buffer.concat(chunks);
+      const terminator = combined.indexOf(0);
+      if (terminator !== -1) {
+        cleanup();
+        resolve(combined.subarray(0, terminator).toString('utf8'));
+      }
+    };
+    const onError = () => fail(new Error('CLAMAV_CONNECTION_FAILED'));
+    const onTimeout = () => fail(new Error('CLAMAV_TIMEOUT'));
+    const onClose = () => fail(new Error('CLAMAV_CONNECTION_CLOSED'));
+    socket.setTimeout(timeoutMs);
+    socket.on('data', onData);
+    socket.once('error', onError);
+    socket.once('timeout', onTimeout);
+    socket.once('close', onClose);
+  });
+}
+
+async function connectClamd(configuration: ClamAvConfiguration): Promise<Socket> {
+  const socket = createConnection({ host: configuration.host, port: configuration.port });
+  socket.setTimeout(configuration.timeoutMs);
+  await once(socket, 'connect');
+  return socket;
+}
+
+export function createClamAvMalwareScanner(
+  configuration: ClamAvConfiguration
+): MalwareScannerAdapter {
+  return {
+    kind: 'clamav',
+    async isReady() {
+      let socket: Socket | undefined;
+      try {
+        socket = await connectClamd(configuration);
+        const reply = readClamdReply(socket, configuration.timeoutMs);
+        await socketWrite(socket, 'zPING\0');
+        return (await reply).trim() === 'PONG';
+      } catch {
+        return false;
+      } finally {
+        socket?.destroy();
+      }
+    },
+    async scan(source) {
+      let socket: Socket | undefined;
+      try {
+        socket = await connectClamd(configuration);
+        const reply = readClamdReply(socket, configuration.timeoutMs);
+        await socketWrite(socket, 'zINSTREAM\0');
+        for await (const value of source) {
+          const chunk = Buffer.isBuffer(value) ? value : Buffer.from(value);
+          const length = Buffer.allocUnsafe(4);
+          length.writeUInt32BE(chunk.byteLength);
+          await socketWrite(socket, length);
+          await socketWrite(socket, chunk);
+        }
+        await socketWrite(socket, Buffer.alloc(4));
+        const result = (await reply).trim();
+        if (/^stream:\s+OK$/u.test(result)) return 'clean';
+        if (/^stream:\s+.+\s+FOUND$/u.test(result)) return 'infected';
+        return 'failed';
+      } catch (error) {
+        return error instanceof Error && error.message === 'CLAMAV_TIMEOUT' ? 'timeout' : 'failed';
+      } finally {
+        socket?.destroy();
+      }
+    }
   };
 }
 

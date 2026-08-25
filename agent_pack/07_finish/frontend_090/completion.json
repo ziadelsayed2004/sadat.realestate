@@ -193,7 +193,7 @@
     "All 131 screens complete is not claimed because route-locale UAT coverage does not convert the waived ADM-54 direct comparison into a direct-comparison claim.",
     "The unfiltered Web E2E runner produced no progress and was safely terminated; targeted critical journeys passed 9/9.",
     "The repository does not define npm run security:check.",
-    "Docker, a live MongoDB replica set, private storage/scanner providers, Preview providers, monitoring, backup/restore, and external security assurance were unavailable; no Production deployment was performed."
+    "A live native Ubuntu target, MongoDB replica set, private storage/scanner providers, Preview providers, monitoring, backup/restore, and external security assurance were unavailable; no Production deployment was performed."
   ],
   "completedAt": "2026-08-21T10:45:43.8912376Z"
 }

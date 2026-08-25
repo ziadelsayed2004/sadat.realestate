@@ -20,6 +20,7 @@ function profileData(locale: 'ar' | 'en' | 'zh-CN', firstName = 'Mohamed') {
     roleType: 'seeker',
     status: 'verified',
     phone: '+201012345678',
+    email: 'seeker@example.com',
     firstName,
     lastName: 'Salem',
     locale

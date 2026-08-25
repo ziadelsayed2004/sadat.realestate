@@ -1,0 +1,33 @@
+[Unit]
+Description=Elsadat Real Estate API
+After=network-online.target mongod.service clamav-daemon.service
+Wants=network-online.target
+Requires=mongod.service clamav-daemon.service
+
+[Service]
+Type=simple
+User=elsadat
+Group=elsadat
+WorkingDirectory=/opt/elsadatrealestate/current
+EnvironmentFile=/etc/elsadatrealestate/production.env
+ExecStart=/usr/bin/node apps/api/dist/server.js
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+KillSignal=SIGTERM
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/var/lib/elsadatrealestate/private
+
+[Install]
+WantedBy=multi-user.target
+

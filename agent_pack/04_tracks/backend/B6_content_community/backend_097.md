@@ -6,7 +6,7 @@
 | Phase | B6_content_community |
 | Area | quality |
 | Kind | quality |
-| Sequence | 77 / 197 |
+| Sequence | 77 / 198 |
 | Depends on | `backend_096` |
 
 ## Goal

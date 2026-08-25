@@ -173,6 +173,7 @@ test('persists only hashed OTP material and enforces resend cooldown by normaliz
   const input = {
     publicId: '123e4567-e89b-42d3-a456-426614174000',
     phone: '+201000000000',
+    email: 'seeker@example.com',
     roleType: 'seeker' as const,
     purpose: 'login' as const,
     codeHash: 'H'.repeat(43),
@@ -184,7 +185,7 @@ test('persists only hashed OTP material and enforces resend cooldown by normaliz
   assert.deepEqual(await repository.createChallenge(input), { kind: 'created' });
   assert.equal(created?.codeHash, 'H'.repeat(43));
   assert.equal('code' in (created ?? {}), false);
-  assert.equal(created?.activeKey, 'seeker:login:+201000000000');
+  assert.equal(created?.activeKey, 'seeker:login:+201000000000:seeker@example.com');
 
   state.active = {
     createdAt: new Date('2026-08-13T12:00:30.000Z'),
@@ -206,6 +207,7 @@ test('atomically bounds failed OTP attempts, one-time verification, and grant re
       ? {
           _id: new Types.ObjectId(),
           normalizedPhone: '+201000000000',
+          normalizedEmail: 'seeker@example.com',
           roleType: 'seeker',
           purpose: 'registration',
           attemptsRemaining: retryRemaining ?? 0
@@ -234,12 +236,16 @@ test('atomically bounds failed OTP attempts, one-time verification, and grant re
   assert.equal(await repository.verifyRegistrationChallenge(
     '111111111111111111111111', 'V'.repeat(43), new Date(), new Date(Date.now() + 60_000)
   ), true);
-  assert.deepEqual(await repository.findPhoneAccount('+201000000000', 'seeker'), {
+  assert.deepEqual(await repository.findOtpAccount(
+    '+201000000000',
+    'seeker@example.com',
+    'seeker'
+  ), {
     id: userId.toHexString(), roleType: 'seeker', status: 'verified'
   });
   redeemed = true;
   assert.deepEqual(await repository.redeemRegistrationGrant('V'.repeat(43), 'seeker', new Date()), {
-    phone: '+201000000000', roleType: 'seeker', purpose: 'registration'
+    phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'registration'
   });
   redeemed = false;
   assert.equal(await repository.redeemRegistrationGrant('V'.repeat(43), 'seeker', new Date()), undefined);

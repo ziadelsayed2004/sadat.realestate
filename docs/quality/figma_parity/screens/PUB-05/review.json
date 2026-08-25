@@ -1,0 +1,263 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-05",
+  "classification": "PARTIAL",
+  "classificationReason": "Fresh canonical comparison is complete. The runtime contract and accessibility gate pass, but the runtime does not match the clone card grid, approved imagery, controls, or footer composition.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4352",
+    "nodeId": "6017:11366",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-11366&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4352&starting-point-node-id=6017%3A10847",
+    "screenshot": {
+      "path": "docs/quality/figma_parity/screens/PUB-05/figma.png",
+      "width": 1523,
+      "height": 1536,
+      "reviewed": true
+    },
+    "getDesignContext": {
+      "tool": "mcp__figma__get_design_context",
+      "skill": "resource:figma-design-to-code",
+      "resultStatus": "FULL_REFERENCE_CODE_RETURNED",
+      "root": {
+        "id": "6017:11366",
+        "name": "Developers & Companies",
+        "width": 1523,
+        "height": 1536
+      },
+      "retrievedRegions": [
+        "header",
+        "directory heading",
+        "search and sort controls",
+        "developer card grid",
+        "pagination",
+        "footer"
+      ],
+      "reviewed": true,
+      "responseSummary": {
+        "contentBlocks": 4,
+        "textLengths": [79022, 551, 83, 354],
+        "referenceCodeReturned": true,
+        "assetMapReturned": true,
+        "screenshotExcluded": true
+      },
+      "note": "The canonical get_design_context call returned the full React/Tailwind reference and asset constants for this frame. The reference was used for direct comparison only; the generated code was not copied into the runtime."
+    }
+  },
+  "runtime": {
+    "route": "/developers?lang=ar",
+    "role": "public",
+    "permissions": {
+      "requiredRole": "public",
+      "ownership": "public",
+      "availableActionsObserved": {
+        "links": [
+          {
+            "text": "تخطي إلى المحتوى الرئيسي",
+            "href": "#main-content"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "الرئيسية",
+            "href": "/"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "المقالات",
+            "href": "/articles"
+          },
+          {
+            "text": "المجتمع",
+            "href": "/community"
+          },
+          {
+            "text": "عن المنصة",
+            "href": "/about"
+          },
+          {
+            "text": "فريقنا",
+            "href": "/team"
+          },
+          {
+            "text": "تسجيل الدخول",
+            "href": "/auth/login"
+          },
+          {
+            "text": "إنشاء حساب",
+            "href": "/auth/register"
+          },
+          {
+            "text": "شركة معتمدة",
+            "href": "/developers/approved-builder"
+          },
+          {
+            "text": "عرض الملف التعريفي",
+            "href": "/developers/approved-builder"
+          },
+          {
+            "text": "الرئيسية",
+            "href": "/"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "عن المنصة",
+            "href": "/about"
+          }
+        ],
+        "buttons": [
+          {
+            "text": "إعادة ضبط",
+            "aria": null
+          },
+          {
+            "text": "بحث",
+            "aria": null
+          },
+          {
+            "text": "›",
+            "aria": "الصفحة السابقة"
+          },
+          {
+            "text": "1",
+            "aria": "1"
+          },
+          {
+            "text": "‹",
+            "aria": "الصفحة التالية"
+          }
+        ]
+      },
+      "source": "runtime DOM and route contract"
+    },
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "deterministicState": {
+      "path": "docs/quality/figma_parity/screens/PUB-05/deterministic-state.json",
+      "seedId": "fresh-audit-PUB-05-ar-v1",
+      "responseSha256": "3a8b4b1163755363d305834292848eaa573efa7ad21ecb6e7a175d788673d0d1"
+    },
+    "response": {
+      "status": 200,
+      "ok": true
+    },
+    "apiRequests": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/developers?sort=slug&direction=asc&page=1&limit=20"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/developers?sort=slug&direction=asc&page=1&limit=20",
+        "status": 200
+      }
+    ],
+    "before": {
+      "path": "docs/quality/figma_parity/screens/PUB-05/runtime-before.png",
+      "sha256": "7703031256bff4f83c825bfbc37f44601915221ef45ccc2a1b73807195a3442e"
+    },
+    "after": {
+      "path": "docs/quality/figma_parity/screens/PUB-05/runtime-after.png",
+      "sha256": "7703031256bff4f83c825bfbc37f44601915221ef45ccc2a1b73807195a3442e"
+    }
+  },
+  "structuredVisualComparison": {
+    "reviewed": true,
+    "diffPath": "docs/quality/figma_parity/screens/PUB-05/diff.png",
+    "sourceDimensions": [
+      {
+        "width": 1523,
+        "height": 1536
+      },
+      {
+        "width": 1280,
+        "height": 1314
+      },
+      {
+        "width": 1280,
+        "height": 1314
+      }
+    ],
+    "observations": [
+      "Figma source is 1523px wide and 1536px high for PUB-05.",
+      "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 1314px document height.",
+      "The clone has four image-backed organization cards in a two-column grid; the deterministic runtime has one organization card with placeholder media.",
+      "The clone heading and card grid are centered under the shell with no visible filter panel; the runtime adds a right-side filter panel and uses different card geometry and spacing.",
+      "The clone footer includes brand, page links, contact information, social controls, and legal rows; the captured runtime footer is truncated and omits those approved regions.",
+      "The side-by-side diff is evidence for review only; no baseline was updated."
+    ]
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "requestProjection": "GET /api/v1/public/developers",
+    "responseProjection": "public-developers fixture captured and hashed",
+    "outcome": "GET /api/v1/public/developers?sort=slug&direction=asc&page=1&limit=20 returned HTTP 200 and the page reached success. The response projection is consumed, but the clone card count/media projection and CTA surface are not matched."
+  },
+  "defects": [
+    "Runtime renders one organization card instead of the clone's four-card two-column composition for the approved reference state.",
+    "Runtime organization media is a placeholder/missing-image state while the clone uses four approved image assets.",
+    "Runtime adds a filter/search panel and different pagination/card controls that do not match the clone composition.",
+    "Runtime footer is shorter and omits the clone's contact, social, and legal rows.",
+    "No runtime files were repaired during this evidence pass."
+  ],
+  "filesRepaired": [],
+  "focusedTests": [
+    {
+      "name": "affected typecheck",
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0
+    },
+    {
+      "name": "affected public lint",
+      "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"tests/e2e/public-fixtures.ts\" --max-warnings=0",
+      "exitCode": 0
+    },
+    {
+      "name": "focused API contract tests",
+      "command": "node --import tsx --test apps/web/tests/contracts.test.ts",
+      "exitCode": 0
+    },
+    {
+      "name": "focused Playwright visual",
+      "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public developer directory renders approved organizations\"",
+      "exitCode": 0
+    }
+  ],
+  "accessibility": {
+    "focusedCheck": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public developer directory exposes labeled filters\"",
+    "exitCode": 0
+  },
+  "evidencePaths": {
+    "figma": "docs/quality/figma_parity/screens/PUB-05/figma.png",
+    "runtimeBefore": "docs/quality/figma_parity/screens/PUB-05/runtime-before.png",
+    "runtimeAfter": "docs/quality/figma_parity/screens/PUB-05/runtime-after.png",
+    "diff": "docs/quality/figma_parity/screens/PUB-05/diff.png",
+    "review": "docs/quality/figma_parity/screens/PUB-05/review.json"
+  }
+}

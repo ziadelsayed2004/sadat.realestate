@@ -129,7 +129,7 @@
 - [x] backend_130 — Upload and Media Security Verification
 - [x] backend_131 — Search and Performance Tests
 - [x] backend_132 — Migrations, Backup, and Restore
-- [x] backend_133 — Containers and Production Runtime
+- [x] backend_133 — Native Services and Production Runtime
 - [x] backend_134 — Health, Readiness, and Monitoring
 - [x] backend_135 — Security Assurance Report
 - [x] backend_136 — Backend End-to-End Journeys
@@ -138,6 +138,7 @@
 ## B10_post_release_assurance
 
 - [!] backend_139 — Live Production-Parity Infrastructure and API Assurance
+- [x] backend_140 — Native Non-Docker Local Runtime Recovery
 ## F0_frontend_foundation
 
 - [x] frontend_000 — Establish Vite SSR and Frontend Architecture
@@ -234,6 +235,6 @@
 - [x] frontend_093 — Seeker Dashboard Design Parity Remediation
 - [x] frontend_094 — Provider Dashboard Design Parity Remediation
 - [x] frontend_095 — Admin Dashboard Design Parity Remediation
-- [/] frontend_096 — Author and Verify ADM-54 Request Settings Design
+- [x] frontend_096 — Author and Verify ADM-54 Request Settings Design
 - [x] frontend_097 — Full Success-State Browser and Defect-Closure Matrix
 - [ ] frontend_098 — Final Production-Parity Platform Gate

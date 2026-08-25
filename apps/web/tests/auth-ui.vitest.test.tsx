@@ -72,10 +72,16 @@ describe('login and OTP screens', () => {
       { locale: 'en' }
     );
 
+    fireEvent.change(screen.getByLabelText(copy.identifierLabel), { target: { value: 'SEEKER@EXAMPLE.COM' } });
     fireEvent.change(screen.getByLabelText(copy.phoneLabel), { target: { value: '+20 100 000 0000' } });
     fireEvent.click(screen.getByRole('button', { name: copy.sendCodeAction }));
     await waitFor(() => expect(screen.getByRole('heading', { name: copy.otpTitle, level: 1 })).toBeInTheDocument());
-    expect(client.sendOtp).toHaveBeenCalledWith({ phone: '+201000000000', roleType: 'seeker', purpose: 'login' });
+    expect(client.sendOtp).toHaveBeenCalledWith({
+      phone: '+201000000000',
+      email: 'seeker@example.com',
+      roleType: 'seeker',
+      purpose: 'login'
+    });
 
     const resendButton = screen.getByRole('button', { name: copy.resendIn(30) });
     expect(resendButton).toBeDisabled();
@@ -85,6 +91,7 @@ describe('login and OTP screens', () => {
 
     await waitFor(() => expect(verifyOtp).toHaveBeenCalledWith({
       phone: '+201000000000',
+      email: 'seeker@example.com',
       roleType: 'seeker',
       purpose: 'login',
       challengeId: challenge.challengeId,
@@ -110,6 +117,7 @@ describe('login and OTP screens', () => {
     const copy = getAuthCopy('en');
     renderWithLocale(<AuthPage url="/auth/verify-phone" locale="en" client={client} onAuthenticated={vi.fn()} />, { locale: 'en' });
 
+    fireEvent.change(screen.getByLabelText(copy.identifierLabel), { target: { value: 'seeker@example.com' } });
     fireEvent.change(screen.getByLabelText(copy.phoneLabel), { target: { value: '+201000000000' } });
     fireEvent.click(screen.getByRole('button', { name: copy.sendCodeAction }));
     await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent(copy.otpRateLimitedTitle));

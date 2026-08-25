@@ -6,7 +6,7 @@
 | Phase | B9_admin_system_readiness |
 | Area | docs |
 | Kind | docs |
-| Sequence | 101 / 197 |
+| Sequence | 101 / 198 |
 | Depends on | `backend_125` |
 
 ## Goal

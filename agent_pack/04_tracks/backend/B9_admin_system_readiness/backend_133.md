@@ -1,4 +1,4 @@
-# backend_133 — Containers and Production Runtime
+# backend_133 — Native Services and Production Runtime
 
 | Field | Value |
 |---|---|
@@ -6,12 +6,12 @@
 | Phase | B9_admin_system_readiness |
 | Area | deployment |
 | Kind | release |
-| Sequence | 108 / 197 |
+| Sequence | 108 / 198 |
 | Depends on | `backend_132` |
 
 ## Goal
 
-Prepare multi-stage images, a non-root process, graceful shutdown, health checks, and development Compose.
+Prepare restricted systemd services, Nginx routing, a non-root process, graceful shutdown, health checks, and native Local tooling.
 
 ## Screen IDs
 

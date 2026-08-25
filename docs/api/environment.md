@@ -1,15 +1,11 @@
 # API environment configuration
 
-The API accepts five runtime configuration values at this stage:
+The API validates `APP_ENV`, `API_HOST`, `API_PORT`, `MONGODB_URI`, authentication secrets, email OTP, and private-upload settings. The process manager supplies values; the application never searches for or prints a secret file.
 
-- `APP_ENV`: `local`, `test`, `preview`, `uat`, or `production`.
-- `API_HOST`: a hostname or IP address without a URL scheme or path.
-- `API_PORT`: a decimal integer from `1` through `65535`.
-- `MONGODB_URI`: a `mongodb://` or `mongodb+srv://` connection URI supplied as a secret outside source control.
-- `AUTH_ACCESS_TOKEN_SECRET`: a canonical base64url value representing at least 32 random bytes. It signs access tokens and derives a domain-separated OTP hashing key; the value is never exposed.
+Local uses `.env.local` through the native supervisor and requires an installed MongoDB service or isolated non-production Atlas `MONGODB_URI`; the supervisor never downloads MongoDB or starts Docker. Explicit process-environment overrides are supported for CI and one-off diagnostics without rewriting `.env.local`. Production system services read `/etc/elsadatrealestate/production.env`. Example files are templates, never credential stores.
 
-The process manager or shell supplies these values. The application does not load `.env` files. `apps/api/.env.example` contains local non-secret documentation values only; it is not a source of production configuration.
+Production bindings are loopback-only. The MongoDB URI must use authenticated `rs0` topology. Hostinger email uses `smtp.hostinger.com`, port 465 implicit TLS, full username `info@elsadatrealestate.com`, and a mailbox password supplied only on the VPS. Port 587 with STARTTLS is the approved fallback.
 
-Validation errors expose variable names and stable issue codes, never rejected values. Safe diagnostics include only allowlisted non-secret fields, TTL/cookie policy, the derived OTP provider mode, and the fact that a database is configured; the MongoDB URI and authentication secret are never included.
+Local OTP is delivered into the native catcher at `http://localhost:8025`. Preview/UAT/Production require authenticated SMTP and fail readiness when verification fails.
 
-OTP delivery mode is derived rather than configured by a secret: Local and Test select the deterministic fake adapter, while Preview, UAT, and Production remain `unconfigured` until an approved provider adapter is injected. Unconfigured environments fail OTP delivery closed and remain incomplete for release readiness. Storage, notification, payment, and external-provider credentials are intentionally not declared until their owning integrations define those contracts.
+Protected environments require private filesystem configuration, a distinct download-signing secret, and native ClamAV on loopback. Diagnostics expose readiness modes only; they never expose MongoDB URI, passwords, tokens, OTP values, or signing material.

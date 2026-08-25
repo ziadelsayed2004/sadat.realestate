@@ -27,8 +27,9 @@ describe('operations handoff guide', () => {
       'packages/contracts/src/',
       'agent_pack/01_product/ROLES_PERMISSIONS_MATRIX.md',
       'docs/api/environment.md',
-      'Dockerfile',
-      'docker-compose.yml',
+      'deploy/nginx/elsadatrealestate.conf',
+      'deploy/systemd/elsadat-api.service',
+      'deploy/native/deploy-release.sh',
       'apps/web/tests/preview-deployment.vitest.test.ts'
     ]) expect(guide).toContain(source);
     for (const command of [

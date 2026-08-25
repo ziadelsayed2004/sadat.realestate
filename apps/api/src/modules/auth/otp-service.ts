@@ -42,7 +42,7 @@ export type OtpVerificationResult =
     };
 
 export interface OtpService {
-  isReady(): boolean;
+  isReady(): boolean | Promise<boolean>;
   send(input: OtpSendRequest): Promise<OtpSendData>;
   verify(input: OtpVerifyRequest): Promise<OtpVerificationResult>;
 }
@@ -89,14 +89,19 @@ export function createOtpService(dependencies: OtpServiceDependencies): OtpServi
   return Object.freeze({
     isReady: () => dependencies.provider.isReady(),
     async send(input: OtpSendRequest) {
-      if (!dependencies.provider.isReady()) {
+      if (!await dependencies.provider.isReady()) {
         throw new OtpServiceError('OTP_PROVIDER_UNAVAILABLE');
       }
       const issuedAt = now();
       const expiresAt = new Date(issuedAt.getTime() + otpTtlSeconds * 1000);
       const challengeId = createChallengeId();
       const code = dependencies.codeGenerator.create();
-      const context = { phone: input.phone, roleType: input.roleType, purpose: input.purpose };
+      const context = {
+        phone: input.phone,
+        email: input.email,
+        roleType: input.roleType,
+        purpose: input.purpose
+      };
       const created = await dependencies.repository.createChallenge({
         ...context,
         publicId: challengeId,
@@ -109,7 +114,14 @@ export function createOtpService(dependencies: OtpServiceDependencies): OtpServi
       if (created.kind === 'cooldown') throw new OtpServiceError('OTP_SEND_RATE_LIMITED');
 
       try {
-        await dependencies.provider.send({ phone: input.phone, code, expiresAt });
+        await dependencies.provider.send({
+          phone: input.phone,
+          email: input.email,
+          roleType: input.roleType,
+          purpose: input.purpose,
+          code,
+          expiresAt
+        });
       } catch {
         await dependencies.repository.cancelChallenge(challengeId, now());
         throw new OtpServiceError('OTP_PROVIDER_UNAVAILABLE');
@@ -124,7 +136,12 @@ export function createOtpService(dependencies: OtpServiceDependencies): OtpServi
 
     async verify(input: OtpVerifyRequest): Promise<OtpVerificationResult> {
       const verifiedAt = now();
-      const context = { phone: input.phone, roleType: input.roleType, purpose: input.purpose };
+      const context = {
+        phone: input.phone,
+        email: input.email,
+        roleType: input.roleType,
+        purpose: input.purpose
+      };
       const challenge = await dependencies.repository.findChallenge(
         input.challengeId,
         context,
@@ -160,7 +177,11 @@ export function createOtpService(dependencies: OtpServiceDependencies): OtpServi
         };
       }
 
-      const account = await dependencies.repository.findPhoneAccount(input.phone, input.roleType);
+      const account = await dependencies.repository.findOtpAccount(
+        input.phone,
+        input.email,
+        input.roleType
+      );
       const consumed = await dependencies.repository.consumeLoginChallenge(challenge.id, verifiedAt);
       if (!consumed || !account) throw new OtpServiceError('INVALID_OTP');
       if (account.status === 'rejected' || account.status === 'suspended') {

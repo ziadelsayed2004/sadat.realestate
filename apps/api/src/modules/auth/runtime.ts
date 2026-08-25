@@ -17,6 +17,7 @@ import { createAuthService } from './service.js';
 import {
   createDeterministicFakeOtpProvider,
   createDeterministicOtpCodeGenerator,
+  createSmtpOtpProvider,
   createSecureOtpCodeGenerator,
   createUnconfiguredOtpProvider,
   type OtpCodeGenerator,
@@ -50,10 +51,14 @@ export function createAuthRuntime(
     refreshTokenTtlSeconds: environment.refreshTokenTtlSeconds
   });
   const deterministic = environment.otpProviderMode === 'deterministic-fake';
+  const configuredProvider = environment.otpProviderMode === 'smtp' && environment.smtp
+    ? createSmtpOtpProvider(environment.smtp)
+    : environment.otpProviderMode === 'unconfigured'
+      ? createUnconfiguredOtpProvider()
+      : createDeterministicFakeOtpProvider();
   const otpService = createOtpService({
     repository: createMongooseOtpRepository(identityModels, authModels),
-    provider: options.otpProvider
-      ?? (deterministic ? createDeterministicFakeOtpProvider() : createUnconfiguredOtpProvider()),
+    provider: options.otpProvider ?? configuredProvider,
     codeGenerator: options.otpCodeGenerator
       ?? (deterministic ? createDeterministicOtpCodeGenerator() : createSecureOtpCodeGenerator()),
     codeHasher: createHmacOtpCodeHasher(environment.accessTokenSecret),
