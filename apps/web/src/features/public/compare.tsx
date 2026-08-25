@@ -290,7 +290,6 @@ function ComparisonContent({
       <section className="public-property-comparison__selection" aria-labelledby="public-property-comparison-selection-title">
         <h2 id="public-property-comparison-selection-title" className="public-property-comparison__visually-hidden">{copy.title}</h2>
         <ComparisonCards data={data} locale={locale} copy={copy} onRemove={onRemove} />
-        <button type="button" className="public-property-comparison__clear" onClick={onClear}>{copy.clearAll}</button>
       </section>
       <ComparisonTables data={data} locale={locale} copy={copy} showDifferences={showDifferences} />
       <aside className="public-property-comparison__sticky-bar" aria-label={copy.title}>

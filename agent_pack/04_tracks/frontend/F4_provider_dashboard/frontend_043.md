@@ -6,7 +6,7 @@
 | Phase | F4_provider_dashboard |
 | Area | provider_property |
 | Kind | frontend |
-| Sequence | 153 / 198 |
+| Sequence | 153 / 199 |
 | Depends on | `frontend_042` |
 
 ## Goal

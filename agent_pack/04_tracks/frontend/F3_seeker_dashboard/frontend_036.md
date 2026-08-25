@@ -6,7 +6,7 @@
 | Phase | F3_seeker_dashboard |
 | Area | qa |
 | Kind | quality |
-| Sequence | 149 / 198 |
+| Sequence | 149 / 199 |
 | Depends on | `frontend_035` |
 
 ## Goal

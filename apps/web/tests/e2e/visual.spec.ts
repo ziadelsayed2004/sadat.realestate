@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { routePublicHomepageApi, routePublicPropertyListApi } from './public-fixtures';
+import { PUBLIC_CLONE_ASSETS, routePublicHomepageApi, routePublicPropertyListApi } from './public-fixtures';
 
 function localeForProject(): 'ar' | 'en' | 'zh-CN' {
   const projectName = test.info().project.name;
@@ -204,7 +204,7 @@ test('public homepage renders its SSR shell across approved locales and devices'
   await expect(homepage).toHaveAttribute('data-homepage-state', 'success');
   const heroImage = homepage.locator('.public-homepage__hero-media img');
   await expect(heroImage).toBeVisible();
-  await expect(heroImage).toHaveAttribute('src', 'http://127.0.0.1:4173/__test-fixtures/homepage-banner.svg');
+  await expect(heroImage).toHaveAttribute('src', PUBLIC_CLONE_ASSETS.hero);
   await expect(page).toHaveScreenshot('public-homepage-' + locale + '.png', { fullPage: true });
 });
 
@@ -324,6 +324,6 @@ test('public article details renders the published projection and safe media sta
   await expect(details).toBeVisible();
   await expect(details).toHaveAttribute('data-article-details-state', 'success');
   await expect(details.locator('#public-article-details-title')).toBeVisible();
-  await expect(details.locator('[data-state="missing_image"]')).toBeVisible();
+  await expect(details.locator('[data-state="missing_image"]')).toHaveCount(2);
   await expect(page).toHaveScreenshot(`public-article-details-${locale}.png`, { fullPage: true });
 });

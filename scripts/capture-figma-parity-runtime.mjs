@@ -15,6 +15,8 @@ const evidenceDir = path.join(root, 'docs/quality/figma_parity/screens', screenI
 const queue = JSON.parse(fs.readFileSync(path.join(root, 'docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json'), 'utf8'));
 const queueEntry = queue.screens.find((entry) => entry.screenId === screenId);
 if (!queueEntry) throw new Error(`Screen ${screenId} is not present in the execution queue`);
+const referenceWidth = Number(queueEntry.evidence?.figmaScreenshot?.width ?? queueEntry.evidence?.figmaContext?.root?.width ?? 1280);
+if (!Number.isInteger(referenceWidth) || referenceWidth < 320) throw new Error(`Invalid cached Figma frame width for ${screenId}: ${referenceWidth}`);
 const fixtureKind = String(args.get('fixture') ?? (screenId === 'PUB-01' ? 'public-home' : 'public-list'));
 const capturePhase = String(args.get('phase') ?? 'before');
 const propertyDetailsFixture = {
@@ -193,7 +195,7 @@ const seedState = {
 fs.writeFileSync(path.join(evidenceDir, 'deterministic-state.json'), JSON.stringify(seedState, null, 2) + '\n');
 
 const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ viewport: { width: 1280, height: 720 }, deviceScaleFactor: 1, locale });
+const context = await browser.newContext({ viewport: { width: referenceWidth, height: 720 }, deviceScaleFactor: 1, locale });
 const page = await context.newPage();
 const requestedApi = [];
 const apiResponses = [];
@@ -224,6 +226,33 @@ targetUrl.searchParams.set('lang', locale);
 const response = await page.goto(targetUrl.toString(), { waitUntil: 'domcontentloaded', timeout: 30_000 });
 await page.waitForLoadState('networkidle', { timeout: 10_000 }).catch(() => undefined);
 await page.locator(`[data-page="${fixtureConfig.pageName}"]`).waitFor({ state: 'visible', timeout: 10_000 }).catch(() => undefined);
+await page.addStyleTag({ content: `
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    caret-color: transparent !important;
+    scroll-behavior: auto !important;
+  }
+` });
+await page.evaluate(async () => {
+  await document.fonts.ready;
+  const images = Array.from(document.images);
+  const scrollHeight = Math.max(document.documentElement.scrollHeight, document.body?.scrollHeight ?? 0);
+  const step = Math.max(Math.floor(window.innerHeight * 0.8), 1);
+  for (let y = 0; y < scrollHeight; y += step) {
+    window.scrollTo(0, y);
+    await new Promise(resolve => requestAnimationFrame(() => resolve(undefined)));
+  }
+  window.scrollTo(0, 0);
+  await Promise.all(images.map(image => image.complete && image.naturalWidth > 0
+    ? Promise.resolve()
+    : new Promise(resolve => {
+      image.addEventListener('load', resolve, { once: true });
+      image.addEventListener('error', resolve, { once: true });
+    })));
+  await document.fonts.ready;
+});
+await page.waitForTimeout(100);
 
 const runtimePath = path.join(evidenceDir, 'runtime-before.png');
 const afterPath = path.join(evidenceDir, 'runtime-after.png');
@@ -267,7 +296,7 @@ const dom = await page.evaluate(({ pageName, stateAttribute }) => {
 }, { pageName: fixtureConfig.pageName, stateAttribute: fixtureConfig.stateAttribute });
 
 const imageData = (filePath) => `data:image/png;base64,${fs.readFileSync(filePath).toString('base64')}`;
-const diffPage = await context.newPage({ viewport: { width: 1280, height: 720 } });
+const diffPage = await context.newPage({ viewport: { width: referenceWidth, height: 720 } });
 const comparison = await diffPage.evaluate(async ({ figma, before, after }) => {
   const load = (src) => new Promise((resolve, reject) => {
     const image = new Image();
@@ -296,10 +325,52 @@ const comparison = await diffPage.evaluate(async ({ figma, before, after }) => {
     context.drawImage(columns[index], x, 44, widths[index], heights[index]);
     x += widths[index];
   });
-  return { dataUrl: canvas.toDataURL('image/png'), dimensions: { width, height }, sourceDimensions: columns.map((image) => ({ width: image.naturalWidth, height: image.naturalHeight })) };
+  const compareWidth = figmaImage.naturalWidth;
+  const compareHeight = Math.min(figmaImage.naturalHeight, afterImage.naturalHeight);
+  const compareCanvas = document.createElement('canvas');
+  compareCanvas.width = compareWidth;
+  compareCanvas.height = compareHeight;
+  const compareContext = compareCanvas.getContext('2d', { willReadFrequently: true });
+  if (compareContext === null) throw new Error('Unable to create visual comparison canvas');
+  compareContext.drawImage(figmaImage, 0, 0, compareWidth, compareHeight);
+  const expected = compareContext.getImageData(0, 0, compareWidth, compareHeight).data;
+  compareContext.clearRect(0, 0, compareWidth, compareHeight);
+  compareContext.drawImage(afterImage, 0, 0, compareWidth, compareHeight);
+  const actual = compareContext.getImageData(0, 0, compareWidth, compareHeight).data;
+  let changedPixels = 0;
+  let antiAliasingOnlyPixels = 0;
+  for (let index = 0; index < expected.length; index += 4) {
+    const delta = Math.abs(expected[index] - actual[index]) + Math.abs(expected[index + 1] - actual[index + 1]) + Math.abs(expected[index + 2] - actual[index + 2]);
+    if (delta > 24) changedPixels += 1;
+    else if (delta > 3) antiAliasingOnlyPixels += 1;
+  }
+  const comparedPixels = compareWidth * compareHeight;
+  return {
+    dataUrl: canvas.toDataURL('image/png'),
+    dimensions: { width, height },
+    sourceDimensions: columns.map((image) => ({ width: image.naturalWidth, height: image.naturalHeight })),
+    visualMetrics: {
+      comparedWidth: compareWidth,
+      comparedHeight: compareHeight,
+      comparedPixels,
+      materialDifferencePercent: Number(((changedPixels / comparedPixels) * 100).toFixed(4)),
+      antiAliasingOnlyPercent: Number(((antiAliasingOnlyPixels / comparedPixels) * 100).toFixed(4)),
+      threshold: { materialRgbSumGreaterThan: 24, antiAliasingRgbSumGreaterThan: 3 },
+      method: 'same-width source/runtime canvas comparison over the overlapping document height'
+    }
+  };
 }, { figma: imageData(path.join(evidenceDir, 'figma.png')), before: imageData(runtimePath), after: imageData(afterPath) });
 const diffBuffer = Buffer.from(comparison.dataUrl.split(',')[1], 'base64');
 fs.writeFileSync(path.join(evidenceDir, 'diff.png'), diffBuffer);
+fs.writeFileSync(path.join(evidenceDir, 'visual-metrics.json'), JSON.stringify({
+  schemaVersion: 1,
+  screenId,
+  phase: capturePhase,
+  source: comparison.sourceDimensions[0],
+  runtimeAfter: comparison.sourceDimensions[2],
+  ...comparison.visualMetrics,
+  reviewed: false
+}, null, 2) + '\n');
 
 if (capturePhase === 'after') {
   fs.writeFileSync(path.join(evidenceDir, 'runtime-after-capture.json'), JSON.stringify({
@@ -309,7 +380,7 @@ if (capturePhase === 'after') {
     runtime: { route, locale, direction, viewport: dom.viewport, responseStatus: response?.status() ?? null, responseOk: response?.ok() ?? false, beforeHash, afterHash, requestedApi, apiResponses },
     structure: dom.structure,
     transitions: dom.transitions,
-    comparison: { sourceDimensions: comparison.sourceDimensions, dimensions: comparison.dimensions, diffPath: `docs/quality/figma_parity/screens/${screenId}/diff.png` }
+    comparison: { sourceDimensions: comparison.sourceDimensions, dimensions: comparison.dimensions, diffPath: `docs/quality/figma_parity/screens/${screenId}/diff.png`, visualMetricsPath: `docs/quality/figma_parity/screens/${screenId}/visual-metrics.json`, visualMetrics: comparison.visualMetrics }
   }, null, 2) + '\n');
 }
 

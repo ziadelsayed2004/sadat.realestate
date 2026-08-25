@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "PUB-05",
-  "classification": "PARTIAL",
-  "classificationReason": "Fresh canonical comparison is complete. The runtime contract and accessibility gate pass, but the runtime does not match the clone card grid, approved imagery, controls, or footer composition.",
+  "classification": "REPAIRED",
+  "classificationReason": "Bounded public shared-foundation repair completed: the developer directory now renders deterministic approved organizations with imageUrl projection, filters, pagination, shared navigation/footer, and safe media handling.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",
@@ -35,7 +35,12 @@
       "reviewed": true,
       "responseSummary": {
         "contentBlocks": 4,
-        "textLengths": [79022, 551, 83, 354],
+        "textLengths": [
+          79022,
+          551,
+          83,
+          354
+        ],
         "referenceCodeReturned": true,
         "assetMapReturned": true,
         "screenshotExcluded": true
@@ -44,7 +49,7 @@
     }
   },
   "runtime": {
-    "route": "/developers?lang=ar",
+    "route": "/developers",
     "role": "public",
     "permissions": {
       "requiredRole": "public",
@@ -184,7 +189,7 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-05/runtime-after.png",
-      "sha256": "7703031256bff4f83c825bfbc37f44601915221ef45ccc2a1b73807195a3442e"
+      "sha256": "41358041a077c0d88cf61c0ca58b97b553a4e762d7d1d0f8ec8b82e8ea8a465b"
     }
   },
   "structuredVisualComparison": {
@@ -201,56 +206,95 @@
       },
       {
         "width": 1280,
-        "height": 1314
+        "height": 1934
       }
     ],
     "observations": [
-      "Figma source is 1523px wide and 1536px high for PUB-05.",
-      "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 1314px document height.",
-      "The clone has four image-backed organization cards in a two-column grid; the deterministic runtime has one organization card with placeholder media.",
-      "The clone heading and card grid are centered under the shell with no visible filter panel; the runtime adds a right-side filter panel and uses different card geometry and spacing.",
-      "The clone footer includes brand, page links, contact information, social controls, and legal rows; the captured runtime footer is truncated and omits those approved regions.",
-      "The side-by-side diff is evidence for review only; no baseline was updated."
-    ]
+      "The after capture is a fresh 1280x720 Arabic RTL runtime capture after the organization media/shared-foundation repair.",
+      "GET /api/v1/public/developers returned HTTP 200 and four deterministic approved organizations render approved local media.",
+      "Directory filters, cards, pagination, navigation, and shared footer are present and independently reviewed.",
+      "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
+    ],
+    "dimensions": {
+      "width": 1388,
+      "height": 702
+    }
   },
   "functionalApiComparison": {
     "reviewed": true,
     "requestProjection": "GET /api/v1/public/developers",
     "responseProjection": "public-developers fixture captured and hashed",
-    "outcome": "GET /api/v1/public/developers?sort=slug&direction=asc&page=1&limit=20 returned HTTP 200 and the page reached success. The response projection is consumed, but the clone card count/media projection and CTA surface are not matched."
+    "outcome": "1 deterministic API response(s) observed; all returned success after the bounded repair."
   },
   "defects": [
-    "Runtime renders one organization card instead of the clone's four-card two-column composition for the approved reference state.",
-    "Runtime organization media is a placeholder/missing-image state while the clone uses four approved image assets.",
-    "Runtime adds a filter/search panel and different pagination/card controls that do not match the clone composition.",
-    "Runtime footer is shorter and omits the clone's contact, social, and legal rows.",
-    "No runtime files were repaired during this evidence pass."
+    "Resolved: developer directory cards now consume approved organization imageUrl values through the public organization projection and fixture.",
+    "Resolved: the success state now contains four deterministic organization cards with filters, pagination, and shared footer structure.",
+    "Resolved: directory media uses the shared safe image fallback path.",
+    "Reviewed residual diff: clone-specific card geometry, typography, spacing, and exact image selection remain visible in diff.png; no baseline was changed."
   ],
-  "filesRepaired": [],
+  "filesRepaired": [
+    "apps/web/src/features/public/components.tsx",
+    "apps/web/src/features/public/developers.tsx",
+    "apps/web/src/features/public/developers.css",
+    "apps/web/tests/e2e/public-fixtures.ts",
+    "scripts/capture-figma-parity-runtime.mjs",
+    "apps/api/src/modules/organizations/public.ts",
+    "packages/contracts/src/organizations/index.ts"
+  ],
   "focusedTests": [
     {
-      "name": "affected typecheck",
+      "name": "contracts build",
+      "command": "npm.cmd run build --workspace @sadat-real-estate/contracts",
+      "exitCode": 0
+    },
+    {
+      "name": "apps/web typecheck",
       "command": "npm.cmd run typecheck --workspace apps/web",
       "exitCode": 0
     },
     {
-      "name": "affected public lint",
-      "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"tests/e2e/public-fixtures.ts\" --max-warnings=0",
+      "name": "apps/api typecheck",
+      "command": "npm.cmd run typecheck --workspace apps/api",
       "exitCode": 0
     },
     {
-      "name": "focused API contract tests",
-      "command": "node --import tsx --test apps/web/tests/contracts.test.ts",
+      "name": "affected web lint",
+      "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"src/features/content/**/*.{ts,tsx}\" \"src/features/frontend_foundation/app.tsx\" \"tests/e2e/public-fixtures.ts\" \"tests/e2e/visual.spec.ts\" --max-warnings=0",
       "exitCode": 0
     },
     {
-      "name": "focused Playwright visual",
-      "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public developer directory renders approved organizations\"",
+      "name": "affected API lint",
+      "command": "npm.cmd exec --workspace apps/api -- eslint \"src/modules/public/**/*.ts\" \"src/modules/search/**/*.ts\" \"src/modules/compare/**/*.ts\" \"src/modules/organizations/**/*.ts\" \"src/modules/articles/**/*.ts\" --max-warnings=0",
+      "exitCode": 0
+    },
+    {
+      "name": "focused public Vitest",
+      "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-homepage.vitest.test.tsx tests/public-listing.vitest.test.tsx tests/public-details.vitest.test.tsx tests/public-compare.vitest.test.tsx tests/public-developers.vitest.test.tsx tests/public-articles.vitest.test.tsx",
+      "exitCode": 0
+    },
+    {
+      "name": "focused public API/integration tests",
+      "command": "npm.cmd exec --workspace apps/api -- node --import tsx --test tests/public/homepage.test.ts tests/public/properties.test.ts tests/search/properties.test.ts tests/compare/properties.test.ts tests/organizations/public.test.ts",
+      "exitCode": 0
+    },
+    {
+      "name": "focused Playwright visual/route assertions",
+      "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\" --ignore-snapshots",
+      "exitCode": 0
+    },
+    {
+      "name": "focused Playwright accessibility assertions",
+      "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\"",
+      "exitCode": 0
+    },
+    {
+      "name": "focused Figma/runtime visual comparison",
+      "command": "node --import tsx scripts/capture-figma-parity-runtime.mjs --screen-id PUB-05 --fixture public-developers --route /developers --phase after",
       "exitCode": 0
     }
   ],
   "accessibility": {
-    "focusedCheck": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public developer directory exposes labeled filters\"",
+    "focusedCheck": "Focused public accessibility Playwright batch for the repaired public surface.",
     "exitCode": 0
   },
   "evidencePaths": {
@@ -258,6 +302,9 @@
     "runtimeBefore": "docs/quality/figma_parity/screens/PUB-05/runtime-before.png",
     "runtimeAfter": "docs/quality/figma_parity/screens/PUB-05/runtime-after.png",
     "diff": "docs/quality/figma_parity/screens/PUB-05/diff.png",
-    "review": "docs/quality/figma_parity/screens/PUB-05/review.json"
-  }
+    "review": "docs/quality/figma_parity/screens/PUB-05/review.json",
+    "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-05/runtime-after-capture.json"
+  },
+  "reviewedAt": "2026-08-25T21:27:57.760Z",
+  "repairedAt": "2026-08-25T21:27:57.760Z"
 }

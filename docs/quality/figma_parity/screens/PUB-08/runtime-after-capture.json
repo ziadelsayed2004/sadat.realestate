@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-08",
+  "phase": "after",
+  "runtime": {
+    "route": "/articles/buying-in-sadat",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "responseStatus": 200,
+    "responseOk": true,
+    "beforeHash": "4a4d9f867b0dc38c6eab5a63c59b2579556cd0a57e94bc77659de65d74cfb00d",
+    "afterHash": "fa48c3e03ddb9b1e2268a1abb6a1d3461a7fb581bfdc6c7b7342b5d65817ac5d",
+    "requestedApi": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/articles/buying-in-sadat?locale=ar"
+      },
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/articles?locale=ar&page=1&limit=20"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/articles/buying-in-sadat?locale=ar",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/articles?locale=ar&page=1&limit=20",
+        "status": 200
+      }
+    ]
+  },
+  "structure": {
+    "headers": 2,
+    "navs": 1,
+    "sections": 2,
+    "cards": 18,
+    "images": 6,
+    "forms": 0
+  },
+  "transitions": {
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "الرئيسية",
+        "href": "/"
+      },
+      {
+        "text": "العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "المطورون",
+        "href": "/developers"
+      },
+      {
+        "text": "المقالات",
+        "href": "/articles"
+      },
+      {
+        "text": "المجتمع",
+        "href": "/community"
+      },
+      {
+        "text": "عن المنصة",
+        "href": "/about"
+      },
+      {
+        "text": "فريقنا",
+        "href": "/team"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register"
+      },
+      {
+        "text": "العودة للمقالات",
+        "href": "/articles"
+      },
+      {
+        "text": "نصائح الإيجار",
+        "href": "/articles/rental-tips"
+      },
+      {
+        "text": "اقرأ المقال",
+        "href": "/articles/rental-tips"
+      },
+      {
+        "text": "Market outlook",
+        "href": "/articles/market-outlook"
+      },
+      {
+        "text": "اقرأ المقال",
+        "href": "/articles/market-outlook"
+      },
+      {
+        "text": "First-home checklist",
+        "href": "/articles/first-home-checklist"
+      },
+      {
+        "text": "اقرأ المقال",
+        "href": "/articles/first-home-checklist"
+      },
+      {
+        "text": "الرئيسية",
+        "href": "/"
+      },
+      {
+        "text": "العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "المطورون",
+        "href": "/developers"
+      },
+      {
+        "text": "المقالات",
+        "href": "/articles"
+      },
+      {
+        "text": "عن المنصة",
+        "href": "/about"
+      },
+      {
+        "text": "hello@sadat.realestate",
+        "href": "mailto:hello@sadat.realestate"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login"
+      }
+    ],
+    "buttons": []
+  },
+  "comparison": {
+    "sourceDimensions": [
+      {
+        "width": 1523,
+        "height": 1759
+      },
+      {
+        "width": 1280,
+        "height": 1404
+      },
+      {
+        "width": 1280,
+        "height": 2042
+      }
+    ],
+    "dimensions": {
+      "width": 1388,
+      "height": 738
+    },
+    "diffPath": "docs/quality/figma_parity/screens/PUB-08/diff.png"
+  }
+}

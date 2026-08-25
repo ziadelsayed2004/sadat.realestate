@@ -6,7 +6,7 @@
 | Phase | F0_frontend_foundation |
 | Area | accessibility |
 | Kind | quality |
-| Sequence | 124 / 198 |
+| Sequence | 124 / 199 |
 | Depends on | `frontend_007` |
 
 ## Goal

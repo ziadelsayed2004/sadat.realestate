@@ -6,7 +6,7 @@
 | Phase | B9_admin_system_readiness |
 | Area | fixtures |
 | Kind | quality |
-| Sequence | 103 / 198 |
+| Sequence | 103 / 199 |
 | Depends on | `backend_127` |
 
 ## Goal

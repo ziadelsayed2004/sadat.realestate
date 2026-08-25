@@ -8,12 +8,13 @@
     "direction": "rtl"
   },
   "responseRequestId": "fresh-audit-public-article-details",
-  "responseSha256": "05c6316f7b41da6aaa1afa6bbb2aeed706e77398704eea0d62d42db5bef3a2f2",
+  "responseSha256": "01f2442ee1481ca56af3524a89992a830358e7f1806dbe69ab81f3e24b20a751",
   "response": {
     "data": {
       "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
       "categoryId": "bbbbbbbbbbbbbbbbbbbbbbbb",
       "slug": "buying-in-sadat",
+      "imageUrl": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
       "title": {
         "ar": "الشراء في مدينة السادات",
         "en": "Buying in Sadat City",
@@ -40,7 +41,152 @@
       "requestId": "fresh-audit-public-article-details"
     }
   },
-  "relatedResponses": {},
+  "relatedResponses": {
+    "articleCategories": {
+      "data": [
+        {
+          "id": "bbbbbbbbbbbbbbbbbbbbbbbb",
+          "slug": "buying",
+          "name": {
+            "ar": "نصائح شراء",
+            "en": "Buying",
+            "zh-CN": "购买"
+          }
+        },
+        {
+          "id": "dddddddddddddddddddddddd",
+          "slug": "renting",
+          "name": {
+            "ar": "نصائح إيجار",
+            "en": "Renting",
+            "zh-CN": "租赁"
+          }
+        }
+      ],
+      "meta": {
+        "requestId": "fresh-audit-public-article-categories"
+      }
+    },
+    "relatedArticles": {
+      "data": [
+        {
+          "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
+          "categoryId": "bbbbbbbbbbbbbbbbbbbbbbbb",
+          "slug": "buying-in-sadat",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
+          "title": {
+            "ar": "الشراء في مدينة السادات",
+            "en": "Buying in Sadat City",
+            "zh-CN": "在萨达特城购房"
+          },
+          "body": {
+            "ar": "دليل عملي للمنازل المنشورة.",
+            "en": "A practical guide to published homes.",
+            "zh-CN": "已发布房产实用指南。"
+          },
+          "seoTitle": {
+            "ar": "الشراء في مدينة السادات",
+            "en": "Buying in Sadat City",
+            "zh-CN": "在萨达特城购房"
+          },
+          "seoDescription": {
+            "ar": "دليل عملي للشراء.",
+            "en": "A practical buying guide.",
+            "zh-CN": "实用购房指南。"
+          },
+          "publishedAt": "2026-08-01T10:00:00+00:00"
+        },
+        {
+          "id": "cccccccccccccccccccccccc",
+          "categoryId": "dddddddddddddddddddddddd",
+          "slug": "rental-tips",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
+          "title": {
+            "ar": "نصائح الإيجار",
+            "en": "Rental tips",
+            "zh-CN": "租赁技巧"
+          },
+          "body": {
+            "ar": "قائمة قصيرة للإيجار.",
+            "en": "A short rental checklist.",
+            "zh-CN": "简短的租赁清单。"
+          },
+          "publishedAt": "2026-07-20T10:00:00+00:00"
+        },
+        {
+          "id": "eeeeeeeeeeeeeeeeeeeeeeee",
+          "categoryId": "bbbbbbbbbbbbbbbbbbbbbbbb",
+          "slug": "market-outlook",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
+          "title": {
+            "ar": "Market outlook",
+            "en": "Market outlook",
+            "zh-CN": "Market outlook"
+          },
+          "body": {
+            "ar": "A practical market outlook.",
+            "en": "A practical market outlook.",
+            "zh-CN": "A practical market outlook."
+          },
+          "publishedAt": "2026-07-10T10:00:00+00:00"
+        },
+        {
+          "id": "ffffffffffffffffffffffff",
+          "categoryId": "dddddddddddddddddddddddd",
+          "slug": "first-home-checklist",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
+          "title": {
+            "ar": "First-home checklist",
+            "en": "First-home checklist",
+            "zh-CN": "First-home checklist"
+          },
+          "body": {
+            "ar": "A first-home checklist.",
+            "en": "A first-home checklist.",
+            "zh-CN": "A first-home checklist."
+          },
+          "publishedAt": "2026-07-01T10:00:00+00:00"
+        },
+        {
+          "id": "111111111111111111111111",
+          "categoryId": "bbbbbbbbbbbbbbbbbbbbbbbb",
+          "slug": "neighborhood-guide",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
+          "title": {
+            "ar": "Neighborhood guide",
+            "en": "Neighborhood guide",
+            "zh-CN": "Neighborhood guide"
+          },
+          "body": {
+            "ar": "A guide to published neighborhoods.",
+            "en": "A guide to published neighborhoods.",
+            "zh-CN": "A guide to published neighborhoods."
+          },
+          "publishedAt": "2026-06-20T10:00:00+00:00"
+        },
+        {
+          "id": "222222222222222222222222",
+          "categoryId": "dddddddddddddddddddddddd",
+          "slug": "rental-contracts",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
+          "title": {
+            "ar": "Rental contracts",
+            "en": "Rental contracts",
+            "zh-CN": "Rental contracts"
+          },
+          "body": {
+            "ar": "Notes on rental contracts.",
+            "en": "Notes on rental contracts.",
+            "zh-CN": "Notes on rental contracts."
+          },
+          "publishedAt": "2026-06-10T10:00:00+00:00"
+        }
+      ],
+      "meta": {
+        "requestId": "fresh-audit-public-articles"
+      }
+    }
+  },
   "authSession": null,
   "ownership": "public"
 }

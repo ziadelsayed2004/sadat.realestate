@@ -6,7 +6,7 @@
 | Phase | B10_post_release_assurance |
 | Area | release assurance |
 | Kind | quality |
-| Sequence | 114 / 198 |
+| Sequence | 114 / 199 |
 | Depends on | `backend_138` |
 
 ## Goal

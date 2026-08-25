@@ -14,7 +14,7 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "8875c50dec55638c801237915262f20c9c47eb7646b3630406753686c5cbb121",
-    "afterHash": "834c7137da4814322a48f732abae33d7dafff46ac48572d71a526d5ef055a9e5",
+    "afterHash": "e8e84d9804f2fbfff16fe3d40f34f0d6a9a86d8d45198a5daf727f7c66391d55",
     "requestedApi": [
       {
         "method": "POST",
@@ -160,10 +160,6 @@
       {
         "text": "مسح الكل والعودة للبحث",
         "aria": null
-      },
-      {
-        "text": "مسح الكل والعودة للبحث",
-        "aria": null
       }
     ]
   },
@@ -179,12 +175,12 @@
       },
       {
         "width": 1280,
-        "height": 2328
+        "height": 2264
       }
     ],
     "dimensions": {
       "width": 1432,
-      "height": 836
+      "height": 831
     },
     "diffPath": "docs/quality/figma_parity/screens/PUB-04/diff.png"
   }

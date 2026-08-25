@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-25T20:35:49.248Z",
-  "currentTask": "frontend_098",
-  "status": "public_repair_batch_in_progress",
+  "updatedAt": "2026-08-25T21:42:58.007Z",
+  "currentTask": "frontend_099",
+  "status": "public_exact_figma_parity_closure_in_progress",
   "lastCompletedIndependentWork": [
     "canonical-clone-identity-verification",
     "direct-page-metadata-capture",
@@ -13,7 +13,19 @@
     "agent-pack-synchronized-and-audited",
     "deterministic-131-screen-queue-created",
     "PUB-01-through-PUB-08-partial-reviews-moved-to-repair-queue",
-    "new-screen-discovery-halted-before-PUB-09"
+    "new-screen-discovery-halted-before-PUB-09",
+    "PUB-01-repair-and-independent-after-capture-recorded",
+    "PUB-02-repair-and-independent-after-capture-recorded",
+    "PUB-03-repair-and-independent-after-capture-recorded",
+    "PUB-04-repair-and-independent-after-capture-recorded",
+    "PUB-05-repair-and-independent-after-capture-recorded",
+    "PUB-06-repair-and-independent-after-capture-recorded",
+    "PUB-07-repair-and-independent-after-capture-recorded",
+    "PUB-08-repair-and-independent-after-capture-recorded",
+    "PUB-01-through-PUB-08-prior-functional-pass-retained-as-nonfinal-evidence",
+    "frontend_099-exact-parity-closure-task-created",
+    "PUB-01-through-PUB-08-reopened-for-second-implementation-pass",
+    "new-screen-discovery-remains-halted-before-PUB-09"
   ],
   "canonicalScreenCount": 131,
   "mappedToCloneNodeCount": 129,
@@ -23,10 +35,10 @@
     "ADM-54"
   ],
   "remainingIndependentWork": [
-    "bounded shared public-foundation repair for PUB-01 through PUB-08",
-    "fresh runtime-after capture and focused confirmation for each repaired screen",
-    "fresh per-screen clone-Figma evidence for remaining canonical screens after repair queue closes",
-    "surface gates and final release-gate evidence after all screen classifications pass"
+    "exact visual closure for PUB-01 through PUB-08 in order",
+    "new runtime-after and reviewed diff evidence for each repaired screen",
+    "normal visual, functional, accessibility, locale/direction, and performance focused gates",
+    "surface gates after closure; do not discover PUB-09 before the closure task passes"
   ],
   "screenExecutionQueue": {
     "path": "docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json",
@@ -71,8 +83,10 @@
     "Arabic client user guide file is absent"
   ],
   "repairQueue": {
-    "mode": "bounded_public_shared_foundation",
-    "scope": "public header/navigation, hero/search, approved imagery/media, card grids, filters, CTA sections, footer, deterministic API-backed success data",
+    "taskId": "frontend_099",
+    "mode": "public_exact_figma_parity_closure",
+    "pass": 2,
+    "scope": "exact typography, geometry, spacing, grids, approved media, controls, CTA/footer, API projections, locale/direction, accessibility, and lazy-loading capture behavior",
     "screenIds": [
       {
         "sequence": 1,

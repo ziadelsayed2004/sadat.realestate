@@ -8959,5 +8959,70 @@
       "node agent_pack/scripts/select_next_step.mjs"
     ],
     "sequence": 198
+  },
+  {
+    "id": "frontend_099",
+    "phase": "F7_post_release_assurance",
+    "area": "public exact visual parity",
+    "title": "Public Exact Figma Parity Closure — PUB-01 through PUB-08",
+    "goal": "Close every repository-owned material visual difference in the already audited PUB-01 through PUB-08 screens using cached canonical clone evidence, deterministic API-backed success data, and normal focused verification.",
+    "kind": "quality",
+    "screens": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "01_product/SCREEN_COVERAGE.json",
+      "08_reality_sync/PLATFORM_COMPLETION_AUDIT.json"
+    ],
+    "notes": [
+      "This is the second implementation pass for PUB-01 through PUB-08 and must not discover PUB-09.",
+      "The task is associated with the Partial frontend_098 final-gate task but does not make frontend_098 complete.",
+      "The canonical source is FIGMA_FILE_KEY=Odl1Epn2u6lIEuIMmABT7o. The source key 0HBdTNGROmmpC6S7OYa3iJ is forbidden.",
+      "The eight Screen IDs remain owned by their existing catalog task; this closure task intentionally has an empty screens array so ownership stays unique."
+    ],
+    "track": "frontend",
+    "dependsOn": [
+      "frontend_097"
+    ],
+    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_099.md",
+    "allowedRoots": [
+      "apps/web/src/features/public/**",
+      "apps/web/src/features/content/**",
+      "apps/web/src/features/frontend_foundation/**",
+      "apps/web/tests/e2e/**",
+      "apps/web/tests/performance/**",
+      "apps/api/src/modules/public/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/src/modules/compare/**",
+      "apps/api/src/modules/organizations/**",
+      "apps/api/src/modules/articles/**",
+      "packages/contracts/**",
+      "packages/ui/**",
+      "apps/web/public/assets/clone/**",
+      "scripts/**",
+      "docs/quality/figma_parity/**",
+      "agent_pack/**"
+    ],
+    "acceptance": [
+      "Keep the closure task In Progress or Partial until every repository-owned material visual defect is repaired and verified.",
+      "Review PUB-01 through PUB-08 in order using cached Figma evidence and record an element-level defect list for every screen.",
+      "Capture a genuinely new runtime-after.png only after a real runtime, data, contract, or capture repair; never duplicate runtime-before.png.",
+      "Capture at each exact cached Figma frame width with the required locale, direction, deterministic success state, ready fonts, decoded images, and disabled animation variance.",
+      "Repair typography, geometry, spacing, grids, imagery, controls, CTA/footer, API projections, and lazy-loading behavior in repository-owned code and data paths.",
+      "Use only REPAIRED_VERIFIED, VERIFIED_NO_CHANGE, or PARTIAL with an exact external blocker for final screen classifications.",
+      "Do not update a visual baseline until the corrected runtime has been directly reviewed against the canonical clone; then inspect the baseline and pass normal visual tests without --ignore-snapshots.",
+      "Pass normal focused visual snapshots 8/8, focused accessibility and functional/API tests, affected typecheck/lint, and the focused performance gate.",
+      "Leave below-fold Production images lazy and restrict eager loading to LCP/above-fold media while making the capture harness scroll and wait for lazy media.",
+      "Mark Complete only when all eight screens are visually verified, zero material differences remain, all required gates pass, completion evidence is valid, Finish Index is consistent, and the Agent Pack audit has zero errors."
+    ],
+    "verification": [
+      "affected contracts build and typecheck",
+      "affected apps/web and apps/api typecheck and lint",
+      "focused public Vitest and API/integration tests",
+      "focused Playwright functional, locale/direction, accessibility, approved-viewport, and normal visual tests",
+      "focused per-screen visual comparison and manual diff review",
+      "focused performance and lazy-loading gate",
+      "node agent_pack/scripts/audit_pack.mjs"
+    ],
+    "sequence": 199
   }
 ]

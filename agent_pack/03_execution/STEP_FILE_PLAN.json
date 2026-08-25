@@ -2280,5 +2280,26 @@
       "docs/**",
       "agent_pack/**"
     ]
+  },
+  {
+    "taskId": "frontend_099",
+    "allowedRoots": [
+      "apps/web/src/features/public/**",
+      "apps/web/src/features/content/**",
+      "apps/web/src/features/frontend_foundation/**",
+      "apps/web/tests/e2e/**",
+      "apps/web/tests/performance/**",
+      "apps/api/src/modules/public/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/src/modules/compare/**",
+      "apps/api/src/modules/organizations/**",
+      "apps/api/src/modules/articles/**",
+      "packages/contracts/**",
+      "packages/ui/**",
+      "apps/web/public/assets/clone/**",
+      "scripts/**",
+      "docs/quality/figma_parity/**",
+      "agent_pack/**"
+    ]
   }
 ]

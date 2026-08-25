@@ -6,7 +6,7 @@
 | Phase | F5_admin_dashboard |
 | Area | admin_content |
 | Kind | frontend |
-| Sequence | 171 / 198 |
+| Sequence | 171 / 199 |
 | Depends on | `frontend_068` |
 
 ## Goal

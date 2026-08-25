@@ -100,7 +100,7 @@ function ProfileHero({ data, locale, copy }: { readonly data: PublicOrganization
   return (
     <section className="public-developer-profile__hero" aria-labelledby="public-developer-profile-title">
       <div className="public-developer-profile__hero-media">
-        <PublicMediaImage src={data.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />
+        <PublicMediaImage src={data.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} loading="eager" />
       </div>
       <div className="public-developer-profile__hero-body">
         <div className="public-developer-profile__badges">

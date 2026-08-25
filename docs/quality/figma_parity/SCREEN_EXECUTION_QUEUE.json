@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "generatedAt": "2026-08-25T18:46:19.368Z",
-  "updatedAt": "2026-08-25T20:35:49.248Z",
-  "executionMode": "bounded_public_shared_foundation_repair_before_new_screen_discovery",
+  "updatedAt": "2026-08-25T21:42:58.007Z",
+  "executionMode": "public_exact_figma_parity_closure_before_new_screen_discovery",
   "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
   "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
   "canonicalScreenCount": 131,
@@ -20,7 +20,14 @@
     "fullMatrixAllowedOnlyWhen": "verifiedScreens + repairedScreens = 131; partialScreens = 0; blockedScreens = 0; unreviewedScreens = 0",
     "partialIsNotProcessed": true,
     "runtimeAfterRequiresActualRepair": true,
-    "discoveryHaltedUntilRepairQueueClosed": true
+    "discoveryHaltedUntilRepairQueueClosed": true,
+    "closureRequiresNormalVisualSnapshots": true,
+    "closureRequiresElementLevelDefectList": true,
+    "allowedFinalClassifications": [
+      "REPAIRED_VERIFIED",
+      "VERIFIED_NO_CHANGE",
+      "PARTIAL"
+    ]
   },
   "surfaceOrder": [
     {
@@ -84,6 +91,7 @@
   ],
   "cursor": {
     "phase": "repair",
+    "taskId": "frontend_099",
     "nextSequence": 1,
     "currentScreenId": "PUB-01",
     "currentFigmaNode": "6017:10847",
@@ -91,7 +99,7 @@
   },
   "counts": {
     "processed": 0,
-    "pending": 123,
+    "pending": 131,
     "verifiedWithoutChange": 0,
     "repaired": 0,
     "partial": 8,
@@ -148,7 +156,7 @@
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR"
       },
       "responsiveCoverage": {
         "includedInThisCanonicalScreen": true,
@@ -211,36 +219,42 @@
             },
             {
               "width": 1280,
-              "height": 4712
+              "height": 6719
             }
           ],
           "observations": [
-            "Figma source is a 1549px-wide, 5378px rendered Arabic homepage reference.",
-            "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 4712px document height.",
-            "Runtime has the public shell and success state, but the seeded content renders one property, one developer, and sparse content cards instead of the clone's complete multi-card sections.",
-            "The Figma hero uses the approved Sadat city image and centered search composition; runtime uses the current geometric fallback artwork and a different control arrangement.",
-            "The clone contains populated categories, featured properties, articles, community cards, an about/media panel, CTA, and footer details that are absent or materially reduced in the runtime capture.",
-            "The side-by-side diff is evidence for review only; no baseline was updated.",
-            "Exact typography, spacing, imagery, control states, responsive variants, and prototype transitions remain to be checked against focused fixtures."
-          ]
+            "The after capture is a fresh 1280x720 Arabic RTL runtime capture after the bounded shared-foundation repair.",
+            "The deterministic homepage response is HTTP 200 and renders six properties, four developers, eight content records, and three banners with approved local media.",
+            "The public shared header, navigation, CTA, footer, card-grid media, and safe image fallback are visible in the after capture.",
+            "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
+          ],
+          "dimensions": {
+            "width": 1397,
+            "height": 2328
+          }
         },
         "functionalApiComparison": {
           "reviewed": true,
           "requestProjection": "GET /api/v1/public/home -> publicHomepageSuccessEnvelopeSchema",
           "responseProjection": "deterministic fixture captured and hashed",
-          "outcome": "route loaded with a public success fixture; complete CTA/prototype/API projection comparison remains pending"
+          "outcome": "1 deterministic API response(s) observed; all returned success after the bounded repair."
         },
         "defects": [
-          "Full per-screen parity review is incomplete.",
-          "Figma get_design_context returned sparse metadata because the full frame exceeded context limits.",
-          "Runtime hero imagery and search composition do not match the canonical clone.",
-          "Runtime deterministic content does not populate the complete clone hierarchy (categories, featured properties, articles, community, and about/media content).",
-          "Exact typography, spacing, state variants, transitions, and responsive behavior remain unverified."
+          "Resolved: homepage success data now contains the approved deterministic multi-card property, developer, content, and banner projections.",
+          "Resolved: homepage property, developer, content, and banner media now use the approved local assets through the public URL contract.",
+          "Resolved: shared public header/navigation, CTA, and footer structure now render on the homepage success route.",
+          "Reviewed residual diff: clone-specific typography, spacing, and exact section geometry remain visible in diff.png; no baseline was changed."
         ],
-        "repairedFiles": [],
+        "repairedFiles": [
+          "apps/web/src/features/public/components.tsx",
+          "apps/web/src/features/public/styles.css",
+          "apps/web/tests/e2e/public-fixtures.ts",
+          "apps/api/src/modules/public/homepage.ts",
+          "packages/contracts/src/public/index.ts"
+        ],
         "runtimeAfter": {
           "path": "docs/quality/figma_parity/screens/PUB-01/runtime-after.png",
-          "sha256": "775ed3ca971ead2112ab9ee5441005a21f50acbec3f35cd4475eb2678d7bcbd6"
+          "sha256": "0807451d2c16adf3c15350a9f9bb610bd7d5112dc395089e623b6e282db63880"
         },
         "reviewedDiff": {
           "path": "docs/quality/figma_parity/screens/PUB-01/diff.png",
@@ -248,47 +262,77 @@
         },
         "focusedTests": [
           {
+            "name": "contracts build",
+            "command": "npm.cmd run build --workspace @sadat-real-estate/contracts",
+            "exitCode": 0
+          },
+          {
             "name": "apps/web typecheck",
             "command": "npm.cmd run typecheck --workspace apps/web",
             "exitCode": 0
           },
           {
-            "name": "public feature lint",
-            "command": "npm.cmd exec --workspace apps/web -- eslint src/features/public tests/e2e/public-fixtures.ts --max-warnings=0",
+            "name": "apps/api typecheck",
+            "command": "npm.cmd run typecheck --workspace apps/api",
             "exitCode": 0
           },
           {
-            "name": "API contract tests",
-            "command": "node --import tsx --test apps/web/tests/contracts.test.ts",
+            "name": "affected web lint",
+            "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"src/features/content/**/*.{ts,tsx}\" \"src/features/frontend_foundation/app.tsx\" \"tests/e2e/public-fixtures.ts\" \"tests/e2e/visual.spec.ts\" --max-warnings=0",
             "exitCode": 0
           },
           {
-            "name": "focused Playwright visual",
-            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public homepage renders its SSR shell\"",
+            "name": "affected API lint",
+            "command": "npm.cmd exec --workspace apps/api -- eslint \"src/modules/public/**/*.ts\" \"src/modules/search/**/*.ts\" \"src/modules/compare/**/*.ts\" \"src/modules/organizations/**/*.ts\" \"src/modules/articles/**/*.ts\" --max-warnings=0",
             "exitCode": 0
           },
           {
-            "name": "focused Playwright accessibility",
-            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public homepage exposes a labeled navigation\"",
+            "name": "focused public Vitest",
+            "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-homepage.vitest.test.tsx tests/public-listing.vitest.test.tsx tests/public-details.vitest.test.tsx tests/public-compare.vitest.test.tsx tests/public-developers.vitest.test.tsx tests/public-articles.vitest.test.tsx",
+            "exitCode": 0
+          },
+          {
+            "name": "focused public API/integration tests",
+            "command": "npm.cmd exec --workspace apps/api -- node --import tsx --test tests/public/homepage.test.ts tests/public/properties.test.ts tests/search/properties.test.ts tests/compare/properties.test.ts tests/organizations/public.test.ts",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright visual/route assertions",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\" --ignore-snapshots",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright accessibility assertions",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\"",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Figma/runtime visual comparison",
+            "command": "node --import tsx scripts/capture-figma-parity-runtime.mjs --screen-id PUB-01 --fixture public-home --route / --phase after",
             "exitCode": 0
           }
         ],
         "accessibility": {
-          "focusedCheck": "public homepage exposes a labeled navigation, search form, and image states",
+          "focusedCheck": "Focused public accessibility Playwright batch for the repaired public surface.",
           "exitCode": 0
-        }
+        },
+        "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-01/runtime-after-capture.json"
       },
       "classification": "PARTIAL",
       "processedAt": null,
       "notes": [
-        "Fresh source and runtime capture completed; direct comparison found major structural/content/media differences and repair/parity confirmation is not complete.",
-        "Partial review is evidence only and is not counted as processed.",
-        "Queued for bounded shared public-foundation repair before any new screen discovery."
+        "Bounded public shared-foundation repair completed: the public header/footer structure, approved media handling, populated deterministic homepage success data, card grids, banners, CTA content, and image fallbacks are implemented and independently recaptured.",
+        "PARTIAL evidence was replaced only after a genuine repair capture with different before/after hashes.",
+        "Discovery remains halted before PUB-09.",
+        "The prior functional repair pass is not visual closure evidence.",
+        "Typography, spacing, geometry, and reviewed diff differences remain repository-owned defects.",
+        "Queued for the frontend_099 exact Figma parity closure pass; this Partial record is not processed."
       ],
-      "reviewedAt": "2026-08-25T19:06:39.198Z",
+      "reviewedAt": "2026-08-25T21:26:34.928Z",
       "processingState": "REPAIR_REQUIRED",
       "repairStatus": "PENDING",
-      "repairSequence": 1
+      "repairSequence": 1,
+      "repairCompletedAt": "2026-08-25T21:26:34.928Z"
     },
     {
       "sequence": 2,
@@ -338,7 +382,7 @@
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR"
       },
       "responsiveCoverage": {
         "includedInThisCanonicalScreen": true,
@@ -397,35 +441,44 @@
             },
             {
               "width": 1280,
-              "height": 2151
+              "height": 2228
             }
           ],
           "observations": [
-            "Figma source is 1577px wide and 1981px high for PUB-02.",
-            "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 2151px document height.",
-            "The clone has a populated category carousel, six image-backed cards, a right filter sidebar, sort/view controls, and approved footer composition.",
-            "Runtime preserves the route shell, six-card grid, filter sidebar, and successful API state, but uses placeholder media, different top controls, omits the clone category carousel, and differs in card typography and spacing.",
-            "The side-by-side diff is evidence for review only; no baseline was updated.",
-            "Exact typography, spacing, imagery, control states, responsive variants, and prototype transitions remain to be checked against focused fixtures."
-          ]
+            "The after capture is a fresh 1280x720 Arabic RTL runtime capture after the listing/shared-foundation repair.",
+            "GET /api/v1/public/properties returned HTTP 200 and the six deterministic cards render approved local media.",
+            "The filter/sidebar, category controls, card grid, pagination, and shared footer are present and independently reviewed.",
+            "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
+          ],
+          "dimensions": {
+            "width": 1406,
+            "height": 802
+          }
         },
         "functionalApiComparison": {
           "reviewed": true,
           "requestProjection": "GET /api/v1/public/properties",
           "responseProjection": "public-list fixture captured and hashed",
-          "outcome": "route loaded with a public-list fixture; complete CTA/prototype/API projection comparison remains pending"
+          "outcome": "1 deterministic API response(s) observed; all returned success after the bounded repair."
         },
         "defects": [
-          "Full per-screen parity review is incomplete.",
-          "Figma get_design_context returned sparse metadata because the full frame exceeded context limits.",
-          "Approved category carousel content and layout are not present in the runtime capture.",
-          "Runtime property imagery is a missing-image placeholder instead of the approved clone assets.",
-          "Top result, sort, view, filter, card, pagination, and footer geometry/typography differ from the clone."
+          "Resolved: property listing cards now receive approved imageUrl values through the public property projection and deterministic fixture.",
+          "Resolved: the listing success state now has a populated multi-card grid, category strip, filter controls, pagination, CTA path, and shared footer.",
+          "Resolved: media failures remain safe through the shared public image fallback component.",
+          "Reviewed residual diff: clone-specific control geometry, typography, spacing, and exact category presentation remain visible in diff.png; no baseline was changed."
         ],
-        "repairedFiles": [],
+        "repairedFiles": [
+          "apps/web/src/features/public/components.tsx",
+          "apps/web/src/features/public/listing.tsx",
+          "apps/web/src/features/public/listing.css",
+          "apps/web/tests/e2e/public-fixtures.ts",
+          "apps/api/src/modules/public/properties.ts",
+          "apps/api/src/modules/search/properties.ts",
+          "packages/contracts/src/public/index.ts"
+        ],
         "runtimeAfter": {
           "path": "docs/quality/figma_parity/screens/PUB-02/runtime-after.png",
-          "sha256": "a8af6e406cb2608007467ab2cae70b71115d7fc68bb35b3c3605f010c22960f9"
+          "sha256": "ba47e7365734722ec223373a423704ccc6ee69138855ad1573a0fbfd2e6bf868"
         },
         "reviewedDiff": {
           "path": "docs/quality/figma_parity/screens/PUB-02/diff.png",
@@ -433,47 +486,77 @@
         },
         "focusedTests": [
           {
+            "name": "contracts build",
+            "command": "npm.cmd run build --workspace @sadat-real-estate/contracts",
+            "exitCode": 0
+          },
+          {
             "name": "apps/web typecheck",
             "command": "npm.cmd run typecheck --workspace apps/web",
             "exitCode": 0
           },
           {
-            "name": "public feature lint",
-            "command": "npm.cmd exec --workspace apps/web -- eslint src/features/public tests/e2e/public-fixtures.ts --max-warnings=0",
+            "name": "apps/api typecheck",
+            "command": "npm.cmd run typecheck --workspace apps/api",
             "exitCode": 0
           },
           {
-            "name": "API contract tests",
-            "command": "node --import tsx --test apps/web/tests/contracts.test.ts",
+            "name": "affected web lint",
+            "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"src/features/content/**/*.{ts,tsx}\" \"src/features/frontend_foundation/app.tsx\" \"tests/e2e/public-fixtures.ts\" \"tests/e2e/visual.spec.ts\" --max-warnings=0",
             "exitCode": 0
           },
           {
-            "name": "focused Playwright visual",
-            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public route shell has a locale-aware visual snapshot\"",
+            "name": "affected API lint",
+            "command": "npm.cmd exec --workspace apps/api -- eslint \"src/modules/public/**/*.ts\" \"src/modules/search/**/*.ts\" \"src/modules/compare/**/*.ts\" \"src/modules/organizations/**/*.ts\" \"src/modules/articles/**/*.ts\" --max-warnings=0",
             "exitCode": 0
           },
           {
-            "name": "focused Playwright accessibility",
-            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public property listing exposes labeled filters\"",
+            "name": "focused public Vitest",
+            "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-homepage.vitest.test.tsx tests/public-listing.vitest.test.tsx tests/public-details.vitest.test.tsx tests/public-compare.vitest.test.tsx tests/public-developers.vitest.test.tsx tests/public-articles.vitest.test.tsx",
+            "exitCode": 0
+          },
+          {
+            "name": "focused public API/integration tests",
+            "command": "npm.cmd exec --workspace apps/api -- node --import tsx --test tests/public/homepage.test.ts tests/public/properties.test.ts tests/search/properties.test.ts tests/compare/properties.test.ts tests/organizations/public.test.ts",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright visual/route assertions",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\" --ignore-snapshots",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright accessibility assertions",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\"",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Figma/runtime visual comparison",
+            "command": "node --import tsx scripts/capture-figma-parity-runtime.mjs --screen-id PUB-02 --fixture public-list --route /properties --phase after",
             "exitCode": 0
           }
         ],
         "accessibility": {
-          "focusedCheck": "public property listing exposes labeled filters, query controls, and safe states",
+          "focusedCheck": "Focused public accessibility Playwright batch for the repaired public surface.",
           "exitCode": 0
-        }
+        },
+        "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-02/runtime-after-capture.json"
       },
       "classification": "PARTIAL",
       "processedAt": null,
       "notes": [
-        "Fresh source and runtime capture completed; direct comparison found hierarchy, asset, and control differences and repair/parity confirmation is not complete.",
-        "Partial review is evidence only and is not counted as processed.",
-        "Queued for bounded shared public-foundation repair before any new screen discovery."
+        "Bounded public shared-foundation repair completed: the listing now consumes deterministic six-card success data with approved media, shared navigation/footer, category/filter controls, pagination, and safe image handling.",
+        "PARTIAL evidence was replaced only after a genuine repair capture with different before/after hashes.",
+        "Discovery remains halted before PUB-09.",
+        "The prior functional repair pass is not visual closure evidence.",
+        "Typography, spacing, geometry, and reviewed diff differences remain repository-owned defects.",
+        "Queued for the frontend_099 exact Figma parity closure pass; this Partial record is not processed."
       ],
-      "reviewedAt": "2026-08-25T19:36:39.026Z",
+      "reviewedAt": "2026-08-25T21:27:42.818Z",
       "processingState": "REPAIR_REQUIRED",
       "repairStatus": "PENDING",
-      "repairSequence": 2
+      "repairSequence": 2,
+      "repairCompletedAt": "2026-08-25T21:27:42.818Z"
     },
     {
       "sequence": 3,
@@ -523,7 +606,7 @@
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR"
       },
       "responsiveCoverage": {
         "includedInThisCanonicalScreen": true,
@@ -584,34 +667,44 @@
             },
             {
               "width": 1280,
-              "height": 2230
+              "height": 2848
             }
           ],
           "observations": [
-            "Figma source is 1577px wide and 3046px high for PUB-03.",
-            "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 2230px document height.",
-            "The clone has a populated image gallery, compact property summary, provider card, description, feature chips, nearby-services panel, advisory banner, related card, and contact form.",
-            "Runtime preserves the main detail summary, provider/project/description blocks, related card, and contact form, but uses missing-media state and omits or materially reduces the clone's feature, service, advisory, and gallery content.",
-            "The side-by-side diff is evidence for review only; no baseline was updated.",
-            "Exact typography, spacing, imagery, control states, responsive variants, and prototype transitions remain to be checked against focused fixtures."
-          ]
+            "The after capture is a fresh 1280x720 Arabic RTL runtime capture after the media projection repair.",
+            "GET /api/v1/public/properties/published-home returned HTTP 200; the cover gallery and related property media are loaded from approved local assets.",
+            "Details actions, project/summary content, related cards, and shared footer are present and independently reviewed.",
+            "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
+          ],
+          "dimensions": {
+            "width": 1406,
+            "height": 1080
+          }
         },
         "functionalApiComparison": {
           "reviewed": true,
           "requestProjection": "GET /api/v1/public/properties/published-home",
           "responseProjection": "public-details fixture captured and hashed",
-          "outcome": "route loaded with a public-details fixture; complete CTA/prototype/API projection comparison remains pending"
+          "outcome": "1 deterministic API response(s) observed; all returned success after the bounded repair."
         },
         "defects": [
-          "Full per-screen parity review is incomplete.",
-          "Runtime media is in the safe missing-image state instead of the clone's approved property image.",
-          "Feature chips, nearby services, advisory content, and gallery behavior are not equivalent to the clone.",
-          "Exact CTA/prototype transitions, ownership actions, and responsive/detail states remain unverified."
+          "Resolved: property details now project cover/media imageUrl values and render the approved deterministic gallery assets.",
+          "Resolved: related property cards now render approved media through the shared public image component.",
+          "Resolved: the details route uses the shared public footer and deterministic HTTP 200 success projection.",
+          "Reviewed residual diff: clone-specific amenities/advisory content and exact details geometry remain visible in diff.png; no baseline was changed."
         ],
-        "repairedFiles": [],
+        "repairedFiles": [
+          "apps/web/src/features/public/components.tsx",
+          "apps/web/src/features/public/details.tsx",
+          "apps/web/src/features/public/details.css",
+          "apps/web/tests/e2e/public-fixtures.ts",
+          "scripts/capture-figma-parity-runtime.mjs",
+          "apps/api/src/modules/public/properties.ts",
+          "packages/contracts/src/public/index.ts"
+        ],
         "runtimeAfter": {
           "path": "docs/quality/figma_parity/screens/PUB-03/runtime-after.png",
-          "sha256": "9dbd074542650cb7e54fd186bce70913fb61ec60fe414b66d51d892c85f57ff1"
+          "sha256": "ea610fdc91a6e6c92a355820629e3e2ea467bd73a46ec22273ad3a6152d274a5"
         },
         "reviewedDiff": {
           "path": "docs/quality/figma_parity/screens/PUB-03/diff.png",
@@ -619,47 +712,77 @@
         },
         "focusedTests": [
           {
+            "name": "contracts build",
+            "command": "npm.cmd run build --workspace @sadat-real-estate/contracts",
+            "exitCode": 0
+          },
+          {
             "name": "apps/web typecheck",
             "command": "npm.cmd run typecheck --workspace apps/web",
             "exitCode": 0
           },
           {
-            "name": "public feature lint",
-            "command": "npm.cmd exec --workspace apps/web -- eslint src/features/public tests/e2e/public-fixtures.ts --max-warnings=0",
+            "name": "apps/api typecheck",
+            "command": "npm.cmd run typecheck --workspace apps/api",
             "exitCode": 0
           },
           {
-            "name": "API contract tests",
-            "command": "node --import tsx --test apps/web/tests/contracts.test.ts",
+            "name": "affected web lint",
+            "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"src/features/content/**/*.{ts,tsx}\" \"src/features/frontend_foundation/app.tsx\" \"tests/e2e/public-fixtures.ts\" \"tests/e2e/visual.spec.ts\" --max-warnings=0",
             "exitCode": 0
           },
           {
-            "name": "focused Playwright visual",
-            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public property details renders the implemented projection\"",
+            "name": "affected API lint",
+            "command": "npm.cmd exec --workspace apps/api -- eslint \"src/modules/public/**/*.ts\" \"src/modules/search/**/*.ts\" \"src/modules/compare/**/*.ts\" \"src/modules/organizations/**/*.ts\" \"src/modules/articles/**/*.ts\" --max-warnings=0",
             "exitCode": 0
           },
           {
-            "name": "focused Playwright accessibility",
-            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public property details exposes one main landmark\"",
+            "name": "focused public Vitest",
+            "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-homepage.vitest.test.tsx tests/public-listing.vitest.test.tsx tests/public-details.vitest.test.tsx tests/public-compare.vitest.test.tsx tests/public-developers.vitest.test.tsx tests/public-articles.vitest.test.tsx",
+            "exitCode": 0
+          },
+          {
+            "name": "focused public API/integration tests",
+            "command": "npm.cmd exec --workspace apps/api -- node --import tsx --test tests/public/homepage.test.ts tests/public/properties.test.ts tests/search/properties.test.ts tests/compare/properties.test.ts tests/organizations/public.test.ts",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright visual/route assertions",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\" --ignore-snapshots",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright accessibility assertions",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\"",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Figma/runtime visual comparison",
+            "command": "node --import tsx scripts/capture-figma-parity-runtime.mjs --screen-id PUB-03 --fixture public-details --route /properties/published-home --phase after",
             "exitCode": 0
           }
         ],
         "accessibility": {
-          "focusedCheck": "public property details exposes one main landmark, labeled actions, and safe media states",
+          "focusedCheck": "Focused public accessibility Playwright batch for the repaired public surface.",
           "exitCode": 0
-        }
+        },
+        "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-03/runtime-after-capture.json"
       },
       "classification": "PARTIAL",
       "processedAt": null,
       "notes": [
-        "Fresh source and runtime capture completed; direct repair/parity confirmation is not complete.",
-        "Partial review is evidence only and is not counted as processed.",
-        "Queued for bounded shared public-foundation repair before any new screen discovery."
+        "Bounded public shared-foundation repair completed: property details and related cards now consume approved media through the public projection, the gallery renders real media with safe fallback, and shared footer/media behavior is in place.",
+        "PARTIAL evidence was replaced only after a genuine repair capture with different before/after hashes.",
+        "Discovery remains halted before PUB-09.",
+        "The prior functional repair pass is not visual closure evidence.",
+        "Typography, spacing, geometry, and reviewed diff differences remain repository-owned defects.",
+        "Queued for the frontend_099 exact Figma parity closure pass; this Partial record is not processed."
       ],
-      "reviewedAt": "2026-08-25T19:56:42.301Z",
+      "reviewedAt": "2026-08-25T21:27:47.761Z",
       "processingState": "REPAIR_REQUIRED",
       "repairStatus": "PENDING",
-      "repairSequence": 3
+      "repairSequence": 3,
+      "repairCompletedAt": "2026-08-25T21:27:47.761Z"
     },
     {
       "sequence": 4,
@@ -709,7 +832,7 @@
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR"
       },
       "responsiveCoverage": {
         "includedInThisCanonicalScreen": true,
@@ -768,34 +891,43 @@
             },
             {
               "width": 1280,
-              "height": 2145
+              "height": 2264
             }
           ],
           "observations": [
-            "Figma source is 1653px wide and 2314px high for PUB-04.",
-            "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 2145px document height.",
-            "The clone contains two image-backed comparison cards, detailed comparison tables, a sticky comparison bar, and distinct detail/difference controls.",
-            "Runtime preserves two comparison cards and the table groups, but uses missing-image placeholders, different card/control geometry, and does not render the clone's sticky comparison bar or exact asset content.",
-            "The side-by-side diff is evidence for review only; no baseline was updated.",
-            "Exact typography, spacing, imagery, control states, responsive variants, and prototype transitions remain to be checked against focused fixtures."
-          ]
+            "The after capture is a fresh 1280x720 Arabic RTL runtime capture after the final comparison markup repair.",
+            "POST /api/v1/public/properties/compare returned HTTP 200 and both deterministic comparison cards render approved local media.",
+            "The comparison tables, sticky bar, controls, remove actions, and shared footer are present and independently reviewed.",
+            "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
+          ],
+          "dimensions": {
+            "width": 1432,
+            "height": 831
+          }
         },
         "functionalApiComparison": {
           "reviewed": true,
           "requestProjection": "GET /api/v1/public/properties/compare",
           "responseProjection": "public-comparison fixture captured and hashed",
-          "outcome": "route loaded with a public-comparison fixture; complete CTA/prototype/API projection comparison remains pending"
+          "outcome": "1 deterministic API response(s) observed; all returned success after the bounded repair."
         },
         "defects": [
-          "Full per-screen parity review is incomplete.",
-          "Runtime comparison-card imagery is a missing-image placeholder instead of the approved clone assets.",
-          "Sticky comparison bar and its CTA projection are not equivalent to the clone.",
-          "Comparison-card button geometry, typography, table spacing, and detail/difference control states differ from the clone."
+          "Resolved: comparison cards now consume approved imageUrl values through the comparison projection and deterministic fixture.",
+          "Resolved: the sticky comparison bar exposes selected count, return-to-search navigation, and a single accessible clear action.",
+          "Resolved: comparison success data and shared footer render safely after the final accessibility fix.",
+          "Reviewed residual diff: clone-specific comparison table geometry, typography, and exact card composition remain visible in diff.png; no baseline was changed."
         ],
-        "repairedFiles": [],
+        "repairedFiles": [
+          "apps/web/src/features/public/components.tsx",
+          "apps/web/src/features/public/compare.tsx",
+          "apps/web/src/features/public/compare.css",
+          "scripts/capture-figma-parity-runtime.mjs",
+          "apps/api/src/modules/compare/properties.ts",
+          "packages/contracts/src/public/index.ts"
+        ],
         "runtimeAfter": {
           "path": "docs/quality/figma_parity/screens/PUB-04/runtime-after.png",
-          "sha256": "8875c50dec55638c801237915262f20c9c47eb7646b3630406753686c5cbb121"
+          "sha256": "e8e84d9804f2fbfff16fe3d40f34f0d6a9a86d8d45198a5daf727f7c66391d55"
         },
         "reviewedDiff": {
           "path": "docs/quality/figma_parity/screens/PUB-04/diff.png",
@@ -803,47 +935,77 @@
         },
         "focusedTests": [
           {
+            "name": "contracts build",
+            "command": "npm.cmd run build --workspace @sadat-real-estate/contracts",
+            "exitCode": 0
+          },
+          {
             "name": "apps/web typecheck",
             "command": "npm.cmd run typecheck --workspace apps/web",
             "exitCode": 0
           },
           {
-            "name": "public feature lint",
-            "command": "npm.cmd exec --workspace apps/web -- eslint src/features/public tests/e2e/public-fixtures.ts --max-warnings=0",
+            "name": "apps/api typecheck",
+            "command": "npm.cmd run typecheck --workspace apps/api",
             "exitCode": 0
           },
           {
-            "name": "API contract tests",
-            "command": "node --import tsx --test apps/web/tests/contracts.test.ts",
+            "name": "affected web lint",
+            "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"src/features/content/**/*.{ts,tsx}\" \"src/features/frontend_foundation/app.tsx\" \"tests/e2e/public-fixtures.ts\" \"tests/e2e/visual.spec.ts\" --max-warnings=0",
             "exitCode": 0
           },
           {
-            "name": "focused Playwright visual",
-            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public property comparison renders the fixed two-item projection\"",
+            "name": "affected API lint",
+            "command": "npm.cmd exec --workspace apps/api -- eslint \"src/modules/public/**/*.ts\" \"src/modules/search/**/*.ts\" \"src/modules/compare/**/*.ts\" \"src/modules/organizations/**/*.ts\" \"src/modules/articles/**/*.ts\" --max-warnings=0",
             "exitCode": 0
           },
           {
-            "name": "focused Playwright accessibility",
-            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public property comparison exposes labeled controls\"",
+            "name": "focused public Vitest",
+            "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-homepage.vitest.test.tsx tests/public-listing.vitest.test.tsx tests/public-details.vitest.test.tsx tests/public-compare.vitest.test.tsx tests/public-developers.vitest.test.tsx tests/public-articles.vitest.test.tsx",
+            "exitCode": 0
+          },
+          {
+            "name": "focused public API/integration tests",
+            "command": "npm.cmd exec --workspace apps/api -- node --import tsx --test tests/public/homepage.test.ts tests/public/properties.test.ts tests/search/properties.test.ts tests/compare/properties.test.ts tests/organizations/public.test.ts",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright visual/route assertions",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\" --ignore-snapshots",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright accessibility assertions",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\"",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Figma/runtime visual comparison",
+            "command": "node --import tsx scripts/capture-figma-parity-runtime.mjs --screen-id PUB-04 --fixture public-comparison --route \"/compare?propertyIds=aaaaaaaaaaaaaaaaaaaaaaaa&propertyIds=bbbbbbbbbbbbbbbbbbbbbbbb\" --phase after",
             "exitCode": 0
           }
         ],
         "accessibility": {
-          "focusedCheck": "public property comparison exposes labeled controls, tables, and safe media states",
+          "focusedCheck": "Focused public accessibility Playwright batch for the repaired public surface.",
           "exitCode": 0
-        }
+        },
+        "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-04/runtime-after-capture.json"
       },
       "classification": "PARTIAL",
       "processedAt": null,
       "notes": [
-        "Fresh source and runtime capture completed; direct repair/parity confirmation is not complete.",
-        "Partial review is evidence only and is not counted as processed.",
-        "Queued for bounded shared public-foundation repair before any new screen discovery."
+        "Bounded public shared-foundation repair completed: comparison cards use approved media, comparison controls remain functional, the sticky selected-items bar is present with one accessible clear action, and the shared footer is rendered.",
+        "PARTIAL evidence was replaced only after a genuine repair capture with different before/after hashes.",
+        "Discovery remains halted before PUB-09.",
+        "The prior functional repair pass is not visual closure evidence.",
+        "Typography, spacing, geometry, and reviewed diff differences remain repository-owned defects.",
+        "Queued for the frontend_099 exact Figma parity closure pass; this Partial record is not processed."
       ],
-      "reviewedAt": "2026-08-25T20:00:44.912Z",
+      "reviewedAt": "2026-08-25T21:27:52.384Z",
       "processingState": "REPAIR_REQUIRED",
       "repairStatus": "PENDING",
-      "repairSequence": 4
+      "repairSequence": 4,
+      "repairCompletedAt": "2026-08-25T21:27:52.384Z"
     },
     {
       "sequence": 5,
@@ -893,7 +1055,7 @@
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR"
       },
       "responsiveCoverage": {
         "includedInThisCanonicalScreen": true,
@@ -963,35 +1125,44 @@
             },
             {
               "width": 1280,
-              "height": 1314
+              "height": 1934
             }
           ],
           "observations": [
-            "Figma source is 1523px wide and 1536px high for PUB-05.",
-            "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 1314px document height.",
-            "The clone has four image-backed organization cards in a two-column grid; the deterministic runtime has one organization card with placeholder media.",
-            "The clone heading and card grid are centered under the shell with no visible filter panel; the runtime adds a right-side filter panel and uses different card geometry and spacing.",
-            "The clone footer includes brand, page links, contact information, social controls, and legal rows; the captured runtime footer is truncated and omits those approved regions.",
-            "The side-by-side diff is evidence for review only; no baseline was updated."
-          ]
+            "The after capture is a fresh 1280x720 Arabic RTL runtime capture after the organization media/shared-foundation repair.",
+            "GET /api/v1/public/developers returned HTTP 200 and four deterministic approved organizations render approved local media.",
+            "Directory filters, cards, pagination, navigation, and shared footer are present and independently reviewed.",
+            "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
+          ],
+          "dimensions": {
+            "width": 1388,
+            "height": 702
+          }
         },
         "functionalApiComparison": {
           "reviewed": true,
           "requestProjection": "GET /api/v1/public/developers",
           "responseProjection": "public-developers fixture captured and hashed",
-          "outcome": "GET /api/v1/public/developers?sort=slug&direction=asc&page=1&limit=20 returned HTTP 200 and the page reached success. The response projection is consumed, but the clone card count/media projection and CTA surface are not matched."
+          "outcome": "1 deterministic API response(s) observed; all returned success after the bounded repair."
         },
         "defects": [
-          "Runtime renders one organization card instead of the clone's four-card two-column composition for the approved reference state.",
-          "Runtime organization media is a placeholder/missing-image state while the clone uses four approved image assets.",
-          "Runtime adds a filter/search panel and different pagination/card controls that do not match the clone composition.",
-          "Runtime footer is shorter and omits the clone's contact, social, and legal rows.",
-          "No runtime files were repaired during this evidence pass."
+          "Resolved: developer directory cards now consume approved organization imageUrl values through the public organization projection and fixture.",
+          "Resolved: the success state now contains four deterministic organization cards with filters, pagination, and shared footer structure.",
+          "Resolved: directory media uses the shared safe image fallback path.",
+          "Reviewed residual diff: clone-specific card geometry, typography, spacing, and exact image selection remain visible in diff.png; no baseline was changed."
         ],
-        "repairedFiles": [],
+        "repairedFiles": [
+          "apps/web/src/features/public/components.tsx",
+          "apps/web/src/features/public/developers.tsx",
+          "apps/web/src/features/public/developers.css",
+          "apps/web/tests/e2e/public-fixtures.ts",
+          "scripts/capture-figma-parity-runtime.mjs",
+          "apps/api/src/modules/organizations/public.ts",
+          "packages/contracts/src/organizations/index.ts"
+        ],
         "runtimeAfter": {
           "path": "docs/quality/figma_parity/screens/PUB-05/runtime-after.png",
-          "sha256": "7703031256bff4f83c825bfbc37f44601915221ef45ccc2a1b73807195a3442e"
+          "sha256": "41358041a077c0d88cf61c0ca58b97b553a4e762d7d1d0f8ec8b82e8ea8a465b"
         },
         "reviewedDiff": {
           "path": "docs/quality/figma_parity/screens/PUB-05/diff.png",
@@ -999,42 +1170,77 @@
         },
         "focusedTests": [
           {
-            "name": "affected typecheck",
+            "name": "contracts build",
+            "command": "npm.cmd run build --workspace @sadat-real-estate/contracts",
+            "exitCode": 0
+          },
+          {
+            "name": "apps/web typecheck",
             "command": "npm.cmd run typecheck --workspace apps/web",
             "exitCode": 0
           },
           {
-            "name": "affected public lint",
-            "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"tests/e2e/public-fixtures.ts\" --max-warnings=0",
+            "name": "apps/api typecheck",
+            "command": "npm.cmd run typecheck --workspace apps/api",
             "exitCode": 0
           },
           {
-            "name": "focused API contract tests",
-            "command": "node --import tsx --test apps/web/tests/contracts.test.ts",
+            "name": "affected web lint",
+            "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"src/features/content/**/*.{ts,tsx}\" \"src/features/frontend_foundation/app.tsx\" \"tests/e2e/public-fixtures.ts\" \"tests/e2e/visual.spec.ts\" --max-warnings=0",
             "exitCode": 0
           },
           {
-            "name": "focused Playwright visual",
-            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public developer directory renders approved organizations\"",
+            "name": "affected API lint",
+            "command": "npm.cmd exec --workspace apps/api -- eslint \"src/modules/public/**/*.ts\" \"src/modules/search/**/*.ts\" \"src/modules/compare/**/*.ts\" \"src/modules/organizations/**/*.ts\" \"src/modules/articles/**/*.ts\" --max-warnings=0",
+            "exitCode": 0
+          },
+          {
+            "name": "focused public Vitest",
+            "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-homepage.vitest.test.tsx tests/public-listing.vitest.test.tsx tests/public-details.vitest.test.tsx tests/public-compare.vitest.test.tsx tests/public-developers.vitest.test.tsx tests/public-articles.vitest.test.tsx",
+            "exitCode": 0
+          },
+          {
+            "name": "focused public API/integration tests",
+            "command": "npm.cmd exec --workspace apps/api -- node --import tsx --test tests/public/homepage.test.ts tests/public/properties.test.ts tests/search/properties.test.ts tests/compare/properties.test.ts tests/organizations/public.test.ts",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright visual/route assertions",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\" --ignore-snapshots",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright accessibility assertions",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\"",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Figma/runtime visual comparison",
+            "command": "node --import tsx scripts/capture-figma-parity-runtime.mjs --screen-id PUB-05 --fixture public-developers --route /developers --phase after",
             "exitCode": 0
           }
         ],
         "accessibility": {
-          "focusedCheck": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public developer directory exposes labeled filters\"",
+          "focusedCheck": "Focused public accessibility Playwright batch for the repaired public surface.",
           "exitCode": 0
-        }
+        },
+        "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-05/runtime-after-capture.json"
       },
       "classification": "PARTIAL",
       "processedAt": null,
       "notes": [
-        "Fresh canonical comparison is complete. The runtime contract and accessibility gate pass, but the runtime does not match the clone card grid, approved imagery, controls, or footer composition.",
-        "Partial review is evidence only and is not counted as processed.",
-        "Queued for bounded shared public-foundation repair before any new screen discovery."
+        "Bounded public shared-foundation repair completed: the developer directory now renders deterministic approved organizations with imageUrl projection, filters, pagination, shared navigation/footer, and safe media handling.",
+        "PARTIAL evidence was replaced only after a genuine repair capture with different before/after hashes.",
+        "Discovery remains halted before PUB-09.",
+        "The prior functional repair pass is not visual closure evidence.",
+        "Typography, spacing, geometry, and reviewed diff differences remain repository-owned defects.",
+        "Queued for the frontend_099 exact Figma parity closure pass; this Partial record is not processed."
       ],
-      "reviewedAt": "2026-08-25T20:12:36.418Z",
+      "reviewedAt": "2026-08-25T21:27:57.760Z",
       "processingState": "REPAIR_REQUIRED",
       "repairStatus": "PENDING",
-      "repairSequence": 5
+      "repairSequence": 5,
+      "repairCompletedAt": "2026-08-25T21:27:57.760Z"
     },
     {
       "sequence": 6,
@@ -1084,7 +1290,7 @@
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR"
       },
       "responsiveCoverage": {
         "includedInThisCanonicalScreen": true,
@@ -1156,35 +1362,44 @@
             },
             {
               "width": 1280,
-              "height": 2103
+              "height": 2492
             }
           ],
           "observations": [
-            "Figma source is 1534px wide and 2985px high for PUB-06.",
-            "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 2103px document height.",
-            "The clone has a full-width city hero image, verified developer identity, project/area badges, and explicit contact and unit actions; the runtime hero uses a missing-image state and only exposes a compact summary.",
-            "The clone includes an activity summary rail, contact panel, trust notice, project image cards, an available-units empty state, and an inquiry form; the runtime omits the activity/contact/inquiry surfaces and renders sparse text-only project/property cards.",
-            "The clone footer includes brand, page links, contact information, social controls, and legal rows; the captured runtime footer is shorter and omits those approved regions.",
-            "The side-by-side diff is evidence for review only; no baseline was updated."
-          ]
+            "The after capture is a fresh 1280x720 Arabic RTL runtime capture after the organization profile media repair.",
+            "GET /api/v1/public/developers/approved-builder returned HTTP 200 and the profile hero/project/property media uses the approved local assets where available.",
+            "Profile tabs, overview, project/property cards, contact state, and shared footer are present and independently reviewed.",
+            "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
+          ],
+          "dimensions": {
+            "width": 1392,
+            "height": 1059
+          }
         },
         "functionalApiComparison": {
           "reviewed": true,
           "requestProjection": "GET /api/v1/public/developers/approved-builder",
           "responseProjection": "public-developer-profile fixture captured and hashed",
-          "outcome": "GET /api/v1/public/developers/approved-builder returned HTTP 200 and the page reached success. The projects and properties response projection is consumed, but the clone media, activity, contact, inquiry, and CTA surfaces are not matched."
+          "outcome": "1 deterministic API response(s) observed; all returned success after the bounded repair."
         },
         "defects": [
-          "Runtime hero media is a placeholder/missing-image state while the clone uses an approved city/developer image.",
-          "Runtime omits the clone's activity summary, contact card, trust notice, available-units state, and inquiry form.",
-          "Runtime project and property cards are sparse text-only projections instead of the clone's image-backed cards with approved metadata/actions.",
-          "Runtime footer is shorter and omits the clone's contact, social, and legal rows.",
-          "No runtime files were repaired during this evidence pass."
+          "Resolved: the developer profile hero and project cards now render approved imageUrl values from the public organization projection.",
+          "Resolved: published profile property cards now render the approved media where supplied and preserve safe fallback for absent media.",
+          "Resolved: profile navigation, tabs, overview, projects, properties, and shared footer render from the deterministic HTTP 200 success fixture.",
+          "Reviewed residual diff: clone-specific profile statistics/contact composition and exact project/card geometry remain visible in diff.png; no baseline was changed."
         ],
-        "repairedFiles": [],
+        "repairedFiles": [
+          "apps/web/src/features/public/components.tsx",
+          "apps/web/src/features/public/developer-profile.tsx",
+          "apps/web/src/features/public/developers.css",
+          "apps/web/tests/e2e/public-fixtures.ts",
+          "scripts/capture-figma-parity-runtime.mjs",
+          "apps/api/src/modules/organizations/public.ts",
+          "packages/contracts/src/organizations/index.ts"
+        ],
         "runtimeAfter": {
           "path": "docs/quality/figma_parity/screens/PUB-06/runtime-after.png",
-          "sha256": "4daebbf4536e7db32c9ddcf67bc8068ad708fe4e7fafc16ca526ab9f642788a3"
+          "sha256": "881c43b409df0dce37eddb3c732ab3dafa4f69d94becfef14d68a9a94056ce9e"
         },
         "reviewedDiff": {
           "path": "docs/quality/figma_parity/screens/PUB-06/diff.png",
@@ -1192,52 +1407,77 @@
         },
         "focusedTests": [
           {
-            "name": "affected typecheck",
+            "name": "contracts build",
+            "command": "npm.cmd run build --workspace @sadat-real-estate/contracts",
+            "exitCode": 0
+          },
+          {
+            "name": "apps/web typecheck",
             "command": "npm.cmd run typecheck --workspace apps/web",
             "exitCode": 0
           },
           {
-            "name": "affected public lint",
-            "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"tests/public-developers.vitest.test.tsx\" \"tests/e2e/public-fixtures.ts\" --max-warnings=0",
+            "name": "apps/api typecheck",
+            "command": "npm.cmd run typecheck --workspace apps/api",
             "exitCode": 0
           },
           {
-            "name": "focused Vitest",
-            "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-developers.vitest.test.tsx",
+            "name": "affected web lint",
+            "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"src/features/content/**/*.{ts,tsx}\" \"src/features/frontend_foundation/app.tsx\" \"tests/e2e/public-fixtures.ts\" \"tests/e2e/visual.spec.ts\" --max-warnings=0",
             "exitCode": 0
           },
           {
-            "name": "focused SSR/API integration",
-            "command": "node --test apps/web/tests/ssr.test.mjs --test-name-pattern \"public developer profile\"",
+            "name": "affected API lint",
+            "command": "npm.cmd exec --workspace apps/api -- eslint \"src/modules/public/**/*.ts\" \"src/modules/search/**/*.ts\" \"src/modules/compare/**/*.ts\" \"src/modules/organizations/**/*.ts\" \"src/modules/articles/**/*.ts\" --max-warnings=0",
             "exitCode": 0
           },
           {
-            "name": "focused API contract tests",
-            "command": "node --import tsx --test apps/web/tests/contracts.test.ts",
+            "name": "focused public Vitest",
+            "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-homepage.vitest.test.tsx tests/public-listing.vitest.test.tsx tests/public-details.vitest.test.tsx tests/public-compare.vitest.test.tsx tests/public-developers.vitest.test.tsx tests/public-articles.vitest.test.tsx",
             "exitCode": 0
           },
           {
-            "name": "focused Playwright visual",
-            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public developer profile renders projects\"",
+            "name": "focused public API/integration tests",
+            "command": "npm.cmd exec --workspace apps/api -- node --import tsx --test tests/public/homepage.test.ts tests/public/properties.test.ts tests/search/properties.test.ts tests/compare/properties.test.ts tests/organizations/public.test.ts",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright visual/route assertions",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\" --ignore-snapshots",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright accessibility assertions",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\"",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Figma/runtime visual comparison",
+            "command": "node --import tsx scripts/capture-figma-parity-runtime.mjs --screen-id PUB-06 --fixture public-developer-profile --route /developers/approved-builder --phase after",
             "exitCode": 0
           }
         ],
         "accessibility": {
-          "focusedCheck": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public developer profile exposes tab navigation\"",
+          "focusedCheck": "Focused public accessibility Playwright batch for the repaired public surface.",
           "exitCode": 0
-        }
+        },
+        "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-06/runtime-after-capture.json"
       },
       "classification": "PARTIAL",
       "processedAt": null,
       "notes": [
-        "Fresh canonical comparison is complete. The runtime profile contract and focused gates pass, but the runtime does not match the clone hero, activity/contact rail, project media, inquiry form, or footer composition.",
-        "Partial review is evidence only and is not counted as processed.",
-        "Queued for bounded shared public-foundation repair before any new screen discovery."
+        "Bounded public shared-foundation repair completed: the developer profile hero, project cards, property cards, navigation/footer, and safe media states now consume the approved deterministic public organization projection.",
+        "PARTIAL evidence was replaced only after a genuine repair capture with different before/after hashes.",
+        "Discovery remains halted before PUB-09.",
+        "The prior functional repair pass is not visual closure evidence.",
+        "Typography, spacing, geometry, and reviewed diff differences remain repository-owned defects.",
+        "Queued for the frontend_099 exact Figma parity closure pass; this Partial record is not processed."
       ],
-      "reviewedAt": "2026-08-25T20:18:50.212Z",
+      "reviewedAt": "2026-08-25T21:28:06.681Z",
       "processingState": "REPAIR_REQUIRED",
       "repairStatus": "PENDING",
-      "repairSequence": 6
+      "repairSequence": 6,
+      "repairCompletedAt": "2026-08-25T21:28:06.681Z"
     },
     {
       "sequence": 7,
@@ -1287,7 +1527,7 @@
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR"
       },
       "responsiveCoverage": {
         "includedInThisCanonicalScreen": true,
@@ -1358,35 +1598,44 @@
             },
             {
               "width": 1280,
-              "height": 1340
+              "height": 2376
             }
           ],
           "observations": [
-            "Figma source is 1523px wide and 1783px high for PUB-07.",
-            "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 1340px document height.",
-            "The clone renders six image-backed article cards in a three-column grid; the deterministic runtime renders two cards with missing-image placeholders.",
-            "The clone has a centered heading/search/category composition and a dark call-to-action banner; the runtime's heading and filters are left-weighted in the captured RTL layout and the CTA banner is absent.",
-            "The clone footer includes brand, page links, contact information, social controls, and legal rows; the captured runtime footer is shorter and omits those approved regions.",
-            "The side-by-side diff is evidence for review only; no baseline was updated."
-          ]
+            "The after capture is a fresh 1280x720 Arabic RTL runtime capture after the article listing/media repair.",
+            "GET /api/v1/public/articles returned HTTP 200 and six deterministic article cards render approved local media.",
+            "Search, category filters, result grid, CTA, navigation, and shared footer are present and independently reviewed.",
+            "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
+          ],
+          "dimensions": {
+            "width": 1388,
+            "height": 852
+          }
         },
         "functionalApiComparison": {
           "reviewed": true,
           "requestProjection": "GET /api/v1/public/articles",
           "responseProjection": "public-articles fixture captured and hashed",
-          "outcome": "GET /api/v1/public/articles?locale=ar&page=1&limit=20 and GET /api/v1/public/article-categories?locale=ar both returned HTTP 200 and the page reached success. The article/category response projections are consumed, but the clone card count/media and CTA surface are not matched."
+          "outcome": "2 deterministic API response(s) observed; all returned success after the bounded repair."
         },
         "defects": [
-          "Runtime renders two article cards instead of the clone's six-card three-column composition for the approved reference state.",
-          "Runtime article media is a placeholder/missing-image state while the clone uses approved article imagery.",
-          "Runtime omits the clone's dark search CTA banner and does not match the approved heading/filter alignment and spacing.",
-          "Runtime footer is shorter and omits the clone's contact, social, and legal rows.",
-          "No runtime files were repaired during this evidence pass."
+          "Resolved: article cards now consume approved imageUrl values through the public article contract and deterministic fixture.",
+          "Resolved: the listing now renders six deterministic article cards with category controls, search, CTA, and shared footer structure.",
+          "Resolved: article media errors remain safe through the shared public image fallback component.",
+          "Reviewed residual diff: clone-specific article card geometry, typography, spacing, and exact image composition remain visible in diff.png; no baseline was changed."
         ],
-        "repairedFiles": [],
+        "repairedFiles": [
+          "apps/web/src/features/public/components.tsx",
+          "apps/web/src/features/content/articles.tsx",
+          "apps/web/src/features/content/articles.css",
+          "apps/web/src/features/frontend_foundation/app.tsx",
+          "apps/web/tests/e2e/public-fixtures.ts",
+          "scripts/capture-figma-parity-runtime.mjs",
+          "packages/contracts/src/articles/index.ts"
+        ],
         "runtimeAfter": {
           "path": "docs/quality/figma_parity/screens/PUB-07/runtime-after.png",
-          "sha256": "c1fd8847a16c267d8386fdce6d6c49d2b3f0ea38d116698a5f7fb247355ffb5b"
+          "sha256": "7d5099c36b234c806baed8b9a459529ab7b09ff717dc252cb81ada99d3e91585"
         },
         "reviewedDiff": {
           "path": "docs/quality/figma_parity/screens/PUB-07/diff.png",
@@ -1394,52 +1643,77 @@
         },
         "focusedTests": [
           {
-            "name": "affected typecheck",
+            "name": "contracts build",
+            "command": "npm.cmd run build --workspace @sadat-real-estate/contracts",
+            "exitCode": 0
+          },
+          {
+            "name": "apps/web typecheck",
             "command": "npm.cmd run typecheck --workspace apps/web",
             "exitCode": 0
           },
           {
-            "name": "affected content lint",
-            "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/content/**/*.{ts,tsx}\" \"tests/public-articles.vitest.test.tsx\" \"tests/e2e/public-fixtures.ts\" --max-warnings=0",
+            "name": "apps/api typecheck",
+            "command": "npm.cmd run typecheck --workspace apps/api",
             "exitCode": 0
           },
           {
-            "name": "focused Vitest",
-            "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-articles.vitest.test.tsx",
+            "name": "affected web lint",
+            "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"src/features/content/**/*.{ts,tsx}\" \"src/features/frontend_foundation/app.tsx\" \"tests/e2e/public-fixtures.ts\" \"tests/e2e/visual.spec.ts\" --max-warnings=0",
             "exitCode": 0
           },
           {
-            "name": "focused SSR/API integration",
-            "command": "node --test apps/web/tests/ssr.test.mjs --test-name-pattern \"public article listing\"",
+            "name": "affected API lint",
+            "command": "npm.cmd exec --workspace apps/api -- eslint \"src/modules/public/**/*.ts\" \"src/modules/search/**/*.ts\" \"src/modules/compare/**/*.ts\" \"src/modules/organizations/**/*.ts\" \"src/modules/articles/**/*.ts\" --max-warnings=0",
             "exitCode": 0
           },
           {
-            "name": "focused API contract tests",
-            "command": "node --import tsx --test apps/web/tests/contracts.test.ts",
+            "name": "focused public Vitest",
+            "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-homepage.vitest.test.tsx tests/public-listing.vitest.test.tsx tests/public-details.vitest.test.tsx tests/public-compare.vitest.test.tsx tests/public-developers.vitest.test.tsx tests/public-articles.vitest.test.tsx",
             "exitCode": 0
           },
           {
-            "name": "focused Playwright visual",
-            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public article listing renders published cards\"",
+            "name": "focused public API/integration tests",
+            "command": "npm.cmd exec --workspace apps/api -- node --import tsx --test tests/public/homepage.test.ts tests/public/properties.test.ts tests/search/properties.test.ts tests/compare/properties.test.ts tests/organizations/public.test.ts",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright visual/route assertions",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\" --ignore-snapshots",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright accessibility assertions",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\"",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Figma/runtime visual comparison",
+            "command": "node --import tsx scripts/capture-figma-parity-runtime.mjs --screen-id PUB-07 --fixture public-articles --route /articles --phase after",
             "exitCode": 0
           }
         ],
         "accessibility": {
-          "focusedCheck": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public article listing exposes labeled search\"",
+          "focusedCheck": "Focused public accessibility Playwright batch for the repaired public surface.",
           "exitCode": 0
-        }
+        },
+        "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-07/runtime-after-capture.json"
       },
       "classification": "PARTIAL",
       "processedAt": null,
       "notes": [
-        "Fresh canonical comparison is complete. Article and category APIs, focused tests, and accessibility pass, but the runtime does not match the clone card count, approved imagery, CTA banner, or footer composition.",
-        "Partial review is evidence only and is not counted as processed.",
-        "Queued for bounded shared public-foundation repair before any new screen discovery."
+        "Bounded public shared-foundation repair completed: article listing cards now consume approved imageUrl data, related category/search/filter behavior remains API-backed, the CTA is present, and the shared footer/media handling is rendered.",
+        "PARTIAL evidence was replaced only after a genuine repair capture with different before/after hashes.",
+        "Discovery remains halted before PUB-09.",
+        "The prior functional repair pass is not visual closure evidence.",
+        "Typography, spacing, geometry, and reviewed diff differences remain repository-owned defects.",
+        "Queued for the frontend_099 exact Figma parity closure pass; this Partial record is not processed."
       ],
-      "reviewedAt": "2026-08-25T20:24:15.283Z",
+      "reviewedAt": "2026-08-25T21:28:11.188Z",
       "processingState": "REPAIR_REQUIRED",
       "repairStatus": "PENDING",
-      "repairSequence": 7
+      "repairSequence": 7,
+      "repairCompletedAt": "2026-08-25T21:28:11.188Z"
     },
     {
       "sequence": 8,
@@ -1489,7 +1763,7 @@
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR"
       },
       "responsiveCoverage": {
         "includedInThisCanonicalScreen": true,
@@ -1560,35 +1834,44 @@
             },
             {
               "width": 1280,
-              "height": 1404
+              "height": 2042
             }
           ],
           "observations": [
-            "Figma source is 1523px wide and 1759px high for PUB-08.",
-            "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 1404px document height.",
-            "The clone has a wide approved hero image, a related-properties side rail with three image-backed items, and a structured title/meta treatment; the runtime hero uses a missing-image placeholder and has no related-property rail.",
-            "The clone article body includes a heading, paragraph, quote treatment, and rich spacing; the deterministic runtime only renders the short fixture body summary.",
-            "The clone includes three related-article image cards and a complete footer; the runtime related-article area is empty and the footer is shorter than the clone.",
-            "The side-by-side diff is evidence for review only; no baseline was updated."
-          ]
+            "The after capture is a fresh 1280x720 Arabic RTL runtime capture after the article detail/media/related-content repair.",
+            "GET /api/v1/public/articles/buying-in-sadat and the related GET /api/v1/public/articles request both returned HTTP 200.",
+            "The article hero, title/meta, body, three related article cards, shared navigation, and expanded footer are present and independently reviewed.",
+            "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
+          ],
+          "dimensions": {
+            "width": 1388,
+            "height": 738
+          }
         },
         "functionalApiComparison": {
           "reviewed": true,
           "requestProjection": "GET /api/v1/public/articles/buying-in-sadat",
           "responseProjection": "public-article-details fixture captured and hashed",
-          "outcome": "GET /api/v1/public/articles/buying-in-sadat?locale=ar returned HTTP 200 and the page reached success. The article response projection is consumed, but the clone media, related-property, rich-body, related-article, and footer surfaces are not matched."
+          "outcome": "2 deterministic API response(s) observed; all returned success after the bounded repair."
         },
         "defects": [
-          "Runtime article hero media is a placeholder/missing-image state while the clone uses an approved image asset.",
-          "Runtime omits the clone's related-property side rail and its three image-backed property items.",
-          "Runtime body content is a short text projection and does not include the clone's structured introduction and quote treatment.",
-          "Runtime omits the clone's three related-article cards and full footer rows.",
-          "No runtime files were repaired during this evidence pass."
+          "Resolved: article detail hero media now consumes the approved imageUrl projection instead of a placeholder.",
+          "Resolved: the article body renders the localized API body projection and related articles are loaded through the public article-list contract.",
+          "Resolved: related article cards render deterministic approved media and the shared footer rows are present.",
+          "Reviewed residual diff: clone-specific rich-body/side-rail geometry and exact typography/spacing remain visible in diff.png; no baseline was changed."
         ],
-        "repairedFiles": [],
+        "repairedFiles": [
+          "apps/web/src/features/public/components.tsx",
+          "apps/web/src/features/content/articles.tsx",
+          "apps/web/src/features/content/articles.css",
+          "apps/web/src/features/frontend_foundation/app.tsx",
+          "apps/web/tests/e2e/public-fixtures.ts",
+          "scripts/capture-figma-parity-runtime.mjs",
+          "packages/contracts/src/articles/index.ts"
+        ],
         "runtimeAfter": {
           "path": "docs/quality/figma_parity/screens/PUB-08/runtime-after.png",
-          "sha256": "4a4d9f867b0dc38c6eab5a63c59b2579556cd0a57e94bc77659de65d74cfb00d"
+          "sha256": "fa48c3e03ddb9b1e2268a1abb6a1d3461a7fb581bfdc6c7b7342b5d65817ac5d"
         },
         "reviewedDiff": {
           "path": "docs/quality/figma_parity/screens/PUB-08/diff.png",
@@ -1596,52 +1879,77 @@
         },
         "focusedTests": [
           {
-            "name": "affected typecheck",
+            "name": "contracts build",
+            "command": "npm.cmd run build --workspace @sadat-real-estate/contracts",
+            "exitCode": 0
+          },
+          {
+            "name": "apps/web typecheck",
             "command": "npm.cmd run typecheck --workspace apps/web",
             "exitCode": 0
           },
           {
-            "name": "affected content lint",
-            "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/content/**/*.{ts,tsx}\" \"tests/public-articles.vitest.test.tsx\" \"tests/e2e/public-fixtures.ts\" --max-warnings=0",
+            "name": "apps/api typecheck",
+            "command": "npm.cmd run typecheck --workspace apps/api",
             "exitCode": 0
           },
           {
-            "name": "focused Vitest",
-            "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-articles.vitest.test.tsx",
+            "name": "affected web lint",
+            "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"src/features/content/**/*.{ts,tsx}\" \"src/features/frontend_foundation/app.tsx\" \"tests/e2e/public-fixtures.ts\" \"tests/e2e/visual.spec.ts\" --max-warnings=0",
             "exitCode": 0
           },
           {
-            "name": "focused SSR/API integration",
-            "command": "node --test apps/web/tests/ssr.test.mjs --test-name-pattern \"article details\"",
+            "name": "affected API lint",
+            "command": "npm.cmd exec --workspace apps/api -- eslint \"src/modules/public/**/*.ts\" \"src/modules/search/**/*.ts\" \"src/modules/compare/**/*.ts\" \"src/modules/organizations/**/*.ts\" \"src/modules/articles/**/*.ts\" --max-warnings=0",
             "exitCode": 0
           },
           {
-            "name": "focused API contract tests",
-            "command": "node --import tsx --test apps/web/tests/contracts.test.ts",
+            "name": "focused public Vitest",
+            "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-homepage.vitest.test.tsx tests/public-listing.vitest.test.tsx tests/public-details.vitest.test.tsx tests/public-compare.vitest.test.tsx tests/public-developers.vitest.test.tsx tests/public-articles.vitest.test.tsx",
             "exitCode": 0
           },
           {
-            "name": "focused Playwright visual",
-            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public article details renders the published projection\"",
+            "name": "focused public API/integration tests",
+            "command": "npm.cmd exec --workspace apps/api -- node --import tsx --test tests/public/homepage.test.ts tests/public/properties.test.ts tests/search/properties.test.ts tests/compare/properties.test.ts tests/organizations/public.test.ts",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright visual/route assertions",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\" --ignore-snapshots",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright accessibility assertions",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\"",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Figma/runtime visual comparison",
+            "command": "node --import tsx scripts/capture-figma-parity-runtime.mjs --screen-id PUB-08 --fixture public-article-details --route /articles/buying-in-sadat --phase after",
             "exitCode": 0
           }
         ],
         "accessibility": {
-          "focusedCheck": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public article details exposes\"",
+          "focusedCheck": "Focused public accessibility Playwright batch for the repaired public surface.",
           "exitCode": 0
-        }
+        },
+        "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-08/runtime-after-capture.json"
       },
       "classification": "PARTIAL",
       "processedAt": null,
       "notes": [
-        "Fresh canonical comparison is complete. The article-detail API and focused gates pass, but the runtime does not match the clone hero media, rich body, related content, side rail, or footer composition.",
-        "Partial review is evidence only and is not counted as processed.",
-        "Queued for bounded shared public-foundation repair before any new screen discovery."
+        "Bounded public shared-foundation repair completed: article details now render the approved hero media, projected body, API-backed related articles, shared navigation/footer, and safe media states from deterministic public contract data.",
+        "PARTIAL evidence was replaced only after a genuine repair capture with different before/after hashes.",
+        "Discovery remains halted before PUB-09.",
+        "The prior functional repair pass is not visual closure evidence.",
+        "Typography, spacing, geometry, and reviewed diff differences remain repository-owned defects.",
+        "Queued for the frontend_099 exact Figma parity closure pass; this Partial record is not processed."
       ],
-      "reviewedAt": "2026-08-25T20:28:51.311Z",
+      "reviewedAt": "2026-08-25T21:28:15.550Z",
       "processingState": "REPAIR_REQUIRED",
       "repairStatus": "PENDING",
-      "repairSequence": 8
+      "repairSequence": 8,
+      "repairCompletedAt": "2026-08-25T21:28:15.550Z"
     },
     {
       "sequence": 9,
@@ -10120,8 +10428,10 @@
     "reason": "Do not discover new screens until PUB-01 through PUB-08 have zero repository-owned material defects."
   },
   "repairQueue": {
-    "mode": "bounded_public_shared_foundation",
-    "scope": "public header/navigation, hero/search, approved imagery/media, card grids, filters, CTA sections, footer, deterministic API-backed success data",
+    "taskId": "frontend_099",
+    "mode": "public_exact_figma_parity_closure",
+    "pass": 2,
+    "scope": "exact typography, geometry, spacing, grids, approved media, controls, CTA/footer, API projections, locale/direction, accessibility, and lazy-loading capture behavior",
     "screenIds": [
       {
         "sequence": 1,

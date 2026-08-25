@@ -125,6 +125,7 @@ function Gallery({
           src={selected?.imageUrl}
           alt={copy.mediaItem(Math.max(1, media.findIndex(item => item.id === selected?.id) + 1))}
           fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} message={selected?.kind === 'floor_plan' ? copy.mediaUnavailable : undefined} />}
+          loading="eager"
         />
       </div>
       {media.length > 0 ? (

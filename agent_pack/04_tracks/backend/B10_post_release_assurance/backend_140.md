@@ -6,7 +6,7 @@
 | Phase | B10_post_release_assurance |
 | Area | local runtime |
 | Kind | infrastructure |
-| Sequence | 115 / 198 |
+| Sequence | 115 / 199 |
 | Depends on | `backend_138` |
 
 ## Goal

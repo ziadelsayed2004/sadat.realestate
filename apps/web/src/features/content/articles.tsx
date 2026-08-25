@@ -340,7 +340,7 @@ function ArticleDetailsView({
   return (
     <article className="public-article-details__article">
       <div className="public-article-details__hero">
-        <div className="public-article-details__hero-media"><PublicMediaImage src={article.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} /></div>
+        <div className="public-article-details__hero-media"><PublicMediaImage src={article.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} loading="eager" /></div>
         <div className="public-article-details__hero-copy">
           {category === undefined ? null : <Badge tone="warning">{category}</Badge>}
           <h1 id="public-article-details-title">{title}</h1>

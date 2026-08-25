@@ -6,7 +6,7 @@
 | Phase | F0_frontend_foundation |
 | Area | design_system |
 | Kind | frontend |
-| Sequence | 118 / 198 |
+| Sequence | 118 / 199 |
 | Depends on | `frontend_001` |
 
 ## Goal

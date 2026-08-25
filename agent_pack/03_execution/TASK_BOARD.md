@@ -237,4 +237,5 @@
 - [x] frontend_095 — Admin Dashboard Design Parity Remediation
 - [x] frontend_096 — Author and Verify ADM-54 Request Settings Design
 - [x] frontend_097 — Full Success-State Browser and Defect-Closure Matrix
-- [ ] frontend_098 — Final Production-Parity Platform Gate
+- [/] frontend_098 — Final Production-Parity Platform Gate
+- [ ] frontend_099 — Public Exact Figma Parity Closure — PUB-01 through PUB-08 — IN PROGRESS

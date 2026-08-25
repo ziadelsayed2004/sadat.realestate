@@ -6,7 +6,7 @@
 | Phase | B9_admin_system_readiness |
 | Area | observability |
 | Kind | release |
-| Sequence | 109 / 198 |
+| Sequence | 109 / 199 |
 | Depends on | `backend_133` |
 
 ## Goal

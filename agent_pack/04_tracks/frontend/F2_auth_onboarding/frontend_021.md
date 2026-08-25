@@ -6,7 +6,7 @@
 | Phase | F2_auth_onboarding |
 | Area | auth |
 | Kind | frontend |
-| Sequence | 137 / 198 |
+| Sequence | 137 / 199 |
 | Depends on | `frontend_020` |
 
 ## Goal

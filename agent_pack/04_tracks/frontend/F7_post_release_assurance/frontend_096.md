@@ -6,7 +6,7 @@
 | Phase | F7_post_release_assurance |
 | Area | admin design evidence |
 | Kind | quality |
-| Sequence | 196 / 198 |
+| Sequence | 196 / 199 |
 | Depends on | `frontend_091` |
 
 ## Goal

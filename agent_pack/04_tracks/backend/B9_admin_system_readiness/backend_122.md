@@ -6,7 +6,7 @@
 | Phase | B9_admin_system_readiness |
 | Area | notifications |
 | Kind | api |
-| Sequence | 97 / 198 |
+| Sequence | 97 / 199 |
 | Depends on | `backend_121` |
 
 ## Goal

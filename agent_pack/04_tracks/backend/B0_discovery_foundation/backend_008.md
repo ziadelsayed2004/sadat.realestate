@@ -6,7 +6,7 @@
 | Phase | B0_discovery_foundation |
 | Area | testing |
 | Kind | quality |
-| Sequence | 9 / 198 |
+| Sequence | 9 / 199 |
 | Depends on | `backend_007` |
 
 ## Goal

@@ -90,7 +90,7 @@ export function PublicSiteHeader({
   return (
     <header className="public-homepage__header">
       <a className="public-homepage__brand" href="/" aria-label={copy.brand}>
-        <img src="/assets/sadat-real-estate-logo.png" alt={copy.brand} width={636} height={557} decoding="async" />
+        <img src="/assets/sadat-real-estate-logo.png" alt={copy.brand} width={636} height={557} decoding="async" loading="eager" />
       </a>
       <nav className="public-homepage__nav" aria-label={copy.nav.home}>
         {links.map(([href, label]) => <a key={href} href={href} aria-current={href === activePath ? 'page' : undefined}>{label}</a>)}
@@ -108,17 +108,19 @@ export function PublicMediaImage({
   src,
   alt,
   fallback,
-  className
+  className,
+  loading = 'lazy'
 }: {
   readonly src?: string | undefined;
   readonly alt: string;
   readonly fallback: ReactNode;
   readonly className?: string | undefined;
+  readonly loading?: 'eager' | 'lazy';
 }) {
   const [failed, setFailed] = useState(false);
   const imageUrl = safePublicUrl(src);
   if (imageUrl === undefined || failed) return <>{fallback}</>;
-  return <img className={className} src={imageUrl} alt={alt} decoding="async" onError={() => setFailed(true)} />;
+  return <img className={className} src={imageUrl} alt={alt} decoding="async" loading={loading} onError={() => setFailed(true)} />;
 }
 
 export function PublicSiteFooter({ locale, description }: { readonly locale: SupportedLocale; readonly description?: string | undefined }) {
@@ -165,12 +167,14 @@ function BannerMedia({
   banner,
   copy,
   locale,
-  className
+  className,
+  priority = false
 }: {
   readonly banner: PublicHomepageBanner | undefined;
   readonly copy: PublicHomepageCopy;
   readonly locale: SupportedLocale;
   readonly className?: string | undefined;
+  readonly priority?: boolean;
 }) {
   const [failed, setFailed] = useState(false);
   const imageUrl = safePublicUrl(banner?.imageUrl);
@@ -184,7 +188,7 @@ function BannerMedia({
     );
   }
 
-  return <img className={className} src={imageUrl} alt={imageAlt} onError={() => setFailed(true)} />;
+  return <img className={className} src={imageUrl} alt={imageAlt} decoding="async" loading={priority ? 'eager' : 'lazy'} onError={() => setFailed(true)} />;
 }
 
 function SearchPanel({ copy }: { readonly copy: PublicHomepageCopy }) {
@@ -222,7 +226,7 @@ function Hero({
   return (
     <section className="public-homepage__hero" aria-labelledby="public-homepage-hero-title">
       <div className="public-homepage__hero-media" aria-hidden={banner?.imageUrl === undefined ? undefined : true}>
-        <BannerMedia banner={banner} copy={copy} locale={locale} />
+        <BannerMedia banner={banner} copy={copy} locale={locale} priority />
       </div>
       <div className="public-homepage__hero-shade" aria-hidden="true" />
       <div className="public-homepage__hero-content">
