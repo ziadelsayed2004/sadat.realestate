@@ -435,6 +435,26 @@
   min-block-size: 13rem;
 }
 
+.public-homepage .ui-property-card__media > img,
+.public-homepage__developer-card > img,
+.public-homepage__content-card > img {
+  display: block;
+  inline-size: 100%;
+  block-size: 13rem;
+  object-fit: cover;
+}
+
+.public-homepage__developer-card > img {
+  block-size: 8rem;
+  border-radius: var(--radius-md);
+}
+
+.public-homepage__content-card > img {
+  block-size: 10rem;
+  margin-block-end: var(--space-sm);
+  border-radius: var(--radius-md);
+}
+
 .public-homepage .ui-property-card__media .ux-state-view {
   display: grid;
   inline-size: 100%;
@@ -523,6 +543,26 @@
   padding: clamp(var(--space-2xl), 6vw, var(--space-4xl)) min(8vw, 10rem);
   color: var(--color-on-brand);
   background: var(--color-brand-secondary);
+}
+
+.public-site-footer {
+  grid-template-columns: 1.5fr 1fr 1fr;
+  row-gap: var(--space-2xl);
+}
+
+.public-site-footer__brand {
+  max-inline-size: 24rem;
+}
+
+.public-site-footer__bottom {
+  display: flex;
+  grid-column: 1 / -1;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  padding-block-start: var(--space-lg);
+  color: rgb(255 255 255 / 0.64);
+  border-block-start: 1px solid rgb(255 255 255 / 0.16);
+  font-size: var(--font-size-small);
 }
 
 .public-homepage__footer .public-homepage__eyebrow,

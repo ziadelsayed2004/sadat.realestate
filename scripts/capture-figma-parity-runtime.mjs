@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { chromium } from '@playwright/test';
-import { publicHomepageFixture, publicPropertyListFixture } from '../apps/web/tests/e2e/public-fixtures.ts';
+import { PUBLIC_CLONE_ASSETS, publicHomepageFixture, publicPropertyListFixture } from '../apps/web/tests/e2e/public-fixtures.ts';
 
 const root = process.cwd();
 const args = new Map(process.argv.slice(2).flatMap((value, index, values) => value.startsWith('--') ? [[value.slice(2), values[index + 1] ?? true]] : []));
@@ -16,6 +16,7 @@ const queue = JSON.parse(fs.readFileSync(path.join(root, 'docs/quality/figma_par
 const queueEntry = queue.screens.find((entry) => entry.screenId === screenId);
 if (!queueEntry) throw new Error(`Screen ${screenId} is not present in the execution queue`);
 const fixtureKind = String(args.get('fixture') ?? (screenId === 'PUB-01' ? 'public-home' : 'public-list'));
+const capturePhase = String(args.get('phase') ?? 'before');
 const propertyDetailsFixture = {
   data: {
     id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
@@ -23,6 +24,7 @@ const propertyDetailsFixture = {
     kind: 'property',
     name: { ar: 'منزل منشور', en: 'Published home', 'zh-CN': '已发布房产' },
     transactionType: 'sale',
+    imageUrl: PUBLIC_CLONE_ASSETS.house,
     description: { ar: 'وصف المنزل المنشور', en: 'A published home description', 'zh-CN': '已发布房产描述' },
     area: { value: 120, unit: 'sqm' },
     layout: { bedrooms: 3, bathrooms: 2, floor: 4 },
@@ -30,16 +32,23 @@ const propertyDetailsFixture = {
     source: { sourceType: 'developer_company', organizationId: 'bbbbbbbbbbbbbbbbbbbbbbbb' },
     seo: { title: { ar: 'تفاصيل منزل منشور', en: 'Published home details', 'zh-CN': '已发布房产详情' }, description: { ar: 'وصف محرك البحث', en: 'Search description', 'zh-CN': '搜索描述' }, slug: 'published-home' },
     project: { id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'central-project', name: { ar: 'المشروع المركزي', en: 'Central project', 'zh-CN': '中央项目' }, description: { ar: 'نبذة المشروع', en: 'Project description', 'zh-CN': '项目简介' } },
-    media: [],
-    relatedProperties: []
+    media: [
+      { id: 'cccccccccccccccccccccccc', propertyId: 'aaaaaaaaaaaaaaaaaaaaaaaa', kind: 'image', imageUrl: PUBLIC_CLONE_ASSETS.house, originalFilename: 'published-home-cover.png', detectedMime: 'image/png', byteSize: 120000, sortOrder: 0, isCover: true },
+      { id: 'dddddddddddddddddddddddd', propertyId: 'aaaaaaaaaaaaaaaaaaaaaaaa', kind: 'image', imageUrl: PUBLIC_CLONE_ASSETS.city, originalFilename: 'published-home-city.png', detectedMime: 'image/png', byteSize: 120000, sortOrder: 1, isCover: false },
+      { id: 'eeeeeeeeeeeeeeeeeeeeeeee', propertyId: 'aaaaaaaaaaaaaaaaaaaaaaaa', kind: 'floor_plan', imageUrl: PUBLIC_CLONE_ASSETS.chart, originalFilename: 'published-home-plan.png', detectedMime: 'image/png', byteSize: 120000, sortOrder: 2, isCover: false }
+    ],
+    relatedProperties: [
+      { id: 'ffffffffffffffffffffffff', slug: 'garden-villa', kind: 'property', name: { ar: 'Garden villa', en: 'Garden villa', 'zh-CN': 'Garden villa' }, transactionType: 'sale', imageUrl: PUBLIC_CLONE_ASSETS.city, price: { amount: 2500000, currency: 'EGP' } },
+      { id: '111111111111111111111111', slug: 'city-apartment', kind: 'unit', name: { ar: 'City apartment', en: 'City apartment', 'zh-CN': 'City apartment' }, transactionType: 'rent', imageUrl: PUBLIC_CLONE_ASSETS.night, price: { amount: 20000, currency: 'EGP' } }
+    ]
   },
   meta: { requestId: 'fresh-audit-public-details' }
 };
 const propertyComparisonFixture = {
   data: {
     items: [
-      { id: 'aaaaaaaaaaaaaaaaaaaaaaaa', slug: 'garden-villa', kind: 'property', name: { ar: 'فيلا مستقلة بالمنطقة الراقية', en: 'Garden villa', 'zh-CN': 'Garden villa' }, transactionType: 'sale', area: { value: 180, unit: 'sqm' }, layout: { bedrooms: 4, bathrooms: 3, floor: 1 }, price: { amount: 2500000, currency: 'EGP' } },
-      { id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'city-apartment', kind: 'unit', name: { ar: 'شقة فاخرة في الحي الأول', en: 'City apartment', 'zh-CN': 'City apartment' }, transactionType: 'rent', area: { value: 120, unit: 'sqm' }, layout: { bedrooms: 3, bathrooms: 2, floor: 8 }, price: { amount: 20000, currency: 'EGP' } }
+      { id: 'aaaaaaaaaaaaaaaaaaaaaaaa', slug: 'garden-villa', kind: 'property', name: { ar: 'فيلا مستقلة بالمنطقة الراقية', en: 'Garden villa', 'zh-CN': 'Garden villa' }, transactionType: 'sale', imageUrl: PUBLIC_CLONE_ASSETS.city, area: { value: 180, unit: 'sqm' }, layout: { bedrooms: 4, bathrooms: 3, floor: 1 }, price: { amount: 2500000, currency: 'EGP' } },
+      { id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'city-apartment', kind: 'unit', name: { ar: 'شقة فاخرة في الحي الأول', en: 'City apartment', 'zh-CN': 'City apartment' }, transactionType: 'rent', imageUrl: PUBLIC_CLONE_ASSETS.night, area: { value: 120, unit: 'sqm' }, layout: { bedrooms: 3, bathrooms: 2, floor: 8 }, price: { amount: 20000, currency: 'EGP' } }
     ],
     fields: ['name', 'transactionType', 'price', 'area', 'layout']
   },
@@ -51,17 +60,103 @@ const developerDirectoryFixture = {
       id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
       kind: 'developer_company',
       slug: 'approved-builder',
+      imageUrl: PUBLIC_CLONE_ASSETS.city,
       name: { ar: 'شركة معتمدة', en: 'Approved builder', 'zh-CN': '已批准开发商' },
       description: { ar: 'جهة منشورة', en: 'Published developer description.', 'zh-CN': '已发布的开发商' },
       verified: true,
       projectCount: 2,
       propertyCount: 4
+    }, {
+      id: 'cccccccccccccccccccccccc', kind: 'developer_company', slug: 'city-builders',
+      name: { ar: 'City builders', en: 'City builders', 'zh-CN': 'City builders' }, imageUrl: PUBLIC_CLONE_ASSETS.night,
+      description: { en: 'Published developer description.', ar: 'Published developer description.', 'zh-CN': 'Published developer description.' }, verified: true, projectCount: 3, propertyCount: 5
+    }, {
+      id: 'dddddddddddddddddddddddd', kind: 'brokerage_office', slug: 'sadat-brokers',
+      name: { ar: 'Sadat brokers', en: 'Sadat brokers', 'zh-CN': 'Sadat brokers' }, imageUrl: PUBLIC_CLONE_ASSETS.building,
+      description: { en: 'Published brokerage description.', ar: 'Published brokerage description.', 'zh-CN': 'Published brokerage description.' }, verified: true, projectCount: 1, propertyCount: 7
+    }, {
+      id: 'eeeeeeeeeeeeeeeeeeeeeeee', kind: 'developer_company', slug: 'new-city-developments',
+      name: { ar: 'New city developments', en: 'New city developments', 'zh-CN': 'New city developments' }, imageUrl: PUBLIC_CLONE_ASSETS.house,
+      description: { en: 'Published developer description.', ar: 'Published developer description.', 'zh-CN': 'Published developer description.' }, verified: true, projectCount: 4, propertyCount: 8
     }],
     page: 1,
     limit: 20,
-    total: 1
+    total: 4
   },
   meta: { requestId: 'fresh-audit-public-developer-directory' }
+};
+const developerProfileFixture = {
+  data: {
+    ...developerDirectoryFixture.data.items[0],
+    projects: [{
+      id: 'bbbbbbbbbbbbbbbbbbbbbbbb',
+      slug: 'central-project',
+      imageUrl: PUBLIC_CLONE_ASSETS.night,
+      name: { ar: 'المشروع المركزي', en: 'Central project', 'zh-CN': '中央项目' },
+      description: { ar: 'نبذة المشروع', en: 'Project description.', 'zh-CN': '项目简介' },
+      website: 'https://example.com/central-project'
+    }],
+    properties: [{
+      id: 'cccccccccccccccccccccccc',
+      slug: 'published-home',
+      kind: 'property',
+      name: { ar: 'منزل منشور', en: 'Published home', 'zh-CN': '已发布房产' },
+      transactionType: 'sale',
+      projectId: 'bbbbbbbbbbbbbbbbbbbbbbbb'
+    }, {
+      id: 'dddddddddddddddddddddddd', slug: 'central-heights', kind: 'property', imageUrl: PUBLIC_CLONE_ASSETS.building,
+      name: { ar: 'Central heights', en: 'Central heights', 'zh-CN': 'Central heights' }, transactionType: 'sale', projectId: 'bbbbbbbbbbbbbbbbbbbbbbbb'
+    }]
+  },
+  meta: { requestId: 'fresh-audit-public-developer-profile' }
+};
+const articleListFixture = {
+  data: [
+    {
+      id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
+      categoryId: 'bbbbbbbbbbbbbbbbbbbbbbbb',
+      slug: 'buying-in-sadat',
+      imageUrl: PUBLIC_CLONE_ASSETS.article,
+      title: { ar: 'الشراء في مدينة السادات', en: 'Buying in Sadat City', 'zh-CN': '在萨达特城购房' },
+      body: { ar: 'دليل عملي للمنازل المنشورة.', en: 'A practical guide to published homes.', 'zh-CN': '已发布房产实用指南。' },
+      seoTitle: { ar: 'الشراء في مدينة السادات', en: 'Buying in Sadat City', 'zh-CN': '在萨达特城购房' },
+      seoDescription: { ar: 'دليل عملي للشراء.', en: 'A practical buying guide.', 'zh-CN': '实用购房指南。' },
+      publishedAt: '2026-08-01T10:00:00+00:00'
+    },
+    {
+      id: 'cccccccccccccccccccccccc',
+      categoryId: 'dddddddddddddddddddddddd',
+      slug: 'rental-tips',
+      imageUrl: PUBLIC_CLONE_ASSETS.night,
+      title: { ar: 'نصائح الإيجار', en: 'Rental tips', 'zh-CN': '租赁技巧' },
+      body: { ar: 'قائمة قصيرة للإيجار.', en: 'A short rental checklist.', 'zh-CN': '简短的租赁清单。' },
+      publishedAt: '2026-07-20T10:00:00+00:00'
+    }, {
+      id: 'eeeeeeeeeeeeeeeeeeeeeeee', categoryId: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'market-outlook', imageUrl: PUBLIC_CLONE_ASSETS.chart,
+      title: { ar: 'Market outlook', en: 'Market outlook', 'zh-CN': 'Market outlook' }, body: { ar: 'A practical market outlook.', en: 'A practical market outlook.', 'zh-CN': 'A practical market outlook.' }, publishedAt: '2026-07-10T10:00:00+00:00'
+    }, {
+      id: 'ffffffffffffffffffffffff', categoryId: 'dddddddddddddddddddddddd', slug: 'first-home-checklist', imageUrl: PUBLIC_CLONE_ASSETS.building,
+      title: { ar: 'First-home checklist', en: 'First-home checklist', 'zh-CN': 'First-home checklist' }, body: { ar: 'A first-home checklist.', en: 'A first-home checklist.', 'zh-CN': 'A first-home checklist.' }, publishedAt: '2026-07-01T10:00:00+00:00'
+    }, {
+      id: '111111111111111111111111', categoryId: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'neighborhood-guide', imageUrl: PUBLIC_CLONE_ASSETS.house,
+      title: { ar: 'Neighborhood guide', en: 'Neighborhood guide', 'zh-CN': 'Neighborhood guide' }, body: { ar: 'A guide to published neighborhoods.', en: 'A guide to published neighborhoods.', 'zh-CN': 'A guide to published neighborhoods.' }, publishedAt: '2026-06-20T10:00:00+00:00'
+    }, {
+      id: '222222222222222222222222', categoryId: 'dddddddddddddddddddddddd', slug: 'rental-contracts', imageUrl: PUBLIC_CLONE_ASSETS.city,
+      title: { ar: 'Rental contracts', en: 'Rental contracts', 'zh-CN': 'Rental contracts' }, body: { ar: 'Notes on rental contracts.', en: 'Notes on rental contracts.', 'zh-CN': 'Notes on rental contracts.' }, publishedAt: '2026-06-10T10:00:00+00:00'
+    }
+  ],
+  meta: { requestId: 'fresh-audit-public-articles' }
+};
+const articleCategoryFixture = {
+  data: [
+    { id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'buying', name: { ar: 'نصائح شراء', en: 'Buying', 'zh-CN': '购买' } },
+    { id: 'dddddddddddddddddddddddd', slug: 'renting', name: { ar: 'نصائح إيجار', en: 'Renting', 'zh-CN': '租赁' } }
+  ],
+  meta: { requestId: 'fresh-audit-public-article-categories' }
+};
+const articleDetailsFixture = {
+  data: articleListFixture.data[0],
+  meta: { requestId: 'fresh-audit-public-article-details' }
 };
 const fixtureConfig = fixtureKind === 'public-home'
   ? { fixture: publicHomepageFixture(), apiPath: '/api/v1/public/home', apiPattern: '**/api/v1/public/home**', pageName: 'public-home', stateAttribute: 'data-homepage-state', regions: ['header', 'hero/search', 'advertising banner', 'population counter', 'property categories', 'featured properties', 'articles', 'community', 'about', 'CTA', 'footer'] }
@@ -71,6 +166,12 @@ const fixtureConfig = fixtureKind === 'public-home'
     ? { fixture: propertyComparisonFixture, apiPath: '/api/v1/public/properties/compare', apiPattern: '**/api/v1/public/properties/compare**', pageName: 'public-comparison', stateAttribute: 'data-comparison-state', regions: ['header', 'comparison heading', 'difference/details toggle', 'comparison cards', 'comparison tables', 'sticky comparison bar', 'footer'] }
   : fixtureKind === 'public-developers'
     ? { fixture: developerDirectoryFixture, apiPath: '/api/v1/public/developers', apiPattern: '**/api/v1/public/developers**', pageName: 'public-developers', stateAttribute: 'data-developers-state', regions: ['header', 'directory heading', 'search and sort controls', 'developer card grid', 'pagination', 'footer'] }
+  : fixtureKind === 'public-developer-profile'
+    ? { fixture: developerProfileFixture, apiPath: '/api/v1/public/developers/approved-builder', apiPattern: '**/api/v1/public/developers/approved-builder**', pageName: 'public-developer-profile', stateAttribute: 'data-developer-profile-state', regions: ['header', 'profile hero', 'tabs', 'overview', 'projects', 'properties', 'contact/inquiry', 'footer'] }
+  : fixtureKind === 'public-articles'
+    ? { fixture: articleListFixture, apiPath: '/api/v1/public/articles', apiPattern: '**/api/v1/public/articles**', pageName: 'public-articles', stateAttribute: 'data-articles-state', regions: ['header', 'directory heading', 'article search', 'category filters', 'article card grid', 'CTA banner', 'footer'] }
+  : fixtureKind === 'public-article-details'
+    ? { fixture: articleDetailsFixture, apiPath: '/api/v1/public/articles/buying-in-sadat', apiPattern: '**/api/v1/public/articles/buying-in-sadat**', pageName: 'public-article-details', stateAttribute: 'data-article-details-state', regions: ['header', 'back link', 'hero/media', 'article title/meta', 'article body', 'related articles', 'footer'] }
   : { fixture: publicPropertyListFixture(), apiPath: '/api/v1/public/properties', apiPattern: '**/api/v1/public/properties**', pageName: 'public-properties', stateAttribute: 'data-listing-state', regions: ['header', 'listing heading', 'property categories', 'property grid', 'filter sidebar', 'pagination/controls', 'footer'] };
 
 if (!screenId) throw new Error('Missing --screen-id');
@@ -85,6 +186,7 @@ const seedState = {
   responseRequestId: fixture.meta.requestId,
   responseSha256: crypto.createHash('sha256').update(fixtureJson).digest('hex'),
   response: fixture,
+  relatedResponses: fixtureKind === 'public-articles' || fixtureKind === 'public-article-details' ? { articleCategories: articleCategoryFixture, relatedArticles: articleListFixture } : {},
   authSession: null,
   ownership: 'public',
 };
@@ -108,6 +210,14 @@ if (fixtureKind === 'public-home') await page.route('**/__test-fixtures/homepage
 await page.route(fixtureConfig.apiPattern, async (routeHandler) => {
   await routeHandler.fulfill({ status: 200, contentType: 'application/json', body: fixtureJson });
 });
+if (fixtureKind === 'public-article-details') await page.route('**/api/v1/public/articles**', async (routeHandler) => {
+  const url = new URL(routeHandler.request().url());
+  const body = url.pathname.endsWith('/buying-in-sadat') ? articleDetailsFixture : articleListFixture;
+  await routeHandler.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) });
+});
+if (fixtureKind === 'public-articles') await page.route('**/api/v1/public/article-categories**', async (routeHandler) => {
+  await routeHandler.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(articleCategoryFixture) });
+});
 
 const targetUrl = new URL(route, baseUrl);
 targetUrl.searchParams.set('lang', locale);
@@ -116,14 +226,15 @@ await page.waitForLoadState('networkidle', { timeout: 10_000 }).catch(() => unde
 await page.locator(`[data-page="${fixtureConfig.pageName}"]`).waitFor({ state: 'visible', timeout: 10_000 }).catch(() => undefined);
 
 const runtimePath = path.join(evidenceDir, 'runtime-before.png');
-await page.screenshot({ path: runtimePath, fullPage: true });
-const beforeHash = crypto.createHash('sha256').update(fs.readFileSync(runtimePath)).digest('hex');
-
-// No implementation change is made for this capture. The after artifact is intentionally
-// recaptured from the same deterministic state so a later repair can be distinguished.
 const afterPath = path.join(evidenceDir, 'runtime-after.png');
-await page.screenshot({ path: afterPath, fullPage: true });
-const afterHash = crypto.createHash('sha256').update(fs.readFileSync(afterPath)).digest('hex');
+if (capturePhase === 'after') {
+  if (!fs.existsSync(runtimePath)) throw new Error(`Cannot capture after phase without ${runtimePath}`);
+  await page.screenshot({ path: afterPath, fullPage: true });
+} else {
+  await page.screenshot({ path: runtimePath, fullPage: true });
+}
+const beforeHash = fs.existsSync(runtimePath) ? crypto.createHash('sha256').update(fs.readFileSync(runtimePath)).digest('hex') : null;
+const afterHash = fs.existsSync(afterPath) ? crypto.createHash('sha256').update(fs.readFileSync(afterPath)).digest('hex') : null;
 
 const dom = await page.evaluate(({ pageName, stateAttribute }) => {
   const pageRoot = document.querySelector(`[data-page="${pageName}"]`);
@@ -189,6 +300,18 @@ const comparison = await diffPage.evaluate(async ({ figma, before, after }) => {
 }, { figma: imageData(path.join(evidenceDir, 'figma.png')), before: imageData(runtimePath), after: imageData(afterPath) });
 const diffBuffer = Buffer.from(comparison.dataUrl.split(',')[1], 'base64');
 fs.writeFileSync(path.join(evidenceDir, 'diff.png'), diffBuffer);
+
+if (capturePhase === 'after') {
+  fs.writeFileSync(path.join(evidenceDir, 'runtime-after-capture.json'), JSON.stringify({
+    schemaVersion: 1,
+    screenId,
+    phase: 'after',
+    runtime: { route, locale, direction, viewport: dom.viewport, responseStatus: response?.status() ?? null, responseOk: response?.ok() ?? false, beforeHash, afterHash, requestedApi, apiResponses },
+    structure: dom.structure,
+    transitions: dom.transitions,
+    comparison: { sourceDimensions: comparison.sourceDimensions, dimensions: comparison.dimensions, diffPath: `docs/quality/figma_parity/screens/${screenId}/diff.png` }
+  }, null, 2) + '\n');
+}
 
 const review = {
   schemaVersion: 1,
@@ -257,8 +380,8 @@ const review = {
     review: `docs/quality/figma_parity/screens/${screenId}/review.json`,
   },
 };
-fs.writeFileSync(path.join(evidenceDir, 'review.json'), JSON.stringify(review, null, 2) + '\n');
+if (capturePhase !== 'after') fs.writeFileSync(path.join(evidenceDir, 'review.json'), JSON.stringify(review, null, 2) + '\n');
 await diffPage.close();
 await context.close();
 await browser.close();
-console.log(JSON.stringify({ screenId, route: targetUrl.pathname + targetUrl.search, viewport: dom.viewport, state: dom.page.state, responseStatus: response?.status() ?? null, requestedApi, apiResponses, evidenceDir }, null, 2));
+console.log(JSON.stringify({ screenId, phase: capturePhase, route: targetUrl.pathname + targetUrl.search, viewport: dom.viewport, state: dom.page.state, responseStatus: response?.status() ?? null, beforeHash, afterHash, requestedApi, apiResponses, evidenceDir }, null, 2));

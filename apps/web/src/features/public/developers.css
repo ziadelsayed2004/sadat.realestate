@@ -224,6 +224,15 @@
   background: linear-gradient(135deg, var(--color-brand-soft), var(--color-surface-soft));
 }
 
+.public-developer-directory__card-media > img,
+.public-developer-profile__hero-media > img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  min-block-size: 9rem;
+  object-fit: cover;
+}
+
 .public-developer-directory__card-media .ux-state-view,
 .public-developer-profile__hero-media .ux-state-view {
   block-size: 100%;
@@ -447,6 +456,15 @@
   padding: var(--space-xl);
   background: var(--color-page-background);
   border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.public-developer-profile__project-card > img,
+.public-developer-profile__property-card > img {
+  display: block;
+  inline-size: 100%;
+  block-size: 8rem;
+  object-fit: cover;
   border-radius: var(--radius-md);
 }
 

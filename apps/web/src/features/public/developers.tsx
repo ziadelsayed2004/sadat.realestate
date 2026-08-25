@@ -10,7 +10,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { Badge, Pagination } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
-import { PublicSiteHeader } from './components.tsx';
+import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from './components.tsx';
 import {
   PUBLIC_DEVELOPERS_PATH,
   defaultPublicDeveloperDirectoryLoader,
@@ -166,7 +166,7 @@ function OrganizationCard({ organization, locale, copy }: { readonly organizatio
   return (
     <article className="public-developer-directory__card">
       <div className="public-developer-directory__card-media">
-        <UxStateView state="missing_image" title={copy.imageUnavailable} />
+        <PublicMediaImage src={organization.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />
       </div>
       <div className="public-developer-directory__card-body">
         <div className="public-developer-profile__badges">
@@ -210,26 +210,7 @@ function DirectorySuccess({
   );
 }
 
-function Footer({ locale, copy }: { readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) {
-  const homepageCopy = getPublicHomepageCopy(locale);
-  return (
-    <footer className="public-homepage__footer public-developer-profile__footer">
-      <div>
-        <p className="public-homepage__eyebrow">{homepageCopy.brand}</p>
-        <p>{copy.footerDescription}</p>
-      </div>
-      <div>
-        <p className="public-homepage__footer-title">{copy.footerLinks}</p>
-        <div className="public-homepage__footer-links">
-          <a href="/">{homepageCopy.nav.home}</a>
-          <a href="/properties">{homepageCopy.nav.properties}</a>
-          <a href="/developers">{homepageCopy.nav.developers}</a>
-          <a href="/about">{homepageCopy.nav.about}</a>
-        </div>
-      </div>
-    </footer>
-  );
-}
+function Footer({ locale, copy }: { readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) { return <PublicSiteFooter locale={locale} description={copy.footerDescription} />; }
 
 export function PublicDevelopers({
   url,

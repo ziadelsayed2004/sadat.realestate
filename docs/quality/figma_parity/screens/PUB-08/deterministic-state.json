@@ -1,0 +1,46 @@
+{
+  "seedId": "fresh-audit-PUB-08-ar-v1",
+  "fixtureKind": "public-article-details",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/public/articles/buying-in-sadat",
+    "locale": "ar",
+    "direction": "rtl"
+  },
+  "responseRequestId": "fresh-audit-public-article-details",
+  "responseSha256": "05c6316f7b41da6aaa1afa6bbb2aeed706e77398704eea0d62d42db5bef3a2f2",
+  "response": {
+    "data": {
+      "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
+      "categoryId": "bbbbbbbbbbbbbbbbbbbbbbbb",
+      "slug": "buying-in-sadat",
+      "title": {
+        "ar": "الشراء في مدينة السادات",
+        "en": "Buying in Sadat City",
+        "zh-CN": "在萨达特城购房"
+      },
+      "body": {
+        "ar": "دليل عملي للمنازل المنشورة.",
+        "en": "A practical guide to published homes.",
+        "zh-CN": "已发布房产实用指南。"
+      },
+      "seoTitle": {
+        "ar": "الشراء في مدينة السادات",
+        "en": "Buying in Sadat City",
+        "zh-CN": "在萨达特城购房"
+      },
+      "seoDescription": {
+        "ar": "دليل عملي للشراء.",
+        "en": "A practical buying guide.",
+        "zh-CN": "实用购房指南。"
+      },
+      "publishedAt": "2026-08-01T10:00:00+00:00"
+    },
+    "meta": {
+      "requestId": "fresh-audit-public-article-details"
+    }
+  },
+  "relatedResponses": {},
+  "authSession": null,
+  "ownership": "public"
+}

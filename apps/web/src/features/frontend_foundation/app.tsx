@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { ArticleListQuery, ArticlePublic, ArticlePublicListData, CmsPublicContentListData, CommunityPublicPostListData, PublicHomepageData, PublicOrganizationDirectoryQuery, PublicOrganizationListData, PublicOrganizationProfile, PublicPropertyComparisonData, PublicPropertyDetails, PublicPropertyListData, PublicPropertySearchQuery, SupportedLocale } from '@sadat-real-estate/contracts';
 import { resolveRoute } from '../../routes/route-table.js';
 import { PublicCommunity, type CommunityAuthClient } from '../community/index.ts';
-import { PublicAbout, PublicArticleDetails, PublicArticles, PublicTeam } from '../content/index.ts';
+import { defaultPublicArticleListLoader, PublicAbout, PublicArticleDetails, PublicArticles, PublicTeam } from '../content/index.ts';
 import { AuthPage } from '../auth/pages.tsx';
 import { PublicDeveloperProfile, PublicDevelopers, PublicHomepage, PublicPropertyComparison, PublicPropertyDetails as PublicPropertyDetailsPage, PublicPropertyListing, type PublicDeveloperProfileInitialState, type PublicPropertyComparisonInitialState, type PublicPropertyDetailsInitialState } from '../public/index.ts';
 import { ProviderAdvertising, ProviderCommission, ProviderCustomerRequests, ProviderNotifications, ProviderOverview, ProviderProperties, ProviderProjects, ProviderSettings, ProviderViewings } from '../provider/index.ts';
@@ -222,7 +222,7 @@ export function App({
     ) : isPublicArticles ? (
       <PublicArticles url={url} locale={locale} initialData={articleListData} initialQuery={articleListQuery} initialState={articleListInitialState} />
     ) : isPublicArticleDetails ? (
-      <PublicArticleDetails url={url} locale={locale} initialData={articleDetailsData} initialState={articleDetailsInitialState} relatedArticles={relatedArticles} />
+      <PublicArticleDetails url={url} locale={locale} initialData={articleDetailsData} initialState={articleDetailsInitialState} relatedArticles={relatedArticles} loadRelated={defaultPublicArticleListLoader} />
     ) : isPublicCommunity ? (
       <PublicCommunity url={url} locale={locale} session={session} authClient={authClient} initialData={communityData} initialState={communityInitialState} />
     ) : isPublicAbout ? (

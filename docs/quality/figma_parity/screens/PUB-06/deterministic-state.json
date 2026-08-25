@@ -1,0 +1,84 @@
+{
+  "seedId": "fresh-audit-PUB-06-ar-v1",
+  "fixtureKind": "public-developer-profile",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/public/developers/approved-builder",
+    "locale": "ar",
+    "direction": "rtl"
+  },
+  "responseRequestId": "fresh-audit-public-developer-profile",
+  "responseSha256": "5d9180ca493b23da2a4a8e77550b27a2d7386a86eda847554a8f73e2126d8b28",
+  "response": {
+    "data": {
+      "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
+      "kind": "developer_company",
+      "slug": "approved-builder",
+      "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
+      "name": {
+        "ar": "شركة معتمدة",
+        "en": "Approved builder",
+        "zh-CN": "已批准开发商"
+      },
+      "description": {
+        "ar": "جهة منشورة",
+        "en": "Published developer description.",
+        "zh-CN": "已发布的开发商"
+      },
+      "verified": true,
+      "projectCount": 2,
+      "propertyCount": 4,
+      "projects": [
+        {
+          "id": "bbbbbbbbbbbbbbbbbbbbbbbb",
+          "slug": "central-project",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
+          "name": {
+            "ar": "المشروع المركزي",
+            "en": "Central project",
+            "zh-CN": "中央项目"
+          },
+          "description": {
+            "ar": "نبذة المشروع",
+            "en": "Project description.",
+            "zh-CN": "项目简介"
+          },
+          "website": "https://example.com/central-project"
+        }
+      ],
+      "properties": [
+        {
+          "id": "cccccccccccccccccccccccc",
+          "slug": "published-home",
+          "kind": "property",
+          "name": {
+            "ar": "منزل منشور",
+            "en": "Published home",
+            "zh-CN": "已发布房产"
+          },
+          "transactionType": "sale",
+          "projectId": "bbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "id": "dddddddddddddddddddddddd",
+          "slug": "central-heights",
+          "kind": "property",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
+          "name": {
+            "ar": "Central heights",
+            "en": "Central heights",
+            "zh-CN": "Central heights"
+          },
+          "transactionType": "sale",
+          "projectId": "bbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ]
+    },
+    "meta": {
+      "requestId": "fresh-audit-public-developer-profile"
+    }
+  },
+  "relatedResponses": {},
+  "authSession": null,
+  "ownership": "public"
+}

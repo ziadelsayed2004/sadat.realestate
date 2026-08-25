@@ -9,7 +9,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { Pagination, PropertyCard } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
-import { PublicSiteHeader } from './components.tsx';
+import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from './components.tsx';
 import {
   defaultPublicPropertyListLoader,
   defaultPublicPropertySearchQuery,
@@ -216,7 +216,7 @@ function PropertyResults({
             price={formatMoney(property.price, locale)}
             badges={[property.transactionType === 'sale' ? copy.sale : copy.rent]}
             features={propertyFeatures(property, locale, { area: copy.area, bedrooms: homepageCopy.bedrooms, bathrooms: copy.bathrooms, floor: copy.floor, sqm: copy.sqm })}
-            image={<UxStateView state="missing_image" title={copy.imageUnavailable} />}
+            image={<PublicMediaImage src={property.imageUrl} alt={localizedText(property.name, locale) ?? property.slug} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />}
             imageAlt={copy.imageUnavailable}
             className="public-property-listing__card"
           />
@@ -359,10 +359,7 @@ export function PublicPropertyListing({
           {view === 'success' && data !== undefined ? <PropertyResults data={data} locale={locale} copy={copy} listMode={listMode} onPageChange={page => navigate({ ...query, page })} /> : view === 'success' ? <StateNotice state="empty" copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : <StateNotice state={view} copy={copy} onRetry={() => setAttempt(value => value + 1)} />}
         </section>
       </div>
-      <footer className="public-homepage__footer public-property-listing__footer">
-        <div><p className="public-homepage__eyebrow">{homepageCopy.brand}</p><p>{copy.footerDescription}</p></div>
-        <div><p className="public-homepage__footer-title">{copy.footerLinks}</p><div className="public-homepage__footer-links"><a href="/">{homepageCopy.nav.home}</a><a href="/properties">{homepageCopy.nav.properties}</a><a href="/developers">{homepageCopy.nav.developers}</a><a href="/about">{homepageCopy.nav.about}</a></div></div>
-      </footer>
+      <PublicSiteFooter locale={locale} description={copy.footerDescription} />
     </div>
   );
 }

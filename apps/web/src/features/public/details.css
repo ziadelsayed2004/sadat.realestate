@@ -61,6 +61,14 @@
   background: var(--color-surface-soft);
 }
 
+.public-property-details__gallery-main > img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  min-block-size: 24rem;
+  object-fit: cover;
+}
+
 .public-property-details__gallery-main .ux-state-view {
   display: grid;
   min-block-size: inherit;
@@ -251,6 +259,13 @@
 
 .public-property-details__related .ui-property-card__media {
   min-block-size: 12rem;
+}
+
+.public-property-details__related .ui-property-card__media > img {
+  display: block;
+  inline-size: 100%;
+  block-size: 12rem;
+  object-fit: cover;
 }
 
 .public-property-details__related .ui-property-card__media .ux-state-view {

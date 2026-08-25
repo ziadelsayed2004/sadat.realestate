@@ -8,7 +8,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { Badge, Button, Modal, PropertyCard } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
-import { PublicSiteHeader } from './components.tsx';
+import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from './components.tsx';
 import {
   defaultPublicPropertyDetailsActions,
   defaultPublicPropertyDetailsLoader,
@@ -63,26 +63,7 @@ function loginUrl(url: string | undefined): string {
   return `/auth/login?returnTo=${encodeURIComponent(returnToUrl(url))}`;
 }
 
-function Footer({ locale }: { readonly locale: SupportedLocale }) {
-  const homepageCopy = getPublicHomepageCopy(locale);
-  return (
-    <footer className="public-homepage__footer public-property-details__footer">
-      <div>
-        <p className="public-homepage__eyebrow">{homepageCopy.brand}</p>
-        <p>{homepageCopy.footerDescription}</p>
-      </div>
-      <div>
-        <p className="public-homepage__footer-title">{homepageCopy.footerLinks}</p>
-        <div className="public-homepage__footer-links">
-          <a href="/">{homepageCopy.nav.home}</a>
-          <a href="/properties">{homepageCopy.nav.properties}</a>
-          <a href="/developers">{homepageCopy.nav.developers}</a>
-          <a href="/about">{homepageCopy.nav.about}</a>
-        </div>
-      </div>
-    </footer>
-  );
-}
+function Footer({ locale }: { readonly locale: SupportedLocale }) { return <PublicSiteFooter locale={locale} />; }
 
 function StateNotice({
   state,
@@ -140,10 +121,10 @@ function Gallery({
     <section className="public-property-details__gallery" aria-labelledby="public-property-details-gallery-title" data-gallery="true">
       <h2 id="public-property-details-gallery-title" className="public-property-details__visually-hidden">{copy.galleryTitle}</h2>
       <div className="public-property-details__gallery-main">
-        <UxStateView
-          state="missing_image"
-          title={copy.imageUnavailable}
-          message={selected?.kind === 'floor_plan' ? copy.mediaUnavailable : undefined}
+        <PublicMediaImage
+          src={selected?.imageUrl}
+          alt={copy.mediaItem(Math.max(1, media.findIndex(item => item.id === selected?.id) + 1))}
+          fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} message={selected?.kind === 'floor_plan' ? copy.mediaUnavailable : undefined} />}
         />
       </div>
       {media.length > 0 ? (
@@ -278,7 +259,7 @@ function RelatedProperties({
             href={`/properties/${property.slug}`}
             price={formatMoney(property.price, locale)}
             badges={[property.transactionType === 'sale' ? copy.sale : copy.rent]}
-            image={<UxStateView state="missing_image" title={copy.imageUnavailable} />}
+            image={<PublicMediaImage src={property.imageUrl} alt={localizedText(property.name, locale) ?? property.slug} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />}
             imageAlt={copy.imageUnavailable}
           />
         ))}

@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "fresh-audit-public-comparison",
-  "responseSha256": "4b5eb6a4e42005edad1496b2f772bd34a3b3fe46ef353f7e8815c54d12df46ec",
+  "responseSha256": "18c412dc938c32ae9c391e14128b7542266402b1beec64585485b1cb92246d28",
   "response": {
     "data": {
       "items": [
@@ -22,6 +22,7 @@
             "zh-CN": "Garden villa"
           },
           "transactionType": "sale",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
           "area": {
             "value": 180,
             "unit": "sqm"
@@ -46,6 +47,7 @@
             "zh-CN": "City apartment"
           },
           "transactionType": "rent",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
           "area": {
             "value": 120,
             "unit": "sqm"
@@ -73,6 +75,7 @@
       "requestId": "fresh-audit-public-comparison"
     }
   },
+  "relatedResponses": {},
   "authSession": null,
   "ownership": "public"
 }

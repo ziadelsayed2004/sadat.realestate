@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "fresh-audit-public-developer-directory",
-  "responseSha256": "3a8b4b1163755363d305834292848eaa573efa7ad21ecb6e7a175d788673d0d1",
+  "responseSha256": "a3aeb40e5b517640032b7a2a76187e654f47470afad0b4c12a0410b7c0326ee2",
   "response": {
     "data": {
       "items": [
@@ -16,6 +16,7 @@
           "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
           "kind": "developer_company",
           "slug": "approved-builder",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
           "name": {
             "ar": "شركة معتمدة",
             "en": "Approved builder",
@@ -29,16 +30,74 @@
           "verified": true,
           "projectCount": 2,
           "propertyCount": 4
+        },
+        {
+          "id": "cccccccccccccccccccccccc",
+          "kind": "developer_company",
+          "slug": "city-builders",
+          "name": {
+            "ar": "City builders",
+            "en": "City builders",
+            "zh-CN": "City builders"
+          },
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
+          "description": {
+            "en": "Published developer description.",
+            "ar": "Published developer description.",
+            "zh-CN": "Published developer description."
+          },
+          "verified": true,
+          "projectCount": 3,
+          "propertyCount": 5
+        },
+        {
+          "id": "dddddddddddddddddddddddd",
+          "kind": "brokerage_office",
+          "slug": "sadat-brokers",
+          "name": {
+            "ar": "Sadat brokers",
+            "en": "Sadat brokers",
+            "zh-CN": "Sadat brokers"
+          },
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
+          "description": {
+            "en": "Published brokerage description.",
+            "ar": "Published brokerage description.",
+            "zh-CN": "Published brokerage description."
+          },
+          "verified": true,
+          "projectCount": 1,
+          "propertyCount": 7
+        },
+        {
+          "id": "eeeeeeeeeeeeeeeeeeeeeeee",
+          "kind": "developer_company",
+          "slug": "new-city-developments",
+          "name": {
+            "ar": "New city developments",
+            "en": "New city developments",
+            "zh-CN": "New city developments"
+          },
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
+          "description": {
+            "en": "Published developer description.",
+            "ar": "Published developer description.",
+            "zh-CN": "Published developer description."
+          },
+          "verified": true,
+          "projectCount": 4,
+          "propertyCount": 8
         }
       ],
       "page": 1,
       "limit": 20,
-      "total": 1
+      "total": 4
     },
     "meta": {
       "requestId": "fresh-audit-public-developer-directory"
     }
   },
+  "relatedResponses": {},
   "authSession": null,
   "ownership": "public"
 }

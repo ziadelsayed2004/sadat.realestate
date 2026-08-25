@@ -1,6 +1,6 @@
 {
-  "seedId": "fresh-audit-public-home-ar-v1",
-  "fixtureKind": "publicHomepageSuccessEnvelopeSchema",
+  "seedId": "fresh-audit-PUB-01-ar-v1",
+  "fixtureKind": "public-home",
   "request": {
     "method": "GET",
     "path": "/api/v1/public/home",
@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "e2e-public-homepage-success",
-  "responseSha256": "2b9d567e2d78a7902b7d17284f00d7e4f24cda62088428635608a329f9b24a97",
+  "responseSha256": "5cfa3c956e6aa1fed4fe02460eb4d2a2829686d1bba7bf77ab8aea19bd58485f",
   "response": {
     "data": {
       "sections": [
@@ -47,6 +47,7 @@
             "zh-CN": "已发布房产"
           },
           "transactionType": "sale",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
           "description": {
             "ar": "وصف المنزل المنشور",
             "en": "A published home description",
@@ -65,6 +66,126 @@
             "amount": 1250000,
             "currency": "EGP"
           }
+        },
+        {
+          "id": "cccccccccccccccccccccccc",
+          "slug": "published-villa",
+          "kind": "property",
+          "name": {
+            "ar": "Published villa",
+            "en": "Published villa",
+            "zh-CN": "Published villa"
+          },
+          "transactionType": "sale",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
+          "area": {
+            "value": 240,
+            "unit": "sqm"
+          },
+          "layout": {
+            "bedrooms": 4,
+            "bathrooms": 3,
+            "floor": 1
+          },
+          "price": {
+            "amount": 5200000,
+            "currency": "EGP"
+          }
+        },
+        {
+          "id": "dddddddddddddddddddddddd",
+          "slug": "published-rental",
+          "kind": "unit",
+          "name": {
+            "ar": "Published rental",
+            "en": "Published rental",
+            "zh-CN": "Published rental"
+          },
+          "transactionType": "rent",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
+          "area": {
+            "value": 95,
+            "unit": "sqm"
+          },
+          "layout": {
+            "bedrooms": 2,
+            "bathrooms": 1,
+            "floor": 3
+          },
+          "price": {
+            "amount": 20000,
+            "currency": "EGP"
+          }
+        },
+        {
+          "id": "eeeeeeeeeeeeeeeeeeeeeeee",
+          "slug": "published-office",
+          "kind": "unit",
+          "name": {
+            "ar": "Published office",
+            "en": "Published office",
+            "zh-CN": "Published office"
+          },
+          "transactionType": "rent",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
+          "area": {
+            "value": 150,
+            "unit": "sqm"
+          },
+          "layout": {
+            "bedrooms": 2,
+            "bathrooms": 1,
+            "floor": 2
+          },
+          "price": {
+            "amount": 12000,
+            "currency": "EGP"
+          }
+        },
+        {
+          "id": "ffffffffffffffffffffffff",
+          "slug": "published-unit",
+          "kind": "property",
+          "name": {
+            "ar": "Published unit",
+            "en": "Published unit",
+            "zh-CN": "Published unit"
+          },
+          "transactionType": "sale",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub06-a.png",
+          "area": {
+            "value": 135,
+            "unit": "sqm"
+          },
+          "layout": {
+            "bedrooms": 3,
+            "bathrooms": 2,
+            "floor": 5
+          },
+          "price": {
+            "amount": 3100000,
+            "currency": "EGP"
+          }
+        },
+        {
+          "id": "111111111111111111111111",
+          "slug": "published-land",
+          "kind": "property",
+          "name": {
+            "ar": "Published land",
+            "en": "Published land",
+            "zh-CN": "Published land"
+          },
+          "transactionType": "sale",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
+          "area": {
+            "value": 400,
+            "unit": "sqm"
+          },
+          "price": {
+            "amount": 780000,
+            "currency": "EGP"
+          }
         }
       ],
       "developers": [
@@ -76,10 +197,56 @@
             "en": "Approved builder",
             "zh-CN": "已批准开发商"
           },
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
           "description": {
             "ar": "وصف المطور",
             "en": "Published developer description",
             "zh-CN": "已发布开发商描述"
+          }
+        },
+        {
+          "id": "cccccccccccccccccccccccc",
+          "slug": "city-builders",
+          "name": {
+            "ar": "City builders",
+            "en": "City builders",
+            "zh-CN": "City builders"
+          },
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
+          "description": {
+            "ar": "Published developer description",
+            "en": "Published developer description",
+            "zh-CN": "Published developer description"
+          }
+        },
+        {
+          "id": "dddddddddddddddddddddddd",
+          "slug": "sadat-brokers",
+          "name": {
+            "ar": "Sadat brokers",
+            "en": "Sadat brokers",
+            "zh-CN": "Sadat brokers"
+          },
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
+          "description": {
+            "ar": "Published brokerage description",
+            "en": "Published brokerage description",
+            "zh-CN": "Published brokerage description"
+          }
+        },
+        {
+          "id": "eeeeeeeeeeeeeeeeeeeeeeee",
+          "slug": "new-city-developments",
+          "name": {
+            "ar": "New city developments",
+            "en": "New city developments",
+            "zh-CN": "New city developments"
+          },
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
+          "description": {
+            "ar": "Published developer description",
+            "en": "Published developer description",
+            "zh-CN": "Published developer description"
           }
         }
       ],
@@ -117,6 +284,7 @@
             "en": "About the platform",
             "zh-CN": "关于平台"
           },
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
           "order": 2
         },
         {
@@ -127,7 +295,72 @@
             "en": "Property tip",
             "zh-CN": "房产提示"
           },
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
           "order": 3
+        },
+        {
+          "key": "market_news",
+          "type": "article",
+          "title": {
+            "ar": "Market news",
+            "en": "Market news",
+            "zh-CN": "Market news"
+          },
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
+          "body": {
+            "ar": "Market news",
+            "en": "Market news",
+            "zh-CN": "Market news"
+          },
+          "order": 4
+        },
+        {
+          "key": "community_events",
+          "type": "community",
+          "title": {
+            "ar": "Community events",
+            "en": "Community events",
+            "zh-CN": "Community events"
+          },
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
+          "body": {
+            "ar": "Community events",
+            "en": "Community events",
+            "zh-CN": "Community events"
+          },
+          "order": 5
+        },
+        {
+          "key": "about_sources",
+          "type": "about",
+          "title": {
+            "ar": "Approved sources",
+            "en": "Approved sources",
+            "zh-CN": "Approved sources"
+          },
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
+          "body": {
+            "ar": "Approved sources",
+            "en": "Approved sources",
+            "zh-CN": "Approved sources"
+          },
+          "order": 6
+        },
+        {
+          "key": "tip_checklist",
+          "type": "tip",
+          "title": {
+            "ar": "Buying checklist",
+            "en": "Buying checklist",
+            "zh-CN": "Buying checklist"
+          },
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
+          "body": {
+            "ar": "Buying checklist",
+            "en": "Buying checklist",
+            "zh-CN": "Buying checklist"
+          },
+          "order": 7
         }
       ],
       "banners": [
@@ -138,8 +371,30 @@
             "en": "Discover more",
             "zh-CN": "探索更多"
           },
-          "imageUrl": "http://127.0.0.1:4173/__test-fixtures/homepage-banner.svg",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub06-a.png",
           "order": 0
+        },
+        {
+          "key": "city_banner",
+          "title": {
+            "ar": "City banner",
+            "en": "City banner",
+            "zh-CN": "City banner"
+          },
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
+          "targetUrl": "http://127.0.0.1:4173/properties",
+          "order": 1
+        },
+        {
+          "key": "market_banner",
+          "title": {
+            "ar": "Market banner",
+            "en": "Market banner",
+            "zh-CN": "Market banner"
+          },
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
+          "targetUrl": "http://127.0.0.1:4173/articles",
+          "order": 2
         }
       ]
     },
@@ -147,6 +402,7 @@
       "requestId": "e2e-public-homepage-success"
     }
   },
+  "relatedResponses": {},
   "authSession": null,
   "ownership": "public"
 }

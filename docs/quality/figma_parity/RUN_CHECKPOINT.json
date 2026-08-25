@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-25T20:12:36.419Z",
+  "updatedAt": "2026-08-25T20:35:49.248Z",
   "currentTask": "frontend_098",
-  "status": "fresh_screen_audit_in_progress",
+  "status": "public_repair_batch_in_progress",
   "lastCompletedIndependentWork": [
     "canonical-clone-identity-verification",
     "direct-page-metadata-capture",
@@ -11,7 +11,9 @@
     "development-runtime-csp-repair",
     "release-matrix-stopped-and-artifact-preserved",
     "agent-pack-synchronized-and-audited",
-    "deterministic-131-screen-queue-created"
+    "deterministic-131-screen-queue-created",
+    "PUB-01-through-PUB-08-partial-reviews-moved-to-repair-queue",
+    "new-screen-discovery-halted-before-PUB-09"
   ],
   "canonicalScreenCount": 131,
   "mappedToCloneNodeCount": 129,
@@ -21,22 +23,23 @@
     "ADM-54"
   ],
   "remainingIndependentWork": [
-    "fresh per-screen clone-Figma evidence for all 131 canonical screens",
-    "focused runtime/browser and API comparison after each screen",
-    "surface gates after each complete surface",
-    "final release-gate evidence after all screen classifications pass"
+    "bounded shared public-foundation repair for PUB-01 through PUB-08",
+    "fresh runtime-after capture and focused confirmation for each repaired screen",
+    "fresh per-screen clone-Figma evidence for remaining canonical screens after repair queue closes",
+    "surface gates and final release-gate evidence after all screen classifications pass"
   ],
   "screenExecutionQueue": {
     "path": "docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json",
-    "processed": 5,
+    "phase": "repair",
+    "processed": 0,
     "verifiedWithoutChange": 0,
     "repaired": 0,
-    "partial": 5,
+    "partial": 8,
     "blocked": 0,
-    "unreviewed": 126,
-    "nextScreenId": "PUB-06",
-    "nextCloneNode": "6017:13155",
-    "nextRuntimeRoute": "/developers/:slug"
+    "unreviewed": 123,
+    "nextScreenId": "PUB-01",
+    "nextCloneNode": "6017:10847",
+    "nextRuntimeRoute": "/"
   },
   "fullMatrixAttempt": {
     "command": "npm.cmd run test:e2e --workspace apps/web",
@@ -66,5 +69,93 @@
   "externalBlockers": [
     "backend_139 external infrastructure/provider prerequisites",
     "Arabic client user guide file is absent"
-  ]
+  ],
+  "repairQueue": {
+    "mode": "bounded_public_shared_foundation",
+    "scope": "public header/navigation, hero/search, approved imagery/media, card grids, filters, CTA sections, footer, deterministic API-backed success data",
+    "screenIds": [
+      {
+        "sequence": 1,
+        "screenId": "PUB-01",
+        "status": "PENDING",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-01",
+        "cloneNode": "6017:10847",
+        "runtimeRoute": "/"
+      },
+      {
+        "sequence": 2,
+        "screenId": "PUB-02",
+        "status": "PENDING",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-02",
+        "cloneNode": "6017:12095",
+        "runtimeRoute": "/properties"
+      },
+      {
+        "sequence": 3,
+        "screenId": "PUB-03",
+        "status": "PENDING",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-03",
+        "cloneNode": "6017:12693",
+        "runtimeRoute": "/properties/:slug"
+      },
+      {
+        "sequence": 4,
+        "screenId": "PUB-04",
+        "status": "PENDING",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-04",
+        "cloneNode": "6017:13838",
+        "runtimeRoute": "/compare"
+      },
+      {
+        "sequence": 5,
+        "screenId": "PUB-05",
+        "status": "PENDING",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-05",
+        "cloneNode": "6017:11366",
+        "runtimeRoute": "/developers"
+      },
+      {
+        "sequence": 6,
+        "screenId": "PUB-06",
+        "status": "PENDING",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-06",
+        "cloneNode": "6017:13155",
+        "runtimeRoute": "/developers/:slug"
+      },
+      {
+        "sequence": 7,
+        "screenId": "PUB-07",
+        "status": "PENDING",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-07",
+        "cloneNode": "6017:11467",
+        "runtimeRoute": "/articles"
+      },
+      {
+        "sequence": 8,
+        "screenId": "PUB-08",
+        "status": "PENDING",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-08",
+        "cloneNode": "6017:12560",
+        "runtimeRoute": "/articles/:slug"
+      }
+    ],
+    "nextScreenId": "PUB-01",
+    "nextSequence": 1,
+    "status": "IN_PROGRESS"
+  },
+  "discoveryHalt": {
+    "halted": true,
+    "haltedBeforeScreenId": "PUB-09",
+    "haltedBeforeCloneNode": "6017:11634",
+    "haltedBeforeRuntimeRoute": "/community",
+    "reason": "Do not discover new screens until PUB-01 through PUB-08 have zero repository-owned material defects."
+  }
 }

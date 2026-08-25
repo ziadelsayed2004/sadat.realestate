@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "e2e-public-property-list-success",
-  "responseSha256": "aa55371e98bdba934bb111002bcea10d4d2662dda2663ed758a010173b1655d6",
+  "responseSha256": "69bbc13d24644fe976c39d310a0c29ce904faa595423d97856617301d49b4b50",
   "response": {
     "data": {
       "items": [
@@ -22,6 +22,7 @@
             "zh-CN": "Published home"
           },
           "transactionType": "sale",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
           "description": {
             "ar": "Published home",
             "en": "Published home",
@@ -51,6 +52,7 @@
             "zh-CN": "Published villa"
           },
           "transactionType": "sale",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
           "description": {
             "ar": "Published villa",
             "en": "Published villa",
@@ -80,6 +82,7 @@
             "zh-CN": "Published rental"
           },
           "transactionType": "rent",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
           "description": {
             "ar": "Published rental",
             "en": "Published rental",
@@ -109,6 +112,7 @@
             "zh-CN": "Published office"
           },
           "transactionType": "rent",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
           "description": {
             "ar": "Published office",
             "en": "Published office",
@@ -138,6 +142,7 @@
             "zh-CN": "Published unit"
           },
           "transactionType": "sale",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub06-a.png",
           "description": {
             "ar": "Published unit",
             "en": "Published unit",
@@ -167,6 +172,7 @@
             "zh-CN": "Published land"
           },
           "transactionType": "sale",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
           "description": {
             "ar": "Published land",
             "en": "Published land",
@@ -195,6 +201,7 @@
       "requestId": "e2e-public-property-list-success"
     }
   },
+  "relatedResponses": {},
   "authSession": null,
   "ownership": "public"
 }

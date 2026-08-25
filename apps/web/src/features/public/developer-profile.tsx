@@ -8,7 +8,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { Badge } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
-import { PublicSiteHeader } from './components.tsx';
+import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from './components.tsx';
 import {
   defaultPublicDeveloperProfileLoader,
   publicDeveloperProfileSlugFromUrl,
@@ -100,7 +100,7 @@ function ProfileHero({ data, locale, copy }: { readonly data: PublicOrganization
   return (
     <section className="public-developer-profile__hero" aria-labelledby="public-developer-profile-title">
       <div className="public-developer-profile__hero-media">
-        <UxStateView state="missing_image" title={copy.imageUnavailable} />
+        <PublicMediaImage src={data.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />
       </div>
       <div className="public-developer-profile__hero-body">
         <div className="public-developer-profile__badges">
@@ -130,6 +130,7 @@ function ProjectsSection({ data, locale, copy }: { readonly data: PublicOrganiza
             const website = safePublicUrl(project.website);
             return (
               <article className="public-developer-profile__project-card" key={project.id}>
+                <PublicMediaImage src={project.imageUrl} alt={name} fallback={<span className="public-developer-profile__project-media-fallback" />} />
                 <h3>{name}</h3>
                 {description === undefined ? null : <p><strong>{copy.projectDescription}:</strong> {description}</p>}
                 <p className="public-developer-profile__project-slug">{project.slug}</p>
@@ -153,6 +154,7 @@ function PropertiesSection({ data, locale, copy }: { readonly data: PublicOrgani
             const name = localizedText(property.name, locale) ?? property.slug;
             return (
               <article className="public-developer-profile__property-card" key={property.id}>
+                <PublicMediaImage src={property.imageUrl} alt={name} fallback={<span className="public-developer-profile__property-media-fallback" />} />
                 <div className="public-developer-profile__badges">
                   <Badge tone="brand">{property.transactionType === 'sale' ? copy.sale : copy.rent}</Badge>
                   <Badge tone="neutral">{propertyLabel(property, copy)}</Badge>
@@ -193,26 +195,7 @@ function ProfileSuccess({ data, locale, copy }: { readonly data: PublicOrganizat
   );
 }
 
-function Footer({ locale, copy }: { readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) {
-  const homepageCopy = getPublicHomepageCopy(locale);
-  return (
-    <footer className="public-homepage__footer public-developer-profile__footer">
-      <div>
-        <p className="public-homepage__eyebrow">{homepageCopy.brand}</p>
-        <p>{copy.footerDescription}</p>
-      </div>
-      <div>
-        <p className="public-homepage__footer-title">{copy.footerLinks}</p>
-        <div className="public-homepage__footer-links">
-          <a href="/">{homepageCopy.nav.home}</a>
-          <a href="/properties">{homepageCopy.nav.properties}</a>
-          <a href="/developers">{homepageCopy.nav.developers}</a>
-          <a href="/about">{homepageCopy.nav.about}</a>
-        </div>
-      </div>
-    </footer>
-  );
-}
+function Footer({ locale, copy }: { readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) { return <PublicSiteFooter locale={locale} description={copy.footerDescription} />; }
 
 export function PublicDeveloperProfile({
   url,

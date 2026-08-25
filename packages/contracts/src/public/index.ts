@@ -19,6 +19,7 @@ export const publicHomepagePropertySchema = z.object({
   kind: propertyKindSchema,
   name: localizedTextSchema,
   transactionType: propertyTransactionTypeSchema,
+  imageUrl: publicUrlSchema.optional(),
   projectId: propertyObjectIdSchema.optional(),
   description: localizedTextSchema.optional(),
   area: propertyAreaSchema.optional(),
@@ -30,6 +31,7 @@ export const publicHomepageDeveloperSchema = z.object({
   id: propertyObjectIdSchema,
   slug: propertySlugSchema,
   name: localizedTextSchema,
+  imageUrl: publicUrlSchema.optional(),
   description: localizedTextSchema.optional()
 }).strict();
 
@@ -37,6 +39,7 @@ export const publicHomepageContentSchema = z.object({
   key: z.string().trim().min(2).max(64).regex(/^[a-z][a-z0-9_]*$/),
   type: z.enum(['article', 'community', 'about', 'tip']),
   title: localizedTextSchema,
+  imageUrl: publicUrlSchema.optional(),
   body: localizedTextSchema.optional(),
   order: publicOrderSchema
 }).strict();
@@ -78,6 +81,7 @@ export const publicPropertyMediaSchema = z.object({
   id: propertyObjectIdSchema,
   propertyId: propertyObjectIdSchema,
   kind: z.enum(['image', 'floor_plan']),
+  imageUrl: publicUrlSchema.optional(),
   originalFilename: z.string().trim().min(1).max(120),
   detectedMime: z.enum(['application/pdf', 'image/jpeg', 'image/png']),
   byteSize: z.number().int().positive().max(10 * 1024 * 1024),

@@ -7,6 +7,7 @@ export interface PublicPropertySearchSource {
   kind: string;
   name: unknown;
   transactionType: string;
+  imageUrl?: string;
   projectId?: string;
   description?: unknown;
   area?: unknown;
@@ -27,6 +28,7 @@ function item(source: PublicPropertySearchSource) {
     kind: source.kind,
     name: source.name,
     transactionType: source.transactionType,
+    ...(source.imageUrl ? { imageUrl: source.imageUrl } : {}),
     ...(source.projectId ? { projectId: source.projectId } : {}),
     ...(source.description !== undefined ? { description: source.description } : {}),
     ...(source.area !== undefined ? { area: source.area } : {}),
@@ -56,6 +58,7 @@ type MongoPropertyRow = {
   kind?: string;
   name?: unknown;
   transactionType?: string;
+  imageUrl?: string;
   projectId?: unknown;
   description?: unknown;
   area?: unknown;
@@ -75,7 +78,7 @@ function source(row: MongoPropertyRow): PublicPropertySearchSource | null {
   const rowId = id(row._id);
   if (!rowId || typeof row.slug !== 'string' || typeof row.kind !== 'string' || row.name === undefined || typeof row.transactionType !== 'string' || typeof row.status !== 'string' || typeof row.active !== 'boolean') return null;
   const projectId = id(row.projectId);
-  return { id: rowId, slug: row.slug, kind: row.kind, name: row.name, transactionType: row.transactionType, ...(projectId ? { projectId } : {}), ...(row.description !== undefined ? { description: row.description } : {}), ...(row.area !== undefined ? { area: row.area } : {}), ...(row.layout !== undefined ? { layout: row.layout } : {}), ...(row.price !== undefined ? { price: row.price } : {}), status: row.status, active: row.active };
+  return { id: rowId, slug: row.slug, kind: row.kind, name: row.name, transactionType: row.transactionType, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}), ...(projectId ? { projectId } : {}), ...(row.description !== undefined ? { description: row.description } : {}), ...(row.area !== undefined ? { area: row.area } : {}), ...(row.layout !== undefined ? { layout: row.layout } : {}), ...(row.price !== undefined ? { price: row.price } : {}), status: row.status, active: row.active };
 }
 
 export function createMongoosePublicPropertySearchRepository(connection: Connection): PublicPropertySearchRepository {
@@ -94,7 +97,7 @@ export function createMongoosePublicPropertySearchRepository(connection: Connect
       const sort: Record<string, 1 | -1> = { [sortField]: direction, slug: 1, _id: 1 };
       const collection = connection.collection('properties');
       const [rows, total] = await Promise.all([
-        collection.find(filter).sort(sort).skip((query.page - 1) * query.limit).limit(query.limit).toArray() as Promise<MongoPropertyRow[]>,
+        collection.find(filter, { projection: { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, projectId: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 } }).sort(sort).skip((query.page - 1) * query.limit).limit(query.limit).toArray() as Promise<MongoPropertyRow[]>,
         collection.countDocuments(filter)
       ]);
       return { items: rows.flatMap((row) => { const value = source(row); return value ? [value] : []; }), total };

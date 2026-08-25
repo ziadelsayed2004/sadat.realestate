@@ -9,7 +9,7 @@ import { articleListQuerySchema } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import { Badge } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
-import { PublicSiteHeader } from '../public/components.tsx';
+import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from '../public/components.tsx';
 import { getPublicHomepageCopy } from '../public/copy.ts';
 import { localizedText } from '../public/model.ts';
 import {
@@ -50,6 +50,7 @@ export interface PublicArticleDetailsProps {
   readonly initialState?: 'loading' | 'retry' | 'not_found' | undefined;
   readonly categories?: readonly PublicArticleCategoryOption[] | undefined;
   readonly relatedArticles?: ArticlePublicListData | undefined;
+  readonly loadRelated?: PublicArticleListLoader | undefined;
   readonly load?: PublicArticleDetailsLoader | undefined;
 }
 
@@ -154,7 +155,7 @@ function ArticleCard({
   return (
     <article className="public-articles__card" data-article-card>
       <div className="public-articles__card-media">
-        <UxStateView state="missing_image" title={copy.imageUnavailable} />
+        <PublicMediaImage src={article.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />
       </div>
       <div className="public-articles__card-body">
         {category === undefined ? null : <Badge tone="warning">{category}</Badge>}
@@ -176,26 +177,7 @@ function ArticleCard({
   );
 }
 
-function Footer({ locale, copy }: { readonly locale: SupportedLocale; readonly copy: PublicArticlesCopy }) {
-  const homepageCopy = getPublicHomepageCopy(locale);
-  return (
-    <footer className="public-homepage__footer public-articles__footer">
-      <div>
-        <p className="public-homepage__eyebrow">{homepageCopy.brand}</p>
-        <p>{copy.footerDescription}</p>
-      </div>
-      <div>
-        <p className="public-homepage__footer-title">{copy.footerLinks}</p>
-        <div className="public-homepage__footer-links">
-          <a href="/">{homepageCopy.nav.home}</a>
-          <a href="/properties">{homepageCopy.nav.properties}</a>
-          <a href="/developers">{homepageCopy.nav.developers}</a>
-          <a href={PUBLIC_ARTICLES_PATH}>{homepageCopy.nav.articles}</a>
-        </div>
-      </div>
-    </footer>
-  );
-}
+function Footer({ locale, copy }: { readonly locale: SupportedLocale; readonly copy: PublicArticlesCopy }) { return <PublicSiteFooter locale={locale} description={copy.footerDescription} />; }
 
 export function PublicArticles({
   url,
@@ -306,6 +288,10 @@ export function PublicArticles({
         <div className="public-articles__toolbar"><p id="public-articles-results-title">{view === 'success' ? copy.resultCount(filteredArticles.length) : copy.title}</p></div>
         {resultsView}
       </section>
+      <section className="public-articles__cta" aria-labelledby="public-articles-cta-title">
+        <div><p className="public-articles__eyebrow">{homepageCopy.brand}</p><h2 id="public-articles-cta-title">{copy.openArticle}</h2><p>{copy.subtitle}</p></div>
+        <a href="/properties">{homepageCopy.browseProperties}</a>
+      </section>
       <Footer locale={locale} copy={copy} />
     </div>
   );
@@ -354,7 +340,7 @@ function ArticleDetailsView({
   return (
     <article className="public-article-details__article">
       <div className="public-article-details__hero">
-        <div className="public-article-details__hero-media"><UxStateView state="missing_image" title={copy.imageUnavailable} /></div>
+        <div className="public-article-details__hero-media"><PublicMediaImage src={article.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} /></div>
         <div className="public-article-details__hero-copy">
           {category === undefined ? null : <Badge tone="warning">{category}</Badge>}
           <h1 id="public-article-details-title">{title}</h1>
@@ -381,6 +367,7 @@ export function PublicArticleDetails({
   initialState,
   categories,
   relatedArticles,
+  loadRelated,
   load = defaultPublicArticleDetailsLoader
 }: PublicArticleDetailsProps) {
   const copy = getPublicArticlesCopy(locale);
@@ -388,6 +375,7 @@ export function PublicArticleDetails({
   const sourceUrl = url ?? (typeof window === 'undefined' ? PUBLIC_ARTICLES_PATH : window.location.href);
   const slug = publicArticleSlugFromUrl(sourceUrl);
   const [data, setData] = useState<ArticlePublic | undefined>(initialData);
+  const [relatedData, setRelatedData] = useState<ArticlePublicListData | undefined>(relatedArticles);
   const [view, setView] = useState<PublicArticleDetailsViewState>(slug === undefined ? 'not_found' : initialData === undefined ? initialState ?? 'loading' : 'success');
   const [attempt, setAttempt] = useState(0);
 
@@ -413,6 +401,17 @@ export function PublicArticleDetails({
     return () => controller.abort();
   }, [attempt, initialData, load, locale, slug]);
 
+  useEffect(() => {
+    if (loadRelated === undefined || relatedArticles !== undefined || slug === undefined) return;
+    const controller = new AbortController();
+    void loadRelated({ locale, page: 1, limit: 20 }, controller.signal)
+      .then(nextData => {
+        if (!controller.signal.aborted) setRelatedData(nextData);
+      })
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, [loadRelated, locale, relatedArticles, slug]);
+
   const retry = () => setAttempt(value => value + 1);
   const state = view === 'not_found' || view === 'success' ? null : stateCopy(view, copy);
 
@@ -421,7 +420,7 @@ export function PublicArticleDetails({
       <PublicSiteHeader locale={locale} copy={homepageCopy} activePath={PUBLIC_ARTICLES_PATH} />
       <div className="public-article-details__content">
         <a className="public-article-details__back" href={PUBLIC_ARTICLES_PATH}>{copy.backToArticles}</a>
-        {view === 'not_found' ? <NotFoundNotice copy={copy} /> : view === 'success' && data !== undefined ? <ArticleDetailsView article={data} locale={locale} copy={copy} categories={categories} relatedArticles={relatedArticles} /> : state === null ? null : <section className="public-article-details__state" data-state={view}><UxStateView state={view} title={state.title} message={state.body} retryLabel={copy.retryLabel} onRetry={retry}>{view === 'permission' ? <a href="/">{copy.permissionLink}</a> : null}{view === 'error' ? <button type="button" onClick={retry}>{copy.retryLabel}</button> : null}</UxStateView></section>}
+        {view === 'not_found' ? <NotFoundNotice copy={copy} /> : view === 'success' && data !== undefined ? <ArticleDetailsView article={data} locale={locale} copy={copy} categories={categories} relatedArticles={relatedData} /> : state === null ? null : <section className="public-article-details__state" data-state={view}><UxStateView state={view} title={state.title} message={state.body} retryLabel={copy.retryLabel} onRetry={retry}>{view === 'permission' ? <a href="/">{copy.permissionLink}</a> : null}{view === 'error' ? <button type="button" onClick={retry}>{copy.retryLabel}</button> : null}</UxStateView></section>}
       </div>
       <Footer locale={locale} copy={copy} />
     </div>

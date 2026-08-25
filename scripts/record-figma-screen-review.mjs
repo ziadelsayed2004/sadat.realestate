@@ -16,6 +16,7 @@ const review = read(reviewPath);
 const allowed = new Set(queue.requiredClassifications);
 if (review.screenId !== screenId) throw new Error(`Review screen mismatch: ${review.screenId}`);
 if (!allowed.has(review.classification)) throw new Error(`Unsupported classification: ${review.classification}`);
+if (review.classification === 'PARTIAL') throw new Error('PARTIAL is evidence only and cannot be recorded as processed; use the bounded repair queue.');
 if (review.source?.fileKey !== queue.canonicalFigmaFileKey) throw new Error('Review is not tied to the canonical Figma file');
 if (review.source?.nodeId === null || review.source?.nodeId === undefined) throw new Error('Review is missing exact clone node');
 for (const relativePath of ['figma.png', 'runtime-before.png', 'runtime-after.png', 'diff.png', 'review.json']) {

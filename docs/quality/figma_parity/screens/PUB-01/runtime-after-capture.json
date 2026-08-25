@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-01",
+  "phase": "after",
+  "runtime": {
+    "route": "/",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "responseStatus": 200,
+    "responseOk": true,
+    "beforeHash": "775ed3ca971ead2112ab9ee5441005a21f50acbec3f35cd4475eb2678d7bcbd6",
+    "afterHash": "0807451d2c16adf3c15350a9f9bb610bd7d5112dc395089e623b6e282db63880",
+    "requestedApi": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/home"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/home",
+        "status": 200
+      }
+    ]
+  },
+  "structure": {
+    "headers": 2,
+    "navs": 1,
+    "sections": 12,
+    "cards": 58,
+    "images": 21,
+    "forms": 1
+  },
+  "transitions": {
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "الرئيسية",
+        "href": "/"
+      },
+      {
+        "text": "العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "المطورون",
+        "href": "/developers"
+      },
+      {
+        "text": "المقالات",
+        "href": "/articles"
+      },
+      {
+        "text": "المجتمع",
+        "href": "/community"
+      },
+      {
+        "text": "عن المنصة",
+        "href": "/about"
+      },
+      {
+        "text": "فريقنا",
+        "href": "/team"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register"
+      },
+      {
+        "text": "تصفح العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "المطورون والشركات",
+        "href": "/developers"
+      },
+      {
+        "text": "◆property4",
+        "href": "/properties?kind=property"
+      },
+      {
+        "text": "◆unit2",
+        "href": "/properties?kind=unit"
+      },
+      {
+        "text": "City banner",
+        "href": "http://127.0.0.1:4173/properties"
+      },
+      {
+        "text": "Market banner",
+        "href": "http://127.0.0.1:4173/articles"
+      },
+      {
+        "text": "عرض الكل",
+        "href": "/properties"
+      },
+      {
+        "text": "منزل منشور",
+        "href": "/properties/published-home"
+      },
+      {
+        "text": "Published villa",
+        "href": "/properties/published-villa"
+      },
+      {
+        "text": "Published rental",
+        "href": "/properties/published-rental"
+      },
+      {
+        "text": "Published office",
+        "href": "/properties/published-office"
+      },
+      {
+        "text": "Published unit",
+        "href": "/properties/published-unit"
+      },
+      {
+        "text": "Published land",
+        "href": "/properties/published-land"
+      },
+      {
+        "text": "عرض الكل",
+        "href": "/developers"
+      },
+      {
+        "text": "المطور المعتمد",
+        "href": "/developers/approved-builder"
+      },
+      {
+        "text": "City builders",
+        "href": "/developers/city-builders"
+      },
+      {
+        "text": "Sadat brokers",
+        "href": "/developers/sadat-brokers"
+      },
+      {
+        "text": "New city developments",
+        "href": "/developers/new-city-developments"
+      },
+      {
+        "text": "اقرأ المزيد",
+        "href": "/articles"
+      },
+      {
+        "text": "اقرأ المزيد",
+        "href": "/articles"
+      },
+      {
+        "text": "تصفح العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "الرئيسية",
+        "href": "/"
+      },
+      {
+        "text": "العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "المطورون",
+        "href": "/developers"
+      },
+      {
+        "text": "المقالات",
+        "href": "/articles"
+      },
+      {
+        "text": "عن المنصة",
+        "href": "/about"
+      },
+      {
+        "text": "hello@sadat.realestate",
+        "href": "mailto:hello@sadat.realestate"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "بحث",
+        "aria": null
+      }
+    ]
+  },
+  "comparison": {
+    "sourceDimensions": [
+      {
+        "width": 1549,
+        "height": 5378
+      },
+      {
+        "width": 1280,
+        "height": 4712
+      },
+      {
+        "width": 1280,
+        "height": 6719
+      }
+    ],
+    "dimensions": {
+      "width": 1397,
+      "height": 2328
+    },
+    "diffPath": "docs/quality/figma_parity/screens/PUB-01/diff.png"
+  }
+}

@@ -1,0 +1,249 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-08",
+  "classification": "PARTIAL",
+  "classificationReason": "Fresh canonical comparison is complete. The article-detail API and focused gates pass, but the runtime does not match the clone hero media, rich body, related content, side rail, or footer composition.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4352",
+    "nodeId": "6017:12560",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-12560&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4352&starting-point-node-id=6017%3A10847",
+    "screenshot": {
+      "path": "docs/quality/figma_parity/screens/PUB-08/figma.png",
+      "width": 1523,
+      "height": 1759,
+      "reviewed": true
+    },
+    "getDesignContext": {
+      "tool": "mcp__figma__get_design_context",
+      "skill": "resource:figma-design-to-code",
+      "resultStatus": "FULL_REFERENCE_CODE_RETURNED",
+      "root": {
+        "id": "6017:12560",
+        "name": "Article Details",
+        "width": 1523,
+        "height": 1759
+      },
+      "retrievedRegions": [
+        "header",
+        "back link",
+        "hero/media",
+        "article title/meta",
+        "article body",
+        "related articles",
+        "footer"
+      ],
+      "reviewed": true,
+      "responseSummary": {
+        "contentBlocks": 4,
+        "textLengths": [89437, 551, 83, 354],
+        "referenceCodeReturned": true,
+        "assetMapReturned": true,
+        "screenshotExcluded": true
+      },
+      "note": "The canonical get_design_context call returned the full React/Tailwind reference and asset constants for this frame. The reference was used for direct comparison only; the generated code was not copied into the runtime."
+    }
+  },
+  "runtime": {
+    "route": "/articles/buying-in-sadat?lang=ar",
+    "role": "public",
+    "permissions": {
+      "requiredRole": "public",
+      "ownership": "public",
+      "availableActionsObserved": {
+        "links": [
+          {
+            "text": "تخطي إلى المحتوى الرئيسي",
+            "href": "#main-content"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "الرئيسية",
+            "href": "/"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "المقالات",
+            "href": "/articles"
+          },
+          {
+            "text": "المجتمع",
+            "href": "/community"
+          },
+          {
+            "text": "عن المنصة",
+            "href": "/about"
+          },
+          {
+            "text": "فريقنا",
+            "href": "/team"
+          },
+          {
+            "text": "تسجيل الدخول",
+            "href": "/auth/login"
+          },
+          {
+            "text": "إنشاء حساب",
+            "href": "/auth/register"
+          },
+          {
+            "text": "العودة للمقالات",
+            "href": "/articles"
+          },
+          {
+            "text": "الرئيسية",
+            "href": "/"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "المقالات",
+            "href": "/articles"
+          }
+        ],
+        "buttons": []
+      },
+      "source": "runtime DOM and route contract"
+    },
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "deterministicState": {
+      "path": "docs/quality/figma_parity/screens/PUB-08/deterministic-state.json",
+      "seedId": "fresh-audit-PUB-08-ar-v1",
+      "responseSha256": "05c6316f7b41da6aaa1afa6bbb2aeed706e77398704eea0d62d42db5bef3a2f2"
+    },
+    "response": {
+      "status": 200,
+      "ok": true
+    },
+    "apiRequests": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/articles/buying-in-sadat?locale=ar"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/articles/buying-in-sadat?locale=ar",
+        "status": 200
+      }
+    ],
+    "before": {
+      "path": "docs/quality/figma_parity/screens/PUB-08/runtime-before.png",
+      "sha256": "4a4d9f867b0dc38c6eab5a63c59b2579556cd0a57e94bc77659de65d74cfb00d"
+    },
+    "after": {
+      "path": "docs/quality/figma_parity/screens/PUB-08/runtime-after.png",
+      "sha256": "4a4d9f867b0dc38c6eab5a63c59b2579556cd0a57e94bc77659de65d74cfb00d"
+    }
+  },
+  "structuredVisualComparison": {
+    "reviewed": true,
+    "diffPath": "docs/quality/figma_parity/screens/PUB-08/diff.png",
+    "sourceDimensions": [
+      {
+        "width": 1523,
+        "height": 1759
+      },
+      {
+        "width": 1280,
+        "height": 1404
+      },
+      {
+        "width": 1280,
+        "height": 1404
+      }
+    ],
+    "observations": [
+      "Figma source is 1523px wide and 1759px high for PUB-08.",
+      "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 1404px document height.",
+      "The clone has a wide approved hero image, a related-properties side rail with three image-backed items, and a structured title/meta treatment; the runtime hero uses a missing-image placeholder and has no related-property rail.",
+      "The clone article body includes a heading, paragraph, quote treatment, and rich spacing; the deterministic runtime only renders the short fixture body summary.",
+      "The clone includes three related-article image cards and a complete footer; the runtime related-article area is empty and the footer is shorter than the clone.",
+      "The side-by-side diff is evidence for review only; no baseline was updated."
+    ]
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "requestProjection": "GET /api/v1/public/articles/buying-in-sadat",
+    "responseProjection": "public-article-details fixture captured and hashed",
+    "outcome": "GET /api/v1/public/articles/buying-in-sadat?locale=ar returned HTTP 200 and the page reached success. The article response projection is consumed, but the clone media, related-property, rich-body, related-article, and footer surfaces are not matched."
+  },
+  "defects": [
+    "Runtime article hero media is a placeholder/missing-image state while the clone uses an approved image asset.",
+    "Runtime omits the clone's related-property side rail and its three image-backed property items.",
+    "Runtime body content is a short text projection and does not include the clone's structured introduction and quote treatment.",
+    "Runtime omits the clone's three related-article cards and full footer rows.",
+    "No runtime files were repaired during this evidence pass."
+  ],
+  "filesRepaired": [],
+  "focusedTests": [
+    {
+      "name": "affected typecheck",
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0
+    },
+    {
+      "name": "affected content lint",
+      "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/content/**/*.{ts,tsx}\" \"tests/public-articles.vitest.test.tsx\" \"tests/e2e/public-fixtures.ts\" --max-warnings=0",
+      "exitCode": 0
+    },
+    {
+      "name": "focused Vitest",
+      "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-articles.vitest.test.tsx",
+      "exitCode": 0
+    },
+    {
+      "name": "focused SSR/API integration",
+      "command": "node --test apps/web/tests/ssr.test.mjs --test-name-pattern \"article details\"",
+      "exitCode": 0
+    },
+    {
+      "name": "focused API contract tests",
+      "command": "node --import tsx --test apps/web/tests/contracts.test.ts",
+      "exitCode": 0
+    },
+    {
+      "name": "focused Playwright visual",
+      "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public article details renders the published projection\"",
+      "exitCode": 0
+    }
+  ],
+  "accessibility": {
+    "focusedCheck": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public article details exposes\"",
+    "exitCode": 0
+  },
+  "evidencePaths": {
+    "figma": "docs/quality/figma_parity/screens/PUB-08/figma.png",
+    "runtimeBefore": "docs/quality/figma_parity/screens/PUB-08/runtime-before.png",
+    "runtimeAfter": "docs/quality/figma_parity/screens/PUB-08/runtime-after.png",
+    "diff": "docs/quality/figma_parity/screens/PUB-08/diff.png",
+    "review": "docs/quality/figma_parity/screens/PUB-08/review.json"
+  }
+}

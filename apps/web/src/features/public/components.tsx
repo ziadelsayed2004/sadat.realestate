@@ -104,6 +104,63 @@ export function PublicSiteHeader({
   );
 }
 
+export function PublicMediaImage({
+  src,
+  alt,
+  fallback,
+  className
+}: {
+  readonly src?: string | undefined;
+  readonly alt: string;
+  readonly fallback: ReactNode;
+  readonly className?: string | undefined;
+}) {
+  const [failed, setFailed] = useState(false);
+  const imageUrl = safePublicUrl(src);
+  if (imageUrl === undefined || failed) return <>{fallback}</>;
+  return <img className={className} src={imageUrl} alt={alt} decoding="async" onError={() => setFailed(true)} />;
+}
+
+export function PublicSiteFooter({ locale, description }: { readonly locale: SupportedLocale; readonly description?: string | undefined }) {
+  const copy = getPublicHomepageCopy(locale);
+  const labels = locale === 'ar'
+    ? { explore: 'استكشف', contact: 'تواصل معنا', legal: 'الخصوصية والشروط', email: 'hello@sadat.realestate' }
+    : locale === 'zh-CN'
+      ? { explore: '探索', contact: '联系我们', legal: '隐私与条款', email: 'hello@sadat.realestate' }
+      : { explore: 'Explore', contact: 'Contact', legal: 'Privacy & terms', email: 'hello@sadat.realestate' };
+  return (
+    <footer className="public-homepage__footer public-site-footer">
+      <div className="public-site-footer__brand">
+        <p className="public-homepage__eyebrow">{copy.brand}</p>
+        <p>{description ?? copy.footerDescription}</p>
+      </div>
+      <div>
+        <p className="public-homepage__footer-title">{labels.explore}</p>
+        <div className="public-homepage__footer-links">
+          <a href="/">{copy.nav.home}</a>
+          <a href="/properties">{copy.nav.properties}</a>
+          <a href="/developers">{copy.nav.developers}</a>
+          <a href="/articles">{copy.nav.articles}</a>
+          <a href="/about">{copy.nav.about}</a>
+        </div>
+      </div>
+      <div>
+        <p className="public-homepage__footer-title">{labels.contact}</p>
+        <div className="public-homepage__footer-links">
+          <a href={`mailto:${labels.email}`}>{labels.email}</a>
+          <a href="/auth/register">{copy.createAccount}</a>
+          <a href="/auth/login">{copy.login}</a>
+        </div>
+      </div>
+      <div className="public-site-footer__bottom">
+        <span>{copy.brand}</span>
+        <span>{labels.legal}</span>
+        <span aria-label="social links">◎ ◇ ◌</span>
+      </div>
+    </footer>
+  );
+}
+
 function BannerMedia({
   banner,
   copy,
@@ -226,7 +283,7 @@ function PropertyGrid({
             price={formatMoney(property.price, locale)}
             badges={[property.transactionType === 'sale' ? copy.sale : copy.rent]}
             features={features}
-            image={<UxStateView state="missing_image" title={copy.imageUnavailable} />}
+            image={<PublicMediaImage src={property.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />}
             imageAlt={copy.imageUnavailable}
             className="public-homepage__property-card"
           />
@@ -332,6 +389,7 @@ function DeveloperGrid({
     <div className="public-homepage__developer-grid">
       {developers.map(developer => (
         <article className="public-homepage__developer-card" key={developer.id}>
+          <PublicMediaImage src={developer.imageUrl} alt={localizedText(developer.name, locale) ?? developer.slug} fallback={<span className="public-homepage__developer-mark" aria-hidden="true">◆</span>} />
           <span className="public-homepage__developer-mark" aria-hidden="true">◆</span>
           <h3><a href={'/developers/' + developer.slug}>{localizedText(developer.name, locale) ?? developer.slug}</a></h3>
           {localizedText(developer.description, locale) === undefined ? null : <p>{localizedText(developer.description, locale)}</p>}
@@ -368,6 +426,7 @@ function ContentGrid({
       <div className="public-homepage__content-grid">
         {items.map(item => (
           <article className="public-homepage__content-card" key={item.key}>
+            {item.imageUrl === undefined ? null : <PublicMediaImage src={item.imageUrl} alt={localizedText(item.title, locale) ?? item.key} fallback={<span className="public-homepage__content-media-fallback" />} />}
             <p className="public-homepage__content-type">{title}</p>
             <h3>{localizedText(item.title, locale) ?? item.key}</h3>
             {localizedText(item.body, locale) === undefined ? null : <p>{localizedText(item.body, locale)}</p>}
@@ -459,21 +518,7 @@ function HomepageContent({
           </div>
         </section>
       )}
-      <footer className="public-homepage__footer">
-        <div>
-          <p className="public-homepage__eyebrow">{copy.brand}</p>
-          <p>{copy.footerDescription}</p>
-        </div>
-        <div>
-          <p className="public-homepage__footer-title">{copy.footerLinks}</p>
-          <div className="public-homepage__footer-links">
-            <a href="/properties">{copy.nav.properties}</a>
-            <a href="/developers">{copy.nav.developers}</a>
-            <a href="/articles">{copy.nav.articles}</a>
-            <a href="/about">{copy.nav.about}</a>
-          </div>
-        </div>
-      </footer>
+      <PublicSiteFooter locale={locale} description={copy.footerDescription} />
     </div>
   );
 }

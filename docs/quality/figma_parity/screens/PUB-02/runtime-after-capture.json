@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-02",
+  "phase": "after",
+  "runtime": {
+    "route": "/properties",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "responseStatus": 200,
+    "responseOk": true,
+    "beforeHash": "a8af6e406cb2608007467ab2cae70b71115d7fc68bb35b3c3605f010c22960f9",
+    "afterHash": "ba47e7365734722ec223373a423704ccc6ee69138855ad1573a0fbfd2e6bf868",
+    "requestedApi": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=20"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=20",
+        "status": 200
+      }
+    ]
+  },
+  "structure": {
+    "headers": 2,
+    "navs": 3,
+    "sections": 2,
+    "cards": 43,
+    "images": 8,
+    "forms": 1
+  },
+  "transitions": {
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "الرئيسية",
+        "href": "/"
+      },
+      {
+        "text": "العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "المطورون",
+        "href": "/developers"
+      },
+      {
+        "text": "المقالات",
+        "href": "/articles"
+      },
+      {
+        "text": "المجتمع",
+        "href": "/community"
+      },
+      {
+        "text": "عن المنصة",
+        "href": "/about"
+      },
+      {
+        "text": "فريقنا",
+        "href": "/team"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register"
+      },
+      {
+        "text": "Published home",
+        "href": "/properties/published-home"
+      },
+      {
+        "text": "Published villa",
+        "href": "/properties/published-villa"
+      },
+      {
+        "text": "Published rental",
+        "href": "/properties/published-rental"
+      },
+      {
+        "text": "Published office",
+        "href": "/properties/published-office"
+      },
+      {
+        "text": "Published unit",
+        "href": "/properties/published-unit"
+      },
+      {
+        "text": "Published land",
+        "href": "/properties/published-land"
+      },
+      {
+        "text": "الرئيسية",
+        "href": "/"
+      },
+      {
+        "text": "العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "المطورون",
+        "href": "/developers"
+      },
+      {
+        "text": "المقالات",
+        "href": "/articles"
+      },
+      {
+        "text": "عن المنصة",
+        "href": "/about"
+      },
+      {
+        "text": "hello@sadat.realestate",
+        "href": "mailto:hello@sadat.realestate"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "الكل",
+        "aria": null
+      },
+      {
+        "text": "عقار",
+        "aria": null
+      },
+      {
+        "text": "وحدة",
+        "aria": null
+      },
+      {
+        "text": "إعادة ضبط",
+        "aria": null
+      },
+      {
+        "text": "تطبيق التصفية",
+        "aria": null
+      },
+      {
+        "text": "▦",
+        "aria": "عرض شبكي"
+      },
+      {
+        "text": "☷",
+        "aria": "عرض قائمة"
+      },
+      {
+        "text": "›",
+        "aria": "الصفحة السابقة"
+      },
+      {
+        "text": "1",
+        "aria": "1"
+      },
+      {
+        "text": "‹",
+        "aria": "الصفحة التالية"
+      }
+    ]
+  },
+  "comparison": {
+    "sourceDimensions": [
+      {
+        "width": 1577,
+        "height": 1981
+      },
+      {
+        "width": 1280,
+        "height": 2151
+      },
+      {
+        "width": 1280,
+        "height": 2228
+      }
+    ],
+    "dimensions": {
+      "width": 1406,
+      "height": 802
+    },
+    "diffPath": "docs/quality/figma_parity/screens/PUB-02/diff.png"
+  }
+}

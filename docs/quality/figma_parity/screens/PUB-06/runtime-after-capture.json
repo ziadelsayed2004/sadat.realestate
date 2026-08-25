@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-06",
+  "phase": "after",
+  "runtime": {
+    "route": "/developers/approved-builder",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "responseStatus": 200,
+    "responseOk": true,
+    "beforeHash": "4daebbf4536e7db32c9ddcf67bc8068ad708fe4e7fafc16ca526ab9f642788a3",
+    "afterHash": "881c43b409df0dce37eddb3c732ab3dafa4f69d94becfef14d68a9a94056ce9e",
+    "requestedApi": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/developers/approved-builder"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/developers/approved-builder",
+        "status": 200
+      }
+    ]
+  },
+  "structure": {
+    "headers": 2,
+    "navs": 2,
+    "sections": 5,
+    "cards": 3,
+    "images": 5,
+    "forms": 0
+  },
+  "transitions": {
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "الرئيسية",
+        "href": "/"
+      },
+      {
+        "text": "العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "المطورون",
+        "href": "/developers"
+      },
+      {
+        "text": "المقالات",
+        "href": "/articles"
+      },
+      {
+        "text": "المجتمع",
+        "href": "/community"
+      },
+      {
+        "text": "عن المنصة",
+        "href": "/about"
+      },
+      {
+        "text": "فريقنا",
+        "href": "/team"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register"
+      },
+      {
+        "text": "العودة إلى دليل الجهات",
+        "href": "/developers"
+      },
+      {
+        "text": "نبذة عامة",
+        "href": "#developer-overview"
+      },
+      {
+        "text": "المشروعات",
+        "href": "#developer-projects"
+      },
+      {
+        "text": "العقارات المنشورة",
+        "href": "#developer-properties"
+      },
+      {
+        "text": "زيارة الموقع الإلكتروني",
+        "href": "https://example.com/central-project"
+      },
+      {
+        "text": "منزل منشور",
+        "href": "/properties/published-home"
+      },
+      {
+        "text": "Central heights",
+        "href": "/properties/central-heights"
+      },
+      {
+        "text": "الرئيسية",
+        "href": "/"
+      },
+      {
+        "text": "العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "المطورون",
+        "href": "/developers"
+      },
+      {
+        "text": "المقالات",
+        "href": "/articles"
+      },
+      {
+        "text": "عن المنصة",
+        "href": "/about"
+      },
+      {
+        "text": "hello@sadat.realestate",
+        "href": "mailto:hello@sadat.realestate"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login"
+      }
+    ],
+    "buttons": []
+  },
+  "comparison": {
+    "sourceDimensions": [
+      {
+        "width": 1534,
+        "height": 2985
+      },
+      {
+        "width": 1280,
+        "height": 2103
+      },
+      {
+        "width": 1280,
+        "height": 2492
+      }
+    ],
+    "dimensions": {
+      "width": 1392,
+      "height": 1059
+    },
+    "diffPath": "docs/quality/figma_parity/screens/PUB-06/diff.png"
+  }
+}

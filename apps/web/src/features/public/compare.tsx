@@ -9,7 +9,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { Badge, Button, PropertyCard } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
-import { PublicSiteHeader } from './components.tsx';
+import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from './components.tsx';
 import {
   defaultPublicPropertyComparisonLoader,
   parsePublicPropertyComparisonIds,
@@ -53,27 +53,7 @@ function stateCopy(
   }
 }
 
-function Footer({ locale }: { readonly locale: SupportedLocale }) {
-  const homepageCopy = getPublicHomepageCopy(locale);
-  const copy = getPublicPropertyComparisonCopy(locale);
-  return (
-    <footer className="public-homepage__footer public-property-comparison__footer">
-      <div>
-        <p className="public-homepage__eyebrow">{homepageCopy.brand}</p>
-        <p>{copy.footerDescription}</p>
-      </div>
-      <div>
-        <p className="public-homepage__footer-title">{copy.footerLinks}</p>
-        <div className="public-homepage__footer-links">
-          <a href="/">{homepageCopy.nav.home}</a>
-          <a href="/properties">{homepageCopy.nav.properties}</a>
-          <a href="/developers">{homepageCopy.nav.developers}</a>
-          <a href="/about">{homepageCopy.nav.about}</a>
-        </div>
-      </div>
-    </footer>
-  );
-}
+function Footer({ locale }: { readonly locale: SupportedLocale }) { return <PublicSiteFooter locale={locale} description={getPublicPropertyComparisonCopy(locale).footerDescription} />; }
 
 function StateNotice({
   state,
@@ -265,7 +245,7 @@ function ComparisonCards({
               <Badge key="kind" tone="neutral">{property.kind === 'property' ? copy.property : copy.unit}</Badge>,
               <Badge key="transaction" tone="gold">{property.transactionType === 'sale' ? copy.sale : copy.rent}</Badge>
             ]}
-            image={<UxStateView state="missing_image" title={copy.imageUnavailable} />}
+            image={<PublicMediaImage src={property.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />}
             imageAlt={copy.imageUnavailable}
             action={(
               <div className="public-property-comparison__card-actions">
@@ -313,6 +293,11 @@ function ComparisonContent({
         <button type="button" className="public-property-comparison__clear" onClick={onClear}>{copy.clearAll}</button>
       </section>
       <ComparisonTables data={data} locale={locale} copy={copy} showDifferences={showDifferences} />
+      <aside className="public-property-comparison__sticky-bar" aria-label={copy.title}>
+        <span>{copy.selectedCount(data.items.length)}</span>
+        <a href="/properties">{copy.backToProperties}</a>
+        <button type="button" onClick={onClear}>{copy.clearAll}</button>
+      </aside>
     </>
   );
 }

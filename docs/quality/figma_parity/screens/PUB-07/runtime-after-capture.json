@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-07",
+  "phase": "after",
+  "runtime": {
+    "route": "/articles",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "responseStatus": 200,
+    "responseOk": true,
+    "beforeHash": "c1fd8847a16c267d8386fdce6d6c49d2b3f0ea38d116698a5f7fb247355ffb5b",
+    "afterHash": "7d5099c36b234c806baed8b9a459529ab7b09ff717dc252cb81ada99d3e91585",
+    "requestedApi": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/article-categories?locale=ar"
+      },
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/articles?locale=ar&page=1&limit=20"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/article-categories?locale=ar",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/articles?locale=ar&page=1&limit=20",
+        "status": 200
+      }
+    ]
+  },
+  "structure": {
+    "headers": 2,
+    "navs": 2,
+    "sections": 3,
+    "cards": 36,
+    "images": 8,
+    "forms": 0
+  },
+  "transitions": {
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "الرئيسية",
+        "href": "/"
+      },
+      {
+        "text": "العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "المطورون",
+        "href": "/developers"
+      },
+      {
+        "text": "المقالات",
+        "href": "/articles"
+      },
+      {
+        "text": "المجتمع",
+        "href": "/community"
+      },
+      {
+        "text": "عن المنصة",
+        "href": "/about"
+      },
+      {
+        "text": "فريقنا",
+        "href": "/team"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register"
+      },
+      {
+        "text": "الشراء في مدينة السادات",
+        "href": "/articles/buying-in-sadat"
+      },
+      {
+        "text": "اقرأ المقال",
+        "href": "/articles/buying-in-sadat"
+      },
+      {
+        "text": "نصائح الإيجار",
+        "href": "/articles/rental-tips"
+      },
+      {
+        "text": "اقرأ المقال",
+        "href": "/articles/rental-tips"
+      },
+      {
+        "text": "Market outlook",
+        "href": "/articles/market-outlook"
+      },
+      {
+        "text": "اقرأ المقال",
+        "href": "/articles/market-outlook"
+      },
+      {
+        "text": "First-home checklist",
+        "href": "/articles/first-home-checklist"
+      },
+      {
+        "text": "اقرأ المقال",
+        "href": "/articles/first-home-checklist"
+      },
+      {
+        "text": "Neighborhood guide",
+        "href": "/articles/neighborhood-guide"
+      },
+      {
+        "text": "اقرأ المقال",
+        "href": "/articles/neighborhood-guide"
+      },
+      {
+        "text": "Rental contracts",
+        "href": "/articles/rental-contracts"
+      },
+      {
+        "text": "اقرأ المقال",
+        "href": "/articles/rental-contracts"
+      },
+      {
+        "text": "تصفح العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "الرئيسية",
+        "href": "/"
+      },
+      {
+        "text": "العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "المطورون",
+        "href": "/developers"
+      },
+      {
+        "text": "المقالات",
+        "href": "/articles"
+      },
+      {
+        "text": "عن المنصة",
+        "href": "/about"
+      },
+      {
+        "text": "hello@sadat.realestate",
+        "href": "mailto:hello@sadat.realestate"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "الكل",
+        "aria": null
+      },
+      {
+        "text": "نصائح شراء",
+        "aria": null
+      },
+      {
+        "text": "نصائح إيجار",
+        "aria": null
+      }
+    ]
+  },
+  "comparison": {
+    "sourceDimensions": [
+      {
+        "width": 1523,
+        "height": 1783
+      },
+      {
+        "width": 1280,
+        "height": 1340
+      },
+      {
+        "width": 1280,
+        "height": 2376
+      }
+    ],
+    "dimensions": {
+      "width": 1388,
+      "height": 852
+    },
+    "diffPath": "docs/quality/figma_parity/screens/PUB-07/diff.png"
+  }
+}

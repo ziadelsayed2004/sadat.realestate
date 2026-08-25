@@ -173,6 +173,7 @@ export const articlePublicSchema = articleDataSchema.pick({
   coverAssetId: true,
   publishedAt: true
 }).extend({
+  imageUrl: z.url().max(2_048).optional(),
   category: articlePublicCategorySchema.optional()
 }).strict();
 

@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "fresh-audit-public-details",
-  "responseSha256": "72687aaa1cfec1526a47205f406a8d0f3eebd24b23cbbbcfcfd97f6b66c46789",
+  "responseSha256": "63aa22edca1ab3a98a5f83d98e2a753102a48c499c90dcfd3a4ccf7a0979ca93",
   "response": {
     "data": {
       "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
@@ -20,6 +20,7 @@
         "zh-CN": "已发布房产"
       },
       "transactionType": "sale",
+      "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
       "description": {
         "ar": "وصف المنزل المنشور",
         "en": "A published home description",
@@ -69,13 +70,81 @@
           "zh-CN": "项目简介"
         }
       },
-      "media": [],
-      "relatedProperties": []
+      "media": [
+        {
+          "id": "cccccccccccccccccccccccc",
+          "propertyId": "aaaaaaaaaaaaaaaaaaaaaaaa",
+          "kind": "image",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
+          "originalFilename": "published-home-cover.png",
+          "detectedMime": "image/png",
+          "byteSize": 120000,
+          "sortOrder": 0,
+          "isCover": true
+        },
+        {
+          "id": "dddddddddddddddddddddddd",
+          "propertyId": "aaaaaaaaaaaaaaaaaaaaaaaa",
+          "kind": "image",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
+          "originalFilename": "published-home-city.png",
+          "detectedMime": "image/png",
+          "byteSize": 120000,
+          "sortOrder": 1,
+          "isCover": false
+        },
+        {
+          "id": "eeeeeeeeeeeeeeeeeeeeeeee",
+          "propertyId": "aaaaaaaaaaaaaaaaaaaaaaaa",
+          "kind": "floor_plan",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
+          "originalFilename": "published-home-plan.png",
+          "detectedMime": "image/png",
+          "byteSize": 120000,
+          "sortOrder": 2,
+          "isCover": false
+        }
+      ],
+      "relatedProperties": [
+        {
+          "id": "ffffffffffffffffffffffff",
+          "slug": "garden-villa",
+          "kind": "property",
+          "name": {
+            "ar": "Garden villa",
+            "en": "Garden villa",
+            "zh-CN": "Garden villa"
+          },
+          "transactionType": "sale",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
+          "price": {
+            "amount": 2500000,
+            "currency": "EGP"
+          }
+        },
+        {
+          "id": "111111111111111111111111",
+          "slug": "city-apartment",
+          "kind": "unit",
+          "name": {
+            "ar": "City apartment",
+            "en": "City apartment",
+            "zh-CN": "City apartment"
+          },
+          "transactionType": "rent",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
+          "price": {
+            "amount": 20000,
+            "currency": "EGP"
+          }
+        }
+      ]
     },
     "meta": {
       "requestId": "fresh-audit-public-details"
     }
   },
+  "relatedResponses": {},
   "authSession": null,
   "ownership": "public"
 }

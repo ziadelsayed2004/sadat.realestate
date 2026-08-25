@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-07",
+  "classification": "PARTIAL",
+  "classificationReason": "Fresh canonical comparison is complete. Article and category APIs, focused tests, and accessibility pass, but the runtime does not match the clone card count, approved imagery, CTA banner, or footer composition.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4352",
+    "nodeId": "6017:11467",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-11467&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4352&starting-point-node-id=6017%3A10847",
+    "screenshot": {
+      "path": "docs/quality/figma_parity/screens/PUB-07/figma.png",
+      "width": 1523,
+      "height": 1783,
+      "reviewed": true
+    },
+    "getDesignContext": {
+      "tool": "mcp__figma__get_design_context",
+      "skill": "resource:figma-design-to-code",
+      "resultStatus": "FULL_REFERENCE_CODE_RETURNED",
+      "root": {
+        "id": "6017:11467",
+        "name": "Articles Listing",
+        "width": 1523,
+        "height": 1783
+      },
+      "retrievedRegions": [
+        "header",
+        "directory heading",
+        "article search",
+        "category filters",
+        "article card grid",
+        "CTA banner",
+        "footer"
+      ],
+      "reviewed": true,
+      "responseSummary": {
+        "contentBlocks": 4,
+        "textLengths": [96133, 551, 83, 354],
+        "referenceCodeReturned": true,
+        "assetMapReturned": true,
+        "screenshotExcluded": true
+      },
+      "note": "The canonical get_design_context call returned the full React/Tailwind reference and asset constants for this frame. The reference was used for direct comparison only; the generated code was not copied into the runtime."
+    }
+  },
+  "runtime": {
+    "route": "/articles?lang=ar",
+    "role": "public",
+    "permissions": {
+      "requiredRole": "public",
+      "ownership": "public",
+      "availableActionsObserved": {
+        "links": [
+          {
+            "text": "تخطي إلى المحتوى الرئيسي",
+            "href": "#main-content"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "الرئيسية",
+            "href": "/"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "المقالات",
+            "href": "/articles"
+          },
+          {
+            "text": "المجتمع",
+            "href": "/community"
+          },
+          {
+            "text": "عن المنصة",
+            "href": "/about"
+          },
+          {
+            "text": "فريقنا",
+            "href": "/team"
+          },
+          {
+            "text": "تسجيل الدخول",
+            "href": "/auth/login"
+          },
+          {
+            "text": "إنشاء حساب",
+            "href": "/auth/register"
+          },
+          {
+            "text": "الشراء في مدينة السادات",
+            "href": "/articles/buying-in-sadat"
+          },
+          {
+            "text": "اقرأ المقال",
+            "href": "/articles/buying-in-sadat"
+          },
+          {
+            "text": "نصائح الإيجار",
+            "href": "/articles/rental-tips"
+          },
+          {
+            "text": "اقرأ المقال",
+            "href": "/articles/rental-tips"
+          },
+          {
+            "text": "الرئيسية",
+            "href": "/"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "المقالات",
+            "href": "/articles"
+          }
+        ],
+        "buttons": [
+          {
+            "text": "الكل",
+            "aria": null
+          },
+          {
+            "text": "نصائح شراء",
+            "aria": null
+          },
+          {
+            "text": "نصائح إيجار",
+            "aria": null
+          }
+        ]
+      },
+      "source": "runtime DOM and route contract"
+    },
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "deterministicState": {
+      "path": "docs/quality/figma_parity/screens/PUB-07/deterministic-state.json",
+      "seedId": "fresh-audit-PUB-07-ar-v1",
+      "responseSha256": "a7ed866526515d1b56b85753b01ae7d7743c70d5f0571de4120b1d1e05807213"
+    },
+    "response": {
+      "status": 200,
+      "ok": true
+    },
+    "apiRequests": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/article-categories?locale=ar"
+      },
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/articles?locale=ar&page=1&limit=20"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/article-categories?locale=ar",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/articles?locale=ar&page=1&limit=20",
+        "status": 200
+      }
+    ],
+    "before": {
+      "path": "docs/quality/figma_parity/screens/PUB-07/runtime-before.png",
+      "sha256": "c1fd8847a16c267d8386fdce6d6c49d2b3f0ea38d116698a5f7fb247355ffb5b"
+    },
+    "after": {
+      "path": "docs/quality/figma_parity/screens/PUB-07/runtime-after.png",
+      "sha256": "c1fd8847a16c267d8386fdce6d6c49d2b3f0ea38d116698a5f7fb247355ffb5b"
+    }
+  },
+  "structuredVisualComparison": {
+    "reviewed": true,
+    "diffPath": "docs/quality/figma_parity/screens/PUB-07/diff.png",
+    "sourceDimensions": [
+      {
+        "width": 1523,
+        "height": 1783
+      },
+      {
+        "width": 1280,
+        "height": 1340
+      },
+      {
+        "width": 1280,
+        "height": 1340
+      }
+    ],
+    "observations": [
+      "Figma source is 1523px wide and 1783px high for PUB-07.",
+      "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 1340px document height.",
+      "The clone renders six image-backed article cards in a three-column grid; the deterministic runtime renders two cards with missing-image placeholders.",
+      "The clone has a centered heading/search/category composition and a dark call-to-action banner; the runtime's heading and filters are left-weighted in the captured RTL layout and the CTA banner is absent.",
+      "The clone footer includes brand, page links, contact information, social controls, and legal rows; the captured runtime footer is shorter and omits those approved regions.",
+      "The side-by-side diff is evidence for review only; no baseline was updated."
+    ]
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "requestProjection": "GET /api/v1/public/articles",
+    "responseProjection": "public-articles fixture captured and hashed",
+    "outcome": "GET /api/v1/public/articles?locale=ar&page=1&limit=20 and GET /api/v1/public/article-categories?locale=ar both returned HTTP 200 and the page reached success. The article/category response projections are consumed, but the clone card count/media and CTA surface are not matched."
+  },
+  "defects": [
+    "Runtime renders two article cards instead of the clone's six-card three-column composition for the approved reference state.",
+    "Runtime article media is a placeholder/missing-image state while the clone uses approved article imagery.",
+    "Runtime omits the clone's dark search CTA banner and does not match the approved heading/filter alignment and spacing.",
+    "Runtime footer is shorter and omits the clone's contact, social, and legal rows.",
+    "No runtime files were repaired during this evidence pass."
+  ],
+  "filesRepaired": [],
+  "focusedTests": [
+    {
+      "name": "affected typecheck",
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0
+    },
+    {
+      "name": "affected content lint",
+      "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/content/**/*.{ts,tsx}\" \"tests/public-articles.vitest.test.tsx\" \"tests/e2e/public-fixtures.ts\" --max-warnings=0",
+      "exitCode": 0
+    },
+    {
+      "name": "focused Vitest",
+      "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-articles.vitest.test.tsx",
+      "exitCode": 0
+    },
+    {
+      "name": "focused SSR/API integration",
+      "command": "node --test apps/web/tests/ssr.test.mjs --test-name-pattern \"public article listing\"",
+      "exitCode": 0
+    },
+    {
+      "name": "focused API contract tests",
+      "command": "node --import tsx --test apps/web/tests/contracts.test.ts",
+      "exitCode": 0
+    },
+    {
+      "name": "focused Playwright visual",
+      "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public article listing renders published cards\"",
+      "exitCode": 0
+    }
+  ],
+  "accessibility": {
+    "focusedCheck": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public article listing exposes labeled search\"",
+    "exitCode": 0
+  },
+  "evidencePaths": {
+    "figma": "docs/quality/figma_parity/screens/PUB-07/figma.png",
+    "runtimeBefore": "docs/quality/figma_parity/screens/PUB-07/runtime-before.png",
+    "runtimeAfter": "docs/quality/figma_parity/screens/PUB-07/runtime-after.png",
+    "diff": "docs/quality/figma_parity/screens/PUB-07/diff.png",
+    "review": "docs/quality/figma_parity/screens/PUB-07/review.json"
+  }
+}

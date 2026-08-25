@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-06",
+  "classification": "PARTIAL",
+  "classificationReason": "Fresh canonical comparison is complete. The runtime profile contract and focused gates pass, but the runtime does not match the clone hero, activity/contact rail, project media, inquiry form, or footer composition.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4352",
+    "nodeId": "6017:13155",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-13155&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4352&starting-point-node-id=6017%3A10847",
+    "screenshot": {
+      "path": "docs/quality/figma_parity/screens/PUB-06/figma.png",
+      "width": 1534,
+      "height": 2985,
+      "reviewed": true
+    },
+    "getDesignContext": {
+      "tool": "mcp__figma__get_design_context",
+      "skill": "resource:figma-design-to-code",
+      "resultStatus": "FULL_REFERENCE_CODE_RETURNED",
+      "root": {
+        "id": "6017:13155",
+        "name": "Developer Profile",
+        "width": 1534,
+        "height": 2985
+      },
+      "retrievedRegions": [
+        "header",
+        "profile hero",
+        "tabs",
+        "overview",
+        "projects",
+        "properties",
+        "contact/inquiry",
+        "footer"
+      ],
+      "reviewed": true,
+      "responseSummary": {
+        "contentBlocks": 4,
+        "textLengths": [192625, 551, 83, 354],
+        "referenceCodeReturned": true,
+        "assetMapReturned": true,
+        "screenshotExcluded": true
+      },
+      "note": "The canonical get_design_context call returned the full React/Tailwind reference and asset constants for this frame. The reference was used for direct comparison only; the generated code was not copied into the runtime."
+    }
+  },
+  "runtime": {
+    "route": "/developers/approved-builder?lang=ar",
+    "role": "public",
+    "permissions": {
+      "requiredRole": "public",
+      "ownership": "public",
+      "availableActionsObserved": {
+        "links": [
+          {
+            "text": "تخطي إلى المحتوى الرئيسي",
+            "href": "#main-content"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "الرئيسية",
+            "href": "/"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "المقالات",
+            "href": "/articles"
+          },
+          {
+            "text": "المجتمع",
+            "href": "/community"
+          },
+          {
+            "text": "عن المنصة",
+            "href": "/about"
+          },
+          {
+            "text": "فريقنا",
+            "href": "/team"
+          },
+          {
+            "text": "تسجيل الدخول",
+            "href": "/auth/login"
+          },
+          {
+            "text": "إنشاء حساب",
+            "href": "/auth/register"
+          },
+          {
+            "text": "العودة إلى دليل الجهات",
+            "href": "/developers"
+          },
+          {
+            "text": "نبذة عامة",
+            "href": "#developer-overview"
+          },
+          {
+            "text": "المشروعات",
+            "href": "#developer-projects"
+          },
+          {
+            "text": "العقارات المنشورة",
+            "href": "#developer-properties"
+          },
+          {
+            "text": "زيارة الموقع الإلكتروني",
+            "href": "https://example.com/central-project"
+          },
+          {
+            "text": "منزل منشور",
+            "href": "/properties/published-home"
+          },
+          {
+            "text": "الرئيسية",
+            "href": "/"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "عن المنصة",
+            "href": "/about"
+          }
+        ],
+        "buttons": []
+      },
+      "source": "runtime DOM and route contract"
+    },
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "deterministicState": {
+      "path": "docs/quality/figma_parity/screens/PUB-06/deterministic-state.json",
+      "seedId": "fresh-audit-PUB-06-ar-v1",
+      "responseSha256": "d5e1370cb1894c6f750385cbb902230597c57c9fb31e4f849f8170ed1349bef1"
+    },
+    "response": {
+      "status": 200,
+      "ok": true
+    },
+    "apiRequests": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/developers/approved-builder"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/developers/approved-builder",
+        "status": 200
+      }
+    ],
+    "before": {
+      "path": "docs/quality/figma_parity/screens/PUB-06/runtime-before.png",
+      "sha256": "4daebbf4536e7db32c9ddcf67bc8068ad708fe4e7fafc16ca526ab9f642788a3"
+    },
+    "after": {
+      "path": "docs/quality/figma_parity/screens/PUB-06/runtime-after.png",
+      "sha256": "4daebbf4536e7db32c9ddcf67bc8068ad708fe4e7fafc16ca526ab9f642788a3"
+    }
+  },
+  "structuredVisualComparison": {
+    "reviewed": true,
+    "diffPath": "docs/quality/figma_parity/screens/PUB-06/diff.png",
+    "sourceDimensions": [
+      {
+        "width": 1534,
+        "height": 2985
+      },
+      {
+        "width": 1280,
+        "height": 2103
+      },
+      {
+        "width": 1280,
+        "height": 2103
+      }
+    ],
+    "observations": [
+      "Figma source is 1534px wide and 2985px high for PUB-06.",
+      "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 2103px document height.",
+      "The clone has a full-width city hero image, verified developer identity, project/area badges, and explicit contact and unit actions; the runtime hero uses a missing-image state and only exposes a compact summary.",
+      "The clone includes an activity summary rail, contact panel, trust notice, project image cards, an available-units empty state, and an inquiry form; the runtime omits the activity/contact/inquiry surfaces and renders sparse text-only project/property cards.",
+      "The clone footer includes brand, page links, contact information, social controls, and legal rows; the captured runtime footer is shorter and omits those approved regions.",
+      "The side-by-side diff is evidence for review only; no baseline was updated."
+    ]
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "requestProjection": "GET /api/v1/public/developers/approved-builder",
+    "responseProjection": "public-developer-profile fixture captured and hashed",
+    "outcome": "GET /api/v1/public/developers/approved-builder returned HTTP 200 and the page reached success. The projects and properties response projection is consumed, but the clone media, activity, contact, inquiry, and CTA surfaces are not matched."
+  },
+  "defects": [
+    "Runtime hero media is a placeholder/missing-image state while the clone uses an approved city/developer image.",
+    "Runtime omits the clone's activity summary, contact card, trust notice, available-units state, and inquiry form.",
+    "Runtime project and property cards are sparse text-only projections instead of the clone's image-backed cards with approved metadata/actions.",
+    "Runtime footer is shorter and omits the clone's contact, social, and legal rows.",
+    "No runtime files were repaired during this evidence pass."
+  ],
+  "filesRepaired": [],
+  "focusedTests": [
+    {
+      "name": "affected typecheck",
+      "command": "npm.cmd run typecheck --workspace apps/web",
+      "exitCode": 0
+    },
+    {
+      "name": "affected public lint",
+      "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"tests/public-developers.vitest.test.tsx\" \"tests/e2e/public-fixtures.ts\" --max-warnings=0",
+      "exitCode": 0
+    },
+    {
+      "name": "focused Vitest",
+      "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-developers.vitest.test.tsx",
+      "exitCode": 0
+    },
+    {
+      "name": "focused SSR/API integration",
+      "command": "node --test apps/web/tests/ssr.test.mjs --test-name-pattern \"public developer profile\"",
+      "exitCode": 0
+    },
+    {
+      "name": "focused API contract tests",
+      "command": "node --import tsx --test apps/web/tests/contracts.test.ts",
+      "exitCode": 0
+    },
+    {
+      "name": "focused Playwright visual",
+      "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public developer profile renders projects\"",
+      "exitCode": 0
+    }
+  ],
+  "accessibility": {
+    "focusedCheck": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public developer profile exposes tab navigation\"",
+    "exitCode": 0
+  },
+  "evidencePaths": {
+    "figma": "docs/quality/figma_parity/screens/PUB-06/figma.png",
+    "runtimeBefore": "docs/quality/figma_parity/screens/PUB-06/runtime-before.png",
+    "runtimeAfter": "docs/quality/figma_parity/screens/PUB-06/runtime-after.png",
+    "diff": "docs/quality/figma_parity/screens/PUB-06/diff.png",
+    "review": "docs/quality/figma_parity/screens/PUB-06/review.json"
+  }
+}

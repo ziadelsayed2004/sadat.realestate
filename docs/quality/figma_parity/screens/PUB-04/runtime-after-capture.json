@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-04",
+  "phase": "after",
+  "runtime": {
+    "route": "/compare?propertyIds=aaaaaaaaaaaaaaaaaaaaaaaa&propertyIds=bbbbbbbbbbbbbbbbbbbbbbbb",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "responseStatus": 200,
+    "responseOk": true,
+    "beforeHash": "8875c50dec55638c801237915262f20c9c47eb7646b3630406753686c5cbb121",
+    "afterHash": "834c7137da4814322a48f732abae33d7dafff46ac48572d71a526d5ef055a9e5",
+    "requestedApi": [
+      {
+        "method": "POST",
+        "url": "http://127.0.0.1:4173/api/v1/public/properties/compare"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "POST",
+        "url": "http://127.0.0.1:4173/api/v1/public/properties/compare",
+        "status": 200
+      }
+    ]
+  },
+  "structure": {
+    "headers": 2,
+    "navs": 1,
+    "sections": 6,
+    "cards": 17,
+    "images": 4,
+    "forms": 0
+  },
+  "transitions": {
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "الرئيسية",
+        "href": "/"
+      },
+      {
+        "text": "العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "المطورون",
+        "href": "/developers"
+      },
+      {
+        "text": "المقالات",
+        "href": "/articles"
+      },
+      {
+        "text": "المجتمع",
+        "href": "/community"
+      },
+      {
+        "text": "عن المنصة",
+        "href": "/about"
+      },
+      {
+        "text": "فريقنا",
+        "href": "/team"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register"
+      },
+      {
+        "text": "فيلا مستقلة بالمنطقة الراقية",
+        "href": "/properties/garden-villa"
+      },
+      {
+        "text": "عرض التفاصيل",
+        "href": "/properties/garden-villa"
+      },
+      {
+        "text": "شقة فاخرة في الحي الأول",
+        "href": "/properties/city-apartment"
+      },
+      {
+        "text": "عرض التفاصيل",
+        "href": "/properties/city-apartment"
+      },
+      {
+        "text": "تصفح العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "الرئيسية",
+        "href": "/"
+      },
+      {
+        "text": "العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "المطورون",
+        "href": "/developers"
+      },
+      {
+        "text": "المقالات",
+        "href": "/articles"
+      },
+      {
+        "text": "عن المنصة",
+        "href": "/about"
+      },
+      {
+        "text": "hello@sadat.realestate",
+        "href": "mailto:hello@sadat.realestate"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "إظهار كل التفاصيل",
+        "aria": null
+      },
+      {
+        "text": "إظهار الاختلافات فقط",
+        "aria": null
+      },
+      {
+        "text": "إزالة",
+        "aria": null
+      },
+      {
+        "text": "إزالة",
+        "aria": null
+      },
+      {
+        "text": "مسح الكل والعودة للبحث",
+        "aria": null
+      },
+      {
+        "text": "مسح الكل والعودة للبحث",
+        "aria": null
+      }
+    ]
+  },
+  "comparison": {
+    "sourceDimensions": [
+      {
+        "width": 1653,
+        "height": 2314
+      },
+      {
+        "width": 1280,
+        "height": 2145
+      },
+      {
+        "width": 1280,
+        "height": 2328
+      }
+    ],
+    "dimensions": {
+      "width": 1432,
+      "height": 836
+    },
+    "diffPath": "docs/quality/figma_parity/screens/PUB-04/diff.png"
+  }
+}

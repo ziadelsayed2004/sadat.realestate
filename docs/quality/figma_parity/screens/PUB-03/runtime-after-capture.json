@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-03",
+  "phase": "after",
+  "runtime": {
+    "route": "/properties/published-home",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "responseStatus": 200,
+    "responseOk": true,
+    "beforeHash": "9dbd074542650cb7e54fd186bce70913fb61ec60fe414b66d51d892c85f57ff1",
+    "afterHash": "ea610fdc91a6e6c92a355820629e3e2ea467bd73a46ec22273ad3a6152d274a5",
+    "requestedApi": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/properties/published-home"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/properties/published-home",
+        "status": 200
+      }
+    ]
+  },
+  "structure": {
+    "headers": 2,
+    "navs": 1,
+    "sections": 7,
+    "cards": 17,
+    "images": 5,
+    "forms": 1
+  },
+  "transitions": {
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "الرئيسية",
+        "href": "/"
+      },
+      {
+        "text": "العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "المطورون",
+        "href": "/developers"
+      },
+      {
+        "text": "المقالات",
+        "href": "/articles"
+      },
+      {
+        "text": "المجتمع",
+        "href": "/community"
+      },
+      {
+        "text": "عن المنصة",
+        "href": "/about"
+      },
+      {
+        "text": "فريقنا",
+        "href": "/team"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register"
+      },
+      {
+        "text": "العودة إلى النتائج",
+        "href": "/properties"
+      },
+      {
+        "text": "Garden villa",
+        "href": "/properties/garden-villa"
+      },
+      {
+        "text": "City apartment",
+        "href": "/properties/city-apartment"
+      },
+      {
+        "text": "الرئيسية",
+        "href": "/"
+      },
+      {
+        "text": "العقارات",
+        "href": "/properties"
+      },
+      {
+        "text": "المطورون",
+        "href": "/developers"
+      },
+      {
+        "text": "المقالات",
+        "href": "/articles"
+      },
+      {
+        "text": "عن المنصة",
+        "href": "/about"
+      },
+      {
+        "text": "hello@sadat.realestate",
+        "href": "mailto:hello@sadat.realestate"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "1",
+        "aria": "الوسائط 1"
+      },
+      {
+        "text": "2",
+        "aria": "الوسائط 2"
+      },
+      {
+        "text": "3",
+        "aria": "الوسائط 3"
+      },
+      {
+        "text": "أرسل الطلب",
+        "aria": null
+      },
+      {
+        "text": "طلب معاينة",
+        "aria": null
+      }
+    ]
+  },
+  "comparison": {
+    "sourceDimensions": [
+      {
+        "width": 1577,
+        "height": 3046
+      },
+      {
+        "width": 1280,
+        "height": 2230
+      },
+      {
+        "width": 1280,
+        "height": 2848
+      }
+    ],
+    "dimensions": {
+      "width": 1406,
+      "height": 1080
+    },
+    "diffPath": "docs/quality/figma_parity/screens/PUB-03/diff.png"
+  }
+}

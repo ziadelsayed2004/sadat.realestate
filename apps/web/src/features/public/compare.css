@@ -98,6 +98,42 @@
   min-block-size: 13rem;
 }
 
+.public-property-comparison__card .ui-property-card__media > img {
+  display: block;
+  inline-size: 100%;
+  block-size: 13rem;
+  object-fit: cover;
+}
+
+.public-property-comparison__sticky-bar {
+  position: sticky;
+  inset-block-end: var(--space-md);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  width: min(100% - 2rem, 48rem);
+  margin: var(--space-2xl) auto var(--space-xl);
+  padding: var(--space-sm) var(--space-md);
+  color: var(--color-text-strong);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-card);
+}
+
+.public-property-comparison__sticky-bar a,
+.public-property-comparison__sticky-bar button {
+  color: var(--color-brand-primary);
+  background: transparent;
+  border: 0;
+  font: inherit;
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  text-decoration: none;
+}
+
 .public-property-comparison__card .ui-property-card__media .ux-state-view {
   display: grid;
   inline-size: 100%;

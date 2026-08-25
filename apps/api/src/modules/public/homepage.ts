@@ -10,9 +10,9 @@ import {
 } from '@sadat-real-estate/contracts';
 
 export interface HomepageSectionSource { key: string; title: unknown; body?: unknown; order: number; status: string; visible: boolean }
-export interface HomepagePropertySource { id: string; slug: string; kind: string; name: unknown; transactionType: string; projectId?: string; description?: unknown; area?: unknown; layout?: unknown; price?: unknown; status: string; active: boolean }
-export interface HomepageDeveloperSource { id: string; slug: string; name: unknown; description?: unknown; kind: string; status: string }
-export interface HomepageContentSource { key: string; type: 'article' | 'community' | 'about' | 'tip'; title: unknown; body?: unknown; order: number; status: string; active?: boolean }
+export interface HomepagePropertySource { id: string; slug: string; kind: string; name: unknown; transactionType: string; imageUrl?: string; projectId?: string; description?: unknown; area?: unknown; layout?: unknown; price?: unknown; status: string; active: boolean }
+export interface HomepageDeveloperSource { id: string; slug: string; name: unknown; imageUrl?: string; description?: unknown; kind: string; status: string }
+export interface HomepageContentSource { key: string; type: 'article' | 'community' | 'about' | 'tip'; title: unknown; imageUrl?: string; body?: unknown; order: number; status: string; active?: boolean }
 export interface HomepageBannerSource { key: string; title?: unknown; imageUrl?: string; targetUrl?: string; order: number; status: string; active?: boolean }
 
 export interface HomepageSources {
@@ -40,6 +40,7 @@ function publicProperties(items: HomepagePropertySource[]) {
   return [...items].filter((item) => item.status === 'published' && item.active).sort((left, right) => left.slug.localeCompare(right.slug, 'en') || left.id.localeCompare(right.id, 'en')).flatMap((item) => {
     const parsed = publicHomepagePropertySchema.safeParse({
       id: item.id, slug: item.slug, kind: item.kind, name: item.name, transactionType: item.transactionType,
+      ...(item.imageUrl ? { imageUrl: item.imageUrl } : {}),
       ...(item.projectId ? { projectId: item.projectId } : {}), ...(item.description !== undefined ? { description: item.description } : {}),
       ...(item.area !== undefined ? { area: item.area } : {}), ...(item.layout !== undefined ? { layout: item.layout } : {}), ...(item.price !== undefined ? { price: item.price } : {})
     });
@@ -49,14 +50,14 @@ function publicProperties(items: HomepagePropertySource[]) {
 
 function publicDevelopers(items: HomepageDeveloperSource[]) {
   return [...items].filter((item) => item.status === 'approved' && item.kind === 'developer_company').sort((left, right) => left.slug.localeCompare(right.slug, 'en') || left.id.localeCompare(right.id, 'en')).flatMap((item) => {
-    const parsed = publicHomepageDeveloperSchema.safeParse({ id: item.id, slug: item.slug, name: item.name, ...(item.description !== undefined ? { description: item.description } : {}) });
+    const parsed = publicHomepageDeveloperSchema.safeParse({ id: item.id, slug: item.slug, name: item.name, ...(item.imageUrl ? { imageUrl: item.imageUrl } : {}), ...(item.description !== undefined ? { description: item.description } : {}) });
     return parsed.success ? [parsed.data] : [];
   });
 }
 
 function publicContent(items: HomepageContentSource[]) {
   return stableOrder(items.filter((item) => item.status === 'published' && item.active !== false).flatMap((item) => {
-    const parsed = publicHomepageContentSchema.safeParse({ key: item.key, type: item.type, title: item.title, ...(item.body !== undefined ? { body: item.body } : {}), order: item.order });
+    const parsed = publicHomepageContentSchema.safeParse({ key: item.key, type: item.type, title: item.title, ...(item.imageUrl ? { imageUrl: item.imageUrl } : {}), ...(item.body !== undefined ? { body: item.body } : {}), order: item.order });
     return parsed.success ? [parsed.data] : [];
   }));
 }
@@ -118,8 +119,8 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
     async read() {
       const [sections, properties, developers, about, tips, banners] = await Promise.all([
         findRows(connection, 'cms_homepage_sections', { status: 'published', visible: true }, { _id: 1, key: 1, title: 1, body: 1, order: 1, status: 1, visible: 1 }, { order: 1, key: 1, _id: 1 }, 100),
-        findRows(connection, 'properties', { status: 'published', active: true }, { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, projectId: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 }, { slug: 1, _id: 1 }, 100),
-        findRows(connection, 'organizations', { status: 'approved', kind: 'developer_company' }, { _id: 1, slug: 1, name: 1, description: 1, kind: 1, status: 1 }, { slug: 1, _id: 1 }, 100),
+        findRows(connection, 'properties', { status: 'published', active: true }, { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, projectId: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 }, { slug: 1, _id: 1 }, 100),
+        findRows(connection, 'organizations', { status: 'approved', kind: 'developer_company' }, { _id: 1, slug: 1, name: 1, imageUrl: 1, description: 1, kind: 1, status: 1 }, { slug: 1, _id: 1 }, 100),
         findRows(connection, 'cms_about_blocks', { status: 'published', active: true }, { _id: 1, key: 1, title: 1, body: 1, order: 1, status: 1, active: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'cms_real_estate_tips', { status: 'published', active: true }, { _id: 1, key: 1, title: 1, body: 1, order: 1, status: 1, active: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'cms_banners', { status: 'published', active: true }, { _id: 1, key: 1, title: 1, imageUrl: 1, targetUrl: 1, order: 1, status: 1, active: 1 }, { order: 1, key: 1, _id: 1 }, 100)
@@ -127,9 +128,9 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
       const mapId = (row: MongoRow) => id(row._id);
       return {
         sections: sections.flatMap((row) => mapId(row) && typeof row.key === 'string' && typeof row.order === 'number' && typeof row.status === 'string' && typeof row.visible === 'boolean' ? [{ key: row.key, title: row.title, ...(row.body !== undefined ? { body: row.body } : {}), order: row.order, status: row.status, visible: row.visible }] : []),
-        properties: properties.flatMap((row) => { const rowId = mapId(row); const projectId = id(row.projectId); return rowId && typeof row.slug === 'string' && typeof row.kind === 'string' && row.name !== undefined && typeof row.transactionType === 'string' && typeof row.status === 'string' && typeof row.active === 'boolean' ? [{ id: rowId, slug: row.slug, kind: row.kind, name: row.name, transactionType: row.transactionType, ...(projectId ? { projectId } : {}), ...(row.description !== undefined ? { description: row.description } : {}), ...(row.area !== undefined ? { area: row.area } : {}), ...(row.layout !== undefined ? { layout: row.layout } : {}), ...(row.price !== undefined ? { price: row.price } : {}), status: row.status, active: row.active }] : []; }),
-        developers: developers.flatMap((row) => { const rowId = mapId(row); return rowId && typeof row.slug === 'string' && row.name !== undefined && typeof row.kind === 'string' && typeof row.status === 'string' ? [{ id: rowId, slug: row.slug, name: row.name, ...(row.description !== undefined ? { description: row.description } : {}), kind: row.kind, status: row.status }] : [] }),
-        content: [...about, ...tips].flatMap((row) => typeof row.key === 'string' && row.title !== undefined && typeof row.order === 'number' && typeof row.status === 'string' ? [{ key: row.key, type: about.includes(row) ? 'about' as const : 'tip' as const, title: row.title, ...(row.body !== undefined ? { body: row.body } : {}), order: row.order, status: row.status, ...(typeof row.active === 'boolean' ? { active: row.active } : {}) }] : []),
+        properties: properties.flatMap((row) => { const rowId = mapId(row); const projectId = id(row.projectId); return rowId && typeof row.slug === 'string' && typeof row.kind === 'string' && row.name !== undefined && typeof row.transactionType === 'string' && typeof row.status === 'string' && typeof row.active === 'boolean' ? [{ id: rowId, slug: row.slug, kind: row.kind, name: row.name, transactionType: row.transactionType, ...(row.imageUrl ? { imageUrl: row.imageUrl } : {}), ...(projectId ? { projectId } : {}), ...(row.description !== undefined ? { description: row.description } : {}), ...(row.area !== undefined ? { area: row.area } : {}), ...(row.layout !== undefined ? { layout: row.layout } : {}), ...(row.price !== undefined ? { price: row.price } : {}), status: row.status, active: row.active }] : []; }),
+        developers: developers.flatMap((row) => { const rowId = mapId(row); return rowId && typeof row.slug === 'string' && row.name !== undefined && typeof row.kind === 'string' && typeof row.status === 'string' ? [{ id: rowId, slug: row.slug, name: row.name, ...(row.imageUrl ? { imageUrl: row.imageUrl } : {}), ...(row.description !== undefined ? { description: row.description } : {}), kind: row.kind, status: row.status }] : [] }),
+        content: [...about, ...tips].flatMap((row) => typeof row.key === 'string' && row.title !== undefined && typeof row.order === 'number' && typeof row.status === 'string' ? [{ key: row.key, type: about.includes(row) ? 'about' as const : 'tip' as const, title: row.title, ...(row.imageUrl ? { imageUrl: row.imageUrl } : {}), ...(row.body !== undefined ? { body: row.body } : {}), order: row.order, status: row.status, ...(typeof row.active === 'boolean' ? { active: row.active } : {}) }] : []),
         banners: banners.flatMap((row) => typeof row.key === 'string' && typeof row.order === 'number' && typeof row.status === 'string' ? [{ key: row.key, ...(row.title !== undefined ? { title: row.title } : {}), ...(row.imageUrl ? { imageUrl: row.imageUrl } : {}), ...(row.targetUrl ? { targetUrl: row.targetUrl } : {}), order: row.order, status: row.status, ...(typeof row.active === 'boolean' ? { active: row.active } : {}) }] : [])
       };
     }

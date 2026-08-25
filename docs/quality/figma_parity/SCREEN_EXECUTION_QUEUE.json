@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "generatedAt": "2026-08-25T18:46:19.368Z",
-  "updatedAt": "2026-08-25T20:12:36.419Z",
-  "executionMode": "fresh_screen_by_screen_clone_figma_audit",
+  "updatedAt": "2026-08-25T20:35:49.248Z",
+  "executionMode": "bounded_public_shared_foundation_repair_before_new_screen_discovery",
   "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
   "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
   "canonicalScreenCount": 131,
@@ -17,7 +17,10 @@
     "oneScreenAtATime": true,
     "continueAutomaticallyAfterClose": true,
     "oldSnapshotsAreNotProof": true,
-    "fullMatrixAllowedOnlyWhen": "verifiedScreens + repairedScreens = 131; partialScreens = 0; blockedScreens = 0; unreviewedScreens = 0"
+    "fullMatrixAllowedOnlyWhen": "verifiedScreens + repairedScreens = 131; partialScreens = 0; blockedScreens = 0; unreviewedScreens = 0",
+    "partialIsNotProcessed": true,
+    "runtimeAfterRequiresActualRepair": true,
+    "discoveryHaltedUntilRepairQueueClosed": true
   },
   "surfaceOrder": [
     {
@@ -80,20 +83,21 @@
     }
   ],
   "cursor": {
-    "nextSequence": 6,
-    "currentScreenId": "PUB-06",
-    "currentFigmaNode": "6017:13155",
-    "currentRuntimeRoute": "/developers/:slug"
+    "phase": "repair",
+    "nextSequence": 1,
+    "currentScreenId": "PUB-01",
+    "currentFigmaNode": "6017:10847",
+    "currentRuntimeRoute": "/"
   },
   "counts": {
-    "processed": 5,
-    "pending": 126,
+    "processed": 0,
+    "pending": 123,
     "verifiedWithoutChange": 0,
     "repaired": 0,
-    "partial": 5,
+    "partial": 8,
     "blockedSource": 0,
     "blockedContract": 0,
-    "unreviewed": 126
+    "unreviewed": 123
   },
   "screens": [
     {
@@ -275,10 +279,16 @@
         }
       },
       "classification": "PARTIAL",
-      "processedAt": "2026-08-25T19:06:39.198Z",
+      "processedAt": null,
       "notes": [
-        "Fresh source and runtime capture completed; direct comparison found major structural/content/media differences and repair/parity confirmation is not complete."
-      ]
+        "Fresh source and runtime capture completed; direct comparison found major structural/content/media differences and repair/parity confirmation is not complete.",
+        "Partial review is evidence only and is not counted as processed.",
+        "Queued for bounded shared public-foundation repair before any new screen discovery."
+      ],
+      "reviewedAt": "2026-08-25T19:06:39.198Z",
+      "processingState": "REPAIR_REQUIRED",
+      "repairStatus": "PENDING",
+      "repairSequence": 1
     },
     {
       "sequence": 2,
@@ -454,10 +464,16 @@
         }
       },
       "classification": "PARTIAL",
-      "processedAt": "2026-08-25T19:36:39.026Z",
+      "processedAt": null,
       "notes": [
-        "Fresh source and runtime capture completed; direct comparison found hierarchy, asset, and control differences and repair/parity confirmation is not complete."
-      ]
+        "Fresh source and runtime capture completed; direct comparison found hierarchy, asset, and control differences and repair/parity confirmation is not complete.",
+        "Partial review is evidence only and is not counted as processed.",
+        "Queued for bounded shared public-foundation repair before any new screen discovery."
+      ],
+      "reviewedAt": "2026-08-25T19:36:39.026Z",
+      "processingState": "REPAIR_REQUIRED",
+      "repairStatus": "PENDING",
+      "repairSequence": 2
     },
     {
       "sequence": 3,
@@ -634,10 +650,16 @@
         }
       },
       "classification": "PARTIAL",
-      "processedAt": "2026-08-25T19:56:42.301Z",
+      "processedAt": null,
       "notes": [
-        "Fresh source and runtime capture completed; direct repair/parity confirmation is not complete."
-      ]
+        "Fresh source and runtime capture completed; direct repair/parity confirmation is not complete.",
+        "Partial review is evidence only and is not counted as processed.",
+        "Queued for bounded shared public-foundation repair before any new screen discovery."
+      ],
+      "reviewedAt": "2026-08-25T19:56:42.301Z",
+      "processingState": "REPAIR_REQUIRED",
+      "repairStatus": "PENDING",
+      "repairSequence": 3
     },
     {
       "sequence": 4,
@@ -812,10 +834,16 @@
         }
       },
       "classification": "PARTIAL",
-      "processedAt": "2026-08-25T20:00:44.912Z",
+      "processedAt": null,
       "notes": [
-        "Fresh source and runtime capture completed; direct repair/parity confirmation is not complete."
-      ]
+        "Fresh source and runtime capture completed; direct repair/parity confirmation is not complete.",
+        "Partial review is evidence only and is not counted as processed.",
+        "Queued for bounded shared public-foundation repair before any new screen discovery."
+      ],
+      "reviewedAt": "2026-08-25T20:00:44.912Z",
+      "processingState": "REPAIR_REQUIRED",
+      "repairStatus": "PENDING",
+      "repairSequence": 4
     },
     {
       "sequence": 5,
@@ -997,10 +1025,16 @@
         }
       },
       "classification": "PARTIAL",
-      "processedAt": "2026-08-25T20:12:36.418Z",
+      "processedAt": null,
       "notes": [
-        "Fresh canonical comparison is complete. The runtime contract and accessibility gate pass, but the runtime does not match the clone card grid, approved imagery, controls, or footer composition."
-      ]
+        "Fresh canonical comparison is complete. The runtime contract and accessibility gate pass, but the runtime does not match the clone card grid, approved imagery, controls, or footer composition.",
+        "Partial review is evidence only and is not counted as processed.",
+        "Queued for bounded shared public-foundation repair before any new screen discovery."
+      ],
+      "reviewedAt": "2026-08-25T20:12:36.418Z",
+      "processingState": "REPAIR_REQUIRED",
+      "repairStatus": "PENDING",
+      "repairSequence": 5
     },
     {
       "sequence": 6,
@@ -1063,21 +1097,147 @@
       },
       "evidenceDir": "docs/quality/figma_parity/screens/PUB-06",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
-        "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
+        "figmaContext": {
+          "tool": "mcp__figma__get_design_context",
+          "skill": "resource:figma-design-to-code",
+          "resultStatus": "FULL_REFERENCE_CODE_RETURNED",
+          "root": {
+            "id": "6017:13155",
+            "name": "Developer Profile",
+            "width": 1534,
+            "height": 2985
+          },
+          "retrievedRegions": [
+            "header",
+            "profile hero",
+            "tabs",
+            "overview",
+            "projects",
+            "properties",
+            "contact/inquiry",
+            "footer"
+          ],
+          "reviewed": true,
+          "responseSummary": {
+            "contentBlocks": 4,
+            "textLengths": [
+              192625,
+              551,
+              83,
+              354
+            ],
+            "referenceCodeReturned": true,
+            "assetMapReturned": true,
+            "screenshotExcluded": true
+          },
+          "note": "The canonical get_design_context call returned the full React/Tailwind reference and asset constants for this frame. The reference was used for direct comparison only; the generated code was not copied into the runtime."
+        },
+        "figmaScreenshot": {
+          "path": "docs/quality/figma_parity/screens/PUB-06/figma.png",
+          "width": 1534,
+          "height": 2985,
+          "reviewed": true
+        },
+        "runtimeBefore": {
+          "path": "docs/quality/figma_parity/screens/PUB-06/runtime-before.png",
+          "sha256": "4daebbf4536e7db32c9ddcf67bc8068ad708fe4e7fafc16ca526ab9f642788a3"
+        },
+        "structuredVisualComparison": {
+          "reviewed": true,
+          "diffPath": "docs/quality/figma_parity/screens/PUB-06/diff.png",
+          "sourceDimensions": [
+            {
+              "width": 1534,
+              "height": 2985
+            },
+            {
+              "width": 1280,
+              "height": 2103
+            },
+            {
+              "width": 1280,
+              "height": 2103
+            }
+          ],
+          "observations": [
+            "Figma source is 1534px wide and 2985px high for PUB-06.",
+            "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 2103px document height.",
+            "The clone has a full-width city hero image, verified developer identity, project/area badges, and explicit contact and unit actions; the runtime hero uses a missing-image state and only exposes a compact summary.",
+            "The clone includes an activity summary rail, contact panel, trust notice, project image cards, an available-units empty state, and an inquiry form; the runtime omits the activity/contact/inquiry surfaces and renders sparse text-only project/property cards.",
+            "The clone footer includes brand, page links, contact information, social controls, and legal rows; the captured runtime footer is shorter and omits those approved regions.",
+            "The side-by-side diff is evidence for review only; no baseline was updated."
+          ]
+        },
+        "functionalApiComparison": {
+          "reviewed": true,
+          "requestProjection": "GET /api/v1/public/developers/approved-builder",
+          "responseProjection": "public-developer-profile fixture captured and hashed",
+          "outcome": "GET /api/v1/public/developers/approved-builder returned HTTP 200 and the page reached success. The projects and properties response projection is consumed, but the clone media, activity, contact, inquiry, and CTA surfaces are not matched."
+        },
+        "defects": [
+          "Runtime hero media is a placeholder/missing-image state while the clone uses an approved city/developer image.",
+          "Runtime omits the clone's activity summary, contact card, trust notice, available-units state, and inquiry form.",
+          "Runtime project and property cards are sparse text-only projections instead of the clone's image-backed cards with approved metadata/actions.",
+          "Runtime footer is shorter and omits the clone's contact, social, and legal rows.",
+          "No runtime files were repaired during this evidence pass."
+        ],
         "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "runtimeAfter": {
+          "path": "docs/quality/figma_parity/screens/PUB-06/runtime-after.png",
+          "sha256": "4daebbf4536e7db32c9ddcf67bc8068ad708fe4e7fafc16ca526ab9f642788a3"
+        },
+        "reviewedDiff": {
+          "path": "docs/quality/figma_parity/screens/PUB-06/diff.png",
+          "reviewed": true
+        },
+        "focusedTests": [
+          {
+            "name": "affected typecheck",
+            "command": "npm.cmd run typecheck --workspace apps/web",
+            "exitCode": 0
+          },
+          {
+            "name": "affected public lint",
+            "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"tests/public-developers.vitest.test.tsx\" \"tests/e2e/public-fixtures.ts\" --max-warnings=0",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Vitest",
+            "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-developers.vitest.test.tsx",
+            "exitCode": 0
+          },
+          {
+            "name": "focused SSR/API integration",
+            "command": "node --test apps/web/tests/ssr.test.mjs --test-name-pattern \"public developer profile\"",
+            "exitCode": 0
+          },
+          {
+            "name": "focused API contract tests",
+            "command": "node --import tsx --test apps/web/tests/contracts.test.ts",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright visual",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public developer profile renders projects\"",
+            "exitCode": 0
+          }
+        ],
+        "accessibility": {
+          "focusedCheck": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public developer profile exposes tab navigation\"",
+          "exitCode": 0
+        }
       },
-      "classification": "PENDING",
+      "classification": "PARTIAL",
       "processedAt": null,
-      "notes": []
+      "notes": [
+        "Fresh canonical comparison is complete. The runtime profile contract and focused gates pass, but the runtime does not match the clone hero, activity/contact rail, project media, inquiry form, or footer composition.",
+        "Partial review is evidence only and is not counted as processed.",
+        "Queued for bounded shared public-foundation repair before any new screen discovery."
+      ],
+      "reviewedAt": "2026-08-25T20:18:50.212Z",
+      "processingState": "REPAIR_REQUIRED",
+      "repairStatus": "PENDING",
+      "repairSequence": 6
     },
     {
       "sequence": 7,
@@ -1140,21 +1300,146 @@
       },
       "evidenceDir": "docs/quality/figma_parity/screens/PUB-07",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
-        "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
+        "figmaContext": {
+          "tool": "mcp__figma__get_design_context",
+          "skill": "resource:figma-design-to-code",
+          "resultStatus": "FULL_REFERENCE_CODE_RETURNED",
+          "root": {
+            "id": "6017:11467",
+            "name": "Articles Listing",
+            "width": 1523,
+            "height": 1783
+          },
+          "retrievedRegions": [
+            "header",
+            "directory heading",
+            "article search",
+            "category filters",
+            "article card grid",
+            "CTA banner",
+            "footer"
+          ],
+          "reviewed": true,
+          "responseSummary": {
+            "contentBlocks": 4,
+            "textLengths": [
+              96133,
+              551,
+              83,
+              354
+            ],
+            "referenceCodeReturned": true,
+            "assetMapReturned": true,
+            "screenshotExcluded": true
+          },
+          "note": "The canonical get_design_context call returned the full React/Tailwind reference and asset constants for this frame. The reference was used for direct comparison only; the generated code was not copied into the runtime."
+        },
+        "figmaScreenshot": {
+          "path": "docs/quality/figma_parity/screens/PUB-07/figma.png",
+          "width": 1523,
+          "height": 1783,
+          "reviewed": true
+        },
+        "runtimeBefore": {
+          "path": "docs/quality/figma_parity/screens/PUB-07/runtime-before.png",
+          "sha256": "c1fd8847a16c267d8386fdce6d6c49d2b3f0ea38d116698a5f7fb247355ffb5b"
+        },
+        "structuredVisualComparison": {
+          "reviewed": true,
+          "diffPath": "docs/quality/figma_parity/screens/PUB-07/diff.png",
+          "sourceDimensions": [
+            {
+              "width": 1523,
+              "height": 1783
+            },
+            {
+              "width": 1280,
+              "height": 1340
+            },
+            {
+              "width": 1280,
+              "height": 1340
+            }
+          ],
+          "observations": [
+            "Figma source is 1523px wide and 1783px high for PUB-07.",
+            "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 1340px document height.",
+            "The clone renders six image-backed article cards in a three-column grid; the deterministic runtime renders two cards with missing-image placeholders.",
+            "The clone has a centered heading/search/category composition and a dark call-to-action banner; the runtime's heading and filters are left-weighted in the captured RTL layout and the CTA banner is absent.",
+            "The clone footer includes brand, page links, contact information, social controls, and legal rows; the captured runtime footer is shorter and omits those approved regions.",
+            "The side-by-side diff is evidence for review only; no baseline was updated."
+          ]
+        },
+        "functionalApiComparison": {
+          "reviewed": true,
+          "requestProjection": "GET /api/v1/public/articles",
+          "responseProjection": "public-articles fixture captured and hashed",
+          "outcome": "GET /api/v1/public/articles?locale=ar&page=1&limit=20 and GET /api/v1/public/article-categories?locale=ar both returned HTTP 200 and the page reached success. The article/category response projections are consumed, but the clone card count/media and CTA surface are not matched."
+        },
+        "defects": [
+          "Runtime renders two article cards instead of the clone's six-card three-column composition for the approved reference state.",
+          "Runtime article media is a placeholder/missing-image state while the clone uses approved article imagery.",
+          "Runtime omits the clone's dark search CTA banner and does not match the approved heading/filter alignment and spacing.",
+          "Runtime footer is shorter and omits the clone's contact, social, and legal rows.",
+          "No runtime files were repaired during this evidence pass."
+        ],
         "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "runtimeAfter": {
+          "path": "docs/quality/figma_parity/screens/PUB-07/runtime-after.png",
+          "sha256": "c1fd8847a16c267d8386fdce6d6c49d2b3f0ea38d116698a5f7fb247355ffb5b"
+        },
+        "reviewedDiff": {
+          "path": "docs/quality/figma_parity/screens/PUB-07/diff.png",
+          "reviewed": true
+        },
+        "focusedTests": [
+          {
+            "name": "affected typecheck",
+            "command": "npm.cmd run typecheck --workspace apps/web",
+            "exitCode": 0
+          },
+          {
+            "name": "affected content lint",
+            "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/content/**/*.{ts,tsx}\" \"tests/public-articles.vitest.test.tsx\" \"tests/e2e/public-fixtures.ts\" --max-warnings=0",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Vitest",
+            "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-articles.vitest.test.tsx",
+            "exitCode": 0
+          },
+          {
+            "name": "focused SSR/API integration",
+            "command": "node --test apps/web/tests/ssr.test.mjs --test-name-pattern \"public article listing\"",
+            "exitCode": 0
+          },
+          {
+            "name": "focused API contract tests",
+            "command": "node --import tsx --test apps/web/tests/contracts.test.ts",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright visual",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public article listing renders published cards\"",
+            "exitCode": 0
+          }
+        ],
+        "accessibility": {
+          "focusedCheck": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public article listing exposes labeled search\"",
+          "exitCode": 0
+        }
       },
-      "classification": "PENDING",
+      "classification": "PARTIAL",
       "processedAt": null,
-      "notes": []
+      "notes": [
+        "Fresh canonical comparison is complete. Article and category APIs, focused tests, and accessibility pass, but the runtime does not match the clone card count, approved imagery, CTA banner, or footer composition.",
+        "Partial review is evidence only and is not counted as processed.",
+        "Queued for bounded shared public-foundation repair before any new screen discovery."
+      ],
+      "reviewedAt": "2026-08-25T20:24:15.283Z",
+      "processingState": "REPAIR_REQUIRED",
+      "repairStatus": "PENDING",
+      "repairSequence": 7
     },
     {
       "sequence": 8,
@@ -1217,21 +1502,146 @@
       },
       "evidenceDir": "docs/quality/figma_parity/screens/PUB-08",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
-        "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
+        "figmaContext": {
+          "tool": "mcp__figma__get_design_context",
+          "skill": "resource:figma-design-to-code",
+          "resultStatus": "FULL_REFERENCE_CODE_RETURNED",
+          "root": {
+            "id": "6017:12560",
+            "name": "Article Details",
+            "width": 1523,
+            "height": 1759
+          },
+          "retrievedRegions": [
+            "header",
+            "back link",
+            "hero/media",
+            "article title/meta",
+            "article body",
+            "related articles",
+            "footer"
+          ],
+          "reviewed": true,
+          "responseSummary": {
+            "contentBlocks": 4,
+            "textLengths": [
+              89437,
+              551,
+              83,
+              354
+            ],
+            "referenceCodeReturned": true,
+            "assetMapReturned": true,
+            "screenshotExcluded": true
+          },
+          "note": "The canonical get_design_context call returned the full React/Tailwind reference and asset constants for this frame. The reference was used for direct comparison only; the generated code was not copied into the runtime."
+        },
+        "figmaScreenshot": {
+          "path": "docs/quality/figma_parity/screens/PUB-08/figma.png",
+          "width": 1523,
+          "height": 1759,
+          "reviewed": true
+        },
+        "runtimeBefore": {
+          "path": "docs/quality/figma_parity/screens/PUB-08/runtime-before.png",
+          "sha256": "4a4d9f867b0dc38c6eab5a63c59b2579556cd0a57e94bc77659de65d74cfb00d"
+        },
+        "structuredVisualComparison": {
+          "reviewed": true,
+          "diffPath": "docs/quality/figma_parity/screens/PUB-08/diff.png",
+          "sourceDimensions": [
+            {
+              "width": 1523,
+              "height": 1759
+            },
+            {
+              "width": 1280,
+              "height": 1404
+            },
+            {
+              "width": 1280,
+              "height": 1404
+            }
+          ],
+          "observations": [
+            "Figma source is 1523px wide and 1759px high for PUB-08.",
+            "Runtime is 1280px wide at the approved Desktop Chrome viewport and has 1404px document height.",
+            "The clone has a wide approved hero image, a related-properties side rail with three image-backed items, and a structured title/meta treatment; the runtime hero uses a missing-image placeholder and has no related-property rail.",
+            "The clone article body includes a heading, paragraph, quote treatment, and rich spacing; the deterministic runtime only renders the short fixture body summary.",
+            "The clone includes three related-article image cards and a complete footer; the runtime related-article area is empty and the footer is shorter than the clone.",
+            "The side-by-side diff is evidence for review only; no baseline was updated."
+          ]
+        },
+        "functionalApiComparison": {
+          "reviewed": true,
+          "requestProjection": "GET /api/v1/public/articles/buying-in-sadat",
+          "responseProjection": "public-article-details fixture captured and hashed",
+          "outcome": "GET /api/v1/public/articles/buying-in-sadat?locale=ar returned HTTP 200 and the page reached success. The article response projection is consumed, but the clone media, related-property, rich-body, related-article, and footer surfaces are not matched."
+        },
+        "defects": [
+          "Runtime article hero media is a placeholder/missing-image state while the clone uses an approved image asset.",
+          "Runtime omits the clone's related-property side rail and its three image-backed property items.",
+          "Runtime body content is a short text projection and does not include the clone's structured introduction and quote treatment.",
+          "Runtime omits the clone's three related-article cards and full footer rows.",
+          "No runtime files were repaired during this evidence pass."
+        ],
         "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "runtimeAfter": {
+          "path": "docs/quality/figma_parity/screens/PUB-08/runtime-after.png",
+          "sha256": "4a4d9f867b0dc38c6eab5a63c59b2579556cd0a57e94bc77659de65d74cfb00d"
+        },
+        "reviewedDiff": {
+          "path": "docs/quality/figma_parity/screens/PUB-08/diff.png",
+          "reviewed": true
+        },
+        "focusedTests": [
+          {
+            "name": "affected typecheck",
+            "command": "npm.cmd run typecheck --workspace apps/web",
+            "exitCode": 0
+          },
+          {
+            "name": "affected content lint",
+            "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/content/**/*.{ts,tsx}\" \"tests/public-articles.vitest.test.tsx\" \"tests/e2e/public-fixtures.ts\" --max-warnings=0",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Vitest",
+            "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-articles.vitest.test.tsx",
+            "exitCode": 0
+          },
+          {
+            "name": "focused SSR/API integration",
+            "command": "node --test apps/web/tests/ssr.test.mjs --test-name-pattern \"article details\"",
+            "exitCode": 0
+          },
+          {
+            "name": "focused API contract tests",
+            "command": "node --import tsx --test apps/web/tests/contracts.test.ts",
+            "exitCode": 0
+          },
+          {
+            "name": "focused Playwright visual",
+            "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public article details renders the published projection\"",
+            "exitCode": 0
+          }
+        ],
+        "accessibility": {
+          "focusedCheck": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public article details exposes\"",
+          "exitCode": 0
+        }
       },
-      "classification": "PENDING",
+      "classification": "PARTIAL",
       "processedAt": null,
-      "notes": []
+      "notes": [
+        "Fresh canonical comparison is complete. The article-detail API and focused gates pass, but the runtime does not match the clone hero media, rich body, related content, side rail, or footer composition.",
+        "Partial review is evidence only and is not counted as processed.",
+        "Queued for bounded shared public-foundation repair before any new screen discovery."
+      ],
+      "reviewedAt": "2026-08-25T20:28:51.311Z",
+      "processingState": "REPAIR_REQUIRED",
+      "repairStatus": "PENDING",
+      "repairSequence": 8
     },
     {
       "sequence": 9,
@@ -9701,5 +10111,93 @@
       "processedAt": null,
       "notes": []
     }
-  ]
+  ],
+  "discoveryHalt": {
+    "halted": true,
+    "haltedBeforeScreenId": "PUB-09",
+    "haltedBeforeCloneNode": "6017:11634",
+    "haltedBeforeRuntimeRoute": "/community",
+    "reason": "Do not discover new screens until PUB-01 through PUB-08 have zero repository-owned material defects."
+  },
+  "repairQueue": {
+    "mode": "bounded_public_shared_foundation",
+    "scope": "public header/navigation, hero/search, approved imagery/media, card grids, filters, CTA sections, footer, deterministic API-backed success data",
+    "screenIds": [
+      {
+        "sequence": 1,
+        "screenId": "PUB-01",
+        "status": "PENDING",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-01",
+        "cloneNode": "6017:10847",
+        "runtimeRoute": "/"
+      },
+      {
+        "sequence": 2,
+        "screenId": "PUB-02",
+        "status": "PENDING",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-02",
+        "cloneNode": "6017:12095",
+        "runtimeRoute": "/properties"
+      },
+      {
+        "sequence": 3,
+        "screenId": "PUB-03",
+        "status": "PENDING",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-03",
+        "cloneNode": "6017:12693",
+        "runtimeRoute": "/properties/:slug"
+      },
+      {
+        "sequence": 4,
+        "screenId": "PUB-04",
+        "status": "PENDING",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-04",
+        "cloneNode": "6017:13838",
+        "runtimeRoute": "/compare"
+      },
+      {
+        "sequence": 5,
+        "screenId": "PUB-05",
+        "status": "PENDING",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-05",
+        "cloneNode": "6017:11366",
+        "runtimeRoute": "/developers"
+      },
+      {
+        "sequence": 6,
+        "screenId": "PUB-06",
+        "status": "PENDING",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-06",
+        "cloneNode": "6017:13155",
+        "runtimeRoute": "/developers/:slug"
+      },
+      {
+        "sequence": 7,
+        "screenId": "PUB-07",
+        "status": "PENDING",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-07",
+        "cloneNode": "6017:11467",
+        "runtimeRoute": "/articles"
+      },
+      {
+        "sequence": 8,
+        "screenId": "PUB-08",
+        "status": "PENDING",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-08",
+        "cloneNode": "6017:12560",
+        "runtimeRoute": "/articles/:slug"
+      }
+    ],
+    "nextScreenId": "PUB-01",
+    "nextSequence": 1,
+    "status": "IN_PROGRESS"
+  }
 }
