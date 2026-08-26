@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-02",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4353",
+    "nodeId": "6017:15835"
+  },
+  "runtime": {
+    "route": "/auth/register/seeker?lang=ar",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "deviceScaleFactor": 1
+    },
+    "sha256": "2d636ee2a981d57d02e93d2af44367a3d1b2f54e641ee5fef02405d72a076b0c",
+    "fontsReady": true,
+    "logoDecoded": true
+  },
+  "repair": {
+    "measuredDefect": "Pass11's 0.5px role-options translation added 160 card-region material pixels while the CTA changes removed 81 pixels.",
+    "implementedRepair": "Removed only the role-options translation and retained the CTA -0.5px placement and #e6e7e7 disabled label override.",
+    "predictedMaterialDifferencePercent": 1.4181,
+    "observedMaterialDifferencePercent": 1.4181,
+    "observedAntiAliasingOnlyPercent": 0.3688,
+    "predictionConfirmed": true
+  },
+  "manualReview": {
+    "reviewed": true,
+    "content": "Canonical Arabic title, description, role labels, role descriptions, provider badge, CTA, and back action are present and ordered correctly.",
+    "geometry": "Header, centered heading group, two 328x236 role cards, 16px inter-card gap, and action band visually match the canonical composition. No new pass12 displacement is visible.",
+    "assets": "The approved logo and both inline role SVGs render; the runtime capture reports the logo decoded.",
+    "behavior": "The default state keeps Continue disabled, exposes seeker selection as a button, and exposes provider registration and login return as links.",
+    "residualClassification": "All 21,111 material pixels are contained in the seven known glyph/vector/stroke regions: header 633, step badge 1,008, heading/description 6,749, provider card 5,307, seeker card 5,297, CTA 781, and back action 1,336. No material residual exists in the surrounding flat page field."
+  },
+  "focusedVisualGate": {
+    "commandScope": "seeker-registration visual-baseline test; desktop/tablet/mobile; ar/en only",
+    "animationsDisabledByRunner": true,
+    "fontsWaitedByRunner": true,
+    "snapshotsUpdated": false,
+    "ignoredSnapshots": false,
+    "status": "failed",
+    "failures": [
+      {
+        "project": "desktop-ar",
+        "expected": "1280x1031",
+        "actual": "1280x810",
+        "differentPixels": 20140
+      },
+      {
+        "project": "desktop-en",
+        "expected": "1280x1031",
+        "actual": "1280x810",
+        "differentPixels": 23895
+      },
+      {
+        "project": "tablet-ar",
+        "expected": "712x1317",
+        "actual": "712x1138",
+        "differentPixels": 43801
+      },
+      {
+        "project": "tablet-en",
+        "expected": "712x1317",
+        "actual": "712x1138",
+        "differentPixels": 46690
+      },
+      {
+        "project": "mobile-ar",
+        "expected": "393x1155",
+        "actual": "393x997",
+        "differentPixels": 27311
+      },
+      {
+        "project": "mobile-en",
+        "expected": "393x1182",
+        "actual": "393x997",
+        "differentPixels": 28807
+      }
+    ]
+  },
+  "focusedFunctionalAccessibilityGate": {
+    "scope": "desktop ar/en seeker registration contract flow and keyboard/accessibility labels",
+    "passed": 4,
+    "failed": 0,
+    "exitCode": 0
+  },
+  "classification": {
+    "screenClosed": false,
+    "status": "EXTERNAL_BLOCKER",
+    "blocker": "The normal focused visual test compares the repaired AUTH-02 role screen with coordinator-owned stale snapshots whose document heights predate the canonical compact composition. This lane is prohibited from updating visual baselines.",
+    "coordinatorRequest": "Review the six generated actual/expected/diff sets under AUTH-02/test-artifacts/pass12-visual and, if accepted, update only the AUTH-02 seeker-registration role snapshots for desktop/tablet/mobile ar/en in the coordinator lane, then rerun the same focused visual test without ignored snapshots.",
+    "advanceAllowed": false,
+    "nextScreen": "AUTH-02"
+  }
+}

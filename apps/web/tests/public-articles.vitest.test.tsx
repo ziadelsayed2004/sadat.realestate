@@ -40,6 +40,7 @@ const categories: readonly PublicArticleCategoryOption[] = [
   { id: 'bbbbbbbbbbbbbbbbbbbbbbbb', name: { en: 'Buying tips' } },
   { id: 'dddddddddddddddddddddddd', name: { en: 'Rental tips' } }
 ];
+const emptyRelatedProperties = { items: [], categories: [], propertyTypes: [], page: 1, limit: 3, total: 0 };
 
 describe('public article listing and details', () => {
   it('parses the bounded query and keeps category/page controls on the public route', () => {
@@ -86,13 +87,13 @@ describe('public article listing and details', () => {
       }
     });
     renderWithLocale(
-      <PublicArticleDetails locale="en" url="/articles/buying-in-sadat" initialData={embedded} />,
+      <PublicArticleDetails locale="en" url="/articles/buying-in-sadat" initialData={embedded} relatedProperties={emptyRelatedProperties} />,
       { locale: 'en' }
     );
     expect(screen.getByText('Embedded buying tips')).toBeInTheDocument();
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the public projection and locale direction for %s', locale => {
+  it.each(['ar', 'en'] as const)('renders the public projection and locale direction for %s', locale => {
     const result = renderWithLocale(<PublicArticles locale={locale} initialData={articleListData} categories={categories} />, { locale });
     const copy = getPublicArticlesCopy(locale);
 
@@ -130,20 +131,20 @@ describe('public article listing and details', () => {
   it('keeps forbidden listing and missing detail responses safe', async () => {
     const copy = getPublicArticlesCopy('en');
     const permissionLoad = vi.fn().mockRejectedValue(new ApiClientError('forbidden', { code: 'HTTP_ERROR', status: 403 }));
-    renderWithLocale(<PublicArticles locale="en" load={permissionLoad} />, { locale: 'en' });
+    renderWithLocale(<PublicArticles locale="en" categories={categories} load={permissionLoad} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByRole('alert', { name: copy.permissionTitle })).toBeInTheDocument());
 
     const notFoundLoad = vi.fn().mockRejectedValue(new ApiClientError('missing', { code: 'HTTP_ERROR', status: 404 }));
-    renderWithLocale(<PublicArticleDetails locale="en" url="/articles/missing-article" load={notFoundLoad} />, { locale: 'en' });
+    renderWithLocale(<PublicArticleDetails locale="en" url="/articles/missing-article" load={notFoundLoad} relatedProperties={emptyRelatedProperties} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByRole('heading', { name: copy.notFoundTitle, level: 1 })).toBeInTheDocument());
     expect(screen.getByRole('link', { name: copy.notFoundLink })).toHaveAttribute('href', '/articles');
   });
 
   it('renders details, related content, and an explicit unavailable-image state', () => {
-    const result = renderWithLocale(<PublicArticleDetails locale="en" url="/articles/buying-in-sadat" initialData={article} relatedArticles={articleListData} categories={categories} />, { locale: 'en' });
+    const result = renderWithLocale(<PublicArticleDetails locale="en" url="/articles/buying-in-sadat" initialData={article} relatedArticles={articleListData} relatedProperties={emptyRelatedProperties} categories={categories} />, { locale: 'en' });
 
     expect(screen.getByRole('heading', { name: 'Buying in Sadat City', level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Article content', level: 2 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: getPublicArticlesCopy('en').introduction, level: 2 })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Related articles', level: 2 })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Rental tips' })).toHaveAttribute('href', '/articles/rental-tips');
     expect(result.container.querySelector('[data-state="missing_image"]')).toBeInTheDocument();

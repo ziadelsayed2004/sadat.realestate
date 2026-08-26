@@ -1,0 +1,43 @@
+{
+  "taskId": "backend_146",
+  "summary": "Added a strict persisted property delivery-status contract and API-backed public filter required by canonical PUB-02.",
+  "filesChanged": [
+    "packages/contracts/src/properties/index.ts",
+    "packages/contracts/src/search/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/properties/models.ts",
+    "apps/api/src/modules/properties/repository.ts",
+    "apps/api/src/modules/properties/service.ts",
+    "apps/api/src/modules/search/properties.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+    "docs/api/public-properties-search.md"
+  ],
+  "verification": [
+    {
+      "command": "contracts build",
+      "result": "passed",
+      "exitCode": 0
+    },
+    {
+      "command": "API and web typecheck",
+      "result": "passed",
+      "exitCode": 0
+    },
+    {
+      "command": "focused property/search/route tests",
+      "result": "passed: 13/13",
+      "exitCode": 0
+    },
+    {
+      "command": "affected lint",
+      "result": "passed: 0 errors",
+      "exitCode": 0
+    },
+    {
+      "command": "OpenAPI and Postman validation",
+      "result": "passed",
+      "exitCode": 0
+    }
+  ]
+}

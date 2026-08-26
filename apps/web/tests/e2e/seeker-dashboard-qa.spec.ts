@@ -153,7 +153,7 @@ const completedRoutes = [
   { path: '/seeker/saved', selector: '[data-screen-id="SEK-06"]' },
   { path: '/seeker/notifications', selector: '[data-screen-id="SEK-07"]' },
   { path: '/seeker/profile?tab=preferences', selector: '[data-screen-id="SEK-08"]' },
-  { path: '/seeker/profile?tab=profile', selector: '[data-screen-id="SEK-09"]' },
+  { path: '/seeker/profile?tab=personal', selector: '[data-screen-id="SEK-09"]' },
   { path: '/seeker/settings', selector: '[data-screen-id="SEK-10"]' }
 ] as const;
 

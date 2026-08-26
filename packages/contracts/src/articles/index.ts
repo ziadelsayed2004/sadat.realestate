@@ -174,7 +174,9 @@ export const articlePublicSchema = articleDataSchema.pick({
   publishedAt: true
 }).extend({
   imageUrl: z.url().max(2_048).optional(),
-  category: articlePublicCategorySchema.optional()
+  category: articlePublicCategorySchema.optional(),
+  authorName: localizedTextSchema.optional(),
+  readingTimeMinutes: z.number().int().positive().max(240).optional()
 }).strict();
 
 export const articleListQuerySchema = z.object({

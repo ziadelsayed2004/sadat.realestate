@@ -6,7 +6,7 @@
 | Phase | F6_integration_release |
 | Area | e2e |
 | Kind | quality |
-| Sequence | 180 / 199 |
+| Sequence | 189 / 208 |
 | Depends on | `frontend_077` |
 
 ## Goal

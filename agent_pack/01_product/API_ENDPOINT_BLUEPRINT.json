@@ -357,7 +357,7 @@
     "roles": [
       "public"
     ],
-    "purpose": "Published listing/search",
+    "purpose": "Published listing/search with taxonomy and delivery-status filters",
     "status": "implemented",
     "apiVersion": "v1"
   },

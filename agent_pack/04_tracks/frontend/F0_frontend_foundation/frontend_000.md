@@ -6,7 +6,7 @@
 | Phase | F0_frontend_foundation |
 | Area | frontend_foundation |
 | Kind | infrastructure |
-| Sequence | 116 / 199 |
+| Sequence | 125 / 208 |
 | Depends on | `backend_138` |
 
 ## Goal

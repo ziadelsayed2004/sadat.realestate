@@ -84,6 +84,15 @@ describe('Seeker saved properties', () => {
     await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('This property is no longer available.'));
   });
 
+  it('keeps the canonical grid view by default and exposes a list view toggle', async () => {
+    const result = renderWithLocale(<SeekerSaved locale="en" session={session} load={async () => list} actions={emptyActions()} />, { locale: 'en' });
+    await waitFor(() => expect(screen.getByTestId(`seeker-saved-property-${saved.id}`)).toBeInTheDocument());
+    const grid = result.container.querySelector('.seeker-saved__grid');
+    expect(grid).toHaveAttribute('data-view', 'grid');
+    fireEvent.click(screen.getByRole('button', { name: 'List view' }));
+    expect(grid).toHaveAttribute('data-view', 'list');
+  });
+
   it('renders the truthful empty state and fails closed for an anonymous session', () => {
     const copy = getSeekerSavedCopy('en');
     const empty = favoriteListDataSchema.parse({ items: [], page: 1, limit: 20, total: 0 });

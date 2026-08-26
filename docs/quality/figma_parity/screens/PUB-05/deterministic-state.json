@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "fresh-audit-public-developer-directory",
-  "responseSha256": "a3aeb40e5b517640032b7a2a76187e654f47470afad0b4c12a0410b7c0326ee2",
+  "responseSha256": "041072678ee0a6b3c083e9a8a455117eb3fc79a46c1e8b0d48377e51810109d5",
   "response": {
     "data": {
       "items": [
@@ -18,16 +18,28 @@
           "slug": "approved-builder",
           "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
           "name": {
-            "ar": "شركة معتمدة",
-            "en": "Approved builder",
-            "zh-CN": "已批准开发商"
+            "ar": "شركة AS للتطوير العقاري",
+            "en": "AS Real Estate Development",
+            "zh-CN": "AS房地产开发公司"
           },
           "description": {
-            "ar": "جهة منشورة",
-            "en": "Published developer description.",
-            "zh-CN": "已发布的开发商"
+            "ar": "شركة رائدة في تطوير العقارات بمدينة السادات منذ أكثر من 15 عاماً.",
+            "en": "A leading Sadat City real-estate developer for more than 15 years.",
+            "zh-CN": "在萨达特城开发房地产超过15年的领先公司。"
           },
           "verified": true,
+          "logoUrl": "http://127.0.0.1:4173/assets/clone/pub05-b.png",
+          "locations": [
+            {
+              "ar": "المنطقة الراقية"
+            },
+            {
+              "ar": "الحي الخامس"
+            },
+            {
+              "ar": "الحي الأول"
+            }
+          ],
           "projectCount": 2,
           "propertyCount": 4
         },
@@ -36,57 +48,84 @@
           "kind": "developer_company",
           "slug": "city-builders",
           "name": {
-            "ar": "City builders",
-            "en": "City builders",
-            "zh-CN": "City builders"
+            "ar": "مجموعة النيل العقارية",
+            "en": "Nile Real Estate Group",
+            "zh-CN": "尼罗房地产集团"
           },
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
           "description": {
-            "en": "Published developer description.",
-            "ar": "Published developer description.",
-            "zh-CN": "Published developer description."
+            "en": "An integrated real-estate group known for luxury projects and after-sales service.",
+            "ar": "مجموعة عقارية متكاملة تتميز بمشاريعها الفاخرة وخدمة ما بعد البيع.",
+            "zh-CN": "提供豪华项目和售后服务的综合房地产集团。"
           },
           "verified": true,
           "projectCount": 3,
-          "propertyCount": 5
+          "propertyCount": 5,
+          "logoUrl": "http://127.0.0.1:4173/assets/clone/pub05-d.png",
+          "locations": [
+            {
+              "ar": "الحي السابع"
+            },
+            {
+              "ar": "المنطقة الراقية"
+            }
+          ]
         },
         {
           "id": "dddddddddddddddddddddddd",
           "kind": "brokerage_office",
           "slug": "sadat-brokers",
           "name": {
-            "ar": "Sadat brokers",
-            "en": "Sadat brokers",
-            "zh-CN": "Sadat brokers"
+            "ar": "شركة مصر الجديدة للإسكان",
+            "en": "Misr El Gedida Housing",
+            "zh-CN": "新开罗住房公司"
           },
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
           "description": {
-            "en": "Published brokerage description.",
-            "ar": "Published brokerage description.",
-            "zh-CN": "Published brokerage description."
+            "en": "A specialist in mid-market and premium housing at competitive prices.",
+            "ar": "شركة متخصصة في الإسكان المتوسط والراقي بأسعار تنافسية.",
+            "zh-CN": "专注于以有竞争力的价格提供中高端住房。"
           },
           "verified": true,
-          "projectCount": 1,
-          "propertyCount": 7
+          "projectCount": 4,
+          "propertyCount": 8,
+          "logoUrl": "http://127.0.0.1:4173/assets/clone/pub05-f.png",
+          "locations": [
+            {
+              "ar": "الحي الخامس"
+            },
+            {
+              "ar": "الحي الثالث"
+            }
+          ]
         },
         {
           "id": "eeeeeeeeeeeeeeeeeeeeeeee",
           "kind": "developer_company",
           "slug": "new-city-developments",
           "name": {
-            "ar": "New city developments",
-            "en": "New city developments",
-            "zh-CN": "New city developments"
+            "ar": "مجموعة الدلتا العقارية",
+            "en": "Delta Real Estate Group",
+            "zh-CN": "三角洲房地产集团"
           },
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
           "description": {
-            "en": "Published developer description.",
-            "ar": "Published developer description.",
-            "zh-CN": "Published developer description."
+            "en": "Twenty years of experience in the Egyptian real-estate market.",
+            "ar": "خبرة 20 عاماً في السوق العقاري المصري.",
+            "zh-CN": "在埃及房地产市场拥有20年经验。"
           },
           "verified": true,
           "projectCount": 4,
-          "propertyCount": 8
+          "propertyCount": 8,
+          "logoUrl": "http://127.0.0.1:4173/assets/clone/pub05-f.png",
+          "locations": [
+            {
+              "ar": "المنطقة الراقية"
+            },
+            {
+              "ar": "المنطقة الصناعية"
+            }
+          ]
         }
       ],
       "page": 1,

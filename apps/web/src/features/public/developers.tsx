@@ -7,7 +7,7 @@ import type {
 } from '@sadat-real-estate/contracts';
 import { publicOrganizationDirectoryQuerySchema } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
-import { Badge, Pagination } from '../design_system/index.ts';
+import { Pagination } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
 import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from './components.tsx';
@@ -87,10 +87,6 @@ function syncBrowserUrl(query: PublicOrganizationDirectoryQuery): void {
   if (typeof window !== 'undefined') window.history.replaceState({}, '', publicDeveloperDirectoryUrl(query));
 }
 
-function kindLabel(kind: PublicOrganizationCard['kind'], copy: PublicDevelopersCopy): string {
-  return kind === 'developer_company' ? copy.developerCompany : copy.brokerageOffice;
-}
-
 function StateNotice({
   state,
   copy,
@@ -163,23 +159,21 @@ function DirectoryFilters({
 function OrganizationCard({ organization, locale, copy }: { readonly organization: PublicOrganizationCard; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) {
   const title = localizedText(organization.name, locale) ?? organization.slug;
   const description = localizedText(organization.description, locale);
+  const locations = (organization.locations ?? []).flatMap((location, index) => {
+    const label = localizedText(location, locale);
+    return label === undefined ? [] : [{ key: `${organization.id}-location-${index}`, label }];
+  });
   return (
     <article className="public-developer-directory__card">
       <div className="public-developer-directory__card-media">
         <PublicMediaImage src={organization.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />
+        {organization.logoUrl ? <PublicMediaImage className="public-developer-directory__card-logo" src={organization.logoUrl} alt="" loading="lazy" fallback={<span className="public-developer-directory__card-logo-fallback" aria-hidden="true" />} /> : null}
       </div>
       <div className="public-developer-directory__card-body">
-        <div className="public-developer-profile__badges">
-          <Badge tone="success">{copy.verified}</Badge>
-          <Badge tone="neutral">{kindLabel(organization.kind, copy)}</Badge>
-        </div>
         <h2><a href={`/developers/${encodeURIComponent(organization.slug)}`}>{title}</a></h2>
         {description === undefined ? null : <p className="public-developer-directory__card-description">{description}</p>}
-        <dl className="public-developer-directory__card-meta">
-          <div><dt>{copy.projects}</dt><dd>{copy.projectCount(organization.projectCount)}</dd></div>
-          <div><dt>{copy.properties}</dt><dd>{copy.propertyCount(organization.propertyCount)}</dd></div>
-        </dl>
-        <a className="public-developer-directory__card-link" href={`/developers/${encodeURIComponent(organization.slug)}`}>{copy.openProfile}</a>
+        {locations.length > 0 ? <div className="public-developer-directory__card-locations" aria-label={copy.locationsLabel}>{locations.map(location => <span key={location.key}>{location.label}</span>)}</div> : null}
+        <a className="public-developer-directory__card-link" href={`/developers/${encodeURIComponent(organization.slug)}`}><span>{copy.openProfile}</span><span aria-hidden="true">←</span></a>
       </div>
     </article>
   );
@@ -205,7 +199,7 @@ function DirectorySuccess({
       <div className="public-developer-directory__grid">
         {data.items.map(organization => <OrganizationCard key={organization.id} organization={organization} locale={locale} copy={copy} />)}
       </div>
-      <Pagination page={data.page} pageCount={pageCount} onPageChange={onPageChange} previousLabel={copy.previousPage} nextLabel={copy.nextPage} ariaLabel={copy.paginationLabel} direction={locale === 'ar' ? 'rtl' : 'ltr'} />
+      {pageCount > 1 ? <Pagination page={data.page} pageCount={pageCount} onPageChange={onPageChange} previousLabel={copy.previousPage} nextLabel={copy.nextPage} ariaLabel={copy.paginationLabel} direction={locale === 'ar' ? 'rtl' : 'ltr'} /> : null}
     </section>
   );
 }
@@ -283,7 +277,7 @@ export function PublicDevelopers({
       <PublicSiteHeader locale={locale} copy={getPublicHomepageCopy(locale)} activePath="/developers" />
       <header className="public-developer-directory__intro">
         <div>
-          <p className="public-homepage__eyebrow">{copy.verified}</p>
+          <p className="public-homepage__eyebrow">{copy.introEyebrow}</p>
           <h1>{copy.title}</h1>
           <p>{copy.subtitle}</p>
         </div>

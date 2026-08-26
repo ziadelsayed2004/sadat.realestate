@@ -1,0 +1,18 @@
+{
+  "taskId": "backend_142",
+  "summary": "Added localized, stable, publication-safe homepage metrics and deterministic local/UAT seed records so PUB-01 renders canonical population statistics from the real homepage API contract.",
+  "filesChanged": [
+    "packages/contracts/src/public/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/public/homepage.ts",
+    "apps/api/src/modules/database/seed.ts",
+    "apps/api/tests/public/homepage.test.ts"
+  ],
+  "verification": [
+    { "command": "npm run build --workspace packages/contracts", "result": "passed", "exitCode": 0 },
+    { "command": "npm run typecheck --workspace apps/api", "result": "passed", "exitCode": 0 },
+    { "command": "node --import tsx --test apps/api/tests/public/homepage.test.ts apps/api/tests/security/public-projections.test.ts", "result": "passed: 5/5", "exitCode": 0 },
+    { "command": "npx eslint <affected metric files> --max-warnings=0", "result": "passed", "exitCode": 0 }
+  ],
+  "dataPolicy": "Seed records are synthetic and restricted by the existing local/UAT seed guard; Production projection only returns records explicitly marked published and visible."
+}

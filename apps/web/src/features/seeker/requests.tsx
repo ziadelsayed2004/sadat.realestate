@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { RequestData, RequestListData, RequestStatus, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
-import { Badge, Button, Pagination, StateMessage } from '../design_system/index.ts';
+import { Badge, Button, Input, Pagination, StateMessage } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
 import {
   createSeekerRequestLoader,
   createSeekerRequestsLoader,
+  isAuthenticatedSeekerSession,
   localeForSeekerPath,
   type SeekerAuthorizationSource,
   type SeekerRequestLoader,
@@ -44,6 +45,24 @@ function dateLabel(value: string, locale: SupportedLocale): string {
 
 function shortRequestId(value: string): string {
   return `REQ-${value.slice(-4).toUpperCase()}`;
+}
+
+const requestFilterStatuses: readonly RequestStatus[] = ['new', 'under_review', 'contacted', 'scheduled', 'needs_information', 'in_progress', 'resolved', 'cancelled', 'closed'];
+
+function requestSearchLabel(locale: SupportedLocale): string {
+  return locale === 'ar' ? 'البحث في الطلبات' : 'Search requests';
+}
+
+function requestFilterLabel(locale: SupportedLocale): string {
+  return locale === 'ar' ? 'تصفية الطلبات حسب الحالة' : 'Filter requests by status';
+}
+
+function requestAllLabel(locale: SupportedLocale): string {
+  return locale === 'ar' ? 'الكل' : 'All';
+}
+
+function linkedRequestLabel(locale: SupportedLocale): string {
+  return locale === 'ar' ? 'متاح من خلال الطلب المرتبط' : 'Available through the linked request';
 }
 
 function requestScreenId(request: RequestData): 'SEK-03' | 'SEK-04' | undefined {
@@ -97,10 +116,6 @@ function RequestListContent({ data, locale, onPageChange }: { readonly data: Req
   const pageCount = Math.ceil(data.total / data.limit);
   return (
     <>
-      <div className="seeker-dashboard__section-heading">
-        <h2 id="seeker-requests-list-title">{copy.list.title}</h2>
-        <span className="seeker-requests__count">{data.total} {copy.list.count}</span>
-      </div>
       {data.items.length === 0 ? (
         <div className="seeker-dashboard__empty" data-state="empty"><h3>{copy.list.emptyTitle}</h3><p>{copy.list.emptyBody}</p></div>
       ) : (
@@ -124,6 +139,8 @@ function RequestDetailContent({ request, locale }: { readonly request: RequestDa
   const message = safePayloadValue(request, 'message');
   const note = safePayloadValue(request, 'note');
   const screenId = requestScreenId(request);
+  const lifecycle: readonly RequestStatus[] = ['new', 'under_review', 'contacted', 'scheduled', 'resolved'];
+  const currentIndex = lifecycle.indexOf(request.status);
   return (
     <div className="seeker-request-detail" {...(screenId === undefined ? {} : { 'data-screen-id': screenId })} data-request-status={request.status}>
       <div className="seeker-dashboard__heading-row">
@@ -137,7 +154,11 @@ function RequestDetailContent({ request, locale }: { readonly request: RequestDa
         <section className="seeker-request-detail__card" aria-labelledby="seeker-request-timeline-title">
           <h2 id="seeker-request-timeline-title">{copy.detail.timeline}</h2>
           <ol className="seeker-request-detail__timeline">
-            <li data-current="true"><span aria-hidden="true">✓</span><div><strong>{copy.statuses[request.status]}</strong><time dateTime={request.updatedAt}>{dateLabel(request.updatedAt, locale)}</time></div></li>
+            {lifecycle.map((status, index) => {
+              const stepState = currentIndex < 0 ? 'pending' : index < currentIndex ? 'complete' : index === currentIndex ? 'current' : 'pending';
+              const timestamp = index === 0 ? request.createdAt : stepState === 'current' ? request.updatedAt : undefined;
+              return <li key={status} data-state={stepState} data-current={stepState === 'current' || undefined}><span aria-hidden="true">{stepState === 'complete' ? '✓' : stepState === 'current' ? '•' : ''}</span><div><strong>{copy.statuses[status]}</strong>{timestamp === undefined ? null : <time dateTime={timestamp}>{dateLabel(timestamp, locale)}</time>}</div></li>;
+            })}
           </ol>
           <p className="seeker-request-detail__muted">{copy.detail.unavailable}</p>
         </section>
@@ -148,8 +169,8 @@ function RequestDetailContent({ request, locale }: { readonly request: RequestDa
             <DetailValue label={copy.detail.status} value={copy.statuses[request.status]} />
             <DetailValue label={copy.detail.submitted} value={dateLabel(request.createdAt, locale)} />
             <DetailValue label={copy.detail.updated} value={dateLabel(request.updatedAt, locale)} />
-            <DetailValue label={copy.detail.property} value={request.propertyId === undefined ? undefined : 'Available through the linked request'} />
-            <DetailValue label={copy.detail.project} value={request.projectId === undefined ? undefined : 'Available through the linked request'} />
+            <DetailValue label={copy.detail.property} value={request.propertyId === undefined ? undefined : linkedRequestLabel(locale)} />
+            <DetailValue label={copy.detail.project} value={request.projectId === undefined ? undefined : linkedRequestLabel(locale)} />
           </dl>
           {message === undefined && note === undefined ? <p className="seeker-request-detail__muted">{copy.detail.unavailable}</p> : null}
           {message === undefined ? null : <div className="seeker-request-detail__payload"><h3>{copy.detail.message}</h3><p>{message}</p></div>}
@@ -165,16 +186,25 @@ export function SeekerRequests({ locale, session, authClient, apiOrigin, request
   const copy = getSeekerRequestsCopy(locale);
   const isDetail = requestId !== undefined;
   const [page, setPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState<RequestStatus | undefined>();
+  const [search, setSearch] = useState('');
   const [state, setState] = useState<SeekerRequestsViewState>('loading');
   const [listData, setListData] = useState<RequestListData | undefined>();
   const [detailData, setDetailData] = useState<RequestData | undefined>();
   const [attempt, setAttempt] = useState(0);
-  const listSource = useMemo(() => listLoad ?? createSeekerRequestsLoader({ apiOrigin, authorization: authClient, query: { page, limit: 5 } }), [apiOrigin, authClient, listLoad, page]);
+  const listQuery = useMemo(() => ({
+    page,
+    limit: 5,
+    ...(statusFilter === undefined ? {} : { status: statusFilter }),
+    ...(search.trim() === '' ? {} : { search: search.trim() })
+  }), [page, search, statusFilter]);
+  const listSource = useMemo(() => listLoad ?? createSeekerRequestsLoader({ apiOrigin, authorization: authClient, query: listQuery }), [apiOrigin, authClient, listLoad, listQuery]);
   const detailSource = useMemo(() => detailLoad ?? (requestId === undefined ? undefined : createSeekerRequestLoader(requestId, { apiOrigin, authorization: authClient })), [apiOrigin, authClient, detailLoad, requestId]);
   const activePath = isDetail ? `/seeker/requests/${requestId}` : '/seeker/requests';
+  const sessionRole = session.status === 'authenticated' ? session.role : undefined;
 
   useEffect(() => {
-    if (session.status !== 'authenticated') {
+    if (!isAuthenticatedSeekerSession(session)) {
       setState('permission');
       return undefined;
     }
@@ -198,7 +228,7 @@ export function SeekerRequests({ locale, session, authClient, apiOrigin, request
       });
     }
     return () => controller.abort();
-  }, [attempt, detailSource, isDetail, listSource, session.status]);
+  }, [attempt, detailSource, isDetail, listSource, search, sessionRole, statusFilter]);
 
   return (
     <section className="seeker-dashboard" data-screen-id={isDetail ? undefined : 'SEK-02'} data-route={isDetail ? '/seeker/requests/:requestId' : '/seeker/requests'}>
@@ -206,7 +236,17 @@ export function SeekerRequests({ locale, session, authClient, apiOrigin, request
       <div className="seeker-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {state === 'not_found' ? <section className="seeker-dashboard__state" data-state="not_found" data-request-state="not_found" role="alert"><StateMessage state="error" title={copy.states.notFound.title} message={copy.states.notFound.body} /><a className="seeker-dashboard__back-link" href={localeForSeekerPath(locale, '/seeker/requests')}>‹ {copy.detail.back}</a></section> : null}
-        {!isDetail && (state === 'success' || state === 'empty') && listData !== undefined ? <main aria-labelledby="seeker-requests-list-title"><div className="seeker-dashboard__heading-row"><div><p className="seeker-dashboard__eyebrow">{copy.list.eyebrow}</p><h1>{copy.list.title}</h1><p>{copy.list.description}</p></div></div><section className="seeker-requests__panel"><RequestListContent data={listData} locale={locale} onPageChange={setPage} /></section></main> : null}
+        {!isDetail && (state === 'success' || state === 'empty') && listData !== undefined ? <main aria-labelledby="seeker-requests-list-title"><div className="seeker-dashboard__heading-row"><div><p className="seeker-dashboard__eyebrow">{copy.list.eyebrow}</p><h1 id="seeker-requests-list-title">{copy.list.title}</h1><p>{copy.list.description}</p></div></div><section className="seeker-requests__panel">
+          <div className="seeker-requests__toolbar">
+            <Input id="seeker-requests-search" type="search" label={requestSearchLabel(locale)} value={search} placeholder={requestSearchLabel(locale)} onChange={event => { setSearch(event.target.value); setPage(1); }} />
+            <span className="seeker-requests__count">{listData.total} {copy.list.count}</span>
+          </div>
+          <div className="seeker-requests__filters" role="group" aria-label={requestFilterLabel(locale)}>
+            <button type="button" className="seeker-requests__filter" data-active={statusFilter === undefined || undefined} aria-pressed={statusFilter === undefined} onClick={() => { setStatusFilter(undefined); setPage(1); }}>{requestAllLabel(locale)}</button>
+            {requestFilterStatuses.map(status => <button key={status} type="button" className="seeker-requests__filter" data-active={statusFilter === status || undefined} aria-pressed={statusFilter === status} onClick={() => { setStatusFilter(current => current === status ? undefined : status); setPage(1); }}>{copy.statuses[status]}</button>)}
+          </div>
+          <RequestListContent data={listData} locale={locale} onPageChange={setPage} />
+        </section></main> : null}
         {isDetail && state === 'success' && detailData !== undefined ? <main aria-label={copy.detail.title}><RequestDetailContent request={detailData} locale={locale} /></main> : null}
       </div>
     </section>

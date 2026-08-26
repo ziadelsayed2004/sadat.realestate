@@ -95,7 +95,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicHomepageCopy>> = {
     permissionTitle: 'لا يمكن عرض هذا المحتوى',
     permissionBody: 'رفض الخادم الوصول إلى محتوى الصفحة الرئيسية.',
     permissionLink: 'العودة إلى الصفحة العامة',
-    footerDescription: 'منصة عامة لعرض العقارات والمحتوى المنشور من المصادر المعتمدة.',
+    footerDescription: 'بوابتك الموثوقة لعقارات مدينة السادات',
     footerLinks: 'روابط المنصة'
   },
   en: {
@@ -207,4 +207,3 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicHomepageCopy>> = {
 export function getPublicHomepageCopy(locale: SupportedLocale): PublicHomepageCopy {
   return copyByLocale[locale];
 }
-

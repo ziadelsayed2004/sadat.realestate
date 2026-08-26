@@ -4,7 +4,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { Button, StateMessage } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
 import { getSeekerCopy } from './copy.ts';
-import { createSeekerOverviewLoader, localeForSeekerPath, type SeekerAuthorizationSource, type SeekerOverviewLoader } from './data.ts';
+import { createSeekerOverviewLoader, isAuthenticatedSeekerSession, localeForSeekerPath, type SeekerAuthorizationSource, type SeekerOverviewLoader } from './data.ts';
 import './styles.css';
 
 export type SeekerOverviewViewState = 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission';
@@ -55,7 +55,7 @@ export function SeekerNavigation({ locale, activePath }: { readonly locale: Supp
     ['viewings', '/seeker/viewings'],
     ['saved', '/seeker/saved'],
     ['notifications', '/seeker/notifications'],
-    ['profile', '/seeker/profile?tab=preferences'],
+    ['profile', '/seeker/profile?tab=personal'],
     ['settings', '/seeker/settings']
   ] as const;
   return (
@@ -63,7 +63,7 @@ export function SeekerNavigation({ locale, activePath }: { readonly locale: Supp
       <header className="seeker-dashboard__topbar">
         <button className="seeker-dashboard__menu-button" type="button" aria-label={menuLabel}><span aria-hidden="true">☰</span></button>
         <label className="seeker-dashboard__search">
-          <span className="sr-only">{searchLabel}</span>
+          <span className="a11y-visually-hidden">{searchLabel}</span>
           <span aria-hidden="true">⌕</span>
           <input type="search" placeholder={searchLabel} aria-label={searchLabel} />
         </label>
@@ -161,13 +161,20 @@ function OverviewContent({ data, locale }: { readonly data: SeekerOverviewData; 
 
 export function SeekerOverview({ locale, session, authClient, apiOrigin, initialData, initialState = 'loading', load }: SeekerOverviewProps) {
   const source = useMemo(() => load ?? createSeekerOverviewLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, load]);
-  const [state, setState] = useState<SeekerOverviewViewState>(() => initialData === undefined ? initialState : isEmpty(initialData) ? 'empty' : 'success');
+  const sessionRole = session.status === 'authenticated' ? session.role : undefined;
+  const [state, setState] = useState<SeekerOverviewViewState>(() => !isAuthenticatedSeekerSession(session)
+    ? 'permission'
+    : initialData === undefined
+      ? initialState
+      : isEmpty(initialData)
+        ? 'empty'
+        : 'success');
   const [data, setData] = useState<SeekerOverviewData | undefined>(initialData);
   const [attempt, setAttempt] = useState(0);
   const path = typeof window === 'undefined' ? '/seeker' : new URL(window.location.href).pathname;
 
   useEffect(() => {
-    if (session.status !== 'authenticated') {
+    if (!isAuthenticatedSeekerSession(session)) {
       setState('permission');
       return undefined;
     }
@@ -183,7 +190,7 @@ export function SeekerOverview({ locale, session, authClient, apiOrigin, initial
       setState(stateForError(error));
     });
     return () => controller.abort();
-  }, [attempt, initialData, session.status, source]);
+  }, [attempt, initialData, sessionRole, source]);
 
   return (
     <section className="seeker-dashboard" data-screen-id="SEK-01" data-route="/seeker">

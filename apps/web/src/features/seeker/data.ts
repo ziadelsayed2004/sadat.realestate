@@ -43,6 +43,7 @@ import {
   type ViewingPatch
 } from '@sadat-real-estate/contracts';
 import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
+import type { RouteSession } from '../routing/index.ts';
 
 export const SEEKER_OVERVIEW_ROUTE = '/seeker/overview' as const;
 export const SEEKER_REQUESTS_ROUTE = '/seeker/requests' as const;
@@ -54,6 +55,10 @@ export const SEEKER_PREFERENCES_ROUTE = '/me/preferences' as const;
 
 export interface SeekerAuthorizationSource {
   readonly getAuthorizationHeader: () => string | undefined;
+}
+
+export function isAuthenticatedSeekerSession(session: RouteSession): boolean {
+  return session.status === 'authenticated' && session.role === 'seeker';
 }
 
 export interface SeekerOverviewLoadOptions {

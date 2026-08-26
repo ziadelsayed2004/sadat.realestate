@@ -130,16 +130,21 @@ function isUnauthorized(error: unknown): boolean {
 
 function organizationError(error: unknown, copy: ProviderOrganizationCopy): OrganizationUiError {
   const code = error instanceof ApiClientError ? error.apiError?.code : undefined;
-  if (code === 'PROVIDER_APPLICATION_NOT_FOUND' || (error instanceof ApiClientError && error.status === 404)) {
+  const status = error instanceof ApiClientError
+    ? error.status
+    : typeof error === 'object' && error !== null && 'status' in error
+      ? (error as { readonly status?: unknown }).status
+      : undefined;
+  if (code === 'PROVIDER_APPLICATION_NOT_FOUND' || status === 404) {
     return { state: 'permission', title: copy.notFoundTitle, message: copy.notFoundBody };
   }
-  if (code === 'PROVIDER_APPLICATION_NOT_EDITABLE' || (error instanceof ApiClientError && error.status === 403)) {
+  if (code === 'PROVIDER_APPLICATION_NOT_EDITABLE' || status === 403) {
     return { state: 'permission', title: copy.permissionTitle, message: copy.permissionBody };
   }
   if (code === 'PROVIDER_APPLICATION_VERSION_CONFLICT') {
     return { state: 'retry', title: copy.conflictTitle, message: copy.conflictBody };
   }
-  if (error instanceof ApiClientError && (error.code === 'NETWORK_ERROR' || error.status === 503)) {
+  if ((error instanceof ApiClientError && error.code === 'NETWORK_ERROR') || status === 503) {
     return { state: 'retry', title: copy.networkTitle, message: copy.networkBody };
   }
   return { state: 'error', title: copy.unavailableTitle, message: copy.unavailableBody };
@@ -168,6 +173,11 @@ export function ProviderOrganizationPage({ client, locale, providerType, initial
     }
     if (client.getProviderApplication === undefined) {
       if (initialApplication === undefined) {
+        setLoadState('permission');
+        setError({ state: 'permission', title: copy.permissionTitle, message: copy.permissionBody });
+        return;
+      }
+      if (initialApplication.providerType !== providerType) {
         setLoadState('permission');
         setError({ state: 'permission', title: copy.permissionTitle, message: copy.permissionBody });
         return;
@@ -264,12 +274,12 @@ export function ProviderOrganizationPage({ client, locale, providerType, initial
   const state = loadState === 'ready' ? saveState : loadState;
 
   if (loadState === 'loading') {
-    return <section className="auth-page provider-organization-page" data-testid="provider-organization-details" data-screen-id="AUTH-10" data-state="loading"><div className="auth-card auth-card--form provider-organization-card"><div className="provider-account-state"><StateMessage state="loading" title={copy.businessTitle} message={copy.businessDescription} /></div></div></section>;
+    return <section className="auth-page provider-organization-page" data-testid="provider-organization-details" data-screen-id="AUTH-10" data-state="loading" dir={locale === 'ar' ? 'rtl' : 'ltr'}><div className="auth-card auth-card--form provider-organization-card"><div className="provider-account-state"><StateMessage state="loading" title={copy.businessTitle} message={copy.businessDescription} /></div></div></section>;
   }
 
   if (variant === undefined || loadState === 'permission' || loadState === 'error' || loadState === 'retry') {
     return (
-      <section className="auth-page provider-organization-page" data-testid="provider-organization-details" data-screen-id={screenId} data-state={loadState}>
+      <section className="auth-page provider-organization-page" data-testid="provider-organization-details" data-screen-id={screenId} data-state={loadState} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
         <div className="auth-card auth-card--form provider-organization-card">
           <div className="provider-account-state">
             {error === undefined ? null : <FormNotice error={error} copy={copy} onRetry={() => void loadApplication()} />}
@@ -286,7 +296,7 @@ export function ProviderOrganizationPage({ client, locale, providerType, initial
   const inputState = (field: OrganizationField): 'default' | 'error' => saveState === 'error' && form[field].trim() === '' && organizationFields.has(field) ? 'error' : 'default';
 
   return (
-    <section className="auth-page provider-organization-page" data-testid="provider-organization-details" data-screen-id={screenId} data-state={state} data-provider-variant={variant}>
+    <section className="auth-page provider-organization-page" data-testid="provider-organization-details" data-screen-id={screenId} data-state={state} data-provider-variant={variant} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <div className="auth-card auth-card--form provider-organization-card">
         <header className="auth-card__heading provider-organization-card__heading">
           <span className="auth-card__icon provider-organization-card__step" aria-hidden="true">3</span>

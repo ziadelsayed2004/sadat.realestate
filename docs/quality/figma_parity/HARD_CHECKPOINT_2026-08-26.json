@@ -1,0 +1,535 @@
+{
+  "schemaVersion": 1,
+  "checkpointType": "hard_checkpoint",
+  "recordedAt": "2026-08-26T19:19:29.6797501Z",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "implementationPaused": true,
+  "recapturePaused": true,
+  "newCaptureRule": "No capture is permitted unless a measured code or data repair is made first and its expected visual effect is recorded.",
+  "processState": {
+    "stoppedProcessId": 4328,
+    "stoppedCommand": "node --import tsx scripts/capture-figma-parity-runtime.mjs --screen-id PUB-01 --fixture public-home --route / --locale ar --phase after",
+    "matchingPlaywrightOrCaptureProcessesRemaining": false,
+    "existingMatrixFailureArtifactsPreserved": true
+  },
+  "fullMatrixAttempt": {
+    "status": "INTERRUPTED_AFTER_STRATEGY_CORRECTION",
+    "passed": 379,
+    "failed": 5,
+    "interrupted": 1,
+    "didNotRun": 2621,
+    "restartAllowed": false,
+    "artifactRoot": "apps/web/test-results"
+  },
+  "cursor": {
+    "phase": "repair",
+    "taskId": "frontend_099",
+    "nextSequence": 3,
+    "currentScreenId": "PUB-03",
+    "currentFigmaNode": "6017:12693",
+    "currentRuntimeRoute": "/properties/:slug",
+    "discoveryHaltedBefore": {
+      "screenId": "PUB-09",
+      "figmaNode": "6017:11634",
+      "runtimeRoute": "/community"
+    }
+  },
+  "gitSnapshot": {
+    "statusLines": 446,
+    "trackedDiffFiles": 304,
+    "untrackedFiles": 142,
+    "modifiedStatusLines": 304,
+    "diffStat": "304 files changed, 22776 insertions(+), 1885 deletions(-)",
+    "preservationRule": "All existing changes and artifacts are retained; no reset, revert, stash, clean, discard, or snapshot update was performed."
+  },
+  "agentPack": {
+    "synchronized": true,
+    "auditPassed": true,
+    "auditErrors": [],
+    "taskCount": 208,
+    "screenCount": 131,
+    "inProgressTaskIds": ["backend_149"],
+    "frontend099State": "partial",
+    "finishIndexContainsFrontend099": false
+  },
+  "parallelCoordination": {
+    "status": "PARALLEL_COORDINATION_ACTIVE",
+    "spawnedAt": "2026-08-26T19:23:29.4862619Z",
+    "nestedSubagents": false,
+    "agents": [
+      {
+        "lane": "public_parity",
+        "agentId": "01a03f86-ed1d-7192-88f7-7b579654d251",
+        "nickname": "Sartre",
+        "currentScreen": {
+          "screenId": "PUB-03",
+          "figmaNode": "6017:12693",
+          "runtimeRoute": "/properties/:slug"
+        },
+        "ownedPaths": [
+          "apps/web/src/features/public/compare.tsx",
+          "apps/web/src/features/public/compare.css",
+          "apps/web/src/features/public/compare-copy.ts",
+          "apps/web/src/features/public/compare-data.ts",
+          "apps/web/src/features/public/details.tsx",
+          "apps/web/src/features/public/details.css",
+          "apps/web/src/features/public/details-copy.ts",
+          "apps/web/src/features/public/details-data.ts",
+          "apps/web/src/features/public/developer-profile.tsx",
+          "apps/web/src/features/public/developers.tsx",
+          "apps/web/src/features/public/developers.css",
+          "apps/web/src/features/public/developers-copy.ts",
+          "apps/web/src/features/public/developers-data.ts",
+          "apps/web/src/features/public/listing.tsx",
+          "apps/web/src/features/public/listing.css",
+          "apps/web/src/features/public/listing-copy.ts",
+          "apps/web/src/features/public/listing-data.ts",
+          "apps/web/src/features/content/articles.tsx",
+          "apps/web/src/features/content/articles.css",
+          "apps/web/src/features/content/articles-copy.ts",
+          "apps/web/tests/public-*.vitest.test.tsx"
+        ]
+      },
+      {
+        "lane": "auth_parity",
+        "agentId": "01a03f86-ee4f-7e72-babb-f0b86532cb47",
+        "nickname": "Boyle",
+        "currentScreen": {
+          "screenId": "AUTH-01",
+          "figmaNode": "6017:16212",
+          "runtimeRoute": "/auth/login"
+        },
+        "ownedPaths": [
+          "apps/web/src/features/auth/**",
+          "apps/web/src/features/provider_auth/**",
+          "apps/web/tests/auth.test.ts",
+          "apps/web/tests/auth-onboarding-qa.vitest.test.ts",
+          "apps/web/tests/auth-ui.vitest.test.tsx"
+        ]
+      },
+      {
+        "lane": "seeker_parity",
+        "agentId": "01a03f86-ef61-7202-9738-1d4d4eed4fd4",
+        "nickname": "Newton",
+        "currentScreen": {
+          "screenId": "SEK-01",
+          "figmaNode": "6027:3579",
+          "runtimeRoute": "/seeker"
+        },
+        "ownedPaths": [
+          "apps/web/src/features/seeker/**",
+          "apps/web/tests/seeker-*.vitest.test.tsx"
+        ]
+      }
+    ],
+    "coordinatorOwnedPaths": [
+      "agent_pack/**",
+      "docs/quality/figma_parity/**",
+      "apps/web/src/features/public/components.tsx",
+      "apps/web/src/features/public/styles.css",
+      "apps/web/src/features/frontend_foundation/**",
+      "apps/web/src/features/design_system/**",
+      "apps/web/src/features/localization/**",
+      "apps/web/tests/e2e/**",
+      "packages/**",
+      "apps/api/**",
+      "routers and application entry points",
+      "global tokens and styles",
+      "scripts/**",
+      "visual baselines and snapshots"
+    ],
+    "localeScope": ["ar-RTL", "en-LTR"],
+    "deviceScope": {
+      "public": ["desktop", "tablet", "mobile"],
+      "auth": ["desktop", "tablet", "mobile"],
+      "seeker": ["desktop"]
+    }
+  },
+  "closedScreens": [],
+  "screenRows": [
+    {
+      "screenId": "PUB-01",
+      "sequence": 1,
+      "cloneNode": "6017:10847",
+      "runtimeRoute": "/",
+      "currentClassification": "PARTIAL",
+      "lastFreshCapture": {
+        "status": "last complete paired after capture",
+        "afterHash": "edb23e48f56a2587678201ff0ae8687f1c2b9b92d3aa39d3b87cf8474ae30e8d",
+        "runtimeAfterPngTimeUtc": "2026-08-26T00:04:30.229Z",
+        "captureMetadataTimeUtc": "2026-08-26T00:04:30.862Z",
+        "runtimeAfterPath": "docs/quality/figma_parity/screens/PUB-01/runtime-after.png",
+        "captureMetadataPath": "docs/quality/figma_parity/screens/PUB-01/runtime-after-capture.json"
+      },
+      "materialDifferencePercent": 29.1437,
+      "antiAliasingOnlyDifferencePercent": 6.6669,
+      "latestMetricsReviewed": true,
+      "remainingRepositoryOwnedDefects": [],
+      "externalOnlyBlockers": [
+        "Canonical daylight Sadat City aerial/mosque hero and eight distinct category icon exports are absent from approved repository assets and cached extracted assets."
+      ],
+      "focusedTests": {
+        "passed": [
+          "contracts build",
+          "web typecheck and production build",
+          "affected web lint",
+          "focused PUB-01 Vitest",
+          "focused PUB-01 accessibility Playwright",
+          "backend_143 focused API/security tests"
+        ],
+        "failed": [],
+        "notPassingOrUnconfirmed": ["normal visual snapshot without --ignore-snapshots: no exit code recorded"]
+      },
+      "exactEvidenceStillMissing": [
+        "normal visual snapshot without --ignore-snapshots",
+        "approved clone exports for the missing hero and category icon assets"
+      ]
+    },
+    {
+      "screenId": "PUB-02",
+      "sequence": 2,
+      "cloneNode": "6017:12095",
+      "runtimeRoute": "/properties",
+      "currentClassification": "PARTIAL",
+      "lastFreshCapture": {
+        "status": "last complete paired after capture",
+        "afterHash": "4012d63dd64cb32b1c75da2b5cceda5ed1cdad5a2c9493d532fb8b725cb4fea8",
+        "runtimeAfterPngTimeUtc": "2026-08-26T05:58:46.725Z",
+        "captureMetadataTimeUtc": "2026-08-26T05:58:46.971Z",
+        "runtimeAfterPath": "docs/quality/figma_parity/screens/PUB-02/runtime-after.png",
+        "captureMetadataPath": "docs/quality/figma_parity/screens/PUB-02/runtime-after-capture.json"
+      },
+      "materialDifferencePercent": 16.9379,
+      "antiAliasingOnlyDifferencePercent": 4.9163,
+      "latestMetricsReviewed": true,
+      "remainingRepositoryOwnedDefects": [],
+      "externalOnlyBlockers": [
+        "Exact frame-linked exports for the eight canonical category illustrations, six source avatars, and canonical listing-photo render variants are absent from approved repository assets and cached extracted assets."
+      ],
+      "focusedTests": {
+        "passed": [
+          "apps/web typecheck",
+          "affected TypeScript lint",
+          "focused PUB-02 Vitest",
+          "focused PUB-02 accessibility Playwright",
+          "focused production performance Playwright",
+          "production bundle budget"
+        ],
+        "failed": ["normal visual snapshot without --ignore-snapshots (exit 1)"],
+        "notPassingOrUnconfirmed": []
+      },
+      "exactEvidenceStillMissing": [
+        "approved frame-linked exports for category illustrations, avatars, and listing-photo render variants",
+        "normal visual snapshot without --ignore-snapshots passing"
+      ]
+    },
+    {
+      "screenId": "PUB-03",
+      "sequence": 3,
+      "cloneNode": "6017:12693",
+      "runtimeRoute": "/properties/:slug",
+      "currentClassification": "PARTIAL",
+      "lastFreshCapture": {
+        "status": "paired after capture from the shared repair pass; latest manual review is pending",
+        "afterHash": "0e8816a98ddf02957b395316074e86d6f93017e05d7adf024950f1e58aabcc50",
+        "runtimeAfterPngTimeUtc": "2026-08-26T19:09:45.272Z",
+        "captureMetadataTimeUtc": "2026-08-26T19:09:45.638Z",
+        "runtimeAfterPath": "docs/quality/figma_parity/screens/PUB-03/runtime-after.png",
+        "captureMetadataPath": "docs/quality/figma_parity/screens/PUB-03/runtime-after-capture.json"
+      },
+      "materialDifferencePercent": 6.6134,
+      "antiAliasingOnlyDifferencePercent": 4.862,
+      "latestMetricsReviewed": false,
+      "remainingRepositoryOwnedDefects": [
+        "Clone-specific amenities and advisory content projection differs.",
+        "Exact details-page geometry, typography, spacing, icon, and media treatments remain materially different."
+      ],
+      "externalOnlyBlockers": [],
+      "focusedTests": {
+        "passed": [
+          "contracts build",
+          "apps/web typecheck",
+          "apps/api typecheck",
+          "affected web lint",
+          "affected API lint",
+          "focused public Vitest",
+          "focused public API/integration tests",
+          "focused Playwright visual/route assertions (non-final ignore-snapshots run)",
+          "focused Playwright accessibility assertions",
+          "focused Figma/runtime visual comparison"
+        ],
+        "failed": [],
+        "notPassingOrUnconfirmed": [
+          "normal visual snapshot without --ignore-snapshots",
+          "manual review of the latest after/diff pair",
+          "current focused confirmation after final repair"
+        ]
+      },
+      "exactEvidenceStillMissing": [
+        "element-defects.json",
+        "manual review record for the latest after/diff pair",
+        "normal visual snapshot without --ignore-snapshots",
+        "current focused visual, accessibility, functional, locale/direction, and performance confirmation"
+      ]
+    },
+    {
+      "screenId": "PUB-04",
+      "sequence": 4,
+      "cloneNode": "6017:13838",
+      "runtimeRoute": "/compare",
+      "currentClassification": "PARTIAL",
+      "lastFreshCapture": {
+        "status": "paired after capture from the shared repair pass; latest manual review is pending",
+        "afterHash": "35f2a738990017b1e79711edc1eb95b77050194e3ccbfd865fd18a160b5b22a9",
+        "runtimeAfterPngTimeUtc": "2026-08-26T19:09:49.692Z",
+        "captureMetadataTimeUtc": "2026-08-26T19:09:49.959Z",
+        "runtimeAfterPath": "docs/quality/figma_parity/screens/PUB-04/runtime-after.png",
+        "captureMetadataPath": "docs/quality/figma_parity/screens/PUB-04/runtime-after-capture.json"
+      },
+      "materialDifferencePercent": 10.799,
+      "antiAliasingOnlyDifferencePercent": 9.0598,
+      "latestMetricsReviewed": false,
+      "remainingRepositoryOwnedDefects": [
+        "Clone-specific comparison table geometry and column alignment differ.",
+        "Typography, controls, labels, icons, spacing, and exact card composition remain materially different."
+      ],
+      "externalOnlyBlockers": [],
+      "focusedTests": {
+        "passed": [
+          "contracts build",
+          "apps/web typecheck",
+          "apps/api typecheck",
+          "affected web lint",
+          "affected API lint",
+          "focused public Vitest",
+          "focused public API/integration tests",
+          "focused Playwright visual/route assertions (non-final ignore-snapshots run)",
+          "focused Playwright accessibility assertions",
+          "focused Figma/runtime visual comparison"
+        ],
+        "failed": [],
+        "notPassingOrUnconfirmed": [
+          "normal visual snapshot without --ignore-snapshots",
+          "manual review of the latest after/diff pair",
+          "current focused confirmation after final repair"
+        ]
+      },
+      "exactEvidenceStillMissing": [
+        "element-defects.json",
+        "manual review record for the latest after/diff pair",
+        "normal visual snapshot without --ignore-snapshots",
+        "current focused visual, accessibility, functional, locale/direction, and performance confirmation"
+      ]
+    },
+    {
+      "screenId": "PUB-05",
+      "sequence": 5,
+      "cloneNode": "6017:11366",
+      "runtimeRoute": "/developers",
+      "currentClassification": "PARTIAL",
+      "lastFreshCapture": {
+        "status": "paired after capture from the shared repair pass; latest manual review is pending",
+        "afterHash": "f3ca02f398ddee0ff16c11c4b0fac7e3149d024ab0bb06dccfc2dce26921814f",
+        "runtimeAfterPngTimeUtc": "2026-08-26T19:09:54.026Z",
+        "captureMetadataTimeUtc": "2026-08-26T19:09:54.283Z",
+        "runtimeAfterPath": "docs/quality/figma_parity/screens/PUB-05/runtime-after.png",
+        "captureMetadataPath": "docs/quality/figma_parity/screens/PUB-05/runtime-after-capture.json"
+      },
+      "materialDifferencePercent": 16.9449,
+      "antiAliasingOnlyDifferencePercent": 6.1426,
+      "latestMetricsReviewed": false,
+      "remainingRepositoryOwnedDefects": [
+        "Clone-specific card geometry, typography, spacing, and filter/control treatments differ.",
+        "Exact image selection and media crop remain materially different."
+      ],
+      "externalOnlyBlockers": [],
+      "focusedTests": {
+        "passed": [
+          "contracts build",
+          "apps/web typecheck",
+          "apps/api typecheck",
+          "affected web lint",
+          "affected API lint",
+          "focused public Vitest",
+          "focused public API/integration tests",
+          "focused Playwright visual/route assertions (non-final ignore-snapshots run)",
+          "focused Playwright accessibility assertions",
+          "focused Figma/runtime visual comparison"
+        ],
+        "failed": [],
+        "notPassingOrUnconfirmed": [
+          "normal visual snapshot without --ignore-snapshots",
+          "manual review of the latest after/diff pair",
+          "current focused confirmation after final repair"
+        ]
+      },
+      "exactEvidenceStillMissing": [
+        "element-defects.json",
+        "manual review record for the latest after/diff pair",
+        "normal visual snapshot without --ignore-snapshots",
+        "current focused visual, accessibility, functional, locale/direction, and performance confirmation"
+      ]
+    },
+    {
+      "screenId": "PUB-06",
+      "sequence": 6,
+      "cloneNode": "6017:13155",
+      "runtimeRoute": "/developers/:slug",
+      "currentClassification": "PARTIAL",
+      "lastFreshCapture": {
+        "status": "paired after capture from the shared repair pass; latest manual review is pending",
+        "afterHash": "a51fc5c00d8168d8aaa81f79faffe57b22c333c6c0280956e535bb9d67f2e271",
+        "runtimeAfterPngTimeUtc": "2026-08-26T19:09:58.634Z",
+        "captureMetadataTimeUtc": "2026-08-26T19:09:59.023Z",
+        "runtimeAfterPath": "docs/quality/figma_parity/screens/PUB-06/runtime-after.png",
+        "captureMetadataPath": "docs/quality/figma_parity/screens/PUB-06/runtime-after-capture.json"
+      },
+      "materialDifferencePercent": 16.8636,
+      "antiAliasingOnlyDifferencePercent": 5.6811,
+      "latestMetricsReviewed": false,
+      "remainingRepositoryOwnedDefects": [
+        "Clone-specific profile statistics and contact composition differ.",
+        "Exact project and property card geometry, typography, spacing, icons, and media treatments remain materially different."
+      ],
+      "externalOnlyBlockers": [],
+      "focusedTests": {
+        "passed": [
+          "contracts build",
+          "apps/web typecheck",
+          "apps/api typecheck",
+          "affected web lint",
+          "affected API lint",
+          "focused public Vitest",
+          "focused public API/integration tests",
+          "focused Playwright visual/route assertions (non-final ignore-snapshots run)",
+          "focused Playwright accessibility assertions",
+          "focused Figma/runtime visual comparison"
+        ],
+        "failed": [],
+        "notPassingOrUnconfirmed": [
+          "normal visual snapshot without --ignore-snapshots",
+          "manual review of the latest after/diff pair",
+          "current focused confirmation after final repair"
+        ]
+      },
+      "exactEvidenceStillMissing": [
+        "element-defects.json",
+        "manual review record for the latest after/diff pair",
+        "normal visual snapshot without --ignore-snapshots",
+        "current focused visual, accessibility, functional, locale/direction, and performance confirmation"
+      ]
+    },
+    {
+      "screenId": "PUB-07",
+      "sequence": 7,
+      "cloneNode": "6017:11467",
+      "runtimeRoute": "/articles",
+      "currentClassification": "PARTIAL",
+      "lastFreshCapture": {
+        "status": "paired after capture from the shared repair pass; latest manual review is pending",
+        "afterHash": "3732fb3c33358af76aa10d52e7973192813d6a0d0d74a4b5e3bc36188090d406",
+        "runtimeAfterPngTimeUtc": "2026-08-26T19:00:25.535Z",
+        "captureMetadataTimeUtc": "2026-08-26T19:00:25.797Z",
+        "runtimeAfterPath": "docs/quality/figma_parity/screens/PUB-07/runtime-after.png",
+        "captureMetadataPath": "docs/quality/figma_parity/screens/PUB-07/runtime-after-capture.json"
+      },
+      "materialDifferencePercent": 12.4989,
+      "antiAliasingOnlyDifferencePercent": 6.2144,
+      "latestMetricsReviewed": false,
+      "remainingRepositoryOwnedDefects": [
+        "Clone-specific article card geometry, typography, spacing, and filter/control treatments differ.",
+        "Exact image composition and media crop remain materially different."
+      ],
+      "externalOnlyBlockers": [],
+      "focusedTests": {
+        "passed": [
+          "contracts build",
+          "apps/web typecheck",
+          "apps/api typecheck",
+          "affected web lint",
+          "affected API lint",
+          "focused public Vitest",
+          "focused public API/integration tests",
+          "focused Playwright visual/route assertions (non-final ignore-snapshots run)",
+          "focused Playwright accessibility assertions",
+          "focused Figma/runtime visual comparison"
+        ],
+        "failed": [],
+        "notPassingOrUnconfirmed": [
+          "normal visual snapshot without --ignore-snapshots",
+          "manual review of the latest after/diff pair",
+          "current focused confirmation after final repair"
+        ]
+      },
+      "exactEvidenceStillMissing": [
+        "element-defects.json",
+        "manual review record for the latest after/diff pair",
+        "normal visual snapshot without --ignore-snapshots",
+        "current focused visual, accessibility, functional, locale/direction, and performance confirmation"
+      ]
+    },
+    {
+      "screenId": "PUB-08",
+      "sequence": 8,
+      "cloneNode": "6017:12560",
+      "runtimeRoute": "/articles/:slug",
+      "currentClassification": "PARTIAL",
+      "lastFreshCapture": {
+        "status": "paired after capture from the shared repair pass; latest manual review is pending",
+        "afterHash": "ff35ee37ad4ad9090a296624d8865a54fac78f08f75a83432acf85942e9e446d",
+        "runtimeAfterPngTimeUtc": "2026-08-26T19:01:40.283Z",
+        "captureMetadataTimeUtc": "2026-08-26T19:01:40.522Z",
+        "runtimeAfterPath": "docs/quality/figma_parity/screens/PUB-08/runtime-after.png",
+        "captureMetadataPath": "docs/quality/figma_parity/screens/PUB-08/runtime-after-capture.json"
+      },
+      "materialDifferencePercent": 10.921,
+      "antiAliasingOnlyDifferencePercent": 4.0084,
+      "latestMetricsReviewed": false,
+      "remainingRepositoryOwnedDefects": [
+        "Clone-specific rich-body and side-rail geometry differ.",
+        "Exact typography, spacing, related-card composition, and media treatments remain materially different."
+      ],
+      "externalOnlyBlockers": [],
+      "focusedTests": {
+        "passed": [
+          "contracts build",
+          "apps/web typecheck",
+          "apps/api typecheck",
+          "affected web lint",
+          "affected API lint",
+          "focused public Vitest",
+          "focused public API/integration tests",
+          "focused Playwright visual/route assertions (non-final ignore-snapshots run)",
+          "focused Playwright accessibility assertions",
+          "focused Figma/runtime visual comparison"
+        ],
+        "failed": [],
+        "notPassingOrUnconfirmed": [
+          "normal visual snapshot without --ignore-snapshots",
+          "manual review of the latest after/diff pair",
+          "current focused confirmation after final repair"
+        ]
+      },
+      "exactEvidenceStillMissing": [
+        "element-defects.json",
+        "manual review record for the latest after/diff pair",
+        "normal visual snapshot without --ignore-snapshots",
+        "current focused visual, accessibility, functional, locale/direction, and performance confirmation"
+      ]
+    }
+  ],
+  "summary": {
+    "queueProcessedCount": 2,
+    "reviewedScreens": 8,
+    "closedScreens": 0,
+    "verifiedWithoutChange": 0,
+    "repairedVerified": 0,
+    "partial": 8,
+    "blocked": 0,
+    "materialDifferenceFreeScreens": 0,
+    "normalVisualSnapshotsPassing": 0,
+    "normalVisualSnapshotsRequired": 8,
+    "nextScreenAllowed": "No. Keep frontend_099 open at PUB-03; PUB-09 discovery remains halted."
+  }
+}

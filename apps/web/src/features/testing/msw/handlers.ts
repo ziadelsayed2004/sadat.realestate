@@ -4,6 +4,8 @@ import { publicHomepageSuccessEnvelopeSchema } from '@sadat-real-estate/contract
 const publicHomeFixture = publicHomepageSuccessEnvelopeSchema.parse({
   data: {
     sections: [],
+    categories: [],
+    metrics: [],
     properties: [],
     developers: [],
     content: [],

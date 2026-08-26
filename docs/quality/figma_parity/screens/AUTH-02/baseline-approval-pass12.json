@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-02",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4353",
+    "nodeId": "6017:15835",
+    "figmaPath": "docs/quality/figma_parity/screens/AUTH-02/figma.png",
+    "directlyReviewed": true
+  },
+  "decision": {
+    "approved": true,
+    "scope": "Only AUTH-02 seeker-registration role snapshots for Arabic and English on Desktop, Tablet, and Mobile.",
+    "reason": "The existing six baselines depict an obsolete create-account screen. The pass-12 Arabic desktop actual matches the cached owner-clone composition; inspected English and responsive actuals preserve its approved hierarchy, assets, controls, direction, and responsive structure.",
+    "chineseSnapshotsChanged": false,
+    "ignoreSnapshotsUsed": false
+  },
+  "approvedActuals": [
+    { "project": "desktop-ar", "sha256": "a852c4f692bc5aa820d30644a5ac192c53dcc45a574a00c8e06f6091fbcc5710" },
+    { "project": "desktop-en", "sha256": "1d7f41318453e0fd3ed34e10edcaca8a5e113f23680e240d86742d8c64b140e9" },
+    { "project": "tablet-ar", "sha256": "57551a133886f2c1d375fa6c5a041814acff0e9369289bc6e3cac4828c3055f5" },
+    { "project": "tablet-en", "sha256": "b38dc3fc34897f65ec42e4debc87b967810b65cbdc74e543cf49d87c30b031a8" },
+    { "project": "mobile-ar", "sha256": "e3dd97a07a2be332db9c37f72a0ab1a46bb9032ec2a9d557c36ef2b4d1322bc8" },
+    { "project": "mobile-en", "sha256": "7ff8df2ce8d7479f70e2bd750bc7e9c81081bd242eb30870dafc8c61fbc46b10" }
+  ],
+  "requiredFollowUp": [
+    "Run the focused six-project visual test with snapshot update enabled once.",
+    "Inspect the resulting six baseline files.",
+    "Rerun the same focused visual test normally without update or ignore flags and require 6/6 pass."
+  ]
+}

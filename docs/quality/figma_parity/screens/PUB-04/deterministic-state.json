@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "fresh-audit-public-comparison",
-  "responseSha256": "18c412dc938c32ae9c391e14128b7542266402b1beec64585485b1cb92246d28",
+  "responseSha256": "046416a15a0ad7a41d69909a7cc2e06da7f845de8a4127c071b37d02d37e1237",
   "response": {
     "data": {
       "items": [
@@ -22,18 +22,38 @@
             "zh-CN": "Garden villa"
           },
           "transactionType": "sale",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-f.png",
+          "propertyTypeName": {
+            "ar": "فيلا",
+            "en": "Villa",
+            "zh-CN": "别墅"
+          },
+          "locationName": {
+            "ar": "المنطقة الراقية",
+            "en": "Al Raqia district",
+            "zh-CN": "高级区"
+          },
+          "publicCode": "SDT-0892",
+          "sourceType": "developer_company",
+          "sourceName": {
+            "ar": "مجموعة النيل العقارية",
+            "en": "Nile Real Estate Group",
+            "zh-CN": "尼罗房地产集团"
+          },
+          "sourceImageUrl": "http://127.0.0.1:4173/assets/clone/pub05-f.png",
+          "sourceVerified": true,
+          "installmentAvailable": true,
           "area": {
-            "value": 180,
+            "value": 320,
             "unit": "sqm"
           },
           "layout": {
-            "bedrooms": 4,
-            "bathrooms": 3,
-            "floor": 1
+            "bedrooms": 5,
+            "bathrooms": 4,
+            "floor": 2
           },
           "price": {
-            "amount": 2500000,
+            "amount": 5200000,
             "currency": "EGP"
           }
         },
@@ -46,29 +66,59 @@
             "en": "City apartment",
             "zh-CN": "City apartment"
           },
-          "transactionType": "rent",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
+          "transactionType": "sale",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
+          "propertyTypeName": {
+            "ar": "شقة",
+            "en": "Apartment",
+            "zh-CN": "公寓"
+          },
+          "locationName": {
+            "ar": "الحي الأول",
+            "en": "First District",
+            "zh-CN": "第一区"
+          },
+          "publicCode": "SDT-1234",
+          "sourceType": "developer_company",
+          "sourceName": {
+            "ar": "شركة السادات للتطوير العقاري",
+            "en": "Sadat Real Estate Development",
+            "zh-CN": "萨达特房地产开发"
+          },
+          "sourceImageUrl": "http://127.0.0.1:4173/assets/clone/pub05-b.png",
+          "sourceVerified": true,
+          "installmentAvailable": true,
           "area": {
-            "value": 120,
+            "value": 145,
             "unit": "sqm"
           },
           "layout": {
             "bedrooms": 3,
             "bathrooms": 2,
-            "floor": 8
+            "floor": 4
           },
           "price": {
-            "amount": 20000,
+            "amount": 1900000,
             "currency": "EGP"
           }
         }
       ],
       "fields": [
-        "name",
+        "kind",
         "transactionType",
+        "sourceName",
+        "sourceType",
+        "project",
+        "developer",
+        "publicCode",
         "price",
+        "installment",
         "area",
-        "layout"
+        "bedrooms",
+        "bathrooms",
+        "floor",
+        "deliveryStatus",
+        "locationName"
       ]
     },
     "meta": {

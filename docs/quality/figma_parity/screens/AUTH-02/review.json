@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-02",
+  "classification": "PARTIAL",
+  "classificationReason": "Fresh protected runtime capture exists; direct element-level parity review and repository-owned repairs remain open.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4353",
+    "nodeId": "6017:15835",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-15835&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "screenshot": {
+      "path": "docs/quality/figma_parity/screens/AUTH-02/figma.png",
+      "width": 1577,
+      "height": 944,
+      "reviewed": true
+    },
+    "getDesignContext": {
+      "tool": "mcp__figma__get_design_context",
+      "skill": "resource:figma-design-to-code",
+      "resultStatus": "OK_WITH_REFERENCE_CODE_CACHED",
+      "root": {
+        "id": "6017:15835",
+        "name": "Seeker Registration — Default",
+        "width": 1577,
+        "height": 944
+      },
+      "reviewed": true,
+      "note": "This review uses the already-cached canonical context and screenshot; the same Figma node was not queried again."
+    }
+  },
+  "runtime": {
+    "route": "/auth/register/seeker?lang=ar",
+    "requestedQueueRoute": "/auth/register/seeker",
+    "role": "anonymous",
+    "permissions": {
+      "requiredRole": "anonymous",
+      "ownership": "anonymous",
+      "availableActionsObserved": {
+        "links": [
+          {
+            "text": "تخطي إلى المحتوى الرئيسي",
+            "href": "#main-content"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "▣مقدم عقارقدّم عقاراتك وابدأ طلب حساب مقدم عقار.",
+            "href": "/auth/register/provider/type"
+          },
+          {
+            "text": "رجوع",
+            "href": "/auth/login"
+          }
+        ],
+        "buttons": [
+          {
+            "text": "⌂باحث عن عقارابحث عن العقارات وتابع طلباتك من حسابك.",
+            "aria": null,
+            "disabled": false
+          },
+          {
+            "text": "متابعة",
+            "aria": null,
+            "disabled": true
+          }
+        ]
+      }
+    },
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "deterministicState": {
+      "path": "docs/quality/figma_parity/screens/AUTH-02/deterministic-state.json",
+      "seedId": "capture-AUTH-02-ar-before-2026-08-26",
+      "seedSha256": "a9c018e382ce482f11726a760241ef40c2ef0b249e2d2b4c84d27d3eda74fa03"
+    },
+    "before": {
+      "path": "docs/quality/figma_parity/screens/AUTH-02/runtime-before.png",
+      "sha256": "0c8482ce3ff68f446416cbe9db4237d14db8b8cedb5be3a9223b60c4eda6548e"
+    }
+  },
+  "structuredVisualComparison": {
+    "reviewed": false,
+    "diffPath": "docs/quality/figma_parity/screens/AUTH-02/diff.png",
+    "metricsPath": "docs/quality/figma_parity/screens/AUTH-02/visual-metrics.json",
+    "sourceDimensions": {
+      "width": 1577,
+      "height": 944
+    },
+    "runtimeDimensions": {
+      "width": 1577,
+      "height": 1002
+    },
+    "observations": [
+      "Initial post-implementation capture only; no screen is considered passed from this capture.",
+      "Direct element-level review is required before any repair or classification."
+    ]
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "fixtureContract": "real writable API response shapes",
+    "apiRequests": [],
+    "apiResponses": [],
+    "routeHits": [],
+    "outcome": "deterministic route state loaded; interaction comparison remains pending focused review"
+  },
+  "defects": [
+    "Element-level visual review remains open.",
+    "No visual baseline was changed."
+  ],
+  "filesRepaired": [],
+  "focusedTests": [],
+  "accessibility": {
+    "focusedCheck": "not yet run",
+    "exitCode": null
+  },
+  "evidencePaths": {
+    "figma": "docs/quality/figma_parity/screens/AUTH-02/figma.png",
+    "runtimeBefore": "docs/quality/figma_parity/screens/AUTH-02/runtime-before.png",
+    "runtimeAfter": "docs/quality/figma_parity/screens/AUTH-02/runtime-after.png",
+    "diff": "docs/quality/figma_parity/screens/AUTH-02/diff.png",
+    "review": "docs/quality/figma_parity/screens/AUTH-02/review.json"
+  }
+}

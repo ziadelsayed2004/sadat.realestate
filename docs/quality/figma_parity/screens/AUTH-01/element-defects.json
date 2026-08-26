@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 2,
+  "screenId": "AUTH-01",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4353",
+    "nodeId": "6017:16212",
+    "cachedContext": true
+  },
+  "comparisonCapture": {
+    "runtimeAfter": "docs/quality/figma_parity/screens/AUTH-01/runtime-after-pass4.png",
+    "diff": "docs/quality/figma_parity/screens/AUTH-01/diff-pass4.png",
+    "metrics": "docs/quality/figma_parity/screens/AUTH-01/visual-metrics-pass4.json",
+    "runtimeAfterSha256": "69d3565204be7ff13cea0e0a9ccdd836219cc5a34324f7f68ddfa0325092345c",
+    "capturedAt": "2026-08-26T20:41:34.882Z",
+    "materialDifferencePercent": 2.4583,
+    "antiAliasingOnlyPercent": 9.1341
+  },
+  "status": "PARTIAL_EXACT_BLOCKERS_RECORDED",
+  "items": [
+    {
+      "element": "auth shell and card",
+      "figmaExpected": "Centered card x559 y196, width 459px, bottom approximately y804 in the 1577x944 frame.",
+      "runtimeActual": "Card x559 y195.98, width 459px, bottom y803.71 in runtime-after-pass4.",
+      "measuredDelta": "x 0px; y -0.02px; width 0px; bottom -0.29px.",
+      "owner": "apps/web/src/features/auth/styles.css",
+      "requiredRepair": "Keep the measured shell geometry; inspect the remaining card border/shadow pixels after content and icon parity are resolved."
+    },
+    {
+      "element": "hero logo",
+      "figmaExpected": "Approved Sadat Real Estate logo visual bounds approximately x766..809, y232..269 (44x38px).",
+      "runtimeActual": "Runtime logo is approximately x766..809, y231..269 (44x39px) in pass4.",
+      "measuredDelta": "Approximately y -1px and height +1px; residual difference is concentrated in the logo raster/shadow pixels.",
+      "owner": "apps/web/src/features/auth/styles.css and apps/web/src/features/auth/pages.tsx",
+      "requiredRepair": "Use the approved logo asset and tune its rendered box only if the reviewed pixel difference remains material after the form/content blockers are resolved."
+    },
+    {
+      "element": "hero title and description",
+      "figmaExpected": "Arabic title and supporting copy with the clone's Cairo weight, glyph bounds, and line-height; title glyphs approximately x718..858, y301..322.",
+      "runtimeActual": "Runtime title line box x718.34 y292.98, width 140.31px, height 31.19px; supporting copy line box x680.94 y336.17, width 215.13px, height 21px.",
+      "measuredDelta": "Container geometry is close; the remaining material pixels are typography/glyph rasterization and copy-shape differences, not a release-approved zero-diff result.",
+      "owner": "apps/web/src/features/auth/styles.css and apps/web/src/features/auth/copy.ts",
+      "requiredRepair": "Directly compare Cairo weight/size/line-height and Arabic copy glyph bounds; retain only measured anti-aliasing after the unsupported source-state differences are resolved."
+    },
+    {
+      "element": "identity input label and value state",
+      "figmaExpected": "Label 'رقم الهاتف أو البريد الإلكتروني' with the clone's filled deterministic email value.",
+      "runtimeActual": "Runtime exposes the email-only label 'البريد الإلكتروني' and an empty placeholder state.",
+      "measuredDelta": "Semantic/content mismatch; the label and filled text pixels differ across the first control.",
+      "owner": "apps/web/src/features/auth/pages.tsx and packages/contracts auth login contract",
+      "requiredRepair": "Resolve the source/contract decision for phone-or-email login and the approved deterministic authenticated fixture. Do not hardcode the Figma's personal-looking values or fabricate a reset/login contract."
+    },
+    {
+      "element": "password input value state",
+      "figmaExpected": "Clone frame shows a filled password value and its corresponding obscured glyph pattern.",
+      "runtimeActual": "Runtime password input is empty in the anonymous deterministic capture.",
+      "measuredDelta": "Semantic/content mismatch in the password control; measured material diff remains in the control text region.",
+      "owner": "apps/web/src/features/auth/pages.tsx and packages/contracts auth login contract",
+      "requiredRepair": "Define an approved non-production fixture state in the real auth contract if this source state is intended; never add screenshot-only production content."
+    },
+    {
+      "element": "input and password icons",
+      "figmaExpected": "Approved vector phone/email, lock, and visibility icons with the clone's size, stroke, and placement.",
+      "runtimeActual": "Runtime uses Unicode/CSS approximations (☎, ▢, and ◉) in the controls.",
+      "measuredDelta": "Material icon shape and stroke differences remain in both controls and the password toggle.",
+      "owner": "apps/web/src/features/auth/styles.css and apps/web/src/features/auth/pages.tsx",
+      "requiredRepair": "Replace approximations with an approved repository icon asset/component and measure its bounds against the cached clone."
+    },
+    {
+      "element": "remember/forgot options",
+      "figmaExpected": "Visible remember checkbox and active forgot-password action in the same row as the clone.",
+      "runtimeActual": "Remember checkbox is visible; forgot-password control is disabled because the writable auth contract has no password-reset route/purpose.",
+      "measuredDelta": "The action state and text pixels differ; this is a contract/route gap, not a reason to invent a transition.",
+      "owner": "apps/web/src/features/auth/pages.tsx and packages/contracts auth routes",
+      "requiredRepair": "Obtain an approved password-reset contract/route or retain the exact blocker and disabled state; do not claim visual closure."
+    },
+    {
+      "element": "phone verification CTA",
+      "figmaExpected": "No additional visible phone CTA in the cached login frame.",
+      "runtimeActual": "The existing phone-verification transition remains in the DOM and is visually clipped to preserve the supported functional path and focused auth test.",
+      "measuredDelta": "No intended visible geometry, but the source/runtime interaction surfaces are not identical.",
+      "owner": "apps/web/src/features/auth/pages.tsx and apps/web/src/features/auth/styles.css",
+      "requiredRepair": "Resolve the approved login interaction model before making the CTA visible or removing the accessible transition."
+    },
+    {
+      "element": "lower body, divider, privacy, and card shadow",
+      "figmaExpected": "Account prompt approximately y699, divider y739, privacy notice y762, with the clone's bottom shadow.",
+      "runtimeActual": "Runtime pass4 account prompt y694.72, divider y737.72, privacy y760.72; card bottom y803.71.",
+      "measuredDelta": "Approximately -4.28px, -1.28px, and -1.28px respectively; shadow and text pixels remain materially different in the reviewed diff.",
+      "owner": "apps/web/src/features/auth/styles.css and apps/web/src/features/auth/pages.tsx",
+      "requiredRepair": "Tune the remaining lower-body spacing/shadow only after the source copy and unsupported state decisions are settled."
+    }
+  ]
+}

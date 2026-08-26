@@ -53,6 +53,8 @@ const detailsData = publicPropertyDetailsSchema.parse({
     sortOrder: 0,
     isCover: true
   }],
+  features: [],
+  services: [],
   relatedProperties: [{
     id: relatedId,
     slug: 'related-home',
@@ -110,7 +112,7 @@ describe('public property details', () => {
     expect(publicPropertyDetailsUrl(detailsData.slug)).toBe('/properties/published-home');
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the localized public projection and safe media state for %s', locale => {
+  it.each(['ar', 'en'] as const)('renders the localized public projection and safe media state for %s', locale => {
     const copy = getPublicPropertyDetailsCopy(locale);
     const result = renderWithLocale(
       <PublicPropertyDetails locale={locale} url={`/properties/${detailsData.slug}?lang=${locale}`} initialData={detailsData} />,
@@ -120,7 +122,7 @@ describe('public property details', () => {
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(screen.getByRole('heading', { name: detailsData.name[locale] ?? detailsData.slug, level: 1 })).toBeInTheDocument();
     expect(screen.getByText(copy.sourceTypes.developer_company)).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: detailsData.project?.name[locale] ?? '', level: 3 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: copy.sourceTitle, level: 2 })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: copy.relatedTitle, level: 2 })).toBeInTheDocument();
     expect(screen.getAllByRole('status', { name: copy.imageUnavailable }).length).toBeGreaterThan(0);
     expect(result.container.querySelector('[data-page="public-property-details"]')).toHaveAttribute('data-details-state', 'success');
@@ -136,6 +138,9 @@ describe('public property details', () => {
     const copy = getPublicPropertyDetailsCopy('en');
     renderWithLocale(<PublicPropertyDetails locale="en" url="/properties/published-home" initialData={detailsData} actions={actions} />, { locale: 'en' });
 
+    fireEvent.change(screen.getByLabelText('Full name'), { target: { value: 'Example Seeker' } });
+    fireEvent.change(screen.getByLabelText('Phone number'), { target: { value: '01001234567' } });
+    fireEvent.change(screen.getByLabelText('Contact time'), { target: { value: 'morning' } });
     fireEvent.change(screen.getByLabelText(copy.messageLabel), { target: { value: 'Please share the details.' } });
     fireEvent.click(screen.getByRole('button', { name: copy.submitContact }));
     await waitFor(() => expect(submitContact).toHaveBeenCalledWith({

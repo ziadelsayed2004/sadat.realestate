@@ -79,21 +79,28 @@ function emptyForm(locale: SupportedLocale): AccountFormState {
 }
 
 function isUnauthorized(error: unknown): boolean {
-  return error instanceof ApiClientError && (error.status === 401 || error.status === 403);
+  if (error instanceof ApiClientError) return error.status === 401 || error.status === 403;
+  return typeof error === 'object' && error !== null && 'status' in error
+    && ((error as { readonly status?: unknown }).status === 401 || (error as { readonly status?: unknown }).status === 403);
 }
 
 function accountError(error: unknown, copy: ProviderAccountCopy): AccountUiError {
   const code = error instanceof ApiClientError ? error.apiError?.code : undefined;
-  if (code === 'PROVIDER_APPLICATION_NOT_FOUND' || (error instanceof ApiClientError && error.status === 404)) {
+  const status = error instanceof ApiClientError
+    ? error.status
+    : typeof error === 'object' && error !== null && 'status' in error
+      ? (error as { readonly status?: unknown }).status
+      : undefined;
+  if (code === 'PROVIDER_APPLICATION_NOT_FOUND' || status === 404) {
     return { state: 'permission', title: copy.notFoundTitle, message: copy.notFoundBody };
   }
-  if (code === 'PROVIDER_APPLICATION_NOT_EDITABLE' || (error instanceof ApiClientError && error.status === 403)) {
+  if (code === 'PROVIDER_APPLICATION_NOT_EDITABLE' || status === 403) {
     return { state: 'permission', title: copy.permissionTitle, message: copy.permissionBody };
   }
   if (code === 'PROVIDER_APPLICATION_VERSION_CONFLICT') {
     return { state: 'retry', title: copy.conflictTitle, message: copy.conflictBody };
   }
-  if (error instanceof ApiClientError && (error.code === 'NETWORK_ERROR' || error.status === 503)) {
+  if ((error instanceof ApiClientError && error.code === 'NETWORK_ERROR') || status === 503) {
     return { state: 'retry', title: copy.networkTitle, message: copy.networkBody };
   }
   return { state: 'error', title: copy.permissionTitle, message: copy.permissionBody };
@@ -168,6 +175,11 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
   const loadApplication = useCallback(async () => {
     if (client.getProviderApplication === undefined) {
       if (initialApplication === undefined) {
+        setLoadState('permission');
+        setError({ state: 'permission', title: copy.permissionTitle, message: copy.permissionBody });
+        return;
+      }
+      if (initialApplication.providerType !== providerType) {
         setLoadState('permission');
         setError({ state: 'permission', title: copy.permissionTitle, message: copy.permissionBody });
         return;
@@ -259,7 +271,7 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
 
   if (loadState === 'loading') {
     return (
-      <section className="auth-page provider-account-page" data-testid="provider-account-details" data-screen-id="AUTH-09" data-state="loading">
+      <section className="auth-page provider-account-page" data-testid="provider-account-details" data-screen-id="AUTH-09" data-state="loading" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
         <div className="auth-card auth-card--form provider-account-card">
           <div className="provider-account-state"><StateMessage state="loading" title={copy.loadingTitle} message={copy.loadingBody} /></div>
         </div>
@@ -269,7 +281,7 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
 
   if (loadState === 'permission' || loadState === 'error' || loadState === 'retry') {
     return (
-      <section className="auth-page provider-account-page" data-testid="provider-account-details" data-screen-id="AUTH-09" data-state={loadState}>
+      <section className="auth-page provider-account-page" data-testid="provider-account-details" data-screen-id="AUTH-09" data-state={loadState} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
         <div className="auth-card auth-card--form provider-account-card">
           <div className="provider-account-state">
             {error === undefined ? null : <FormNotice error={error} copy={copy} onRetry={() => void loadApplication()} />}
@@ -281,7 +293,7 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
   }
 
   return (
-    <section className="auth-page provider-account-page" data-testid="provider-account-details" data-screen-id={screenId} data-state={state}>
+    <section className="auth-page provider-account-page" data-testid="provider-account-details" data-screen-id={screenId} data-state={state} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <div className="auth-card auth-card--form provider-account-card">
         <header className="auth-card__heading provider-account-card__heading">
           <span className="auth-card__icon provider-account-card__step" aria-hidden="true">3</span>

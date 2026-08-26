@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "PUB-01",
-  "classification": "REPAIRED",
-  "classificationReason": "Bounded public shared-foundation repair completed: the public header/footer structure, approved media handling, populated deterministic homepage success data, card grids, banners, CTA content, and image fallbacks are implemented and independently recaptured.",
+  "classification": "PARTIAL",
+  "classificationReason": "The canonical daylight Sadat City aerial/mosque hero and eight distinct category icon exports are absent from approved repository assets and cached extracted assets. Reconstructing them from figma.png would create prohibited screenshot-only content.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",
@@ -162,7 +162,7 @@
     "locale": "ar",
     "direction": "rtl",
     "viewport": {
-      "width": 1280,
+      "width": 1549,
       "height": 720,
       "devicePixelRatio": 1
     },
@@ -194,36 +194,29 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-01/runtime-after.png",
-      "sha256": "0807451d2c16adf3c15350a9f9bb610bd7d5112dc395089e623b6e282db63880"
+      "sha256": "edb23e48f56a2587678201ff0ae8687f1c2b9b92d3aa39d3b87cf8474ae30e8d"
     }
   },
   "structuredVisualComparison": {
     "reviewed": true,
     "diffPath": "docs/quality/figma_parity/screens/PUB-01/diff.png",
-    "sourceDimensions": [
-      {
-        "width": 1549,
-        "height": 5378
-      },
-      {
-        "width": 1280,
-        "height": 4712
-      },
-      {
-        "width": 1280,
-        "height": 6719
-      }
-    ],
+    "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-01/visual-metrics.json",
+    "sourceDimensions": {
+      "width": 1549,
+      "height": 5378
+    },
+    "runtimeDimensions": {
+      "width": 1549,
+      "height": 5378
+    },
+    "exactMajorBands": true,
+    "materialDifferencePercent": 29.1437,
+    "antiAliasingOnlyPercent": 6.6669,
     "observations": [
-      "The after capture is a fresh 1280x720 Arabic RTL runtime capture after the bounded shared-foundation repair.",
-      "The deterministic homepage response is HTTP 200 and renders six properties, four developers, eight content records, and three banners with approved local media.",
-      "The public shared header, navigation, CTA, footer, card-grid media, and safe image fallback are visible in the after capture.",
-      "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
-    ],
-    "dimensions": {
-      "width": 1397,
-      "height": 2328
-    }
+      "Header, hero, banner, summary, categories, properties, articles, community, about, CTA, and footer boundaries match the canonical 1549x5378 frame.",
+      "API-backed banner copy, metrics, taxonomy counts, property cards, testimonials, about points, CTA, and footer were repaired and recaptured.",
+      "The remaining reviewed material pixels include unavailable canonical hero/category artwork; no baseline was updated."
+    ]
   },
   "functionalApiComparison": {
     "reviewed": true,
@@ -232,68 +225,53 @@
     "outcome": "1 deterministic API response(s) observed; all returned success after the bounded repair."
   },
   "defects": [
-    "Resolved: homepage success data now contains the approved deterministic multi-card property, developer, content, and banner projections.",
-    "Resolved: homepage property, developer, content, and banner media now use the approved local assets through the public URL contract.",
-    "Resolved: shared public header/navigation, CTA, and footer structure now render on the homepage success route.",
-    "Reviewed residual diff: clone-specific typography, spacing, and exact section geometry remain visible in diff.png; no baseline was changed."
+    "Resolved repository defect: complete document and major section geometry now match the canonical frame exactly.",
+    "Resolved repository defect: canonical banner, property, community, about, CTA, and footer content hierarchy is API-backed and recaptured.",
+    "External source blocker: The canonical daylight Sadat City aerial/mosque hero and eight distinct category icon exports are absent from approved repository assets and cached extracted assets. Reconstructing them from figma.png would create prohibited screenshot-only content."
   ],
   "filesRepaired": [
     "apps/web/src/features/public/components.tsx",
     "apps/web/src/features/public/styles.css",
+    "apps/web/src/features/testing/msw/handlers.ts",
+    "apps/web/tests/public-homepage.vitest.test.tsx",
     "apps/web/tests/e2e/public-fixtures.ts",
+    "packages/contracts/src/public/index.ts",
     "apps/api/src/modules/public/homepage.ts",
-    "packages/contracts/src/public/index.ts"
+    "apps/api/src/modules/database/seed.ts",
+    "apps/api/tests/public/homepage.test.ts"
   ],
   "focusedTests": [
     {
       "name": "contracts build",
-      "command": "npm.cmd run build --workspace @sadat-real-estate/contracts",
       "exitCode": 0
     },
     {
-      "name": "apps/web typecheck",
-      "command": "npm.cmd run typecheck --workspace apps/web",
-      "exitCode": 0
-    },
-    {
-      "name": "apps/api typecheck",
-      "command": "npm.cmd run typecheck --workspace apps/api",
+      "name": "web typecheck and production build",
       "exitCode": 0
     },
     {
       "name": "affected web lint",
-      "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"src/features/content/**/*.{ts,tsx}\" \"src/features/frontend_foundation/app.tsx\" \"tests/e2e/public-fixtures.ts\" \"tests/e2e/visual.spec.ts\" --max-warnings=0",
       "exitCode": 0
     },
     {
-      "name": "affected API lint",
-      "command": "npm.cmd exec --workspace apps/api -- eslint \"src/modules/public/**/*.ts\" \"src/modules/search/**/*.ts\" \"src/modules/compare/**/*.ts\" \"src/modules/organizations/**/*.ts\" \"src/modules/articles/**/*.ts\" --max-warnings=0",
+      "name": "focused PUB-01 Vitest",
+      "result": "7/7 passed",
       "exitCode": 0
     },
     {
-      "name": "focused public Vitest",
-      "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-homepage.vitest.test.tsx tests/public-listing.vitest.test.tsx tests/public-details.vitest.test.tsx tests/public-compare.vitest.test.tsx tests/public-developers.vitest.test.tsx tests/public-articles.vitest.test.tsx",
+      "name": "focused PUB-01 accessibility Playwright",
+      "result": "1/1 passed",
       "exitCode": 0
     },
     {
-      "name": "focused public API/integration tests",
-      "command": "npm.cmd exec --workspace apps/api -- node --import tsx --test tests/public/homepage.test.ts tests/public/properties.test.ts tests/search/properties.test.ts tests/compare/properties.test.ts tests/organizations/public.test.ts",
+      "name": "backend_143 focused API/security tests",
+      "result": "5/5 passed",
       "exitCode": 0
     },
     {
-      "name": "focused Playwright visual/route assertions",
-      "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\" --ignore-snapshots",
-      "exitCode": 0
-    },
-    {
-      "name": "focused Playwright accessibility assertions",
-      "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\"",
-      "exitCode": 0
-    },
-    {
-      "name": "focused Figma/runtime visual comparison",
-      "command": "node --import tsx scripts/capture-figma-parity-runtime.mjs --screen-id PUB-01 --fixture public-home --route / --phase after",
-      "exitCode": 0
+      "name": "normal visual snapshot",
+      "result": "not eligible while exact source assets are blocked",
+      "exitCode": null
     }
   ],
   "accessibility": {
@@ -308,6 +286,7 @@
     "review": "docs/quality/figma_parity/screens/PUB-01/review.json",
     "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-01/runtime-after-capture.json"
   },
-  "reviewedAt": "2026-08-25T21:26:34.928Z",
-  "repairedAt": "2026-08-25T21:26:34.928Z"
+  "reviewedAt": "2026-08-26T00:13:15.928Z",
+  "repairedAt": "2026-08-26T00:13:15.928Z",
+  "externalBlocker": "The canonical daylight Sadat City aerial/mosque hero and eight distinct category icon exports are absent from approved repository assets and cached extracted assets. Reconstructing them from figma.png would create prohibited screenshot-only content."
 }

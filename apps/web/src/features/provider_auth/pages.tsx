@@ -68,6 +68,7 @@ export function ProviderTypePage({ url, locale, onContinue }: ProviderTypePagePr
       data-testid="provider-type-selection"
       data-screen-id={selected ? 'AUTH-08' : 'AUTH-07'}
       data-state={selected ? 'success' : 'idle'}
+      dir={locale === 'ar' ? 'rtl' : 'ltr'}
     >
       <div className="auth-card auth-card--form provider-type-card">
         <header className="auth-card__heading provider-type-card__heading">

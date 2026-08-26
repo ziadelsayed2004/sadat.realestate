@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "seedId": "capture-AUTH-01-ar-after-2026-08-26",
+  "environment": "non-production-browser-fixture",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "screenId": "AUTH-01",
+  "source": {
+    "pageId": "6017:4353",
+    "nodeId": "6017:16212",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-16212&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "screenshot": "docs/quality/figma_parity/screens/AUTH-01/figma.png"
+  },
+  "runtime": {
+    "route": "/auth/login?lang=ar",
+    "requestedQueueRoute": "/auth/login",
+    "role": "anonymous",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "deviceScaleFactor": 1
+    }
+  },
+  "authSession": null,
+  "api": {
+    "fixtureContract": "real writable API response shapes",
+    "responseRequestIds": [
+      "capture-AUTH-01-ar"
+    ],
+    "state": {
+      "id": "abcdef0123456789abcdef01",
+      "providerType": "developer_company",
+      "status": "draft",
+      "version": 0,
+      "phone": "+201000000000",
+      "requirementVersion": "2026-08-13.1",
+      "requirementsSnapshot": {
+        "version": "2026-08-13.1",
+        "providerType": "developer_company",
+        "requirements": [
+          {
+            "key": "commercial_registration",
+            "labelKey": "provider.documents.commercialRegistration",
+            "classification": "required",
+            "applies": true
+          },
+          {
+            "key": "tax_card",
+            "labelKey": "provider.documents.taxCard",
+            "classification": "required",
+            "applies": true
+          },
+          {
+            "key": "authorized_representative_id_front",
+            "labelKey": "provider.documents.authorizedRepresentativeIdFront",
+            "classification": "required",
+            "applies": true
+          },
+          {
+            "key": "authorized_representative_id_back",
+            "labelKey": "provider.documents.authorizedRepresentativeIdBack",
+            "classification": "required",
+            "applies": true
+          },
+          {
+            "key": "company_profile",
+            "labelKey": "provider.documents.companyProfile",
+            "classification": "optional",
+            "applies": true
+          },
+          {
+            "key": "developer_license",
+            "labelKey": "provider.documents.developerLicense",
+            "classification": "optional",
+            "applies": true
+          },
+          {
+            "key": "additional_supporting_document",
+            "labelKey": "provider.documents.additionalSupportingDocument",
+            "classification": "optional",
+            "applies": true
+          }
+        ]
+      },
+      "missingFields": [
+        "accountOwnerFullName",
+        "displayName",
+        "email",
+        "legalCompanyName",
+        "brandName",
+        "headOfficeAddress",
+        "commercialRegistrationNumber",
+        "taxRegistrationNumber",
+        "authorizedRepresentativeFullName",
+        "authorizedRepresentativeTitle"
+      ],
+      "missingDocuments": [
+        "commercial_registration",
+        "tax_card",
+        "authorized_representative_id_front",
+        "authorized_representative_id_back"
+      ],
+      "availableActions": [
+        "edit_company",
+        "submit",
+        "view_status"
+      ],
+      "createdAt": "2026-07-23T09:00:00.000Z",
+      "updatedAt": "2026-07-23T10:00:00.000Z"
+    }
+  },
+  "phase": "after",
+  "repair": {
+    "repairId": "auth01-form-composition-pass3-2026-08-26",
+    "expectedEffect": "AUTH-01 now uses the cached Arabic Figma copy, 18px form rhythm, 1.3 label line-height, inline password control, remember/options row, account-divider-privacy order, and accessible non-visual phone transition."
+  },
+  "seedSha256": "68e1901d79ff48c528244b07f15548cb1149a6cbf453f9670df4284fec75eb91"
+}

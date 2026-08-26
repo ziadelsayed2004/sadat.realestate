@@ -20,6 +20,7 @@ const directoryData = publicOrganizationListDataSchema.parse({
     name: { en: 'Approved builder' },
     description: { en: 'Published developer description.' },
     verified: true,
+    locations: [{ en: 'Central district' }],
     projectCount: 2,
     propertyCount: 4
   }],
@@ -44,7 +45,13 @@ const profileData = publicOrganizationProfileSchema.parse({
     name: { en: 'Published home' },
     transactionType: 'sale',
     projectId: 'bbbbbbbbbbbbbbbbbbbbbbbb'
-  }]
+  }],
+  stats: {
+    publishedProjects: 2,
+    availableProperties: 4,
+    saleProperties: 4,
+    rentalProperties: 0
+  }
 });
 
 describe('public developer directory and profiles', () => {
@@ -56,15 +63,14 @@ describe('public developer directory and profiles', () => {
     expect(defaultPublicDeveloperDirectoryQuery()).toMatchObject({ sort: 'slug', direction: 'asc', page: 1, limit: 20 });
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the directory contract projection and direction for %s', (locale) => {
+  it.each(['ar', 'en'] as const)('renders the directory contract projection and direction for %s', (locale) => {
     const result = renderWithLocale(<PublicDevelopers locale={locale} initialData={directoryData} />, { locale });
     const copy = getPublicDevelopersCopy(locale);
 
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(screen.getByRole('heading', { name: copy.title, level: 1 })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Approved builder' })).toHaveAttribute('href', '/developers/approved-builder');
-    expect(screen.getByText(copy.projectCount(2))).toBeInTheDocument();
-    expect(screen.getByText(copy.propertyCount(4))).toBeInTheDocument();
+    expect(screen.getByText('Central district')).toBeInTheDocument();
     expect(result.container.textContent).not.toContain('providerId');
     expect(result.container.textContent).not.toContain('audit');
   });

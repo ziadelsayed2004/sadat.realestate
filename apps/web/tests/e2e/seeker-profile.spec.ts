@@ -116,7 +116,7 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
     });
     await expect(page).toHaveScreenshot(`seeker-profile-preferences-${locale}.png`, { fullPage: true });
 
-    await page.goto(`/seeker/profile?tab=profile&${query}`, { waitUntil: 'domcontentloaded' });
+    await page.goto(`/seeker/profile?tab=personal&${query}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-screen-id="SEK-09"]')).toBeVisible();
     await expect(page.getByLabel(copy.profile.phone)).toBeDisabled();
     await page.evaluate(async () => {
@@ -142,7 +142,7 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
     await page.getByRole('button', { name: copy.preferences.save }).click();
     await expect(page.locator('.seeker-profile__feedback[data-state="success"]')).toContainText(copy.preferences.saved);
 
-    await page.goto(`/seeker/profile?tab=profile&lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
+    await page.goto(`/seeker/profile?tab=personal&lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await page.getByLabel(copy.profile.firstName).fill('Mariam');
     await page.getByRole('button', { name: copy.profile.save }).click();
     await expect(page.locator('.seeker-profile__feedback[data-state="success"]')).toContainText(copy.profile.saved);

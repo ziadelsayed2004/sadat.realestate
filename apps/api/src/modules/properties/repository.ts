@@ -17,6 +17,7 @@ export interface StoredProperty {
   coordinates?: PropertyCoordinates;
   description?: PropertyRecord['name'];
   propertyTypeId?: string;
+  deliveryStatus?: PropertyRecord['deliveryStatus'];
   area?: PropertyDetailsStep['area'] extends infer T ? Exclude<T, null | undefined> : never;
   layout?: PropertyDetailsStep['layout'];
   price?: PropertyPricingStep['price'];
@@ -90,6 +91,7 @@ function stored(record: PropertyRecord & { _id: Types.ObjectId }): StoredPropert
     ...(record.coordinates ? { coordinates: { longitude: record.coordinates.coordinates[0], latitude: record.coordinates.coordinates[1] } } : {}),
     ...(record.description ? { description: structuredClone(record.description) } : {}),
     ...(record.propertyTypeId ? { propertyTypeId: record.propertyTypeId.toHexString() } : {}),
+    ...(record.deliveryStatus ? { deliveryStatus: record.deliveryStatus } : {}),
     ...(record.area ? { area: structuredClone(record.area) } : {}),
     ...(record.layout ? { layout: structuredClone(record.layout) } : {}),
     ...(record.price ? { price: structuredClone(record.price) } : {}),
@@ -151,7 +153,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
         }
         if ('coordinates' in set) set.coordinates = coordinates(set.coordinates as PropertyCoordinates | null);
         const unset: Record<string, 1> = {};
-        for (const field of ['projectId', 'parentPropertyId', 'locationId', 'coordinates', 'description', 'propertyTypeId', 'area', 'layout', 'price', 'paymentPlans', 'featureIds', 'serviceIds', 'contact']) if (set[field] === undefined || set[field] === null) { delete set[field]; unset[field] = 1; }
+        for (const field of ['projectId', 'parentPropertyId', 'locationId', 'coordinates', 'description', 'propertyTypeId', 'deliveryStatus', 'area', 'layout', 'price', 'paymentPlans', 'featureIds', 'serviceIds', 'contact']) if (set[field] === undefined || set[field] === null) { delete set[field]; unset[field] = 1; }
         const result = await models.Property.findOneAndUpdate(
           { _id: input.id, providerId: new Types.ObjectId(input.providerId), version: input.expectedVersion },
           { $set: set, ...(Object.keys(unset).length ? { $unset: unset } : {}), $inc: { version: 1 } },

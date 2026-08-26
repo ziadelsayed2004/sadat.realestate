@@ -168,9 +168,11 @@ test('public property listing exposes labeled filters, query controls, and safe 
   await expect(listing.locator('.public-homepage__nav')).toHaveAttribute('aria-label', /.+/);
   const filters = listing.locator('form[aria-label]');
   await expect(filters).toBeVisible();
-  await expect(filters.locator('input[name="search"]')).toHaveAttribute('id', 'public-property-search');
+  await expect(filters.locator('input[name="locationId"]')).toHaveAttribute('id', 'public-property-location');
+  await expect(filters.locator('select[name="deliveryStatus"]')).toHaveAttribute('id', 'public-property-delivery-status');
   await expect(listing.locator('select[name="sort"]')).toHaveAttribute('id', 'public-property-sort');
-  await expect(listing.locator('select[name="direction"]')).toHaveAttribute('id', 'public-property-direction');
+  await expect(listing.getByRole('button', { name: /عرض شبكي|Grid view|网格/ })).toHaveAttribute('aria-pressed', /^(true|false)$/);
+  await expect(listing.getByRole('button', { name: /عرض قائمة|List view|列表/ })).toHaveAttribute('aria-pressed', /^(true|false)$/);
   const state = await listing.getAttribute('data-listing-state');
   expect(state).toMatch(/^(loading|empty|error|retry|permission|success)$/);
   await expect(listing.locator('.public-homepage__brand img')).toHaveAttribute('alt', /.+/);

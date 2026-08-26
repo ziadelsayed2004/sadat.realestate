@@ -54,8 +54,10 @@ test.describe('local production performance and Core Web Vitals inputs', () => {
           .reduce((total, resource) => total + (resource.encodedBodySize || resource.transferSize || 0), 0);
         const images = Array.from(document.images).map(image => ({
           src: image.getAttribute('src') ?? '',
+          loading: image.loading,
           complete: image.complete,
-          naturalWidth: image.naturalWidth
+          naturalWidth: image.naturalWidth,
+          top: Math.round(image.getBoundingClientRect().top)
         }));
         return {
           ttfbMs: navigation === undefined ? 0 : Math.round(navigation.responseStart - navigation.startTime),
@@ -81,7 +83,26 @@ test.describe('local production performance and Core Web Vitals inputs', () => {
       expect(metrics.loadEventMs, route.id).toBeLessThan(PERFORMANCE_BUDGETS.loadEventMs);
       expect(metrics.scriptBytes, route.id).toBeLessThan(PERFORMANCE_BUDGETS.scriptBytes);
       expect(metrics.stylesheetBytes, route.id).toBeLessThan(PERFORMANCE_BUDGETS.stylesheetBytes);
-      expect(metrics.images.every(image => image.complete && image.naturalWidth > 0), route.id).toBe(true);
+      const aboveFold = metrics.images.filter(image => image.top < 720);
+      expect(aboveFold.every(image => image.loading === 'eager' || image.complete), `${route.id}: above-fold media`).toBe(true);
+      expect(metrics.images.some(image => image.top >= 720 && image.loading === 'lazy'), `${route.id}: below-fold lazy media`).toBe(true);
+
+      await page.evaluate(async () => {
+        const step = Math.max(480, Math.floor(window.innerHeight * 0.8));
+        for (let top = 0; top <= document.documentElement.scrollHeight; top += step) {
+          window.scrollTo(0, top);
+          await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        }
+        await Promise.all(Array.from(document.images).map(async image => {
+          if (image.complete && image.naturalWidth > 0) return;
+          try { await image.decode(); } catch { /* asserted below */ }
+        }));
+      });
+      const finalImages = await page.locator('img').evaluateAll(images => images.map(element => {
+        const image = element as HTMLImageElement;
+        return { complete: image.complete, naturalWidth: image.naturalWidth };
+      }));
+      expect(finalImages.every(image => image.complete && image.naturalWidth > 0), `${route.id}: images after lazy-load exercise`).toBe(true);
     });
   }
 });

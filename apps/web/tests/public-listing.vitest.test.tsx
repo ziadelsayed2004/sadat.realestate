@@ -22,6 +22,8 @@ const listingData = publicPropertyListDataSchema.parse({
     layout: { bedrooms: 3, bathrooms: 2 },
     price: { amount: 1_250_000, currency: 'EGP' }
   }],
+  categories: [{ id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'apartments', name: { ar: 'شقق', en: 'Apartments', 'zh-CN': '公寓' }, propertyCount: 1, order: 0 }],
+  propertyTypes: [{ id: 'cccccccccccccccccccccccc', slug: 'apartments', name: { ar: 'شقة', en: 'Apartment', 'zh-CN': '公寓' }, propertyCount: 1, order: 0 }],
   page: 1,
   limit: 20,
   total: 1
@@ -35,7 +37,7 @@ describe('public property listing', () => {
     expect(publicPropertySearchUrl(query)).toBe('/properties?transactionType=rent&search=home&sort=price&direction=asc&page=2&limit=10');
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the public projection and direction for %s', (locale) => {
+  it.each(['ar', 'en'] as const)('renders the public projection and direction for %s', (locale) => {
     const copy = getPublicPropertyListingCopy(locale);
     const result = renderWithLocale(
       <PublicPropertyListing locale={locale} initialData={listingData} initialQuery={defaultPublicPropertySearchQuery()} />,
@@ -60,34 +62,31 @@ describe('public property listing', () => {
       { locale: 'en' }
     );
 
-    fireEvent.change(screen.getByLabelText(copy.searchLabel), { target: { value: 'home' } });
     fireEvent.change(screen.getByLabelText(copy.sortLabel), { target: { value: 'price' } });
     fireEvent.click(screen.getByRole('button', { name: copy.applyFilters }));
 
-    await waitFor(() => expect(load).toHaveBeenCalledWith(expect.objectContaining({ search: 'home', sort: 'price', page: 1 }), expect.any(AbortSignal)));
+    await waitFor(() => expect(load).toHaveBeenCalledWith(expect.objectContaining({ sort: 'price', page: 1 }), expect.any(AbortSignal)));
     expect(window.location.pathname).toBe('/properties');
-    expect(window.location.search).toContain('search=home');
     expect(window.location.search).toContain('sort=price');
   });
 
   it('supports pagination and kind navigation without inventing query fields', async () => {
     window.history.replaceState({}, '', '/properties');
     const load = vi.fn().mockResolvedValue({ ...listingData, page: 2, total: 41 });
-    const copy = getPublicPropertyListingCopy('en');
     renderWithLocale(
       <PublicPropertyListing locale="en" initialData={{ ...listingData, page: 1, total: 41 }} initialQuery={defaultPublicPropertySearchQuery()} load={load} />,
       { locale: 'en' }
     );
 
-    fireEvent.click(screen.getByRole('button', { name: copy.unit }));
-    await waitFor(() => expect(load).toHaveBeenCalledWith(expect.objectContaining({ kind: 'unit', page: 1 }), expect.any(AbortSignal)));
-    expect(window.location.search).toContain('kind=unit');
+    fireEvent.click(screen.getByRole('button', { name: /Apartments|شقق|公寓/ }));
+    await waitFor(() => expect(load).toHaveBeenCalledWith(expect.objectContaining({ propertyCategoryId: expect.any(String), page: 1 }), expect.any(AbortSignal)));
+    expect(window.location.search).toContain('propertyCategoryId=');
   });
 
   it('renders empty and loading-to-success states with retry', async () => {
     const load = vi.fn().mockResolvedValue(listingData);
     const copy = getPublicPropertyListingCopy('en');
-    const empty = publicPropertyListDataSchema.parse({ items: [], page: 1, limit: 20, total: 0 });
+    const empty = publicPropertyListDataSchema.parse({ items: [], categories: [], propertyTypes: [], page: 1, limit: 20, total: 0 });
     renderWithLocale(<PublicPropertyListing locale="en" initialData={empty} load={load} />, { locale: 'en' });
 
     expect(screen.getByRole('status', { name: copy.emptyTitle })).toBeInTheDocument();

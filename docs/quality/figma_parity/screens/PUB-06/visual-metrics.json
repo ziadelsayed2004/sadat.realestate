@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-06",
+  "phase": "after",
+  "source": {
+    "width": 1534,
+    "height": 2985
+  },
+  "runtimeAfter": {
+    "width": 1534,
+    "height": 2985
+  },
+  "comparedWidth": 1534,
+  "comparedHeight": 2985,
+  "comparedPixels": 4578990,
+  "materialDifferencePercent": 16.8636,
+  "antiAliasingOnlyPercent": 5.6811,
+  "threshold": {
+    "materialRgbSumGreaterThan": 24,
+    "antiAliasingRgbSumGreaterThan": 3
+  },
+  "method": "same-width source/runtime canvas comparison over the overlapping document height",
+  "reviewed": false
+}

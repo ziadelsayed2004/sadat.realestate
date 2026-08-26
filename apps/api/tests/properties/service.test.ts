@@ -123,8 +123,9 @@ test('creates provider-owned drafts and saves core/location steps with optimisti
   const located = await service.saveStep(claims(), id, 'location', { version: 1, locationId: location, coordinates: { latitude: 30.62, longitude: 30.74 }, reason: 'Save property location' }, { requestId: 'property-3', traceId: 'c'.repeat(32) });
   assert.equal(located.locationId, location);
   assert.deepEqual(located.coordinates, { latitude: 30.62, longitude: 30.74 });
-  const details = await service.saveStep(claims(), id, 'details', { version: 2, area: { value: 85, unit: 'sqm' }, layout: { bedrooms: 2, bathrooms: 1, floor: 2, totalFloors: 5 }, reason: 'Save property details' }, { requestId: 'property-8', traceId: '1'.repeat(32) });
+  const details = await service.saveStep(claims(), id, 'details', { version: 2, deliveryStatus: 'ready_to_move', area: { value: 85, unit: 'sqm' }, layout: { bedrooms: 2, bathrooms: 1, floor: 2, totalFloors: 5 }, reason: 'Save property details' }, { requestId: 'property-8', traceId: '1'.repeat(32) });
   assert.equal(details.area?.value, 85);
+  assert.equal(details.deliveryStatus, 'ready_to_move');
   const priced = await service.saveStep(claims(), id, 'price-payment', { version: 3, price: { amount: 1_000_000, currency: 'EGP' }, paymentPlans: [{ name: { en: 'Plan' }, installments: 12, frequency: 'monthly', installmentAmount: { amount: 80_000, currency: 'EGP' } }], reason: 'Save property pricing' }, { requestId: 'property-9', traceId: '2'.repeat(32) });
   assert.equal(priced.price?.currency, 'EGP');
   assert.equal(priced.paymentPlans?.[0]?.installments, 12);

@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 2,
+  "screenId": "AUTH-01",
+  "classification": "PARTIAL",
+  "classificationReason": "The latest cached-Figma comparison remains materially different at 2.4583%. Repository-owned icon and residual typography/shadow differences remain, and the clone's filled phone-or-email/password state plus forgot-password action are not representable by the current writable auth contract without an approved contract decision. AUTH-01 is not closed.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4353",
+    "nodeId": "6017:16212",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-16212&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "screenshot": {
+      "path": "docs/quality/figma_parity/screens/AUTH-01/figma.png",
+      "width": 1577,
+      "height": 944,
+      "reviewed": true
+    },
+    "getDesignContext": {
+      "tool": "mcp__figma__get_design_context",
+      "skill": "resource:figma-design-to-code",
+      "resultStatus": "OK_WITH_REFERENCE_CODE_CACHED",
+      "root": {
+        "id": "6017:16212",
+        "name": "Login",
+        "width": 1577,
+        "height": 944
+      },
+      "reviewed": true,
+      "queriedAgain": false,
+      "note": "This review uses the already-cached canonical context and screenshot."
+    }
+  },
+  "runtime": {
+    "route": "/auth/login?lang=ar",
+    "requestedQueueRoute": "/auth/login",
+    "role": "anonymous",
+    "permissions": {
+      "requiredRole": "anonymous",
+      "ownership": "anonymous",
+      "availableActionsObserved": {
+        "links": [
+          { "text": "skip-to-content", "href": "#main-content" },
+          { "text": "brand-home", "href": "/" },
+          { "text": "verify-by-email", "href": "/auth/verify-phone?purpose=login&roleType=seeker" },
+          { "text": "create-account", "href": "/auth/register" }
+        ],
+        "buttons": [
+          { "text": "show-password", "aria": "show-password", "disabled": false },
+          { "text": "forgot-password", "aria": null, "disabled": true },
+          { "text": "login", "aria": null, "disabled": false }
+        ]
+      }
+    },
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "deterministicState": {
+      "path": "docs/quality/figma_parity/screens/AUTH-01/deterministic-state-pass4.json",
+      "seedId": "capture-AUTH-01-ar-after-2026-08-26",
+      "seedSha256": "c6ff75316ba9d6c5bd5bddaaf534af2cee80ecf16b2936b819a08b6328f273b2"
+    },
+    "before": {
+      "path": "docs/quality/figma_parity/screens/AUTH-01/runtime-before.png",
+      "sha256": "3387ddce31374e3536a777c183217a96f87caa3f1649b5b8d452cf1dab80246a"
+    },
+    "latestReviewedAfter": {
+      "path": "docs/quality/figma_parity/screens/AUTH-01/runtime-after-pass4.png",
+      "sha256": "69d3565204be7ff13cea0e0a9ccdd836219cc5a34324f7f68ddfa0325092345c",
+      "capturedAt": "2026-08-26T20:41:34.882Z",
+      "repairId": "auth01-typography-controls-pass4-2026-08-26",
+      "expectedEffect": "AUTH-01 typography, logo, control borders, button radius, and lower-body row-gap use the measured Figma bounds and colors while preserving accessible runtime behavior."
+    }
+  },
+  "structuredVisualComparison": {
+    "reviewed": true,
+    "diffPath": "docs/quality/figma_parity/screens/AUTH-01/diff-pass4.png",
+    "metricsPath": "docs/quality/figma_parity/screens/AUTH-01/visual-metrics-pass4.json",
+    "sourceDimensions": { "width": 1577, "height": 944 },
+    "runtimeDimensions": { "width": 1577, "height": 944 },
+    "metrics": {
+      "materialDifferencePercent": 2.4583,
+      "antiAliasingOnlyPercent": 9.1341,
+      "comparedPixels": 1488688,
+      "threshold": {
+        "materialRgbSumGreaterThan": 24,
+        "antiAliasingRgbSumGreaterThan": 3
+      }
+    },
+    "method": "unmasked same-width source/runtime canvas comparison over the overlapping document height",
+    "manualReview": {
+      "reviewed": true,
+      "reviewedAt": "2026-08-26T20:47:27.889Z",
+      "summary": "Card placement and primary geometry now closely match. Reviewed material differences remain in source-vs-runtime input content/state, control icon shapes, forgot-password state, Arabic typography glyphs, lower-body spacing, and card shadow."
+    }
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "fixtureContract": "real writable API response shapes",
+    "apiRequests": [],
+    "apiResponses": [],
+    "routeHits": [],
+    "outcome": "Anonymous login route loaded deterministically; supported create-account and phone-verification transitions are present. Forgot-password remains disabled because no writable reset route/purpose exists."
+  },
+  "defects": [
+    "Repository-owned control icons are Unicode/CSS approximations rather than approved clone-equivalent vector assets.",
+    "Material typography/glyph and lower-body shadow/spacing differences remain after pass4.",
+    "The source filled phone-or-email/password state and visible forgot-password action require an approved contract/route decision; no screenshot-only or production-hardcoded data was added."
+  ],
+  "filesRepaired": [
+    "apps/web/src/features/auth/styles.css",
+    "apps/web/src/features/auth/pages.tsx",
+    "apps/web/src/features/auth/copy.ts",
+    "scripts/capture-figma-parity-protected.mjs"
+  ],
+  "focusedTests": [
+    { "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/auth-ui.vitest.test.tsx tests/auth-onboarding-qa.vitest.test.ts", "result": "8/8 passed", "exitCode": 0 },
+    { "command": "npm.cmd exec --workspace apps/web -- eslint src/features/auth/pages.tsx src/features/auth/copy.ts --max-warnings=0", "result": "passed", "exitCode": 0 },
+    { "command": "npm.cmd run typecheck --workspace apps/web", "result": "passed", "exitCode": 0 },
+    { "command": "node --check scripts/capture-figma-parity-protected.mjs", "result": "passed", "exitCode": 0 }
+  ],
+  "accessibility": {
+    "focusedCheck": "not yet run",
+    "exitCode": null
+  },
+  "evidencePaths": {
+    "figma": "docs/quality/figma_parity/screens/AUTH-01/figma.png",
+    "runtimeBefore": "docs/quality/figma_parity/screens/AUTH-01/runtime-before.png",
+    "runtimeAfter": "docs/quality/figma_parity/screens/AUTH-01/runtime-after-pass4.png",
+    "diff": "docs/quality/figma_parity/screens/AUTH-01/diff-pass4.png",
+    "review": "docs/quality/figma_parity/screens/AUTH-01/review.json",
+    "elementDefects": "docs/quality/figma_parity/screens/AUTH-01/element-defects.json",
+    "visualMetrics": "docs/quality/figma_parity/screens/AUTH-01/visual-metrics-pass4.json",
+    "captureMetadata": "docs/quality/figma_parity/screens/AUTH-01/runtime-after-pass4-capture.json"
+  }
+}

@@ -7,6 +7,7 @@ import { localizedText } from '../public/model.ts';
 import {
   createSeekerNotificationActions,
   createSeekerNotificationsLoader,
+  isAuthenticatedSeekerSession,
   localeForSeekerPath,
   type SeekerAuthorizationSource,
   type SeekerNotificationActions,
@@ -117,11 +118,12 @@ export function SeekerNotifications({ locale, session, authClient, apiOrigin, lo
   const [markingId, setMarkingId] = useState<string | undefined>();
   const [markingAll, setMarkingAll] = useState(false);
   const [mutationFeedback, setMutationFeedback] = useState<MutationFeedback | undefined>();
+  const sessionRole = session.status === 'authenticated' ? session.role : undefined;
   const loadSource = useMemo(() => load ?? createSeekerNotificationsLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, load]);
   const actionSource = useMemo(() => actions ?? createSeekerNotificationActions({ apiOrigin, authorization: authClient }), [actions, apiOrigin, authClient]);
 
   useEffect(() => {
-    if (session.status !== 'authenticated') {
+    if (!isAuthenticatedSeekerSession(session)) {
       setState('permission');
       return undefined;
     }
@@ -135,7 +137,7 @@ export function SeekerNotifications({ locale, session, authClient, apiOrigin, lo
       if (!controller.signal.aborted) setState(stateForError(error));
     });
     return () => controller.abort();
-  }, [attempt, filter, loadSource, page, session.status]);
+  }, [attempt, filter, loadSource, page, sessionRole]);
 
   const markRead = async (notificationId: string) => {
     setMutationFeedback(undefined);

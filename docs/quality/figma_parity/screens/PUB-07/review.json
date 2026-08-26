@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "PUB-07",
-  "classification": "REPAIRED",
-  "classificationReason": "Bounded public shared-foundation repair completed: article listing cards now consume approved imageUrl data, related category/search/filter behavior remains API-backed, the CTA is present, and the shared footer/media handling is rendered.",
+  "classification": "PARTIAL",
+  "classificationReason": "Second cached-Figma pass remains open: measured material visual differences remain after the latest repair capture; this screen is not eligible for REPAIRED_VERIFIED.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",

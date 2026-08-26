@@ -524,6 +524,7 @@ export interface PropertyCardProps extends Omit<HTMLAttributes<HTMLElement>, 'ti
   readonly source?: ReactNode | undefined;
   readonly image?: ReactNode | undefined;
   readonly imageAlt?: string | undefined;
+  readonly mediaOverlay?: ReactNode | undefined;
   readonly badges?: readonly ReactNode[] | undefined;
   readonly features?: readonly PropertyCardFeature[] | undefined;
   readonly href?: string | undefined;
@@ -539,6 +540,7 @@ export function PropertyCard({
   source,
   image,
   imageAlt,
+  mediaOverlay,
   badges,
   features,
   href,
@@ -563,7 +565,7 @@ export function PropertyCard({
 
   return (
     <article {...articleProps} className={joinClassNames('ui-property-card', className)} data-state="success">
-      {image !== undefined ? <div className="ui-property-card__media" {...mediaProps}>{image}</div> : <div className="ui-property-card__media ui-property-card__media--empty" aria-hidden="true" />}
+      {image !== undefined ? <div className="ui-property-card__media" {...mediaProps}>{image}{mediaOverlay}</div> : <div className="ui-property-card__media ui-property-card__media--empty" aria-hidden="true">{mediaOverlay}</div>}
       <div className="ui-property-card__body">
         {badges !== undefined && badges.length > 0 ? <div className="ui-property-card__badges">{badges.map((badge, index) => <span key={index}>{badge}</span>)}</div> : null}
         <h3>{titleMarkup}</h3>

@@ -15,6 +15,7 @@ test('projects approved organizations with only published projects and active pr
   const profile = await service.get('trusted-company');
   assert.deepEqual(profile?.projects.map(item => item.slug), ['published-project']);
   assert.deepEqual(profile?.properties.map(item => item.slug), ['published-home']);
+  assert.deepEqual(profile?.stats, { publishedProjects: 1, availableProperties: 1, saleProperties: 1, rentalProperties: 0 });
   assert.equal('providerId' in (profile ?? {}), false);
   assert.equal('status' in (profile ?? {}), false);
 });

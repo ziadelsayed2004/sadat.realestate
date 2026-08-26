@@ -2301,5 +2301,138 @@
       "docs/quality/figma_parity/**",
       "agent_pack/**"
     ]
+  },
+  {
+    "taskId": "backend_141",
+    "allowedRoots": [
+      "packages/contracts/src/public/**",
+      "packages/contracts/src/organizations/**",
+      "apps/api/src/modules/public/**",
+      "apps/api/src/modules/organizations/**",
+      "apps/api/src/**/__tests__/**",
+      "packages/contracts/src/**/__tests__/**",
+      "docs/api-artifacts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_142",
+    "allowedRoots": [
+      "packages/contracts/src/public/**",
+      "packages/contracts/src/contracts/**",
+      "apps/api/src/modules/public/**",
+      "apps/api/src/modules/database/seed.ts",
+      "apps/api/tests/public/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_143",
+    "allowedRoots": [
+      "packages/contracts/src/public/**",
+      "packages/contracts/src/contracts/**",
+      "apps/api/src/modules/public/**",
+      "apps/api/src/modules/database/seed.ts",
+      "apps/api/tests/public/**",
+      "apps/web/tests/e2e/public-fixtures.ts",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_144",
+    "allowedRoots": [
+      "packages/contracts/src/search/**",
+      "packages/contracts/src/public/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/tests/search/**",
+      "apps/web/tests/e2e/public-fixtures.ts",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_145",
+    "allowedRoots": [
+      "packages/contracts/src/search/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/tests/search/**",
+      "apps/web/src/features/public/listing-data.ts",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_146",
+    "allowedRoots": [
+      "packages/contracts/src/properties/**",
+      "packages/contracts/src/search/**",
+      "apps/api/src/modules/properties/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/tests/properties/**",
+      "apps/api/tests/search/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_147",
+    "allowedRoots": [
+      "packages/contracts/src/search/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/tests/search/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "docs/api/public-properties-search.md",
+      "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_148",
+    "allowedRoots": [
+      "packages/contracts/src/search/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/tests/search/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "docs/api/public-properties-search.md",
+      "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_149",
+    "allowedRoots": [
+      "packages/contracts/src/public/**",
+      "apps/api/src/modules/public/**",
+      "apps/api/tests/public/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "apps/web/tests/e2e/public-fixtures.ts",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_100",
+    "allowedRoots": [
+      "apps/web/src/features/public/**",
+      "apps/web/src/features/content/**",
+      "apps/web/src/features/auth/**",
+      "apps/web/src/features/provider_auth/**",
+      "apps/web/src/features/seeker/**",
+      "apps/web/src/features/frontend_foundation/**",
+      "apps/web/src/features/design_system/**",
+      "apps/web/src/features/localization/**",
+      "apps/web/src/features/routing/**",
+      "apps/web/src/app/**",
+      "apps/web/tests/**",
+      "apps/web/public/assets/clone/**",
+      "apps/api/**",
+      "packages/contracts/**",
+      "packages/ui/**",
+      "scripts/**",
+      "docs/quality/figma_parity/**",
+      "agent_pack/**"
+    ]
   }
 ]

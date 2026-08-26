@@ -1,0 +1,4 @@
+import fs from 'node:fs';
+import { chromium } from '@playwright/test';
+const b=await chromium.launch({headless:true});const p=await b.newPage({viewport:{width:1600,height:3200}});
+for(const file of ['figma.png','runtime-after.png']){await p.setContent(`<img id="i" src="data:image/png;base64,${fs.readFileSync(`docs/quality/figma_parity/screens/PUB-03/${file}`).toString('base64')}">`);const r=await p.evaluate(()=>{const im=document.querySelector('#i'),c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;const x=c.getContext('2d');x.drawImage(im,0,0);const d=x.getImageData(0,0,c.width,c.height).data;const pts=[[10,0],[10,80],[10,89],[10,90],[10,96],[10,97],[10,98],[10,100],[800,89],[800,90],[800,97],[800,98],[600,580],[600,581],[600,582]];return pts.map(([xx,y])=>({x:xx,y,rgb:[d[(y*c.width+xx)*4],d[(y*c.width+xx)*4+1],d[(y*c.width+xx)*4+2]]}))});console.log(file,JSON.stringify(r))}await b.close();

@@ -139,6 +139,17 @@
 
 - [!] backend_139 — Live Production-Parity Infrastructure and API Assurance
 - [x] backend_140 — Native Non-Docker Local Runtime Recovery
+## F7_post_release_assurance
+
+- [x] backend_141 — Public Figma Data Projection Repair — PUB-01, PUB-03, PUB-06
+- [x] backend_142 — Public Homepage Metric Projection — PUB-01
+- [x] backend_143 — Public Homepage Banner Content Projection — PUB-01
+- [x] backend_144 — Public Listing Facets and Card Metadata Projection — PUB-02
+- [x] backend_145 — Public Listing Taxonomy Filter — PUB-02
+- [x] backend_146 — Property Delivery Status Contract and Public Filter — PUB-02
+- [x] backend_147 — Distinct Public Listing Rail and Filter Taxonomies — PUB-02
+- [x] backend_148 — Public Listing Card Presentation Projection — PUB-02
+- [x] backend_149 — Public Property Detail Canonical Projection — PUB-03
 ## F0_frontend_foundation
 
 - [x] frontend_000 — Establish Vite SSR and Frontend Architecture
@@ -238,4 +249,5 @@
 - [x] frontend_096 — Author and Verify ADM-54 Request Settings Design
 - [x] frontend_097 — Full Success-State Browser and Defect-Closure Matrix
 - [/] frontend_098 — Final Production-Parity Platform Gate
-- [ ] frontend_099 — Public Exact Figma Parity Closure — PUB-01 through PUB-08 — IN PROGRESS
+- [/] frontend_099 — Public Exact Figma Parity Closure — PUB-01 through PUB-08
+- [ ] frontend_100 — Concurrent Owner-Clone Parity Coordinator - Public, Authentication, and Seeker — IN PROGRESS

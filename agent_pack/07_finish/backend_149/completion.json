@@ -1,0 +1,50 @@
+{
+  "taskId": "backend_149",
+  "summary": "Projected publication-safe source identity, localized feature/service metadata, approved media, and related property fields required by the canonical PUB-03 property details frame.",
+  "filesChanged": [
+    "packages/contracts/src/public/index.ts",
+    "apps/api/src/modules/public/homepage.ts",
+    "apps/api/src/modules/public/properties.ts",
+    "apps/api/tests/public/homepage.test.ts",
+    "apps/api/tests/public/properties.test.ts",
+    "apps/web/tests/e2e/public-fixtures.ts",
+    "apps/api/openapi/openapi.json",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace @sadat-real-estate/contracts",
+      "result": "passed",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "result": "passed",
+      "exitCode": 0
+    },
+    {
+      "command": "focused public API tests: homepage, properties, details-router, router",
+      "result": "passed: 9/9",
+      "exitCode": 0
+    },
+    {
+      "command": "affected public API and test lint",
+      "result": "passed",
+      "exitCode": 0
+    },
+    {
+      "command": "OpenAPI/Postman JSON structural validation",
+      "result": "passed; OpenAPI paths: 185",
+      "exitCode": 0
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs after state synchronization",
+      "result": "passed; 0 errors; 209 tasks, 131 screens",
+      "exitCode": 0
+    }
+  ],
+  "notes": [
+    "This closes only the bounded backend projection task; frontend_099 remains Partial until Public parity closure is visually verified.",
+    "No visual baseline or Figma source was changed."
+  ]
+}

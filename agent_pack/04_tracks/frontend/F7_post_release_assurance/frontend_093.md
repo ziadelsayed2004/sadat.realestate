@@ -6,7 +6,7 @@
 | Phase | F7_post_release_assurance |
 | Area | seeker UI |
 | Kind | visual quality |
-| Sequence | 193 / 199 |
+| Sequence | 202 / 208 |
 | Depends on | `frontend_092` |
 
 ## Goal

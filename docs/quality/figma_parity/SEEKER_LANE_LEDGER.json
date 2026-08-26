@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "taskId": "frontend_100",
+  "lane": "seeker_parity",
+  "agentId": "01a03f86-ef61-7202-9738-1d4d4eed4fd4",
+  "status": "ACTIVE_EVIDENCE_BACKLOG",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "currentScreen": {
+    "screenId": "SEK-10",
+    "clonePage": "6017:4354",
+    "cloneNode": "6027:6531",
+    "runtimeRoute": "/seeker/settings"
+  },
+  "sequence": "SEK-01 through SEK-10",
+  "completedImplementationRange": "SEK-01 through SEK-10",
+  "locales": ["ar-RTL", "en-LTR"],
+  "devices": ["desktop"],
+  "implementationReport": {
+    "typecheck": 0,
+    "lint": 0,
+    "focusedVitest": "profile: 8 passed; regression: 22 passed",
+    "directionTests": "12 passed",
+    "diffCheck": 0
+  },
+  "capturePrecondition": {
+    "satisfied": true,
+    "measuredRepairs": [
+      "Request search/status filters and lifecycle timeline were implemented against the existing request contract.",
+      "Viewing cards and saved grid/list projection were aligned with the available seeker data shapes.",
+      "Preference chips, personal route resolution, identity/role presentation, and contract-backed email were implemented.",
+      "Settings now renders the six canonical cards with unavailable mutations explicitly disabled."
+    ],
+    "expectedVisualEffect": "Seeker captures should reflect the corrected route-specific composition, card/list/timeline geometry, preference chips, and settings-card structure before direct Figma review."
+  },
+  "blockers": [
+    "Canonical property/provider/avatar media unavailable in writable assets.",
+    "Per-status request counts and richer request/viewing metadata unavailable in writable contracts.",
+    "Seeker request cancellation contract unavailable.",
+    "Preference area/payment fields unavailable in writable contracts/assets."
+  ],
+  "coordinatorSharedRepairs": [
+    {
+      "screenId": "SEK-09",
+      "requirement": "Canonical tab=personal route mapping",
+      "status": "implemented_and_focused_verified",
+      "expectedVisualEffect": "The shared route composer and client resolver both render the personal-profile composition for /seeker/profile?tab=personal.",
+      "verification": {
+        "webTypecheck": 0,
+        "scopedLint": 0,
+        "seekerProfileVitest": "8/8 passed; exit 0",
+        "focusedPlaywright": "desktop-ar and desktop-en contract-shaped profile/preferences flow: 2/2 passed; exit 0"
+      }
+    }
+  ],
+  "evidence": "SEK-01 through SEK-10 each have cached figma.png but no reviewed runtime-after/diff/review record. SEEKER_AGENT starts at the first missing record without resetting the SEK-10 implementation cursor and may write only SEK-* screen evidence; baselines, snapshots, queue/checkpoint, and Agent Pack remain coordinator-owned."
+}

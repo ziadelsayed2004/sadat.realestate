@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 2,
+  "screenId": "PUB-01",
+  "sourceNode": "6017:10847",
+  "viewportWidth": 1549,
+  "reviewedAgainst": [
+    "figma.png",
+    "runtime-after.png",
+    "diff.png"
+  ],
+  "defects": [
+    {
+      "element": "document and section geometry",
+      "figmaExpected": "1549x5378 with boundaries 90, 940, 1434, 1883, 2412, 3098, 3685, 4140, 4588, 4964, 5378",
+      "runtimeActual": "same dimensions and boundaries",
+      "measuredDelta": "0px",
+      "owner": "apps/web/src/features/public/styles.css",
+      "requiredRepair": "none",
+      "status": "REPAIRED"
+    },
+    {
+      "element": "content hierarchy and API projection",
+      "figmaExpected": "banner detail, population metrics, eight categories, three properties/articles, two testimonials, split about, CTA, footer",
+      "runtimeActual": "same hierarchy through deterministic public contracts",
+      "measuredDelta": "0 missing repository-owned regions",
+      "owner": "components.tsx; public-fixtures.ts; public homepage contract/API",
+      "requiredRepair": "none",
+      "status": "REPAIRED"
+    },
+    {
+      "element": "hero media",
+      "figmaExpected": "daylight Sadat City aerial with mosque",
+      "runtimeActual": "approved nighttime skyline fallback",
+      "measuredDelta": "850px full-width media field",
+      "owner": "external canonical asset export",
+      "requiredRepair": "supply approved source export; never crop figma.png",
+      "status": "BLOCKED_SOURCE_ASSET"
+    },
+    {
+      "element": "category artwork",
+      "figmaExpected": "eight distinct canonical category illustrations",
+      "runtimeActual": "approved shared brand-mark fallback",
+      "measuredDelta": "8 icon fields",
+      "owner": "external canonical asset exports",
+      "requiredRepair": "supply approved category icon exports",
+      "status": "BLOCKED_SOURCE_ASSET"
+    }
+  ],
+  "classification": "PARTIAL",
+  "externalBlocker": "The canonical daylight Sadat City aerial/mosque hero and eight distinct category icon exports are absent from approved repository assets and cached extracted assets. Reconstructing them from figma.png would create prohibited screenshot-only content.",
+  "materialDifferencePercent": 29.1437,
+  "antiAliasingOnlyPercent": 6.6669,
+  "reviewedAt": "2026-08-26T00:13:15.928Z"
+}

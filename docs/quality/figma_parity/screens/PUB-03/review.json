@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "PUB-03",
-  "classification": "REPAIRED",
-  "classificationReason": "Bounded public shared-foundation repair completed: property details and related cards now consume approved media through the public projection, the gallery renders real media with safe fallback, and shared footer/media behavior is in place.",
+  "classification": "PARTIAL",
+  "classificationReason": "Second cached-Figma pass remains open: measured material visual differences remain after the latest repair capture; this screen is not eligible for REPAIRED_VERIFIED.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",

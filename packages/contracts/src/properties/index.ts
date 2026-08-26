@@ -8,6 +8,8 @@ export const propertyKindSchema = z.enum(PROPERTY_KINDS);
 
 export const PROPERTY_TRANSACTION_TYPES = ['sale', 'rent'] as const;
 export const propertyTransactionTypeSchema = z.enum(PROPERTY_TRANSACTION_TYPES);
+export const PROPERTY_DELIVERY_STATUSES = ['ready_to_move', 'under_construction', 'future_delivery'] as const;
+export const propertyDeliveryStatusSchema = z.enum(PROPERTY_DELIVERY_STATUSES);
 
 export const PROPERTY_STATUSES = [
   'draft',
@@ -160,6 +162,7 @@ export const propertyLayoutSchema = z.object({
 export const propertyDetailsStepSchema = draftPatch({
   description: propertyDescriptionSchema.nullable().optional(),
   propertyTypeId: propertyObjectIdSchema.nullable().optional(),
+  deliveryStatus: propertyDeliveryStatusSchema.nullable().optional(),
   area: propertyAreaSchema.nullable().optional(),
   layout: propertyLayoutSchema.optional()
 });
@@ -230,6 +233,7 @@ export const propertyDataSchema = z.object({
   coordinates: propertyCoordinatesSchema.optional(),
   description: propertyDescriptionSchema.optional(),
   propertyTypeId: propertyObjectIdSchema.optional(),
+  deliveryStatus: propertyDeliveryStatusSchema.optional(),
   area: propertyAreaSchema.optional(),
   layout: propertyLayoutSchema.optional(),
   price: propertyMoneySchema.optional(),
@@ -256,6 +260,7 @@ export const propertyLocaleSchema = supportedLocaleSchema;
 
 export type PropertyKind = z.infer<typeof propertyKindSchema>;
 export type PropertyTransactionType = z.infer<typeof propertyTransactionTypeSchema>;
+export type PropertyDeliveryStatus = z.infer<typeof propertyDeliveryStatusSchema>;
 export type PropertyStatus = z.infer<typeof propertyStatusSchema>;
 export type PropertySource = z.infer<typeof propertySourceSchema>;
 export type PropertyUnit = z.infer<typeof propertyUnitSchema>;

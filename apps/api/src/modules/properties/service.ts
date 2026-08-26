@@ -92,6 +92,7 @@ function data(record: StoredProperty, actor: 'provider' | 'admin' = 'provider'):
     ...(record.coordinates ? { coordinates: record.coordinates } : {}),
     ...(record.description ? { description: record.description } : {}),
     ...(record.propertyTypeId ? { propertyTypeId: record.propertyTypeId } : {}),
+    ...(record.deliveryStatus ? { deliveryStatus: record.deliveryStatus } : {}),
     ...(record.area ? { area: record.area } : {}),
     ...(record.layout ? { layout: record.layout } : {}),
     ...(record.price ? { price: record.price } : {}),

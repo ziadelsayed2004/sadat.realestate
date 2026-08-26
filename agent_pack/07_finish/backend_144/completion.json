@@ -1,0 +1,35 @@
+{
+  "taskId": "backend_144",
+  "summary": "Added additive public listing category facets with deterministic counts and publication-safe location/source card metadata, plus optional persisted public code and view-count fields.",
+  "filesChanged": [
+    "packages/contracts/src/search/index.ts",
+    "apps/api/src/modules/search/properties.ts",
+    "apps/api/tests/search/properties.test.ts",
+    "apps/api/tests/search/router.test.ts",
+    "apps/api/tests/performance/search-performance.test.ts",
+    "apps/web/tests/e2e/public-fixtures.ts"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run build --workspace @sadat-real-estate/contracts",
+      "result": "passed",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run typecheck --workspace apps/api",
+      "result": "passed",
+      "exitCode": 0
+    },
+    {
+      "command": "node --import tsx --test focused search and performance tests",
+      "result": "passed: 7/7",
+      "exitCode": 0
+    },
+    {
+      "command": "eslint affected projection files --max-warnings=0",
+      "result": "passed",
+      "exitCode": 0
+    }
+  ],
+  "dataPolicy": "Taxonomy counts come from published active properties; location and organization labels are bulk-hydrated only from active/approved public records; screenshot-only production content was not added."
+}

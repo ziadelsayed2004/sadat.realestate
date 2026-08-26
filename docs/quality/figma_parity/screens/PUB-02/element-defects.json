@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 2,
+  "screenId": "PUB-02",
+  "sourceNode": "6017:12095",
+  "viewportWidth": 1577,
+  "reviewedAgainst": [
+    "figma.png",
+    "runtime-after.png",
+    "diff.png"
+  ],
+  "defects": [
+    {
+      "element": "document and major vertical bands",
+      "figmaExpected": "1577x1981; intro y90 h111; category rail y227 h172; body y399; footer y1567 h414",
+      "runtimeActual": "same dimensions and boundaries",
+      "measuredDelta": "0px",
+      "owner": "apps/web/src/features/public/listing.css",
+      "requiredRepair": "none",
+      "status": "REPAIRED"
+    },
+    {
+      "element": "listing/filter grid",
+      "figmaExpected": "results 923px, gap 24px, sidebar 288px; toolbar y435; cards y499",
+      "runtimeActual": "results 923px, gap 24px, sidebar 288px; toolbar y435; cards y499",
+      "measuredDelta": "0px",
+      "owner": "apps/web/src/features/public/listing.css",
+      "requiredRepair": "none",
+      "status": "REPAIRED"
+    },
+    {
+      "element": "property cards and media frame",
+      "figmaExpected": "three 295.7px columns, 18px gaps, 462px rows, 23px row gap; edge-to-edge 296x207 media",
+      "runtimeActual": "same measured geometry after border-underlay repair",
+      "measuredDelta": "0px macro geometry; <=1px raster edge",
+      "owner": "apps/web/src/features/public/listing.css",
+      "requiredRepair": "none",
+      "status": "REPAIRED"
+    },
+    {
+      "element": "category carousel geometry",
+      "figmaExpected": "eight 140px cards plus clipped continuation edge",
+      "runtimeActual": "eight 140px cards plus clipped structural continuation edge",
+      "measuredDelta": "0px structural delta",
+      "owner": "apps/web/src/features/public/listing.css",
+      "requiredRepair": "none",
+      "status": "REPAIRED"
+    },
+    {
+      "element": "typography and controls",
+      "figmaExpected": "Cairo; 25px page title; 17px card titles; canonical grid/list, feature, compare controls",
+      "runtimeActual": "approved Cairo loaded; matching measured sizes; code-native SVG/mask controls",
+      "measuredDelta": "0 known repository-owned typography/control defects",
+      "owner": "apps/web/src/features/public/listing.tsx; apps/web/src/features/public/listing.css",
+      "requiredRepair": "none",
+      "status": "REPAIRED"
+    },
+    {
+      "element": "deterministic content/API projection",
+      "figmaExpected": "six success cards with category/type facets, delivery status, source, promotion, installment, views and exact zero-amenity omission",
+      "runtimeActual": "same contract-backed deterministic projection; HTTP 200",
+      "measuredDelta": "0 missing fields",
+      "owner": "public fixtures; contracts; public search API",
+      "requiredRepair": "none",
+      "status": "REPAIRED"
+    },
+    {
+      "element": "listing photo render variants",
+      "figmaExpected": "six exact canonical frame-linked image renders",
+      "runtimeActual": "approved subject-matched clone assets with measured darkening and edge geometry; sampled card-region material differences remain 46.68% to 94.71%",
+      "measuredDelta": "six 296x207 media regions",
+      "owner": "external canonical source exports",
+      "requiredRepair": "supply exact approved frame-linked image exports; never crop figma.png",
+      "status": "BLOCKED_SOURCE_ASSET"
+    },
+    {
+      "element": "category artwork",
+      "figmaExpected": "eight distinct canonical category illustrations",
+      "runtimeActual": "approved shared brand fallback because exact exports are absent",
+      "measuredDelta": "8 illustration fields",
+      "owner": "external canonical source exports",
+      "requiredRepair": "supply approved category illustration exports",
+      "status": "BLOCKED_SOURCE_ASSET"
+    },
+    {
+      "element": "source avatars",
+      "figmaExpected": "six distinct canonical organization/person avatars",
+      "runtimeActual": "approved organization brand fallback",
+      "measuredDelta": "6 avatar fields",
+      "owner": "external canonical source exports/data",
+      "requiredRepair": "supply approved source avatar exports through the real API contract",
+      "status": "BLOCKED_SOURCE_ASSET"
+    }
+  ],
+  "classification": "PARTIAL",
+  "externalBlocker": "Exact frame-linked exports for the eight canonical category illustrations, six source avatars, and the canonical listing-photo render variants are absent from approved repository assets and cached extracted assets. The approved subject-matched photos remain measurably different from the frame; reconstructing assets from figma.png would create prohibited screenshot-only content.",
+  "materialDifferencePercent": 16.9379,
+  "antiAliasingOnlyPercent": 4.9163,
+  "reviewedAt": "2026-08-26T06:02:04.697Z"
+}

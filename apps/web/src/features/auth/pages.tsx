@@ -24,7 +24,7 @@ import {
   type ProviderType,
   type SupportedLocale
 } from '@sadat-real-estate/contracts';
-import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ClipboardEvent, type FormEvent, type KeyboardEvent } from 'react';
 import { ApiClientError } from '../contracts/index.ts';
 import { Button, Input, Select, StateMessage } from '../design_system/index.ts';
 import {
@@ -175,6 +175,7 @@ function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthF
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [state, setState] = useState<RequestState>('idle');
   const [error, setError] = useState<AuthUiError | undefined>();
 
@@ -205,7 +206,7 @@ function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthF
   }
 
   return (
-    <section className="auth-page auth-page--login" data-screen-id="AUTH-01" data-state={state}>
+    <section className="auth-page auth-page--login" data-screen-id="AUTH-01" data-state={state} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <div className="auth-card">
         <header className="auth-card__hero">
           <img className="auth-card__logo" src="/assets/sadat-real-estate-logo.png" alt="" width="636" height="557" />
@@ -218,6 +219,7 @@ function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthF
           <form className="auth-form" onSubmit={handleSubmit} noValidate>
             <Input
               id="auth-login-email"
+              className="auth-login-field auth-login-field--email"
               label={copy.identifierLabel}
               type="email"
               name="email"
@@ -227,11 +229,12 @@ function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthF
               value={email}
               onChange={event => setEmail(event.currentTarget.value)}
               required
-              state={state === 'error' && email.trim() === '' ? 'error' : 'default'}
+              state={state === 'error' && !normalizedEmailSchema.safeParse(email).success ? 'error' : 'default'}
             />
             <div className="auth-password-field">
               <Input
                 id="auth-login-password"
+                className="auth-login-field auth-login-field--password"
                 label={copy.passwordLabel}
                 type={showPassword ? 'text' : 'password'}
                 name="password"
@@ -247,21 +250,34 @@ function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthF
                 type="button"
                 onClick={() => setShowPassword(value => !value)}
                 aria-pressed={showPassword}
+                aria-label={showPassword ? copy.hidePassword : copy.showPassword}
               >
                 {showPassword ? copy.hidePassword : copy.showPassword}
               </button>
             </div>
+            {copy.rememberLabel !== undefined && copy.forgotPasswordAction !== undefined ? (
+              <div className="auth-login-options">
+                <label className="auth-remember">
+                  <input type="checkbox" checked={rememberMe} onChange={event => setRememberMe(event.currentTarget.checked)} />
+                  <span>{copy.rememberLabel}</span>
+                </label>
+                <button className="auth-forgot" type="button" disabled aria-disabled="true">
+                  {copy.forgotPasswordAction}
+                </button>
+              </div>
+            ) : null}
             <Button type="submit" fullWidth size="lg" loading={state === 'loading'}>
               {state === 'loading' ? copy.loggingIn : copy.loginAction}
             </Button>
           </form>
-          <div className="auth-card__divider" aria-hidden="true" />
-          <p className="auth-card__prompt">
+          <p className="auth-card__prompt auth-card__prompt--phone">
             {copy.phoneLoginPrompt} <a href="/auth/verify-phone?purpose=login&roleType=seeker">{copy.phoneLoginAction}</a>
           </p>
-          <p className="auth-card__prompt">
+          <p className="auth-card__prompt auth-card__prompt--account">
             {copy.createAccountPrompt} <a href="/auth/register">{copy.createAccountAction}</a>
           </p>
+          <div className="auth-card__divider" aria-hidden="true" />
+          {copy.privacyNotice === undefined ? null : <p className="auth-card__privacy"><span aria-hidden="true">♢</span>{copy.privacyNotice}</p>}
         </div>
       </div>
     </section>
@@ -420,6 +436,18 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
     if (event.key === 'ArrowRight' && position < OTP_LENGTH - 1) inputRefs.current[position + 1]?.focus();
   }
 
+  function handleCodePaste(position: number, event: ClipboardEvent<HTMLInputElement>): void {
+    const pasted = event.clipboardData.getData('text').replace(/\D/gu, '').slice(0, OTP_LENGTH - position);
+    if (pasted === '') return;
+    event.preventDefault();
+    setCode(previous => {
+      const next = [...previous];
+      for (const [offset, digit] of Array.from(pasted).entries()) next[position + offset] = digit;
+      return next;
+    });
+    inputRefs.current[Math.min(position + pasted.length, OTP_LENGTH - 1)]?.focus();
+  }
+
   function changePhone(): void {
     setStage('request');
     setChallenge(undefined);
@@ -433,7 +461,7 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
 
   if (stage === 'request') {
     return (
-      <section className="auth-page auth-page--phone" data-screen-id="AUTH-04" data-state={state}>
+      <section className="auth-page auth-page--phone" data-screen-id="AUTH-04" data-state={state} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
         <div className="auth-card auth-card--form">
           <header className="auth-card__heading">
             <span className="auth-card__icon" aria-hidden="true">☎</span>
@@ -493,7 +521,7 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
   }
 
   return (
-    <section className="auth-page auth-page--otp" data-screen-id="AUTH-05" data-state={state}>
+    <section className="auth-page auth-page--otp" data-screen-id="AUTH-05" data-state={state} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <div className="auth-card auth-card--form">
         <header className="auth-card__heading">
           <span className="auth-card__icon" aria-hidden="true">✉</span>
@@ -522,6 +550,7 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
                     value={digit}
                     onChange={event => updateCodeDigit(position, event.currentTarget.value)}
                     onKeyDown={event => handleCodeKeyDown(position, event)}
+                    onPaste={event => handleCodePaste(position, event)}
                     aria-invalid={error !== undefined || undefined}
                   />
                 ))}
@@ -553,11 +582,12 @@ function replaceAuthUrl(path: string): void {
 
 interface RegistrationRolePageProps {
   readonly copy: AuthCopy;
+  readonly locale: SupportedLocale;
   readonly restartRequired: boolean;
   readonly onSelectSeeker: () => void;
 }
 
-function RegistrationRolePage({ copy, restartRequired, onSelectSeeker }: RegistrationRolePageProps) {
+function RegistrationRolePage({ copy, locale, restartRequired, onSelectSeeker }: RegistrationRolePageProps) {
   const [selected, setSelected] = useState(false);
 
   function selectSeeker(): void {
@@ -570,10 +600,13 @@ function RegistrationRolePage({ copy, restartRequired, onSelectSeeker }: Registr
   }
 
   return (
-    <section className="auth-page auth-page--registration-role" data-screen-id="AUTH-02" data-state={selected ? 'success' : 'idle'}>
+    <section className="auth-page auth-page--registration-role" data-screen-id="AUTH-02" data-state={selected ? 'success' : 'idle'} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <div className="auth-card auth-card--form">
         <header className="auth-card__heading">
-          <span className="auth-card__icon" aria-hidden="true">＋</span>
+          <span className="auth-registration-step" aria-label={copy.registrationStepLabel ?? 'Step 1'}>
+            <span className="auth-registration-step__number" aria-hidden="true">1</span>
+            <span>{copy.registrationStepLabel ?? 'Step 1'}</span>
+          </span>
           <h1>{copy.accountSelectionTitle}</h1>
           <p>{copy.accountSelectionBody}</p>
         </header>
@@ -592,20 +625,27 @@ function RegistrationRolePage({ copy, restartRequired, onSelectSeeker }: Registr
               aria-pressed={selected}
               onClick={selectSeeker}
             >
-              <span className="auth-role-card__icon" aria-hidden="true">⌂</span>
+              <span className="auth-role-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="m3 9.5 7.5-6 7.5 6v10.5H3Z" /><path d="M8 20v-8h4v8" /></svg>
+              </span>
               <span className="auth-role-card__title">{copy.seekerAccountTitle}</span>
               <span className="auth-role-card__body">{copy.seekerAccountBody}</span>
             </button>
             <a className="auth-role-card auth-role-card--link" href="/auth/register/provider/type">
-              <span className="auth-role-card__icon" aria-hidden="true">▣</span>
+              <span className="auth-role-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false"><path d="M7 20V3h10v17" /><path d="M3 20v-8l4-2v10M17 10l4 2v8" /><path d="M11 6h2M11 9h2M11 13h2M11 16h2" /><path d="M3 20h18" /></svg>
+              </span>
               <span className="auth-role-card__title">{copy.providerAccountTitle}</span>
               <span className="auth-role-card__body">{copy.providerAccountBody}</span>
+              <span className="auth-role-card__tag"><span className="auth-role-card__tag-label">{copy.roleProvider}</span></span>
             </a>
           </div>
-          <Button type="button" fullWidth size="lg" disabled={!selected} onClick={continueToPhone}>
-            {copy.continueAction}
-          </Button>
-          <p className="auth-card__prompt"><a href="/auth/login">{copy.backAction}</a></p>
+          <div className="auth-role-actions">
+            <Button type="button" size="lg" disabled={!selected} onClick={continueToPhone}>
+              {copy.continueAction}
+            </Button>
+            <p className="auth-card__prompt"><a href="/auth/login">{copy.backAction}</a></p>
+          </div>
         </div>
       </div>
     </section>
@@ -661,7 +701,7 @@ function SeekerRegistrationForm({ client, locale, phone, email, verificationToke
   }
 
   return (
-    <section className="auth-page auth-page--registration-form" data-screen-id="AUTH-03" data-state={state}>
+    <section className="auth-page auth-page--registration-form" data-screen-id="AUTH-03" data-state={state} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <div className="auth-card auth-card--form">
         <header className="auth-card__heading">
           <span className="auth-card__icon" aria-hidden="true">✓</span>
@@ -733,13 +773,14 @@ function SeekerRegistrationForm({ client, locale, phone, email, verificationToke
 
 interface SeekerRegistrationSuccessProps {
   readonly copy: AuthCopy;
+  readonly locale: SupportedLocale;
   readonly snapshot: AuthSnapshot;
   readonly onContinue: (snapshot: AuthSnapshot) => void;
 }
 
-function SeekerRegistrationSuccess({ copy, snapshot, onContinue }: SeekerRegistrationSuccessProps) {
+function SeekerRegistrationSuccess({ copy, locale, snapshot, onContinue }: SeekerRegistrationSuccessProps) {
   return (
-    <section className="auth-page auth-page--registration-success" data-screen-id="AUTH-06" data-state="success">
+    <section className="auth-page auth-page--registration-success" data-screen-id="AUTH-06" data-state="success" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <div className="auth-card auth-card--success">
         <div className="auth-success-mark" aria-hidden="true">✓</div>
         <div className="auth-success-content" role="status" aria-live="polite">
@@ -808,7 +849,7 @@ function SeekerRegistrationFlow({ client, locale, onAuthenticated, restartRequir
   }, []);
 
   if (step === 'role') {
-    return <RegistrationRolePage copy={copy} restartRequired={showRestartNotice} onSelectSeeker={startSeekerRegistration} />;
+    return <RegistrationRolePage copy={copy} locale={locale} restartRequired={showRestartNotice} onSelectSeeker={startSeekerRegistration} />;
   }
   if (step === 'otp') {
     return (
@@ -841,9 +882,9 @@ function SeekerRegistrationFlow({ client, locale, onAuthenticated, restartRequir
     );
   }
   if (step === 'success' && snapshot !== undefined) {
-    return <SeekerRegistrationSuccess copy={copy} snapshot={snapshot} onContinue={onAuthenticated} />;
+    return <SeekerRegistrationSuccess copy={copy} locale={locale} snapshot={snapshot} onContinue={onAuthenticated} />;
   }
-  return <RegistrationRolePage copy={copy} restartRequired onSelectSeeker={startSeekerRegistration} />;
+  return <RegistrationRolePage copy={copy} locale={locale} restartRequired onSelectSeeker={startSeekerRegistration} />;
 }
 
 type ProviderRegistrationStep = 'type' | 'otp' | 'registering' | 'account' | 'organization' | 'documents' | 'review' | 'registration-error';
@@ -924,7 +965,7 @@ function ProviderRegistrationState({
 }) {
   const copy = getProviderAccountCopy(locale);
   return (
-    <section className="auth-page provider-account-page" data-testid="provider-registration-state" data-screen-id="AUTH-09" data-state={error?.state ?? 'loading'}>
+    <section className="auth-page provider-account-page" data-testid="provider-registration-state" data-screen-id="AUTH-09" data-state={error?.state ?? 'loading'} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <div className="auth-card auth-card--form provider-account-card">
         <div className="provider-account-state">
           {error === undefined
@@ -1179,12 +1220,12 @@ export function AuthPage({ url, locale, client: providedClient, onAuthenticated:
         client={client}
         locale={locale}
         onAuthenticated={onAuthenticated}
-        restartRequired={location.pathname !== '/auth/register'}
+        restartRequired={location.pathname === '/auth/register/seeker/success'}
       />
     );
   }
   return (
-    <section className="auth-page auth-page--unavailable" data-state="error">
+    <section className="auth-page auth-page--unavailable" data-state="error" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <StateMessage state="error" title={copy.unknownRouteTitle} message={copy.unknownRouteBody} />
     </section>
   );

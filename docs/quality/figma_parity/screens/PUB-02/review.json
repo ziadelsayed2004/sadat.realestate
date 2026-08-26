@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "PUB-02",
-  "classification": "REPAIRED",
-  "classificationReason": "Bounded public shared-foundation repair completed: the listing now consumes deterministic six-card success data with approved media, shared navigation/footer, category/filter controls, pagination, and safe image handling.",
+  "classification": "PARTIAL",
+  "classificationReason": "Exact frame-linked exports for the eight canonical category illustrations, six source avatars, and the canonical listing-photo render variants are absent from approved repository assets and cached extracted assets. The approved subject-matched photos remain measurably different from the frame; reconstructing assets from figma.png would create prohibited screenshot-only content.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",
@@ -182,7 +182,7 @@
     "locale": "ar",
     "direction": "rtl",
     "viewport": {
-      "width": 1280,
+      "width": 1577,
       "height": 720,
       "devicePixelRatio": 1
     },
@@ -214,36 +214,29 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-02/runtime-after.png",
-      "sha256": "ba47e7365734722ec223373a423704ccc6ee69138855ad1573a0fbfd2e6bf868"
+      "sha256": "4012d63dd64cb32b1c75da2b5cceda5ed1cdad5a2c9493d532fb8b725cb4fea8"
     }
   },
   "structuredVisualComparison": {
     "reviewed": true,
     "diffPath": "docs/quality/figma_parity/screens/PUB-02/diff.png",
-    "sourceDimensions": [
-      {
-        "width": 1577,
-        "height": 1981
-      },
-      {
-        "width": 1280,
-        "height": 2151
-      },
-      {
-        "width": 1280,
-        "height": 2228
-      }
-    ],
+    "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-02/visual-metrics.json",
+    "sourceDimensions": {
+      "width": 1577,
+      "height": 1981
+    },
+    "runtimeDimensions": {
+      "width": 1577,
+      "height": 1981
+    },
+    "exactMajorBands": true,
+    "materialDifferencePercent": 16.9379,
+    "antiAliasingOnlyPercent": 4.9163,
     "observations": [
-      "The after capture is a fresh 1280x720 Arabic RTL runtime capture after the listing/shared-foundation repair.",
-      "GET /api/v1/public/properties returned HTTP 200 and the six deterministic cards render approved local media.",
-      "The filter/sidebar, category controls, card grid, pagination, and shared footer are present and independently reviewed.",
-      "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
-    ],
-    "dimensions": {
-      "width": 1406,
-      "height": 802
-    }
+      "Document, rail, listing grid, card/media frames, filter/sidebar and footer boundaries match the canonical 1577x1981 frame.",
+      "The deterministic public search projection returned HTTP 200 and provides six canonical-content cards without fake production data.",
+      "Remaining reviewed material pixels are confined primarily to unavailable exact source artwork/photo/avatar exports; no baseline was updated."
+    ]
   },
   "functionalApiComparison": {
     "reviewed": true,
@@ -252,74 +245,60 @@
     "outcome": "1 deterministic API response(s) observed; all returned success after the bounded repair."
   },
   "defects": [
-    "Resolved: property listing cards now receive approved imageUrl values through the public property projection and deterministic fixture.",
-    "Resolved: the listing success state now has a populated multi-card grid, category strip, filter controls, pagination, CTA path, and shared footer.",
-    "Resolved: media failures remain safe through the shared public image fallback component.",
-    "Reviewed residual diff: clone-specific control geometry, typography, spacing, and exact category presentation remain visible in diff.png; no baseline was changed."
+    "Resolved repository defect: exact macro geometry, category carousel sizing, card/media bounds, typography, controls, metadata icons and footer copy were repaired and recaptured.",
+    "Resolved repository defect: canonical listing fields/facets and deterministic success content are projected through the real contracts and API.",
+    "External source blocker: Exact frame-linked exports for the eight canonical category illustrations, six source avatars, and the canonical listing-photo render variants are absent from approved repository assets and cached extracted assets. The approved subject-matched photos remain measurably different from the frame; reconstructing assets from figma.png would create prohibited screenshot-only content."
   ],
   "filesRepaired": [
-    "apps/web/src/features/public/components.tsx",
     "apps/web/src/features/public/listing.tsx",
     "apps/web/src/features/public/listing.css",
+    "apps/web/src/features/public/listing-copy.ts",
+    "apps/web/src/features/public/copy.ts",
+    "apps/web/src/features/public/components.tsx",
     "apps/web/tests/e2e/public-fixtures.ts",
-    "apps/api/src/modules/public/properties.ts",
-    "apps/api/src/modules/search/properties.ts",
-    "packages/contracts/src/public/index.ts"
+    "apps/web/tests/e2e/accessibility.spec.ts",
+    "packages/contracts/src/search/index.ts",
+    "apps/api/src/modules/search/properties.ts"
   ],
   "focusedTests": [
     {
-      "name": "contracts build",
-      "command": "npm.cmd run build --workspace @sadat-real-estate/contracts",
-      "exitCode": 0
-    },
-    {
       "name": "apps/web typecheck",
-      "command": "npm.cmd run typecheck --workspace apps/web",
+      "result": "passed",
       "exitCode": 0
     },
     {
-      "name": "apps/api typecheck",
-      "command": "npm.cmd run typecheck --workspace apps/api",
+      "name": "affected TypeScript lint",
+      "result": "passed",
       "exitCode": 0
     },
     {
-      "name": "affected web lint",
-      "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"src/features/content/**/*.{ts,tsx}\" \"src/features/frontend_foundation/app.tsx\" \"tests/e2e/public-fixtures.ts\" \"tests/e2e/visual.spec.ts\" --max-warnings=0",
+      "name": "focused PUB-02 Vitest",
+      "result": "8/8 passed",
       "exitCode": 0
     },
     {
-      "name": "affected API lint",
-      "command": "npm.cmd exec --workspace apps/api -- eslint \"src/modules/public/**/*.ts\" \"src/modules/search/**/*.ts\" \"src/modules/compare/**/*.ts\" \"src/modules/organizations/**/*.ts\" \"src/modules/articles/**/*.ts\" --max-warnings=0",
+      "name": "focused PUB-02 accessibility Playwright",
+      "result": "1/1 passed",
       "exitCode": 0
     },
     {
-      "name": "focused public Vitest",
-      "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-homepage.vitest.test.tsx tests/public-listing.vitest.test.tsx tests/public-details.vitest.test.tsx tests/public-compare.vitest.test.tsx tests/public-developers.vitest.test.tsx tests/public-articles.vitest.test.tsx",
+      "name": "focused production performance Playwright",
+      "result": "1/1 passed; 77,737 script bytes; below-fold lazy media exercised",
       "exitCode": 0
     },
     {
-      "name": "focused public API/integration tests",
-      "command": "npm.cmd exec --workspace apps/api -- node --import tsx --test tests/public/homepage.test.ts tests/public/properties.test.ts tests/search/properties.test.ts tests/compare/properties.test.ts tests/organizations/public.test.ts",
+      "name": "production bundle budget",
+      "result": "passed; 1,519,279 JavaScript bytes",
       "exitCode": 0
     },
     {
-      "name": "focused Playwright visual/route assertions",
-      "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\" --ignore-snapshots",
-      "exitCode": 0
-    },
-    {
-      "name": "focused Playwright accessibility assertions",
-      "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\"",
-      "exitCode": 0
-    },
-    {
-      "name": "focused Figma/runtime visual comparison",
-      "command": "node --import tsx scripts/capture-figma-parity-runtime.mjs --screen-id PUB-02 --fixture public-list --route /properties --phase after",
-      "exitCode": 0
+      "name": "normal visual snapshot",
+      "result": "failed against stale 1280x2151 baseline; actual canonical-height runtime is 1280x1981; baseline intentionally not updated while source assets are blocked",
+      "exitCode": 1
     }
   ],
   "accessibility": {
-    "focusedCheck": "Focused public accessibility Playwright batch for the repaired public surface.",
+    "focusedCheck": "PUB-02 labeled filters, query controls, route state and image alternatives",
     "exitCode": 0
   },
   "evidencePaths": {
@@ -330,6 +309,12 @@
     "review": "docs/quality/figma_parity/screens/PUB-02/review.json",
     "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-02/runtime-after-capture.json"
   },
-  "reviewedAt": "2026-08-25T21:27:42.818Z",
-  "repairedAt": "2026-08-25T21:27:42.818Z"
+  "reviewedAt": "2026-08-26T06:02:04.697Z",
+  "repairedAt": "2026-08-26T06:02:04.697Z",
+  "externalBlocker": "Exact frame-linked exports for the eight canonical category illustrations, six source avatars, and the canonical listing-photo render variants are absent from approved repository assets and cached extracted assets. The approved subject-matched photos remain measurably different from the frame; reconstructing assets from figma.png would create prohibited screenshot-only content.",
+  "performance": {
+    "focusedCheck": "production public-properties SSR, hydration, bundle and lazy-image budgets",
+    "exitCode": 0,
+    "regression": false
+  }
 }

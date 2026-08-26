@@ -6,7 +6,7 @@
 | Phase | B2_master_data_localization |
 | Area | cms |
 | Kind | api |
-| Sequence | 30 / 199 |
+| Sequence | 30 / 208 |
 | Depends on | `backend_037` |
 
 ## Goal

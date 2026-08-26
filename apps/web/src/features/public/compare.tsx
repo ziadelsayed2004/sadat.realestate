@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import type {
-  PublicHomepageProperty,
+  PublicPropertyRelatedProperty,
   PublicPropertyComparisonData,
   PublicPropertyComparisonField,
   SupportedLocale
 } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
-import { Badge, Button, PropertyCard } from '../design_system/index.ts';
+import { Button, PropertyCard } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
 import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from './components.tsx';
@@ -20,6 +20,8 @@ import { getPublicPropertyComparisonCopy, type PublicPropertyComparisonCopy } fr
 import { formatArea, formatMoney, localizedText } from './model.ts';
 import { publicPropertyDetailsUrl } from './details-data.ts';
 import './compare.css';
+
+type PublicComparisonProperty = PublicPropertyComparisonData['items'][number];
 
 export type PublicPropertyComparisonInitialState = 'loading' | 'retry' | 'empty' | 'unavailable';
 export type PublicPropertyComparisonViewState =
@@ -92,47 +94,79 @@ function UnavailableNotice({ copy }: { readonly copy: PublicPropertyComparisonCo
   );
 }
 
-function layoutValue(property: PublicHomepageProperty, copy: PublicPropertyComparisonCopy): string {
-  const values = [
-    property.layout?.bedrooms === undefined ? undefined : copy.bedrooms + ': ' + property.layout.bedrooms,
-    property.layout?.bathrooms === undefined ? undefined : copy.bathrooms + ': ' + property.layout.bathrooms,
-    property.layout?.floor === undefined ? undefined : copy.floor + ': ' + property.layout.floor
-  ].filter((value): value is string => value !== undefined);
-  return values.length === 0 ? copy.valueUnavailable : values.join(' · ');
+function sourceTypeValue(property: PublicPropertyRelatedProperty, copy: PublicPropertyComparisonCopy): string {
+  switch (property.sourceType) {
+    case 'developer_company': return copy.developerCompany;
+    case 'brokerage_office': return copy.brokerageOffice;
+    case 'individual_broker': return copy.individualBroker;
+    default: return copy.valueUnavailable;
+  }
+}
+
+function localizedOptional(value: Parameters<typeof localizedText>[0], locale: SupportedLocale, fallback: string): string {
+  return localizedText(value, locale) ?? fallback;
+}
+
+function comparisonMoney(property: PublicPropertyRelatedProperty, locale: SupportedLocale): string | undefined {
+  if (locale === 'ar' && property.price?.currency === 'EGP' && property.price.amount >= 1_000_000) {
+    return new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(property.price.amount / 1_000_000) + ' مليون جنيه';
+  }
+  return formatMoney(property.price, locale);
 }
 
 function fieldValue(
-  property: PublicHomepageProperty,
+  property: PublicComparisonProperty,
   field: PublicPropertyComparisonField,
   locale: SupportedLocale,
   copy: PublicPropertyComparisonCopy
 ): string {
   switch (field) {
-    case 'name': return localizedText(property.name, locale) ?? property.slug;
+    case 'kind': return localizedOptional(property.propertyTypeName, locale, property.kind === 'property' ? copy.property : copy.unit);
     case 'transactionType': return property.transactionType === 'sale' ? copy.sale : copy.rent;
-    case 'price': return formatMoney(property.price, locale) ?? copy.valueUnavailable;
+    case 'sourceName': return localizedOptional(property.sourceName, locale, copy.valueUnavailable);
+    case 'sourceType': return sourceTypeValue(property, copy);
+    case 'project': return copy.valueUnavailable;
+    case 'developer': return localizedOptional(property.sourceName, locale, copy.valueUnavailable);
+    case 'publicCode': return property.publicCode ?? copy.valueUnavailable;
+    case 'price': return comparisonMoney(property, locale) ?? copy.valueUnavailable;
+    case 'installment': return property.installmentAvailable === true ? copy.available : copy.valueUnavailable;
     case 'area': return formatArea(property.area, locale, copy.sqm) ?? copy.valueUnavailable;
-    case 'layout': return layoutValue(property, copy);
+    case 'bedrooms': return property.layout?.bedrooms === undefined ? copy.valueUnavailable : String(property.layout.bedrooms);
+    case 'bathrooms': return property.layout?.bathrooms === undefined ? copy.valueUnavailable : String(property.layout.bathrooms);
+    case 'floor': return property.layout?.floor === undefined ? copy.valueUnavailable : String(property.layout.floor);
+    case 'deliveryStatus': return copy.valueUnavailable;
+    case 'locationName': return localizedOptional(property.locationName, locale, copy.valueUnavailable);
   }
 }
 
 function fieldLabel(field: PublicPropertyComparisonField, copy: PublicPropertyComparisonCopy): string {
   switch (field) {
-    case 'name': return copy.name;
+    case 'kind': return copy.propertyType;
     case 'transactionType': return copy.transactionType;
+    case 'sourceName': return copy.sourceName;
+    case 'sourceType': return copy.sourceType;
+    case 'project': return copy.project;
+    case 'developer': return copy.developer;
+    case 'publicCode': return copy.reference;
     case 'price': return copy.price;
+    case 'installment': return copy.installment;
     case 'area': return copy.area;
-    case 'layout': return copy.layout;
+    case 'bedrooms': return copy.bedrooms;
+    case 'bathrooms': return copy.bathrooms;
+    case 'floor': return copy.floor;
+    case 'deliveryStatus': return copy.deliveryStatus;
+    case 'locationName': return copy.location;
   }
 }
 
 const fieldGroups: ReadonlyArray<{
-  readonly title: keyof Pick<PublicPropertyComparisonCopy, 'basicTitle' | 'priceTitle' | 'dimensionsTitle'>;
+  readonly title: keyof Pick<PublicPropertyComparisonCopy, 'basicTitle' | 'priceTitle' | 'dimensionsTitle' | 'locationTitle'>;
   readonly fields: readonly PublicPropertyComparisonField[];
 }> = [
-  { title: 'basicTitle', fields: ['name', 'transactionType'] },
-  { title: 'priceTitle', fields: ['price'] },
-  { title: 'dimensionsTitle', fields: ['area', 'layout'] }
+  { title: 'basicTitle', fields: ['kind', 'transactionType', 'sourceName', 'sourceType', 'project', 'developer', 'publicCode'] },
+  { title: 'priceTitle', fields: ['price', 'installment'] },
+  { title: 'dimensionsTitle', fields: ['area', 'bedrooms', 'bathrooms', 'floor', 'deliveryStatus'] },
+  { title: 'locationTitle', fields: ['locationName'] }
 ];
 
 function ComparisonGroup({
@@ -166,17 +200,17 @@ function ComparisonGroup({
       <div className="public-property-comparison__table-wrap">
         <table>
           <caption className="public-property-comparison__visually-hidden">{title}</caption>
-          <thead>
-            <tr>
-              <th scope="col">{copy.fieldColumn}</th>
-              {data.items.map(item => <th scope="col" key={item.id}>{localizedText(item.name, locale) ?? item.slug}</th>)}
-            </tr>
-          </thead>
+          <colgroup>
+            <col className="public-property-comparison__value-column" />
+            <col className="public-property-comparison__label-column" />
+            <col className="public-property-comparison__value-column" />
+          </colgroup>
           <tbody>
             {visibleFields.map(field => (
               <tr key={field}>
+                {data.items[0] !== undefined ? <td>{fieldValue(data.items[0], field, locale, copy)}</td> : null}
                 <th scope="row">{fieldLabel(field, copy)}</th>
-                {data.items.map(item => <td key={item.id}>{fieldValue(item, field, locale, copy)}</td>)}
+                {data.items[1] !== undefined ? <td>{fieldValue(data.items[1], field, locale, copy)}</td> : null}
               </tr>
             ))}
           </tbody>
@@ -240,11 +274,17 @@ function ComparisonCards({
             data-comparison-card="true"
             title={title}
             href={publicPropertyDetailsUrl(property.slug)}
-            price={formatMoney(property.price, locale)}
-            badges={[
-              <Badge key="kind" tone="neutral">{property.kind === 'property' ? copy.property : copy.unit}</Badge>,
-              <Badge key="transaction" tone="gold">{property.transactionType === 'sale' ? copy.sale : copy.rent}</Badge>
-            ]}
+            location={localizedOptional(property.locationName, locale, copy.valueUnavailable)}
+            price={comparisonMoney(property, locale)}
+            source={property.sourceName !== undefined ? (
+              <span className="public-property-comparison__source-content">
+                {property.sourceImageUrl !== undefined ? <PublicMediaImage src={property.sourceImageUrl} alt="" loading="eager" fallback={<span className="public-property-comparison__source-image-fallback" aria-hidden="true" />} /> : null}
+                <span>
+                  <strong>{localizedOptional(property.sourceName, locale, copy.valueUnavailable)}</strong>
+                  <small>{sourceTypeValue(property, copy)}</small>
+                </span>
+              </span>
+            ) : undefined}
             image={<PublicMediaImage src={property.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />}
             imageAlt={copy.imageUnavailable}
             action={(
@@ -293,8 +333,17 @@ function ComparisonContent({
       </section>
       <ComparisonTables data={data} locale={locale} copy={copy} showDifferences={showDifferences} />
       <aside className="public-property-comparison__sticky-bar" aria-label={copy.title}>
-        <span>{copy.selectedCount(data.items.length)}</span>
-        <a href="/properties">{copy.backToProperties}</a>
+        <strong>{copy.title}</strong>
+        <div className="public-property-comparison__selected-items" aria-label={copy.selectedCount(data.items.length)}>
+          {data.items.map(property => (
+            <span className="public-property-comparison__selected-item" key={property.id}>
+              {property.imageUrl !== undefined ? <PublicMediaImage src={property.imageUrl} alt="" loading="eager" fallback={<span className="public-property-comparison__selected-image-fallback" aria-hidden="true" />} /> : null}
+              <span>{localizedText(property.name, locale) ?? property.slug}</span>
+              <button type="button" aria-label={copy.remove + ' ' + (localizedText(property.name, locale) ?? property.slug)} onClick={() => onRemove(property.id)}>×</button>
+            </span>
+          ))}
+        </div>
+        <a className="public-property-comparison__compare-action" href="#public-property-comparison-details-title">{copy.compareNow}</a>
         <button type="button" onClick={onClear}>{copy.clearAll}</button>
       </aside>
     </>

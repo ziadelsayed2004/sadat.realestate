@@ -6,7 +6,7 @@
 | Phase | F0_frontend_foundation |
 | Area | ux_states |
 | Kind | frontend |
-| Sequence | 123 / 199 |
+| Sequence | 132 / 208 |
 | Depends on | `frontend_006` |
 
 ## Goal

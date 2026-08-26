@@ -10,6 +10,9 @@ export interface AuthCopy {
   readonly passwordPlaceholder: string;
   readonly showPassword: string;
   readonly hidePassword: string;
+  readonly rememberLabel?: string;
+  readonly forgotPasswordAction?: string;
+  readonly privacyNotice?: string;
   readonly loginAction: string;
   readonly loggingIn: string;
   readonly createAccountPrompt: string;
@@ -62,6 +65,7 @@ export interface AuthCopy {
   readonly unknownRouteBody: string;
   readonly retryAction: string;
   readonly registrationPurpose: string;
+  readonly registrationStepLabel?: string;
   readonly accountSelectionTitle: string;
   readonly accountSelectionBody: string;
   readonly seekerAccountTitle: string;
@@ -94,14 +98,17 @@ export interface AuthCopy {
 const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
   ar: {
     brand: 'عقارات السادات',
-    loginTitle: 'تسجيل الدخول',
-    loginDescription: 'سجّل الدخول لمتابعة بحثك العقاري وطلباتك.',
+    loginTitle: 'مرحباً لعودتك',
+    loginDescription: 'سجل دخولك لمتابعة طلباتك وعقاراتك.',
     identifierLabel: 'البريد الإلكتروني',
     identifierPlaceholder: 'أدخل البريد الإلكتروني',
     passwordLabel: 'كلمة المرور',
     passwordPlaceholder: 'أدخل كلمة المرور',
     showPassword: 'إظهار كلمة المرور',
     hidePassword: 'إخفاء كلمة المرور',
+    rememberLabel: 'تذكرني',
+    forgotPasswordAction: 'نسيت كلمة المرور؟',
+    privacyNotice: 'نحافظ على خصوصية بياناتك ولا نشاركها دون إذنك.',
     loginAction: 'تسجيل الدخول',
     loggingIn: 'جارٍ تسجيل الدخول',
     createAccountPrompt: 'ليس لديك حساب؟',
@@ -154,14 +161,15 @@ const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
     unknownRouteBody: 'ارجع إلى صفحة تسجيل الدخول للمتابعة.',
     retryAction: 'إعادة المحاولة',
     registrationPurpose: 'التسجيل',
-    accountSelectionTitle: 'أنشئ حسابك',
-    accountSelectionBody: 'اختر نوع الحساب المناسب للمتابعة.',
-    seekerAccountTitle: 'باحث عن عقار',
-    seekerAccountBody: 'ابحث عن العقارات وتابع طلباتك من حسابك.',
-    providerAccountTitle: 'مقدم عقار',
-    providerAccountBody: 'قدّم عقاراتك وابدأ طلب حساب مقدم عقار.',
+    registrationStepLabel: 'الخطوة 1',
+    accountSelectionTitle: 'ما هدفك من استخدام عقارات السادات؟',
+    accountSelectionBody: 'اختر نوع الاستخدام المناسب لك، ويمكنك استكمال بيانات حسابك في الخطوة التالية.',
+    seekerAccountTitle: 'أبحث عن عقار',
+    seekerAccountBody: 'استكشف الوحدات، احفظ العقارات المناسبة، وأرسل طلبات الاستفسار والمعاينة.',
+    providerAccountTitle: 'أريد عرض عقارات',
+    providerAccountBody: 'أضف وحداتك وتابع طلبات العملاء بعد مراجعة واعتماد حسابك.',
     continueAction: 'متابعة',
-    backAction: 'رجوع',
+    backAction: 'العودة إلى تسجيل الدخول',
     registrationFormTitle: 'إنشاء حساب الباحث عن عقار',
     registrationFormBody: 'أكمل بياناتك الأساسية بعد تأكيد الهاتف والبريد الإلكتروني.',
     firstNameLabel: 'الاسم الأول',
@@ -192,6 +200,9 @@ const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
     passwordPlaceholder: 'Enter your password',
     showPassword: 'Show password',
     hidePassword: 'Hide password',
+    rememberLabel: 'Remember me',
+    forgotPasswordAction: 'Forgot password?',
+    privacyNotice: 'We protect your data and never share it without your consent.',
     loginAction: 'Log in',
     loggingIn: 'Logging in',
     createAccountPrompt: "Don't have an account?",
@@ -244,14 +255,15 @@ const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
     unknownRouteBody: 'Return to the login page to continue.',
     retryAction: 'Try again',
     registrationPurpose: 'registration',
-    accountSelectionTitle: 'Create your account',
-    accountSelectionBody: 'Choose the account type that matches how you will use the platform.',
-    seekerAccountTitle: 'Property seeker',
-    seekerAccountBody: 'Search for properties and follow your requests from your account.',
-    providerAccountTitle: 'Property provider',
-    providerAccountBody: 'Share properties and start the provider application.',
+    registrationStepLabel: 'Step 1',
+    accountSelectionTitle: 'How will you use Sadat Real Estate?',
+    accountSelectionBody: 'Choose the use that fits you. You can complete your account details in the next step.',
+    seekerAccountTitle: 'I am looking for a property',
+    seekerAccountBody: 'Explore units, save suitable properties, and send inquiry and viewing requests.',
+    providerAccountTitle: 'I want to list properties',
+    providerAccountBody: 'Add your units and follow customer requests after your account is reviewed and approved.',
     continueAction: 'Continue',
-    backAction: 'Back',
+    backAction: 'Back to log in',
     registrationFormTitle: 'Create your seeker account',
     registrationFormBody: 'Complete your basic details after verifying your phone and email.',
     firstNameLabel: 'First name',

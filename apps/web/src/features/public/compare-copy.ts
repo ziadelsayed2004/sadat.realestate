@@ -12,11 +12,14 @@ export interface PublicPropertyComparisonCopy {
   readonly basicTitle: string;
   readonly priceTitle: string;
   readonly dimensionsTitle: string;
+  readonly locationTitle: string;
   readonly remove: string;
   readonly viewDetails: string;
   readonly clearAll: string;
+  readonly compareNow: string;
   readonly backToProperties: string;
   readonly property: string;
+  readonly propertyType: string;
   readonly unit: string;
   readonly sale: string;
   readonly rent: string;
@@ -39,12 +42,24 @@ export interface PublicPropertyComparisonCopy {
   readonly unavailableBody: string;
   readonly name: string;
   readonly transactionType: string;
+  readonly sourceName: string;
+  readonly sourceType: string;
+  readonly project: string;
+  readonly developer: string;
+  readonly reference: string;
   readonly price: string;
+  readonly installment: string;
+  readonly available: string;
   readonly area: string;
   readonly layout: string;
   readonly bedrooms: string;
   readonly bathrooms: string;
   readonly floor: string;
+  readonly deliveryStatus: string;
+  readonly location: string;
+  readonly developerCompany: string;
+  readonly brokerageOffice: string;
+  readonly individualBroker: string;
   readonly sqm: string;
   readonly footerDescription: string;
   readonly footerLinks: string;
@@ -63,11 +78,14 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyComparisonCop
     basicTitle: 'البيانات الأساسية',
     priceTitle: 'السعر والدفع',
     dimensionsTitle: 'المساحات والتقسيم',
+    locationTitle: 'الموقع',
     remove: 'إزالة',
     viewDetails: 'عرض التفاصيل',
     clearAll: 'مسح الكل والعودة للبحث',
+    compareNow: 'قارن الآن',
     backToProperties: 'تصفح العقارات',
     property: 'عقار',
+    propertyType: 'نوع العقار',
     unit: 'وحدة',
     sale: 'بيع',
     rent: 'إيجار',
@@ -90,12 +108,24 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyComparisonCop
     unavailableBody: 'تم تحديث البيانات المنشورة. ارجع إلى النتائج واختر عقارات متاحة للمقارنة.',
     name: 'اسم العقار',
     transactionType: 'نوع المعاملة',
+    sourceName: 'مقدم العقار',
+    sourceType: 'نوع مقدم العقار',
+    project: 'المشروع',
+    developer: 'المطور العقاري',
+    reference: 'الرقم المرجعي',
     price: 'السعر',
+    installment: 'التقسيط',
+    available: 'متاح',
     area: 'المساحة الإجمالية',
     layout: 'التقسيم',
     bedrooms: 'غرف النوم',
     bathrooms: 'الحمامات',
     floor: 'الدور',
+    deliveryStatus: 'حالة التشطيب',
+    location: 'الموقع',
+    developerCompany: 'شركة تطوير عقاري',
+    brokerageOffice: 'مكتب وساطة عقارية',
+    individualBroker: 'وسيط عقاري',
     sqm: 'م²',
     footerDescription: 'مقارنة آمنة لبيانات العقارات المنشورة من مصادر معتمدة.',
     footerLinks: 'روابط المنصة'
@@ -112,11 +142,14 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyComparisonCop
     basicTitle: 'Basic information',
     priceTitle: 'Price and payment',
     dimensionsTitle: 'Area and layout',
+    locationTitle: 'Location',
     remove: 'Remove',
     viewDetails: 'View details',
     clearAll: 'Clear all and return to search',
+    compareNow: 'Compare now',
     backToProperties: 'Browse properties',
     property: 'Property',
+    propertyType: 'Property type',
     unit: 'Unit',
     sale: 'For sale',
     rent: 'For rent',
@@ -139,12 +172,24 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyComparisonCop
     unavailableBody: 'Published data changed. Return to the results and choose available properties.',
     name: 'Property name',
     transactionType: 'Transaction type',
+    sourceName: 'Provider',
+    sourceType: 'Provider type',
+    project: 'Project',
+    developer: 'Developer',
+    reference: 'Reference number',
     price: 'Price',
+    installment: 'Installment plan',
+    available: 'Available',
     area: 'Total area',
     layout: 'Layout',
     bedrooms: 'Bedrooms',
     bathrooms: 'Bathrooms',
     floor: 'Floor',
+    deliveryStatus: 'Finish status',
+    location: 'Location',
+    developerCompany: 'Real-estate developer',
+    brokerageOffice: 'Brokerage office',
+    individualBroker: 'Individual broker',
     sqm: 'sqm',
     footerDescription: 'Safe comparison of published property data from approved sources.',
     footerLinks: 'Platform links'
@@ -161,11 +206,14 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyComparisonCop
     basicTitle: '基本信息',
     priceTitle: '价格与付款',
     dimensionsTitle: '面积与布局',
+    locationTitle: '位置',
     remove: '移除',
     viewDetails: '查看详情',
     clearAll: '清除全部并返回搜索',
+    compareNow: '立即比较',
     backToProperties: '浏览房源',
     property: '房产',
+    propertyType: '房产类型',
     unit: '单元',
     sale: '出售',
     rent: '出租',
@@ -188,12 +236,24 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyComparisonCop
     unavailableBody: '已发布数据发生变化。返回结果并选择可用房源进行对比。',
     name: '房源名称',
     transactionType: '交易类型',
+    sourceName: '房源提供方',
+    sourceType: '提供方类型',
+    project: '项目',
+    developer: '开发商',
+    reference: '参考编号',
     price: '价格',
+    installment: '分期付款',
+    available: '可用',
     area: '总面积',
     layout: '布局',
     bedrooms: '卧室',
     bathrooms: '卫生间',
     floor: '楼层',
+    deliveryStatus: '装修状态',
+    location: '位置',
+    developerCompany: '房地产开发商',
+    brokerageOffice: '房地产中介',
+    individualBroker: '个人经纪人',
     sqm: '平方米',
     footerDescription: '安全比较来自已批准来源的已发布房源数据。',
     footerLinks: '平台链接'

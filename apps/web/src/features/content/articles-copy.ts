@@ -16,7 +16,11 @@ export interface PublicArticlesCopy {
   readonly noSummary: string;
   readonly backToArticles: string;
   readonly articleBody: string;
+  readonly introduction: string;
   readonly relatedArticles: string;
+  readonly relatedProperties: string;
+  readonly ctaTitle: string;
+  readonly ctaAction: string;
   readonly noRelatedArticles: string;
   readonly searchNoMatch: string;
   readonly loadingTitle: string;
@@ -55,7 +59,11 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicArticlesCopy>> = {
     noSummary: 'لا يوجد ملخص منشور لهذا المقال.',
     backToArticles: 'العودة للمقالات',
     articleBody: 'محتوى المقال',
+    introduction: '\u0645\u0642\u062f\u0645\u0629',
     relatedArticles: 'مقالات ذات صلة',
+    relatedProperties: '\u0639\u0642\u0627\u0631\u0627\u062a \u0630\u0627\u062a \u0635\u0644\u0629',
+    ctaTitle: 'هل تبحث عن عقار مناسب؟',
+    ctaAction: 'ابحث الآن',
     noRelatedArticles: 'لا توجد مقالات ذات صلة منشورة حاليًا.',
     searchNoMatch: 'لا توجد مقالات تطابق بحثك.',
     loadingTitle: 'جاري تحميل المقالات',
@@ -92,7 +100,11 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicArticlesCopy>> = {
     noSummary: 'No published summary is available for this article.',
     backToArticles: 'Back to articles',
     articleBody: 'Article content',
+    introduction: 'Introduction',
     relatedArticles: 'Related articles',
+    relatedProperties: 'Related properties',
+    ctaTitle: 'Looking for the right property?',
+    ctaAction: 'Search now',
     noRelatedArticles: 'No related published articles are available yet.',
     searchNoMatch: 'No articles match your search.',
     loadingTitle: 'Loading articles',
@@ -129,7 +141,11 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicArticlesCopy>> = {
     noSummary: '此文章暂未提供已发布摘要。',
     backToArticles: '返回文章',
     articleBody: '文章内容',
+    introduction: '简介',
     relatedArticles: '相关文章',
+    relatedProperties: '相关房产',
+    ctaTitle: '正在寻找合适的房产吗？',
+    ctaAction: '立即搜索',
     noRelatedArticles: '暂时没有已发布的相关文章。',
     searchNoMatch: '没有符合搜索条件的文章。',
     loadingTitle: '正在加载文章',

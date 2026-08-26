@@ -55,6 +55,18 @@ export interface PublicPropertyListingCopy {
   readonly sqm: string;
   readonly footerDescription: string;
   readonly footerLinks: string;
+  readonly propertyType: string;
+  readonly propertyCountLabel: string;
+  readonly addToCompare: string;
+  readonly deliveryStatus: string;
+  readonly readyToMove: string;
+  readonly underConstruction: string;
+  readonly futureDelivery: string;
+  readonly views: string;
+  readonly installment: string;
+  readonly featured: string;
+  readonly developerSource: string;
+  readonly brokerageSource: string;
 }
 
 const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyListingCopy>> = {
@@ -111,8 +123,20 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyListingCopy>>
     bathrooms: 'الحمامات',
     floor: 'الطابق',
     sqm: 'م²',
-    footerDescription: 'قائمة عامة للعقارات المنشورة من مصادر معتمدة.',
-    footerLinks: 'روابط المنصة'
+    footerDescription: 'بوابتك الموثوقة لعقارات مدينة السادات',
+    footerLinks: 'روابط المنصة',
+    propertyType: 'نوع العقار',
+    propertyCountLabel: 'عقار',
+    addToCompare: 'أضف للمقارنة',
+    deliveryStatus: 'حالة الاستلام',
+    readyToMove: 'جاهز للاستلام',
+    underConstruction: 'تحت الإنشاء',
+    futureDelivery: 'استلام مستقبلي',
+    views: 'مشاهدة',
+    installment: 'تقسيط',
+    featured: 'مميز',
+    developerSource: 'المطور العقاري',
+    brokerageSource: 'مكتب عقاري'
   },
   en: {
     title: 'Property search results',
@@ -168,7 +192,19 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyListingCopy>>
     floor: 'Floor',
     sqm: 'sqm',
     footerDescription: 'A public list of published properties from approved sources.',
-    footerLinks: 'Platform links'
+    footerLinks: 'Platform links',
+    propertyType: 'Property type',
+    propertyCountLabel: 'properties',
+    addToCompare: 'Add to compare',
+    deliveryStatus: 'Delivery status',
+    readyToMove: 'Ready to move',
+    underConstruction: 'Under construction',
+    futureDelivery: 'Future delivery',
+    views: 'Views',
+    installment: 'Installments',
+    featured: 'Featured',
+    developerSource: 'Property developer',
+    brokerageSource: 'Brokerage office'
   },
   'zh-CN': {
     title: '房产搜索结果',
@@ -224,11 +260,22 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyListingCopy>>
     floor: '楼层',
     sqm: '平方米',
     footerDescription: '展示来自已批准来源的已发布房产。',
-    footerLinks: '平台链接'
+    footerLinks: '平台链接',
+    propertyType: '房产类型',
+    propertyCountLabel: '套房产',
+    addToCompare: '加入比较',
+    deliveryStatus: '交付状态',
+    readyToMove: '现房',
+    underConstruction: '在建',
+    futureDelivery: '未来交付',
+    views: '浏览',
+    installment: '分期',
+    featured: '精选',
+    developerSource: '房地产开发商',
+    brokerageSource: '经纪公司'
   }
 };
 
 export function getPublicPropertyListingCopy(locale: SupportedLocale): PublicPropertyListingCopy {
   return copyByLocale[locale];
 }
-

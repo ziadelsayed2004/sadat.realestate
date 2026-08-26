@@ -1,8 +1,9 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-25T21:42:58.007Z",
-  "currentTask": "frontend_099",
-  "status": "public_exact_figma_parity_closure_in_progress",
+  "updatedAt": "2026-08-26T21:53:53.6093833Z",
+  "currentTask": "frontend_100",
+  "status": "PARALLEL_COORDINATION_ACTIVE",
+  "coordinatorTaskId": "frontend_100",
   "lastCompletedIndependentWork": [
     "canonical-clone-identity-verification",
     "direct-page-metadata-capture",
@@ -25,7 +26,9 @@
     "PUB-01-through-PUB-08-prior-functional-pass-retained-as-nonfinal-evidence",
     "frontend_099-exact-parity-closure-task-created",
     "PUB-01-through-PUB-08-reopened-for-second-implementation-pass",
-    "new-screen-discovery-remains-halted-before-PUB-09"
+    "new-screen-discovery-remains-halted-before-PUB-09",
+    "AUTH-01-pass4-element-review-recorded-as-partial"
+    ,"SEK-09-shared-personal-route-composer-repaired-and-focused-gates-passed"
   ],
   "canonicalScreenCount": 131,
   "mappedToCloneNodeCount": 129,
@@ -43,15 +46,15 @@
   "screenExecutionQueue": {
     "path": "docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json",
     "phase": "repair",
-    "processed": 0,
+    "processed": 2,
     "verifiedWithoutChange": 0,
     "repaired": 0,
     "partial": 8,
     "blocked": 0,
     "unreviewed": 123,
-    "nextScreenId": "PUB-01",
-    "nextCloneNode": "6017:10847",
-    "nextRuntimeRoute": "/"
+    "nextScreenId": "PUB-03",
+    "nextCloneNode": "6017:12693",
+      "nextRuntimeRoute": "/properties/:slug"
   },
   "fullMatrixAttempt": {
     "command": "npm.cmd run test:e2e --workspace apps/web",
@@ -80,7 +83,9 @@
   },
   "externalBlockers": [
     "backend_139 external infrastructure/provider prerequisites",
-    "Arabic client user guide file is absent"
+    "Arabic client user guide file is absent",
+    "PUB-01: The canonical daylight Sadat City aerial/mosque hero and eight distinct category icon exports are absent from approved repository assets and cached extracted assets. Reconstructing them from figma.png would create prohibited screenshot-only content.",
+    "PUB-02: Exact frame-linked exports for the eight canonical category illustrations, six source avatars, and the canonical listing-photo render variants are absent from approved repository assets and cached extracted assets. The approved subject-matched photos remain measurably different from the frame; reconstructing assets from figma.png would create prohibited screenshot-only content."
   ],
   "repairQueue": {
     "taskId": "frontend_099",
@@ -91,7 +96,7 @@
       {
         "sequence": 1,
         "screenId": "PUB-01",
-        "status": "PENDING",
+        "status": "PARTIAL_EXTERNAL",
         "classification": "PARTIAL",
         "evidenceDir": "docs/quality/figma_parity/screens/PUB-01",
         "cloneNode": "6017:10847",
@@ -100,7 +105,7 @@
       {
         "sequence": 2,
         "screenId": "PUB-02",
-        "status": "PENDING",
+        "status": "PARTIAL_EXTERNAL",
         "classification": "PARTIAL",
         "evidenceDir": "docs/quality/figma_parity/screens/PUB-02",
         "cloneNode": "6017:12095",
@@ -161,8 +166,8 @@
         "runtimeRoute": "/articles/:slug"
       }
     ],
-    "nextScreenId": "PUB-01",
-    "nextSequence": 1,
+    "nextScreenId": "PUB-03",
+    "nextSequence": 3,
     "status": "IN_PROGRESS"
   },
   "discoveryHalt": {
@@ -171,5 +176,79 @@
     "haltedBeforeCloneNode": "6017:11634",
     "haltedBeforeRuntimeRoute": "/community",
     "reason": "Do not discover new screens until PUB-01 through PUB-08 have zero repository-owned material defects."
+  },
+  "hardCheckpoint": {
+    "recordedAt": "2026-08-26T19:19:29.6797501Z",
+    "path": "docs/quality/figma_parity/HARD_CHECKPOINT_2026-08-26.json",
+    "implementationPaused": true,
+    "recapturePaused": true,
+    "fullMatrixRestartAllowed": false,
+    "stoppedCaptureProcessId": 4328,
+    "allPublicScreensRemainPartial": true,
+    "closedScreens": [],
+    "nextScreenId": "PUB-03",
+    "nextCloneNode": "6017:12693",
+    "nextRuntimeRoute": "/properties/:slug",
+    "agentPackSynchronization": "synchronized_and_audited",
+    "agentPackAudit": {
+      "passed": true,
+      "errors": [],
+      "taskCount": 208,
+      "screenCount": 131,
+      "inProgressTaskIds": ["backend_149"]
+    },
+    "preservation": "Existing changed files, artifacts, and failure evidence are retained; snapshots were not updated."
+  },
+  "parallelCoordination": {
+    "status": "PARALLEL_COORDINATION_ACTIVE",
+    "nestedSubagents": false,
+    "agents": {
+      "public_parity": {
+        "agentId": "01a03f86-ed1d-7192-88f7-7b579654d251",
+        "status": "active_at_live_cursor",
+        "currentScreen": "PUB-03",
+        "figmaNode": "6017:12693",
+        "runtimeRoute": "/properties/:slug",
+        "latestDecision": "PUB-03 fresh exact-width capture is PARTIAL at 6.2852% material difference; attempted PUB-04 evidence is preserved but not counted, and the lane was returned to PUB-03."
+      },
+      "auth_parity": {
+        "agentId": "01a03f86-ee4f-7e72-babb-f0b86532cb47",
+        "status": "active_at_live_cursor",
+        "currentScreen": "AUTH-02",
+        "figmaNode": "6017:15835",
+        "runtimeRoute": "/auth/register/seeker",
+        "lastDecision": "AUTH-01 PARTIAL; exact blocker recorded in its review and ledger",
+        "latestCapture": "AUTH-02 pass12; material 1.4181% after accepted measured repair; normal ar/en Desktop/Tablet/Mobile visual gate failed 0/6, no snapshots updated, screen remains Partial"
+      },
+      "seeker_parity": {
+        "agentId": "01a03f86-ef61-7202-9738-1d4d4eed4fd4",
+        "status": "active_evidence_backlog",
+        "currentScreen": "SEK-10",
+        "figmaNode": "6027:6531",
+        "runtimeRoute": "/seeker/settings",
+        "evidenceBacklog": "SEK-01 through SEK-10; cached figma.png exists, first missing reviewed record is SEK-01",
+        "coordinatorSharedRepair": {
+          "requirement": "Canonical /seeker/profile?tab=personal must resolve the personal-profile composition in the shared route composer.",
+          "files": [
+            "apps/web/src/features/frontend_foundation/app.tsx",
+            "apps/web/tests/e2e/seeker-dashboard-qa.spec.ts",
+            "apps/web/tests/e2e/seeker-profile.spec.ts"
+          ],
+          "expectedVisualEffect": "SEK-09 renders the personal-profile screen for canonical client and shared/SSR route resolution.",
+          "focusedVerification": {
+            "webTypecheck": 0,
+            "scopedLint": 0,
+            "seekerProfileVitest": "8/8 passed; exit 0",
+            "focusedPlaywright": "desktop-ar and desktop-en contract-shaped profile/preferences flow: 2/2 passed; exit 0"
+          }
+        }
+      }
+    },
+    "localeScope": ["ar-RTL", "en-LTR"],
+    "deviceScope": {
+      "public": ["desktop", "tablet", "mobile"],
+      "auth": ["desktop", "tablet", "mobile"],
+      "seeker": ["desktop"]
+    }
   }
 }

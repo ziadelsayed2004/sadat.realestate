@@ -6,7 +6,7 @@
 | Phase | F7_post_release_assurance |
 | Area | public exact visual parity |
 | Kind | quality |
-| Sequence | 199 / 199 |
+| Sequence | 208 / 208 |
 | Depends on | `frontend_097` |
 
 ## Goal

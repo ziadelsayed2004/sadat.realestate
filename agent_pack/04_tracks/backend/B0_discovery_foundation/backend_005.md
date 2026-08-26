@@ -6,7 +6,7 @@
 | Phase | B0_discovery_foundation |
 | Area | contracts |
 | Kind | architecture |
-| Sequence | 6 / 199 |
+| Sequence | 6 / 208 |
 | Depends on | `backend_004` |
 
 ## Goal

@@ -15,6 +15,7 @@ import type { RouteSession } from '../routing/index.ts';
 import {
   createSeekerViewingActions,
   createSeekerViewingsLoader,
+  isAuthenticatedSeekerSession,
   type SeekerAuthorizationSource,
   type SeekerViewingActions,
   type SeekerViewingsLoader
@@ -260,9 +261,10 @@ export function SeekerViewings({ locale, session, authClient, apiOrigin, load, a
   const actionSource = useMemo(() => actions ?? createSeekerViewingActions({ apiOrigin, authorization: authClient }), [actions, apiOrigin, authClient]);
   const query = useMemo(() => queryForTab(tab), [tab]);
   const visibleItems = useMemo(() => (data?.items ?? []).filter(item => matchesTab(item, tab)).sort((left, right) => new Date(left.requestedAt).getTime() - new Date(right.requestedAt).getTime()), [data, tab]);
+  const sessionRole = session.status === 'authenticated' ? session.role : undefined;
 
   useEffect(() => {
-    if (session.status !== 'authenticated') {
+    if (!isAuthenticatedSeekerSession(session)) {
       setState('permission');
       return undefined;
     }
@@ -276,7 +278,7 @@ export function SeekerViewings({ locale, session, authClient, apiOrigin, load, a
       if (!controller.signal.aborted) setState(stateForError(error));
     });
     return () => controller.abort();
-  }, [attempt, loadSource, query, session.status, tab]);
+  }, [attempt, loadSource, query, sessionRole, tab]);
 
   const runMutation = async (operation: () => Promise<ViewingData>, success: string) => {
     setMutationError(undefined);

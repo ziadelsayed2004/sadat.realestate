@@ -1381,6 +1381,29 @@
             }
           },
           {
+            "name": "propertyCategoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          {
+            "name": "deliveryStatus",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/PropertyDeliveryStatus"
+            }
+          },
+          {
+            "name": "propertyTypeId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{24}$"
+            }
+          },
+          {
             "name": "projectId",
             "in": "query",
             "schema": {
@@ -16037,6 +16060,9 @@
                 "archive"
               ]
             }
+          },
+          "deliveryStatus": {
+            "$ref": "#/components/schemas/PropertyDeliveryStatus"
           }
         }
       },
@@ -16121,6 +16147,16 @@
             "type": "string",
             "minLength": 5,
             "maxLength": 500
+          },
+          "deliveryStatus": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PropertyDeliveryStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         }
       },
@@ -17863,14 +17899,16 @@
           "items",
           "page",
           "limit",
-          "total"
+          "total",
+          "categories",
+          "propertyTypes"
         ],
         "properties": {
           "items": {
             "type": "array",
             "maxItems": 100,
             "items": {
-              "$ref": "#/components/schemas/PublicHomepageProperty"
+              "$ref": "#/components/schemas/PublicPropertyListItem"
             }
           },
           "page": {
@@ -17885,6 +17923,20 @@
           "total": {
             "type": "integer",
             "minimum": 0
+          },
+          "categories": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/PublicHomepageCategory"
+            }
+          },
+          "propertyTypes": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/PublicHomepageCategory"
+            }
           }
         }
       },
@@ -21492,6 +21544,103 @@
           "total": {
             "type": "integer",
             "minimum": 0
+          }
+        }
+      },
+      "PropertyDeliveryStatus": {
+        "type": "string",
+        "enum": [
+          "ready_to_move",
+          "under_construction",
+          "future_delivery"
+        ]
+      },
+      "PublicPropertyListItem": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PublicHomepageProperty"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "locationName": {
+                "$ref": "#/components/schemas/LocalizedText"
+              },
+              "sourceName": {
+                "$ref": "#/components/schemas/LocalizedText"
+              },
+              "sourceImageUrl": {
+                "type": "string",
+                "format": "uri",
+                "maxLength": 2048
+              },
+              "sourceType": {
+                "type": "string",
+                "enum": [
+                  "brokerage_office",
+                  "developer_company"
+                ]
+              },
+              "publicCode": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 80,
+                "pattern": "^[A-Za-z0-9_-]+$"
+              },
+              "viewCount": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "installmentAvailable": {
+                "type": "boolean"
+              },
+              "featured": {
+                "type": "boolean"
+              },
+              "deliveryStatus": {
+                "$ref": "#/components/schemas/PropertyDeliveryStatus"
+              }
+            }
+          }
+        ]
+      },
+      "PublicHomepageCategory": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "propertyCount",
+          "order"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "name": {
+            "$ref": "#/components/schemas/LocalizedText"
+          },
+          "imageUrl": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048
+          },
+          "propertyCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "order": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100000
           }
         }
       }

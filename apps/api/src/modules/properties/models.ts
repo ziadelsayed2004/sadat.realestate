@@ -1,5 +1,5 @@
 import { Schema, type Connection, type Model, type Types } from 'mongoose';
-import type { LocalizedText, PropertyArea, PropertyContact, PropertyKind, PropertyLayout, PropertyMoney, PropertyPaymentPlan, PropertySource, PropertyStatus, PropertyTransactionType } from '@sadat-real-estate/contracts';
+import type { LocalizedText, PropertyArea, PropertyContact, PropertyDeliveryStatus, PropertyKind, PropertyLayout, PropertyMoney, PropertyPaymentPlan, PropertySource, PropertyStatus, PropertyTransactionType } from '@sadat-real-estate/contracts';
 
 export interface PropertyRecord {
   providerId: Types.ObjectId;
@@ -15,6 +15,7 @@ export interface PropertyRecord {
   coordinates?: { type: 'Point'; coordinates: [number, number] };
   description?: LocalizedText;
   propertyTypeId?: Types.ObjectId;
+  deliveryStatus?: PropertyDeliveryStatus;
   area?: PropertyArea;
   layout?: PropertyLayout;
   price?: PropertyMoney;
@@ -70,6 +71,7 @@ export const propertySchema = new Schema<PropertyRecord>({
   },
   description: localized,
   propertyTypeId: { type: Schema.Types.ObjectId, ref: 'PropertyTaxonomy' },
+  deliveryStatus: { type: String, enum: ['ready_to_move', 'under_construction', 'future_delivery'] },
   area: area,
   layout: layout,
   price: money,

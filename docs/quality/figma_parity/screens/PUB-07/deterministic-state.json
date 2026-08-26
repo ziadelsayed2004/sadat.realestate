@@ -8,120 +8,156 @@
     "direction": "rtl"
   },
   "responseRequestId": "fresh-audit-public-articles",
-  "responseSha256": "7f9820c6ce617b318dffdc29633db94c84236ed19eedceaceb4952823be52aeb",
+  "responseSha256": "d7c3cb9f7d794f572981f80d124848fd1ee5fcaf9bdc1e9acae9387e601a06ab",
   "response": {
     "data": [
       {
         "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
-        "categoryId": "bbbbbbbbbbbbbbbbbbbbbbbb",
+        "categoryId": "222222222222222222222222",
         "slug": "buying-in-sadat",
         "imageUrl": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
         "title": {
-          "ar": "الشراء في مدينة السادات",
-          "en": "Buying in Sadat City",
-          "zh-CN": "在萨达特城购房"
+          "ar": "دليلك الكامل للشراء في مدينة السادات 2024",
+          "en": "Your complete guide to buying in Sadat City 2024",
+          "zh-CN": "2024年萨达特城购房完整指南"
         },
         "body": {
-          "ar": "دليل عملي للمنازل المنشورة.",
-          "en": "A practical guide to published homes.",
-          "zh-CN": "已发布房产实用指南。"
+          "ar": "كل ما تحتاج معرفته قبل شراء عقار في مدينة السادات.",
+          "en": "Everything you need to know before buying a property in Sadat City.",
+          "zh-CN": "在萨达特城购买房产前需要了解的一切。"
         },
         "seoTitle": {
-          "ar": "الشراء في مدينة السادات",
-          "en": "Buying in Sadat City",
-          "zh-CN": "在萨达特城购房"
+          "ar": "دليلك الكامل للشراء في مدينة السادات 2024",
+          "en": "Your complete guide to buying in Sadat City 2024",
+          "zh-CN": "2024年萨达特城购房完整指南"
         },
         "seoDescription": {
           "ar": "دليل عملي للشراء.",
           "en": "A practical buying guide.",
           "zh-CN": "实用购房指南。"
         },
-        "publishedAt": "2026-08-01T10:00:00+00:00"
+        "publishedAt": "2026-08-01T10:00:00+00:00",
+        "authorName": {
+          "ar": "أحمد محمود",
+          "en": "Ahmed Mahmoud",
+          "zh-CN": "艾哈迈德 · 马哈茂德"
+        },
+        "readingTimeMinutes": 8
       },
       {
         "id": "cccccccccccccccccccccccc",
         "categoryId": "dddddddddddddddddddddddd",
-        "slug": "rental-tips",
-        "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
+        "slug": "investment-areas",
+        "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
         "title": {
-          "ar": "نصائح الإيجار",
-          "en": "Rental tips",
-          "zh-CN": "租赁技巧"
+          "ar": "أفضل المناطق للاستثمار العقاري في السادات",
+          "en": "Best areas for real-estate investment in Sadat",
+          "zh-CN": "萨达特房地产投资的最佳区域"
         },
         "body": {
-          "ar": "قائمة قصيرة للإيجار.",
-          "en": "A short rental checklist.",
-          "zh-CN": "简短的租赁清单。"
+          "ar": "تحليل شامل للمناطق ذات العائد الاستثماري الأعلى.",
+          "en": "A complete analysis of the areas with the highest investment returns.",
+          "zh-CN": "全面分析投资回报率最高的区域。"
         },
-        "publishedAt": "2026-07-20T10:00:00+00:00"
+        "publishedAt": "2026-07-20T10:00:00+00:00",
+        "authorName": {
+          "ar": "سارة أحمد",
+          "en": "Sara Ahmed",
+          "zh-CN": "萨拉 · 艾哈迈德"
+        },
+        "readingTimeMinutes": 6
       },
       {
         "id": "eeeeeeeeeeeeeeeeeeeeeeee",
-        "categoryId": "bbbbbbbbbbbbbbbbbbbbbbbb",
+        "categoryId": "ffffffffffffffffffffffff",
         "slug": "market-outlook",
-        "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
+        "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
         "title": {
-          "ar": "Market outlook",
-          "en": "Market outlook",
-          "zh-CN": "Market outlook"
+          "ar": "خدمات مدينة السادات: ما المتاح وما المخطط له",
+          "en": "Sadat City services: what is available and planned",
+          "zh-CN": "萨达特城服务：现有与规划"
         },
         "body": {
-          "ar": "A practical market outlook.",
-          "en": "A practical market outlook.",
-          "zh-CN": "A practical market outlook."
+          "ar": "استعراض شامل للخدمات المتاحة في المدينة.",
+          "en": "A complete overview of services available in the city.",
+          "zh-CN": "城市现有服务概览。"
         },
-        "publishedAt": "2026-07-10T10:00:00+00:00"
+        "publishedAt": "2026-07-10T10:00:00+00:00",
+        "authorName": {
+          "ar": "محمد علي",
+          "en": "Mohamed Ali",
+          "zh-CN": "穆哈默德 · 阿里"
+        },
+        "readingTimeMinutes": 5
       },
       {
         "id": "ffffffffffffffffffffffff",
-        "categoryId": "dddddddddddddddddddddddd",
+        "categoryId": "111111111111111111111111",
         "slug": "first-home-checklist",
-        "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
+        "imageUrl": "http://127.0.0.1:4173/assets/clone/pub07-d.png",
         "title": {
-          "ar": "First-home checklist",
-          "en": "First-home checklist",
-          "zh-CN": "First-home checklist"
+          "ar": "قوانين الإيجار الجديدة وما يهمك معرفته",
+          "en": "New rental laws and what you need to know",
+          "zh-CN": "新的租赁法规及须知"
         },
         "body": {
-          "ar": "A first-home checklist.",
-          "en": "A first-home checklist.",
-          "zh-CN": "A first-home checklist."
+          "ar": "شرح مبسط للتعديلات الأخيرة على قانون الإيجار.",
+          "en": "A simple explanation of recent rental-law changes.",
+          "zh-CN": "租赁法最新修订的简明解释。"
         },
-        "publishedAt": "2026-07-01T10:00:00+00:00"
+        "publishedAt": "2026-07-01T10:00:00+00:00",
+        "authorName": {
+          "ar": "أحمد محمود",
+          "en": "Ahmed Mahmoud",
+          "zh-CN": "艾哈迈德 · 马哈茂德"
+        },
+        "readingTimeMinutes": 5
       },
       {
         "id": "111111111111111111111111",
-        "categoryId": "bbbbbbbbbbbbbbbbbbbbbbbb",
+        "categoryId": "eeeeeeeeeeeeeeeeeeeeeeee",
         "slug": "neighborhood-guide",
-        "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
+        "imageUrl": "http://127.0.0.1:4173/assets/clone/pub07-e.png",
         "title": {
-          "ar": "Neighborhood guide",
-          "en": "Neighborhood guide",
-          "zh-CN": "Neighborhood guide"
+          "ar": "الحياة في مدينة السادات: تجارب السكان",
+          "en": "Life in Sadat City: resident experiences",
+          "zh-CN": "萨达特城生活：居民体验"
         },
         "body": {
-          "ar": "A guide to published neighborhoods.",
-          "en": "A guide to published neighborhoods.",
-          "zh-CN": "A guide to published neighborhoods."
+          "ar": "قصص حقيقية من سكان مدينة السادات.",
+          "en": "Real stories from Sadat City residents.",
+          "zh-CN": "来自萨达特城居民的真实故事。"
         },
-        "publishedAt": "2026-06-20T10:00:00+00:00"
+        "publishedAt": "2026-06-20T10:00:00+00:00",
+        "authorName": {
+          "ar": "ريم خالد",
+          "en": "Reem Khaled",
+          "zh-CN": "雷姆 · 哈利德"
+        },
+        "readingTimeMinutes": 4
       },
       {
         "id": "222222222222222222222222",
-        "categoryId": "dddddddddddddddddddddddd",
+        "categoryId": "333333333333333333333333",
         "slug": "rental-contracts",
-        "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
+        "imageUrl": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
         "title": {
-          "ar": "Rental contracts",
-          "en": "Rental contracts",
-          "zh-CN": "Rental contracts"
+          "ar": "نصائح المستأجر الأول: تجنب هذه الأخطاء",
+          "en": "First-renter tips: avoid these mistakes",
+          "zh-CN": "首次租房提示：避免这些错误"
         },
         "body": {
-          "ar": "Notes on rental contracts.",
-          "en": "Notes on rental contracts.",
-          "zh-CN": "Notes on rental contracts."
+          "ar": "أبرز الأخطاء التي يقع فيها المستأجر للمرة الأولى.",
+          "en": "Common mistakes made by first-time renters.",
+          "zh-CN": "首次租房者常犯的错误。"
         },
-        "publishedAt": "2026-06-10T10:00:00+00:00"
+        "publishedAt": "2026-06-10T10:00:00+00:00",
+        "authorName": {
+          "ar": "محمد علي",
+          "en": "Mohamed Ali",
+          "zh-CN": "穆哈默德 · 阿里"
+        },
+        "readingTimeMinutes": 7
       }
     ],
     "meta": {
@@ -132,21 +168,66 @@
     "articleCategories": {
       "data": [
         {
-          "id": "bbbbbbbbbbbbbbbbbbbbbbbb",
-          "slug": "buying",
+          "id": "cccccccccccccccccccccccc",
+          "slug": "housing",
           "name": {
-            "ar": "نصائح شراء",
-            "en": "Buying",
-            "zh-CN": "购买"
+            "ar": "سكن",
+            "en": "Housing",
+            "zh-CN": "居住"
           }
         },
         {
           "id": "dddddddddddddddddddddddd",
+          "slug": "investment",
+          "name": {
+            "ar": "استثمار",
+            "en": "Investment",
+            "zh-CN": "投资"
+          }
+        },
+        {
+          "id": "eeeeeeeeeeeeeeeeeeeeeeee",
+          "slug": "areas",
+          "name": {
+            "ar": "مناطق",
+            "en": "Areas",
+            "zh-CN": "区域"
+          }
+        },
+        {
+          "id": "ffffffffffffffffffffffff",
+          "slug": "services",
+          "name": {
+            "ar": "خدمات",
+            "en": "Services",
+            "zh-CN": "服务"
+          }
+        },
+        {
+          "id": "111111111111111111111111",
+          "slug": "laws",
+          "name": {
+            "ar": "قوانين",
+            "en": "Laws",
+            "zh-CN": "法规"
+          }
+        },
+        {
+          "id": "222222222222222222222222",
+          "slug": "buying",
+          "name": {
+            "ar": "نصائح شراء",
+            "en": "Buying tips",
+            "zh-CN": "购房建议"
+          }
+        },
+        {
+          "id": "333333333333333333333333",
           "slug": "renting",
           "name": {
             "ar": "نصائح إيجار",
-            "en": "Renting",
-            "zh-CN": "租赁"
+            "en": "Renting tips",
+            "zh-CN": "租赁建议"
           }
         }
       ],
@@ -158,115 +239,151 @@
       "data": [
         {
           "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
-          "categoryId": "bbbbbbbbbbbbbbbbbbbbbbbb",
+          "categoryId": "222222222222222222222222",
           "slug": "buying-in-sadat",
           "imageUrl": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
           "title": {
-            "ar": "الشراء في مدينة السادات",
-            "en": "Buying in Sadat City",
-            "zh-CN": "在萨达特城购房"
+            "ar": "دليلك الكامل للشراء في مدينة السادات 2024",
+            "en": "Your complete guide to buying in Sadat City 2024",
+            "zh-CN": "2024年萨达特城购房完整指南"
           },
           "body": {
-            "ar": "دليل عملي للمنازل المنشورة.",
-            "en": "A practical guide to published homes.",
-            "zh-CN": "已发布房产实用指南。"
+            "ar": "كل ما تحتاج معرفته قبل شراء عقار في مدينة السادات.",
+            "en": "Everything you need to know before buying a property in Sadat City.",
+            "zh-CN": "在萨达特城购买房产前需要了解的一切。"
           },
           "seoTitle": {
-            "ar": "الشراء في مدينة السادات",
-            "en": "Buying in Sadat City",
-            "zh-CN": "在萨达特城购房"
+            "ar": "دليلك الكامل للشراء في مدينة السادات 2024",
+            "en": "Your complete guide to buying in Sadat City 2024",
+            "zh-CN": "2024年萨达特城购房完整指南"
           },
           "seoDescription": {
             "ar": "دليل عملي للشراء.",
             "en": "A practical buying guide.",
             "zh-CN": "实用购房指南。"
           },
-          "publishedAt": "2026-08-01T10:00:00+00:00"
+          "publishedAt": "2026-08-01T10:00:00+00:00",
+          "authorName": {
+            "ar": "أحمد محمود",
+            "en": "Ahmed Mahmoud",
+            "zh-CN": "艾哈迈德 · 马哈茂德"
+          },
+          "readingTimeMinutes": 8
         },
         {
           "id": "cccccccccccccccccccccccc",
           "categoryId": "dddddddddddddddddddddddd",
-          "slug": "rental-tips",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
+          "slug": "investment-areas",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
           "title": {
-            "ar": "نصائح الإيجار",
-            "en": "Rental tips",
-            "zh-CN": "租赁技巧"
+            "ar": "أفضل المناطق للاستثمار العقاري في السادات",
+            "en": "Best areas for real-estate investment in Sadat",
+            "zh-CN": "萨达特房地产投资的最佳区域"
           },
           "body": {
-            "ar": "قائمة قصيرة للإيجار.",
-            "en": "A short rental checklist.",
-            "zh-CN": "简短的租赁清单。"
+            "ar": "تحليل شامل للمناطق ذات العائد الاستثماري الأعلى.",
+            "en": "A complete analysis of the areas with the highest investment returns.",
+            "zh-CN": "全面分析投资回报率最高的区域。"
           },
-          "publishedAt": "2026-07-20T10:00:00+00:00"
+          "publishedAt": "2026-07-20T10:00:00+00:00",
+          "authorName": {
+            "ar": "سارة أحمد",
+            "en": "Sara Ahmed",
+            "zh-CN": "萨拉 · 艾哈迈德"
+          },
+          "readingTimeMinutes": 6
         },
         {
           "id": "eeeeeeeeeeeeeeeeeeeeeeee",
-          "categoryId": "bbbbbbbbbbbbbbbbbbbbbbbb",
+          "categoryId": "ffffffffffffffffffffffff",
           "slug": "market-outlook",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
           "title": {
-            "ar": "Market outlook",
-            "en": "Market outlook",
-            "zh-CN": "Market outlook"
+            "ar": "خدمات مدينة السادات: ما المتاح وما المخطط له",
+            "en": "Sadat City services: what is available and planned",
+            "zh-CN": "萨达特城服务：现有与规划"
           },
           "body": {
-            "ar": "A practical market outlook.",
-            "en": "A practical market outlook.",
-            "zh-CN": "A practical market outlook."
+            "ar": "استعراض شامل للخدمات المتاحة في المدينة.",
+            "en": "A complete overview of services available in the city.",
+            "zh-CN": "城市现有服务概览。"
           },
-          "publishedAt": "2026-07-10T10:00:00+00:00"
+          "publishedAt": "2026-07-10T10:00:00+00:00",
+          "authorName": {
+            "ar": "محمد علي",
+            "en": "Mohamed Ali",
+            "zh-CN": "穆哈默德 · 阿里"
+          },
+          "readingTimeMinutes": 5
         },
         {
           "id": "ffffffffffffffffffffffff",
-          "categoryId": "dddddddddddddddddddddddd",
+          "categoryId": "111111111111111111111111",
           "slug": "first-home-checklist",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub07-d.png",
           "title": {
-            "ar": "First-home checklist",
-            "en": "First-home checklist",
-            "zh-CN": "First-home checklist"
+            "ar": "قوانين الإيجار الجديدة وما يهمك معرفته",
+            "en": "New rental laws and what you need to know",
+            "zh-CN": "新的租赁法规及须知"
           },
           "body": {
-            "ar": "A first-home checklist.",
-            "en": "A first-home checklist.",
-            "zh-CN": "A first-home checklist."
+            "ar": "شرح مبسط للتعديلات الأخيرة على قانون الإيجار.",
+            "en": "A simple explanation of recent rental-law changes.",
+            "zh-CN": "租赁法最新修订的简明解释。"
           },
-          "publishedAt": "2026-07-01T10:00:00+00:00"
+          "publishedAt": "2026-07-01T10:00:00+00:00",
+          "authorName": {
+            "ar": "أحمد محمود",
+            "en": "Ahmed Mahmoud",
+            "zh-CN": "艾哈迈德 · 马哈茂德"
+          },
+          "readingTimeMinutes": 5
         },
         {
           "id": "111111111111111111111111",
-          "categoryId": "bbbbbbbbbbbbbbbbbbbbbbbb",
+          "categoryId": "eeeeeeeeeeeeeeeeeeeeeeee",
           "slug": "neighborhood-guide",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub07-e.png",
           "title": {
-            "ar": "Neighborhood guide",
-            "en": "Neighborhood guide",
-            "zh-CN": "Neighborhood guide"
+            "ar": "الحياة في مدينة السادات: تجارب السكان",
+            "en": "Life in Sadat City: resident experiences",
+            "zh-CN": "萨达特城生活：居民体验"
           },
           "body": {
-            "ar": "A guide to published neighborhoods.",
-            "en": "A guide to published neighborhoods.",
-            "zh-CN": "A guide to published neighborhoods."
+            "ar": "قصص حقيقية من سكان مدينة السادات.",
+            "en": "Real stories from Sadat City residents.",
+            "zh-CN": "来自萨达特城居民的真实故事。"
           },
-          "publishedAt": "2026-06-20T10:00:00+00:00"
+          "publishedAt": "2026-06-20T10:00:00+00:00",
+          "authorName": {
+            "ar": "ريم خالد",
+            "en": "Reem Khaled",
+            "zh-CN": "雷姆 · 哈利德"
+          },
+          "readingTimeMinutes": 4
         },
         {
           "id": "222222222222222222222222",
-          "categoryId": "dddddddddddddddddddddddd",
+          "categoryId": "333333333333333333333333",
           "slug": "rental-contracts",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
           "title": {
-            "ar": "Rental contracts",
-            "en": "Rental contracts",
-            "zh-CN": "Rental contracts"
+            "ar": "نصائح المستأجر الأول: تجنب هذه الأخطاء",
+            "en": "First-renter tips: avoid these mistakes",
+            "zh-CN": "首次租房提示：避免这些错误"
           },
           "body": {
-            "ar": "Notes on rental contracts.",
-            "en": "Notes on rental contracts.",
-            "zh-CN": "Notes on rental contracts."
+            "ar": "أبرز الأخطاء التي يقع فيها المستأجر للمرة الأولى.",
+            "en": "Common mistakes made by first-time renters.",
+            "zh-CN": "首次租房者常犯的错误。"
           },
-          "publishedAt": "2026-06-10T10:00:00+00:00"
+          "publishedAt": "2026-06-10T10:00:00+00:00",
+          "authorName": {
+            "ar": "محمد علي",
+            "en": "Mohamed Ali",
+            "zh-CN": "穆哈默德 · 阿里"
+          },
+          "readingTimeMinutes": 7
         }
       ],
       "meta": {

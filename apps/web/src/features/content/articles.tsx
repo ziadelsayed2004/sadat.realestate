@@ -3,6 +3,8 @@ import type {
   ArticleListQuery,
   ArticlePublic,
   ArticlePublicListData,
+  PublicPropertyListData,
+  PublicPropertyListItem,
   SupportedLocale
 } from '@sadat-real-estate/contracts';
 import { articleListQuerySchema } from '@sadat-real-estate/contracts';
@@ -11,7 +13,12 @@ import { Badge } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from '../public/components.tsx';
 import { getPublicHomepageCopy } from '../public/copy.ts';
-import { localizedText } from '../public/model.ts';
+import { formatMoney, localizedText } from '../public/model.ts';
+import {
+  defaultPublicPropertyListLoader,
+  defaultPublicPropertySearchQuery,
+  type PublicPropertyListLoader
+} from '../public/listing-data.ts';
 import {
   PUBLIC_ARTICLES_PATH,
   defaultPublicArticleCategoryLoader,
@@ -50,7 +57,9 @@ export interface PublicArticleDetailsProps {
   readonly initialState?: 'loading' | 'retry' | 'not_found' | undefined;
   readonly categories?: readonly PublicArticleCategoryOption[] | undefined;
   readonly relatedArticles?: ArticlePublicListData | undefined;
+  readonly relatedProperties?: PublicPropertyListData | undefined;
   readonly loadRelated?: PublicArticleListLoader | undefined;
+  readonly loadRelatedProperties?: PublicPropertyListLoader | undefined;
   readonly load?: PublicArticleDetailsLoader | undefined;
 }
 
@@ -86,6 +95,16 @@ function formatPublishedAt(value: string | undefined, locale: SupportedLocale): 
 function readTime(body: string | undefined): number {
   if (body === undefined || body.trim().length === 0) return 1;
   return Math.max(1, Math.ceil(body.trim().split(/\s+/u).length / 180));
+}
+
+function relatedPropertyPrice(item: PublicPropertyListItem, locale: SupportedLocale): string | undefined {
+  const price = item.price;
+  if (price === undefined) return undefined;
+  if (locale === 'ar' && price.currency === 'EGP') {
+    if (price.amount >= 1_000_000) return `${(price.amount / 1_000_000).toLocaleString('en-US', { maximumFractionDigits: 1 })} \u0645\u0644\u064a\u0648\u0646 \u062c\u0646\u064a\u0647`;
+    return `${price.amount.toLocaleString('en-US')} \u062c\u0646\u064a\u0647`;
+  }
+  return formatMoney(price, locale);
 }
 
 function summary(body: string | undefined, copy: PublicArticlesCopy): string {
@@ -152,15 +171,21 @@ function ArticleCard({
     ? categoryName(article.categoryId, locale, categories)
     : localizedText(article.category.name, locale);
   const publishedAt = formatPublishedAt(article.publishedAt, locale);
+  const authorName = localizedText(article.authorName, locale) ?? copy.authorUnavailable;
+  const readingTimeMinutes = article.readingTimeMinutes ?? readTime(body);
   return (
     <article className="public-articles__card" data-article-card>
       <div className="public-articles__card-media">
         <PublicMediaImage src={article.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />
+        {category === undefined ? null : <Badge className="public-articles__card-category" tone="warning">{category}</Badge>}
       </div>
       <div className="public-articles__card-body">
-        {category === undefined ? null : <Badge tone="warning">{category}</Badge>}
         <h2><a href={publicArticleUrl(article.slug)}>{title}</a></h2>
         <p className="public-articles__card-summary">{summary(body, copy)}</p>
+        <div className="public-articles__card-byline">
+          <span className="public-articles__card-author">{authorName}</span>
+          <span className="public-articles__card-reading"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="1.7" /><path d="M12 7v5l3 2" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" /></svg>{copy.readTime(readingTimeMinutes)}</span>
+        </div>
         <dl className="public-articles__card-meta">
           <div>
             <dt>{copy.publishedAt}</dt>
@@ -289,8 +314,8 @@ export function PublicArticles({
         {resultsView}
       </section>
       <section className="public-articles__cta" aria-labelledby="public-articles-cta-title">
-        <div><p className="public-articles__eyebrow">{homepageCopy.brand}</p><h2 id="public-articles-cta-title">{copy.openArticle}</h2><p>{copy.subtitle}</p></div>
-        <a href="/properties">{homepageCopy.browseProperties}</a>
+        <h2 id="public-articles-cta-title">{copy.ctaTitle}</h2>
+        <a href="/properties"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m21 21-4.35-4.35m1.35-5.4a6.75 6.75 0 1 1-13.5 0 6.75 6.75 0 0 1 13.5 0Z" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" /></svg>{copy.ctaAction}</a>
       </section>
       <Footer locale={locale} copy={copy} />
     </div>
@@ -312,9 +337,44 @@ function ArticleBody({ article, locale, copy }: { readonly article: ArticlePubli
   const paragraphs = (body ?? '').split(/\n{2,}/u).map(value => value.trim()).filter(Boolean);
   return (
     <section className="public-article-details__body" aria-labelledby="public-article-body-title">
-      <h2 id="public-article-body-title">{copy.articleBody}</h2>
-      {paragraphs.length === 0 ? <p>{copy.noSummary}</p> : paragraphs.map((paragraph, index) => <p key={`${article.id}-paragraph-${index}`}>{paragraph}</p>)}
+      <h2 id="public-article-body-title">{copy.introduction ?? copy.articleBody}</h2>
+      {paragraphs.length === 0 ? <p>{copy.noSummary}</p> : paragraphs.map((paragraph, index) => /^['"“«]/u.test(paragraph)
+        ? <blockquote key={`${article.id}-paragraph-${index}`}>{paragraph.replace(/^['"“«]|['"”»]$/gu, '').trim()}</blockquote>
+        : <p key={`${article.id}-paragraph-${index}`}>{paragraph}</p>)}
     </section>
+  );
+}
+
+function RelatedPropertyRail({
+  data,
+  locale,
+  copy
+}: {
+  readonly data: PublicPropertyListData | undefined;
+  readonly locale: SupportedLocale;
+  readonly copy: PublicArticlesCopy;
+}) {
+  const items = data?.items.slice(0, 3) ?? [];
+  if (items.length === 0) return null;
+  return (
+    <aside className="public-article-details__property-rail" aria-labelledby="public-article-related-properties-title">
+      <h2 id="public-article-related-properties-title">{copy.relatedProperties}</h2>
+      <div className="public-article-details__property-list">
+        {items.map((item: PublicPropertyListItem) => {
+          const title = localizedText(item.name, locale) ?? item.slug;
+          const price = relatedPropertyPrice(item, locale);
+          return (
+            <a className="public-article-details__property" href={`/properties/${encodeURIComponent(item.slug)}`} key={item.id}>
+              <PublicMediaImage src={item.imageUrl} alt={title} loading="eager" fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />
+              <span className="public-article-details__property-copy">
+                <strong>{title}</strong>
+                <span>{price ?? '—'}</span>
+              </span>
+            </a>
+          );
+        })}
+      </div>
+    </aside>
   );
 }
 
@@ -323,13 +383,15 @@ function ArticleDetailsView({
   locale,
   copy,
   categories,
-  relatedArticles
+  relatedArticles,
+  relatedProperties
 }: {
   readonly article: ArticlePublic;
   readonly locale: SupportedLocale;
   readonly copy: PublicArticlesCopy;
   readonly categories: readonly PublicArticleCategoryOption[] | undefined;
   readonly relatedArticles: ArticlePublicListData | undefined;
+  readonly relatedProperties: PublicPropertyListData | undefined;
 }) {
   const title = localizedText(article.title, locale) ?? article.slug;
   const category = article.category === undefined
@@ -338,7 +400,9 @@ function ArticleDetailsView({
   const publishedAt = formatPublishedAt(article.publishedAt, locale);
   const related = relatedArticles?.filter(item => item.slug !== article.slug).slice(0, 3) ?? [];
   return (
-    <article className="public-article-details__article">
+    <div className="public-article-details__detail-layout">
+      <RelatedPropertyRail data={relatedProperties} locale={locale} copy={copy} />
+      <article className="public-article-details__article">
       <div className="public-article-details__hero">
         <div className="public-article-details__hero-media"><PublicMediaImage src={article.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} loading="eager" /></div>
         <div className="public-article-details__hero-copy">
@@ -346,9 +410,8 @@ function ArticleDetailsView({
           <h1 id="public-article-details-title">{title}</h1>
           <dl className="public-article-details__meta">
             <div><dt>{copy.publishedAt}</dt><dd>{publishedAt ?? '—'}</dd></div>
-            <div><dt>{copy.readTime(1)}</dt><dd>{copy.readTime(readTime(localizedText(article.body, locale)))}</dd></div>
+            <div><dt>{copy.readTime(1)}</dt><dd>{copy.readTime(article.readingTimeMinutes ?? readTime(localizedText(article.body, locale)))}</dd></div>
           </dl>
-          <p className="public-article-details__author-note">{copy.authorUnavailable}</p>
         </div>
       </div>
       <ArticleBody article={article} locale={locale} copy={copy} />
@@ -356,7 +419,8 @@ function ArticleDetailsView({
         <h2 id="public-article-related-title">{copy.relatedArticles}</h2>
         {related.length === 0 ? <p>{copy.noRelatedArticles}</p> : <div className="public-article-details__related-grid">{related.map(item => <ArticleCard key={item.id} article={item} locale={locale} copy={copy} categories={categories} />)}</div>}
       </section>
-    </article>
+      </article>
+    </div>
   );
 }
 
@@ -367,7 +431,9 @@ export function PublicArticleDetails({
   initialState,
   categories,
   relatedArticles,
+  relatedProperties,
   loadRelated,
+  loadRelatedProperties = defaultPublicPropertyListLoader,
   load = defaultPublicArticleDetailsLoader
 }: PublicArticleDetailsProps) {
   const copy = getPublicArticlesCopy(locale);
@@ -376,6 +442,7 @@ export function PublicArticleDetails({
   const slug = publicArticleSlugFromUrl(sourceUrl);
   const [data, setData] = useState<ArticlePublic | undefined>(initialData);
   const [relatedData, setRelatedData] = useState<ArticlePublicListData | undefined>(relatedArticles);
+  const [relatedPropertyData, setRelatedPropertyData] = useState<PublicPropertyListData | undefined>(relatedProperties);
   const [view, setView] = useState<PublicArticleDetailsViewState>(slug === undefined ? 'not_found' : initialData === undefined ? initialState ?? 'loading' : 'success');
   const [attempt, setAttempt] = useState(0);
 
@@ -412,6 +479,18 @@ export function PublicArticleDetails({
     return () => controller.abort();
   }, [loadRelated, locale, relatedArticles, slug]);
 
+  useEffect(() => {
+    if (relatedProperties !== undefined || loadRelatedProperties === undefined || slug === undefined) return;
+    const controller = new AbortController();
+    const query = { ...defaultPublicPropertySearchQuery(), limit: 3 };
+    void loadRelatedProperties(query, controller.signal)
+      .then(nextData => {
+        if (!controller.signal.aborted) setRelatedPropertyData(nextData);
+      })
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, [loadRelatedProperties, relatedProperties, slug]);
+
   const retry = () => setAttempt(value => value + 1);
   const state = view === 'not_found' || view === 'success' ? null : stateCopy(view, copy);
 
@@ -420,7 +499,7 @@ export function PublicArticleDetails({
       <PublicSiteHeader locale={locale} copy={homepageCopy} activePath={PUBLIC_ARTICLES_PATH} />
       <div className="public-article-details__content">
         <a className="public-article-details__back" href={PUBLIC_ARTICLES_PATH}>{copy.backToArticles}</a>
-        {view === 'not_found' ? <NotFoundNotice copy={copy} /> : view === 'success' && data !== undefined ? <ArticleDetailsView article={data} locale={locale} copy={copy} categories={categories} relatedArticles={relatedData} /> : state === null ? null : <section className="public-article-details__state" data-state={view}><UxStateView state={view} title={state.title} message={state.body} retryLabel={copy.retryLabel} onRetry={retry}>{view === 'permission' ? <a href="/">{copy.permissionLink}</a> : null}{view === 'error' ? <button type="button" onClick={retry}>{copy.retryLabel}</button> : null}</UxStateView></section>}
+        {view === 'not_found' ? <NotFoundNotice copy={copy} /> : view === 'success' && data !== undefined ? <ArticleDetailsView article={data} locale={locale} copy={copy} categories={categories} relatedArticles={relatedData} relatedProperties={relatedPropertyData} /> : state === null ? null : <section className="public-article-details__state" data-state={view}><UxStateView state={view} title={state.title} message={state.body} retryLabel={copy.retryLabel} onRetry={retry}>{view === 'permission' ? <a href="/">{copy.permissionLink}</a> : null}{view === 'error' ? <button type="button" onClick={retry}>{copy.retryLabel}</button> : null}</UxStateView></section>}
       </div>
       <Footer locale={locale} copy={copy} />
     </div>

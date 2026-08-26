@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-02",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4353",
+    "nodeId": "6017:15835"
+  },
+  "status": "PENDING_DIRECT_ELEMENT_REVIEW",
+  "items": [
+    {
+      "element": "complete protected-screen composition",
+      "figmaExpected": "Exact cached clone frame",
+      "runtimeActual": "Fresh deterministic runtime capture",
+      "measuredDelta": "See visual-metrics.json; element measurements pending direct review",
+      "owner": "coordinator/runtime surface",
+      "requiredRepair": "Review shell, typography, geometry, controls, state, and transitions against Figma before any classification closure."
+    }
+  ]
+}

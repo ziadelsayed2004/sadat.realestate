@@ -109,7 +109,7 @@ code {
   border-radius: var(--radius-sm);
 }
 
-[data-state] {
+[data-state]:not(.ui-button):not(.ui-property-card) {
   max-width: 48rem;
   margin-block-start: var(--space-2xl);
   padding: var(--space-xl);

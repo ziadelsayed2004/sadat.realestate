@@ -6,7 +6,7 @@
 | Phase | F1_public_site |
 | Area | content |
 | Kind | frontend |
-| Sequence | 131 / 199 |
+| Sequence | 140 / 208 |
 | Depends on | `frontend_014` |
 
 ## Goal

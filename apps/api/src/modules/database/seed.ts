@@ -60,7 +60,8 @@ const ids = {
   paymentProof: new Types.ObjectId('670000000000000000000027'),
   commissionPolicy: new Types.ObjectId('670000000000000000000028'),
   commissionConfirmation: new Types.ObjectId('670000000000000000000029'),
-  commissionSnapshot: new Types.ObjectId('67000000000000000000002a')
+  commissionSnapshot: new Types.ObjectId('67000000000000000000002a'),
+  homepageMetric: new Types.ObjectId('67000000000000000000002b')
 } as const;
 
 const localized = (ar: string, en: string, zhCN: string) => ({ ar, en, 'zh-CN': zhCN });
@@ -282,6 +283,12 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
       updatedAt: SEEDED_AT,
       version: 0
     })]);
+    await insertSyntheticDocuments(connection, 'cms_homepage_metrics', [
+      document(ids.homepageMetric, { key: 'population', title: localized('عدد سكان مدينة السادات', 'Sadat City population', '萨达特城人口'), value: 342800, unit: localized('نسمة', 'residents', '居民'), order: 0, visible: true, status: 'published', updatedBy: ids.user, createdAt: SEEDED_AT, updatedAt: SEEDED_AT }),
+      document(new Types.ObjectId('67000000000000000000002c'), { key: 'annual_growth', title: localized('نمو سنوي', 'Annual growth', '年增长'), value: 3500, unit: localized('نسمة', 'residents', '居民'), order: 1, visible: true, status: 'published', updatedBy: ids.user, createdAt: SEEDED_AT, updatedAt: SEEDED_AT }),
+      document(new Types.ObjectId('67000000000000000000002d'), { key: 'residential_districts', title: localized('منطقة سكنية', 'Residential districts', '住宅区'), value: 18, order: 2, visible: true, status: 'published', updatedBy: ids.user, createdAt: SEEDED_AT, updatedAt: SEEDED_AT }),
+      document(new Types.ObjectId('67000000000000000000002e'), { key: 'housing_units', title: localized('وحدة سكنية', 'Housing units', '住房单元'), value: 1200, order: 3, visible: true, status: 'published', updatedBy: ids.user, createdAt: SEEDED_AT, updatedAt: SEEDED_AT })
+    ]);
     await insertSyntheticDocuments(connection, 'cms_about_blocks', [document(ids.about, {
       key: 'local_preview_about',
       title: localized('عن منصة السادات', 'About the Sadat Platform', '关于萨达特平台'),
@@ -309,6 +316,9 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
     await insertSyntheticDocuments(connection, 'cms_banners', [document(ids.banner, {
       key: 'local_preview_banner',
       title: localized('بيئة عرض محلية', 'Local Preview Environment', '本地预览环境'),
+      eyebrow: localized('فرصة مميزة', 'Featured opportunity', '精选机会'),
+      body: localized('بيانات منشورة لاختبار بطاقة العرض العامة.', 'Published data for exercising the public promotional card.', '用于测试公共推广卡片的已发布数据。'),
+      highlight: localized('بيانات تجريبية', 'Demo data', '演示数据'),
       order: 10,
       active: true,
       status: 'published',

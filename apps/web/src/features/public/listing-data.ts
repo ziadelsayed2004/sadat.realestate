@@ -13,6 +13,9 @@ const QUERY_KEYS = [
   'kind',
   'transactionType',
   'projectId',
+  'propertyCategoryId',
+  'propertyTypeId',
+  'deliveryStatus',
   'locationId',
   'search',
   'minPrice',
@@ -68,6 +71,9 @@ export function publicPropertySearchParams(query: PublicPropertySearchQuery): UR
   setIfPresent(params, 'kind', query.kind);
   setIfPresent(params, 'transactionType', query.transactionType);
   setIfPresent(params, 'projectId', query.projectId);
+  setIfPresent(params, 'propertyCategoryId', query.propertyCategoryId);
+  setIfPresent(params, 'propertyTypeId', query.propertyTypeId);
+  setIfPresent(params, 'deliveryStatus', query.deliveryStatus);
   setIfPresent(params, 'locationId', query.locationId);
   setIfPresent(params, 'search', query.search);
   setIfPresent(params, 'minPrice', query.minPrice);
@@ -106,4 +112,3 @@ export function createPublicPropertyListLoader(
 }
 
 export const defaultPublicPropertyListLoader = createPublicPropertyListLoader();
-

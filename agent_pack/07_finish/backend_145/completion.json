@@ -1,0 +1,32 @@
+{
+  "taskId": "backend_145",
+  "summary": "Added strict public propertyTypeId query parsing, URL serialization, and published-active Mongo filtering for the canonical PUB-02 taxonomy controls.",
+  "filesChanged": [
+    "packages/contracts/src/search/index.ts",
+    "apps/api/src/modules/search/properties.ts",
+    "apps/api/tests/search/properties.test.ts",
+    "apps/web/src/features/public/listing-data.ts"
+  ],
+  "verification": [
+    {
+      "command": "contracts build",
+      "result": "passed",
+      "exitCode": 0
+    },
+    {
+      "command": "API typecheck",
+      "result": "passed",
+      "exitCode": 0
+    },
+    {
+      "command": "focused search and route tests",
+      "result": "passed: 5/5",
+      "exitCode": 0
+    },
+    {
+      "command": "affected lint",
+      "result": "passed",
+      "exitCode": 0
+    }
+  ]
+}

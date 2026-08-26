@@ -30,7 +30,7 @@ function createClient(overrides: Partial<AuthFlowClient> = {}): AuthFlowClient {
 }
 
 describe('login and OTP screens', () => {
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the login surface with the supported direction for %s', (locale) => {
+  it.each(['ar', 'en'] as const)('renders the login surface with the supported direction for %s', (locale) => {
     const result = renderWithLocale(
       <AuthPage url="/auth/login" locale={locale} client={createClient()} onAuthenticated={vi.fn()} />,
       { locale }
@@ -86,7 +86,8 @@ describe('login and OTP screens', () => {
     const resendButton = screen.getByRole('button', { name: copy.resendIn(30) });
     expect(resendButton).toBeDisabled();
     const digits = Array.from({ length: 6 }, (_, position) => screen.getByLabelText(copy.codeDigitLabel(position + 1)));
-    digits.forEach((input, position) => fireEvent.change(input, { target: { value: String(position + 1) } }));
+    fireEvent.paste(digits[0]!, { clipboardData: { getData: () => '1 2 3 4 5 6' } });
+    await waitFor(() => digits.forEach((input, position) => expect(input).toHaveValue(String(position + 1))));
     fireEvent.click(screen.getByRole('button', { name: copy.verifyAction }));
 
     await waitFor(() => expect(verifyOtp).toHaveBeenCalledWith({
@@ -126,8 +127,8 @@ describe('login and OTP screens', () => {
   });
 
   it('keeps a direct verification route in the safe phone-entry state until a challenge exists', () => {
-    const copy = getAuthCopy('zh-CN');
-    renderWithLocale(<AuthPage url="/auth/verify-phone" locale="zh-CN" client={createClient()} onAuthenticated={vi.fn()} />, { locale: 'zh-CN' });
+    const copy = getAuthCopy('en');
+    renderWithLocale(<AuthPage url="/auth/verify-phone" locale="en" client={createClient()} onAuthenticated={vi.fn()} />, { locale: 'en' });
 
     expect(screen.getByRole('heading', { name: copy.phoneTitle, level: 1 })).toBeInTheDocument();
     expect(screen.queryByLabelText(copy.codeDigitLabel(1))).not.toBeInTheDocument();

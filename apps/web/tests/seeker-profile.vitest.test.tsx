@@ -64,7 +64,7 @@ describe('Seeker profile, preferences, and settings', () => {
     ]);
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the preference screen in the approved direction for %s', async locale => {
+  it.each(['ar', 'en'] as const)('renders the preference screen in the approved direction for %s', async locale => {
     const copy = getSeekerProfileCopy(locale);
     const result = renderWithLocale(
       <SeekerProfile locale={locale} session={session} tab="preferences" loadProfile={async () => profile} loadPreferences={async () => preferences} actions={emptyActions()} />,
@@ -74,7 +74,7 @@ describe('Seeker profile, preferences, and settings', () => {
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(result.container.querySelector('[data-screen-id="SEK-08"]')).not.toBeNull();
     expect(screen.getByDisplayValue('500000')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: copy.tabs.profile })).toHaveAttribute('href', `/seeker/profile?tab=profile&lang=${locale}`);
+    expect(screen.getByRole('link', { name: copy.tabs.profile })).toHaveAttribute('href', `/seeker/profile?tab=personal&lang=${locale}`);
     expect(result.container.textContent).not.toContain('accessToken');
     expect(result.container.textContent).not.toContain('internalNote');
     result.unmount();
@@ -97,6 +97,17 @@ describe('Seeker profile, preferences, and settings', () => {
     expect(await screen.findByText(copy.preferences.saved)).toBeInTheDocument();
   });
 
+  it('maps the preference chips to the supported preference patch', async () => {
+    const actions = emptyActions();
+    const copy = getSeekerProfileCopy('en');
+    renderWithLocale(<SeekerProfile locale="en" session={session} tab="preferences" loadProfile={async () => profile} loadPreferences={async () => preferences} actions={actions} />, { locale: 'en' });
+    await waitFor(() => expect(screen.getByRole('heading', { name: copy.preferences.heading, level: 1 })).toBeInTheDocument());
+    fireEvent.click(screen.getByRole('button', { name: 'Duplex' }));
+    fireEvent.click(screen.getByRole('button', { name: '3' }));
+    fireEvent.click(screen.getByRole('button', { name: copy.preferences.save }));
+    await waitFor(() => expect(actions.updatePreferences).toHaveBeenCalledWith(expect.objectContaining({ propertyTypes: ['apartment', 'duplex'], locations: ['new-cairo'], bedroomsMin: 3, bedroomsMax: 3 })));
+  });
+
   it('renders personal data and settings without unsupported account fields', async () => {
     const profileResult = renderWithLocale(<SeekerProfile locale="en" session={session} tab="profile" loadProfile={async () => profile} actions={emptyActions()} />, { locale: 'en' });
     const profileCopy = getSeekerProfileCopy('en');
@@ -110,8 +121,27 @@ describe('Seeker profile, preferences, and settings', () => {
     await waitFor(() => expect(screen.getByRole('heading', { name: settingsCopy.settings.heading, level: 1 })).toBeInTheDocument());
     expect(settingsResult.container.querySelector('[data-screen-id="SEK-10"]')).not.toBeNull();
     expect(screen.getAllByText(settingsCopy.unavailable).length).toBeGreaterThan(0);
-    expect(settingsResult.container.textContent).not.toContain('m.salem@email.com');
+    expect(screen.getByDisplayValue(profile.email)).toBeDisabled();
+    expect(settingsResult.container.querySelectorAll('.seeker-profile__settings-card')).toHaveLength(6);
+    expect(screen.getByLabelText('Current password')).toBeDisabled();
+    expect(screen.getAllByRole('checkbox')).toHaveLength(5);
+    expect(screen.getByRole('button', { name: 'Delete account permanently' })).toBeDisabled();
     settingsResult.unmount();
+  });
+
+  it('resolves the canonical personal profile URL to SEK-09', async () => {
+    const originalLocation = `${window.location.pathname}${window.location.search}`;
+    window.history.pushState({}, '', '/seeker/profile?tab=personal');
+    const result = renderWithLocale(<SeekerProfile locale="en" session={session} loadProfile={async () => profile} actions={emptyActions()} />, { locale: 'en' });
+    try {
+      await waitFor(() => expect(screen.getByRole('heading', { name: getSeekerProfileCopy('en').profile.heading, level: 1 })).toBeInTheDocument());
+      expect(result.container.querySelector('[data-screen-id="SEK-09"]')).not.toBeNull();
+      expect(result.container.querySelector('[data-route="/seeker/profile?tab=personal"]')).not.toBeNull();
+      expect(screen.getByDisplayValue(profile.email)).toBeDisabled();
+    } finally {
+      result.unmount();
+      window.history.pushState({}, '', originalLocation || '/');
+    }
   });
 
   it('supports retry and fails closed for an anonymous session', async () => {

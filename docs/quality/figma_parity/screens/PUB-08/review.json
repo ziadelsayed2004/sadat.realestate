@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "PUB-08",
-  "classification": "REPAIRED",
-  "classificationReason": "Bounded public shared-foundation repair completed: article details now render the approved hero media, projected body, API-backed related articles, shared navigation/footer, and safe media states from deterministic public contract data.",
+  "classification": "PARTIAL",
+  "classificationReason": "Second cached-Figma pass remains open: measured material visual differences remain after the latest repair capture; this screen is not eligible for REPAIRED_VERIFIED.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",

@@ -6,7 +6,7 @@
 | Phase | F3_seeker_dashboard |
 | Area | seeker |
 | Kind | frontend |
-| Sequence | 145 / 199 |
+| Sequence | 154 / 208 |
 | Depends on | `frontend_031` |
 
 ## Goal

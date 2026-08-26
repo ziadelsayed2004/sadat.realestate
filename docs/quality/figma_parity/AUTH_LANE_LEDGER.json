@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "taskId": "frontend_100",
+  "lane": "auth_parity",
+  "agentId": "01a03f86-ee4f-7e72-babb-f0b86532cb47",
+  "status": "ACTIVE_AT_LIVE_CURSOR",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "currentScreen": {
+    "screenId": "AUTH-02",
+    "clonePage": "6017:4353",
+    "cloneNode": "6017:15835",
+    "runtimeRoute": "/auth/register/seeker"
+  },
+  "sequence": "AUTH-01 through AUTH-17",
+  "locales": ["ar-RTL", "en-LTR"],
+  "devices": ["desktop", "tablet", "mobile"],
+  "implementationReport": {
+    "typecheck": 0,
+    "lint": 0,
+    "authUiQa": "8/8",
+    "authContract": "11/11",
+    "providerAccount": "6/6",
+    "providerOrganizationDocuments": "10/10",
+    "englishProviderReview": "5 passed, 3 skipped",
+    "diffCheck": 0
+  },
+  "capturePrecondition": {
+    "satisfied": true,
+    "measuredRepairs": [
+      "Auth page now applies locale direction to the rendered shell and normalizes reset state styling.",
+      "OTP paste distributes digits deterministically across fields.",
+      "Email validation and provider status mapping fail closed against the writable auth contract.",
+      "Provider upload/delete state reconciles with the server projection and localized missing-field/document states."
+    ],
+    "expectedVisualEffect": "Auth captures should reflect the corrected RTL/LTR shell, stable reset/OTP control geometry, and provider state/document projections before direct Figma review."
+  },
+  "blockers": [
+    "AUTH-02 pass-10 still has 1.4235% measured material difference; the lane must separate real residual defects from the recorded 0.366% anti-alias-only component before closure.",
+    "AUTH-01, AUTH-03, and AUTH-04 cached visuals contain fields or flows unsupported by current writable contracts.",
+    "AUTH-04 cached export appears semantically inconsistent with the route matrix."
+  ],
+  "lastScreenDecision": {
+    "screenId": "AUTH-01",
+    "classification": "PARTIAL",
+    "evidencePath": "docs/quality/figma_parity/screens/AUTH-01/review.json",
+    "materialDifferencePercent": 2.4583,
+    "exactBlockers": [
+      "Repository-owned control icons remain Unicode/CSS approximations and residual typography/shadow differences remain.",
+      "The cached clone shows filled phone-or-email/password state that the current writable auth contract does not represent without an approved non-production fixture decision.",
+      "The cached clone shows an active forgot-password action, but no writable reset route/purpose exists; no transition was fabricated."
+    ],
+    "nextScreenAllowed": "AUTH-02 may begin because AUTH-01 has an exact recorded Partial decision; AUTH-01 is not closed."
+  },
+  "latestScreenEvidence": {
+    "screenId": "AUTH-02",
+    "artifact": "docs/quality/figma_parity/screens/AUTH-02/runtime-after-pass10.png",
+    "sha256": "0a08697e0ffe557f80bb7faaaad9b016050341c1b9a452c9da46689d667816a3",
+    "materialDifferencePercent": 1.4235,
+    "antiAliasingOnlyPercent": 0.366,
+    "classification": "PARTIAL",
+    "reviewStatus": "residual review active"
+  },
+  "latestAttempt": {
+    "screenId": "AUTH-02",
+    "artifact": "docs/quality/figma_parity/screens/AUTH-02/runtime-after-pass12.png",
+    "materialDifferencePercent": 1.4181,
+    "antiAliasingOnlyPercent": 0.3688,
+    "classification": "PARTIAL",
+    "decision": "The accepted pass-11 regression repair produced its predicted pass-12 improvement, but material differences remain. The normal Arabic/English Desktop/Tablet/Mobile visual gate failed 0/6; no snapshot was updated and AUTH-02 remains open."
+  },
+  "evidence": "AUTH-01 retains its exact Partial record. AUTH_AGENT is reviewing AUTH-02 pass-10 evidence and may write only AUTH-* screen evidence; baselines, snapshots, queue/checkpoint, and Agent Pack remain coordinator-owned."
+}

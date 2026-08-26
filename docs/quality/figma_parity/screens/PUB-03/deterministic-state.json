@@ -8,26 +8,34 @@
     "direction": "rtl"
   },
   "responseRequestId": "fresh-audit-public-details",
-  "responseSha256": "63aa22edca1ab3a98a5f83d98e2a753102a48c499c90dcfd3a4ccf7a0979ca93",
+  "responseSha256": "ffe59d6a2aedd25d4745337a7b04e541b3610fbfb47529cbc2469f89db4cdda5",
   "response": {
     "data": {
       "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
       "slug": "published-home",
       "kind": "property",
       "name": {
-        "ar": "منزل منشور",
-        "en": "Published home",
-        "zh-CN": "已发布房产"
+        "ar": "شقة فاخرة في الحي الأول",
+        "en": "Luxury apartment in the First District",
+        "zh-CN": "第一区豪华公寓"
       },
       "transactionType": "sale",
-      "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
+      "locationName": {
+        "ar": "الحي الأول",
+        "en": "First District",
+        "zh-CN": "第一街区"
+      },
+      "publicCode": "SDT-1234",
+      "deliveryStatus": "ready_to_move",
+      "installmentAvailable": true,
+      "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
       "description": {
-        "ar": "وصف المنزل المنشور",
-        "en": "A published home description",
-        "zh-CN": "已发布房产描述"
+        "ar": "شقة فاخرة بالحي الأول بمدينة السادات، تشطيب سوبر لوكس كامل، إطلالة مميزة وموقع استراتيجي قريب من جميع الخدمات والمرافق.",
+        "en": "A fully finished luxury apartment in Sadat City near essential services.",
+        "zh-CN": "萨达特市精装修豪华公寓，邻近各项服务。"
       },
       "area": {
-        "value": 120,
+        "value": 145,
         "unit": "sqm"
       },
       "layout": {
@@ -36,12 +44,19 @@
         "floor": 4
       },
       "price": {
-        "amount": 1250000,
+        "amount": 1900000,
         "currency": "EGP"
       },
       "source": {
         "sourceType": "developer_company",
-        "organizationId": "bbbbbbbbbbbbbbbbbbbbbbbb"
+        "organizationId": "bbbbbbbbbbbbbbbbbbbbbbbb",
+        "name": {
+          "ar": "شركة السادات للتطوير العقاري",
+          "en": "Sadat Real Estate Development",
+          "zh-CN": "萨达特房地产开发公司"
+        },
+        "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-b.png",
+        "verified": true
       },
       "seo": {
         "title": {
@@ -60,9 +75,9 @@
         "id": "bbbbbbbbbbbbbbbbbbbbbbbb",
         "slug": "central-project",
         "name": {
-          "ar": "المشروع المركزي",
-          "en": "Central project",
-          "zh-CN": "中央项目"
+          "ar": "كومباوند النخبة",
+          "en": "Elite Compound",
+          "zh-CN": "精英社区"
         },
         "description": {
           "ar": "نبذة المشروع",
@@ -75,66 +90,360 @@
           "id": "cccccccccccccccccccccccc",
           "propertyId": "aaaaaaaaaaaaaaaaaaaaaaaa",
           "kind": "image",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
           "originalFilename": "published-home-cover.png",
           "detectedMime": "image/png",
           "byteSize": 120000,
           "sortOrder": 0,
           "isCover": true
+        }
+      ],
+      "features": [
+        {
+          "id": "121212121212121212121212",
+          "kind": "feature",
+          "groupKey": "property_feature",
+          "name": {
+            "ar": "ناصية",
+            "en": "ناصية",
+            "zh-CN": "ناصية"
+          },
+          "slug": "feature-1",
+          "order": 0
         },
         {
-          "id": "dddddddddddddddddddddddd",
-          "propertyId": "aaaaaaaaaaaaaaaaaaaaaaaa",
-          "kind": "image",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
-          "originalFilename": "published-home-city.png",
-          "detectedMime": "image/png",
-          "byteSize": 120000,
-          "sortOrder": 1,
-          "isCover": false
+          "id": "131313131313131313131313",
+          "kind": "feature",
+          "groupKey": "property_feature",
+          "name": {
+            "ar": "شارع رئيسي",
+            "en": "شارع رئيسي",
+            "zh-CN": "شارع رئيسي"
+          },
+          "slug": "feature-2",
+          "order": 1
         },
         {
-          "id": "eeeeeeeeeeeeeeeeeeeeeeee",
-          "propertyId": "aaaaaaaaaaaaaaaaaaaaaaaa",
-          "kind": "floor_plan",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
-          "originalFilename": "published-home-plan.png",
-          "detectedMime": "image/png",
-          "byteSize": 120000,
-          "sortOrder": 2,
-          "isCover": false
+          "id": "141414141414141414141414",
+          "kind": "feature",
+          "groupKey": "property_feature",
+          "name": {
+            "ar": "مدخل خاص",
+            "en": "مدخل خاص",
+            "zh-CN": "مدخل خاص"
+          },
+          "slug": "feature-3",
+          "order": 2
+        },
+        {
+          "id": "151515151515151515151515",
+          "kind": "feature",
+          "groupKey": "property_feature",
+          "name": {
+            "ar": "عدادات كاملة",
+            "en": "عدادات كاملة",
+            "zh-CN": "عدادات كاملة"
+          },
+          "slug": "feature-4",
+          "order": 3
+        },
+        {
+          "id": "161616161616161616161616",
+          "kind": "feature",
+          "groupKey": "finishing",
+          "name": {
+            "ar": "تشطيب فاخر",
+            "en": "تشطيب فاخر",
+            "zh-CN": "تشطيب فاخر"
+          },
+          "detail": {
+            "ar": "سوبر لوكس",
+            "en": "Super lux",
+            "zh-CN": "精装"
+          },
+          "slug": "super-lux-finish",
+          "order": 4
+        },
+        {
+          "id": "171717171717171717171717",
+          "kind": "feature",
+          "groupKey": "property_feature",
+          "name": {
+            "ar": "جاهز للاستلام",
+            "en": "جاهز للاستلام",
+            "zh-CN": "جاهز للاستلام"
+          },
+          "slug": "feature-6",
+          "order": 5
+        },
+        {
+          "id": "181818181818181818181818",
+          "kind": "feature",
+          "groupKey": "property_feature",
+          "name": {
+            "ar": "قابل للتقسيط",
+            "en": "قابل للتقسيط",
+            "zh-CN": "قابل للتقسيط"
+          },
+          "slug": "feature-7",
+          "order": 6
+        },
+        {
+          "id": "191919191919191919191919",
+          "kind": "feature",
+          "groupKey": "property_feature",
+          "name": {
+            "ar": "مناسب للاستثمار",
+            "en": "مناسب للاستثمار",
+            "zh-CN": "مناسب للاستثمار"
+          },
+          "slug": "feature-8",
+          "order": 7
+        },
+        {
+          "id": "1a1a1a1a1a1a1a1a1a1a1a1a",
+          "kind": "feature",
+          "groupKey": "property_feature",
+          "name": {
+            "ar": "منطقة هادئة",
+            "en": "منطقة هادئة",
+            "zh-CN": "منطقة هادئة"
+          },
+          "slug": "feature-9",
+          "order": 8
+        },
+        {
+          "id": "1b1b1b1b1b1b1b1b1b1b1b1b",
+          "kind": "feature",
+          "groupKey": "property_feature",
+          "name": {
+            "ar": "موقف سيارات",
+            "en": "موقف سيارات",
+            "zh-CN": "موقف سيارات"
+          },
+          "slug": "feature-10",
+          "order": 9
+        },
+        {
+          "id": "1c1c1c1c1c1c1c1c1c1c1c1c",
+          "kind": "feature",
+          "groupKey": "property_feature",
+          "name": {
+            "ar": "مصعد",
+            "en": "مصعد",
+            "zh-CN": "مصعد"
+          },
+          "slug": "feature-11",
+          "order": 10
+        },
+        {
+          "id": "1d1d1d1d1d1d1d1d1d1d1d1d",
+          "kind": "feature",
+          "groupKey": "property_feature",
+          "name": {
+            "ar": "حديقة خاصة",
+            "en": "حديقة خاصة",
+            "zh-CN": "حديقة خاصة"
+          },
+          "slug": "feature-12",
+          "order": 11
+        },
+        {
+          "id": "1e1e1e1e1e1e1e1e1e1e1e1e",
+          "kind": "feature",
+          "groupKey": "property_feature",
+          "name": {
+            "ar": "تراس",
+            "en": "تراس",
+            "zh-CN": "تراس"
+          },
+          "slug": "feature-13",
+          "order": 12
+        },
+        {
+          "id": "1f1f1f1f1f1f1f1f1f1f1f1f",
+          "kind": "feature",
+          "groupKey": "property_feature",
+          "name": {
+            "ar": "أمن وحراسة",
+            "en": "أمن وحراسة",
+            "zh-CN": "أمن وحراسة"
+          },
+          "slug": "feature-14",
+          "order": 13
+        }
+      ],
+      "services": [
+        {
+          "id": "282828282828282828282828",
+          "kind": "service",
+          "groupKey": "nearby",
+          "name": {
+            "ar": "مجمع المدارس",
+            "en": "مجمع المدارس",
+            "zh-CN": "مجمع المدارس"
+          },
+          "detail": {
+            "ar": "مدارس حكومية وخاصة",
+            "en": "مدارس حكومية وخاصة",
+            "zh-CN": "مدارس حكومية وخاصة"
+          },
+          "distanceLabel": {
+            "ar": "5 دقائق",
+            "en": "5 دقائق",
+            "zh-CN": "5 دقائق"
+          },
+          "slug": "service-1",
+          "order": 0
+        },
+        {
+          "id": "292929292929292929292929",
+          "kind": "service",
+          "groupKey": "nearby",
+          "name": {
+            "ar": "السوق التجاري",
+            "en": "السوق التجاري",
+            "zh-CN": "السوق التجاري"
+          },
+          "detail": {
+            "ar": "بجوار المجمع التجاري الرئيسي",
+            "en": "بجوار المجمع التجاري الرئيسي",
+            "zh-CN": "بجوار المجمع التجاري الرئيسي"
+          },
+          "distanceLabel": {
+            "ar": "700 متر",
+            "en": "700 متر",
+            "zh-CN": "700 متر"
+          },
+          "slug": "service-2",
+          "order": 1
+        },
+        {
+          "id": "2a2a2a2a2a2a2a2a2a2a2a2a",
+          "kind": "service",
+          "groupKey": "nearby",
+          "name": {
+            "ar": "المستشفى المركزي",
+            "en": "المستشفى المركزي",
+            "zh-CN": "المستشفى المركزي"
+          },
+          "detail": {
+            "ar": "خدمة طوارئ 24 ساعة",
+            "en": "خدمة طوارئ 24 ساعة",
+            "zh-CN": "خدمة طوارئ 24 ساعة"
+          },
+          "distanceLabel": {
+            "ar": "8 دقائق",
+            "en": "8 دقائق",
+            "zh-CN": "8 دقائق"
+          },
+          "slug": "service-3",
+          "order": 2
+        },
+        {
+          "id": "2b2b2b2b2b2b2b2b2b2b2b2b",
+          "kind": "service",
+          "groupKey": "nearby",
+          "name": {
+            "ar": "الطريق الإقليمي",
+            "en": "الطريق الإقليمي",
+            "zh-CN": "الطريق الإقليمي"
+          },
+          "detail": {
+            "ar": "ربط سريع بالقاهرة والإسكندرية",
+            "en": "ربط سريع بالقاهرة والإسكندرية",
+            "zh-CN": "ربط سريع بالقاهرة والإسكندرية"
+          },
+          "distanceLabel": {
+            "ar": "10 دقائق",
+            "en": "10 دقائق",
+            "zh-CN": "10 دقائق"
+          },
+          "slug": "service-4",
+          "order": 3
+        },
+        {
+          "id": "2c2c2c2c2c2c2c2c2c2c2c2c",
+          "kind": "service",
+          "groupKey": "nearby",
+          "name": {
+            "ar": "موقف المواصلات",
+            "en": "موقف المواصلات",
+            "zh-CN": "موقف المواصلات"
+          },
+          "detail": {
+            "ar": "خطوط منتظمة للحي والرئيسية",
+            "en": "خطوط منتظمة للحي والرئيسية",
+            "zh-CN": "خطوط منتظمة للحي والرئيسية"
+          },
+          "distanceLabel": {
+            "ar": "3 دقائق",
+            "en": "3 دقائق",
+            "zh-CN": "3 دقائق"
+          },
+          "slug": "service-5",
+          "order": 4
+        },
+        {
+          "id": "2d2d2d2d2d2d2d2d2d2d2d2d",
+          "kind": "service",
+          "groupKey": "nearby",
+          "name": {
+            "ar": "مسجد الحي",
+            "en": "مسجد الحي",
+            "zh-CN": "مسجد الحي"
+          },
+          "detail": {
+            "ar": "جامع",
+            "en": "جامع",
+            "zh-CN": "جامع"
+          },
+          "distanceLabel": {
+            "ar": "4 دقائق",
+            "en": "4 دقائق",
+            "zh-CN": "4 دقائق"
+          },
+          "slug": "service-6",
+          "order": 5
         }
       ],
       "relatedProperties": [
-        {
-          "id": "ffffffffffffffffffffffff",
-          "slug": "garden-villa",
-          "kind": "property",
-          "name": {
-            "ar": "Garden villa",
-            "en": "Garden villa",
-            "zh-CN": "Garden villa"
-          },
-          "transactionType": "sale",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
-          "price": {
-            "amount": 2500000,
-            "currency": "EGP"
-          }
-        },
         {
           "id": "111111111111111111111111",
           "slug": "city-apartment",
           "kind": "unit",
           "name": {
-            "ar": "City apartment",
-            "en": "City apartment",
-            "zh-CN": "City apartment"
+            "ar": "شقة للإيجار في الحي الثالث",
+            "en": "Apartment for rent in the Third District",
+            "zh-CN": "第三区出租公寓"
           },
           "transactionType": "rent",
           "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
+          "locationName": {
+            "ar": "الحي الثالث",
+            "en": "Third District",
+            "zh-CN": "第三区"
+          },
+          "publicCode": "SDT-0234",
+          "sourceName": {
+            "ar": "مكتب الثقة للعقارات",
+            "en": "Al Thiqah Real Estate Office",
+            "zh-CN": "信任房地产办公室"
+          },
+          "sourceImageUrl": "http://127.0.0.1:4173/assets/clone/pub05-f.png",
+          "sourceType": "brokerage_office",
+          "sourceVerified": true,
+          "viewCount": 267,
+          "area": {
+            "value": 120,
+            "unit": "sqm"
+          },
+          "layout": {
+            "bedrooms": 2,
+            "bathrooms": 2
+          },
           "price": {
-            "amount": 20000,
+            "amount": 8500,
             "currency": "EGP"
           }
         }

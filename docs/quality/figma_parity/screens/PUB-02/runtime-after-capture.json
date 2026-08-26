@@ -7,14 +7,14 @@
     "locale": "ar",
     "direction": "rtl",
     "viewport": {
-      "width": 1280,
+      "width": 1577,
       "height": 720,
       "devicePixelRatio": 1
     },
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "a8af6e406cb2608007467ab2cae70b71115d7fc68bb35b3c3605f010c22960f9",
-    "afterHash": "ba47e7365734722ec223373a423704ccc6ee69138855ad1573a0fbfd2e6bf868",
+    "afterHash": "4012d63dd64cb32b1c75da2b5cceda5ed1cdad5a2c9493d532fb8b725cb4fea8",
     "requestedApi": [
       {
         "method": "GET",
@@ -31,10 +31,10 @@
   },
   "structure": {
     "headers": 2,
-    "navs": 3,
+    "navs": 2,
     "sections": 2,
-    "cards": 43,
-    "images": 8,
+    "cards": 61,
+    "images": 23,
     "forms": 1
   },
   "transitions": {
@@ -88,28 +88,28 @@
         "href": "/auth/register"
       },
       {
-        "text": "Published home",
+        "text": "شقة فاخرة في الحي الأول",
         "href": "/properties/published-home"
       },
       {
-        "text": "Published villa",
+        "text": "فيلا مستقلة بالمنطقة الراقية",
         "href": "/properties/published-villa"
       },
       {
-        "text": "Published rental",
+        "text": "أرض سكنية في الحي السابع",
+        "href": "/properties/published-land"
+      },
+      {
+        "text": "شقة للإيجار في الحي الثالث",
         "href": "/properties/published-rental"
       },
       {
-        "text": "Published office",
+        "text": "مكتب تجاري في المنطقة الصناعية",
         "href": "/properties/published-office"
       },
       {
-        "text": "Published unit",
+        "text": "دوبلكس فاخر في الحي الخامس",
         "href": "/properties/published-unit"
-      },
-      {
-        "text": "Published land",
-        "href": "/properties/published-land"
       },
       {
         "text": "الرئيسية",
@@ -132,29 +132,77 @@
         "href": "/about"
       },
       {
-        "text": "hello@sadat.realestate",
-        "href": "mailto:hello@sadat.realestate"
+        "text": "عن المنصة",
+        "href": "/about"
       },
       {
-        "text": "إنشاء حساب",
-        "href": "/auth/register"
+        "text": "فريقنا",
+        "href": "/team"
       },
       {
-        "text": "تسجيل الدخول",
-        "href": "/auth/login"
+        "text": "01001234567",
+        "href": "tel:01001234567"
+      },
+      {
+        "text": "واتساب متاح 24/7",
+        "href": "/community"
+      },
+      {
+        "text": "f",
+        "href": "/community"
+      },
+      {
+        "text": "◎",
+        "href": "/community"
+      },
+      {
+        "text": "▶",
+        "href": "/community"
+      },
+      {
+        "text": "♪",
+        "href": "/community"
+      },
+      {
+        "text": "in",
+        "href": "/community"
+      },
+      {
+        "text": "◉",
+        "href": "/community"
       }
     ],
     "buttons": [
       {
-        "text": "الكل",
+        "text": "الكل6 عقار",
         "aria": null
       },
       {
-        "text": "عقار",
+        "text": "مطاعم وكافيهات22 عقار",
         "aria": null
       },
       {
-        "text": "وحدة",
+        "text": "صالات عرض34 عقار",
+        "aria": null
+      },
+      {
+        "text": "مبنى تجاري كامل19 عقار",
+        "aria": null
+      },
+      {
+        "text": "غرفة65 عقار",
+        "aria": null
+      },
+      {
+        "text": "روف28 عقار",
+        "aria": null
+      },
+      {
+        "text": "دوبلكس43 عقار",
+        "aria": null
+      },
+      {
+        "text": "فيلا87 عقار",
         "aria": null
       },
       {
@@ -166,24 +214,36 @@
         "aria": null
       },
       {
-        "text": "▦",
+        "text": "",
         "aria": "عرض شبكي"
       },
       {
-        "text": "☷",
+        "text": "",
         "aria": "عرض قائمة"
       },
       {
-        "text": "›",
-        "aria": "الصفحة السابقة"
+        "text": "أضف للمقارنة",
+        "aria": "أضف للمقارنة: شقة فاخرة في الحي الأول"
       },
       {
-        "text": "1",
-        "aria": "1"
+        "text": "أضف للمقارنة",
+        "aria": "أضف للمقارنة: فيلا مستقلة بالمنطقة الراقية"
       },
       {
-        "text": "‹",
-        "aria": "الصفحة التالية"
+        "text": "أضف للمقارنة",
+        "aria": "أضف للمقارنة: أرض سكنية في الحي السابع"
+      },
+      {
+        "text": "أضف للمقارنة",
+        "aria": "أضف للمقارنة: شقة للإيجار في الحي الثالث"
+      },
+      {
+        "text": "أضف للمقارنة",
+        "aria": "أضف للمقارنة: مكتب تجاري في المنطقة الصناعية"
+      },
+      {
+        "text": "أضف للمقارنة",
+        "aria": "أضف للمقارنة: دوبلكس فاخر في الحي الخامس"
       }
     ]
   },
@@ -198,14 +258,27 @@
         "height": 2151
       },
       {
-        "width": 1280,
-        "height": 2228
+        "width": 1577,
+        "height": 1981
       }
     ],
     "dimensions": {
-      "width": 1406,
-      "height": 802
+      "width": 1507,
+      "height": 775
     },
-    "diffPath": "docs/quality/figma_parity/screens/PUB-02/diff.png"
+    "diffPath": "docs/quality/figma_parity/screens/PUB-02/diff.png",
+    "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-02/visual-metrics.json",
+    "visualMetrics": {
+      "comparedWidth": 1577,
+      "comparedHeight": 1981,
+      "comparedPixels": 3124037,
+      "materialDifferencePercent": 16.9379,
+      "antiAliasingOnlyPercent": 4.9163,
+      "threshold": {
+        "materialRgbSumGreaterThan": 24,
+        "antiAliasingRgbSumGreaterThan": 3
+      },
+      "method": "same-width source/runtime canvas comparison over the overlapping document height"
+    }
   }
 }

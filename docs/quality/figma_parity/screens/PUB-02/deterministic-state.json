@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "e2e-public-property-list-success",
-  "responseSha256": "69bbc13d24644fe976c39d310a0c29ce904faa595423d97856617301d49b4b50",
+  "responseSha256": "727a6c82035e85d89b43cb92b85aa69fb94535a312f198c7c08bc09d35587692",
   "response": {
     "data": {
       "items": [
@@ -17,16 +17,152 @@
           "slug": "published-home",
           "kind": "property",
           "name": {
-            "ar": "Published home",
-            "en": "Published home",
-            "zh-CN": "Published home"
+            "ar": "شقة فاخرة في الحي الأول",
+            "en": "شقة فاخرة في الحي الأول",
+            "zh-CN": "شقة فاخرة في الحي الأول"
           },
           "transactionType": "sale",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
           "description": {
-            "ar": "Published home",
-            "en": "Published home",
-            "zh-CN": "Published home"
+            "ar": "شقة فاخرة في الحي الأول",
+            "en": "شقة فاخرة في الحي الأول",
+            "zh-CN": "شقة فاخرة في الحي الأول"
+          },
+          "area": {
+            "value": 145,
+            "unit": "sqm"
+          },
+          "layout": {
+            "bedrooms": 3,
+            "bathrooms": 2,
+            "floor": 1
+          },
+          "price": {
+            "amount": 1900000,
+            "currency": "EGP"
+          },
+          "locationName": {
+            "ar": "الحي الأول",
+            "en": "الحي الأول",
+            "zh-CN": "الحي الأول"
+          },
+          "sourceName": {
+            "ar": "شركة السادات للتطوير العقاري",
+            "en": "شركة السادات للتطوير العقاري",
+            "zh-CN": "شركة السادات للتطوير العقاري"
+          },
+          "sourceImageUrl": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+          "sourceType": "developer_company",
+          "publicCode": "SDT-1234",
+          "viewCount": 342,
+          "installmentAvailable": true,
+          "featured": true,
+          "deliveryStatus": "ready_to_move"
+        },
+        {
+          "id": "222222222222222222222222",
+          "slug": "published-villa",
+          "kind": "property",
+          "name": {
+            "ar": "فيلا مستقلة بالمنطقة الراقية",
+            "en": "فيلا مستقلة بالمنطقة الراقية",
+            "zh-CN": "فيلا مستقلة بالمنطقة الراقية"
+          },
+          "transactionType": "sale",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-f.png",
+          "description": {
+            "ar": "فيلا مستقلة بالمنطقة الراقية",
+            "en": "فيلا مستقلة بالمنطقة الراقية",
+            "zh-CN": "فيلا مستقلة بالمنطقة الراقية"
+          },
+          "area": {
+            "value": 320,
+            "unit": "sqm"
+          },
+          "layout": {
+            "bedrooms": 5,
+            "bathrooms": 4,
+            "floor": 2
+          },
+          "price": {
+            "amount": 5200000,
+            "currency": "EGP"
+          },
+          "locationName": {
+            "ar": "المنطقة الراقية",
+            "en": "المنطقة الراقية",
+            "zh-CN": "المنطقة الراقية"
+          },
+          "sourceName": {
+            "ar": "مجموعة النيل العقارية",
+            "en": "مجموعة النيل العقارية",
+            "zh-CN": "مجموعة النيل العقارية"
+          },
+          "sourceImageUrl": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+          "sourceType": "developer_company",
+          "publicCode": "SDT-0892",
+          "viewCount": 512,
+          "installmentAvailable": true,
+          "featured": true,
+          "deliveryStatus": "under_construction"
+        },
+        {
+          "id": "333333333333333333333333",
+          "slug": "published-land",
+          "kind": "unit",
+          "name": {
+            "ar": "أرض سكنية في الحي السابع",
+            "en": "أرض سكنية في الحي السابع",
+            "zh-CN": "أرض سكنية في الحي السابع"
+          },
+          "transactionType": "sale",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-g.png",
+          "description": {
+            "ar": "أرض سكنية في الحي السابع",
+            "en": "أرض سكنية في الحي السابع",
+            "zh-CN": "أرض سكنية في الحي السابع"
+          },
+          "area": {
+            "value": 400,
+            "unit": "sqm"
+          },
+          "price": {
+            "amount": 780000,
+            "currency": "EGP"
+          },
+          "locationName": {
+            "ar": "الحي السابع",
+            "en": "الحي السابع",
+            "zh-CN": "الحي السابع"
+          },
+          "sourceName": {
+            "ar": "مكتب الأمل العقاري",
+            "en": "مكتب الأمل العقاري",
+            "zh-CN": "مكتب الأمل العقاري"
+          },
+          "sourceImageUrl": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+          "sourceType": "brokerage_office",
+          "publicCode": "SDT-0456",
+          "viewCount": 189,
+          "installmentAvailable": false,
+          "featured": false,
+          "deliveryStatus": "future_delivery"
+        },
+        {
+          "id": "444444444444444444444444",
+          "slug": "published-rental",
+          "kind": "unit",
+          "name": {
+            "ar": "شقة للإيجار في الحي الثالث",
+            "en": "شقة للإيجار في الحي الثالث",
+            "zh-CN": "شقة للإيجار في الحي الثالث"
+          },
+          "transactionType": "rent",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
+          "description": {
+            "ar": "شقة للإيجار في الحي الثالث",
+            "en": "شقة للإيجار في الحي الثالث",
+            "zh-CN": "شقة للإيجار في الحي الثالث"
           },
           "area": {
             "value": 120,
@@ -34,119 +170,46 @@
           },
           "layout": {
             "bedrooms": 2,
-            "bathrooms": 1,
-            "floor": 1
-          },
-          "price": {
-            "amount": 1250000,
-            "currency": "EGP"
-          }
-        },
-        {
-          "id": "222222222222222222222222",
-          "slug": "published-villa",
-          "kind": "property",
-          "name": {
-            "ar": "Published villa",
-            "en": "Published villa",
-            "zh-CN": "Published villa"
-          },
-          "transactionType": "sale",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
-          "description": {
-            "ar": "Published villa",
-            "en": "Published villa",
-            "zh-CN": "Published villa"
-          },
-          "area": {
-            "value": 140,
-            "unit": "sqm"
-          },
-          "layout": {
-            "bedrooms": 3,
             "bathrooms": 2,
-            "floor": 2
-          },
-          "price": {
-            "amount": 5200000,
-            "currency": "EGP"
-          }
-        },
-        {
-          "id": "333333333333333333333333",
-          "slug": "published-rental",
-          "kind": "unit",
-          "name": {
-            "ar": "Published rental",
-            "en": "Published rental",
-            "zh-CN": "Published rental"
-          },
-          "transactionType": "rent",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
-          "description": {
-            "ar": "Published rental",
-            "en": "Published rental",
-            "zh-CN": "Published rental"
-          },
-          "area": {
-            "value": 160,
-            "unit": "sqm"
-          },
-          "layout": {
-            "bedrooms": 4,
-            "bathrooms": 1,
             "floor": 3
           },
           "price": {
-            "amount": 20000,
+            "amount": 8500,
             "currency": "EGP"
-          }
-        },
-        {
-          "id": "444444444444444444444444",
-          "slug": "published-office",
-          "kind": "unit",
-          "name": {
-            "ar": "Published office",
-            "en": "Published office",
-            "zh-CN": "Published office"
           },
-          "transactionType": "rent",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
-          "description": {
-            "ar": "Published office",
-            "en": "Published office",
-            "zh-CN": "Published office"
+          "locationName": {
+            "ar": "الحي الثالث",
+            "en": "الحي الثالث",
+            "zh-CN": "الحي الثالث"
           },
-          "area": {
-            "value": 180,
-            "unit": "sqm"
+          "sourceName": {
+            "ar": "أحمد حسن",
+            "en": "أحمد حسن",
+            "zh-CN": "أحمد حسن"
           },
-          "layout": {
-            "bedrooms": 2,
-            "bathrooms": 2,
-            "floor": 4
-          },
-          "price": {
-            "amount": 12000,
-            "currency": "EGP"
-          }
+          "sourceImageUrl": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+          "sourceType": "brokerage_office",
+          "publicCode": "SDT-0234",
+          "viewCount": 267,
+          "installmentAvailable": false,
+          "featured": false,
+          "deliveryStatus": "ready_to_move"
         },
         {
           "id": "555555555555555555555555",
-          "slug": "published-unit",
+          "slug": "published-office",
           "kind": "property",
           "name": {
-            "ar": "Published unit",
-            "en": "Published unit",
-            "zh-CN": "Published unit"
+            "ar": "مكتب تجاري في المنطقة الصناعية",
+            "en": "مكتب تجاري في المنطقة الصناعية",
+            "zh-CN": "مكتب تجاري في المنطقة الصناعية"
           },
-          "transactionType": "sale",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub06-a.png",
+          "transactionType": "rent",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-f.png",
           "description": {
-            "ar": "Published unit",
-            "en": "Published unit",
-            "zh-CN": "Published unit"
+            "ar": "مكتب تجاري في المنطقة الصناعية",
+            "en": "مكتب تجاري في المنطقة الصناعية",
+            "zh-CN": "مكتب تجاري في المنطقة الصناعية"
           },
           "area": {
             "value": 200,
@@ -154,43 +217,213 @@
           },
           "layout": {
             "bedrooms": 3,
-            "bathrooms": 1,
+            "bathrooms": 2,
+            "floor": 1
+          },
+          "price": {
+            "amount": 12000,
+            "currency": "EGP"
+          },
+          "locationName": {
+            "ar": "المنطقة الصناعية",
+            "en": "المنطقة الصناعية",
+            "zh-CN": "المنطقة الصناعية"
+          },
+          "sourceName": {
+            "ar": "مجموعة الدلتا العقارية",
+            "en": "مجموعة الدلتا العقارية",
+            "zh-CN": "مجموعة الدلتا العقارية"
+          },
+          "sourceImageUrl": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+          "sourceType": "developer_company",
+          "publicCode": "SDT-0789",
+          "viewCount": 134,
+          "installmentAvailable": false,
+          "featured": false,
+          "deliveryStatus": "under_construction"
+        },
+        {
+          "id": "666666666666666666666666",
+          "slug": "published-unit",
+          "kind": "property",
+          "name": {
+            "ar": "دوبلكس فاخر في الحي الخامس",
+            "en": "دوبلكس فاخر في الحي الخامس",
+            "zh-CN": "دوبلكس فاخر في الحي الخامس"
+          },
+          "transactionType": "sale",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
+          "description": {
+            "ar": "دوبلكس فاخر في الحي الخامس",
+            "en": "دوبلكس فاخر في الحي الخامس",
+            "zh-CN": "دوبلكس فاخر في الحي الخامس"
+          },
+          "area": {
+            "value": 240,
+            "unit": "sqm"
+          },
+          "layout": {
+            "bedrooms": 4,
+            "bathrooms": 3,
             "floor": 5
           },
           "price": {
             "amount": 3100000,
             "currency": "EGP"
-          }
+          },
+          "locationName": {
+            "ar": "الحي الخامس",
+            "en": "الحي الخامس",
+            "zh-CN": "الحي الخامس"
+          },
+          "sourceName": {
+            "ar": "شركة السادات للتطوير العقاري",
+            "en": "شركة السادات للتطوير العقاري",
+            "zh-CN": "شركة السادات للتطوير العقاري"
+          },
+          "sourceImageUrl": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+          "sourceType": "developer_company",
+          "publicCode": "SDT-0567",
+          "viewCount": 423,
+          "installmentAvailable": true,
+          "featured": true,
+          "deliveryStatus": "future_delivery"
+        }
+      ],
+      "categories": [
+        {
+          "id": "777777777777777777777777",
+          "slug": "restaurants-cafes",
+          "name": {
+            "ar": "مطاعم وكافيهات",
+            "en": "Restaurants and cafés",
+            "zh-CN": "Restaurants and cafés"
+          },
+          "propertyCount": 22,
+          "order": 0
         },
         {
-          "id": "666666666666666666666666",
-          "slug": "published-land",
-          "kind": "property",
+          "id": "888888888888888888888888",
+          "slug": "showrooms",
           "name": {
-            "ar": "Published land",
-            "en": "Published land",
-            "zh-CN": "Published land"
+            "ar": "صالات عرض",
+            "en": "Showrooms",
+            "zh-CN": "Showrooms"
           },
-          "transactionType": "sale",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
-          "description": {
-            "ar": "Published land",
-            "en": "Published land",
-            "zh-CN": "Published land"
+          "propertyCount": 34,
+          "order": 1
+        },
+        {
+          "id": "999999999999999999999999",
+          "slug": "full-commercial-building",
+          "name": {
+            "ar": "مبنى تجاري كامل",
+            "en": "Full commercial building",
+            "zh-CN": "Full commercial building"
           },
-          "area": {
-            "value": 220,
-            "unit": "sqm"
+          "propertyCount": 19,
+          "order": 2
+        },
+        {
+          "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
+          "slug": "room",
+          "name": {
+            "ar": "غرفة",
+            "en": "Room",
+            "zh-CN": "Room"
           },
-          "layout": {
-            "bedrooms": 4,
-            "bathrooms": 2,
-            "floor": 6
+          "propertyCount": 65,
+          "order": 3
+        },
+        {
+          "id": "bbbbbbbbbbbbbbbbbbbbbbbb",
+          "slug": "roof",
+          "name": {
+            "ar": "روف",
+            "en": "Roof",
+            "zh-CN": "Roof"
           },
-          "price": {
-            "amount": 780000,
-            "currency": "EGP"
-          }
+          "propertyCount": 28,
+          "order": 4
+        },
+        {
+          "id": "cccccccccccccccccccccccc",
+          "slug": "duplex",
+          "name": {
+            "ar": "دوبلكس",
+            "en": "Duplex",
+            "zh-CN": "Duplex"
+          },
+          "propertyCount": 43,
+          "order": 5
+        },
+        {
+          "id": "dddddddddddddddddddddddd",
+          "slug": "villa",
+          "name": {
+            "ar": "فيلا",
+            "en": "Villa",
+            "zh-CN": "Villa"
+          },
+          "propertyCount": 87,
+          "order": 6
+        }
+      ],
+      "propertyTypes": [
+        {
+          "id": "111111111111111111111111",
+          "slug": "apartments",
+          "name": {
+            "ar": "شقة",
+            "en": "Apartment",
+            "zh-CN": "Apartment"
+          },
+          "propertyCount": 112,
+          "order": 0
+        },
+        {
+          "id": "222222222222222222222222",
+          "slug": "villas",
+          "name": {
+            "ar": "فيلا",
+            "en": "Villa",
+            "zh-CN": "Villa"
+          },
+          "propertyCount": 64,
+          "order": 1
+        },
+        {
+          "id": "333333333333333333333333",
+          "slug": "land",
+          "name": {
+            "ar": "أرض",
+            "en": "Land",
+            "zh-CN": "Land"
+          },
+          "propertyCount": 48,
+          "order": 2
+        },
+        {
+          "id": "444444444444444444444444",
+          "slug": "offices",
+          "name": {
+            "ar": "مكتب",
+            "en": "Office",
+            "zh-CN": "Office"
+          },
+          "propertyCount": 31,
+          "order": 3
+        },
+        {
+          "id": "555555555555555555555555",
+          "slug": "duplex",
+          "name": {
+            "ar": "دوبلكس",
+            "en": "Duplex",
+            "zh-CN": "Duplex"
+          },
+          "propertyCount": 43,
+          "order": 4
         }
       ],
       "page": 1,

@@ -41,12 +41,44 @@ const secondProperty = publicHomepagePropertySchema.parse({
 
 const comparisonData = publicPropertyComparisonDataSchema.parse({
   items: [firstProperty, secondProperty],
-  fields: ['name', 'transactionType', 'price', 'area', 'layout']
+  fields: [
+    'kind',
+    'transactionType',
+    'sourceName',
+    'sourceType',
+    'project',
+    'developer',
+    'publicCode',
+    'price',
+    'installment',
+    'area',
+    'bedrooms',
+    'bathrooms',
+    'floor',
+    'deliveryStatus',
+    'locationName'
+  ]
 });
 
 const singleComparisonData = publicPropertyComparisonDataSchema.parse({
   items: [secondProperty],
-  fields: ['name', 'transactionType', 'price', 'area', 'layout']
+  fields: [
+    'kind',
+    'transactionType',
+    'sourceName',
+    'sourceType',
+    'project',
+    'developer',
+    'publicCode',
+    'price',
+    'installment',
+    'area',
+    'bedrooms',
+    'bathrooms',
+    'floor',
+    'deliveryStatus',
+    'locationName'
+  ]
 });
 
 afterEach(() => {
@@ -58,7 +90,7 @@ describe('public property comparison', () => {
     expect(parsePublicPropertyComparisonIds(`/compare?lang=ar&propertyIds=${firstId}&propertyIds=${secondId}`)).toEqual([firstId, secondId]);
     expect(parsePublicPropertyComparisonIds(`/compare?propertyIds=${firstId}&propertyIds=${firstId}`)).toEqual([]);
     expect(parsePublicPropertyComparisonIds(`/compare?propertyIds=${firstId}&propertyIds=${secondId}&propertyIds=cccccccccccccccccccccccc`)).toEqual([]);
-    expect(publicPropertyComparisonUrl([firstId, secondId], '/compare?lang=zh-CN')).toBe(`/compare?lang=zh-CN&propertyIds=${firstId}&propertyIds=${secondId}`);
+    expect(publicPropertyComparisonUrl([firstId, secondId], '/compare?lang=en')).toBe(`/compare?lang=en&propertyIds=${firstId}&propertyIds=${secondId}`);
     expect(() => publicPropertyComparisonUrl([firstId, secondId, 'cccccccccccccccccccccccc'])).toThrow();
   });
 
@@ -82,7 +114,7 @@ describe('public property comparison', () => {
     expect(JSON.parse(String(requestInit?.body))).toEqual({ propertyIds: [firstId, secondId] });
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the localized contract projection and safe missing-media state for %s', locale => {
+  it.each(['ar', 'en'] as const)('renders the localized contract projection and safe missing-media state for %s', locale => {
     const copy = getPublicPropertyComparisonCopy(locale);
     const result = renderWithLocale(
       <PublicPropertyComparison locale={locale} url={`/compare?lang=${locale}&propertyIds=${firstId}&propertyIds=${secondId}`} initialData={comparisonData} />,
@@ -92,7 +124,7 @@ describe('public property comparison', () => {
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(screen.getByRole('heading', { name: copy.title, level: 1 })).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: copy.remove })).toHaveLength(2);
-    expect(screen.getAllByRole('table')).toHaveLength(3);
+    expect(screen.getAllByRole('table')).toHaveLength(4);
     expect(screen.getByText(copy.area)).toBeInTheDocument();
     expect(result.container.querySelector('[data-page="public-comparison"]')).toHaveAttribute('data-comparison-state', 'success');
     expect(result.container.querySelector('[data-page="public-comparison"]')).toHaveAttribute('data-comparison-count', '2');

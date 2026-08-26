@@ -1,9 +1,10 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import type {
   PublicHomepageBanner,
+  PublicHomepageCategory,
   PublicHomepageContent,
   PublicHomepageData,
-  PublicHomepageDeveloper,
+  PublicHomepageMetric,
   PublicHomepageProperty,
   PublicHomepageSection,
   SupportedLocale
@@ -77,14 +78,17 @@ export function PublicSiteHeader({
   readonly copy: PublicHomepageCopy;
   readonly activePath?: string;
 }) {
+  const nav = locale === 'ar'
+    ? { ...copy.nav, community: '\u0627\u0644\u0643\u0648\u0645\u064a\u0648\u0646\u062a\u064a', about: '\u0645\u0646 \u0646\u062d\u0646', team: '\u0641\u0631\u064a\u0642 \u0627\u0644\u0639\u0645\u0644' }
+    : copy.nav;
   const links: ReadonlyArray<readonly [string, string]> = [
-    ['/', copy.nav.home],
-    ['/properties', copy.nav.properties],
-    ['/developers', copy.nav.developers],
-    ['/articles', copy.nav.articles],
-    ['/community', copy.nav.community],
-    ['/about', copy.nav.about],
-    ['/team', copy.nav.team]
+    ['/', nav.home],
+    ['/properties', nav.properties],
+    ['/developers', nav.developers],
+    ['/articles', nav.articles],
+    ['/community', nav.community],
+    ['/about', nav.about],
+    ['/team', nav.team]
   ];
 
   return (
@@ -92,13 +96,17 @@ export function PublicSiteHeader({
       <a className="public-homepage__brand" href="/" aria-label={copy.brand}>
         <img src="/assets/sadat-real-estate-logo.png" alt={copy.brand} width={636} height={557} decoding="async" loading="eager" />
       </a>
-      <nav className="public-homepage__nav" aria-label={copy.nav.home}>
+      <nav className="public-homepage__nav" aria-label={nav.home}>
         {links.map(([href, label]) => <a key={href} href={href} aria-current={href === activePath ? 'page' : undefined}>{label}</a>)}
       </nav>
       <div className="public-homepage__actions">
+        <span className="public-homepage__locale" aria-label={copy.localeLabel}>
+          <span aria-hidden="true">⌄</span>
+          <span>{locale.toUpperCase()}</span>
+          <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><circle cx="8" cy="8" r="6" /><path d="M2 8h12M8 2a9 9 0 0 1 0 12M8 2a9 9 0 0 0 0 12" /></svg>
+        </span>
         <a className="public-homepage__login" href="/auth/login">{copy.login}</a>
         <a className="public-homepage__signup" href="/auth/register">{copy.createAccount}</a>
-        <span className="public-homepage__locale" aria-label={copy.localeLabel}>{locale}</span>
       </div>
     </header>
   );
@@ -126,38 +134,58 @@ export function PublicMediaImage({
 export function PublicSiteFooter({ locale, description }: { readonly locale: SupportedLocale; readonly description?: string | undefined }) {
   const copy = getPublicHomepageCopy(locale);
   const labels = locale === 'ar'
-    ? { explore: 'استكشف', contact: 'تواصل معنا', legal: 'الخصوصية والشروط', email: 'hello@sadat.realestate' }
+    ? { explore: 'الصفحات', company: 'الشركة', contact: 'تواصل معنا', follow: 'تابع عقارات السادات', followBody: 'ابقَ على اطلاع بأحدث العروض والأخبار', legal: 'سياسة الخصوصية · الشروط والأحكام', copyright: '© 2026 منصة عقارات السادات — جميع الحقوق محفوظة', phone: '01001234567', whatsapp: 'واتساب متاح 24/7', address: 'مدينة السادات، مصر' }
     : locale === 'zh-CN'
-      ? { explore: '探索', contact: '联系我们', legal: '隐私与条款', email: 'hello@sadat.realestate' }
-      : { explore: 'Explore', contact: 'Contact', legal: 'Privacy & terms', email: 'hello@sadat.realestate' };
+      ? { explore: '页面', company: '公司', contact: '联系我们', follow: '关注萨达特房地产', followBody: '及时了解最新房源与资讯', legal: '隐私政策 · 条款与条件', copyright: '© 2026 萨达特房地产平台 — 版权所有', phone: '01001234567', whatsapp: 'WhatsApp 全天候可用', address: '埃及萨达特城' }
+      : { explore: 'Pages', company: 'Company', contact: 'Contact us', follow: 'Follow Sadat Real Estate', followBody: 'Stay informed about the latest listings and news', legal: 'Privacy policy · Terms and conditions', copyright: '© 2026 Sadat Real Estate — All rights reserved', phone: '01001234567', whatsapp: 'WhatsApp available 24/7', address: 'Sadat City, Egypt' };
+  const nav = locale === 'ar'
+    ? { ...copy.nav, community: '\u0627\u0644\u0643\u0648\u0645\u064a\u0648\u0646\u062a\u064a', about: '\u0645\u0646 \u0646\u062d\u0646', team: '\u0641\u0631\u064a\u0642 \u0627\u0644\u0639\u0645\u0644' }
+    : copy.nav;
   return (
     <footer className="public-homepage__footer public-site-footer">
       <div className="public-site-footer__brand">
+        <img className="public-site-footer__logo" src="/assets/sadat-real-estate-logo.png" alt="" width={636} height={557} decoding="async" loading="lazy" />
         <p className="public-homepage__eyebrow">{copy.brand}</p>
         <p>{description ?? copy.footerDescription}</p>
       </div>
       <div>
         <p className="public-homepage__footer-title">{labels.explore}</p>
         <div className="public-homepage__footer-links">
-          <a href="/">{copy.nav.home}</a>
-          <a href="/properties">{copy.nav.properties}</a>
-          <a href="/developers">{copy.nav.developers}</a>
-          <a href="/articles">{copy.nav.articles}</a>
-          <a href="/about">{copy.nav.about}</a>
+          <a href="/properties">{nav.properties}</a>
+          <a href="/developers">{nav.developers}</a>
+          <a href="/articles">{nav.articles}</a>
+          <a href="/community">{nav.community}</a>
+        </div>
+      </div>
+      <div>
+        <p className="public-homepage__footer-title">{labels.company}</p>
+        <div className="public-homepage__footer-links">
+          <a href="/about">{nav.about}</a>
+          <a href="/team">{nav.team}</a>
         </div>
       </div>
       <div>
         <p className="public-homepage__footer-title">{labels.contact}</p>
         <div className="public-homepage__footer-links">
-          <a href={`mailto:${labels.email}`}>{labels.email}</a>
-          <a href="/auth/register">{copy.createAccount}</a>
-          <a href="/auth/login">{copy.login}</a>
+          <a href={`tel:${labels.phone}`}>{labels.phone}</a>
+          <a href="/community">{labels.whatsapp}</a>
+          <span>{labels.address}</span>
+        </div>
+      </div>
+      <div className="public-site-footer__follow">
+        <div><strong>{labels.follow}</strong><span>{labels.followBody}</span></div>
+        <div className="public-site-footer__social" aria-label="social links">
+          <a href="/community" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3.31 0-5 1.69-5 5v3H6v4h3v4h4v-4h3l1-4h-4V9c0-.67.33-1 1-1Z" /></svg></a>
+          <a href="/community" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4" /><circle cx="12" cy="12" r="3.5" /><circle cx="17.25" cy="6.75" r=".75" fill="currentColor" stroke="none" /></svg></a>
+          <a href="/community" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3" /><path d="m10 9 5 3-5 3Z" fill="currentColor" stroke="none" /></svg></a>
+          <a href="/community" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4v10.2a3.8 3.8 0 1 1-3-3.7V14a1.8 1.8 0 1 0 1 1.7V4h3c.3 1.7 1.3 2.8 3 3.2v3c-1.1-.1-2.1-.5-3-1.1V14a4.8 4.8 0 1 1-5-4.8V4Z" fill="currentColor" stroke="none" /></svg></a>
+          <a href="/community" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8.5V18H3V8.5h3ZM4.5 3A1.75 1.75 0 1 1 4.5 6.5 1.75 1.75 0 0 1 4.5 3ZM8 8.5h2.9v1.3h.1c.4-.8 1.4-1.7 3-1.7 3.2 0 3.8 2.1 3.8 4.9V18h-3v-4.4c0-1.1 0-2.6-1.6-2.6s-1.9 1.2-1.9 2.5V18H8V8.5Z" fill="currentColor" stroke="none" /></svg></a>
+          <a href="/community" aria-label="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.9L3.5 20.5l4.2-1.1A8.5 8.5 0 1 0 12 3.5Z" /><path d="M9.2 8.7c.2-.3.4-.3.7-.3h.5c.2 0 .4.1.5.4l.7 1.6c.1.2.1.4-.1.6l-.5.6c.5 1 1.3 1.7 2.4 2.2l.7-.7c.2-.2.4-.2.7-.1l1.5.7c.3.1.4.3.3.6-.2.8-.8 1.3-1.6 1.4-1.2.1-3-.8-4.4-2.1-1.3-1.2-2.3-2.8-2.2-4.1 0-.3.2-.6.5-.8Z" fill="currentColor" stroke="none" /></svg></a>
         </div>
       </div>
       <div className="public-site-footer__bottom">
-        <span>{copy.brand}</span>
+        <span>{labels.copyright}</span>
         <span>{labels.legal}</span>
-        <span aria-label="social links">◎ ◇ ◌</span>
       </div>
     </footer>
   );
@@ -191,16 +219,22 @@ function BannerMedia({
   return <img className={className} src={imageUrl} alt={imageAlt} decoding="async" loading={priority ? 'eager' : 'lazy'} onError={() => setFailed(true)} />;
 }
 
-function SearchPanel({ copy }: { readonly copy: PublicHomepageCopy }) {
+function SearchPanel({ copy, locale, categories }: { readonly copy: PublicHomepageCopy; readonly locale: SupportedLocale; readonly categories: readonly PublicHomepageCategory[] }) {
+  const labels = locale === 'ar'
+    ? { type: 'نوع العقار', district: 'المنطقة', price: 'السعر', any: 'الكل' }
+    : locale === 'zh-CN'
+      ? { type: '房产类型', district: '区域', price: '价格', any: '全部' }
+      : { type: 'Property type', district: 'District', price: 'Price', any: 'Any' };
   return (
     <form className="public-homepage__search" action="/properties" method="get" aria-label={copy.searchLabel}>
       <div className="public-homepage__search-tabs" aria-hidden="true">
         <span className="is-active">{copy.sale}</span>
         <span>{copy.rent}</span>
       </div>
-      <label htmlFor="public-homepage-search">{copy.searchLabel}</label>
       <div className="public-homepage__search-row">
-        <input id="public-homepage-search" name="search" type="search" placeholder={copy.searchPlaceholder} />
+        <label><span>{labels.type}</span><select name="propertyTypeId" defaultValue=""><option value="">{labels.any}</option>{categories.map(category => <option value={category.id} key={category.id}>{localizedText(category.name, locale) ?? category.slug}</option>)}</select></label>
+        <label><span>{labels.district}</span><input id="public-homepage-search" name="search" type="search" placeholder={copy.searchPlaceholder} /></label>
+        <label><span>{labels.price}</span><select name="maxPrice" defaultValue=""><option value="">{labels.any}</option><option value="1000000">1,000,000</option><option value="3000000">3,000,000</option><option value="5000000">5,000,000</option></select></label>
         <button type="submit">{copy.searchAction}</button>
       </div>
     </form>
@@ -211,17 +245,20 @@ function Hero({
   locale,
   copy,
   sections,
-  banners
+  banners,
+  categories
 }: {
   readonly locale: SupportedLocale;
   readonly copy: PublicHomepageCopy;
   readonly sections: readonly PublicHomepageSection[];
   readonly banners: readonly PublicHomepageBanner[];
+  readonly categories: readonly PublicHomepageCategory[];
 }) {
   const section = sections[0];
   const banner = banners[0];
   const title = localizedText(section?.title, locale) ?? localizedText(banner?.title, locale) ?? copy.heroFallbackTitle;
   const body = localizedText(section?.body, locale) ?? copy.heroFallbackBody;
+  const titleLines = title.split('\n');
 
   return (
     <section className="public-homepage__hero" aria-labelledby="public-homepage-hero-title">
@@ -231,13 +268,9 @@ function Hero({
       <div className="public-homepage__hero-shade" aria-hidden="true" />
       <div className="public-homepage__hero-content">
         <p className="public-homepage__eyebrow">{copy.heroLabel}</p>
-        <h1 id="public-homepage-hero-title">{title}</h1>
+        <h1 id="public-homepage-hero-title"><span>{titleLines[0]}</span>{titleLines.slice(1).map(line => <strong key={line}>{line}</strong>)}</h1>
         <p className="public-homepage__hero-body">{body}</p>
-        <div className="public-homepage__hero-links">
-          <a className="public-homepage__primary-action" href="/properties">{copy.browseProperties}</a>
-          <a className="public-homepage__secondary-action" href="/developers">{copy.developers}</a>
-        </div>
-        <SearchPanel copy={copy} />
+        <SearchPanel copy={copy} locale={locale} categories={categories} />
       </div>
     </section>
   );
@@ -299,30 +332,29 @@ function PropertyGrid({
 
 function HomepageSummary({
   locale,
-  properties,
-  developers,
-  content
+  metrics
 }: {
   readonly locale: SupportedLocale;
-  readonly properties: readonly PublicHomepageProperty[];
-  readonly developers: readonly PublicHomepageDeveloper[];
-  readonly content: readonly PublicHomepageContent[];
+  readonly metrics: readonly PublicHomepageMetric[];
 }) {
-  const labels = locale === 'ar'
-    ? ['عقار منشور', 'مصدر معتمد', 'محتوى منشور']
-    : locale === 'zh-CN'
-      ? ['已发布房产', '已批准来源', '已发布内容']
-      : ['Published properties', 'Approved sources', 'Published content'];
-  const values = [properties.length, developers.length, content.length];
+  const primary = metrics[0];
+  if (primary === undefined) return null;
+  const secondary = metrics.slice(1, 4);
 
   return (
-    <section className="public-homepage__summary" aria-label={labels.join(', ')} data-homepage-summary="data-backed">
-      {labels.map((label, index) => (
-        <article className="public-homepage__summary-item" key={label}>
-          <strong>{new Intl.NumberFormat(locale).format(values[index] ?? 0)}</strong>
-          <span>{label}</span>
-        </article>
-      ))}
+    <section className="public-homepage__summary" aria-label={localizedText(primary.title, locale) ?? primary.key} data-homepage-summary="data-backed">
+      <p className="public-homepage__summary-kicker">{locale === 'ar' ? 'إحصاءات المدينة' : locale === 'zh-CN' ? '城市统计' : 'City statistics'}</p>
+      <h2>{localizedText(primary.title, locale) ?? primary.key}</h2>
+      <strong className="public-homepage__summary-primary">{new Intl.NumberFormat(locale).format(primary.value)}</strong>
+      {localizedText(primary.unit, locale) === undefined ? null : <p className="public-homepage__summary-unit">{localizedText(primary.unit, locale)}</p>}
+      <div className="public-homepage__summary-grid">
+        {secondary.map(metric => (
+          <article className="public-homepage__summary-item" key={metric.key}>
+            <strong>{metric.key === 'annual_growth' ? '+' : ''}{new Intl.NumberFormat(locale).format(metric.value)}</strong>
+            <span>{localizedText(metric.title, locale) ?? metric.key}</span>
+          </article>
+        ))}
+      </div>
     </section>
   );
 }
@@ -330,27 +362,27 @@ function HomepageSummary({
 function HomepageCategoryRail({
   locale,
   copy,
-  properties
+  categories
 }: {
   readonly locale: SupportedLocale;
   readonly copy: PublicHomepageCopy;
-  readonly properties: readonly PublicHomepageProperty[];
+  readonly categories: readonly PublicHomepageCategory[];
 }) {
-  const counts = new Map<string, number>();
-  for (const property of properties) counts.set(property.kind, (counts.get(property.kind) ?? 0) + 1);
-  const items = [...counts.entries()];
-  if (items.length === 0) return null;
+  if (categories.length === 0) return null;
 
   const title = locale === 'ar' ? 'تصفح حسب النوع' : locale === 'zh-CN' ? '按类型浏览' : 'Browse by type';
   return (
     <section className="public-homepage__category-section" aria-labelledby="public-homepage-categories">
       <SectionHeading eyebrow={copy.featuredProperties} id="public-homepage-categories" title={title} />
+      <p className="public-homepage__section-description">
+        {locale === 'ar' ? 'تصفح جميع أنواع العقارات المتاحة في مدينة السادات' : locale === 'zh-CN' ? '浏览萨达特城所有可用房产类型' : 'Browse every property type available in Sadat City'}
+      </p>
       <div className="public-homepage__category-rail">
-        {items.map(([kind, count]) => (
-          <a className="public-homepage__category-card" href={'/properties?kind=' + encodeURIComponent(kind)} key={kind}>
-            <span className="public-homepage__category-icon" aria-hidden="true">◆</span>
-            <strong>{kind}</strong>
-            <small>{new Intl.NumberFormat(locale).format(count)}</small>
+        {categories.map(category => (
+          <a className="public-homepage__category-card" href={'/properties?propertyTypeId=' + encodeURIComponent(category.id)} key={category.id}>
+            <PublicMediaImage className="public-homepage__category-image" src={category.imageUrl} alt="" fallback={<span className="public-homepage__category-icon" aria-hidden="true">◆</span>} />
+            <strong>{localizedText(category.name, locale) ?? category.slug}</strong>
+            <small>{new Intl.NumberFormat(locale).format(category.propertyCount)}</small>
           </a>
         ))}
       </div>
@@ -378,28 +410,8 @@ function PlatformCallout({ locale, copy }: { readonly locale: SupportedLocale; r
         <p>{body}</p>
       </div>
       <a className="public-homepage__primary-action" href="/properties">{copy.browseProperties}</a>
+      <a className="public-homepage__secondary-action" href="/auth/register">{copy.createAccount}</a>
     </section>
-  );
-}
-
-function DeveloperGrid({
-  locale,
-  developers
-}: {
-  readonly locale: SupportedLocale;
-  readonly developers: readonly PublicHomepageDeveloper[];
-}) {
-  return (
-    <div className="public-homepage__developer-grid">
-      {developers.map(developer => (
-        <article className="public-homepage__developer-card" key={developer.id}>
-          <PublicMediaImage src={developer.imageUrl} alt={localizedText(developer.name, locale) ?? developer.slug} fallback={<span className="public-homepage__developer-mark" aria-hidden="true">◆</span>} />
-          <span className="public-homepage__developer-mark" aria-hidden="true">◆</span>
-          <h3><a href={'/developers/' + developer.slug}>{localizedText(developer.name, locale) ?? developer.slug}</a></h3>
-          {localizedText(developer.description, locale) === undefined ? null : <p>{localizedText(developer.description, locale)}</p>}
-        </article>
-      ))}
-    </div>
   );
 }
 
@@ -425,18 +437,23 @@ function ContentGrid({
         : copy.tips;
 
   return (
-    <section className="public-homepage__section public-homepage__section--content" aria-labelledby={'public-homepage-' + type}>
+    <section className={`public-homepage__section public-homepage__section--content public-homepage__section--${type}`} aria-labelledby={'public-homepage-' + type}>
       <SectionHeading id={'public-homepage-' + type} title={title} />
       <div className="public-homepage__content-grid">
-        {items.map(item => (
-          <article className="public-homepage__content-card" key={item.key}>
-            {item.imageUrl === undefined ? null : <PublicMediaImage src={item.imageUrl} alt={localizedText(item.title, locale) ?? item.key} fallback={<span className="public-homepage__content-media-fallback" />} />}
-            <p className="public-homepage__content-type">{title}</p>
-            <h3>{localizedText(item.title, locale) ?? item.key}</h3>
-            {localizedText(item.body, locale) === undefined ? null : <p>{localizedText(item.body, locale)}</p>}
-            {type === 'article' ? <a href="/articles">{copy.readMore}</a> : null}
-          </article>
-        ))}
+        {items.map(item => {
+          const body = localizedText(item.body, locale);
+          const bodyLines = body?.split('\n').filter(Boolean) ?? [];
+          return (
+            <article className="public-homepage__content-card" key={item.key}>
+              {item.imageUrl === undefined ? null : <PublicMediaImage src={item.imageUrl} alt={localizedText(item.title, locale) ?? item.key} fallback={<span className="public-homepage__content-media-fallback" />} />}
+              <p className="public-homepage__content-type">{title}</p>
+              <h3>{localizedText(item.title, locale) ?? item.key}</h3>
+              {bodyLines[0] === undefined ? null : <p>{bodyLines[0]}</p>}
+              {type === 'about' && bodyLines.length > 1 ? <ul className="public-homepage__about-points">{bodyLines.slice(1).map(line => <li key={line}>{line}</li>)}</ul> : null}
+              {type === 'article' ? <a href="/articles">{copy.readMore}</a> : null}
+            </article>
+          );
+        })}
       </div>
     </section>
   );
@@ -451,27 +468,26 @@ function BannerGrid({
   readonly copy: PublicHomepageCopy;
   readonly banners: readonly PublicHomepageBanner[];
 }) {
-  const items = ordered(banners).slice(1);
-  if (items.length === 0) return null;
+  const banner = ordered(banners).slice(1)[0];
+  if (banner === undefined) return null;
+  const title = localizedText(banner.title, locale) ?? banner.key;
+  const eyebrow = localizedText(banner.eyebrow, locale) ?? copy.about;
+  const body = localizedText(banner.body, locale);
+  const highlight = localizedText(banner.highlight, locale);
+  const targetUrl = safePublicUrl(banner.targetUrl) ?? '/properties';
 
   return (
     <section className="public-homepage__section public-homepage__section--banners" aria-labelledby="public-homepage-banners">
-      <SectionHeading id="public-homepage-banners" title={copy.about} />
-      <div className="public-homepage__banner-grid">
-        {items.map(banner => {
-          const title = localizedText(banner.title, locale) ?? banner.key;
-          const targetUrl = safePublicUrl(banner.targetUrl);
-          const content = (
-            <>
-              <BannerMedia banner={banner} copy={copy} locale={locale} />
-              <span>{title}</span>
-            </>
-          );
-          return targetUrl === undefined
-            ? <article className="public-homepage__banner-card" key={banner.key}>{content}</article>
-            : <a className="public-homepage__banner-card" key={banner.key} href={targetUrl}>{content}</a>;
-        })}
-      </div>
+      <a className="public-homepage__banner-card" href={targetUrl}>
+        <BannerMedia banner={banner} copy={copy} locale={locale} />
+        <span className="public-homepage__banner-copy">
+          <small>{eyebrow}</small>
+          <strong>{title}</strong>
+          {body === undefined ? null : <span className="public-homepage__banner-body">{body}</span>}
+          {highlight === undefined ? null : <b className="public-homepage__banner-highlight">{highlight}</b>}
+          <em>{copy.browseProperties}</em>
+        </span>
+      </a>
     </section>
   );
 }
@@ -488,40 +504,20 @@ function HomepageContent({
   const sections = ordered(data.sections);
   return (
     <div className="public-homepage__content">
-      <Hero locale={locale} copy={copy} sections={sections} banners={data.banners} />
-      <HomepageSummary locale={locale} properties={data.properties} developers={data.developers} content={data.content} />
-      <HomepageCategoryRail locale={locale} copy={copy} properties={data.properties} />
+      <Hero locale={locale} copy={copy} sections={sections} banners={data.banners} categories={data.categories} />
       <BannerGrid locale={locale} copy={copy} banners={data.banners} />
+      <HomepageSummary locale={locale} metrics={data.metrics} />
+      <HomepageCategoryRail locale={locale} copy={copy} categories={data.categories} />
       {data.properties.length === 0 ? null : (
         <section className="public-homepage__section public-homepage__section--properties" aria-labelledby="public-homepage-properties">
           <SectionHeading id="public-homepage-properties" title={copy.featuredProperties} action={<a href="/properties">{copy.viewAll}</a>} />
-          <PropertyGrid locale={locale} copy={copy} properties={data.properties} />
-        </section>
-      )}
-      {data.developers.length === 0 ? null : (
-        <section className="public-homepage__section public-homepage__section--developers" aria-labelledby="public-homepage-developers">
-          <SectionHeading id="public-homepage-developers" title={copy.developers} action={<a href="/developers">{copy.viewAll}</a>} />
-          <DeveloperGrid locale={locale} developers={data.developers} />
+          <PropertyGrid locale={locale} copy={copy} properties={data.properties.slice(0, 3)} />
         </section>
       )}
       <ContentGrid locale={locale} copy={copy} type="article" content={data.content} />
       <ContentGrid locale={locale} copy={copy} type="community" content={data.content} />
-      <PlatformCallout locale={locale} copy={copy} />
       <ContentGrid locale={locale} copy={copy} type="about" content={data.content} />
-      <ContentGrid locale={locale} copy={copy} type="tip" content={data.content} />
-      {sections.length <= 1 ? null : (
-        <section className="public-homepage__section public-homepage__section--editorial" aria-labelledby="public-homepage-editorial">
-          <SectionHeading id="public-homepage-editorial" title={copy.about} />
-          <div className="public-homepage__editorial-grid">
-            {sections.slice(1).map(section => (
-              <article key={section.key}>
-                <h3>{localizedText(section.title, locale) ?? section.key}</h3>
-                {localizedText(section.body, locale) === undefined ? null : <p>{localizedText(section.body, locale)}</p>}
-              </article>
-            ))}
-          </div>
-        </section>
-      )}
+      <PlatformCallout locale={locale} copy={copy} />
       <PublicSiteFooter locale={locale} description={copy.footerDescription} />
     </div>
   );

@@ -1,0 +1,23 @@
+{
+  "taskId": "backend_141",
+  "summary": "Added additive, publication-safe public projections for active property-type categories with counts, property features/services, and derived developer statistics required by PUB-01, PUB-03, and PUB-06.",
+  "filesChanged": [
+    "packages/contracts/src/public/index.ts",
+    "packages/contracts/src/organizations/index.ts",
+    "packages/contracts/src/contracts/index.ts",
+    "apps/api/src/modules/public/homepage.ts",
+    "apps/api/src/modules/public/properties.ts",
+    "apps/api/src/modules/organizations/public.ts",
+    "apps/api/tests/public/homepage.test.ts",
+    "apps/api/tests/public/properties.test.ts",
+    "apps/api/tests/organizations/public.test.ts"
+  ],
+  "verification": [
+    { "command": "npm run build --workspace packages/contracts", "result": "passed", "exitCode": 0 },
+    { "command": "npm run typecheck --workspace apps/api", "result": "passed", "exitCode": 0 },
+    { "command": "node --import tsx --test apps/api/tests/public/homepage.test.ts apps/api/tests/public/properties.test.ts apps/api/tests/organizations/public.test.ts apps/api/tests/security/public-projections.test.ts", "result": "passed: 10/10", "exitCode": 0 },
+    { "command": "npx eslint <affected backend/contracts files> --max-warnings=0", "result": "passed", "exitCode": 0 },
+    { "command": "npm run api:inventory && npm run openapi:validate && npm run postman:validate", "result": "passed: OPENAPI_VALID, POSTMAN_VALID", "exitCode": 0 }
+  ],
+  "security": "No private provider email, phone, credential, account, workflow, or audit data is projected. Counts use only published active records; amenities use only active taxonomy records."
+}

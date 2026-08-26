@@ -6,7 +6,7 @@
 | Phase | F1_public_site |
 | Area | qa |
 | Kind | quality |
-| Sequence | 135 / 199 |
+| Sequence | 144 / 208 |
 | Depends on | `frontend_018` |
 
 ## Goal

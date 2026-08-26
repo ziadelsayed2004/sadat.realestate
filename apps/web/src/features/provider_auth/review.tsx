@@ -3,12 +3,16 @@ import type {
   ProviderApplicationState,
   ProviderApplicationStatusData,
   ProviderSubmitRequest,
+  ProviderDocumentCategory,
   ProviderType,
   SupportedLocale
 } from '@sadat-real-estate/contracts';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { ApiClientError } from '../contracts/index.ts';
 import { Button, StateMessage } from '../design_system/index.ts';
+import { getProviderAccountCopy } from './account-copy.ts';
+import { getProviderDocumentsCopy } from './documents-copy.ts';
+import { getProviderOrganizationCopy } from './organization-copy.ts';
 import { getProviderReviewCopy, type ProviderReviewCopy } from './review-copy.ts';
 import './styles.css';
 
@@ -93,6 +97,20 @@ function organizationAddress(application: ProviderApplicationData): string | und
       : undefined;
 }
 
+function missingFieldLabel(application: ProviderApplicationData, locale: SupportedLocale, field: string): string {
+  const accountLabel = getProviderAccountCopy(locale).missingFieldLabels[field];
+  if (accountLabel !== undefined) return accountLabel;
+  if (application.providerType !== 'individual_broker') {
+    const organizationLabel = getProviderOrganizationCopy(locale).missingFieldLabels[field];
+    if (organizationLabel !== undefined) return organizationLabel;
+  }
+  return field;
+}
+
+function missingDocumentLabel(locale: SupportedLocale, document: ProviderDocumentCategory): string {
+  return getProviderDocumentsCopy(locale).categoryLabels[document];
+}
+
 function PageFrame({
   locale,
   screenId,
@@ -164,7 +182,7 @@ function ApplicationSummary({ application, copy }: { readonly application: Provi
   );
 }
 
-function MissingList({ application, copy }: { readonly application: ProviderApplicationData; readonly copy: ProviderReviewCopy }) {
+function MissingList({ application, copy, locale }: { readonly application: ProviderApplicationData; readonly copy: ProviderReviewCopy; readonly locale: SupportedLocale }) {
   const complete = application.missingFields.length === 0 && application.missingDocuments.length === 0;
   return (
     <section className="provider-review-section" aria-labelledby="provider-review-documents-title">
@@ -175,13 +193,13 @@ function MissingList({ application, copy }: { readonly application: ProviderAppl
           {application.missingFields.length === 0 ? null : (
             <div>
               <strong>{copy.missingFieldsLabel}</strong>
-              <ul>{application.missingFields.map(field => <li key={field}>{field}</li>)}</ul>
+              <ul>{application.missingFields.map(field => <li key={field}>{missingFieldLabel(application, locale, field)}</li>)}</ul>
             </div>
           )}
           {application.missingDocuments.length === 0 ? null : (
             <div>
               <strong>{copy.missingDocumentsLabel}</strong>
-              <ul>{application.missingDocuments.map(document => <li key={document}>{document}</li>)}</ul>
+              <ul>{application.missingDocuments.map(document => <li key={document}>{missingDocumentLabel(locale, document)}</li>)}</ul>
             </div>
           )}
         </div>
@@ -253,7 +271,7 @@ function ReviewDraft({
           <aside className="provider-account-guidance" role="note"><strong>{copy.reviewTitle}</strong><span>{copy.reviewBody}</span></aside>
           {submitError === undefined ? null : <StateMessage state={submitError.state} title={submitError.title} message={submitError.message} retryLabel={copy.retryAction} onRetry={submitError.state === 'retry' ? onSubmit : undefined} />}
           <ApplicationSummary application={application} copy={copy} />
-          <MissingList application={application} copy={copy} />
+          <MissingList application={application} copy={copy} locale={locale} />
           {!complete ? <StateMessage state="empty" title={copy.submitUnavailableTitle} message={copy.submitUnavailableBody} /> : null}
           <div className="provider-review-card__footer">
             <Button type="button" variant="ghost" onClick={onBack}>{copy.backAction}</Button>
@@ -329,7 +347,7 @@ function NeedsInformation({ application, copy, locale, onEdit, onBack }: {
           <div className="provider-review-status-mark provider-review-status-mark--warning" aria-hidden="true">!</div>
           <ApplicationMeta application={application} copy={copy} locale={locale} />
           {application.reviewReason === undefined ? null : <aside className="provider-account-guidance" role="note"><strong>{copy.reviewReasonLabel}</strong><span>{application.reviewReason}</span></aside>}
-          <MissingList application={application} copy={copy} />
+          <MissingList application={application} copy={copy} locale={locale} />
           <div className="provider-review-card__footer">
             {application.availableActions.includes('edit_account') || application.availableActions.includes('edit_business') || application.availableActions.includes('edit_company')
               ? <Button type="button" data-testid="provider-review-edit" variant="primary" onClick={onEdit}>{copy.editApplicationAction}</Button>

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "PUB-04",
-  "classification": "REPAIRED",
-  "classificationReason": "Bounded public shared-foundation repair completed: comparison cards use approved media, comparison controls remain functional, the sticky selected-items bar is present with one accessible clear action, and the shared footer is rendered.",
+  "classification": "PARTIAL",
+  "classificationReason": "Second cached-Figma pass remains open: measured material visual differences remain after the latest repair capture; this screen is not eligible for REPAIRED_VERIFIED.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",

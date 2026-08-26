@@ -6,7 +6,7 @@
 | Phase | F0_frontend_foundation |
 | Area | routing |
 | Kind | frontend |
-| Sequence | 119 / 199 |
+| Sequence | 128 / 208 |
 | Depends on | `frontend_002` |
 
 ## Goal

@@ -5,7 +5,7 @@ import { Button, Pagination, PropertyCard, StateMessage } from '../design_system
 import type { RouteSession } from '../routing/index.ts';
 import { UxStateView } from '../ux_states/index.ts';
 import { formatMoney, localizedText, propertyFeatures } from '../public/model.ts';
-import { createSeekerFavoriteActions, createSeekerFavoritesLoader, localeForSeekerPath, type SeekerAuthorizationSource, type SeekerFavoriteActions, type SeekerFavoritesLoader } from './data.ts';
+import { createSeekerFavoriteActions, createSeekerFavoritesLoader, isAuthenticatedSeekerSession, localeForSeekerPath, type SeekerAuthorizationSource, type SeekerFavoriteActions, type SeekerFavoritesLoader } from './data.ts';
 import { SeekerNavigation } from './overview.tsx';
 import { getSeekerSavedCopy } from './saved-copy.ts';
 import './styles.css';
@@ -26,6 +26,12 @@ export interface SeekerSavedProps {
 }
 
 type MutationError = 'unavailable' | 'permission' | 'error';
+type SavedView = 'grid' | 'list';
+
+function savedViewLabel(locale: SupportedLocale, view: SavedView): string {
+  if (locale === 'ar') return view === 'grid' ? 'عرض شبكي' : 'عرض قائمة';
+  return view === 'grid' ? 'Grid view' : 'List view';
+}
 
 function stateForError(error: unknown): Exclude<SeekerSavedViewState, 'loading' | 'empty' | 'success'> {
   if (error instanceof ApiClientError && (error.status === 401 || error.status === 403)) return 'permission';
@@ -87,15 +93,17 @@ export function SeekerSaved({ locale, session, authClient, apiOrigin, load, acti
   const [state, setState] = useState<SeekerSavedViewState>('loading');
   const [data, setData] = useState<FavoriteListData | undefined>();
   const [page, setPage] = useState(1);
+  const [view, setView] = useState<SavedView>('grid');
   const [attempt, setAttempt] = useState(0);
   const [removingId, setRemovingId] = useState<string | undefined>();
   const [mutationError, setMutationError] = useState<MutationError | undefined>();
   const [mutationSuccess, setMutationSuccess] = useState<string | undefined>();
+  const sessionRole = session.status === 'authenticated' ? session.role : undefined;
   const loadSource = useMemo(() => load ?? createSeekerFavoritesLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, load]);
   const actionSource = useMemo(() => actions ?? createSeekerFavoriteActions({ apiOrigin, authorization: authClient }), [actions, apiOrigin, authClient]);
 
   useEffect(() => {
-    if (session.status !== 'authenticated') {
+    if (!isAuthenticatedSeekerSession(session)) {
       setState('permission');
       return undefined;
     }
@@ -109,7 +117,7 @@ export function SeekerSaved({ locale, session, authClient, apiOrigin, load, acti
       if (!controller.signal.aborted) setState(stateForError(error));
     });
     return () => controller.abort();
-  }, [attempt, loadSource, page, session.status]);
+  }, [attempt, loadSource, page, sessionRole]);
 
   const remove = async (propertyId: string) => {
     setMutationError(undefined);
@@ -144,12 +152,19 @@ export function SeekerSaved({ locale, session, authClient, apiOrigin, load, acti
                 <p>{copy.description}</p>
                 <span className="seeker-saved__count">{data.total} {copy.count}</span>
               </div>
+              <div className="seeker-saved__view-toggle" role="group" aria-label={locale === 'ar' ? 'طريقة عرض العقارات المحفوظة' : 'Saved properties view'}>
+                {(['grid', 'list'] as const).map(nextView => (
+                  <button key={nextView} type="button" aria-label={savedViewLabel(locale, nextView)} aria-pressed={view === nextView} data-active={view === nextView || undefined} onClick={() => setView(nextView)}>
+                    <span aria-hidden="true">{nextView === 'grid' ? '▦' : '☷'}</span>
+                  </button>
+                ))}
+              </div>
             </div>
             {data.items.length === 0 ? (
               <div className="seeker-dashboard__empty" data-state="empty"><h2>{copy.empty.title}</h2><p>{copy.empty.body}</p></div>
             ) : (
               <>
-                <div className="seeker-saved__grid" role="list" aria-label={copy.title}>
+                <div className="seeker-saved__grid" data-view={view} role="list" aria-label={copy.title}>
                   {data.items.map(property => <SavedPropertyCard key={property.id} property={property} locale={locale} copy={copy} removing={removingId === property.id} onRemove={() => { void remove(property.id); }} />)}
                 </div>
                 <Pagination page={data.page} pageCount={pageCount} onPageChange={nextPage => { setPage(nextPage); setMutationError(undefined); setMutationSuccess(undefined); }} previousLabel={copy.previous} nextLabel={copy.next} ariaLabel={copy.pagination} direction={locale === 'ar' ? 'rtl' : 'ltr'} />

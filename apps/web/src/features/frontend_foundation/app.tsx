@@ -203,7 +203,8 @@ export function App({
   const providerPropertyCompletionStep = providerPropertyCompletionMatch?.[2] as ProviderPropertyCompletionStep | undefined;
   const providerPropertyStateRoute = providerPropertyStateMatch?.[2] as ProviderPropertyStateRoute | undefined;
   const providerPropertyWizardId = providerPropertyStateMatch?.[1] ?? providerPropertyCompletionMatch?.[1] ?? providerPropertyAdvancedMatch?.[1] ?? providerPropertyLocationMatch?.[1] ?? providerPropertyBasicMatch?.[1];
-  const seekerProfileTab = seekerUrl.searchParams.get('tab') === 'profile' ? 'profile' : 'preferences';
+  const seekerProfileQueryTab = seekerUrl.searchParams.get('tab');
+  const seekerProfileTab = seekerProfileQueryTab === 'personal' || seekerProfileQueryTab === 'profile' ? 'profile' : 'preferences';
   const providerSettingsTab = seekerUrl.searchParams.get('tab') === 'contact' ? 'contact' : seekerUrl.searchParams.get('tab') === 'security' ? 'security' : 'account';
 
   const content = guard.allowed ? (

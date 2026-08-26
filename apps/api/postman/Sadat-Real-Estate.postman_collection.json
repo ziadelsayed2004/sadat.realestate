@@ -149,7 +149,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{apiV1BaseUrl}}/public/properties?sort=publishedAt&direction=desc&page=1&limit=20",
+          "raw": "{{apiV1BaseUrl}}/public/properties?deliveryStatus=ready_to_move&sort=publishedAt&direction=desc&page=1&limit=20",
           "host": [
             "{{apiV1BaseUrl}}"
           ],
@@ -158,6 +158,10 @@
             "properties"
           ],
           "query": [
+            {
+              "key": "deliveryStatus",
+              "value": "ready_to_move"
+            },
             {
               "key": "sort",
               "value": "publishedAt"

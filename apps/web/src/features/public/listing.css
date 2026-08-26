@@ -212,6 +212,23 @@
   line-height: 1;
 }
 
+.public-property-listing__icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -0.15em;
+}
+
+.public-property-listing__view-toggle .public-property-listing__icon {
+  width: 17px;
+  height: 17px;
+}
+
 .public-property-listing__cards {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -348,5 +365,404 @@
 
   .public-property-listing__cards.is-list .public-property-listing__card .ui-property-card__media {
     min-block-size: 13rem;
+  }
+}
+
+@media (min-width: 1101px) {
+  .public-property-listing__intro,
+  .public-property-listing__category-rail,
+  .public-property-listing__body {
+    width: 1235px;
+  }
+
+  .public-property-listing__intro {
+    height: 111px;
+    padding: 35px 0 0;
+  }
+
+  .public-property-listing__intro h1 {
+    font-size: 25px;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+
+  .public-property-listing__intro p {
+    margin-top: 2px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .public-property-listing__category-rail {
+    display: flex;
+    gap: 10px;
+    height: 172px;
+    margin-block-start: 26px;
+    margin-inline: auto;
+    padding-inline: 14px;
+    overflow: hidden;
+  }
+
+  .public-property-listing__category-rail button {
+    display: grid;
+    flex: 0 0 140px;
+    grid-template-rows: 72px auto auto;
+    align-items: center;
+    justify-items: center;
+    min-width: 0;
+    padding: 15px 8px 12px;
+    color: #17233f;
+    background: #fff;
+    border: 1px solid #dfe1e4;
+    border-radius: 14px;
+    box-shadow: 0 2px 4px rgb(15 23 42 / 0.12);
+    cursor: pointer;
+  }
+
+  .public-property-listing__category-rail::after {
+    flex: 0 0 140px;
+    content: '';
+    background: #fff;
+    border: 1px solid #dfe1e4;
+    border-radius: 14px;
+    box-shadow: 0 2px 4px rgb(15 23 42 / 0.12);
+  }
+
+  .public-property-listing__category-rail button.is-active {
+    color: #fff;
+    background: #07513f;
+    border-color: #07513f;
+  }
+
+  .public-property-listing__category-rail img {
+    width: 76px;
+    height: 64px;
+    object-fit: contain;
+  }
+
+  .public-property-listing__category-rail strong {
+    overflow: hidden;
+    max-width: 100%;
+    font-size: 12px;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .public-property-listing__category-rail span {
+    color: #9098a8;
+    font-size: 10px;
+  }
+
+  .public-property-listing__category-rail .is-active span {
+    color: rgb(255 255 255 / 0.72);
+  }
+
+  .public-property-listing__body {
+    grid-template-columns: 288px 923px;
+    gap: 24px;
+    padding: 36px 0 0;
+  }
+
+  .public-property-listing__filters {
+    padding: 17.5px 18px;
+    border-radius: 13px;
+    box-shadow: 0 2px 4px rgb(15 23 42 / 0.12);
+  }
+
+  .public-property-listing__filters-heading {
+    margin-bottom: 16px;
+  }
+
+  .public-property-listing__filters h2 {
+    font-size: 18px;
+  }
+
+  .public-property-listing__filters form {
+    gap: 18px;
+  }
+
+  .public-property-listing__filter-field,
+  .public-property-listing__sort {
+    gap: 5px;
+  }
+
+  .public-property-listing__filter-field input,
+  .public-property-listing__filter-field select,
+  .public-property-listing__sort select {
+    min-height: 45px;
+    border-radius: 11px;
+    font-size: 11px;
+  }
+
+  .public-property-listing__filters .public-property-listing__filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .public-property-listing__filter-chips legend {
+    width: 100%;
+    margin-bottom: 3px;
+  }
+
+  .public-property-listing__filter-chips label {
+    padding: 6px 12px;
+    color: #29354d;
+    background: #f4ead4;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+
+  .public-property-listing__filter-chips label:has(input:checked) {
+    color: #fff;
+    background: #17233f;
+  }
+
+  .public-property-listing__filter-chips input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .public-property-listing__filter-pair {
+    gap: 7px;
+  }
+
+  .public-property-listing__apply {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .public-property-listing__toolbar {
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+    min-block-size: 40px;
+    margin-bottom: 24px;
+    margin-block-end: 24px;
+  }
+
+  .public-property-listing__sort {
+    display: block;
+  }
+
+  .public-property-listing__sort select {
+    width: 116px;
+    min-height: 32px;
+    color: transparent;
+    background: #fff;
+    appearance: none;
+  }
+
+  .public-property-listing__visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .public-property-listing__filter-field input::placeholder {
+    color: transparent;
+  }
+
+  .public-property-listing__filter-field select {
+    color: transparent;
+    background: #fbf8f0;
+    appearance: none;
+  }
+
+  .public-property-listing__view-toggle {
+    padding: 0;
+    border: 0;
+  }
+
+  .public-property-listing__view-toggle button {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+  }
+
+  .public-property-listing__cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: 462px;
+    column-gap: 18px;
+    row-gap: 23px;
+  }
+
+  .public-property-listing__cards .public-property-listing__card {
+    position: relative;
+    height: 462px;
+    min-height: 0;
+    margin-block-start: 0;
+    padding: 0;
+    overflow: hidden;
+    grid-template-rows: 206px 254px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgb(15 23 42 / 0.13);
+  }
+
+  .public-property-listing__card .ui-property-card__media,
+  .public-property-listing__card .ui-property-card__media > img {
+    width: calc(100% + 2px);
+    height: 207px;
+    min-height: 206px;
+  }
+
+  .public-property-listing__card .ui-property-card__media {
+    margin: -1px -1px 0;
+  }
+
+  .public-property-listing__card .ui-property-card__media > img {
+    filter: brightness(0.88);
+  }
+
+  .public-property-listing__cards .public-property-listing__card:nth-child(5) .ui-property-card__media > img {
+    filter: brightness(0.81);
+  }
+
+  .public-property-listing__card .ui-property-card__body {
+    display: grid;
+    gap: 6px;
+    padding: 14px 15px 12px;
+  }
+
+  .public-property-listing__card .ui-property-card__badges {
+    position: absolute;
+    inset: 10px 10px auto;
+    justify-content: flex-start;
+  }
+
+  .public-property-listing__card .ui-property-card__badges span {
+    padding: 3px 9px;
+    color: #bc7d10;
+    background: #fff4cf;
+    border-radius: 999px;
+    font-size: 10px;
+  }
+
+  .public-property-listing__card .ui-property-card__badges span:nth-child(2):not(:last-child) {
+    color: #15845a;
+    background: #d9f5df;
+  }
+
+  .public-property-listing__card .ui-property-card__badges span:last-child {
+    position: absolute;
+    top: 151px;
+    inset-inline-end: 0;
+    color: #17233f;
+    background: #fff;
+    box-shadow: 0 1px 3px rgb(15 23 42 / 0.14);
+  }
+
+  .public-property-listing__card .ui-property-card__location {
+    order: -1;
+    font-size: 11px;
+    line-height: 1.6;
+  }
+
+  .public-property-listing__card .ui-property-card__body h3,
+  .public-property-listing__card .ui-property-card__title {
+    font-size: 17px;
+    line-height: 1.35;
+  }
+
+  .public-property-listing__card .ui-property-card__price {
+    color: #d39a31;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  .public-property-listing__card .ui-property-card__features {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    padding: 10px 0;
+  }
+
+  .public-property-listing__card .ui-property-card__features dt {
+    display: none;
+  }
+
+  .public-property-listing__card .ui-property-card__features dd,
+  .public-property-listing__card .ui-property-card__source {
+    font-size: 10px;
+  }
+
+  .public-property-listing__card .ui-property-card__features dd {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+  }
+
+  .public-property-listing__card .ui-property-card__features dd::before {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    content: '';
+    background: #8d96a7;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+  }
+
+  .public-property-listing__card .ui-property-card__features div:nth-child(1) dd::before { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cg fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 3H3v4M13 17h4v-4M3 7l5-5M17 13l-5 5'/%3E%3C/g%3E%3C/svg%3E"); }
+  .public-property-listing__card .ui-property-card__features div:nth-child(2) dd::before { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cg fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 16V7M17 16v-5a2 2 0 0 0-2-2H6M3 13h14M6 9V6h4a2 2 0 0 1 2 2v1'/%3E%3C/g%3E%3C/svg%3E"); }
+  .public-property-listing__card .ui-property-card__features div:nth-child(3) dd::before { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cg fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 10h14v2a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4v-2ZM5 10V6a3 3 0 0 1 3-3h1M5 16l-1 2M15 16l1 2'/%3E%3C/g%3E%3C/svg%3E"); }
+  .public-property-listing__card .ui-property-card__features div:nth-child(4) dd::before { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cg fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 10s3-5 8-5 8 5 8 5-3 5-8 5-8-5-8-5Z'/%3E%3Ccircle cx='10' cy='10' r='2.5'/%3E%3C/g%3E%3C/svg%3E"); }
+
+  .public-property-listing__source-identity {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 27px;
+  }
+
+  .public-property-listing__source-identity > img {
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .public-property-listing__source-identity > span {
+    display: grid;
+    gap: 1px;
+  }
+
+  .public-property-listing__source-identity small {
+    color: #a2a8b3;
+    font-size: 8px;
+  }
+
+  .public-property-listing__card .ui-property-card__action button {
+    width: 100%;
+    min-height: 29px;
+    color: #697386;
+    background: #fff;
+    border: 1px solid #dfe1e4;
+    border-radius: 999px;
+    font-size: 10px;
+  }
+
+  .public-property-listing__card .ui-property-card__action .public-property-listing__icon--compare {
+    width: 13px;
+    height: 13px;
+  }
+
+  .public-property-listing > .public-site-footer {
+    min-height: 414px;
+    margin-top: 121px;
+    padding: 48px max(calc((100vw - 1235px) / 2), 48px) 24px;
   }
 }

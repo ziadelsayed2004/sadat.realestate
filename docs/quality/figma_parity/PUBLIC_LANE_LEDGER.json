@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "taskId": "frontend_100",
+  "lane": "public_parity",
+  "agentId": "01a03f86-ed1d-7192-88f7-7b579654d251",
+  "status": "ACTIVE_AT_LIVE_CURSOR",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "currentScreen": {
+    "screenId": "PUB-03",
+    "clonePage": "6017:4352",
+    "cloneNode": "6017:12693",
+    "runtimeRoute": "/properties/:slug"
+  },
+  "sequence": ["PUB-03", "PUB-04", "PUB-05", "PUB-06", "PUB-07", "PUB-08"],
+  "publicHistory": {
+    "taskId": "frontend_099",
+    "PUB-01": "PARTIAL_EXTERNAL",
+    "PUB-02": "PARTIAL_EXTERNAL"
+  },
+  "locales": ["ar-RTL", "en-LTR"],
+  "devices": ["desktop", "tablet", "mobile"],
+  "implementationReport": {
+    "screensImplemented": ["PUB-03", "PUB-04", "PUB-05", "PUB-06", "PUB-07", "PUB-08"],
+    "measuredEffects": {
+      "PUB-03": "Card/advisory borders and radii; advisory target geometry 67px header and 90px body; reduced footer-link emphasis; provider descriptor rendered as one text node.",
+      "PUB-04": "Action controls reduced from 40px toward the 36px clone controls; table boundary positions corrected; invalid pill token corrected.",
+      "PUB-05": "Arabic heading restored with العقارية; developer cards targeted at 604x354 with 176px media and 24px gap; overlay and tan-border treatment corrected.",
+      "PUB-06": "Action buttons targeted toward 180px; verified badge targeted at 75x20; logo sizing corrected; metric tile order aligned.",
+      "PUB-07": "Article grid height, border color, and category-pill width corrected.",
+      "PUB-08": "Article rail width/gap, badge size, related-card gaps/media height, and extra article links corrected."
+    },
+    "focusedValidation": {
+      "publicVitest": "39/39 passed",
+      "accessibility": "7/7 passed",
+      "webTypecheck": 0,
+      "scopedLint": 0,
+      "developerSuite": "6/6 passed",
+      "diffCheck": 0
+    },
+    "evidenceStatus": "No screen is closed from implementation alone; coordinator must capture and review each screen independently."
+  },
+  "latestAttempt": {
+    "screenId": "PUB-03",
+    "artifactRoot": "docs/quality/figma_parity/screens/PUB-03/public-agent-2026-08-27/PUB-03",
+    "runtimeSha256": "daf796a26e06c4228c7593a90c59cd3363d9d78611cf2babab24324d3dabceb3",
+    "viewport": "1577x720; full document 1577x3047 against source 1577x3046",
+    "materialDifferencePercent": 6.2852,
+    "antiAliasingOnlyPercent": 10.1512,
+    "classification": "PARTIAL",
+    "decision": "PUB-03 remains the cursor. A subsequently created PUB-04 artifact is preserved but is not counted because PUB-03 was neither closed nor assigned an exact external blocker."
+  },
+  "evidence": "PUBLIC_AGENT may write only PUB-01 through PUB-08 screen evidence. Baselines, snapshots, queue/checkpoint, and Agent Pack remain coordinator-owned.",
+  "nextAction": "PUBLIC_AGENT reviews and closes PUB-03 from the exact cursor, proceeds only after closure or an exact external blocker, and revisits PUB-01 and PUB-02 before convergence; do not advance to PUB-09."
+}

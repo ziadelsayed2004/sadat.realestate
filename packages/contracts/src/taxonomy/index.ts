@@ -49,8 +49,8 @@ export type TaxonomyData = z.infer<typeof taxonomyDataSchema>;
 export const FEATURE_KINDS = ['feature', 'service'] as const;
 export const featureKindSchema = z.enum(FEATURE_KINDS);
 export const featureGroupKeySchema = z.string().trim().min(2).max(64).regex(/^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$/);
-export const featureCreateSchema = z.object({ kind: featureKindSchema, groupKey: featureGroupKeySchema, name: localizedTextSchema, slug: taxonomySlugSchema, order: z.number().int().min(0).max(1_000_000).default(0), active: z.boolean().default(true), reason }).strict();
-export const featurePatchSchema = z.object({ version: z.number().int().nonnegative(), groupKey: featureGroupKeySchema.optional(), name: localizedTextSchema.optional(), slug: taxonomySlugSchema.optional(), order: z.number().int().min(0).max(1_000_000).optional(), active: z.boolean().optional(), reason }).strict().refine(v=>Object.keys(v).some(k=>!['version','reason'].includes(k)),{message:'At least one mutable field is required'});
+export const featureCreateSchema = z.object({ kind: featureKindSchema, groupKey: featureGroupKeySchema, name: localizedTextSchema, detail: localizedTextSchema.optional(), distanceLabel: localizedTextSchema.optional(), slug: taxonomySlugSchema, order: z.number().int().min(0).max(1_000_000).default(0), active: z.boolean().default(true), reason }).strict();
+export const featurePatchSchema = z.object({ version: z.number().int().nonnegative(), groupKey: featureGroupKeySchema.optional(), name: localizedTextSchema.optional(), detail: localizedTextSchema.optional(), distanceLabel: localizedTextSchema.optional(), slug: taxonomySlugSchema.optional(), order: z.number().int().min(0).max(1_000_000).optional(), active: z.boolean().optional(), reason }).strict().refine(v=>Object.keys(v).some(k=>!['version','reason'].includes(k)),{message:'At least one mutable field is required'});
 export const featureDeleteSchema = taxonomyDeleteSchema;
 export const featureParamsSchema = z.object({ featureId: taxonomyIdSchema }).strict();
 export const featureListQuerySchema = z.object({ kind: featureKindSchema.optional(), groupKey: featureGroupKeySchema.optional(), active: z.preprocess(v=>v==='true'?true:v==='false'?false:v,z.boolean().optional()), search:z.string().trim().min(1).max(80).optional(), page:numberQuery(1,100_000),limit:numberQuery(20,100) }).strict();
@@ -59,6 +59,8 @@ export const featureDataSchema = z.object({
   kind: featureKindSchema,
   groupKey: featureGroupKeySchema,
   name: localizedTextSchema,
+  detail: localizedTextSchema.optional(),
+  distanceLabel: localizedTextSchema.optional(),
   slug: taxonomySlugSchema,
   order: z.number().int().nonnegative(),
   active: z.boolean(),

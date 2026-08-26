@@ -6,7 +6,7 @@
 | Phase | F7_post_release_assurance |
 | Area | release assurance |
 | Kind | quality |
-| Sequence | 197 / 199 |
+| Sequence | 206 / 208 |
 | Depends on | `frontend_095` |
 
 ## Goal

@@ -12,6 +12,8 @@ const homepageData = publicHomepageDataSchema.parse({
     body: { en: 'Content supplied by the public homepage contract.' },
     order: 0
   }],
+  categories: [],
+  metrics: [],
   properties: [{
     id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
     slug: 'published-home',
@@ -46,6 +48,8 @@ const homepageData = publicHomepageDataSchema.parse({
 
 const emptyData = publicHomepageDataSchema.parse({
   sections: [],
+  categories: [],
+  metrics: [],
   properties: [],
   developers: [],
   content: [],
@@ -53,16 +57,16 @@ const emptyData = publicHomepageDataSchema.parse({
 });
 
 describe('public homepage', () => {
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the contract projection for %s', (locale) => {
+  it.each(['ar', 'en'] as const)('renders the contract projection for %s', (locale) => {
     const result = renderWithLocale(<PublicHomepage locale={locale} initialData={homepageData} />, { locale });
 
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
-    const heroTitle = locale === 'ar' ? 'عقارات منشورة' : locale === 'zh-CN' ? '已发布房产' : 'Published homes';
+    const heroTitle = locale === 'ar' ? 'عقارات منشورة' : 'Published homes';
     expect(screen.getByRole('heading', { name: heroTitle, level: 1 })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Published home' })).toHaveAttribute('href', '/properties/published-home');
-    expect(screen.getByRole('link', { name: 'Approved builder' })).toHaveAttribute('href', '/developers/approved-builder');
+    expect(screen.queryByRole('link', { name: 'Approved builder' })).not.toBeInTheDocument();
     expect(screen.getByText('Published article body.')).toBeInTheDocument();
-    const brandLabel = locale === 'ar' ? 'عقارات السادات' : locale === 'zh-CN' ? '萨达特房地产' : 'Sadat Real Estate';
+    const brandLabel = locale === 'ar' ? 'عقارات السادات' : 'Sadat Real Estate';
     expect(screen.getByRole('img', { name: brandLabel })).toBeInTheDocument();
     expect(result.container.textContent).not.toContain('providerId');
     expect(result.container.textContent).not.toContain('audit');

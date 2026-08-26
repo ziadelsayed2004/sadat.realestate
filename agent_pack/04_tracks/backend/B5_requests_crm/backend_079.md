@@ -6,7 +6,7 @@
 | Phase | B5_requests_crm |
 | Area | moderation |
 | Kind | api |
-| Sequence | 67 / 199 |
+| Sequence | 67 / 208 |
 | Depends on | `backend_078` |
 
 ## Goal

@@ -3,7 +3,7 @@ import test from 'node:test';
 import { createApiServer, startApiServer, stopApiServer } from '../../src/server.js';
 import type { PublicSearchRouterDependencies } from '../../src/modules/search/router.js';
 
-const result = { items: [], page: 1, limit: 20, total: 0 };
+const result = { items: [], categories: [], page: 1, limit: 20, total: 0 };
 const service: PublicSearchRouterDependencies['service'] = { async list() { return result; } };
 
 test('public property listing is unauthenticated and returns pagination metadata', async () => {

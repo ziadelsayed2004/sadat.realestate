@@ -51,7 +51,7 @@ describe('Seeker requests', () => {
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(screen.getByRole('heading', { name: copy.list.title, level: 1 })).toBeInTheDocument();
     expect(screen.getByText('REQ-4567')).toBeInTheDocument();
-    expect(screen.getByText(copy.statuses.under_review)).toBeInTheDocument();
+    expect(screen.getAllByText(copy.statuses.under_review).length).toBeGreaterThan(0);
     expect(result.container.querySelector('[data-screen-id="SEK-02"]')).not.toBeNull();
     expect(result.container.textContent).not.toContain('assignedTo');
     expect(result.container.textContent).not.toContain('internalNotes');

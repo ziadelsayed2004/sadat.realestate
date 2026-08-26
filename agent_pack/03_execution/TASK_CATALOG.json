@@ -5080,6 +5080,396 @@
     "sequence": 115
   },
   {
+    "id": "backend_141",
+    "phase": "F7_post_release_assurance",
+    "area": "public projection parity",
+    "title": "Public Figma Data Projection Repair — PUB-01, PUB-03, PUB-06",
+    "goal": "Add the smallest publication-safe projections required by the cached PUB-01, PUB-03, and PUB-06 clone evidence.",
+    "kind": "implementation",
+    "screens": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "01_product/SCREEN_COVERAGE.json"
+    ],
+    "notes": [
+      "Canonical source: FIGMA_FILE_KEY=Odl1Epn2u6lIEuIMmABT7o.",
+      "No private provider contact data or screenshot-only production content may be added."
+    ],
+    "track": "backend",
+    "dependsOn": [
+      "backend_140"
+    ],
+    "atomicTaskFile": "04_tracks/backend/F7_post_release_assurance/backend_141.md",
+    "allowedRoots": [
+      "packages/contracts/src/public/**",
+      "packages/contracts/src/organizations/**",
+      "apps/api/src/modules/public/**",
+      "apps/api/src/modules/organizations/**",
+      "apps/api/src/**/__tests__/**",
+      "packages/contracts/src/**/__tests__/**",
+      "docs/api-artifacts/**",
+      "agent_pack/**"
+    ],
+    "acceptance": [
+      "Project active public categories/counts, property features/services, and derived developer statistics.",
+      "Keep changes additive and publication-safe with deterministic empty defaults.",
+      "Pass focused contracts/API tests, affected typecheck/lint, completion evidence, and Agent Pack audit."
+    ],
+    "verification": [
+      "contracts build/typecheck",
+      "focused API and contract tests",
+      "affected API typecheck/lint",
+      "node agent_pack/scripts/audit_pack.mjs"
+    ],
+    "sequence": 116
+  },
+  {
+    "id": "backend_142",
+    "phase": "F7_post_release_assurance",
+    "area": "public homepage parity",
+    "title": "Public Homepage Metric Projection — PUB-01",
+    "goal": "Project deterministic publication-safe homepage metrics required by canonical PUB-01.",
+    "kind": "implementation",
+    "screens": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
+    "notes": [
+      "Canonical source key: Odl1Epn2u6lIEuIMmABT7o."
+    ],
+    "track": "backend",
+    "dependsOn": [
+      "backend_141"
+    ],
+    "atomicTaskFile": "04_tracks/backend/F7_post_release_assurance/backend_142.md",
+    "allowedRoots": [
+      "packages/contracts/src/public/**",
+      "packages/contracts/src/contracts/**",
+      "apps/api/src/modules/public/**",
+      "apps/api/src/modules/database/seed.ts",
+      "apps/api/tests/public/**",
+      "agent_pack/**"
+    ],
+    "acceptance": [
+      "Project localized published homepage metrics with stable ordering.",
+      "Seed deterministic non-production metrics without hardcoded screenshot-only UI content.",
+      "Pass focused verification and pack audit."
+    ],
+    "verification": [
+      "contracts build",
+      "API/web typecheck",
+      "focused homepage tests",
+      "affected lint",
+      "node agent_pack/scripts/audit_pack.mjs"
+    ],
+    "sequence": 117
+  },
+  {
+    "id": "backend_143",
+    "phase": "F7_post_release_assurance",
+    "area": "public homepage parity",
+    "title": "Public Homepage Banner Content Projection — PUB-01",
+    "goal": "Project localized published banner copy required by canonical PUB-01.",
+    "kind": "implementation",
+    "screens": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
+    "notes": [
+      "Canonical source key: Odl1Epn2u6lIEuIMmABT7o; node: 6017:10847."
+    ],
+    "track": "backend",
+    "dependsOn": [
+      "backend_142"
+    ],
+    "atomicTaskFile": "04_tracks/backend/F7_post_release_assurance/backend_143.md",
+    "allowedRoots": [
+      "packages/contracts/src/public/**",
+      "packages/contracts/src/contracts/**",
+      "apps/api/src/modules/public/**",
+      "apps/api/src/modules/database/seed.ts",
+      "apps/api/tests/public/**",
+      "apps/web/tests/e2e/public-fixtures.ts",
+      "agent_pack/**"
+    ],
+    "acceptance": [
+      "Add localized eyebrow, body, and highlight banner projection.",
+      "Use published active records and deterministic non-production data only.",
+      "Pass focused verification and pack audit."
+    ],
+    "verification": [
+      "contracts build",
+      "API typecheck",
+      "focused homepage tests",
+      "affected lint",
+      "node agent_pack/scripts/audit_pack.mjs"
+    ],
+    "sequence": 118
+  },
+  {
+    "id": "backend_144",
+    "phase": "F7_post_release_assurance",
+    "area": "public listing parity",
+    "title": "Public Listing Facets and Card Metadata Projection — PUB-02",
+    "goal": "Project the publication-safe listing facets and card metadata required by canonical PUB-02.",
+    "kind": "implementation",
+    "screens": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
+    "notes": [
+      "Canonical source key: Odl1Epn2u6lIEuIMmABT7o; PUB-02 node: 6017:12095; owned by frontend_099."
+    ],
+    "track": "backend",
+    "dependsOn": [
+      "backend_143"
+    ],
+    "atomicTaskFile": "04_tracks/backend/F7_post_release_assurance/backend_144.md",
+    "allowedRoots": [
+      "packages/contracts/src/search/**",
+      "packages/contracts/src/public/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/tests/search/**",
+      "apps/web/tests/e2e/public-fixtures.ts",
+      "agent_pack/**"
+    ],
+    "acceptance": [
+      "Add additive public category facets with deterministic counts.",
+      "Add publication-safe location, source, public code, and view-count card metadata when persisted sources exist.",
+      "Use published active records and deterministic non-production data only.",
+      "Pass focused verification and pack audit."
+    ],
+    "verification": [
+      "contracts build",
+      "API typecheck",
+      "focused public search tests",
+      "affected lint",
+      "node agent_pack/scripts/audit_pack.mjs"
+    ],
+    "sequence": 119
+  },
+  {
+    "id": "backend_145",
+    "phase": "F7_post_release_assurance",
+    "area": "public listing parity",
+    "title": "Public Listing Taxonomy Filter — PUB-02",
+    "goal": "Add the allowlisted property-type query required by canonical PUB-02 controls.",
+    "kind": "implementation",
+    "screens": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
+    "notes": [
+      "Canonical source key: Odl1Epn2u6lIEuIMmABT7o; PUB-02 node: 6017:12095; owned by frontend_099."
+    ],
+    "track": "backend",
+    "dependsOn": [
+      "backend_144"
+    ],
+    "atomicTaskFile": "04_tracks/backend/F7_post_release_assurance/backend_145.md",
+    "allowedRoots": [
+      "packages/contracts/src/search/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/tests/search/**",
+      "apps/web/src/features/public/listing-data.ts",
+      "agent_pack/**"
+    ],
+    "acceptance": [
+      "Allowlist propertyTypeId in the public listing query.",
+      "Filter only published active properties.",
+      "Pass focused verification and pack audit."
+    ],
+    "verification": [
+      "contracts build",
+      "API typecheck",
+      "focused search tests",
+      "affected lint",
+      "node agent_pack/scripts/audit_pack.mjs"
+    ],
+    "sequence": 120
+  },
+  {
+    "id": "backend_146",
+    "phase": "F7_post_release_assurance",
+    "area": "public listing parity",
+    "title": "Property Delivery Status Contract and Public Filter — PUB-02",
+    "goal": "Persist and safely filter the delivery-status field required by canonical PUB-02.",
+    "kind": "implementation",
+    "screens": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
+    "notes": [
+      "Canonical source key: Odl1Epn2u6lIEuIMmABT7o; PUB-02 node: 6017:12095; owned by frontend_099."
+    ],
+    "track": "backend",
+    "dependsOn": [
+      "backend_145"
+    ],
+    "atomicTaskFile": "04_tracks/backend/F7_post_release_assurance/backend_146.md",
+    "allowedRoots": [
+      "packages/contracts/src/properties/**",
+      "packages/contracts/src/search/**",
+      "apps/api/src/modules/properties/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/tests/properties/**",
+      "apps/api/tests/search/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+      "agent_pack/**"
+    ],
+    "acceptance": [
+      "Add a strict delivery-status enum to property details and public search.",
+      "Persist and project only allowlisted values.",
+      "Synchronize OpenAPI, Postman, and API inventory artifacts.",
+      "Pass focused verification and pack audit."
+    ],
+    "verification": [
+      "contracts build",
+      "API typecheck",
+      "focused property/search tests",
+      "OpenAPI/Postman/API inventory validation",
+      "affected lint",
+      "node agent_pack/scripts/audit_pack.mjs"
+    ],
+    "sequence": 121
+  },
+  {
+    "id": "backend_147",
+    "phase": "F7_post_release_assurance",
+    "area": "public listing parity",
+    "title": "Distinct Public Listing Rail and Filter Taxonomies — PUB-02",
+    "goal": "Expose distinct API-backed category-rail and property-type-filter facets required by canonical PUB-02.",
+    "kind": "implementation",
+    "screens": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
+    "notes": [
+      "Canonical source key: Odl1Epn2u6lIEuIMmABT7o; PUB-02 node: 6017:12095; owned by frontend_099."
+    ],
+    "track": "backend",
+    "dependsOn": [
+      "backend_146"
+    ],
+    "atomicTaskFile": "04_tracks/backend/F7_post_release_assurance/backend_147.md",
+    "allowedRoots": [
+      "packages/contracts/src/search/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/tests/search/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "docs/api/public-properties-search.md",
+      "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+      "agent_pack/**"
+    ],
+    "acceptance": [
+      "Return separate bounded category-rail and property-type facets.",
+      "Populate both from active taxonomy data with published-property counts.",
+      "Synchronize API artifacts.",
+      "Pass focused verification and pack audit."
+    ],
+    "verification": [
+      "contracts build",
+      "API typecheck",
+      "focused search tests",
+      "OpenAPI/Postman validation",
+      "affected lint",
+      "node agent_pack/scripts/audit_pack.mjs"
+    ],
+    "sequence": 122
+  },
+  {
+    "id": "backend_148",
+    "phase": "F7_post_release_assurance",
+    "area": "public listing parity",
+    "title": "Public Listing Card Presentation Projection — PUB-02",
+    "goal": "Project publication-safe source, installment, promotion, and view metadata required by canonical PUB-02 cards.",
+    "kind": "implementation",
+    "screens": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
+    "notes": [
+      "Canonical source key: Odl1Epn2u6lIEuIMmABT7o; PUB-02 node: 6017:12095; owned by frontend_099."
+    ],
+    "track": "backend",
+    "dependsOn": [
+      "backend_147"
+    ],
+    "atomicTaskFile": "04_tracks/backend/F7_post_release_assurance/backend_148.md",
+    "allowedRoots": [
+      "packages/contracts/src/search/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/tests/search/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "docs/api/public-properties-search.md",
+      "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+      "agent_pack/**"
+    ],
+    "acceptance": [
+      "Safely project source image/type, installment availability, featured state, and views.",
+      "Derive values from approved persisted records.",
+      "Synchronize API artifacts.",
+      "Pass focused verification and pack audit."
+    ],
+    "verification": [
+      "contracts build",
+      "API typecheck",
+      "focused search tests",
+      "OpenAPI/Postman validation",
+      "affected lint",
+      "node agent_pack/scripts/audit_pack.mjs"
+    ],
+    "sequence": 123
+  },
+  {
+    "id": "backend_149",
+    "phase": "F7_post_release_assurance",
+    "area": "public property detail parity",
+    "title": "Public Property Detail Canonical Projection — PUB-03",
+    "goal": "Project publication-safe source identity and canonical feature/service presentation metadata required by PUB-03.",
+    "kind": "implementation",
+    "screens": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    ],
+    "notes": [
+      "Canonical source key: Odl1Epn2u6lIEuIMmABT7o; PUB-03 node: 6017:12693; owned by frontend_099."
+    ],
+    "track": "backend",
+    "dependsOn": [
+      "backend_148"
+    ],
+    "atomicTaskFile": "04_tracks/backend/F7_post_release_assurance/backend_149.md",
+    "allowedRoots": [
+      "packages/contracts/src/public/**",
+      "apps/api/src/modules/public/**",
+      "apps/api/tests/public/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "apps/web/tests/e2e/public-fixtures.ts",
+      "agent_pack/**"
+    ],
+    "acceptance": [
+      "Project approved source name/image/verification.",
+      "Project localized amenity detail and distance labels.",
+      "Preserve publication and approval filters.",
+      "Pass focused verification and pack audit."
+    ],
+    "verification": [
+      "contracts build",
+      "API typecheck",
+      "focused public property tests",
+      "affected lint",
+      "OpenAPI/Postman validation",
+      "node agent_pack/scripts/audit_pack.mjs"
+    ],
+    "sequence": 124
+  },
+  {
     "id": "frontend_000",
     "phase": "F0_frontend_foundation",
     "area": "frontend_foundation",
@@ -5092,7 +5482,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 116,
+    "sequence": 125,
     "dependsOn": [
       "backend_138"
     ],
@@ -5136,7 +5526,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 117,
+    "sequence": 126,
     "dependsOn": [
       "frontend_000"
     ],
@@ -5179,7 +5569,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 118,
+    "sequence": 127,
     "dependsOn": [
       "frontend_001"
     ],
@@ -5222,7 +5612,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 119,
+    "sequence": 128,
     "dependsOn": [
       "frontend_002"
     ],
@@ -5265,7 +5655,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 120,
+    "sequence": 129,
     "dependsOn": [
       "frontend_003"
     ],
@@ -5308,7 +5698,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 121,
+    "sequence": 130,
     "dependsOn": [
       "frontend_004"
     ],
@@ -5351,7 +5741,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 122,
+    "sequence": 131,
     "dependsOn": [
       "frontend_005"
     ],
@@ -5394,7 +5784,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 123,
+    "sequence": 132,
     "dependsOn": [
       "frontend_006"
     ],
@@ -5437,7 +5827,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 124,
+    "sequence": 133,
     "dependsOn": [
       "frontend_007"
     ],
@@ -5480,7 +5870,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 125,
+    "sequence": 134,
     "dependsOn": [
       "frontend_008"
     ],
@@ -5526,7 +5916,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 126,
+    "sequence": 135,
     "dependsOn": [
       "frontend_009"
     ],
@@ -5572,7 +5962,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 127,
+    "sequence": 136,
     "dependsOn": [
       "frontend_010"
     ],
@@ -5618,7 +6008,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 128,
+    "sequence": 137,
     "dependsOn": [
       "frontend_011"
     ],
@@ -5664,7 +6054,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 129,
+    "sequence": 138,
     "dependsOn": [
       "frontend_012"
     ],
@@ -5712,7 +6102,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 130,
+    "sequence": 139,
     "dependsOn": [
       "frontend_013"
     ],
@@ -5760,7 +6150,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 131,
+    "sequence": 140,
     "dependsOn": [
       "frontend_014"
     ],
@@ -5808,7 +6198,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 132,
+    "sequence": 141,
     "dependsOn": [
       "frontend_015"
     ],
@@ -5856,7 +6246,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 133,
+    "sequence": 142,
     "dependsOn": [
       "frontend_016"
     ],
@@ -5899,7 +6289,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 134,
+    "sequence": 143,
     "dependsOn": [
       "frontend_017"
     ],
@@ -5942,7 +6332,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 135,
+    "sequence": 144,
     "dependsOn": [
       "frontend_018"
     ],
@@ -5992,7 +6382,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 136,
+    "sequence": 145,
     "dependsOn": [
       "frontend_019"
     ],
@@ -6042,7 +6432,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 137,
+    "sequence": 146,
     "dependsOn": [
       "frontend_020"
     ],
@@ -6090,7 +6480,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 138,
+    "sequence": 147,
     "dependsOn": [
       "frontend_021"
     ],
@@ -6138,7 +6528,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 139,
+    "sequence": 148,
     "dependsOn": [
       "frontend_022"
     ],
@@ -6190,7 +6580,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 140,
+    "sequence": 149,
     "dependsOn": [
       "frontend_023"
     ],
@@ -6244,7 +6634,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 141,
+    "sequence": 150,
     "dependsOn": [
       "frontend_024"
     ],
@@ -6287,7 +6677,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 142,
+    "sequence": 151,
     "dependsOn": [
       "frontend_025"
     ],
@@ -6333,7 +6723,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 143,
+    "sequence": 152,
     "dependsOn": [
       "frontend_026"
     ],
@@ -6383,7 +6773,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 144,
+    "sequence": 153,
     "dependsOn": [
       "frontend_030"
     ],
@@ -6429,7 +6819,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 145,
+    "sequence": 154,
     "dependsOn": [
       "frontend_031"
     ],
@@ -6475,7 +6865,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 146,
+    "sequence": 155,
     "dependsOn": [
       "frontend_032"
     ],
@@ -6521,7 +6911,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 147,
+    "sequence": 156,
     "dependsOn": [
       "frontend_033"
     ],
@@ -6571,7 +6961,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 148,
+    "sequence": 157,
     "dependsOn": [
       "frontend_034"
     ],
@@ -6614,7 +7004,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 149,
+    "sequence": 158,
     "dependsOn": [
       "frontend_035"
     ],
@@ -6660,7 +7050,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 150,
+    "sequence": 159,
     "dependsOn": [
       "frontend_036"
     ],
@@ -6706,7 +7096,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 151,
+    "sequence": 160,
     "dependsOn": [
       "frontend_040"
     ],
@@ -6754,7 +7144,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 152,
+    "sequence": 161,
     "dependsOn": [
       "frontend_041"
     ],
@@ -6804,7 +7194,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 153,
+    "sequence": 162,
     "dependsOn": [
       "frontend_042"
     ],
@@ -6854,7 +7244,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 154,
+    "sequence": 163,
     "dependsOn": [
       "frontend_043"
     ],
@@ -6906,7 +7296,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 155,
+    "sequence": 164,
     "dependsOn": [
       "frontend_044"
     ],
@@ -6952,7 +7342,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 156,
+    "sequence": 165,
     "dependsOn": [
       "frontend_045"
     ],
@@ -7000,7 +7390,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 157,
+    "sequence": 166,
     "dependsOn": [
       "frontend_046"
     ],
@@ -7046,7 +7436,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 158,
+    "sequence": 167,
     "dependsOn": [
       "frontend_047"
     ],
@@ -7094,7 +7484,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 159,
+    "sequence": 168,
     "dependsOn": [
       "frontend_048"
     ],
@@ -7146,7 +7536,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 160,
+    "sequence": 169,
     "dependsOn": [
       "frontend_049"
     ],
@@ -7189,7 +7579,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 161,
+    "sequence": 170,
     "dependsOn": [
       "frontend_050"
     ],
@@ -7235,7 +7625,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 162,
+    "sequence": 171,
     "dependsOn": [
       "frontend_051"
     ],
@@ -7287,7 +7677,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 163,
+    "sequence": 172,
     "dependsOn": [
       "frontend_060"
     ],
@@ -7337,7 +7727,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 164,
+    "sequence": 173,
     "dependsOn": [
       "frontend_061"
     ],
@@ -7387,7 +7777,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 165,
+    "sequence": 174,
     "dependsOn": [
       "frontend_062"
     ],
@@ -7435,7 +7825,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 166,
+    "sequence": 175,
     "dependsOn": [
       "frontend_063"
     ],
@@ -7487,7 +7877,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 167,
+    "sequence": 176,
     "dependsOn": [
       "frontend_064"
     ],
@@ -7545,7 +7935,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 168,
+    "sequence": 177,
     "dependsOn": [
       "frontend_065"
     ],
@@ -7593,7 +7983,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 169,
+    "sequence": 178,
     "dependsOn": [
       "frontend_066"
     ],
@@ -7643,7 +8033,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 170,
+    "sequence": 179,
     "dependsOn": [
       "frontend_067"
     ],
@@ -7693,7 +8083,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 171,
+    "sequence": 180,
     "dependsOn": [
       "frontend_068"
     ],
@@ -7749,7 +8139,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 172,
+    "sequence": 181,
     "dependsOn": [
       "frontend_069"
     ],
@@ -7807,7 +8197,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 173,
+    "sequence": 182,
     "dependsOn": [
       "frontend_070"
     ],
@@ -7859,7 +8249,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 174,
+    "sequence": 183,
     "dependsOn": [
       "frontend_071"
     ],
@@ -7909,7 +8299,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 175,
+    "sequence": 184,
     "dependsOn": [
       "frontend_072"
     ],
@@ -7965,7 +8355,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 176,
+    "sequence": 185,
     "dependsOn": [
       "frontend_073"
     ],
@@ -8021,7 +8411,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 177,
+    "sequence": 186,
     "dependsOn": [
       "frontend_074"
     ],
@@ -8069,7 +8459,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 178,
+    "sequence": 187,
     "dependsOn": [
       "frontend_075"
     ],
@@ -8112,7 +8502,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 179,
+    "sequence": 188,
     "dependsOn": [
       "frontend_076"
     ],
@@ -8155,7 +8545,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 180,
+    "sequence": 189,
     "dependsOn": [
       "frontend_077"
     ],
@@ -8198,7 +8588,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 181,
+    "sequence": 190,
     "dependsOn": [
       "frontend_080"
     ],
@@ -8241,7 +8631,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 182,
+    "sequence": 191,
     "dependsOn": [
       "frontend_081"
     ],
@@ -8284,7 +8674,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 183,
+    "sequence": 192,
     "dependsOn": [
       "frontend_082"
     ],
@@ -8327,7 +8717,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 184,
+    "sequence": 193,
     "dependsOn": [
       "frontend_083"
     ],
@@ -8370,7 +8760,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 185,
+    "sequence": 194,
     "dependsOn": [
       "frontend_084"
     ],
@@ -8413,7 +8803,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 186,
+    "sequence": 195,
     "dependsOn": [
       "frontend_085"
     ],
@@ -8456,7 +8846,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 187,
+    "sequence": 196,
     "dependsOn": [
       "frontend_086"
     ],
@@ -8499,7 +8889,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 188,
+    "sequence": 197,
     "dependsOn": [
       "frontend_087"
     ],
@@ -8542,7 +8932,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 189,
+    "sequence": 198,
     "dependsOn": [
       "frontend_088"
     ],
@@ -8585,7 +8975,7 @@
     ],
     "notes": [],
     "track": "frontend",
-    "sequence": 190,
+    "sequence": 199,
     "dependsOn": [
       "frontend_089"
     ],
@@ -8652,7 +9042,7 @@
       "npm run test:vitest --workspace apps/web",
       "source-manifest checksum verification"
     ],
-    "sequence": 191
+    "sequence": 200
   },
   {
     "id": "frontend_092",
@@ -8694,7 +9084,7 @@
       "targeted Playwright, visual, accessibility, locale, direction, and device checks",
       "node agent_pack/scripts/audit_pack.mjs"
     ],
-    "sequence": 192
+    "sequence": 201
   },
   {
     "id": "frontend_093",
@@ -8736,7 +9126,7 @@
       "targeted Playwright, visual, accessibility, locale, direction, and device checks",
       "node agent_pack/scripts/audit_pack.mjs"
     ],
-    "sequence": 193
+    "sequence": 202
   },
   {
     "id": "frontend_094",
@@ -8778,7 +9168,7 @@
       "targeted Playwright, visual, accessibility, locale, direction, and device checks",
       "node agent_pack/scripts/audit_pack.mjs"
     ],
-    "sequence": 194
+    "sequence": 203
   },
   {
     "id": "frontend_095",
@@ -8822,7 +9212,7 @@
       "targeted Playwright, visual, accessibility, locale, direction, and device checks",
       "node agent_pack/scripts/audit_pack.mjs"
     ],
-    "sequence": 195
+    "sequence": 204
   },
   {
     "id": "frontend_096",
@@ -8867,7 +9257,7 @@
       "targeted Playwright, visual, accessibility, locale, direction, and device checks",
       "node agent_pack/scripts/audit_pack.mjs"
     ],
-    "sequence": 196
+    "sequence": 205
   },
   {
     "id": "frontend_097",
@@ -8915,7 +9305,7 @@
       "performance and bundle-budget gates",
       "browser and session security gates"
     ],
-    "sequence": 197
+    "sequence": 206
   },
   {
     "id": "frontend_098",
@@ -8958,7 +9348,7 @@
       "node agent_pack/scripts/audit_pack.mjs",
       "node agent_pack/scripts/select_next_step.mjs"
     ],
-    "sequence": 198
+    "sequence": 207
   },
   {
     "id": "frontend_099",
@@ -9023,6 +9413,76 @@
       "focused performance and lazy-loading gate",
       "node agent_pack/scripts/audit_pack.mjs"
     ],
-    "sequence": 199
+    "sequence": 208
+  },
+  {
+    "id": "frontend_100",
+    "phase": "F7_post_release_assurance",
+    "area": "concurrent owner-clone parity coordination",
+    "title": "Concurrent Owner-Clone Parity Coordinator - Public, Authentication, and Seeker",
+    "goal": "Coordinate three non-overlapping parity lanes against the owner-controlled Figma clone, preserve frontend_099 as the honest Public closure history, and converge Public, Authentication/Onboarding, and Seeker screens with independently verified evidence.",
+    "kind": "coordination",
+    "screens": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "01_product/SCREEN_REGISTRY.json",
+      "01_product/SCREEN_COVERAGE.json"
+    ],
+    "notes": [
+      "This is the single audited coordinator task for exactly three concurrent lanes: public_parity, auth_parity, and seeker_parity.",
+      "frontend_099 remains Partial and retains its Public PUB-01 through PUB-08 history; this task does not falsify or replace that status.",
+      "Canonical source is FIGMA_FILE_KEY=Odl1Epn2u6lIEuIMmABT7o. The source key 0HBdTNGROmmpC6S7OYa3iJ is forbidden.",
+      "Lane ledgers are maintained under docs/quality/figma_parity/PUBLIC_LANE_LEDGER.json, AUTH_LANE_LEDGER.json, and SEEKER_LANE_LEDGER.json.",
+      "Arabic RTL and English LTR are the only execution locales. Simplified Chinese is not added or tested.",
+      "Public and Auth cover Desktop, Tablet, and Mobile. Seeker covers Desktop only.",
+      "No nested subagents, branch, or worktree is permitted."
+    ],
+    "track": "frontend",
+    "dependsOn": [
+      "backend_149",
+      "frontend_097"
+    ],
+    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_100.md",
+    "allowedRoots": [
+      "apps/web/src/features/public/**",
+      "apps/web/src/features/content/**",
+      "apps/web/src/features/auth/**",
+      "apps/web/src/features/provider_auth/**",
+      "apps/web/src/features/seeker/**",
+      "apps/web/src/features/frontend_foundation/**",
+      "apps/web/src/features/design_system/**",
+      "apps/web/src/features/localization/**",
+      "apps/web/src/features/routing/**",
+      "apps/web/src/app/**",
+      "apps/web/tests/**",
+      "apps/web/public/assets/clone/**",
+      "apps/api/**",
+      "packages/contracts/**",
+      "packages/ui/**",
+      "scripts/**",
+      "docs/quality/figma_parity/**",
+      "agent_pack/**"
+    ],
+    "acceptance": [
+      "Maintain exactly one In Progress coordinator task and three non-overlapping lane ledgers.",
+      "Process one canonical screen at a time per lane using only the owner-controlled clone and cached evidence; preserve the Public cursor at frontend_099/PUB-03 and do not discover PUB-09.",
+      "Resolve exact clone node, route, role, permissions, locale, direction, device, deterministic state, API projection, and prototype flow for every lane screen.",
+      "Implement repository-owned defects in the owning lane or coordinator-owned shared/backend path; return exact change requests for cross-lane shared changes.",
+      "Capture after real repairs with ready fonts, decoded images, stable animation state, exact viewport, and reviewed numerical and visual diffs.",
+      "Close screens only as REPAIRED_VERIFIED or VERIFIED_NO_CHANGE; keep PARTIAL only for a genuine documented external blocker.",
+      "Run focused functional, API, accessibility, security, locale/direction, device, visual, and performance checks during lane work; defer the full matrix until convergence.",
+      "Do not claim Public, Auth, Seeker, or platform parity while required evidence, normal snapshots, or repository-owned material differences remain."
+    ],
+    "verification": [
+      "lane-specific typecheck, lint, unit, integration, API, accessibility, permission, and security tests",
+      "focused per-screen approved-source visual comparison and reviewed diff",
+      "normal visual snapshots without --ignore-snapshots after direct clone review",
+      "focused locale/direction/device and performance gates",
+      "synchronized lane ledgers and coordinator checkpoint",
+      "node agent_pack/scripts/sync_pack.mjs",
+      "node agent_pack/scripts/audit_pack.mjs",
+      "combined final gates only after all three lanes converge"
+    ],
+    "sequence": 209
   }
 ]

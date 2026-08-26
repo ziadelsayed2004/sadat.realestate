@@ -1,0 +1,33 @@
+{
+  "taskId": "backend_147",
+  "summary": "Separated discovery-category and property-type facets, and added a strict category filter resolved through active child property types for canonical PUB-02.",
+  "filesChanged": [
+    "packages/contracts/src/search/index.ts",
+    "apps/api/src/modules/search/properties.ts",
+    "apps/api/tests/search/properties.test.ts",
+    "apps/api/openapi/openapi.json",
+    "docs/api/public-properties-search.md"
+  ],
+  "verification": [
+    {
+      "command": "contracts build and API typecheck",
+      "result": "passed",
+      "exitCode": 0
+    },
+    {
+      "command": "focused search and route tests",
+      "result": "passed: 5/5",
+      "exitCode": 0
+    },
+    {
+      "command": "affected lint",
+      "result": "passed",
+      "exitCode": 0
+    },
+    {
+      "command": "OpenAPI and Postman validation",
+      "result": "passed",
+      "exitCode": 0
+    }
+  ]
+}

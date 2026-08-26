@@ -6,7 +6,7 @@
 | Phase | B3_projects_properties |
 | Area | moderation |
 | Kind | api |
-| Sequence | 46 / 199 |
+| Sequence | 46 / 208 |
 | Depends on | `backend_053` |
 
 ## Goal

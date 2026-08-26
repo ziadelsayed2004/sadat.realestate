@@ -6,7 +6,7 @@
 | Phase | B4_public_seeker |
 | Area | seeker |
 | Kind | api |
-| Sequence | 54 / 199 |
+| Sequence | 54 / 208 |
 | Depends on | `backend_065` |
 
 ## Goal

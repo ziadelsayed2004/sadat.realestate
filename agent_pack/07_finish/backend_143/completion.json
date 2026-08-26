@@ -1,0 +1,18 @@
+{
+  "taskId": "backend_143",
+  "summary": "Added additive localized eyebrow, body, and highlight fields to the publication-safe homepage banner projection so PUB-01 can render the canonical promotional content through the real API contract.",
+  "filesChanged": [
+    "packages/contracts/src/public/index.ts",
+    "apps/api/src/modules/public/homepage.ts",
+    "apps/api/src/modules/database/seed.ts",
+    "apps/api/tests/public/homepage.test.ts",
+    "apps/web/tests/e2e/public-fixtures.ts"
+  ],
+  "verification": [
+    { "command": "npm run build --workspace @sadat-real-estate/contracts", "result": "passed", "exitCode": 0 },
+    { "command": "npm run typecheck --workspace apps/api", "result": "passed", "exitCode": 0 },
+    { "command": "node --import tsx --test apps/api/tests/public/homepage.test.ts apps/api/tests/security/public-projections.test.ts", "result": "passed: 5/5", "exitCode": 0 },
+    { "command": "eslint affected banner projection files --max-warnings=0", "result": "passed", "exitCode": 0 }
+  ],
+  "dataPolicy": "The seed remains guarded for non-production environments; the runtime repository filters published active banners and projects only explicit public fields."
+}

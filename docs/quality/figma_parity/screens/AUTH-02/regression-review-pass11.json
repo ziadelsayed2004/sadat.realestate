@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-02",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4353",
+    "nodeId": "6017:15835",
+    "route": "/auth/register/seeker?lang=ar"
+  },
+  "captures": {
+    "pass10": {
+      "runtimeSha256": "0a08697e0ffe557f80bb7faaaad9b016050341c1b9a452c9da46689d667816a3",
+      "materialDifferencePercent": 1.4235,
+      "antiAliasingOnlyPercent": 0.366
+    },
+    "pass11": {
+      "runtimeSha256": "02125b3e9be63c3ae733d624fb2b3b3f4b833cd72f1ac54dad8e6206c5dfa9c3",
+      "materialDifferencePercent": 1.4288,
+      "antiAliasingOnlyPercent": 0.3685
+    }
+  },
+  "comparisonMethod": {
+    "thresholds": {
+      "materialRgbSumGreaterThan": 24,
+      "antiAliasingRgbSumGreaterThan": 3
+    },
+    "description": "Direct source-versus-runtime pixel counts over isolated element regions using the saved canonical source, pass10, and pass11 PNGs."
+  },
+  "elementReview": {
+    "unchangedRegions": [
+      {
+        "element": "auth header",
+        "pass10VsPass11ChangedPixels": 0
+      },
+      {
+        "element": "step badge",
+        "pass10VsPass11ChangedPixels": 0
+      },
+      {
+        "element": "heading and description",
+        "pass10VsPass11ChangedPixels": 0
+      },
+      {
+        "element": "back-to-login action",
+        "pass10VsPass11ChangedPixels": 0
+      }
+    ],
+    "changedRegions": [
+      {
+        "element": "provider role card",
+        "codeChange": "Added position: relative and inset-inline-start: 0.5px to .auth-role-options, translating the RTL grid by 0.5px.",
+        "sourceVsPass10MaterialPixels": 5307,
+        "sourceVsPass11MaterialPixels": 5530,
+        "materialPixelDelta": 223,
+        "assessment": "regression"
+      },
+      {
+        "element": "seeker role card",
+        "codeChange": "The same 0.5px grid translation moved the complete card, icon, title, and body.",
+        "sourceVsPass10MaterialPixels": 5297,
+        "sourceVsPass11MaterialPixels": 5234,
+        "materialPixelDelta": -63,
+        "assessment": "local improvement outweighed by provider-card and border regressions"
+      },
+      {
+        "element": "combined role-card region",
+        "sourceVsPass10MaterialPixels": 10604,
+        "sourceVsPass11MaterialPixels": 10764,
+        "materialPixelDelta": 160,
+        "assessment": "root cause of pass11 regression"
+      },
+      {
+        "element": "disabled continue CTA",
+        "codeChange": "Changed inset-inline-start from -1px to -0.5px and added a higher-specificity disabled color of #e6e7e7.",
+        "sourceVsPass10MaterialPixels": 862,
+        "sourceVsPass11MaterialPixels": 781,
+        "materialPixelDelta": -81,
+        "assessment": "measured improvement; retain"
+      }
+    ]
+  },
+  "regressionAccounting": {
+    "roleCardMaterialPixelDelta": 160,
+    "disabledCtaMaterialPixelDelta": -81,
+    "netMaterialPixelDelta": 79,
+    "observedMaterialDifferencePointDelta": 0.0053
+  },
+  "documentedRepair": {
+    "measuredDefect": "The pass11 0.5px .auth-role-options translation caused a net 160-pixel material regression in the combined card region.",
+    "codeRepair": "Remove only position: relative and inset-inline-start: 0.5px from .auth-role-options; retain the independently beneficial CTA -0.5px placement and #e6e7e7 disabled label override.",
+    "expectedVisualEffect": "Restore pass10 role-card geometry while preserving the measured 81-pixel CTA improvement. Under deterministic rendering, the predicted material count is 21,111 pixels, approximately 1.4181% of the 1,488,688 compared pixels.",
+    "implemented": true,
+    "capturePerformed": true,
+    "captureRevision": "pass12",
+    "observedMaterialDifferencePercent": 1.4181,
+    "predictionConfirmed": true
+  },
+  "status": {
+    "reviewed": true,
+    "screenClosed": false,
+    "advanceAllowed": false,
+    "nextAction": "Pass12 is the single accepted recapture. AUTH-02 remains blocked on coordinator-owned visual baselines; do not recapture or advance."
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-01",
+  "phase": "after",
+  "source": {
+    "width": 1549,
+    "height": 5378
+  },
+  "runtimeAfter": {
+    "width": 1549,
+    "height": 5378
+  },
+  "comparedWidth": 1549,
+  "comparedHeight": 5378,
+  "comparedPixels": 8330522,
+  "materialDifferencePercent": 29.1437,
+  "antiAliasingOnlyPercent": 6.6669,
+  "threshold": {
+    "materialRgbSumGreaterThan": 24,
+    "antiAliasingRgbSumGreaterThan": 3
+  },
+  "method": "same-width source/runtime canvas comparison over the overlapping document height",
+  "reviewed": true,
+  "reviewedAt": "2026-08-26T00:13:15.928Z",
+  "reviewOutcome": "PARTIAL_EXTERNAL_SOURCE_ASSETS"
+}

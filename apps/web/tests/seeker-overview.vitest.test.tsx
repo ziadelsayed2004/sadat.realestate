@@ -60,5 +60,26 @@ describe('Seeker overview', () => {
     expect(screen.getByRole('heading', { name: copy.states.permission.title })).toBeInTheDocument();
     expect(load).toHaveBeenCalledTimes(1);
   });
-});
 
+  it('does not render prefetched counts before denying an anonymous session', () => {
+    const result = renderWithLocale(
+      <SeekerOverview locale="en" session={{ status: 'anonymous' }} initialData={overview} />,
+      { locale: 'en' }
+    );
+
+    expect(screen.getByRole('heading', { name: getSeekerCopy('en').states.permission.title })).toBeInTheDocument();
+    expect(screen.queryByTestId('seeker-summary-requests')).not.toBeInTheDocument();
+    expect(result.container.querySelector('[data-screen-id="SEK-01"]')).toBeInTheDocument();
+  });
+
+  it('does not render prefetched counts for an authenticated non-seeker role', () => {
+    const result = renderWithLocale(
+      <SeekerOverview locale="en" session={{ status: 'authenticated', role: 'provider' }} initialData={overview} />,
+      { locale: 'en' }
+    );
+
+    expect(screen.getByRole('heading', { name: getSeekerCopy('en').states.permission.title })).toBeInTheDocument();
+    expect(screen.queryByTestId('seeker-summary-requests')).not.toBeInTheDocument();
+    expect(result.container.querySelector('[data-screen-id="SEK-01"]')).toBeInTheDocument();
+  });
+});

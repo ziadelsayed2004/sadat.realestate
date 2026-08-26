@@ -248,11 +248,16 @@ export function ProviderDocumentsPage({ client, locale, providerType, initialApp
     try {
       const document = await client.uploadProviderDocument(category, file);
       setDocuments(previous => ({ ...previous, [category]: document }));
+      setApplication(previous => previous === undefined
+        ? previous
+        : { ...previous, missingDocuments: previous.missingDocuments.filter(item => item !== category) });
       setUploadStates(previous => ({ ...previous, [category]: 'success' }));
       if (client.getProviderApplication !== undefined) {
         try {
           const refreshed = await client.getProviderApplication();
-          if (refreshed.providerType === providerType) setApplication(refreshed);
+          if (refreshed.providerType === providerType) {
+            setApplication({ ...refreshed, missingDocuments: refreshed.missingDocuments.filter(item => item !== category) });
+          }
         } catch {
           // The uploaded document remains visible locally; the server response is authoritative for this card.
         }
@@ -279,20 +284,38 @@ export function ProviderDocumentsPage({ client, locale, providerType, initialApp
         delete next[category];
         return next;
       });
+      const requirement = requirements.find(item => item.key === category);
+      if (requirement !== undefined && requirement.classification !== 'optional') {
+        setApplication(previous => previous === undefined || previous.missingDocuments.includes(category)
+          ? previous
+          : { ...previous, missingDocuments: [...previous.missingDocuments, category] });
+      }
       setUploadStates(previous => ({ ...previous, [category]: 'success' }));
+      if (client.getProviderApplication !== undefined) {
+        try {
+          const refreshed = await client.getProviderApplication();
+          if (refreshed.providerType === providerType) {
+            setApplication(requirement === undefined || requirement.classification === 'optional'
+              ? refreshed
+              : { ...refreshed, missingDocuments: refreshed.missingDocuments.includes(category) ? refreshed.missingDocuments : [...refreshed.missingDocuments, category] });
+          }
+        } catch {
+          // The deleted document is removed locally; a later reload can reconcile the server state.
+        }
+      }
     } catch (requestError: unknown) {
       setUploadStates(previous => ({ ...previous, [category]: 'idle' }));
       setCardErrors(previous => ({ ...previous, [category]: uploadError(requestError, copy) }));
     }
-  }, [client, copy, documents]);
+  }, [client, copy, documents, providerType, requirements]);
 
   if (loadState === 'loading') {
-    return <section className="auth-page provider-documents-page" data-testid="provider-documents" data-screen-id="AUTH-12" data-state="loading"><div className="auth-card auth-card--form provider-documents-card"><div className="provider-account-state"><StateMessage state="loading" title={copy.title} message={copy.description} /></div></div></section>;
+    return <section className="auth-page provider-documents-page" data-testid="provider-documents" data-screen-id="AUTH-12" data-state="loading" dir={locale === 'ar' ? 'rtl' : 'ltr'}><div className="auth-card auth-card--form provider-documents-card"><div className="provider-account-state"><StateMessage state="loading" title={copy.title} message={copy.description} /></div></div></section>;
   }
 
   if (loadState === 'permission' || loadState === 'error' || loadState === 'retry') {
     return (
-      <section className="auth-page provider-documents-page" data-testid="provider-documents" data-screen-id="AUTH-12" data-state={loadState}>
+      <section className="auth-page provider-documents-page" data-testid="provider-documents" data-screen-id="AUTH-12" data-state={loadState} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
         <div className="auth-card auth-card--form provider-documents-card"><div className="provider-account-state">
           {error === undefined ? null : <StateMessage state={error.state} title={error.title} message={error.message} retryLabel={copy.retryAction} onRetry={error.state === 'retry' ? () => void loadApplication() : undefined} />}
           <Button type="button" variant="ghost" onClick={onBack}>{copy.backAction}</Button>
@@ -303,7 +326,7 @@ export function ProviderDocumentsPage({ client, locale, providerType, initialApp
 
   if (requirements.length === 0) {
     return (
-      <section className="auth-page provider-documents-page" data-testid="provider-documents" data-screen-id="AUTH-12" data-state="empty">
+      <section className="auth-page provider-documents-page" data-testid="provider-documents" data-screen-id="AUTH-12" data-state="empty" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
         <div className="auth-card auth-card--form provider-documents-card"><div className="provider-account-state">
           <StateMessage state="empty" title={copy.emptyTitle} message={copy.emptyBody} />
           <Button type="button" variant="ghost" onClick={onBack}>{copy.backAction}</Button>
@@ -319,7 +342,7 @@ export function ProviderDocumentsPage({ client, locale, providerType, initialApp
     && application.missingFields.length === 0
     && application.missingDocuments.length === 0;
   return (
-    <section className="auth-page provider-documents-page" data-testid="provider-documents" data-screen-id="AUTH-12" data-state="ready" data-can-edit={canEdit}>
+    <section className="auth-page provider-documents-page" data-testid="provider-documents" data-screen-id="AUTH-12" data-state="ready" data-can-edit={canEdit} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <div className="auth-card auth-card--form provider-documents-card">
         <header className="auth-card__heading provider-documents-card__heading">
           <span className="auth-card__icon provider-organization-card__step" aria-hidden="true">4</span>

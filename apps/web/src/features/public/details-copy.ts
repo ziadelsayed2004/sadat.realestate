@@ -92,7 +92,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     sourceTypes: {
       individual_broker: 'وسيط عقاري فردي',
       brokerage_office: 'مكتب وساطة عقارية',
-      developer_company: 'شركة مطورة'
+      developer_company: 'شركة تطوير عقاري'
     },
     projectTitle: 'المشروع والمطور',
     projectUnavailable: 'لا يوجد مشروع منشور مرتبط بهذا العقار.',

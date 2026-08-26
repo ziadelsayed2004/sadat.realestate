@@ -344,3 +344,731 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Auth screens use the approved full-width page treatment while the shared
+   shell keeps its dashboard defaults for every other surface. */
+.route-shell--auth .app-main {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.route-shell--auth .route-shell__header {
+  min-block-size: 3.5rem;
+  padding-block: var(--space-sm);
+  padding-inline: clamp(var(--space-lg), 4vw, var(--space-4xl));
+  border-bottom: 1px solid #eee;
+  box-shadow: none;
+}
+
+.route-shell--auth .surface-label,
+.route-shell--auth .locale {
+  display: none;
+}
+
+.route-shell--auth .brand::after {
+  display: inline-block;
+  margin-inline-start: var(--space-lg);
+  color: var(--color-text-muted);
+  content: '‹';
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.route-shell--auth:dir(ltr) .brand::after {
+  content: '›';
+}
+
+.route-shell--auth .brand-image {
+  block-size: 1.75rem;
+  max-inline-size: 2.25rem;
+}
+
+.route-shell--auth .auth-page {
+  align-content: start;
+  min-block-size: calc(100vh - var(--header-height-min));
+  inline-size: 100%;
+  max-width: none;
+  max-inline-size: none;
+  margin-block: 0;
+  padding-block: clamp(var(--space-2xl), 10vh, 8rem) clamp(var(--space-3xl), 7vh, 6rem);
+  padding-inline: clamp(var(--space-lg), 5vw, var(--space-4xl));
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.route-shell--auth .auth-page[data-state] {
+  max-width: none;
+  max-inline-size: none;
+  margin-block-start: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.auth-page .ui-button--primary {
+  background: var(--color-brand-secondary);
+}
+
+.auth-page .ui-button--secondary {
+  background: var(--color-surface);
+  border-color: var(--color-border-strong);
+}
+
+.auth-page .ui-field__control {
+  min-block-size: 3rem;
+  border-radius: var(--radius-xl);
+}
+
+.auth-page--login {
+  padding-block-start: clamp(var(--space-3xl), 15vh, 11rem);
+}
+
+.auth-page--login .auth-card {
+  inline-size: min(100%, 29rem);
+}
+
+.auth-page--login .auth-card__hero {
+  padding-block: var(--space-2xl);
+  padding-inline: var(--space-xl);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.auth-page--login .auth-card__logo {
+  block-size: 3rem;
+}
+
+.auth-page--login .auth-card__hero h1 {
+  font-size: var(--font-size-heading-two);
+  line-height: var(--line-height-heading);
+}
+
+.auth-page--login .auth-card__body {
+  position: relative;
+  margin-block-start: -2rem;
+  padding-block: var(--space-2xl) var(--space-xl);
+  padding-inline: var(--space-xl);
+  gap: var(--space-lg);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+/* The foundation state surface is intentionally broad. Auth pages and their
+   form fields are composed surfaces, so they must opt out without changing
+   state styling for unrelated routes. */
+.route-shell--auth > .app-main > .auth-page[data-state] {
+  max-width: none;
+  max-inline-size: none;
+  margin-block: 0;
+  padding-block: clamp(var(--space-2xl), 10vh, 8rem) clamp(var(--space-3xl), 7vh, 6rem);
+  padding-inline: clamp(var(--space-lg), 5vw, var(--space-4xl));
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] {
+  padding-block-start: clamp(var(--space-3xl), 14.83vh, 11rem);
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-card {
+  inline-size: min(100%, 28.6875rem);
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-card__body {
+  padding-inline: 1.75rem;
+  padding-block-end: 1.125rem;
+}
+
+.route-shell--auth > .app-main > .auth-page[data-state] .ui-field[data-state] {
+  max-width: none;
+  max-inline-size: none;
+  margin-block-start: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-card__body {
+  padding-inline: 1.6875rem;
+  padding-block-start: 2.8125rem;
+  padding-block-end: 1.125rem;
+  row-gap: 1.375rem;
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-form {
+  gap: 1.125rem;
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .ui-field__label {
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-card__hero {
+  block-size: 12.6367rem;
+  align-content: start;
+  row-gap: var(--space-md);
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-card__logo {
+  block-size: 2.5rem;
+  margin-block-end: var(--space-md);
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-card__hero h1 {
+  font-size: 1.5rem;
+  line-height: var(--line-height-heading);
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-card__hero p {
+  font-size: var(--font-size-small);
+  line-height: 1.5;
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-login-field,
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-password-field {
+  position: relative;
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-login-field::before,
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-password-field .auth-login-field::before {
+  position: absolute;
+  z-index: 1;
+  inset-inline-end: 0.875rem;
+  inset-block-start: 2.15rem;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-login-field--email::before {
+  content: '☎';
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-login-field--password::before {
+  content: '▢';
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-login-field .ui-field__control {
+  padding-inline-end: 2.5rem;
+  border-color: #edeef0;
+  border-radius: 1.25rem;
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-password-field__toggle {
+  position: absolute;
+  z-index: 1;
+  inset-inline-start: 0.75rem;
+  inset-block-start: 2.125rem;
+  display: grid;
+  place-items: center;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  padding: 0;
+  color: var(--color-text-muted);
+  font-size: 0;
+  line-height: 1;
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-password-field__toggle::before {
+  content: '◉';
+  font-size: 0.875rem;
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-form .ui-button {
+  border-radius: 1rem;
+  font-size: var(--font-size-body-large);
+  font-weight: var(--font-weight-bold);
+}
+
+.auth-login-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-block-size: 1.125rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-small);
+  line-height: 1.3;
+}
+
+.auth-remember {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  cursor: pointer;
+}
+
+.auth-remember input {
+  inline-size: 1rem;
+  block-size: 1rem;
+  margin: 0;
+  accent-color: var(--color-brand-primary);
+}
+
+.auth-forgot {
+  padding: 0;
+  color: var(--color-brand-accent);
+  background: transparent;
+  border: 0;
+  font: inherit;
+  font-size: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.auth-forgot:disabled {
+  color: var(--color-brand-accent);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-card__prompt {
+  font-size: var(--font-size-small);
+  line-height: 1.5;
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-card__prompt--phone {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  margin: -1px;
+  padding: 0;
+  white-space: nowrap;
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+}
+
+.auth-card__privacy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-caption);
+  line-height: 1.5;
+  text-align: center;
+}
+
+.auth-card__privacy span {
+  color: var(--color-brand-primary);
+  font-size: var(--font-size-body);
+}
+
+.auth-card--form {
+  overflow: visible;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.auth-card--form .auth-card__heading {
+  padding-block-start: 0;
+}
+
+.auth-card--form .auth-card__body {
+  background: var(--color-surface);
+  border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+}
+
+.auth-page--registration-role .auth-card,
+.provider-type-card {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.auth-page--registration-role .auth-card__heading,
+.auth-page--registration-role .auth-card__body,
+.provider-type-card .auth-card__heading,
+.provider-type-card .auth-card__body {
+  padding-inline: 0;
+}
+
+.auth-page--registration-role .auth-card__body,
+.provider-type-card .auth-card__body {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.auth-page--registration-role .auth-role-card,
+.provider-type-option {
+  background: var(--color-surface);
+  border-color: color-mix(in srgb, var(--color-brand-secondary) 16%, var(--color-border));
+  box-shadow: var(--shadow-sm);
+}
+
+.auth-page--registration-role .auth-role-card--selected,
+.provider-type-option--selected {
+  background: color-mix(in srgb, var(--color-status-success) 7%, var(--color-surface));
+}
+
+.auth-page--registration-role .ui-button:disabled,
+.provider-type-page .ui-button:disabled {
+  color: var(--color-on-brand);
+  background: color-mix(in srgb, var(--color-text-muted) 58%, var(--color-surface));
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .route-shell--auth .route-shell__header {
+    min-block-size: 3.5rem;
+  }
+
+  .route-shell--auth .brand-image {
+    block-size: 2.35rem;
+  }
+
+  .auth-page {
+    min-block-size: auto;
+    padding-block: var(--space-2xl) var(--space-3xl);
+    padding-inline: var(--space-lg);
+  }
+
+  .auth-page--login {
+    padding-block-start: var(--space-2xl);
+  }
+
+  .auth-page--login .auth-card__body {
+    margin-block-start: -1rem;
+  }
+
+  .auth-card--form .auth-card__heading {
+    padding-inline: var(--space-sm);
+  }
+}
+
+/* AUTH-02 — canonical purpose-selection frame geometry. */
+.route-shell--auth > .app-main > .auth-page--registration-role[data-state] {
+  align-content: start;
+  min-block-size: calc(100vh - 3.5rem);
+  padding-block: 12.25rem 4rem;
+  padding-inline: 4rem;
+}
+
+.auth-page--registration-role .auth-card.auth-card--form {
+  inline-size: min(100%, 42rem);
+  max-inline-size: 42rem;
+}
+
+.auth-page--registration-role .auth-card__heading {
+  display: grid;
+  justify-items: center;
+  gap: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.auth-registration-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-block-size: 2.125rem;
+  padding-inline: 0.7rem;
+  color: var(--color-text-strong);
+  background: var(--color-surface-soft);
+  border: 1px solid color-mix(in srgb, var(--color-brand-accent) 55%, var(--color-border));
+  border-radius: 999px;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+}
+
+.auth-registration-step__number {
+  display: grid;
+  place-items: center;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  color: var(--color-on-brand);
+  background: var(--color-brand-secondary);
+  border-radius: 50%;
+  font-size: var(--font-size-caption);
+  line-height: 1;
+}
+
+.auth-page--registration-role .auth-card__heading h1 {
+  max-inline-size: 100%;
+  margin-block-start: 1.5rem;
+  color: var(--color-text-strong);
+  position: relative;
+  inset-block-start: -0.1875rem;
+  font-size: 30.625px;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.3;
+}
+
+.auth-page--registration-role .auth-card__heading p {
+  max-inline-size: 27rem;
+  margin-block-start: 0.25rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-small);
+  line-height: 1.5;
+}
+
+.auth-page--registration-role .auth-card__body {
+  display: grid;
+  gap: 2rem;
+  padding: 2.125rem 0 0;
+}
+
+.auth-page--registration-role .auth-role-options {
+  gap: 1rem;
+}
+
+.auth-page--registration-role .auth-role-card {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-items: center;
+  block-size: 14.75rem;
+  min-block-size: 14.75rem;
+  padding: 1.5rem;
+  color: var(--color-text-strong);
+  text-align: center;
+  background: var(--color-surface);
+  border: 2px solid #e3e4e7;
+  border-radius: 1rem;
+  box-shadow: 0 1px 2px rgb(23 35 61 / 4%);
+  row-gap: 0;
+}
+
+.auth-page--registration-role .auth-role-card__icon {
+  inline-size: 3.5rem;
+  block-size: 3.5rem;
+  border-radius: 1rem;
+  font-size: 1.5rem;
+}
+
+.auth-page--registration-role .auth-role-card__icon svg {
+  inline-size: 1.875rem;
+  block-size: 1.875rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.auth-page--registration-role .auth-role-card__title {
+  margin-block-start: 1.0625rem;
+  font-size: 1.15625rem;
+  line-height: 1.4;
+}
+
+.auth-page--registration-role .auth-role-card__body {
+  max-inline-size: 100%;
+  margin-block-start: 0.4375rem;
+  color: var(--color-text-secondary);
+  font-size: 14.25px;
+  line-height: 23px;
+}
+
+.auth-page--registration-role .auth-role-card:first-child .auth-role-card__body {
+  max-inline-size: 14rem;
+  position: relative;
+  inset-block-start: 0.25rem;
+}
+
+.auth-page--registration-role .auth-role-card:not(.auth-role-card--link) .auth-role-card__icon,
+.auth-page--registration-role .auth-role-card:not(.auth-role-card--link) .auth-role-card__title,
+.auth-page--registration-role .auth-role-card:not(.auth-role-card--link) .auth-role-card__body {
+  position: relative;
+  inset-block-start: 0.3125rem;
+}
+
+.auth-page--registration-role .auth-role-card:not(.auth-role-card--link) .auth-role-card__icon svg {
+  position: relative;
+  inset-block-start: -0.125rem;
+}
+
+.auth-page--registration-role .auth-role-card__tag {
+  align-self: center;
+  margin-block-start: auto;
+  inline-size: 62px;
+  block-size: 18px;
+  padding: 1px 0;
+  color: var(--color-text-strong);
+  background: var(--color-surface-soft);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  line-height: 14px;
+}
+
+.auth-page--registration-role .auth-role-card__tag-label {
+  display: inline-block;
+  transform: scaleX(0.9);
+}
+
+.auth-role-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  direction: ltr;
+}
+
+.auth-role-actions .ui-button {
+  inline-size: 8.625rem;
+}
+
+.auth-role-actions .ui-button:disabled {
+  background: #c1c3c4;
+}
+
+.auth-role-actions .auth-card__prompt {
+  direction: rtl;
+  text-align: end;
+}
+
+.auth-role-actions .auth-card__prompt a::after {
+  content: none;
+}
+
+.auth-role-actions .auth-card__prompt a::before {
+  display: inline-block;
+  margin-inline-end: 0.35rem;
+  content: '›';
+}
+
+/* AUTH-02 pass 6: apply the measured source-to-runtime alignment deltas. */
+.auth-page--registration-role .auth-registration-step {
+  position: relative;
+  inset-block-start: 0.125rem;
+  min-block-size: 2.125rem;
+  padding-inline: 0.65rem;
+  direction: ltr;
+}
+
+.auth-page--registration-role .auth-registration-step > * {
+  position: relative;
+  inset-inline-start: 2px;
+}
+
+.auth-page--registration-role .auth-registration-step > span:not(.auth-registration-step__number) {
+  font-size: 13px;
+}
+
+.auth-page--registration-role .auth-card__heading h1 {
+  inset-block-start: -0.1875rem;
+  font-size: 30.6875px;
+}
+
+.auth-page--registration-role .auth-role-card--link .auth-role-card__title {
+  position: relative;
+  inset-inline-start: 1px;
+  margin-block-start: 1.1875rem;
+}
+
+.auth-page--registration-role .auth-role-card--link .auth-role-card__body {
+  margin-block-start: 0.3125rem;
+}
+
+.auth-page--registration-role .auth-role-card:not(.auth-role-card--link) .auth-role-card__body {
+  inset-block-start: 0.25rem;
+}
+
+.auth-page--registration-role .auth-role-card--link .auth-role-card__tag {
+  font-weight: var(--font-weight-semibold);
+}
+
+.auth-page--registration-role .auth-role-card--link .auth-role-card__tag-label {
+  position: relative;
+  inset-inline-start: -2px;
+  inset-block-start: 2px;
+  transform: scaleX(0.9);
+}
+
+.auth-page--registration-role .auth-role-card--link .auth-role-card__icon svg {
+  position: relative;
+  inset-inline-start: -0.5px;
+}
+
+.auth-page--registration-role .auth-role-card:not(.auth-role-card--link) .auth-role-card__icon svg {
+  inset-inline-start: -0.5px;
+}
+
+.auth-role-actions .auth-card__prompt a {
+  color: #6b7280;
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.auth-role-actions .ui-button {
+  position: relative;
+  inset-inline-start: -0.5px;
+  border-radius: 1rem;
+  color: #e6e7e7;
+}
+
+.auth-page--registration-role .auth-role-actions .ui-button:disabled {
+  color: #e6e7e7;
+}
+
+.route-shell--auth .route-shell__header {
+  padding-inline: 1.5rem;
+  background: #fefefc;
+}
+
+.route-shell--auth .brand {
+  direction: ltr;
+}
+
+.route-shell--auth .brand::after {
+  color: #6b7280;
+  content: '›';
+  position: relative;
+  inset-inline-end: 1px;
+  inset-block-start: -0.125rem;
+  font-size: 20px;
+}
+
+.route-shell--auth .brand-image {
+  block-size: 1.875rem;
+  position: relative;
+  inset-inline-start: -1px;
+  inset-block-start: -1px;
+}
+
+@media (max-width: 720px) {
+  .route-shell--auth > .app-main > .auth-page--registration-role[data-state] {
+    padding-block: 4rem 3rem;
+    padding-inline: 1.25rem;
+  }
+
+  .auth-page--registration-role .auth-role-options {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-page--registration-role .auth-role-card {
+    min-block-size: 13rem;
+  }
+
+  .auth-role-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .auth-role-actions .ui-button {
+    inline-size: 100%;
+  }
+
+  .auth-role-actions .auth-card__prompt {
+    align-self: end;
+  }
+}

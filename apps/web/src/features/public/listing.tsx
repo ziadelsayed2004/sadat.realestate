@@ -41,6 +41,8 @@ interface ListingFilterDraft {
   readonly bedrooms: string;
   readonly locationId: string;
   readonly projectId: string;
+  readonly propertyTypeId: string;
+  readonly deliveryStatus: '' | 'ready_to_move' | 'under_construction' | 'future_delivery';
   readonly sort: PublicPropertySearchQuery['sort'];
   readonly direction: PublicPropertySearchQuery['direction'];
 }
@@ -78,6 +80,8 @@ function draftFromQuery(query: PublicPropertySearchQuery): ListingFilterDraft {
     bedrooms: query.bedrooms === undefined ? '' : String(query.bedrooms),
     locationId: query.locationId ?? '',
     projectId: query.projectId ?? '',
+    propertyTypeId: query.propertyTypeId ?? '',
+    deliveryStatus: query.deliveryStatus ?? '',
     sort: query.sort,
     direction: query.direction
   };
@@ -133,16 +137,20 @@ function ListingFilters({
   draft,
   copy,
   onChange,
+  onCommit,
   onSubmit,
   onReset,
-  error
+  error,
+  categories
 }: {
   readonly draft: ListingFilterDraft;
   readonly copy: PublicPropertyListingCopy;
   readonly onChange: <K extends FilterKey>(key: K, value: ListingFilterDraft[K]) => void;
+  readonly onCommit: <K extends FilterKey>(key: K, value: ListingFilterDraft[K]) => void;
   readonly onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   readonly onReset: () => void;
   readonly error: boolean;
+  readonly categories: PublicPropertyListData['categories'];
 }) {
   return (
     <aside className="public-property-listing__filters" aria-labelledby="public-property-listing-filters-title">
@@ -151,43 +159,43 @@ function ListingFilters({
         <button type="button" className="public-property-listing__reset" onClick={onReset}>{copy.resetFilters}</button>
       </div>
       <form onSubmit={onSubmit} aria-label={copy.filtersTitle}>
-        <FilterField id="public-property-search" label={copy.searchLabel}>
-          <input id="public-property-search" name="search" type="search" value={draft.search} placeholder={copy.searchPlaceholder} onChange={event => onChange('search', event.target.value)} />
-        </FilterField>
-        <fieldset>
+        <fieldset className="public-property-listing__filter-chips">
           <legend>{copy.transactionLabel}</legend>
-          <label><input type="radio" name="transactionType" value="" checked={draft.transactionType === ''} onChange={() => onChange('transactionType', '')} /> {copy.allTransactions}</label>
-          <label><input type="radio" name="transactionType" value="sale" checked={draft.transactionType === 'sale'} onChange={() => onChange('transactionType', 'sale')} /> {copy.sale}</label>
-          <label><input type="radio" name="transactionType" value="rent" checked={draft.transactionType === 'rent'} onChange={() => onChange('transactionType', 'rent')} /> {copy.rent}</label>
+          <label><input type="radio" name="transactionType" value="" checked={draft.transactionType === ''} onChange={() => onCommit('transactionType', '')} /> {copy.allTransactions}</label>
+          <label><input type="radio" name="transactionType" value="sale" checked={draft.transactionType === 'sale'} onChange={() => onCommit('transactionType', 'sale')} /> {copy.sale}</label>
+          <label><input type="radio" name="transactionType" value="rent" checked={draft.transactionType === 'rent'} onChange={() => onCommit('transactionType', 'rent')} /> {copy.rent}</label>
         </fieldset>
-        <fieldset>
-          <legend>{copy.kindLabel}</legend>
-          <label><input type="radio" name="kind" value="" checked={draft.kind === ''} onChange={() => onChange('kind', '')} /> {copy.allKinds}</label>
-          <label><input type="radio" name="kind" value="property" checked={draft.kind === 'property'} onChange={() => onChange('kind', 'property')} /> {copy.property}</label>
-          <label><input type="radio" name="kind" value="unit" checked={draft.kind === 'unit'} onChange={() => onChange('kind', 'unit')} /> {copy.unit}</label>
+        <fieldset className="public-property-listing__filter-chips public-property-listing__filter-chips--types">
+          <legend>{copy.propertyType}</legend>
+          <label><input type="radio" name="propertyTypeId" value="" checked={draft.propertyTypeId === ''} onChange={() => onCommit('propertyTypeId', '')} /> {copy.allKinds}</label>
+          {categories.slice(0, 5).map(category => <label key={category.id}><input type="radio" name="propertyTypeId" value={category.id} checked={draft.propertyTypeId === category.id} onChange={() => onCommit('propertyTypeId', category.id)} /> {localizedText(category.name, 'ar') ?? category.slug}</label>)}
         </fieldset>
-        <div className="public-property-listing__filter-pair">
-          <FilterField id="public-property-min-price" label={copy.minPrice}>
-            <input id="public-property-min-price" name="minPrice" type="number" min="0" inputMode="decimal" value={draft.minPrice} placeholder={copy.valuePlaceholder} onChange={event => onChange('minPrice', event.target.value)} />
-          </FilterField>
-          <FilterField id="public-property-max-price" label={copy.maxPrice}>
-            <input id="public-property-max-price" name="maxPrice" type="number" min="0" inputMode="decimal" value={draft.maxPrice} placeholder={copy.valuePlaceholder} onChange={event => onChange('maxPrice', event.target.value)} />
-          </FilterField>
-        </div>
-        <FilterField id="public-property-bedrooms" label={copy.bedrooms}>
-          <input id="public-property-bedrooms" name="bedrooms" type="number" min="0" max="100" inputMode="numeric" value={draft.bedrooms} placeholder={copy.valuePlaceholder} onChange={event => onChange('bedrooms', event.target.value)} />
-        </FilterField>
         <FilterField id="public-property-location" label={copy.locationId}>
-          <input id="public-property-location" name="locationId" type="text" value={draft.locationId} placeholder={copy.valuePlaceholder} onChange={event => onChange('locationId', event.target.value)} />
+          <input id="public-property-location" name="locationId" type="text" value={draft.locationId} placeholder={copy.valuePlaceholder} onChange={event => onChange('locationId', event.target.value)} onBlur={event => onCommit('locationId', event.target.value)} />
         </FilterField>
-        <FilterField id="public-property-project" label={copy.projectId}>
-          <input id="public-property-project" name="projectId" type="text" value={draft.projectId} placeholder={copy.valuePlaceholder} onChange={event => onChange('projectId', event.target.value)} />
+        <FilterField id="public-property-delivery-status" label={copy.deliveryStatus}>
+          <select id="public-property-delivery-status" name="deliveryStatus" value={draft.deliveryStatus} onChange={event => onCommit('deliveryStatus', event.target.value as ListingFilterDraft['deliveryStatus'])}>
+            <option value="">{copy.valuePlaceholder}</option>
+            <option value="ready_to_move">{copy.readyToMove}</option>
+            <option value="under_construction">{copy.underConstruction}</option>
+            <option value="future_delivery">{copy.futureDelivery}</option>
+          </select>
         </FilterField>
         {error ? <p className="public-property-listing__filter-error" role="alert">{copy.invalidFilters}</p> : null}
         <button className="public-property-listing__apply" type="submit">{copy.applyFilters}</button>
       </form>
     </aside>
   );
+}
+
+function ListingIcon({ type }: { readonly type: 'grid' | 'list' | 'compare' }) {
+  if (type === 'grid') {
+    return <svg className="public-property-listing__icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="2.5" width="6" height="6" rx="1" /><rect x="11.5" y="2.5" width="6" height="6" rx="1" /><rect x="2.5" y="11.5" width="6" height="6" rx="1" /><rect x="11.5" y="11.5" width="6" height="6" rx="1" /></svg>;
+  }
+  if (type === 'list') {
+    return <svg className="public-property-listing__icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="3.5" cy="4" r="1" /><circle cx="3.5" cy="10" r="1" /><circle cx="3.5" cy="16" r="1" /><path d="M7 4h10M7 10h10M7 16h10" /></svg>;
+  }
+  return <svg className="public-property-listing__icon public-property-listing__icon--compare" viewBox="0 0 20 20" aria-hidden="true"><circle cx="5" cy="5" r="2" /><circle cx="15" cy="5" r="2" /><circle cx="5" cy="15" r="2" /><circle cx="15" cy="15" r="2" /><path d="M7 5h6M5 7v6M15 7v6M7 15h6" /></svg>;
 }
 
 function PropertyResults({
@@ -214,15 +222,18 @@ function PropertyResults({
             title={localizedText(property.name, locale) ?? property.slug}
             href={'/properties/' + property.slug}
             price={formatMoney(property.price, locale)}
-            badges={[property.transactionType === 'sale' ? copy.sale : copy.rent]}
-            features={propertyFeatures(property, locale, { area: copy.area, bedrooms: homepageCopy.bedrooms, bathrooms: copy.bathrooms, floor: copy.floor, sqm: copy.sqm })}
+            location={localizedText(property.locationName, locale)}
+            source={<span className="public-property-listing__source-identity">{property.sourceImageUrl ? <img src={property.sourceImageUrl} alt="" width="24" height="24" loading="lazy" decoding="async" /> : null}<span>{localizedText(property.sourceName, locale)}{property.sourceType ? <small>{property.sourceType === 'developer_company' ? copy.developerSource : copy.brokerageSource}</small> : null}</span></span>}
+            badges={[property.transactionType === 'sale' ? copy.sale : copy.rent, ...(property.installmentAvailable ? [copy.installment] : []), ...(property.featured ? [copy.featured] : []), property.publicCode ?? property.slug.toUpperCase()]}
+            features={[...propertyFeatures(property, locale, { area: copy.area, bedrooms: homepageCopy.bedrooms, bathrooms: copy.bathrooms, floor: copy.floor, sqm: copy.sqm }).slice(0, 3), ...(property.viewCount === undefined ? [] : [{ label: copy.views, value: property.viewCount.toLocaleString(locale) }])]}
             image={<PublicMediaImage src={property.imageUrl} alt={localizedText(property.name, locale) ?? property.slug} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />}
             imageAlt={copy.imageUnavailable}
             className="public-property-listing__card"
+            action={<button type="button" aria-label={`${copy.addToCompare}: ${localizedText(property.name, locale) ?? property.slug}`}><ListingIcon type="compare" /> {copy.addToCompare}</button>}
           />
         ))}
       </div>
-      <Pagination
+      {pageCount > 1 ? <Pagination
         page={data.page}
         pageCount={pageCount}
         onPageChange={onPageChange}
@@ -230,7 +241,7 @@ function PropertyResults({
         nextLabel={copy.nextPage}
         ariaLabel={copy.paginationLabel}
         direction={locale === 'ar' ? 'rtl' : 'ltr'}
-      />
+      /> : null}
     </>
   );
 }
@@ -296,6 +307,17 @@ export function PublicPropertyListing({
     setDraft(previous => ({ ...previous, [key]: value }));
   };
 
+  const commitFilterChange = <K extends FilterKey>(key: K, value: ListingFilterDraft[K]) => {
+    const nextDraft = { ...draft, [key]: value, sort: query.sort, direction: query.direction };
+    setDraft(nextDraft);
+    const nextQuery = queryFromDraft(nextDraft);
+    if (nextQuery === undefined) {
+      setFilterError(true);
+      return;
+    }
+    navigate(nextQuery, false);
+  };
+
   const applyFilters = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const nextQuery = queryFromDraft({ ...draft, sort: query.sort, direction: query.direction });
@@ -306,9 +328,8 @@ export function PublicPropertyListing({
     navigate(nextQuery);
   };
 
-  const updateKind = (kind: PublicPropertySearchQuery['kind'] | undefined) => {
-    setDraft(previous => ({ ...previous, kind: kind ?? '' }));
-    navigate({ ...query, kind, page: 1 }, false);
+  const updatePropertyCategory = (propertyCategoryId: string | undefined) => {
+    navigate({ ...query, propertyCategoryId, propertyTypeId: undefined, page: 1 }, false);
   };
 
   return (
@@ -320,17 +341,16 @@ export function PublicPropertyListing({
           {view === 'success' && data !== undefined ? <p>{copy.resultCount(data.total)}</p> : null}
         </div>
       </section>
-      <nav className="public-property-listing__kind-strip" aria-label={copy.kindLabel}>
-        <button type="button" className={query.kind === undefined ? 'is-active' : ''} aria-pressed={query.kind === undefined} onClick={() => updateKind(undefined)}>{copy.allKinds}</button>
-        <button type="button" className={query.kind === 'property' ? 'is-active' : ''} aria-pressed={query.kind === 'property'} onClick={() => updateKind('property')}>{copy.property}</button>
-        <button type="button" className={query.kind === 'unit' ? 'is-active' : ''} aria-pressed={query.kind === 'unit'} onClick={() => updateKind('unit')}>{copy.unit}</button>
-      </nav>
+      {view === 'success' && data !== undefined ? <nav className="public-property-listing__category-rail" aria-label={copy.propertyType}>
+        <button type="button" className={query.propertyCategoryId === undefined ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === undefined} onClick={() => updatePropertyCategory(undefined)}><img src="/assets/sadat-real-estate-logo.png" alt="" width="72" height="64" decoding="async" loading="eager" /><strong>{copy.allKinds}</strong><span>{data.total.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>
+        {data.categories.slice(0, 7).map(category => <button type="button" key={category.id} className={query.propertyCategoryId === category.id ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === category.id} onClick={() => updatePropertyCategory(category.id)}><PublicMediaImage src={category.imageUrl} alt="" fallback={<img src="/assets/sadat-real-estate-logo.png" alt="" width="72" height="64" />} loading="eager" /><strong>{localizedText(category.name, locale) ?? category.slug}</strong><span>{category.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
+      </nav> : null}
       <div className="public-property-listing__body">
-        <ListingFilters draft={draft} copy={copy} onChange={onFilterChange} onSubmit={applyFilters} onReset={() => navigate(defaultPublicPropertySearchQuery())} error={filterError} />
+        <ListingFilters draft={draft} copy={copy} onChange={onFilterChange} onCommit={commitFilterChange} onSubmit={applyFilters} onReset={() => navigate(defaultPublicPropertySearchQuery())} error={filterError} categories={data?.propertyTypes ?? []} />
         <section className="public-property-listing__results" aria-labelledby="public-property-listing-title" aria-busy={view === 'loading'}>
           <div className="public-property-listing__toolbar">
             <div className="public-property-listing__sort">
-              <label htmlFor="public-property-sort">{copy.sortLabel}</label>
+              <label className="public-property-listing__visually-hidden" htmlFor="public-property-sort">{copy.sortLabel}</label>
               <select id="public-property-sort" name="sort" value={query.sort} onChange={event => {
                 const sort = event.target.value as PublicPropertySearchQuery['sort'];
                 setDraft(previous => ({ ...previous, sort }));
@@ -341,19 +361,10 @@ export function PublicPropertyListing({
                 <option value="name">{copy.sortName}</option>
                 <option value="slug">{copy.sortSlug}</option>
               </select>
-              <label htmlFor="public-property-direction">{copy.directionLabel}</label>
-              <select id="public-property-direction" name="direction" value={query.direction} onChange={event => {
-                const direction = event.target.value as PublicPropertySearchQuery['direction'];
-                setDraft(previous => ({ ...previous, direction }));
-                navigate({ ...query, direction, page: 1 }, false);
-              }}>
-                <option value="desc">{copy.descending}</option>
-                <option value="asc">{copy.ascending}</option>
-              </select>
             </div>
             <div className="public-property-listing__view-toggle" role="group" aria-label={copy.title}>
-              <button type="button" aria-pressed={!listMode} aria-label={copy.gridView} onClick={() => setListMode(false)}>▦</button>
-              <button type="button" aria-pressed={listMode} aria-label={copy.listView} onClick={() => setListMode(true)}>☷</button>
+              <button type="button" aria-pressed={!listMode} aria-label={copy.gridView} onClick={() => setListMode(false)}><ListingIcon type="grid" /></button>
+              <button type="button" aria-pressed={listMode} aria-label={copy.listView} onClick={() => setListMode(true)}><ListingIcon type="list" /></button>
             </div>
           </div>
           {view === 'success' && data !== undefined ? <PropertyResults data={data} locale={locale} copy={copy} listMode={listMode} onPageChange={page => navigate({ ...query, page })} /> : view === 'success' ? <StateNotice state="empty" copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : <StateNotice state={view} copy={copy} onRetry={() => setAttempt(value => value + 1)} />}
