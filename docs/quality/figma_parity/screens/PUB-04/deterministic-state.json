@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "fresh-audit-public-comparison",
-  "responseSha256": "f4c6d34ddeb436c4785712f42d87777b1db7b32ed730ff22fee7f710f809d3ec",
+  "responseSha256": "0ef5790e5c130ee3f412179c4abb6ee0d69e67b43924b88b092d37c6910c76f6",
   "response": {
     "data": {
       "items": [
@@ -22,7 +22,7 @@
             "zh-CN": "Garden villa"
           },
           "transactionType": "sale",
-          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub08-f.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-f.png",
           "propertyTypeName": {
             "ar": "فيلا",
             "en": "Villa",
@@ -40,7 +40,7 @@
             "en": "Nile Real Estate Group",
             "zh-CN": "尼罗房地产集团"
           },
-          "sourceImageUrl": "http://127.0.0.1:4175/assets/clone/pub05-f.png",
+          "sourceImageUrl": "http://127.0.0.1:4173/assets/clone/pub05-f.png",
           "sourceVerified": true,
           "installmentAvailable": true,
           "area": {
@@ -49,8 +49,7 @@
           },
           "layout": {
             "bedrooms": 5,
-            "bathrooms": 4,
-            "floor": 2
+            "bathrooms": 4
           },
           "price": {
             "amount": 5200000,
@@ -67,7 +66,7 @@
             "zh-CN": "City apartment"
           },
           "transactionType": "sale",
-          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub08-e.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
           "propertyTypeName": {
             "ar": "شقة",
             "en": "Apartment",
@@ -85,7 +84,7 @@
             "en": "Sadat Real Estate Development",
             "zh-CN": "萨达特房地产开发"
           },
-          "sourceImageUrl": "http://127.0.0.1:4175/assets/clone/pub05-b.png",
+          "sourceImageUrl": "http://127.0.0.1:4173/assets/clone/pub05-b.png",
           "sourceVerified": true,
           "installmentAvailable": true,
           "area": {
@@ -94,8 +93,7 @@
           },
           "layout": {
             "bedrooms": 3,
-            "bathrooms": 2,
-            "floor": 4
+            "bathrooms": 2
           },
           "price": {
             "amount": 1900000,

@@ -1,0 +1,59 @@
+{
+  "seedId": "fresh-audit-PUB-10-ar-v1",
+  "fixtureKind": "public-community-create",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/public/community/posts",
+    "locale": "ar",
+    "direction": "rtl"
+  },
+  "responseRequestId": "fresh-audit-public-community",
+  "responseSha256": "a54cede97ea5087be2662b225296e5555cfb182576d2ce2919c7fc0eae4b7e75",
+  "response": {
+    "data": {
+      "items": [
+        {
+          "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "ما أفضل حي للسكن بميزانية 2 مليون؟",
+          "body": "أنا وعائلتي بنفكر ننقل للسادات، ميزانيتنا حوالي 2 مليون جنيه. فين تنصحوني أشتري؟",
+          "createdAt": "2026-08-26T10:00:00+00:00",
+          "commentCount": 12
+        },
+        {
+          "id": "bbbbbbbbbbbbbbbbbbbbbbbb",
+          "title": "تجربتي بعد سنة كاملة في السادات",
+          "body": "انتقلت من القاهرة للسادات السنة اللي فاتت وعندي شوية ملاحظات وتجارب.",
+          "createdAt": "2026-08-25T10:00:00+00:00",
+          "commentCount": 34
+        },
+        {
+          "id": "cccccccccccccccccccccccc",
+          "title": "نصيحة مهمة لكل من يفكر في الشراء على الخريطة",
+          "body": "بعد تجربتي شراء وحدة على الخريطة من مطور محترم، عندي نصائح مهمة جداً.",
+          "createdAt": "2026-08-21T10:00:00+00:00",
+          "commentCount": 45
+        },
+        {
+          "id": "dddddddddddddddddddddddd",
+          "title": "مطعم جديد ممتاز في الحي الأول",
+          "body": "افتتح مطعم جديد في الحي الأول الأكل فيه ممتاز وأسعار معقولة.",
+          "createdAt": "2026-08-24T10:00:00+00:00",
+          "commentCount": 18
+        }
+      ],
+      "page": 1,
+      "limit": 20,
+      "total": 4
+    },
+    "meta": {
+      "requestId": "fresh-audit-public-community"
+    }
+  },
+  "relatedResponses": {},
+  "authSession": {
+    "status": "authenticated",
+    "role": "seeker",
+    "source": "deterministic-refresh"
+  },
+  "ownership": "public"
+}

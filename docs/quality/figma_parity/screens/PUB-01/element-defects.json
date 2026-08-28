@@ -30,25 +30,25 @@
     {
       "element": "hero media",
       "figmaExpected": "daylight Sadat City aerial with mosque",
-      "runtimeActual": "approved nighttime skyline fallback",
-      "measuredDelta": "850px full-width media field",
-      "owner": "external canonical asset export",
-      "requiredRepair": "supply approved source export; never crop figma.png",
-      "status": "BLOCKED_SOURCE_ASSET"
+      "runtimeActual": "approved canonical Sadat City aerial export",
+      "measuredDelta": "0px asset-field geometry; residual sampled visual pixels are tracked in review.json",
+      "owner": "apps/web/src/features/public/components.tsx; canonical public assets",
+      "requiredRepair": "continue geometry and typography refinement; never crop figma.png",
+      "status": "REPAIRED"
     },
     {
       "element": "category artwork",
       "figmaExpected": "eight distinct canonical category illustrations",
-      "runtimeActual": "approved shared brand-mark fallback",
-      "measuredDelta": "8 icon fields",
-      "owner": "external canonical asset exports",
-      "requiredRepair": "supply approved category icon exports",
-      "status": "BLOCKED_SOURCE_ASSET"
+      "runtimeActual": "approved canonical category illustration exports",
+      "measuredDelta": "0px asset-field geometry; residual sampled visual pixels are tracked in review.json",
+      "owner": "apps/web/src/features/public/components.tsx; canonical public assets",
+      "requiredRepair": "continue surrounding geometry and typography refinement",
+      "status": "REPAIRED"
     }
   ],
   "classification": "PARTIAL",
-  "externalBlocker": "The canonical daylight Sadat City aerial/mosque hero and eight distinct category icon exports are absent from approved repository assets and cached extracted assets. Reconstructing them from figma.png would create prohibited screenshot-only content.",
-  "materialDifferencePercent": 29.1437,
-  "antiAliasingOnlyPercent": 6.6669,
-  "reviewedAt": "2026-08-26T00:13:15.928Z"
+  "externalBlocker": "Approved frame-linked assets are present and wired. Residual material differences remain in rendered geometry, typography, image framing, and other details; reconstructing content from figma.png is prohibited.",
+  "materialDifferencePercent": 21.8768,
+  "antiAliasingOnlyPercent": 14.1222,
+  "reviewedAt": "2026-08-28T00:31:53.000Z"
 }

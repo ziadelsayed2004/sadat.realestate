@@ -68,12 +68,12 @@ test('community feed and create-post surface match the approved responsive publi
   await expect(page.locator('main#main-content main')).toHaveCount(0);
   await expect(page).toHaveScreenshot(`public-community-${locale}.png`, { fullPage: true });
 
-  const openButton = community.getByRole('button', { name: /Create|إنشاء|创建/ });
-  await expect(openButton).toHaveCSS('background-color', 'rgb(15, 74, 59)');
+  const openButton = community.getByRole('button', { name: /Create|إنشاء|انشر|بوست|创建/ });
+  await expect(openButton).toHaveCSS('background-color', 'rgb(209, 160, 68)');
   await openButton.click();
   await expect(page.getByRole('dialog')).toBeVisible();
-  await expect(page.getByLabel(/Post title|عنوان المشاركة|帖子标题/)).toBeVisible();
-  await expect(page.getByLabel(/Post body|نص المشاركة|帖子内容/)).toBeVisible();
+  await expect(page.getByLabel(/Post title|عنوان المشاركة|عنوان البوست|帖子标题/)).toBeVisible();
+  await expect(page.getByLabel(/Post body|نص المشاركة|محتوى البوست|帖子内容/)).toBeVisible();
   await expect(page.locator('.ui-modal__footer')).toBeVisible();
   await expect(page).toHaveScreenshot(`public-community-create-${locale}.png`, { fullPage: true });
 });
@@ -85,7 +85,7 @@ test('community controls are labeled and keyboard-accessible across approved loc
 
   const community = page.locator('[data-page="public-community"]');
   await expect(community.locator('.public-homepage__nav')).toHaveAttribute('aria-label', /.+/);
-  await expect(community.locator('button').filter({ hasText: /Create|إنشاء|创建/ })).toBeVisible();
+  await expect(community.locator('button').filter({ hasText: /Create|إنشاء|انشر|بوست|创建/ })).toBeVisible();
   await expect(community.locator('[role="note"]')).toBeVisible();
   await expect(page.locator('main#main-content')).toBeVisible();
   await expect(page.locator('main#main-content main')).toHaveCount(0);

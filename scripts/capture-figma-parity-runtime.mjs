@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { chromium } from '@playwright/test';
-import { PUBLIC_CLONE_ASSETS, publicHomepageFixture, publicPropertyListFixture } from '../apps/web/tests/e2e/public-fixtures.ts';
+import { PUBLIC_CLONE_ASSETS, publicAboutFixture, publicCommunityFixture, publicHomepageFixture, publicPropertyListFixture, publicTeamFixture } from '../apps/web/tests/e2e/public-fixtures.ts';
 
 const root = process.cwd();
 const args = new Map(process.argv.slice(2).flatMap((value, index, values) => value.startsWith('--') ? [[value.slice(2), values[index + 1] ?? true]] : []));
@@ -15,7 +15,16 @@ const evidenceDir = path.join(root, 'docs/quality/figma_parity/screens', screenI
 const queue = JSON.parse(fs.readFileSync(path.join(root, 'docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json'), 'utf8'));
 const queueEntry = queue.screens.find((entry) => entry.screenId === screenId);
 if (!queueEntry) throw new Error(`Screen ${screenId} is not present in the execution queue`);
-const referenceWidth = Number(queueEntry.evidence?.figmaScreenshot?.width ?? queueEntry.evidence?.figmaContext?.root?.width ?? 1280);
+function localPngWidth(filePath) {
+  try {
+    const buffer = fs.readFileSync(filePath);
+    if (buffer.length >= 24 && buffer.readUInt32BE(0) === 0x89504e47 && buffer.toString('ascii', 1, 4) === 'PNG') return buffer.readUInt32BE(16);
+  } catch {
+    // A missing local source falls through to the cached Figma context width.
+  }
+  return undefined;
+}
+const referenceWidth = Number(queueEntry.evidence?.figmaScreenshot?.width ?? queueEntry.evidence?.figmaContext?.root?.width ?? localPngWidth(path.join(evidenceDir, 'figma.png')) ?? 1280);
 if (!Number.isInteger(referenceWidth) || referenceWidth < 320) throw new Error(`Invalid cached Figma frame width for ${screenId}: ${referenceWidth}`);
 const fixtureKind = String(args.get('fixture') ?? (screenId === 'PUB-01' ? 'public-home' : 'public-list'));
 const capturePhase = String(args.get('phase') ?? 'before');
@@ -59,8 +68,8 @@ const propertyDetailsFixture = {
 const propertyComparisonFixture = {
   data: {
     items: [
-      { id: 'aaaaaaaaaaaaaaaaaaaaaaaa', slug: 'garden-villa', kind: 'property', name: { ar: 'فيلا مستقلة بالمنطقة الراقية', en: 'Garden villa', 'zh-CN': 'Garden villa' }, transactionType: 'sale', imageUrl: PUBLIC_CLONE_ASSETS.villa, propertyTypeName: { ar: 'فيلا', en: 'Villa', 'zh-CN': '别墅' }, locationName: { ar: 'المنطقة الراقية', en: 'Al Raqia district', 'zh-CN': '高级区' }, publicCode: 'SDT-0892', sourceType: 'developer_company', sourceName: { ar: 'مجموعة النيل العقارية', en: 'Nile Real Estate Group', 'zh-CN': '尼罗房地产集团' }, sourceImageUrl: PUBLIC_CLONE_ASSETS.office, sourceVerified: true, installmentAvailable: true, area: { value: 320, unit: 'sqm' }, layout: { bedrooms: 5, bathrooms: 4, floor: 2 }, price: { amount: 5200000, currency: 'EGP' } },
-      { id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'city-apartment', kind: 'unit', name: { ar: 'شقة فاخرة في الحي الأول', en: 'City apartment', 'zh-CN': 'City apartment' }, transactionType: 'sale', imageUrl: PUBLIC_CLONE_ASSETS.interior, propertyTypeName: { ar: 'شقة', en: 'Apartment', 'zh-CN': '公寓' }, locationName: { ar: 'الحي الأول', en: 'First District', 'zh-CN': '第一区' }, publicCode: 'SDT-1234', sourceType: 'developer_company', sourceName: { ar: 'شركة السادات للتطوير العقاري', en: 'Sadat Real Estate Development', 'zh-CN': '萨达特房地产开发' }, sourceImageUrl: PUBLIC_CLONE_ASSETS.provider, sourceVerified: true, installmentAvailable: true, area: { value: 145, unit: 'sqm' }, layout: { bedrooms: 3, bathrooms: 2, floor: 4 }, price: { amount: 1900000, currency: 'EGP' } }
+      { id: 'aaaaaaaaaaaaaaaaaaaaaaaa', slug: 'garden-villa', kind: 'property', name: { ar: 'فيلا مستقلة بالمنطقة الراقية', en: 'Garden villa', 'zh-CN': 'Garden villa' }, transactionType: 'sale', imageUrl: PUBLIC_CLONE_ASSETS.villa, propertyTypeName: { ar: 'فيلا', en: 'Villa', 'zh-CN': '别墅' }, locationName: { ar: 'المنطقة الراقية', en: 'Al Raqia district', 'zh-CN': '高级区' }, publicCode: 'SDT-0892', sourceType: 'developer_company', sourceName: { ar: 'مجموعة النيل العقارية', en: 'Nile Real Estate Group', 'zh-CN': '尼罗房地产集团' }, sourceImageUrl: PUBLIC_CLONE_ASSETS.office, sourceVerified: true, installmentAvailable: true, area: { value: 320, unit: 'sqm' }, layout: { bedrooms: 5, bathrooms: 4 }, price: { amount: 5200000, currency: 'EGP' } },
+      { id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'city-apartment', kind: 'unit', name: { ar: 'شقة فاخرة في الحي الأول', en: 'City apartment', 'zh-CN': 'City apartment' }, transactionType: 'sale', imageUrl: PUBLIC_CLONE_ASSETS.interior, propertyTypeName: { ar: 'شقة', en: 'Apartment', 'zh-CN': '公寓' }, locationName: { ar: 'الحي الأول', en: 'First District', 'zh-CN': '第一区' }, publicCode: 'SDT-1234', sourceType: 'developer_company', sourceName: { ar: 'شركة السادات للتطوير العقاري', en: 'Sadat Real Estate Development', 'zh-CN': '萨达特房地产开发' }, sourceImageUrl: PUBLIC_CLONE_ASSETS.provider, sourceVerified: true, installmentAvailable: true, area: { value: 145, unit: 'sqm' }, layout: { bedrooms: 3, bathrooms: 2 }, price: { amount: 1900000, currency: 'EGP' } }
     ],
     fields: ['kind', 'transactionType', 'sourceName', 'sourceType', 'project', 'developer', 'publicCode', 'price', 'installment', 'area', 'bedrooms', 'bathrooms', 'floor', 'deliveryStatus', 'locationName']
   },
@@ -203,7 +212,7 @@ const articleListFixture = {
       body: { ar: 'كل ما تحتاج معرفته قبل شراء عقار في مدينة السادات. مدينة السادات من أسرع المدن نموًا على مستوى المنطقة.', en: 'Everything you need to know before buying a property in Sadat City.', 'zh-CN': '在萨达特城购房前需要了解的一切。' },
       seoTitle: { ar: 'دليلك الكامل للشراء في مدينة السادات 2024', en: 'Your complete guide to buying in Sadat City 2024', 'zh-CN': '2024年萨达特城购房完整指南' },
       seoDescription: { ar: 'دليل عملي للشراء.', en: 'A practical buying guide.', 'zh-CN': '实用购房指南。' },
-      publishedAt: '2026-08-01T10:00:00+00:00'
+      publishedAt: '2024-01-15T10:00:00+00:00'
     },
     {
       id: 'cccccccccccccccccccccccc',
@@ -296,6 +305,12 @@ const fixtureConfig = fixtureKind === 'public-home'
     ? { fixture: articleListFixture, apiPath: '/api/v1/public/articles', apiPattern: '**/api/v1/public/articles**', pageName: 'public-articles', stateAttribute: 'data-articles-state', regions: ['header', 'directory heading', 'article search', 'category filters', 'article card grid', 'CTA banner', 'footer'] }
   : fixtureKind === 'public-article-details'
     ? { fixture: articleDetailsFixture, apiPath: '/api/v1/public/articles/buying-in-sadat', apiPattern: '**/api/v1/public/articles/buying-in-sadat**', pageName: 'public-article-details', stateAttribute: 'data-article-details-state', regions: ['header', 'back link', 'related properties', 'hero/media', 'article title/meta', 'article body', 'related articles', 'footer'] }
+  : fixtureKind === 'public-community' || fixtureKind === 'public-community-create'
+    ? { fixture: publicCommunityFixture(), apiPath: '/api/v1/public/community/posts', apiPattern: '**/api/v1/public/community/posts**', pageName: 'public-community', stateAttribute: 'data-page', regions: ['header', 'community heading', 'create-post action', 'category filters', 'moderation notice', 'community post cards', 'post media/stats', 'footer'] }
+  : fixtureKind === 'public-about'
+    ? { fixture: publicAboutFixture(), apiPath: '/api/v1/public/about', apiPattern: '**/api/v1/public/about**', pageName: 'public-about', stateAttribute: 'data-about-state', regions: ['header', 'about hero', 'how it works', 'values', 'platform statistics', 'CTA', 'footer'] }
+  : fixtureKind === 'public-team'
+    ? { fixture: publicTeamFixture(), apiPath: '/api/v1/public/team', apiPattern: '**/api/v1/public/team**', pageName: 'public-team', stateAttribute: 'data-team-state', regions: ['header', 'team heading', 'team filters', 'team member cards', 'footer'] }
   : { fixture: publicPropertyListFixture(), apiPath: '/api/v1/public/properties', apiPattern: '**/api/v1/public/properties**', pageName: 'public-properties', stateAttribute: 'data-listing-state', regions: ['header', 'listing heading', 'property categories', 'property grid', 'filter sidebar', 'pagination/controls', 'footer'] };
 
 if (!screenId) throw new Error('Missing --screen-id');
@@ -311,7 +326,7 @@ const seedState = {
   responseSha256: crypto.createHash('sha256').update(fixtureJson).digest('hex'),
   response: fixture,
   relatedResponses: fixtureKind === 'public-articles' || fixtureKind === 'public-article-details' ? { articleCategories: articleCategoryFixture, relatedArticles: articleListFixture, ...(fixtureKind === 'public-article-details' ? { relatedProperties: articleRelatedPropertyFixture } : {}) } : {},
-  authSession: null,
+  authSession: fixtureKind === 'public-community-create' ? { status: 'authenticated', role: 'seeker', source: 'deterministic-refresh' } : null,
   ownership: 'public',
 };
 fs.writeFileSync(path.join(evidenceDir, 'deterministic-state.json'), JSON.stringify(seedState, null, 2) + '\n');
@@ -345,12 +360,33 @@ if (fixtureKind === 'public-article-details') await page.route('**/api/v1/public
 if (fixtureKind === 'public-articles') await page.route('**/api/v1/public/article-categories**', async (routeHandler) => {
   await routeHandler.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(articleCategoryFixture) });
 });
+if (fixtureKind === 'public-community-create') await page.route('**/api/v1/auth/refresh', async (routeHandler) => {
+  await routeHandler.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({
+      data: {
+        accessToken: 'header.payload.signature',
+        tokenType: 'Bearer',
+        expiresInSeconds: 3_600,
+        user: { id: 'bbbbbbbbbbbbbbbbbbbbbbbb', roleType: 'seeker', status: 'verified' }
+      },
+      meta: { requestId: 'fresh-audit-public-community-auth' }
+    })
+  });
+});
 
 const targetUrl = new URL(route, baseUrl);
 targetUrl.searchParams.set('lang', locale);
 const response = await page.goto(targetUrl.toString(), { waitUntil: 'domcontentloaded', timeout: 30_000 });
 await page.waitForLoadState('networkidle', { timeout: 10_000 }).catch(() => undefined);
 await page.locator(`[data-page="${fixtureConfig.pageName}"]`).waitFor({ state: 'visible', timeout: 10_000 }).catch(() => undefined);
+if (fixtureKind === 'public-community-create') {
+  const initialPermission = page.locator('[role="dialog"] .ui-modal__close');
+  if (await initialPermission.isVisible().catch(() => false)) await initialPermission.click();
+  await page.locator('.public-community__intro .ui-button').click();
+  await page.locator('[role="dialog"] .public-community__composer').waitFor({ state: 'visible', timeout: 10_000 });
+}
 await page.addStyleTag({ content: `
   *, *::before, *::after {
     animation: none !important;
@@ -434,6 +470,7 @@ const dom = await page.evaluate(({ pageName, stateAttribute }) => {
 
 const imageData = (filePath) => `data:image/png;base64,${fs.readFileSync(filePath).toString('base64')}`;
 const diffPage = await context.newPage({ viewport: { width: referenceWidth, height: 720 } });
+const comparisonAfterPath = fs.existsSync(afterPath) ? afterPath : runtimePath;
 const comparison = await diffPage.evaluate(async ({ figma, before, after }) => {
   const load = (src) => new Promise((resolve, reject) => {
     const image = new Image();
@@ -496,7 +533,7 @@ const comparison = await diffPage.evaluate(async ({ figma, before, after }) => {
       method: 'same-width source/runtime canvas comparison over the overlapping document height'
     }
   };
-}, { figma: imageData(path.join(evidenceDir, 'figma.png')), before: imageData(runtimePath), after: imageData(afterPath) });
+}, { figma: imageData(path.join(evidenceDir, 'figma.png')), before: imageData(runtimePath), after: imageData(comparisonAfterPath) });
 const diffBuffer = Buffer.from(comparison.dataUrl.split(',')[1], 'base64');
 fs.writeFileSync(path.join(evidenceDir, 'diff.png'), diffBuffer);
 fs.writeFileSync(path.join(evidenceDir, 'visual-metrics.json'), JSON.stringify({

@@ -75,7 +75,7 @@ function localizedValues(values: readonly LocalizedValue[] | undefined, locale: 
 }
 
 function ProfileIcon({ name }: { readonly name: IconName }) {
-  const common = { className: 'public-developer-profile__icon', viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const, focusable: 'false' as const, 'aria-hidden': true };
+  const common = { className: `public-developer-profile__icon public-developer-profile__icon--${name}`, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const, focusable: 'false' as const, 'aria-hidden': true };
   switch (name) {
     case 'check':
       return <svg {...common}><path d="m5 12 4 4L19 6" /></svg>;
@@ -276,7 +276,7 @@ function PropertiesSection({ data, locale, copy }: { readonly data: PublicOrgani
     <section className="public-developer-profile__section public-developer-profile__properties-section" id="developer-properties" aria-labelledby="public-developer-properties-title">
       <div className="public-developer-profile__section-heading">
         <h2 id="public-developer-properties-title">{copy.availableUnitsTitle}</h2>
-        {data.properties.length > 0 ? <a href="#developer-contact">{copy.availableUnitsAction}<ProfileIcon name="arrow" /></a> : null}
+        <a href="#developer-contact">{copy.availableUnitsAction}<ProfileIcon name="arrow" /></a>
       </div>
       {data.properties.length === 0 ? <p className="public-developer-profile__empty public-developer-profile__empty--units"><ProfileIcon name="unit" />{copy.availableUnitsEmpty}</p> : (
         <div className="public-developer-profile__property-grid">

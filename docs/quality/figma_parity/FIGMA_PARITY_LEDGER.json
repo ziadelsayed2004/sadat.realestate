@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-25T18:00:00.000Z",
+  "generatedAt": "2026-08-28T19:12:41.452Z",
+  "updatedAt": "2026-08-28T20:57:49.568Z",
   "policy": "No screen is marked visually verified without direct clone-source and runtime comparison evidence.",
   "rows": [
     {
@@ -12,22 +13,51 @@
       "directMetadataEvidence": true,
       "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": "docs/quality/figma_parity/runtime-PUB-01-ar.png",
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "REVIEWED_MATERIAL_DIFFERENCES_OBSERVED_RUNTIME_ERROR_STATE",
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PUB-01/runtime-after.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PUB-01/diff.png",
+      "visualReviewStatus": "REVIEWED_MATERIAL_DIFFERENCES_OBSERVED",
       "runtimeEvidence": {
-        "locale": "ar",
-        "direction": "rtl",
-        "viewport": {
-          "width": 1440,
-          "height": 1080
-        },
-        "sourceScreenshot": "docs/quality/figma_parity/figma-source-PUB-01.png",
-        "runtimeScreenshot": "docs/quality/figma_parity/runtime-PUB-01-ar.png",
-        "runtimeState": "error-retry-no-api-fixture",
-        "comparisonStatus": "NOT_COMPARABLE_TO_FIGMA_SUCCESS_STATE"
+        "approvedLocaleScope": [
+          "ar"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PUB-01/runtime-after.png",
+            "capturePath": "docs/quality/figma_parity/screens/PUB-01/runtime-after-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/PUB-01/diff.png",
+            "metricsPath": "docs/quality/figma_parity/screens/PUB-01/visual-metrics.json",
+            "sha256": "6f1cf039f851e0294d8185b5d148cfd7b157cf197d9f79c1b7ff9a694445617d",
+            "materialDifferencePercent": 20.8017,
+            "antiAliasingOnlyPercent": 14.2793
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PUB-01/review.json",
+        "evidenceComplete": true
       },
-      "materialDefects": []
+      "materialDefects": [
+        "Direct clone/runtime comparison remains PARTIAL; implementation snapshots were updated only after direct source/runtime review and no screen was closed."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "REVIEWED_MATERIAL_DIFFERENCES_OBSERVED_RUNTIME_ERROR_STATE",
+      "historicalCoordinatorRuntimeAfterEvidence": "docs/quality/figma_parity/runtime-PUB-01-ar.png",
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 20.8017,
+            "antiAliasingOnlyPercent": 14.2793
+          }
+        ]
+      }
     },
     {
       "screenId": "PUB-02",
@@ -36,13 +66,53 @@
       "exactCloneNodeId": "6017:12095",
       "sourceChecksum": "d5ac0f6bc48a74c4cb8af9ab458c0b70a79d026b162000bcedf45115b5261e9c",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PUB-02/runtime-after.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PUB-02/diff.png",
+      "visualReviewStatus": "REVIEWED_MATERIAL_DIFFERENCES_OBSERVED",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PUB-02/runtime-after.png",
+            "capturePath": "docs/quality/figma_parity/screens/PUB-02/runtime-after-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/PUB-02/diff.png",
+            "metricsPath": "docs/quality/figma_parity/screens/PUB-02/visual-metrics.json",
+            "sha256": "98a2c24b3c0feb68fef3c5f768b1f1bc515dc2a2275ad028a1456e625fa2d7da",
+            "materialDifferencePercent": 12.6057,
+            "antiAliasingOnlyPercent": 7.5326
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PUB-02/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Direct clone/runtime comparison remains PARTIAL; implementation snapshots were updated only after direct source/runtime review and no screen was closed."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 12.6057,
+            "antiAliasingOnlyPercent": 7.5326
+          }
+        ]
+      }
     },
     {
       "screenId": "PUB-03",
@@ -51,13 +121,53 @@
       "exactCloneNodeId": "6017:12693",
       "sourceChecksum": "d1346599fdb04cdc8b217fd99d7323a281810d69c6e6b9265dc3df204735679d",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PUB-03/runtime-after.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PUB-03/diff.png",
+      "visualReviewStatus": "REVIEWED_MATERIAL_DIFFERENCES_OBSERVED",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PUB-03/runtime-after.png",
+            "capturePath": "docs/quality/figma_parity/screens/PUB-03/runtime-after-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/PUB-03/diff.png",
+            "metricsPath": "docs/quality/figma_parity/screens/PUB-03/visual-metrics.json",
+            "sha256": "b4b67edbe4298ed37520aa39e050b764c3c7de120ae3e8bc965ac7af9cc8d3a6",
+            "materialDifferencePercent": 8.196,
+            "antiAliasingOnlyPercent": 4.6249
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PUB-03/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Direct clone/runtime comparison remains PARTIAL; implementation snapshots were updated only after direct source/runtime review and no screen was closed."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 8.196,
+            "antiAliasingOnlyPercent": 4.6249
+          }
+        ]
+      }
     },
     {
       "screenId": "PUB-04",
@@ -66,13 +176,53 @@
       "exactCloneNodeId": "6017:13838",
       "sourceChecksum": "9dee0f806a8eea7402ebc536c489ec9e33c591bdddf4482cf3883daace1aff98",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PUB-04/runtime-after.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PUB-04/diff.png",
+      "visualReviewStatus": "REVIEWED_MATERIAL_DIFFERENCES_OBSERVED",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PUB-04/runtime-after.png",
+            "capturePath": "docs/quality/figma_parity/screens/PUB-04/runtime-after-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/PUB-04/diff.png",
+            "metricsPath": "docs/quality/figma_parity/screens/PUB-04/visual-metrics.json",
+            "sha256": "f5a7d4ff9bf81852ab07d5ebc78134c3415690a0c784499c63bf5a17f3a01996",
+            "materialDifferencePercent": 5.9039,
+            "antiAliasingOnlyPercent": 7.6607
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PUB-04/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Direct clone/runtime comparison remains PARTIAL; implementation snapshots were updated only after direct source/runtime review and no screen was closed."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 5.9039,
+            "antiAliasingOnlyPercent": 7.6607
+          }
+        ]
+      }
     },
     {
       "screenId": "PUB-05",
@@ -81,13 +231,53 @@
       "exactCloneNodeId": "6017:11366",
       "sourceChecksum": "88114921e9fac4389f4ddc7242cc26b9b099cefd1eafdf801a4922690937fb77",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PUB-05/runtime-after.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PUB-05/diff.png",
+      "visualReviewStatus": "REVIEWED_MATERIAL_DIFFERENCES_OBSERVED",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PUB-05/runtime-after.png",
+            "capturePath": "docs/quality/figma_parity/screens/PUB-05/runtime-after-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/PUB-05/diff.png",
+            "metricsPath": "docs/quality/figma_parity/screens/PUB-05/visual-metrics.json",
+            "sha256": "e2e0c33c2fbcec7ebfe1ca8c01196527d5c165aec8ef868f8dfa476f7c57e787",
+            "materialDifferencePercent": 18.0671,
+            "antiAliasingOnlyPercent": 4.6796
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PUB-05/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Direct clone/runtime comparison remains PARTIAL; implementation snapshots were updated only after direct source/runtime review and no screen was closed."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 18.0671,
+            "antiAliasingOnlyPercent": 4.6796
+          }
+        ]
+      }
     },
     {
       "screenId": "PUB-06",
@@ -96,13 +286,53 @@
       "exactCloneNodeId": "6017:13155",
       "sourceChecksum": "5ea3de7f6b83c35e1270b83d76db594d2409fc5d0bf562bedd4db141b71851a1",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PUB-06/runtime-after.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PUB-06/diff.png",
+      "visualReviewStatus": "REVIEWED_MATERIAL_DIFFERENCES_OBSERVED",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PUB-06/runtime-after.png",
+            "capturePath": "docs/quality/figma_parity/screens/PUB-06/runtime-after-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/PUB-06/diff.png",
+            "metricsPath": "docs/quality/figma_parity/screens/PUB-06/visual-metrics.json",
+            "sha256": "68b2e2073459059249f4240d94c5b40a3f689e83ef40405bdd302315b5769062",
+            "materialDifferencePercent": 15.8102,
+            "antiAliasingOnlyPercent": 6.2958
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PUB-06/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Direct clone/runtime comparison remains PARTIAL; implementation snapshots were updated only after direct source/runtime review and no screen was closed."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 15.8102,
+            "antiAliasingOnlyPercent": 6.2958
+          }
+        ]
+      }
     },
     {
       "screenId": "PUB-07",
@@ -111,13 +341,53 @@
       "exactCloneNodeId": "6017:11467",
       "sourceChecksum": "2c7da5d5dd9e8f6cecd51856ec7046b746fa608bbbf68b67c1e35348cf6385e5",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PUB-07/runtime-after.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PUB-07/diff.png",
+      "visualReviewStatus": "REVIEWED_MATERIAL_DIFFERENCES_OBSERVED",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PUB-07/runtime-after.png",
+            "capturePath": "docs/quality/figma_parity/screens/PUB-07/runtime-after-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/PUB-07/diff.png",
+            "metricsPath": "docs/quality/figma_parity/screens/PUB-07/visual-metrics.json",
+            "sha256": "463296f485ca3b59a08aa7dcf0c595a236b383c3c55ed3285e95ff82bb9e7875",
+            "materialDifferencePercent": 10.1597,
+            "antiAliasingOnlyPercent": 6.513
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PUB-07/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Direct clone/runtime comparison remains PARTIAL; implementation snapshots were updated only after direct source/runtime review and no screen was closed."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 10.1597,
+            "antiAliasingOnlyPercent": 6.513
+          }
+        ]
+      }
     },
     {
       "screenId": "PUB-08",
@@ -126,13 +396,53 @@
       "exactCloneNodeId": "6017:12560",
       "sourceChecksum": "06814379fbb850bdd15ef3a1fbd1e6172463282585a11cd14e9d207d6e99fdff",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PUB-08/runtime-after.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PUB-08/diff.png",
+      "visualReviewStatus": "REVIEWED_MATERIAL_DIFFERENCES_OBSERVED",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PUB-08/runtime-after.png",
+            "capturePath": "docs/quality/figma_parity/screens/PUB-08/runtime-after-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/PUB-08/diff.png",
+            "metricsPath": "docs/quality/figma_parity/screens/PUB-08/visual-metrics.json",
+            "sha256": "b8568b184275e67042e57c871f865671d5947fc9565580d86cb9b6d06303c2cc",
+            "materialDifferencePercent": 8.5476,
+            "antiAliasingOnlyPercent": 4.7159
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PUB-08/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Direct clone/runtime comparison remains PARTIAL; implementation snapshots were updated only after direct source/runtime review and no screen was closed."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 8.5476,
+            "antiAliasingOnlyPercent": 4.7159
+          }
+        ]
+      }
     },
     {
       "screenId": "PUB-09",
@@ -141,13 +451,53 @@
       "exactCloneNodeId": "6017:11634",
       "sourceChecksum": "bb57550933a7b7687316465022e85b30d817ea4bafb605f0700de11ecb1197c7",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PUB-09/runtime-after.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PUB-09/diff.png",
+      "visualReviewStatus": "REVIEWED_MATERIAL_DIFFERENCES_OBSERVED",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PUB-09/runtime-after.png",
+            "capturePath": "docs/quality/figma_parity/screens/PUB-09/runtime-after-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/PUB-09/diff.png",
+            "metricsPath": "docs/quality/figma_parity/screens/PUB-09/visual-metrics.json",
+            "sha256": "a046397684dbc1c49a3dcdf97df894a17cff0ad803444bdd5728b4432a411a61",
+            "materialDifferencePercent": 4.9283,
+            "antiAliasingOnlyPercent": 7.8299
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PUB-09/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Direct clone/runtime comparison remains PARTIAL; implementation snapshots were updated only after direct source/runtime review and no screen was closed."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 4.9283,
+            "antiAliasingOnlyPercent": 7.8299
+          }
+        ]
+      }
     },
     {
       "screenId": "PUB-10",
@@ -156,13 +506,53 @@
       "exactCloneNodeId": "6017:13611",
       "sourceChecksum": "3fa4aa55d8d1058453a194e1ad14ceaafbcf6bd922b9a209d3dda9b8ef9d02ec",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PUB-10/runtime-after.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PUB-10/diff.png",
+      "visualReviewStatus": "REVIEWED_MATERIAL_DIFFERENCES_OBSERVED",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PUB-10/runtime-after.png",
+            "capturePath": "docs/quality/figma_parity/screens/PUB-10/runtime-after-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/PUB-10/diff.png",
+            "metricsPath": "docs/quality/figma_parity/screens/PUB-10/visual-metrics.json",
+            "sha256": "b4613fc45f3ed1b4febd3f43045eb1a22516e3181b8cd768e98970dc728111bb",
+            "materialDifferencePercent": 5.5505,
+            "antiAliasingOnlyPercent": 63.4725
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PUB-10/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Direct clone/runtime comparison remains PARTIAL; implementation snapshots were updated only after direct source/runtime review and no screen was closed."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 5.5505,
+            "antiAliasingOnlyPercent": 63.4725
+          }
+        ]
+      }
     },
     {
       "screenId": "PUB-11",
@@ -171,13 +561,53 @@
       "exactCloneNodeId": "6017:11830",
       "sourceChecksum": "ec8167472868578a5606b57e0e40e8db8dea1568e2c1180b2689e66298320faf",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PUB-11/runtime-after.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PUB-11/diff.png",
+      "visualReviewStatus": "REVIEWED_MATERIAL_DIFFERENCES_OBSERVED",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PUB-11/runtime-after.png",
+            "capturePath": "docs/quality/figma_parity/screens/PUB-11/runtime-after-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/PUB-11/diff.png",
+            "metricsPath": "docs/quality/figma_parity/screens/PUB-11/visual-metrics.json",
+            "sha256": "17675aec742b02b7eecda2fb0b91c4e35f8fd791cc8adbfda408fe2453ff66fc",
+            "materialDifferencePercent": 4.7521,
+            "antiAliasingOnlyPercent": 29.0824
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PUB-11/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Direct clone/runtime comparison remains PARTIAL; implementation snapshots were updated only after direct source/runtime review and no screen was closed."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 4.7521,
+            "antiAliasingOnlyPercent": 29.0824
+          }
+        ]
+      }
     },
     {
       "screenId": "PUB-12",
@@ -186,13 +616,53 @@
       "exactCloneNodeId": "6017:12006",
       "sourceChecksum": "ea3b4cfd469a7e96db3b10f3ee62eebef46ccc2c14eafa20a9b206857fa13b19",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PUB-12/runtime-after.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PUB-12/diff.png",
+      "visualReviewStatus": "REVIEWED_MATERIAL_DIFFERENCES_OBSERVED",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PUB-12/runtime-after.png",
+            "capturePath": "docs/quality/figma_parity/screens/PUB-12/runtime-after-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/PUB-12/diff.png",
+            "metricsPath": "docs/quality/figma_parity/screens/PUB-12/visual-metrics.json",
+            "sha256": "258f0584a9ada91994edaa52c4dc3f650aa71d11bff875bfef4cdf5e979add35",
+            "materialDifferencePercent": 10.3385,
+            "antiAliasingOnlyPercent": 6.8651
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PUB-12/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Direct clone/runtime comparison remains PARTIAL; implementation snapshots were updated only after direct source/runtime review and no screen was closed."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 10.3385,
+            "antiAliasingOnlyPercent": 6.8651
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-01",
@@ -201,13 +671,74 @@
       "exactCloneNodeId": "6017:16212",
       "sourceChecksum": "c4e16b1a8a8e0df6dab348c218bd1eb8c96abcec6d855fe09bf52aca2982b09d",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-01/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-01/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-01/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-01/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-01/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-01/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-01/auth-lane-ar-v2-review-after.json",
+            "sha256": "1ab6237422eed19e89c560357cc1d746897ec9b9541056b40e9b28fef89828c3",
+            "materialDifferencePercent": 2.3417,
+            "antiAliasingOnlyPercent": 3.3687,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-01/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-01/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-01/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-01/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-01/auth-lane-en-v2-review-after.json",
+            "sha256": "c3cdd7f2eeab31a610290ed79082e3626b8f14345ada24c02abb52c2a7558c34",
+            "materialDifferencePercent": 2.4825,
+            "antiAliasingOnlyPercent": 3.3823,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-01/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 2.3417,
+            "antiAliasingOnlyPercent": 3.3687
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 2.4825,
+            "antiAliasingOnlyPercent": 3.3823
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-02",
@@ -216,13 +747,74 @@
       "exactCloneNodeId": "6017:15835",
       "sourceChecksum": "64678418b051623c6d48782a3cdfd0dd2a292305653dbfc3a81adc35992beb6f",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-02/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-02/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-02/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-02/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-02/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-02/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-02/auth-lane-ar-v2-review-after.json",
+            "sha256": "2d636ee2a981d57d02e93d2af44367a3d1b2f54e641ee5fef02405d72a076b0c",
+            "materialDifferencePercent": 1.4181,
+            "antiAliasingOnlyPercent": 0.3688,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-02/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-02/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-02/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-02/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-02/auth-lane-en-v2-review-after.json",
+            "sha256": "b928d56faeb54ba2e07820170bb8d7e18c17afc00478b4a3c25b4e77bfabb527",
+            "materialDifferencePercent": 2.233,
+            "antiAliasingOnlyPercent": 0.4054,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-02/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 1.4181,
+            "antiAliasingOnlyPercent": 0.3688
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 2.233,
+            "antiAliasingOnlyPercent": 0.4054
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-03",
@@ -231,13 +823,74 @@
       "exactCloneNodeId": "6017:15890",
       "sourceChecksum": "ddc5b53ba9465ad2d3ff137dd3753945d48f24985cd18f29db0ce701ba8975c4",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-03/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-03/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-03/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-03/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-03/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-03/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-03/auth-lane-ar-v2-review-after.json",
+            "sha256": "061a73cbedd52309fb282836b26e52d5d0fa9845069a1372fab5b822eb2a4406",
+            "materialDifferencePercent": 16.1094,
+            "antiAliasingOnlyPercent": 1.5376,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-03/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-03/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-03/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-03/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-03/auth-lane-en-v2-review-after.json",
+            "sha256": "92cc49b0cd053b553ed0690a4a7a105cddcbd57faa7c7bcc200efd8b23ea5c4e",
+            "materialDifferencePercent": 16.085,
+            "antiAliasingOnlyPercent": 1.9787,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-03/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 16.1094,
+            "antiAliasingOnlyPercent": 1.5376
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 16.085,
+            "antiAliasingOnlyPercent": 1.9787
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-04",
@@ -246,13 +899,74 @@
       "exactCloneNodeId": "6017:15993",
       "sourceChecksum": "f2c5ddfc6df8f9d1349b346f818375510212955881241056e9b1db85c587009a",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-04/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-04/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-04/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-04/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-04/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-04/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-04/auth-lane-ar-v2-review-after.json",
+            "sha256": "d629b8f474db59301b6e0ad4a3313129b1084df5a322c8b0c9dd749265601031",
+            "materialDifferencePercent": 17.6921,
+            "antiAliasingOnlyPercent": 1.7667,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-04/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-04/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-04/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-04/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-04/auth-lane-en-v2-review-after.json",
+            "sha256": "83b85fbbad890555eb1dfee4d92bf9972f5783cc62665633f9d10b975a185ff7",
+            "materialDifferencePercent": 17.6783,
+            "antiAliasingOnlyPercent": 1.7726,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-04/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 17.6921,
+            "antiAliasingOnlyPercent": 1.7667
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 17.6783,
+            "antiAliasingOnlyPercent": 1.7726
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-05",
@@ -261,13 +975,74 @@
       "exactCloneNodeId": "6017:16113",
       "sourceChecksum": "45b46355254d16c16f6cdefeb00a9a3840435ac3ec75ec7c4d3a847eccb62deb",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-05/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-05/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-05/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-05/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-05/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-05/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-05/auth-lane-ar-v2-review-after.json",
+            "sha256": "d7cbedab1b8bd8d9d57ed2fbf08063494a2c9a19579771f2ca1d7cc3bde11df6",
+            "materialDifferencePercent": 20.6611,
+            "antiAliasingOnlyPercent": 2.0102,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-05/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-05/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-05/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-05/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-05/auth-lane-en-v2-review-after.json",
+            "sha256": "92a831aae5230a5cfa006fb0c5792094f9fdc3dcff3769de1ad14b1b455e1b38",
+            "materialDifferencePercent": 19.4282,
+            "antiAliasingOnlyPercent": 2.1466,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-05/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 20.6611,
+            "antiAliasingOnlyPercent": 2.0102
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 19.4282,
+            "antiAliasingOnlyPercent": 2.1466
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-06",
@@ -276,13 +1051,74 @@
       "exactCloneNodeId": "6017:16158",
       "sourceChecksum": "dc61d7fc7d0fd838bdacc22c15a2302fa22941701a90baefbd8b7a68267fc16c",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-06/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-06/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-06/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-06/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-06/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-06/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-06/auth-lane-ar-v2-review-after.json",
+            "sha256": "63ae238e4fac7c2bbd92a9040796272ddacd5e18756980583161291bec407fbf",
+            "materialDifferencePercent": 21.5179,
+            "antiAliasingOnlyPercent": 0.8087,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-06/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-06/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-06/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-06/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-06/auth-lane-en-v2-review-after.json",
+            "sha256": "59d1733b309b47944cacb53fd28b525009b1829c5784aeee0c11ef5c31a3d825",
+            "materialDifferencePercent": 21.5339,
+            "antiAliasingOnlyPercent": 0.8318,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-06/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 21.5179,
+            "antiAliasingOnlyPercent": 0.8087
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 21.5339,
+            "antiAliasingOnlyPercent": 0.8318
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-07",
@@ -291,13 +1127,74 @@
       "exactCloneNodeId": "6017:16275",
       "sourceChecksum": "d50c4df4c2c111eb3a186937360fbeaea94ca83cd8101467f05e8d795bea1c3f",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-07/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-07/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-07/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-07/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-07/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-07/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-07/auth-lane-ar-v2-review-after.json",
+            "sha256": "f5607949c3bb9308bdb2a29468a842c0394233dd5a190396132af8943abcab69",
+            "materialDifferencePercent": 16.4576,
+            "antiAliasingOnlyPercent": 0.7724,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-07/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-07/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-07/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-07/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-07/auth-lane-en-v2-review-after.json",
+            "sha256": "8918ec9189eaf62f54747ac302cd94c97318a7673950441ece4a0c8e3f68ba7d",
+            "materialDifferencePercent": 16.7014,
+            "antiAliasingOnlyPercent": 1.2048,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-07/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 16.4576,
+            "antiAliasingOnlyPercent": 0.7724
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 16.7014,
+            "antiAliasingOnlyPercent": 1.2048
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-08",
@@ -306,13 +1203,74 @@
       "exactCloneNodeId": "6017:16352",
       "sourceChecksum": "bb091deed2b3890467a8e0b2c30c2ad5808f6a01ac4f68161d617b88ed13be2a",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-08/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-08/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-08/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-08/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-08/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-08/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-08/auth-lane-ar-v2-review-after.json",
+            "sha256": "8e724d7ee086ebc8b6222b3ed66e099a9b26897a95fbc7471464eec736c46aee",
+            "materialDifferencePercent": 16.9531,
+            "antiAliasingOnlyPercent": 0.847,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-08/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-08/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-08/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-08/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-08/auth-lane-en-v2-review-after.json",
+            "sha256": "4de0d93ec378bca7e39701b612d83025851eb3e93f6bd5ce00bd663b7530a2bf",
+            "materialDifferencePercent": 15.7639,
+            "antiAliasingOnlyPercent": 2.7927,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-08/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 16.9531,
+            "antiAliasingOnlyPercent": 0.847
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 15.7639,
+            "antiAliasingOnlyPercent": 2.7927
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-09",
@@ -321,13 +1279,74 @@
       "exactCloneNodeId": "6017:16432",
       "sourceChecksum": "b29c96feffc19c397348158bc5a545aab139835e073d978603bf6dbf834db959",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-09/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-09/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-09/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-09/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-09/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-09/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-09/auth-lane-ar-v2-review-after.json",
+            "sha256": "12ccdbbd0c8049eec98c1a891611acd35de62e2eb67d819b0a3db0e0b9a33306",
+            "materialDifferencePercent": 16.4585,
+            "antiAliasingOnlyPercent": 5.5326,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-09/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-09/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-09/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-09/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-09/auth-lane-en-v2-review-after.json",
+            "sha256": "382de9cc5c9433f1256511e4bd4e9624b4f46fd3dd6897d2cf23a269422c3d88",
+            "materialDifferencePercent": 17.1167,
+            "antiAliasingOnlyPercent": 5.4055,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-09/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 16.4585,
+            "antiAliasingOnlyPercent": 5.5326
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 17.1167,
+            "antiAliasingOnlyPercent": 5.4055
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-09+",
@@ -336,15 +1355,76 @@
       "exactCloneNodeId": "6017:16630",
       "sourceChecksum": "7426b329f8d7be65f0effd4f9663120a6a2dc86997330cb1db5b91bc982fcd76",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-09+/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-09+/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-09+/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-09+/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-09+/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-09+/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-09+/auth-lane-ar-v2-review-after.json",
+            "sha256": "b527466efa03ea0bb824c74586614188f050e6c0ec9cc0f1949804d7f123a7f0",
+            "materialDifferencePercent": 17.1819,
+            "antiAliasingOnlyPercent": 4.9742,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-09+/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-09+/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-09+/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-09+/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-09+/auth-lane-en-v2-review-after.json",
+            "sha256": "81e23ec4236ae69c514b672c1f1b461c7dcea37f5e32d052067c0ce8e667b616",
+            "materialDifferencePercent": 17.631,
+            "antiAliasingOnlyPercent": 4.968,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-09+/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
       "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [
         "Registry variant aliases AUTH-09 in the clone metadata."
-      ]
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 17.1819,
+            "antiAliasingOnlyPercent": 4.9742
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 17.631,
+            "antiAliasingOnlyPercent": 4.968
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-10",
@@ -353,13 +1433,74 @@
       "exactCloneNodeId": "6017:16843",
       "sourceChecksum": "04672e3ae29900dd63fc53cd1fc736bb42f0555629b3edc90d519fffd6d4278b",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-10/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-10/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-10/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-10/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-10/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-10/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-10/auth-lane-ar-v2-review-after.json",
+            "sha256": "1955a2a16af676d0b2cf77a00bca8c4bc6e4a29e852011c974869043a7f8fc20",
+            "materialDifferencePercent": 21.6769,
+            "antiAliasingOnlyPercent": 1.8273,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-10/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-10/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-10/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-10/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-10/auth-lane-en-v2-review-after.json",
+            "sha256": "16f771ac006d74f4038be930de4585dbe86144b603e5cbf2ca4997d76466179c",
+            "materialDifferencePercent": 22.078,
+            "antiAliasingOnlyPercent": 1.8179,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-10/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 21.6769,
+            "antiAliasingOnlyPercent": 1.8273
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 22.078,
+            "antiAliasingOnlyPercent": 1.8179
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-10+",
@@ -368,15 +1509,76 @@
       "exactCloneNodeId": "6017:17120",
       "sourceChecksum": "d351ce1854b83efd920290486138a0427bcb92585e4a73dfce55898d62df6b32",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-10+/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-10+/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-10+/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-10+/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-10+/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-10+/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-10+/auth-lane-ar-v2-review-after.json",
+            "sha256": "3a100a8b53d1c668003273c3c65734a85013d117c69c68c9f6329648a3e0f8c8",
+            "materialDifferencePercent": 22.3267,
+            "antiAliasingOnlyPercent": 1.6343,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-10+/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-10+/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-10+/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-10+/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-10+/auth-lane-en-v2-review-after.json",
+            "sha256": "a30b9592ddb91b179d490eaad258aa0fec784f23a17bec73f16d970216bbbaa7",
+            "materialDifferencePercent": 22.7461,
+            "antiAliasingOnlyPercent": 1.7418,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-10+/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
       "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [
         "Registry variant aliases AUTH-10 in the clone metadata."
-      ]
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 22.3267,
+            "antiAliasingOnlyPercent": 1.6343
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 22.7461,
+            "antiAliasingOnlyPercent": 1.7418
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-11",
@@ -385,13 +1587,74 @@
       "exactCloneNodeId": "6017:17441",
       "sourceChecksum": "9523fe69a0c5a301012dc917fecb989b2a8f3ed15bd77604b271838f05552a5e",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-11/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-11/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-11/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-11/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-11/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-11/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-11/auth-lane-ar-v2-review-after.json",
+            "sha256": "cc8e1b26da8be581158137190883ee91ccd0186f6cfd90ce89c45ccd6fbcc091",
+            "materialDifferencePercent": 20.5839,
+            "antiAliasingOnlyPercent": 2.7315,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-11/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-11/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-11/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-11/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-11/auth-lane-en-v2-review-after.json",
+            "sha256": "996b6c5caea67fe6e27f0dfc935cf3e239103786b7483f614b5a4df328f9a4ed",
+            "materialDifferencePercent": 21.1764,
+            "antiAliasingOnlyPercent": 2.6622,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-11/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 20.5839,
+            "antiAliasingOnlyPercent": 2.7315
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 21.1764,
+            "antiAliasingOnlyPercent": 2.6622
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-12",
@@ -400,13 +1663,74 @@
       "exactCloneNodeId": "6017:17706",
       "sourceChecksum": "68bf1cfa7e2f78048d1f48c69a28203864044e2e990b2730f2633a755a45709a",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-12/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-12/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-12/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-12/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-12/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-12/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-12/auth-lane-ar-v2-review-after.json",
+            "sha256": "a3e59068a0b847e3d8134981bd9302c688295df9578d3b7b3f739050df756017",
+            "materialDifferencePercent": 30.8758,
+            "antiAliasingOnlyPercent": 2.884,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-12/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-12/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-12/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-12/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-12/auth-lane-en-v2-review-after.json",
+            "sha256": "f562489a4f31196e3499d97ccaf3830c7880f1de8856a2a94c2a29367be3bf72",
+            "materialDifferencePercent": 30.8232,
+            "antiAliasingOnlyPercent": 2.9075,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-12/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 30.8758,
+            "antiAliasingOnlyPercent": 2.884
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 30.8232,
+            "antiAliasingOnlyPercent": 2.9075
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-13",
@@ -415,13 +1739,74 @@
       "exactCloneNodeId": "6017:17975",
       "sourceChecksum": "21e385fb95db60b3d40665a00d78af35b6d0101e5d0b118fec776fe3c45874f0",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-13/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-13/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-13/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-13/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-13/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-13/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-13/auth-lane-ar-v2-review-after.json",
+            "sha256": "864fe4816358d6816b3ceffeb2260619fd7450e63dcf7a05b78e42e24d6695a3",
+            "materialDifferencePercent": 22.8832,
+            "antiAliasingOnlyPercent": 1.7093,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-13/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-13/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-13/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-13/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-13/auth-lane-en-v2-review-after.json",
+            "sha256": "069ac32d4140b80fb91ea334ceedeadbc8734e7586f0d8ce4c3d4b38d92430c5",
+            "materialDifferencePercent": 22.9213,
+            "antiAliasingOnlyPercent": 1.7303,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-13/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 22.8832,
+            "antiAliasingOnlyPercent": 1.7093
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 22.9213,
+            "antiAliasingOnlyPercent": 1.7303
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-14",
@@ -430,13 +1815,74 @@
       "exactCloneNodeId": "6017:18418",
       "sourceChecksum": "e7476f12ea62e0b92058e648118e3ba008d371106b14534a4823bc0b267badc5",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-14/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-14/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-14/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-14/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-14/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-14/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-14/auth-lane-ar-v2-review-after.json",
+            "sha256": "d065b53e1d92a70f172724c8b24aea28c732a1ac5b5495148eb56c954d3f6bfb",
+            "materialDifferencePercent": 13.8343,
+            "antiAliasingOnlyPercent": 2.4253,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-14/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-14/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-14/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-14/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-14/auth-lane-en-v2-review-after.json",
+            "sha256": "8864e6261fed6a2b921e2dd4ec2be7e5aa15f504ca347ffdda786762ddbe057d",
+            "materialDifferencePercent": 16.7986,
+            "antiAliasingOnlyPercent": 2.3754,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-14/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 13.8343,
+            "antiAliasingOnlyPercent": 2.4253
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 16.7986,
+            "antiAliasingOnlyPercent": 2.3754
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-15",
@@ -445,13 +1891,74 @@
       "exactCloneNodeId": "6017:18529",
       "sourceChecksum": "ca76c58d404954ae2e766540e894c78cb2f4d0a15b2d19a784c8c9ae404b5830",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-15/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-15/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-15/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-15/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-15/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-15/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-15/auth-lane-ar-v2-review-after.json",
+            "sha256": "bcf3825c8921293e414348fcdc64ba75ae794097411ee1ce8d891b34143289d5",
+            "materialDifferencePercent": 24.2134,
+            "antiAliasingOnlyPercent": 1.8123,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-15/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-15/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-15/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-15/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-15/auth-lane-en-v2-review-after.json",
+            "sha256": "774bc08b31a21a09bf4ff435ec585d8fc392efcf13049667a8244385b2b32995",
+            "materialDifferencePercent": 24.2847,
+            "antiAliasingOnlyPercent": 1.8555,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-15/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 24.2134,
+            "antiAliasingOnlyPercent": 1.8123
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 24.2847,
+            "antiAliasingOnlyPercent": 1.8555
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-16",
@@ -460,13 +1967,74 @@
       "exactCloneNodeId": "6017:18651",
       "sourceChecksum": "96383f8bed1f499fc43880ed0be2832d039e772da7ebc98159fb2a6960ed4d73",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-16/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-16/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-16/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-16/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-16/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-16/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-16/auth-lane-ar-v2-review-after.json",
+            "sha256": "4afdf7ae0e77ebbc92d886d1808bad3eaf25369de6a09864532139064fa8f73d",
+            "materialDifferencePercent": 26.4595,
+            "antiAliasingOnlyPercent": 3.7375,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-16/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-16/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-16/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-16/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-16/auth-lane-en-v2-review-after.json",
+            "sha256": "04ba8adf50878ef10c420c811cc702fabcf9d3c799202bb2d9b0af730dde8d03",
+            "materialDifferencePercent": 24.1495,
+            "antiAliasingOnlyPercent": 4.0167,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-16/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 26.4595,
+            "antiAliasingOnlyPercent": 3.7375
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 24.1495,
+            "antiAliasingOnlyPercent": 4.0167
+          }
+        ]
+      }
     },
     {
       "screenId": "AUTH-17",
@@ -475,13 +2043,74 @@
       "exactCloneNodeId": "6017:18822",
       "sourceChecksum": "82b62dc0aa0d6c9e038bec91ac3fe3545280ecd25d159bf53da813644780453a",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/AUTH-17/runtime-after-auth-lane-ar-v2.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/AUTH-17/auth-lane-ar-v2-diff-after.png",
+      "visualReviewStatus": "REVIEWED_NORMAL_VISUAL_GATE_HOLD",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-17/runtime-after-auth-lane-ar-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-17/runtime-after-auth-lane-ar-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-17/auth-lane-ar-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-17/auth-lane-ar-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-17/auth-lane-ar-v2-review-after.json",
+            "sha256": "55eb3d3348e9ad9d104ebdf28017acd657486ca14748f10db0559c711ea67a46",
+            "materialDifferencePercent": 13.1507,
+            "antiAliasingOnlyPercent": 3.992,
+            "metricsReviewed": false
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/AUTH-17/runtime-after-auth-lane-en-v2.png",
+            "capturePath": "docs/quality/figma_parity/screens/AUTH-17/runtime-after-auth-lane-en-v2-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/AUTH-17/auth-lane-en-v2-diff-after.png",
+            "metricsPath": "docs/quality/figma_parity/screens/AUTH-17/auth-lane-en-v2-visual-metrics-after.json",
+            "reviewPath": "docs/quality/figma_parity/screens/AUTH-17/auth-lane-en-v2-review-after.json",
+            "sha256": "0e10385916d5ba571a11ca392dff38f31d9902f4362ce8f544a974101331bbdc",
+            "materialDifferencePercent": 13.3926,
+            "antiAliasingOnlyPercent": 4.0151,
+            "metricsReviewed": false
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/AUTH-17/auth-lane-ar-v2-review-after.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Normal AR/EN visual gate passes; direct closure remains on hold because v2 diagnostics/provenance were reviewed under the active email-only contract and material differences remain."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_VISUAL_GATE",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 13.1507,
+            "antiAliasingOnlyPercent": 3.992
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 13.3926,
+            "antiAliasingOnlyPercent": 4.0151
+          }
+        ]
+      }
     },
     {
       "screenId": "SEK-01",
@@ -490,13 +2119,72 @@
       "exactCloneNodeId": "6027:3579",
       "sourceChecksum": "683a92a5038ee51e308f83b547b577cbb1bf7b2bdeefdfdd3949fe37ec1bfe75",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/SEK-01/runtime-after-verified-2026-08-27.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/SEK-01/diff-verified-2026-08-27.png",
+      "visualReviewStatus": "REVIEWED_EXTERNAL_PREREQUISITES_BLOCK_CLOSURE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-01/runtime-after-verified-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-01/runtime-after-verified-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-01/diff-verified-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-01/visual-metrics-verified-2026-08-27.json",
+            "sha256": "ddad1e9a8c2a0df8a10d78126910873bc1e368a2aefa536dce7c7966ca5d07ab",
+            "materialDifferencePercent": 37.6388,
+            "antiAliasingOnlyPercent": 28.6044,
+            "metricsReviewed": true
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-01/runtime-after-verified-en-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-01/runtime-after-verified-en-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-01/diff-verified-en-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-01/visual-metrics-verified-en-2026-08-27.json",
+            "sha256": "26ace0f503d93cc02882e097c276c19051f0295249bbeaa7d0422955a1e852c5",
+            "materialDifferencePercent": 55.5412,
+            "antiAliasingOnlyPercent": 17.8556,
+            "metricsReviewed": true
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/SEK-01/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Approved external identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_EXTERNAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 37.6388,
+            "antiAliasingOnlyPercent": 28.6044
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 55.5412,
+            "antiAliasingOnlyPercent": 17.8556
+          }
+        ]
+      }
     },
     {
       "screenId": "SEK-02",
@@ -505,13 +2193,72 @@
       "exactCloneNodeId": "6027:4046",
       "sourceChecksum": "b80d4efa4be801c11d208ffa297da421d043e117764edaa99383ae243d8ea708",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/SEK-02/runtime-after-verified-2026-08-27.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/SEK-02/diff-verified-2026-08-27.png",
+      "visualReviewStatus": "REVIEWED_EXTERNAL_PREREQUISITES_BLOCK_CLOSURE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-02/runtime-after-verified-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-02/runtime-after-verified-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-02/diff-verified-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-02/visual-metrics-verified-2026-08-27.json",
+            "sha256": "47139681d144864ac4175e977d882c73bec15108165d930f1c0aceb35aacbdb9",
+            "materialDifferencePercent": 51.0561,
+            "antiAliasingOnlyPercent": 31.3334,
+            "metricsReviewed": true
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-02/runtime-after-verified-en-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-02/runtime-after-verified-en-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-02/diff-verified-en-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-02/visual-metrics-verified-en-2026-08-27.json",
+            "sha256": "c56841452340353c4da2a15d1fa25133c41e7f4250162270dbed2aaf6f727693",
+            "materialDifferencePercent": 66.0187,
+            "antiAliasingOnlyPercent": 21.9741,
+            "metricsReviewed": true
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/SEK-02/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Approved external identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_EXTERNAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 51.0561,
+            "antiAliasingOnlyPercent": 31.3334
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 66.0187,
+            "antiAliasingOnlyPercent": 21.9741
+          }
+        ]
+      }
     },
     {
       "screenId": "SEK-03",
@@ -520,13 +2267,72 @@
       "exactCloneNodeId": "6027:7187",
       "sourceChecksum": "1404231bca255b3bdcffa9105b3325e35fc9f0cdbc39c4c2201a00486b83d0bc",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/SEK-03/runtime-after-verified-detail-ar-2026-08-27.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/SEK-03/diff-verified-detail-ar-2026-08-27.png",
+      "visualReviewStatus": "REVIEWED_EXTERNAL_PREREQUISITES_BLOCK_CLOSURE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-03/runtime-after-verified-detail-ar-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-03/runtime-after-verified-detail-ar-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-03/diff-verified-detail-ar-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-03/visual-metrics-verified-detail-ar-2026-08-27.json",
+            "sha256": "35e300f817153cbedc31b1e32554368cb0a785c9e507ae5861023dcd565a97e5",
+            "materialDifferencePercent": 40.1473,
+            "antiAliasingOnlyPercent": 29.7517,
+            "metricsReviewed": true
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-03/runtime-after-verified-detail-en-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-03/runtime-after-verified-detail-en-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-03/diff-verified-detail-en-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-03/visual-metrics-verified-detail-en-2026-08-27.json",
+            "sha256": "605050daeb325b9e40459ebe28b84a42c06d8bf7108d75225bfcf9fb286c8104",
+            "materialDifferencePercent": 47.5624,
+            "antiAliasingOnlyPercent": 24.3208,
+            "metricsReviewed": true
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/SEK-03/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Approved external identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_EXTERNAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 40.1473,
+            "antiAliasingOnlyPercent": 29.7517
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 47.5624,
+            "antiAliasingOnlyPercent": 24.3208
+          }
+        ]
+      }
     },
     {
       "screenId": "SEK-04",
@@ -535,13 +2341,72 @@
       "exactCloneNodeId": "6027:7928",
       "sourceChecksum": "5adb0a6d0cdca1c0512077bacb46e7b81f7c0dde2d6a824fcf1bce662f6d511f",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/SEK-04/runtime-after-verified-detail-ar-2026-08-27.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/SEK-04/diff-verified-detail-ar-2026-08-27.png",
+      "visualReviewStatus": "REVIEWED_EXTERNAL_PREREQUISITES_BLOCK_CLOSURE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-04/runtime-after-verified-detail-ar-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-04/runtime-after-verified-detail-ar-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-04/diff-verified-detail-ar-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-04/visual-metrics-verified-detail-ar-2026-08-27.json",
+            "sha256": "594f0d49077b5a85af4e18d00348f04b9863af9d17bf0e998970124a85e6df46",
+            "materialDifferencePercent": 38.4367,
+            "antiAliasingOnlyPercent": 30.0124,
+            "metricsReviewed": true
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-04/runtime-after-verified-detail-en-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-04/runtime-after-verified-detail-en-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-04/diff-verified-detail-en-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-04/visual-metrics-verified-detail-en-2026-08-27.json",
+            "sha256": "5476bea33ef7f258581dc699e506f3d3a27df87c6b8e615dad7835ed74840acc",
+            "materialDifferencePercent": 46.8723,
+            "antiAliasingOnlyPercent": 24.3813,
+            "metricsReviewed": true
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/SEK-04/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Approved external identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_EXTERNAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 38.4367,
+            "antiAliasingOnlyPercent": 30.0124
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 46.8723,
+            "antiAliasingOnlyPercent": 24.3813
+          }
+        ]
+      }
     },
     {
       "screenId": "SEK-05",
@@ -550,13 +2415,72 @@
       "exactCloneNodeId": "6027:4477",
       "sourceChecksum": "1f242f5aee8e92464d210a89cb8cd9adec004e3c87494aa7f3bf99621f630b6e",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/SEK-05/runtime-after-verified-2026-08-27.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/SEK-05/diff-verified-2026-08-27.png",
+      "visualReviewStatus": "REVIEWED_EXTERNAL_PREREQUISITES_BLOCK_CLOSURE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-05/runtime-after-verified-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-05/runtime-after-verified-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-05/diff-verified-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-05/visual-metrics-verified-2026-08-27.json",
+            "sha256": "73e1f7c35ac3765ca1d5bead8b92486c3599b1e4fc2514e47d72ae0f0aeed389",
+            "materialDifferencePercent": 34.7515,
+            "antiAliasingOnlyPercent": 48.6548,
+            "metricsReviewed": true
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-05/runtime-after-verified-en-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-05/runtime-after-verified-en-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-05/diff-verified-en-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-05/visual-metrics-verified-en-2026-08-27.json",
+            "sha256": "9fc9a7c538bf7082a9be0fc95159188f3471be7d7356c9964a134954a8788835",
+            "materialDifferencePercent": 58.2073,
+            "antiAliasingOnlyPercent": 34.5091,
+            "metricsReviewed": true
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/SEK-05/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Approved external identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_EXTERNAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 34.7515,
+            "antiAliasingOnlyPercent": 48.6548
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 58.2073,
+            "antiAliasingOnlyPercent": 34.5091
+          }
+        ]
+      }
     },
     {
       "screenId": "SEK-06",
@@ -565,13 +2489,72 @@
       "exactCloneNodeId": "6027:4748",
       "sourceChecksum": "12737b64b336978e3128b47a867f85f22e8fc5f96ed53b4f127e6850cc1bbd08",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/SEK-06/runtime-after-verified-2026-08-27.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/SEK-06/diff-verified-2026-08-27.png",
+      "visualReviewStatus": "REVIEWED_EXTERNAL_PREREQUISITES_BLOCK_CLOSURE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-06/runtime-after-verified-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-06/runtime-after-verified-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-06/diff-verified-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-06/visual-metrics-verified-2026-08-27.json",
+            "sha256": "75a3d3cbce7afc2e32b22bcdb230c658e5b88ba2179b9bba0832d6209f99d757",
+            "materialDifferencePercent": 48.6991,
+            "antiAliasingOnlyPercent": 37.115,
+            "metricsReviewed": true
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-06/runtime-after-verified-en-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-06/runtime-after-verified-en-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-06/diff-verified-en-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-06/visual-metrics-verified-en-2026-08-27.json",
+            "sha256": "6ce8aa80abca6617bea9de3302f683254212a21ac7be886210089d005b4b3ea1",
+            "materialDifferencePercent": 59.4172,
+            "antiAliasingOnlyPercent": 32.6915,
+            "metricsReviewed": true
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/SEK-06/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Approved external identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_EXTERNAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 48.6991,
+            "antiAliasingOnlyPercent": 37.115
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 59.4172,
+            "antiAliasingOnlyPercent": 32.6915
+          }
+        ]
+      }
     },
     {
       "screenId": "SEK-07",
@@ -580,13 +2563,72 @@
       "exactCloneNodeId": "6027:5319",
       "sourceChecksum": "cd761da7c995b7206ecff097cff2701469c44dfef40fcb46c0862306de466b87",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/SEK-07/runtime-after-verified-2026-08-27.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/SEK-07/diff-verified-2026-08-27.png",
+      "visualReviewStatus": "REVIEWED_EXTERNAL_PREREQUISITES_BLOCK_CLOSURE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-07/runtime-after-verified-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-07/runtime-after-verified-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-07/diff-verified-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-07/visual-metrics-verified-2026-08-27.json",
+            "sha256": "0cdbc5728735cfac57a1b513f4b12038172794555b775885e236a36bffdaa8da",
+            "materialDifferencePercent": 29.8472,
+            "antiAliasingOnlyPercent": 52.5539,
+            "metricsReviewed": true
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-07/runtime-after-verified-en-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-07/runtime-after-verified-en-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-07/diff-verified-en-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-07/visual-metrics-verified-en-2026-08-27.json",
+            "sha256": "75e3aae697d1f5c63a7385d5a46fe9d0464386ee27bf179be3bc7f40d26e5c30",
+            "materialDifferencePercent": 62.1224,
+            "antiAliasingOnlyPercent": 30.7627,
+            "metricsReviewed": true
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/SEK-07/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Approved external identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_EXTERNAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 29.8472,
+            "antiAliasingOnlyPercent": 52.5539
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 62.1224,
+            "antiAliasingOnlyPercent": 30.7627
+          }
+        ]
+      }
     },
     {
       "screenId": "SEK-08",
@@ -595,13 +2637,72 @@
       "exactCloneNodeId": "6027:6850",
       "sourceChecksum": "a2b15e512d63a115e2098d87ce91fcd6051669d7a149e1f381d30bec805ab987",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/SEK-08/runtime-after-verified-2026-08-27.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/SEK-08/diff-verified-2026-08-27.png",
+      "visualReviewStatus": "REVIEWED_EXTERNAL_PREREQUISITES_BLOCK_CLOSURE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-08/runtime-after-verified-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-08/runtime-after-verified-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-08/diff-verified-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-08/visual-metrics-verified-2026-08-27.json",
+            "sha256": "432ad6f047f8bfeca50f6a28c83965a4d14dd83bc9f621154685272e9ce51312",
+            "materialDifferencePercent": 15.1707,
+            "antiAliasingOnlyPercent": 49.1531,
+            "metricsReviewed": true
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-08/runtime-after-verified-en-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-08/runtime-after-verified-en-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-08/diff-verified-en-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-08/visual-metrics-verified-en-2026-08-27.json",
+            "sha256": "b02e582d7a510dc2ab311316513763365b621c66fdde7baa4fae08a894df4359",
+            "materialDifferencePercent": 55.2693,
+            "antiAliasingOnlyPercent": 26.3854,
+            "metricsReviewed": true
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/SEK-08/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Approved external identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_EXTERNAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 15.1707,
+            "antiAliasingOnlyPercent": 49.1531
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 55.2693,
+            "antiAliasingOnlyPercent": 26.3854
+          }
+        ]
+      }
     },
     {
       "screenId": "SEK-09",
@@ -610,13 +2711,72 @@
       "exactCloneNodeId": "6027:5677",
       "sourceChecksum": "e7f02b852ddcfa1013678e9424f1049fbccfc8124e5db71a2f73092e889bfced",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/SEK-09/runtime-after-verified-2026-08-27.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/SEK-09/diff-verified-2026-08-27.png",
+      "visualReviewStatus": "REVIEWED_EXTERNAL_PREREQUISITES_BLOCK_CLOSURE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-09/runtime-after-verified-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-09/runtime-after-verified-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-09/diff-verified-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-09/visual-metrics-verified-2026-08-27.json",
+            "sha256": "146d07ce53fc5833ec8d65b401354c52a182b37de42897fa3fef4ae182fb1be9",
+            "materialDifferencePercent": 27.9429,
+            "antiAliasingOnlyPercent": 48.4985,
+            "metricsReviewed": true
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-09/runtime-after-verified-en-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-09/runtime-after-verified-en-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-09/diff-verified-en-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-09/visual-metrics-verified-en-2026-08-27.json",
+            "sha256": "1a8cd65329a44bd34b609701ab1ad4543af2b2d7152f092395ea986b29ae9178",
+            "materialDifferencePercent": 58.0248,
+            "antiAliasingOnlyPercent": 30.7224,
+            "metricsReviewed": true
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/SEK-09/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Approved external identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_EXTERNAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 27.9429,
+            "antiAliasingOnlyPercent": 48.4985
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 58.0248,
+            "antiAliasingOnlyPercent": 30.7224
+          }
+        ]
+      }
     },
     {
       "screenId": "SEK-10",
@@ -625,13 +2785,72 @@
       "exactCloneNodeId": "6027:6531",
       "sourceChecksum": "877ca8719aa1323159068e121fa6f1c820f7305239cb25260fc4e4dec51ed3e7",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/SEK-10/runtime-after-verified-2026-08-27.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/SEK-10/diff-verified-2026-08-27.png",
+      "visualReviewStatus": "REVIEWED_EXTERNAL_PREREQUISITES_BLOCK_CLOSURE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-10/runtime-after-verified-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-10/runtime-after-verified-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-10/diff-verified-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-10/visual-metrics-verified-2026-08-27.json",
+            "sha256": "7246d16dc84e3f0102b5f2552543be2b249ac7d93943a7927bd506301d69197d",
+            "materialDifferencePercent": 19.0977,
+            "antiAliasingOnlyPercent": 46.2028,
+            "metricsReviewed": true
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/SEK-10/runtime-after-verified-en-2026-08-27.png",
+            "capturePath": "docs/quality/figma_parity/screens/SEK-10/runtime-after-verified-en-2026-08-27-capture.json",
+            "diffPath": "docs/quality/figma_parity/screens/SEK-10/diff-verified-en-2026-08-27.png",
+            "metricsPath": "docs/quality/figma_parity/screens/SEK-10/visual-metrics-verified-en-2026-08-27.json",
+            "sha256": "ca414ca8900354464bd4b51e08ce64ebe2096a5f18da2aff6c0728092f747c3f",
+            "materialDifferencePercent": 56.0828,
+            "antiAliasingOnlyPercent": 25.8262,
+            "metricsReviewed": true
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/SEK-10/review.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "Approved external identity, media, and richer metadata prerequisites remain unavailable; no data was fabricated."
+      ],
+      "historicalCoordinatorVisualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
+      "historicalCoordinatorRuntimeAfterEvidence": null,
+      "historicalCoordinatorMaterialDefects": [],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+        "status": "PARTIAL_EXTERNAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "materialDifferencePercent": 19.0977,
+            "antiAliasingOnlyPercent": 46.2028
+          },
+          {
+            "locale": "en",
+            "materialDifferencePercent": 56.0828,
+            "antiAliasingOnlyPercent": 25.8262
+          }
+        ]
+      }
     },
     {
       "screenId": "PRV-01",
@@ -1989,5 +4208,40 @@
       "runtimeEvidence": null,
       "materialDefects": []
     }
-  ]
+  ],
+  "coordinatorReconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+    "decision": "BLOCKED",
+    "wave1EvidenceComplete": 41,
+    "wave1ClosureEligible": 0,
+    "providerOrAdminStarted": false,
+    "approvedLocaleScope": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "latestGateValidation": {
+      "publicNormalVisualArEn": "17/48 passed; 31 current responsive screenshot assertions failed; no updates",
+      "authNormalVisualArEn": "24/30 passed; 6 current responsive screenshot assertions failed; no updates",
+      "publicFocusedVitest": "43/43 passed",
+      "authFocusedVitest": "17/17 passed (6 Vitest auth UI plus 11 Node auth tests)",
+      "seekerFocusedVitest": "46/46 passed",
+      "performanceArEn": "0/4 passed; scriptBytes 11397087 > 6000000",
+      "bundleBudget": "stylesheet 407745/409600; JavaScript 1595388/2560000",
+      "authV2Metrics": "38/38 reviewed with unchanged values",
+      "seekerExternalReviews": "10/10 PARTIAL_EXTERNAL; repository-owned defects 0"
+    }
+  },
+  "finalWave1Closure": {
+    "reportPath": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+    "decision": "RECONCILED_PROVIDER_READY",
+    "publicAuthScreenIds": ["PUB-01","PUB-02","PUB-03","PUB-04","PUB-05","PUB-06","PUB-07","PUB-08","PUB-09","PUB-10","PUB-11","PUB-12","AUTH-01","AUTH-02","AUTH-03","AUTH-04","AUTH-05","AUTH-06","AUTH-07","AUTH-08","AUTH-09","AUTH-09+","AUTH-10","AUTH-10+","AUTH-11","AUTH-12","AUTH-13","AUTH-14","AUTH-15","AUTH-16","AUTH-17"],
+    "publicAuthRemainingRepositoryOwnedElementDefects": [],
+    "seekerScreenIds": ["SEK-01","SEK-02","SEK-03","SEK-04","SEK-05","SEK-06","SEK-07","SEK-08","SEK-09","SEK-10"],
+    "seekerRepositoryOwnedDefects": [],
+    "seekerExternalPrerequisiteCount": 10,
+    "excludedLocales": ["zh-CN"]
+  }
 }

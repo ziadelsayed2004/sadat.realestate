@@ -174,22 +174,22 @@
     "apiRequests": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/article-categories?locale=ar"
+        "url": "http://127.0.0.1:4175/api/v1/public/article-categories?locale=ar"
       },
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/articles?locale=ar&page=1&limit=20"
+        "url": "http://127.0.0.1:4175/api/v1/public/articles?locale=ar&page=1&limit=20"
       }
     ],
     "apiResponses": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/article-categories?locale=ar",
+        "url": "http://127.0.0.1:4175/api/v1/public/article-categories?locale=ar",
         "status": 200
       },
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/articles?locale=ar&page=1&limit=20",
+        "url": "http://127.0.0.1:4175/api/v1/public/articles?locale=ar&page=1&limit=20",
         "status": 200
       }
     ],
@@ -199,7 +199,7 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-07/runtime-after.png",
-      "sha256": "e9b869f6c99024b1f988479980d703e7a829ea5f593d9fbf49e1b2625d446d7c"
+        "sha256": "463296f485ca3b59a08aa7dcf0c595a236b383c3c55ed3285e95ff82bb9e7875"
     }
   },
   "structuredVisualComparison": {
@@ -211,23 +211,24 @@
         "height": 1783
       },
       {
-        "width": 1280,
-        "height": 1340
+        "width": 1523,
+        "height": 1783
       },
       {
-        "width": 1280,
-        "height": 2376
+        "width": 1523,
+        "height": 1783
       }
     ],
     "observations": [
-      "The after capture is a fresh 1280x720 Arabic RTL runtime capture after the article listing/media repair.",
+      "The after capture is a fresh 1523px-wide Arabic RTL runtime capture after the article listing/media repair.",
       "GET /api/v1/public/articles returned HTTP 200 and six deterministic article cards render approved local media.",
       "Search, category filters, result grid, CTA, navigation, and shared footer are present and independently reviewed.",
+      "The desktop footer separators now use the canonical three-row geometry while preserving the 414px footer frame.",
       "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
     ],
     "dimensions": {
-      "width": 1388,
-      "height": 852
+      "width": 1471,
+      "height": 650
     }
   },
   "functionalApiComparison": {
@@ -315,14 +316,14 @@
     "review": "docs/quality/figma_parity/screens/PUB-07/review.json",
     "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-07/runtime-after-capture.json"
   },
-  "reviewedAt": "2026-08-25T21:28:11.188Z",
-  "repairedAt": "2026-08-25T21:28:11.188Z",
+  "reviewedAt": "2026-08-28T09:07:39.573Z",
+  "repairedAt": "2026-08-28T04:55:00.000Z",
   "latestRuntimeVerification": {
     "source": "runtime-after-capture.json and visual-metrics.json",
     "phase": "after",
     "apiResponseStatus": 200,
-    "materialDifferencePercent": 10.5895,
-    "antiAliasingOnlyPercent": 6.4062,
+    "materialDifferencePercent": 10.1597,
+    "antiAliasingOnlyPercent": 6.513,
     "officialClosureEligible": false
   }
 }

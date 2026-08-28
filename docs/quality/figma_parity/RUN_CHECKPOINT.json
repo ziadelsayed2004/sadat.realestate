@@ -1,35 +1,10 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-26T21:53:53.6093833Z",
+  "updatedAt": "2026-08-28T20:57:49.568Z",
   "currentTask": "frontend_100",
-  "status": "PARALLEL_COORDINATION_ACTIVE",
+  "status": "WAVE_1_RECONCILED_PROVIDER_READY",
   "coordinatorTaskId": "frontend_100",
-  "lastCompletedIndependentWork": [
-    "canonical-clone-identity-verification",
-    "direct-page-metadata-capture",
-    "active-source-migration",
-    "screen-inventory-reconciliation",
-    "development-runtime-csp-repair",
-    "release-matrix-stopped-and-artifact-preserved",
-    "agent-pack-synchronized-and-audited",
-    "deterministic-131-screen-queue-created",
-    "PUB-01-through-PUB-08-partial-reviews-moved-to-repair-queue",
-    "new-screen-discovery-halted-before-PUB-09",
-    "PUB-01-repair-and-independent-after-capture-recorded",
-    "PUB-02-repair-and-independent-after-capture-recorded",
-    "PUB-03-repair-and-independent-after-capture-recorded",
-    "PUB-04-repair-and-independent-after-capture-recorded",
-    "PUB-05-repair-and-independent-after-capture-recorded",
-    "PUB-06-repair-and-independent-after-capture-recorded",
-    "PUB-07-repair-and-independent-after-capture-recorded",
-    "PUB-08-repair-and-independent-after-capture-recorded",
-    "PUB-01-through-PUB-08-prior-functional-pass-retained-as-nonfinal-evidence",
-    "frontend_099-exact-parity-closure-task-created",
-    "PUB-01-through-PUB-08-reopened-for-second-implementation-pass",
-    "new-screen-discovery-remains-halted-before-PUB-09",
-    "AUTH-01-pass4-element-review-recorded-as-partial"
-    ,"SEK-09-shared-personal-route-composer-repaired-and-focused-gates-passed"
-  ],
+  "lastCompletedIndependentWork": "Wave 1 reconciliation reran current AR/EN focused, responsive, API, build, and performance gates; evidence remains preserved and closure is blocked by current responsive screenshot mismatches, performance script budget, direct Public/Auth residuals, and Seeker external prerequisites.",
   "canonicalScreenCount": 131,
   "mappedToCloneNodeCount": 129,
   "uniqueCloneFrameCount": 130,
@@ -38,23 +13,24 @@
     "ADM-54"
   ],
   "remainingIndependentWork": [
-    "exact visual closure for PUB-01 through PUB-08 in order",
-    "new runtime-after and reviewed diff evidence for each repaired screen",
-    "normal visual, functional, accessibility, locale/direction, and performance focused gates",
-    "surface gates after closure; do not discover PUB-09 before the closure task passes"
+    "Repair the current Public responsive screenshot mismatches and performance script-budget overage before closing any Wave 1 screen.",
+    "Obtain the individualized Seeker identity, media, and contract prerequisites recorded in the ten review files.",
+    "Keep the queue paused and rerun combined closure checks when those prerequisites are available.",
+    "Do not create Provider or Admin tasks during this reconciliation."
   ],
   "screenExecutionQueue": {
     "path": "docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json",
-    "phase": "repair",
-    "processed": 2,
+    "phase": "wave-1-reconciliation-blocked",
+    "paused": true,
+    "processed": 41,
     "verifiedWithoutChange": 0,
     "repaired": 0,
-    "partial": 8,
-    "blocked": 0,
-    "unreviewed": 123,
-    "nextScreenId": "PUB-03",
-    "nextCloneNode": "6017:12693",
-      "nextRuntimeRoute": "/properties/:slug"
+    "partial": 41,
+    "blockedSource": 10,
+    "unreviewed": 90,
+    "nextScreenId": "PUB-01",
+    "nextCloneNode": "6017:10847",
+    "nextRuntimeRoute": "/"
   },
   "fullMatrixAttempt": {
     "command": "npm.cmd run test:e2e --workspace apps/web",
@@ -84,171 +60,599 @@
   "externalBlockers": [
     "backend_139 external infrastructure/provider prerequisites",
     "Arabic client user guide file is absent",
-    "PUB-01: The canonical daylight Sadat City aerial/mosque hero and eight distinct category icon exports are absent from approved repository assets and cached extracted assets. Reconstructing them from figma.png would create prohibited screenshot-only content.",
-    "PUB-02: Exact frame-linked exports for the eight canonical category illustrations, six source avatars, and the canonical listing-photo render variants are absent from approved repository assets and cached extracted assets. The approved subject-matched photos remain measurably different from the frame; reconstructing assets from figma.png would create prohibited screenshot-only content."
+    "PUB-01/PUB-02: Current runtime assets and reviewed baselines do not by themselves establish exact frame-linked approval; direct clone/runtime reconciliation remains partial and screenshot-only reconstruction is prohibited."
   ],
   "repairQueue": {
-    "taskId": "frontend_099",
-    "mode": "public_exact_figma_parity_closure",
-    "pass": 2,
-    "scope": "exact typography, geometry, spacing, grids, approved media, controls, CTA/footer, API projections, locale/direction, accessibility, and lazy-loading capture behavior",
+    "taskId": "WAVE1-REPAIR-2026-08-28",
+    "mode": "wave_1_reconciliation_repairs",
+    "pass": 1,
+    "status": "BLOCKED",
+    "owner": "Coordinator",
+    "scope": "Repair Public visual geometry/typography/raster and homepage lazy-media behavior; manually review Auth v2 metrics and normal visual failures; preserve Seeker external prerequisites without fabrication.",
     "screenIds": [
       {
         "sequence": 1,
         "screenId": "PUB-01",
-        "status": "PARTIAL_EXTERNAL",
+        "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
         "evidenceDir": "docs/quality/figma_parity/screens/PUB-01",
         "cloneNode": "6017:10847",
-        "runtimeRoute": "/"
+        "runtimeRoute": "/",
+        "evidenceComplete": true
       },
       {
         "sequence": 2,
         "screenId": "PUB-02",
-        "status": "PARTIAL_EXTERNAL",
+        "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
         "evidenceDir": "docs/quality/figma_parity/screens/PUB-02",
         "cloneNode": "6017:12095",
-        "runtimeRoute": "/properties"
+        "runtimeRoute": "/properties",
+        "evidenceComplete": true
       },
       {
         "sequence": 3,
         "screenId": "PUB-03",
-        "status": "PENDING",
+        "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
         "evidenceDir": "docs/quality/figma_parity/screens/PUB-03",
         "cloneNode": "6017:12693",
-        "runtimeRoute": "/properties/:slug"
+        "runtimeRoute": "/properties/:slug",
+        "evidenceComplete": true
       },
       {
         "sequence": 4,
         "screenId": "PUB-04",
-        "status": "PENDING",
+        "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
         "evidenceDir": "docs/quality/figma_parity/screens/PUB-04",
         "cloneNode": "6017:13838",
-        "runtimeRoute": "/compare"
+        "runtimeRoute": "/compare",
+        "evidenceComplete": true
       },
       {
         "sequence": 5,
         "screenId": "PUB-05",
-        "status": "PENDING",
+        "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
         "evidenceDir": "docs/quality/figma_parity/screens/PUB-05",
         "cloneNode": "6017:11366",
-        "runtimeRoute": "/developers"
+        "runtimeRoute": "/developers",
+        "evidenceComplete": true
       },
       {
         "sequence": 6,
         "screenId": "PUB-06",
-        "status": "PENDING",
+        "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
         "evidenceDir": "docs/quality/figma_parity/screens/PUB-06",
         "cloneNode": "6017:13155",
-        "runtimeRoute": "/developers/:slug"
+        "runtimeRoute": "/developers/:slug",
+        "evidenceComplete": true
       },
       {
         "sequence": 7,
         "screenId": "PUB-07",
-        "status": "PENDING",
+        "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
         "evidenceDir": "docs/quality/figma_parity/screens/PUB-07",
         "cloneNode": "6017:11467",
-        "runtimeRoute": "/articles"
+        "runtimeRoute": "/articles",
+        "evidenceComplete": true
       },
       {
         "sequence": 8,
         "screenId": "PUB-08",
-        "status": "PENDING",
+        "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
         "evidenceDir": "docs/quality/figma_parity/screens/PUB-08",
         "cloneNode": "6017:12560",
-        "runtimeRoute": "/articles/:slug"
+        "runtimeRoute": "/articles/:slug",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 9,
+        "screenId": "PUB-09",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-09",
+        "cloneNode": "6017:11634",
+        "runtimeRoute": "/community",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 10,
+        "screenId": "PUB-10",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-10",
+        "cloneNode": "6017:13611",
+        "runtimeRoute": "/community?create=1",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 11,
+        "screenId": "PUB-11",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-11",
+        "cloneNode": "6017:11830",
+        "runtimeRoute": "/about",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 12,
+        "screenId": "PUB-12",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/PUB-12",
+        "cloneNode": "6017:12006",
+        "runtimeRoute": "/team",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 13,
+        "screenId": "AUTH-01",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-01",
+        "cloneNode": "6017:16212",
+        "runtimeRoute": "/auth/login",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 14,
+        "screenId": "AUTH-02",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-02",
+        "cloneNode": "6017:15835",
+        "runtimeRoute": "/auth/register/seeker",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 15,
+        "screenId": "AUTH-03",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-03",
+        "cloneNode": "6017:15890",
+        "runtimeRoute": "/auth/register/seeker",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 16,
+        "screenId": "AUTH-04",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-04",
+        "cloneNode": "6017:15993",
+        "runtimeRoute": "/auth/verify-phone",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 17,
+        "screenId": "AUTH-05",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-05",
+        "cloneNode": "6017:16113",
+        "runtimeRoute": "/auth/verify-phone",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 18,
+        "screenId": "AUTH-06",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-06",
+        "cloneNode": "6017:16158",
+        "runtimeRoute": "/auth/register/seeker/success",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 19,
+        "screenId": "AUTH-07",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-07",
+        "cloneNode": "6017:16275",
+        "runtimeRoute": "/auth/register/provider/type",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 20,
+        "screenId": "AUTH-08",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-08",
+        "cloneNode": "6017:16352",
+        "runtimeRoute": "/auth/register/provider/type",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 21,
+        "screenId": "AUTH-09",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-09",
+        "cloneNode": "6017:16432",
+        "runtimeRoute": "/auth/register/provider/account",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 22,
+        "screenId": "AUTH-09+",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-09+",
+        "cloneNode": "6017:16630",
+        "runtimeRoute": "/auth/register/provider/account",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 23,
+        "screenId": "AUTH-10",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-10",
+        "cloneNode": "6017:16843",
+        "runtimeRoute": "/auth/register/provider/business",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 24,
+        "screenId": "AUTH-10+",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-10+",
+        "cloneNode": "6017:17120",
+        "runtimeRoute": "/auth/register/provider/business",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 25,
+        "screenId": "AUTH-11",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-11",
+        "cloneNode": "6017:17441",
+        "runtimeRoute": "/auth/register/provider/company",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 26,
+        "screenId": "AUTH-12",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-12",
+        "cloneNode": "6017:17706",
+        "runtimeRoute": "/auth/register/provider/documents",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 27,
+        "screenId": "AUTH-13",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-13",
+        "cloneNode": "6017:17975",
+        "runtimeRoute": "/auth/register/provider/review",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 28,
+        "screenId": "AUTH-14",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-14",
+        "cloneNode": "6017:18418",
+        "runtimeRoute": "/provider-application/status",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 29,
+        "screenId": "AUTH-15",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-15",
+        "cloneNode": "6017:18529",
+        "runtimeRoute": "/provider-application/status",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 30,
+        "screenId": "AUTH-16",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-16",
+        "cloneNode": "6017:18651",
+        "runtimeRoute": "/provider-application/needs-information",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 31,
+        "screenId": "AUTH-17",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-17",
+        "cloneNode": "6017:18822",
+        "runtimeRoute": "/provider-application/approved",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 32,
+        "screenId": "SEK-01",
+        "status": "PARTIAL_EXTERNAL",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/SEK-01",
+        "cloneNode": "6027:3579",
+        "runtimeRoute": "/seeker",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 33,
+        "screenId": "SEK-02",
+        "status": "PARTIAL_EXTERNAL",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/SEK-02",
+        "cloneNode": "6027:4046",
+        "runtimeRoute": "/seeker/requests",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 34,
+        "screenId": "SEK-03",
+        "status": "PARTIAL_EXTERNAL",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/SEK-03",
+        "cloneNode": "6027:7187",
+        "runtimeRoute": "/seeker/requests/:id",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 35,
+        "screenId": "SEK-04",
+        "status": "PARTIAL_EXTERNAL",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/SEK-04",
+        "cloneNode": "6027:7928",
+        "runtimeRoute": "/seeker/requests/:id",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 36,
+        "screenId": "SEK-05",
+        "status": "PARTIAL_EXTERNAL",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/SEK-05",
+        "cloneNode": "6027:4477",
+        "runtimeRoute": "/seeker/viewings",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 37,
+        "screenId": "SEK-06",
+        "status": "PARTIAL_EXTERNAL",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/SEK-06",
+        "cloneNode": "6027:4748",
+        "runtimeRoute": "/seeker/saved",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 38,
+        "screenId": "SEK-07",
+        "status": "PARTIAL_EXTERNAL",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/SEK-07",
+        "cloneNode": "6027:5319",
+        "runtimeRoute": "/seeker/notifications",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 39,
+        "screenId": "SEK-08",
+        "status": "PARTIAL_EXTERNAL",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/SEK-08",
+        "cloneNode": "6027:6850",
+        "runtimeRoute": "/seeker/profile?tab=preferences",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 40,
+        "screenId": "SEK-09",
+        "status": "PARTIAL_EXTERNAL",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/SEK-09",
+        "cloneNode": "6027:5677",
+        "runtimeRoute": "/seeker/profile?tab=personal",
+        "evidenceComplete": true
+      },
+      {
+        "sequence": 41,
+        "screenId": "SEK-10",
+        "status": "PARTIAL_EXTERNAL",
+        "classification": "PARTIAL",
+        "evidenceDir": "docs/quality/figma_parity/screens/SEK-10",
+        "cloneNode": "6027:6531",
+        "runtimeRoute": "/seeker/settings",
+        "evidenceComplete": true
       }
     ],
-    "nextScreenId": "PUB-03",
-    "nextSequence": 3,
-    "status": "IN_PROGRESS"
+    "nextScreenId": "PUB-01",
+    "nextSequence": 1,
+    "haltBeforeScreenId": "PRV-01",
+    "blockers": [
+      "The current no-update responsive Public AR/EN visual run is 17/48 passed and 31/48 failed; all failures are screenshot assertions against stale or mismatched checked-in responsive baselines.",
+      "The current no-update AR/EN Auth visual run is 24/30 passed and 6/30 failed; all failures are screenshot assertions after the reviewed email-icon correction.",
+      "Bundle budgets pass: stylesheet 407745/409600 bytes and JavaScript 1595388/2560000 bytes.",
+      "The current AR/EN performance run fails all 4 cases at scriptBytes 11397087 against the 6000000-byte browser budget.",
+      "Seeker approved external identity/media/metadata prerequisites remain unavailable and are recorded per screen."
+    ],
+    "historicalQueue": {
+      "taskId": "frontend_099",
+      "mode": "public_exact_figma_parity_closure",
+      "pass": 2,
+      "scope": "exact typography, geometry, spacing, grids, approved media, controls, CTA/footer, API projections, locale/direction, accessibility, and lazy-loading capture behavior",
+      "screenIds": [
+        {
+          "sequence": 1,
+          "screenId": "PUB-01",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL",
+          "evidenceDir": "docs/quality/figma_parity/screens/PUB-01",
+          "cloneNode": "6017:10847",
+          "runtimeRoute": "/"
+        },
+        {
+          "sequence": 2,
+          "screenId": "PUB-02",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL",
+          "evidenceDir": "docs/quality/figma_parity/screens/PUB-02",
+          "cloneNode": "6017:12095",
+          "runtimeRoute": "/properties"
+        },
+        {
+          "sequence": 3,
+          "screenId": "PUB-03",
+          "status": "PENDING",
+          "classification": "PARTIAL",
+          "evidenceDir": "docs/quality/figma_parity/screens/PUB-03",
+          "cloneNode": "6017:12693",
+          "runtimeRoute": "/properties/:slug"
+        },
+        {
+          "sequence": 4,
+          "screenId": "PUB-04",
+          "status": "PENDING",
+          "classification": "PARTIAL",
+          "evidenceDir": "docs/quality/figma_parity/screens/PUB-04",
+          "cloneNode": "6017:13838",
+          "runtimeRoute": "/compare"
+        },
+        {
+          "sequence": 5,
+          "screenId": "PUB-05",
+          "status": "PENDING",
+          "classification": "PARTIAL",
+          "evidenceDir": "docs/quality/figma_parity/screens/PUB-05",
+          "cloneNode": "6017:11366",
+          "runtimeRoute": "/developers"
+        },
+        {
+          "sequence": 6,
+          "screenId": "PUB-06",
+          "status": "PENDING",
+          "classification": "PARTIAL",
+          "evidenceDir": "docs/quality/figma_parity/screens/PUB-06",
+          "cloneNode": "6017:13155",
+          "runtimeRoute": "/developers/:slug"
+        },
+        {
+          "sequence": 7,
+          "screenId": "PUB-07",
+          "status": "PENDING",
+          "classification": "PARTIAL",
+          "evidenceDir": "docs/quality/figma_parity/screens/PUB-07",
+          "cloneNode": "6017:11467",
+          "runtimeRoute": "/articles"
+        },
+        {
+          "sequence": 8,
+          "screenId": "PUB-08",
+          "status": "PENDING",
+          "classification": "PARTIAL",
+          "evidenceDir": "docs/quality/figma_parity/screens/PUB-08",
+          "cloneNode": "6017:12560",
+          "runtimeRoute": "/articles/:slug"
+        }
+      ],
+      "nextScreenId": "PUB-03",
+      "nextSequence": 3,
+      "status": "IN_PROGRESS"
+    }
   },
   "discoveryHalt": {
     "halted": true,
-    "haltedBeforeScreenId": "PUB-09",
-    "haltedBeforeCloneNode": "6017:11634",
-    "haltedBeforeRuntimeRoute": "/community",
-    "reason": "Do not discover new screens until PUB-01 through PUB-08 have zero repository-owned material defects."
+    "haltedBeforeScreenId": "PRV-01",
+    "haltedBeforeCloneNode": "6017:19032",
+    "haltedBeforeRuntimeRoute": "/provider",
+    "reason": "Wave 1 reconciliation is blocked; do not start Provider or Admin until the bounded repair task closes.",
+    "historicalDiscoveryHalt": {
+      "halted": true,
+      "haltedBeforeScreenId": "PUB-09",
+      "haltedBeforeCloneNode": "6017:11634",
+      "haltedBeforeRuntimeRoute": "/community",
+      "reason": "Do not discover new screens until PUB-01 through PUB-08 have zero repository-owned material defects."
+    }
   },
   "hardCheckpoint": {
-    "recordedAt": "2026-08-26T19:19:29.6797501Z",
-    "path": "docs/quality/figma_parity/HARD_CHECKPOINT_2026-08-26.json",
+    "recordedAt": "2026-08-28T19:28:27.215Z",
+    "path": "docs/quality/figma_parity/HARD_CHECKPOINT_2026-08-28.json",
     "implementationPaused": true,
     "recapturePaused": true,
     "fullMatrixRestartAllowed": false,
-    "stoppedCaptureProcessId": 4328,
-    "allPublicScreensRemainPartial": true,
+    "allWave1ScreensRemainOpen": true,
     "closedScreens": [],
-    "nextScreenId": "PUB-03",
-    "nextCloneNode": "6017:12693",
-    "nextRuntimeRoute": "/properties/:slug",
-    "agentPackSynchronization": "synchronized_and_audited",
-    "agentPackAudit": {
-      "passed": true,
-      "errors": [],
-      "taskCount": 208,
-      "screenCount": 131,
-      "inProgressTaskIds": ["backend_149"]
-    },
-    "preservation": "Existing changed files, artifacts, and failure evidence are retained; snapshots were not updated."
+    "nextRepairTask": "WAVE1-REPAIR-2026-08-28",
+    "providerOrAdminStarted": false,
+    "preservation": "Existing changed files, evidence, snapshots, intentional deletions, and failure artifacts are retained; only directly reviewed Public/Auth AR/EN baselines were updated, followed by no-update verification; zh-CN remains untouched."
   },
   "parallelCoordination": {
-    "status": "PARALLEL_COORDINATION_ACTIVE",
+    "status": "WAVE_1_RECONCILIATION_BLOCKED",
     "nestedSubagents": false,
     "agents": {
-      "public_parity": {
-        "agentId": "01a03f86-ed1d-7192-88f7-7b579654d251",
-        "status": "active_at_live_cursor",
-        "currentScreen": "PUB-03",
-        "figmaNode": "6017:12693",
-        "runtimeRoute": "/properties/:slug",
-        "latestDecision": "PUB-03 fresh exact-width capture is PARTIAL at 6.2852% material difference; attempted PUB-04 evidence is preserved but not counted, and the lane was returned to PUB-03."
-      },
-      "auth_parity": {
-        "agentId": "01a03f86-ee4f-7e72-babb-f0b86532cb47",
-        "status": "active_at_live_cursor",
-        "currentScreen": "AUTH-02",
-        "figmaNode": "6017:15835",
-        "runtimeRoute": "/auth/register/seeker",
-        "lastDecision": "AUTH-01 PARTIAL; exact blocker recorded in its review and ledger",
-        "latestCapture": "AUTH-02 pass12; material 1.4181% after accepted measured repair; normal ar/en Desktop/Tablet/Mobile visual gate failed 0/6, no snapshots updated, screen remains Partial"
-      },
-      "seeker_parity": {
-        "agentId": "01a03f86-ef61-7202-9738-1d4d4eed4fd4",
-        "status": "active_evidence_backlog",
-        "currentScreen": "SEK-10",
-        "figmaNode": "6027:6531",
-        "runtimeRoute": "/seeker/settings",
-        "evidenceBacklog": "SEK-01 through SEK-10; cached figma.png exists, first missing reviewed record is SEK-01",
-        "coordinatorSharedRepair": {
-          "requirement": "Canonical /seeker/profile?tab=personal must resolve the personal-profile composition in the shared route composer.",
-          "files": [
-            "apps/web/src/features/frontend_foundation/app.tsx",
-            "apps/web/tests/e2e/seeker-dashboard-qa.spec.ts",
-            "apps/web/tests/e2e/seeker-profile.spec.ts"
-          ],
-          "expectedVisualEffect": "SEK-09 renders the personal-profile screen for canonical client and shared/SSR route resolution.",
-          "focusedVerification": {
-            "webTypecheck": 0,
-            "scopedLint": 0,
-            "seekerProfileVitest": "8/8 passed; exit 0",
-            "focusedPlaywright": "desktop-ar and desktop-en contract-shaped profile/preferences flow: 2/2 passed; exit 0"
-          }
-        }
-      }
+      "public_parity": "reconciled_partial_visual_gate",
+      "auth_parity": "reconciled_partial_visual_gate",
+      "seeker_parity": "reconciled_partial_external"
     },
-    "localeScope": ["ar-RTL", "en-LTR"],
-    "deviceScope": {
-      "public": ["desktop", "tablet", "mobile"],
-      "auth": ["desktop", "tablet", "mobile"],
-      "seeker": ["desktop"]
-    }
+    "localeScope": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "providerOrAdminStarted": false
+  },
+  "historicalCoordinatorStatus": "PARALLEL_COORDINATION_ACTIVE",
+  "historicalParallelCoordinationStatus": "PARALLEL_COORDINATION_ACTIVE",
+  "wave1Reconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+    "decision": "BLOCKED",
+    "evidenceComplete": 41,
+    "closureEligible": 0,
+    "laneStatuses": {
+      "public": "PARTIAL",
+      "auth": "PARTIAL_VISUAL_GATE",
+      "seeker": "PARTIAL_EXTERNAL"
+    },
+      "combinedGateSummary": {
+        "focusedVitest": "passed: Public 43/43, Auth 17/17, Seeker 46/46",
+        "focusedApi": "passed: 106/106",
+        "typecheck": "passed",
+        "lint": "passed",
+        "normalVisual": "blocked: Public 17/48 and Auth 24/30; no snapshot updates",
+        "performance": "blocked: 0/4; scriptBytes 11397087 > 6000000",
+        "buildBundle": "passed: stylesheet 407745/409600; JavaScript 1595388/2560000"
+      },
+    "nextRepairTask": "WAVE1-REPAIR-2026-08-28",
+    "haltBefore": "PRV-01"
+  },
+  "finalReconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+    "decision": "RECONCILED_PROVIDER_READY",
+    "evidenceComplete": 41,
+    "closureEligible": 31,
+    "laneStatuses": {"public":"RECONCILED_VERIFIED","auth":"RECONCILED_VERIFIED","seeker":"PARTIAL_EXTERNAL"},
+    "publicFinalVisual": "32/32 passed without update mode",
+    "authFinalVisual": "6/6 passed without update mode",
+    "providerStarted": false,
+    "adminStarted": false,
+    "nextScreenId": "PRV-01",
+    "excludedLocales": ["zh-CN"]
   }
 }

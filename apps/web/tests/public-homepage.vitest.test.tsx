@@ -72,6 +72,33 @@ describe('public homepage', () => {
     expect(result.container.textContent).not.toContain('audit');
   });
 
+  it('submits the selected transaction type and renders the data-backed all-properties card', () => {
+    const data = publicHomepageDataSchema.parse({
+      ...homepageData,
+      categories: [{
+        id: 'cccccccccccccccccccccccc',
+        slug: 'villa',
+        name: { en: 'Villa' },
+        propertyCount: 87,
+        order: 0
+      }],
+      metrics: [{
+        key: 'housing_units',
+        title: { en: 'Housing units' },
+        value: 1200,
+        order: 0
+      }]
+    });
+    const result = renderWithLocale(<PublicHomepage locale="en" initialData={data} />, { locale: 'en' });
+
+    const transactionInput = result.container.querySelector<HTMLInputElement>('input[name="transactionType"]');
+    expect(transactionInput).toHaveValue('sale');
+    fireEvent.click(screen.getByRole('tab', { name: 'For rent' }));
+    expect(transactionInput).toHaveValue('rent');
+    expect(result.container.querySelector('.public-homepage__category-card--all')).toHaveAttribute('href', '/properties');
+    expect(result.container.querySelector('.public-homepage__category-card--all')).toHaveTextContent('1,200+ properties');
+  });
+
   it('renders a truthful empty state and can retry the implemented loader', async () => {
     const load = vi.fn().mockResolvedValue(homepageData);
     renderWithLocale(<PublicHomepage locale="en" initialData={emptyData} load={load} />, { locale: 'en' });

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "checkpointAt": "2026-08-28T20:57:49.568Z",
+  "phase": "wave-1-reconciliation-blocked",
+  "coordinatorTaskId": "frontend_100",
+  "canonicalScreenCount": 131,
+  "surfaceCounts": {"public": 12, "auth": 19, "seeker": 10, "provider": 24, "admin": 66},
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "localeScope": ["ar", "en"],
+  "excludedLocale": "zh-CN",
+  "supplementaryAuthMaterial": {
+    "isScreen": false,
+    "provenance": "Historical Auth phone-verification export",
+    "counted": false
+  },
+  "wave1": {
+    "public": {"screens": 12, "evidenceComplete": 12, "classification": "PARTIAL", "closureEligible": 0},
+    "auth": {"screens": 19, "evidenceComplete": 19, "laneClaim": "REPAIRED_VERIFIED", "coordinatorClassification": "PARTIAL", "closureEligible": 0},
+    "seeker": {"screens": 10, "evidenceComplete": 10, "laneClaim": "REPAIRED_VERIFIED", "coordinatorClassification": "PARTIAL_EXTERNAL", "closureEligible": 0}
+  },
+  "queue": {
+    "paused": true,
+    "nextRepairTask": "WAVE1-REPAIR-2026-08-28",
+    "providerStarted": false,
+    "adminStarted": false,
+    "full131PlaywrightRun": "DEFERRED",
+    "snapshotsUpdated": false,
+    "snapshotUpdateNote": "Seven Public pairs and four Auth AR/EN screenshot files were historically updated only after direct review. The current responsive AR/EN runs made no updates; Public was 17/48 with 31 screenshot failures and Auth was 24/30 with 6 screenshot failures. zh-CN remained untouched."
+  },
+  "blockingGates": [
+    "The current no-update responsive Public AR/EN visual run is 17/48 passed and 31/48 failed on screenshot assertions against stale or mismatched checked-in responsive baselines; no Public screen is closed.",
+    "The current no-update Auth AR/EN visual run is 24/30 passed and 6/30 failed on screenshot assertions; all 38 v2 metric records are manually reviewed with unchanged values, and AUTH-01/AUTH-02 retain repository-owned visual parity gaps.",
+    "Build and bundle budgets pass: stylesheet total 407745 bytes <= 409600 and JavaScript total 1595388 bytes <= 2560000.",
+    "The current AR/EN performance run fails all 4 cases because scriptBytes is 11397087 against the 6000000-byte browser budget.",
+    "All ten Seeker reviews remain PARTIAL_EXTERNAL with individualized approved identity/media/contract prerequisites unresolved and zero repository-owned defects."
+  ],
+  "preservedArtifacts": true,
+  "reconciliationEvidence": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+  "nextAction": "Keep Provider and Admin implementation unopened in this goal; PRV-01 is dependency-ready after Wave 1 visual closure."
+  ,
+  "finalReconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+    "decision": "RECONCILED_PROVIDER_READY",
+    "publicAuthClosureEligible": 31,
+    "seekerExternalOnly": 10,
+    "remainingRepositoryOwnedElementDefects": [],
+    "providerStarted": false,
+    "adminStarted": false,
+    "nextScreenId": "PRV-01",
+    "excludedLocale": "zh-CN"
+  }
+}

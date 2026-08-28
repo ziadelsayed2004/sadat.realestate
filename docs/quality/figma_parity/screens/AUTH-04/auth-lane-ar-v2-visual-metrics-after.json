@@ -25,6 +25,21 @@
   },
   "method": "unmasked same-width source/runtime canvas comparison over overlapping document height",
   "comparedCapture": "RUNTIME AFTER (REPAIRED)",
-  "reviewed": false,
-  "reviewedAt": null
+  "reviewed": true,
+  "reviewedAt": "2026-08-28T18:36:24.741Z",
+  "review": {
+    "reviewer": "Codex",
+    "reviewedAt": "2026-08-28T18:36:24.741Z",
+    "locale": "ar",
+    "direction": "rtl",
+    "device": "desktop",
+    "sourceHash": "b06d8d3a9c22349096fbab52a16445db7666edad43fd1aa859ca2b081e2b57f5",
+    "runtimeBeforeHash": "d629b8f474db59301b6e0ad4a3313129b1084df5a322c8b0c9dd749265601031",
+    "runtimeAfterHash": "d629b8f474db59301b6e0ad4a3313129b1084df5a322c8b0c9dd749265601031",
+    "materialDifferencePercent": 17.6921,
+    "antiAliasingOnlyPercent": 1.7667,
+    "directReviewConclusion": "The active email-only Auth implementation and direct contract checks are authoritative; retired phone/password source composition is not restored. The measured visual difference is retained as diagnostic evidence and does not authorize a screen closure.",
+    "remainingDifference": "Material difference 17.6921%; anti-alias-only difference 1.7667%; direct coordinator closure remains partial.",
+    "closureEligible": false
+  }
 }

@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-12",
+  "classification": "PARTIAL",
+  "classificationReason": "Fresh source and runtime capture completed after the Public-12 repair; residual visual differences remain, so this screen is not eligible for official closure.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4352",
+    "nodeId": "6017:12006",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-12006&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4352&starting-point-node-id=6017%3A10847",
+    "screenshot": {
+      "path": "docs/quality/figma_parity/screens/PUB-12/figma.png",
+      "width": 1523,
+      "height": 1560,
+      "reviewed": true
+    },
+    "getDesignContext": {
+      "tool": "mcp__figma__get_design_context",
+      "skill": "resource:figma-design-to-code",
+      "resultStatus": "SPARSE_METADATA_DUE_TO_CONTEXT_LIMIT",
+      "root": {
+        "id": "6017:12006",
+        "name": "Team",
+        "width": 1523,
+        "height": 1560
+      },
+      "retrievedRegions": [
+        "header",
+        "team heading",
+        "team filters",
+        "team member cards",
+        "footer"
+      ],
+      "reviewed": true,
+      "note": "The tool explicitly returned sparse metadata and instructed sublayer retrieval for full code; this is recorded as an incomplete context result, not treated as parity proof."
+    }
+  },
+  "runtime": {
+    "route": "/team",
+    "role": "public",
+    "permissions": {
+      "requiredRole": "public",
+      "ownership": "public",
+      "availableActionsObserved": {
+        "links": [
+          {
+            "text": "تخطي إلى المحتوى الرئيسي",
+            "href": "#main-content"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "الرئيسية",
+            "href": "/"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "المقالات",
+            "href": "/articles"
+          },
+          {
+            "text": "الكوميونتي",
+            "href": "/community"
+          },
+          {
+            "text": "من نحن",
+            "href": "/about"
+          },
+          {
+            "text": "فريق العمل",
+            "href": "/team"
+          },
+          {
+            "text": "تسجيل الدخول",
+            "href": "/auth/login"
+          },
+          {
+            "text": "إنشاء حساب",
+            "href": "/auth/register"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "المقالات",
+            "href": "/articles"
+          },
+          {
+            "text": "الكوميونتي",
+            "href": "/community"
+          },
+          {
+            "text": "من نحن",
+            "href": "/about"
+          },
+          {
+            "text": "فريق العمل",
+            "href": "/team"
+          },
+          {
+            "text": "01001234567",
+            "href": "tel:01001234567"
+          },
+          {
+            "text": "واتساب متاح 24/7",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          }
+        ],
+        "buttons": [
+          {
+            "text": "الكل",
+            "aria": null
+          },
+          {
+            "text": "إدارة",
+            "aria": null
+          },
+          {
+            "text": "مبيعات",
+            "aria": null
+          },
+          {
+            "text": "دعم",
+            "aria": null
+          },
+          {
+            "text": "محتوى",
+            "aria": null
+          }
+        ]
+      },
+      "source": "runtime DOM and route contract"
+    },
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1523,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "deterministicState": {
+      "path": "docs/quality/figma_parity/screens/PUB-12/deterministic-state.json",
+      "seedId": "fresh-audit-PUB-12-ar-v1",
+      "responseSha256": "0fceb9d431937c15142e80392127526d49b0184e388ff9d101215f5b3a8236b7"
+    },
+    "response": {
+      "status": 200,
+      "ok": true
+    },
+    "apiRequests": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/team"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/team",
+        "status": 200
+      }
+    ],
+    "before": {
+      "path": "docs/quality/figma_parity/screens/PUB-12/runtime-before.png",
+      "sha256": "23353ebb4686304c57ef06af22eb8889344d717e5cb18bef11e313963d114de3"
+    },
+    "after": {
+      "path": "docs/quality/figma_parity/screens/PUB-12/runtime-after.png",
+        "sha256": "258f0584a9ada91994edaa52c4dc3f650aa71d11bff875bfef4cdf5e979add35"
+    }
+  },
+  "structuredVisualComparison": {
+    "reviewed": true,
+    "diffPath": "docs/quality/figma_parity/screens/PUB-12/diff.png",
+    "sourceDimensions": [
+      {
+        "width": 1523,
+        "height": 1560
+      },
+      {
+        "width": 1523,
+        "height": 1560
+      },
+      {
+        "width": 1523,
+        "height": 1560
+      }
+    ],
+    "observations": [
+      "Figma source is 1523px wide and 1560px high for PUB-12.",
+      "Runtime is 1523px wide at the approved Desktop Chrome viewport and now has the canonical 1560px document height.",
+      "The after capture confirms all six canonical team portraits, names, roles, bios, category filters, and shared footer geometry.",
+      "Residual typography, card detail, and exact raster differences remain visible in diff.png; no baseline was updated and official closure is not claimed."
+    ]
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "requestProjection": "GET /api/v1/public/team",
+    "responseProjection": "public-team fixture captured and hashed",
+    "outcome": "route loaded with the deterministic public-team fixture and returned HTTP 200; filters, six member cards, portraits, and footer were reviewed with residual visual differences recorded."
+  },
+  "defects": [
+    "Residual visual differences remain in typography, card details, and exact raster rendering; official closure is intentionally withheld.",
+    "Figma get_design_context returned sparse metadata because the full frame exceeded context limits."
+  ],
+  "filesRepaired": [
+    "apps/web/src/features/content/about-team.tsx",
+    "apps/web/src/features/content/about-team.css",
+    "apps/web/tests/e2e/public-fixtures.ts",
+    "scripts/capture-figma-parity-runtime.mjs"
+  ],
+  "focusedTests": [],
+  "accessibility": {
+    "focusedCheck": "Public about/team accessibility assertions are covered by the focused Playwright public batch.",
+    "exitCode": 0
+  },
+  "evidencePaths": {
+    "figma": "docs/quality/figma_parity/screens/PUB-12/figma.png",
+    "runtimeBefore": "docs/quality/figma_parity/screens/PUB-12/runtime-before.png",
+    "runtimeAfter": "docs/quality/figma_parity/screens/PUB-12/runtime-after.png",
+    "diff": "docs/quality/figma_parity/screens/PUB-12/diff.png",
+    "review": "docs/quality/figma_parity/screens/PUB-12/review.json"
+  },
+  "reviewedAt": "2026-08-28T13:35:00.000Z",
+  "latestRuntimeVerification": {
+    "source": "runtime-after-capture.json and visual-metrics.json",
+    "phase": "after",
+    "apiResponseStatus": 200,
+    "materialDifferencePercent": 10.3385,
+    "antiAliasingOnlyPercent": 6.8651,
+    "officialClosureEligible": false
+  }
+}

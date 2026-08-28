@@ -8,13 +8,13 @@
     "direction": "rtl"
   },
   "responseRequestId": "fresh-audit-public-developer-profile",
-  "responseSha256": "9d94d697bcbd65922eb9ab5079ece33ab6902888a679f789cb8048a6224d6824",
+  "responseSha256": "3bf0190f730234c73403fe6573344cffc83460ebc865577e54761d2221027393",
   "response": {
     "data": {
       "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
       "kind": "developer_company",
       "slug": "approved-builder",
-      "imageUrl": "http://127.0.0.1:4175/assets/clone/pub05-a.png",
+      "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
       "name": {
         "ar": "شركة السادات للتطوير العقاري",
         "en": "Sadat Real Estate Development",
@@ -26,7 +26,7 @@
         "zh-CN": "在萨达特城开发房地产超过15年的领先公司。"
       },
       "verified": true,
-      "logoUrl": "http://127.0.0.1:4175/assets/clone/pub05-b.png",
+      "logoUrl": "http://127.0.0.1:4173/assets/clone/pub05-b.png",
       "locations": [
         {
           "ar": "المنطقة الراقية"
@@ -56,7 +56,7 @@
         {
           "id": "bbbbbbbbbbbbbbbbbbbbbbbb",
           "slug": "sadat-residential-towers",
-          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub05-e.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
           "name": {
             "ar": "أبراج السادات السكنية"
           },
@@ -86,7 +86,7 @@
         {
           "id": "cccccccccccccccccccccccc",
           "slug": "elite-compound",
-          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub05-a.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
           "name": {
             "ar": "كمبوند النخبة"
           },

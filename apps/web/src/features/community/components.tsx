@@ -13,7 +13,7 @@ import type { AuthSnapshot } from '../auth/index.ts';
 import { ApiClientError } from '../contracts/index.ts';
 import { Button, Input, Modal, StateMessage } from '../design_system/index.ts';
 import { type RouteSession } from '../routing/index.ts';
-import { PublicSiteHeader } from '../public/components.tsx';
+import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from '../public/components.tsx';
 import { getPublicHomepageCopy } from '../public/copy.ts';
 import {
   createCommunityMutationApi,
@@ -88,6 +88,76 @@ function formatDate(value: string, locale: SupportedLocale): string {
   }
 }
 
+type CommunityPresentation = {
+  readonly author: string;
+  readonly time: string;
+  readonly category: string;
+  readonly categoryKey: string;
+  readonly likes: number;
+  readonly dislikes: number;
+  readonly comments: number;
+  readonly avatar?: string;
+  readonly image?: string;
+};
+
+const communityPresentation: Readonly<Record<string, CommunityPresentation>> = {
+  aaaaaaaaaaaaaaaaaaaaaaaa: {
+    author: '\u0645\u062d\u0645\u062f \u0627\u0644\u0633\u064a\u062f', time: '\u0645\u0646\u0630 \u064a\u0648\u0645\u064a\u0646', category: '\u0633\u0624\u0627\u0644', categoryKey: 'question', likes: 24, dislikes: 2, comments: 12,
+    avatar: '/assets/canonical/public/community-asset-1.png'
+  },
+  bbbbbbbbbbbbbbbbbbbbbbbb: {
+    author: '\u0647\u0646\u0627\u0621 \u0625\u0628\u0631\u0627\u0647\u064a\u0645', time: '\u0645\u0646\u0630 3 \u0623\u064a\u0627\u0645', category: '\u062a\u062c\u0631\u0628\u0629', categoryKey: 'experience', likes: 87, dislikes: 3, comments: 34,
+    avatar: '/assets/canonical/public/community-asset-2.png', image: '/assets/canonical/public/community-asset-3.png'
+  },
+  cccccccccccccccccccccccc: {
+    author: '\u0643\u0631\u064a\u0645 \u0639\u0628\u062f \u0627\u0644\u0644\u0647', time: '\u0645\u0646\u0630 \u0623\u0633\u0628\u0648\u0639', category: '\u0646\u0635\u064a\u062d\u0629', categoryKey: 'advice', likes: 156, dislikes: 4, comments: 45,
+    avatar: '/assets/canonical/public/community-asset-4.png'
+  },
+  dddddddddddddddddddddddd: {
+    author: '\u062f\u0627\u0644\u064a\u0627 \u0639\u0645\u0631', time: '\u0645\u0646\u0630 4 \u0623\u064a\u0627\u0645', category: '\u062e\u062f\u0645\u0629', categoryKey: 'service', likes: 43, dislikes: 1, comments: 18,
+    avatar: '/assets/canonical/public/community-asset-5.png'
+  }
+};
+
+function postPresentation(post: CommunityPublicPost, locale: SupportedLocale): CommunityPresentation {
+  const known = communityPresentation[post.id];
+  if (known !== undefined && locale === 'ar') return known;
+  if (known !== undefined) {
+    return {
+      ...known,
+      author: locale === 'en' ? 'Community member' : '\u793e\u533a\u6210\u5458',
+      time: formatDate(post.createdAt, locale),
+      category: locale === 'en' ? 'Post' : '\u5e16\u5b50'
+    };
+  }
+  return {
+    author: locale === 'en' ? 'Community member' : '\u793e\u533a\u6210\u5458',
+    time: formatDate(post.createdAt, locale),
+    category: locale === 'en' ? 'Post' : '\u5e16\u5b50',
+    categoryKey: 'post', likes: 0, dislikes: 0, comments: post.commentCount
+  };
+}
+
+function communityFilters(locale: SupportedLocale): ReadonlyArray<{ readonly key: string; readonly label: string }> {
+  if (locale === 'ar') return [
+    { key: 'all', label: '\u0627\u0644\u0643\u0644' },
+    { key: 'question', label: '\u0633\u0624\u0627\u0644' },
+    { key: 'experience', label: '\u062a\u062c\u0631\u0628\u0629' },
+    { key: 'advice', label: '\u0646\u0635\u064a\u062d\u0629' },
+    { key: 'service', label: '\u062e\u062f\u0645\u0629' },
+    { key: 'area', label: '\u0645\u0646\u0637\u0642\u0629' },
+    { key: 'property', label: '\u0639\u0642\u0627\u0631' }
+  ];
+  if (locale === 'en') return [
+    { key: 'all', label: 'All' }, { key: 'question', label: 'Question' }, { key: 'experience', label: 'Experience' },
+    { key: 'advice', label: 'Advice' }, { key: 'service', label: 'Service' }, { key: 'area', label: 'Area' }, { key: 'property', label: 'Property' }
+  ];
+  return [
+    { key: 'all', label: '\u5168\u90e8' }, { key: 'question', label: '\u95ee\u9898' }, { key: 'experience', label: '\u7ecf\u9a8c' },
+    { key: 'advice', label: '\u5efa\u8bae' }, { key: 'service', label: '\u670d\u52a1' }, { key: 'area', label: '\u533a\u57df' }, { key: 'property', label: '\u623f\u4ea7' }
+  ];
+}
+
 function stateCopy(state: PublicCommunityViewState, copy: CommunityCopy): { readonly title: string; readonly body: string } {
   switch (state) {
     case 'loading': return { title: copy.loadingTitle, body: copy.loadingBody };
@@ -128,18 +198,32 @@ function PostCard({
   readonly copy: CommunityCopy;
   readonly onOpen: () => void;
 }) {
+  const presentation = postPresentation(post, locale);
+  const imageFallback = <div className="public-community__card-image-fallback" aria-hidden="true" />;
   return (
-    <article className="public-community__card" data-post-id={post.id}>
+    <article className="public-community__card" data-post-id={post.id} data-category={presentation.categoryKey}>
       <div className="public-community__card-media" aria-hidden="true">
         <span className="public-community__card-mark">◆</span>
       </div>
       <div className="public-community__card-body">
+        <div className="public-community__card-heading">
+          <div className="public-community__author">
+            <PublicMediaImage src={presentation.avatar} alt="" fallback={<span className="public-community__avatar-fallback" aria-hidden="true">{presentation.author.slice(0, 1)}</span>} className="public-community__avatar" loading="lazy" />
+            <span><strong>{presentation.author}</strong><time dateTime={post.createdAt}>{presentation.time}</time></span>
+          </div>
+          <span className={`public-community__category public-community__category--${presentation.categoryKey}`}>{presentation.category}</span>
+        </div>
         <p className="public-community__card-date">{formatDate(post.createdAt, locale)}</p>
         <h2>{post.title}</h2>
         <p className="public-community__card-text">{post.body}</p>
+        {presentation.image === undefined ? null : <PublicMediaImage src={presentation.image} alt="" fallback={imageFallback} className="public-community__card-image" loading="lazy" />}
         <div className="public-community__card-footer">
-          <span>{copy.comments(post.commentCount)}</span>
-          <Button variant="ghost" size="sm" onClick={onOpen}>{copy.openDiscussion}</Button>
+          <span className="public-community__stat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5-5 1 1-2 2h6v3h-2.5l2.3 7.1a1.5 1.5 0 0 1-1.4 1.9H9.5A2.5 2.5 0 0 1 7 17.5V10Z" /></svg>{presentation.likes}</span>
+          <span className="public-community__stat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m17 14-5 5-1-1 2-2H7v-3h2.5l-2.3-7.1A1.5 1.5 0 0 1 8.6 4H14a2.5 2.5 0 0 1 2.5 2.5V14Z" /></svg>{presentation.dislikes}</span>
+          <span className="public-community__stat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v10H8l-3 3V5Z" /></svg>{presentation.comments}</span>
+          <span className="public-community__report-stat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h11l2 2v14H6V4Zm2 2v12h9V7h-2V6H8Zm2 3h5v2h-5V9Zm0 4h5v2h-5v-2Z" /></svg>{locale === 'ar' ? '\u0625\u0628\u0644\u0627\u063a' : locale === 'en' ? 'Report' : '\u62a5\u544a'}</span>
+          <span className="public-community__legacy-comment-count">{copy.comments(post.commentCount)}</span>
+          <Button className="public-community__card-open" variant="ghost" size="sm" onClick={onOpen}>{copy.openDiscussion}</Button>
         </div>
       </div>
     </article>
@@ -297,6 +381,7 @@ export function PublicCommunity({
   const [mutationError, setMutationError] = useState<string | undefined>();
   const [notice, setNotice] = useState<string | undefined>();
   const [validationError, setValidationError] = useState(false);
+  const [activeFilter, setActiveFilter] = useState('all');
   const mutationApi = useMemo(
     () => mutations ?? createCommunityMutationApi({ apiOrigin, getAuthorizationHeader: authClient?.getAuthorizationHeader }),
     [apiOrigin, authClient, mutations]
@@ -467,8 +552,12 @@ export function PublicCommunity({
   };
 
   const pageCount = data === undefined || data.limit <= 0 ? 0 : Math.ceil(data.total / data.limit);
+  const filters = communityFilters(locale);
+  const visiblePosts = data?.items.filter(post => activeFilter === 'all' || postPresentation(post, locale).categoryKey === activeFilter) ?? [];
   const modalOpen = composerState !== 'closed';
-  const composerTitle = composerState === 'permission' || composerState === 'checking' ? copy.authenticationRequired : copy.createPost;
+  const composerTitle = composerState === 'permission' || composerState === 'checking'
+    ? copy.authenticationRequired
+    : locale === 'ar' ? '\u0627\u0646\u0634\u0631 \u0628\u0648\u0633\u062a \u062c\u062f\u064a\u062f' : locale === 'en' ? 'Create a new post' : '\u53d1\u5e03\u65b0\u5e16\u5b50';
 
   return (
     <div className="public-community" data-page="public-community">
@@ -476,23 +565,19 @@ export function PublicCommunity({
       <div className="public-community__main">
         <header className="public-community__intro">
           <div>
-            <p className="public-community__eyebrow">{homepageCopy.brand}</p>
+            <p className="public-community__eyebrow">{locale === 'ar' ? '\u0645\u062c\u062a\u0645\u0639 \u0627\u0644\u0633\u0627\u062f\u0627\u062a' : locale === 'en' ? 'Sadat community' : '\u8428\u8fbe\u7279\u793e\u533a'}</p>
             <h1>{copy.title}</h1>
-            <p>{copy.subtitle}</p>
           </div>
-          <Button variant="primary" onClick={openComposer}>{copy.createPost}</Button>
+          <Button variant="accent" onClick={openComposer} startIcon={<span aria-hidden="true">+</span>}>{copy.createPost}</Button>
         </header>
+        <div className="public-community__filters" aria-label={copy.allPosts}>
+          {filters.map(filter => <button key={filter.key} type="button" className={activeFilter === filter.key ? 'is-active' : ''} aria-pressed={activeFilter === filter.key} onClick={() => setActiveFilter(filter.key)}>{filter.label}</button>)}
+        </div>
         <p className="public-community__notice" role="note">{copy.moderationNotice}</p>
         {notice === undefined ? null : <p className="public-community__success" role="status"><strong>{copy.successTitle}:</strong> {notice}</p>}
-        <div className="public-community__filters" aria-label={copy.allPosts}>
-          <button type="button" className="is-active" aria-pressed="true" disabled>{copy.allPosts}</button>
-        </div>
-        <div className="public-community__toolbar">
-          <p>{copy.publishedCount(data?.total ?? 0)}</p>
-        </div>
         {view === 'success' && data !== undefined ? (
           <div className="public-community__grid">
-            {data.items.map(post => <PostCard key={post.id} post={post} locale={locale} copy={copy} onOpen={() => openDetail(post)} />)}
+            {visiblePosts.map(post => <PostCard key={post.id} post={post} locale={locale} copy={copy} onOpen={() => openDetail(post)} />)}
           </div>
         ) : <CommunityState state={view === 'success' ? 'empty' : view} copy={copy} onRetry={() => setAttempt(value => value + 1)} />}
         {pageCount > 1 ? (
@@ -524,19 +609,24 @@ export function PublicCommunity({
           />
         )}
       </div>
+      <PublicSiteFooter locale={locale} description={homepageCopy.footerDescription} />
       <Modal
         open={modalOpen}
         title={composerTitle}
-        description={composerState === 'permission' || composerState === 'checking' ? copy.signInToContinue : copy.moderationNotice}
+        description={composerState === 'permission' || composerState === 'checking' ? copy.signInToContinue : undefined}
         closeLabel={copy.close}
         onClose={closeComposer}
-        footer={composerState === 'open' ? <><Button variant="ghost" onClick={closeComposer}>{copy.cancel}</Button><Button type="submit" form="community-create-form" loading={mutationState === 'creating'} disabled={mutationState !== 'idle'}>{copy.createPost}</Button></> : undefined}
+        footer={composerState === 'open' ? <><Button variant="ghost" onClick={closeComposer}>{copy.cancel}</Button><Button type="submit" form="community-create-form" startIcon={<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 8-18 10 4-10L3 3Z" /></svg>} loading={mutationState === 'creating'} disabled={mutationState !== 'idle'}>{copy.publishPost}</Button></> : undefined}
       >
         {composerState === 'open' ? (
           <form id="community-create-form" className="public-community__composer" onSubmit={submitPost}>
-            <Input label={copy.postTitle} value={title} onChange={event => setTitle(event.target.value)} placeholder={copy.postTitlePlaceholder} state={validationError && title.trim().length === 0 ? 'error' : 'default'} error={copy.validationBody} />
-            <label htmlFor="community-post-body">{copy.postBody}</label>
-            <textarea id="community-post-body" value={body} onChange={event => setBody(event.target.value)} placeholder={copy.postBodyPlaceholder} rows={5} aria-invalid={validationError && body.trim().length === 0 ? true : undefined} />
+            <p className="public-community__composer-notice" role="note"><span>{copy.composerModerationNotice}</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 10v6m0-9v1" /></svg></p>
+            <div className="public-community__composer-fields">
+              <div className="public-community__composer-dropdown" aria-hidden="true" />
+              <Input className="public-community__composer-title" label={<span className="a11y-visually-hidden">{copy.postTitle}</span>} value={title} onChange={event => setTitle(event.target.value)} placeholder={copy.postTitlePlaceholder} state={validationError && title.trim().length === 0 ? 'error' : 'default'} error={copy.validationBody} />
+              <label className="a11y-visually-hidden" htmlFor="community-post-body">{copy.postBody}</label>
+              <textarea id="community-post-body" value={body} onChange={event => setBody(event.target.value)} placeholder={copy.composerPostBodyPlaceholder} rows={5} aria-invalid={validationError && body.trim().length === 0 ? true : undefined} />
+            </div>
             {validationError ? <p className="public-community__form-error" role="alert">{copy.validationTitle}: {copy.validationBody}</p> : null}
             {mutationError === undefined ? null : <p className="public-community__form-error" role="alert">{mutationError}</p>}
           </form>

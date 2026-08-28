@@ -1,0 +1,307 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-09",
+  "classification": "PARTIAL",
+  "classificationReason": "Fresh source and runtime capture completed after the Public-09 repair; residual visual differences remain, so this screen is not eligible for official closure.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4352",
+    "nodeId": "6017:11634",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-11634&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4352&starting-point-node-id=6017%3A10847",
+    "screenshot": {
+      "path": "docs/quality/figma_parity/screens/PUB-09/figma.png",
+      "width": 1524,
+      "height": 1999,
+      "reviewed": true
+    },
+    "getDesignContext": {
+      "tool": "mcp__figma__get_design_context",
+      "skill": "resource:figma-design-to-code",
+      "resultStatus": "SPARSE_METADATA_DUE_TO_CONTEXT_LIMIT",
+      "root": {
+        "id": "6017:11634",
+        "name": "Community Feed",
+        "width": 1524,
+        "height": 1999
+      },
+      "retrievedRegions": [
+        "header",
+        "community heading",
+        "create-post action",
+        "category filters",
+        "moderation notice",
+        "community post cards",
+        "post media/stats",
+        "footer"
+      ],
+      "reviewed": true,
+      "note": "The tool explicitly returned sparse metadata and instructed sublayer retrieval for full code; this is recorded as an incomplete context result, not treated as parity proof."
+    }
+  },
+  "runtime": {
+    "route": "/community",
+    "role": "public",
+    "permissions": {
+      "requiredRole": "public",
+      "ownership": "public",
+      "availableActionsObserved": {
+        "links": [
+          {
+            "text": "تخطي إلى المحتوى الرئيسي",
+            "href": "#main-content"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "الرئيسية",
+            "href": "/"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "المقالات",
+            "href": "/articles"
+          },
+          {
+            "text": "الكوميونتي",
+            "href": "/community"
+          },
+          {
+            "text": "من نحن",
+            "href": "/about"
+          },
+          {
+            "text": "فريق العمل",
+            "href": "/team"
+          },
+          {
+            "text": "تسجيل الدخول",
+            "href": "/auth/login"
+          },
+          {
+            "text": "إنشاء حساب",
+            "href": "/auth/register"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "المقالات",
+            "href": "/articles"
+          },
+          {
+            "text": "الكوميونتي",
+            "href": "/community"
+          },
+          {
+            "text": "من نحن",
+            "href": "/about"
+          },
+          {
+            "text": "فريق العمل",
+            "href": "/team"
+          },
+          {
+            "text": "01001234567",
+            "href": "tel:01001234567"
+          },
+          {
+            "text": "واتساب متاح 24/7",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          }
+        ],
+        "buttons": [
+          {
+            "text": "+انشر بوست",
+            "aria": null
+          },
+          {
+            "text": "الكل",
+            "aria": null
+          },
+          {
+            "text": "سؤال",
+            "aria": null
+          },
+          {
+            "text": "تجربة",
+            "aria": null
+          },
+          {
+            "text": "نصيحة",
+            "aria": null
+          },
+          {
+            "text": "خدمة",
+            "aria": null
+          },
+          {
+            "text": "منطقة",
+            "aria": null
+          },
+          {
+            "text": "عقار",
+            "aria": null
+          },
+          {
+            "text": "عرض النقاش",
+            "aria": null
+          },
+          {
+            "text": "عرض النقاش",
+            "aria": null
+          },
+          {
+            "text": "عرض النقاش",
+            "aria": null
+          },
+          {
+            "text": "عرض النقاش",
+            "aria": null
+          }
+        ]
+      },
+      "source": "runtime DOM and route contract"
+    },
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1524,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "deterministicState": {
+      "path": "docs/quality/figma_parity/screens/PUB-09/deterministic-state.json",
+      "seedId": "fresh-audit-PUB-09-ar-v1",
+      "responseSha256": "a54cede97ea5087be2662b225296e5555cfb182576d2ce2919c7fc0eae4b7e75"
+    },
+    "response": {
+      "status": 200,
+      "ok": true
+    },
+    "apiRequests": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/community/posts?page=1&limit=20"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/community/posts?page=1&limit=20",
+        "status": 200
+      }
+    ],
+    "before": {
+      "path": "docs/quality/figma_parity/screens/PUB-09/runtime-before.png",
+      "sha256": "1deb2fe3805e85d2bf595244eaccf3013fb18fe79e37c2cec6776ea72735013f"
+    },
+    "after": {
+      "path": "docs/quality/figma_parity/screens/PUB-09/runtime-after.png",
+      "sha256": "a046397684dbc1c49a3dcdf97df894a17cff0ad803444bdd5728b4432a411a61"
+    }
+  },
+  "structuredVisualComparison": {
+    "reviewed": true,
+    "diffPath": "docs/quality/figma_parity/screens/PUB-09/diff.png",
+    "sourceDimensions": [
+      {
+        "width": 1524,
+        "height": 1999
+      },
+      {
+        "width": 1524,
+        "height": 1999
+      },
+      {
+        "width": 1524,
+        "height": 1999
+      }
+    ],
+    "observations": [
+      "Figma source is 1524px wide and 1999px high for PUB-09.",
+      "Runtime is 1524px wide at the approved Desktop Chrome viewport and now has the canonical 1999px document height.",
+      "The after capture preserves the before evidence and confirms the corrected filter order, canonical community projection, media/stats treatment, and footer geometry.",
+      "The after capture now matches the Figma feed boundaries, card sizes, filter row, and footer geometry; residual typography and exact raster differences remain visible in diff.png; no baseline was updated and official closure is not claimed."
+    ]
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "requestProjection": "GET /api/v1/public/community/posts",
+    "responseProjection": "public-community fixture captured and hashed",
+    "outcome": "route loaded with the deterministic public-community fixture and returned HTTP 200; CTA, filter, media, stats, and footer states were reviewed with residual visual differences recorded."
+  },
+  "defects": [
+    "Residual visual differences remain in typography, card geometry, and exact raster rendering; official closure is intentionally withheld.",
+    "Figma get_design_context returned sparse metadata because the full frame exceeded context limits."
+  ],
+  "filesRepaired": [
+    "apps/web/src/features/community/components.tsx",
+    "apps/web/src/features/community/copy.ts",
+    "apps/web/src/features/community/styles.css",
+    "apps/web/tests/e2e/public-fixtures.ts",
+    "scripts/capture-figma-parity-runtime.mjs"
+  ],
+  "focusedTests": [],
+  "accessibility": {
+    "focusedCheck": "Public community accessibility assertions are covered by the focused Playwright public batch.",
+    "exitCode": 0
+  },
+  "evidencePaths": {
+    "figma": "docs/quality/figma_parity/screens/PUB-09/figma.png",
+    "runtimeBefore": "docs/quality/figma_parity/screens/PUB-09/runtime-before.png",
+    "runtimeAfter": "docs/quality/figma_parity/screens/PUB-09/runtime-after.png",
+    "diff": "docs/quality/figma_parity/screens/PUB-09/diff.png",
+    "review": "docs/quality/figma_parity/screens/PUB-09/review.json"
+  },
+  "reviewedAt": "2026-08-28T13:45:00.000Z",
+  "latestRuntimeVerification": {
+    "source": "runtime-after-capture.json and visual-metrics.json",
+    "phase": "after",
+    "apiResponseStatus": 200,
+    "materialDifferencePercent": 4.9283,
+    "antiAliasingOnlyPercent": 7.8299,
+    "officialClosureEligible": false
+  }
+}

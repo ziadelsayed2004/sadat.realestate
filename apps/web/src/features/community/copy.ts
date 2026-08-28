@@ -4,7 +4,9 @@ export interface CommunityCopy {
   readonly title: string;
   readonly subtitle: string;
   readonly moderationNotice: string;
+  readonly composerModerationNotice: string;
   readonly createPost: string;
+  readonly publishPost: string;
   readonly allPosts: string;
   readonly publishedCount: (count: number) => string;
   readonly comments: (count: number) => string;
@@ -14,6 +16,7 @@ export interface CommunityCopy {
   readonly postBody: string;
   readonly postTitlePlaceholder: string;
   readonly postBodyPlaceholder: string;
+  readonly composerPostBodyPlaceholder: string;
   readonly commentLabel: string;
   readonly commentPlaceholder: string;
   readonly submitComment: string;
@@ -53,19 +56,22 @@ export interface CommunityCopy {
 
 const copyByLocale: Readonly<Record<SupportedLocale, CommunityCopy>> = {
   ar: {
-    title: 'مجتمع عقارات السادات',
+    title: 'آراء وتجارب المقيمين',
     subtitle: 'شارك الأسئلة والتجارب العقارية المنشورة بأمان مع مجتمع المنصة.',
-    moderationNotice: 'تخضع المشاركات والتعليقات للمراجعة قبل ظهورها للعامة.',
-    createPost: 'إنشاء مشاركة',
-    allPosts: 'كل المشاركات',
+    moderationNotice: 'سيتم مراجعة كل بوست من فريق الإشراف قبل ظهوره للعامة',
+    composerModerationNotice: 'سيتم مراجعة البوست قبل ظهوره للعامة',
+    createPost: 'انشر بوست',
+    publishPost: 'نشر البوست',
+    allPosts: 'الكل',
     publishedCount: count => `${count} مشاركة منشورة`,
     comments: count => `${count} تعليق`,
     openDiscussion: 'عرض النقاش',
     closeDiscussion: 'إغلاق النقاش',
-    postTitle: 'عنوان المشاركة',
-    postBody: 'نص المشاركة',
-    postTitlePlaceholder: 'اكتب عنواناً واضحاً',
-    postBodyPlaceholder: 'شارك سؤالك أو تجربتك العقارية',
+    postTitle: 'عنوان البوست',
+    postBody: 'محتوى البوست',
+    postTitlePlaceholder: 'عنوان البوست',
+    postBodyPlaceholder: 'محتوى البوست…',
+    composerPostBodyPlaceholder: 'محتوى البوست...',
     commentLabel: 'أضف تعليقاً',
     commentPlaceholder: 'اكتب تعليقك',
     submitComment: 'نشر التعليق',
@@ -106,7 +112,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, CommunityCopy>> = {
     title: 'Sadat Real Estate community',
     subtitle: 'Share published property questions and experiences safely with the platform community.',
     moderationNotice: 'Posts and comments are reviewed before they become public.',
+    composerModerationNotice: 'Posts are reviewed before they become public.',
     createPost: 'Create a post',
+    publishPost: 'Publish post',
     allPosts: 'All posts',
     publishedCount: count => `${count} published ${count === 1 ? 'post' : 'posts'}`,
     comments: count => `${count} ${count === 1 ? 'comment' : 'comments'}`,
@@ -116,6 +124,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, CommunityCopy>> = {
     postBody: 'Post body',
     postTitlePlaceholder: 'Write a clear title',
     postBodyPlaceholder: 'Share a property question or experience',
+    composerPostBodyPlaceholder: 'Post content...',
     commentLabel: 'Add a comment',
     commentPlaceholder: 'Write your comment',
     submitComment: 'Post comment',
@@ -156,7 +165,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, CommunityCopy>> = {
     title: '萨达特房地产社区',
     subtitle: '与平台社区安全分享已发布的房地产问题和经验。',
     moderationNotice: '帖子和评论经过审核后才会公开。',
+    composerModerationNotice: '帖子发布前会经过审核。',
     createPost: '创建帖子',
+    publishPost: '发布帖子',
     allPosts: '全部帖子',
     publishedCount: count => `${count} 个已发布帖子`,
     comments: count => `${count} 条评论`,
@@ -166,6 +177,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, CommunityCopy>> = {
     postBody: '帖子内容',
     postTitlePlaceholder: '写一个清晰的标题',
     postBodyPlaceholder: '分享房地产问题或经验',
+    composerPostBodyPlaceholder: '帖子内容...',
     commentLabel: '添加评论',
     commentPlaceholder: '写下你的评论',
     submitComment: '发布评论',

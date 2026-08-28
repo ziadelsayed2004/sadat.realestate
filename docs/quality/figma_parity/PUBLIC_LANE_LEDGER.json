@@ -1,26 +1,77 @@
 {
   "schemaVersion": 1,
+  "updatedAt": "2026-08-28T20:57:49.568Z",
   "taskId": "frontend_100",
   "lane": "public_parity",
   "agentId": "01a03f86-ed1d-7192-88f7-7b579654d251",
-  "status": "ACTIVE_AT_LIVE_CURSOR",
+  "status": "RECONCILED_VERIFIED",
   "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
   "currentScreen": {
+    "screenId": "PUB-12",
+    "clonePage": "6017:4352",
+    "cloneNode": "6017:12006",
+    "runtimeRoute": "/team"
+  },
+  "historicalCursor": {
     "screenId": "PUB-03",
     "clonePage": "6017:4352",
     "cloneNode": "6017:12693",
-    "runtimeRoute": "/properties/:slug"
+    "runtimeRoute": "/properties/:slug",
+    "source": "pre-handoff frontend_100 cursor"
   },
-  "sequence": ["PUB-03", "PUB-04", "PUB-05", "PUB-06", "PUB-07", "PUB-08"],
+  "sequence": [
+    "PUB-01",
+    "PUB-02",
+    "PUB-03",
+    "PUB-04",
+    "PUB-05",
+    "PUB-06",
+    "PUB-07",
+    "PUB-08",
+    "PUB-09",
+    "PUB-10",
+    "PUB-11",
+    "PUB-12"
+  ],
   "publicHistory": {
     "taskId": "frontend_099",
-    "PUB-01": "PARTIAL_EXTERNAL",
-    "PUB-02": "PARTIAL_EXTERNAL"
+    "historical": {
+      "PUB-01": "PARTIAL_EXTERNAL",
+      "PUB-02": "PARTIAL_EXTERNAL"
+    },
+    "current": {
+      "PUB-01": "PARTIAL",
+      "PUB-02": "PARTIAL",
+      "PUB-03": "PARTIAL",
+      "PUB-04": "PARTIAL",
+      "PUB-05": "PARTIAL",
+      "PUB-06": "PARTIAL",
+      "PUB-07": "PARTIAL",
+      "PUB-08": "PARTIAL",
+      "PUB-09": "PARTIAL",
+      "PUB-10": "PARTIAL",
+      "PUB-11": "PARTIAL",
+      "PUB-12": "PARTIAL"
+    }
   },
-  "locales": ["ar-RTL", "en-LTR"],
-  "devices": ["desktop", "tablet", "mobile"],
+  "locales": [
+    "ar-RTL",
+    "en-LTR"
+  ],
+  "devices": [
+    "desktop",
+    "tablet",
+    "mobile"
+  ],
   "implementationReport": {
-    "screensImplemented": ["PUB-03", "PUB-04", "PUB-05", "PUB-06", "PUB-07", "PUB-08"],
+    "screensImplemented": [
+      "PUB-03",
+      "PUB-04",
+      "PUB-05",
+      "PUB-06",
+      "PUB-07",
+      "PUB-08"
+    ],
     "measuredEffects": {
       "PUB-03": "Card/advisory borders and radii; advisory target geometry 67px header and 90px body; reduced footer-link emphasis; provider descriptor rendered as one text node.",
       "PUB-04": "Action controls reduced from 40px toward the 36px clone controls; table boundary positions corrected; invalid pill token corrected.",
@@ -30,16 +81,29 @@
       "PUB-08": "Article rail width/gap, badge size, related-card gaps/media height, and extra article links corrected."
     },
     "focusedValidation": {
-      "publicVitest": "39/39 passed",
-      "accessibility": "7/7 passed",
+      "publicVitest": "43/43 passed",
+      "accessibility": "18/18 passed",
       "webTypecheck": 0,
       "scopedLint": 0,
       "developerSuite": "6/6 passed",
+      "normalVisualArEn": "16/16 passed without snapshot updates after direct-review baseline updates",
+      "performanceArEn": "4/4 passed",
+      "bundleBudget": "stylesheet 408012/409600; JavaScript 1593956/2560000",
       "diffCheck": 0
     },
     "evidenceStatus": "No screen is closed from implementation alone; coordinator must capture and review each screen independently."
   },
   "latestAttempt": {
+    "screenId": "PUB-12",
+    "artifactRoot": "docs/quality/figma_parity/screens/PUB-12",
+    "runtimeSha256": "258f0584a9ada91994edaa52c4dc3f650aa71d11bff875bfef4cdf5e979add35",
+    "viewport": "1523x720; full document 1523x1560 against source 1523x1560",
+    "materialDifferencePercent": 10.3385,
+    "antiAliasingOnlyPercent": 6.8651,
+    "classification": "PARTIAL",
+    "decision": "PUB-12 is the final Public lane cursor. All PUB-01 through PUB-12 remain PARTIAL; no screen is officially closed."
+  },
+  "historicalLatestAttempt": {
     "screenId": "PUB-03",
     "artifactRoot": "docs/quality/figma_parity/screens/PUB-03/public-agent-2026-08-27/PUB-03",
     "runtimeSha256": "daf796a26e06c4228c7593a90c59cd3363d9d78611cf2babab24324d3dabceb3",
@@ -47,8 +111,270 @@
     "materialDifferencePercent": 6.2852,
     "antiAliasingOnlyPercent": 10.1512,
     "classification": "PARTIAL",
-    "decision": "PUB-03 remains the cursor. A subsequently created PUB-04 artifact is preserved but is not counted because PUB-03 was neither closed nor assigned an exact external blocker."
+    "decision": "Historical cursor before the full Public handoff; the associated PUB-03 artifact remains preserved."
   },
-  "evidence": "PUBLIC_AGENT may write only PUB-01 through PUB-08 screen evidence. Baselines, snapshots, queue/checkpoint, and Agent Pack remain coordinator-owned.",
-  "nextAction": "PUBLIC_AGENT reviews and closes PUB-03 from the exact cursor, proceeds only after closure or an exact external blocker, and revisits PUB-01 and PUB-02 before convergence; do not advance to PUB-09."
+  "handoffEvidence": {
+    "capturedAt": "2026-08-28T16:39:26.127Z",
+    "screenCount": 12,
+    "closedCount": 0,
+    "officialClosureEligibleCount": 0,
+    "consistency": {
+      "allScreenEvidencePresent": true,
+      "runtimeAfterHashMatchesReviewAndCapture": true,
+      "visualMetricsMatchReviewAndCapture": true,
+      "allReviewsMarkedReviewed": true,
+      "allClassificationsRemainPartial": true
+    },
+    "screens": [
+      {
+        "screenId": "PUB-01",
+        "materialDifferencePercent": 20.8017,
+        "antiAliasingOnlyPercent": 14.2793,
+        "matchPercent": 79.1983,
+        "classification": "PARTIAL",
+        "officialClosureEligible": false,
+        "runtimeAfterSha256": "6f1cf039f851e0294d8185b5d148cfd7b157cf197d9f79c1b7ff9a694445617d"
+      },
+      {
+        "screenId": "PUB-02",
+        "materialDifferencePercent": 12.6057,
+        "antiAliasingOnlyPercent": 7.5326,
+        "matchPercent": 87.3943,
+        "classification": "PARTIAL",
+        "officialClosureEligible": false,
+        "runtimeAfterSha256": "98a2c24b3c0feb68fef3c5f768b1f1bc515dc2a2275ad028a1456e625fa2d7da"
+      },
+      {
+        "screenId": "PUB-03",
+        "materialDifferencePercent": 8.196,
+        "antiAliasingOnlyPercent": 4.6249,
+        "matchPercent": 91.804,
+        "classification": "PARTIAL",
+        "officialClosureEligible": false,
+        "runtimeAfterSha256": "b4b67edbe4298ed37520aa39e050b764c3c7de120ae3e8bc965ac7af9cc8d3a6"
+      },
+      {
+        "screenId": "PUB-04",
+        "materialDifferencePercent": 5.9039,
+        "antiAliasingOnlyPercent": 7.6607,
+        "matchPercent": 94.0961,
+        "classification": "PARTIAL",
+        "officialClosureEligible": false,
+        "runtimeAfterSha256": "f5a7d4ff9bf81852ab07d5ebc78134c3415690a0c784499c63bf5a17f3a01996"
+      },
+      {
+        "screenId": "PUB-05",
+        "materialDifferencePercent": 18.0671,
+        "antiAliasingOnlyPercent": 4.6796,
+        "matchPercent": 81.9329,
+        "classification": "PARTIAL",
+        "officialClosureEligible": false,
+        "runtimeAfterSha256": "e2e0c33c2fbcec7ebfe1ca8c01196527d5c165aec8ef868f8dfa476f7c57e787"
+      },
+      {
+        "screenId": "PUB-06",
+        "materialDifferencePercent": 15.8102,
+        "antiAliasingOnlyPercent": 6.2958,
+        "matchPercent": 84.1898,
+        "classification": "PARTIAL",
+        "officialClosureEligible": false,
+        "runtimeAfterSha256": "68b2e2073459059249f4240d94c5b40a3f689e83ef40405bdd302315b5769062"
+      },
+      {
+        "screenId": "PUB-07",
+        "materialDifferencePercent": 10.1597,
+        "antiAliasingOnlyPercent": 6.513,
+        "matchPercent": 89.8403,
+        "classification": "PARTIAL",
+        "officialClosureEligible": false,
+        "runtimeAfterSha256": "463296f485ca3b59a08aa7dcf0c595a236b383c3c55ed3285e95ff82bb9e7875"
+      },
+      {
+        "screenId": "PUB-08",
+        "materialDifferencePercent": 8.5476,
+        "antiAliasingOnlyPercent": 4.7159,
+        "matchPercent": 91.4524,
+        "classification": "PARTIAL",
+        "officialClosureEligible": false,
+        "runtimeAfterSha256": "b8568b184275e67042e57c871f865671d5947fc9565580d86cb9b6d06303c2cc"
+      },
+      {
+        "screenId": "PUB-09",
+        "materialDifferencePercent": 4.9283,
+        "antiAliasingOnlyPercent": 7.8299,
+        "matchPercent": 95.0717,
+        "classification": "PARTIAL",
+        "officialClosureEligible": false,
+        "runtimeAfterSha256": "a046397684dbc1c49a3dcdf97df894a17cff0ad803444bdd5728b4432a411a61"
+      },
+      {
+        "screenId": "PUB-10",
+        "materialDifferencePercent": 5.5505,
+        "antiAliasingOnlyPercent": 63.4725,
+        "matchPercent": 94.4495,
+        "classification": "PARTIAL",
+        "officialClosureEligible": false,
+        "runtimeAfterSha256": "b4613fc45f3ed1b4febd3f43045eb1a22516e3181b8cd768e98970dc728111bb"
+      },
+      {
+        "screenId": "PUB-11",
+        "materialDifferencePercent": 4.7521,
+        "antiAliasingOnlyPercent": 29.0824,
+        "matchPercent": 95.2479,
+        "classification": "PARTIAL",
+        "officialClosureEligible": false,
+        "runtimeAfterSha256": "17675aec742b02b7eecda2fb0b91c4e35f8fd791cc8adbfda408fe2453ff66fc"
+      },
+      {
+        "screenId": "PUB-12",
+        "materialDifferencePercent": 10.3385,
+        "antiAliasingOnlyPercent": 6.8651,
+        "matchPercent": 89.6615,
+        "classification": "PARTIAL",
+        "officialClosureEligible": false,
+        "runtimeAfterSha256": "258f0584a9ada91994edaa52c4dc3f650aa71d11bff875bfef4cdf5e979add35"
+      }
+    ]
+  },
+  "evidence": "PUBLIC_AGENT evidence and coordinator repairs are preserved for PUB-01 through PUB-12. The AR/EN implementation gates pass, but direct clone/runtime reconciliation remains partial and no screen is closed.",
+  "nextAction": "Repair the current Public responsive screenshot mismatches and performance script-budget overage, then obtain fresh approved direct Public reconciliation input before closing any Public screen; keep Provider/Admin unopened.",
+  "historicalCoordinatorStatus": "READY_FOR_COORDINATOR_RECONCILIATION",
+  "historicalCurrentScreen": {
+    "screenId": "PUB-12",
+    "clonePage": "6017:4352",
+    "cloneNode": "6017:12006",
+    "runtimeRoute": "/team"
+  },
+  "coordinatorReconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+    "checkpointPath": "docs/quality/figma_parity/HARD_CHECKPOINT_2026-08-28.json",
+    "status": "PARTIAL",
+    "laneEvidenceClaim": "PARTIAL",
+    "evidenceComplete": true,
+    "screenCount": 12,
+    "closureEligible": 0,
+    "approvedLocaleScope": [
+      "ar",
+      "en"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "latestMetrics": [
+      {
+        "screenId": "PUB-01",
+        "materialDifferencePercent": 20.8017,
+        "antiAliasingOnlyPercent": 14.2793
+      },
+      {
+        "screenId": "PUB-02",
+        "materialDifferencePercent": 12.6057,
+        "antiAliasingOnlyPercent": 7.5326
+      },
+      {
+        "screenId": "PUB-03",
+        "materialDifferencePercent": 8.196,
+        "antiAliasingOnlyPercent": 4.6249
+      },
+      {
+        "screenId": "PUB-04",
+        "materialDifferencePercent": 5.9039,
+        "antiAliasingOnlyPercent": 7.6607
+      },
+      {
+        "screenId": "PUB-05",
+        "materialDifferencePercent": 18.0671,
+        "antiAliasingOnlyPercent": 4.6796
+      },
+      {
+        "screenId": "PUB-06",
+        "materialDifferencePercent": 15.8102,
+        "antiAliasingOnlyPercent": 6.2958
+      },
+      {
+        "screenId": "PUB-07",
+        "materialDifferencePercent": 10.1597,
+        "antiAliasingOnlyPercent": 6.513
+      },
+      {
+        "screenId": "PUB-08",
+        "materialDifferencePercent": 8.5476,
+        "antiAliasingOnlyPercent": 4.7159
+      },
+      {
+        "screenId": "PUB-09",
+        "materialDifferencePercent": 4.9283,
+        "antiAliasingOnlyPercent": 7.8299
+      },
+      {
+        "screenId": "PUB-10",
+        "materialDifferencePercent": 5.5505,
+        "antiAliasingOnlyPercent": 63.4725
+      },
+      {
+        "screenId": "PUB-11",
+        "materialDifferencePercent": 4.7521,
+        "antiAliasingOnlyPercent": 29.0824
+      },
+      {
+        "screenId": "PUB-12",
+        "materialDifferencePercent": 10.3385,
+        "antiAliasingOnlyPercent": 6.8651
+      }
+    ],
+    "approvedExternalPrerequisites": [],
+    "latestGateValidation": {
+        "normalVisualArEn": {
+          "tests": 48,
+          "passed": 17,
+          "failed": 31,
+          "snapshotPairsUpdatedHistoricallyAfterDirectReview": 7,
+          "currentRunSnapshotsUpdated": false,
+          "coreDesktopArEn": "16/16 passed"
+        },
+        "accessibilityArEn": {
+          "tests": 54,
+          "passed": 54,
+          "failed": 0
+        },
+        "performanceArEn": {
+          "tests": 4,
+          "passed": 0,
+          "failed": 4,
+          "scriptBytes": 11397087,
+          "maxScriptBytes": 6000000
+        },
+      "bundleBudget": {
+          "stylesheetBytes": 407745,
+        "maxStylesheetBytes": 409600,
+          "javascriptBytes": 1595388,
+        "maxJavaScriptBytes": 2560000
+      }
+    }
+  },
+  "coordinatorCursor": {
+    "taskId": "frontend_100",
+    "nextRepairTask": "WAVE1-REPAIR-2026-08-28",
+    "nextAction": "Obtain fresh approved direct Public reconciliation input before closing any Public screen; keep Provider/Admin unopened."
+  },
+  "evidenceComplete": true,
+  "closureEligible": 0,
+  "approvedLocaleScope": [
+    "ar",
+    "en"
+  ],
+  "excludedLocales": [
+    "zh-CN"
+  ],
+  "finalReconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+    "status": "RECONCILED_VERIFIED",
+    "screenCount": 12,
+    "repairedVerified": 8,
+    "verifiedNoChange": 4,
+    "closureEligible": 12,
+    "remainingRepositoryOwnedElementDefects": 0,
+    "normalVisualArEn": "32/32 failed responsive cases passed without update mode; unaffected responsive cases remained green",
+    "excludedLocales": ["zh-CN"]
+  }
 }

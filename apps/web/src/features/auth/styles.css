@@ -36,7 +36,9 @@
   margin: 0;
 }
 
-.auth-card__hero h1 {
+.auth-card__hero h1,
+.auth-card__heading h1,
+.auth-success-content h1 {
   font-size: clamp(var(--font-size-heading-two), 4vw, var(--font-size-display));
   line-height: var(--line-height-heading);
 }
@@ -62,11 +64,6 @@
   text-align: center;
 }
 
-.auth-card__heading h1 {
-  font-size: clamp(var(--font-size-heading-two), 4vw, var(--font-size-display));
-  line-height: var(--line-height-heading);
-}
-
 .auth-card__icon {
   display: grid;
   place-items: center;
@@ -75,8 +72,11 @@
   color: var(--color-brand-secondary);
   background: var(--color-surface-soft);
   border-radius: var(--radius-xl);
-  font-size: 2.5rem;
-  line-height: 1;
+}
+
+.auth-card__icon .auth-icon {
+  inline-size: 2rem;
+  block-size: 2rem;
 }
 
 .auth-card__body {
@@ -210,7 +210,8 @@
   transform: translateY(-1px);
 }
 
-.auth-role-card:focus-visible {
+.auth-role-card:focus-visible,
+.auth-inline-button:focus-visible {
   outline: 3px solid var(--color-focus);
   outline-offset: 3px;
 }
@@ -236,7 +237,8 @@
   font-weight: var(--font-weight-bold);
 }
 
-.auth-role-card__body {
+.auth-role-card__body,
+.auth-success-content p {
   color: var(--color-text-secondary);
   line-height: var(--line-height-body);
 }
@@ -251,11 +253,6 @@
   font-weight: var(--font-weight-semibold);
   text-decoration: underline;
   text-underline-offset: 0.2em;
-}
-
-.auth-inline-button:focus-visible {
-  outline: 3px solid var(--color-focus);
-  outline-offset: 3px;
 }
 
 .auth-card--success {
@@ -287,16 +284,6 @@
 .auth-success-content h1,
 .auth-success-content p {
   margin: 0;
-}
-
-.auth-success-content h1 {
-  font-size: clamp(var(--font-size-heading-two), 4vw, var(--font-size-display));
-  line-height: var(--line-height-heading);
-}
-
-.auth-success-content p {
-  color: var(--color-text-secondary);
-  line-height: var(--line-height-body);
 }
 
 .auth-success-actions {
@@ -528,34 +515,34 @@
   line-height: var(--line-height-heading);
 }
 
-.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-card__hero p {
-  font-size: var(--font-size-small);
-  line-height: 1.5;
-}
+  .route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-card__hero p,
+  .route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-card__prompt {
+    font-size: var(--font-size-small);
+    line-height: 1.5;
+  }
 
-.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-login-field,
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-login-field-shell,
 .route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-password-field {
   position: relative;
 }
 
-.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-login-field::before,
-.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-password-field .auth-login-field::before {
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-login-field__icon {
   position: absolute;
   z-index: 1;
   inset-inline-end: 0.875rem;
-  inset-block-start: 2.15rem;
+  inset-block-start: 2.125rem;
+  display: grid;
+  place-items: center;
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
   color: var(--color-text-muted);
-  font-size: 0.875rem;
   line-height: 1;
   pointer-events: none;
 }
 
-.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-login-field--email::before {
-  content: '☎';
-}
-
-.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-login-field--password::before {
-  content: '▢';
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-login-field__icon .auth-icon {
+  inline-size: 100%;
+  block-size: 100%;
 }
 
 .route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-login-field .ui-field__control {
@@ -579,9 +566,9 @@
   line-height: 1;
 }
 
-.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-password-field__toggle::before {
-  content: '◉';
-  font-size: 0.875rem;
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-password-field__toggle .auth-icon {
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
 }
 
 .route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-form .ui-button {
@@ -631,11 +618,6 @@
   opacity: 1;
 }
 
-.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-card__prompt {
-  font-size: var(--font-size-small);
-  line-height: 1.5;
-}
-
 .route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-card__prompt--email {
   position: absolute;
   inline-size: 1px;
@@ -661,9 +643,15 @@
   text-align: center;
 }
 
-.auth-card__privacy span {
+.auth-card__privacy-icon {
+  display: inline-grid;
+  place-items: center;
   color: var(--color-brand-primary);
-  font-size: var(--font-size-body);
+}
+
+.auth-card__privacy-icon .auth-icon {
+  inline-size: 0.875rem;
+  block-size: 0.875rem;
 }
 
 .auth-card--form {
@@ -860,7 +848,7 @@
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 2;
+  stroke-width: 1.75;
 }
 
 .auth-page--registration-role .auth-role-card__title {
@@ -991,15 +979,6 @@
   inset-inline-start: -2px;
   inset-block-start: 2px;
   transform: scaleX(0.9);
-}
-
-.auth-page--registration-role .auth-role-card--link .auth-role-card__icon svg {
-  position: relative;
-  inset-inline-start: -0.5px;
-}
-
-.auth-page--registration-role .auth-role-card:not(.auth-role-card--link) .auth-role-card__icon svg {
-  inset-inline-start: -0.5px;
 }
 
 .auth-role-actions .auth-card__prompt a {

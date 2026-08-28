@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { PUBLIC_CLONE_ASSETS, routePublicHomepageApi, routePublicPropertyListApi } from './public-fixtures';
 
 function localeForProject(): 'ar' | 'en' | 'zh-CN' {
@@ -6,6 +6,26 @@ function localeForProject(): 'ar' | 'en' | 'zh-CN' {
   if (projectName.endsWith('-zh')) return 'zh-CN';
   if (projectName.endsWith('-en')) return 'en';
   return 'ar';
+}
+
+async function waitForHomepageMediaToSettle(page: Page): Promise<void> {
+  const images = page.locator('[data-page="public-home"] img');
+  await images.evaluateAll(elements => (elements as HTMLImageElement[]).forEach(image => {
+    if (image.loading === 'lazy') image.loading = 'eager';
+    image.decoding = 'sync';
+  }));
+  for (let index = 0; index < await images.count(); index += 1) {
+    await images.nth(index).scrollIntoViewIfNeeded();
+  }
+  await page.evaluate(() => document.fonts.ready);
+  await expect.poll(
+    () => images.evaluateAll(elements => (elements as HTMLImageElement[]).every(image => image.complete && image.naturalWidth > 0)),
+    { timeout: 10_000 }
+  ).toBe(true);
+  await images.evaluateAll(elements => Promise.all((elements as HTMLImageElement[]).map(image => image.decode().catch(() => undefined))));
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await images.evaluateAll(elements => Promise.all((elements as HTMLImageElement[]).map(image => image.decode().catch(() => undefined))));
+  await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
 }
 
 function propertyDetailsFixture() {
@@ -208,6 +228,7 @@ test('public homepage renders its SSR shell across approved locales and devices'
   const heroImage = homepage.locator('.public-homepage__hero-media img');
   await expect(heroImage).toBeVisible();
   await expect(heroImage).toHaveAttribute('src', PUBLIC_CLONE_ASSETS.homepageHero);
+  await waitForHomepageMediaToSettle(page);
   await expect(page).toHaveScreenshot('public-homepage-' + locale + '.png', { fullPage: true });
 });
 

@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "fresh-audit-public-developer-directory",
-  "responseSha256": "c535f7bba08024774d64144e8c21798ebb2a18d0f79eb58af2edce84717e6e3e",
+  "responseSha256": "041072678ee0a6b3c083e9a8a455117eb3fc79a46c1e8b0d48377e51810109d5",
   "response": {
     "data": {
       "items": [
@@ -16,7 +16,7 @@
           "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
           "kind": "developer_company",
           "slug": "approved-builder",
-          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub05-a.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
           "name": {
             "ar": "شركة AS للتطوير العقاري",
             "en": "AS Real Estate Development",
@@ -28,7 +28,7 @@
             "zh-CN": "在萨达特城开发房地产超过15年的领先公司。"
           },
           "verified": true,
-          "logoUrl": "http://127.0.0.1:4175/assets/clone/pub05-b.png",
+          "logoUrl": "http://127.0.0.1:4173/assets/clone/pub05-b.png",
           "locations": [
             {
               "ar": "المنطقة الراقية"
@@ -52,7 +52,7 @@
             "en": "Nile Real Estate Group",
             "zh-CN": "尼罗房地产集团"
           },
-          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub05-c.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
           "description": {
             "en": "An integrated real-estate group known for luxury projects and after-sales service.",
             "ar": "مجموعة عقارية متكاملة تتميز بمشاريعها الفاخرة وخدمة ما بعد البيع.",
@@ -61,7 +61,7 @@
           "verified": true,
           "projectCount": 3,
           "propertyCount": 5,
-          "logoUrl": "http://127.0.0.1:4175/assets/clone/pub05-d.png",
+          "logoUrl": "http://127.0.0.1:4173/assets/clone/pub05-d.png",
           "locations": [
             {
               "ar": "الحي السابع"
@@ -80,7 +80,7 @@
             "en": "Misr El Gedida Housing",
             "zh-CN": "新开罗住房公司"
           },
-          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub05-e.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
           "description": {
             "en": "A specialist in mid-market and premium housing at competitive prices.",
             "ar": "شركة متخصصة في الإسكان المتوسط والراقي بأسعار تنافسية.",
@@ -89,7 +89,7 @@
           "verified": true,
           "projectCount": 4,
           "propertyCount": 8,
-          "logoUrl": "http://127.0.0.1:4175/assets/clone/pub05-f.png",
+          "logoUrl": "http://127.0.0.1:4173/assets/clone/pub05-f.png",
           "locations": [
             {
               "ar": "الحي الخامس"
@@ -108,7 +108,7 @@
             "en": "Delta Real Estate Group",
             "zh-CN": "三角洲房地产集团"
           },
-          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub05-g.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
           "description": {
             "en": "Twenty years of experience in the Egyptian real-estate market.",
             "ar": "خبرة 20 عاماً في السوق العقاري المصري.",
@@ -117,7 +117,7 @@
           "verified": true,
           "projectCount": 4,
           "propertyCount": 8,
-          "logoUrl": "http://127.0.0.1:4175/assets/clone/pub05-f.png",
+          "logoUrl": "http://127.0.0.1:4173/assets/clone/pub05-f.png",
           "locations": [
             {
               "ar": "المنطقة الراقية"

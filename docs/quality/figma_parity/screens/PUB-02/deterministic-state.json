@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "e2e-public-property-list-success",
-  "responseSha256": "2f1c702357deff3ca51a71c06ed532ca210ec6f97b729ac3bca479f0e85c3b57",
+  "responseSha256": "870f0ef90455fb0913895ccf62ddca2c5608a370741dfe8f2a0c6bd4370c1eaa",
   "response": {
     "data": {
       "items": [
@@ -22,7 +22,7 @@
             "zh-CN": "شقة فاخرة في الحي الأول"
           },
           "transactionType": "sale",
-          "imageUrl": "http://127.0.0.1:4175/assets/canonical/public/listing-property-home.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-property-home.png",
           "description": {
             "ar": "شقة فاخرة في الحي الأول",
             "en": "شقة فاخرة في الحي الأول",
@@ -51,7 +51,7 @@
             "en": "شركة السادات للتطوير العقاري",
             "zh-CN": "شركة السادات للتطوير العقاري"
           },
-          "sourceImageUrl": "http://127.0.0.1:4175/assets/canonical/public/listing-provider-sadat.png",
+          "sourceImageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-sadat.png",
           "sourceType": "developer_company",
           "publicCode": "SDT-1234",
           "viewCount": 342,
@@ -69,7 +69,7 @@
             "zh-CN": "فيلا مستقلة بالمنطقة الراقية"
           },
           "transactionType": "sale",
-          "imageUrl": "http://127.0.0.1:4175/assets/canonical/public/listing-property-villa.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-property-villa.png",
           "description": {
             "ar": "فيلا مستقلة بالمنطقة الراقية",
             "en": "فيلا مستقلة بالمنطقة الراقية",
@@ -98,7 +98,7 @@
             "en": "مجموعة النيل العقارية",
             "zh-CN": "مجموعة النيل العقارية"
           },
-          "sourceImageUrl": "http://127.0.0.1:4175/assets/canonical/public/listing-provider-nile.png",
+          "sourceImageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-nile.png",
           "sourceType": "developer_company",
           "publicCode": "SDT-0892",
           "viewCount": 512,
@@ -116,7 +116,7 @@
             "zh-CN": "أرض سكنية في الحي السابع"
           },
           "transactionType": "sale",
-          "imageUrl": "http://127.0.0.1:4175/assets/canonical/public/listing-property-land.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-property-land.png",
           "description": {
             "ar": "أرض سكنية في الحي السابع",
             "en": "أرض سكنية في الحي السابع",
@@ -140,7 +140,7 @@
             "en": "مكتب الأمل العقاري",
             "zh-CN": "مكتب الأمل العقاري"
           },
-          "sourceImageUrl": "http://127.0.0.1:4175/assets/canonical/public/listing-provider-hope.png",
+          "sourceImageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-hope.png",
           "sourceType": "brokerage_office",
           "publicCode": "SDT-0456",
           "viewCount": 189,
@@ -158,7 +158,7 @@
             "zh-CN": "شقة للإيجار في الحي الثالث"
           },
           "transactionType": "rent",
-          "imageUrl": "http://127.0.0.1:4175/assets/canonical/public/listing-property-rental.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-property-rental.png",
           "description": {
             "ar": "شقة للإيجار في الحي الثالث",
             "en": "شقة للإيجار في الحي الثالث",
@@ -187,7 +187,7 @@
             "en": "أحمد حسن",
             "zh-CN": "أحمد حسن"
           },
-          "sourceImageUrl": "http://127.0.0.1:4175/assets/canonical/public/listing-provider-ahmed.png",
+          "sourceImageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-ahmed.png",
           "sourceType": "brokerage_office",
           "publicCode": "SDT-0234",
           "viewCount": 267,
@@ -205,7 +205,7 @@
             "zh-CN": "مكتب تجاري في المنطقة الصناعية"
           },
           "transactionType": "rent",
-          "imageUrl": "http://127.0.0.1:4175/assets/canonical/public/listing-property-office.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-property-office.png",
           "description": {
             "ar": "مكتب تجاري في المنطقة الصناعية",
             "en": "مكتب تجاري في المنطقة الصناعية",
@@ -234,7 +234,7 @@
             "en": "مجموعة الدلتا العقارية",
             "zh-CN": "مجموعة الدلتا العقارية"
           },
-          "sourceImageUrl": "http://127.0.0.1:4175/assets/canonical/public/listing-provider-delta.png",
+          "sourceImageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-delta.png",
           "sourceType": "developer_company",
           "publicCode": "SDT-0789",
           "viewCount": 134,
@@ -252,7 +252,7 @@
             "zh-CN": "دوبلكس فاخر في الحي الخامس"
           },
           "transactionType": "sale",
-          "imageUrl": "http://127.0.0.1:4175/assets/canonical/public/listing-property-duplex.png",
+          "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-property-duplex.png",
           "description": {
             "ar": "دوبلكس فاخر في الحي الخامس",
             "en": "دوبلكس فاخر في الحي الخامس",
@@ -281,7 +281,7 @@
             "en": "شركة السادات للتطوير العقاري",
             "zh-CN": "شركة السادات للتطوير العقاري"
           },
-          "sourceImageUrl": "http://127.0.0.1:4175/assets/canonical/public/listing-provider-sadat-2.png",
+          "sourceImageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-sadat-2.png",
           "sourceType": "developer_company",
           "publicCode": "SDT-0567",
           "viewCount": 423,

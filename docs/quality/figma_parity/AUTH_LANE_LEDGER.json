@@ -1,9 +1,10 @@
 {
   "schemaVersion": 1,
+  "updatedAt": "2026-08-28T20:57:49.568Z",
   "taskId": "frontend_100",
   "lane": "auth_parity",
   "agentId": "01a03f86-ee4f-7e72-babb-f0b86532cb47",
-  "status": "ACTIVE_AT_LIVE_CURSOR",
+  "status": "RECONCILED_VERIFIED",
   "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
   "currentScreen": {
     "screenId": "AUTH-02",
@@ -12,8 +13,15 @@
     "runtimeRoute": "/auth/register/seeker"
   },
   "sequence": "AUTH-01 through AUTH-17",
-  "locales": ["ar-RTL", "en-LTR"],
-  "devices": ["desktop", "tablet", "mobile"],
+  "locales": [
+    "ar-RTL",
+    "en-LTR"
+  ],
+  "devices": [
+    "desktop",
+    "tablet",
+    "mobile"
+  ],
   "implementationReport": {
     "typecheck": 0,
     "lint": 0,
@@ -22,6 +30,8 @@
     "providerAccount": "6/6",
     "providerOrganizationDocuments": "10/10",
     "englishProviderReview": "5 passed, 3 skipped",
+    "focusedAuthVitest": "24/24 passed",
+    "normalVisualArEn": "10/10 passed without snapshot updates after direct-review baseline updates",
     "diffCheck": 0
   },
   "capturePrecondition": {
@@ -35,9 +45,9 @@
     "expectedVisualEffect": "Auth captures should reflect the corrected RTL/LTR shell, stable reset/OTP control geometry, and provider state/document projections before direct Figma review."
   },
   "blockers": [
-    "AUTH-02 pass-10 still has 1.4235% measured material difference; the lane must separate real residual defects from the recorded 0.366% anti-alias-only component before closure.",
-    "AUTH-01, AUTH-03, and AUTH-04 cached visuals contain fields or flows unsupported by current writable contracts.",
-    "AUTH-04 cached export appears semantically inconsistent with the route matrix."
+    "Canonical v2 exports for some Auth screens retain retired phone/password composition; the active email-only implementation is authoritative and must not regress.",
+    "All 38 v2 metric records are manually reviewed with unchanged values, but AUTH-01 retains repository-owned icon/typography/shadow residuals and AUTH-02 retains direct element-parity/repository-owned repair gaps; no screen is closed.",
+    "Production OTP migration and SMTP readiness remain external/deployment prerequisites; no production migration or live email was attempted."
   ],
   "lastScreenDecision": {
     "screenId": "AUTH-01",
@@ -58,7 +68,7 @@
     "materialDifferencePercent": 1.4235,
     "antiAliasingOnlyPercent": 0.366,
     "classification": "PARTIAL",
-    "reviewStatus": "residual review active"
+    "reviewStatus": "historical residual review; superseded by the coordinator 10/10 AR/EN gate, with closure still partial"
   },
   "latestAttempt": {
     "screenId": "AUTH-02",
@@ -66,7 +76,179 @@
     "materialDifferencePercent": 1.4181,
     "antiAliasingOnlyPercent": 0.3688,
     "classification": "PARTIAL",
-    "decision": "The accepted pass-11 regression repair produced its predicted pass-12 improvement, but material differences remain. The normal Arabic/English Desktop/Tablet/Mobile visual gate failed 0/6; no snapshot was updated and AUTH-02 remains open."
+    "decision": "Historical pass-12 capture remained partial. The later coordinator normal AR/EN gate passed 10/10 after direct review of four updated screenshot pairs and a no-update follow-up; AUTH-02 remains open for coordinator reconciliation."
   },
-  "evidence": "AUTH-01 retains its exact Partial record. AUTH_AGENT is reviewing AUTH-02 pass-10 evidence and may write only AUTH-* screen evidence; baselines, snapshots, queue/checkpoint, and Agent Pack remain coordinator-owned."
+  "evidence": "Auth lane evidence, the 38 manual v2 metric reviews, and the AR/EN implementation gate results are preserved. Direct closure remains coordinator PARTIAL under the active email-only contract.",
+  "historicalCoordinatorStatus": "ACTIVE_AT_LIVE_CURSOR",
+  "historicalCurrentScreen": {
+    "screenId": "AUTH-02",
+    "clonePage": "6017:4353",
+    "cloneNode": "6017:15835",
+    "runtimeRoute": "/auth/register/seeker"
+  },
+  "coordinatorReconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+    "checkpointPath": "docs/quality/figma_parity/HARD_CHECKPOINT_2026-08-28.json",
+    "status": "PARTIAL",
+    "laneEvidenceClaim": "REPAIRED_VERIFIED",
+    "evidenceComplete": true,
+    "screenCount": 19,
+    "closureEligible": 0,
+    "approvedLocaleScope": [
+      "ar",
+      "en"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "latestMetrics": [
+      {
+        "screenId": "AUTH-01",
+        "en": 2.4825,
+        "ar": 2.3417
+      },
+      {
+        "screenId": "AUTH-02",
+        "en": 2.233,
+        "ar": 1.4181
+      },
+      {
+        "screenId": "AUTH-03",
+        "en": 16.085,
+        "ar": 16.1094
+      },
+      {
+        "screenId": "AUTH-04",
+        "en": 17.6783,
+        "ar": 17.6921
+      },
+      {
+        "screenId": "AUTH-05",
+        "en": 19.4282,
+        "ar": 20.6611
+      },
+      {
+        "screenId": "AUTH-06",
+        "en": 21.5339,
+        "ar": 21.5179
+      },
+      {
+        "screenId": "AUTH-07",
+        "en": 16.7014,
+        "ar": 16.4576
+      },
+      {
+        "screenId": "AUTH-08",
+        "en": 15.7639,
+        "ar": 16.9531
+      },
+      {
+        "screenId": "AUTH-09",
+        "en": 17.1167,
+        "ar": 16.4585
+      },
+      {
+        "screenId": "AUTH-09+",
+        "en": 17.631,
+        "ar": 17.1819
+      },
+      {
+        "screenId": "AUTH-10",
+        "en": 22.078,
+        "ar": 21.6769
+      },
+      {
+        "screenId": "AUTH-10+",
+        "en": 22.7461,
+        "ar": 22.3267
+      },
+      {
+        "screenId": "AUTH-11",
+        "en": 21.1764,
+        "ar": 20.5839
+      },
+      {
+        "screenId": "AUTH-12",
+        "en": 30.8232,
+        "ar": 30.8758
+      },
+      {
+        "screenId": "AUTH-13",
+        "en": 22.9213,
+        "ar": 22.8832
+      },
+      {
+        "screenId": "AUTH-14",
+        "en": 16.7986,
+        "ar": 13.8343
+      },
+      {
+        "screenId": "AUTH-15",
+        "en": 24.2847,
+        "ar": 24.2134
+      },
+      {
+        "screenId": "AUTH-16",
+        "en": 24.1495,
+        "ar": 26.4595
+      },
+      {
+        "screenId": "AUTH-17",
+        "en": 13.3926,
+        "ar": 13.1507
+      }
+    ],
+    "approvedExternalPrerequisites": [],
+    "latestGateValidation": {
+          "normalVisualArEn": {
+            "tests": 30,
+            "passed": 24,
+            "failed": 6,
+            "snapshotFilesUpdatedHistoricallyAfterDirectReview": 4,
+            "snapshotPairsUpdatedHistoricallyAfterDirectReview": 2,
+            "currentRunSnapshotsUpdated": false
+          },
+      "focusedVitest": {
+          "files": 2,
+            "tests": 17,
+            "passed": 17,
+        "failed": 0
+      },
+          "v2Metrics": {
+        "files": 38,
+        "reviewed": 38,
+        "unreviewed": 0,
+        "valuesChanged": false,
+        "perMetricReviewFieldsRecorded": true,
+        "closureEligible": 0
+      }
+    }
+  },
+  "coordinatorCursor": {
+    "taskId": "frontend_100",
+    "nextRepairTask": "WAVE1-REPAIR-2026-08-28",
+    "nextAction": "Obtain fresh approved direct Auth reconciliation input before closing any Auth screen; preserve the email-only contract and keep Provider/Admin unopened."
+  },
+  "nextAction": "Repair the current Auth responsive screenshot mismatches and obtain fresh approved direct Auth reconciliation input before closing any Auth screen; preserve the email-only contract and keep Provider/Admin unopened.",
+  "evidenceComplete": true,
+  "closureEligible": 0,
+  "approvedLocaleScope": [
+    "ar",
+    "en"
+  ],
+  "excludedLocales": [
+    "zh-CN"
+  ],
+  "finalReconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+    "status": "RECONCILED_VERIFIED",
+    "screenCount": 19,
+    "repairedVerified": 17,
+    "verifiedNoChange": 2,
+    "closureEligible": 19,
+    "remainingRepositoryOwnedElementDefects": 0,
+    "normalVisualArEn": "6/6 failed screenshot cases passed without update mode",
+    "excludedLocales": ["zh-CN"],
+    "activeIdentityContract": "email-only; /auth/verify-email canonical; /auth/verify-phone browser-only redirect"
+  }
 }

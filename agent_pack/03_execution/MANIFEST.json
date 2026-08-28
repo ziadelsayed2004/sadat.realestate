@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "project": "Sadat Real Estate Platform",
   "packVersion": "1.4.0",
-  "generatedAt": "2026-08-27T13:12:43.867Z",
+  "generatedAt": "2026-08-28T19:28:27.215Z",
   "sourceHandoffDate": "2026-08-09",
   "screenCounts": {
     "PUB": 12,
@@ -60,5 +60,19 @@
       "ADM-54"
     ],
     "productLogoRuntimePath": "../apps/web/public/assets/sadat-real-estate-logo.png"
+  },
+  "wave1Reconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+    "decision": "BLOCKED",
+    "evidenceComplete": 41,
+    "closureEligible": 0,
+    "providerOrAdminStarted": false,
+    "approvedLocaleScope": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ]
   }
 }

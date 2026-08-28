@@ -40,7 +40,7 @@ test('public About exposes landmarks, labeled navigation, headings, and keyboard
   await expect(page.locator('main#main-content')).toBeVisible();
   await expect(about.locator('.public-homepage__nav')).toHaveAttribute('aria-label', /.+/);
   await expect(about.locator('h1')).toBeVisible();
-  await expect(about.locator('.public-about__block h2')).toHaveCount(1);
+  await expect(about.locator('.public-about__how h2')).toHaveCount(1);
   await page.keyboard.press('Tab');
   await expect(page.locator('.a11y-skip-link')).toBeFocused();
 });

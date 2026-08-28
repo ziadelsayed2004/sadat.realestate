@@ -399,8 +399,9 @@ function ArticleDetailsView({
     : localizedText(article.category.name, locale);
   const publishedAt = formatPublishedAt(article.publishedAt, locale);
   const related = relatedArticles?.filter(item => item.slug !== article.slug).slice(0, 3) ?? [];
+  const hasRelatedProperties = (relatedProperties?.items.length ?? 0) > 0;
   return (
-    <div className="public-article-details__detail-layout">
+    <div className={`public-article-details__detail-layout${hasRelatedProperties ? '' : ' public-article-details__detail-layout--without-property-rail'}`}>
       <RelatedPropertyRail data={relatedProperties} locale={locale} copy={copy} />
       <article className="public-article-details__article">
       <div className="public-article-details__hero">

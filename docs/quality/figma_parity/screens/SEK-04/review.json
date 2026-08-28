@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "SEK-04",
-  "classification": "REPAIRED_VERIFIED",
-  "classificationReason": "Direct runtime-before/runtime-after review completed for both approved desktop locales. Repository-owned layout, direction, safe projection, interaction, and state behavior are verified; approved contract/asset differences are recorded explicitly and no screenshot masking was used.",
+  "classification": "PARTIAL_EXTERNAL",
+  "classificationReason": "Direct runtime-before/runtime-after review completed for both approved desktop locales. Repository-owned layout, direction, safe projection, interaction, and state behavior are verified; richer provider/contact metadata remains externally unavailable and no screenshot masking was used.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4354",
@@ -138,6 +138,16 @@
     "Seeker desktop-ar E2E: 27/27 non-visual passed",
     "Seeker desktop-en E2E: 27/27 passed across dashboard QA/profile checks"
   ],
+  "coordinatorExternalReconciliation": {
+    "status": "BLOCKED_EXTERNAL",
+    "reviewedAt": "2026-08-28T18:36:24.741Z",
+    "owner": "Backend/API contract owner and Product",
+    "missingApprovedPrerequisite": "Approved provider/contact metadata projection for the request detail",
+    "whyNotDerivable": "The approved request contract does not provide the canonical provider/contact fields; screenshot content cannot be promoted into runtime data.",
+    "prerequisite": "Provide the approved safe provider/contact response fields or confirm the canonical export is retired.",
+    "nextAction": "Owner supplies the contract decision/data, then recapture AR/EN and re-review.",
+    "repositoryOwnedDefects": []
+  },
   "evidencePaths": {
     "figma": "docs/quality/figma_parity/screens/SEK-04/figma.png",
     "runtimeBefore": "docs/quality/figma_parity/screens/SEK-04/runtime-before.png",

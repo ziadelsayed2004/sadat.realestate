@@ -14,17 +14,17 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "a8af6e406cb2608007467ab2cae70b71115d7fc68bb35b3c3605f010c22960f9",
-    "afterHash": "efa4c96df79c3ea821043b6131079cbefeccda5b2039976d670435fcd3c8f276",
+    "afterHash": "98a2c24b3c0feb68fef3c5f768b1f1bc515dc2a2275ad028a1456e625fa2d7da",
     "requestedApi": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4175/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=20"
+        "url": "http://127.0.0.1:4173/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=20"
       }
     ],
     "apiResponses": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4175/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=20",
+        "url": "http://127.0.0.1:4173/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=20",
         "status": 200
       }
     ]
@@ -2145,139 +2145,139 @@
   },
   "images": [
     {
-      "src": "http://127.0.0.1:4175/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-restaurants-cafes.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/category-restaurants-cafes.png",
+      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/category-showrooms.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-showrooms.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/category-full-commercial-building.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-full-commercial-building.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/category-room.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-room.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/category-roof.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-roof.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/category-duplex.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-duplex.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/category-villa.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-villa.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/listing-property-home.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-home.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/listing-provider-sadat.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-sadat.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/listing-property-villa.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-villa.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/listing-provider-nile.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-nile.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/listing-property-land.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-land.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/listing-provider-hope.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-hope.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/listing-property-rental.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-rental.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/listing-provider-ahmed.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-ahmed.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/listing-property-office.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-office.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/listing-provider-delta.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-delta.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/listing-property-duplex.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-duplex.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/canonical/public/listing-provider-sadat-2.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-sadat-2.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
@@ -2416,11 +2416,11 @@
     ],
     "buttons": [
       {
-        "text": "الكل6 عقار",
+        "text": "مطاعم وكافيهات22 عقار",
         "aria": null
       },
       {
-        "text": "مطاعم وكافيهات22 عقار",
+        "text": "الكل1,200+ عقار",
         "aria": null
       },
       {
@@ -2514,8 +2514,8 @@
       "comparedWidth": 1577,
       "comparedHeight": 1981,
       "comparedPixels": 3124037,
-      "materialDifferencePercent": 15.3262,
-      "antiAliasingOnlyPercent": 6.2961,
+      "materialDifferencePercent": 12.6057,
+      "antiAliasingOnlyPercent": 7.5326,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

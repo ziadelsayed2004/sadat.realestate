@@ -235,3 +235,29 @@ This canonical order is connected by dependencies and enforces backend-first, on
 186. `frontend_088` — Operations and Handoff Guide
 187. `frontend_089` — UAT and Defect Closure
 188. `frontend_090` — Final Release Gate
+
+## Current expanded post-release sequence (source: TASK_CATALOG.json)
+
+189. `frontend_080` - Critical End-to-End Journeys
+190. `frontend_081` - Visual Fidelity Review
+191. `frontend_082` - Three-Locale and Direction QA
+192. `frontend_083` - Accessibility Audit
+193. `frontend_084` - Performance and Core Web Vitals
+194. `frontend_085` - Browser and Session Security
+195. `frontend_086` - UAT, Postman, and Screen-State Data Binding
+196. `frontend_087` - Secure Preview Build and Deployment
+197. `frontend_088` - Operations and Handoff Guide
+198. `frontend_089` - UAT and Defect Closure
+199. `frontend_090` - Final Release Gate
+200. `frontend_091` - Restore and Verify the Approved Design Source Bundle
+201. `frontend_092` - Public and Authentication Design Parity Remediation
+202. `frontend_093` - Seeker Dashboard Design Parity Remediation
+203. `frontend_094` - Provider Dashboard Design Parity Remediation
+204. `frontend_095` - Admin Dashboard Design Parity Remediation
+205. `frontend_096` - Author and Verify ADM-54 Request Settings Design
+206. `frontend_097` - Full Success-State Browser and Defect-Closure Matrix
+207. `frontend_098` - Final Production-Parity Platform Gate
+208. `frontend_099` - Public Exact Figma Parity Closure - PUB-01 through PUB-08
+209. `frontend_100` - Concurrent Owner-Clone Parity Coordinator - Public, Authentication, and Seeker
+
+Current coordinator state: `frontend_100` is complete after the final Wave 1 visual reconciliation recorded in `08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json`. The visual queue is dependency-ready at `PRV-01`; Provider and Admin implementation remain unopened until their own goals begin.

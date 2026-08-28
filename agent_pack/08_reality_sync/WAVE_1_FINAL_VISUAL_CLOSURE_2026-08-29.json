@@ -1,0 +1,290 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-29T01:13:48.932+03:00",
+  "reportType": "wave-1-final-visual-closure",
+  "taskId": "frontend_100",
+  "repairId": "WAVE1-REPAIR-2026-08-28",
+  "decision": "RECONCILED_PROVIDER_READY",
+  "providerStartAllowed": true,
+  "providerImplementationStarted": false,
+  "adminStartAllowed": false,
+  "adminImplementationStarted": false,
+  "canonical": {
+    "figmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pages": {
+      "public": "6017:4352",
+      "auth": "6017:4353",
+      "seeker": "6017:4354"
+    },
+    "approvedLocales": ["ar-RTL", "en-LTR"],
+    "excludedLocales": ["zh-CN"],
+    "wave1Screens": {
+      "public": 12,
+      "auth": 19,
+      "seeker": 10,
+      "total": 41
+    }
+  },
+  "boundedPass": {
+    "directActualAgainstCanonicalReviewCompleted": true,
+    "consolidatedProductionRepairPasses": 1,
+    "additionalCssTuningLoops": 0,
+    "masksAdded": false,
+    "assertionsWeakened": false,
+    "ignoreSnapshotsUsed": false,
+    "inventedAssetsUsed": false,
+    "chineseSnapshotsTestedOrUpdated": false,
+    "providerOrAdminStarted": false
+  },
+  "failureClassification": {
+    "public": [
+      {
+        "screenId": "PUB-01",
+        "projects": ["tablet-ar", "tablet-en", "mobile-ar", "mobile-en"],
+        "classification": "REAL_REPOSITORY_DEFECT_REPAIRED",
+        "element": "Responsive About/platform section background cascade",
+        "owner": "PUBLIC_FINAL_AGENT / Public feature lane",
+        "targetFile": "apps/web/src/features/public/styles.css",
+        "repair": "Excluded the About section from the even-section transparent override so the responsive About/platform panel remains navy with white text.",
+        "canonicalEvidence": ["docs/quality/figma_parity/screens/PUB-01/figma.png", "docs/quality/figma_parity/screens/PUB-01/review.json"]
+      },
+      {
+        "screenId": "PUB-02",
+        "projects": ["tablet-ar", "tablet-en", "mobile-ar", "mobile-en"],
+        "classification": "REAL_REPOSITORY_DEFECT_REPAIRED",
+        "element": "Responsive property-category rail intrinsic image sizing",
+        "owner": "PUBLIC_FINAL_AGENT / Public feature lane",
+        "targetFile": "apps/web/src/features/public/listing.css",
+        "repair": "Added bounded responsive rail, button, image, glyph, overflow, and text geometry for widths at or below 1100px.",
+        "canonicalEvidence": ["docs/quality/figma_parity/screens/PUB-02/figma.png", "docs/quality/figma_parity/screens/PUB-02/review.json"]
+      },
+      {
+        "screenIds": ["PUB-03", "PUB-04", "PUB-05", "PUB-06", "PUB-07", "PUB-08"],
+        "projects": ["tablet-ar", "tablet-en", "mobile-ar", "mobile-en"],
+        "classification": "STALE_SNAPSHOT_RUNTIME_PROVEN",
+        "reason": "Direct actual-to-canonical review found the current runtime structurally aligned at the approved responsive sizes; the checked-in cases represented the prior runtime/capture state. The exact AR/EN baselines were refreshed only after review.",
+        "canonicalEvidence": [
+          "docs/quality/figma_parity/screens/PUB-03/figma.png",
+          "docs/quality/figma_parity/screens/PUB-04/figma.png",
+          "docs/quality/figma_parity/screens/PUB-05/figma.png",
+          "docs/quality/figma_parity/screens/PUB-06/figma.png",
+          "docs/quality/figma_parity/screens/PUB-07/figma.png",
+          "docs/quality/figma_parity/screens/PUB-08/figma.png"
+        ]
+      }
+    ],
+    "auth": [
+      {
+        "case": "auth login and OTP approved states",
+        "screens": ["AUTH-01", "AUTH-05"],
+        "projects": ["desktop-ar", "desktop-en", "tablet-ar", "tablet-en", "mobile-ar", "mobile-en"],
+        "classification": "STALE_SNAPSHOT_ACTIVE_EMAIL_ONLY_CONTRACT",
+        "reason": "The cached AUTH-01/AUTH-05 exports encode the retired phone-or-email/password composition. Direct review of the current actuals, the approved email-only Auth lane evidence, and the SVG envelope/lock/eye controls confirmed the active email-only runtime. The AR/EN login and paired OTP baselines were refreshed; the legacy browser-only verify-phone redirect and Chinese baselines were not changed.",
+        "canonicalEvidence": [
+          "docs/quality/figma_parity/screens/AUTH-01/figma.png",
+          "docs/quality/figma_parity/screens/AUTH-05/figma.png",
+          "docs/quality/figma_parity/AUTH-LANE-EVIDENCE-2026-08-27.json",
+          "docs/quality/figma_parity/screens/AUTH-01/runtime-after-auth-lane-ar-v2.png",
+          "docs/quality/figma_parity/screens/AUTH-01/runtime-after-auth-lane-en-v2.png",
+          "docs/quality/figma_parity/screens/AUTH-05/runtime-after-auth-lane-ar-v2.png",
+          "docs/quality/figma_parity/screens/AUTH-05/runtime-after-auth-lane-en-v2.png"
+        ]
+      }
+    ]
+  },
+  "screens": [
+    {"screenId":"PUB-01","surface":"Public","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"PUB-02","surface":"Public","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"PUB-03","surface":"Public","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"PUB-04","surface":"Public","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"PUB-05","surface":"Public","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"PUB-06","surface":"Public","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"PUB-07","surface":"Public","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"PUB-08","surface":"Public","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"PUB-09","surface":"Public","status":"VERIFIED_NO_CHANGE","repositoryOwnedDefects":[]},
+    {"screenId":"PUB-10","surface":"Public","status":"VERIFIED_NO_CHANGE","repositoryOwnedDefects":[]},
+    {"screenId":"PUB-11","surface":"Public","status":"VERIFIED_NO_CHANGE","repositoryOwnedDefects":[]},
+    {"screenId":"PUB-12","surface":"Public","status":"VERIFIED_NO_CHANGE","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-01","surface":"Auth","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-02","surface":"Auth","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-03","surface":"Auth","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-04","surface":"Auth","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-05","surface":"Auth","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-06","surface":"Auth","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-07","surface":"Auth","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-08","surface":"Auth","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-09","surface":"Auth","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-09+","surface":"Auth","status":"VERIFIED_NO_CHANGE","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-10","surface":"Auth","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-10+","surface":"Auth","status":"VERIFIED_NO_CHANGE","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-11","surface":"Auth","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-12","surface":"Auth","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-13","surface":"Auth","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-14","surface":"Auth","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-15","surface":"Auth","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-16","surface":"Auth","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"AUTH-17","surface":"Auth","status":"REPAIRED_VERIFIED","repositoryOwnedDefects":[]},
+    {"screenId":"SEK-01","surface":"Seeker","status":"PARTIAL_EXTERNAL","repositoryOwnedDefects":[]},
+    {"screenId":"SEK-02","surface":"Seeker","status":"PARTIAL_EXTERNAL","repositoryOwnedDefects":[]},
+    {"screenId":"SEK-03","surface":"Seeker","status":"PARTIAL_EXTERNAL","repositoryOwnedDefects":[]},
+    {"screenId":"SEK-04","surface":"Seeker","status":"PARTIAL_EXTERNAL","repositoryOwnedDefects":[]},
+    {"screenId":"SEK-05","surface":"Seeker","status":"PARTIAL_EXTERNAL","repositoryOwnedDefects":[]},
+    {"screenId":"SEK-06","surface":"Seeker","status":"PARTIAL_EXTERNAL","repositoryOwnedDefects":[]},
+    {"screenId":"SEK-07","surface":"Seeker","status":"PARTIAL_EXTERNAL","repositoryOwnedDefects":[]},
+    {"screenId":"SEK-08","surface":"Seeker","status":"PARTIAL_EXTERNAL","repositoryOwnedDefects":[]},
+    {"screenId":"SEK-09","surface":"Seeker","status":"PARTIAL_EXTERNAL","repositoryOwnedDefects":[]},
+    {"screenId":"SEK-10","surface":"Seeker","status":"PARTIAL_EXTERNAL","repositoryOwnedDefects":[]}
+  ],
+  "totals": {
+    "public": {"screens": 12, "repairedVerified": 8, "verifiedNoChange": 4, "partial": 0, "remainingRepositoryOwnedDefects": 0},
+    "auth": {"screens": 19, "repairedVerified": 17, "verifiedNoChange": 2, "partial": 0, "remainingRepositoryOwnedDefects": 0},
+    "seeker": {"screens": 10, "partialExternal": 10, "repositoryOwnedDefects": 0, "externalPrerequisites": 10},
+    "wave1": {"screens": 41, "publicAuthVerified": 31, "publicAuthPartial": 0, "seekerExternal": 10}
+  },
+  "remainingElementLevelDefects": [],
+  "seekerExternalPrerequisites": [
+    {"screenId":"SEK-01","owner":"Product/Design and identity projection owner","missing":"Approved avatar artwork and the named profile identity projection","nextAction":"Owner supplies the approved asset and projection, then recapture AR/EN and re-review."},
+    {"screenId":"SEK-02","owner":"Backend/API contract owner and Product","missing":"Approved request-list fixture with the canonical row inventory and totals","nextAction":"Owner supplies the approved fixture/contract, then recapture AR/EN and re-review."},
+    {"screenId":"SEK-03","owner":"Backend/API contract owner and Product/Design","missing":"Approved provider/avatar/media projection and richer request status metadata","nextAction":"Owner supplies the contract/assets, then recapture AR/EN and re-review."},
+    {"screenId":"SEK-04","owner":"Backend/API contract owner and Product","missing":"Approved provider/contact metadata projection for the request detail","nextAction":"Owner supplies the contract decision/data, then recapture AR/EN and re-review."},
+    {"screenId":"SEK-05","owner":"Backend/API contract owner and Product/Design","missing":"Approved property/provider images, viewing metadata, and cancellation contract state","nextAction":"Owner supplies the approved inputs, then recapture AR/EN and re-review."},
+    {"screenId":"SEK-06","owner":"Product/Design and approved media owner","missing":"Canonical property, provider, and avatar media assets","nextAction":"Owner supplies the assets, then recapture AR/EN and re-review."},
+    {"screenId":"SEK-07","owner":"Backend/API contract owner and Product","missing":"Approved notification inventory and count metadata matching the canonical export","nextAction":"Owner supplies the approved fixture, then recapture AR/EN and re-review."},
+    {"screenId":"SEK-08","owner":"Backend/API contract owner and Product","missing":"Approved preference-area and payment contract fields/assets","nextAction":"Owner supplies the approved inputs, then recapture AR/EN and re-review."},
+    {"screenId":"SEK-09","owner":"Product/Design and identity projection owner","missing":"Approved avatar media and a current canonical profile composition compatible with email-only identity","nextAction":"Owner resolves the canonical/asset provenance, then recapture AR/EN and re-review."},
+    {"screenId":"SEK-10","owner":"Product/Design and identity/settings contract owner","missing":"Current email-only settings canonical export and approved richer settings action contract","nextAction":"Owner resolves the canonical/contract provenance, then recapture AR/EN and re-review."}
+  ],
+  "changedFiles": {
+    "thisPassProductionRepair": [
+      "apps/web/src/features/public/styles.css",
+      "apps/web/src/features/public/listing.css"
+    ],
+    "snapshotCoordinatorChanges": [
+      "apps/web/tests/e2e/__snapshots__/visual.spec.ts-snapshots/ (32 AR/EN responsive files)",
+      "apps/web/tests/e2e/__snapshots__/auth.spec.ts-snapshots/ (6 AR/EN login files and 6 paired AR/EN OTP files)"
+    ],
+    "preservedExistingLaneEdits": [
+      "apps/web/src/features/auth/pages.tsx",
+      "apps/web/src/features/auth/styles.css",
+      "apps/web/src/features/auth/copy.ts",
+      "apps/web/tests/e2e/auth.spec.ts",
+      "apps/web/tests/e2e/about-team-accessibility.spec.ts",
+      "apps/web/tests/about-team.vitest.test.tsx"
+    ],
+    "noChineseFilesChangedByThisPass": true
+  },
+  "snapshotReconciliation": {
+    "reasonCodes": {
+      "PUBLIC_REPAIR_RESPONSIVE": "Exact AR/EN responsive baselines were updated after direct review of the consolidated Public repair and repaired actuals.",
+      "PUBLIC_STALE_BASELINE_RUNTIME_PROVEN": "The current runtime was directly reviewed against cached canonical evidence; the checked-in responsive baseline was stale/missing for the current approved runtime.",
+      "AUTH_STALE_RETIRED_COMPOSITION": "The cached screenshot encoded retired phone/password state; the active email-only runtime and lane evidence were directly reviewed before AR/EN update."
+    },
+    "public": [
+      {"screenId":"PUB-01","file":"public-homepage-ar-tablet-ar-win32.png","oldSha256":"e0905e18ed03303fdd2883f3e3856a51c7a77992826a7f301e7f1aa8bf4ab829","newSha256":"5f96e542fefea6d06d9140e0b86b936043d9c34b8c883b29895c54017f0f7bef","reasonCode":"PUBLIC_REPAIR_RESPONSIVE"},
+      {"screenId":"PUB-01","file":"public-homepage-en-tablet-en-win32.png","oldSha256":"e9705ce03f0869b7974555ea7a7cdea7631ff136d3f0b9402cb9096ddbb40556","newSha256":"030a2ff6af7a39f86a2a1c7dd60584d308c983cc7f4ded84a5db5f605947dd69","reasonCode":"PUBLIC_REPAIR_RESPONSIVE"},
+      {"screenId":"PUB-01","file":"public-homepage-ar-mobile-ar-win32.png","oldSha256":"bf43301ce4026f11e2678d166394e45babcb45c4d3722b36eb968407c9200baf","newSha256":"6f21b23e3ecbbaf2843625f98682208ace7b5a8a56acb264597a8053f7b96222","reasonCode":"PUBLIC_REPAIR_RESPONSIVE"},
+      {"screenId":"PUB-01","file":"public-homepage-en-mobile-en-win32.png","oldSha256":"487ff94fade04822df8987d4d941660fd983f7942776cd11ddde12777ec4ceb6","newSha256":"62be119daa26215b2bd0cd25d8c51a41c11b1f119b79bbc3e15c87d8f9165f6e","reasonCode":"PUBLIC_REPAIR_RESPONSIVE"},
+      {"screenId":"PUB-02","file":"public-properties-ar-tablet-ar-win32.png","oldSha256":"11bae3a1d7d6a4bd157b6433bb41175b9070bd8addc064be09c86b3662896c8a","newSha256":"96b791e442dd5aa010b46ccd880d721f196ad157a593e1c54eb10fb70e87f231","reasonCode":"PUBLIC_REPAIR_RESPONSIVE"},
+      {"screenId":"PUB-02","file":"public-properties-en-tablet-en-win32.png","oldSha256":"bb8f8247718eefe9d43444727203e804f280860d4ea5701160c85999c0820ec6","newSha256":"91fb29d7a78e5f2d4a60cb00e2edf699d8a75d9483b90e13615abb4722681acf","reasonCode":"PUBLIC_REPAIR_RESPONSIVE"},
+      {"screenId":"PUB-02","file":"public-properties-ar-mobile-ar-win32.png","oldSha256":"ccac1f2a81150106f19972455af6a53c0a1c4e28d78f73efe9cc40ec9bc74a26","newSha256":"2cbefe81a9a432132c96a1cd1c9e242caca24a5dff7089869618c804411ee385","reasonCode":"PUBLIC_REPAIR_RESPONSIVE"},
+      {"screenId":"PUB-02","file":"public-properties-en-mobile-en-win32.png","oldSha256":"3c2d6683378c8cddaac367d6db3f9b43d6326eee23de8d17a050d1c3fe7b1439","newSha256":"163f5be84a97815893758a2035d9d24c78644b774fa27096ba19d8e8e569fcaa","reasonCode":"PUBLIC_REPAIR_RESPONSIVE"},
+      {"screenId":"PUB-03","file":"public-property-details-ar-tablet-ar-win32.png","oldSha256":"0b6fe33812bf02dcb2d55e500b8de604f5a18338ce9e5981f5f90fc2430f9c09","newSha256":"e5bcef6df6fee8c95e677741a2e7b20cd825d0b95951d805fcc76fd4bb32e370","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-03","file":"public-property-details-en-tablet-en-win32.png","oldSha256":"49ec7bda1d34ef40c950fac7fb73df12388c2b46b88c47b157131ffddc3442c9","newSha256":"4ba18152bb8b1a978f42cf283739be25cca7ea83082a438e3754d12a8b271652","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-03","file":"public-property-details-ar-mobile-ar-win32.png","oldSha256":"ea1bf0fae7e505d82785c13cf3e1ffd80983daedf6533ae86950791691cd4c5a","newSha256":"c314b7885d2360e832cf1346d6a867a6ace52e548dc8f5d041b112f530fca86d","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-03","file":"public-property-details-en-mobile-en-win32.png","oldSha256":"a03ce11a26eede6c4b6965c4b007ab01ff61dd91c22a7e6ada8d5bccb56ea3d1","newSha256":"5c33c07d6aef33334a5df98526b96f350b7ffb56311399503f5c7db684566356","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-04","file":"public-comparison-ar-tablet-ar-win32.png","oldSha256":"9ebdfc1616da44bce6b0035e130718df63ebf60a547f8b72f18ea79103bea979","newSha256":"df2ca95c266761af8db6132715758e130b48c71a9c08cafd8c50ac60b3b0ad15","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-04","file":"public-comparison-en-tablet-en-win32.png","oldSha256":"d9b221c1b4997cd0e576b8e7fc85ffd8b61e1038a73135032a2d80e18f65ffa8","newSha256":"6a08bdf0943ce7391678c6b71857fcd93d55e824917980e9a5e3516bde768efe","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-04","file":"public-comparison-ar-mobile-ar-win32.png","oldSha256":"223e064528bf3ae6034485eea48eec40c835e6c3ad6515bf0c2be5fb9edcb23e","newSha256":"c2c7b5de3acb8e44a1b56a95d9b6db76a86873d447a93b49ed928f10e8f505c4","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-04","file":"public-comparison-en-mobile-en-win32.png","oldSha256":"facb2563e555469c7254ad925f820e575c0698f3a16014f5a1fb0d04312da9a4","newSha256":"2b4ad6ebb99845bff1b47797945fca06153c5709965cfc4f08b7966bd821ec11","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-05","file":"public-developers-ar-tablet-ar-win32.png","oldSha256":"695ddd51fcad53786a4df878d3c8abe77ab46d395031e1ccd4b55750fd4d7d18","newSha256":"6f4936b06c7fd9ff0e5774466c816d35e917680ac44e4f54051cdaa7157e89b3","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-05","file":"public-developers-en-tablet-en-win32.png","oldSha256":"e651cbc7a29082498002817fe700de5a99fa74ea7496e872d61dfbc6c10eeafd","newSha256":"760697c290f0d31acd406a8335266ae22ededd4184340d2dc6f0d183b640618e","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-05","file":"public-developers-ar-mobile-ar-win32.png","oldSha256":"a0ba2e9c1fe932df99fb3aa6c6fee832aa48a5529931d220f83cf1d058595c8a","newSha256":"dd7824f642f642b791785608a0cb178936e9dc657d56c4aa9cff07ef3ac350c9","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-05","file":"public-developers-en-mobile-en-win32.png","oldSha256":"6f4ab8276efe5ad074b90415b9093fd85dceae303f45fac395e6b98fb9aaeffc","newSha256":"87d471e5fe54db6f45caeb03309ac8318d933a5f5e71fac904fc31f1b42648d5","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-06","file":"public-developer-profile-ar-tablet-ar-win32.png","oldSha256":"a9f93974c276d2909b6f34e7cfbe4a2fc1caa6a3b94e1417cd04acf84c77e6f3","newSha256":"0e1759b8f80d685cbc3779160f3f5cb0dd2affe08825ef13c4baebafbe4bc80a","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-06","file":"public-developer-profile-en-tablet-en-win32.png","oldSha256":"3a887af5f82e41a5cf386be09a7e3d35c9c68adf824c8411f967f8201fe80057","newSha256":"13e6a70e65ce3693eca6f04a8b5154d4f8ddb78351b3f1001729e1d70ed93c14","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-06","file":"public-developer-profile-ar-mobile-ar-win32.png","oldSha256":"c9cd3ad7cbb3e179bbae8e040de4a4828a77e39d34f90c0119e1b72d10de059a","newSha256":"daf19bbfb6841990beb898a53dbd21647c7cf5df3f1e19fc3e26f3fc7169ba97","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-06","file":"public-developer-profile-en-mobile-en-win32.png","oldSha256":"de27e1711b2f965691d6a19ad7701c56ab6ebae173c8f056592b3272fa7824e9","newSha256":"682d1b591d6286375e9eae92322b8798659234aedab7b68bff5ffeb4de02c99f","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-07","file":"public-articles-ar-tablet-ar-win32.png","oldSha256":"ddb80800dc04bff7f144730214db1e5396f6effc1d683e44aa417545da70bbb9","newSha256":"b720e10b47a4b18090b450ec18b3561899788671ad23a1df661f83f5e39730d0","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-07","file":"public-articles-en-tablet-en-win32.png","oldSha256":"c4861b693aa7b5f6caf9f36bc4ad987d3b5163a562511211f41994b18a99bfa4","newSha256":"d45fb71d690f47c21dd09afa484c93138258b5a61dfd02e45bbfc710bec4d756","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-07","file":"public-articles-ar-mobile-ar-win32.png","oldSha256":"1053b4cdf27fc30ae8e190fcbdd0be11cdfca3b5dfa345154f0a61c95db16e5a","newSha256":"38c07100dfd421d5a370f5996d336cb04cfc0ba9ed274013b8e76c5a007da17b","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-07","file":"public-articles-en-mobile-en-win32.png","oldSha256":"723c955192fd1eacdf07a821d974dc6976c742b6189b5071941e35dbdc52834b","newSha256":"0357514b9a8d94d08229ed3071f199a0779335fdc9cd0d285517bea6831b96b5","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-08","file":"public-article-details-ar-tablet-ar-win32.png","oldSha256":"ac1007cd432776cef9ba9bdbdc745396c98388f2c750f8e507eceb30dd781b05","newSha256":"fc3d1cdfd02defc4214d3ca37a9cb932fdd2d8e19e69912f43fd4f59bcef8795","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-08","file":"public-article-details-en-tablet-en-win32.png","oldSha256":"bffc93b2faa651b6ae70dfd4efeb5408d41f4abfb39e3bb77d5f30e4003a5dcc","newSha256":"7e37c3bc615b236b6c1f8cddea5db538fd9d087ee87d844ee62485db54c7d972","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-08","file":"public-article-details-ar-mobile-ar-win32.png","oldSha256":"e6957120cfd9b206cd22a1a2316b94befe09c1b5120c12558638b9b8d777b777","newSha256":"97f86d1b4f3e5a4cf483050b9d13b40ea979034ec6a570992a984afa16fdc42a","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"},
+      {"screenId":"PUB-08","file":"public-article-details-en-mobile-en-win32.png","oldSha256":"46281080236d8cae17370f61a4f67fabd354ea7a807854b67217917baa31fd02","newSha256":"4bb6125131316c0f19ab3b34de10aca0f05f7fbd13581b4f0b0aab898ebbf10d","reasonCode":"PUBLIC_STALE_BASELINE_RUNTIME_PROVEN"}
+    ],
+    "auth": [
+      {"screenId":"AUTH-01","state":"login","file":"auth-login-ar-desktop-ar-win32.png","oldSha256":"cad79cfedbba7888233e049c95ac7652a0a007e26b5aef93c54699c049d118fa","newSha256":"4e7c7212692178b70fdb360ebaacede8a8c23a46706ae151929be362db2989da","reasonCode":"AUTH_STALE_RETIRED_COMPOSITION"},
+      {"screenId":"AUTH-01","state":"login","file":"auth-login-en-desktop-en-win32.png","oldSha256":"78af8ffc910292d22f4df6e642f07e0797f488e6515ac3f57e6e652a6471c811","newSha256":"3af0cc7add32958d2d5d7a28f03e4cff36c4241ec4f751eaa1481cd56e12a778","reasonCode":"AUTH_STALE_RETIRED_COMPOSITION"},
+      {"screenId":"AUTH-01","state":"login","file":"auth-login-ar-tablet-ar-win32.png","oldSha256":"1517334dc2cf2adf37cfe490e6517e7b59f24ccd81bf9c95a3a9b98ffdc5fa70","newSha256":"db5b0209721b42e3eb67c54af816dddc08c718d48e2e0f58f02e15da9c8ffa1f","reasonCode":"AUTH_STALE_RETIRED_COMPOSITION"},
+      {"screenId":"AUTH-01","state":"login","file":"auth-login-en-tablet-en-win32.png","oldSha256":"6a5f5b1940485a7aa58259448e4b9fc20567c9bc00a9732f10b44476b104b896","newSha256":"822b95ddafc14b1e668e819dd3da30700ef01b0bfd235e2057d70f34cab3d4af","reasonCode":"AUTH_STALE_RETIRED_COMPOSITION"},
+      {"screenId":"AUTH-01","state":"login","file":"auth-login-ar-mobile-ar-win32.png","oldSha256":"ad2321214bd4dbef6b7c2edad596e96d3239fa78332d2acd7b5b5714521d2944","newSha256":"4ee51eb6a14247bbc8dfa581a71841dd5ee24c5b148c301e567a177dd78e753c","reasonCode":"AUTH_STALE_RETIRED_COMPOSITION"},
+      {"screenId":"AUTH-01","state":"login","file":"auth-login-en-mobile-en-win32.png","oldSha256":"4abbcc23d5d17b6387020228636771f65108b55bc6310a49f81439fa4539e9ad","newSha256":"f3d4bda2fc2459cbda56011f5b5abfc9369d20e15cf7a0e1ab1f3e22f01045ab","reasonCode":"AUTH_STALE_RETIRED_COMPOSITION"},
+      {"screenId":"AUTH-05","state":"otp","file":"auth-otp-ar-desktop-ar-win32.png","oldSha256":null,"preUpdateTrackedBaselineSha256":"666932af82bc2a7e10f38aa5f44abcdd1f05e13075cb4c781434fc1068040bec","newSha256":"819668e9cfaf692e2142d1fc4158c4b3350f0d7471283245da3ef6d543753b68","oldHashNote":"The pre-update working-tree file was already dirty from the prior Auth lane; its exact working-tree hash was not captured. The tracked pre-update blob is recorded above; no hash was guessed.","reasonCode":"AUTH_STALE_RETIRED_COMPOSITION"},
+      {"screenId":"AUTH-05","state":"otp","file":"auth-otp-en-desktop-en-win32.png","oldSha256":null,"preUpdateTrackedBaselineSha256":"9d84ade2b7d626d5066c0db9ee54369d79abff422d9fc0aaee857691d0b25956","newSha256":"4f92c48fc16b3646c8b1eca35cf4d00ece1f2baaa5cbac3d9d89e9bf1b81bb53","oldHashNote":"The pre-update working-tree file was already dirty from the prior Auth lane; its exact working-tree hash was not captured. The tracked pre-update blob is recorded above; no hash was guessed.","reasonCode":"AUTH_STALE_RETIRED_COMPOSITION"},
+      {"screenId":"AUTH-05","state":"otp","file":"auth-otp-ar-tablet-ar-win32.png","oldSha256":"2e12ee5261121cf2c0dbf01180881db9090441d25cd0f58085e4901004f6f71b","newSha256":"d717213fe4a67cee56c9a42a4010344ca2f6729ba0b19df7963b912d4ff1ac48","reasonCode":"AUTH_STALE_RETIRED_COMPOSITION"},
+      {"screenId":"AUTH-05","state":"otp","file":"auth-otp-en-tablet-en-win32.png","oldSha256":"713aa07c017abf2ca722c6e4c7960a8df71bbca4e15c1213e8c5527118326ad1","newSha256":"9cf21a0055b345a5396e1bfa0125594f28cd0a6c08c640fcec2fef1e2084579f","reasonCode":"AUTH_STALE_RETIRED_COMPOSITION"},
+      {"screenId":"AUTH-05","state":"otp","file":"auth-otp-ar-mobile-ar-win32.png","oldSha256":"1ce4d4b6268168b35c5a252e31e1e4f8ab5e74ecd442507a460badec839507f4","newSha256":"82079da9535cdcb93fcd8ced69c0f58fe5749efee3ef0447438d28ea80870c03","reasonCode":"AUTH_STALE_RETIRED_COMPOSITION"},
+      {"screenId":"AUTH-05","state":"otp","file":"auth-otp-en-mobile-en-win32.png","oldSha256":"09a481d4a10cad41ff9dcc0cb7748a601a8f3fa64959c68da989c68d93dc78c5","newSha256":"d12883208fa8363c09f50fffb676510e5dec1a5c4478805e40c6b20b8ed2eb80","reasonCode":"AUTH_STALE_RETIRED_COMPOSITION"}
+    ],
+    "counts": {"publicFilesUpdated":32,"authLoginFilesUpdated":6,"authOtpFilesUpdated":6,"totalFilesUpdated":44,"chineseFilesUpdated":0}
+  },
+  "verification": {
+    "finalNoUpdate": [
+      {"name":"Public failed responsive visual cases only","result":"32/32 passed","exitCode":0,"scope":"visual.spec.ts; tablet-ar, tablet-en, mobile-ar, mobile-en; PUB-01 through PUB-08 responsive cases"},
+      {"name":"Auth failed screenshot cases only","result":"6/6 passed","exitCode":0,"scope":"auth.spec.ts; desktop/tablet/mobile AR/EN; login and paired OTP states"}
+    ],
+    "resumedExactPointVerification": {
+      "publicAffectedRouteShellAndHomepage": {"result":"8/8 passed","exitCode":0,"updateMode":false,"scope":"visual.spec.ts; tablet-ar, tablet-en, mobile-ar, mobile-en; public route shell and homepage only"},
+      "authSixVisualCases": {"result":"6/6 passed","exitCode":0,"updateMode":false,"scope":"auth.spec.ts; desktop/tablet/mobile AR/EN; login and paired OTP states"},
+      "serverProcess": "coordinator-owned local server stopped after verification; port 4173 clear"
+    },
+    "snapshotUpdateRuns": [
+      {"name":"Public AR/EN responsive update run","result":"31/32 passed; one transient mobile-en comparison navigation timeout","exitCode":1},
+      {"name":"Public mobile-en comparison targeted retry with update mode","result":"1/1 passed","exitCode":0},
+      {"name":"Auth AR/EN login and paired OTP update run","result":"6/6 passed","exitCode":0}
+    ],
+    "priorEvidenceNotRerun": {
+      "publicVitest":"43/43 passed",
+      "authFocusedUnit":"17/17 passed",
+      "seekerFocused":"46/46 passed",
+      "publicAccessibility":"54/54 passed",
+      "aboutTeamAccessibility":"12/12 passed",
+      "browserSecurity":"18/18 passed",
+      "typecheck":"passed",
+      "lint":"passed",
+      "build":"passed",
+      "openApiPostmanInventory":"passed",
+      "bundleBudget":"passed; stylesheet 407745/409600 and JavaScript 1595388/2560000",
+      "performance":"not rerun in this visual-only closure; preserved historical combined record is 0/4 at 11397087 script bytes against 6000000, while the retained focused Public lane record is 4/4. This non-element gate did not create a Public/Auth visual defect.",
+      "agentPackAudit":"run after this report and recorded below"
+    }
+  },
+  "queuedSharedRequests": [],
+  "providerReadiness": {
+    "dependencyReadyScreen": "PRV-01",
+    "taskPrepared": true,
+    "implementationStarted": false,
+    "reason": "Public/Auth visual closure is green with no remaining repository-owned element defect; Seeker has only its ten recorded external prerequisites.",
+    "providerAndAdminMustRemainUnstartedInThisGoal": true
+  },
+  "agentPack": {
+    "syncCommand": "node agent_pack/scripts/sync_pack.mjs",
+    "auditCommand": "node agent_pack/scripts/audit_pack.mjs",
+    "syncExitCode": 0,
+    "auditExitCode": 0,
+    "auditErrors": [],
+    "selectorAfterSync": "frontend_099",
+    "selectorNote": "The historical Agent Pack graph retains frontend_099 as Partial; the visual queue cursor is independently prepared at PRV-01 and no Provider implementation was started.",
+    "countsAfterSync": {"tasks":209,"backend":124,"frontend":85,"inProgress":0,"auditErrors":0},
+    "completionEvidence": "agent_pack/07_finish/frontend_100/completion.json"
+  },
+  "finalCursor": {
+    "completedCoordinatorTask": "frontend_100",
+    "closedRepair": "WAVE1-REPAIR-2026-08-28",
+    "nextScreenId": "PRV-01",
+    "providerImplementationStarted": false,
+    "adminImplementationStarted": false
+  }
+}

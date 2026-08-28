@@ -170,13 +170,13 @@
     "apiRequests": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/developers/approved-builder"
+        "url": "http://127.0.0.1:4175/api/v1/public/developers/approved-builder"
       }
     ],
     "apiResponses": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/developers/approved-builder",
+        "url": "http://127.0.0.1:4175/api/v1/public/developers/approved-builder",
         "status": 200
       }
     ],
@@ -186,7 +186,7 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-06/runtime-after.png",
-      "sha256": "bb7d6149562c94a62de017910ce5a432c7e309e1cc2f46d1c41f43956c43e2c8"
+        "sha256": "68b2e2073459059249f4240d94c5b40a3f689e83ef40405bdd302315b5769062"
     }
   },
   "structuredVisualComparison": {
@@ -198,22 +198,22 @@
         "height": 2985
       },
       {
-        "width": 1280,
-        "height": 2103
+        "width": 1534,
+        "height": 2984
       },
       {
-        "width": 1280,
-        "height": 2492
+        "width": 1534,
+        "height": 2984
       }
     ],
     "observations": [
-      "The after capture is a fresh 1280x720 Arabic RTL runtime capture after the organization profile media repair.",
+      "The after capture is a fresh 1534px-wide Arabic RTL runtime capture after the organization profile media repair, including the canonical available-units action and active-tab accent.",
       "GET /api/v1/public/developers/approved-builder returned HTTP 200 and the profile hero/project/property media uses the approved local assets where available.",
       "Profile tabs, overview, project/property cards, contact state, and shared footer are present and independently reviewed.",
-      "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
+      "The reviewed Figma/runtime difference remains evidence only; the canonical desktop footer-row geometry is now applied to the profile surface, and no visual baseline was updated."
     ],
     "dimensions": {
-      "width": 1392,
+      "width": 1479,
       "height": 1059
     }
   },
@@ -227,6 +227,7 @@
     "Resolved: the developer profile hero and project cards now render approved imageUrl values from the public organization projection.",
     "Resolved: published profile property cards now render the approved media where supplied and preserve safe fallback for absent media.",
     "Resolved: profile navigation, tabs, overview, projects, properties, and shared footer render from the deterministic HTTP 200 success fixture.",
+    "Resolved: the desktop directory/profile footer rows align to the canonical Figma separators while preserving the 414px footer frame.",
     "Reviewed residual diff: clone-specific profile statistics/contact composition and exact project/card geometry remain visible in diff.png; no baseline was changed."
   ],
   "filesRepaired": [
@@ -303,14 +304,14 @@
     "review": "docs/quality/figma_parity/screens/PUB-06/review.json",
     "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-06/runtime-after-capture.json"
   },
-  "reviewedAt": "2026-08-25T21:28:06.681Z",
-  "repairedAt": "2026-08-25T21:28:06.681Z",
+  "reviewedAt": "2026-08-28T09:07:39.573Z",
+  "repairedAt": "2026-08-28T04:50:00.000Z",
   "latestRuntimeVerification": {
     "source": "runtime-after-capture.json and visual-metrics.json",
     "phase": "after",
     "apiResponseStatus": 200,
-    "materialDifferencePercent": 16.1127,
-    "antiAliasingOnlyPercent": 6.1845,
+    "materialDifferencePercent": 15.8102,
+    "antiAliasingOnlyPercent": 6.2958,
     "officialClosureEligible": false
   }
 }

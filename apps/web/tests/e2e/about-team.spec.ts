@@ -11,7 +11,7 @@ function aboutFixture() {
   return {
     data: {
       items: [
-        { key: 'mission', title: { ar: 'رسالتنا', en: 'Our mission', 'zh-CN': '我们的使命' }, body: { ar: 'محتوى منشور', en: 'A published mission.', 'zh-CN': '已发布使命。' }, order: 0 },
+        { key: 'about_intro', title: { ar: 'عن المنصة', en: 'About the platform', 'zh-CN': '关于平台' }, body: { ar: 'أنشأنا هذه المنصة لأن السوق العقاري في مدينة السادات يحتاج منصة متخصصة وموثوقة.', en: 'A specialized and trusted real-estate marketplace.', 'zh-CN': '专业且可信的房地产市场。' }, order: 0 },
         { key: 'trust', title: { ar: 'الثقة', en: 'Trust', 'zh-CN': '信任' }, body: { ar: 'مبدأ ثقة منشور', en: 'A published trust principle.', 'zh-CN': '已发布的信任原则。' }, order: 1 }
       ]
     },
@@ -23,7 +23,7 @@ function teamFixture() {
   return {
     data: {
       items: [{
-        key: 'leader',
+        key: 'team_ahmed',
         title: { ar: 'قائد المنصة', en: 'Platform lead', 'zh-CN': '平台负责人' },
         name: { ar: 'عضو الفريق المنشور', en: 'Published team member', 'zh-CN': '已发布团队成员' },
         role: { ar: 'قائد المنصة', en: 'Platform lead', 'zh-CN': '平台负责人' },
@@ -57,9 +57,11 @@ test('public About renders published CMS content across approved locales and dev
   await expect(page.locator('.route-shell')).toHaveAttribute('data-device-scope', 'desktop/tablet/mobile');
   const about = page.locator('[data-page="public-about"]');
   await expect(about).toHaveAttribute('data-about-state', 'success');
-  await expect(about.locator('.public-about__hero-media')).toHaveAttribute('data-media-state', 'unavailable');
+  await expect(about.locator('.public-about__hero-media')).toBeVisible();
   await expect(about.locator('h1')).toBeVisible();
-  await expect(about.locator('.public-about__block')).toHaveCount(2);
+  await expect(about.locator('.public-about__step')).toHaveCount(5);
+  await expect(about.locator('.public-about__value')).toHaveCount(4);
+  await expect(about.locator('.public-about__stat-grid article')).toHaveCount(4);
   await expect(page).toHaveScreenshot(`public-about-${locale}.png`, { fullPage: true });
 });
 
@@ -75,6 +77,6 @@ test('public Team renders safe published projections across approved locales and
   const team = page.locator('[data-page="public-team"]');
   await expect(team).toHaveAttribute('data-team-state', 'success');
   await expect(team.locator('.public-team__card')).toHaveCount(1);
-  await expect(team.locator('[data-media-state="unavailable"]')).toHaveCount(1);
+  await expect(team.locator('[data-media-state="success"]')).toHaveCount(1);
   await expect(page).toHaveScreenshot(`public-team-${locale}.png`, { fullPage: true });
 });

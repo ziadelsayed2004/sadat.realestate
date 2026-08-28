@@ -214,7 +214,7 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-02/runtime-after.png",
-      "sha256": "efa4c96df79c3ea821043b6131079cbefeccda5b2039976d670435fcd3c8f276"
+      "sha256": "98a2c24b3c0feb68fef3c5f768b1f1bc515dc2a2275ad028a1456e625fa2d7da"
     }
   },
   "structuredVisualComparison": {
@@ -230,11 +230,12 @@
       "height": 1981
     },
     "exactMajorBands": true,
-    "materialDifferencePercent": 15.3262,
-    "antiAliasingOnlyPercent": 6.2961,
+      "materialDifferencePercent": 12.6057,
+      "antiAliasingOnlyPercent": 7.5326,
     "observations": [
       "Document, rail, listing grid, card/media frames, filter/sidebar and footer boundaries match the canonical 1577x1981 frame.",
       "The deterministic public search projection returned HTTP 200 and provides six canonical-content cards without fake production data.",
+      "The desktop footer separators now use the canonical three-row geometry while preserving the 414px footer frame.",
       "The exact Figma category illustration exports are loaded from approved local assets and are present in the deterministic runtime capture.",
       "The approved local Figma listing and provider exports are present in the runtime, while remaining reviewed material pixels are concentrated in rendered geometry, typography, image framing, and other details; no baseline was updated and the screen remains open."
     ]
@@ -312,8 +313,8 @@
     "review": "docs/quality/figma_parity/screens/PUB-02/review.json",
     "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-02/runtime-after-capture.json"
   },
-  "reviewedAt": "2026-08-27T23:20:00.000Z",
-  "repairedAt": "2026-08-27T23:20:00.000Z",
+  "reviewedAt": "2026-08-28T16:39:26.127Z",
+  "repairedAt": "2026-08-28T04:55:00.000Z",
   "externalBlocker": "Approved frame-linked listing and provider exports are available and wired, but rendered geometry/framing and surrounding typography remain measurably different from the canonical frame; screenshot reconstruction is prohibited.",
   "performance": {
     "focusedCheck": "production public-properties SSR, hydration, bundle and lazy-image budgets",
@@ -324,8 +325,8 @@
     "source": "runtime-after-capture.json and visual-metrics.json",
     "phase": "after",
     "apiResponseStatus": 200,
-    "materialDifferencePercent": 15.3262,
-    "antiAliasingOnlyPercent": 6.2961,
+    "materialDifferencePercent": 12.6057,
+    "antiAliasingOnlyPercent": 7.5326,
     "officialClosureEligible": false
   }
 }

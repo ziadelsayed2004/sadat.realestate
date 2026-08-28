@@ -168,6 +168,39 @@ function StateNotice({ error, copy, onRetry }: { readonly error: AuthUiError; re
   );
 }
 
+type AuthIconName = 'mail' | 'lock' | 'eye' | 'eye-off' | 'shield' | 'home' | 'building';
+
+function AuthIcon({ name }: { readonly name: AuthIconName }) {
+  const svgProps = {
+    className: 'auth-icon',
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.75,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+    focusable: 'false' as const,
+    'aria-hidden': true
+  };
+
+  switch (name) {
+    case 'mail':
+      return <svg {...svgProps}><rect x="3.5" y="5.5" width="17" height="13" rx="2" /><path d="m4.5 7 7.5 5 7.5-5" /></svg>;
+    case 'lock':
+      return <svg {...svgProps}><rect x="6.5" y="10" width="11" height="10" rx="1" /><path d="M8.5 10V7a3.5 3.5 0 0 1 7 0v3" /></svg>;
+    case 'eye':
+      return <svg {...svgProps}><path d="M3.5 12s3-5 8.5-5 8.5 5 8.5 5-3 5-8.5 5-8.5-5-8.5-5Z" /><circle cx="12" cy="12" r="2" /></svg>;
+    case 'eye-off':
+      return <svg {...svgProps}><path d="M3.5 12s3-5 8.5-5c5.5 0 8.5 5 8.5 5s-3 5-8.5 5c-5.5 0-8.5-5-8.5-5Z" /><circle cx="12" cy="12" r="2" /><path d="m4 4 16 16" /></svg>;
+    case 'shield':
+      return <svg {...svgProps}><path d="M12 3 19 6v5.5c0 4.5-2.8 7.7-7 9.5-4.2-1.8-7-5-7-9.5V6l7-3Z" /></svg>;
+    case 'home':
+      return <svg {...svgProps}><path d="m4 10 8-7 8 7" /><path d="M5 9.5V20h14V9.5" /><path d="M9.5 20v-6h5v6" /></svg>;
+    case 'building':
+      return <svg {...svgProps}><path d="M7 21V4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v17" /><path d="M7 10H5a2 2 0 0 0-2 2v9M17 10h2a2 2 0 0 1 2 2v9M3 21h18" /><path d="M10 6h4M10 10h4M10 14h4M10 18h4" /></svg>;
+  }
+}
+
 function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthFlowClient; readonly locale: SupportedLocale; readonly onAuthenticated: (snapshot: AuthSnapshot) => void }) {
   const copy = getAuthCopy(locale);
   const [email, setEmail] = useState('');
@@ -215,20 +248,23 @@ function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthF
           {error === undefined ? null : <StateNotice error={error} copy={copy} onRetry={() => void submit()} />}
           {state === 'success' ? <StateMessage state="success" title={copy.loginSuccessTitle} message={copy.loginSuccessBody} /> : null}
           <form className="auth-form" onSubmit={handleSubmit} noValidate>
-            <Input
-              id="auth-login-email"
-              className="auth-login-field auth-login-field--email"
-              label={copy.identifierLabel}
-              type="email"
-              name="email"
-              autoComplete="email"
-              inputMode="email"
-              placeholder={copy.identifierPlaceholder}
-              value={email}
-              onChange={event => setEmail(event.currentTarget.value)}
-              required
-              state={state === 'error' && !normalizedEmailSchema.safeParse(email).success ? 'error' : 'default'}
-            />
+            <div className="auth-login-field-shell auth-login-field-shell--email">
+              <Input
+                id="auth-login-email"
+                className="auth-login-field auth-login-field--email"
+                label={copy.identifierLabel}
+                type="email"
+                name="email"
+                autoComplete="email"
+                inputMode="email"
+                placeholder={copy.identifierPlaceholder}
+                value={email}
+                onChange={event => setEmail(event.currentTarget.value)}
+                required
+                state={state === 'error' && !normalizedEmailSchema.safeParse(email).success ? 'error' : 'default'}
+              />
+              <span className="auth-login-field__icon" aria-hidden="true"><AuthIcon name="mail" /></span>
+            </div>
             <div className="auth-password-field">
               <Input
                 id="auth-login-password"
@@ -243,6 +279,7 @@ function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthF
                 required
                 state={state === 'error' && password === '' ? 'error' : 'default'}
               />
+              <span className="auth-login-field__icon auth-login-field__icon--password" aria-hidden="true"><AuthIcon name="lock" /></span>
               <button
                 className="auth-password-field__toggle"
                 type="button"
@@ -250,7 +287,7 @@ function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthF
                 aria-pressed={showPassword}
                 aria-label={showPassword ? copy.hidePassword : copy.showPassword}
               >
-                {showPassword ? copy.hidePassword : copy.showPassword}
+                <AuthIcon name={showPassword ? 'eye' : 'eye-off'} />
               </button>
             </div>
             {copy.rememberLabel !== undefined && copy.forgotPasswordAction !== undefined ? (
@@ -275,7 +312,7 @@ function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthF
             {copy.createAccountPrompt} <a href="/auth/register">{copy.createAccountAction}</a>
           </p>
           <div className="auth-card__divider" aria-hidden="true" />
-          {copy.privacyNotice === undefined ? null : <p className="auth-card__privacy"><span aria-hidden="true">♢</span>{copy.privacyNotice}</p>}
+          {copy.privacyNotice === undefined ? null : <p className="auth-card__privacy"><span className="auth-card__privacy-icon"><AuthIcon name="shield" /></span>{copy.privacyNotice}</p>}
         </div>
       </div>
     </section>
@@ -453,7 +490,7 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
       <section className="auth-page auth-page--email" data-screen-id="AUTH-04" data-state={state} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
         <div className="auth-card auth-card--form">
           <header className="auth-card__heading">
-            <span className="auth-card__icon" aria-hidden="true">☎</span>
+            <span className="auth-card__icon"><AuthIcon name="mail" /></span>
             <h1>{copy.emailTitle}</h1>
             <p>{purpose === 'registration' ? copy.registrationPurpose : copy.emailDescription}</p>
           </header>
@@ -500,7 +537,7 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
     <section className="auth-page auth-page--otp" data-screen-id="AUTH-05" data-state={state} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <div className="auth-card auth-card--form">
         <header className="auth-card__heading">
-          <span className="auth-card__icon" aria-hidden="true">✉</span>
+          <span className="auth-card__icon"><AuthIcon name="mail" /></span>
           <h1>{copy.otpTitle}</h1>
           <p>{copy.otpDescription} <strong dir="ltr">{email}</strong></p>
         </header>
@@ -631,16 +668,12 @@ function RegistrationRolePage({ copy, locale, restartRequired, onSelectSeeker }:
               aria-pressed={selected}
               onClick={selectSeeker}
             >
-              <span className="auth-role-card__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" focusable="false"><path d="m3 9.5 7.5-6 7.5 6v10.5H3Z" /><path d="M8 20v-8h4v8" /></svg>
-              </span>
+              <span className="auth-role-card__icon"><AuthIcon name="home" /></span>
               <span className="auth-role-card__title">{copy.seekerAccountTitle}</span>
               <span className="auth-role-card__body">{copy.seekerAccountBody}</span>
             </button>
             <a className="auth-role-card auth-role-card--link" href="/auth/register/provider/type">
-              <span className="auth-role-card__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" focusable="false"><path d="M7 20V3h10v17" /><path d="M3 20v-8l4-2v10M17 10l4 2v8" /><path d="M11 6h2M11 9h2M11 13h2M11 16h2" /><path d="M3 20h18" /></svg>
-              </span>
+              <span className="auth-role-card__icon"><AuthIcon name="building" /></span>
               <span className="auth-role-card__title">{copy.providerAccountTitle}</span>
               <span className="auth-role-card__body">{copy.providerAccountBody}</span>
               <span className="auth-role-card__tag"><span className="auth-role-card__tag-label">{copy.roleProvider}</span></span>

@@ -148,13 +148,13 @@
     "apiRequests": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/properties/published-home"
+        "url": "http://127.0.0.1:4175/api/v1/public/properties/published-home"
       }
     ],
     "apiResponses": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/properties/published-home",
+        "url": "http://127.0.0.1:4175/api/v1/public/properties/published-home",
         "status": 200
       }
     ],
@@ -164,7 +164,7 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-03/runtime-after.png",
-      "sha256": "daf796a26e06c4228c7593a90c59cd3363d9d78611cf2babab24324d3dabceb3"
+        "sha256": "b4b67edbe4298ed37520aa39e050b764c3c7de120ae3e8bc965ac7af9cc8d3a6"
     }
   },
   "structuredVisualComparison": {
@@ -180,18 +180,19 @@
         "height": 2230
       },
       {
-        "width": 1280,
-        "height": 2848
+        "width": 1577,
+        "height": 3045
       }
     ],
     "observations": [
-      "The after capture is a fresh 1280x720 Arabic RTL runtime capture after the media projection repair.",
+      "The after capture is a fresh 1577px-wide Arabic RTL runtime capture after the media projection and back-link icon repairs.",
       "GET /api/v1/public/properties/published-home returned HTTP 200; the cover gallery and related property media are loaded from approved local assets.",
       "Details actions, project/summary content, related cards, and shared footer are present and independently reviewed.",
+      "The desktop footer separators now use the canonical three-row geometry while preserving the 414px footer frame.",
       "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
     ],
     "dimensions": {
-      "width": 1406,
+      "width": 1507,
       "height": 1080
     }
   },
@@ -280,14 +281,14 @@
     "review": "docs/quality/figma_parity/screens/PUB-03/review.json",
     "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-03/runtime-after-capture.json"
   },
-  "reviewedAt": "2026-08-25T21:27:47.761Z",
-  "repairedAt": "2026-08-25T21:27:47.761Z",
+  "reviewedAt": "2026-08-28T09:07:39.573Z",
+  "repairedAt": "2026-08-28T04:55:00.000Z",
   "latestRuntimeVerification": {
     "source": "runtime-after-capture.json and visual-metrics.json",
     "phase": "after",
     "apiResponseStatus": 200,
-    "materialDifferencePercent": 6.6054,
-    "antiAliasingOnlyPercent": 4.8916,
+    "materialDifferencePercent": 8.196,
+    "antiAliasingOnlyPercent": 4.6249,
     "officialClosureEligible": false
   }
 }

@@ -1,17 +1,5 @@
-.route-shell[data-route-id="public-compare"] > .route-shell__header {
-  display: none;
-}
-
-.route-shell[data-route-id="public-compare"] > .app-main {
-  width: 100%;
-  max-width: none;
-  padding: 0;
-}
-
 .public-property-comparison {
   min-block-size: 100vh;
-  color: var(--color-text);
-  background: var(--color-page-background);
 }
 
 .public-property-comparison__intro,
@@ -57,8 +45,7 @@
   justify-content: end;
 }
 
-.public-property-comparison__controls button,
-.public-property-comparison__clear {
+.public-property-comparison__controls button {
   min-block-size: var(--button-height-md);
   padding-inline: var(--space-lg);
   color: var(--color-text-secondary);
@@ -187,18 +174,6 @@
 }
 
 .public-property-comparison__details-link:hover {
-  color: var(--color-brand-primary);
-  border-color: var(--color-brand-primary);
-}
-
-.public-property-comparison__clear {
-  display: block;
-  margin: var(--space-xl) auto 0;
-  color: var(--color-text-secondary);
-  background: transparent;
-}
-
-.public-property-comparison__clear:hover {
   color: var(--color-brand-primary);
   border-color: var(--color-brand-primary);
 }
@@ -344,10 +319,6 @@
   white-space: nowrap;
 }
 
-.public-property-comparison__footer {
-  margin-block-start: var(--space-2xl);
-}
-
 @media (max-width: 780px) {
   .public-property-comparison__intro {
     align-items: start;
@@ -426,8 +397,7 @@
     border-color: var(--color-brand-primary);
   }
 
-  .public-property-comparison__controls button,
-  .public-property-comparison__clear {
+  .public-property-comparison__controls button {
     min-block-size: 2.5rem;
     padding-inline: 1rem;
     font-size: 0.875rem;
@@ -728,14 +698,4 @@
     );
   }
 
-  .public-property-comparison > .public-site-footer .public-homepage__footer-links a {
-    color: rgb(255 255 255 / 0.7);
-    font-weight: 400;
-  }
-
-  .public-property-comparison > .public-site-footer .public-site-footer__brand > p:last-child,
-  .public-property-comparison > .public-site-footer .public-site-footer__follow span,
-  .public-property-comparison > .public-site-footer .public-site-footer__bottom {
-    color: rgb(255 255 255 / 0.4);
-  }
 }

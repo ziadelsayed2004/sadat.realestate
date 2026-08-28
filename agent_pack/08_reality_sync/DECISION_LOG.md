@@ -1,5 +1,34 @@
 # Decision Log
 
+## DECISION-2026-08-28-WAVE-1-FINAL-RECONCILIATION
+
+- **Status:** Active coordinator hold; Wave 1 reconciliation blocked
+- **Scope:** Public 12, Auth 19, and Seeker 10 only; Arabic RTL and English LTR verification only
+- **Decision:** Keep all 41 Wave 1 screens evidence-complete but open: Public `PARTIAL`, Auth coordinator `PARTIAL`, and Seeker `PARTIAL_EXTERNAL`. Keep the queue paused before `PRV-01`; do not create or start Provider/Admin work.
+- **Current gates:** Public responsive visual 17/48 passed with 31 screenshot failures; Auth responsive visual 24/30 passed with 6 screenshot failures; no current snapshots updated. Public 43/43, About/Team 6/6, Community 7/7, Auth unit 17/17, Seeker 46/46, focused API 106/106, Public accessibility 54/54, About/Team accessibility 12/12, browser security 18/18, Community visual 12/12, About/Team visual 12/12, and Seeker dashboard QA 50/50 passed. Typecheck, lint, API inventory, OpenAPI, Postman, build/bundle, and `git diff --check` passed. Performance failed 4/4 at 11397087 script bytes against a 6000000-byte browser budget.
+- **Remaining blockers:** Public retains repository-owned geometry, typography, image-framing, and component-parity defects; Auth retains AUTH-01/AUTH-02 visual gaps and the current responsive screenshot failures; all ten Seeker records retain individualized external prerequisites with zero repository-owned defects. No screen is closed.
+- **Preservation:** No reset, revert, stash, clean, discard, overwrite, commit, branch, worktree, Provider, or Admin operation was used. The 13 zh-CN snapshot changes remain preserved and queued separately. The coordinator-started dev server was stopped after verification. No production OTP migration or live SMTP email was attempted.
+- **Next action:** Keep `WAVE1-REPAIR-2026-08-28` open, resolve the bounded Public/Auth/performance defects and obtain the Seeker prerequisites, then rerun combined closure checks. A Provider task is not dependency-ready and was not created.
+
+## DECISION-2026-08-28-WAVE-1-REPAIR-RECONCILIATION
+
+- **Status:** Active coordinator hold; bounded repair completed, Wave 1 closure blocked
+- **Scope:** Public 12, Auth 19, and Seeker 10 only; Arabic RTL and English LTR verification only
+- **Decision:** Keep all 41 Wave 1 screens evidence-complete but open: Public `PARTIAL`, Auth coordinator `PARTIAL`, and Seeker `PARTIAL_EXTERNAL`. Keep the queue paused before `PRV-01`; do not create or start Provider/Admin work.
+- **Gate results:** Public visual 16/16, Auth visual 10/10, Public focused Vitest 43/43, Auth focused Vitest 24/24, Seeker focused Vitest 46/46, Public accessibility 18/18, performance 4/4, bundle budgets, typecheck, lint, API inventory, OpenAPI, Postman, browser security, and `git diff --check` pass. Public/Auth baselines were changed only after direct review and each had a no-update follow-up pass; the update ledger records 18 exact files and hashes.
+- **Remaining blockers:** Direct Public/Auth clone/runtime reconciliation remains partial; all ten Seeker records retain individualized external prerequisites; the separate stale About-Team accessibility check has 2 failures against pre-existing dirty-tree markup. No screen is closed.
+- **Preservation:** No reset, revert, stash, clean, discard, overwrite, commit, branch, or worktree operation was used. zh-CN snapshots, lane evidence, failure artifacts, environment files, and intentional deletions remain preserved. No production OTP migration or live SMTP email was attempted.
+
+## DECISION-2026-08-28-WAVE-1-RECONCILIATION
+
+- **Status:** Active coordinator hold
+- **Scope:** Public 12, Auth 19, and Seeker 10 only; Arabic RTL and English LTR verification only
+- **Decision:** Retain all 41 Wave 1 screens as open evidence-complete records, with Public `PARTIAL`, Auth coordinator `PARTIAL`, and Seeker `PARTIAL_EXTERNAL`. Keep the execution queue paused before Provider (`PRV-01`) and do not begin Provider or Admin implementation.
+- **Evidence:** `08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json`, `docs/quality/figma_parity/HARD_CHECKPOINT_2026-08-28.json`, and the synchronized queue/ledger/checkpoint files.
+- **Rationale:** The implementation gates now pass, but direct Public/Auth clone/runtime reconciliation remains partial and Seeker still lacks approved external identity/media/metadata inputs. No Wave 1 screen is closed.
+- **Next action:** Keep Wave 1 paused under the bounded coordinator repair/reconciliation task `WAVE1-REPAIR-2026-08-28`; obtain the missing approved inputs and rerun combined closure checks. A Provider task may be created only after Wave 1 closure is actually eligible.
+- **Locale rule:** Do not test, capture, update, or classify the 13 preserved zh-CN snapshots in this run. They remain a separate cleanup queue.
+
 ## DECISION-2026-08-27-EMAIL-ONLY-AUTH
 
 - **Status:** Active and superseding for implementation
@@ -92,3 +121,11 @@ Q-004 through Q-012 remain explicitly pending in `01_product/OPEN_QUESTIONS.md`.
 `backend_000` records repository reality and does not resolve those questions. A task that first needs a pending decision must apply the blocker-classification policy: approved adapter boundaries may proceed with missing Production configuration recorded as a readiness gap, while unresolved domain, authorization, security, financial, legal, or irreversible data-model invariants block when no safe reversible boundary exists. Architectural decisions require an ADR before implementation.
 
 `backend_004` uses a URI-driven Mongoose boundary and an isolated replica-set test contract without selecting a production host, provider, or topology for Q-010. Its local-only seed registry is intentionally empty until approved synthetic domain fixtures exist.
+
+## WAVE-1-FINAL-VISUAL-CLOSURE-2026-08-29
+
+- **Status:** Reconciled; Provider dependency-ready, Provider and Admin unopened.
+- **Decision:** The single bounded visual pass directly reviewed the failing Public responsive and Auth actuals against cached canonical evidence. One consolidated Public repair pass corrected the responsive About background cascade and the responsive property-category rail sizing. Public and Auth AR/EN snapshot updates were limited to the exact reviewed files, followed by no-update verification. Chinese snapshots were not tested or updated.
+- **Result:** Public 32/32 targeted failed responsive cases passed without update mode; Auth 6/6 targeted failed screenshot cases passed without update mode. Public and Auth have zero remaining repository-owned element-level defects. Seeker remains PARTIAL_EXTERNAL for ten screens with zero repository-owned defects and ten recorded external prerequisites.
+- **Evidence:** `agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json` records screen classifications, canonical evidence, exact old/new snapshot hashes, commands, results, and the final cursor.
+- **Agent Pack:** `frontend_100` is complete with sync exit 0 and audit exit 0 with zero errors. The historical `frontend_099` Partial record is preserved; the dependency-ready visual queue cursor is `PRV-01`. No Provider implementation or Admin work was started.

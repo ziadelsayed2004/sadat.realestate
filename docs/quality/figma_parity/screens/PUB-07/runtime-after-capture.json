@@ -14,26 +14,26 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "c1fd8847a16c267d8386fdce6d6c49d2b3f0ea38d116698a5f7fb247355ffb5b",
-    "afterHash": "e9b869f6c99024b1f988479980d703e7a829ea5f593d9fbf49e1b2625d446d7c",
+    "afterHash": "463296f485ca3b59a08aa7dcf0c595a236b383c3c55ed3285e95ff82bb9e7875",
     "requestedApi": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4175/api/v1/public/article-categories?locale=ar"
+        "url": "http://127.0.0.1:4173/api/v1/public/article-categories?locale=ar"
       },
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4175/api/v1/public/articles?locale=ar&page=1&limit=20"
+        "url": "http://127.0.0.1:4173/api/v1/public/articles?locale=ar&page=1&limit=20"
       }
     ],
     "apiResponses": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4175/api/v1/public/article-categories?locale=ar",
+        "url": "http://127.0.0.1:4173/api/v1/public/article-categories?locale=ar",
         "status": 200
       },
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4175/api/v1/public/articles?locale=ar&page=1&limit=20",
+        "url": "http://127.0.0.1:4173/api/v1/public/articles?locale=ar&page=1&limit=20",
         "status": 200
       }
     ]
@@ -2154,55 +2154,55 @@
   },
   "images": [
     {
-      "src": "http://127.0.0.1:4175/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/clone/pub07-a.png",
+      "src": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/clone/pub05-a.png",
+      "src": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/clone/pub05-c.png",
+      "src": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/clone/pub07-d.png",
+      "src": "http://127.0.0.1:4173/assets/clone/pub07-d.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/clone/pub07-e.png",
+      "src": "http://127.0.0.1:4173/assets/clone/pub07-e.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/clone/pub07-a.png",
+      "src": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4175/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
@@ -2427,8 +2427,8 @@
       "comparedWidth": 1523,
       "comparedHeight": 1783,
       "comparedPixels": 2715509,
-      "materialDifferencePercent": 10.5895,
-      "antiAliasingOnlyPercent": 6.4062,
+      "materialDifferencePercent": 10.1597,
+      "antiAliasingOnlyPercent": 6.513,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

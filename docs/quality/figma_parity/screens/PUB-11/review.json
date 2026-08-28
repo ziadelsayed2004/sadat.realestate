@@ -1,0 +1,265 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PUB-11",
+  "classification": "PARTIAL",
+  "classificationReason": "Fresh source and runtime capture completed after the Public-11 repair; residual visual differences remain, so this screen is not eligible for official closure.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4352",
+    "nodeId": "6017:11830",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-11830&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4352&starting-point-node-id=6017%3A10847",
+    "screenshot": {
+      "path": "docs/quality/figma_parity/screens/PUB-11/figma.png",
+      "width": 1524,
+      "height": 2214,
+      "reviewed": true
+    },
+    "getDesignContext": {
+      "tool": "mcp__figma__get_design_context",
+      "skill": "resource:figma-design-to-code",
+      "resultStatus": "SPARSE_METADATA_DUE_TO_CONTEXT_LIMIT",
+      "root": {
+        "id": "6017:11830",
+        "name": "About Platform",
+        "width": 1524,
+        "height": 2214
+      },
+      "retrievedRegions": [
+        "header",
+        "about hero",
+        "how it works",
+        "values",
+        "platform statistics",
+        "CTA",
+        "footer"
+      ],
+      "reviewed": true,
+      "note": "The tool explicitly returned sparse metadata and instructed sublayer retrieval for full code; this is recorded as an incomplete context result, not treated as parity proof."
+    }
+  },
+  "runtime": {
+    "route": "/about",
+    "role": "public",
+    "permissions": {
+      "requiredRole": "public",
+      "ownership": "public",
+      "availableActionsObserved": {
+        "links": [
+          {
+            "text": "تخطي إلى المحتوى الرئيسي",
+            "href": "#main-content"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "",
+            "href": "/"
+          },
+          {
+            "text": "الرئيسية",
+            "href": "/"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "المقالات",
+            "href": "/articles"
+          },
+          {
+            "text": "الكوميونتي",
+            "href": "/community"
+          },
+          {
+            "text": "من نحن",
+            "href": "/about"
+          },
+          {
+            "text": "فريق العمل",
+            "href": "/team"
+          },
+          {
+            "text": "تسجيل الدخول",
+            "href": "/auth/login"
+          },
+          {
+            "text": "إنشاء حساب",
+            "href": "/auth/register"
+          },
+          {
+            "text": "تصفح العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "واتساب",
+            "href": "/community"
+          },
+          {
+            "text": "العقارات",
+            "href": "/properties"
+          },
+          {
+            "text": "المطورون",
+            "href": "/developers"
+          },
+          {
+            "text": "المقالات",
+            "href": "/articles"
+          },
+          {
+            "text": "الكوميونتي",
+            "href": "/community"
+          },
+          {
+            "text": "من نحن",
+            "href": "/about"
+          },
+          {
+            "text": "فريق العمل",
+            "href": "/team"
+          },
+          {
+            "text": "01001234567",
+            "href": "tel:01001234567"
+          },
+          {
+            "text": "واتساب متاح 24/7",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          },
+          {
+            "text": "",
+            "href": "/community"
+          }
+        ],
+        "buttons": []
+      },
+      "source": "runtime DOM and route contract"
+    },
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1524,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "deterministicState": {
+      "path": "docs/quality/figma_parity/screens/PUB-11/deterministic-state.json",
+      "seedId": "fresh-audit-PUB-11-ar-v1",
+      "responseSha256": "d413de346bf1013158ccd8330b54e1d65a8cf49993ca6e10eb55f0023282fd73"
+    },
+    "response": {
+      "status": 200,
+      "ok": true
+    },
+    "apiRequests": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/about"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/public/about",
+        "status": 200
+      }
+    ],
+    "before": {
+      "path": "docs/quality/figma_parity/screens/PUB-11/runtime-before.png",
+      "sha256": "81b3989569f2ce9ea29fc745e0d67dc036d3402f19574f8967c27d971e055347"
+    },
+    "after": {
+      "path": "docs/quality/figma_parity/screens/PUB-11/runtime-after.png",
+      "sha256": "17675aec742b02b7eecda2fb0b91c4e35f8fd791cc8adbfda408fe2453ff66fc"
+    }
+  },
+  "structuredVisualComparison": {
+    "reviewed": true,
+    "diffPath": "docs/quality/figma_parity/screens/PUB-11/diff.png",
+    "sourceDimensions": [
+      {
+        "width": 1524,
+        "height": 2214
+      },
+      {
+        "width": 1524,
+        "height": 2214
+      },
+      {
+        "width": 1524,
+        "height": 2214
+      }
+    ],
+    "observations": [
+      "Figma source is 1524px wide and 2214px high for PUB-11.",
+      "Runtime is 1524px wide at the approved Desktop Chrome viewport and now has the canonical 2214px document height.",
+      "The after capture confirms the canonical platform hero, five-step journey, four values, four statistics, CTA pair, and shared footer geometry.",
+      "The after capture now matches the Figma section boundaries and geometry; residual typography, content rasterization, and component-level differences remain visible in diff.png; no baseline was updated and official closure is not claimed."
+    ]
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "requestProjection": "GET /api/v1/public/about",
+    "responseProjection": "public-about fixture captured and hashed",
+    "outcome": "route loaded with the deterministic public-about fixture and returned HTTP 200; hero, sections, statistics, CTAs, and footer were reviewed with residual visual differences recorded."
+  },
+  "defects": [
+    "Residual visual differences remain in typography, exact imagery rasterization, and component details; official closure is intentionally withheld.",
+    "Figma get_design_context returned sparse metadata because the full frame exceeded context limits."
+  ],
+  "filesRepaired": [
+    "apps/web/src/features/content/about-team.tsx",
+    "apps/web/src/features/content/about-team.css",
+    "apps/web/src/features/content/about-team-copy.ts",
+    "apps/web/tests/e2e/public-fixtures.ts",
+    "scripts/capture-figma-parity-runtime.mjs"
+  ],
+  "focusedTests": [],
+  "accessibility": {
+    "focusedCheck": "Public about/team accessibility assertions are covered by the focused Playwright public batch.",
+    "exitCode": 0
+  },
+  "evidencePaths": {
+    "figma": "docs/quality/figma_parity/screens/PUB-11/figma.png",
+    "runtimeBefore": "docs/quality/figma_parity/screens/PUB-11/runtime-before.png",
+    "runtimeAfter": "docs/quality/figma_parity/screens/PUB-11/runtime-after.png",
+    "diff": "docs/quality/figma_parity/screens/PUB-11/diff.png",
+    "review": "docs/quality/figma_parity/screens/PUB-11/review.json"
+  },
+  "reviewedAt": "2026-08-28T13:40:00.000Z",
+  "latestRuntimeVerification": {
+    "source": "runtime-after-capture.json and visual-metrics.json",
+    "phase": "after",
+    "apiResponseStatus": 200,
+    "materialDifferencePercent": 4.7521,
+    "antiAliasingOnlyPercent": 29.0824,
+    "officialClosureEligible": false
+  }
+}

@@ -149,22 +149,22 @@
     "apiRequests": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/articles/buying-in-sadat?locale=ar"
+        "url": "http://127.0.0.1:4175/api/v1/public/articles/buying-in-sadat?locale=ar"
       },
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/articles?locale=ar&page=1&limit=20"
+        "url": "http://127.0.0.1:4175/api/v1/public/articles?locale=ar&page=1&limit=20"
       }
     ],
     "apiResponses": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/articles/buying-in-sadat?locale=ar",
+        "url": "http://127.0.0.1:4175/api/v1/public/articles/buying-in-sadat?locale=ar",
         "status": 200
       },
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/articles?locale=ar&page=1&limit=20",
+        "url": "http://127.0.0.1:4175/api/v1/public/articles?locale=ar&page=1&limit=20",
         "status": 200
       }
     ],
@@ -174,7 +174,7 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-08/runtime-after.png",
-      "sha256": "076da414ed48eac759697fa962a1f20fa323c9ed04af3f9c863d50ed43054254"
+        "sha256": "b8568b184275e67042e57c871f865671d5947fc9565580d86cb9b6d06303c2cc"
     }
   },
   "structuredVisualComparison": {
@@ -186,23 +186,24 @@
         "height": 1759
       },
       {
-        "width": 1280,
-        "height": 1404
+        "width": 1523,
+        "height": 1759
       },
       {
-        "width": 1280,
-        "height": 2042
+        "width": 1523,
+        "height": 1759
       }
     ],
     "observations": [
-      "The after capture is a fresh 1280x720 Arabic RTL runtime capture after the article detail/media/related-content repair.",
+      "The after capture is a fresh 1523px-wide Arabic RTL runtime capture after the article detail/media/related-content repair.",
       "GET /api/v1/public/articles/buying-in-sadat and the related GET /api/v1/public/articles request both returned HTTP 200.",
       "The article hero, title/meta, body, three related article cards, shared navigation, and expanded footer are present and independently reviewed.",
+      "The desktop footer separators now use the canonical three-row geometry while preserving the 414px footer frame.",
       "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
     ],
     "dimensions": {
-      "width": 1388,
-      "height": 738
+      "width": 1471,
+      "height": 642
     }
   },
   "functionalApiComparison": {
@@ -290,14 +291,14 @@
     "review": "docs/quality/figma_parity/screens/PUB-08/review.json",
     "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-08/runtime-after-capture.json"
   },
-  "reviewedAt": "2026-08-25T21:28:15.550Z",
-  "repairedAt": "2026-08-25T21:28:15.550Z",
+  "reviewedAt": "2026-08-28T09:07:39.573Z",
+  "repairedAt": "2026-08-28T04:55:00.000Z",
   "latestRuntimeVerification": {
     "source": "runtime-after-capture.json and visual-metrics.json",
     "phase": "after",
     "apiResponseStatus": 200,
-    "materialDifferencePercent": 9.076,
-    "antiAliasingOnlyPercent": 4.522,
+    "materialDifferencePercent": 8.5476,
+    "antiAliasingOnlyPercent": 4.7159,
     "officialClosureEligible": false
   }
 }

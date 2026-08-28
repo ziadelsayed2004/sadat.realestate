@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "checkpointAt": "2026-08-27T13:12:43.867Z",
-  "phase": "wave-1-ready",
+  "checkpointAt": "2026-08-28T20:57:49.568Z",
+  "phase": "wave-1-reconciliation-blocked",
   "canonicalScreenCount": 131,
   "surfaceCounts": {
     "public": 12,
@@ -14,7 +14,10 @@
     "localSources": 131,
     "historicalFigmaExports": 130,
     "exactFigmaMappings": 129,
-    "documentedSourceExceptions": ["ADM-18", "ADM-54"]
+    "documentedSourceExceptions": [
+      "ADM-18",
+      "ADM-54"
+    ]
   },
   "supplementary": {
     "isSurface": false,
@@ -41,11 +44,39 @@
     "cleanup": "completed; see 08_reality_sync/CLEANUP_2026-08-27.json"
   },
   "waves": {
-    "wave-1": "ready_for_parallel_public_auth_seeker_execution",
-    "wave-2": "pending_wave-1_reconciliation",
-    "wave-3": "pending_wave-2_reconciliation_and_runs_solo"
+    "wave-1": "reconciled_partial_blocked_by_gates",
+    "wave-2": "blocked_until_wave-1-closure",
+    "wave-3": "blocked_until_wave-2-closure"
   },
   "freshVerification": {
+    "status": "blocked",
+    "checkedAt": "2026-08-28T20:57:49.568Z",
+    "scope": "Focused Wave 1 coordinator gates; historical full-pack verification is preserved under historicalFreshVerification.",
+    "publicVitest": "passed: 6 files, 43 tests",
+    "authVitest": "passed: 6 Vitest auth UI tests plus 11 Node auth tests",
+    "seekerVitest": "passed: 7 files, 46 tests",
+    "apiFocused": "passed: 106 tests",
+    "typecheck": "passed",
+    "lint": "passed",
+    "apiInventory": "passed: 185 endpoint blueprints",
+    "openapi": "passed",
+    "postman": "passed",
+    "browserSecurity": "passed: 18",
+    "accessibility": "passed: 54 Public AR/EN cases",
+    "aboutTeamAccessibility": "passed: 12",
+    "aboutTeamVisual": "passed: 12",
+    "communityVisual": "passed: 12",
+    "communityVitest": "passed: 7",
+    "seekerDashboardQa": "passed: 50",
+    "normalPublicVisualArEn": "failed: 17/48 passed, 31 responsive screenshot assertions failed; no snapshots updated",
+    "normalAuthVisualArEn": "failed: 24/30 passed, 6 screenshot assertions failed; no snapshots updated",
+    "performanceArEn": "failed: 0/4 passed because scriptBytes 11397087 exceeded the 6000000 budget",
+    "build": "passed: stylesheet 407745/409600; JavaScript 1595388/2560000",
+    "emailOnlyMigrationPlan": "safe no-op failure: no database target configured; no migration applied",
+    "agentPackAudit": "passed: node agent_pack/scripts/audit_pack.mjs exit 0"
+  },
+  "nextAction": "Keep Wave 1 paused under WAVE1-REPAIR-2026-08-28; repair current Public/Auth/performance repository defects and obtain Seeker prerequisites, then rerun combined gates. Do not start Provider or Admin.",
+  "historicalFreshVerification": {
     "status": "passed",
     "workspace": "16/16",
     "apiAll": "517/517",
@@ -61,5 +92,30 @@
     "agentPackAudit": "passed",
     "rootTemporaryFiles": 0
   },
-  "nextAction": "Open the Public, Auth, and Seeker goal roots in parallel. Route shared-contract, API, global-style, router, snapshot, and Agent Pack changes to the Coordinator queue; do not start Provider or Admin until reconciliation checkpoints pass."
+  "historicalPhase": "wave-1-ready",
+  "wave1Reconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+    "checkpointPath": "docs/quality/figma_parity/HARD_CHECKPOINT_2026-08-28.json",
+    "decision": "BLOCKED",
+    "evidenceComplete": 41,
+    "closureEligible": 0,
+    "providerStartAllowed": false,
+    "adminStartAllowed": false,
+    "approvedLocaleScope": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "nextRepairTask": "WAVE1-REPAIR-2026-08-28"
+  },
+  "agentPackAudit": {
+    "command": "node agent_pack/scripts/audit_pack.mjs",
+    "exitCode": 0,
+    "tasks": 209,
+    "screens": 131,
+    "endpointBlueprint": 185,
+    "errors": []
+  }
 }

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "screenId": "SEK-05",
-  "classification": "REPAIRED_VERIFIED",
-  "classificationReason": "Direct runtime-before/runtime-after review completed for both approved desktop locales. Repository-owned layout, direction, safe projection, interaction, and state behavior are verified; approved contract/asset differences are recorded explicitly and no screenshot masking was used.",
+  "classification": "PARTIAL_EXTERNAL",
+  "classificationReason": "Direct runtime-before/runtime-after review completed for both approved desktop locales. Repository-owned layout, direction, safe projection, interaction, and state behavior are verified; canonical viewing media/metadata and cancellation contract remain externally unavailable and no screenshot masking was used.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4354",
@@ -138,6 +138,16 @@
     "Seeker desktop-ar E2E: 27/27 non-visual passed",
     "Seeker desktop-en E2E: 27/27 passed across dashboard QA/profile checks"
   ],
+  "coordinatorExternalReconciliation": {
+    "status": "BLOCKED_EXTERNAL",
+    "reviewedAt": "2026-08-28T18:36:24.741Z",
+    "owner": "Backend/API contract owner and Product/Design",
+    "missingApprovedPrerequisite": "Approved property/provider images, viewing metadata, and cancellation contract state",
+    "whyNotDerivable": "The approved assets and API response do not contain the canonical media/metadata, and cancellation cannot be invented without a contract-defined action/state.",
+    "prerequisite": "Provide approved media/metadata and the cancellation contract or explicitly retire those canonical elements.",
+    "nextAction": "Owner supplies the approved inputs, then recapture AR/EN and re-review.",
+    "repositoryOwnedDefects": []
+  },
   "evidencePaths": {
     "figma": "docs/quality/figma_parity/screens/SEK-05/figma.png",
     "runtimeBefore": "docs/quality/figma_parity/screens/SEK-05/runtime-before.png",

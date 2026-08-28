@@ -57,6 +57,7 @@ export interface PublicPropertyListingCopy {
   readonly footerLinks: string;
   readonly propertyType: string;
   readonly propertyCountLabel: string;
+  readonly allPropertiesCount: string;
   readonly addToCompare: string;
   readonly deliveryStatus: string;
   readonly readyToMove: string;
@@ -127,6 +128,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyListingCopy>>
     footerLinks: 'روابط المنصة',
     propertyType: 'نوع العقار',
     propertyCountLabel: 'عقار',
+    allPropertiesCount: '1,200+',
     addToCompare: 'أضف للمقارنة',
     deliveryStatus: 'حالة الاستلام',
     readyToMove: 'جاهز للاستلام',
@@ -195,6 +197,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyListingCopy>>
     footerLinks: 'Platform links',
     propertyType: 'Property type',
     propertyCountLabel: 'properties',
+    allPropertiesCount: '1,200+',
     addToCompare: 'Add to compare',
     deliveryStatus: 'Delivery status',
     readyToMove: 'Ready to move',
@@ -263,6 +266,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyListingCopy>>
     footerLinks: '平台链接',
     propertyType: '房产类型',
     propertyCountLabel: '套房产',
+    allPropertiesCount: '1,200+',
     addToCompare: '加入比较',
     deliveryStatus: '交付状态',
     readyToMove: '现房',

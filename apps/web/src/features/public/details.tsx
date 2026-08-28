@@ -189,11 +189,13 @@ function PropertyFactIcon({ kind }: { readonly kind: 'area' | 'bedrooms' | 'bath
   return <span className={`public-property-details__fact-icon public-property-details__fact-icon--${kind}`} aria-hidden="true"><svg viewBox="0 0 20 20" focusable="false" aria-hidden="true">{icon}</svg></span>;
 }
 
-type DetailLineIconKind = 'calendar' | 'location' | 'paper-plane' | 'whatsapp' | 'feature' | 'service' | 'advisory' | 'eye' | 'area' | 'bedrooms' | 'bathrooms';
+type DetailLineIconKind = 'calendar' | 'back' | 'location' | 'paper-plane' | 'whatsapp' | 'feature' | 'service' | 'advisory' | 'eye' | 'area' | 'bedrooms' | 'bathrooms';
 
 function DetailLineIcon({ kind, index }: { readonly kind: DetailLineIconKind; readonly index?: number }) {
   const icon = kind === 'calendar'
     ? <><rect x="3" y="4" width="14" height="12" rx="2" /><path d="M6 2v4M14 2v4M3 8h14M6 11h.01M10 11h.01M14 11h.01M6 14h.01M10 14h.01" /></>
+    : kind === 'back'
+      ? <path d="m12.5 4.5-5.5 5.5 5.5 5.5" />
     : kind === 'advisory'
       ? <><path d="m10 2 6 2v5c0 4-2.5 7-6 9-3.5-2-6-5-6-9V4Z" /><path d="m7 10 2 2 4-4" /></>
       : kind === 'location'
@@ -619,7 +621,7 @@ function SuccessDetails({
   return (
     <>
       <div className="public-property-details__content">
-        <a className="public-property-details__back" href="/properties">{copy.backToResults}</a>
+        <a className="public-property-details__back" href="/properties"><DetailLineIcon kind="back" />{copy.backToResults}</a>
         <div className="public-property-details__layout">
           <div className="public-property-details__main-column">
             <Gallery media={data.media} copy={copy} locale={locale} installmentAvailable={data.installmentAvailable} />

@@ -52,11 +52,15 @@ describe('public About and Team content', () => {
   it.each(['ar', 'en', 'zh-CN'] as const)('renders published About content with the correct direction for %s', locale => {
     const result = renderWithLocale(<PublicAbout locale={locale} initialData={aboutData} />, { locale });
     const copy = getPublicAboutTeamCopy(locale);
-    const missionTitle = locale === 'ar' ? 'رسالتنا' : locale === 'zh-CN' ? '我们的使命' : 'Our mission';
+    const howTitle = locale === 'ar'
+      ? 'رحلتك معنا خطوة بخطوة'
+      : locale === 'zh-CN'
+        ? '与我们一起一步一步'
+        : 'Your journey with us, step by step';
 
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
-    expect(screen.getByRole('heading', { name: copy.aboutTitle, level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: missionTitle, level: 2 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(copy.aboutTitle);
+    expect(screen.getByRole('heading', { name: howTitle, level: 2 })).toBeInTheDocument();
     expect(result.container.querySelector('[data-about-state="success"]')).not.toBeNull();
     expect(result.container.textContent).not.toContain('updatedBy');
     result.unmount();
@@ -81,7 +85,7 @@ describe('public About and Team content', () => {
 
     await waitFor(() => expect(screen.getByRole('region', { name: copy.retryTitle })).toBeInTheDocument());
     fireEvent.click(screen.getByRole('button', { name: copy.retryLabel }));
-    await waitFor(() => expect(screen.getByRole('heading', { name: 'Our mission', level: 2 })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(copy.aboutTitle));
     expect(load).toHaveBeenCalledTimes(2);
 
     renderWithLocale(<PublicTeam locale="en" initialData={{ items: [], }} />, { locale: 'en' });

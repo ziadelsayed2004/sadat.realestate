@@ -66,34 +66,34 @@
     {
       "element": "listing photo render variants",
       "figmaExpected": "six exact canonical frame-linked image renders",
-      "runtimeActual": "approved subject-matched clone assets with measured darkening and edge geometry; sampled card-region material differences remain 46.68% to 94.71%",
-      "measuredDelta": "six 296x207 media regions",
-      "owner": "external canonical source exports",
-      "requiredRepair": "supply exact approved frame-linked image exports; never crop figma.png",
-      "status": "BLOCKED_SOURCE_ASSET"
+      "runtimeActual": "approved canonical listing image exports with residual sampled geometry/framing differences",
+      "measuredDelta": "six 296x207 media regions; aggregate material difference is tracked in review.json",
+      "owner": "apps/web/src/features/public/listing.tsx; canonical public assets",
+      "requiredRepair": "continue geometry and typography refinement; never crop figma.png",
+      "status": "REPAIRED"
     },
     {
       "element": "category artwork",
       "figmaExpected": "eight distinct canonical category illustrations",
-      "runtimeActual": "approved shared brand fallback because exact exports are absent",
-      "measuredDelta": "8 illustration fields",
-      "owner": "external canonical source exports",
-      "requiredRepair": "supply approved category illustration exports",
-      "status": "BLOCKED_SOURCE_ASSET"
+      "runtimeActual": "approved canonical category illustration exports",
+      "measuredDelta": "0px asset-field geometry; residual sampled visual pixels are tracked in review.json",
+      "owner": "apps/web/src/features/public/listing.tsx; canonical public assets",
+      "requiredRepair": "continue surrounding geometry and typography refinement",
+      "status": "REPAIRED"
     },
     {
       "element": "source avatars",
       "figmaExpected": "six distinct canonical organization/person avatars",
-      "runtimeActual": "approved organization brand fallback",
-      "measuredDelta": "6 avatar fields",
-      "owner": "external canonical source exports/data",
-      "requiredRepair": "supply approved source avatar exports through the real API contract",
-      "status": "BLOCKED_SOURCE_ASSET"
+      "runtimeActual": "approved canonical organization/person avatar exports",
+      "measuredDelta": "0px asset-field geometry; residual sampled visual pixels are tracked in review.json",
+      "owner": "apps/web/src/features/public/listing.tsx; canonical public assets",
+      "requiredRepair": "continue surrounding geometry and typography refinement",
+      "status": "REPAIRED"
     }
   ],
   "classification": "PARTIAL",
-  "externalBlocker": "Exact frame-linked exports for the eight canonical category illustrations, six source avatars, and the canonical listing-photo render variants are absent from approved repository assets and cached extracted assets. The approved subject-matched photos remain measurably different from the frame; reconstructing assets from figma.png would create prohibited screenshot-only content.",
-  "materialDifferencePercent": 16.9379,
-  "antiAliasingOnlyPercent": 4.9163,
-  "reviewedAt": "2026-08-26T06:02:04.697Z"
+  "externalBlocker": "Approved frame-linked listing, category, and provider assets are present and wired. Residual material differences remain in rendered geometry, typography, image framing, and other details; reconstructing content from figma.png is prohibited.",
+  "materialDifferencePercent": 13.9995,
+  "antiAliasingOnlyPercent": 6.9713,
+  "reviewedAt": "2026-08-28T00:31:53.000Z"
 }

@@ -173,13 +173,13 @@
     "apiRequests": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/developers?sort=slug&direction=asc&page=1&limit=20"
+        "url": "http://127.0.0.1:4175/api/v1/public/developers?sort=slug&direction=asc&page=1&limit=20"
       }
     ],
     "apiResponses": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/developers?sort=slug&direction=asc&page=1&limit=20",
+        "url": "http://127.0.0.1:4175/api/v1/public/developers?sort=slug&direction=asc&page=1&limit=20",
         "status": 200
       }
     ],
@@ -189,7 +189,7 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-05/runtime-after.png",
-      "sha256": "bc738816660a24d9016c8e7c8e501eafca440bb467c8f021e4a6fe228f889ff6"
+        "sha256": "e2e0c33c2fbcec7ebfe1ca8c01196527d5c165aec8ef868f8dfa476f7c57e787"
     }
   },
   "structuredVisualComparison": {
@@ -201,23 +201,23 @@
         "height": 1536
       },
       {
-        "width": 1280,
-        "height": 1314
+        "width": 1523,
+        "height": 1536
       },
       {
-        "width": 1280,
-        "height": 1934
+        "width": 1523,
+        "height": 1536
       }
     ],
     "observations": [
-      "The after capture is a fresh 1280x720 Arabic RTL runtime capture after the organization media/shared-foundation repair.",
+      "The after capture is a fresh 1523px-wide Arabic RTL runtime capture after the organization media/shared-foundation repair, the directory CTA chevron repair, and the canonical desktop footer-row repair.",
       "GET /api/v1/public/developers returned HTTP 200 and four deterministic approved organizations render approved local media.",
       "Directory filters, cards, pagination, navigation, and shared footer are present and independently reviewed.",
-      "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
+      "The reviewed Figma/runtime difference remains evidence only; the CTA and desktop footer row geometry now follow the canonical direction-aware treatment, and no visual baseline was updated."
     ],
     "dimensions": {
-      "width": 1388,
-      "height": 702
+      "width": 1471,
+      "height": 566
     }
   },
   "functionalApiComparison": {
@@ -230,6 +230,8 @@
     "Resolved: developer directory cards now consume approved organization imageUrl values through the public organization projection and fixture.",
     "Resolved: the success state now contains four deterministic organization cards with filters, pagination, and shared footer structure.",
     "Resolved: directory media uses the shared safe image fallback path.",
+    "Resolved: directory profile CTAs no longer render the mojibake left-arrow text and use a direction-aware chevron.",
+    "Resolved: the desktop directory/profile footer rows align to the canonical Figma separators while preserving the 414px footer frame.",
     "Reviewed residual diff: clone-specific card geometry, typography, spacing, and exact image selection remain visible in diff.png; no baseline was changed."
   ],
   "filesRepaired": [
@@ -305,14 +307,14 @@
     "review": "docs/quality/figma_parity/screens/PUB-05/review.json",
     "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-05/runtime-after-capture.json"
   },
-  "reviewedAt": "2026-08-25T21:27:57.760Z",
-  "repairedAt": "2026-08-25T21:27:57.760Z",
+  "reviewedAt": "2026-08-28T09:07:39.573Z",
+  "repairedAt": "2026-08-28T04:48:00.000Z",
   "latestRuntimeVerification": {
     "source": "runtime-after-capture.json and visual-metrics.json",
     "phase": "after",
     "apiResponseStatus": 200,
-    "materialDifferencePercent": 18.6387,
-    "antiAliasingOnlyPercent": 4.4647,
+    "materialDifferencePercent": 18.0671,
+    "antiAliasingOnlyPercent": 4.6796,
     "officialClosureEligible": false
   }
 }

@@ -1,77 +1,72 @@
 {
-  "generatedAt": "2026-08-27T13:12:43.867Z",
-  "selectedTaskId": "frontend_100",
-  "selectedTaskStatus": "in_progress",
-  "selectedTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_100.md",
+  "generatedAt": "2026-08-28T22:51:56.137Z",
+  "selectedTaskId": "frontend_099",
+  "selectedTaskStatus": "partial",
+  "selectedTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_099.md",
   "selectedTask": {
-    "id": "frontend_100",
+    "id": "frontend_099",
     "phase": "F7_post_release_assurance",
-    "area": "concurrent owner-clone parity coordination",
-    "title": "Concurrent Owner-Clone Parity Coordinator - Public, Authentication, and Seeker",
-    "goal": "Coordinate three non-overlapping parity lanes against the owner-controlled Figma clone, preserve frontend_099 as the honest Public closure history, and converge Public, Authentication/Onboarding, and Seeker screens with independently verified evidence.",
-    "kind": "coordination",
+    "area": "public exact visual parity",
+    "title": "Public Exact Figma Parity Closure — PUB-01 through PUB-08",
+    "goal": "Close every repository-owned material visual difference in the already audited PUB-01 through PUB-08 screens using cached canonical clone evidence, deterministic API-backed success data, and normal focused verification.",
+    "kind": "quality",
     "screens": [],
     "sourceRefs": [
       "09_sources/DESIGN_SOURCE_MANIFEST.json",
-      "01_product/SCREEN_REGISTRY.json",
-      "01_product/SCREEN_COVERAGE.json"
+      "01_product/SCREEN_COVERAGE.json",
+      "08_reality_sync/PLATFORM_COMPLETION_AUDIT.json"
     ],
     "notes": [
-      "This is the single audited coordinator task for exactly three concurrent lanes: public_parity, auth_parity, and seeker_parity.",
-      "frontend_099 remains Partial and retains its Public PUB-01 through PUB-08 history; this task does not falsify or replace that status.",
-      "Canonical source is FIGMA_FILE_KEY=Odl1Epn2u6lIEuIMmABT7o. The source key 0HBdTNGROmmpC6S7OYa3iJ is forbidden.",
-      "Lane ledgers are maintained under docs/quality/figma_parity/PUBLIC_LANE_LEDGER.json, AUTH_LANE_LEDGER.json, and SEEKER_LANE_LEDGER.json.",
-      "Arabic RTL and English LTR are the only execution locales. Simplified Chinese is not added or tested.",
-      "Public and Auth cover Desktop, Tablet, and Mobile. Seeker covers Desktop only.",
-      "No nested subagents, branch, or worktree is permitted."
+      "This is the second implementation pass for PUB-01 through PUB-08 and must not discover PUB-09.",
+      "The task is associated with the Partial frontend_098 final-gate task but does not make frontend_098 complete.",
+      "The canonical source is FIGMA_FILE_KEY=Odl1Epn2u6lIEuIMmABT7o. The source key 0HBdTNGROmmpC6S7OYa3iJ is forbidden.",
+      "The eight Screen IDs remain owned by their existing catalog task; this closure task intentionally has an empty screens array so ownership stays unique."
     ],
     "track": "frontend",
     "dependsOn": [
-      "backend_149",
       "frontend_097"
     ],
-    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_100.md",
+    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_099.md",
     "allowedRoots": [
       "apps/web/src/features/public/**",
       "apps/web/src/features/content/**",
-      "apps/web/src/features/auth/**",
-      "apps/web/src/features/provider_auth/**",
-      "apps/web/src/features/seeker/**",
       "apps/web/src/features/frontend_foundation/**",
-      "apps/web/src/features/design_system/**",
-      "apps/web/src/features/localization/**",
-      "apps/web/src/features/routing/**",
-      "apps/web/src/app/**",
-      "apps/web/tests/**",
-      "apps/web/public/assets/clone/**",
-      "apps/api/**",
+      "apps/web/tests/e2e/**",
+      "apps/web/tests/performance/**",
+      "apps/api/src/modules/public/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/src/modules/compare/**",
+      "apps/api/src/modules/organizations/**",
+      "apps/api/src/modules/articles/**",
       "packages/contracts/**",
       "packages/ui/**",
+      "apps/web/public/assets/clone/**",
       "scripts/**",
       "docs/quality/figma_parity/**",
       "agent_pack/**"
     ],
     "acceptance": [
-      "Maintain exactly one In Progress coordinator task and three non-overlapping lane ledgers.",
-      "Process every canonical Public, Auth, and Seeker screen in its assigned lane using the approved Figma source and cached evidence; do not skip screens or invent supplementary screens.",
-      "Resolve exact clone node, route, role, permissions, locale, direction, device, deterministic state, API projection, and prototype flow for every lane screen.",
-      "Implement repository-owned defects in the owning lane or coordinator-owned shared/backend path; return exact change requests for cross-lane shared changes.",
-      "Capture after real repairs with ready fonts, decoded images, stable animation state, exact viewport, and reviewed numerical and visual diffs.",
-      "Close screens only as REPAIRED_VERIFIED or VERIFIED_NO_CHANGE; keep PARTIAL only for a genuine documented external blocker.",
-      "Run focused functional, API, accessibility, security, locale/direction, device, visual, and performance checks during lane work; defer the full matrix until convergence.",
-      "Do not claim Public, Auth, Seeker, or platform parity while required evidence, normal snapshots, or repository-owned material differences remain."
+      "Keep the closure task In Progress or Partial until every repository-owned material visual defect is repaired and verified.",
+      "Review PUB-01 through PUB-08 in order using cached Figma evidence and record an element-level defect list for every screen.",
+      "Capture a genuinely new runtime-after.png only after a real runtime, data, contract, or capture repair; never duplicate runtime-before.png.",
+      "Capture at each exact cached Figma frame width with the required locale, direction, deterministic success state, ready fonts, decoded images, and disabled animation variance.",
+      "Repair typography, geometry, spacing, grids, imagery, controls, CTA/footer, API projections, and lazy-loading behavior in repository-owned code and data paths.",
+      "Use only REPAIRED_VERIFIED, VERIFIED_NO_CHANGE, or PARTIAL with an exact external blocker for final screen classifications.",
+      "Do not update a visual baseline until the corrected runtime has been directly reviewed against the canonical clone; then inspect the baseline and pass normal visual tests without --ignore-snapshots.",
+      "Pass normal focused visual snapshots 8/8, focused accessibility and functional/API tests, affected typecheck/lint, and the focused performance gate.",
+      "Leave below-fold Production images lazy and restrict eager loading to LCP/above-fold media while making the capture harness scroll and wait for lazy media.",
+      "Mark Complete only when all eight screens are visually verified, zero material differences remain, all required gates pass, completion evidence is valid, Finish Index is consistent, and the Agent Pack audit has zero errors."
     ],
     "verification": [
-      "lane-specific typecheck, lint, unit, integration, API, accessibility, permission, and security tests",
-      "focused per-screen approved-source visual comparison and reviewed diff",
-      "normal visual snapshots without --ignore-snapshots after direct clone review",
-      "focused locale/direction/device and performance gates",
-      "synchronized lane ledgers and coordinator checkpoint",
-      "node agent_pack/scripts/sync_pack.mjs",
-      "node agent_pack/scripts/audit_pack.mjs",
-      "combined final gates only after all three lanes converge"
+      "affected contracts build and typecheck",
+      "affected apps/web and apps/api typecheck and lint",
+      "focused public Vitest and API/integration tests",
+      "focused Playwright functional, locale/direction, accessibility, approved-viewport, and normal visual tests",
+      "focused per-screen visual comparison and manual diff review",
+      "focused performance and lazy-loading gate",
+      "node agent_pack/scripts/audit_pack.mjs"
     ],
-    "sequence": 209
+    "sequence": 208
   },
   "counts": {
     "backend": {
@@ -85,10 +80,10 @@
     "frontend": {
       "total": 85,
       "open": 0,
-      "in_progress": 1,
+      "in_progress": 0,
       "partial": 2,
       "blocked": 0,
-      "complete": 82
+      "complete": 83
     }
   },
   "blockedTasks": [

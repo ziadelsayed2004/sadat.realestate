@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { routePublicHomepageApi, routePublicPropertyListApi } from './public-fixtures.ts';
 
 type TestLocale = 'ar' | 'en' | 'zh-CN';
 
@@ -39,12 +40,19 @@ test.describe('local production performance and Core Web Vitals inputs', () => {
     test(`${route.id} stays within measured SSR, hydration, bundle, and image budgets`, async ({ page }) => {
       const locale = localeForProject();
       const direction = directionForLocale(locale);
+      if (route.id === 'public-home') await routePublicHomepageApi(page);
+      else await routePublicPropertyListApi(page);
       const response = await page.goto(`${route.path}?lang=${encodeURIComponent(locale)}`, { waitUntil: 'load' });
       const ssrHtml = response === null ? '' : await response.text();
 
       expect(response?.status(), route.id).toBe(200);
       expect(ssrHtml, route.id).toContain(`data-route-id="${route.id}"`);
       await expect(page.locator('.route-shell')).toBeVisible();
+      if (route.id === 'public-home') {
+        await expect(page.locator('[data-page="public-home"]')).toHaveAttribute('data-homepage-state', 'success');
+      } else {
+        await expect(page.locator('[data-page="public-properties"]')).toHaveAttribute('data-listing-state', 'success');
+      }
 
       const metrics = await page.evaluate(() => {
         const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;

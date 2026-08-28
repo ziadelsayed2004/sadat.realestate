@@ -1,9 +1,10 @@
 {
   "schemaVersion": 1,
+  "updatedAt": "2026-08-28T20:57:49.568Z",
   "taskId": "frontend_100",
   "lane": "seeker_parity",
   "agentId": "01a03f86-ef61-7202-9738-1d4d4eed4fd4",
-  "status": "ACTIVE_EVIDENCE_BACKLOG",
+  "status": "RECONCILED_PARTIAL_EXTERNAL",
   "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
   "currentScreen": {
     "screenId": "SEK-10",
@@ -13,8 +14,13 @@
   },
   "sequence": "SEK-01 through SEK-10",
   "completedImplementationRange": "SEK-01 through SEK-10",
-  "locales": ["ar-RTL", "en-LTR"],
-  "devices": ["desktop"],
+  "locales": [
+    "ar-RTL",
+    "en-LTR"
+  ],
+  "devices": [
+    "desktop"
+  ],
   "implementationReport": {
     "typecheck": 0,
     "lint": 0,
@@ -33,10 +39,10 @@
     "expectedVisualEffect": "Seeker captures should reflect the corrected route-specific composition, card/list/timeline geometry, preference chips, and settings-card structure before direct Figma review."
   },
   "blockers": [
-    "Canonical property/provider/avatar media unavailable in writable assets.",
-    "Per-status request counts and richer request/viewing metadata unavailable in writable contracts.",
-    "Seeker request cancellation contract unavailable.",
-    "Preference area/payment fields unavailable in writable contracts/assets."
+    "SEK-01 and SEK-06 require approved canonical identity/avatar/property/provider media inputs.",
+    "SEK-02 through SEK-05 and SEK-07 require richer approved request, status, provider, viewing, and notification contract data.",
+    "SEK-08 requires approved preference-area/payment fields; SEK-09 and SEK-10 must not restore legacy phone identity/settings content under the active email-only contract.",
+    "All ten screen reviews record BLOCKED_EXTERNAL with repositoryOwnedDefects: [] and individualized owner prerequisites."
   ],
   "coordinatorSharedRepairs": [
     {
@@ -52,5 +58,134 @@
       }
     }
   ],
-  "evidence": "SEK-01 through SEK-10 each have cached figma.png but no reviewed runtime-after/diff/review record. SEEKER_AGENT starts at the first missing record without resetting the SEK-10 implementation cursor and may write only SEK-* screen evidence; baselines, snapshots, queue/checkpoint, and Agent Pack remain coordinator-owned."
+  "evidence": "SEK-01 through SEK-10 retain reviewed runtime/diff/review records. Each coordinator review is PARTIAL_EXTERNAL with an individualized external owner, missing prerequisite, and next action; no unsupported identity, media, metadata, or phone content was fabricated.",
+  "historicalCoordinatorStatus": "ACTIVE_EVIDENCE_BACKLOG",
+  "historicalCurrentScreen": {
+    "screenId": "SEK-10",
+    "clonePage": "6017:4354",
+    "cloneNode": "6027:6531",
+    "runtimeRoute": "/seeker/settings"
+  },
+  "coordinatorReconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+    "checkpointPath": "docs/quality/figma_parity/HARD_CHECKPOINT_2026-08-28.json",
+    "status": "PARTIAL_EXTERNAL",
+    "laneEvidenceClaim": "REPAIRED_VERIFIED",
+    "evidenceComplete": true,
+    "screenCount": 10,
+    "closureEligible": 0,
+    "approvedLocaleScope": [
+      "ar",
+      "en"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "latestMetrics": [
+      {
+        "screenId": "SEK-01",
+        "ar": 37.6388,
+        "en": 55.5412
+      },
+      {
+        "screenId": "SEK-02",
+        "ar": 51.0561,
+        "en": 66.0187
+      },
+      {
+        "screenId": "SEK-03",
+        "ar": 40.1473,
+        "en": 47.5624
+      },
+      {
+        "screenId": "SEK-04",
+        "ar": 38.4367,
+        "en": 46.8723
+      },
+      {
+        "screenId": "SEK-05",
+        "ar": 34.7515,
+        "en": 58.2073
+      },
+      {
+        "screenId": "SEK-06",
+        "ar": 48.6991,
+        "en": 59.4172
+      },
+      {
+        "screenId": "SEK-07",
+        "ar": 29.8472,
+        "en": 62.1224
+      },
+      {
+        "screenId": "SEK-08",
+        "ar": 15.1707,
+        "en": 55.2693
+      },
+      {
+        "screenId": "SEK-09",
+        "ar": 27.9429,
+        "en": 58.0248
+      },
+      {
+        "screenId": "SEK-10",
+        "ar": 19.0977,
+        "en": 56.0828
+      }
+    ],
+    "approvedExternalPrerequisites": [
+      "Canonical avatar and identity",
+      "Canonical image assets",
+      "Richer rows/status/provider/viewing/notification/preference metadata",
+      "No legacy phone content"
+    ],
+    "externalReconciliation": {
+      "status": "BLOCKED_EXTERNAL",
+      "screenCount": 10,
+      "repositoryOwnedDefects": 0,
+      "reviewPaths": [
+        "docs/quality/figma_parity/screens/SEK-01/review.json",
+        "docs/quality/figma_parity/screens/SEK-02/review.json",
+        "docs/quality/figma_parity/screens/SEK-03/review.json",
+        "docs/quality/figma_parity/screens/SEK-04/review.json",
+        "docs/quality/figma_parity/screens/SEK-05/review.json",
+        "docs/quality/figma_parity/screens/SEK-06/review.json",
+        "docs/quality/figma_parity/screens/SEK-07/review.json",
+        "docs/quality/figma_parity/screens/SEK-08/review.json",
+        "docs/quality/figma_parity/screens/SEK-09/review.json",
+        "docs/quality/figma_parity/screens/SEK-10/review.json"
+      ],
+      "nextAction": "Each named owner supplies the approved prerequisite; then recapture AR/EN and re-review the affected screen."
+    }
+  },
+  "coordinatorCursor": {
+    "taskId": "frontend_100",
+    "nextRepairTask": "WAVE1-REPAIR-2026-08-28",
+    "nextAction": "Keep Seeker screens Partial External until approved identity, media, and richer metadata inputs are supplied; do not fabricate them."
+  },
+  "latestGateValidation": {
+    "focusedVitest": "46/46 passed",
+    "dashboardQaArEn": "50/50 passed",
+    "repositoryOwnedDefects": 0,
+    "screenStatus": "10/10 PARTIAL_EXTERNAL"
+  },
+  "nextAction": "Keep Seeker screens Partial External until approved identity, media, and richer metadata inputs are supplied; do not fabricate them.",
+  "evidenceComplete": true,
+  "closureEligible": 0,
+  "approvedLocaleScope": [
+    "ar",
+    "en"
+  ],
+  "excludedLocales": [
+    "zh-CN"
+  ],
+  "finalReconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+    "status": "PARTIAL_EXTERNAL",
+    "screenCount": 10,
+    "repositoryOwnedDefects": 0,
+    "externalPrerequisites": 10,
+    "closureEligible": 0,
+    "excludedLocales": ["zh-CN"]
+  }
 }

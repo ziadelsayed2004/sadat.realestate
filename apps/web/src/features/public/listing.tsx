@@ -59,6 +59,19 @@ function isListEmpty(data: PublicPropertyListData): boolean {
   return data.total === 0 || data.items.length === 0;
 }
 
+function listingPrice(
+  value: PublicPropertyListData['items'][number]['price'],
+  transactionType: PublicPropertyListData['items'][number]['transactionType'],
+  locale: SupportedLocale
+): string | undefined {
+  if (value === undefined || locale !== 'ar' || value.currency !== 'EGP') return formatMoney(value, locale);
+
+  const amount = value.amount >= 1_000_000
+    ? `${new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(value.amount / 1_000_000)} مليون جنيه`
+    : `${new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value.amount)} جنيه`;
+  return transactionType === 'rent' ? `${amount} / شهر` : amount;
+}
+
 function stateCopy(state: PublicPropertyListingViewState, copy: PublicPropertyListingCopy): { readonly title: string; readonly body: string } {
   switch (state) {
     case 'loading': return { title: copy.loadingTitle, body: copy.loadingBody };
@@ -221,7 +234,7 @@ function PropertyResults({
             key={property.id}
             title={localizedText(property.name, locale) ?? property.slug}
             href={'/properties/' + property.slug}
-            price={formatMoney(property.price, locale)}
+            price={listingPrice(property.price, property.transactionType, locale)}
             location={localizedText(property.locationName, locale)}
             source={<span className="public-property-listing__source-identity">{property.sourceImageUrl ? <img src={property.sourceImageUrl} alt="" width="24" height="24" loading="lazy" decoding="async" /> : null}<span>{localizedText(property.sourceName, locale)}{property.sourceType ? <small>{property.sourceType === 'developer_company' ? copy.developerSource : copy.brokerageSource}</small> : null}</span></span>}
             badges={[property.transactionType === 'sale' ? copy.sale : copy.rent, ...(property.installmentAvailable ? [copy.installment] : []), ...(property.featured ? [copy.featured] : []), property.publicCode ?? property.slug.toUpperCase()]}
@@ -332,6 +345,9 @@ export function PublicPropertyListing({
     navigate({ ...query, propertyCategoryId, propertyTypeId: undefined, page: 1 }, false);
   };
 
+  const categoryRail = data?.categories.slice(0, 7) ?? [];
+  const firstCategory = categoryRail[0];
+
   return (
     <div className="public-property-listing" data-page="public-properties" data-listing-state={view}>
       <PublicSiteHeader locale={locale} copy={homepageCopy} activePath="/properties" />
@@ -342,8 +358,9 @@ export function PublicPropertyListing({
         </div>
       </section>
       {view === 'success' && data !== undefined ? <nav className="public-property-listing__category-rail" aria-label={copy.propertyType}>
-        <button type="button" className={query.propertyCategoryId === undefined ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === undefined} onClick={() => updatePropertyCategory(undefined)}><img src="/assets/sadat-real-estate-logo.png" alt="" width="72" height="64" decoding="async" loading="eager" /><strong>{copy.allKinds}</strong><span>{data.total.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>
-        {data.categories.slice(0, 7).map(category => <button type="button" key={category.id} className={query.propertyCategoryId === category.id ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === category.id} onClick={() => updatePropertyCategory(category.id)}><PublicMediaImage src={category.imageUrl ?? publicCategoryAsset(category.slug)} alt="" fallback={<PublicCategoryGlyph slug={category.slug} />} loading="eager" /><strong>{localizedText(category.name, locale) ?? category.slug}</strong><span>{category.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
+        {firstCategory === undefined ? null : <button type="button" key={firstCategory.id} className={query.propertyCategoryId === firstCategory.id ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === firstCategory.id} onClick={() => updatePropertyCategory(firstCategory.id)}><PublicMediaImage src={firstCategory.imageUrl ?? publicCategoryAsset(firstCategory.slug)} alt="" fallback={<PublicCategoryGlyph slug={firstCategory.slug} />} loading="eager" /><strong>{localizedText(firstCategory.name, locale) ?? firstCategory.slug}</strong><span>{firstCategory.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>}
+        <button type="button" className={query.propertyCategoryId === undefined ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === undefined} onClick={() => updatePropertyCategory(undefined)}><img src="/assets/sadat-real-estate-logo.png" alt="" width="72" height="64" decoding="async" loading="eager" /><strong>{copy.allKinds}</strong><span>{copy.allPropertiesCount} {copy.propertyCountLabel}</span></button>
+        {categoryRail.slice(1).map(category => <button type="button" key={category.id} className={query.propertyCategoryId === category.id ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === category.id} onClick={() => updatePropertyCategory(category.id)}><PublicMediaImage src={category.imageUrl ?? publicCategoryAsset(category.slug)} alt="" fallback={<PublicCategoryGlyph slug={category.slug} />} loading="eager" /><strong>{localizedText(category.name, locale) ?? category.slug}</strong><span>{category.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
       </nav> : null}
       <div className="public-property-listing__body">
         <ListingFilters draft={draft} copy={copy} onChange={onFilterChange} onCommit={commitFilterChange} onSubmit={applyFilters} onReset={() => navigate(defaultPublicPropertySearchQuery())} error={filterError} categories={data?.propertyTypes ?? []} />

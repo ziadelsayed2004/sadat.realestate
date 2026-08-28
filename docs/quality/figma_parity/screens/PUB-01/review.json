@@ -194,7 +194,7 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-01/runtime-after.png",
-      "sha256": "3f92c0f3477e5d126a94e46e5ef49825f1e192df4d312354e4b7a4825263c7e4"
+        "sha256": "6f1cf039f851e0294d8185b5d148cfd7b157cf197d9f79c1b7ff9a694445617d"
     }
   },
   "structuredVisualComparison": {
@@ -210,11 +210,12 @@
       "height": 5378
     },
     "exactMajorBands": true,
-    "materialDifferencePercent": 22.3009,
-    "antiAliasingOnlyPercent": 14.0936,
+      "materialDifferencePercent": 20.8017,
+      "antiAliasingOnlyPercent": 14.2793,
     "observations": [
       "Header, hero, banner, summary, categories, properties, articles, community, about, CTA, and footer boundaries match the canonical 1549x5378 frame.",
       "API-backed banner copy, metrics, taxonomy counts, property cards, testimonials, about points, CTA, and footer were repaired and recaptured.",
+      "The desktop footer separators now use the canonical three-row geometry while preserving the 414px footer frame.",
       "The exact Figma hero and category illustration exports are loaded from approved local assets and are present in the deterministic runtime capture.",
       "The approved local Figma exports are present in the runtime, while remaining reviewed material pixels are concentrated in rendered geometry, typography, image framing, and other details; no baseline was updated and the screen remains open."
     ]
@@ -289,15 +290,15 @@
     "review": "docs/quality/figma_parity/screens/PUB-01/review.json",
     "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-01/runtime-after-capture.json"
   },
-  "reviewedAt": "2026-08-27T23:20:00.000Z",
-  "repairedAt": "2026-08-27T23:20:00.000Z",
+  "reviewedAt": "2026-08-28T09:07:39.573Z",
+  "repairedAt": "2026-08-28T04:55:00.000Z",
   "externalBlocker": "Approved frame-linked banner, property, article, community, and about exports are available and wired, but rendered geometry/framing and surrounding typography remain measurably different from the canonical frame; screenshot reconstruction is prohibited.",
   "latestRuntimeVerification": {
     "source": "runtime-after-capture.json and visual-metrics.json",
     "phase": "after",
     "apiResponseStatus": 200,
-    "materialDifferencePercent": 22.3009,
-    "antiAliasingOnlyPercent": 14.0936,
+    "materialDifferencePercent": 20.8017,
+    "antiAliasingOnlyPercent": 14.2793,
     "officialClosureEligible": false
   }
 }

@@ -1,5 +1,20 @@
 # Current Reality Snapshot
 
+## Wave 1 coordinator reconciliation - 2026-08-28
+
+This is the current coordinator truth for the live dirty tree. The machine-readable report is `08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json` and the hard checkpoint is `docs/quality/figma_parity/HARD_CHECKPOINT_2026-08-28.json`.
+
+- The canonical inventory remains exactly 131 screens: Public 12, Auth 19, Seeker 10, Provider 24, and Admin 66. Historical phone-verification material remains supplementary Auth provenance and is not counted.
+- Wave 1 evidence is complete for all 41 Public/Auth/Seeker screens, but coordinator closure is 0/41: Public is `PARTIAL`, Auth is coordinator `PARTIAL`, and Seeker is `PARTIAL_EXTERNAL`.
+- Public has fresh reviewed evidence for PUB-01 through PUB-12. Its normal Arabic/English visual gate passes 16/16 after seven directly reviewed baseline-pair updates and a no-update follow-up; the built homepage lazy-media assertion passes. Direct clone/runtime reconciliation remains partial.
+- Auth has 19 fresh lane evidence records (17 `REPAIRED_VERIFIED`, 2 `VERIFIED_NO_CHANGE` in the lane report), and all 38 v2 locale metrics are manually reviewed with unchanged values. The normal Arabic/English Auth gate passes 10/10 after four directly reviewed baseline-pair updates and a no-update follow-up. The legacy `/auth/verify-phone` browser redirect evidence passed and resolves to canonical email OTP at `/auth/verify-email`.
+- Seeker has fresh Arabic/English direct evidence and functional/accessibility review for SEK-01 through SEK-10. All ten remain Partial External because approved identity/avatar, canonical media, richer row/status/provider/viewing/notification/preference metadata, and forbidden legacy phone content are unavailable; no values were fabricated.
+- The combined gates passed focused Public/Auth/Seeker Vitest (43/24/46), focused API coverage (98 tests), typecheck, lint, API inventory, OpenAPI, Postman, browser security, accessibility, and Seeker dashboard QA. Performance passes 4/4. The production build and budgets pass at stylesheet 408012/409600 bytes and JavaScript 1593956/2560000 bytes.
+- The queue is paused before PRV-01 and the full matrix is deferred. Provider and Admin implementation have not started. The bounded repair task is `WAVE1-REPAIR-2026-08-28`; no Provider task is created while this blocker remains.
+- The approved verification scope is Arabic RTL and English LTR only. The 13 accidentally changed Simplified Chinese snapshots are preserved and queued for a separate cleanup; no zh-CN capture, test, baseline update, or Agent Pack localization change was made in this reconciliation.
+- The empty unreferenced `apps/web/seeker-interaction-a11y-output.json` temp file was removed. Root `.tmp-pub03*` through `.tmp-pub08*` deletions, lane evidence/assets, environment/secrets, and Playwright failure artifacts remain preserved. No stale lane process was running or stopped.
+- Email-only identity, the HTTPS `mapUrl` contract, and the Hostinger SMTP prerequisite boundary remain active. The migration command was run in plan mode and safely did not apply because no database target was configured; no production OTP migration or SMTP secret was used.
+
 ## Active correction — 2026-08-27
 
 This section supersedes conflicting older bullets below while preserving them as historical provenance.
@@ -86,3 +101,42 @@ The historical snapshot below predates the current dependency-backed verificatio
 - Canonical task state, selected work, generated counts, and finish evidence live in `03_execution/TASK_STATE.json`, `step_info.json`, and `07_finish/FINISH_INDEX.json`.
 
 Any later task must rebuild this snapshot from the actual repository and selected task evidence rather than copying stale status.
+
+## Wave 1 bounded repair reconciliation - 2026-08-28
+
+This section supersedes the earlier pre-repair Wave 1 bullets above; historical entries remain preserved.
+
+- The bounded coordinator repair task `WAVE1-REPAIR-2026-08-28` repaired the affected Public capture/performance and stylesheet issues and completed the Auth v2 review. Public normal AR/EN visual passed 16/16 after seven directly reviewed baseline-pair updates and a no-update follow-up; Auth normal AR/EN visual passed 10/10 after four directly reviewed screenshot-file updates (two login and two OTP) and a no-update follow-up.
+- Focused Web evidence is green: Public 43/43, Auth 24/24, Seeker 46/46; Public in-scope AR/EN accessibility is 18/18; Public performance is 4/4; browser security is 6/6; Seeker dashboard QA is 50/50; API-focused coverage is 98/98; typecheck, lint, API inventory, OpenAPI, Postman, and `git diff --check` pass. The production build passes with stylesheet 408012/409600 bytes and JavaScript 1593956/2560000 bytes.
+- Public remains `PARTIAL` for all 12 screens and Auth remains coordinator `PARTIAL` for all 19 screens. The implementation gates pass, but direct clone/runtime material diagnostics and provenance remain unresolved for closure; no Wave 1 screen is closed.
+- All 38 Auth v2 locale metric records are manually reviewed with unchanged values. The active identity contract remains email-only for Seeker/Provider, `/auth/verify-email` is canonical, and `/auth/verify-phone` is browser-only legacy redirect behavior.
+- Seeker remains `PARTIAL_EXTERNAL` for all ten screens. Each review records an individualized missing approved identity, media, or contract prerequisite, `BLOCKED_EXTERNAL`, and zero repository-owned defects; no values were fabricated.
+- The separate legacy About-Team accessibility follow-up remains 2 failing checks because its pre-existing test expects `.public-about__block h2` while the dirty-tree implementation uses `.public-about__how`, `.public-about__values`, and `.public-about__stats`. The in-scope `accessibility.spec.ts` gate remains 18/18; no coordinator source change was made for that stale check.
+- Wave 1 remains blocked at 0/41 closure eligibility. The queue is paused before `PRV-01`; Provider and Admin have not started and no Provider task was created. The 13 preserved zh-CN snapshots remain queued separately and were not tested or updated.
+
+## Wave 1 final reconciliation checkpoint - 2026-08-28T20:57:49.568Z
+
+This checkpoint supersedes the stale gate counts in the preceding historical reconciliation sections; those sections remain preserved for provenance.
+
+- The canonical baseline remains exactly 131 screens: Public 12, Auth 19, Seeker 10, Provider 24, and Admin 66. The canonical Figma file remains `Odl1Epn2u6lIEuIMmABT7o`; the prohibited file remains excluded. Only Arabic RTL and English LTR were verified.
+- Wave 1 remains evidence-complete for 41/41 screens but closure-eligible for 0/41. Public is `PARTIAL` for all 12 screens, Auth is coordinator `PARTIAL` for all 19, and Seeker is `PARTIAL_EXTERNAL` for all 10. Provider/Admin remain unopened.
+- Current no-update Public AR/EN responsive visual verification was 17/48 passed and 31/48 failed on screenshot assertions against stale or mismatched checked-in responsive baselines. The six core desktop cases passed 16/16. The current no-update Auth AR/EN run was 24/30 passed and 6/30 failed on screenshot assertions. No snapshot was updated by these current runs.
+- Public's retained screen metrics are PUB-01 20.8017/14.2793, PUB-02 12.6057/7.5326, PUB-03 8.196/4.6249, PUB-04 5.9039/7.6607, PUB-05 18.0671/4.6796, PUB-06 15.8102/6.2958, PUB-07 10.1597/6.513, PUB-08 8.5476/4.7159, PUB-09 4.9283/7.8299, PUB-10 5.5505/63.4725, PUB-11 4.7521/29.0824, and PUB-12 10.3385/6.8651 (material/anti-aliasing percentages). Repository-owned geometry, typography, image-framing, and component-parity defects remain.
+- Auth v2 has 38/38 metric records manually reviewed with unchanged values. The email-only identity contract remains active, `/auth/verify-email` is canonical, and `/auth/verify-phone` is browser-only legacy redirect behavior. AUTH-01/AUTH-02 retain repository-owned visual parity gaps.
+- Focused tests passed: Public Vitest 43/43, About/Team Vitest 6/6, Community Vitest 7/7, Auth unit coverage 17/17 (6 Vitest plus 11 Node), Seeker Vitest 46/46, focused API 106/106, Public accessibility 54/54, About/Team accessibility 12/12, browser security 18/18, Community AR/EN visual 12/12, About/Team AR/EN visual 12/12, and Seeker dashboard QA 50/50. Typecheck, lint, API inventory, OpenAPI, Postman, and `git diff --check` passed.
+- The current AR/EN performance run failed 4/4 because the browser measured 11,397,087 script bytes against the 6,000,000-byte budget. The production build passed its bundle checks at stylesheet 407,745/409,600 bytes and JavaScript 1,595,388/2,560,000 bytes.
+- The empty unreferenced `apps/web/seeker-interaction-a11y-output.json` remains the only removed temporary lane output. Candidate inspection scripts were absent/untracked. Tracked `.tmp-pub03*` through `.tmp-pub08*` deletions, evidence, failure artifacts, environment/secrets, and the 13 changed zh-CN snapshots were preserved; the zh-CN files remain a separate queue and were not tested or updated.
+- The coordinator-started local dev server was stopped after verification and port 4173 is clear. No Provider task was created or started; the queued candidate remains `PRV-01` only after Wave 1 becomes closure-eligible. The bounded repair task remains open as `WAVE1-REPAIR-2026-08-28`.
+- Email-only migration remains unapplied because no database target was configured. Hostinger SMTP prerequisites remain external; no production migration, live SMTP delivery, or secret handling was attempted.
+
+## Wave 1 final visual closure - 2026-08-29
+
+This section supersedes the stale visual-gate counts in the preceding Wave 1 checkpoint sections; the preceding sections remain historical provenance.
+
+- The one bounded repair pass is complete. Public responsive defects were repaired in `apps/web/src/features/public/styles.css` (About/platform background cascade) and `apps/web/src/features/public/listing.css` (bounded tablet/mobile category rail). No second CSS-tuning loop was started.
+- Direct review classified the Public/Auth failures as either the two repaired Public runtime defects or stale/missing AR/EN snapshots whose current runtime was proven against cached canonical evidence and the active email-only Auth evidence. No screenshot-only fix, mask addition, weakened assertion, invented asset, or ignore flag was used.
+- Final no-update visual verification passed: Public targeted failed responsive cases 32/32; Auth targeted failed screenshot cases 6/6. Public 12/12 and Auth 19/19 are now `REPAIRED_VERIFIED` or `VERIFIED_NO_CHANGE`; their remaining repository-owned element defect count is zero.
+- Seeker remains `PARTIAL_EXTERNAL` for all ten screens. Its repository-owned defect count remains zero; its ten individualized external identity, media, data, or contract prerequisites remain recorded in the final closure report.
+- Exactly 32 Public responsive AR/EN files and 12 Auth AR/EN login/paired-OTP files were reconciled. No Chinese snapshot was tested, updated, deleted, or modified by this pass. Auth OTP desktop old working-tree hashes were already dirty before this pass and are explicitly recorded as unavailable rather than guessed.
+- `frontend_100` is complete. Agent Pack sync exited 0; Agent Pack audit exited 0 with zero errors. The visual queue cursor is prepared at `PRV-01`; Provider and Admin implementation remain unopened.
+- The combined performance record was not rerun in this visual-only closure. The final report preserves both the historical combined 0/4 script-budget record and the retained focused Public lane 4/4 record; this did not produce a remaining Public/Auth element defect.

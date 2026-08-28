@@ -68,7 +68,11 @@
           "root": "worker-seeker",
           "allowedRoot": "apps/web/src/features/seeker"
         }
-      ]
+      ],
+      "reconciliationStatus": "reconciled_provider_ready_with_seeker_external_exceptions",
+      "evidenceComplete": 41,
+      "closureEligible": 31,
+      "externalOnly": 10
     },
     {
       "id": "wave-2",
@@ -83,7 +87,11 @@
           "allowedRoot": "apps/web/src/features/provider"
         }
       ],
-      "supplementaryHandling": "Historical Auth provenance only; never add a surface or screen count."
+      "supplementaryHandling": "Historical Auth provenance only; never add a surface or screen count.",
+      "status": "dependency_ready_after_wave-1-closure",
+      "providerStartAllowed": true,
+      "implementationStarted": false,
+      "nextScreenId": "PRV-01"
     },
     {
       "id": "wave-3",
@@ -98,7 +106,9 @@
           "root": "worker-admin",
           "allowedRoot": "apps/web/src/features/admin"
         }
-      ]
+      ],
+      "status": "blocked_until_wave-2-closure",
+      "adminStartAllowed": false
     }
   ],
   "executionRules": {
@@ -106,8 +116,38 @@
     "noAdditionalBranchesOrWorktrees": true,
     "sharedChangeOwner": "Coordinator",
     "sharedChangeQueue": "Coordinator queue",
-    "closureStatuses": ["REPAIRED_VERIFIED", "VERIFIED_NO_CHANGE"],
+    "closureStatuses": [
+      "REPAIRED_VERIFIED",
+      "VERIFIED_NO_CHANGE"
+    ],
     "historicalEvidenceIsImmutable": true,
-    "doNotStartAdminBeforeWave2": true
+    "doNotStartAdminBeforeWave2": true,
+    "providerStartRequiresWave1Closure": true,
+    "adminStartRequiresProviderClosure": true,
+    "noProviderOrAdminImplementationDuringCoordinatorReconciliation": true,
+    "approvedLocaleScope": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ]
+  },
+  "lastCoordinatorReconciliation": {
+    "at": "2026-08-29T01:13:48.932+03:00",
+    "reportPath": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+    "decision": "RECONCILED_PROVIDER_READY",
+    "evidenceComplete": 41,
+    "closureEligible": 31,
+    "externalOnly": 10,
+    "approvedLocaleScope": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "providerOrAdminStarted": false,
+    "nextRepairTask": "WAVE1-REPAIR-2026-08-28"
   }
 }

@@ -170,13 +170,13 @@
     "apiRequests": [
       {
         "method": "POST",
-        "url": "http://127.0.0.1:4173/api/v1/public/properties/compare"
+        "url": "http://127.0.0.1:4175/api/v1/public/properties/compare"
       }
     ],
     "apiResponses": [
       {
         "method": "POST",
-        "url": "http://127.0.0.1:4173/api/v1/public/properties/compare",
+        "url": "http://127.0.0.1:4175/api/v1/public/properties/compare",
         "status": 200
       }
     ],
@@ -186,7 +186,7 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-04/runtime-after.png",
-      "sha256": "f7551ec7dccf5b9d4c2531eb5285a2db0ba83aa98e46e990847f1bbd2fe14e86"
+        "sha256": "f5a7d4ff9bf81852ab07d5ebc78134c3415690a0c784499c63bf5a17f3a01996"
     }
   },
   "structuredVisualComparison": {
@@ -198,22 +198,23 @@
         "height": 2314
       },
       {
-        "width": 1280,
-        "height": 2145
+        "width": 1653,
+        "height": 2314
       },
       {
-        "width": 1280,
-        "height": 2264
+        "width": 1653,
+        "height": 2314
       }
     ],
     "observations": [
-      "The after capture is a fresh 1280x720 Arabic RTL runtime capture after the final comparison markup repair.",
+      "The after capture is a fresh 1653px-wide Arabic RTL runtime capture after the final comparison markup repair.",
       "POST /api/v1/public/properties/compare returned HTTP 200 and both deterministic comparison cards render approved local media.",
       "The comparison tables, sticky bar, controls, remove actions, and shared footer are present and independently reviewed.",
+      "The desktop footer separators now use the canonical three-row geometry while preserving the 414px footer frame.",
       "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
     ],
     "dimensions": {
-      "width": 1432,
+      "width": 1559,
       "height": 831
     }
   },
@@ -301,14 +302,14 @@
     "review": "docs/quality/figma_parity/screens/PUB-04/review.json",
     "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-04/runtime-after-capture.json"
   },
-  "reviewedAt": "2026-08-25T21:27:52.384Z",
-  "repairedAt": "2026-08-25T21:27:52.384Z",
+  "reviewedAt": "2026-08-28T09:07:39.573Z",
+  "repairedAt": "2026-08-28T04:55:00.000Z",
   "latestRuntimeVerification": {
     "source": "runtime-after-capture.json and visual-metrics.json",
     "phase": "after",
     "apiResponseStatus": 200,
-    "materialDifferencePercent": 6.0963,
-    "antiAliasingOnlyPercent": 7.6067,
+    "materialDifferencePercent": 5.9039,
+    "antiAliasingOnlyPercent": 7.6607,
     "officialClosureEligible": false
   }
 }

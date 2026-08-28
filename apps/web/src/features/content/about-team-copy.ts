@@ -29,8 +29,8 @@ export interface PublicAboutTeamCopy {
 const copyByLocale: Readonly<Record<SupportedLocale, PublicAboutTeamCopy>> = {
   ar: {
     aboutEyebrow: 'عن المنصة',
-    aboutTitle: 'منصة سادات للعقارات',
-    aboutSubtitle: 'بوابة موثوقة لعرض العقارات والمحتوى المنشور من مصادر معتمدة.',
+    aboutTitle: 'منصة السادات للعقارات',
+    aboutSubtitle: 'أنشأنا هذه المنصة لأن السوق العقاري في مدينة السادات يحتاج منصة متخصصة وموثوقة.',
     teamEyebrow: 'الفريق',
     teamTitle: 'الأشخاص خلف المنصة',
     teamSubtitle: 'فريق متخصص يعمل يوميًا لتحسين تجربتك.',
