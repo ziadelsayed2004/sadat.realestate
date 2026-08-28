@@ -20,7 +20,6 @@ const profile = seekerProfileDataSchema.parse({
   id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
   roleType: 'seeker',
   status: 'verified',
-  phone: '+201012345678',
   email: 'mohamed.salem@example.com',
   firstName: 'Mohamed',
   lastName: 'Salem',
@@ -70,7 +69,7 @@ describe('Seeker profile, preferences, and settings', () => {
       <SeekerProfile locale={locale} session={session} tab="preferences" loadProfile={async () => profile} loadPreferences={async () => preferences} actions={emptyActions()} />,
       { locale }
     );
-    await waitFor(() => expect(screen.getByRole('heading', { name: copy.preferences.heading, level: 1 })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: copy.preferences.heading, level: 2 })).toBeInTheDocument());
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(result.container.querySelector('[data-screen-id="SEK-08"]')).not.toBeNull();
     expect(screen.getByDisplayValue('500000')).toBeInTheDocument();
@@ -84,7 +83,7 @@ describe('Seeker profile, preferences, and settings', () => {
     const actions = emptyActions();
     const copy = getSeekerProfileCopy('en');
     renderWithLocale(<SeekerProfile locale="en" session={session} tab="preferences" loadProfile={async () => profile} loadPreferences={async () => preferences} actions={actions} />, { locale: 'en' });
-    await waitFor(() => expect(screen.getByRole('heading', { name: copy.preferences.heading, level: 1 })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: copy.preferences.heading, level: 2 })).toBeInTheDocument());
     fireEvent.change(screen.getByLabelText(copy.preferences.minPrice), { target: { value: '2000000' } });
     fireEvent.change(screen.getByLabelText(copy.preferences.maxPrice), { target: { value: '1000000' } });
     fireEvent.click(screen.getByRole('button', { name: copy.preferences.save }));
@@ -101,7 +100,7 @@ describe('Seeker profile, preferences, and settings', () => {
     const actions = emptyActions();
     const copy = getSeekerProfileCopy('en');
     renderWithLocale(<SeekerProfile locale="en" session={session} tab="preferences" loadProfile={async () => profile} loadPreferences={async () => preferences} actions={actions} />, { locale: 'en' });
-    await waitFor(() => expect(screen.getByRole('heading', { name: copy.preferences.heading, level: 1 })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: copy.preferences.heading, level: 2 })).toBeInTheDocument());
     fireEvent.click(screen.getByRole('button', { name: 'Duplex' }));
     fireEvent.click(screen.getByRole('button', { name: '3' }));
     fireEvent.click(screen.getByRole('button', { name: copy.preferences.save }));
@@ -111,9 +110,9 @@ describe('Seeker profile, preferences, and settings', () => {
   it('renders personal data and settings without unsupported account fields', async () => {
     const profileResult = renderWithLocale(<SeekerProfile locale="en" session={session} tab="profile" loadProfile={async () => profile} actions={emptyActions()} />, { locale: 'en' });
     const profileCopy = getSeekerProfileCopy('en');
-    await waitFor(() => expect(screen.getByRole('heading', { name: profileCopy.profile.heading, level: 1 })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: profileCopy.profile.heading, level: 2 })).toBeInTheDocument());
     expect(profileResult.container.querySelector('[data-screen-id="SEK-09"]')).not.toBeNull();
-    expect(screen.getByDisplayValue(profile.phone)).toBeDisabled();
+    expect(screen.getByDisplayValue(profile.email)).toBeDisabled();
     profileResult.unmount();
 
     const settingsResult = renderWithLocale(<SeekerProfile locale="en" session={session} tab="settings" loadProfile={async () => profile} actions={emptyActions()} />, { locale: 'en' });
@@ -122,7 +121,7 @@ describe('Seeker profile, preferences, and settings', () => {
     expect(settingsResult.container.querySelector('[data-screen-id="SEK-10"]')).not.toBeNull();
     expect(screen.getAllByText(settingsCopy.unavailable).length).toBeGreaterThan(0);
     expect(screen.getByDisplayValue(profile.email)).toBeDisabled();
-    expect(settingsResult.container.querySelectorAll('.seeker-profile__settings-card')).toHaveLength(6);
+    expect(settingsResult.container.querySelectorAll('.seeker-profile__settings-card')).toHaveLength(5);
     expect(screen.getByLabelText('Current password')).toBeDisabled();
     expect(screen.getAllByRole('checkbox')).toHaveLength(5);
     expect(screen.getByRole('button', { name: 'Delete account permanently' })).toBeDisabled();
@@ -134,7 +133,7 @@ describe('Seeker profile, preferences, and settings', () => {
     window.history.pushState({}, '', '/seeker/profile?tab=personal');
     const result = renderWithLocale(<SeekerProfile locale="en" session={session} loadProfile={async () => profile} actions={emptyActions()} />, { locale: 'en' });
     try {
-      await waitFor(() => expect(screen.getByRole('heading', { name: getSeekerProfileCopy('en').profile.heading, level: 1 })).toBeInTheDocument());
+      await waitFor(() => expect(screen.getByRole('heading', { name: getSeekerProfileCopy('en').profile.heading, level: 2 })).toBeInTheDocument());
       expect(result.container.querySelector('[data-screen-id="SEK-09"]')).not.toBeNull();
       expect(result.container.querySelector('[data-route="/seeker/profile?tab=personal"]')).not.toBeNull();
       expect(screen.getByDisplayValue(profile.email)).toBeDisabled();
@@ -152,7 +151,7 @@ describe('Seeker profile, preferences, and settings', () => {
     renderWithLocale(<SeekerProfile locale="en" session={session} tab="profile" loadProfile={load} actions={emptyActions()} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByRole('button', { name: copy.retry })).toBeInTheDocument());
     fireEvent.click(screen.getByRole('button', { name: copy.retry }));
-    await waitFor(() => expect(screen.getByRole('heading', { name: copy.profile.heading, level: 1 })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: copy.profile.heading, level: 2 })).toBeInTheDocument());
     expect(load).toHaveBeenCalledTimes(2);
 
     renderWithLocale(<SeekerProfile locale="en" session={{ status: 'anonymous' }} loadProfile={async () => profile} actions={emptyActions()} />, { locale: 'en' });

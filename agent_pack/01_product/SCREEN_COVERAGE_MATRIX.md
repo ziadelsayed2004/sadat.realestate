@@ -20,8 +20,8 @@
 | AUTH-01 | auth | Login | ar/en/zh-CN | rtl/ltr | desktop/tablet/mobile | `/auth/login` | `backend_011`<br>`backend_012` | `frontend_020` |
 | AUTH-02 | auth | Seeker Registration — Default | ar/en/zh-CN | rtl/ltr | desktop/tablet/mobile | `/auth/register/seeker` | `backend_013` | `frontend_021` |
 | AUTH-03 | auth | Seeker Registration — Default | ar/en/zh-CN | rtl/ltr | desktop/tablet/mobile | `/auth/register/seeker` | `backend_013` | `frontend_021` |
-| AUTH-04 | auth | Phone Verification — OTP | ar/en/zh-CN | rtl/ltr | desktop/tablet/mobile | `/auth/verify-phone` | `backend_011`<br>`backend_012` | `frontend_020` |
-| AUTH-05 | auth | Phone Verification — OTP | ar/en/zh-CN | rtl/ltr | desktop/tablet/mobile | `/auth/verify-phone` | `backend_011`<br>`backend_012` | `frontend_020` |
+| AUTH-04 | auth | Email Verification — OTP | ar/en/zh-CN | rtl/ltr | desktop/tablet/mobile | `/auth/verify-email` | `backend_011`<br>`backend_012` | `frontend_020` |
+| AUTH-05 | auth | Email Verification — OTP | ar/en/zh-CN | rtl/ltr | desktop/tablet/mobile | `/auth/verify-email` | `backend_011`<br>`backend_012` | `frontend_020` |
 | AUTH-06 | auth | Seeker Registration — Success | ar/en/zh-CN | rtl/ltr | desktop/tablet/mobile | `/auth/register/seeker/success` | `backend_013` | `frontend_021` |
 | AUTH-07 | auth | Provider Type Selection — Default | ar/en/zh-CN | rtl/ltr | desktop/tablet/mobile | `/auth/register/provider/type` | `backend_014` | `frontend_022` |
 | AUTH-08 | auth | Provider Type Selection — Selected | ar/en/zh-CN | rtl/ltr | desktop/tablet/mobile | `/auth/register/provider/type` | `backend_014` | `frontend_022` |

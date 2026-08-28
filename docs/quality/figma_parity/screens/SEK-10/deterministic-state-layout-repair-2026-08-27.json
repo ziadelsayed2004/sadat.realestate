@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "seedId": "capture-SEK-10-ar-after-2026-08-26",
+  "environment": "non-production-browser-fixture",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "screenId": "SEK-10",
+  "source": {
+    "pageId": "6017:4354",
+    "nodeId": "6027:6531",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6027-6531&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4354&starting-point-node-id=6027%3A3579",
+    "screenshot": "docs/quality/figma_parity/screens/SEK-10/figma.png"
+  },
+  "runtime": {
+    "route": "/seeker/settings?lang=ar",
+    "requestedQueueRoute": "/seeker/settings",
+    "role": "seeker",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1551,
+      "height": 1776,
+      "deviceScaleFactor": 1
+    }
+  },
+  "authSession": {
+    "roleType": "seeker",
+    "projection": {
+      "accessToken": "capture.header.signature",
+      "tokenType": "Bearer",
+      "expiresInSeconds": 900,
+      "user": {
+        "id": "0123456789abcdef01234567",
+        "roleType": "seeker",
+        "status": "verified"
+      }
+    },
+    "source": "intercepted /api/v1/auth/refresh response"
+  },
+  "api": {
+    "fixtureContract": "real writable API response shapes",
+    "responseRequestIds": [
+      "capture-SEK-10-ar"
+    ],
+    "state": null
+  },
+  "phase": "after",
+  "repair": {
+    "repairId": "seeker-parity-layout-2026-08-27",
+    "expectedEffect": "Seeker desktop canonical frame repair: independent main header and rail, 1024px content canvas, centered screen panels, compact controls, and contract-safe phone-free identity."
+  },
+  "seedSha256": "168428045ac32d8047b749163dea93ea2680f979b4bc60e84a9cdcd4bdedcf97"
+}

@@ -18,7 +18,7 @@
 
 - [x] backend_010 — Identity and Account Models
 - [x] backend_011 — Login, Sessions, Refresh, and Logout
-- [x] backend_012 — OTP and Phone Verification
+- [x] backend_012 — OTP and Email Verification (legacy task key)
 - [x] backend_013 — Seeker Registration, Profile, and Preferences
 - [x] backend_014 — Provider Types and Registration Application
 - [x] backend_015 — Private Provider Documents

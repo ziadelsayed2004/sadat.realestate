@@ -2,7 +2,6 @@ import { randomInt } from 'node:crypto';
 import nodemailer from 'nodemailer';
 
 export interface OtpDelivery {
-  phone: string;
   email: string;
   roleType: 'seeker' | 'provider';
   purpose: 'login' | 'registration';

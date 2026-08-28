@@ -4,12 +4,12 @@ The identity module registers five connection-scoped Mongoose models: `User`, `S
 
 ## User identity
 
-`User` stores a role type, account state, supported locale, state-change timestamp, and one or both normalized identifier candidates:
+`User` stores a role type, account state, supported locale, state-change timestamp, and a required normalized email plus an optional legacy/contact phone field:
 
 - Email is trimmed and lowercased.
 - Phone uses an E.164-shaped value.
 - Each identifier has a partial unique index, so uniqueness applies when that identifier exists.
-- At least one identifier is required. Current product truth requires both normalized E.164 phone and normalized email for Seekers and Property Providers; the OTP is delivered only to that email. Admin users use normalized email plus password.
+- A normalized email is required for Seeker and Provider identities. Phone remains an optional legacy/contact field where a separate approved contract allows it; it is not an authentication identifier. OTP is bound only to email, role type, and purpose. Admin users use normalized email plus password.
 
 No password, OTP, raw session token, provider credential, or production account is included in these shared identity records. Admin password hashes are isolated in `admin_credentials`. OTP challenges are isolated in `otp_challenges`, store only keyed code and opaque verification-token hashes, and use explicit active-target, lookup, uniqueness, and TTL indexes.
 
@@ -17,7 +17,7 @@ No password, OTP, raw session token, provider credential, or production account 
 
 Each profile has a unique immutable `userId`. Provider type supports the three approved product categories: individual broker, office, and development company. Account and provider-review state constants and transition guards mirror the current state-machine document; undefined jumps such as unverified directly to verified or draft directly to approved are rejected by policy.
 
-Cross-document role/profile consistency is enforced by identity application services in later tasks. Admin login, seeker/provider phone-and-email-bound OTP login, refresh rotation, reuse detection, logout, and one-time registration verification authority are implemented. Account registration, downstream bearer authorization, and public projections remain later scope.
+Cross-document role/profile consistency is enforced by identity application services in later tasks. Admin login, seeker/provider email-bound OTP login, refresh rotation, reuse detection, logout, and one-time registration verification authority are implemented. Account registration, downstream bearer authorization, and public projections remain later scope.
 
 ## Sessions and indexes
 

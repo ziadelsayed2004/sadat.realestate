@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "project": "Sadat Real Estate Platform",
-  "packVersion": "1.3.0",
-  "generatedAt": "2026-08-26T19:51:34.2380262Z",
+  "packVersion": "1.4.0",
+  "generatedAt": "2026-08-27T13:12:43.867Z",
   "sourceHandoffDate": "2026-08-09",
   "screenCounts": {
     "PUB": 12,
@@ -31,8 +31,11 @@
     "languagePolicy": "00_start_here/LANGUAGE_POLICY.md",
     "runner": "05_prompts/MASTER_SINGLE_TASK_RUNNER.md",
     "sourceReference": "09_sources/HANDOFF_REFERENCE.md",
-    "designSourceManifest": "09_sources/DESIGN_SOURCE_MANIFEST.json"
+    "designSourceManifest": "09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "parallelWavePlan": "03_execution/PARALLEL_WAVE_PLAN.json",
+    "coordinatorPrompt": "05_prompts/PARALLEL_COORDINATOR.md"
   },
+  "deliveryModel": "coordinator-bootstrap-then-controlled-parallel-waves",
   "packLanguage": "en",
   "productLocalization": {
     "primaryLocale": "ar",
@@ -47,11 +50,13 @@
   "finalVisualSourceDate": "2026-08-15",
   "designSources": {
     "localScreenExportRoot": "../docs/design_sources/final_screens",
-    "localScreenIds": 130,
+    "localScreenIds": 131,
+    "historicalFigmaExportScreenIds": 130,
     "externalOnlyScreenIds": [
       "ADM-54"
     ],
-    "ownerAuthoredPendingReviewScreenIds": [
+    "ownerAuthoredPendingReviewScreenIds": [],
+    "ownerAuthoredApprovedScreenIds": [
       "ADM-54"
     ],
     "productLogoRuntimePath": "../apps/web/public/assets/sadat-real-estate-logo.png"

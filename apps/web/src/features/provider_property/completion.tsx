@@ -321,7 +321,7 @@ function ValidationView({ locale, property, issues }: { readonly locale: Support
         <h2 id="provider-property-validation-summary">{propertyName}</h2>
         <dl className="provider-property-state__summary">
           <div><dt>{copy.issueLabels.status}</dt><dd>{propertyCopy.wizard.statusLabels[property.status]}</dd></div>
-          <div><dt>{copy.issueLabels.location}</dt><dd>{property.locationId ?? propertyCopy.wizard.unavailable}</dd></div>
+          <div><dt>{copy.issueLabels.location}</dt><dd>{property.locationId ?? property.mapUrl ?? (property.coordinates ? `${property.coordinates.latitude}, ${property.coordinates.longitude}` : propertyCopy.wizard.unavailable)}</dd></div>
           <div><dt>{copy.issueLabels.price}</dt><dd>{property.price === undefined ? propertyCopy.wizard.unavailable : `${property.price.amount} ${property.price.currency}`}</dd></div>
           <div><dt>{copy.issueLabels.contact}</dt><dd>{property.contact?.contactName ?? property.contact?.email ?? property.contact?.phone ?? propertyCopy.wizard.unavailable}</dd></div>
         </dl>
@@ -371,7 +371,7 @@ function ReviewView({
 }) {
   const review = copy.review;
   const missing: string[] = [];
-  if (property.locationId === undefined) missing.push(review.location);
+  if (property.locationId === undefined && property.mapUrl === undefined && property.coordinates === undefined) missing.push(review.location);
   if (property.price === undefined) missing.push(review.price);
   if (property.contact?.phone === undefined && property.contact?.whatsappNumber === undefined && property.contact?.email === undefined) missing.push(review.contact);
   const serverCanSubmit = property.availableActions.includes('submit');
@@ -390,7 +390,7 @@ function ReviewView({
         <p>{review.safeProjectionBody}</p>
         <dl className="provider-property-completion__summary">
           <div><dt>{review.status}</dt><dd>{statusLabel(property)}</dd></div>
-          <div><dt>{review.location}</dt><dd>{property.locationId ?? '—'}</dd></div>
+          <div><dt>{review.location}</dt><dd>{property.locationId ?? property.mapUrl ?? (property.coordinates ? `${property.coordinates.latitude}, ${property.coordinates.longitude}` : '—')}</dd></div>
           <div><dt>{review.price}</dt><dd>{property.price === undefined ? '—' : `${property.price.amount} ${property.price.currency}`}</dd></div>
           <div><dt>{review.contact}</dt><dd>{property.contact?.contactName ?? property.contact?.email ?? property.contact?.phone ?? '—'}</dd></div>
           <div><dt>{review.media}</dt><dd>{media.length === 0 ? review.noMedia : `${media.length} ${review.mediaCount}`}</dd></div>
@@ -558,7 +558,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (property === undefined) return;
-    const currentMissing = property.locationId === undefined || property.price === undefined || (property.contact?.phone === undefined && property.contact?.whatsappNumber === undefined && property.contact?.email === undefined);
+    const currentMissing = (property.locationId === undefined && property.mapUrl === undefined && property.coordinates === undefined) || property.price === undefined || (property.contact?.phone === undefined && property.contact?.whatsappNumber === undefined && property.contact?.email === undefined);
     if (currentMissing || !property.availableActions.includes('submit') || !checks.data || !checks.authority || !checks.review) { setValidationError(true); return; }
     const parsed = propertySubmitInput(property.version, reason);
     if (parsed === undefined) { setValidationError(true); return; }

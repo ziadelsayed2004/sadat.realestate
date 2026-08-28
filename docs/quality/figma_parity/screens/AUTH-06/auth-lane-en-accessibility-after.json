@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-06",
+  "phase": "after",
+  "html": {
+    "lang": "en",
+    "dir": "ltr"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-06",
+    "state": "success",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/register/seeker/success",
+    "html": {
+      "lang": "en",
+      "dir": "ltr"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 944
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 1,
+      "sections": 1,
+      "cards": 1,
+      "forms": 0,
+      "buttons": 1,
+      "links": 3,
+      "inputs": 0,
+      "unlabeledControls": 0
+    },
+    "controls": [],
+    "links": [
+      {
+        "text": "Skip to main content",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "Log in",
+        "href": "/auth/login"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "Go to my account",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  }
+}

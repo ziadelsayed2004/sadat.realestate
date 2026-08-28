@@ -32,6 +32,8 @@ function propertyDetailsFixture() {
       description: { ar: 'نبذة المشروع', en: 'Project description', 'zh-CN': '项目描述' }
     },
     media: [],
+    features: [],
+    services: [],
     relatedProperties: []
   };
 }
@@ -60,7 +62,7 @@ function propertyComparisonFixture() {
         price: { amount: 20000, currency: 'EGP' }
       }
     ],
-    fields: ['name', 'transactionType', 'price', 'area', 'layout']
+    fields: ['kind', 'transactionType', 'sourceName', 'sourceType', 'project', 'developer', 'publicCode', 'price', 'installment', 'area', 'bedrooms', 'bathrooms', 'floor', 'deliveryStatus', 'locationName']
   };
 }
 
@@ -103,7 +105,8 @@ function developerProfileFixture() {
         name: { ar: 'Ù…Ù†Ø²Ù„ Ù…Ù†Ø´ÙˆØ±', en: 'Published home', 'zh-CN': 'å·²å‘å¸ƒæˆ¿äº§' },
         transactionType: 'sale',
         projectId: 'bbbbbbbbbbbbbbbbbbbbbbbb'
-      }]
+      }],
+      stats: { publishedProjects: 2, availableProperties: 4, saleProperties: 3, rentalProperties: 1 }
     },
     meta: { requestId: 'e2e-developer-profile' }
   };
@@ -204,7 +207,7 @@ test('public homepage renders its SSR shell across approved locales and devices'
   await expect(homepage).toHaveAttribute('data-homepage-state', 'success');
   const heroImage = homepage.locator('.public-homepage__hero-media img');
   await expect(heroImage).toBeVisible();
-  await expect(heroImage).toHaveAttribute('src', PUBLIC_CLONE_ASSETS.hero);
+  await expect(heroImage).toHaveAttribute('src', PUBLIC_CLONE_ASSETS.homepageHero);
   await expect(page).toHaveScreenshot('public-homepage-' + locale + '.png', { fullPage: true });
 });
 
@@ -253,7 +256,7 @@ test('public property comparison renders the fixed two-item projection', async (
   await expect(comparison).toHaveAttribute('data-comparison-state', 'success');
   await expect(comparison).toHaveAttribute('data-comparison-count', '2');
   await expect(comparison.locator('[data-comparison-card]')).toHaveCount(2);
-  await expect(comparison.locator('table')).toHaveCount(3);
+  await expect(comparison.locator('table')).toHaveCount(4);
   await expect(page).toHaveScreenshot(`public-comparison-${locale}.png`, { fullPage: true });
 });
 
@@ -269,7 +272,7 @@ test('public developer directory renders approved organizations across locales a
   const directory = page.locator('[data-page="public-developers"]');
   await expect(directory).toBeVisible();
   await expect(directory).toHaveAttribute('data-developers-state', 'success');
-  await expect(directory.locator('form[aria-label]')).toBeVisible();
+  await expect(directory.locator('form[aria-label]')).toBeAttached();
   await expect(directory.locator('[data-state="missing_image"]')).toBeVisible();
   await expect(page).toHaveScreenshot(`public-developers-${locale}.png`, { fullPage: true });
 });

@@ -30,29 +30,27 @@ test('normalizes strict Admin login requests without exposing a password policy 
   assert.throws(() => adminLoginRequestSchema.parse({ email: 'bad', password: '' }));
 });
 
-test('normalizes E.164 phone inputs and rejects local, Admin, malformed, or loose OTP requests', () => {
+test('keeps contact phone normalization separate and accepts only email OTP identity', () => {
   assert.equal(normalizedPhoneSchema.parse(' 0020 (100) 000-0000 '), '+201000000000');
   assert.equal(otpSendRequestSchema.parse({
-    phone: '+20 100 000 0000',
     email: ' Seeker@Example.COM ',
     roleType: 'seeker',
     purpose: 'login'
-  }).phone, '+201000000000');
+  }).email, 'seeker@example.com');
   assert.equal(otpSendRequestSchema.parse({
-    phone: '+201000000000',
     email: ' Seeker@Example.COM ',
     roleType: 'seeker',
     purpose: 'login'
   }).email, 'seeker@example.com');
   for (const invalid of [
-    { phone: '01000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login' },
-    { phone: '+201000000000', email: 'bad', roleType: 'seeker', purpose: 'login' },
-    { phone: '+201000000000', email: 'seeker@example.com', roleType: 'admin', purpose: 'login' },
-    { phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'password-reset' },
-    { phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', unexpected: true }
+    { phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login' },
+    { email: 'bad', roleType: 'seeker', purpose: 'login' },
+    { email: 'seeker@example.com', roleType: 'admin', purpose: 'login' },
+    { email: 'seeker@example.com', roleType: 'seeker', purpose: 'password-reset' },
+    { email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', unexpected: true }
   ]) assert.throws(() => otpSendRequestSchema.parse(invalid));
   assert.throws(() => otpVerifyRequestSchema.parse({
-    phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login',
+    email: 'seeker@example.com', roleType: 'seeker', purpose: 'login',
     challengeId: 'not-a-uuid', code: '12345'
   }));
 });

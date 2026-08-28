@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-04",
+  "phase": "after",
+  "html": {
+    "lang": "ar",
+    "dir": "rtl"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-04",
+    "state": "idle",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/verify-email?purpose=registration&roleType=seeker&lang=ar",
+    "html": {
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 1033,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 1033
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 5,
+      "forms": 1,
+      "buttons": 1,
+      "links": 3,
+      "inputs": 2,
+      "unlabeledControls": 0
+    },
+    "controls": [
+      {
+        "tag": "input",
+        "id": "auth-otp-email",
+        "name": "email",
+        "type": "email",
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "email"
+      },
+      {
+        "tag": "select",
+        "id": "auth-role-type",
+        "name": "roleType",
+        "type": null,
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": null
+      }
+    ],
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "إرسال الرمز",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  }
+}

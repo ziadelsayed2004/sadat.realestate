@@ -9,7 +9,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { Pagination, PropertyCard } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
-import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from './components.tsx';
+import { PublicCategoryGlyph, PublicMediaImage, PublicSiteFooter, PublicSiteHeader, publicCategoryAsset } from './components.tsx';
 import {
   defaultPublicPropertyListLoader,
   defaultPublicPropertySearchQuery,
@@ -343,7 +343,7 @@ export function PublicPropertyListing({
       </section>
       {view === 'success' && data !== undefined ? <nav className="public-property-listing__category-rail" aria-label={copy.propertyType}>
         <button type="button" className={query.propertyCategoryId === undefined ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === undefined} onClick={() => updatePropertyCategory(undefined)}><img src="/assets/sadat-real-estate-logo.png" alt="" width="72" height="64" decoding="async" loading="eager" /><strong>{copy.allKinds}</strong><span>{data.total.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>
-        {data.categories.slice(0, 7).map(category => <button type="button" key={category.id} className={query.propertyCategoryId === category.id ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === category.id} onClick={() => updatePropertyCategory(category.id)}><PublicMediaImage src={category.imageUrl} alt="" fallback={<img src="/assets/sadat-real-estate-logo.png" alt="" width="72" height="64" />} loading="eager" /><strong>{localizedText(category.name, locale) ?? category.slug}</strong><span>{category.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
+        {data.categories.slice(0, 7).map(category => <button type="button" key={category.id} className={query.propertyCategoryId === category.id ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === category.id} onClick={() => updatePropertyCategory(category.id)}><PublicMediaImage src={category.imageUrl ?? publicCategoryAsset(category.slug)} alt="" fallback={<PublicCategoryGlyph slug={category.slug} />} loading="eager" /><strong>{localizedText(category.name, locale) ?? category.slug}</strong><span>{category.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
       </nav> : null}
       <div className="public-property-listing__body">
         <ListingFilters draft={draft} copy={copy} onChange={onFilterChange} onCommit={commitFilterChange} onSubmit={applyFilters} onReset={() => navigate(defaultPublicPropertySearchQuery())} error={filterError} categories={data?.propertyTypes ?? []} />

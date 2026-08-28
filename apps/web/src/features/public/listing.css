@@ -434,9 +434,27 @@
   }
 
   .public-property-listing__category-rail img {
+    width: 78px;
+    height: 78px;
+    object-fit: contain;
+  }
+
+  .public-property-listing__category-rail .public-category-glyph {
     width: 76px;
     height: 64px;
-    object-fit: contain;
+    color: #07513f;
+    background: #f7f4ec;
+    border-radius: 10px;
+  }
+
+  .public-property-listing__category-rail .public-category-glyph svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .public-property-listing__category-rail .is-active .public-category-glyph {
+    color: #d6a95d;
+    background: rgb(255 255 255 / 0.08);
   }
 
   .public-property-listing__category-rail strong {

@@ -14,6 +14,7 @@ export interface StoredProperty {
   projectId?: string;
   parentPropertyId?: string;
   locationId?: string;
+  mapUrl?: string;
   coordinates?: PropertyCoordinates;
   description?: PropertyRecord['name'];
   propertyTypeId?: string;
@@ -88,6 +89,7 @@ function stored(record: PropertyRecord & { _id: Types.ObjectId }): StoredPropert
     ...(record.projectId ? { projectId: record.projectId.toHexString() } : {}),
     ...(record.parentPropertyId ? { parentPropertyId: record.parentPropertyId.toHexString() } : {}),
     ...(record.locationId ? { locationId: record.locationId.toHexString() } : {}),
+    ...(record.mapUrl ? { mapUrl: record.mapUrl } : {}),
     ...(record.coordinates ? { coordinates: { longitude: record.coordinates.coordinates[0], latitude: record.coordinates.coordinates[1] } } : {}),
     ...(record.description ? { description: structuredClone(record.description) } : {}),
     ...(record.propertyTypeId ? { propertyTypeId: record.propertyTypeId.toHexString() } : {}),
@@ -153,7 +155,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
         }
         if ('coordinates' in set) set.coordinates = coordinates(set.coordinates as PropertyCoordinates | null);
         const unset: Record<string, 1> = {};
-        for (const field of ['projectId', 'parentPropertyId', 'locationId', 'coordinates', 'description', 'propertyTypeId', 'deliveryStatus', 'area', 'layout', 'price', 'paymentPlans', 'featureIds', 'serviceIds', 'contact']) if (set[field] === undefined || set[field] === null) { delete set[field]; unset[field] = 1; }
+        for (const field of ['projectId', 'parentPropertyId', 'locationId', 'mapUrl', 'coordinates', 'description', 'propertyTypeId', 'deliveryStatus', 'area', 'layout', 'price', 'paymentPlans', 'featureIds', 'serviceIds', 'contact']) if (set[field] === undefined || set[field] === null) { delete set[field]; unset[field] = 1; }
         const result = await models.Property.findOneAndUpdate(
           { _id: input.id, providerId: new Types.ObjectId(input.providerId), version: input.expectedVersion },
           { $set: set, ...(Object.keys(unset).length ? { $unset: unset } : {}), $inc: { version: 1 } },
@@ -272,6 +274,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
             ...(input.property.projectId ? { projectId: new Types.ObjectId(input.property.projectId) } : {}),
             ...(input.property.parentPropertyId ? { parentPropertyId: new Types.ObjectId(input.property.parentPropertyId) } : {}),
             ...(input.property.locationId ? { locationId: new Types.ObjectId(input.property.locationId) } : {}),
+            ...(input.property.mapUrl ? { mapUrl: input.property.mapUrl } : {}),
             ...(input.property.coordinates ? { coordinates: coordinates(input.property.coordinates) } : {}),
             ...(input.property.description ? { description: input.property.description } : {}),
             ...(input.property.propertyTypeId ? { propertyTypeId: new Types.ObjectId(input.property.propertyTypeId) } : {}),

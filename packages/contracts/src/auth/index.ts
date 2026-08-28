@@ -54,7 +54,6 @@ export const otpPurposeSchema = z.enum(OTP_PURPOSES);
 export const otpRoleTypeSchema = z.enum(OTP_ROLE_TYPES);
 
 const otpRequestIdentityShape = {
-  phone: normalizedPhoneSchema,
   email: normalizedEmailSchema,
   roleType: otpRoleTypeSchema,
   purpose: otpPurposeSchema

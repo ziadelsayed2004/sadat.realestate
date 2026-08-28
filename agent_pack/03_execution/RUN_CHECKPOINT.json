@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "checkpointAt": "2026-08-27T13:12:43.867Z",
+  "phase": "wave-1-ready",
+  "canonicalScreenCount": 131,
+  "surfaceCounts": {
+    "public": 12,
+    "auth": 19,
+    "seeker": 10,
+    "provider": 24,
+    "admin": 66
+  },
+  "designSourceCoverage": {
+    "localSources": 131,
+    "historicalFigmaExports": 130,
+    "exactFigmaMappings": 129,
+    "documentedSourceExceptions": ["ADM-18", "ADM-54"]
+  },
+  "supplementary": {
+    "isSurface": false,
+    "isScreen": false,
+    "countedInBaseline": false,
+    "provenance": "Historical Auth phone-verification export"
+  },
+  "selectedTaskId": "frontend_100",
+  "selectedTaskStatus": "in_progress",
+  "graphCounts": {
+    "total": 209,
+    "backend": 124,
+    "backendComplete": 123,
+    "frontend": 85,
+    "frontendComplete": 82,
+    "frontendPartial": 2,
+    "frontendInProgress": 1,
+    "blocked": 1
+  },
+  "bootstrap": {
+    "emailOnlyAuth": "implemented-in-source; migration command available; fresh quality verification passed",
+    "mapUrl": "implemented-in-contract-api-provider-wizard-and-public-details",
+    "smtp": "Hostinger production contract documented; password remains external",
+    "cleanup": "completed; see 08_reality_sync/CLEANUP_2026-08-27.json"
+  },
+  "waves": {
+    "wave-1": "ready_for_parallel_public_auth_seeker_execution",
+    "wave-2": "pending_wave-1_reconciliation",
+    "wave-3": "pending_wave-2_reconciliation_and_runs_solo"
+  },
+  "freshVerification": {
+    "status": "passed",
+    "workspace": "16/16",
+    "apiAll": "517/517",
+    "apiUnit": "382/382",
+    "apiRouteMatrix": "107/107",
+    "webVitest": "379/379 across 65 files",
+    "webNodeAuxiliary": "76/76",
+    "typecheck": "passed",
+    "lint": "passed",
+    "openapi": "passed",
+    "postman": "passed",
+    "build": "passed",
+    "agentPackAudit": "passed",
+    "rootTemporaryFiles": 0
+  },
+  "nextAction": "Open the Public, Auth, and Seeker goal roots in parallel. Route shared-contract, API, global-style, router, snapshot, and Agent Pack changes to the Coordinator queue; do not start Provider or Admin until reconciliation checkpoints pass."
+}

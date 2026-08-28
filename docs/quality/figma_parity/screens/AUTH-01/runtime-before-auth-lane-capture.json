@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-01",
+  "phase": "before",
+  "capturedAt": "2026-08-27T16:27:52.082Z",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4353",
+    "nodeId": "6017:16212",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-16212&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "dimensions": {
+      "width": 1577,
+      "height": 944
+    }
+  },
+  "runtime": {
+    "route": "/auth/login?lang=en",
+    "requestedQueueRoute": "/auth/login",
+    "role": "anonymous",
+    "locale": "en",
+    "direction": "ltr",
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "capture": {
+      "path": "docs/quality/figma_parity/screens/AUTH-01/runtime-before-auth-lane.png",
+      "sha256": "c3cdd7f2eeab31a610290ed79082e3626b8f14345ada24c02abb52c2a7558c34"
+    },
+    "beforeHash": "c3cdd7f2eeab31a610290ed79082e3626b8f14345ada24c02abb52c2a7558c34",
+    "afterHash": null,
+    "apiRequests": [],
+    "apiResponses": [],
+    "routeHits": []
+  },
+  "page": {
+    "screenId": "AUTH-01",
+    "state": "idle",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/login?lang=en",
+    "html": {
+      "lang": "en",
+      "dir": "ltr"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 944
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 8,
+      "forms": 1,
+      "buttons": 3,
+      "links": 4,
+      "inputs": 3,
+      "unlabeledControls": 1
+    },
+    "controls": [
+      {
+        "tag": "input",
+        "id": "auth-login-email",
+        "name": "email",
+        "type": "email",
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "email"
+      },
+      {
+        "tag": "input",
+        "id": "auth-login-password",
+        "name": "password",
+        "type": "password",
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "current-password"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "checkbox",
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": null
+      }
+    ],
+    "links": [
+      {
+        "text": "Skip to main content",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "Verify by email",
+        "href": "/auth/verify-email?purpose=login&roleType=seeker"
+      },
+      {
+        "text": "Create an account",
+        "href": "/auth/register"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "Show password",
+        "ariaLabel": "Show password",
+        "disabled": false
+      },
+      {
+        "text": "Forgot password?",
+        "ariaLabel": null,
+        "disabled": true
+      },
+      {
+        "text": "Log in",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  },
+  "comparison": {
+    "diffPath": "docs/quality/figma_parity/screens/AUTH-01/auth-lane-diff-before.png",
+    "visualMetrics": {
+      "schemaVersion": 1,
+      "screenId": "AUTH-01",
+      "phase": "before",
+      "source": {
+        "width": 1577,
+        "height": 944
+      },
+      "runtimeBefore": {
+        "width": 1577,
+        "height": 944
+      },
+      "runtimeAfter": null,
+      "comparedWidth": 1577,
+      "comparedHeight": 944,
+      "comparedPixels": 1488688,
+      "materialDifferencePercent": 2.4825,
+      "antiAliasingOnlyPercent": 3.3823,
+      "threshold": {
+        "materialRgbSumGreaterThan": 24,
+        "antiAliasingRgbSumGreaterThan": 3
+      },
+      "method": "unmasked same-width source/runtime canvas comparison over overlapping document height",
+      "comparedCapture": "RUNTIME BEFORE (CURRENT)",
+      "reviewed": false,
+      "reviewedAt": null
+    }
+  }
+}

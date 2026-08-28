@@ -157,6 +157,7 @@
   },
   "screenSummary": {
     "registryCount": 131,
+    "locallySourcedScreenIds": 131,
     "locallyExportedScreenIds": 130,
     "externalOnlyScreenIds": [
       "ADM-54"

@@ -1,5 +1,16 @@
 # Execution Order
 
+## Active delivery waves
+
+The historical dependency order below remains useful for atomic task selection, but the current screen-delivery order is governed by `PARALLEL_WAVE_PLAN.json` and the prompts in `05_prompts/`.
+
+1. **Coordinator Bootstrap:** complete and verify email-only Seeker/Provider authentication, the Hostinger SMTP contract, safe `mapUrl` persistence/projection, shared quality drift, and the explicit legacy OTP migration. Shared changes are Coordinator-owned.
+2. **Wave 1 (parallel):** Public (`PUB-01`–`PUB-12`), Auth (`AUTH-01`–`AUTH-17` plus aliases), and Seeker (`SEK-01`–`SEK-10`) work on separate roots and write only lane-owned UI, tests, and evidence.
+3. **Wave 2:** Provider (`PRV-01`–`PRV-24`) runs after Wave 1 reconciliation. The supplementary phone-verification export is reconciled as historical Auth evidence and is not counted as a screen.
+4. **Wave 3 (solo):** Admin (`ADM-01`–`ADM-66`) runs only after Provider closes. `ADM-18` and `ADM-54` retain explicit source provenance; no Figma node may be invented.
+
+No screen is closed from a source-only or screenshot-only result. Every closure requires deterministic before/after evidence, visual and interaction review, accessibility checks, and either `REPAIRED_VERIFIED` or `VERIFIED_NO_CHANGE`.
+
 This canonical order is connected by dependencies and enforces backend-first, one-task-at-a-time execution.
 
 ## B0_discovery_foundation
@@ -18,7 +29,7 @@ This canonical order is connected by dependencies and enforces backend-first, on
 
 11. `backend_010` — Identity and Account Models
 12. `backend_011` — Login, Sessions, Refresh, and Logout
-13. `backend_012` — OTP and Phone Verification
+13. `backend_012` — OTP and Email Verification (legacy task key)
 14. `backend_013` — Seeker Registration, Profile, and Preferences
 15. `backend_014` — Provider Types and Registration Application
 16. `backend_015` — Private Provider Documents

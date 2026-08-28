@@ -208,7 +208,7 @@ function ProfileAside({ data, copy }: { readonly data: PublicOrganizationProfile
       <section className="public-developer-profile__contact-card" aria-labelledby="developer-contact-card-title">
         <h2 id="developer-contact-card-title"><ProfileIcon name="phone" />{contactCardTitle}</h2>
         {phone ? <a href={'tel:' + phone}><ProfileIcon name="phone" />{phone}</a> : null}
-        {whatsapp ? <a href={whatsapp}><ProfileIcon name="whatsapp" />{copy.contactWhatsapp}</a> : null}
+        {whatsapp ? <a href={whatsapp}><ProfileIcon name="whatsapp" />{copy.contactWhatsappAvailable}</a> : null}
         {!phone && !whatsapp ? <p>{copy.profileContactUnavailable}</p> : null}
         <a className="public-developer-profile__aside-cta" href="#developer-contact">{copy.sendInquiry}<ProfileIcon name="arrow" /></a>
       </section>
@@ -235,12 +235,11 @@ function ProjectCard({ project, locale, copy }: { readonly project: PublicOrgani
   const description = localizedText(project.description, locale);
   const website = safePublicUrl(project.website);
   const projectUrl = website ?? '/properties?projectId=' + encodeURIComponent(project.id);
-  const values: ReadonlyArray<readonly [string, string | undefined]> = [
-    [copy.projectStatus, localizedText(project.statusLabel, locale)],
+  const projectType = localizedText(project.projectType, locale);
+  const meta: ReadonlyArray<readonly [string, string | undefined]> = [
     [copy.projectUnits, project.unitCount === undefined ? undefined : String(project.unitCount)],
-    [copy.projectArea, localizedText(project.areaLabel, locale)],
-    [copy.projectPrice, localizedText(project.priceLabel, locale)],
-    [copy.projectDelivery, localizedText(project.deliveryLabel, locale)]
+    ['', localizedText(project.areaLabel, locale)],
+    ['', projectType]
   ];
   return (
     <article className="public-developer-profile__project-card">
@@ -253,8 +252,9 @@ function ProjectCard({ project, locale, copy }: { readonly project: PublicOrgani
         <h3>{name}</h3>
         {description ? <p>{description}</p> : null}
         <div className="public-developer-profile__project-meta">
-          {values.slice(1).map(([label, value]) => value ? <span key={label}><strong>{value}</strong><small>{label}</small></span> : null)}
+          {meta.map(([label, value], index) => value ? <span key={`${label}-${index}`}><strong>{value}</strong>{label ? <small>{label}</small> : null}</span> : null)}
         </div>
+        {localizedText(project.deliveryLabel, locale) ? <p className="public-developer-profile__project-delivery"><ProfileIcon name="calendar" />{localizedText(project.deliveryLabel, locale)}</p> : null}
         {localizedText(project.priceLabel, locale) ? <p className="public-developer-profile__project-price">{localizedText(project.priceLabel, locale)}</p> : null}
         <a className="public-developer-profile__project-link" href={projectUrl} rel={website ? 'noreferrer' : undefined}>{copy.viewProject}<ProfileIcon name="arrow" /></a>
       </div>
@@ -265,7 +265,7 @@ function ProjectCard({ project, locale, copy }: { readonly project: PublicOrgani
 function ProjectsSection({ data, locale, copy }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) {
   return (
     <section className="public-developer-profile__section public-developer-profile__projects-section" id="developer-projects" aria-labelledby="public-developer-projects-title">
-      <h2 id="public-developer-projects-title">{copy.profileProjects}</h2>
+      <h2 id="public-developer-projects-title">{copy.projectsSectionTitle}</h2>
       {data.projects.length === 0 ? <p className="public-developer-profile__empty">{copy.noProjects}</p> : <div className="public-developer-profile__project-grid">{data.projects.map(project => <ProjectCard key={project.id} project={project} locale={locale} copy={copy} />)}</div>}
     </section>
   );
@@ -318,15 +318,15 @@ function ContactSection({ data, locale, copy }: { readonly data: PublicOrganizat
   const whatsapp = safePublicUrl(data.whatsappUrl);
   return (
     <section className="public-developer-profile__contact" id="developer-contact" aria-labelledby="developer-contact-title">
-      <h2 id="developer-contact-title">{copy.profileContact} {localizedText(data.name, locale) ?? data.slug}</h2>
+      <h2 id="developer-contact-title">{copy.profileInquiryTitle(localizedText(data.name, locale) ?? data.slug)}</h2>
       <form className="public-developer-profile__inquiry" action="/auth/login" method="get">
         <input type="hidden" name="returnTo" value={'/developers/' + data.slug + '#developer-contact'} />
-        <label>{copy.fieldName}<input name="name" autoComplete="name" required /></label>
-        <label>{copy.fieldPhone}<input name="phone" type="tel" autoComplete="tel" required placeholder="0100xxxxxxxx" /></label>
+        <label><span>{copy.fieldName} <span className="public-developer-profile__required-mark" aria-hidden="true">*</span></span><input name="name" autoComplete="name" required /></label>
+        <label><span>{copy.fieldPhone} <span className="public-developer-profile__required-mark" aria-hidden="true">*</span></span><input name="phone" type="tel" autoComplete="tel" required placeholder="0100xxxxxxxx" /></label>
         <label className="public-developer-profile__inquiry-wide">{copy.fieldEmail}<input name="email" type="email" autoComplete="email" placeholder="example@mail.com" /></label>
         <label>{copy.fieldRequestType}<select name="requestType" defaultValue=""><option value=""> </option><option value="unit">{copy.availableUnits}</option><option value="project">{copy.profileProjects}</option></select></label>
         <label>{copy.fieldPreferredTime}<select name="preferredTime" defaultValue=""><option value=""> </option><option value="morning">09:00 - 12:00</option><option value="evening">16:00 - 20:00</option></select></label>
-        <label className="public-developer-profile__inquiry-wide">{copy.fieldMessage}<textarea name="message" rows={4} required placeholder={copy.formNote} /></label>
+        <label className="public-developer-profile__inquiry-wide">{copy.fieldMessage}<textarea name="message" rows={4} required placeholder={copy.messagePlaceholder} /></label>
         <div className="public-developer-profile__inquiry-actions">
           <button type="submit">{copy.sendInquiry}<ProfileIcon name="arrow" /></button>
           {whatsapp ? <a href={whatsapp} className="public-developer-profile__whatsapp-button"><ProfileIcon name="whatsapp" />{copy.contactWhatsapp}</a> : null}
@@ -344,17 +344,17 @@ function ProfileSuccess({ data, locale, copy }: { readonly data: PublicOrganizat
       <nav className="public-developer-profile__tabs" aria-label={copy.profileOverview}>
         <a className="is-active" href="#developer-overview">{copy.profileOverview}</a>
         <a href="#developer-projects">{copy.profileProjects}</a>
-        <a href="#developer-properties">{copy.availableUnitsTitle}</a>
+        <a href="#developer-properties">{copy.profileProperties}</a>
         <a href="#developer-contact">{copy.profileContact}</a>
       </nav>
       <div className="public-developer-profile__layout">
         <ProfileAside data={data} copy={copy} />
-        <main className="public-developer-profile__main">
+        <div className="public-developer-profile__main">
           <ProfileOverview data={data} locale={locale} copy={copy} />
           <ProjectsSection data={data} locale={locale} copy={copy} />
           <PropertiesSection data={data} locale={locale} copy={copy} />
           <ContactSection data={data} locale={locale} copy={copy} />
-        </main>
+        </div>
       </div>
     </div>
   );

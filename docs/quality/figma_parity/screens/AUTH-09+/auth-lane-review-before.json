@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-09+",
+  "phase": "before",
+  "classification": "PENDING",
+  "source": {
+    "canonicalFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4353",
+    "nodeId": "6017:16630",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-16630&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "screenshot": "docs/quality/figma_parity/screens/AUTH-09+/figma.png"
+  },
+  "interpretation": "AUTH-04 and AUTH-05 canonical phone-verification exports are historical/retired evidence. The active interpretation is email-only passwordless verification. Provider WhatsApp and secondary phone fields remain contact-only business data, never identity or OTP inputs.",
+  "runtime": {
+    "route": "/auth/register/provider/account?providerType=developer_company&lang=en",
+    "locale": "en",
+    "direction": "ltr",
+    "viewport": {
+      "width": 1577,
+      "height": 1140,
+      "devicePixelRatio": 1
+    },
+    "state": "idle",
+    "applicationStatus": null
+  },
+  "artifacts": {
+    "runtime": "docs/quality/figma_parity/screens/AUTH-09+/runtime-before-auth-lane.png",
+    "diff": "docs/quality/figma_parity/screens/AUTH-09+/auth-lane-diff-before.png",
+    "metrics": "docs/quality/figma_parity/screens/AUTH-09+/auth-lane-visual-metrics-before.json",
+    "deterministicState": "docs/quality/figma_parity/screens/AUTH-09+/auth-lane-deterministic-state-before.json",
+    "accessibility": "docs/quality/figma_parity/screens/AUTH-09+/auth-lane-accessibility-before.json",
+    "interactionApi": "docs/quality/figma_parity/screens/AUTH-09+/auth-lane-interaction-api-before.json"
+  },
+  "checks": {
+    "accessibility": {
+      "directionMatchesLocale": true,
+      "singleMain": true,
+      "singleH1": true,
+      "controlsHaveAccessibleNames": false,
+      "noPhoneIdentityControl": false
+    },
+    "interactionApi": {
+      "emailOnlyOtpSend": true,
+      "emailOnlyOtpVerify": true,
+      "otpContainsNoPhoneKey": true,
+      "providerRegistrationContainsNoPhoneOrPassword": true,
+      "providerPatchesContainNoPasswordOrVerificationToken": true,
+      "activeUrlContainsNoPhoneIdentity": true,
+      "observedScreen": true
+    },
+    "activeContract": "email-only identity verification; admin password flow excluded"
+  }
+}

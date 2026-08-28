@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "seedId": "capture-SEK-09-en-after-2026-08-26",
+  "environment": "non-production-browser-fixture",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "screenId": "SEK-09",
+  "source": {
+    "pageId": "6017:4354",
+    "nodeId": "6027:5677",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6027-5677&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4354&starting-point-node-id=6027%3A3579",
+    "screenshot": "docs/quality/figma_parity/screens/SEK-09/figma.png"
+  },
+  "runtime": {
+    "route": "/seeker/profile?tab=personal&lang=en",
+    "requestedQueueRoute": "/seeker/profile?tab=personal",
+    "role": "seeker",
+    "locale": "en",
+    "direction": "ltr",
+    "viewport": {
+      "width": 1551,
+      "height": 862,
+      "deviceScaleFactor": 1
+    }
+  },
+  "authSession": {
+    "roleType": "seeker",
+    "projection": {
+      "accessToken": "capture.header.signature",
+      "tokenType": "Bearer",
+      "expiresInSeconds": 900,
+      "user": {
+        "id": "0123456789abcdef01234567",
+        "roleType": "seeker",
+        "status": "verified"
+      }
+    },
+    "source": "intercepted /api/v1/auth/refresh response"
+  },
+  "api": {
+    "fixtureContract": "real writable API response shapes",
+    "responseRequestIds": [
+      "capture-SEK-09-en"
+    ],
+    "state": null
+  },
+  "phase": "after",
+  "repair": {
+    "repairId": "verified-en-2026-08-27",
+    "expectedEffect": "align personal-profile heading/form density and remove the phone identity projection"
+  },
+  "seedSha256": "4dbd60853a74e9ab5d7c892e61ca396aa8d792ccbc1b46f9bf82a6b4a7408b51"
+}

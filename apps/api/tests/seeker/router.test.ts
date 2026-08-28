@@ -40,13 +40,13 @@ const service: SeekerService = {
   async getProfile() {
     return {
       id: '0123456789abcdef01234567', roleType: 'seeker', status: 'verified',
-      phone: '+201000000000', email: 'seeker@example.com', firstName: 'Salma', lastName: 'Hassan', locale: 'ar'
+      email: 'seeker@example.com', firstName: 'Salma', lastName: 'Hassan', locale: 'ar'
     };
   },
   async updateProfile(_claims, patch) {
     return {
       id: '0123456789abcdef01234567', roleType: 'seeker', status: 'verified',
-      phone: '+201000000000', email: 'seeker@example.com', firstName: patch.firstName ?? 'Salma',
+      email: 'seeker@example.com', firstName: patch.firstName ?? 'Salma',
       lastName: patch.lastName ?? 'Hassan', locale: patch.locale ?? 'ar'
     };
   },
@@ -101,7 +101,7 @@ test('registers and serves only the authenticated seeker projection', async () =
     assert.equal(profile.status, 200);
     const body = await profile.json() as { data?: { id?: string; phone?: string; internalNotes?: unknown } };
     assert.equal(body.data?.id, '0123456789abcdef01234567');
-    assert.equal(body.data?.phone, '+201000000000');
+    assert.equal('phone' in (body.data ?? {}), false);
     assert.equal('internalNotes' in (body.data ?? {}), false);
 
     const updatedProfile = await fetch(`${baseUrl}/api/v1/me`, {

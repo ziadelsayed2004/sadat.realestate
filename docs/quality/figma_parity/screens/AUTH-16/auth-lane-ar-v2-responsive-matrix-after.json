@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-16",
+  "phase": "after",
+  "locale": "ar",
+  "direction": "rtl",
+  "capturedAt": "2026-08-27T20:05:40.747Z",
+  "source": {
+    "canonicalFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4353",
+    "nodeId": "6017:18651",
+    "dimensions": {
+      "width": 1577,
+      "height": 1457
+    }
+  },
+  "runtime": {
+    "baseUrl": "http://127.0.0.1:4180",
+    "requestedRoute": "/provider-application/needs-information",
+    "route": "/provider-application/needs-information?lang=ar"
+  },
+  "devices": [
+    {
+      "device": "desktop",
+      "preset": "Desktop Chrome",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "deviceScaleFactor": 1,
+      "isMobile": false,
+      "hasTouch": false,
+      "route": "/provider-application/needs-information?lang=ar",
+      "screenId": "AUTH-16",
+      "state": "ready",
+      "applicationStatus": "needs_information",
+      "direction": "rtl",
+      "language": "ar",
+      "scroll": {
+        "width": 1280,
+        "height": 1360
+      },
+      "structure": {
+        "headings": 2,
+        "h1": 1,
+        "main": 1,
+        "headers": 2,
+        "sections": 2,
+        "cards": 5,
+        "forms": 0,
+        "buttons": 2,
+        "links": 2,
+        "inputs": 0,
+        "unlabeledControls": 0
+      },
+      "noHorizontalOverflow": true,
+      "screenshot": "docs/quality/figma_parity/screens/AUTH-16/auth-lane-ar-v2-desktop.png",
+      "routeHits": [
+        {
+          "method": "POST",
+          "pathname": "/auth/refresh"
+        },
+        {
+          "method": "GET",
+          "pathname": "/provider/application"
+        }
+      ],
+      "requestBodyKeys": [
+        {
+          "method": "POST",
+          "pathname": "/auth/refresh",
+          "keys": []
+        }
+      ]
+    },
+    {
+      "device": "tablet",
+      "preset": "Galaxy Tab S4",
+      "viewport": {
+        "width": 712,
+        "height": 1138
+      },
+      "deviceScaleFactor": 2.25,
+      "isMobile": true,
+      "hasTouch": true,
+      "route": "/provider-application/needs-information?lang=ar",
+      "screenId": "AUTH-16",
+      "state": "ready",
+      "applicationStatus": "needs_information",
+      "direction": "rtl",
+      "language": "ar",
+      "scroll": {
+        "width": 712,
+        "height": 1321
+      },
+      "structure": {
+        "headings": 2,
+        "h1": 1,
+        "main": 1,
+        "headers": 2,
+        "sections": 2,
+        "cards": 5,
+        "forms": 0,
+        "buttons": 2,
+        "links": 2,
+        "inputs": 0,
+        "unlabeledControls": 0
+      },
+      "noHorizontalOverflow": true,
+      "screenshot": "docs/quality/figma_parity/screens/AUTH-16/auth-lane-ar-v2-tablet.png",
+      "routeHits": [
+        {
+          "method": "POST",
+          "pathname": "/auth/refresh"
+        },
+        {
+          "method": "GET",
+          "pathname": "/provider/application"
+        }
+      ],
+      "requestBodyKeys": [
+        {
+          "method": "POST",
+          "pathname": "/auth/refresh",
+          "keys": []
+        }
+      ]
+    },
+    {
+      "device": "mobile",
+      "preset": "Pixel 5",
+      "viewport": {
+        "width": 393,
+        "height": 727
+      },
+      "deviceScaleFactor": 2.75,
+      "isMobile": true,
+      "hasTouch": true,
+      "route": "/provider-application/needs-information?lang=ar",
+      "screenId": "AUTH-16",
+      "state": "ready",
+      "applicationStatus": "needs_information",
+      "direction": "rtl",
+      "language": "ar",
+      "scroll": {
+        "width": 393,
+        "height": 1502
+      },
+      "structure": {
+        "headings": 2,
+        "h1": 1,
+        "main": 1,
+        "headers": 2,
+        "sections": 2,
+        "cards": 5,
+        "forms": 0,
+        "buttons": 2,
+        "links": 2,
+        "inputs": 0,
+        "unlabeledControls": 0
+      },
+      "noHorizontalOverflow": true,
+      "screenshot": "docs/quality/figma_parity/screens/AUTH-16/auth-lane-ar-v2-mobile.png",
+      "routeHits": [
+        {
+          "method": "POST",
+          "pathname": "/auth/refresh"
+        },
+        {
+          "method": "GET",
+          "pathname": "/provider/application"
+        }
+      ],
+      "requestBodyKeys": [
+        {
+          "method": "POST",
+          "pathname": "/auth/refresh",
+          "keys": []
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "allScreensObserved": true,
+    "allDirectionsMatchLocale": true,
+    "allLanguagesMatchLocale": true,
+    "noHorizontalOverflow": true,
+    "mobileAndTabletUseResponsiveViewport": true,
+    "activeUrlContainsNoPhoneIdentity": true
+  },
+  "interpretation": "Responsive evidence uses the same active email-only identity contract. Historical phone/password fields in the canonical provider export are not reintroduced; provider phone/WhatsApp controls remain contact-only where approved."
+}

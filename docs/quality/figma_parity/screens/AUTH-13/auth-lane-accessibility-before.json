@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-13",
+  "phase": "before",
+  "html": {
+    "lang": "en",
+    "dir": "ltr"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-13",
+    "state": "ready",
+    "applicationStatus": "draft",
+    "providerVariant": null,
+    "route": "/auth/register/provider/review?providerType=developer_company&lang=en",
+    "html": {
+      "lang": "en",
+      "dir": "ltr"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 2326,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 2326
+    },
+    "structure": {
+      "headings": 3,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 3,
+      "cards": 6,
+      "forms": 0,
+      "buttons": 2,
+      "links": 2,
+      "inputs": 0,
+      "unlabeledControls": 0
+    },
+    "controls": [],
+    "links": [
+      {
+        "text": "Skip to main content",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "Back",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "Submit registration application",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  }
+}

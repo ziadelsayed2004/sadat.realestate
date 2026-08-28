@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "seedId": "capture-SEK-01-ar-after-2026-08-26",
+  "environment": "non-production-browser-fixture",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "screenId": "SEK-01",
+  "source": {
+    "pageId": "6017:4354",
+    "nodeId": "6027:3579",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6027-3579&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4354&starting-point-node-id=6027%3A3579",
+    "screenshot": "docs/quality/figma_parity/screens/SEK-01/figma.png"
+  },
+  "runtime": {
+    "route": "/seeker?lang=ar",
+    "requestedQueueRoute": "/seeker",
+    "role": "seeker",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1551,
+      "height": 1033,
+      "deviceScaleFactor": 1
+    }
+  },
+  "authSession": {
+    "roleType": "seeker",
+    "projection": {
+      "accessToken": "capture.header.signature",
+      "tokenType": "Bearer",
+      "expiresInSeconds": 900,
+      "user": {
+        "id": "0123456789abcdef01234567",
+        "roleType": "seeker",
+        "status": "verified"
+      }
+    },
+    "source": "intercepted /api/v1/auth/refresh response"
+  },
+  "api": {
+    "fixtureContract": "real writable API response shapes",
+    "responseRequestIds": [
+      "capture-SEK-01-ar"
+    ],
+    "state": null
+  },
+  "phase": "after",
+  "repair": {
+    "repairId": "seeker-parity-layout-2-2026-08-27",
+    "expectedEffect": "Seeker canonical desktop geometry repair pass 2: no duplicate workspace eyebrow on content frames, overview headings suppressed to match the clone, and screen-specific layout classes applied."
+  },
+  "seedSha256": "76b77b5fe725cc5f09f72f511f6e1458608e77ef60536adc06c796c184a04597"
+}

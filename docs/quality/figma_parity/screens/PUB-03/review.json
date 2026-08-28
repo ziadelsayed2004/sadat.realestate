@@ -164,7 +164,7 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-03/runtime-after.png",
-      "sha256": "ea610fdc91a6e6c92a355820629e3e2ea467bd73a46ec22273ad3a6152d274a5"
+      "sha256": "daf796a26e06c4228c7593a90c59cd3363d9d78611cf2babab24324d3dabceb3"
     }
   },
   "structuredVisualComparison": {
@@ -281,5 +281,13 @@
     "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-03/runtime-after-capture.json"
   },
   "reviewedAt": "2026-08-25T21:27:47.761Z",
-  "repairedAt": "2026-08-25T21:27:47.761Z"
+  "repairedAt": "2026-08-25T21:27:47.761Z",
+  "latestRuntimeVerification": {
+    "source": "runtime-after-capture.json and visual-metrics.json",
+    "phase": "after",
+    "apiResponseStatus": 200,
+    "materialDifferencePercent": 6.6054,
+    "antiAliasingOnlyPercent": 4.8916,
+    "officialClosureEligible": false
+  }
 }

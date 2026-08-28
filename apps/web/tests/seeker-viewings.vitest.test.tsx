@@ -87,7 +87,7 @@ describe('Seeker viewing appointments', () => {
 
     fireEvent.click(screen.getAllByRole('button', { name: 'Reschedule' })[0]!);
     const rescheduleInput = screen.getByLabelText('Viewing time', { selector: 'input' });
-    fireEvent.change(rescheduleInput, { target: { value: '2026-08-27T11:00' } });
+    fireEvent.change(rescheduleInput, { target: { value: '2030-08-27T11:00' } });
     fireEvent.click(screen.getByRole('button', { name: 'Save appointment' }));
     await waitFor(() => expect(actions.reschedule).toHaveBeenCalledWith(requested.id, expect.objectContaining({ expectedVersion: 0, timezone: 'Africa/Cairo' })));
     await waitFor(() => expect(screen.getByTestId(`seeker-viewing-${requested.id}`)).toBeInTheDocument());

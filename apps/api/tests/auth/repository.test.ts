@@ -172,7 +172,6 @@ test('persists only hashed OTP material and enforces resend cooldown by normaliz
   );
   const input = {
     publicId: '123e4567-e89b-42d3-a456-426614174000',
-    phone: '+201000000000',
     email: 'seeker@example.com',
     roleType: 'seeker' as const,
     purpose: 'login' as const,
@@ -185,7 +184,7 @@ test('persists only hashed OTP material and enforces resend cooldown by normaliz
   assert.deepEqual(await repository.createChallenge(input), { kind: 'created' });
   assert.equal(created?.codeHash, 'H'.repeat(43));
   assert.equal('code' in (created ?? {}), false);
-  assert.equal(created?.activeKey, 'seeker:login:+201000000000:seeker@example.com');
+  assert.equal(created?.activeKey, 'seeker:login:seeker@example.com');
 
   state.active = {
     createdAt: new Date('2026-08-13T12:00:30.000Z'),
@@ -206,7 +205,6 @@ test('atomically bounds failed OTP attempts, one-time verification, and grant re
     findOneAndUpdate: () => query(redeemed
       ? {
           _id: new Types.ObjectId(),
-          normalizedPhone: '+201000000000',
           normalizedEmail: 'seeker@example.com',
           roleType: 'seeker',
           purpose: 'registration',
@@ -237,7 +235,6 @@ test('atomically bounds failed OTP attempts, one-time verification, and grant re
     '111111111111111111111111', 'V'.repeat(43), new Date(), new Date(Date.now() + 60_000)
   ), true);
   assert.deepEqual(await repository.findOtpAccount(
-    '+201000000000',
     'seeker@example.com',
     'seeker'
   ), {
@@ -245,7 +242,7 @@ test('atomically bounds failed OTP attempts, one-time verification, and grant re
   });
   redeemed = true;
   assert.deepEqual(await repository.redeemRegistrationGrant('V'.repeat(43), 'seeker', new Date()), {
-    phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'registration'
+    email: 'seeker@example.com', roleType: 'seeker', purpose: 'registration'
   });
   redeemed = false;
   assert.equal(await repository.redeemRegistrationGrant('V'.repeat(43), 'seeker', new Date()), undefined);

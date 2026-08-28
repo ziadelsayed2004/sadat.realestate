@@ -194,7 +194,7 @@ export function SeekerRequests({ locale, session, authClient, apiOrigin, request
   const [attempt, setAttempt] = useState(0);
   const listQuery = useMemo(() => ({
     page,
-    limit: 5,
+    limit: 20,
     ...(statusFilter === undefined ? {} : { status: statusFilter }),
     ...(search.trim() === '' ? {} : { search: search.trim() })
   }), [page, search, statusFilter]);

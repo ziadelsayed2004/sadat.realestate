@@ -9,6 +9,7 @@ export interface PublicPropertyDetailsSource {
   transactionType: string;
   imageUrl?: string;
   locationId?: string;
+  mapUrl?: string;
   locationName?: unknown;
   publicCode?: string;
   viewCount?: number;
@@ -85,6 +86,7 @@ export function publicPropertyDetailsProjection(source: PublicPropertyDetailsSou
     ...(property.layout !== undefined ? { layout: property.layout } : {}),
     ...(property.price !== undefined ? { price: property.price } : {}),
     ...(property.locationName !== undefined ? { locationName: property.locationName } : {}),
+    ...(source.mapUrl ? { mapUrl: source.mapUrl } : {}),
     ...(property.publicCode ? { publicCode: property.publicCode } : {}),
     ...(property.deliveryStatus ? { deliveryStatus: property.deliveryStatus } : {}),
     ...(property.installmentAvailable !== undefined ? { installmentAvailable: property.installmentAvailable } : {})
@@ -102,13 +104,13 @@ function property(row: Row): PublicPropertyDetailsSource | null {
   const rowId = id(row._id); const slug = row.slug; const kind = row.kind; const name = row.name; const transactionType = row.transactionType; const sourceType = row.sourceType; const status = row.status; const active = row.active;
   if (!rowId || typeof slug !== 'string' || typeof kind !== 'string' || name === undefined || typeof transactionType !== 'string' || typeof sourceType !== 'string' || typeof status !== 'string' || typeof active !== 'boolean') return null;
   const projectId = id(row.projectId); const organizationId = id(row.organizationId); const locationId = id(row.locationId);
-  return { id: rowId, slug, kind, name, transactionType, sourceType, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}), ...(locationId ? { locationId } : {}), ...(typeof row.publicCode === 'string' ? { publicCode: row.publicCode } : {}), ...(typeof row.viewCount === 'number' ? { viewCount: row.viewCount } : {}), ...(typeof row.deliveryStatus === 'string' ? { deliveryStatus: row.deliveryStatus } : {}), ...(Array.isArray(row.paymentPlans) ? { installmentAvailable: row.paymentPlans.length > 0 } : {}), ...(organizationId ? { organizationId } : {}), ...(projectId ? { projectId } : {}), ...(row.description !== undefined ? { description: row.description } : {}), ...(row.area !== undefined ? { area: row.area } : {}), ...(row.layout !== undefined ? { layout: row.layout } : {}), ...(row.price !== undefined ? { price: row.price } : {}), status, active, media: [], features: [], services: [], relatedProperties: [] };
+  return { id: rowId, slug, kind, name, transactionType, sourceType, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}), ...(locationId ? { locationId } : {}), ...(typeof row.mapUrl === 'string' ? { mapUrl: row.mapUrl } : {}), ...(typeof row.publicCode === 'string' ? { publicCode: row.publicCode } : {}), ...(typeof row.viewCount === 'number' ? { viewCount: row.viewCount } : {}), ...(typeof row.deliveryStatus === 'string' ? { deliveryStatus: row.deliveryStatus } : {}), ...(Array.isArray(row.paymentPlans) ? { installmentAvailable: row.paymentPlans.length > 0 } : {}), ...(organizationId ? { organizationId } : {}), ...(projectId ? { projectId } : {}), ...(row.description !== undefined ? { description: row.description } : {}), ...(row.area !== undefined ? { area: row.area } : {}), ...(row.layout !== undefined ? { layout: row.layout } : {}), ...(row.price !== undefined ? { price: row.price } : {}), status, active, media: [], features: [], services: [], relatedProperties: [] };
 }
 
 export function createMongoosePublicPropertyDetailsRepository(connection: Connection): PublicPropertyDetailsRepository {
   return { async findBySlug(slug) {
     const properties = connection.collection('properties');
-    const row = await properties.findOne({ slug, status: 'published', active: true }, { projection: { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, sourceType: 1, organizationId: 1, projectId: 1, locationId: 1, publicCode: 1, viewCount: 1, deliveryStatus: 1, paymentPlans: 1, featureIds:1, serviceIds:1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 } });
+    const row = await properties.findOne({ slug, status: 'published', active: true }, { projection: { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, sourceType: 1, organizationId: 1, projectId: 1, locationId: 1, mapUrl: 1, publicCode: 1, viewCount: 1, deliveryStatus: 1, paymentPlans: 1, featureIds:1, serviceIds:1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 } });
     const base = property(row as Row | null ?? {}); if (!base) return null;
     const project = base.projectId ? await connection.collection('projects').findOne({ _id: new Types.ObjectId(base.projectId), status: 'published' }, { projection: { _id: 1, slug: 1, name: 1, description: 1, status: 1 } }) : null;
     const location = base.locationId ? await connection.collection('locations').findOne({ _id: new Types.ObjectId(base.locationId), active: true }, { projection: { name: 1, active: 1 } }) : null;

@@ -136,13 +136,12 @@ test('logs in an Admin with strict input, a success envelope, and a secure HttpO
   });
 });
 
-test('sends and verifies strict phone-and-email-bound OTP challenges for seeker/provider flows', async () => {
+test('sends and verifies strict email-bound OTP challenges for seeker/provider flows', async () => {
   await withAuthServer(async (baseUrl) => {
     const sent = await fetch(`${baseUrl}/api/v1/auth/otp/send`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Request-Id': 'otp-send-api' },
       body: JSON.stringify({
-        phone: '+20 100 000 0000',
         email: 'seeker@example.com',
         roleType: 'seeker',
         purpose: 'login'
@@ -159,7 +158,7 @@ test('sends and verifies strict phone-and-email-bound OTP challenges for seeker/
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
+        email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
       })
     });
     assert.equal(verified.status, 200);
@@ -173,7 +172,7 @@ test('sends and verifies strict phone-and-email-bound OTP challenges for seeker/
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        phone: '+201000000000', email: 'provider@example.com', roleType: 'provider', purpose: 'registration', challengeId, code: '000000'
+        email: 'provider@example.com', roleType: 'provider', purpose: 'registration', challengeId, code: '000000'
       })
     });
     assert.equal(registration.status, 200);
@@ -184,12 +183,12 @@ test('sends and verifies strict phone-and-email-bound OTP challenges for seeker/
   });
 });
 
-test('rejects Admin OTP, loose payloads, malformed codes, and provider failures safely', async () => {
+test('rejects Admin OTP, phone-bound payloads, malformed codes, and provider failures safely', async () => {
   await withAuthServer(async (baseUrl) => {
     for (const body of [
-      { phone: '+201000000000', email: 'admin@example.com', roleType: 'admin', purpose: 'login' },
+      { email: 'admin@example.com', roleType: 'admin', purpose: 'login' },
       { phone: '01000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login' },
-      { phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', password: 'unsafe' }
+      { email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', password: 'unsafe' }
     ]) {
       const response = await fetch(`${baseUrl}/api/v1/auth/otp/send`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
@@ -199,7 +198,7 @@ test('rejects Admin OTP, loose payloads, malformed codes, and provider failures 
     const invalid = await fetch(`${baseUrl}/api/v1/auth/otp/verify`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '111111'
+        email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '111111'
       })
     });
     assert.equal(invalid.status, 401);

@@ -193,7 +193,7 @@ export function SeekerOverview({ locale, session, authClient, apiOrigin, initial
   }, [attempt, initialData, sessionRole, source]);
 
   return (
-    <section className="seeker-dashboard" data-screen-id="SEK-01" data-route="/seeker">
+    <section className="seeker-dashboard seeker-overview" data-screen-id="SEK-01" data-route="/seeker">
       <SeekerNavigation locale={locale} activePath={path} />
       <div className="seeker-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}

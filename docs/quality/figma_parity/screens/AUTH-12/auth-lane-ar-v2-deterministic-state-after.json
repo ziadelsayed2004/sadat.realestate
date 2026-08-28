@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "seedId": "auth-lane-AUTH-12-ar-after-2026-08-27",
+  "environment": "non-production-browser-fixture",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "screenId": "AUTH-12",
+  "source": {
+    "pageId": "6017:4353",
+    "nodeId": "6017:17706",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-17706&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "screenshot": "docs/quality/figma_parity/screens/AUTH-12/figma.png"
+  },
+  "runtime": {
+    "route": "/auth/register/provider/account?providerType=developer_company&step=documents&lang=ar",
+    "requestedQueueRoute": "/auth/register/provider/documents",
+    "role": "anonymous",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1577,
+      "height": 2094
+    }
+  },
+  "authSession": null,
+  "api": {
+    "fixtureContract": "real writable API response shapes",
+    "state": {
+      "id": "abcdef0123456789abcdef01",
+      "providerType": "developer_company",
+      "status": "draft",
+      "version": 0,
+      "requirementVersion": "2026-08-13.1",
+      "email": "capture@example.com",
+      "requirementsSnapshot": {
+        "version": "2026-08-13.1",
+        "providerType": "developer_company",
+        "requirements": [
+          {
+            "key": "commercial_registration",
+            "labelKey": "provider.documents.commercialRegistration",
+            "classification": "required",
+            "applies": true
+          },
+          {
+            "key": "tax_card",
+            "labelKey": "provider.documents.taxCard",
+            "classification": "required",
+            "applies": true
+          },
+          {
+            "key": "authorized_representative_id_front",
+            "labelKey": "provider.documents.authorizedRepresentativeIdFront",
+            "classification": "required",
+            "applies": true
+          },
+          {
+            "key": "authorized_representative_id_back",
+            "labelKey": "provider.documents.authorizedRepresentativeIdBack",
+            "classification": "required",
+            "applies": true
+          },
+          {
+            "key": "company_profile",
+            "labelKey": "provider.documents.companyProfile",
+            "classification": "optional",
+            "applies": true
+          },
+          {
+            "key": "developer_license",
+            "labelKey": "provider.documents.developerLicense",
+            "classification": "optional",
+            "applies": true
+          },
+          {
+            "key": "additional_supporting_document",
+            "labelKey": "provider.documents.additionalSupportingDocument",
+            "classification": "optional",
+            "applies": true
+          }
+        ]
+      },
+      "missingFields": [
+        "accountOwnerFullName",
+        "displayName",
+        "primaryLocationId",
+        "serviceAreaIds",
+        "preferredLocale",
+        "termsAcceptedAt",
+        "privacyAcceptedAt",
+        "legalCompanyName",
+        "brandName",
+        "headOfficeAddress",
+        "commercialRegistrationNumber",
+        "taxRegistrationNumber",
+        "authorizedRepresentativeFullName",
+        "authorizedRepresentativeTitle"
+      ],
+      "missingDocuments": [
+        "commercial_registration",
+        "tax_card",
+        "authorized_representative_id_front",
+        "authorized_representative_id_back"
+      ],
+      "availableActions": [
+        "edit_company",
+        "submit",
+        "view_status"
+      ],
+      "createdAt": "2026-08-27T08:00:00.000Z",
+      "updatedAt": "2026-08-27T09:00:00.000Z"
+    }
+  },
+  "phase": "after",
+  "hashes": {
+    "canonical": "c616fe2da55b3f2b3f8607056413ee0b02e47543a19c99fc07bad00d43cd593e",
+    "before": "a3e59068a0b847e3d8134981bd9302c688295df9578d3b7b3f739050df756017",
+    "after": "a3e59068a0b847e3d8134981bd9302c688295df9578d3b7b3f739050df756017"
+  }
+}

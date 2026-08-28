@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { adCalendarStatusSchema, adQuoteLineItemSchema, adRequestStatusSchema } from '../ads/index.js';
-import { authSessionDataSchema, normalizedPhoneSchema } from '../auth/index.js';
+import { authSessionDataSchema, normalizedEmailSchema, normalizedPhoneSchema } from '../auth/index.js';
 import { commissionPolicyKindSchema, commissionResolutionSourceSchema } from '../commissions/index.js';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
 
@@ -154,11 +154,10 @@ export const providerApplicationDataSchema = z.object({
   providerType: providerTypeSchema,
   status: providerApplicationStateSchema,
   version: providerApplicationVersionSchema,
-  phone: normalizedPhoneSchema,
   requirementVersion: z.string().regex(/^\d{4}-\d{2}-\d{2}\.\d+$/),
   accountOwnerFullName: safeTextSchema.max(160).optional(),
   displayName: safeTextSchema.max(160).optional(),
-  email: emailSchema.optional(),
+  email: normalizedEmailSchema,
   primaryLocationId: objectIdSchema.optional(),
   serviceAreaIds: z.array(objectIdSchema).max(50).optional(),
   preferredLocale: providerLocaleSchema.optional(),

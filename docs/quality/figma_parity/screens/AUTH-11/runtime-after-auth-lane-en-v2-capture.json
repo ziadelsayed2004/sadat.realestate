@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-11",
+  "phase": "after",
+  "capturedAt": "2026-08-27T17:04:04.885Z",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4353",
+    "nodeId": "6017:17441",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-17441&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "dimensions": {
+      "width": 1577,
+      "height": 1611
+    }
+  },
+  "runtime": {
+    "route": "/auth/register/provider/account?providerType=developer_company&step=organization&lang=en",
+    "requestedQueueRoute": "/auth/register/provider/company",
+    "role": "anonymous",
+    "locale": "en",
+    "direction": "ltr",
+    "viewport": {
+      "width": 1577,
+      "height": 1611,
+      "devicePixelRatio": 1
+    },
+    "capture": {
+      "path": "docs/quality/figma_parity/screens/AUTH-11/runtime-after-auth-lane-en-v2.png",
+      "sha256": "996b6c5caea67fe6e27f0dfc935cf3e239103786b7483f614b5a4df328f9a4ed"
+    },
+    "beforeHash": "996b6c5caea67fe6e27f0dfc935cf3e239103786b7483f614b5a4df328f9a4ed",
+    "afterHash": "996b6c5caea67fe6e27f0dfc935cf3e239103786b7483f614b5a4df328f9a4ed",
+    "apiRequests": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4180/api/v1/provider/application"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4180/api/v1/provider/application",
+        "status": 200
+      }
+    ],
+    "routeHits": [
+      {
+        "method": "GET",
+        "pathname": "/provider/application"
+      }
+    ]
+  },
+  "page": {
+    "screenId": "AUTH-11",
+    "state": "idle",
+    "applicationStatus": null,
+    "providerVariant": "company",
+    "route": "/auth/register/provider/account?providerType=developer_company&step=organization&lang=en",
+    "html": {
+      "lang": "en",
+      "dir": "ltr"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 1611,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 2076
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 5,
+      "forms": 1,
+      "buttons": 3,
+      "links": 2,
+      "inputs": 8,
+      "unlabeledControls": 0
+    },
+    "controls": [
+      {
+        "tag": "input",
+        "id": "provider-company-legal-name",
+        "name": "legalCompanyName",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-company-brand-name",
+        "name": "brandName",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-company-address",
+        "name": "headOfficeAddress",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-organization-commercial-registration",
+        "name": "commercialRegistrationNumber",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-organization-tax-registration",
+        "name": "taxRegistrationNumber",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-organization-representative",
+        "name": "authorizedRepresentativeFullName",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-organization-representative-title",
+        "name": "authorizedRepresentativeTitle",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "select",
+        "id": "provider-organization-authority",
+        "name": "accountOwnerHasRegisteredAuthority",
+        "type": null,
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": null
+      }
+    ],
+    "links": [
+      {
+        "text": "Skip to main content",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "Save draft",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "Save and continue",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "Back",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  },
+  "comparison": {
+    "diffPath": "docs/quality/figma_parity/screens/AUTH-11/auth-lane-en-v2-diff-after.png",
+    "visualMetrics": {
+      "schemaVersion": 1,
+      "screenId": "AUTH-11",
+      "phase": "after",
+      "source": {
+        "width": 1577,
+        "height": 1611
+      },
+      "runtimeBefore": {
+        "width": 1577,
+        "height": 2076
+      },
+      "runtimeAfter": {
+        "width": 1577,
+        "height": 2076
+      },
+      "comparedWidth": 1577,
+      "comparedHeight": 1611,
+      "comparedPixels": 2540547,
+      "materialDifferencePercent": 21.1764,
+      "antiAliasingOnlyPercent": 2.6622,
+      "threshold": {
+        "materialRgbSumGreaterThan": 24,
+        "antiAliasingRgbSumGreaterThan": 3
+      },
+      "method": "unmasked same-width source/runtime canvas comparison over overlapping document height",
+      "comparedCapture": "RUNTIME AFTER (REPAIRED)",
+      "reviewed": false,
+      "reviewedAt": null
+    }
+  }
+}

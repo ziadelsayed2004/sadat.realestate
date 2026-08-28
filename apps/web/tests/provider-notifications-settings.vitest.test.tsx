@@ -37,7 +37,6 @@ const notifications: NotificationListData = notificationListDataSchema.parse({ i
 const settings: ProviderSettingsData = providerSettingsDataSchema.parse({
   version: 3,
   email: 'provider@example.test',
-  phone: '+2010998765432',
   whatsappNumber: '+2010998765433',
   officeAddress: '12 Nile Street',
   website: 'https://provider.example.test',

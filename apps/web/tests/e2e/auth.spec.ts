@@ -32,9 +32,9 @@ async function routeAuthApi(page: import('@playwright/test').Page) {
   });
   await page.route('**/api/v1/auth/otp/send', async route => {
     expect(route.request().method()).toBe('POST');
-    const body = route.request().postDataJSON() as { phone?: string; email?: string; roleType?: string; purpose?: string };
+    const body = route.request().postDataJSON() as { email?: string; roleType?: string; purpose?: string };
     expect(body).toEqual({
-      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'registration'
+      email: 'seeker@example.com', roleType: 'seeker', purpose: 'registration'
     });
     await route.fulfill({
       status: 200,
@@ -47,9 +47,8 @@ async function routeAuthApi(page: import('@playwright/test').Page) {
   });
   await page.route('**/api/v1/auth/otp/verify', async route => {
     expect(route.request().method()).toBe('POST');
-    const body = route.request().postDataJSON() as { phone?: string; email?: string; roleType?: string; purpose?: string; challengeId?: string; code?: string };
+    const body = route.request().postDataJSON() as { email?: string; roleType?: string; purpose?: string; challengeId?: string; code?: string };
     expect(body).toEqual({
-      phone: '+201000000000',
       email: 'seeker@example.com',
       roleType: 'seeker',
       purpose: 'registration',
@@ -70,7 +69,7 @@ async function routeAuthApi(page: import('@playwright/test').Page) {
 test('login screen renders approved locale, direction, responsive shell, and safe navigation', async ({ page }) => {
   const locale = localeForProject();
   await routeAuthApi(page);
-  const response = await page.goto(`/auth/login?lang=${encodeURIComponent(locale)}&returnTo=${encodeURIComponent('/auth/verify-phone?purpose=registration')}`);
+  const response = await page.goto(`/auth/login?lang=${encodeURIComponent(locale)}&returnTo=${encodeURIComponent('/auth/verify-email?purpose=registration')}`);
 
   expect(response?.ok()).toBeTruthy();
   await expect(page.locator('html')).toHaveAttribute('lang', locale);
@@ -84,19 +83,17 @@ test('login screen renders approved locale, direction, responsive shell, and saf
   await page.locator('#auth-login-email').fill('admin@example.com');
   await page.locator('#auth-login-password').fill('secret');
   await page.locator('[data-screen-id="AUTH-01"] button[type="submit"]').click();
-  await expect(page).toHaveURL(/\/auth\/verify-phone\?purpose=registration$/);
+  await expect(page).toHaveURL(/\/auth\/verify-email\?purpose=registration$/);
   await expect(page.locator('[data-screen-id="AUTH-04"]')).toBeVisible();
   await expect(page.locator('body')).not.toContainText('header.payload.signature');
 });
 
-test('phone verification sends, cools down, focuses digits, and verifies without exposing authority', async ({ page }) => {
+test('email verification sends, cools down, focuses digits, and verifies without exposing authority', async ({ page }) => {
   const locale = localeForProject();
   await routeAuthApi(page);
-  await page.goto(`/auth/verify-phone?lang=${encodeURIComponent(locale)}&purpose=registration&roleType=seeker`);
+  await page.goto(`/auth/verify-email?lang=${encodeURIComponent(locale)}&purpose=registration&roleType=seeker`);
 
   await page.locator('#auth-otp-email').fill('seeker@example.com');
-  const phone = page.locator('#auth-phone');
-  await phone.fill('+20 100 000 0000');
   await page.locator('[data-screen-id="AUTH-04"] button[type="submit"]').click();
   await expect(page.locator('[data-screen-id="AUTH-05"]')).toBeVisible();
   await expect(page.locator('.auth-otp__digit').first()).toBeFocused();
@@ -113,15 +110,31 @@ test('phone verification sends, cools down, focuses digits, and verifies without
   await expect(page.locator('body')).not.toContainText('verificationToken');
 });
 
+test('legacy phone verification alias redirects in the browser without preserving phone identity', async ({ page }) => {
+  const locale = localeForProject();
+  await page.goto(`/auth/verify-phone?lang=${encodeURIComponent(locale)}&purpose=registration&roleType=seeker&phone=%2B201000000000`);
+  await page.waitForURL(/\/auth\/verify-email\?/u);
+
+  const redirectedUrl = new URL(page.url());
+  expect(redirectedUrl.pathname).toBe('/auth/verify-email');
+  expect(redirectedUrl.searchParams.get('lang')).toBe(locale);
+  expect(redirectedUrl.searchParams.get('purpose')).toBe('registration');
+  expect(redirectedUrl.searchParams.get('roleType')).toBe('seeker');
+  await expect(page.locator('[data-screen-id="AUTH-04"]')).toBeVisible();
+  await expect(page.locator('#auth-otp-email')).toBeVisible();
+  await expect(page.locator('#auth-phone')).toHaveCount(0);
+  await expect(page.url()).not.toContain('phone');
+  await expect(page.locator('body')).not.toContainText('+201000000000');
+});
+
 test('auth controls expose keyboard focus and accessible labels', async ({ page }) => {
   const locale = localeForProject();
   await routeAuthApi(page);
-  await page.goto(`/auth/verify-phone?lang=${encodeURIComponent(locale)}&purpose=registration&roleType=seeker`);
+  await page.goto(`/auth/verify-email?lang=${encodeURIComponent(locale)}&purpose=registration&roleType=seeker`);
 
   await page.keyboard.press('Tab');
   await expect(page.locator('.a11y-skip-link')).toBeFocused();
   await expect(page.locator('main#main-content')).toBeVisible();
-  await expect(page.locator('#auth-phone')).toHaveAttribute('autocomplete', 'tel');
   await expect(page.locator('#auth-otp-email')).toHaveAttribute('autocomplete', 'email');
   await expect(page.locator('#auth-role-type')).toHaveAttribute('name', 'roleType');
   await expect(page.locator('.auth-card__prompt a')).toHaveAttribute('href', '/auth/login');
@@ -133,9 +146,8 @@ test('auth login and OTP approved states have responsive visual baselines', asyn
   await page.goto(`/auth/login?lang=${encodeURIComponent(locale)}`);
   await expect(page).toHaveScreenshot(`auth-login-${locale}.png`, { fullPage: true });
 
-  await page.goto(`/auth/verify-phone?lang=${encodeURIComponent(locale)}&purpose=registration&roleType=seeker`);
+  await page.goto(`/auth/verify-email?lang=${encodeURIComponent(locale)}&purpose=registration&roleType=seeker`);
   await page.locator('#auth-otp-email').fill('seeker@example.com');
-  await page.locator('#auth-phone').fill('+20 100 000 0000');
   await page.locator('[data-screen-id="AUTH-04"] button[type="submit"]').click();
   await expect(page.locator('[data-screen-id="AUTH-05"]')).toBeVisible();
   await page.locator('.auth-otp__digit').first().blur();

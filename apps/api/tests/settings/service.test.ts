@@ -23,7 +23,6 @@ const providerClaims: AccessTokenClaims = {
 const providerSettings: ProviderSettingsData = {
   version: 0,
   email: 'provider@example.test',
-  phone: '+2010998765432',
   availableActions: ['update_email', 'update_contact']
 };
 

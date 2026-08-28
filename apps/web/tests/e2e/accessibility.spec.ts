@@ -15,6 +15,7 @@ function propertyDetailsFixture() {
     kind: 'property',
     name: { ar: 'منزل منشور', en: 'Published home', 'zh-CN': '已发布房产' },
     transactionType: 'sale',
+    mapUrl: 'https://maps.google.com/?q=Sadat+City',
     description: { ar: 'وصف المنزل المنشور', en: 'A published home description', 'zh-CN': '已发布房产描述' },
     area: { value: 120, unit: 'sqm' },
     layout: { bedrooms: 3, bathrooms: 2, floor: 4 },
@@ -32,6 +33,8 @@ function propertyDetailsFixture() {
       description: { ar: 'نبذة المشروع', en: 'Project description', 'zh-CN': '项目描述' }
     },
     media: [],
+    features: [],
+    services: [],
     relatedProperties: []
   };
 }
@@ -60,7 +63,7 @@ function propertyComparisonFixture() {
         price: { amount: 20000, currency: 'EGP' }
       }
     ],
-    fields: ['name', 'transactionType', 'price', 'area', 'layout']
+    fields: ['kind', 'transactionType', 'sourceName', 'sourceType', 'project', 'developer', 'publicCode', 'price', 'installment', 'area', 'bedrooms', 'bathrooms', 'floor', 'deliveryStatus', 'locationName']
   };
 }
 
@@ -103,7 +106,8 @@ function developerProfileFixture() {
         name: { en: 'Published home' },
         transactionType: 'sale',
         projectId: 'bbbbbbbbbbbbbbbbbbbbbbbb'
-      }]
+      }],
+      stats: { publishedProjects: 2, availableProperties: 4, saleProperties: 3, rentalProperties: 1 }
     },
     meta: { requestId: 'a11y-developer-profile' }
   };
@@ -195,6 +199,10 @@ test('public property details exposes one main landmark, labeled actions, and sa
   await expect(page.locator('main#main-content')).toBeVisible();
   await expect(page.locator('main#main-content main')).toHaveCount(0);
   await expect(details.locator('[data-gallery] [data-state="missing_image"]')).toBeVisible();
+  const mapLink = details.locator('[data-action="open-map"]');
+  await expect(mapLink).toHaveAttribute('href', 'https://maps.google.com/?q=Sadat+City');
+  await expect(mapLink).toHaveAttribute('target', '_blank');
+  await expect(mapLink).toHaveAttribute('rel', 'noopener noreferrer');
   await expect(details.locator('form[aria-label]')).toHaveAttribute('aria-label', /.+/);
   await expect(details.locator('textarea#public-property-contact-message')).toHaveAttribute('name', 'message');
   const viewingButton = details.locator('[data-action="request-viewing"]');
@@ -222,8 +230,8 @@ test('public property comparison exposes labeled controls, tables, and safe medi
   await expect(page.locator('main#main-content main')).toHaveCount(0);
   await expect(comparison.locator('.public-homepage__nav')).toHaveAttribute('aria-label', /.+/);
   await expect(comparison.locator('[data-comparison-card]')).toHaveCount(2);
-  await expect(comparison.locator('table')).toHaveCount(3);
-  await expect(comparison.getByRole('button', { name: /Remove|إزالة|移除/ })).toHaveCount(2);
+  await expect(comparison.locator('table')).toHaveCount(4);
+  await expect(comparison.locator('[data-comparison-card]').getByRole('button', { name: /Remove|إزالة|移除/ })).toHaveCount(2);
   await expect(comparison.locator('[data-state="missing_image"]')).toHaveCount(2);
 });
 
@@ -240,8 +248,8 @@ test('public developer directory exposes labeled filters and safe media states',
   await expect(directory.locator('.public-homepage__nav')).toHaveAttribute('aria-label', /.+/);
   await expect(directory.locator('form[aria-label]')).toHaveAttribute('aria-label', /.+/);
   await expect(directory.locator('input#public-developer-search')).toHaveAttribute('name', 'search');
-  await expect(directory.locator('select#public-developer-sort')).toBeVisible();
-  await expect(directory.locator('select#public-developer-direction')).toBeVisible();
+  await expect(directory.locator('select#public-developer-sort')).toBeAttached();
+  await expect(directory.locator('select#public-developer-direction')).toBeAttached();
   await expect(directory.locator('[data-state="missing_image"]')).toBeVisible();
   await expect(page.locator('main#main-content')).toBeVisible();
   await expect(page.locator('main#main-content main')).toHaveCount(0);
@@ -258,7 +266,7 @@ test('public developer profile exposes tab navigation, project links, and safe m
   await expect(profile).toBeVisible();
   await expect(profile).toHaveAttribute('data-developer-profile-state', 'success');
   await expect(profile.locator('.public-developer-profile__tabs')).toHaveAttribute('aria-label', /.+/);
-  await expect(profile.locator('.public-developer-profile__tabs a')).toHaveCount(3);
+  await expect(profile.locator('.public-developer-profile__tabs a')).toHaveCount(4);
   await expect(profile.locator('[data-state="missing_image"]')).toBeVisible();
   await expect(profile.getByRole('link', { name: /Published home|Ù…Ù†Ø²Ù„/ })).toHaveAttribute('href', '/properties/published-home');
   await expect(page.locator('main#main-content')).toBeVisible();

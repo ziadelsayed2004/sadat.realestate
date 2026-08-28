@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-10",
+  "phase": "after",
+  "html": {
+    "lang": "en",
+    "dir": "ltr"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-10",
+    "state": "idle",
+    "applicationStatus": null,
+    "providerVariant": "business",
+    "route": "/auth/register/provider/account?providerType=brokerage_office&step=organization&lang=en",
+    "html": {
+      "lang": "en",
+      "dir": "ltr"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 1960,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 2076
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 5,
+      "forms": 1,
+      "buttons": 3,
+      "links": 2,
+      "inputs": 8,
+      "unlabeledControls": 0
+    },
+    "controls": [
+      {
+        "tag": "input",
+        "id": "provider-business-legal-name",
+        "name": "legalBusinessName",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-business-trade-name",
+        "name": "tradeName",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-business-address",
+        "name": "businessAddress",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-organization-commercial-registration",
+        "name": "commercialRegistrationNumber",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-organization-tax-registration",
+        "name": "taxRegistrationNumber",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-organization-representative",
+        "name": "authorizedRepresentativeFullName",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-organization-representative-title",
+        "name": "authorizedRepresentativeTitle",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "select",
+        "id": "provider-organization-authority",
+        "name": "accountOwnerHasRegisteredAuthority",
+        "type": null,
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": null
+      }
+    ],
+    "links": [
+      {
+        "text": "Skip to main content",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "Save draft",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "Save and continue",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "Back",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  }
+}

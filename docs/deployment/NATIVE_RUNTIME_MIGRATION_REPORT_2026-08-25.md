@@ -28,8 +28,8 @@ Open:
 Disposable Local identities:
 
 - Super Admin: `admin.demo@example.invalid` / `LocalPreview-Admin-Only-2026!`
-- Provider: `provider.demo@example.invalid` / `+201000000001`; request its OTP and read it in the Local inbox.
-- Seeker: register any unique E.164 test phone with an `.invalid` email, then read the OTP in the Local inbox.
+- Provider: `provider.demo@example.invalid`; request its email OTP and read it in the Local inbox.
+- Seeker: register with a unique `.invalid` email, then read the email OTP in the Local inbox.
 
 These identities are synthetic Local data. They are not included in the Production environment and must never be copied to a VPS.
 

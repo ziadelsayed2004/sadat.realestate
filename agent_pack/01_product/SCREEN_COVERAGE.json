@@ -485,7 +485,7 @@
   {
     "id": "AUTH-04",
     "surface": "auth",
-    "englishName": "Phone Verification — OTP",
+    "englishName": "Email Verification — OTP",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/17KO1GaXuTSpVg1YouOfUgcTgJ4j3N8Ax",
     "deviceScope": [
@@ -502,7 +502,7 @@
       "en",
       "zh-CN"
     ],
-    "route": "/auth/verify-phone",
+    "route": "/auth/verify-email",
     "frontendTaskId": "frontend_020",
     "backendTaskIds": [
       "backend_011",
@@ -518,7 +518,7 @@
   {
     "id": "AUTH-05",
     "surface": "auth",
-    "englishName": "Phone Verification — OTP",
+    "englishName": "Email Verification — OTP",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1zWpe-X_sOYwJe8WS9T4a18p9sZAfG5Kj",
     "deviceScope": [
@@ -535,7 +535,7 @@
       "en",
       "zh-CN"
     ],
-    "route": "/auth/verify-phone",
+    "route": "/auth/verify-email",
     "frontendTaskId": "frontend_020",
     "backendTaskIds": [
       "backend_011",

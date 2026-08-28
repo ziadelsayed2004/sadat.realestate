@@ -38,7 +38,7 @@ test('provider type selection supports keyboard choice and preserves only the se
   await expect(page.getByRole('button', { name: /continue|متابعة|继续/iu })).toBeEnabled();
 
   await Promise.all([
-    page.waitForURL(/\/auth\/verify-phone\?purpose=registration&roleType=provider&lang=.*&providerType=developer_company/u),
+    page.waitForURL(/\/auth\/verify-email\?purpose=registration&roleType=provider&lang=.*&providerType=developer_company/u),
     page.getByRole('button', { name: /continue|متابعة|继续/iu }).click()
   ]);
   expect(new URL(page.url()).searchParams.get('providerType')).toBe('developer_company');

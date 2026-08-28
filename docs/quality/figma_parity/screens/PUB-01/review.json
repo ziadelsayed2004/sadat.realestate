@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "screenId": "PUB-01",
   "classification": "PARTIAL",
-  "classificationReason": "The canonical daylight Sadat City aerial/mosque hero and eight distinct category icon exports are absent from approved repository assets and cached extracted assets. Reconstructing them from figma.png would create prohibited screenshot-only content.",
+  "classificationReason": "The canonical Sadat City hero, category illustrations, and the reviewed secondary Public content exports are available as approved local Figma assets and are wired into the deterministic fixture. The screen remains PARTIAL because material differences remain in rendered geometry, typography, image framing, and other details; official closure still requires zero material differences or reviewed anti-alias-only differences.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",
@@ -169,7 +169,7 @@
     "deterministicState": {
       "path": "docs/quality/figma_parity/screens/PUB-01/deterministic-state.json",
       "seedId": "fresh-audit-public-home-ar-v1",
-      "responseSha256": "2b9d567e2d78a7902b7d17284f00d7e4f24cda62088428635608a329f9b24a97"
+        "responseSha256": "9ad49c1e5494a9af5a5a0fd62a1c8bac424dc2ee1908b1abb37b45f6bf8ee20e"
     },
     "response": {
       "status": 200,
@@ -178,13 +178,13 @@
     "apiRequests": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/home"
+        "url": "http://127.0.0.1:4175/api/v1/public/home"
       }
     ],
     "apiResponses": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/home",
+        "url": "http://127.0.0.1:4175/api/v1/public/home",
         "status": 200
       }
     ],
@@ -194,7 +194,7 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-01/runtime-after.png",
-      "sha256": "edb23e48f56a2587678201ff0ae8687f1c2b9b92d3aa39d3b87cf8474ae30e8d"
+      "sha256": "3f92c0f3477e5d126a94e46e5ef49825f1e192df4d312354e4b7a4825263c7e4"
     }
   },
   "structuredVisualComparison": {
@@ -210,12 +210,13 @@
       "height": 5378
     },
     "exactMajorBands": true,
-    "materialDifferencePercent": 29.1437,
-    "antiAliasingOnlyPercent": 6.6669,
+    "materialDifferencePercent": 22.3009,
+    "antiAliasingOnlyPercent": 14.0936,
     "observations": [
       "Header, hero, banner, summary, categories, properties, articles, community, about, CTA, and footer boundaries match the canonical 1549x5378 frame.",
       "API-backed banner copy, metrics, taxonomy counts, property cards, testimonials, about points, CTA, and footer were repaired and recaptured.",
-      "The remaining reviewed material pixels include unavailable canonical hero/category artwork; no baseline was updated."
+      "The exact Figma hero and category illustration exports are loaded from approved local assets and are present in the deterministic runtime capture.",
+      "The approved local Figma exports are present in the runtime, while remaining reviewed material pixels are concentrated in rendered geometry, typography, image framing, and other details; no baseline was updated and the screen remains open."
     ]
   },
   "functionalApiComparison": {
@@ -227,7 +228,8 @@
   "defects": [
     "Resolved repository defect: complete document and major section geometry now match the canonical frame exactly.",
     "Resolved repository defect: canonical banner, property, community, about, CTA, and footer content hierarchy is API-backed and recaptured.",
-    "External source blocker: The canonical daylight Sadat City aerial/mosque hero and eight distinct category icon exports are absent from approved repository assets and cached extracted assets. Reconstructing them from figma.png would create prohibited screenshot-only content."
+    "Resolved source defect: the canonical Sadat City hero and Public category illustration exports were retrieved from their Figma nodes and added with provenance.",
+    "Visual parity blocker: approved frame-linked banner, property, article, community, and about exports are available and wired, but their rendered geometry/framing and surrounding typography remain measurably different from the canonical frame; screenshot reconstruction is prohibited."
   ],
   "filesRepaired": [
     "apps/web/src/features/public/components.tsx",
@@ -235,6 +237,7 @@
     "apps/web/src/features/testing/msw/handlers.ts",
     "apps/web/tests/public-homepage.vitest.test.tsx",
     "apps/web/tests/e2e/public-fixtures.ts",
+    "apps/web/public/assets/canonical/public/",
     "packages/contracts/src/public/index.ts",
     "apps/api/src/modules/public/homepage.ts",
     "apps/api/src/modules/database/seed.ts",
@@ -286,7 +289,15 @@
     "review": "docs/quality/figma_parity/screens/PUB-01/review.json",
     "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-01/runtime-after-capture.json"
   },
-  "reviewedAt": "2026-08-26T00:13:15.928Z",
-  "repairedAt": "2026-08-26T00:13:15.928Z",
-  "externalBlocker": "The canonical daylight Sadat City aerial/mosque hero and eight distinct category icon exports are absent from approved repository assets and cached extracted assets. Reconstructing them from figma.png would create prohibited screenshot-only content."
+  "reviewedAt": "2026-08-27T23:20:00.000Z",
+  "repairedAt": "2026-08-27T23:20:00.000Z",
+  "externalBlocker": "Approved frame-linked banner, property, article, community, and about exports are available and wired, but rendered geometry/framing and surrounding typography remain measurably different from the canonical frame; screenshot reconstruction is prohibited.",
+  "latestRuntimeVerification": {
+    "source": "runtime-after-capture.json and visual-metrics.json",
+    "phase": "after",
+    "apiResponseStatus": 200,
+    "materialDifferencePercent": 22.3009,
+    "antiAliasingOnlyPercent": 14.0936,
+    "officialClosureEligible": false
+  }
 }

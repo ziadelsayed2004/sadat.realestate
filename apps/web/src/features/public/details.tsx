@@ -63,6 +63,16 @@ function loginUrl(url: string | undefined): string {
   return `/auth/login?returnTo=${encodeURIComponent(returnToUrl(url))}`;
 }
 
+function safeMapUrl(value: string | undefined): string | undefined {
+  if (value === undefined || value.length > 2048) return undefined;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' && url.hostname.length > 0 ? value : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function Footer({ locale }: { readonly locale: SupportedLocale }) { return <PublicSiteFooter locale={locale} />; }
 
 function StateNotice({
@@ -281,6 +291,7 @@ function PropertySummary({
       ? { location: '第一街区', delivery: '交付', finishing: '装修', ready: '可立即入住' }
       : { location: 'First District', delivery: 'Delivery', finishing: 'Finishing', ready: 'Ready to move' };
   const finishing = data.features.find(item => item.groupKey === 'finishing' || item.slug.includes('finish'));
+  const mapUrl = safeMapUrl(data.mapUrl);
   const facts = [
     ...(data.area === undefined ? [] : [{ kind: 'area' as const, label: copy.area, value: formatArea(data.area, locale, copy.sqm) ?? '—' }]),
     ...(data.layout?.bedrooms === undefined ? [] : [{ kind: 'bedrooms' as const, label: copy.bedrooms, value: String(data.layout.bedrooms) }]),
@@ -301,6 +312,7 @@ function PropertySummary({
         {data.price === undefined ? null : <p className="public-property-details__price">{detailsPrice(data.price, locale)}</p>}
       </div>
       {facts.length === 0 ? null : <dl className="public-property-details__facts">{facts.map(fact => <div key={fact.label}><PropertyFactIcon kind={fact.kind} /><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}</dl>}
+      {mapUrl ? <a className="public-property-details__map-link" href={mapUrl} target="_blank" rel="noopener noreferrer" data-action="open-map"><DetailLineIcon kind="location" />{copy.openMap}</a> : null}
     </section>
   );
 }

@@ -6,7 +6,7 @@
 
 | Route | Authority | Behavior |
 |---|---|---|
-| `POST /api/v1/provider/application` | Single-use Provider OTP registration grant | Creates the verified phone-and-email Provider identity, profile, owned draft application, and shared access/rotating-refresh session. |
+| `POST /api/v1/provider/application` | Single-use Provider email OTP registration grant | Creates the verified email-only Provider identity, profile, owned draft application, and shared access/rotating-refresh session. |
 | `GET /api/v1/provider/application` | Provider access token | Returns only the caller's application projection. |
 | `PATCH /api/v1/provider/application/account` | Provider access token | Saves common contact, location, locale, and policy-acceptance fields with an expected application version. |
 | `PATCH /api/v1/provider/application/business` | Provider access token | Saves Brokerage Office fields; other provider types are rejected. |

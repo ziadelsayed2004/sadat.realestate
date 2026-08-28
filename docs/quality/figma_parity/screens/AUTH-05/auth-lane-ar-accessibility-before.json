@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-05",
+  "phase": "before",
+  "html": {
+    "lang": "ar",
+    "dir": "rtl"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-05",
+    "state": "success",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/verify-email?purpose=registration&roleType=seeker&lang=ar",
+    "html": {
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 990
+    },
+    "structure": {
+      "headings": 2,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 5,
+      "forms": 1,
+      "buttons": 3,
+      "links": 3,
+      "inputs": 6,
+      "unlabeledControls": 0
+    },
+    "controls": [
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "رقم 1 من رمز التحقق",
+        "autocomplete": "one-time-code"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "رقم 2 من رمز التحقق",
+        "autocomplete": "off"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "رقم 3 من رمز التحقق",
+        "autocomplete": "off"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "رقم 4 من رمز التحقق",
+        "autocomplete": "off"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "رقم 5 من رمز التحقق",
+        "autocomplete": "off"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "رقم 6 من رمز التحقق",
+        "autocomplete": "off"
+      }
+    ],
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "تأكيد الرمز",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "يمكنك إعادة الإرسال بعد 60 ثانية",
+        "ariaLabel": null,
+        "disabled": true
+      },
+      {
+        "text": "تغيير البريد الإلكتروني",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  }
+}

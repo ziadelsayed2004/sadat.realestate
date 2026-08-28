@@ -46,7 +46,6 @@ export interface AuthRepository {
 }
 
 export interface OtpChallengeContext {
-  phone: string;
   email: string;
   roleType: OtpRoleType;
   purpose: OtpPurpose;
@@ -77,7 +76,6 @@ export type FailedOtpAttemptResult =
   | { kind: 'invalid' };
 
 export interface RedeemedOtpGrant {
-  phone: string;
   email: string;
   roleType: OtpRoleType;
   purpose: 'registration';
@@ -96,7 +94,6 @@ export interface OtpRepository {
     expiresAt: Date
   ): Promise<boolean>;
   findOtpAccount(
-    phone: string,
     email: string,
     roleType: OtpRoleType
   ): Promise<AuthAccount | undefined>;
@@ -129,7 +126,6 @@ interface LeanSession {
 interface LeanOtpChallenge {
   _id: Types.ObjectId;
   publicId: string;
-  normalizedPhone: string;
   normalizedEmail: string;
   roleType: OtpRoleType;
   purpose: OtpPurpose;
@@ -274,7 +270,7 @@ export function createMongooseAuthRepository(
 }
 
 function activeOtpKey(context: OtpChallengeContext): string {
-  return `${context.roleType}:${context.purpose}:${context.phone}:${context.email}`;
+  return `${context.roleType}:${context.purpose}:${context.email}`;
 }
 
 function duplicateKey(error: unknown): boolean {
@@ -317,7 +313,6 @@ export function createMongooseOtpRepository(
         await OtpChallenge.create({
           publicId: input.publicId,
           activeKey,
-          normalizedPhone: input.phone,
           normalizedEmail: input.email,
           roleType: input.roleType,
           purpose: input.purpose,
@@ -348,20 +343,18 @@ export function createMongooseOtpRepository(
     async findChallenge(publicId, context, now) {
       const challenge = await OtpChallenge.findOne({
         publicId,
-        normalizedPhone: context.phone,
         normalizedEmail: context.email,
         roleType: context.roleType,
         purpose: context.purpose,
         status: 'pending',
         expiresAt: { $gt: now }
       })
-        .select('+codeHash _id publicId normalizedPhone normalizedEmail roleType purpose attemptsRemaining')
+        .select('+codeHash _id publicId normalizedEmail roleType purpose attemptsRemaining')
         .lean<LeanOtpChallenge>()
         .exec();
       return challenge
         ? {
             id: challenge._id.toHexString(),
-            phone: challenge.normalizedPhone,
             email: challenge.normalizedEmail,
             roleType: challenge.roleType,
             purpose: challenge.purpose,
@@ -439,9 +432,8 @@ export function createMongooseOtpRepository(
       return result.modifiedCount === 1;
     },
 
-    async findOtpAccount(phone, email, roleType) {
+    async findOtpAccount(email, roleType) {
       const user = await User.findOne({
-        normalizedPhone: phone,
         normalizedEmail: email,
         roleType
       })
@@ -464,12 +456,11 @@ export function createMongooseOtpRepository(
         { $set: { status: 'consumed', consumedAt: now } },
         { new: true }
       )
-        .select('+verificationTokenHash normalizedPhone normalizedEmail roleType purpose')
+        .select('+verificationTokenHash normalizedEmail roleType purpose')
         .lean<LeanOtpChallenge>()
         .exec();
       return challenge
         ? {
-            phone: challenge.normalizedPhone,
             email: challenge.normalizedEmail,
             roleType: challenge.roleType,
             purpose: 'registration'

@@ -636,7 +636,7 @@
   line-height: 1.5;
 }
 
-.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-card__prompt--phone {
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-card__prompt--email {
   position: absolute;
   inline-size: 1px;
   block-size: 1px;

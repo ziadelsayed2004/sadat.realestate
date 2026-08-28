@@ -42,16 +42,20 @@ test('normalizes approved email and E.164 identity candidates', async () => {
   assert.equal(user.locale, 'ar');
 });
 
-test('rejects users without an identifier, malformed values, roles, states, or unknown fields', async () => {
+test('rejects users without an email identity, malformed values, roles, states, or unknown fields', async () => {
   const { User } = createModels();
-  await assert.rejects(new User({ roleType: 'seeker' }).validate(), /identifier/i);
+  await assert.rejects(new User({ roleType: 'seeker' }).validate(), /normalizedEmail|identifier/i);
   await assert.rejects(
     new User({ normalizedEmail: 'not-an-email', roleType: 'seeker' }).validate(),
     /normalizedEmail/
   );
   await assert.rejects(
     new User({ normalizedPhone: '01001234567', roleType: 'seeker' }).validate(),
-    /normalizedPhone/
+    /normalizedEmail/
+  );
+  await assert.rejects(
+    new User({ normalizedPhone: '+201001234567', roleType: 'admin' }).validate(),
+    /normalizedEmail/
   );
   await assert.rejects(
     new User({ normalizedEmail: 'a@example.com', roleType: 'owner' }).validate(),

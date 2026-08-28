@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-16",
+  "phase": "before",
+  "capturedAt": "2026-08-27T16:31:31.997Z",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4353",
+    "nodeId": "6017:18651",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-18651&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "dimensions": {
+      "width": 1577,
+      "height": 1457
+    }
+  },
+  "runtime": {
+    "route": "/provider-application/needs-information?lang=en",
+    "requestedQueueRoute": "/provider-application/needs-information",
+    "role": "anonymous",
+    "locale": "en",
+    "direction": "ltr",
+    "viewport": {
+      "width": 1577,
+      "height": 1457,
+      "devicePixelRatio": 1
+    },
+    "capture": {
+      "path": "docs/quality/figma_parity/screens/AUTH-16/runtime-before-auth-lane.png",
+      "sha256": "04ba8adf50878ef10c420c811cc702fabcf9d3c799202bb2d9b0af730dde8d03"
+    },
+    "beforeHash": "04ba8adf50878ef10c420c811cc702fabcf9d3c799202bb2d9b0af730dde8d03",
+    "afterHash": null,
+    "apiRequests": [
+      {
+        "method": "POST",
+        "url": "http://127.0.0.1:4180/api/v1/auth/refresh",
+        "body": {}
+      },
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4180/api/v1/provider/application"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "POST",
+        "url": "http://127.0.0.1:4180/api/v1/auth/refresh",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4180/api/v1/provider/application",
+        "status": 200
+      }
+    ],
+    "routeHits": [
+      {
+        "method": "POST",
+        "pathname": "/auth/refresh"
+      },
+      {
+        "method": "GET",
+        "pathname": "/provider/application"
+      }
+    ]
+  },
+  "page": {
+    "screenId": "AUTH-16",
+    "state": "ready",
+    "applicationStatus": "needs_information",
+    "providerVariant": null,
+    "route": "/provider-application/needs-information?lang=en",
+    "html": {
+      "lang": "en",
+      "dir": "ltr"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 1457,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 1457
+    },
+    "structure": {
+      "headings": 2,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 2,
+      "cards": 5,
+      "forms": 0,
+      "buttons": 2,
+      "links": 2,
+      "inputs": 0,
+      "unlabeledControls": 0
+    },
+    "controls": [],
+    "links": [
+      {
+        "text": "Skip to main content",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "Edit application",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "Back",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  },
+  "comparison": {
+    "diffPath": "docs/quality/figma_parity/screens/AUTH-16/auth-lane-diff-before.png",
+    "visualMetrics": {
+      "schemaVersion": 1,
+      "screenId": "AUTH-16",
+      "phase": "before",
+      "source": {
+        "width": 1577,
+        "height": 1457
+      },
+      "runtimeBefore": {
+        "width": 1577,
+        "height": 1457
+      },
+      "runtimeAfter": null,
+      "comparedWidth": 1577,
+      "comparedHeight": 1457,
+      "comparedPixels": 2297689,
+      "materialDifferencePercent": 24.1495,
+      "antiAliasingOnlyPercent": 4.0167,
+      "threshold": {
+        "materialRgbSumGreaterThan": 24,
+        "antiAliasingRgbSumGreaterThan": 3
+      },
+      "method": "unmasked same-width source/runtime canvas comparison over overlapping document height",
+      "comparedCapture": "RUNTIME BEFORE (CURRENT)",
+      "reviewed": false,
+      "reviewedAt": null
+    }
+  }
+}

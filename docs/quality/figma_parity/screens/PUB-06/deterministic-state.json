@@ -8,17 +8,17 @@
     "direction": "rtl"
   },
   "responseRequestId": "fresh-audit-public-developer-profile",
-  "responseSha256": "090fa62e5f01ce09854e9da2d69fac0a1ce1124c7bad18be014b7e138c73fdb6",
+  "responseSha256": "9d94d697bcbd65922eb9ab5079ece33ab6902888a679f789cb8048a6224d6824",
   "response": {
     "data": {
       "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
       "kind": "developer_company",
       "slug": "approved-builder",
-      "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
+      "imageUrl": "http://127.0.0.1:4175/assets/clone/pub05-a.png",
       "name": {
-        "ar": "شركة AS للتطوير العقاري",
-        "en": "AS Real Estate Development",
-        "zh-CN": "AS房地产开发公司"
+        "ar": "شركة السادات للتطوير العقاري",
+        "en": "Sadat Real Estate Development",
+        "zh-CN": "萨达特房地产开发公司"
       },
       "description": {
         "ar": "شركة رائدة في تطوير العقارات بمدينة السادات منذ أكثر من 15 عاماً.",
@@ -26,7 +26,7 @@
         "zh-CN": "在萨达特城开发房地产超过15年的领先公司。"
       },
       "verified": true,
-      "logoUrl": "http://127.0.0.1:4173/assets/clone/pub05-b.png",
+      "logoUrl": "http://127.0.0.1:4175/assets/clone/pub05-b.png",
       "locations": [
         {
           "ar": "المنطقة الراقية"
@@ -56,12 +56,12 @@
         {
           "id": "bbbbbbbbbbbbbbbbbbbbbbbb",
           "slug": "sadat-residential-towers",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
+          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub05-e.png",
           "name": {
             "ar": "أبراج السادات السكنية"
           },
           "description": {
-            "ar": "أبراج سكنية متكاملة تضم وحدات متنوعة وخدمات متكاملة."
+            "ar": "أبراج سكنية متكاملة تضم وحدات سكنية متنوعة وخدمات متكاملة."
           },
           "locationName": {
             "ar": "الحي الخامس"
@@ -86,7 +86,7 @@
         {
           "id": "cccccccccccccccccccccccc",
           "slug": "elite-compound",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
+          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub05-a.png",
           "name": {
             "ar": "كمبوند النخبة"
           },

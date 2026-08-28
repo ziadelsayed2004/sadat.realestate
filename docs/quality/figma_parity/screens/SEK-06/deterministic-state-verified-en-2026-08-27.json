@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "seedId": "capture-SEK-06-en-after-2026-08-26",
+  "environment": "non-production-browser-fixture",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "screenId": "SEK-06",
+  "source": {
+    "pageId": "6017:4354",
+    "nodeId": "6027:4748",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6027-4748&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4354&starting-point-node-id=6027%3A3579",
+    "screenshot": "docs/quality/figma_parity/screens/SEK-06/figma.png"
+  },
+  "runtime": {
+    "route": "/seeker/saved?lang=en",
+    "requestedQueueRoute": "/seeker/saved",
+    "role": "seeker",
+    "locale": "en",
+    "direction": "ltr",
+    "viewport": {
+      "width": 1551,
+      "height": 1228,
+      "deviceScaleFactor": 1
+    }
+  },
+  "authSession": {
+    "roleType": "seeker",
+    "projection": {
+      "accessToken": "capture.header.signature",
+      "tokenType": "Bearer",
+      "expiresInSeconds": 900,
+      "user": {
+        "id": "0123456789abcdef01234567",
+        "roleType": "seeker",
+        "status": "verified"
+      }
+    },
+    "source": "intercepted /api/v1/auth/refresh response"
+  },
+  "api": {
+    "fixtureContract": "real writable API response shapes",
+    "responseRequestIds": [
+      "capture-SEK-06-en"
+    ],
+    "state": null
+  },
+  "phase": "after",
+  "repair": {
+    "repairId": "verified-en-2026-08-27",
+    "expectedEffect": "align saved-property grid direction and desktop card geometry"
+  },
+  "seedSha256": "124226745e6219aab8dc910765f119e9f1a37cc38712e2b53df9659c3d02c95c"
+}

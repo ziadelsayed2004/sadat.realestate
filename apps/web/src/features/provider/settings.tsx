@@ -146,7 +146,6 @@ export function ProviderSettings({ locale, session, authClient, apiOrigin, tab =
               <form className="provider-settings__panel" onSubmit={event => { void save(event); }} aria-labelledby="provider-settings-account-heading">
                 <h2 id="provider-settings-account-heading">{copy.account.heading}</h2>
                 <Input id="provider-settings-email" type="email" label={copy.account.email} value={form.email} onChange={updateField('email')} disabled={saving} autoComplete="email" />
-                <Input id="provider-settings-phone" type="tel" label={copy.account.phone} value={data.phone} disabled readOnly />
                 <p className="provider-settings__notice">{copy.account.legalNotice}</p>
                 <Button type="submit" loading={saving}>{copy.account.saveEmail}</Button>
               </form>
@@ -154,7 +153,6 @@ export function ProviderSettings({ locale, session, authClient, apiOrigin, tab =
             {tab === 'contact' ? (
               <form className="provider-settings__panel" onSubmit={event => { void save(event); }} aria-labelledby="provider-settings-contact-heading">
                 <h2 id="provider-settings-contact-heading">{copy.contact.heading}</h2>
-                <Input id="provider-settings-contact-phone" type="tel" label={copy.contact.phone} value={data.phone} disabled readOnly />
                 <Input id="provider-settings-whatsapp" type="tel" label={copy.contact.whatsapp} value={form.whatsappNumber} onChange={updateField('whatsappNumber')} disabled={saving} />
                 <Input id="provider-settings-address" type="text" label={copy.contact.address} value={form.officeAddress} onChange={updateField('officeAddress')} disabled={saving} />
                 <Input id="provider-settings-website" type="url" label={copy.contact.website} value={form.website} onChange={updateField('website')} disabled={saving} />

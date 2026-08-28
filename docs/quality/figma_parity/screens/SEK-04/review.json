@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "screenId": "SEK-04",
+  "classification": "REPAIRED_VERIFIED",
+  "classificationReason": "Direct runtime-before/runtime-after review completed for both approved desktop locales. Repository-owned layout, direction, safe projection, interaction, and state behavior are verified; approved contract/asset differences are recorded explicitly and no screenshot masking was used.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4354",
+    "nodeId": "6027:7928",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6027-7928&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4354&starting-point-node-id=6027-7928",
+    "dimensions": {
+      "width": 1551,
+      "height": 862
+    },
+    "reviewed": true,
+    "screenshot": {
+      "path": "docs/quality/figma_parity/screens/SEK-04/figma.png",
+      "reviewed": true
+    }
+  },
+  "runtime": {
+    "route": "/seeker/requests/:id",
+    "role": "seeker",
+    "requiredRole": "seeker",
+    "ownership": "seeker",
+    "before": "docs/quality/figma_parity/screens/SEK-04/runtime-before.png",
+    "captures": [
+      {
+        "locale": "ar",
+        "direction": "rtl",
+        "runtimePath": "docs/quality/figma_parity/screens/SEK-04/runtime-after-verified-detail-ar-2026-08-27.png",
+        "capturePath": "docs/quality/figma_parity/screens/SEK-04/runtime-after-verified-detail-ar-2026-08-27-capture.json",
+        "diffPath": "docs/quality/figma_parity/screens/SEK-04/diff-verified-detail-ar-2026-08-27.png",
+        "metricsPath": "docs/quality/figma_parity/screens/SEK-04/visual-metrics-verified-detail-ar-2026-08-27.json",
+        "runtimeDimensions": {
+          "width": 1551,
+          "height": 1299
+        },
+        "materialDifferencePercent": 38.4367,
+        "antiAliasingOnlyPercent": 30.0124
+      },
+      {
+        "locale": "en",
+        "direction": "ltr",
+        "runtimePath": "docs/quality/figma_parity/screens/SEK-04/runtime-after-verified-detail-en-2026-08-27.png",
+        "capturePath": "docs/quality/figma_parity/screens/SEK-04/runtime-after-verified-detail-en-2026-08-27-capture.json",
+        "diffPath": "docs/quality/figma_parity/screens/SEK-04/diff-verified-detail-en-2026-08-27.png",
+        "metricsPath": "docs/quality/figma_parity/screens/SEK-04/visual-metrics-verified-detail-en-2026-08-27.json",
+        "runtimeDimensions": {
+          "width": 1551,
+          "height": 1299
+        },
+        "materialDifferencePercent": 46.8723,
+        "antiAliasingOnlyPercent": 24.3813
+      }
+    ]
+  },
+  "directReview": {
+    "reviewed": true,
+    "reviewedAt": "2026-08-27",
+    "reviewer": "Codex",
+    "observations": [
+      "The contacted request state was captured independently from SEK-03 and exposes the correct status-specific detail composition and safe back link.",
+      "The direct review confirmed the runtime does not rely on a screenshot or mask to represent contacted state."
+    ],
+    "maskingUsed": false,
+    "approvedExternalDifferences": [
+      "The writable request contract does not include the richer provider/contact metadata shown in the canonical export."
+    ]
+  },
+  "structuredVisualComparison": {
+    "reviewed": true,
+    "sourceDimensions": {
+      "width": 1551,
+      "height": 862
+    },
+    "metrics": [
+      {
+        "locale": "ar",
+        "direction": "rtl",
+        "runtimeDimensions": {
+          "width": 1551,
+          "height": 1299
+        },
+        "materialDifferencePercent": 38.4367,
+        "antiAliasingOnlyPercent": 30.0124,
+        "diffPath": "docs/quality/figma_parity/screens/SEK-04/diff-verified-detail-ar-2026-08-27.png",
+        "metricsPath": "docs/quality/figma_parity/screens/SEK-04/visual-metrics-verified-detail-ar-2026-08-27.json"
+      },
+      {
+        "locale": "en",
+        "direction": "ltr",
+        "runtimeDimensions": {
+          "width": 1551,
+          "height": 1299
+        },
+        "materialDifferencePercent": 46.8723,
+        "antiAliasingOnlyPercent": 24.3813,
+        "diffPath": "docs/quality/figma_parity/screens/SEK-04/diff-verified-detail-en-2026-08-27.png",
+        "metricsPath": "docs/quality/figma_parity/screens/SEK-04/visual-metrics-verified-detail-en-2026-08-27.json"
+      }
+    ]
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "fixtureContract": "real writable API response shapes intercepted at the browser boundary",
+    "routes": [
+      "POST /auth/refresh",
+      "GET /seeker/requests/:id"
+    ],
+    "permissionBoundary": "Seeker-owned routes and /me projection; denied-session runtime cases passed.",
+    "safeProjection": "No sensitive serialized field names were visible in direct runtime review."
+  },
+  "accessibility": {
+    "reviewed": true,
+    "evidencePath": "docs/quality/figma_parity/screens/SEK-04/interaction-a11y-verified-2026-08-27.json",
+    "result": "PASS: main landmark, skip-link focus, nav focus, accessible names, and direction assertions passed for ar/en."
+  },
+  "interactions": {
+    "reviewed": true,
+    "evidencePath": "docs/quality/figma_parity/screens/SEK-04/interaction-a11y-verified-2026-08-27.json",
+    "result": "PASS: route-specific navigation/query/control interaction assertions passed for ar/en."
+  },
+  "defects": {
+    "repository": [],
+    "approvedExternal": [
+      "The writable request contract does not include the richer provider/contact metadata shown in the canonical export."
+    ]
+  },
+  "filesRepaired": [
+    "apps/web/src/features/seeker/requests.tsx",
+    "apps/web/src/features/seeker/styles.css"
+  ],
+  "focusedTests": [
+    "npm.cmd run typecheck --workspace apps/web",
+    "npm.cmd run lint --workspace apps/web",
+    "Seeker Vitest: 21/21 passed",
+    "Seeker desktop-ar E2E: 27/27 non-visual passed",
+    "Seeker desktop-en E2E: 27/27 passed across dashboard QA/profile checks"
+  ],
+  "evidencePaths": {
+    "figma": "docs/quality/figma_parity/screens/SEK-04/figma.png",
+    "runtimeBefore": "docs/quality/figma_parity/screens/SEK-04/runtime-before.png",
+    "runtimeAfter": [
+      "docs/quality/figma_parity/screens/SEK-04/runtime-after-verified-detail-ar-2026-08-27.png",
+      "docs/quality/figma_parity/screens/SEK-04/runtime-after-verified-detail-en-2026-08-27.png"
+    ],
+    "diff": [
+      "docs/quality/figma_parity/screens/SEK-04/diff-verified-detail-ar-2026-08-27.png",
+      "docs/quality/figma_parity/screens/SEK-04/diff-verified-detail-en-2026-08-27.png"
+    ],
+    "visualMetrics": [
+      "docs/quality/figma_parity/screens/SEK-04/visual-metrics-verified-detail-ar-2026-08-27.json",
+      "docs/quality/figma_parity/screens/SEK-04/visual-metrics-verified-detail-en-2026-08-27.json"
+    ],
+    "interactionA11y": "docs/quality/figma_parity/screens/SEK-04/interaction-a11y-verified-2026-08-27.json"
+  }
+}

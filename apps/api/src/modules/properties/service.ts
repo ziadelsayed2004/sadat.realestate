@@ -89,6 +89,7 @@ function data(record: StoredProperty, actor: 'provider' | 'admin' = 'provider'):
     ...(record.projectId ? { projectId: record.projectId } : {}),
     ...(record.parentPropertyId ? { parentPropertyId: record.parentPropertyId } : {}),
     ...(record.locationId ? { locationId: record.locationId } : {}),
+    ...(record.mapUrl ? { mapUrl: record.mapUrl } : {}),
     ...(record.coordinates ? { coordinates: record.coordinates } : {}),
     ...(record.description ? { description: record.description } : {}),
     ...(record.propertyTypeId ? { propertyTypeId: record.propertyTypeId } : {}),
@@ -130,7 +131,7 @@ function write(result: Awaited<ReturnType<PropertyRepository['create']>> | Await
 
 function validation(record: StoredProperty): ReturnType<typeof propertyValidationDataSchema.parse> {
   const issues: ReturnType<typeof propertyValidationDataSchema.parse>['issues'] = [];
-  if (!record.locationId) issues.push({ path: 'locationId', code: 'required', messageKey: 'errors.properties.locationRequired' });
+  if (!record.locationId && !record.mapUrl && !record.coordinates) issues.push({ path: 'location', code: 'required', messageKey: 'errors.properties.locationRequired' });
   if (!record.price) issues.push({ path: 'price', code: 'required', messageKey: 'errors.properties.priceRequired' });
   if (!record.contact || (!record.contact.phone && !record.contact.whatsappNumber && !record.contact.email)) issues.push({ path: 'contact', code: 'required', messageKey: 'errors.properties.contactRequired' });
   if (!record.active || !['draft', 'needs_changes'].includes(record.status)) issues.push({ path: 'status', code: 'invalid_state', messageKey: 'errors.properties.notSubmittable' });

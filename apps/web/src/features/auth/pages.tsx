@@ -2,7 +2,6 @@ import {
   AUTH_ERROR_CODES,
   adminLoginRequestSchema,
   normalizedEmailSchema,
-  normalizedPhoneSchema,
   seekerRegistrationRequestSchema,
   type AdminLoginRequest,
   type OtpPurpose,
@@ -50,7 +49,6 @@ const OTP_LENGTH = 6;
 export interface AuthFlowClient {
   loginAdmin(input: AdminLoginRequest): Promise<AuthSnapshot>;
   sendOtp(input: {
-    readonly phone: string;
     readonly email: string;
     readonly roleType: OtpRoleType;
     readonly purpose: OtpPurpose;
@@ -270,8 +268,8 @@ function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthF
               {state === 'loading' ? copy.loggingIn : copy.loginAction}
             </Button>
           </form>
-          <p className="auth-card__prompt auth-card__prompt--phone">
-            {copy.phoneLoginPrompt} <a href="/auth/verify-phone?purpose=login&roleType=seeker">{copy.phoneLoginAction}</a>
+          <p className="auth-card__prompt auth-card__prompt--email">
+            {copy.emailLoginPrompt} <a href="/auth/verify-email?purpose=login&roleType=seeker">{copy.emailLoginAction}</a>
           </p>
           <p className="auth-card__prompt auth-card__prompt--account">
             {copy.createAccountPrompt} <a href="/auth/register">{copy.createAccountAction}</a>
@@ -292,7 +290,6 @@ interface OtpPageProps {
   readonly onAuthenticated: (snapshot: AuthSnapshot) => void;
   readonly onRegistrationVerified?: ((
     verificationToken: string,
-    phone: string,
     email: string
   ) => void) | undefined;
   readonly lockRoleType?: boolean | undefined;
@@ -300,7 +297,6 @@ interface OtpPageProps {
 
 function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthenticated, onRegistrationVerified, lockRoleType = false }: OtpPageProps) {
   const copy = getAuthCopy(locale);
-  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [roleType, setRoleType] = useState<OtpRoleType>(initialRoleType);
   const [stage, setStage] = useState<'request' | 'verify'>('request');
@@ -313,9 +309,6 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
   const [verified, setVerified] = useState(false);
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const cooldownSeconds = Math.max(0, Math.ceil((cooldownUntil - now) / 1000));
-  const normalizedPhone = normalizedPhoneSchema.safeParse(phone).success
-    ? normalizedPhoneSchema.parse(phone)
-    : undefined;
   const normalizedEmail = normalizedEmailSchema.safeParse(email).success
     ? normalizedEmailSchema.parse(email)
     : undefined;
@@ -335,9 +328,8 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
 
   const sendCode = useCallback(async () => {
     if (cooldownSeconds > 0) return;
-    const parsedPhone = normalizedPhoneSchema.safeParse(phone);
     const parsedEmail = normalizedEmailSchema.safeParse(email);
-    if (!parsedPhone.success || !parsedEmail.success) {
+    if (!parsedEmail.success) {
       setState('error');
       setError(inputError(copy));
       return;
@@ -347,12 +339,10 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
     setError(undefined);
     try {
       const response = await client.sendOtp({
-        phone: parsedPhone.data,
         email: parsedEmail.data,
         roleType,
         purpose
       });
-      setPhone(parsedPhone.data);
       setEmail(parsedEmail.data);
       setChallenge(response);
       setCode(Array.from({ length: OTP_LENGTH }, () => ''));
@@ -369,12 +359,11 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
         setNow(Date.now());
       }
     }
-  }, [client, copy, cooldownSeconds, email, phone, purpose, roleType]);
+  }, [client, copy, cooldownSeconds, email, purpose, roleType]);
 
   const verifyCode = useCallback(async () => {
     if (
       challenge === undefined
-      || normalizedPhone === undefined
       || normalizedEmail === undefined
       || code.join('').length !== OTP_LENGTH
     ) {
@@ -386,7 +375,6 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
     setState('loading');
     setError(undefined);
     const request: OtpVerifyRequest = {
-      phone: normalizedPhone,
       email: normalizedEmail,
       roleType,
       purpose,
@@ -399,14 +387,14 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
       setVerified(true);
       if (result.outcome === 'authenticated') onAuthenticated(result.snapshot);
       if (result.outcome === 'verified' && onRegistrationVerified !== undefined) {
-        onRegistrationVerified(result.verificationToken, normalizedPhone, normalizedEmail);
+        onRegistrationVerified(result.verificationToken, normalizedEmail);
       }
     } catch (requestError: unknown) {
       const nextError = authError(requestError, copy);
       setState(nextError.state);
       setError(nextError);
     }
-  }, [challenge, client, code, copy, normalizedEmail, normalizedPhone, onAuthenticated, onRegistrationVerified, purpose, roleType]);
+  }, [challenge, client, code, copy, normalizedEmail, onAuthenticated, onRegistrationVerified, purpose, roleType]);
 
   function handleRequestSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
@@ -448,7 +436,8 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
     inputRefs.current[Math.min(position + pasted.length, OTP_LENGTH - 1)]?.focus();
   }
 
-  function changePhone(): void {
+  function changeEmail(): void {
+    setEmail('');
     setStage('request');
     setChallenge(undefined);
     setCode(Array.from({ length: OTP_LENGTH }, () => ''));
@@ -461,12 +450,12 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
 
   if (stage === 'request') {
     return (
-      <section className="auth-page auth-page--phone" data-screen-id="AUTH-04" data-state={state} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+      <section className="auth-page auth-page--email" data-screen-id="AUTH-04" data-state={state} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
         <div className="auth-card auth-card--form">
           <header className="auth-card__heading">
             <span className="auth-card__icon" aria-hidden="true">☎</span>
-            <h1>{copy.phoneTitle}</h1>
-            <p>{purpose === 'registration' ? copy.registrationPurpose : copy.phoneDescription}</p>
+            <h1>{copy.emailTitle}</h1>
+            <p>{purpose === 'registration' ? copy.registrationPurpose : copy.emailDescription}</p>
           </header>
           <div className="auth-card__body">
             {error === undefined ? null : <StateNotice error={error} copy={copy} onRetry={() => void sendCode()} />}
@@ -483,19 +472,6 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
                 onChange={event => setEmail(event.currentTarget.value)}
                 required
                 state={state === 'error' && normalizedEmail === undefined ? 'error' : 'default'}
-              />
-              <Input
-                id="auth-phone"
-                label={copy.phoneLabel}
-                type="tel"
-                name="phone"
-                autoComplete="tel"
-                inputMode="tel"
-                placeholder={copy.phonePlaceholder}
-                value={phone}
-                onChange={event => setPhone(event.currentTarget.value)}
-                required
-                state={state === 'error' && normalizedPhone === undefined ? 'error' : 'default'}
               />
               <Select
                 id="auth-role-type"
@@ -564,8 +540,8 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
             <Button type="button" variant="ghost" size="sm" onClick={() => void sendCode()} disabled={cooldownSeconds > 0 || state === 'loading' || verified}>
               {cooldownSeconds > 0 ? copy.resendIn(cooldownSeconds) : copy.resendAction}
             </Button>
-            <Button type="button" variant="ghost" size="sm" onClick={changePhone} disabled={state === 'loading'}>
-              {copy.changePhoneAction}
+            <Button type="button" variant="ghost" size="sm" onClick={changeEmail} disabled={state === 'loading'}>
+              {copy.changeEmailAction}
             </Button>
           </div>
           <p className="auth-card__prompt"><a href="/auth/login">{copy.loginAction}</a></p>
@@ -578,6 +554,36 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
 function replaceAuthUrl(path: string): void {
   if (typeof window === 'undefined') return;
   window.history.replaceState({}, '', path);
+}
+
+function legacyEmailVerificationPath(url: string): string {
+  const legacy = new URL(url, 'http://sadat.local');
+  const target = new URL('/auth/verify-email', legacy.origin);
+  const preservedKeys = ['purpose', 'roleType', 'providerType', 'lang', 'returnTo'] as const;
+  for (const key of preservedKeys) {
+    const value = legacy.searchParams.get(key);
+    if (value !== null && value.trim() !== '') target.searchParams.set(key, value);
+  }
+  return `${target.pathname}${target.search}${legacy.hash}`;
+}
+
+function LegacyVerificationRedirect({ locale, url }: { readonly locale: SupportedLocale; readonly url: string }) {
+  const copy = getAuthCopy(locale);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    window.location.replace(legacyEmailVerificationPath(url));
+  }, [url]);
+
+  return (
+    <section className="auth-page auth-page--email-redirect" data-route-alias="/auth/verify-phone" data-state="redirecting" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+      <div className="auth-card auth-card--form">
+        <div className="auth-card__body">
+          <StateMessage state="loading" title={copy.emailTitle} message={copy.emailDescription} />
+        </div>
+      </div>
+    </section>
+  );
 }
 
 interface RegistrationRolePageProps {
@@ -594,7 +600,7 @@ function RegistrationRolePage({ copy, locale, restartRequired, onSelectSeeker }:
     setSelected(true);
   }
 
-  function continueToPhone(): void {
+  function continueToEmail(): void {
     if (!selected) return;
     onSelectSeeker();
   }
@@ -641,7 +647,7 @@ function RegistrationRolePage({ copy, locale, restartRequired, onSelectSeeker }:
             </a>
           </div>
           <div className="auth-role-actions">
-            <Button type="button" size="lg" disabled={!selected} onClick={continueToPhone}>
+            <Button type="button" size="lg" disabled={!selected} onClick={continueToEmail}>
               {copy.continueAction}
             </Button>
             <p className="auth-card__prompt"><a href="/auth/login">{copy.backAction}</a></p>
@@ -655,14 +661,13 @@ function RegistrationRolePage({ copy, locale, restartRequired, onSelectSeeker }:
 interface SeekerRegistrationFormProps {
   readonly client: AuthFlowClient;
   readonly locale: SupportedLocale;
-  readonly phone: string;
   readonly email: string;
   readonly verificationToken: string;
   readonly onRegistered: (snapshot: AuthSnapshot) => void;
   readonly onRestart: () => void;
 }
 
-function SeekerRegistrationForm({ client, locale, phone, email, verificationToken, onRegistered, onRestart }: SeekerRegistrationFormProps) {
+function SeekerRegistrationForm({ client, locale, email, verificationToken, onRegistered, onRestart }: SeekerRegistrationFormProps) {
   const copy = getAuthCopy(locale);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -744,17 +749,6 @@ function SeekerRegistrationForm({ client, locale, phone, email, verificationToke
               dir="ltr"
               state="success"
             />
-            <Input
-              id="auth-registration-phone"
-              label={copy.verifiedPhoneLabel}
-              name="phone"
-              type="tel"
-              autoComplete="tel"
-              value={phone}
-              readOnly
-              dir="ltr"
-              state="success"
-            />
             <Button type="submit" fullWidth size="lg" loading={state === 'loading'}>
               {state === 'loading' ? copy.registering : copy.registerAction}
             </Button>
@@ -809,24 +803,21 @@ function SeekerRegistrationFlow({ client, locale, onAuthenticated, restartRequir
   const [step, setStep] = useState<'role' | 'otp' | 'form' | 'success'>('role');
   const [showRestartNotice, setShowRestartNotice] = useState(restartRequired);
   const [verificationToken, setVerificationToken] = useState<string | undefined>();
-  const [phone, setPhone] = useState<string | undefined>();
   const [email, setEmail] = useState<string | undefined>();
   const [snapshot, setSnapshot] = useState<AuthSnapshot | undefined>();
   const copy = getAuthCopy(locale);
 
   function startSeekerRegistration(): void {
     setShowRestartNotice(false);
-    replaceAuthUrl('/auth/verify-phone?purpose=registration&roleType=seeker');
+    replaceAuthUrl('/auth/verify-email?purpose=registration&roleType=seeker');
     setStep('otp');
   }
 
   const handleRegistrationVerified = useCallback((
     token: string,
-    verifiedPhone: string,
     verifiedEmail: string
   ) => {
     setVerificationToken(token);
-    setPhone(verifiedPhone);
     setEmail(verifiedEmail);
     replaceAuthUrl('/auth/register/seeker');
     setStep('form');
@@ -834,7 +825,6 @@ function SeekerRegistrationFlow({ client, locale, onAuthenticated, restartRequir
 
   const restart = useCallback(() => {
     setVerificationToken(undefined);
-    setPhone(undefined);
     setEmail(undefined);
     setSnapshot(undefined);
     setShowRestartNotice(false);
@@ -866,14 +856,12 @@ function SeekerRegistrationFlow({ client, locale, onAuthenticated, restartRequir
   if (
     step === 'form'
     && verificationToken !== undefined
-    && phone !== undefined
     && email !== undefined
   ) {
     return (
       <SeekerRegistrationForm
         client={client}
         locale={locale}
-        phone={phone}
         email={email}
         verificationToken={verificationToken}
         onRegistered={handleRegistered}
@@ -927,7 +915,7 @@ function providerTypePath(providerType: ProviderType | undefined, locale: Suppor
 function providerOtpPath(providerType: ProviderType | undefined, locale: SupportedLocale): string {
   const query = new URLSearchParams({ purpose: 'registration', roleType: 'provider', lang: locale });
   if (providerType !== undefined) query.set('providerType', providerType);
-  return `/auth/verify-phone?${query.toString()}`;
+  return `/auth/verify-email?${query.toString()}`;
 }
 
 function providerProgressPath(providerType: ProviderType, locale: SupportedLocale, step: 'account' | 'organization' | 'documents' | 'review'): string {
@@ -1040,9 +1028,9 @@ function ProviderRegistrationFlow({ client, locale, url, initialStep, onAuthenti
     replaceAuthUrl(providerOtpPath(nextProviderType, locale));
   }, [application, createDraft, locale, verificationToken]);
 
-  const handleRegistrationVerified = useCallback((token: string, verifiedPhone: string) => {
+  const handleRegistrationVerified = useCallback((token: string, verifiedEmail: string) => {
     setVerificationToken(token);
-    void verifiedPhone;
+    void verifiedEmail;
     if (providerType === undefined) {
       setStep('type');
       replaceAuthUrl(providerTypePath(undefined, locale));
@@ -1200,6 +1188,9 @@ export function AuthPage({ url, locale, client: providedClient, onAuthenticated:
     return <LoginPage client={client} locale={locale} onAuthenticated={onAuthenticated} />;
   }
   if (location.pathname === '/auth/verify-phone') {
+    return <LegacyVerificationRedirect locale={locale} url={url} />;
+  }
+  if (location.pathname === '/auth/verify-email') {
     if (location.roleType === 'provider' && location.purpose === 'registration') {
       return <ProviderRegistrationFlow client={client} locale={locale} url={url} initialStep="otp" onAuthenticated={onAuthenticated} />;
     }

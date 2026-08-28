@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-12",
+  "phase": "after",
+  "capturedAt": "2026-08-27T17:01:26.245Z",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4353",
+    "nodeId": "6017:17706",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-17706&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "dimensions": {
+      "width": 1577,
+      "height": 2094
+    }
+  },
+  "runtime": {
+    "route": "/auth/register/provider/account?providerType=developer_company&step=documents&lang=ar",
+    "requestedQueueRoute": "/auth/register/provider/documents",
+    "role": "anonymous",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1577,
+      "height": 2094,
+      "devicePixelRatio": 1
+    },
+    "capture": {
+      "path": "docs/quality/figma_parity/screens/AUTH-12/runtime-after-auth-lane-ar.png",
+      "sha256": "a3e59068a0b847e3d8134981bd9302c688295df9578d3b7b3f739050df756017"
+    },
+    "beforeHash": "a3e59068a0b847e3d8134981bd9302c688295df9578d3b7b3f739050df756017",
+    "afterHash": "a3e59068a0b847e3d8134981bd9302c688295df9578d3b7b3f739050df756017",
+    "apiRequests": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4180/api/v1/provider/application"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4180/api/v1/provider/application",
+        "status": 200
+      }
+    ],
+    "routeHits": [
+      {
+        "method": "GET",
+        "pathname": "/provider/application"
+      }
+    ]
+  },
+  "page": {
+    "screenId": "AUTH-12",
+    "state": "ready",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/register/provider/account?providerType=developer_company&step=documents&lang=ar",
+    "html": {
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 2094,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 2314
+    },
+    "structure": {
+      "headings": 9,
+      "h1": 1,
+      "main": 1,
+      "headers": 9,
+      "sections": 1,
+      "cards": 34,
+      "forms": 0,
+      "buttons": 2,
+      "links": 2,
+      "inputs": 7,
+      "unlabeledControls": 0
+    },
+    "controls": [
+      {
+        "tag": "input",
+        "id": "provider-document-input-commercial_registration",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: السجل التجاري",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-tax_card",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: البطاقة الضريبية",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-authorized_representative_id_front",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: هوية الممثل المفوض - الوجه الأمامي",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-authorized_representative_id_back",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: هوية الممثل المفوض - الوجه الخلفي",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-company_profile",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: ملف الشركة",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-developer_license",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: ترخيص المطور",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-additional_supporting_document",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: مستند داعم إضافي",
+        "autocomplete": null
+      }
+    ],
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "رجوع",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "مراجعة الطلب",
+        "ariaLabel": null,
+        "disabled": true
+      }
+    ]
+  },
+  "comparison": {
+    "diffPath": "docs/quality/figma_parity/screens/AUTH-12/auth-lane-ar-diff-after.png",
+    "visualMetrics": {
+      "schemaVersion": 1,
+      "screenId": "AUTH-12",
+      "phase": "after",
+      "source": {
+        "width": 1577,
+        "height": 2094
+      },
+      "runtimeBefore": {
+        "width": 1577,
+        "height": 2314
+      },
+      "runtimeAfter": {
+        "width": 1577,
+        "height": 2314
+      },
+      "comparedWidth": 1577,
+      "comparedHeight": 2094,
+      "comparedPixels": 3302238,
+      "materialDifferencePercent": 30.8758,
+      "antiAliasingOnlyPercent": 2.884,
+      "threshold": {
+        "materialRgbSumGreaterThan": 24,
+        "antiAliasingRgbSumGreaterThan": 3
+      },
+      "method": "unmasked same-width source/runtime canvas comparison over overlapping document height",
+      "comparedCapture": "RUNTIME AFTER (REPAIRED)",
+      "reviewed": false,
+      "reviewedAt": null
+    }
+  }
+}

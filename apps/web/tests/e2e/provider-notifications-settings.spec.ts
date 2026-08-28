@@ -38,10 +38,10 @@ async function routeProviderData(page: import('@playwright/test').Page): Promise
     expect(route.request().headers().authorization).toBe('Bearer provider.settings.token');
     if (route.request().method() === 'PATCH') {
       expect(JSON.parse(route.request().postData() ?? '{}')).toHaveProperty('expectedVersion', 3);
-      await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ version: 4, email: 'provider@example.test', phone: '+2010998765432', whatsappNumber: '+2010998765433', officeAddress: '12 Nile Street', website: 'https://provider.example.test', availableActions: ['update_email', 'update_contact'] }, 'provider-settings-update') });
+      await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ version: 4, email: 'provider@example.test', whatsappNumber: '+2010998765433', officeAddress: '12 Nile Street', website: 'https://provider.example.test', availableActions: ['update_email', 'update_contact'] }, 'provider-settings-update') });
       return;
     }
-    await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ version: 3, email: 'provider@example.test', phone: '+2010998765432', whatsappNumber: '+2010998765433', officeAddress: '12 Nile Street', website: 'https://provider.example.test', availableActions: ['update_email', 'update_contact'] }, 'provider-settings-read') });
+    await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ version: 3, email: 'provider@example.test', whatsappNumber: '+2010998765433', officeAddress: '12 Nile Street', website: 'https://provider.example.test', availableActions: ['update_email', 'update_contact'] }, 'provider-settings-read') });
   });
 }
 

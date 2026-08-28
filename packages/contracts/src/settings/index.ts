@@ -64,7 +64,6 @@ export const providerSettingsActionSchema = z.enum(PROVIDER_SETTINGS_ACTIONS);
 export const providerSettingsDataSchema = z.object({
   version: z.number().int().nonnegative(),
   email: providerSettingsEmailSchema.optional(),
-  phone: normalizedPhoneSchema,
   whatsappNumber: normalizedPhoneSchema.optional(),
   officeAddress: providerSettingsAddressSchema.optional(),
   website: providerSettingsUrlSchema.optional(),

@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "screenId": "SEK-04",
+  "phase": "after",
+  "capturedAt": "2026-08-27T17:04:58.924Z",
+  "runtime": {
+    "route": "/seeker/requests/bbbbbbbbbbbbbbbbbbbbbbbb?lang=en",
+    "requestedQueueRoute": "/seeker/requests/:id",
+    "role": "seeker",
+    "permissions": {
+      "requiredRole": "seeker",
+      "ownership": "seeker"
+    },
+    "locale": "en",
+    "direction": "ltr",
+    "viewport": {
+      "width": 1551,
+      "height": 862,
+      "devicePixelRatio": 1
+    },
+    "deterministicState": {
+      "path": "docs/quality/figma_parity/screens/SEK-04/deterministic-state-verified-detail-en-2026-08-27.json",
+      "seedId": "capture-SEK-04-en-verified-detail-en-2026-08-27",
+      "seedSha256": "88ca4f9dec095e17b2d3c7c082e8c7b8060c1e65f17251f7308fee9ea26c7a87"
+    },
+    "capture": {
+      "phase": "after",
+      "path": "docs/quality/figma_parity/screens/SEK-04/runtime-after-verified-detail-en-2026-08-27.png",
+      "sha256": "5476bea33ef7f258581dc699e506f3d3a27df87c6b8e615dad7835ed74840acc"
+    },
+    "beforeHash": "0824b7767af16cf018799ddc959b6f2d42011c19742ffccbe4601a5ec991f465",
+    "afterHash": "5476bea33ef7f258581dc699e506f3d3a27df87c6b8e615dad7835ed74840acc",
+    "apiRequests": [
+      {
+        "method": "POST",
+        "url": "http://127.0.0.1:4175/api/v1/auth/refresh"
+      },
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4175/api/v1/seeker/requests/bbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "POST",
+        "url": "http://127.0.0.1:4175/api/v1/auth/refresh",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4175/api/v1/seeker/requests/bbbbbbbbbbbbbbbbbbbbbbbb",
+        "status": 200
+      }
+    ],
+    "routeHits": [
+      {
+        "method": "POST",
+        "pathname": "/auth/refresh"
+      },
+      {
+        "method": "GET",
+        "pathname": "/seeker/requests/bbbbbbbbbbbbbbbbbbbbbbbb"
+      }
+    ]
+  },
+  "page": {
+    "requestStatus": "contacted",
+    "shell": {
+      "routeId": "seeker",
+      "deviceScope": "desktop"
+    },
+    "structure": {
+      "headers": 2,
+      "navs": 2,
+      "sections": 3,
+      "links": 13,
+      "buttons": 1
+    },
+    "transitions": {
+      "links": [
+        {
+          "text": "Skip to main content",
+          "href": "#main-content"
+        },
+        {
+          "text": "",
+          "href": "/"
+        },
+        {
+          "text": "SSeeker workspaceProfile and preferences",
+          "href": "/seeker/profile?tab=personal&lang=en"
+        },
+        {
+          "text": "",
+          "href": "/?lang=en"
+        },
+        {
+          "text": "▦Overview",
+          "href": "/seeker?lang=en"
+        },
+        {
+          "text": "▤My requests",
+          "href": "/seeker/requests?lang=en"
+        },
+        {
+          "text": "◷Viewing requests",
+          "href": "/seeker/viewings?lang=en"
+        },
+        {
+          "text": "♡Saved properties",
+          "href": "/seeker/saved?lang=en"
+        },
+        {
+          "text": "♧Notifications",
+          "href": "/seeker/notifications?lang=en"
+        },
+        {
+          "text": "♙Profile and preferences",
+          "href": "/seeker/profile?tab=personal&lang=en"
+        },
+        {
+          "text": "⚙Account settings",
+          "href": "/seeker/settings?lang=en"
+        },
+        {
+          "text": "View website↗",
+          "href": "/?lang=en"
+        },
+        {
+          "text": "‹ Back to requests",
+          "href": "/seeker/requests?lang=en"
+        }
+      ],
+      "buttons": [
+        {
+          "text": "☰",
+          "aria": "Seeker dashboard menu",
+          "disabled": false
+        }
+      ]
+    },
+    "html": {
+      "lang": "en",
+      "dir": "ltr"
+    },
+    "safeProjection": {
+      "serializedSensitiveFieldVisible": false,
+      "visibleTextLength": 733
+    },
+    "viewport": {
+      "width": 1551,
+      "height": 862,
+      "devicePixelRatio": 1
+    },
+    "pageMetrics": {
+      "scrollWidth": 1551,
+      "scrollHeight": 1299
+    }
+  },
+  "comparison": {
+    "diffPath": "docs/quality/figma_parity/screens/SEK-04/diff-verified-detail-en-2026-08-27.png",
+    "visualMetricsPath": "docs/quality/figma_parity/screens/SEK-04/visual-metrics-verified-detail-en-2026-08-27.json",
+    "visualMetrics": {
+      "comparedWidth": 1551,
+      "comparedHeight": 862,
+      "comparedPixels": 1336962,
+      "materialDifferencePercent": 46.8723,
+      "antiAliasingOnlyPercent": 24.3813,
+      "threshold": {
+        "materialRgbSumGreaterThan": 24,
+        "antiAliasingRgbSumGreaterThan": 3
+      },
+      "method": "unmasked same-width source/runtime canvas comparison over overlapping document height",
+      "comparedCapture": "runtime-after-verified-detail-en-2026-08-27"
+    }
+  }
+}

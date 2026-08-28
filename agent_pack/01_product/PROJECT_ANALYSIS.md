@@ -42,10 +42,10 @@ This is a multi-surface real-estate platform, not a simple listing website. It c
 
 ## Gaps That Must Not Be Invented
 
-- Hostinger SMTP credentials, DNS delivery records, and a live VPS connectivity check remain deployment inputs; the phone-plus-email identifier model, email OTP channel, sender identity, and Admin-only password policy are resolved in Q-001.
+- Hostinger SMTP credentials, DNS delivery records, and a live VPS connectivity check remain deployment inputs; the email-only identifier model, email OTP channel, sender identity, and Admin-only password policy are resolved in Q-001.
 - Provider-type fields and document requirements are resolved by Q-002; Q-003 still governs upload security, storage, MIME and size limits, retention, and authorized private delivery.
 - Commission-trigger event, settlement, and collection method.
-- Media/storage, maps, and notification providers.
+- Media/storage and notification providers. Map behavior is resolved in Q-004 as a stored HTTPS URL with no server-side geocoding.
 - Advertising currency, taxes, quote validity, upload limits, and retention.
 - Exact SLA by request type and assignment policy.
 

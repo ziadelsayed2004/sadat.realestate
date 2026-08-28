@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.4.0 — 2026-08-27
+
+- Set the canonical design baseline to exactly 131 screens across Public, Auth, Seeker, Provider, and Admin; Supplementary remains historical Auth provenance only.
+- Added Coordinator bootstrap and controlled parallel wave prompts for Public/Auth/Seeker, followed by Provider and an Admin-only wave.
+- Locked Seeker/Provider registration, login, OTP, grants, and identity projections to normalized email; preserved Admin email/password and approved contact/business phone fields.
+- Added the versioned email-only OTP migration, Hostinger SMTP runbook, validated property `mapUrl` contract, persistence, projection, and Public open-map action.
+- Recorded the scoped root temporary-file cleanup and synchronized the current verification checkpoint without converting historical visual evidence into screen closure.
+
 ## 1.1.0 — 2026-08-12
 
 - Converted Agent Pack instructions, product documentation, task catalog, task board, execution order, prompts, templates, and all 188 atomic tasks to English.

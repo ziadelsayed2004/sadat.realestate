@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-27",
+  "goal": "AUTH-01 through AUTH-17 and route aliases",
+  "closure": "REPAIRED_VERIFIED",
+  "authority": {
+    "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenHistoricalFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "figmaPageId": "6017:4353",
+    "canonicalLocalExport": "docs/quality/figma_parity/screens/{screenId}/figma.png",
+    "interpretation": "AUTH-04 and AUTH-05 phone-verification exports and the supplementary phone screenshot are historical evidence. The active flow is passwordless email verification. Provider WhatsApp and secondary phone are contact-only fields; Admin email/password remains out of this migration goal."
+  },
+  "coverage": {
+    "screenCount": 19,
+    "screenIds": [
+      "AUTH-01",
+      "AUTH-02",
+      "AUTH-03",
+      "AUTH-04",
+      "AUTH-05",
+      "AUTH-06",
+      "AUTH-07",
+      "AUTH-08",
+      "AUTH-09",
+      "AUTH-09+",
+      "AUTH-10",
+      "AUTH-10+",
+      "AUTH-11",
+      "AUTH-12",
+      "AUTH-13",
+      "AUTH-14",
+      "AUTH-15",
+      "AUTH-16",
+      "AUTH-17"
+    ],
+    "locales": ["en", "ar"],
+    "devices": ["desktop", "tablet", "mobile"],
+    "desktopBeforeCaptures": 38,
+    "desktopAfterCaptures": 38,
+    "responsiveAfterCaptures": 114,
+    "responsiveChecks": {
+      "allScreensObserved": "38/38 locale captures and 114/114 matrix records",
+      "allDirectionsMatchLocale": "38/38 locale captures and 114/114 matrix records",
+      "allLanguagesMatchLocale": "38/38 locale captures and 114/114 matrix records",
+      "noHorizontalOverflow": "114/114 matrix records",
+      "mobileAndTabletUseResponsiveViewport": "114/114 matrix records",
+      "activeUrlContainsNoPhoneIdentity": "38/38 locale captures and 114/114 matrix records",
+      "accessibilityChecks": "38/38 final locale captures",
+      "interactionAndApiAssertions": "38/38 final locale captures"
+    }
+  },
+  "artifactConventions": {
+    "screenDirectory": "docs/quality/figma_parity/screens/{screenId}",
+    "beforeRuntime": ["runtime-before-auth-lane-en.png", "runtime-before-auth-lane-ar.png"],
+    "afterRuntime": ["runtime-after-auth-lane-en-v2.png", "runtime-after-auth-lane-ar-v2.png"],
+    "afterDiff": ["auth-lane-en-v2-diff-after.png", "auth-lane-ar-v2-diff-after.png"],
+    "afterMetrics": ["auth-lane-en-v2-visual-metrics-after.json", "auth-lane-ar-v2-visual-metrics-after.json"],
+    "afterDeterministicState": ["auth-lane-en-v2-deterministic-state-after.json", "auth-lane-ar-v2-deterministic-state-after.json"],
+    "afterAccessibility": ["auth-lane-en-v2-accessibility-after.json", "auth-lane-ar-v2-accessibility-after.json"],
+    "afterInteractionApi": ["auth-lane-en-v2-interaction-api-after.json", "auth-lane-ar-v2-interaction-api-after.json"],
+    "afterReview": ["auth-lane-en-v2-review-after.json", "auth-lane-ar-v2-review-after.json"],
+    "responsiveMatrix": ["auth-lane-en-v2-responsive-matrix-after.json", "auth-lane-ar-v2-responsive-matrix-after.json"],
+    "responsiveImages": [
+      "auth-lane-en-v2-desktop.png",
+      "auth-lane-en-v2-tablet.png",
+      "auth-lane-en-v2-mobile.png",
+      "auth-lane-ar-v2-desktop.png",
+      "auth-lane-ar-v2-tablet.png",
+      "auth-lane-ar-v2-mobile.png"
+    ]
+  },
+  "screens": [
+    { "id": "AUTH-01", "canonicalNode": "6017:16212", "queueRoute": "/auth/login", "status": "VERIFIED_NO_CHANGE", "materialDifferencePercent": { "en": 2.4825, "ar": 2.3417 } },
+    { "id": "AUTH-02", "canonicalNode": "6017:15835", "queueRoute": "/auth/register/seeker", "status": "REPAIRED_VERIFIED", "materialDifferencePercent": { "en": 2.233, "ar": 1.4181 } },
+    { "id": "AUTH-03", "canonicalNode": "6017:15890", "queueRoute": "/auth/register/seeker", "status": "REPAIRED_VERIFIED", "materialDifferencePercent": { "en": 16.085, "ar": 16.1094 } },
+    { "id": "AUTH-04", "canonicalNode": "6017:15993", "queueRoute": "/auth/verify-phone", "activeRoute": "/auth/verify-email", "status": "REPAIRED_VERIFIED", "materialDifferencePercent": { "en": 17.6783, "ar": 17.6921 } },
+    { "id": "AUTH-05", "canonicalNode": "6017:16113", "queueRoute": "/auth/verify-phone", "activeRoute": "/auth/verify-email", "status": "REPAIRED_VERIFIED", "materialDifferencePercent": { "en": 19.4282, "ar": 20.6611 } },
+    { "id": "AUTH-06", "canonicalNode": "6017:16158", "queueRoute": "/auth/register/seeker/success", "status": "REPAIRED_VERIFIED", "materialDifferencePercent": { "en": 21.5339, "ar": 21.5179 } },
+    { "id": "AUTH-07", "canonicalNode": "6017:16275", "queueRoute": "/auth/register/provider/type", "status": "VERIFIED_NO_CHANGE", "materialDifferencePercent": { "en": 16.7014, "ar": 16.4576 } },
+    { "id": "AUTH-08", "canonicalNode": "6017:16352", "queueRoute": "/auth/register/provider/type", "status": "VERIFIED_NO_CHANGE", "materialDifferencePercent": { "en": 15.7639, "ar": 16.9531 } },
+    { "id": "AUTH-09", "canonicalNode": "6017:16432", "queueRoute": "/auth/register/provider/account", "status": "REPAIRED_VERIFIED", "materialDifferencePercent": { "en": 17.1167, "ar": 16.4585 } },
+    { "id": "AUTH-09+", "canonicalNode": "6017:16630", "queueRoute": "/auth/register/provider/account", "status": "REPAIRED_VERIFIED", "materialDifferencePercent": { "en": 17.631, "ar": 17.1819 } },
+    { "id": "AUTH-10", "canonicalNode": "6017:16843", "queueRoute": "/auth/register/provider/business", "status": "REPAIRED_VERIFIED", "materialDifferencePercent": { "en": 22.078, "ar": 21.6769 } },
+    { "id": "AUTH-10+", "canonicalNode": "6017:17120", "queueRoute": "/auth/register/provider/business", "status": "REPAIRED_VERIFIED", "materialDifferencePercent": { "en": 22.7461, "ar": 22.3267 } },
+    { "id": "AUTH-11", "canonicalNode": "6017:17441", "queueRoute": "/auth/register/provider/company", "status": "REPAIRED_VERIFIED", "materialDifferencePercent": { "en": 21.1764, "ar": 20.5839 } },
+    { "id": "AUTH-12", "canonicalNode": "6017:17706", "queueRoute": "/auth/register/provider/documents", "status": "REPAIRED_VERIFIED", "materialDifferencePercent": { "en": 30.8232, "ar": 30.8758 } },
+    { "id": "AUTH-13", "canonicalNode": "6017:17975", "queueRoute": "/auth/register/provider/review", "status": "REPAIRED_VERIFIED", "materialDifferencePercent": { "en": 22.9213, "ar": 22.8832 } },
+    { "id": "AUTH-14", "canonicalNode": "6017:18418", "queueRoute": "/provider-application/status", "status": "REPAIRED_VERIFIED", "materialDifferencePercent": { "en": 16.7986, "ar": 13.8343 } },
+    { "id": "AUTH-15", "canonicalNode": "6017:18529", "queueRoute": "/provider-application/status", "status": "REPAIRED_VERIFIED", "materialDifferencePercent": { "en": 24.2847, "ar": 24.2134 } },
+    { "id": "AUTH-16", "canonicalNode": "6017:18651", "queueRoute": "/provider-application/needs-information", "status": "REPAIRED_VERIFIED", "materialDifferencePercent": { "en": 24.1495, "ar": 26.4595 } },
+    { "id": "AUTH-17", "canonicalNode": "6017:18822", "queueRoute": "/provider-application/approved", "status": "REPAIRED_VERIFIED", "materialDifferencePercent": { "en": 13.3926, "ar": 13.1507 } }
+  ],
+  "aliasEvidence": [
+    {
+      "alias": "/auth/verify-phone",
+      "activeRoute": "/auth/verify-email",
+      "artifacts": [
+        "docs/quality/figma_parity/auth_lane/legacy-verify-phone-en.json",
+        "docs/quality/figma_parity/auth_lane/legacy-verify-phone-ar.json"
+      ],
+      "checks": ["browserOnlyRedirect", "preservesApprovedParameters", "doesNotPreservePhoneIdentity", "rendersEmailOtp", "directionMatchesLocale"]
+    }
+  ],
+  "errorHandlingEvidence": {
+    "authUiTests": "apps/web/tests/auth-ui.vitest.test.tsx",
+    "coveredCases": ["invalid form input", "OTP send rate limit retry state", "safe direct verification route before a challenge", "provider account validation errors", "provider deep-link unauthorized fail-closed state"],
+    "providerValidationE2e": "apps/web/tests/e2e/provider-account.spec.ts"
+  },
+  "verificationCommands": {
+    "capture": "node scripts/capture-auth-lane.mjs",
+    "typecheck": "npx.cmd tsc -p tsconfig.json --noEmit",
+    "unit": "npx.cmd vitest run --config vitest.config.ts tests/provider-account.vitest.test.tsx tests/provider-organization-documents.vitest.test.tsx tests/auth-ui.vitest.test.tsx tests/auth-onboarding-qa.vitest.test.ts",
+    "semanticE2e": "$env:WEB_BASE_URL='http://127.0.0.1:4180'; $env:AUTH_LANE_SEMANTIC_ONLY='1'; npx.cmd playwright test tests/e2e/auth.spec.ts tests/e2e/seeker-registration.spec.ts tests/e2e/provider-type.spec.ts tests/e2e/provider-account.spec.ts tests/e2e/provider-organization-documents.spec.ts tests/e2e/provider-review.spec.ts tests/e2e/provider-review-accessibility.spec.ts --project=desktop-en --retries=1 --grep 'login screen renders|email verification sends|legacy phone verification alias|auth controls expose|seeker registration follows|seeker registration controls|provider type selection renders|provider type selection supports|provider account details saves|deep link fails closed|form exposes accessible|private document cards validate|review, submit|needs-information and approved states expose only|review controls and landmarks|needs-information and approved actions'"
+  },
+  "notes": [
+    "Visual metrics are retained as diagnostics. Higher deltas on provider screens reflect the active API-backed projection and the deliberate removal of retired phone/password identity content, not permission to restore historical fields.",
+    "Phone/WhatsApp controls in provider account evidence are explicitly contact-only and are excluded from identity and OTP assertions.",
+    "Old shared visual baselines were not rewritten; they encode stale phone/password assumptions and are not canonical proof for this goal."
+  ]
+}

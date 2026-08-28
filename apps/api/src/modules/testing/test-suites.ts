@@ -5,6 +5,7 @@ export const TEST_SUITES = Object.freeze({
     'tests/auth/environment.test.ts',
     'tests/auth/models.test.ts',
     'tests/auth/otp.test.ts',
+    'tests/auth/email-only-migration.test.ts',
     'tests/auth/repository.test.ts',
     'tests/auth/service.test.ts',
     'tests/admin/contracts.test.ts',

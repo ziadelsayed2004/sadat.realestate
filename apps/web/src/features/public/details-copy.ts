@@ -26,6 +26,7 @@ export interface PublicPropertyDetailsCopy {
   readonly descriptionTitle: string;
   readonly noDescription: string;
   readonly relatedTitle: string;
+  readonly openMap: string;
   readonly contactTitle: string;
   readonly contactBody: string;
   readonly messageLabel: string;
@@ -100,6 +101,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     descriptionTitle: 'وصف العقار',
     noDescription: 'لا يوجد وصف منشور لهذا العقار.',
     relatedTitle: 'عقارات مشابهة',
+    openMap: 'فتح الموقع على الخريطة',
     contactTitle: 'استفسر عن هذا العقار',
     contactBody: 'أرسل طلب تواصل من خلال حساب الباحث عن عقار.',
     messageLabel: 'رسالتك',
@@ -172,6 +174,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     descriptionTitle: 'Property description',
     noDescription: 'No published description is available for this property.',
     relatedTitle: 'Similar properties',
+    openMap: 'Open location on map',
     contactTitle: 'Ask about this property',
     contactBody: 'Send a contact request through your property-seeker account.',
     messageLabel: 'Your message',
@@ -244,6 +247,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyDetailsCopy>>
     descriptionTitle: '房产描述',
     noDescription: '此房产暂无已发布的描述。',
     relatedTitle: '相似房产',
+    openMap: '在地图上打开位置',
     contactTitle: '咨询此房产',
     contactBody: '通过购房者账户发送联系请求。',
     messageLabel: '您的留言',

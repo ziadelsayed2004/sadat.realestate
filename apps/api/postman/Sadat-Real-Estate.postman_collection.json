@@ -856,7 +856,7 @@
             "exec": [
               "pm.test('Provider settings are safely projected', function () {",
               "  pm.expect([200, 401, 403, 404, 500]).to.include(pm.response.code);",
-              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.keys('version', 'phone', 'availableActions');",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.have.keys('version', 'availableActions');",
               "});"
             ]
           }
@@ -1367,7 +1367,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"phone\": \"+201000000000\",\n  \"email\": \"seeker@example.com\",\n  \"roleType\": \"seeker\",\n  \"purpose\": \"login\"\n}",
+          "raw": "{\n  \"email\": \"seeker@example.com\",\n  \"roleType\": \"seeker\",\n  \"purpose\": \"login\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -1415,7 +1415,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"phone\": \"+201000000000\",\n  \"email\": \"seeker@example.com\",\n  \"roleType\": \"seeker\",\n  \"purpose\": \"login\",\n  \"challengeId\": \"replace-with-send-response-challenge-id\",\n  \"code\": \"000000\"\n}",
+          "raw": "{\n  \"email\": \"seeker@example.com\",\n  \"roleType\": \"seeker\",\n  \"purpose\": \"login\",\n  \"challengeId\": \"replace-with-send-response-challenge-id\",\n  \"code\": \"000000\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -3222,7 +3222,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"version\": 0,\n  \"name\": { \"en\": \"Updated synthetic apartment\" },\n  \"reason\": \"Save basic property data\"\n}",
+              "raw": "{\n  \"version\": 0,\n  \"mapUrl\": \"https://maps.google.com/?q=Sadat+City\",\n  \"reason\": \"Save property map location\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3248,11 +3248,11 @@
                 },
                 {
                   "key": "step",
-                  "value": "basic"
+                  "value": "location"
                 }
               ]
             },
-            "description": "Requires the current optimistic version; set step to basic, location, details, price-payment, features-services, or contact. Location writes also require an existing active location. Contact data contains no provider identity override or secrets."
+            "description": "Requires the current optimistic version; set step to basic, location, details, price-payment, features-services, or contact. Location accepts an active locationId, coordinates, or an HTTPS mapUrl (up to 2048 characters) and does not fetch or geocode the URL. Contact data contains no provider identity override or secrets."
           }
         },
         {

@@ -19,7 +19,6 @@ function profileData(locale: 'ar' | 'en' | 'zh-CN', firstName = 'Mohamed') {
     id: profileId,
     roleType: 'seeker',
     status: 'verified',
-    phone: '+201012345678',
     email: 'seeker@example.com',
     firstName,
     lastName: 'Salem',
@@ -118,7 +117,7 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
 
     await page.goto(`/seeker/profile?tab=personal&${query}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-screen-id="SEK-09"]')).toBeVisible();
-    await expect(page.getByLabel(copy.profile.phone)).toBeDisabled();
+    await expect(page.locator('#seeker-profile-email')).toBeDisabled();
     await page.evaluate(async () => {
       await document.fonts.ready;
     });

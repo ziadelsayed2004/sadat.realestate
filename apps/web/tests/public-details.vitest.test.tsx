@@ -27,6 +27,7 @@ const detailsData = publicPropertyDetailsSchema.parse({
   kind: 'property',
   name: { ar: 'منزل منشور', en: 'Published home', 'zh-CN': '已发布房产' },
   transactionType: 'sale',
+  mapUrl: 'https://maps.google.com/?q=Sadat+City',
   description: { ar: 'وصف المنزل المنشور', en: 'A published home description', 'zh-CN': '已发布房产描述' },
   area: { value: 120, unit: 'sqm' },
   layout: { bedrooms: 3, bathrooms: 2, floor: 4 },
@@ -124,11 +125,22 @@ describe('public property details', () => {
     expect(screen.getByText(copy.sourceTypes.developer_company)).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: copy.sourceTitle, level: 2 })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: copy.relatedTitle, level: 2 })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: copy.openMap })).toHaveAttribute('href', detailsData.mapUrl);
+    expect(screen.getByRole('link', { name: copy.openMap })).toHaveAttribute('target', '_blank');
+    expect(screen.getByRole('link', { name: copy.openMap })).toHaveAttribute('rel', 'noopener noreferrer');
     expect(screen.getAllByRole('status', { name: copy.imageUnavailable }).length).toBeGreaterThan(0);
     expect(result.container.querySelector('[data-page="public-property-details"]')).toHaveAttribute('data-details-state', 'success');
     expect(result.container.textContent).not.toContain('providerId');
     expect(result.container.textContent).not.toContain('storageKey');
     expect(result.container.textContent).not.toContain('sha256');
+  });
+
+  it.each(['javascript:alert(1)', 'http://maps.example.com/sadat', 'data:text/plain,sadat'])('fails closed when an unsafe map URL reaches the view: %s', mapUrl => {
+    const unsafeData = { ...detailsData, mapUrl } as typeof detailsData;
+    const copy = getPublicPropertyDetailsCopy('en');
+    renderWithLocale(<PublicPropertyDetails locale="en" url="/properties/published-home" initialData={unsafeData} />, { locale: 'en' });
+
+    expect(screen.queryByRole('link', { name: copy.openMap })).not.toBeInTheDocument();
   });
 
   it('submits contact and viewing requests through injected implemented actions', async () => {

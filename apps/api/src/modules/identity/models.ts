@@ -121,10 +121,10 @@ const userSchema = new Schema<UserRecord>(
 );
 
 userSchema.pre('validate', function validateIdentifier() {
-  if (!this.normalizedEmail && !this.normalizedPhone) {
+  if (!this.normalizedEmail) {
     this.invalidate(
       'normalizedEmail',
-      'At least one normalized email or normalized phone identifier is required'
+      'A normalized email address is required for every user identity'
     );
   }
 });

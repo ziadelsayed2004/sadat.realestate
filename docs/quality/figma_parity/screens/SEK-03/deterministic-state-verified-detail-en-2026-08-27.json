@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "seedId": "capture-SEK-03-en-verified-detail-en-2026-08-27",
+  "environment": "non-production-browser-fixture",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "screenId": "SEK-03",
+  "source": {
+    "pageId": "6017:4354",
+    "nodeId": "6027:7187",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6027-7187&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4354&starting-point-node-id=6027%3A3579",
+    "screenshot": "docs/quality/figma_parity/screens/SEK-03/figma.png"
+  },
+  "runtime": {
+    "route": "/seeker/requests/bbbbbbbbbbbbbbbbbbbbbbbb?lang=en",
+    "requestedQueueRoute": "/seeker/requests/:id",
+    "role": "seeker",
+    "locale": "en",
+    "direction": "ltr",
+    "viewport": {
+      "width": 1551,
+      "height": 897,
+      "deviceScaleFactor": 1
+    }
+  },
+  "authSession": {
+    "roleType": "seeker",
+    "projection": {
+      "accessToken": "capture.header.signature",
+      "tokenType": "Bearer",
+      "expiresInSeconds": 900,
+      "user": {
+        "id": "0123456789abcdef01234567",
+        "roleType": "seeker",
+        "status": "verified"
+      }
+    },
+    "source": "intercepted /api/v1/auth/refresh response"
+  },
+  "api": {
+    "fixtureContract": "real writable API response shapes",
+    "responseRequestIds": [
+      "capture-SEK-03-en"
+    ],
+    "requestStatus": "under_review"
+  },
+  "phase": "after",
+  "repair": {
+    "repairId": "verified-detail-en-2026-08-27",
+    "expectedEffect": "capture the status-specific request detail state with the Seeker desktop shell and safe projection"
+  },
+  "seedSha256": "b67921eafdba27e3bb348507a41a86ec7e3b1abf6e95b9669942e9f1a6a093d8"
+}

@@ -25,7 +25,8 @@
     "openapi:validate": "node --import tsx src/modules/docs/validate-api-artifacts.ts openapi",
     "postman:validate": "node --import tsx src/modules/docs/validate-api-artifacts.ts postman",
     "admin:bootstrap": "node --import tsx src/modules/admin/run-bootstrap.ts",
-    "db:seed": "node --import tsx src/modules/database/run-seed.ts"
+    "db:seed": "node --import tsx src/modules/database/run-seed.ts",
+    "auth:migrate-email-only": "node --import tsx src/modules/auth/run-email-only-migration.ts"
   },
   "dependencies": {
     "@sadat-real-estate/contracts": "0.0.0",

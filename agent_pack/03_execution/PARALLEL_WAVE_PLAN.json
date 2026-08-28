@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "canonicalScreenCount": 131,
+  "screenCounts": {
+    "public": 12,
+    "auth": 19,
+    "seeker": 10,
+    "provider": 24,
+    "admin": 66
+  },
+  "supplementary": {
+    "isSurface": false,
+    "isScreen": false,
+    "countedInCanonicalBaseline": false,
+    "handling": "Reconcile the phone-verification export as historical Auth provenance."
+  },
+  "bootstrap": {
+    "owner": "Coordinator",
+    "requiredBefore": "wave-1",
+    "status": "passed",
+    "completedAt": "2026-08-27T13:12:43.867Z",
+    "sharedRoots": [
+      "packages/contracts",
+      "apps/api",
+      "apps/api/openapi",
+      "apps/api/postman",
+      "apps/web/src/shared",
+      "apps/web/src/styles",
+      "apps/web/src/router",
+      "apps/web/tests/shared",
+      "agent_pack"
+    ],
+    "requiredChecks": [
+      "email-only-auth-contract",
+      "legacy-phone-otp-migration-plan",
+      "map-url-contract-and-projection",
+      "openapi-postman-route-fixture-reconciliation",
+      "typecheck-lint-tests-build"
+    ]
+  },
+  "waves": [
+    {
+      "id": "wave-1",
+      "parallel": true,
+      "startsAfter": "bootstrap",
+      "lanes": [
+        {
+          "id": "public",
+          "goal": "PUB-01..PUB-12",
+          "prompt": "05_prompts/PUBLIC_GOAL.md",
+          "root": "worker-public",
+          "allowedRoot": "apps/web/src/features/public"
+        },
+        {
+          "id": "auth",
+          "goal": "AUTH-01..AUTH-17+aliases",
+          "prompt": "05_prompts/AUTH_GOAL.md",
+          "root": "worker-auth",
+          "allowedRoots": [
+            "apps/web/src/features/auth",
+            "apps/web/src/features/provider_auth"
+          ]
+        },
+        {
+          "id": "seeker",
+          "goal": "SEK-01..SEK-10",
+          "prompt": "05_prompts/SEEKER_GOAL.md",
+          "root": "worker-seeker",
+          "allowedRoot": "apps/web/src/features/seeker"
+        }
+      ]
+    },
+    {
+      "id": "wave-2",
+      "parallel": false,
+      "startsAfter": "wave-1-reconciliation",
+      "lanes": [
+        {
+          "id": "provider",
+          "goal": "PRV-01..PRV-24",
+          "prompt": "05_prompts/PROVIDER_GOAL.md",
+          "root": "worker-provider",
+          "allowedRoot": "apps/web/src/features/provider"
+        }
+      ],
+      "supplementaryHandling": "Historical Auth provenance only; never add a surface or screen count."
+    },
+    {
+      "id": "wave-3",
+      "parallel": false,
+      "exclusive": true,
+      "startsAfter": "wave-2-reconciliation",
+      "lanes": [
+        {
+          "id": "admin",
+          "goal": "ADM-01..ADM-66",
+          "prompt": "05_prompts/ADMIN_GOAL.md",
+          "root": "worker-admin",
+          "allowedRoot": "apps/web/src/features/admin"
+        }
+      ]
+    }
+  ],
+  "executionRules": {
+    "noNestedSubagents": true,
+    "noAdditionalBranchesOrWorktrees": true,
+    "sharedChangeOwner": "Coordinator",
+    "sharedChangeQueue": "Coordinator queue",
+    "closureStatuses": ["REPAIRED_VERIFIED", "VERIFIED_NO_CHANGE"],
+    "historicalEvidenceIsImmutable": true,
+    "doNotStartAdminBeforeWave2": true
+  }
+}

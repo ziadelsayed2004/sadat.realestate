@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-12",
+  "phase": "after",
+  "locale": "ar",
+  "direction": "rtl",
+  "capturedAt": "2026-08-27T20:04:52.025Z",
+  "source": {
+    "canonicalFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4353",
+    "nodeId": "6017:17706",
+    "dimensions": {
+      "width": 1577,
+      "height": 2094
+    }
+  },
+  "runtime": {
+    "baseUrl": "http://127.0.0.1:4180",
+    "requestedRoute": "/auth/register/provider/documents",
+    "route": "/auth/register/provider/account?providerType=developer_company&step=documents&lang=ar"
+  },
+  "devices": [
+    {
+      "device": "desktop",
+      "preset": "Desktop Chrome",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "deviceScaleFactor": 1,
+      "isMobile": false,
+      "hasTouch": false,
+      "route": "/auth/register/provider/account?providerType=developer_company&step=documents&lang=ar",
+      "screenId": "AUTH-12",
+      "state": "ready",
+      "applicationStatus": null,
+      "direction": "rtl",
+      "language": "ar",
+      "scroll": {
+        "width": 1280,
+        "height": 2212
+      },
+      "structure": {
+        "headings": 9,
+        "h1": 1,
+        "main": 1,
+        "headers": 9,
+        "sections": 1,
+        "cards": 34,
+        "forms": 0,
+        "buttons": 2,
+        "links": 2,
+        "inputs": 7,
+        "unlabeledControls": 0
+      },
+      "noHorizontalOverflow": true,
+      "screenshot": "docs/quality/figma_parity/screens/AUTH-12/auth-lane-ar-v2-desktop.png",
+      "routeHits": [
+        {
+          "method": "GET",
+          "pathname": "/provider/application"
+        }
+      ],
+      "requestBodyKeys": []
+    },
+    {
+      "device": "tablet",
+      "preset": "Galaxy Tab S4",
+      "viewport": {
+        "width": 712,
+        "height": 1138
+      },
+      "deviceScaleFactor": 2.25,
+      "isMobile": true,
+      "hasTouch": true,
+      "route": "/auth/register/provider/account?providerType=developer_company&step=documents&lang=ar",
+      "screenId": "AUTH-12",
+      "state": "ready",
+      "applicationStatus": null,
+      "direction": "rtl",
+      "language": "ar",
+      "scroll": {
+        "width": 712,
+        "height": 2235
+      },
+      "structure": {
+        "headings": 9,
+        "h1": 1,
+        "main": 1,
+        "headers": 9,
+        "sections": 1,
+        "cards": 34,
+        "forms": 0,
+        "buttons": 2,
+        "links": 2,
+        "inputs": 7,
+        "unlabeledControls": 0
+      },
+      "noHorizontalOverflow": true,
+      "screenshot": "docs/quality/figma_parity/screens/AUTH-12/auth-lane-ar-v2-tablet.png",
+      "routeHits": [
+        {
+          "method": "GET",
+          "pathname": "/provider/application"
+        }
+      ],
+      "requestBodyKeys": []
+    },
+    {
+      "device": "mobile",
+      "preset": "Pixel 5",
+      "viewport": {
+        "width": 393,
+        "height": 727
+      },
+      "deviceScaleFactor": 2.75,
+      "isMobile": true,
+      "hasTouch": true,
+      "route": "/auth/register/provider/account?providerType=developer_company&step=documents&lang=ar",
+      "screenId": "AUTH-12",
+      "state": "ready",
+      "applicationStatus": null,
+      "direction": "rtl",
+      "language": "ar",
+      "scroll": {
+        "width": 393,
+        "height": 2375
+      },
+      "structure": {
+        "headings": 9,
+        "h1": 1,
+        "main": 1,
+        "headers": 9,
+        "sections": 1,
+        "cards": 34,
+        "forms": 0,
+        "buttons": 2,
+        "links": 2,
+        "inputs": 7,
+        "unlabeledControls": 0
+      },
+      "noHorizontalOverflow": true,
+      "screenshot": "docs/quality/figma_parity/screens/AUTH-12/auth-lane-ar-v2-mobile.png",
+      "routeHits": [
+        {
+          "method": "GET",
+          "pathname": "/provider/application"
+        }
+      ],
+      "requestBodyKeys": []
+    }
+  ],
+  "checks": {
+    "allScreensObserved": true,
+    "allDirectionsMatchLocale": true,
+    "allLanguagesMatchLocale": true,
+    "noHorizontalOverflow": true,
+    "mobileAndTabletUseResponsiveViewport": true,
+    "activeUrlContainsNoPhoneIdentity": true
+  },
+  "interpretation": "Responsive evidence uses the same active email-only identity contract. Historical phone/password fields in the canonical provider export are not reintroduced; provider phone/WhatsApp controls remain contact-only where approved."
+}

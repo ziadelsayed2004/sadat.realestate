@@ -57,6 +57,8 @@ describe('frontend testing harness', () => {
     expect(response.requestId).toBe('test-public-home');
     expect(response.data.data).toEqual({
       sections: [],
+      categories: [],
+      metrics: [],
       properties: [],
       developers: [],
       content: [],

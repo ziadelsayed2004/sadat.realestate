@@ -8,13 +8,13 @@
     "direction": "rtl"
   },
   "responseRequestId": "fresh-audit-public-article-details",
-  "responseSha256": "5013e32f1eea7a61ffdb9b0977324a9de488eab9a4727020ebc5728874a3f5e7",
+  "responseSha256": "06a94c1f8c96be8396c0531ced6ec9d49b565bebad68b1a16c245eb63f5ab9bb",
   "response": {
     "data": {
       "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
       "categoryId": "222222222222222222222222",
       "slug": "buying-in-sadat",
-      "imageUrl": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
+      "imageUrl": "http://127.0.0.1:4175/assets/clone/pub07-a.png",
       "title": {
         "ar": "دليلك الكامل للشراء في مدينة السادات 2024",
         "en": "Your complete guide to buying in Sadat City 2024",
@@ -133,7 +133,7 @@
           "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
           "categoryId": "222222222222222222222222",
           "slug": "buying-in-sadat",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
+          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub07-a.png",
           "title": {
             "ar": "دليلك الكامل للشراء في مدينة السادات 2024",
             "en": "Your complete guide to buying in Sadat City 2024",
@@ -166,7 +166,7 @@
           "id": "cccccccccccccccccccccccc",
           "categoryId": "dddddddddddddddddddddddd",
           "slug": "investment-areas",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
+          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub05-a.png",
           "title": {
             "ar": "أفضل المناطق للاستثمار العقاري في السادات",
             "en": "Best areas for real-estate investment in Sadat",
@@ -189,7 +189,7 @@
           "id": "eeeeeeeeeeeeeeeeeeeeeeee",
           "categoryId": "ffffffffffffffffffffffff",
           "slug": "market-outlook",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
+          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub05-c.png",
           "title": {
             "ar": "خدمات مدينة السادات: ما المتاح وما المخطط له",
             "en": "Sadat City services: what is available and planned",
@@ -212,7 +212,7 @@
           "id": "ffffffffffffffffffffffff",
           "categoryId": "111111111111111111111111",
           "slug": "first-home-checklist",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub07-d.png",
+          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub07-d.png",
           "title": {
             "ar": "قوانين الإيجار الجديدة وما يهمك معرفته",
             "en": "New rental laws and what you need to know",
@@ -235,7 +235,7 @@
           "id": "111111111111111111111111",
           "categoryId": "eeeeeeeeeeeeeeeeeeeeeeee",
           "slug": "neighborhood-guide",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub07-e.png",
+          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub07-e.png",
           "title": {
             "ar": "الحياة في مدينة السادات: تجارب السكان",
             "en": "Life in Sadat City: resident experiences",
@@ -258,7 +258,7 @@
           "id": "222222222222222222222222",
           "categoryId": "333333333333333333333333",
           "slug": "rental-contracts",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
+          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub07-a.png",
           "title": {
             "ar": "نصائح المستأجر الأول: تجنب هذه الأخطاء",
             "en": "First-renter tips: avoid these mistakes",
@@ -295,7 +295,7 @@
               "zh-CN": "第一区豪华公寓"
             },
             "transactionType": "sale",
-            "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
+            "imageUrl": "http://127.0.0.1:4175/assets/clone/pub08-e.png",
             "locationName": {
               "ar": "الحي الأول",
               "en": "First District",
@@ -324,7 +324,7 @@
               "zh-CN": "高级区独立别墅"
             },
             "transactionType": "sale",
-            "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-f.png",
+            "imageUrl": "http://127.0.0.1:4175/assets/clone/pub08-f.png",
             "locationName": {
               "ar": "المنطقة الراقية",
               "en": "Al Raqia district",
@@ -353,7 +353,7 @@
               "zh-CN": "第七区住宅用地"
             },
             "transactionType": "sale",
-            "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-g.png",
+            "imageUrl": "http://127.0.0.1:4175/assets/clone/pub08-g.png",
             "locationName": {
               "ar": "الحي السابع",
               "en": "Seventh District",

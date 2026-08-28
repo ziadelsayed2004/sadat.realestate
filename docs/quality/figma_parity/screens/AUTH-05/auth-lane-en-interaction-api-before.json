@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-05",
+  "phase": "before",
+  "route": "/auth/verify-email?purpose=registration&roleType=seeker&lang=en",
+  "requestBodies": [
+    {
+      "method": "POST",
+      "pathname": "/auth/otp/send",
+      "body": {
+        "email": "ahmed@example.com",
+        "roleType": "seeker",
+        "purpose": "registration"
+      }
+    }
+  ],
+  "apiRequests": [
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:4180/api/v1/auth/otp/send",
+      "body": {
+        "email": "ahmed@example.com",
+        "roleType": "seeker",
+        "purpose": "registration"
+      }
+    }
+  ],
+  "apiResponses": [
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:4180/api/v1/auth/otp/send",
+      "status": 200
+    }
+  ],
+  "routeHits": [
+    {
+      "method": "POST",
+      "pathname": "/auth/otp/send"
+    }
+  ],
+  "assertions": {
+    "emailOnlyOtpSend": true,
+    "emailOnlyOtpVerify": true,
+    "otpContainsNoPhoneKey": true,
+    "providerRegistrationContainsNoPhoneOrPassword": true,
+    "providerPatchesContainNoPasswordOrVerificationToken": true,
+    "activeUrlContainsNoPhoneIdentity": true,
+    "observedScreen": true
+  }
+}

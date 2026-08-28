@@ -159,9 +159,6 @@ interface SettingsSurfaceCopy {
   readonly emailHeading: string;
   readonly currentEmail: string;
   readonly updateEmail: string;
-  readonly phoneHeading: string;
-  readonly currentPhone: string;
-  readonly updatePhone: string;
   readonly passwordHeading: string;
   readonly currentPassword: string;
   readonly newPassword: string;
@@ -191,9 +188,6 @@ function settingsSurfaceCopy(locale: SupportedLocale): SettingsSurfaceCopy {
       emailHeading: 'البريد الإلكتروني',
       currentEmail: 'البريد الحالي',
       updateEmail: 'تحديث البريد',
-      phoneHeading: 'رقم الهاتف',
-      currentPhone: 'رقم الهاتف الحالي',
-      updatePhone: 'تحديث الهاتف',
       passwordHeading: 'تغيير كلمة المرور',
       currentPassword: 'كلمة المرور الحالية',
       newPassword: 'كلمة المرور الجديدة',
@@ -221,9 +215,6 @@ function settingsSurfaceCopy(locale: SupportedLocale): SettingsSurfaceCopy {
     emailHeading: 'Email',
     currentEmail: 'Current email',
     updateEmail: 'Update email',
-    phoneHeading: 'Phone number',
-    currentPhone: 'Current phone number',
-    updatePhone: 'Update phone',
     passwordHeading: 'Change password',
     currentPassword: 'Current password',
     newPassword: 'New password',
@@ -340,10 +331,8 @@ function ProfileForm({
       <div className="seeker-profile__form-grid">
         <Input id="seeker-profile-first-name" label={copy.profile.firstName} value={draft.firstName} autoComplete="given-name" onChange={event => onChange({ firstName: event.target.value })} required />
         <Input id="seeker-profile-last-name" label={copy.profile.lastName} value={draft.lastName} autoComplete="family-name" onChange={event => onChange({ lastName: event.target.value })} required />
-        <Input id="seeker-profile-phone" label={copy.profile.phone} value={profile.phone} readOnly disabled aria-describedby="seeker-profile-phone-help" />
         <Input id="seeker-profile-email" label={surfaceCopy.email} value={profile.email} readOnly disabled />
       </div>
-      <p id="seeker-profile-phone-help" className="seeker-profile__field-note">{locale === 'ar' ? 'رقم الهاتف محفوظ من خلال عملية التحقق.' : locale === 'zh-CN' ? '电话号码来自已验证的身份。' : 'The phone number is controlled by the verified identity flow.'}</p>
       <Button type="submit" loading={saving}>{saving ? copy.saving : copy.profile.save}</Button>
     </form>
   );
@@ -434,14 +423,6 @@ function SettingsContent({
           <span className="seeker-profile__unavailable-label">{copy.unavailable}</span>
         </div>
       </section>
-      <section className="seeker-profile__settings-card seeker-profile__settings-card--value" data-state="unavailable" aria-labelledby="seeker-profile-phone-title">
-        <h3 id="seeker-profile-phone-title">{surfaceCopy.phoneHeading}</h3>
-        <Input id="seeker-profile-settings-phone" label={surfaceCopy.currentPhone} value={profile.phone} readOnly disabled />
-        <div className="seeker-profile__settings-actions">
-          <Button type="button" disabled>{surfaceCopy.updatePhone}</Button>
-          <span className="seeker-profile__unavailable-label">{copy.unavailable}</span>
-        </div>
-      </section>
       <section className="seeker-profile__settings-card seeker-profile__settings-card--password" data-state="unavailable" aria-labelledby="seeker-profile-password-title">
         <h3 id="seeker-profile-password-title">{surfaceCopy.passwordHeading}</h3>
         <div className="seeker-profile__password-fields">
@@ -487,9 +468,9 @@ function SettingsContent({
   );
 }
 
-export function SeekerProfile({ locale, session, tab = 'preferences', authClient, apiOrigin, loadProfile, loadPreferences, actions }: SeekerProfileProps) {
+export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loadProfile, loadPreferences, actions }: SeekerProfileProps) {
   const copy = getSeekerProfileCopy(locale);
-  const activeTab = profileTabForLocation(tab);
+  const activeTab = tab === undefined ? profileTabForLocation('preferences') : tab;
   const profileSource = useMemo(() => loadProfile ?? createSeekerProfileLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, loadProfile]);
   const preferencesSource = useMemo(() => loadPreferences ?? createPreferencesLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, loadPreferences]);
   const actionSource = useMemo(() => actions ?? createSeekerProfileActions({ apiOrigin, authorization: authClient }), [actions, apiOrigin, authClient]);
@@ -626,7 +607,7 @@ export function SeekerProfile({ locale, session, tab = 'preferences', authClient
                 <p>{copy.description}</p>
               </div>
             </div>
-            <ProfileTabs locale={locale} tab={activeTab} copy={copy} />
+            {activeTab === 'settings' ? null : <ProfileTabs locale={locale} tab={activeTab} copy={copy} />}
             {feedbackText ? <p className="seeker-profile__feedback" data-state="success" role="status">{feedbackText}</p> : null}
             {validationError ? <p className="seeker-profile__feedback" data-state="error" role="alert">{copy.validation}</p> : null}
             {activeTab === 'preferences' ? (

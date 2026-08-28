@@ -407,7 +407,7 @@
   {
     "id": "AUTH-04",
     "surface": "auth",
-    "englishName": "Phone Verification — OTP",
+    "englishName": "Email Verification — OTP",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/17KO1GaXuTSpVg1YouOfUgcTgJ4j3N8Ax",
     "deviceScope": [
@@ -434,7 +434,7 @@
   {
     "id": "AUTH-05",
     "surface": "auth",
-    "englishName": "Phone Verification — OTP",
+    "englishName": "Email Verification — OTP",
     "sourceStatus": "LIVE",
     "driveUrl": "https://drive.google.com/drive/folders/1zWpe-X_sOYwJe8WS9T4a18p9sZAfG5Kj",
     "deviceScope": [

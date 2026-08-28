@@ -32,7 +32,7 @@ function application(
     providerType,
     status: 'draft',
     version: 0,
-    phone: '+201000000000',
+    email: 'provider@example.com',
     requirementVersion: '2026-08-13.1',
     requirementsSnapshot: {
       version: '2026-08-13.1',

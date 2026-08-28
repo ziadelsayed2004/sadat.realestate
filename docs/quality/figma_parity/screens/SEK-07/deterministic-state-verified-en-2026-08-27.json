@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "seedId": "capture-SEK-07-en-after-2026-08-26",
+  "environment": "non-production-browser-fixture",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "screenId": "SEK-07",
+  "source": {
+    "pageId": "6017:4354",
+    "nodeId": "6027:5319",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6027-5319&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4354&starting-point-node-id=6027%3A3579",
+    "screenshot": "docs/quality/figma_parity/screens/SEK-07/figma.png"
+  },
+  "runtime": {
+    "route": "/seeker/notifications?lang=en",
+    "requestedQueueRoute": "/seeker/notifications",
+    "role": "seeker",
+    "locale": "en",
+    "direction": "ltr",
+    "viewport": {
+      "width": 1551,
+      "height": 1010,
+      "deviceScaleFactor": 1
+    }
+  },
+  "authSession": {
+    "roleType": "seeker",
+    "projection": {
+      "accessToken": "capture.header.signature",
+      "tokenType": "Bearer",
+      "expiresInSeconds": 900,
+      "user": {
+        "id": "0123456789abcdef01234567",
+        "roleType": "seeker",
+        "status": "verified"
+      }
+    },
+    "source": "intercepted /api/v1/auth/refresh response"
+  },
+  "api": {
+    "fixtureContract": "real writable API response shapes",
+    "responseRequestIds": [
+      "capture-SEK-07-en"
+    ],
+    "state": null
+  },
+  "phase": "after",
+  "repair": {
+    "repairId": "verified-en-2026-08-27",
+    "expectedEffect": "align notification heading/list width, direction, and compact item spacing"
+  },
+  "seedSha256": "483e0b82be6744addc39cb7a466eff053ee89ced577d79591057a0e27dab13e7"
+}

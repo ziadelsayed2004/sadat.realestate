@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "screenId": "SEK-03",
+  "status": "REPAIRED_VERIFIED",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4354",
+    "nodeId": "6027:7187"
+  },
+  "items": [
+    {
+      "element": "desktop shell/direction/geometry",
+      "figmaExpected": "Canonical node 6027:7187",
+      "runtimeActual": "Fresh deterministic ar/en status-specific runtime captures",
+      "measuredDelta": "See locale-specific unmasked visual metrics",
+      "status": "REPAIRED_VERIFIED"
+    },
+    {
+      "element": "approved contract or asset difference",
+      "figmaExpected": "Canonical export contains additional data/artwork",
+      "runtimeActual": "Runtime preserves truthful contract boundary",
+      "measuredDelta": "The writable request contract exposes safe payload fields only; canonical provider/avatar/media and richer status metadata are unavailable.",
+      "status": "APPROVED_EXTERNAL_DIFFERENCE"
+    }
+  ]
+}
+

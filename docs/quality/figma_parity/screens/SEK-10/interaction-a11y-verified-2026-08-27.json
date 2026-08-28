@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "screenId": "SEK-10",
+  "generatedAt": "2026-08-27T19:59:29.210Z",
+  "command": "node tests/e2e/seeker-interaction-a11y-evidence.mjs",
+  "baseUrl": "http://127.0.0.1:4175",
+  "assertions": {
+    "mainLandmarkVisible": true,
+    "unnamedVisibleInteractiveControls": 0,
+    "sensitiveSerializedProjectionVisible": false,
+    "skipLinkFocused": true,
+    "firstSeekerNavLinkFocused": true
+  },
+  "locales": [
+    {
+      "locale": "ar",
+      "direction": "rtl",
+      "route": "/seeker/settings?lang=ar",
+      "apiRequests": [
+        "POST /auth/refresh",
+        "GET /me"
+      ],
+      "interactions": {
+        "phoneControlCount": 0
+      }
+    },
+    {
+      "locale": "en",
+      "direction": "ltr",
+      "route": "/seeker/settings?lang=en",
+      "apiRequests": [
+        "POST /auth/refresh",
+        "GET /me"
+      ],
+      "interactions": {
+        "phoneControlCount": 0
+      }
+    }
+  ],
+  "outcome": "PASS"
+}
+

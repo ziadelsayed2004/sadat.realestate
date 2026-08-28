@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "screenId": "SEK-08",
+  "generatedAt": "2026-08-27T19:59:29.210Z",
+  "command": "node tests/e2e/seeker-interaction-a11y-evidence.mjs",
+  "baseUrl": "http://127.0.0.1:4175",
+  "assertions": {
+    "mainLandmarkVisible": true,
+    "unnamedVisibleInteractiveControls": 0,
+    "sensitiveSerializedProjectionVisible": false,
+    "skipLinkFocused": true,
+    "firstSeekerNavLinkFocused": true
+  },
+  "locales": [
+    {
+      "locale": "ar",
+      "direction": "rtl",
+      "route": "/seeker/profile?tab=preferences&lang=ar",
+      "apiRequests": [
+        "POST /auth/refresh",
+        "GET /me",
+        "GET /me/preferences"
+      ],
+      "interactions": {
+        "personalTab": "/seeker/profile?tab=personal&lang=ar"
+      }
+    },
+    {
+      "locale": "en",
+      "direction": "ltr",
+      "route": "/seeker/profile?tab=preferences&lang=en",
+      "apiRequests": [
+        "POST /auth/refresh",
+        "GET /me",
+        "GET /me/preferences"
+      ],
+      "interactions": {
+        "personalTab": "/seeker/profile?tab=personal&lang=en"
+      }
+    }
+  ],
+  "outcome": "PASS"
+}
+

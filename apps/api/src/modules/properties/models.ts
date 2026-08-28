@@ -12,6 +12,7 @@ export interface PropertyRecord {
   projectId?: Types.ObjectId;
   parentPropertyId?: Types.ObjectId;
   locationId?: Types.ObjectId;
+  mapUrl?: string;
   coordinates?: { type: 'Point'; coordinates: [number, number] };
   description?: LocalizedText;
   propertyTypeId?: Types.ObjectId;
@@ -65,6 +66,7 @@ export const propertySchema = new Schema<PropertyRecord>({
   projectId: { type: Schema.Types.ObjectId, ref: 'Project' },
   parentPropertyId: { type: Schema.Types.ObjectId, ref: 'Property' },
   locationId: { type: Schema.Types.ObjectId, ref: 'Location' },
+  mapUrl: { type: String, trim: true, maxlength: 2_048, match: /^https:\/\/[^\s]+$/ },
   coordinates: {
     type: { type: String, enum: ['Point'], immutable: true },
     coordinates: { type: [Number], validate: { validator: (value: number[]) => value.length === 2 && Number.isFinite(value[0]) && Number.isFinite(value[1]), message: 'Coordinates must contain longitude and latitude' } }

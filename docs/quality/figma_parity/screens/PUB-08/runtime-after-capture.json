@@ -14,35 +14,35 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "4a4d9f867b0dc38c6eab5a63c59b2579556cd0a57e94bc77659de65d74cfb00d",
-    "afterHash": "ff35ee37ad4ad9090a296624d8865a54fac78f08f75a83432acf85942e9e446d",
+    "afterHash": "076da414ed48eac759697fa962a1f20fa323c9ed04af3f9c863d50ed43054254",
     "requestedApi": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/articles/buying-in-sadat?locale=ar"
+        "url": "http://127.0.0.1:4175/api/v1/public/articles/buying-in-sadat?locale=ar"
       },
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/articles?locale=ar&page=1&limit=20"
+        "url": "http://127.0.0.1:4175/api/v1/public/articles?locale=ar&page=1&limit=20"
       },
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=3"
+        "url": "http://127.0.0.1:4175/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=3"
       }
     ],
     "apiResponses": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/articles/buying-in-sadat?locale=ar",
+        "url": "http://127.0.0.1:4175/api/v1/public/articles/buying-in-sadat?locale=ar",
         "status": 200
       },
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/articles?locale=ar&page=1&limit=20",
+        "url": "http://127.0.0.1:4175/api/v1/public/articles?locale=ar&page=1&limit=20",
         "status": 200
       },
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=3",
+        "url": "http://127.0.0.1:4175/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=3",
         "status": 200
       }
     ]
@@ -2163,61 +2163,61 @@
   },
   "images": [
     {
-      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4175/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4175/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
+      "src": "http://127.0.0.1:4175/assets/clone/pub08-e.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub08-f.png",
+      "src": "http://127.0.0.1:4175/assets/clone/pub08-f.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub08-g.png",
+      "src": "http://127.0.0.1:4175/assets/clone/pub08-g.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
+      "src": "http://127.0.0.1:4175/assets/clone/pub07-a.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
+      "src": "http://127.0.0.1:4175/assets/clone/pub05-a.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
+      "src": "http://127.0.0.1:4175/assets/clone/pub05-c.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub07-d.png",
+      "src": "http://127.0.0.1:4175/assets/clone/pub07-d.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4175/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
@@ -2397,8 +2397,8 @@
       "comparedWidth": 1523,
       "comparedHeight": 1759,
       "comparedPixels": 2678957,
-      "materialDifferencePercent": 10.921,
-      "antiAliasingOnlyPercent": 4.0084,
+      "materialDifferencePercent": 9.076,
+      "antiAliasingOnlyPercent": 4.522,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

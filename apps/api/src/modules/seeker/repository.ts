@@ -9,7 +9,6 @@ import type { IdentityModels } from '../identity/models.js';
 
 export interface SeekerAccount {
   id: string;
-  phone: string;
   email: string;
   status: AuthAccountState;
   locale: SeekerLocale;
@@ -23,7 +22,6 @@ export interface SeekerPreferencesRecord {
 }
 
 export interface CreateSeekerInput {
-  phone: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -40,7 +38,6 @@ export interface SeekerRepository {
 
 interface LeanUser {
   _id: Types.ObjectId;
-  normalizedPhone?: string;
   normalizedEmail?: string;
   roleType: 'seeker' | 'provider' | 'admin';
   status: AuthAccountState;
@@ -62,7 +59,6 @@ function duplicateKey(error: unknown): boolean {
 function toAccount(user: LeanUser, profile: LeanProfile): SeekerAccount | undefined {
   if (
     user.roleType !== 'seeker'
-    || !user.normalizedPhone
     || !user.normalizedEmail
     || !profile.firstName
     || !profile.lastName
@@ -71,7 +67,6 @@ function toAccount(user: LeanUser, profile: LeanProfile): SeekerAccount | undefi
   }
   return {
     id: user._id.toHexString(),
-    phone: user.normalizedPhone,
     email: user.normalizedEmail,
     status: user.status,
     locale: user.locale,
@@ -88,7 +83,7 @@ export function createMongooseSeekerRepository(models: IdentityModels): SeekerRe
     const objectId = new Types.ObjectId(userId);
     const [user, profile] = await Promise.all([
       User.findOne({ _id: objectId, roleType: 'seeker' })
-        .select('_id normalizedPhone normalizedEmail roleType status locale')
+        .select('_id normalizedEmail roleType status locale')
         .lean<LeanUser>()
         .exec(),
       SeekerProfile.findOne({ userId: objectId })
@@ -107,7 +102,6 @@ export function createMongooseSeekerRepository(models: IdentityModels): SeekerRe
     async create(input) {
       try {
         const user = await User.create({
-          normalizedPhone: input.phone,
           normalizedEmail: input.email,
           roleType: 'seeker',
           status: 'verified',
@@ -122,7 +116,6 @@ export function createMongooseSeekerRepository(models: IdentityModels): SeekerRe
           });
           return {
             id: user._id.toHexString(),
-            phone: input.phone,
             email: input.email,
             status: user.status,
             locale: user.locale,

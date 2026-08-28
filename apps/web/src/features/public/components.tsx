@@ -44,6 +44,41 @@ function safePublicUrl(value: string | undefined): string | undefined {
   }
 }
 
+export function PublicCategoryGlyph({ slug }: { readonly slug: string }) {
+  const normalizedSlug = slug.toLowerCase();
+  const icon = normalizedSlug.includes('land') || normalizedSlug.includes('roof')
+    ? <><path d="M3 15 8 9l3 3 3-4 3 7" /><path d="M3 17h14" /></>
+    : normalizedSlug.includes('shop') || normalizedSlug.includes('showroom') || normalizedSlug.includes('commercial')
+      ? <><path d="M4 8h12l-1-4H5L4 8Z" /><path d="M5 8v8h10V8M8 11h2v5" /></>
+      : normalizedSlug.includes('office') || normalizedSlug.includes('room')
+        ? <><path d="M4 3h12v14H4Z" /><path d="M7 7h2M11 7h2M7 11h2M11 11h2M8 17v-3h4v3" /></>
+        : normalizedSlug.includes('warehouse') || normalizedSlug.includes('factory')
+          ? <><path d="m3 8 7-5 7 5v9H3Z" /><path d="M6 17v-5h3v5M12 12h2v2h-2M12 8h2v2h-2" /></>
+          : normalizedSlug.includes('villa') || normalizedSlug.includes('house') || normalizedSlug.includes('duplex')
+            ? <><path d="m3 9 7-6 7 6v8H3Z" /><path d="M8 17v-4h4v4M6 9h.01M14 9h.01" /></>
+            : <><path d="m3 9 7-6 7 6v8H3Z" /><path d="M6 12h2M12 12h2M8 17v-4h4v4" /></>;
+
+  return (
+    <span className="public-category-glyph" data-category-glyph={slug} aria-hidden="true">
+      <svg viewBox="0 0 20 20" focusable="false">{icon}</svg>
+    </span>
+  );
+}
+
+const publicCategoryAssets: Readonly<Record<string, string>> = Object.freeze({
+  duplex: '/assets/canonical/public/category-duplex.png',
+  'full-commercial-building': '/assets/canonical/public/category-full-commercial-building.png',
+  'restaurants-cafes': '/assets/canonical/public/category-restaurants-cafes.png',
+  roof: '/assets/canonical/public/category-roof.png',
+  room: '/assets/canonical/public/category-room.png',
+  showrooms: '/assets/canonical/public/category-showrooms.png',
+  villa: '/assets/canonical/public/category-villa.png'
+});
+
+export function publicCategoryAsset(slug: string): string | undefined {
+  return publicCategoryAssets[slug.trim().toLowerCase()];
+}
+
 function errorState(error: unknown): PublicHomepageViewState {
   if (error instanceof ApiClientError && (error.status === 401 || error.status === 403)) {
     return 'permission';
@@ -339,7 +374,7 @@ function HomepageSummary({
 }) {
   const primary = metrics[0];
   if (primary === undefined) return null;
-  const secondary = metrics.slice(1, 4);
+  const secondary = (locale === 'ar' ? metrics.slice(1, 4).reverse() : metrics.slice(1, 4));
 
   return (
     <section className="public-homepage__summary" aria-label={localizedText(primary.title, locale) ?? primary.key} data-homepage-summary="data-backed">
@@ -380,7 +415,7 @@ function HomepageCategoryRail({
       <div className="public-homepage__category-rail">
         {categories.map(category => (
           <a className="public-homepage__category-card" href={'/properties?propertyTypeId=' + encodeURIComponent(category.id)} key={category.id}>
-            <PublicMediaImage className="public-homepage__category-image" src={category.imageUrl} alt="" fallback={<span className="public-homepage__category-icon" aria-hidden="true">◆</span>} />
+            <PublicMediaImage className="public-homepage__category-image" src={category.imageUrl ?? publicCategoryAsset(category.slug)} alt="" fallback={<PublicCategoryGlyph slug={category.slug} />} />
             <strong>{localizedText(category.name, locale) ?? category.slug}</strong>
             <small>{new Intl.NumberFormat(locale).format(category.propertyCount)}</small>
           </a>
@@ -390,27 +425,16 @@ function HomepageCategoryRail({
   );
 }
 
-function PlatformCallout({ locale, copy }: { readonly locale: SupportedLocale; readonly copy: PublicHomepageCopy }) {
-  const title = locale === 'ar'
-    ? 'ابدأ رحلتك العقارية بثقة'
-    : locale === 'zh-CN'
-      ? '开始安心的房产之旅'
-      : 'Start your property journey with confidence';
-  const body = locale === 'ar'
-    ? 'استخدم البيانات المنشورة من مصادر معتمدة للوصول إلى الخطوة التالية.'
-    : locale === 'zh-CN'
-      ? '使用来自已批准来源的已发布数据，继续您的下一步。'
-      : 'Use published data from approved sources to take the next step.';
-
+function PlatformCallout({ copy }: { readonly copy: PublicHomepageCopy }) {
   return (
     <section className="public-homepage__platform-callout" aria-labelledby="public-homepage-platform-callout">
       <div>
         <p className="public-homepage__eyebrow">{copy.about}</p>
-        <h2 id="public-homepage-platform-callout">{title}</h2>
-        <p>{body}</p>
+        <h2 id="public-homepage-platform-callout">{copy.readyCtaTitle}</h2>
+        <p>{copy.readyCtaBody}</p>
       </div>
       <a className="public-homepage__primary-action" href="/properties">{copy.browseProperties}</a>
-      <a className="public-homepage__secondary-action" href="/auth/register">{copy.createAccount}</a>
+      <a className="public-homepage__secondary-action public-homepage__whatsapp-action" href="https://wa.me/201001234567" target="_blank" rel="noopener noreferrer">{copy.whatsappAction}</a>
     </section>
   );
 }
@@ -485,7 +509,7 @@ function BannerGrid({
           <strong>{title}</strong>
           {body === undefined ? null : <span className="public-homepage__banner-body">{body}</span>}
           {highlight === undefined ? null : <b className="public-homepage__banner-highlight">{highlight}</b>}
-          <em>{copy.browseProperties}</em>
+          <em>{copy.discoverProject}</em>
         </span>
       </a>
     </section>
@@ -517,7 +541,7 @@ function HomepageContent({
       <ContentGrid locale={locale} copy={copy} type="article" content={data.content} />
       <ContentGrid locale={locale} copy={copy} type="community" content={data.content} />
       <ContentGrid locale={locale} copy={copy} type="about" content={data.content} />
-      <PlatformCallout locale={locale} copy={copy} />
+      <PlatformCallout copy={copy} />
       <PublicSiteFooter locale={locale} description={copy.footerDescription} />
     </div>
   );

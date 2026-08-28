@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-05",
+  "phase": "after",
+  "capturedAt": "2026-08-27T17:03:30.247Z",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4353",
+    "nodeId": "6017:16113",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-16113&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "dimensions": {
+      "width": 1577,
+      "height": 944
+    }
+  },
+  "runtime": {
+    "route": "/auth/verify-email?purpose=registration&roleType=seeker&lang=en",
+    "requestedQueueRoute": "/auth/verify-phone",
+    "role": "anonymous",
+    "locale": "en",
+    "direction": "ltr",
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "capture": {
+      "path": "docs/quality/figma_parity/screens/AUTH-05/runtime-after-auth-lane-en-v2.png",
+      "sha256": "92a831aae5230a5cfa006fb0c5792094f9fdc3dcff3769de1ad14b1b455e1b38"
+    },
+    "beforeHash": "92a831aae5230a5cfa006fb0c5792094f9fdc3dcff3769de1ad14b1b455e1b38",
+    "afterHash": "92a831aae5230a5cfa006fb0c5792094f9fdc3dcff3769de1ad14b1b455e1b38",
+    "apiRequests": [
+      {
+        "method": "POST",
+        "url": "http://127.0.0.1:4180/api/v1/auth/otp/send",
+        "body": {
+          "email": "ahmed@example.com",
+          "roleType": "seeker",
+          "purpose": "registration"
+        }
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "POST",
+        "url": "http://127.0.0.1:4180/api/v1/auth/otp/send",
+        "status": 200
+      }
+    ],
+    "routeHits": [
+      {
+        "method": "POST",
+        "pathname": "/auth/otp/send"
+      }
+    ]
+  },
+  "page": {
+    "screenId": "AUTH-05",
+    "state": "success",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/verify-email?purpose=registration&roleType=seeker&lang=en",
+    "html": {
+      "lang": "en",
+      "dir": "ltr"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 1053
+    },
+    "structure": {
+      "headings": 2,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 5,
+      "forms": 1,
+      "buttons": 3,
+      "links": 3,
+      "inputs": 6,
+      "unlabeledControls": 0
+    },
+    "controls": [
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "Verification code digit 1",
+        "autocomplete": "one-time-code"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "Verification code digit 2",
+        "autocomplete": "off"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "Verification code digit 3",
+        "autocomplete": "off"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "Verification code digit 4",
+        "autocomplete": "off"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "Verification code digit 5",
+        "autocomplete": "off"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "Verification code digit 6",
+        "autocomplete": "off"
+      }
+    ],
+    "links": [
+      {
+        "text": "Skip to main content",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "Log in",
+        "href": "/auth/login"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "Verify code",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "You can resend the code in 60 seconds",
+        "ariaLabel": null,
+        "disabled": true
+      },
+      {
+        "text": "Change email address",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  },
+  "comparison": {
+    "diffPath": "docs/quality/figma_parity/screens/AUTH-05/auth-lane-en-v2-diff-after.png",
+    "visualMetrics": {
+      "schemaVersion": 1,
+      "screenId": "AUTH-05",
+      "phase": "after",
+      "source": {
+        "width": 1577,
+        "height": 944
+      },
+      "runtimeBefore": {
+        "width": 1577,
+        "height": 1053
+      },
+      "runtimeAfter": {
+        "width": 1577,
+        "height": 1053
+      },
+      "comparedWidth": 1577,
+      "comparedHeight": 944,
+      "comparedPixels": 1488688,
+      "materialDifferencePercent": 19.4282,
+      "antiAliasingOnlyPercent": 2.1466,
+      "threshold": {
+        "materialRgbSumGreaterThan": 24,
+        "antiAliasingRgbSumGreaterThan": 3
+      },
+      "method": "unmasked same-width source/runtime canvas comparison over overlapping document height",
+      "comparedCapture": "RUNTIME AFTER (REPAIRED)",
+      "reviewed": false,
+      "reviewedAt": null
+    }
+  }
+}

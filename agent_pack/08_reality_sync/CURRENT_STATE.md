@@ -1,5 +1,19 @@
 # Current Reality Snapshot
 
+## Active correction — 2026-08-27
+
+This section supersedes conflicting older bullets below while preserving them as historical provenance.
+
+- The canonical design baseline is exactly 131 screens: Public 12, Auth 19, Seeker 10, Provider 24, and Admin 66. Supplementary phone-verification material is historical Auth evidence and is not a surface, screen, or percentage.
+- Current implementation policy is email-only for Seeker and Provider identity, registration, login, OTP, grants, and identity projections. OTP request/verify uses only `email`, `roleType`, and `purpose`; `/auth/verify-email` is canonical and `/auth/verify-phone` is a browser-only legacy redirect.
+- Admin remains email/password. Phone and WhatsApp remain only where an explicit contact/business contract permits them.
+- Production SMTP configuration is external and must use `smtp.hostinger.com`, port `465`, implicit TLS, `info@elsadatrealestate.com`, and the approved display sender. No password belongs in source, logs, screenshots, or the Agent Pack. Real delivery and SPF/DKIM/DMARC verification remain deployment evidence.
+- Property location now accepts a validated absolute HTTPS `mapUrl` up to 2048 characters, while retaining legacy `locationId` and coordinates. The server does not fetch, geocode, or synthesize map URLs; Public opens the stored URL in a new tab with `noopener noreferrer`.
+- The repository cleanup on 2026-08-27 removed only the 35 recorded root `.tmp-pub03*` through `.tmp-pub08*` artifacts (3,278,746 bytes), added `.tmp-*` ignore coverage, and preserved design sources, runtime files, environment files, and secrets. Details are in `CLEANUP_2026-08-27.json`.
+- The active delivery order is Coordinator Bootstrap, then parallel Public/Auth/Seeker, then Provider, then Admin alone. `frontend_100` remains the only `in_progress` Agent Pack task until the Coordinator changes that state with fresh evidence.
+- The 2026-08-27 Bootstrap quality gate passed: workspace 16/16, API all 517/517, API unit 382/382, API route matrix 107/107, Web Vitest 379/379, Web auxiliary 76/76, typecheck, lint, build, OpenAPI, Postman, and Agent Pack audit all passed. Wave 1 is ready to open in parallel.
+- Fresh visual closure is not implied by historical percentages. A screen closes only with deterministic before/after evidence and `REPAIRED_VERIFIED` or `VERIFIED_NO_CHANGE`.
+
 ## Direct Figma and native-runtime preflight correction — 2026-08-25
 
 - All 138 design-source files referenced by the current manifest exist. The incomplete PUB-01 recovery candidate was preserved, and the canonical path now contains the stable direct export of current approved Figma frame `6017:10847` with SHA-256 `fcaf4e5ebebd29e85373b2562350f997a52d41c99031b630e3f7e7ac1592d190`. The unavailable historical checksum remains provenance only; no historical byte- or pixel-parity claim is made. `frontend_091` is Complete after Node.js 24 verification.

@@ -7,12 +7,13 @@ const relatedId = '1123456789abcdef01234567';
 const localized = { ar: 'شقة', en: 'Apartment', 'zh-CN': '公寓' };
 const source = (overrides: Partial<PublicPropertyDetailsSource> = {}): PublicPropertyDetailsSource => ({ id, slug: 'apartment', kind: 'property', name: localized, transactionType: 'sale', sourceType: 'developer_company', organizationId: relatedId, sourceName: localized, sourceImageUrl: 'https://example.com/source.png', sourceVerified: true, status: 'published', active: true, project: { id: relatedId, slug: 'project', name: { en: 'Project' }, status: 'published' }, media: [{ id: relatedId, propertyId: id, kind: 'image', originalFilename: 'cover.png', detectedMime: 'image/png', byteSize: 100, sortOrder: 0, isCover: true, processingState: 'ready', active: true }], features:[{id:relatedId,kind:'feature',groupKey:'interior',name:localized,detail:{en:'Full finish'},slug:'air-conditioning',order:0,active:true}], services:[{id,kind:'service',groupKey:'nearby',name:localized,detail:{en:'Public school'},distanceLabel:{en:'5 minutes'},slug:'school',order:0,active:true}], relatedProperties: [{ id: relatedId, slug: 'related', kind: 'unit', name: localized, transactionType: 'sale', status: 'published', active: true }], ...overrides });
 
-test('projects published property details with SEO, source, project, media, and related public cards', () => {
-  const result = publicPropertyDetailsProjection(source());
+test('projects published property details with SEO, source, map link, media, and related public cards', () => {
+  const result = publicPropertyDetailsProjection(source({ mapUrl: 'https://maps.google.com/?q=Sadat+City' }));
   assert.equal(result?.seo.slug, 'apartment');
   assert.equal(result?.source.sourceType, 'developer_company');
   assert.equal(result?.source.verified, true);
   assert.equal(result?.source.imageUrl, 'https://example.com/source.png');
+  assert.equal(result?.mapUrl, 'https://maps.google.com/?q=Sadat+City');
   assert.equal(result?.services[0]?.distanceLabel?.en, '5 minutes');
   assert.equal(result?.project?.slug, 'project');
   assert.equal(result?.media[0]?.isCover, true);
@@ -22,6 +23,10 @@ test('projects published property details with SEO, source, project, media, and 
   assert.equal('status' in (result?.media[0] ?? {}), false);
   assert.equal('sha256' in (result?.media[0] ?? {}), false);
   assert.equal('providerId' in (result ?? {}), false);
+});
+
+test('rejects an unsafe map URL before it reaches the public projection', () => {
+  assert.throws(() => publicPropertyDetailsProjection(source({ mapUrl: 'javascript:alert(1)' })));
 });
 
 test('excludes draft/inactive details and non-ready media or related rows', () => {

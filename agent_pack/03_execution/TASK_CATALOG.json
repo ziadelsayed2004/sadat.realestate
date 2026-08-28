@@ -508,8 +508,8 @@
     "id": "backend_012",
     "phase": "B1_identity_access",
     "area": "auth",
-    "title": "OTP and Phone Verification",
-    "goal": "Implement an OTP provider abstraction with hashed storage, TTL, bounded attempts, and E.164 normalization without binding to an unapproved provider.",
+    "title": "OTP and Email Verification (legacy task key)",
+    "goal": "Implement an email-only OTP provider abstraction with hashed storage, TTL, bounded attempts, and normalized email identity without binding to an unapproved provider.",
     "kind": "security",
     "screens": [],
     "sourceRefs": [

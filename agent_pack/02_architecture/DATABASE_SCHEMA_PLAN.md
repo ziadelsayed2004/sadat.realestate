@@ -2,7 +2,7 @@
 
 | Aggregate or Collection | Purpose | Initial Core Indexes |
 |---|---|---|
-| users | Shared identity and state | Unique normalized phone/email, roleType, status |
+| users | Shared identity and state | Unique normalized email, roleType, status; any legacy phone field is non-authentication compatibility data and is not used by OTP/grants |
 | sessions | Refresh rotation and reuse detection | Unique tokenHash, userId, TTL expiresAt |
 | otp_challenges | Hashed OTP challenges | target + purpose, TTL expiresAt, attempts |
 | seeker_profiles | Seeker data and preferences | Unique userId |

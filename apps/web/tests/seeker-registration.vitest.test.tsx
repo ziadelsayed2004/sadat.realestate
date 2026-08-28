@@ -34,9 +34,8 @@ function createClient(overrides: Partial<AuthFlowClient> = {}): AuthFlowClient {
   };
 }
 
-async function completePhoneVerification(copy: ReturnType<typeof getAuthCopy>): Promise<void> {
+async function completeEmailVerification(copy: ReturnType<typeof getAuthCopy>): Promise<void> {
   fireEvent.change(screen.getByLabelText(copy.identifierLabel), { target: { value: 'seeker@example.com' } });
-  fireEvent.change(screen.getByLabelText(copy.phoneLabel), { target: { value: '+20 100 000 0000' } });
   fireEvent.click(screen.getByRole('button', { name: copy.sendCodeAction }));
   await waitFor(() => expect(screen.getByRole('heading', { name: copy.otpTitle, level: 1 })).toBeInTheDocument());
 
@@ -69,7 +68,7 @@ describe('seeker registration screens', () => {
 
     fireEvent.click(screen.getByRole('button', { name: new RegExp(copy.seekerAccountTitle) }));
     fireEvent.click(screen.getByRole('button', { name: copy.continueAction }));
-    await completePhoneVerification(copy);
+    await completeEmailVerification(copy);
 
     expect(window.location.pathname).toBe('/auth/register/seeker');
     expect(window.location.search).toBe('');
@@ -99,7 +98,7 @@ describe('seeker registration screens', () => {
 
     fireEvent.click(screen.getByRole('button', { name: new RegExp(copy.seekerAccountTitle) }));
     fireEvent.click(screen.getByRole('button', { name: copy.continueAction }));
-    await completePhoneVerification(copy);
+    await completeEmailVerification(copy);
     fireEvent.click(screen.getByRole('button', { name: copy.registerAction }));
 
     expect(screen.getByRole('alert')).toHaveTextContent(copy.invalidFormTitle);
@@ -124,7 +123,7 @@ describe('seeker registration screens', () => {
 
     fireEvent.click(screen.getByRole('button', { name: new RegExp(copy.seekerAccountTitle) }));
     fireEvent.click(screen.getByRole('button', { name: copy.continueAction }));
-    await completePhoneVerification(copy);
+    await completeEmailVerification(copy);
     fireEvent.change(screen.getByLabelText(copy.firstNameLabel), { target: { value: 'Mona' } });
     fireEvent.change(screen.getByLabelText(copy.lastNameLabel), { target: { value: 'Hassan' } });
     fireEvent.click(screen.getByRole('button', { name: copy.registerAction }));

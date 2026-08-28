@@ -8,7 +8,6 @@ export interface ProviderReviewCopy {
   readonly reviewBody: string;
   readonly applicationDetailsTitle: string;
   readonly providerTypeLabel: string;
-  readonly phoneLabel: string;
   readonly emailLabel: string;
   readonly accountOwnerLabel: string;
   readonly displayNameLabel: string;
@@ -75,7 +74,6 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderReviewCopy>> = {
     reviewBody: 'تأكد من صحة البيانات والمستندات. بعد الإرسال سيصبح الطلب قيد المراجعة ولا يمكن تعديل البيانات حتى يطلب الفريق معلومات إضافية.',
     applicationDetailsTitle: 'بيانات الطلب',
     providerTypeLabel: 'نوع الحساب',
-    phoneLabel: 'رقم الهاتف الموثق',
     emailLabel: 'البريد الإلكتروني',
     accountOwnerLabel: 'مسؤول الحساب',
     displayNameLabel: 'اسم العرض',
@@ -151,7 +149,6 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderReviewCopy>> = {
     reviewBody: 'Confirm that the details and documents are correct. After submission, the application is read-only until the team requests more information.',
     applicationDetailsTitle: 'Application details',
     providerTypeLabel: 'Account type',
-    phoneLabel: 'Verified phone',
     emailLabel: 'Email',
     accountOwnerLabel: 'Account owner',
     displayNameLabel: 'Display name',
@@ -227,7 +224,6 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderReviewCopy>> = {
     reviewBody: '请确认资料和文件准确无误。提交后，申请将在团队要求补充信息前保持只读。',
     applicationDetailsTitle: '申请详情',
     providerTypeLabel: '账户类型',
-    phoneLabel: '已验证手机号',
     emailLabel: '电子邮箱',
     accountOwnerLabel: '账户负责人',
     displayNameLabel: '显示名称',

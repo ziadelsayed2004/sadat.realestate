@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "fresh-audit-public-comparison",
-  "responseSha256": "046416a15a0ad7a41d69909a7cc2e06da7f845de8a4127c071b37d02d37e1237",
+  "responseSha256": "f4c6d34ddeb436c4785712f42d87777b1db7b32ed730ff22fee7f710f809d3ec",
   "response": {
     "data": {
       "items": [
@@ -22,7 +22,7 @@
             "zh-CN": "Garden villa"
           },
           "transactionType": "sale",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-f.png",
+          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub08-f.png",
           "propertyTypeName": {
             "ar": "فيلا",
             "en": "Villa",
@@ -40,7 +40,7 @@
             "en": "Nile Real Estate Group",
             "zh-CN": "尼罗房地产集团"
           },
-          "sourceImageUrl": "http://127.0.0.1:4173/assets/clone/pub05-f.png",
+          "sourceImageUrl": "http://127.0.0.1:4175/assets/clone/pub05-f.png",
           "sourceVerified": true,
           "installmentAvailable": true,
           "area": {
@@ -67,7 +67,7 @@
             "zh-CN": "City apartment"
           },
           "transactionType": "sale",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
+          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub08-e.png",
           "propertyTypeName": {
             "ar": "شقة",
             "en": "Apartment",
@@ -85,7 +85,7 @@
             "en": "Sadat Real Estate Development",
             "zh-CN": "萨达特房地产开发"
           },
-          "sourceImageUrl": "http://127.0.0.1:4173/assets/clone/pub05-b.png",
+          "sourceImageUrl": "http://127.0.0.1:4175/assets/clone/pub05-b.png",
           "sourceVerified": true,
           "installmentAvailable": true,
           "area": {

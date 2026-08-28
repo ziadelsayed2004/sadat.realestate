@@ -31,13 +31,11 @@ function ownedValue(row: Row | undefined, key: string, fallback: string | undefi
 
 function providerSettingsData(
   row: Row | undefined,
-  phone: string,
   fallback: ProviderApplicationBase
 ): ProviderSettingsData {
   const parsed = providerSettingsDataSchema.safeParse({
     version: typeof row?.version === 'number' ? row.version : 0,
     email: ownedValue(row, 'email', fallback.email),
-    phone,
     whatsappNumber: ownedValue(row, 'whatsappNumber', fallback.whatsappNumber),
     officeAddress: ownedValue(row, 'officeAddress', fallback.officeAddress),
     website: ownedValue(row, 'website', fallback.website),
@@ -63,7 +61,6 @@ export function createMongooseProviderSettingsRepository(connection: Connection)
 
   async function source(userId: string): Promise<{
     id: Types.ObjectId;
-    phone: string;
     fallback: ProviderApplicationBase;
   } | undefined> {
     const id = objectId(userId);
@@ -71,22 +68,20 @@ export function createMongooseProviderSettingsRepository(connection: Connection)
     const [user, application] = await Promise.all([
       users.findOne(
         { _id: id, roleType: 'provider', status: 'verified' },
-        { projection: { normalizedPhone: 1 } }
+        { projection: { normalizedEmail: 1 } }
       ),
       applications.findOne(
         { userId: id },
         { projection: { email: 1, whatsappNumber: 1, businessAddress: 1, headOfficeAddress: 1, website: 1 } }
       )
     ]);
-    const phone = stringValue(user?.normalizedPhone);
-    if (!phone || !application) return undefined;
-    const email = stringValue(application.email);
+    const email = stringValue(user?.normalizedEmail) ?? stringValue(application?.email);
+    if (!email || !application) return undefined;
     const whatsappNumber = stringValue(application.whatsappNumber);
     const officeAddress = stringValue(application.businessAddress ?? application.headOfficeAddress);
     const website = stringValue(application.website);
     return {
       id,
-      phone,
       fallback: {
         ...(email ? { email } : {}),
         ...(whatsappNumber ? { whatsappNumber } : {}),
@@ -105,7 +100,7 @@ export function createMongooseProviderSettingsRepository(connection: Connection)
         { userId: owner.id },
         { projection: { _id: 0, userId: 1, version: 1, email: 1, whatsappNumber: 1, officeAddress: 1, website: 1 } }
       );
-      return providerSettingsData(row as Row | undefined, owner.phone, owner.fallback);
+      return providerSettingsData(row as Row | undefined, owner.fallback);
     },
 
     async update(input): Promise<ProviderSettingsWriteResult> {
@@ -150,7 +145,7 @@ export function createMongooseProviderSettingsRepository(connection: Connection)
       );
       return {
         kind: 'updated',
-        settings: providerSettingsData(result as Row | undefined, owner.phone, owner.fallback)
+        settings: providerSettingsData(result as Row | undefined, owner.fallback)
       };
     }
   };

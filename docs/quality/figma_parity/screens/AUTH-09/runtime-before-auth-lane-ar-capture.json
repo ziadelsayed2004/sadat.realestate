@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-09",
+  "phase": "before",
+  "capturedAt": "2026-08-27T16:33:35.968Z",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4353",
+    "nodeId": "6017:16432",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-16432&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "dimensions": {
+      "width": 1577,
+      "height": 1108
+    }
+  },
+  "runtime": {
+    "route": "/auth/register/provider/account?providerType=developer_company&lang=ar",
+    "requestedQueueRoute": "/auth/register/provider/account",
+    "role": "anonymous",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1577,
+      "height": 1108,
+      "devicePixelRatio": 1
+    },
+    "capture": {
+      "path": "docs/quality/figma_parity/screens/AUTH-09/runtime-before-auth-lane-ar.png",
+      "sha256": "12ccdbbd0c8049eec98c1a891611acd35de62e2eb67d819b0a3db0e0b9a33306"
+    },
+    "beforeHash": "12ccdbbd0c8049eec98c1a891611acd35de62e2eb67d819b0a3db0e0b9a33306",
+    "afterHash": null,
+    "apiRequests": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4180/api/v1/provider/application"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4180/api/v1/provider/application",
+        "status": 200
+      }
+    ],
+    "routeHits": [
+      {
+        "method": "GET",
+        "pathname": "/provider/application"
+      }
+    ]
+  },
+  "page": {
+    "screenId": "AUTH-09+",
+    "state": "idle",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/register/provider/account?providerType=developer_company&lang=ar",
+    "html": {
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 1108,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 2129
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 5,
+      "forms": 1,
+      "buttons": 3,
+      "links": 2,
+      "inputs": 8,
+      "unlabeledControls": 2
+    },
+    "controls": [
+      {
+        "tag": "input",
+        "id": "provider-account-owner-name",
+        "name": "accountOwnerFullName",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "name"
+      },
+      {
+        "tag": "input",
+        "id": "provider-account-display-name",
+        "name": "displayName",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "organization"
+      },
+      {
+        "tag": "input",
+        "id": "provider-account-email",
+        "name": "email",
+        "type": "email",
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "email"
+      },
+      {
+        "tag": "input",
+        "id": "provider-account-whatsapp",
+        "name": "whatsappNumber",
+        "type": "tel",
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": "tel"
+      },
+      {
+        "tag": "input",
+        "id": "provider-account-secondary-phone",
+        "name": "secondaryPhone",
+        "type": "tel",
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": "tel"
+      },
+      {
+        "tag": "select",
+        "id": "provider-account-locale",
+        "name": "preferredLocale",
+        "type": null,
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "checkbox",
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "checkbox",
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": null
+      }
+    ],
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "حفظ كمسودة",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "حفظ ومتابعة",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "العودة إلى اختيار النوع",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  },
+  "comparison": {
+    "diffPath": "docs/quality/figma_parity/screens/AUTH-09/auth-lane-ar-diff-before.png",
+    "visualMetrics": {
+      "schemaVersion": 1,
+      "screenId": "AUTH-09",
+      "phase": "before",
+      "source": {
+        "width": 1577,
+        "height": 1108
+      },
+      "runtimeBefore": {
+        "width": 1577,
+        "height": 2129
+      },
+      "runtimeAfter": null,
+      "comparedWidth": 1577,
+      "comparedHeight": 1108,
+      "comparedPixels": 1747316,
+      "materialDifferencePercent": 16.4585,
+      "antiAliasingOnlyPercent": 5.5326,
+      "threshold": {
+        "materialRgbSumGreaterThan": 24,
+        "antiAliasingRgbSumGreaterThan": 3
+      },
+      "method": "unmasked same-width source/runtime canvas comparison over overlapping document height",
+      "comparedCapture": "RUNTIME BEFORE (CURRENT)",
+      "reviewed": false,
+      "reviewedAt": null
+    }
+  }
+}

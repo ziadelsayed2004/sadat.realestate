@@ -5,8 +5,6 @@ export interface ProviderAccountCopy {
   readonly description: string;
   readonly stepLabel: string;
   readonly providerTypeLabel: string;
-  readonly phoneLabel: string;
-  readonly verifiedPhoneNote: string;
   readonly accountOwnerFullNameLabel: string;
   readonly accountOwnerFullNamePlaceholder: string;
   readonly displayNameLabel: string;
@@ -16,7 +14,6 @@ export interface ProviderAccountCopy {
   readonly whatsappLabel: string;
   readonly secondaryPhoneLabel: string;
   readonly secondaryPhonePlaceholder: string;
-  readonly samePhoneLabel: string;
   readonly preferredLocaleLabel: string;
   readonly localeOptions: Readonly<Record<SupportedLocale, string>>;
   readonly termsLabel: string;
@@ -59,8 +56,6 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAccountCopy>> = {
     description: 'أكمل بيانات الحساب الأساسية حتى نتمكن من حفظ طلب مقدم العقار بأمان.',
     stepLabel: '3 / 4',
     providerTypeLabel: 'نوع مقدم العقار',
-    phoneLabel: 'رقم الهاتف الموثق',
-    verifiedPhoneNote: 'يُستخدم هذا الرقم لتسجيل الدخول إلى حساب مقدم العقار ولا يمكن تغييره في هذه الخطوة.',
     accountOwnerFullNameLabel: 'الاسم الكامل لصاحب الحساب',
     accountOwnerFullNamePlaceholder: 'اكتب الاسم كما يظهر في مستندات الهوية',
     displayNameLabel: 'اسم مقدم العقار أو العلامة التجارية',
@@ -70,7 +65,6 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAccountCopy>> = {
     whatsappLabel: 'رقم واتساب',
     secondaryPhoneLabel: 'رقم هاتف إضافي (اختياري)',
     secondaryPhonePlaceholder: '+20 100 000 0000',
-    samePhoneLabel: 'استخدم الرقم الموثق لواتساب',
     preferredLocaleLabel: 'اللغة المفضلة',
     localeOptions: { ar: 'العربية', en: 'الإنجليزية', 'zh-CN': 'الصينية المبسطة' },
     termsLabel: 'أوافق على شروط الاستخدام',
@@ -100,10 +94,10 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAccountCopy>> = {
     unavailableTitle: 'لا يمكن متابعة التسجيل',
     unavailableBody: 'لم يكتمل التحقق المطلوب لإنشاء طلب مقدم العقار. ابدأ من اختيار النوع.',
     invalidRegistrationTitle: 'انتهت صلاحية التحقق',
-    invalidRegistrationBody: 'أعد التحقق من رقم الهاتف قبل إنشاء طلب مقدم العقار.',
+    invalidRegistrationBody: 'أعد التحقق من البريد الإلكتروني قبل إنشاء طلب مقدم العقار.',
     duplicateRegistrationTitle: 'يوجد طلب مقدم عقار بالفعل',
     duplicateRegistrationBody: 'استخدم جلسة مقدم العقار الحالية لاستكمال الطلب بدل إنشاء طلب آخر.',
-    unsupportedFieldNote: 'يعتمد تسجيل الدخول على رقم الهاتف الموثق. لا نطلب كلمة مرور لأن هذا الحقل غير موجود في العقد الحالي.',
+    unsupportedFieldNote: 'يعتمد تسجيل الدخول على البريد الإلكتروني الموثق. لا نطلب كلمة مرور في هذا المسار.',
     missingFieldLabels: {
       accountOwnerFullName: 'الاسم الكامل لصاحب الحساب',
       displayName: 'اسم مقدم العقار',
@@ -120,8 +114,6 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAccountCopy>> = {
     description: 'Complete the core account details so your provider application can be saved safely.',
     stepLabel: '3 / 4',
     providerTypeLabel: 'Provider type',
-    phoneLabel: 'Verified phone number',
-    verifiedPhoneNote: 'This number is the provider sign-in identifier and cannot be changed in this step.',
     accountOwnerFullNameLabel: 'Account owner full name',
     accountOwnerFullNamePlaceholder: 'Use the name shown on identity documents',
     displayNameLabel: 'Provider or brand name',
@@ -131,7 +123,6 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAccountCopy>> = {
     whatsappLabel: 'WhatsApp number',
     secondaryPhoneLabel: 'Secondary phone (optional)',
     secondaryPhonePlaceholder: '+20 100 000 0000',
-    samePhoneLabel: 'Use the verified phone for WhatsApp',
     preferredLocaleLabel: 'Preferred language',
     localeOptions: { ar: 'Arabic', en: 'English', 'zh-CN': 'Simplified Chinese' },
     termsLabel: 'I agree to the Terms of Use',
@@ -161,10 +152,10 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAccountCopy>> = {
     unavailableTitle: 'Registration cannot continue',
     unavailableBody: 'The verification required to create a provider application is not available. Start from provider type selection.',
     invalidRegistrationTitle: 'Verification expired',
-    invalidRegistrationBody: 'Verify the phone number again before creating a provider application.',
+    invalidRegistrationBody: 'Verify the email address again before creating a provider application.',
     duplicateRegistrationTitle: 'Provider application already exists',
     duplicateRegistrationBody: 'Use the existing provider session to continue instead of creating another application.',
-    unsupportedFieldNote: 'Provider sign-in uses the verified phone number. No password is requested because that field is not in the current contract.',
+    unsupportedFieldNote: 'Provider sign-in uses the verified email address. No password is requested in this flow.',
     missingFieldLabels: {
       accountOwnerFullName: 'Account owner full name',
       displayName: 'Provider name',
@@ -181,8 +172,6 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAccountCopy>> = {
     description: '填写核心账户信息，以便安全保存房产服务提供方申请。',
     stepLabel: '3 / 4',
     providerTypeLabel: '服务提供方类型',
-    phoneLabel: '已验证的手机号',
-    verifiedPhoneNote: '此号码是服务提供方登录标识，本步骤不能修改。',
     accountOwnerFullNameLabel: '账户负责人姓名',
     accountOwnerFullNamePlaceholder: '请使用身份证件上的姓名',
     displayNameLabel: '提供方或品牌名称',
@@ -192,7 +181,6 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAccountCopy>> = {
     whatsappLabel: 'WhatsApp 号码',
     secondaryPhoneLabel: '备用手机号（可选）',
     secondaryPhonePlaceholder: '+20 100 000 0000',
-    samePhoneLabel: '将已验证手机号用于 WhatsApp',
     preferredLocaleLabel: '首选语言',
     localeOptions: { ar: '阿拉伯语', en: '英语', 'zh-CN': '简体中文' },
     termsLabel: '我同意使用条款',
@@ -222,10 +210,10 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAccountCopy>> = {
     unavailableTitle: '无法继续注册',
     unavailableBody: '创建提供方申请所需的验证不可用。请从类型选择开始。',
     invalidRegistrationTitle: '验证已过期',
-    invalidRegistrationBody: '重新验证手机号后再创建提供方申请。',
+    invalidRegistrationBody: '重新验证邮箱后再创建提供方申请。',
     duplicateRegistrationTitle: '提供方申请已存在',
     duplicateRegistrationBody: '请使用现有提供方会话继续，而不是创建新的申请。',
-    unsupportedFieldNote: '提供方使用已验证手机号登录。当前合同不包含密码字段，因此不会请求密码。',
+    unsupportedFieldNote: '提供方使用已验证邮箱登录，此流程不请求密码。',
     missingFieldLabels: {
       accountOwnerFullName: '账户负责人姓名',
       displayName: '提供方名称',

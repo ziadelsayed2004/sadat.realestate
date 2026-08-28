@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-10+",
+  "phase": "before",
+  "route": "/auth/register/provider/account?providerType=brokerage_office&step=organization&lang=en",
+  "requestBodies": [],
+  "apiRequests": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4180/api/v1/provider/application"
+    }
+  ],
+  "apiResponses": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4180/api/v1/provider/application",
+      "status": 200
+    }
+  ],
+  "routeHits": [
+    {
+      "method": "GET",
+      "pathname": "/provider/application"
+    }
+  ],
+  "assertions": {
+    "emailOnlyOtpSend": true,
+    "emailOnlyOtpVerify": true,
+    "otpContainsNoPhoneKey": true,
+    "providerRegistrationContainsNoPhoneOrPassword": true,
+    "providerPatchesContainNoPasswordOrVerificationToken": true,
+    "activeUrlContainsNoPhoneIdentity": true,
+    "observedScreen": true
+  }
+}

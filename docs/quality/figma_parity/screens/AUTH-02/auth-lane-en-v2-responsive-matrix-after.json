@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-02",
+  "phase": "after",
+  "locale": "en",
+  "direction": "ltr",
+  "capturedAt": "2026-08-27T19:56:32.821Z",
+  "source": {
+    "canonicalFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4353",
+    "nodeId": "6017:15835",
+    "dimensions": {
+      "width": 1577,
+      "height": 944
+    }
+  },
+  "runtime": {
+    "baseUrl": "http://127.0.0.1:4180",
+    "requestedRoute": "/auth/register/seeker",
+    "route": "/auth/register/seeker?lang=en"
+  },
+  "devices": [
+    {
+      "device": "desktop",
+      "preset": "Desktop Chrome",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "deviceScaleFactor": 1,
+      "isMobile": false,
+      "hasTouch": false,
+      "route": "/auth/register/seeker?lang=en",
+      "screenId": "AUTH-02",
+      "state": "idle",
+      "applicationStatus": null,
+      "direction": "ltr",
+      "language": "en",
+      "scroll": {
+        "width": 1280,
+        "height": 810
+      },
+      "structure": {
+        "headings": 1,
+        "h1": 1,
+        "main": 1,
+        "headers": 2,
+        "sections": 1,
+        "cards": 14,
+        "forms": 0,
+        "buttons": 2,
+        "links": 4,
+        "inputs": 0,
+        "unlabeledControls": 0
+      },
+      "noHorizontalOverflow": true,
+      "screenshot": "docs/quality/figma_parity/screens/AUTH-02/auth-lane-en-v2-desktop.png",
+      "routeHits": [],
+      "requestBodyKeys": []
+    },
+    {
+      "device": "tablet",
+      "preset": "Galaxy Tab S4",
+      "viewport": {
+        "width": 712,
+        "height": 1138
+      },
+      "deviceScaleFactor": 2.25,
+      "isMobile": true,
+      "hasTouch": true,
+      "route": "/auth/register/seeker?lang=en",
+      "screenId": "AUTH-02",
+      "state": "idle",
+      "applicationStatus": null,
+      "direction": "ltr",
+      "language": "en",
+      "scroll": {
+        "width": 712,
+        "height": 1138
+      },
+      "structure": {
+        "headings": 1,
+        "h1": 1,
+        "main": 1,
+        "headers": 2,
+        "sections": 1,
+        "cards": 14,
+        "forms": 0,
+        "buttons": 2,
+        "links": 4,
+        "inputs": 0,
+        "unlabeledControls": 0
+      },
+      "noHorizontalOverflow": true,
+      "screenshot": "docs/quality/figma_parity/screens/AUTH-02/auth-lane-en-v2-tablet.png",
+      "routeHits": [],
+      "requestBodyKeys": []
+    },
+    {
+      "device": "mobile",
+      "preset": "Pixel 5",
+      "viewport": {
+        "width": 393,
+        "height": 727
+      },
+      "deviceScaleFactor": 2.75,
+      "isMobile": true,
+      "hasTouch": true,
+      "route": "/auth/register/seeker?lang=en",
+      "screenId": "AUTH-02",
+      "state": "idle",
+      "applicationStatus": null,
+      "direction": "ltr",
+      "language": "en",
+      "scroll": {
+        "width": 393,
+        "height": 997
+      },
+      "structure": {
+        "headings": 1,
+        "h1": 1,
+        "main": 1,
+        "headers": 2,
+        "sections": 1,
+        "cards": 14,
+        "forms": 0,
+        "buttons": 2,
+        "links": 4,
+        "inputs": 0,
+        "unlabeledControls": 0
+      },
+      "noHorizontalOverflow": true,
+      "screenshot": "docs/quality/figma_parity/screens/AUTH-02/auth-lane-en-v2-mobile.png",
+      "routeHits": [],
+      "requestBodyKeys": []
+    }
+  ],
+  "checks": {
+    "allScreensObserved": true,
+    "allDirectionsMatchLocale": true,
+    "allLanguagesMatchLocale": true,
+    "noHorizontalOverflow": true,
+    "mobileAndTabletUseResponsiveViewport": true,
+    "activeUrlContainsNoPhoneIdentity": true
+  },
+  "interpretation": "Responsive evidence uses the same active email-only identity contract. Historical phone/password fields in the canonical provider export are not reintroduced; provider phone/WhatsApp controls remain contact-only where approved."
+}

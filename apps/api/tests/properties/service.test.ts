@@ -120,8 +120,9 @@ test('creates provider-owned drafts and saves core/location steps with optimisti
   assert.equal(created.source.providerId, provider);
   const updated = await service.saveStep(claims(), id, 'basic', { version: 0, name: { en: 'Updated apartment' }, reason: 'Save basic property data' }, { requestId: 'property-2', traceId: 'b'.repeat(32) });
   assert.equal(updated.version, 1);
-  const located = await service.saveStep(claims(), id, 'location', { version: 1, locationId: location, coordinates: { latitude: 30.62, longitude: 30.74 }, reason: 'Save property location' }, { requestId: 'property-3', traceId: 'c'.repeat(32) });
+  const located = await service.saveStep(claims(), id, 'location', { version: 1, locationId: location, mapUrl: 'https://maps.google.com/?q=Sadat+City', coordinates: { latitude: 30.62, longitude: 30.74 }, reason: 'Save property location' }, { requestId: 'property-3', traceId: 'c'.repeat(32) });
   assert.equal(located.locationId, location);
+  assert.equal(located.mapUrl, 'https://maps.google.com/?q=Sadat+City');
   assert.deepEqual(located.coordinates, { latitude: 30.62, longitude: 30.74 });
   const details = await service.saveStep(claims(), id, 'details', { version: 2, deliveryStatus: 'ready_to_move', area: { value: 85, unit: 'sqm' }, layout: { bedrooms: 2, bathrooms: 1, floor: 2, totalFloors: 5 }, reason: 'Save property details' }, { requestId: 'property-8', traceId: '1'.repeat(32) });
   assert.equal(details.area?.value, 85);
@@ -165,7 +166,7 @@ test('aggregates submission readiness and rejects incomplete or stale submission
   const { service } = fixture();
   const invalid = await service.validate(claims(), id);
   assert.equal(invalid.valid, false);
-  assert.deepEqual(invalid.issues.map(issue => issue.path), ['locationId', 'price', 'contact']);
+  assert.deepEqual(invalid.issues.map(issue => issue.path), ['location', 'price', 'contact']);
   await assert.rejects(service.submit(claims(), id, { version: 0, reason: 'Submit incomplete property' }, { requestId: 'property-submit-1', traceId: '5'.repeat(32) }), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_VALIDATION_FAILED');
 });
 

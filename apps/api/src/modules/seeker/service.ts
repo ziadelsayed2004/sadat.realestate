@@ -40,7 +40,6 @@ export interface SeekerServiceDependencies {
     roleType: 'seeker',
     now: Date
   ) => Promise<{
-    phone: string;
     email: string;
     roleType: 'seeker';
     purpose: 'registration';
@@ -70,7 +69,6 @@ function profileData(account: SeekerAccount): SeekerProfileData {
     id: account.id,
     roleType: 'seeker',
     status: account.status,
-    phone: account.phone,
     email: account.email,
     firstName: account.firstName,
     lastName: account.lastName,
@@ -106,7 +104,6 @@ export function createSeekerService(dependencies: SeekerServiceDependencies): Se
       let account: SeekerAccount;
       try {
         const createInput: CreateSeekerInput = {
-          phone: grant.phone,
           email: grant.email,
           firstName: input.firstName,
           lastName: input.lastName,

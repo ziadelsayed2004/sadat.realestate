@@ -14,6 +14,19 @@ const nodeGlobals = {
   structuredClone: 'readonly'
 };
 
+const browserCaptureGlobals = {
+  document: 'readonly',
+  window: 'readonly',
+  Image: 'readonly',
+  HTMLImageElement: 'readonly',
+  HTMLElement: 'readonly',
+  Text: 'readonly',
+  innerWidth: 'readonly',
+  innerHeight: 'readonly',
+  getComputedStyle: 'readonly',
+  requestAnimationFrame: 'readonly'
+};
+
 export default tseslint.config(
   {
     ignores: ['**/dist/**', '**/coverage/**', '**/node_modules/**', 'agent_pack/**']
@@ -39,6 +52,15 @@ export default tseslint.config(
     files: ['**/*.{ts,tsx}'],
     rules: {
       'no-undef': 'off'
+    }
+  },
+  {
+    files: ['scripts/**/*.mjs'],
+    languageOptions: {
+      globals: {
+        ...nodeGlobals,
+        ...browserCaptureGlobals
+      }
     }
   }
 );

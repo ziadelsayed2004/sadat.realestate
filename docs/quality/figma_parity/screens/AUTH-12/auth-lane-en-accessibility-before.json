@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-12",
+  "phase": "before",
+  "html": {
+    "lang": "en",
+    "dir": "ltr"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-12",
+    "state": "ready",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/register/provider/account?providerType=developer_company&step=documents&lang=en",
+    "html": {
+      "lang": "en",
+      "dir": "ltr"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 2094,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 2371
+    },
+    "structure": {
+      "headings": 9,
+      "h1": 1,
+      "main": 1,
+      "headers": 9,
+      "sections": 1,
+      "cards": 34,
+      "forms": 0,
+      "buttons": 2,
+      "links": 2,
+      "inputs": 7,
+      "unlabeledControls": 0
+    },
+    "controls": [
+      {
+        "tag": "input",
+        "id": "provider-document-input-commercial_registration",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "Choose file: Commercial registration",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-tax_card",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "Choose file: Tax card",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-authorized_representative_id_front",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "Choose file: Authorized representative ID — front",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-authorized_representative_id_back",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "Choose file: Authorized representative ID — back",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-company_profile",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "Choose file: Company profile",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-developer_license",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "Choose file: Developer license",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-additional_supporting_document",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "Choose file: Additional supporting document",
+        "autocomplete": null
+      }
+    ],
+    "links": [
+      {
+        "text": "Skip to main content",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "Back",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "Review application",
+        "ariaLabel": null,
+        "disabled": true
+      }
+    ]
+  }
+}

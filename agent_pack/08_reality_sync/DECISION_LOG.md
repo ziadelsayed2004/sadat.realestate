@@ -1,5 +1,24 @@
 # Decision Log
 
+## DECISION-2026-08-27-EMAIL-ONLY-AUTH
+
+- **Status:** Active and superseding for implementation
+- **Scope:** Seeker and Provider identity, registration, login, OTP, grants, repositories, projections, fixtures, and UI
+- **Decision:** Use normalized email as the only Seeker/Provider identity identifier. OTP request and verification accept only `email`, `roleType`, and `purpose` (plus challenge/code on verify). `/auth/verify-email` is canonical; `/auth/verify-phone` is a browser-only legacy redirect and does not accept phone OTP. Admin remains email/password. Phone and WhatsApp may remain only as approved contact/business fields.
+- **Rationale:** This is the newer explicit product instruction and removes phone from identity and OTP without removing legitimate property/provider contact data.
+- **Compatibility:** The former phone-plus-email Q-001 decision below remains unchanged as historical provenance. Existing phone-bound pending OTP challenges must be invalidated by `auth_email_only_otp_identity`; accounts without email are reported and are not given a synthetic identity.
+
+## DECISION-2026-08-27-MAP-URL
+
+- **Status:** Active
+- **Scope:** Property location contract, persistence, projections, Provider wizard, and Public property details
+- **Decision:** Accept only absolute HTTPS `mapUrl` values up to 2048 characters. Keep `locationId` and coordinates for compatibility; at least one source is sufficient. Do not fetch, geocode, or synthesize URLs. Public opens the stored URL in a new tab with `noopener noreferrer`.
+
+## DECISION-2026-08-27-SCREEN-BASELINE-AND-WAVES
+
+- **Status:** Active
+- **Decision:** The official baseline is 131 screens: Public 12, Auth 19, Seeker 10, Provider 24, Admin 66. Supplementary is historical Auth provenance only. Coordinator Bootstrap precedes parallel Public/Auth/Seeker; Provider follows reconciliation; Admin runs alone last. No historical screenshot or percentage closes a screen without fresh before/after review.
+
 Q-001 through Q-003 have been approved as recorded below. No other product decision has been confirmed beyond the supplied handoff and the architecture principles already recorded in the Agent Pack.
 
 Q-004 through Q-012 remain explicitly pending in `01_product/OPEN_QUESTIONS.md`. Their listed defaults are planning placeholders only; they must not be used as production behavior, hardcoded prices, provider integrations, or compliance policy.

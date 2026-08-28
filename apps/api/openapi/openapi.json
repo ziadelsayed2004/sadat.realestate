@@ -129,7 +129,7 @@
     "/api/v1/auth/otp/send": {
       "post": {
         "operationId": "sendEmailOtp",
-        "summary": "Create a phone-and-email-bound challenge and deliver its OTP by email",
+        "summary": "Create an email-bound challenge and deliver its OTP by email",
         "requestBody": {
           "required": true,
           "content": {
@@ -289,7 +289,7 @@
     "/api/v1/auth/register/seeker": {
       "post": {
         "operationId": "registerSeeker",
-        "summary": "Create a seeker account from a verified phone registration authority",
+        "summary": "Create a seeker account from a verified email registration authority",
         "requestBody": {
           "required": true,
           "content": {
@@ -12193,15 +12193,11 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "phone",
           "email",
           "roleType",
           "purpose"
         ],
         "properties": {
-          "phone": {
-            "$ref": "#/components/schemas/NormalizedPhone"
-          },
           "email": {
             "$ref": "#/components/schemas/NormalizedEmail"
           },
@@ -12223,7 +12219,6 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "phone",
           "email",
           "roleType",
           "purpose",
@@ -12231,9 +12226,6 @@
           "code"
         ],
         "properties": {
-          "phone": {
-            "$ref": "#/components/schemas/NormalizedPhone"
-          },
           "email": {
             "$ref": "#/components/schemas/NormalizedEmail"
           },
@@ -12378,7 +12370,6 @@
           "id",
           "roleType",
           "status",
-          "phone",
           "email",
           "firstName",
           "lastName",
@@ -12890,8 +12881,8 @@
           "providerType",
           "status",
           "version",
-          "phone",
           "requirementVersion",
+          "email",
           "missingFields",
           "missingDocuments",
           "availableActions",
@@ -12912,9 +12903,6 @@
           "version": {
             "type": "integer",
             "minimum": 0
-          },
-          "phone": {
-            "$ref": "#/components/schemas/NormalizedPhone"
           },
           "requirementVersion": {
             "type": "string"
@@ -15889,6 +15877,19 @@
               }
             ]
           },
+          "mapUrl": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "uri",
+                "maxLength": 2048,
+                "pattern": "^https://[^\\s]+$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "reason": {
             "type": "string",
             "minLength": 5,
@@ -15959,6 +15960,12 @@
                 "type": "number"
               }
             }
+          },
+          "mapUrl": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 2048,
+            "pattern": "^https://[^\\s]+$"
           },
           "description": {
             "$ref": "#/components/schemas/LocalizedText"
@@ -17316,7 +17323,6 @@
         "additionalProperties": false,
         "required": [
           "version",
-          "phone",
           "availableActions"
         ],
         "properties": {
@@ -17328,10 +17334,6 @@
             "type": "string",
             "format": "email",
             "maxLength": 254
-          },
-          "phone": {
-            "type": "string",
-            "pattern": "^\\+[1-9][0-9]{7,14}$"
           },
           "whatsappNumber": {
             "type": "string",
@@ -17817,6 +17819,12 @@
                 "items": {
                   "$ref": "#/components/schemas/PublicHomepageProperty"
                 }
+              },
+              "mapUrl": {
+                "type": "string",
+                "format": "uri",
+                "maxLength": 2048,
+                "pattern": "^https://[^\\s]+$"
               }
             }
           }

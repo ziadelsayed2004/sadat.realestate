@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 
 const VERIFICATION_TOKEN = 'V'.repeat(43);
 const ACCESS_TOKEN = 'header.payload.signature';
-const PHONE = '+201000000000';
 const EMAIL = 'provider@example.com';
 const APPLICATION_ID = 'a'.repeat(24);
 const USER_ID = 'b'.repeat(24);
@@ -20,8 +19,8 @@ function application(overrides: Record<string, unknown> = {}): Record<string, un
     providerType: 'developer_company',
     status: 'draft',
     version: 0,
-    phone: PHONE,
     requirementVersion: '2026-08-13.1',
+    email: 'provider@example.com',
     missingFields: ['accountOwnerFullName', 'displayName', 'email', 'primaryLocationId', 'serviceAreaIds', 'preferredLocale', 'termsAcceptedAt', 'privacyAcceptedAt'],
     missingDocuments: [],
     availableActions: ['edit_account', 'edit_company', 'submit', 'view_status'],
@@ -46,7 +45,7 @@ async function mockProviderApplicationApi(page: import('@playwright/test').Page)
 
   await page.route('**/api/v1/auth/otp/send', async route => {
     const body = route.request().postDataJSON() as Record<string, unknown>;
-    expect(body).toMatchObject({ roleType: 'provider', purpose: 'registration', phone: PHONE, email: EMAIL });
+    expect(body).toMatchObject({ roleType: 'provider', purpose: 'registration', email: EMAIL });
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -61,7 +60,7 @@ async function mockProviderApplicationApi(page: import('@playwright/test').Page)
 
   await page.route('**/api/v1/auth/otp/verify', async route => {
     const body = route.request().postDataJSON() as Record<string, unknown>;
-    expect(body).toMatchObject({ roleType: 'provider', purpose: 'registration', phone: PHONE, email: EMAIL, code: '123456' });
+    expect(body).toMatchObject({ roleType: 'provider', purpose: 'registration', email: EMAIL, code: '123456' });
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -126,7 +125,6 @@ async function reachAccountDetails(page: import('@playwright/test').Page, locale
   await page.getByRole('button', { name: /continue|متابعة|继续/iu }).click();
   await expect(page.locator('[data-screen-id="AUTH-04"]')).toBeVisible();
   await page.locator('#auth-otp-email').fill(EMAIL);
-  await page.locator('#auth-phone').fill(PHONE);
   await page.locator('[data-screen-id="AUTH-04"] button[type="submit"]').click();
   await expect(page.locator('[data-screen-id="AUTH-05"]')).toBeVisible();
   for (let position = 0; position < 6; position += 1) {
@@ -143,7 +141,6 @@ test('provider account details saves a strict patch and resumes with the server 
 
   await expect(page.locator('html')).toHaveAttribute('lang', locale);
   await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
-  await expect(page.locator('#provider-account-phone')).toHaveValue(PHONE);
   await page.locator('#provider-account-owner-name').fill('Mona Hassan');
   await page.locator('#provider-account-display-name').fill('Mona Properties');
   await page.locator('#provider-account-email').fill('Mona@Example.com');
@@ -222,7 +219,6 @@ test('provider account form exposes accessible labels, keyboard order, and valid
 
   const form = page.locator('form.provider-account-form');
   for (const id of [
-    'provider-account-phone',
     'provider-account-owner-name',
     'provider-account-display-name',
     'provider-account-email',
@@ -232,8 +228,8 @@ test('provider account form exposes accessible labels, keyboard order, and valid
   ]) {
     await expect(form.locator(`label[for="${id}"]`)).toHaveCount(1);
   }
-  await expect(form.getByRole('checkbox')).toHaveCount(3);
-  await expect(form.getByRole('checkbox', { name: /.+/ })).toHaveCount(3);
+  await expect(form.getByRole('checkbox')).toHaveCount(2);
+  await expect(form.getByRole('checkbox', { name: /.+/ })).toHaveCount(2);
 
   await page.locator('#provider-account-owner-name').focus();
   await page.keyboard.press('Tab');

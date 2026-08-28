@@ -61,7 +61,6 @@ export function createProviderRuntime(
         );
         return grant?.roleType === 'provider'
           ? {
-              phone: grant.phone,
               email: grant.email,
               roleType: 'provider',
               purpose: 'registration'

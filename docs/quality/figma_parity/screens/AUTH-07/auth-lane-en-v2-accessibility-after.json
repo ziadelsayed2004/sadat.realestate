@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-07",
+  "phase": "after",
+  "html": {
+    "lang": "en",
+    "dir": "ltr"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-07",
+    "state": "idle",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/register/provider/type?lang=en",
+    "html": {
+      "lang": "en",
+      "dir": "ltr"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 1053
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 6,
+      "forms": 0,
+      "buttons": 4,
+      "links": 3,
+      "inputs": 0,
+      "unlabeledControls": 0
+    },
+    "controls": [],
+    "links": [
+      {
+        "text": "Skip to main content",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "Back to account selection",
+        "href": "/auth/register"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "Individual brokerFor a real-estate professional operating as an individual.",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "Brokerage officeFor a brokerage office representing a business activity.",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "Developer companyFor a company that develops and manages real-estate projects.",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "Continue",
+        "ariaLabel": null,
+        "disabled": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "seedId": "capture-SEK-08-ar-after-2026-08-26",
+  "environment": "non-production-browser-fixture",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "screenId": "SEK-08",
+  "source": {
+    "pageId": "6017:4354",
+    "nodeId": "6027:6850",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6027-6850&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4354&starting-point-node-id=6027%3A3579",
+    "screenshot": "docs/quality/figma_parity/screens/SEK-08/figma.png"
+  },
+  "runtime": {
+    "route": "/seeker/profile?tab=preferences&lang=ar",
+    "requestedQueueRoute": "/seeker/profile?tab=preferences",
+    "role": "seeker",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1551,
+      "height": 997,
+      "deviceScaleFactor": 1
+    }
+  },
+  "authSession": {
+    "roleType": "seeker",
+    "projection": {
+      "accessToken": "capture.header.signature",
+      "tokenType": "Bearer",
+      "expiresInSeconds": 900,
+      "user": {
+        "id": "0123456789abcdef01234567",
+        "roleType": "seeker",
+        "status": "verified"
+      }
+    },
+    "source": "intercepted /api/v1/auth/refresh response"
+  },
+  "api": {
+    "fixtureContract": "real writable API response shapes",
+    "responseRequestIds": [
+      "capture-SEK-08-ar"
+    ],
+    "state": null
+  },
+  "phase": "after",
+  "repair": {
+    "repairId": "seeker-parity-verified-2026-08-27",
+    "expectedEffect": "Fresh deterministic Arabic RTL runtime capture for SEK-08 after the existing Seeker implementation; confirms real contract-shaped API loading, state handling, interaction affordances, focus order, and route ownership."
+  },
+  "seedSha256": "d7007d21fc6429d70d511c6dca9a465d9dff5d5eac0399c2b213dbb7d7aa3c68"
+}

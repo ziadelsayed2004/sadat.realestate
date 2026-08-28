@@ -17,7 +17,7 @@ const logoutResponse = (requestId: string) => ({
 });
 
 const homepageResponse = (requestId: string) => ({
-  data: { sections: [], properties: [], developers: [], content: [], banners: [] },
+  data: { sections: [], properties: [], developers: [], content: [], banners: [], categories: [], metrics: [] },
   meta: { requestId }
 });
 

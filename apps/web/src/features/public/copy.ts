@@ -19,6 +19,10 @@ export interface PublicHomepageCopy {
   readonly community: string;
   readonly about: string;
   readonly tips: string;
+  readonly readyCtaTitle: string;
+  readonly readyCtaBody: string;
+  readonly whatsappAction: string;
+  readonly discoverProject: string;
   readonly viewAll: string;
   readonly readMore: string;
   readonly sale: string;
@@ -73,6 +77,10 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicHomepageCopy>> = {
     community: 'المجتمع',
     about: 'عن المنصة',
     tips: 'نصائح عقارية',
+    readyCtaTitle: 'مستعد تبدأ رحلتك العقارية؟',
+    readyCtaBody: 'خليك خطوة أقرب لعقارك المثالي في مدينة السادات.',
+    whatsappAction: 'واتساب',
+    discoverProject: 'اكتشف المشروع',
     viewAll: 'عرض الكل',
     readMore: 'اقرأ المزيد',
     sale: 'للبيع',
@@ -125,6 +133,10 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicHomepageCopy>> = {
     community: 'Community',
     about: 'About the platform',
     tips: 'Real estate tips',
+    readyCtaTitle: 'Ready to start your property journey?',
+    readyCtaBody: 'Take one step closer to your ideal property in Sadat City.',
+    whatsappAction: 'WhatsApp',
+    discoverProject: 'Discover the project',
     viewAll: 'View all',
     readMore: 'Read more',
     sale: 'For sale',
@@ -177,6 +189,10 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicHomepageCopy>> = {
     community: '社区',
     about: '关于平台',
     tips: '房地产资讯',
+    readyCtaTitle: '准备开始您的房产之旅吗？',
+    readyCtaBody: '距离您在萨达特城的理想房产更近一步。',
+    whatsappAction: 'WhatsApp',
+    discoverProject: '探索项目',
     viewAll: '查看全部',
     readMore: '阅读更多',
     sale: '出售',

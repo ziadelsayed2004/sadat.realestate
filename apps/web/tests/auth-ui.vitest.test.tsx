@@ -41,7 +41,7 @@ describe('login and OTP screens', () => {
     expect(screen.getByRole('heading', { name: copy.loginTitle, level: 1 })).toBeInTheDocument();
     expect(screen.getByLabelText(copy.identifierLabel)).toBeInTheDocument();
     expect(screen.getByLabelText(copy.passwordLabel)).toHaveAttribute('autocomplete', 'current-password');
-    expect(screen.getByRole('link', { name: copy.phoneLoginAction })).toHaveAttribute('href', '/auth/verify-phone?purpose=login&roleType=seeker');
+    expect(screen.getByRole('link', { name: copy.emailLoginAction })).toHaveAttribute('href', '/auth/verify-email?purpose=login&roleType=seeker');
   });
 
   it('validates login input, calls the implemented login contract, and never renders the access token', async () => {
@@ -68,16 +68,14 @@ describe('login and OTP screens', () => {
     const client = createClient({ verifyOtp });
     const copy = getAuthCopy('en');
     renderWithLocale(
-      <AuthPage url="/auth/verify-phone?purpose=login&roleType=seeker" locale="en" client={client} onAuthenticated={vi.fn()} />,
+      <AuthPage url="/auth/verify-email?purpose=login&roleType=seeker" locale="en" client={client} onAuthenticated={vi.fn()} />,
       { locale: 'en' }
     );
 
     fireEvent.change(screen.getByLabelText(copy.identifierLabel), { target: { value: 'SEEKER@EXAMPLE.COM' } });
-    fireEvent.change(screen.getByLabelText(copy.phoneLabel), { target: { value: '+20 100 000 0000' } });
     fireEvent.click(screen.getByRole('button', { name: copy.sendCodeAction }));
     await waitFor(() => expect(screen.getByRole('heading', { name: copy.otpTitle, level: 1 })).toBeInTheDocument());
     expect(client.sendOtp).toHaveBeenCalledWith({
-      phone: '+201000000000',
       email: 'seeker@example.com',
       roleType: 'seeker',
       purpose: 'login'
@@ -91,7 +89,6 @@ describe('login and OTP screens', () => {
     fireEvent.click(screen.getByRole('button', { name: copy.verifyAction }));
 
     await waitFor(() => expect(verifyOtp).toHaveBeenCalledWith({
-      phone: '+201000000000',
       email: 'seeker@example.com',
       roleType: 'seeker',
       purpose: 'login',
@@ -116,21 +113,20 @@ describe('login and OTP screens', () => {
     const sendOtp = vi.fn().mockRejectedValue(rateLimited);
     const client = createClient({ sendOtp });
     const copy = getAuthCopy('en');
-    renderWithLocale(<AuthPage url="/auth/verify-phone" locale="en" client={client} onAuthenticated={vi.fn()} />, { locale: 'en' });
+    renderWithLocale(<AuthPage url="/auth/verify-email" locale="en" client={client} onAuthenticated={vi.fn()} />, { locale: 'en' });
 
     fireEvent.change(screen.getByLabelText(copy.identifierLabel), { target: { value: 'seeker@example.com' } });
-    fireEvent.change(screen.getByLabelText(copy.phoneLabel), { target: { value: '+201000000000' } });
     fireEvent.click(screen.getByRole('button', { name: copy.sendCodeAction }));
     await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent(copy.otpRateLimitedTitle));
     expect(screen.getByText(copy.otpRateLimitedBody)).toBeInTheDocument();
     expect(document.body.textContent).not.toContain('OTP_SEND_RATE_LIMITED');
   });
 
-  it('keeps a direct verification route in the safe phone-entry state until a challenge exists', () => {
+  it('keeps a direct verification route in the safe email-entry state until a challenge exists', () => {
     const copy = getAuthCopy('en');
-    renderWithLocale(<AuthPage url="/auth/verify-phone" locale="en" client={createClient()} onAuthenticated={vi.fn()} />, { locale: 'en' });
+    renderWithLocale(<AuthPage url="/auth/verify-email" locale="en" client={createClient()} onAuthenticated={vi.fn()} />, { locale: 'en' });
 
-    expect(screen.getByRole('heading', { name: copy.phoneTitle, level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: copy.emailTitle, level: 1 })).toBeInTheDocument();
     expect(screen.queryByLabelText(copy.codeDigitLabel(1))).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: copy.loginAction })).toHaveAttribute('href', '/auth/login');
   });

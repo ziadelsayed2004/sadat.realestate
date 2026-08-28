@@ -17,12 +17,11 @@ export interface AuthCopy {
   readonly loggingIn: string;
   readonly createAccountPrompt: string;
   readonly createAccountAction: string;
-  readonly phoneLoginPrompt: string;
-  readonly phoneLoginAction: string;
-  readonly phoneTitle: string;
-  readonly phoneDescription: string;
-  readonly phoneLabel: string;
-  readonly phonePlaceholder: string;
+  readonly emailLoginPrompt: string;
+  readonly emailLoginAction: string;
+  readonly emailTitle: string;
+  readonly emailDescription: string;
+  readonly emailPlaceholder: string;
   readonly roleLabel: string;
   readonly roleSeeker: string;
   readonly roleProvider: string;
@@ -36,7 +35,7 @@ export interface AuthCopy {
   readonly verifyingCode: string;
   readonly resendAction: string;
   readonly resendIn: (seconds: number) => string;
-  readonly changePhoneAction: string;
+  readonly changeEmailAction: string;
   readonly codeSentTitle: string;
   readonly codeSentBody: string;
   readonly loginSuccessTitle: string;
@@ -80,7 +79,6 @@ export interface AuthCopy {
   readonly firstNamePlaceholder: string;
   readonly lastNameLabel: string;
   readonly lastNamePlaceholder: string;
-  readonly verifiedPhoneLabel: string;
   readonly registerAction: string;
   readonly registering: string;
   readonly registrationSuccessTitle: string;
@@ -113,12 +111,11 @@ const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
     loggingIn: 'جارٍ تسجيل الدخول',
     createAccountPrompt: 'ليس لديك حساب؟',
     createAccountAction: 'إنشاء حساب',
-    phoneLoginPrompt: 'أو تابع برقم الهاتف ورمز يُرسل إلى بريدك',
-    phoneLoginAction: 'التحقق بالبريد',
-    phoneTitle: 'تأكيد الهاتف والبريد الإلكتروني',
-    phoneDescription: 'أدخل رقم الهاتف والبريد المرتبط بالحساب لإرسال رمز تحقق إلى البريد.',
-    phoneLabel: 'رقم الهاتف',
-    phonePlaceholder: '+20 100 000 0000',
+    emailLoginPrompt: 'أو تابع برمز يُرسل إلى بريدك الإلكتروني',
+    emailLoginAction: 'التحقق بالبريد',
+    emailTitle: 'تأكيد البريد الإلكتروني',
+    emailDescription: 'أدخل البريد الإلكتروني المرتبط بالحساب لإرسال رمز تحقق.',
+    emailPlaceholder: 'أدخل البريد الإلكتروني',
     roleLabel: 'نوع الحساب',
     roleSeeker: 'باحث عن عقار',
     roleProvider: 'مقدم عقار',
@@ -132,12 +129,12 @@ const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
     verifyingCode: 'جارٍ تأكيد الرمز',
     resendAction: 'إعادة إرسال الرمز',
     resendIn: seconds => `يمكنك إعادة الإرسال بعد ${seconds} ثانية`,
-    changePhoneAction: 'تغيير رقم الهاتف',
+    changeEmailAction: 'تغيير البريد الإلكتروني',
     codeSentTitle: 'تم إرسال رمز التحقق',
     codeSentBody: 'تحقق من صندوق البريد والرسائل غير المرغوبة ثم أدخل الرمز للمتابعة.',
     loginSuccessTitle: 'تم تسجيل الدخول',
     loginSuccessBody: 'جارٍ نقلك إلى الصفحة المطلوبة.',
-    verificationSuccessTitle: 'تم تأكيد البريد والهاتف',
+    verificationSuccessTitle: 'تم تأكيد البريد الإلكتروني',
     verificationSuccessBody: 'تم التحقق من بيانات الاتصال ويمكنك متابعة التسجيل.',
     invalidFormTitle: 'تحقق من البيانات',
     invalidFormBody: 'أكمل الحقول المطلوبة بالصيغة الصحيحة.',
@@ -171,21 +168,20 @@ const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
     continueAction: 'متابعة',
     backAction: 'العودة إلى تسجيل الدخول',
     registrationFormTitle: 'إنشاء حساب الباحث عن عقار',
-    registrationFormBody: 'أكمل بياناتك الأساسية بعد تأكيد الهاتف والبريد الإلكتروني.',
+    registrationFormBody: 'أكمل بياناتك الأساسية بعد تأكيد البريد الإلكتروني.',
     firstNameLabel: 'الاسم الأول',
     firstNamePlaceholder: 'أدخل الاسم الأول',
     lastNameLabel: 'اسم العائلة',
     lastNamePlaceholder: 'أدخل اسم العائلة',
-    verifiedPhoneLabel: 'رقم الهاتف المؤكد',
     registerAction: 'إنشاء الحساب',
     registering: 'جارٍ إنشاء الحساب',
     registrationSuccessTitle: 'تم إنشاء حسابك',
     registrationSuccessBody: 'أصبح حساب الباحث عن عقار جاهزًا. يمكنك المتابعة إلى حسابك.',
     registrationNextAction: 'الانتقال إلى حسابي',
     invalidRegistrationTokenTitle: 'انتهت صلاحية التحقق',
-    invalidRegistrationTokenBody: 'ابدأ التحقق من الهاتف والبريد مرة أخرى للمتابعة بأمان.',
+    invalidRegistrationTokenBody: 'ابدأ التحقق من البريد الإلكتروني مرة أخرى للمتابعة بأمان.',
     duplicateRegistrationTitle: 'الحساب موجود بالفعل',
-    duplicateRegistrationBody: 'يوجد حساب مرتبط بهذا الهاتف أو البريد. ارجع إلى تسجيل الدخول للمتابعة.',
+    duplicateRegistrationBody: 'يوجد حساب مرتبط بهذا البريد. ارجع إلى تسجيل الدخول للمتابعة.',
     registrationUnavailableTitle: 'لا يمكن متابعة التسجيل',
     registrationUnavailableBody: 'ابدأ التسجيل من جديد. لم يتم الاحتفاظ ببيانات التحقق على هذا الجهاز.',
     restartRegistrationAction: 'بدء التسجيل من جديد'
@@ -207,12 +203,11 @@ const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
     loggingIn: 'Logging in',
     createAccountPrompt: "Don't have an account?",
     createAccountAction: 'Create an account',
-    phoneLoginPrompt: 'Or continue with your phone and an email code',
-    phoneLoginAction: 'Verify by email',
-    phoneTitle: 'Verify your phone and email',
-    phoneDescription: 'Enter the phone number and email linked to the account. The one-time code is sent by email.',
-    phoneLabel: 'Phone number',
-    phonePlaceholder: '+20 100 000 0000',
+    emailLoginPrompt: 'Or continue with a code sent to your email',
+    emailLoginAction: 'Verify by email',
+    emailTitle: 'Verify your email',
+    emailDescription: 'Enter the email linked to the account. The one-time code is sent by email.',
+    emailPlaceholder: 'Enter your email',
     roleLabel: 'Account type',
     roleSeeker: 'Property seeker',
     roleProvider: 'Property provider',
@@ -226,12 +221,12 @@ const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
     verifyingCode: 'Verifying code',
     resendAction: 'Resend code',
     resendIn: seconds => `You can resend the code in ${seconds} seconds`,
-    changePhoneAction: 'Change phone number',
+    changeEmailAction: 'Change email address',
     codeSentTitle: 'Verification code sent',
     codeSentBody: 'Check your inbox and spam folder, then enter the code to continue.',
     loginSuccessTitle: 'You are logged in',
     loginSuccessBody: 'Taking you to the requested page.',
-    verificationSuccessTitle: 'Email and phone verified',
+    verificationSuccessTitle: 'Email verified',
     verificationSuccessBody: 'Your contact details are verified and you can continue registration.',
     invalidFormTitle: 'Check your details',
     invalidFormBody: 'Complete the required fields using the expected format.',
@@ -265,21 +260,20 @@ const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
     continueAction: 'Continue',
     backAction: 'Back to log in',
     registrationFormTitle: 'Create your seeker account',
-    registrationFormBody: 'Complete your basic details after verifying your phone and email.',
+    registrationFormBody: 'Complete your basic details after verifying your email.',
     firstNameLabel: 'First name',
     firstNamePlaceholder: 'Enter your first name',
     lastNameLabel: 'Last name',
     lastNamePlaceholder: 'Enter your last name',
-    verifiedPhoneLabel: 'Verified phone number',
     registerAction: 'Create account',
     registering: 'Creating account',
     registrationSuccessTitle: 'Your account is ready',
     registrationSuccessBody: 'Your seeker account was created. Continue to your account to get started.',
     registrationNextAction: 'Go to my account',
     invalidRegistrationTokenTitle: 'Verification expired',
-    invalidRegistrationTokenBody: 'Start phone and email verification again to continue safely.',
+    invalidRegistrationTokenBody: 'Start email verification again to continue safely.',
     duplicateRegistrationTitle: 'Account already exists',
-    duplicateRegistrationBody: 'An account is already linked to this phone or email. Return to log in.',
+    duplicateRegistrationBody: 'An account is already linked to this email. Return to log in.',
     registrationUnavailableTitle: 'Registration cannot continue',
     registrationUnavailableBody: 'Start registration again. Verification data is not kept on this device.',
     restartRegistrationAction: 'Restart registration'
@@ -298,12 +292,11 @@ const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
     loggingIn: '正在登录',
     createAccountPrompt: '还没有账号？',
     createAccountAction: '创建账号',
-    phoneLoginPrompt: '或使用手机号和邮件验证码继续',
-    phoneLoginAction: '通过邮件验证',
-    phoneTitle: '验证手机号和邮箱',
-    phoneDescription: '请输入账号关联的手机号和邮箱，一次性验证码将通过邮件发送。',
-    phoneLabel: '手机号',
-    phonePlaceholder: '+20 100 000 0000',
+    emailLoginPrompt: '或使用发送到邮箱的验证码继续',
+    emailLoginAction: '通过邮件验证',
+    emailTitle: '验证邮箱',
+    emailDescription: '请输入账号关联的邮箱，一次性验证码将通过邮件发送。',
+    emailPlaceholder: '请输入邮箱',
     roleLabel: '账号类型',
     roleSeeker: '购房者',
     roleProvider: '房产提供方',
@@ -317,12 +310,12 @@ const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
     verifyingCode: '正在验证验证码',
     resendAction: '重新发送验证码',
     resendIn: seconds => `${seconds} 秒后可以重新发送`,
-    changePhoneAction: '更换手机号',
+    changeEmailAction: '更换邮箱',
     codeSentTitle: '验证码已发送',
     codeSentBody: '请查看收件箱和垃圾邮件，然后输入验证码继续。',
     loginSuccessTitle: '登录成功',
     loginSuccessBody: '正在前往请求的页面。',
-    verificationSuccessTitle: '邮箱和手机号已验证',
+    verificationSuccessTitle: '邮箱已验证',
     verificationSuccessBody: '联系信息验证成功，可以继续注册。',
     invalidFormTitle: '请检查信息',
     invalidFormBody: '请按要求完成必填字段。',
@@ -355,21 +348,20 @@ const copies: Readonly<Record<SupportedLocale, AuthCopy>> = {
     continueAction: '继续',
     backAction: '返回',
     registrationFormTitle: '创建购房者账号',
-    registrationFormBody: '验证手机号和邮箱后，完成您的基本信息。',
+    registrationFormBody: '验证邮箱后，完成您的基本信息。',
     firstNameLabel: '名字',
     firstNamePlaceholder: '请输入名字',
     lastNameLabel: '姓氏',
     lastNamePlaceholder: '请输入姓氏',
-    verifiedPhoneLabel: '已验证手机号',
     registerAction: '创建账号',
     registering: '正在创建账号',
     registrationSuccessTitle: '账号已准备就绪',
     registrationSuccessBody: '您的购房者账号已创建。继续进入账号开始使用。',
     registrationNextAction: '进入我的账号',
     invalidRegistrationTokenTitle: '验证已过期',
-    invalidRegistrationTokenBody: '请重新验证手机号和邮箱后安全继续。',
+    invalidRegistrationTokenBody: '请重新验证邮箱后安全继续。',
     duplicateRegistrationTitle: '账号已存在',
-    duplicateRegistrationBody: '此手机号或邮箱已关联账号。返回登录页面继续。',
+    duplicateRegistrationBody: '此邮箱已关联账号。返回登录页面继续。',
     registrationUnavailableTitle: '无法继续注册',
     registrationUnavailableBody: '请重新开始注册。此设备不会保留验证数据。',
     restartRegistrationAction: '重新开始注册'

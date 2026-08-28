@@ -119,7 +119,7 @@ export function getProviderPropertyStateCopy(locale: SupportedLocale): ProviderP
 
 export function getProviderPropertyValidationIssues(property: PropertyData): readonly ProviderPropertyValidationIssue[] {
   const issues: ProviderPropertyValidationIssue[] = [];
-  if (property.locationId === undefined) issues.push('location');
+  if (property.locationId === undefined && property.mapUrl === undefined && property.coordinates === undefined) issues.push('location');
   if (property.price === undefined) issues.push('price');
   if (property.contact?.phone === undefined && property.contact?.whatsappNumber === undefined && property.contact?.email === undefined) issues.push('contact');
   if (!property.active || !['draft', 'needs_changes'].includes(property.status)) issues.push('status');

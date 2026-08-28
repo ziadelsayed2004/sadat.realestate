@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "seedId": "auth-lane-AUTH-13-en-after-2026-08-27",
+  "environment": "non-production-browser-fixture",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "screenId": "AUTH-13",
+  "source": {
+    "pageId": "6017:4353",
+    "nodeId": "6017:17975",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-17975&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "screenshot": "docs/quality/figma_parity/screens/AUTH-13/figma.png"
+  },
+  "runtime": {
+    "route": "/auth/register/provider/review?providerType=developer_company&lang=en",
+    "requestedQueueRoute": "/auth/register/provider/review",
+    "role": "anonymous",
+    "locale": "en",
+    "direction": "ltr",
+    "viewport": {
+      "width": 1577,
+      "height": 2326
+    }
+  },
+  "authSession": null,
+  "api": {
+    "fixtureContract": "real writable API response shapes",
+    "state": {
+      "id": "abcdef0123456789abcdef01",
+      "providerType": "developer_company",
+      "status": "draft",
+      "version": 0,
+      "requirementVersion": "2026-08-13.1",
+      "email": "capture@example.com",
+      "accountOwnerFullName": "Ahmed Mohamed Ali",
+      "displayName": "Sadat Real Estate Development",
+      "whatsappNumber": "+201000000001",
+      "preferredLocale": "ar",
+      "termsAcceptedAt": "2026-08-27T08:30:00.000Z",
+      "privacyAcceptedAt": "2026-08-27T08:30:00.000Z",
+      "legalCompanyName": "Sadat Real Estate Development Company",
+      "brandName": "Sadat Real Estate",
+      "headOfficeAddress": "First District, Sadat City",
+      "commercialRegistrationNumber": "CR-2026-00128",
+      "taxRegistrationNumber": "TX-2026-00128",
+      "authorizedRepresentativeFullName": "Ahmed Mohamed Ali",
+      "authorizedRepresentativeTitle": "Managing Director",
+      "accountOwnerHasRegisteredAuthority": true,
+      "requirementsSnapshot": {
+        "version": "2026-08-13.1",
+        "providerType": "developer_company",
+        "requirements": [
+          {
+            "key": "commercial_registration",
+            "labelKey": "provider.documents.commercialRegistration",
+            "classification": "required",
+            "applies": true
+          },
+          {
+            "key": "tax_card",
+            "labelKey": "provider.documents.taxCard",
+            "classification": "required",
+            "applies": true
+          },
+          {
+            "key": "authorized_representative_id_front",
+            "labelKey": "provider.documents.authorizedRepresentativeIdFront",
+            "classification": "required",
+            "applies": true
+          },
+          {
+            "key": "authorized_representative_id_back",
+            "labelKey": "provider.documents.authorizedRepresentativeIdBack",
+            "classification": "required",
+            "applies": true
+          },
+          {
+            "key": "company_profile",
+            "labelKey": "provider.documents.companyProfile",
+            "classification": "optional",
+            "applies": true
+          },
+          {
+            "key": "developer_license",
+            "labelKey": "provider.documents.developerLicense",
+            "classification": "optional",
+            "applies": true
+          },
+          {
+            "key": "additional_supporting_document",
+            "labelKey": "provider.documents.additionalSupportingDocument",
+            "classification": "optional",
+            "applies": true
+          }
+        ]
+      },
+      "missingFields": [],
+      "missingDocuments": [],
+      "availableActions": [
+        "view_status",
+        "open_dashboard"
+      ],
+      "createdAt": "2026-08-27T08:00:00.000Z",
+      "updatedAt": "2026-08-27T09:00:00.000Z"
+    }
+  },
+  "phase": "after",
+  "hashes": {
+    "canonical": "5eb00cb8079a5807923d1de7115f9631a03c39e52158712d1695d2baca199c47",
+    "before": "069ac32d4140b80fb91ea334ceedeadbc8734e7586f0d8ce4c3d4b38d92430c5",
+    "after": "069ac32d4140b80fb91ea334ceedeadbc8734e7586f0d8ce4c3d4b38d92430c5"
+  }
+}

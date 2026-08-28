@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { PUBLIC_PROPERTY_COMPARISON_FIELDS } from '@sadat-real-estate/contracts';
 import { createPublicPropertyComparisonService, PublicPropertyComparisonError, type PublicPropertyComparisonRepository, type PublicPropertyComparisonSource } from '../../src/modules/compare/properties.js';
 
 const id = '0123456789abcdef01234567'; const other = '1123456789abcdef01234567';
@@ -11,7 +12,7 @@ test('compares one or two published active properties using fixed fields and saf
   const service = createPublicPropertyComparisonService({ repository: repository([row(id), row(other)]) });
   const result = await service.compare({ propertyIds: [other, id] });
   assert.deepEqual(result.items.map((item) => item.id), [other, id]);
-  assert.deepEqual(result.fields, ['name', 'transactionType', 'price', 'area', 'layout']);
+  assert.deepEqual(result.fields, [...PUBLIC_PROPERTY_COMPARISON_FIELDS]);
   assert.equal('status' in result.items[0]!, false);
   assert.equal('active' in result.items[0]!, false);
 });

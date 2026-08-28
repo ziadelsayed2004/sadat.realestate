@@ -30,6 +30,10 @@ export const propertyCoordinatesSchema = z.object({
   latitude: z.number().finite().min(-90).max(90),
   longitude: z.number().finite().min(-180).max(180)
 }).strict();
+export const propertyMapUrlSchema = z.string().trim().max(2_048).url().refine(
+  value => new URL(value).protocol === 'https:',
+  { message: 'Map URL must use HTTPS' }
+);
 export const PROPERTY_DRAFT_STEPS = ['basic', 'location', 'details', 'price-payment', 'features-services', 'contact'] as const;
 export const propertyDraftStepSchema = z.enum(PROPERTY_DRAFT_STEPS);
 export const propertyIdParamsSchema = z.object({ propertyId: propertyObjectIdSchema }).strict();
@@ -141,7 +145,8 @@ export const propertyCoreStepSchema = draftPatch({
 
 export const propertyLocationStepSchema = draftPatch({
   locationId: propertyObjectIdSchema.nullable().optional(),
-  coordinates: propertyCoordinatesSchema.nullable().optional()
+  coordinates: propertyCoordinatesSchema.nullable().optional(),
+  mapUrl: propertyMapUrlSchema.nullable().optional()
 });
 
 export const propertyDescriptionSchema = localizedTextSchema;
@@ -231,6 +236,7 @@ export const propertyDataSchema = z.object({
   parentPropertyId: propertyObjectIdSchema.optional(),
   locationId: propertyObjectIdSchema.optional(),
   coordinates: propertyCoordinatesSchema.optional(),
+  mapUrl: propertyMapUrlSchema.optional(),
   description: propertyDescriptionSchema.optional(),
   propertyTypeId: propertyObjectIdSchema.optional(),
   deliveryStatus: propertyDeliveryStatusSchema.optional(),
@@ -281,6 +287,7 @@ export type PropertyContact = z.infer<typeof propertyContactSchema>;
 export type PropertyContactStep = z.infer<typeof propertyContactStepSchema>;
 export type PropertyStep = z.infer<typeof propertyStepSchema>;
 export type PropertyCoordinates = z.infer<typeof propertyCoordinatesSchema>;
+export type PropertyMapUrl = z.infer<typeof propertyMapUrlSchema>;
 export type PropertyIdParams = z.infer<typeof propertyIdParamsSchema>;
 export type PropertyStepParams = z.infer<typeof propertyStepParamsSchema>;
 export type PropertySubmit = z.infer<typeof propertySubmitSchema>;

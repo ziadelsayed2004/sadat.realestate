@@ -20,7 +20,6 @@ test('hashes and verifies Admin passwords with Argon2id', async () => {
 test('uses a domain-separated keyed hash for OTP codes and constant-time verification', () => {
   const hasher = createHmacOtpCodeHasher(new Uint8Array(32).fill(4));
   const context = {
-    phone: '+201000000000',
     email: 'seeker@example.com',
     roleType: 'seeker' as const,
     purpose: 'login' as const
@@ -30,7 +29,6 @@ test('uses a domain-separated keyed hash for OTP codes and constant-time verific
   assert.notEqual(hashed, '123456');
   assert.equal(hasher.matches(context, '123456', hashed), true);
   assert.equal(hasher.matches(context, '000000', hashed), false);
-  assert.equal(hasher.matches({ ...context, phone: '+201000000001' }, '123456', hashed), false);
   assert.equal(hasher.matches({ ...context, email: 'other@example.com' }, '123456', hashed), false);
 });
 

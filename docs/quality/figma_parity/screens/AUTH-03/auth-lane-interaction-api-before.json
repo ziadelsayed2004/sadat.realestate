@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-03",
+  "phase": "before",
+  "route": "/auth/register/seeker",
+  "requestBodies": [
+    {
+      "method": "POST",
+      "pathname": "/auth/otp/send",
+      "body": {
+        "email": "ahmed@example.com",
+        "roleType": "seeker",
+        "purpose": "registration"
+      }
+    },
+    {
+      "method": "POST",
+      "pathname": "/auth/otp/verify",
+      "body": {
+        "email": "ahmed@example.com",
+        "roleType": "seeker",
+        "purpose": "registration",
+        "challengeId": "123e4567-e89b-12d3-a456-426614174000",
+        "code": "123456"
+      }
+    }
+  ],
+  "apiRequests": [
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:4180/api/v1/auth/otp/send",
+      "body": {
+        "email": "ahmed@example.com",
+        "roleType": "seeker",
+        "purpose": "registration"
+      }
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:4180/api/v1/auth/otp/verify",
+      "body": {
+        "email": "ahmed@example.com",
+        "roleType": "seeker",
+        "purpose": "registration",
+        "challengeId": "123e4567-e89b-12d3-a456-426614174000",
+        "code": "123456"
+      }
+    }
+  ],
+  "apiResponses": [
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:4180/api/v1/auth/otp/send",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:4180/api/v1/auth/otp/verify",
+      "status": 200
+    }
+  ],
+  "routeHits": [
+    {
+      "method": "POST",
+      "pathname": "/auth/otp/send"
+    },
+    {
+      "method": "POST",
+      "pathname": "/auth/otp/verify"
+    }
+  ],
+  "assertions": {
+    "emailOnlyOtpSend": true,
+    "emailOnlyOtpVerify": true,
+    "otpContainsNoPhoneKey": true,
+    "providerRegistrationContainsNoPhoneOrPassword": true,
+    "providerPatchesContainNoPasswordOrVerificationToken": true,
+    "activeUrlContainsNoPhoneIdentity": true,
+    "observedScreen": true
+  }
+}

@@ -18,7 +18,7 @@ Inventory root: `D:\Projects\$current.projects\sadat.realestate`
 
 ## Remaining runtime gaps
 
-- Phone OTP, registration, password reset, downstream bearer authorization, centralized log transport, production deployment configuration, web runtime, provider adapters, and external isolated live-test data remain future work. OpenAPI/Postman describe the two operational and three implemented authentication routes with executable drift and safe-environment validation. Identity/session/credential uniqueness and TTL indexes are declared and unit-tested but have not been exercised against an isolated MongoDB server.
+- Password reset, downstream bearer authorization, centralized log transport, production deployment configuration, web runtime, provider adapters, and external isolated live-test data remain future work. Seeker/Provider authentication and OTP are email-only; `/auth/verify-email` is canonical and `/auth/verify-phone` is a browser-only legacy redirect. OpenAPI/Postman describe the operational authentication routes with executable drift and safe-environment validation. Identity/session/credential uniqueness and TTL indexes are declared and unit-tested but have not been exercised against an isolated MongoDB server.
 - The checked-in `.env.example` is documentation only. No real `.env` file, secret, production data, or provider credential was opened or used.
 
 ## Scope conclusion

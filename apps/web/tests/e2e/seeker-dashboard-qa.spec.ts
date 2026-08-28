@@ -131,7 +131,6 @@ async function routeSeekerApis(page: import('@playwright/test').Page): Promise<v
           id: seekerId,
           roleType: 'seeker',
           status: 'verified',
-          phone: '+201012345678',
           email: 'seeker@example.com',
           firstName: 'QA',
           lastName: 'Seeker',
@@ -180,7 +179,9 @@ test.describe('F3 Seeker Dashboard QA', () => {
       await expect(page.locator('#main-content')).toBeVisible();
       await expect(page.locator('.seeker-dashboard__nav')).toHaveAttribute('aria-label', /.+/u);
       await expect(page.locator(routeCase.selector)).toBeVisible();
-      await expect(page.locator('body')).not.toContainText(/assignedTo|internalNotes|auditData|providerId|seekerId|recipientId|providerDocument|accessToken|refreshToken|password|secret/u);
+      // User-facing settings labels legitimately contain “password”; reject
+      // serialized sensitive field names instead of matching ordinary copy.
+      await expect(page.locator('body')).not.toContainText(/\b(?:assignedTo|internalNotes|auditData|providerId|seekerId|recipientId|providerDocument|accessToken|refreshToken|password|secret)\s*[:=]/u);
 
       await page.locator('.a11y-skip-link').focus();
       await expect(page.locator('.a11y-skip-link')).toBeFocused();

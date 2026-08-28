@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-05",
+  "phase": "after",
+  "html": {
+    "lang": "en",
+    "dir": "ltr"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-05",
+    "state": "success",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/verify-email?purpose=registration&roleType=seeker&lang=en",
+    "html": {
+      "lang": "en",
+      "dir": "ltr"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 1053
+    },
+    "structure": {
+      "headings": 2,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 5,
+      "forms": 1,
+      "buttons": 3,
+      "links": 3,
+      "inputs": 6,
+      "unlabeledControls": 0
+    },
+    "controls": [
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "Verification code digit 1",
+        "autocomplete": "one-time-code"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "Verification code digit 2",
+        "autocomplete": "off"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "Verification code digit 3",
+        "autocomplete": "off"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "Verification code digit 4",
+        "autocomplete": "off"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "Verification code digit 5",
+        "autocomplete": "off"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "text",
+        "required": false,
+        "ariaLabel": "Verification code digit 6",
+        "autocomplete": "off"
+      }
+    ],
+    "links": [
+      {
+        "text": "Skip to main content",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "Log in",
+        "href": "/auth/login"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "Verify code",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "You can resend the code in 60 seconds",
+        "ariaLabel": null,
+        "disabled": true
+      },
+      {
+        "text": "Change email address",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  }
+}

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "screenId": "PUB-02",
   "classification": "PARTIAL",
-  "classificationReason": "Exact frame-linked exports for the eight canonical category illustrations, six source avatars, and the canonical listing-photo render variants are absent from approved repository assets and cached extracted assets. The approved subject-matched photos remain measurably different from the frame; reconstructing assets from figma.png would create prohibited screenshot-only content.",
+  "classificationReason": "The canonical category illustrations and reviewed listing/provider exports are available as approved local Figma assets and are wired into the deterministic fixture. The screen remains PARTIAL because material differences remain in rendered geometry, typography, image framing, and other details; official closure still requires zero material differences or reviewed anti-alias-only differences.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",
@@ -189,7 +189,7 @@
     "deterministicState": {
       "path": "docs/quality/figma_parity/screens/PUB-02/deterministic-state.json",
       "seedId": "fresh-audit-PUB-02-ar-v1",
-      "responseSha256": "aa55371e98bdba934bb111002bcea10d4d2662dda2663ed758a010173b1655d6"
+        "responseSha256": "2f1c702357deff3ca51a71c06ed532ca210ec6f97b729ac3bca479f0e85c3b57"
     },
     "response": {
       "status": 200,
@@ -198,13 +198,13 @@
     "apiRequests": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=20"
+        "url": "http://127.0.0.1:4175/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=20"
       }
     ],
     "apiResponses": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=20",
+        "url": "http://127.0.0.1:4175/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=20",
         "status": 200
       }
     ],
@@ -214,7 +214,7 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-02/runtime-after.png",
-      "sha256": "4012d63dd64cb32b1c75da2b5cceda5ed1cdad5a2c9493d532fb8b725cb4fea8"
+      "sha256": "efa4c96df79c3ea821043b6131079cbefeccda5b2039976d670435fcd3c8f276"
     }
   },
   "structuredVisualComparison": {
@@ -230,12 +230,13 @@
       "height": 1981
     },
     "exactMajorBands": true,
-    "materialDifferencePercent": 16.9379,
-    "antiAliasingOnlyPercent": 4.9163,
+    "materialDifferencePercent": 15.3262,
+    "antiAliasingOnlyPercent": 6.2961,
     "observations": [
       "Document, rail, listing grid, card/media frames, filter/sidebar and footer boundaries match the canonical 1577x1981 frame.",
       "The deterministic public search projection returned HTTP 200 and provides six canonical-content cards without fake production data.",
-      "Remaining reviewed material pixels are confined primarily to unavailable exact source artwork/photo/avatar exports; no baseline was updated."
+      "The exact Figma category illustration exports are loaded from approved local assets and are present in the deterministic runtime capture.",
+      "The approved local Figma listing and provider exports are present in the runtime, while remaining reviewed material pixels are concentrated in rendered geometry, typography, image framing, and other details; no baseline was updated and the screen remains open."
     ]
   },
   "functionalApiComparison": {
@@ -247,7 +248,8 @@
   "defects": [
     "Resolved repository defect: exact macro geometry, category carousel sizing, card/media bounds, typography, controls, metadata icons and footer copy were repaired and recaptured.",
     "Resolved repository defect: canonical listing fields/facets and deterministic success content are projected through the real contracts and API.",
-    "External source blocker: Exact frame-linked exports for the eight canonical category illustrations, six source avatars, and the canonical listing-photo render variants are absent from approved repository assets and cached extracted assets. The approved subject-matched photos remain measurably different from the frame; reconstructing assets from figma.png would create prohibited screenshot-only content."
+    "Resolved source defect: the canonical listing category illustration exports were retrieved from their Figma node and added with provenance.",
+    "Visual parity blocker: approved frame-linked listing and provider exports are available and wired, but their rendered geometry/framing and surrounding typography remain measurably different from the canonical frame; screenshot reconstruction is prohibited."
   ],
   "filesRepaired": [
     "apps/web/src/features/public/listing.tsx",
@@ -256,6 +258,7 @@
     "apps/web/src/features/public/copy.ts",
     "apps/web/src/features/public/components.tsx",
     "apps/web/tests/e2e/public-fixtures.ts",
+    "apps/web/public/assets/canonical/public/",
     "apps/web/tests/e2e/accessibility.spec.ts",
     "packages/contracts/src/search/index.ts",
     "apps/api/src/modules/search/properties.ts"
@@ -309,12 +312,20 @@
     "review": "docs/quality/figma_parity/screens/PUB-02/review.json",
     "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-02/runtime-after-capture.json"
   },
-  "reviewedAt": "2026-08-26T06:02:04.697Z",
-  "repairedAt": "2026-08-26T06:02:04.697Z",
-  "externalBlocker": "Exact frame-linked exports for the eight canonical category illustrations, six source avatars, and the canonical listing-photo render variants are absent from approved repository assets and cached extracted assets. The approved subject-matched photos remain measurably different from the frame; reconstructing assets from figma.png would create prohibited screenshot-only content.",
+  "reviewedAt": "2026-08-27T23:20:00.000Z",
+  "repairedAt": "2026-08-27T23:20:00.000Z",
+  "externalBlocker": "Approved frame-linked listing and provider exports are available and wired, but rendered geometry/framing and surrounding typography remain measurably different from the canonical frame; screenshot reconstruction is prohibited.",
   "performance": {
     "focusedCheck": "production public-properties SSR, hydration, bundle and lazy-image budgets",
     "exitCode": 0,
     "regression": false
+  },
+  "latestRuntimeVerification": {
+    "source": "runtime-after-capture.json and visual-metrics.json",
+    "phase": "after",
+    "apiResponseStatus": 200,
+    "materialDifferencePercent": 15.3262,
+    "antiAliasingOnlyPercent": 6.2961,
+    "officialClosureEligible": false
   }
 }

@@ -34,7 +34,6 @@ Open:
 
 The synthetic Provider identity is:
 
-- Phone: `+201000000001`
 - Email: `provider.demo@example.invalid`
 
 The Local-only Super Admin (when explicitly bootstrapped on a replica-set/Atlas target) is:
@@ -44,7 +43,7 @@ The Local-only Super Admin (when explicitly bootstrapped on a replica-set/Atlas 
 
 These Admin credentials are intentionally fixed only for the isolated Local preview. They are not written to the Production example and must never be copied to a VPS.
 
-Request a Provider OTP from the application and read the email at `http://localhost:8025`. For Seeker registration, use a unique E.164 phone and an `.invalid` email; the local inbox captures it without sending anything to the internet.
+Request a Provider or Seeker email OTP from the application and read the message at `http://localhost:8025`. Use a unique `.invalid` email for each deterministic local flow; the local inbox captures it without sending anything to the internet.
 
 The `local-showcase-v1` and `local-showcase-v2` seeds are Local/UAT-only, idempotent, and mark records `synthetic: true`. They cover locations, projects/properties, public content, articles, community content, requests, viewings, saved properties, notifications, advertising quote/payment metadata, administrator permission variants, and commission records. Payment proofs contain private storage metadata only, never public file URLs. Standalone MongoDB runs with bootstrap disabled; use an isolated replica set or Atlas only when transactional bootstrap is intentionally enabled. No Production sessions, secrets, or fake Production KPIs are created.
 

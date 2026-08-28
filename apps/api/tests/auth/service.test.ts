@@ -125,7 +125,7 @@ test('rejects valid credentials for a non-active Admin account', async () => {
   );
 });
 
-test('issues the shared session model for active phone-authenticated accounts only', async () => {
+test('issues the shared session model for active email-authenticated accounts only', async () => {
   const auth = service(repository());
   const issued = await auth.issueAccount({
     id: '111111111111111111111111', roleType: 'provider', status: 'pending_review'

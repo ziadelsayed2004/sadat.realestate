@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-09+",
+  "phase": "after",
+  "html": {
+    "lang": "ar",
+    "dir": "rtl"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-09+",
+    "state": "idle",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/register/provider/account?providerType=developer_company&lang=ar",
+    "html": {
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 1140,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 2135
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 5,
+      "forms": 1,
+      "buttons": 3,
+      "links": 2,
+      "inputs": 8,
+      "unlabeledControls": 0
+    },
+    "controls": [
+      {
+        "tag": "input",
+        "id": "provider-account-owner-name",
+        "name": "accountOwnerFullName",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "name"
+      },
+      {
+        "tag": "input",
+        "id": "provider-account-display-name",
+        "name": "displayName",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "organization"
+      },
+      {
+        "tag": "input",
+        "id": "provider-account-email",
+        "name": "email",
+        "type": "email",
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "email"
+      },
+      {
+        "tag": "input",
+        "id": "provider-account-whatsapp",
+        "name": "whatsappNumber",
+        "type": "tel",
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": "tel"
+      },
+      {
+        "tag": "input",
+        "id": "provider-account-secondary-phone",
+        "name": "secondaryPhone",
+        "type": "tel",
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": "tel"
+      },
+      {
+        "tag": "select",
+        "id": "provider-account-locale",
+        "name": "preferredLocale",
+        "type": null,
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "checkbox",
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "checkbox",
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": null
+      }
+    ],
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "حفظ كمسودة",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "حفظ ومتابعة",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "العودة إلى اختيار النوع",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  }
+}

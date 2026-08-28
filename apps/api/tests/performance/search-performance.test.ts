@@ -29,7 +29,7 @@ test('keeps a heavy public search page bounded and performs one repository query
       repositoryCalls += 1;
       observedQuery = query;
       const start = (query.page - 1) * query.limit;
-      return { items: rows.slice(start, start + query.limit), total: rows.length, categories: [] };
+      return { items: rows.slice(start, start + query.limit), total: rows.length, categories: [], propertyTypes: [] };
     }
   };
   const service = createPublicPropertySearchService({ repository });

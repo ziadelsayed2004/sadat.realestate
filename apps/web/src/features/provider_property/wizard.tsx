@@ -53,6 +53,7 @@ interface BasicForm {
 
 interface LocationForm {
   readonly locationId: string;
+  readonly mapUrl: string;
   readonly latitude: string;
   readonly longitude: string;
   readonly reason: string;
@@ -81,7 +82,7 @@ function emptyBasic(copy: ProviderPropertyCopy): BasicForm {
 }
 
 function emptyLocation(copy: ProviderPropertyCopy): LocationForm {
-  return { locationId: '', latitude: '', longitude: '', reason: copy.wizard.placeholders.reason };
+  return { locationId: '', mapUrl: '', latitude: '', longitude: '', reason: copy.wizard.placeholders.reason };
 }
 
 function basicFromProperty(property: PropertyData, copy: ProviderPropertyCopy): BasicForm {
@@ -103,6 +104,7 @@ function basicFromProperty(property: PropertyData, copy: ProviderPropertyCopy): 
 function locationFromProperty(property: PropertyData, copy: ProviderPropertyCopy): LocationForm {
   return {
     locationId: property.locationId ?? '',
+    mapUrl: property.mapUrl ?? '',
     latitude: property.coordinates === undefined ? '' : String(property.coordinates.latitude),
     longitude: property.coordinates === undefined ? '' : String(property.coordinates.longitude),
     reason: copy.wizard.placeholders.reason
@@ -255,6 +257,7 @@ function LocationFormView({
         <div className="provider-property-wizard__card-heading"><h2 id="provider-property-location-title">{wizard.locationTitle}</h2><span>{wizard.steps.location}</span></div>
         <div className="provider-property-wizard__grid">
           <Input id="provider-property-location-id" label={wizard.labels.locationId} value={form.locationId} placeholder={wizard.placeholders.locationId} onChange={event => setForm({ ...form, locationId: event.target.value })} aria-invalid={validationError || undefined} />
+          <Input id="provider-property-map-url" label={wizard.labels.mapUrl} value={form.mapUrl} placeholder={wizard.placeholders.mapUrl} onChange={event => setForm({ ...form, mapUrl: event.target.value })} type="url" inputMode="url" aria-invalid={validationError || undefined} />
           <Input id="provider-property-latitude" label={wizard.labels.latitude} value={form.latitude} placeholder={wizard.placeholders.latitude} inputMode="decimal" onChange={event => setForm({ ...form, latitude: event.target.value })} aria-invalid={validationError || undefined} />
           <Input id="provider-property-longitude" label={wizard.labels.longitude} value={form.longitude} placeholder={wizard.placeholders.longitude} inputMode="decimal" onChange={event => setForm({ ...form, longitude: event.target.value })} aria-invalid={validationError || undefined} />
         </div>
@@ -385,6 +388,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
     const parsed = propertyLocationStepSchema.safeParse({
       version: property.version,
       ...(location.locationId.trim() === '' ? {} : { locationId: location.locationId.trim().toLowerCase() }),
+      ...(location.mapUrl.trim() === '' ? {} : { mapUrl: location.mapUrl.trim() }),
       ...(coordinates === undefined ? {} : { coordinates }),
       reason: location.reason.trim()
     });

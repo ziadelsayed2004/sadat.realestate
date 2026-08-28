@@ -17,7 +17,6 @@ const claims: AccessTokenClaims = {
 
 const account = {
   id: claims.sub,
-  phone: '+201000000000',
   email: 'seeker@example.com',
   status: 'verified' as const,
   locale: 'ar' as const,
@@ -66,7 +65,6 @@ function authService(): Pick<AuthService, 'issueAccount'> {
 }
 
 function service(repo: SeekerRepository = repository(), redeem = async () => ({
-  phone: account.phone,
   email: account.email,
   roleType: 'seeker' as const,
   purpose: 'registration' as const
@@ -88,7 +86,6 @@ test('registers a verified seeker from a one-time OTP grant and issues a shared 
     redeemRegistrationGrant: async (hash) => {
       assert.equal(hash, 'hash:' + 'T'.repeat(43));
       return {
-        phone: account.phone,
         email: account.email,
         roleType: 'seeker',
         purpose: 'registration'

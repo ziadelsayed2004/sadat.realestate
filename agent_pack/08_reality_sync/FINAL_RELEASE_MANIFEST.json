@@ -1,14 +1,14 @@
 {
   "manifestVersion": "sadat-release-v1",
-  "generatedAt": "2026-08-25T15:46:35.565Z",
+  "generatedAt": "2026-08-27T13:12:43.867Z",
   "releaseStatus": "conditional",
   "graphStatus": "pending_post_release_assurance",
   "taskCounts": {
-    "backendTotal": 115,
-    "backendComplete": 114,
-    "frontendTotal": 83,
+    "backendTotal": 124,
+    "backendComplete": 123,
+    "frontendTotal": 85,
     "frontendComplete": 82,
-    "frontendInProgress": null
+    "frontendInProgress": "frontend_100"
   },
   "qualityGates": {
     "webTypecheck": "passed",
@@ -66,10 +66,37 @@
       "reason": "The repository does not define npm run security:check."
     }
   },
+  "freshVerification": {
+    "verifiedAt": "2026-08-27T12:52:31.685Z",
+    "status": "passed",
+    "commands": {
+      "npm run typecheck": "passed",
+      "npm run lint": "passed",
+      "npm test": "passed",
+      "npm run openapi:validate": "passed",
+      "npm run postman:validate": "passed",
+      "node agent_pack/scripts/audit_pack.mjs": "passed",
+      "rootTemporaryFileCheck": "passed"
+    },
+    "testCounts": {
+      "workspace": { "passed": 16, "failed": 0 },
+      "apiAll": { "passed": 517, "failed": 0 },
+      "apiUnit": { "passed": 382, "failed": 0 },
+      "apiRouteMatrix": { "passed": 107, "failed": 0 },
+      "webVitest": { "passed": 379, "failed": 0, "files": 65 },
+      "webNodeAuxiliary": { "passed": 76, "failed": 0 }
+    },
+    "visualClosure": {
+      "status": "not_claimed",
+      "closedScreens": 0,
+      "canonicalScreens": 131,
+      "reason": "Historical visual measurements are retained, but no screen is closed without fresh reviewed Before/After evidence."
+    }
+  },
   "screenEvidence": {
     "canonicalScreenCount": 131,
     "routeLocaleUatCases": 393,
-    "localApprovedVisualSources": 130,
+    "localApprovedVisualSources": 131,
     "adm54DirectComparison": false,
     "adm54ExceptionId": "DESIGN-EXCEPTION-ADM-54"
   },

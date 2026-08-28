@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-14",
+  "phase": "before",
+  "html": {
+    "lang": "en",
+    "dir": "ltr"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-14",
+    "state": "ready",
+    "applicationStatus": "pending_review",
+    "providerVariant": null,
+    "route": "/provider-application/status?lang=en",
+    "html": {
+      "lang": "en",
+      "dir": "ltr"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 1304,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 1304
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 4,
+      "forms": 0,
+      "buttons": 2,
+      "links": 2,
+      "inputs": 0,
+      "unlabeledControls": 0
+    },
+    "controls": [],
+    "links": [
+      {
+        "text": "Skip to main content",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "Track application",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "Back",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  }
+}

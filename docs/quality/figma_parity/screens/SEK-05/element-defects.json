@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "screenId": "SEK-05",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4354",
+    "nodeId": "6027:4477"
+  },
+  "status": "REPAIRED_VERIFIED",
+  "items": [
+    {
+      "element": "desktop shell/direction/geometry",
+      "figmaExpected": "Canonical node 6027:4477",
+      "runtimeActual": "Fresh deterministic ar/en runtime captures",
+      "measuredDelta": "See locale-specific unmasked visual metrics",
+      "status": "REPAIRED_VERIFIED"
+    },
+    {
+      "element": "approved contract or asset difference",
+      "figmaExpected": "Canonical export contains additional data/artwork",
+      "runtimeActual": "Runtime preserves truthful contract boundary",
+      "measuredDelta": "Canonical property/provider images and richer viewing metadata are absent from approved writable assets/contracts; the UI uses the existing missing-media state. Cancellation remains contract-gated.",
+      "status": "APPROVED_EXTERNAL_DIFFERENCE"
+    }
+  ]
+}

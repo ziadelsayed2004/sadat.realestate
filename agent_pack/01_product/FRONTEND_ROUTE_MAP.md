@@ -17,8 +17,8 @@
 | AUTH-01 | `/auth/login` | auth |  |
 | AUTH-02 | `/auth/register/seeker` | auth |  |
 | AUTH-03 | `/auth/register/seeker` | auth |  |
-| AUTH-04 | `/auth/verify-phone` | auth |  |
-| AUTH-05 | `/auth/verify-phone` | auth |  |
+| AUTH-04 | `/auth/verify-email` | auth | Canonical email OTP verification route; phone alias redirects here |
+| AUTH-05 | `/auth/verify-email` | auth | Canonical email OTP verification route; phone alias redirects here |
 | AUTH-06 | `/auth/register/seeker/success` | auth |  |
 | AUTH-07 | `/auth/register/provider/type` | auth |  |
 | AUTH-08 | `/auth/register/provider/type` | auth |  |

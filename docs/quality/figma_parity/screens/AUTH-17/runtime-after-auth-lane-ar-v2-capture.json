@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-17",
+  "phase": "after",
+  "capturedAt": "2026-08-27T17:06:22.394Z",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4353",
+    "nodeId": "6017:18822",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-18822&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "dimensions": {
+      "width": 1577,
+      "height": 1193
+    }
+  },
+  "runtime": {
+    "route": "/provider-application/approved?lang=ar",
+    "requestedQueueRoute": "/provider-application/approved",
+    "role": "anonymous",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1577,
+      "height": 1193,
+      "devicePixelRatio": 1
+    },
+    "capture": {
+      "path": "docs/quality/figma_parity/screens/AUTH-17/runtime-after-auth-lane-ar-v2.png",
+      "sha256": "55eb3d3348e9ad9d104ebdf28017acd657486ca14748f10db0559c711ea67a46"
+    },
+    "beforeHash": "55eb3d3348e9ad9d104ebdf28017acd657486ca14748f10db0559c711ea67a46",
+    "afterHash": "55eb3d3348e9ad9d104ebdf28017acd657486ca14748f10db0559c711ea67a46",
+    "apiRequests": [
+      {
+        "method": "POST",
+        "url": "http://127.0.0.1:4180/api/v1/auth/refresh",
+        "body": {}
+      },
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4180/api/v1/provider/application"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "POST",
+        "url": "http://127.0.0.1:4180/api/v1/auth/refresh",
+        "status": 200
+      },
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4180/api/v1/provider/application",
+        "status": 200
+      }
+    ],
+    "routeHits": [
+      {
+        "method": "POST",
+        "pathname": "/auth/refresh"
+      },
+      {
+        "method": "GET",
+        "pathname": "/provider/application"
+      }
+    ]
+  },
+  "page": {
+    "screenId": "AUTH-17",
+    "state": "ready",
+    "applicationStatus": "approved",
+    "providerVariant": null,
+    "route": "/provider-application/approved?lang=ar",
+    "html": {
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 1193,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 1193
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 5,
+      "forms": 0,
+      "buttons": 1,
+      "links": 3,
+      "inputs": 0,
+      "unlabeledControls": 0
+    },
+    "controls": [],
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "الانتقال إلى لوحة مقدم الخدمة",
+        "href": "/provider"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "رجوع",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  },
+  "comparison": {
+    "diffPath": "docs/quality/figma_parity/screens/AUTH-17/auth-lane-ar-v2-diff-after.png",
+    "visualMetrics": {
+      "schemaVersion": 1,
+      "screenId": "AUTH-17",
+      "phase": "after",
+      "source": {
+        "width": 1577,
+        "height": 1193
+      },
+      "runtimeBefore": {
+        "width": 1577,
+        "height": 1193
+      },
+      "runtimeAfter": {
+        "width": 1577,
+        "height": 1193
+      },
+      "comparedWidth": 1577,
+      "comparedHeight": 1193,
+      "comparedPixels": 1881361,
+      "materialDifferencePercent": 13.1507,
+      "antiAliasingOnlyPercent": 3.992,
+      "threshold": {
+        "materialRgbSumGreaterThan": 24,
+        "antiAliasingRgbSumGreaterThan": 3
+      },
+      "method": "unmasked same-width source/runtime canvas comparison over overlapping document height",
+      "comparedCapture": "RUNTIME AFTER (REPAIRED)",
+      "reviewed": false,
+      "reviewedAt": null
+    }
+  }
+}

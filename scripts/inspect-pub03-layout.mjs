@@ -1,5 +1,4 @@
 import { chromium } from '@playwright/test';
-import { PUBLIC_CLONE_ASSETS } from '../apps/web/tests/e2e/public-fixtures.ts';
 import fs from 'node:fs';
 
 const state = JSON.parse(fs.readFileSync('docs/quality/figma_parity/screens/PUB-03/deterministic-state.json', 'utf8'));

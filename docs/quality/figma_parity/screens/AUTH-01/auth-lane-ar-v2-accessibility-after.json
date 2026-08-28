@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-01",
+  "phase": "after",
+  "html": {
+    "lang": "ar",
+    "dir": "rtl"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-01",
+    "state": "idle",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/login?lang=ar",
+    "html": {
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 944
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 8,
+      "forms": 1,
+      "buttons": 3,
+      "links": 4,
+      "inputs": 3,
+      "unlabeledControls": 0
+    },
+    "controls": [
+      {
+        "tag": "input",
+        "id": "auth-login-email",
+        "name": "email",
+        "type": "email",
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "email"
+      },
+      {
+        "tag": "input",
+        "id": "auth-login-password",
+        "name": "password",
+        "type": "password",
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "current-password"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "checkbox",
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": null
+      }
+    ],
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "التحقق بالبريد",
+        "href": "/auth/verify-email?purpose=login&roleType=seeker"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "إظهار كلمة المرور",
+        "ariaLabel": "إظهار كلمة المرور",
+        "disabled": false
+      },
+      {
+        "text": "نسيت كلمة المرور؟",
+        "ariaLabel": null,
+        "disabled": true
+      },
+      {
+        "text": "تسجيل الدخول",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  }
+}

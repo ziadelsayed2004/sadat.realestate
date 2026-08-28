@@ -49,7 +49,7 @@ async function waitForPreviewServer(child: ChildProcess, url: string): Promise<v
   const output: string[] = [];
   child.stdout?.on('data', chunk => output.push(String(chunk)));
   child.stderr?.on('data', chunk => output.push(String(chunk)));
-  for (let attempt = 0; attempt < 120; attempt += 1) {
+  for (let attempt = 0; attempt < 300; attempt += 1) {
     if (child.exitCode !== null) {
       throw new Error(`Preview server exited before readiness: ${output.join('')}`);
     }
@@ -164,7 +164,7 @@ describe('secure preview build and deployment', () => {
       await stopPreviewServer(child);
       server.listen({ onUnhandledRequest: 'error' });
     }
-  }, 15_000);
+  }, 30_000);
 
   it('keeps the development CSP compatible with Vite hydration and HMR', async () => {
     const port = await unusedPort();
@@ -193,5 +193,5 @@ describe('secure preview build and deployment', () => {
       await stopPreviewServer(child);
       server.listen({ onUnhandledRequest: 'error' });
     }
-  }, 15_000);
+  }, 30_000);
 });

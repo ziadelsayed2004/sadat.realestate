@@ -953,6 +953,31 @@
     white-space: nowrap;
   }
 
+  .public-property-details__map-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 34px;
+    margin-top: 14px;
+    padding: 6px 12px;
+    color: var(--color-text-strong);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .public-property-details__map-link:hover,
+  .public-property-details__map-link:focus-visible {
+    border-color: var(--color-accent);
+  }
+
+  .public-property-details__map-link .public-property-details__line-icon {
+    inline-size: 16px;
+    block-size: 16px;
+  }
+
   .public-property-details__description {
     height: 146px;
     min-height: 146px;

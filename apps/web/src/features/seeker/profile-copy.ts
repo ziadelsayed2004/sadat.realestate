@@ -9,7 +9,6 @@ export interface SeekerProfileCopy {
     readonly heading: string;
     readonly firstName: string;
     readonly lastName: string;
-    readonly phone: string;
     readonly language: string;
     readonly save: string;
     readonly saved: string;
@@ -64,7 +63,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerProfileCopy>> = {
     description: 'أدر بياناتك الشخصية وتفضيلات البحث وإعدادات حسابك.',
     tabs: { preferences: 'تفضيلات البحث', profile: 'المعلومات الشخصية', settings: 'إعدادات الحساب' },
     profile: {
-      heading: 'المعلومات الشخصية', firstName: 'الاسم الأول', lastName: 'اسم العائلة', phone: 'رقم الهاتف', language: 'اللغة المفضلة', save: 'حفظ التغييرات', saved: 'تم حفظ البيانات الشخصية.'
+      heading: 'المعلومات الشخصية', firstName: 'الاسم الأول', lastName: 'اسم العائلة', language: 'اللغة المفضلة', save: 'حفظ التغييرات', saved: 'تم حفظ البيانات الشخصية.'
     },
     preferences: {
       heading: 'تفضيلات البحث', purpose: 'نوع العملية', anyPurpose: 'شراء أو إيجار', buy: 'شراء', rent: 'إيجار', propertyTypes: 'أنواع العقارات', propertyTypesHelp: 'اكتب القيم مفصولة بفواصل.', locations: 'المناطق المفضلة', locationsHelp: 'اكتب المعرفات أو القيم المعتمدة مفصولة بفواصل.', minPrice: 'الحد الأدنى للسعر', maxPrice: 'الحد الأقصى للسعر', bedroomsMin: 'الحد الأدنى لغرف النوم', bedroomsMax: 'الحد الأقصى لغرف النوم', save: 'حفظ التفضيلات', saved: 'تم حفظ تفضيلات البحث.', noSavedPreferences: 'لم تحفظ تفضيلات بحث بعد. يمكنك البدء من الحقول أدناه.', invalid: 'راجع القيم المدخلة وتأكد من صحة النطاقات.'
@@ -86,7 +85,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerProfileCopy>> = {
     description: 'Manage your personal data, search preferences, and account settings.',
     tabs: { preferences: 'Search preferences', profile: 'Personal information', settings: 'Account settings' },
     profile: {
-      heading: 'Personal information', firstName: 'First name', lastName: 'Last name', phone: 'Phone number', language: 'Preferred language', save: 'Save changes', saved: 'Personal information saved.'
+      heading: 'Personal information', firstName: 'First name', lastName: 'Last name', language: 'Preferred language', save: 'Save changes', saved: 'Personal information saved.'
     },
     preferences: {
       heading: 'Search preferences', purpose: 'Transaction purpose', anyPurpose: 'Buy or rent', buy: 'Buy', rent: 'Rent', propertyTypes: 'Property types', propertyTypesHelp: 'Enter values separated by commas.', locations: 'Preferred locations', locationsHelp: 'Enter approved identifiers or values separated by commas.', minPrice: 'Minimum price', maxPrice: 'Maximum price', bedroomsMin: 'Minimum bedrooms', bedroomsMax: 'Maximum bedrooms', save: 'Save preferences', saved: 'Search preferences saved.', noSavedPreferences: 'No search preferences are saved yet. Start with the fields below.', invalid: 'Review the entered values and make sure each range is valid.'
@@ -108,7 +107,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerProfileCopy>> = {
     description: '管理个人信息、找房偏好和账户设置。',
     tabs: { preferences: '找房偏好', profile: '个人信息', settings: '账户设置' },
     profile: {
-      heading: '个人信息', firstName: '名字', lastName: '姓氏', phone: '电话号码', language: '首选语言', save: '保存更改', saved: '个人信息已保存。'
+      heading: '个人信息', firstName: '名字', lastName: '姓氏', language: '首选语言', save: '保存更改', saved: '个人信息已保存。'
     },
     preferences: {
       heading: '找房偏好', purpose: '交易目的', anyPurpose: '买房或租房', buy: '买房', rent: '租房', propertyTypes: '房产类型', propertyTypesHelp: '请输入以逗号分隔的值。', locations: '偏好区域', locationsHelp: '请输入以逗号分隔的已批准标识或值。', minPrice: '最低价格', maxPrice: '最高价格', bedroomsMin: '最少卧室数', bedroomsMax: '最多卧室数', save: '保存偏好', saved: '找房偏好已保存。', noSavedPreferences: '尚未保存找房偏好。请从下方字段开始设置。', invalid: '请检查输入值并确认每个范围有效。'

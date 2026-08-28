@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { localizedTextSchema } from '../localization/index.js';
-import { propertyAreaSchema, propertyDeliveryStatusSchema, propertyKindSchema, propertyLayoutSchema, propertyMoneySchema, propertyObjectIdSchema, propertySlugSchema, propertyTransactionTypeSchema } from '../properties/index.js';
+import { propertyAreaSchema, propertyDeliveryStatusSchema, propertyKindSchema, propertyLayoutSchema, propertyMapUrlSchema, propertyMoneySchema, propertyObjectIdSchema, propertySlugSchema, propertyTransactionTypeSchema } from '../properties/index.js';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
 
 const publicOrderSchema = z.number().int().nonnegative().max(100_000);
@@ -142,6 +142,7 @@ export const publicPropertyAmenitySchema = z.object({
 }).strict();
 export const publicPropertyDetailsSchema = publicHomepagePropertySchema.extend({
   locationName: localizedTextSchema.optional(),
+  mapUrl: propertyMapUrlSchema.optional(),
   publicCode: publicPropertyCodeSchema.optional(),
   deliveryStatus: propertyDeliveryStatusSchema.optional(),
   installmentAvailable: z.boolean().optional(),

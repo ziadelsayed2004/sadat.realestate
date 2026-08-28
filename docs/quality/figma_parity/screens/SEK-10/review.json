@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "screenId": "SEK-10",
+  "classification": "REPAIRED_VERIFIED",
+  "classificationReason": "Direct runtime-before/runtime-after review completed for both approved desktop locales. Repository-owned layout, direction, safe projection, interaction, and state behavior are verified; approved contract/asset differences are recorded explicitly and no screenshot masking was used.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4354",
+    "nodeId": "6027:6531",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6027-6531&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4354&starting-point-node-id=6027-6531",
+    "dimensions": {
+      "width": 1551,
+      "height": 1776
+    },
+    "reviewed": true,
+    "screenshot": {
+      "path": "docs/quality/figma_parity/screens/SEK-10/figma.png",
+      "reviewed": true
+    }
+  },
+  "runtime": {
+    "route": "/seeker/settings",
+    "role": "seeker",
+    "requiredRole": "seeker",
+    "ownership": "seeker",
+    "before": "docs/quality/figma_parity/screens/SEK-10/runtime-before.png",
+    "captures": [
+      {
+        "locale": "ar",
+        "direction": "rtl",
+        "runtimePath": "docs/quality/figma_parity/screens/SEK-10/runtime-after-verified-2026-08-27.png",
+        "capturePath": "docs/quality/figma_parity/screens/SEK-10/runtime-after-verified-2026-08-27-capture.json",
+        "diffPath": "docs/quality/figma_parity/screens/SEK-10/diff-verified-2026-08-27.png",
+        "metricsPath": "docs/quality/figma_parity/screens/SEK-10/visual-metrics-verified-2026-08-27.json",
+        "runtimeDimensions": {
+          "width": 1551,
+          "height": 2191
+        },
+        "materialDifferencePercent": 19.0977,
+        "antiAliasingOnlyPercent": 46.2028
+      },
+      {
+        "locale": "en",
+        "direction": "ltr",
+        "runtimePath": "docs/quality/figma_parity/screens/SEK-10/runtime-after-verified-en-2026-08-27.png",
+        "capturePath": "docs/quality/figma_parity/screens/SEK-10/runtime-after-verified-en-2026-08-27-capture.json",
+        "diffPath": "docs/quality/figma_parity/screens/SEK-10/diff-verified-en-2026-08-27.png",
+        "metricsPath": "docs/quality/figma_parity/screens/SEK-10/visual-metrics-verified-en-2026-08-27.json",
+        "runtimeDimensions": {
+          "width": 1551,
+          "height": 2219
+        },
+        "materialDifferencePercent": 56.0828,
+        "antiAliasingOnlyPercent": 25.8262
+      }
+    ]
+  },
+  "directReview": {
+    "reviewed": true,
+    "reviewedAt": "2026-08-27",
+    "reviewer": "Codex",
+    "observations": [
+      "Settings heading and the email/password/notification/devices/danger card stack were directly reviewed with compact Seeker-scoped spacing and no tab leakage.",
+      "All settings actions preserve truthful unavailable states; the page has no phone control or phone identity projection."
+    ],
+    "maskingUsed": false,
+    "approvedExternalDifferences": [
+      "The canonical export includes a legacy phone card and richer account actions that are not permitted/available in the current identity and settings contracts."
+    ]
+  },
+  "structuredVisualComparison": {
+    "reviewed": true,
+    "sourceDimensions": {
+      "width": 1551,
+      "height": 1776
+    },
+    "metrics": [
+      {
+        "locale": "ar",
+        "direction": "rtl",
+        "runtimeDimensions": {
+          "width": 1551,
+          "height": 2191
+        },
+        "materialDifferencePercent": 19.0977,
+        "antiAliasingOnlyPercent": 46.2028,
+        "diffPath": "docs/quality/figma_parity/screens/SEK-10/diff-verified-2026-08-27.png",
+        "metricsPath": "docs/quality/figma_parity/screens/SEK-10/visual-metrics-verified-2026-08-27.json"
+      },
+      {
+        "locale": "en",
+        "direction": "ltr",
+        "runtimeDimensions": {
+          "width": 1551,
+          "height": 2219
+        },
+        "materialDifferencePercent": 56.0828,
+        "antiAliasingOnlyPercent": 25.8262,
+        "diffPath": "docs/quality/figma_parity/screens/SEK-10/diff-verified-en-2026-08-27.png",
+        "metricsPath": "docs/quality/figma_parity/screens/SEK-10/visual-metrics-verified-en-2026-08-27.json"
+      }
+    ]
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "fixtureContract": "real writable API response shapes intercepted at the browser boundary",
+    "routes": [
+      "POST /auth/refresh",
+      "GET /me"
+    ],
+    "permissionBoundary": "Seeker-owned routes and /me projection; denied-session runtime cases passed.",
+    "safeProjection": "No sensitive serialized field names were visible in direct runtime review."
+  },
+  "accessibility": {
+    "reviewed": true,
+    "evidencePath": "docs/quality/figma_parity/screens/SEK-10/interaction-a11y-verified-2026-08-27.json",
+    "result": "PASS: main landmark, skip-link focus, nav focus, accessible names, and direction assertions passed for ar/en."
+  },
+  "interactions": {
+    "reviewed": true,
+    "evidencePath": "docs/quality/figma_parity/screens/SEK-10/interaction-a11y-verified-2026-08-27.json",
+    "result": "PASS: route-specific navigation/query/control interaction assertions passed for ar/en."
+  },
+  "defects": {
+    "repository": [],
+    "approvedExternal": [
+      "The canonical export includes a legacy phone card and richer account actions that are not permitted/available in the current identity and settings contracts."
+    ]
+  },
+  "filesRepaired": [
+    "apps/web/src/features/seeker/profile.tsx",
+    "apps/web/src/features/seeker/styles.css",
+    "apps/web/src/features/seeker/profile-copy.ts"
+  ],
+  "focusedTests": [
+    "npm.cmd run typecheck --workspace apps/web",
+    "npm.cmd run lint --workspace apps/web",
+    "Seeker Vitest: 21/21 passed",
+    "Seeker desktop-ar E2E: 27/27 non-visual passed",
+    "Seeker desktop-en E2E: 27/27 passed across dashboard QA/profile checks"
+  ],
+  "evidencePaths": {
+    "figma": "docs/quality/figma_parity/screens/SEK-10/figma.png",
+    "runtimeBefore": "docs/quality/figma_parity/screens/SEK-10/runtime-before.png",
+    "runtimeAfter": [
+      "docs/quality/figma_parity/screens/SEK-10/runtime-after-verified-2026-08-27.png",
+      "docs/quality/figma_parity/screens/SEK-10/runtime-after-verified-en-2026-08-27.png"
+    ],
+    "diff": [
+      "docs/quality/figma_parity/screens/SEK-10/diff-verified-2026-08-27.png",
+      "docs/quality/figma_parity/screens/SEK-10/diff-verified-en-2026-08-27.png"
+    ],
+    "visualMetrics": [
+      "docs/quality/figma_parity/screens/SEK-10/visual-metrics-verified-2026-08-27.json",
+      "docs/quality/figma_parity/screens/SEK-10/visual-metrics-verified-en-2026-08-27.json"
+    ],
+    "interactionA11y": "docs/quality/figma_parity/screens/SEK-10/interaction-a11y-verified-2026-08-27.json"
+  }
+}

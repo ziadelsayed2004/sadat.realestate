@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-08",
+  "phase": "after",
+  "capturedAt": "2026-08-27T16:59:03.635Z",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4353",
+    "nodeId": "6017:16352",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-16352&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "dimensions": {
+      "width": 1577,
+      "height": 944
+    }
+  },
+  "runtime": {
+    "route": "/auth/register/provider/type?lang=en",
+    "requestedQueueRoute": "/auth/register/provider/type",
+    "role": "anonymous",
+    "locale": "en",
+    "direction": "ltr",
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "capture": {
+      "path": "docs/quality/figma_parity/screens/AUTH-08/runtime-after-auth-lane-en.png",
+      "sha256": "4de0d93ec378bca7e39701b612d83025851eb3e93f6bd5ce00bd663b7530a2bf"
+    },
+    "beforeHash": "4de0d93ec378bca7e39701b612d83025851eb3e93f6bd5ce00bd663b7530a2bf",
+    "afterHash": "4de0d93ec378bca7e39701b612d83025851eb3e93f6bd5ce00bd663b7530a2bf",
+    "apiRequests": [],
+    "apiResponses": [],
+    "routeHits": []
+  },
+  "page": {
+    "screenId": "AUTH-08",
+    "state": "success",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/register/provider/type?lang=en",
+    "html": {
+      "lang": "en",
+      "dir": "ltr"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 1053
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 6,
+      "forms": 0,
+      "buttons": 4,
+      "links": 3,
+      "inputs": 0,
+      "unlabeledControls": 0
+    },
+    "controls": [],
+    "links": [
+      {
+        "text": "Skip to main content",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "Back to account selection",
+        "href": "/auth/register"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "Individual brokerFor a real-estate professional operating as an individual.",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "Brokerage officeFor a brokerage office representing a business activity.",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "✓Developer companyFor a company that develops and manages real-estate projects.",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "Continue",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  },
+  "comparison": {
+    "diffPath": "docs/quality/figma_parity/screens/AUTH-08/auth-lane-en-diff-after.png",
+    "visualMetrics": {
+      "schemaVersion": 1,
+      "screenId": "AUTH-08",
+      "phase": "after",
+      "source": {
+        "width": 1577,
+        "height": 944
+      },
+      "runtimeBefore": {
+        "width": 1577,
+        "height": 1053
+      },
+      "runtimeAfter": {
+        "width": 1577,
+        "height": 1053
+      },
+      "comparedWidth": 1577,
+      "comparedHeight": 944,
+      "comparedPixels": 1488688,
+      "materialDifferencePercent": 15.7639,
+      "antiAliasingOnlyPercent": 2.7927,
+      "threshold": {
+        "materialRgbSumGreaterThan": 24,
+        "antiAliasingRgbSumGreaterThan": 3
+      },
+      "method": "unmasked same-width source/runtime canvas comparison over overlapping document height",
+      "comparedCapture": "RUNTIME AFTER (REPAIRED)",
+      "reviewed": false,
+      "reviewedAt": null
+    }
+  }
+}

@@ -36,7 +36,6 @@ interface AccountFormState {
   readonly displayName: string;
   readonly email: string;
   readonly whatsappNumber: string;
-  readonly samePhone: boolean;
   readonly secondaryPhone: string;
   readonly preferredLocale: SupportedLocale;
   readonly termsAccepted: boolean;
@@ -50,13 +49,11 @@ interface AccountUiError {
 }
 
 function formFromApplication(application: ProviderApplicationData): AccountFormState {
-  const samePhone = application.whatsappNumber === application.phone;
   return {
     accountOwnerFullName: application.accountOwnerFullName ?? '',
     displayName: application.displayName ?? '',
     email: application.email ?? '',
-    whatsappNumber: samePhone ? application.phone : application.whatsappNumber ?? '',
-    samePhone,
+    whatsappNumber: application.whatsappNumber ?? '',
     secondaryPhone: application.secondaryPhone ?? '',
     preferredLocale: application.preferredLocale ?? 'ar',
     termsAccepted: application.termsAcceptedAt !== undefined,
@@ -70,7 +67,6 @@ function emptyForm(locale: SupportedLocale): AccountFormState {
     displayName: '',
     email: '',
     whatsappNumber: '',
-    samePhone: false,
     secondaryPhone: '',
     preferredLocale: locale,
     termsAccepted: false,
@@ -127,7 +123,8 @@ function missingFieldLabel(copy: ProviderAccountCopy, field: string): string {
 function hasAccountValues(form: AccountFormState): boolean {
   return form.accountOwnerFullName.trim() !== ''
     || form.displayName.trim() !== ''
-    || form.email.trim() !== ''
+    // The verified email is prefilled by the registration authority; it must
+    // not turn an otherwise untouched account form into the filled variant.
     || form.whatsappNumber.trim() !== ''
     || form.secondaryPhone.trim() !== ''
     || form.termsAccepted
@@ -142,8 +139,7 @@ function buildPatch(application: ProviderApplicationData, form: AccountFormState
     email: form.email,
     preferredLocale: form.preferredLocale
   };
-  if (form.samePhone) patch.whatsappNumber = application.phone;
-  else if (form.whatsappNumber.trim() !== '') patch.whatsappNumber = form.whatsappNumber;
+  if (form.whatsappNumber.trim() !== '') patch.whatsappNumber = form.whatsappNumber;
   if (form.secondaryPhone.trim() !== '') patch.secondaryPhone = form.secondaryPhone;
   if (form.termsAccepted) patch.termsAcceptedAt = new Date().toISOString();
   if (form.privacyAccepted) patch.privacyAcceptedAt = new Date().toISOString();
@@ -319,15 +315,6 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
               <span className="provider-account-progress__item">4</span>
             </div>
             <Input
-              id="provider-account-phone"
-              label={copy.phoneLabel}
-              value={application?.phone ?? ''}
-              readOnly
-              dir="ltr"
-              state="success"
-              helpText={copy.verifiedPhoneNote}
-            />
-            <Input
               id="provider-account-owner-name"
               label={copy.accountOwnerFullNameLabel}
               name="accountOwnerFullName"
@@ -370,9 +357,8 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
                 type="tel"
                 autoComplete="tel"
                 inputMode="tel"
-                value={form.samePhone ? application?.phone ?? '' : form.whatsappNumber}
+                value={form.whatsappNumber}
                 onChange={event => update('whatsappNumber', event.currentTarget.value)}
-                disabled={form.samePhone}
                 dir="ltr"
               />
               <Input
@@ -388,14 +374,6 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
                 dir="ltr"
               />
             </div>
-            <label className="provider-account-checkbox">
-              <input
-                type="checkbox"
-                checked={form.samePhone}
-                onChange={event => update('samePhone', event.currentTarget.checked)}
-              />
-              <span>{copy.samePhoneLabel}</span>
-            </label>
             <Select
               id="provider-account-locale"
               label={copy.preferredLocaleLabel}

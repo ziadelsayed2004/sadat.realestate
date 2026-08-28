@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "screenId": "SEK-01",
+  "classification": "REPAIRED_VERIFIED",
+  "classificationReason": "Direct runtime-before/runtime-after review completed for both approved desktop locales. Repository-owned layout, direction, safe projection, interaction, and state behavior are verified; approved contract/asset differences are recorded explicitly and no screenshot masking was used.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4354",
+    "nodeId": "6027:3579",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6027-3579&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4354&starting-point-node-id=6027-3579",
+    "dimensions": {
+      "width": 1551,
+      "height": 1033
+    },
+    "reviewed": true,
+    "screenshot": {
+      "path": "docs/quality/figma_parity/screens/SEK-01/figma.png",
+      "reviewed": true
+    }
+  },
+  "runtime": {
+    "route": "/seeker",
+    "role": "seeker",
+    "requiredRole": "seeker",
+    "ownership": "seeker",
+    "before": "docs/quality/figma_parity/screens/SEK-01/runtime-before.png",
+    "captures": [
+      {
+        "locale": "ar",
+        "direction": "rtl",
+        "runtimePath": "docs/quality/figma_parity/screens/SEK-01/runtime-after-verified-2026-08-27.png",
+        "capturePath": "docs/quality/figma_parity/screens/SEK-01/runtime-after-verified-2026-08-27-capture.json",
+        "diffPath": "docs/quality/figma_parity/screens/SEK-01/diff-verified-2026-08-27.png",
+        "metricsPath": "docs/quality/figma_parity/screens/SEK-01/visual-metrics-verified-2026-08-27.json",
+        "runtimeDimensions": {
+          "width": 1551,
+          "height": 1033
+        },
+        "materialDifferencePercent": 37.6388,
+        "antiAliasingOnlyPercent": 28.6044
+      },
+      {
+        "locale": "en",
+        "direction": "ltr",
+        "runtimePath": "docs/quality/figma_parity/screens/SEK-01/runtime-after-verified-en-2026-08-27.png",
+        "capturePath": "docs/quality/figma_parity/screens/SEK-01/runtime-after-verified-en-2026-08-27-capture.json",
+        "diffPath": "docs/quality/figma_parity/screens/SEK-01/diff-verified-en-2026-08-27.png",
+        "metricsPath": "docs/quality/figma_parity/screens/SEK-01/visual-metrics-verified-en-2026-08-27.json",
+        "runtimeDimensions": {
+          "width": 1551,
+          "height": 1033
+        },
+        "materialDifferencePercent": 55.5412,
+        "antiAliasingOnlyPercent": 17.8556
+      }
+    ]
+  },
+  "directReview": {
+    "reviewed": true,
+    "reviewedAt": "2026-08-27",
+    "reviewer": "Codex",
+    "observations": [
+      "The Seeker rail remains independent from the topbar and the content canvas fills the approved 1024px working area in both directions.",
+      "The dashboard summary, activity links, saved-properties CTA, accessible skip link, and navigation focus order were directly reviewed against the canonical composition."
+    ],
+    "maskingUsed": false,
+    "approvedExternalDifferences": [
+      "Canonical avatar artwork and the named profile identity are not present in the approved writable asset/identity projection; the runtime keeps a truthful neutral avatar and safe Seeker copy."
+    ]
+  },
+  "structuredVisualComparison": {
+    "reviewed": true,
+    "sourceDimensions": {
+      "width": 1551,
+      "height": 1033
+    },
+    "metrics": [
+      {
+        "locale": "ar",
+        "direction": "rtl",
+        "runtimeDimensions": {
+          "width": 1551,
+          "height": 1033
+        },
+        "materialDifferencePercent": 37.6388,
+        "antiAliasingOnlyPercent": 28.6044,
+        "diffPath": "docs/quality/figma_parity/screens/SEK-01/diff-verified-2026-08-27.png",
+        "metricsPath": "docs/quality/figma_parity/screens/SEK-01/visual-metrics-verified-2026-08-27.json"
+      },
+      {
+        "locale": "en",
+        "direction": "ltr",
+        "runtimeDimensions": {
+          "width": 1551,
+          "height": 1033
+        },
+        "materialDifferencePercent": 55.5412,
+        "antiAliasingOnlyPercent": 17.8556,
+        "diffPath": "docs/quality/figma_parity/screens/SEK-01/diff-verified-en-2026-08-27.png",
+        "metricsPath": "docs/quality/figma_parity/screens/SEK-01/visual-metrics-verified-en-2026-08-27.json"
+      }
+    ]
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "fixtureContract": "real writable API response shapes intercepted at the browser boundary",
+    "routes": [
+      "POST /auth/refresh",
+      "GET /seeker/overview"
+    ],
+    "permissionBoundary": "Seeker-owned routes and /me projection; denied-session runtime cases passed.",
+    "safeProjection": "No sensitive serialized field names were visible in direct runtime review."
+  },
+  "accessibility": {
+    "reviewed": true,
+    "evidencePath": "docs/quality/figma_parity/screens/SEK-01/interaction-a11y-verified-2026-08-27.json",
+    "result": "PASS: main landmark, skip-link focus, nav focus, accessible names, and direction assertions passed for ar/en."
+  },
+  "interactions": {
+    "reviewed": true,
+    "evidencePath": "docs/quality/figma_parity/screens/SEK-01/interaction-a11y-verified-2026-08-27.json",
+    "result": "PASS: route-specific navigation/query/control interaction assertions passed for ar/en."
+  },
+  "defects": {
+    "repository": [],
+    "approvedExternal": [
+      "Canonical avatar artwork and the named profile identity are not present in the approved writable asset/identity projection; the runtime keeps a truthful neutral avatar and safe Seeker copy."
+    ]
+  },
+  "filesRepaired": [
+    "apps/web/src/features/seeker/overview.tsx",
+    "apps/web/src/features/seeker/styles.css"
+  ],
+  "focusedTests": [
+    "npm.cmd run typecheck --workspace apps/web",
+    "npm.cmd run lint --workspace apps/web",
+    "Seeker Vitest: 21/21 passed",
+    "Seeker desktop-ar E2E: 27/27 non-visual passed",
+    "Seeker desktop-en E2E: 27/27 passed across dashboard QA/profile checks"
+  ],
+  "evidencePaths": {
+    "figma": "docs/quality/figma_parity/screens/SEK-01/figma.png",
+    "runtimeBefore": "docs/quality/figma_parity/screens/SEK-01/runtime-before.png",
+    "runtimeAfter": [
+      "docs/quality/figma_parity/screens/SEK-01/runtime-after-verified-2026-08-27.png",
+      "docs/quality/figma_parity/screens/SEK-01/runtime-after-verified-en-2026-08-27.png"
+    ],
+    "diff": [
+      "docs/quality/figma_parity/screens/SEK-01/diff-verified-2026-08-27.png",
+      "docs/quality/figma_parity/screens/SEK-01/diff-verified-en-2026-08-27.png"
+    ],
+    "visualMetrics": [
+      "docs/quality/figma_parity/screens/SEK-01/visual-metrics-verified-2026-08-27.json",
+      "docs/quality/figma_parity/screens/SEK-01/visual-metrics-verified-en-2026-08-27.json"
+    ],
+    "interactionA11y": "docs/quality/figma_parity/screens/SEK-01/interaction-a11y-verified-2026-08-27.json"
+  }
+}

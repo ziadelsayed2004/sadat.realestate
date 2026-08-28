@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-07",
+  "phase": "after",
+  "html": {
+    "lang": "ar",
+    "dir": "rtl"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-07",
+    "state": "idle",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/register/provider/type?lang=ar",
+    "html": {
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 1035
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 6,
+      "forms": 0,
+      "buttons": 4,
+      "links": 3,
+      "inputs": 0,
+      "unlabeledControls": 0
+    },
+    "controls": [],
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "العودة إلى اختيار الحساب",
+        "href": "/auth/register"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "وسيط عقاري فرديللمهني العقاري الذي يعمل بصفته الفردية.",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "مكتب وساطة عقاريةلمكتب الوساطة الذي يمثل نشاطًا تجاريًا.",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "شركة مطورةللشركة التي تطور وتدير مشروعات عقارية.",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "متابعة",
+        "ariaLabel": null,
+        "disabled": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-16",
+  "phase": "after",
+  "html": {
+    "lang": "en",
+    "dir": "ltr"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-16",
+    "state": "ready",
+    "applicationStatus": "needs_information",
+    "providerVariant": null,
+    "route": "/provider-application/needs-information?lang=en",
+    "html": {
+      "lang": "en",
+      "dir": "ltr"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 1457,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 1457
+    },
+    "structure": {
+      "headings": 2,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 2,
+      "cards": 5,
+      "forms": 0,
+      "buttons": 2,
+      "links": 2,
+      "inputs": 0,
+      "unlabeledControls": 0
+    },
+    "controls": [],
+    "links": [
+      {
+        "text": "Skip to main content",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "Edit application",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "Back",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  }
+}

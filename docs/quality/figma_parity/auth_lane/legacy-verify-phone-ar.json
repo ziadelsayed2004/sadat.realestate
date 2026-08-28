@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "alias": "/auth/verify-phone",
+  "activeRoute": "/auth/verify-email",
+  "locale": "ar",
+  "requestedUrl": "/auth/verify-phone?lang=ar&purpose=registration&roleType=seeker&phone=%2B201000000000",
+  "final": {
+    "url": "/auth/verify-email?purpose=registration&roleType=seeker&lang=ar",
+    "hasOtpEmail": true,
+    "phoneControlCount": 0,
+    "bodyContainsPhoneIdentity": false,
+    "screenId": "AUTH-04",
+    "html": {
+      "lang": "ar",
+      "dir": "rtl"
+    }
+  },
+  "checks": {
+    "browserOnlyRedirect": true,
+    "preservesApprovedParameters": true,
+    "doesNotPreservePhoneIdentity": true,
+    "rendersEmailOtp": true,
+    "directionMatchesLocale": true
+  }
+}

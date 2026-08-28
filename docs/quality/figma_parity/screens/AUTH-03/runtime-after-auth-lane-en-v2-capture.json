@@ -1,0 +1,196 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-03",
+  "phase": "after",
+  "capturedAt": "2026-08-27T17:03:21.307Z",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4353",
+    "nodeId": "6017:15890",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-15890&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "dimensions": {
+      "width": 1577,
+      "height": 979
+    }
+  },
+  "runtime": {
+    "route": "/auth/register/seeker",
+    "requestedQueueRoute": "/auth/register/seeker",
+    "role": "anonymous",
+    "locale": "en",
+    "direction": "ltr",
+    "viewport": {
+      "width": 1577,
+      "height": 979,
+      "devicePixelRatio": 1
+    },
+    "capture": {
+      "path": "docs/quality/figma_parity/screens/AUTH-03/runtime-after-auth-lane-en-v2.png",
+      "sha256": "92cc49b0cd053b553ed0690a4a7a105cddcbd57faa7c7bcc200efd8b23ea5c4e"
+    },
+    "beforeHash": "92cc49b0cd053b553ed0690a4a7a105cddcbd57faa7c7bcc200efd8b23ea5c4e",
+    "afterHash": "92cc49b0cd053b553ed0690a4a7a105cddcbd57faa7c7bcc200efd8b23ea5c4e",
+    "apiRequests": [
+      {
+        "method": "POST",
+        "url": "http://127.0.0.1:4180/api/v1/auth/otp/send",
+        "body": {
+          "email": "ahmed@example.com",
+          "roleType": "seeker",
+          "purpose": "registration"
+        }
+      },
+      {
+        "method": "POST",
+        "url": "http://127.0.0.1:4180/api/v1/auth/otp/verify",
+        "body": {
+          "email": "ahmed@example.com",
+          "roleType": "seeker",
+          "purpose": "registration",
+          "challengeId": "123e4567-e89b-12d3-a456-426614174000",
+          "code": "123456"
+        }
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "POST",
+        "url": "http://127.0.0.1:4180/api/v1/auth/otp/send",
+        "status": 200
+      },
+      {
+        "method": "POST",
+        "url": "http://127.0.0.1:4180/api/v1/auth/otp/verify",
+        "status": 200
+      }
+    ],
+    "routeHits": [
+      {
+        "method": "POST",
+        "pathname": "/auth/otp/send"
+      },
+      {
+        "method": "POST",
+        "pathname": "/auth/otp/verify"
+      }
+    ]
+  },
+  "page": {
+    "screenId": "AUTH-03",
+    "state": "idle",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/register/seeker",
+    "html": {
+      "lang": "en",
+      "dir": "ltr"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 979,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 998
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 5,
+      "forms": 1,
+      "buttons": 2,
+      "links": 2,
+      "inputs": 3,
+      "unlabeledControls": 0
+    },
+    "controls": [
+      {
+        "tag": "input",
+        "id": "auth-registration-first-name",
+        "name": "firstName",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "given-name"
+      },
+      {
+        "tag": "input",
+        "id": "auth-registration-last-name",
+        "name": "lastName",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "family-name"
+      },
+      {
+        "tag": "input",
+        "id": "auth-registration-email",
+        "name": "email",
+        "type": "email",
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": "email"
+      }
+    ],
+    "links": [
+      {
+        "text": "Skip to main content",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "Create account",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "Back to log in",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  },
+  "comparison": {
+    "diffPath": "docs/quality/figma_parity/screens/AUTH-03/auth-lane-en-v2-diff-after.png",
+    "visualMetrics": {
+      "schemaVersion": 1,
+      "screenId": "AUTH-03",
+      "phase": "after",
+      "source": {
+        "width": 1577,
+        "height": 979
+      },
+      "runtimeBefore": {
+        "width": 1577,
+        "height": 998
+      },
+      "runtimeAfter": {
+        "width": 1577,
+        "height": 998
+      },
+      "comparedWidth": 1577,
+      "comparedHeight": 979,
+      "comparedPixels": 1543883,
+      "materialDifferencePercent": 16.085,
+      "antiAliasingOnlyPercent": 1.9787,
+      "threshold": {
+        "materialRgbSumGreaterThan": 24,
+        "antiAliasingRgbSumGreaterThan": 3
+      },
+      "method": "unmasked same-width source/runtime canvas comparison over overlapping document height",
+      "comparedCapture": "RUNTIME AFTER (REPAIRED)",
+      "reviewed": false,
+      "reviewedAt": null
+    }
+  }
+}

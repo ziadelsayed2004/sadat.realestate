@@ -57,7 +57,6 @@ export interface ProviderServiceDependencies {
     roleType: 'provider',
     now: Date
   ) => Promise<{
-    phone: string;
     email: string;
     roleType: 'provider';
     purpose: 'registration';
@@ -136,11 +135,10 @@ function applicationData(
     providerType: application.providerType,
     status: application.status,
     version: application.version,
-    phone: application.phone,
     requirementVersion: application.requirementVersion,
     ...(application.accountOwnerFullName ? { accountOwnerFullName: application.accountOwnerFullName } : {}),
     ...(application.displayName ? { displayName: application.displayName } : {}),
-    ...(application.email ? { email: application.email } : {}),
+    email: application.email,
     ...(application.primaryLocationId ? { primaryLocationId: application.primaryLocationId } : {}),
     ...(application.serviceAreaIds ? { serviceAreaIds: application.serviceAreaIds } : {}),
     ...(application.preferredLocale ? { preferredLocale: application.preferredLocale } : {}),
@@ -242,7 +240,6 @@ export function createProviderService(dependencies: ProviderServiceDependencies)
       let application: ProviderApplicationEntity;
       try {
         application = await dependencies.repository.createDraft({
-          phone: grant.phone,
           email: grant.email,
           providerType: input.providerType,
           requirementVersion: PROVIDER_REQUIREMENT_VERSION

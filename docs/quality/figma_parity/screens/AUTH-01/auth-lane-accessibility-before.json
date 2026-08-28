@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-01",
+  "phase": "before",
+  "html": {
+    "lang": "en",
+    "dir": "ltr"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": false,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-01",
+    "state": "idle",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/login?lang=en",
+    "html": {
+      "lang": "en",
+      "dir": "ltr"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 944
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 8,
+      "forms": 1,
+      "buttons": 3,
+      "links": 4,
+      "inputs": 3,
+      "unlabeledControls": 1
+    },
+    "controls": [
+      {
+        "tag": "input",
+        "id": "auth-login-email",
+        "name": "email",
+        "type": "email",
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "email"
+      },
+      {
+        "tag": "input",
+        "id": "auth-login-password",
+        "name": "password",
+        "type": "password",
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "current-password"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "checkbox",
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": null
+      }
+    ],
+    "links": [
+      {
+        "text": "Skip to main content",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "Verify by email",
+        "href": "/auth/verify-email?purpose=login&roleType=seeker"
+      },
+      {
+        "text": "Create an account",
+        "href": "/auth/register"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "Show password",
+        "ariaLabel": "Show password",
+        "disabled": false
+      },
+      {
+        "text": "Forgot password?",
+        "ariaLabel": null,
+        "disabled": true
+      },
+      {
+        "text": "Log in",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  }
+}

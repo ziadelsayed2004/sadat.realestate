@@ -12,8 +12,8 @@ export interface ProviderPropertyCopy {
     readonly locationTitle: string;
     readonly locationDescription: string;
     readonly steps: Readonly<Record<'basic' | 'location', string>>;
-    readonly labels: Readonly<Record<'name' | 'slug' | 'kind' | 'transaction' | 'sourceType' | 'organizationId' | 'projectId' | 'parentPropertyId' | 'reason' | 'locationId' | 'latitude' | 'longitude', string>>;
-    readonly placeholders: Readonly<Record<'name' | 'slug' | 'organizationId' | 'projectId' | 'parentPropertyId' | 'reason' | 'locationId' | 'latitude' | 'longitude', string>>;
+    readonly labels: Readonly<Record<'name' | 'slug' | 'kind' | 'transaction' | 'sourceType' | 'organizationId' | 'projectId' | 'parentPropertyId' | 'reason' | 'locationId' | 'mapUrl' | 'latitude' | 'longitude', string>>;
+    readonly placeholders: Readonly<Record<'name' | 'slug' | 'organizationId' | 'projectId' | 'parentPropertyId' | 'reason' | 'locationId' | 'mapUrl' | 'latitude' | 'longitude', string>>;
     readonly sourceTypeLabels: Readonly<Record<ProviderPropertySourceType, string>>;
     readonly kindLabels: Readonly<Record<PropertyKind, string>>;
     readonly transactionLabels: Readonly<Record<PropertyTransactionType, string>>;
@@ -53,12 +53,12 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       labels: {
         name: 'اسم العقار', slug: 'المعرّف المختصر', kind: 'نوع السجل', transaction: 'نوع المعاملة', sourceType: 'نوع مصدر العقار',
         organizationId: 'معرّف المؤسسة', projectId: 'معرّف المشروع', parentPropertyId: 'معرّف العقار الأب', reason: 'سبب حفظ المسودة',
-        locationId: 'معرّف الموقع الرئيسي', latitude: 'خط العرض', longitude: 'خط الطول'
+         locationId: 'معرّف الموقع الرئيسي', mapUrl: 'رابط موقع الخريطة', latitude: 'خط العرض', longitude: 'خط الطول'
       },
       placeholders: {
         name: 'مثال: شقة في مدينة السادات', slug: 'apartment-sadat-city', organizationId: '24 حرفاً سداسياً عشرينياً',
         projectId: 'اختياري', parentPropertyId: 'مطلوب للوحدة إن لم يوجد مشروع', reason: 'حفظ البيانات الأساسية',
-        locationId: '24 حرفاً سداسياً عشرينياً', latitude: '30.62', longitude: '30.74'
+         locationId: '24 حرفاً سداسياً عشرينياً', mapUrl: 'https://maps.example.com/…', latitude: '30.62', longitude: '30.74'
       },
       sourceTypeLabels: { individual_broker: 'وسيط فردي', brokerage_office: 'مكتب وساطة', developer_company: 'شركة مطوّرة' },
       kindLabels: { property: 'عقار', unit: 'وحدة' },
@@ -70,8 +70,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       locationCatalogUnavailableTitle: 'دليل المواقع غير متاح للمزوّد حالياً',
       locationCatalogUnavailableBody: 'لا يعرض العقد الحالي قائمة مواقع للمزوّد. لن نستخدم مسار الإدارة أو بيانات غير معتمدة؛ استخدم معرّف موقع نشطاً من المصدر المصرح به أو الإحداثيات.',
       contractBoundaryTitle: 'حقول غير مدعومة حالياً',
-      contractBoundaryBody: 'حقول العنوان التفصيلية والخرائط الخارجية غير موجودة في عقد الحفظ الحالي، لذلك لا يتم إرسالها أو اختلاق قيم لها.',
-      coordinateHelp: 'يمكن حفظ الإحداثيات وحدها أو مع معرّف الموقع. يجب إدخال خط العرض والطول معاً.',
+      contractBoundaryBody: 'حقول العنوان التفصيلية خارج عقد الحفظ. يتم حفظ رابط خريطة HTTPS آمن يضيفه المزوّد كمرجع للموقع.',
+      coordinateHelp: 'يمكن تحديد الموقع برابط خريطة HTTPS آمن أو بالإحداثيات أو بمعرّف موقع رئيسي. يجب إدخال خط العرض والطول معاً.',
       sourceHelp: 'يتم أخذ هوية المزوّد من جلسة الدخول ولا يمكن تعديلها من النموذج.',
       notFoundTitle: 'المسودة غير موجودة', notFoundBody: 'لا يمكن تحميل هذه المسودة أو لا تملك الجلسة الحالية صلاحية الوصول إليها.', unavailable: 'غير متاح'
     },
@@ -97,12 +97,12 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       labels: {
         name: 'Property name', slug: 'Short identifier', kind: 'Record type', transaction: 'Transaction type', sourceType: 'Property source type',
         organizationId: 'Organization ID', projectId: 'Project ID', parentPropertyId: 'Parent property ID', reason: 'Draft save reason',
-        locationId: 'Master location ID', latitude: 'Latitude', longitude: 'Longitude'
+        locationId: 'Master location ID', mapUrl: 'Map location link', latitude: 'Latitude', longitude: 'Longitude'
       },
       placeholders: {
         name: 'Example: Sadat City apartment', slug: 'apartment-sadat-city', organizationId: '24 hexadecimal characters',
         projectId: 'Optional', parentPropertyId: 'Required for a unit without a project', reason: 'Save basic property data',
-        locationId: '24 hexadecimal characters', latitude: '30.62', longitude: '30.74'
+        locationId: '24 hexadecimal characters', mapUrl: 'https://maps.example.com/…', latitude: '30.62', longitude: '30.74'
       },
       sourceTypeLabels: { individual_broker: 'Individual broker', brokerage_office: 'Brokerage office', developer_company: 'Developer company' },
       kindLabels: { property: 'Property', unit: 'Unit' },
@@ -114,8 +114,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       locationCatalogUnavailableTitle: 'The provider location catalog is unavailable',
       locationCatalogUnavailableBody: 'The current provider contract does not expose a location list. The admin route and unapproved data are not used; enter an active location ID from an approved source or coordinates.',
       contractBoundaryTitle: 'Fields not supported by the current contract',
-      contractBoundaryBody: 'Detailed address fields and external map URLs are not part of the current save contract, so they are not submitted or fabricated.',
-      coordinateHelp: 'Coordinates may be saved alone or with a location ID. Latitude and longitude must be supplied together.',
+      contractBoundaryBody: 'Detailed address fields are outside the save contract. A safe HTTPS map link is stored as the provider-supplied location reference.',
+      coordinateHelp: 'A safe HTTPS map link, coordinates, or a master location ID may identify the location. Latitude and longitude must be supplied together.',
       sourceHelp: 'The provider identity comes from the authenticated session and cannot be changed in this form.',
       notFoundTitle: 'Draft not found', notFoundBody: 'This draft could not be loaded or is not owned by the current session.', unavailable: 'Unavailable'
     },
@@ -141,12 +141,12 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       labels: {
         name: '房产名称', slug: '短标识', kind: '记录类型', transaction: '交易类型', sourceType: '房产来源类型',
         organizationId: '组织 ID', projectId: '项目 ID', parentPropertyId: '父房产 ID', reason: '草稿保存原因',
-        locationId: '主位置 ID', latitude: '纬度', longitude: '经度'
+        locationId: '主位置 ID', mapUrl: '地图位置链接', latitude: '纬度', longitude: '经度'
       },
       placeholders: {
         name: '例如：萨达特城公寓', slug: 'apartment-sadat-city', organizationId: '24 个十六进制字符',
         projectId: '可选', parentPropertyId: '没有项目时单位必填', reason: '保存基本房产数据',
-        locationId: '24 个十六进制字符', latitude: '30.62', longitude: '30.74'
+        locationId: '24 个十六进制字符', mapUrl: 'https://maps.example.com/…', latitude: '30.62', longitude: '30.74'
       },
       sourceTypeLabels: { individual_broker: '个人经纪人', brokerage_office: '经纪办公室', developer_company: '开发公司' },
       kindLabels: { property: '房产', unit: '单元' },
@@ -158,8 +158,8 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       locationCatalogUnavailableTitle: '提供方位置目录不可用',
       locationCatalogUnavailableBody: '当前提供方契约不提供位置列表。不会调用管理端路径或未批准的数据；请输入批准来源中的启用位置 ID 或坐标。',
       contractBoundaryTitle: '当前契约不支持的字段',
-      contractBoundaryBody: '详细地址字段和外部地图 URL 不在当前保存契约中，因此不会提交或编造。',
-      coordinateHelp: '可以单独保存坐标，也可以与位置 ID 一起保存。纬度和经度必须同时填写。',
+      contractBoundaryBody: '详细地址字段不在保存契约中。提供方添加的安全 HTTPS 地图链接会作为位置参考保存。',
+      coordinateHelp: '位置可以使用安全 HTTPS 地图链接、坐标或主位置 ID。纬度和经度必须同时填写。',
       sourceHelp: '提供方身份来自已验证会话，不能在此表单中修改。',
       notFoundTitle: '找不到草稿', notFoundBody: '无法加载此草稿，或当前会话不拥有它。', unavailable: '不可用'
     },
@@ -178,4 +178,3 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
 export function getProviderPropertyCopy(locale: SupportedLocale): ProviderPropertyCopy {
   return copyByLocale[locale];
 }
-

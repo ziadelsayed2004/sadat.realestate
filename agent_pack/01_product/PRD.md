@@ -36,7 +36,7 @@ Create a trusted platform for discovering and presenting Sadat City real estate 
 ### 5.1 Provider types and common application fields
 
 - The only approved provider types are `individual_broker`, `brokerage_office`, and `developer_company`. Adding a type requires a later approved product decision.
-- Every provider application requires `providerType`, `accountOwnerFullName`, `displayName`, the verified E.164 phone number used as the provider authentication identifier, a contact email address, `primaryLocationId`, at least one `serviceAreaId`, `preferredLocale`, a Terms acceptance timestamp, and a Privacy Policy acceptance timestamp. Email is contact information, not the provider login identifier.
+- Every provider application requires `providerType`, `accountOwnerFullName`, `displayName`, the normalized email bound to the email-only Provider authentication authority, `primaryLocationId`, at least one `serviceAreaId`, `preferredLocale`, a Terms acceptance timestamp, and a Privacy Policy acceptance timestamp. Phone and WhatsApp are optional contact/business fields only when the applicable contract exposes them; neither is an authentication identifier.
 - A secondary phone, WhatsApp number, profile image or logo, biography or company summary, website, and social links are optional unless a later approved frame explicitly makes one mandatory.
 
 ### 5.2 Provider-type-specific fields and documents

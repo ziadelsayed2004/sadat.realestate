@@ -408,12 +408,31 @@
   border-radius: 50%;
 }
 
+.public-category-glyph {
+  display: grid;
+  inline-size: 4.75rem;
+  block-size: 4.75rem;
+  place-items: center;
+  color: var(--color-brand-primary);
+  background: var(--color-surface-soft);
+  border-radius: 50%;
+}
+
+.public-category-glyph svg {
+  inline-size: 2rem;
+  block-size: 2rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.35;
+}
+
 .public-homepage__category-image {
   display: block;
   inline-size: 4.75rem;
   block-size: 4.75rem;
-  border-radius: 50%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .public-homepage__category-card small {
@@ -437,12 +456,42 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.public-homepage__section--community .public-homepage__content-card > img {
-  display: none;
+.public-homepage__section--community .public-homepage__content-card {
+  min-block-size: 10rem;
 }
 
 .public-homepage__section--community .public-homepage__content-card {
-  min-block-size: 10rem;
+  grid-template-columns: minmax(0, 1fr) 2.5rem;
+  grid-template-areas:
+    "badge profile"
+    "title title"
+    "body body";
+  align-content: start;
+}
+
+.public-homepage__section--community .public-homepage__content-card > img {
+  grid-area: profile;
+  display: block;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  margin: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.public-homepage__section--community .public-homepage__content-card > .public-homepage__content-type {
+  grid-area: badge;
+  align-self: center;
+  justify-self: start;
+  margin: 0;
+}
+
+.public-homepage__section--community .public-homepage__content-card > h3 {
+  grid-area: title;
+}
+
+.public-homepage__section--community .public-homepage__content-card > p:not(.public-homepage__content-type) {
+  grid-area: body;
 }
 
 .public-homepage__section--about {
@@ -527,6 +576,12 @@
   color: var(--color-on-brand);
   background: var(--color-brand-primary);
   border-color: var(--color-brand-primary);
+}
+
+.public-homepage__platform-callout .public-homepage__whatsapp-action {
+  color: #fff;
+  background: #20cf68;
+  border-color: #20cf68;
 }
 
 .public-homepage__platform-callout h2 {

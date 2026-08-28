@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-07",
+  "phase": "before",
+  "source": {
+    "width": 1577,
+    "height": 944
+  },
+  "runtimeBefore": {
+    "width": 1577,
+    "height": 1053
+  },
+  "runtimeAfter": null,
+  "comparedWidth": 1577,
+  "comparedHeight": 944,
+  "comparedPixels": 1488688,
+  "materialDifferencePercent": 16.7014,
+  "antiAliasingOnlyPercent": 1.2048,
+  "threshold": {
+    "materialRgbSumGreaterThan": 24,
+    "antiAliasingRgbSumGreaterThan": 3
+  },
+  "method": "unmasked same-width source/runtime canvas comparison over overlapping document height",
+  "comparedCapture": "RUNTIME BEFORE (CURRENT)",
+  "reviewed": false,
+  "reviewedAt": null
+}

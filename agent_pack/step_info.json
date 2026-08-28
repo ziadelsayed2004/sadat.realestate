@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-26T22:01:13.209Z",
+  "generatedAt": "2026-08-27T13:12:43.867Z",
   "selectedTaskId": "frontend_100",
   "selectedTaskStatus": "in_progress",
   "selectedTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_100.md",
@@ -53,7 +53,7 @@
     ],
     "acceptance": [
       "Maintain exactly one In Progress coordinator task and three non-overlapping lane ledgers.",
-      "Process one canonical screen at a time per lane using only the owner-controlled clone and cached evidence; preserve the Public cursor at frontend_099/PUB-03 and do not discover PUB-09.",
+      "Process every canonical Public, Auth, and Seeker screen in its assigned lane using the approved Figma source and cached evidence; do not skip screens or invent supplementary screens.",
       "Resolve exact clone node, route, role, permissions, locale, direction, device, deterministic state, API projection, and prototype flow for every lane screen.",
       "Implement repository-owned defects in the owning lane or coordinator-owned shared/backend path; return exact change requests for cross-lane shared changes.",
       "Capture after real repairs with ready fonts, decoded images, stable animation state, exact viewport, and reviewed numerical and visual diffs.",

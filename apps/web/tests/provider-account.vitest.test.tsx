@@ -25,7 +25,7 @@ function application(overrides: Partial<ProviderApplicationData> = {}): Provider
     providerType: 'developer_company',
     status: 'draft',
     version: 0,
-    phone: '+201000000000',
+    email: 'provider@example.com',
     requirementVersion: '2026-08-13.1',
     missingFields: ['accountOwnerFullName', 'displayName', 'email', 'primaryLocationId', 'serviceAreaIds', 'preferredLocale', 'termsAcceptedAt', 'privacyAcceptedAt'],
     missingDocuments: [],
@@ -79,10 +79,14 @@ describe('provider account details', () => {
     );
 
     expect(screen.getByTestId('provider-account-details')).toHaveAttribute('data-state', 'loading');
-    await waitFor(() => expect(screen.getByTestId('provider-account-details')).toHaveAttribute('data-screen-id', 'AUTH-09'));
+    await waitFor(() => {
+      const details = screen.getByTestId('provider-account-details');
+      expect(details).toHaveAttribute('data-state', 'idle');
+      expect(details).toHaveAttribute('data-screen-id', 'AUTH-09');
+    });
     expect(getProviderApplication).toHaveBeenCalledTimes(1);
     expect(screen.getByRole('heading', { name: copy.title, level: 1 })).toBeInTheDocument();
-    expect(screen.getByLabelText(copy.phoneLabel)).toHaveValue('+201000000000');
+    expect(screen.getByLabelText(copy.emailLabel)).toHaveValue('provider@example.com');
     expect(screen.getByLabelText(copy.accountOwnerFullNameLabel)).toBeInTheDocument();
     expect(screen.queryByLabelText(/password|كلمة المرور|密码/iu)).not.toBeInTheDocument();
   });
@@ -114,7 +118,7 @@ describe('provider account details', () => {
     fireEvent.change(screen.getByLabelText(copy.accountOwnerFullNameLabel), { target: { value: 'Mona Hassan' } });
     fireEvent.change(screen.getByLabelText(copy.displayNameLabel), { target: { value: 'Mona Properties' } });
     fireEvent.change(screen.getByLabelText(copy.emailLabel), { target: { value: 'Mona@Example.com' } });
-    fireEvent.click(screen.getByLabelText(copy.samePhoneLabel));
+    fireEvent.change(screen.getByLabelText(copy.whatsappLabel), { target: { value: '+20 100 000 0000' } });
     fireEvent.change(screen.getByLabelText(copy.preferredLocaleLabel), { target: { value: 'en' } });
     fireEvent.click(screen.getByLabelText(copy.termsLabel));
     fireEvent.click(screen.getByLabelText(copy.privacyLabel));
@@ -163,9 +167,8 @@ describe('provider account details', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /developer company/iu }));
     fireEvent.click(screen.getByRole('button', { name: authCopy.continueAction }));
-    await waitFor(() => expect(screen.getByRole('heading', { name: authCopy.phoneTitle, level: 1 })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: authCopy.emailTitle, level: 1 })).toBeInTheDocument());
     fireEvent.change(screen.getByLabelText(authCopy.identifierLabel), { target: { value: 'provider@example.com' } });
-    fireEvent.change(screen.getByLabelText(authCopy.phoneLabel), { target: { value: '+20 100 000 0000' } });
     fireEvent.click(screen.getByRole('button', { name: authCopy.sendCodeAction }));
     await waitFor(() => expect(screen.getByRole('heading', { name: authCopy.otpTitle, level: 1 })).toBeInTheDocument());
     Array.from({ length: 6 }, (_, position) => screen.getByLabelText(authCopy.codeDigitLabel(position + 1)))

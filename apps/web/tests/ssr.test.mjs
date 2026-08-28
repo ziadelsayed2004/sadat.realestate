@@ -14,6 +14,8 @@ const propertyDetailsData = {
   layout: { bedrooms: 3, bathrooms: 2, floor: 4 },
   price: { amount: 1250000, currency: 'EGP' },
   source: { sourceType: 'developer_company', organizationId: 'bbbbbbbbbbbbbbbbbbbbbbbb' },
+  features: [],
+  services: [],
   seo: {
     title: { ar: 'تفاصيل منزل منشور', en: 'Published home details' },
     description: { ar: 'وصف محرك البحث', en: 'Search description' },
@@ -73,6 +75,7 @@ const developerListData = {
 
 const developerProfileData = {
   ...developerListData.items[0],
+  locations: [{ en: 'Central district' }],
   projects: [{
     id: 'bbbbbbbbbbbbbbbbbbbbbbbb',
     slug: 'central-project',
@@ -87,7 +90,13 @@ const developerProfileData = {
     name: { en: 'Published home' },
     transactionType: 'sale',
     projectId: 'bbbbbbbbbbbbbbbbbbbbbbbb'
-  }]
+  }],
+  stats: {
+    publishedProjects: 1,
+    availableProperties: 2,
+    saleProperties: 2,
+    rentalProperties: 0
+  }
 };
 
 const articleListData = [
@@ -172,7 +181,9 @@ test('SSR renders the homepage shell and hydrates CMS data only when supplied', 
       properties: [],
       developers: [],
       content: [],
-      banners: []
+      banners: [],
+      categories: [],
+      metrics: []
     }
   });
   assert.equal(result.statusCode, 200);

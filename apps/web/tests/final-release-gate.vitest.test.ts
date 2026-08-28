@@ -72,7 +72,7 @@ describe('final release manifest', () => {
     expect(manifest.screenEvidence).toEqual({
       canonicalScreenCount: 131,
       routeLocaleUatCases: 393,
-      localApprovedVisualSources: 130,
+      localApprovedVisualSources: 131,
       adm54DirectComparison: false,
       adm54ExceptionId: 'DESIGN-EXCEPTION-ADM-54'
     });

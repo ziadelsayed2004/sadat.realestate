@@ -34,7 +34,6 @@ export type OtpChallengeState = (typeof OTP_CHALLENGE_STATES)[number];
 export interface OtpChallengeRecord {
   publicId: string;
   activeKey?: string;
-  normalizedPhone: string;
   normalizedEmail: string;
   roleType: OtpRoleType;
   purpose: OtpPurpose;
@@ -90,13 +89,6 @@ const otpChallengeSchema = new Schema<OtpChallengeRecord>(
       match: /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
     },
     activeKey: { type: String, select: false, minlength: 1, maxlength: 128 },
-    normalizedPhone: {
-      type: String,
-      required: true,
-      immutable: true,
-      maxlength: 16,
-      match: /^\+[1-9]\d{7,14}$/
-    },
     normalizedEmail: {
       type: String,
       required: true,
@@ -151,8 +143,8 @@ otpChallengeSchema.index(
   }
 );
 otpChallengeSchema.index(
-  { normalizedPhone: 1, normalizedEmail: 1, roleType: 1, purpose: 1, createdAt: -1 },
-  { name: 'otp_challenges_target_created' }
+  { normalizedEmail: 1, roleType: 1, purpose: 1, createdAt: -1 },
+  { name: 'otp_challenges_email_target_created' }
 );
 otpChallengeSchema.index(
   { verificationTokenHash: 1 },

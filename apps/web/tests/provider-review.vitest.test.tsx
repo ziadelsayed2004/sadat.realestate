@@ -13,7 +13,6 @@ function application(overrides: Partial<ProviderApplicationData> = {}): Provider
     providerType: 'developer_company',
     status: 'draft',
     version: 3,
-    phone: '+201000000000',
     requirementVersion: '2026-08-13.1',
     accountOwnerFullName: 'Mona Hassan',
     displayName: 'Nile Developments',

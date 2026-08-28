@@ -1,4 +1,4 @@
-# backend_012 — OTP and Phone Verification
+# backend_012 — OTP and Email Verification (legacy task key)
 
 | Field | Value |
 |---|---|
@@ -11,7 +11,7 @@
 
 ## Goal
 
-Implement an OTP provider abstraction with hashed storage, TTL, bounded attempts, and E.164 normalization without binding to an unapproved provider.
+Implement an email-only OTP provider abstraction with hashed storage, TTL, bounded attempts, and normalized email identity without binding to an unapproved provider. Phone OTP is legacy-only and must not be accepted by the active contract.
 
 ## Screen IDs
 

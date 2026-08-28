@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-03",
+  "phase": "before",
+  "html": {
+    "lang": "ar",
+    "dir": "rtl"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-03",
+    "state": "idle",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/register/seeker",
+    "html": {
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 979,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 998
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 5,
+      "forms": 1,
+      "buttons": 2,
+      "links": 2,
+      "inputs": 3,
+      "unlabeledControls": 0
+    },
+    "controls": [
+      {
+        "tag": "input",
+        "id": "auth-registration-first-name",
+        "name": "firstName",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "given-name"
+      },
+      {
+        "tag": "input",
+        "id": "auth-registration-last-name",
+        "name": "lastName",
+        "type": null,
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "family-name"
+      },
+      {
+        "tag": "input",
+        "id": "auth-registration-email",
+        "name": "email",
+        "type": "email",
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": "email"
+      }
+    ],
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "إنشاء الحساب",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "العودة إلى تسجيل الدخول",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  }
+}

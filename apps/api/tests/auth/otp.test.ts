@@ -22,7 +22,6 @@ const now = new Date('2026-08-13T12:00:00.000Z');
 const challengeId = '123e4567-e89b-42d3-a456-426614174000';
 const challenge: OtpChallenge = {
   id: '0123456789abcdef01234567',
-  phone: '+201000000000',
   email: 'seeker@example.com',
   roleType: 'seeker',
   purpose: 'login',
@@ -101,7 +100,7 @@ test('uses deterministic Local/Test adapters without logging or returning the ra
     }
   }), createDeterministicFakeOtpProvider((delivery) => { delivered = delivery; }));
   const result = await otp.send({
-    phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login'
+    email: 'seeker@example.com', roleType: 'seeker', purpose: 'login'
   });
   assert.deepEqual(result, {
     accepted: true,
@@ -114,7 +113,7 @@ test('uses deterministic Local/Test adapters without logging or returning the ra
   assert.equal(JSON.stringify(result).includes('000000'), false);
 });
 
-test('delivers an Arabic-first OTP email through SMTP without using the phone as destination', async () => {
+test('delivers an Arabic-first OTP email to the email identity', async () => {
   let message: Parameters<SmtpTransport['sendMail']>[0] | undefined;
   const transport: SmtpTransport = {
     async verify() { return true; },
@@ -129,7 +128,6 @@ test('delivers an Arabic-first OTP email through SMTP without using the phone as
     from: 'Elsadat Real Estate <info@elsadatrealestate.com>'
   }, transport);
   await provider.send({
-    phone: '+201000000000',
     email: 'seeker@example.com',
     roleType: 'seeker',
     purpose: 'login',
@@ -167,7 +165,7 @@ test('SMTP readiness verifies credentials and fails closed without exposing tran
 test('fails closed for unconfigured or failed providers and invalidates failed delivery', async () => {
   await rejectsWithCode(
     () => service(repository(), createUnconfiguredOtpProvider()).send({
-      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login'
+      email: 'seeker@example.com', roleType: 'seeker', purpose: 'login'
     }),
     'OTP_PROVIDER_UNAVAILABLE'
   );
@@ -176,7 +174,7 @@ test('fails closed for unconfigured or failed providers and invalidates failed d
     () => service(repository({ async cancelChallenge() { cancelled = true; } }), {
       kind: 'external', isReady: () => true, async send() { throw new Error('synthetic failure'); }
     }).send({
-      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login'
+      email: 'seeker@example.com', roleType: 'seeker', purpose: 'login'
     }),
     'OTP_PROVIDER_UNAVAILABLE'
   );
@@ -188,13 +186,13 @@ test('enforces target resend cooldown and a bounded invalid-attempt state', asyn
     () => service(repository({
       async createChallenge() { return { kind: 'cooldown', retryAfterSeconds: 42 }; }
     })).send({
-      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login'
+      email: 'seeker@example.com', roleType: 'seeker', purpose: 'login'
     }),
     'OTP_SEND_RATE_LIMITED'
   );
   await rejectsWithCode(
     () => service(repository()).verify({
-      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '111111'
+      email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '111111'
     }),
     'INVALID_OTP'
   );
@@ -202,15 +200,15 @@ test('enforces target resend cooldown and a bounded invalid-attempt state', asyn
     () => service(repository({
       async recordFailedAttempt() { return { kind: 'exhausted' }; }
     })).verify({
-      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '111111'
+      email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '111111'
     }),
     'OTP_ATTEMPTS_EXCEEDED'
   );
 });
 
-test('authenticates an existing phone account through the shared rotating-session boundary', async () => {
+test('authenticates an existing email account through the shared rotating-session boundary', async () => {
   const result = await service(repository()).verify({
-    phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
+    email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
   });
   assert.equal(result.data.outcome, 'authenticated');
   if (result.data.outcome === 'authenticated' && 'refreshToken' in result) {
@@ -242,7 +240,7 @@ test('returns a hashed, one-time registration authority without creating an acco
     createChallengeId: () => challengeId
   });
   const result = await otp.verify({
-    phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'registration', challengeId, code: '000000'
+    email: 'seeker@example.com', roleType: 'seeker', purpose: 'registration', challengeId, code: '000000'
   });
   assert.deepEqual(result.data, {
     outcome: 'verified',
@@ -257,19 +255,19 @@ test('returns a hashed, one-time registration authority without creating an acco
 test('rejects expired, replayed, missing, or inactive login challenges without account enumeration', async () => {
   await rejectsWithCode(
     () => service(repository({ async findChallenge() { return undefined; } })).verify({
-      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
+      email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
     }),
     'INVALID_OTP'
   );
   await rejectsWithCode(
     () => service(repository({ async consumeLoginChallenge() { return false; } })).verify({
-      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
+      email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
     }),
     'INVALID_OTP'
   );
   await rejectsWithCode(
     () => service(repository({ async findOtpAccount() { return undefined; } })).verify({
-      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
+      email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
     }),
     'INVALID_OTP'
   );
@@ -279,7 +277,7 @@ test('rejects expired, replayed, missing, or inactive login challenges without a
         return { id: '0123456789abcdef01234567', roleType: 'seeker', status: 'suspended' };
       }
     })).verify({
-      phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
+      email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', challengeId, code: '000000'
     }),
     'ACCOUNT_NOT_ACTIVE'
   );

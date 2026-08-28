@@ -161,7 +161,7 @@
     "deterministicState": {
       "path": "docs/quality/figma_parity/screens/PUB-06/deterministic-state.json",
       "seedId": "fresh-audit-PUB-06-ar-v1",
-      "responseSha256": "d5e1370cb1894c6f750385cbb902230597c57c9fb31e4f849f8170ed1349bef1"
+      "responseSha256": "9d94d697bcbd65922eb9ab5079ece33ab6902888a679f789cb8048a6224d6824"
     },
     "response": {
       "status": 200,
@@ -186,7 +186,7 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-06/runtime-after.png",
-      "sha256": "881c43b409df0dce37eddb3c732ab3dafa4f69d94becfef14d68a9a94056ce9e"
+      "sha256": "bb7d6149562c94a62de017910ce5a432c7e309e1cc2f46d1c41f43956c43e2c8"
     }
   },
   "structuredVisualComparison": {
@@ -232,6 +232,7 @@
   "filesRepaired": [
     "apps/web/src/features/public/components.tsx",
     "apps/web/src/features/public/developer-profile.tsx",
+    "apps/web/src/features/public/developers-copy.ts",
     "apps/web/src/features/public/developers.css",
     "apps/web/tests/e2e/public-fixtures.ts",
     "scripts/capture-figma-parity-runtime.mjs",
@@ -303,5 +304,13 @@
     "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-06/runtime-after-capture.json"
   },
   "reviewedAt": "2026-08-25T21:28:06.681Z",
-  "repairedAt": "2026-08-25T21:28:06.681Z"
+  "repairedAt": "2026-08-25T21:28:06.681Z",
+  "latestRuntimeVerification": {
+    "source": "runtime-after-capture.json and visual-metrics.json",
+    "phase": "after",
+    "apiResponseStatus": 200,
+    "materialDifferencePercent": 16.1127,
+    "antiAliasingOnlyPercent": 6.1845,
+    "officialClosureEligible": false
+  }
 }

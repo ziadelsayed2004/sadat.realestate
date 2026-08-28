@@ -48,7 +48,6 @@ export const seekerProfileDataSchema = z.object({
   id: z.string().regex(/^[a-f0-9]{24}$/),
   roleType: z.literal('seeker'),
   status: z.enum(['draft', 'unverified', 'pending_review', 'needs_information', 'verified', 'rejected', 'restricted', 'suspended']),
-  phone: z.string().regex(/^\+[1-9]\d{7,14}$/),
   email: normalizedEmailSchema,
   firstName: nameSchema,
   lastName: nameSchema,

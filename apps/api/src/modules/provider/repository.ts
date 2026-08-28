@@ -20,14 +20,13 @@ import type { ProviderModels } from './models.js';
 export interface ProviderApplicationEntity {
   id: string;
   userId: string;
-  phone: string;
   providerType: ProviderType;
   status: ProviderApplicationState;
   version: number;
   requirementVersion: string;
   accountOwnerFullName?: string;
   displayName?: string;
-  email?: string;
+  email: string;
   primaryLocationId?: string;
   serviceAreaIds?: string[];
   preferredLocale?: ProviderLocale;
@@ -69,7 +68,6 @@ export type ProviderWriteResult =
 
 export interface ProviderRepository {
   createDraft(input: {
-    phone: string;
     email: string;
     providerType: ProviderType;
     requirementVersion: string;
@@ -95,12 +93,12 @@ export interface ProviderDocumentInventory {
 
 interface LeanUser {
   _id: Types.ObjectId;
-  normalizedPhone?: string;
+  normalizedEmail?: string;
   roleType: 'seeker' | 'provider' | 'admin';
   status: AuthAccountState;
 }
 
-interface LeanApplication extends Omit<ProviderApplicationEntity, 'id' | 'userId' | 'phone' | 'primaryLocationId' | 'serviceAreaIds' | 'profileAssetId'> {
+interface LeanApplication extends Omit<ProviderApplicationEntity, 'id' | 'userId' | 'primaryLocationId' | 'serviceAreaIds' | 'profileAssetId'> {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
   primaryLocationId?: Types.ObjectId;
@@ -117,7 +115,7 @@ function objectId(value: string): Types.ObjectId {
 }
 
 function toEntity(user: LeanUser, application: LeanApplication): ProviderApplicationEntity | undefined {
-  if (user.roleType !== 'provider' || !user.normalizedPhone) return undefined;
+  if (user.roleType !== 'provider' || !user.normalizedEmail) return undefined;
   const {
     _id,
     userId,
@@ -130,7 +128,7 @@ function toEntity(user: LeanUser, application: LeanApplication): ProviderApplica
     ...data,
     id: _id.toHexString(),
     userId: userId.toHexString(),
-    phone: user.normalizedPhone,
+    email: application.email ?? user.normalizedEmail,
     ...(primaryLocationId ? { primaryLocationId: primaryLocationId.toHexString() } : {}),
     ...(serviceAreaIds ? { serviceAreaIds: serviceAreaIds.map((id) => id.toHexString()) } : {}),
     ...(profileAssetId ? { profileAssetId: profileAssetId.toHexString() } : {})
@@ -179,7 +177,7 @@ export function createMongooseProviderRepository(
     const id = objectId(userId);
     const [user, application] = await Promise.all([
       User.findOne({ _id: id, roleType: 'provider' })
-        .select('_id normalizedPhone roleType status')
+        .select('_id normalizedEmail roleType status')
         .lean<LeanUser>()
         .exec(),
       ProviderApplication.findOne({ userId: id }).lean<LeanApplication>().exec()
@@ -192,7 +190,6 @@ export function createMongooseProviderRepository(
       try {
         const userId = await connection.transaction(async (session) => {
           const [user] = await User.create([{
-            normalizedPhone: input.phone,
             normalizedEmail: input.email,
             roleType: 'provider',
             status: 'draft',

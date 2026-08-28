@@ -15,7 +15,6 @@ function application(status: 'draft' | 'needs_information' | 'approved'): Record
     providerType: 'developer_company',
     status,
     version: status === 'draft' ? 3 : 4,
-    phone: '+201000000000',
     requirementVersion: '2026-08-13.1',
     accountOwnerFullName: 'Mona Hassan',
     displayName: 'Nile Developments',

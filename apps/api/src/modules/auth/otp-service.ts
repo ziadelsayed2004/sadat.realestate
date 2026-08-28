@@ -97,7 +97,6 @@ export function createOtpService(dependencies: OtpServiceDependencies): OtpServi
       const challengeId = createChallengeId();
       const code = dependencies.codeGenerator.create();
       const context = {
-        phone: input.phone,
         email: input.email,
         roleType: input.roleType,
         purpose: input.purpose
@@ -115,7 +114,6 @@ export function createOtpService(dependencies: OtpServiceDependencies): OtpServi
 
       try {
         await dependencies.provider.send({
-          phone: input.phone,
           email: input.email,
           roleType: input.roleType,
           purpose: input.purpose,
@@ -137,7 +135,6 @@ export function createOtpService(dependencies: OtpServiceDependencies): OtpServi
     async verify(input: OtpVerifyRequest): Promise<OtpVerificationResult> {
       const verifiedAt = now();
       const context = {
-        phone: input.phone,
         email: input.email,
         roleType: input.roleType,
         purpose: input.purpose
@@ -178,7 +175,6 @@ export function createOtpService(dependencies: OtpServiceDependencies): OtpServi
       }
 
       const account = await dependencies.repository.findOtpAccount(
-        input.phone,
         input.email,
         input.roleType
       );

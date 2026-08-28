@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-04",
+  "phase": "after",
+  "capturedAt": "2026-08-27T17:00:28.732Z",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4353",
+    "nodeId": "6017:15993",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-15993&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "dimensions": {
+      "width": 1577,
+      "height": 1033
+    }
+  },
+  "runtime": {
+    "route": "/auth/verify-email?purpose=registration&roleType=seeker&lang=ar",
+    "requestedQueueRoute": "/auth/verify-phone",
+    "role": "anonymous",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1577,
+      "height": 1033,
+      "devicePixelRatio": 1
+    },
+    "capture": {
+      "path": "docs/quality/figma_parity/screens/AUTH-04/runtime-after-auth-lane-ar.png",
+      "sha256": "d629b8f474db59301b6e0ad4a3313129b1084df5a322c8b0c9dd749265601031"
+    },
+    "beforeHash": "d629b8f474db59301b6e0ad4a3313129b1084df5a322c8b0c9dd749265601031",
+    "afterHash": "d629b8f474db59301b6e0ad4a3313129b1084df5a322c8b0c9dd749265601031",
+    "apiRequests": [],
+    "apiResponses": [],
+    "routeHits": []
+  },
+  "page": {
+    "screenId": "AUTH-04",
+    "state": "idle",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/verify-email?purpose=registration&roleType=seeker&lang=ar",
+    "html": {
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 1033,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 1033
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 5,
+      "forms": 1,
+      "buttons": 1,
+      "links": 3,
+      "inputs": 2,
+      "unlabeledControls": 0
+    },
+    "controls": [
+      {
+        "tag": "input",
+        "id": "auth-otp-email",
+        "name": "email",
+        "type": "email",
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "email"
+      },
+      {
+        "tag": "select",
+        "id": "auth-role-type",
+        "name": "roleType",
+        "type": null,
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": null
+      }
+    ],
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "إرسال الرمز",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  },
+  "comparison": {
+    "diffPath": "docs/quality/figma_parity/screens/AUTH-04/auth-lane-ar-diff-after.png",
+    "visualMetrics": {
+      "schemaVersion": 1,
+      "screenId": "AUTH-04",
+      "phase": "after",
+      "source": {
+        "width": 1577,
+        "height": 1033
+      },
+      "runtimeBefore": {
+        "width": 1577,
+        "height": 1033
+      },
+      "runtimeAfter": {
+        "width": 1577,
+        "height": 1033
+      },
+      "comparedWidth": 1577,
+      "comparedHeight": 1033,
+      "comparedPixels": 1629041,
+      "materialDifferencePercent": 17.6921,
+      "antiAliasingOnlyPercent": 1.7667,
+      "threshold": {
+        "materialRgbSumGreaterThan": 24,
+        "antiAliasingRgbSumGreaterThan": 3
+      },
+      "method": "unmasked same-width source/runtime canvas comparison over overlapping document height",
+      "comparedCapture": "RUNTIME AFTER (REPAIRED)",
+      "reviewed": false,
+      "reviewedAt": null
+    }
+  }
+}

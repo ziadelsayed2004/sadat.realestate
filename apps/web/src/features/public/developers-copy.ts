@@ -29,9 +29,11 @@ export interface PublicDevelopersCopy {
   readonly backToDirectory: string;
   readonly profileOverview: string;
   readonly profileProjects: string;
+  readonly projectsSectionTitle: string;
   readonly profileProperties: string;
   readonly profileKind: string;
   readonly profileContact: string;
+  readonly profileInquiryTitle: (name: string) => string;
   readonly profileContactUnavailable: string;
   readonly contactDeveloper: string;
   readonly availableUnitsAction: string;
@@ -57,6 +59,7 @@ export interface PublicDevelopersCopy {
   readonly advisoryTitle: string;
   readonly advisoryBody: string;
   readonly contactWhatsapp: string;
+  readonly contactWhatsappAvailable: string;
   readonly sendInquiry: string;
   readonly fieldName: string;
   readonly fieldPhone: string;
@@ -64,6 +67,7 @@ export interface PublicDevelopersCopy {
   readonly fieldMessage: string;
   readonly fieldRequestType: string;
   readonly fieldPreferredTime: string;
+  readonly messagePlaceholder: string;
   readonly formNote: string;
   readonly descriptionTitle: string;
   readonly noDescription: string;
@@ -126,12 +130,14 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicDevelopersCopy>> = {
     propertyCount: count => `${count} عقار منشور`,
     locationsLabel: '\u0627\u0644\u0645\u0648\u0627\u0642\u0639',
     openProfile: '\u0639\u0631\u0636 \u0627\u0644\u0645\u0637\u0648\u0631',
-    backToDirectory: 'العودة إلى دليل الجهات',
-    profileOverview: 'نبذة عامة',
-    profileProjects: 'المشروعات',
-    profileProperties: 'العقارات المنشورة',
+    backToDirectory: '\u0627\u0644\u0639\u0648\u062f\u0629 \u0644\u0644\u0645\u0637\u0648\u0631\u064a\u0646',
+    profileOverview: '\u0646\u0628\u0630\u0629',
+    profileProjects: '\u0627\u0644\u0645\u0634\u0627\u0631\u064a\u0639',
+    projectsSectionTitle: '\u0645\u0634\u0627\u0631\u064a\u0639 \u0627\u0644\u0645\u0637\u0648\u0631',
+    profileProperties: '\u0627\u0644\u0648\u062d\u062f\u0627\u062a \u0627\u0644\u0645\u062a\u0627\u062d\u0629',
     profileKind: 'نوع الجهة',
     profileContact: 'التواصل',
+    profileInquiryTitle: name => `\u0627\u0633\u062a\u0641\u0633\u0631 \u0639\u0646 \u0645\u0634\u0627\u0631\u064a\u0639 ${name}`,
     profileContactUnavailable: 'بيانات التواصل العامة غير متاحة في هذا الملف حالياً.',
     contactDeveloper: '\u062a\u0648\u0627\u0635\u0644 \u0645\u0639 \u0627\u0644\u0645\u0637\u0648\u0631',
     availableUnitsAction: '\u0639\u0631\u0636 \u0627\u0644\u0648\u062d\u062f\u0627\u062a \u0627\u0644\u0645\u062a\u0627\u062d\u0629',
@@ -149,7 +155,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicDevelopersCopy>> = {
     availableUnitsTitle: '\u0627\u0644\u0648\u062d\u062f\u0627\u062a \u0627\u0644\u0645\u062a\u0627\u062d\u0629 \u0644\u062f\u0649 \u0627\u0644\u0645\u0637\u0648\u0631',
     availableUnitsEmpty: '\u0644\u0627 \u062a\u0648\u062c\u062f \u0648\u062d\u062f\u0627\u062a \u0645\u062a\u0627\u062d\u0629 \u0644\u062f\u0649 \u0647\u0630\u0627 \u0627\u0644\u0645\u0637\u0648\u0631 \u062d\u0627\u0644\u064a\u0627\u064b.',
     projectStatus: '\u062d\u0627\u0644\u0629 \u0627\u0644\u0645\u0634\u0631\u0648\u0639',
-    projectUnits: '\u0627\u0644\u0648\u062d\u062f\u0627\u062a',
+    projectUnits: '\u0648\u062d\u062f\u0629',
     projectArea: '\u0627\u0644\u0645\u0633\u0627\u062d\u0629',
     projectPrice: '\u0627\u0644\u0623\u0633\u0639\u0627\u0631',
     projectDelivery: '\u0627\u0644\u062a\u0633\u0644\u064a\u0645',
@@ -157,15 +163,17 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicDevelopersCopy>> = {
     advisoryTitle: '\u0645\u0639\u0644\u0648\u0645\u0627\u062a \u0645\u0648\u062b\u0648\u0642\u0629',
     advisoryBody: '\u064a\u062a\u0645 \u0645\u0631\u0627\u062c\u0639\u0629 \u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a \u0648\u0627\u0644\u062a\u0623\u0643\u062f \u0645\u0646 \u062c\u0645\u064a\u0639 \u0627\u0644\u062a\u0641\u0627\u0635\u064a\u0644 \u0642\u0628\u0644 \u0625\u062a\u0645\u0627\u0645 \u0623\u064a \u0639\u0645\u0644\u064a\u0629 \u0634\u0631\u0627\u0621 \u0623\u0648 \u062d\u062c\u0632.',
     contactWhatsapp: '\u062a\u0648\u0627\u0635\u0644 \u0639\u0628\u0631 \u0648\u0627\u062a\u0633\u0627\u0628',
+    contactWhatsappAvailable: '\u0648\u0627\u062a\u0633\u0627\u0628 \u0645\u062a\u0627\u062d',
     sendInquiry: '\u0625\u0631\u0633\u0627\u0644 \u0627\u0644\u0627\u0633\u062a\u0641\u0633\u0627\u0631',
     fieldName: '\u0627\u0644\u0627\u0633\u0645 \u0627\u0644\u0643\u0627\u0645\u0644',
     fieldPhone: '\u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062a\u0641',
     fieldEmail: '\u0627\u0644\u0628\u0631\u064a\u062f \u0627\u0644\u0625\u0644\u0643\u062a\u0631\u0648\u0646\u064a',
-    fieldMessage: '\u0631\u0633\u0627\u0644\u062a\u0643',
+    fieldMessage: '\u0631\u0633\u0627\u0644\u0629 \u0625\u0636\u0627\u0641\u064a\u0629',
     fieldRequestType: '\u0646\u0648\u0639 \u0627\u0644\u0637\u0644\u0628',
     fieldPreferredTime: '\u0648\u0642\u062a \u0627\u0644\u062a\u0648\u0627\u0635\u0644 \u0627\u0644\u0645\u0646\u0627\u0633\u0628',
+    messagePlaceholder: '\u0627\u0643\u062a\u0628 \u0627\u0633\u062a\u0641\u0633\u0627\u0631\u0627\u062a\u0643 \u0623\u0648 \u062a\u0641\u0627\u0635\u064a\u0644 \u0625\u0636\u0627\u0641\u064a\u0629...',
     formNote: '\u0633\u064a\u062a\u0645 \u0627\u0633\u062a\u062e\u062f\u0627\u0645 \u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u062a\u0648\u0627\u0635\u0644 \u0644\u064a\u062e\u0635 \u0637\u0644\u0628\u0643 \u0641\u0642\u0637.',
-    descriptionTitle: 'نبذة عن الجهة',
+    descriptionTitle: '\u0639\u0646 \u0627\u0644\u0645\u0637\u0648\u0631',
     noDescription: 'لا توجد نبذة منشورة عن هذه الجهة حالياً.',
     noProjects: 'لا توجد مشروعات منشورة مرتبطة بهذه الجهة حالياً.',
     noProperties: 'لا توجد عقارات منشورة مرتبطة بهذه الجهة حالياً.',
@@ -227,9 +235,11 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicDevelopersCopy>> = {
     backToDirectory: 'Back to organizations',
     profileOverview: 'Overview',
     profileProjects: 'Projects',
-    profileProperties: 'Published properties',
+    projectsSectionTitle: 'Developer projects',
+    profileProperties: 'Available units',
     profileKind: 'Organization type',
     profileContact: 'Contact',
+    profileInquiryTitle: name => `Inquire about ${name}'s projects`,
     profileContactUnavailable: 'Public contact details are not available in this profile yet.',
     contactDeveloper: 'Contact developer',
     availableUnitsAction: 'View available units',
@@ -247,7 +257,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicDevelopersCopy>> = {
     availableUnitsTitle: 'Available units from this developer',
     availableUnitsEmpty: 'There are no available units from this developer right now.',
     projectStatus: 'Project status',
-    projectUnits: 'Units',
+    projectUnits: 'units',
     projectArea: 'Area',
     projectPrice: 'Price',
     projectDelivery: 'Delivery',
@@ -255,15 +265,17 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicDevelopersCopy>> = {
     advisoryTitle: 'Verified information',
     advisoryBody: 'Project and property information is reviewed before you make a purchase or reservation decision.',
     contactWhatsapp: 'Contact on WhatsApp',
+    contactWhatsappAvailable: 'WhatsApp available',
     sendInquiry: 'Send inquiry',
     fieldName: 'Full name',
     fieldPhone: 'Phone number',
     fieldEmail: 'Email',
-    fieldMessage: 'Message',
+    fieldMessage: 'Additional message',
     fieldRequestType: 'Request type',
     fieldPreferredTime: 'Preferred contact time',
+    messagePlaceholder: 'Write your questions or additional details...',
     formNote: 'Your contact details will only be used to handle this inquiry.',
-    descriptionTitle: 'About this organization',
+    descriptionTitle: 'About the developer',
     noDescription: 'No published description is available for this organization yet.',
     noProjects: 'No published projects are linked to this organization yet.',
     noProperties: 'No published properties are linked to this organization yet.',
@@ -325,9 +337,11 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicDevelopersCopy>> = {
     backToDirectory: '返回机构目录',
     profileOverview: '概览',
     profileProjects: '项目',
-    profileProperties: '已发布房产',
+    projectsSectionTitle: '开发商项目',
+    profileProperties: '可用单元',
     profileKind: '机构类型',
     profileContact: '联系',
+    profileInquiryTitle: name => `咨询 ${name} 的项目`,
     profileContactUnavailable: '此资料暂未提供公开联系方式。',
     contactDeveloper: '联系开发商',
     availableUnitsAction: '查看可用单元',
@@ -353,13 +367,15 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicDevelopersCopy>> = {
     advisoryTitle: '已验证信息',
     advisoryBody: '项目和房产信息会在您做出购买或预订决定前经过审核。',
     contactWhatsapp: '通过 WhatsApp 联系',
+    contactWhatsappAvailable: 'WhatsApp 可用',
     sendInquiry: '发送咨询',
     fieldName: '姓名',
     fieldPhone: '电话号码',
     fieldEmail: '电子邮箱',
-    fieldMessage: '留言',
+    fieldMessage: '附加留言',
     fieldRequestType: '请求类型',
     fieldPreferredTime: '首选联系时间',
+    messagePlaceholder: '请输入您的问题或其他详细信息……',
     formNote: '您的联系方式仅用于处理本次咨询。',
     descriptionTitle: '机构简介',
     noDescription: '此机构暂未发布简介。',

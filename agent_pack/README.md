@@ -1,6 +1,6 @@
 # Sadat Real Estate — Agent Pack
 
-This execution pack converts the approved developer handoff into a dependency-aware, evidence-based delivery graph for a MERN application using TypeScript and Vite. It preserves repository truth and executes backend work before frontend work.
+This execution pack converts the approved developer handoff into a dependency-aware, evidence-based delivery graph for a MERN application using TypeScript and Vite. It preserves repository truth and now uses a Coordinator-owned bootstrap followed by controlled parallel surface lanes.
 
 See `CHANGELOG.md` for the current pack revision.
 
@@ -9,10 +9,10 @@ See `CHANGELOG.md` for the current pack revision.
 | Item | Value |
 |---|---:|
 | Reference screens and states | 131 |
-| Backend tasks | 113 |
-| Frontend tasks | 75 |
-| Total tasks | 188 |
-| Planned API route blueprints | 160 |
+| Backend tasks | 124 |
+| Frontend tasks | 85 |
+| Total tasks | 209 |
+| Planned API route blueprints | 185 |
 | Runtime progress | Read `03_execution/TASK_STATE.json` and `step_info.json` |
 
 ## Language Boundary
@@ -32,13 +32,17 @@ node agent_pack/scripts/select_next_step.mjs
 ```
 
 3. Read `step_info.json` and the selected atomic task.
-4. Use `05_prompts/MASTER_SINGLE_TASK_RUNNER.md` in Code/Agent execution mode.
-5. Execute exactly one task, verify it, write evidence, synchronize the pack, and stop.
+4. For the current surface delivery, read `05_prompts/PARALLEL_COORDINATOR.md` and the selected lane goal.
+5. Use `05_prompts/MASTER_SINGLE_TASK_RUNNER.md` for atomic task execution when the Coordinator assigns a task.
+6. Execute only the assigned lane, verify it, write evidence, synchronize the pack, and stop.
 
 ## Governing Rules
 
 - Runtime code and executable tests outrank chat memory and stale checkboxes.
-- Frontend work cannot start until `backend_138` is complete and v1 contracts are frozen.
+- The active 131-screen delivery baseline is Public 12, Auth 19, Seeker 10, Provider 24, and Admin 66. Supplementary is historical Auth evidence, not a surface or screen count.
+- The Coordinator must complete the shared email-only Auth and `mapUrl` bootstrap before Wave 1 starts. Shared-contract, API, router, global-style, pack, and ledger changes go through the Coordinator queue.
+- The Bootstrap quality gate is currently green; Wave 1 may open the Public, Auth, and Seeker goals in parallel. This does not close any screen and does not authorize Provider/Admin to start early.
+- Wave 1 runs Public, Auth, and Seeker in parallel on separate roots. Wave 2 runs Provider after Wave 1 reconciliation. Wave 3 runs Admin alone after Wave 2.
 - Each Screen ID is owned by exactly one frontend task.
 - Production mocks are forbidden, and no task closes without evidence.
 - Figma and the linked Drive frames define visual truth; this pack defines execution, contracts, dependencies, and coverage.

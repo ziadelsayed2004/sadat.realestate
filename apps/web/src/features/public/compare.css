@@ -603,7 +603,7 @@
   .public-property-comparison__group th,
   .public-property-comparison__group td {
     block-size: 2.6875rem;
-    padding: 0.75rem 1rem;
+    padding: 0.71875rem 1rem;
     border-block-start: 1px solid #f3f2ed;
     text-align: center;
     font-size: 0.875rem;
@@ -638,6 +638,7 @@
 
   .public-property-comparison__group tbody td {
     color: var(--color-text-strong);
+    font-size: 0.875rem;
     font-weight: var(--font-weight-regular);
   }
 
@@ -650,7 +651,7 @@
     inset-block-end: auto;
     width: 100%;
     min-block-size: 4rem;
-    margin: 0 0 2.5rem;
+    margin: 0 0 2.1875rem;
     padding: 0.75rem max(2rem, calc((100% - 62rem) / 2));
     border-inline: 0;
     border-radius: 0;
@@ -718,7 +719,7 @@
   .public-property-comparison {
     box-sizing: border-box;
     padding-inline: 38px;
-    padding-block-end: 4.6875rem;
+    padding-block-end: 5rem;
     background: linear-gradient(
       to right,
       #f3f3f3 0 38px,

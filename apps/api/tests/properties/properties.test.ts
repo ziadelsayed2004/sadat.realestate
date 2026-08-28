@@ -70,6 +70,10 @@ test('rejects invalid source relationships and property/unit state combinations'
 
 test('validates resumable core and location steps with bounded coordinates and versions', () => {
   assert.equal(propertyCoreStepSchema.safeParse({ version: 0, name: { en: 'Updated apartment' }, reason: 'Save basic property data' }).success, true);
+  assert.equal(propertyLocationStepSchema.safeParse({ version: 1, mapUrl: 'https://maps.google.com/?q=Sadat+City', reason: 'Save map location' }).success, true);
+  assert.equal(propertyLocationStepSchema.safeParse({ version: 1, mapUrl: 'http://maps.example.com/sadat', reason: 'Reject insecure map link' }).success, false);
+  assert.equal(propertyLocationStepSchema.safeParse({ version: 1, mapUrl: 'javascript:alert(1)', reason: 'Reject script map link' }).success, false);
+  assert.equal(propertyLocationStepSchema.safeParse({ version: 1, reason: 'Reject missing location source' }).success, false);
   assert.equal(propertyLocationStepSchema.safeParse({ version: 1, locationId: providerId, coordinates: { latitude: 30.62, longitude: 30.74 }, reason: 'Save property location' }).success, true);
   assert.equal(propertyLocationStepSchema.safeParse({ version: 1, coordinates: { latitude: 91, longitude: 30 }, reason: 'Save invalid coordinates' }).success, false);
   assert.equal(propertyCoreStepSchema.safeParse({ version: 1, reason: 'No changed fields' }).success, false);

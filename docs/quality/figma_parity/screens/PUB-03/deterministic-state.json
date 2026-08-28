@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "fresh-audit-public-details",
-  "responseSha256": "ffe59d6a2aedd25d4745337a7b04e541b3610fbfb47529cbc2469f89db4cdda5",
+  "responseSha256": "d3ae46c5c568cd344c62f94c149b9c7438253f41767b5529df84e2b4c23ad233",
   "response": {
     "data": {
       "id": "aaaaaaaaaaaaaaaaaaaaaaaa",
@@ -28,7 +28,7 @@
       "publicCode": "SDT-1234",
       "deliveryStatus": "ready_to_move",
       "installmentAvailable": true,
-      "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
+      "imageUrl": "http://127.0.0.1:4175/assets/clone/pub08-e.png",
       "description": {
         "ar": "شقة فاخرة بالحي الأول بمدينة السادات، تشطيب سوبر لوكس كامل، إطلالة مميزة وموقع استراتيجي قريب من جميع الخدمات والمرافق.",
         "en": "A fully finished luxury apartment in Sadat City near essential services.",
@@ -55,7 +55,7 @@
           "en": "Sadat Real Estate Development",
           "zh-CN": "萨达特房地产开发公司"
         },
-        "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-b.png",
+        "imageUrl": "http://127.0.0.1:4175/assets/clone/pub05-b.png",
         "verified": true
       },
       "seo": {
@@ -90,7 +90,7 @@
           "id": "cccccccccccccccccccccccc",
           "propertyId": "aaaaaaaaaaaaaaaaaaaaaaaa",
           "kind": "image",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
+          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub08-e.png",
           "originalFilename": "published-home-cover.png",
           "detectedMime": "image/png",
           "byteSize": 120000,
@@ -418,7 +418,7 @@
             "zh-CN": "第三区出租公寓"
           },
           "transactionType": "rent",
-          "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
+          "imageUrl": "http://127.0.0.1:4175/assets/clone/pub05-g.png",
           "locationName": {
             "ar": "الحي الثالث",
             "en": "Third District",
@@ -430,7 +430,7 @@
             "en": "Al Thiqah Real Estate Office",
             "zh-CN": "信任房地产办公室"
           },
-          "sourceImageUrl": "http://127.0.0.1:4173/assets/clone/pub05-f.png",
+          "sourceImageUrl": "http://127.0.0.1:4175/assets/clone/pub05-f.png",
           "sourceType": "brokerage_office",
           "sourceVerified": true,
           "viewCount": 267,

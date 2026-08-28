@@ -148,7 +148,6 @@ function providerApplicationFor(screen) {
     providerType,
     status,
     version: 0,
-    phone: '+201000000000',
     requirementVersion: '2026-08-13.1',
     ...accountFields,
     ...organizationFields,
@@ -213,7 +212,6 @@ const profile = {
   id: ids.seeker,
   roleType: 'seeker',
   status: 'verified',
-  phone: '+201000000000',
   email: 'ahmed@example.com',
   firstName: 'Ahmed',
   lastName: 'Mohamed',
@@ -239,7 +237,7 @@ function seekerResponse(pathname) {
 function runtimePathForScreen(screen) {
   if (screen === 'AUTH-01') return '/auth/login';
   if (screen === 'AUTH-02' || screen === 'AUTH-03' || screen === 'AUTH-06') return '/auth/register/seeker';
-  if (screen === 'AUTH-04' || screen === 'AUTH-05') return '/auth/verify-phone?purpose=registration&roleType=seeker';
+  if (screen === 'AUTH-04' || screen === 'AUTH-05') return '/auth/verify-email?purpose=registration&roleType=seeker';
   if (screen === 'AUTH-07' || screen === 'AUTH-08') return '/auth/register/provider/type';
   if (screen === 'AUTH-09' || screen === 'AUTH-09+') return `/auth/register/provider/account?providerType=${providerTypeForScreen(screen)}`;
   if (screen === 'AUTH-10' || screen === 'AUTH-10+') return '/auth/register/provider/account?providerType=brokerage_office&step=organization';
@@ -362,7 +360,6 @@ async function goFromSeekerRoleToOtp() {
 
 async function fillOtpRequest() {
   await page.locator('#auth-otp-email').fill('ahmed@example.com');
-  await page.locator('#auth-phone').fill('+201000000000');
   await page.locator('.auth-page[data-screen-id="AUTH-04"] form button[type="submit"]').click();
   await waitForScreen('AUTH-05');
 }

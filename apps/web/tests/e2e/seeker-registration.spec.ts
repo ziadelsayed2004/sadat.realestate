@@ -17,7 +17,6 @@ async function routeRegistrationApi(page: import('@playwright/test').Page) {
   await page.route('**/api/v1/auth/otp/send', async route => {
     expect(route.request().method()).toBe('POST');
     expect(route.request().postDataJSON()).toEqual({
-      phone: '+201000000000',
       email: 'seeker@example.com',
       roleType: 'seeker',
       purpose: 'registration'
@@ -35,7 +34,6 @@ async function routeRegistrationApi(page: import('@playwright/test').Page) {
   await page.route('**/api/v1/auth/otp/verify', async route => {
     expect(route.request().method()).toBe('POST');
     expect(route.request().postDataJSON()).toEqual({
-      phone: '+201000000000',
       email: 'seeker@example.com',
       roleType: 'seeker',
       purpose: 'registration',
@@ -89,12 +87,11 @@ async function chooseSeeker(page: import('@playwright/test').Page): Promise<void
   await page.locator('[data-screen-id="AUTH-02"] .auth-role-card').first().click();
   await expect(page.locator('[data-screen-id="AUTH-02"] .auth-role-card').first()).toHaveAttribute('aria-pressed', 'true');
   await page.getByRole('button', { name: /continue|متابعة|继续/iu }).click();
-  await expect(page).toHaveURL(/\/auth\/verify-phone\?purpose=registration&roleType=seeker$/u);
+  await expect(page).toHaveURL(/\/auth\/verify-email\?purpose=registration&roleType=seeker$/u);
 }
 
 async function completeVerification(page: import('@playwright/test').Page, locale: 'ar' | 'en' | 'zh-CN'): Promise<void> {
   await page.locator('#auth-otp-email').fill('seeker@example.com');
-  await page.getByLabel(/phone number|رقم الهاتف|手机号/iu).fill('+20 100 000 0000');
   await page.getByRole('button', { name: /send code|إرسال الرمز|发送验证码/iu }).click();
   await expect(page.locator('[data-screen-id="AUTH-05"]')).toBeVisible();
 
@@ -106,7 +103,6 @@ async function completeVerification(page: import('@playwright/test').Page, local
   await page.getByRole('button', { name: /verify code|تأكيد الرمز|验证验证码/iu }).click();
   await expect(page.locator('[data-screen-id="AUTH-03"]')).toBeVisible();
   await expect(page).toHaveURL(/\/auth\/register\/seeker$/u);
-  await expect(page.getByLabel(/verified phone|رقم الهاتف المؤكد|已验证手机号/iu)).toHaveValue('+201000000000');
   await expect(page.locator('#auth-registration-email')).toHaveValue('seeker@example.com');
   await expect(page.locator('body')).not.toContainText(VERIFICATION_TOKEN);
   await expect(page.locator('body')).not.toContainText('verificationToken');
@@ -149,7 +145,7 @@ test('seeker registration controls support keyboard focus and accessible form la
   await expect(seekerCard).toHaveAttribute('aria-pressed', 'true');
   await page.getByRole('button', { name: /continue|متابعة|继续/iu }).focus();
   await page.keyboard.press('Enter');
-  await expect(page.getByLabel(/phone number|رقم الهاتف|手机号/iu)).toHaveAttribute('autocomplete', 'tel');
+  await expect(page.locator('#auth-otp-email')).toHaveAttribute('autocomplete', 'email');
 
   await completeVerification(page, locale);
   await expect(page.getByLabel(/first name|الاسم الأول|名字/iu)).toHaveAttribute('autocomplete', 'given-name');

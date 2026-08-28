@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-17",
+  "phase": "before",
+  "html": {
+    "lang": "ar",
+    "dir": "rtl"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-17",
+    "state": "ready",
+    "applicationStatus": "approved",
+    "providerVariant": null,
+    "route": "/provider-application/approved?lang=ar",
+    "html": {
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 1193,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 1193
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 5,
+      "forms": 0,
+      "buttons": 1,
+      "links": 3,
+      "inputs": 0,
+      "unlabeledControls": 0
+    },
+    "controls": [],
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "الانتقال إلى لوحة مقدم الخدمة",
+        "href": "/provider"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "رجوع",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  }
+}

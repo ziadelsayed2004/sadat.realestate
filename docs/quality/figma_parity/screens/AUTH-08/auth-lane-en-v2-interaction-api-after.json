@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-08",
+  "phase": "after",
+  "route": "/auth/register/provider/type?lang=en",
+  "requestBodies": [],
+  "apiRequests": [],
+  "apiResponses": [],
+  "routeHits": [],
+  "assertions": {
+    "emailOnlyOtpSend": true,
+    "emailOnlyOtpVerify": true,
+    "otpContainsNoPhoneKey": true,
+    "providerRegistrationContainsNoPhoneOrPassword": true,
+    "providerPatchesContainNoPasswordOrVerificationToken": true,
+    "activeUrlContainsNoPhoneIdentity": true,
+    "observedScreen": true
+  }
+}

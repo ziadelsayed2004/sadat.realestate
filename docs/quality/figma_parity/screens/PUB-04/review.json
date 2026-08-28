@@ -161,7 +161,7 @@
     "deterministicState": {
       "path": "docs/quality/figma_parity/screens/PUB-04/deterministic-state.json",
       "seedId": "fresh-audit-PUB-04-ar-v1",
-      "responseSha256": "4b5eb6a4e42005edad1496b2f772bd34a3b3fe46ef353f7e8815c54d12df46ec"
+      "responseSha256": "f4c6d34ddeb436c4785712f42d87777b1db7b32ed730ff22fee7f710f809d3ec"
     },
     "response": {
       "status": 200,
@@ -186,7 +186,7 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-04/runtime-after.png",
-      "sha256": "e8e84d9804f2fbfff16fe3d40f34f0d6a9a86d8d45198a5daf727f7c66391d55"
+      "sha256": "f7551ec7dccf5b9d4c2531eb5285a2db0ba83aa98e46e990847f1bbd2fe14e86"
     }
   },
   "structuredVisualComparison": {
@@ -219,7 +219,7 @@
   },
   "functionalApiComparison": {
     "reviewed": true,
-    "requestProjection": "GET /api/v1/public/properties/compare",
+    "requestProjection": "POST /api/v1/public/properties/compare",
     "responseProjection": "public-comparison fixture captured and hashed",
     "outcome": "1 deterministic API response(s) observed; all returned success after the bounded repair."
   },
@@ -302,5 +302,13 @@
     "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-04/runtime-after-capture.json"
   },
   "reviewedAt": "2026-08-25T21:27:52.384Z",
-  "repairedAt": "2026-08-25T21:27:52.384Z"
+  "repairedAt": "2026-08-25T21:27:52.384Z",
+  "latestRuntimeVerification": {
+    "source": "runtime-after-capture.json and visual-metrics.json",
+    "phase": "after",
+    "apiResponseStatus": 200,
+    "materialDifferencePercent": 6.0963,
+    "antiAliasingOnlyPercent": 7.6067,
+    "officialClosureEligible": false
+  }
 }

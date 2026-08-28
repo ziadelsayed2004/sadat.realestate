@@ -171,7 +171,6 @@ function ApplicationSummary({ application, copy }: { readonly application: Provi
       <dl className="provider-review-details">
         <Detail label={copy.applicationNumberLabel} value={application.id} />
         <Detail label={copy.providerTypeLabel} value={copy.providerTypeLabels[application.providerType]} />
-        <Detail label={copy.phoneLabel} value={application.phone} />
         <Detail label={copy.emailLabel} value={application.email} />
         <Detail label={copy.accountOwnerLabel} value={application.accountOwnerFullName} />
         <Detail label={copy.displayNameLabel} value={application.displayName} />
