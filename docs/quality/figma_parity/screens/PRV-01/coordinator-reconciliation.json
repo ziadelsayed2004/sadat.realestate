@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PRV-01",
+  "classification": "PARTIAL",
+  "status": "COORDINATOR_RECONCILED_PARTIAL",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "nodeId": "6017:19032",
+    "route": "/provider",
+    "role": "provider",
+    "device": "desktop",
+    "localExport": "docs/design_sources/final_screens/provider/PRV-01.png",
+    "localExportSha256": "1e2b295e6dce82a0b307f4c173a485456d26e713b5950711772cb9ce71b3caed",
+    "reviewed": true
+  },
+  "runtime": {
+    "approvedLocaleScope": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "captures": [
+      {
+        "locale": "ar",
+        "direction": "rtl",
+        "runtimePath": "docs/quality/figma_parity/screens/PRV-01/runtime-after-e2e-2026-08-29-ar.png",
+        "sourceArtifact": "apps/web/test-results/provider-overview-PRV-01-P-67c0f-mits-internal-provider-data-desktop-ar/provider-overview-ar-actual.png",
+        "captureMode": "e2e-2026-08-29",
+        "sha256": "1c992efbd9231dd28472dda033fe3bbc4b408a0ae8fe353f34686c1c5f327e80",
+        "width": 1280,
+        "height": 1357,
+        "visual": {
+          "expected": {
+            "width": 1280,
+            "height": 810
+          },
+          "actual": {
+            "width": 1280,
+            "height": 1357
+          },
+          "differentPixels": 188884,
+          "ratio": 0.11,
+          "errorContext": "apps/web/test-results/provider-overview-PRV-01-P-67c0f-mits-internal-provider-data-desktop-ar/error-context.md"
+        }
+      },
+      {
+        "locale": "en",
+        "direction": "ltr",
+        "runtimePath": "docs/quality/figma_parity/screens/PRV-01/runtime-after-e2e-2026-08-29-en.png",
+        "sourceArtifact": "apps/web/test-results/provider-overview-PRV-01-P-67c0f-mits-internal-provider-data-desktop-en/provider-overview-en-actual.png",
+        "captureMode": "e2e-2026-08-29",
+        "sha256": "73bf338044860c9b77c8f9f4360ac9f5f0c934e2c58d088b82b7a2c995a8b7f1",
+        "width": 1280,
+        "height": 1357,
+        "visual": {
+          "expected": {
+            "width": 1280,
+            "height": 810
+          },
+          "actual": {
+            "width": 1280,
+            "height": 1357
+          },
+          "differentPixels": 193594,
+          "ratio": 0.12,
+          "errorContext": "apps/web/test-results/provider-overview-PRV-01-P-67c0f-mits-internal-provider-data-desktop-en/error-context.md"
+        }
+      }
+    ],
+    "beforeCapture": {
+      "status": "NOT_AVAILABLE",
+      "reason": "No pre-Provider-lane capture was available; no before claim is made."
+    },
+    "reachedInCombinedE2E": true,
+    "directCaptureReason": null
+  },
+  "functional": {
+    "status": "PASS_FOR_EXECUTED_ASSERTIONS",
+    "focusedTests": [
+      "apps/web/tests/provider-overview.vitest.test.tsx",
+      "apps/web/tests/e2e/provider-overview.spec.ts"
+    ],
+    "note": "The combined E2E functional and permission assertions passed before the no-update screenshot assertion failed."
+  },
+  "visual": {
+    "status": "OPEN",
+    "snapshotsUpdated": false,
+    "screenshotFailures": [
+      {
+        "locale": "ar",
+        "expected": {
+          "width": 1280,
+          "height": 810
+        },
+        "actual": {
+          "width": 1280,
+          "height": 1357
+        },
+        "differentPixels": 188884,
+        "ratio": 0.11,
+        "errorContext": "apps/web/test-results/provider-overview-PRV-01-P-67c0f-mits-internal-provider-data-desktop-ar/error-context.md"
+      },
+      {
+        "locale": "en",
+        "expected": {
+          "width": 1280,
+          "height": 810
+        },
+        "actual": {
+          "width": 1280,
+          "height": 1357
+        },
+        "differentPixels": 193594,
+        "ratio": 0.12,
+        "errorContext": "apps/web/test-results/provider-overview-PRV-01-P-67c0f-mits-internal-provider-data-desktop-en/error-context.md"
+      }
+    ],
+    "directReview": "Reviewed against the approved local Provider export and preserved runtime evidence. The current visual gate is not closure-eligible because no-update screenshots show material geometry/content differences.",
+    "repoOwnedDefects": [
+      {
+        "id": "PROVIDER-SHARED-NAV-ICON-GLYPHS",
+        "element": "ProviderNavigation icons",
+        "owner": "Coordinator",
+        "targetFile": "apps/web/src/features/provider/overview.tsx",
+        "description": "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "requiredRepair": "Replace the text glyph map with the approved icon implementation/assets while preserving the existing provider-only routes, locale query, active treatment, and direction behavior."
+      },
+      {
+        "id": "PRV-01-SAFE-DATA-BOUNDARY",
+        "element": "Dashboard metric/chart data",
+        "owner": "External contract/API boundary",
+        "targetFile": "apps/web/src/features/provider/overview.tsx",
+        "description": "The canonical export contains customer-request, views, booked, history, and chart values that are absent from the current safe Provider contract.",
+        "requiredRepair": "Obtain an approved safe contract projection before rendering those values; do not fabricate dashboard statistics."
+      }
+    ],
+    "externalBlockers": [
+      "The safe Provider contract exposes property totals but not the canonical customer-request, views, booked, history, or chart series values; the runtime keeps these values explicitly unavailable."
+    ]
+  },
+  "repairs": [
+    "apps/web/src/features/provider/overview.tsx",
+    "apps/web/src/features/provider/copy.ts",
+    "apps/web/src/features/provider/styles.css"
+  ],
+  "evidenceFiles": [
+    "docs/quality/figma_parity/screens/PRV-01/coordinator-reconciliation.json",
+    "docs/quality/figma_parity/screens/PRV-01/review.json"
+  ],
+  "constraints": {
+    "zhCN": "Excluded from execution and untouched.",
+    "admin": "Unopened and unmodified.",
+    "snapshots": "No snapshot was updated."
+  }
+}

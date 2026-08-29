@@ -12,8 +12,12 @@ export interface ProviderCopy {
     readonly addProperty: string;
     readonly summaryTitle: string;
     readonly cards: Readonly<Record<'total' | 'published' | 'pending' | 'drafts', string>>;
+    readonly additionalCards?: Readonly<Record<'needsChanges' | 'customerRequests' | 'views' | 'booked', string>>;
     readonly unavailableMetric: string;
     readonly unavailableMetricBody: string;
+    readonly chart?: { readonly title: string; readonly unavailable: string };
+    readonly quickActions?: { readonly title: string; readonly properties: string; readonly addProperty: string; readonly requests: string; readonly settings: string };
+    readonly recentColumns?: Readonly<Record<'code' | 'property' | 'status' | 'views' | 'updated', string>>;
     readonly recentTitle: string;
     readonly recentEmptyTitle: string;
     readonly recentEmptyBody: string;
@@ -78,8 +82,12 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderCopy>> = {
       addProperty: 'إضافة عقار',
       summaryTitle: 'ملخص العقارات',
       cards: { total: 'كل العقارات', published: 'منشورة', pending: 'قيد المراجعة', drafts: 'مسودات' },
+      additionalCards: { needsChanges: 'تحتاج تعديل', customerRequests: 'طلبات العملاء', views: 'المشاهدات', booked: 'المحجوزة' },
       unavailableMetric: 'غير متاح',
       unavailableMetricBody: 'لا يقدم النظام الحالي هذا المؤشر في لوحة المزود.',
+      chart: { title: 'المشاهدات والطلبات — آخر 6 أشهر', unavailable: 'لا توجد بيانات تاريخية في عقد المزود الحالي.' },
+      quickActions: { title: 'إجراءات سريعة', properties: 'عقاراتي', addProperty: 'إضافة عقار', requests: 'طلبات العملاء', settings: 'الإعدادات' },
+      recentColumns: { code: 'كود العقار', property: 'العنوان', status: 'الحالة', views: 'المشاهدات', updated: 'تاريخ الإضافة' },
       recentTitle: 'آخر العقارات تحديثاً',
       recentEmptyTitle: 'لا توجد عقارات بعد',
       recentEmptyBody: 'يمكنك بدء إضافة عقار عندما تكون حالة حساب المزود مؤهلة.',
@@ -165,8 +173,12 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderCopy>> = {
       addProperty: 'Add property',
       summaryTitle: 'Property summary',
       cards: { total: 'All properties', published: 'Published', pending: 'Pending review', drafts: 'Drafts' },
+      additionalCards: { needsChanges: 'Needs changes', customerRequests: 'Customer requests', views: 'Views', booked: 'Booked' },
       unavailableMetric: 'Unavailable',
       unavailableMetricBody: 'This metric is not provided by the current provider contract.',
+      chart: { title: 'Views and requests — last 6 months', unavailable: 'Historical dashboard data is not provided by the current provider contract.' },
+      quickActions: { title: 'Quick actions', properties: 'My properties', addProperty: 'Add property', requests: 'Customer requests', settings: 'Settings' },
+      recentColumns: { code: 'Property code', property: 'Property', status: 'Status', views: 'Views', updated: 'Added' },
       recentTitle: 'Recently updated properties',
       recentEmptyTitle: 'No properties yet',
       recentEmptyBody: 'Start adding a property when your provider account is eligible.',

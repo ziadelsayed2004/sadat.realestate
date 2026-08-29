@@ -92,7 +92,7 @@ async function routeProviderProperty(page: import('@playwright/test').Page, opti
 test.describe('PRV-03 and PRV-04 Add Property wizard', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'PRV-03; PRV-04' });
-    testInfo.annotations.push({ type: 'design-source', description: 'PRV-03 docs/design_sources/final_screens/provider/PRV-03.png SHA-256 82b6e746c740ef4a064a71533b8b025aaafe0bd56bdd2345cd62b40af2463e22; PRV-04 docs/design_sources/final_screens/provider/PRV-04.png SHA-256 870908c5a0b2ac4d1d0475d0e1552a74e99571487831feec50f11e6b80f37106; Figma node 6017-19032; Drive folders 1DdoEN9a92vmsDI0Zk8dSN1Yxk5k37K4R and 1cHXSIRo0S4A5f2S16gpanhN4GgYsNDRS' });
+    testInfo.annotations.push({ type: 'design-source', description: 'PRV-03 docs/design_sources/final_screens/provider/PRV-03.png SHA-256 82b6e746c740ef4a064a71533b8b025aaafe0bd56bdd2345cd62b40af2463e22; Figma node 6017:19499; PRV-04 docs/design_sources/final_screens/provider/PRV-04.png SHA-256 870908c5a0b2ac4d1d0475d0e1552a74e99571487831feec50f11e6b80f37106; Figma node 6017:19679; Drive folders 1DdoEN9a92vmsDI0Zk8dSN1Yxk5k37K4R and 1cHXSIRo0S4A5f2S16gpanhN4GgYsNDRS' });
     test.skip(!testInfo.project.name.includes('desktop'), 'Provider dashboard is approved for desktop only.');
     void page;
   });

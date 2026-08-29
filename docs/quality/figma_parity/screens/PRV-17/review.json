@@ -1,0 +1,45 @@
+{
+  "screenId": "PRV-17",
+  "canonical": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "nodeId": "6017:21747",
+    "route": "/provider/customer-requests?create=1",
+    "role": "provider",
+    "directions": ["rtl", "ltr"],
+    "device": "desktop",
+    "export": "docs/design_sources/final_screens/provider/PRV-17.png",
+    "exportSha256": "c5737bcda9c5771316253f8174c9ea6c372201ff29510a26e2547bfd87f70281"
+  },
+  "runtime": {
+    "before": ["runtime-before-ar.png", "runtime-before-en.png"],
+    "after": ["runtime-after-final-ar.png", "runtime-after-final-en.png"],
+    "captureNote": "Before captures preserve the pre-final verification capture; after captures are from the latest no-update desktop run."
+  },
+  "classification": "PARTIAL_EXTERNAL",
+  "repositoryOwnedRepairs": [
+    "Opened the create form only for the exact canonical deep-link path and query.",
+    "Required an authenticated provider session before rendering the modal.",
+    "Kept creation and status transitions on server-owned API actions."
+  ],
+  "externalDifference": "The canonical detailed form has a richer hierarchy and content than the current provider request payload and shared shell projection; no invented fields or data were added.",
+  "externalPrerequisite": {
+    "owner": "Provider product/design and contracts/API owners",
+    "nextAction": "Confirm the approved detailed-form hierarchy and safe request fields needed for canonical parity, then rerun the modal visual and post-capture action checks."
+  },
+  "visualDiff": {
+    "ar": { "expected": "1280px by 852px", "received": "1280px by 844px", "differentPixels": 41390, "ratio": 0.04, "artifact": "diff-final-ar.png" },
+    "en": { "expected": "1280px by 879px", "received": "1280px by 871px", "differentPixels": 50669, "ratio": 0.05, "artifact": "diff-final-en.png" }
+  },
+  "snapshot": {
+    "updated": false,
+    "reason": "The baseline retains the previous dark Provider navigation; snapshot updates are out of scope and the current white navigation agrees with the local canonical export.",
+    "ar": { "path": "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-request-modal-ar-desktop-ar-win32.png", "sha256": "a897fcac0f222b2da3b5eaa6bee01f04a406988404e9744323b3a22ebbd004cc" },
+    "en": { "path": "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-request-modal-en-desktop-en-win32.png", "sha256": "f75e148cafb282076ba2e8052158e97512edb5df65d3c997148952fa2bfce829" }
+  },
+  "visualGate": {
+    "command": "$env:WEB_BASE_URL = 'http://127.0.0.1:4173'; npm.cmd exec --workspace apps/web -- playwright test tests/e2e/provider-projects.spec.ts tests/e2e/provider-customer-requests.spec.ts tests/e2e/provider-viewings.spec.ts tests/e2e/provider-advertising.spec.ts --project=desktop-ar --project=desktop-en --workers=1",
+    "exitCode": 1,
+    "result": "The modal case failed at its screenshot assertion before later form submission/transition assertions; the authenticated deep link and modal checks passed, with focused Vitest create/transition coverage green.",
+    "snapshotsUpdated": false
+  }
+}

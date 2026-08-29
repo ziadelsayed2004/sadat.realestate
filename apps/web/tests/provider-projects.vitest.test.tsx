@@ -59,6 +59,13 @@ describe('Provider projects', () => {
     expect(Object.fromEntries(url.searchParams)).toEqual({ status: 'needs_changes', search: 'central', sort: 'updatedAt', direction: 'desc', page: '2', limit: '5' });
   });
 
+  it.each([{ page: 0 }, { page: 1, limit: 101 }])('rejects invalid project pagination before network access: %o', async query => {
+    let calls = 0;
+    const client = new ApiClient({ fetcher: async () => { calls += 1; return success({ items: [] }, 'provider-projects-invalid-pagination'); } });
+    await expect(loadProviderProjects({ apiClient: client, query })).rejects.toThrow();
+    expect(calls).toBe(0);
+  });
+
   it('uses implemented create, update, and submit routes with provider authorization', async () => {
     const requests: Array<{ url: string; method: string; body: unknown; authorization: string | null }> = [];
     const client = new ApiClient({
@@ -79,6 +86,38 @@ describe('Provider projects', () => {
     ]);
     expect(requests.every(request => request.authorization === 'Bearer provider.projects.token')).toBe(true);
     expect(requests[2]?.body).toEqual({ version: 3, reason: 'Submit project' });
+  });
+
+  it('rejects provider organization assignment before any mutation request', async () => {
+    let calls = 0;
+    const client = new ApiClient({
+      fetcher: async () => {
+        calls += 1;
+        return success(draft, 'provider-projects-unexpected');
+      }
+    });
+    const api = createProviderProjectMutationApi({ apiClient: client, authorization: { getAuthorizationHeader: () => 'Bearer provider.projects.token' } });
+
+    await expect(api.create({ name: { en: 'Unsafe project' }, slug: 'unsafe-project', organizationId: providerId, reason: 'Attempt organization assignment' })).rejects.toThrow('cannot set organizationId');
+    await expect(api.update(projectId, { version: 2, slug: 'updated-project', organizationId: providerId, reason: 'Attempt organization reassignment' })).rejects.toThrow('cannot set organizationId');
+    expect(calls).toBe(0);
+  });
+
+  it('does not fetch a draft status filter until Apply is submitted', async () => {
+    const observedQueries: ProviderProjectsQuery[] = [];
+    const load = vi.fn(async (query: ProviderProjectsQuery) => {
+      observedQueries.push(query);
+      return data;
+    });
+    const copy = getProviderProjectsCopy('en');
+    renderWithLocale(<ProviderProjects locale="en" session={session} load={load} />, { locale: 'en' });
+    await waitFor(() => expect(screen.getByTestId('provider-projects-count')).toBeInTheDocument());
+    expect(observedQueries).toHaveLength(1);
+
+    fireEvent.change(screen.getByLabelText(copy.statusLabel), { target: { value: 'published' } });
+    expect(observedQueries).toHaveLength(1);
+    fireEvent.click(screen.getByRole('button', { name: copy.apply }));
+    await waitFor(() => expect(observedQueries.at(-1)).toMatchObject({ status: 'published' }));
   });
 
   it.each(['ar', 'en', 'zh-CN'] as const)('renders safe owned projects and direction for %s', async locale => {

@@ -32,6 +32,12 @@ import type { ProviderAuthorizationSource } from '../provider/data.ts';
 
 export const PROVIDER_PROPERTY_ROUTE = '/provider/properties' as const;
 
+const MEDIA_FILENAME_EXTENSIONS: Readonly<Record<PropertyMediaMime, readonly string[]>> = {
+  'application/pdf': ['.pdf'],
+  'image/jpeg': ['.jpg', '.jpeg'],
+  'image/png': ['.png']
+};
+
 export type ProviderPropertyStep = 'basic' | 'location' | 'details' | 'price-payment' | 'features-services' | 'contact';
 
 export interface ProviderPropertyRequestOptions {
@@ -92,6 +98,19 @@ function propertyPath(propertyId: string): string {
   return `${PROVIDER_PROPERTY_ROUTE}/${encodeURIComponent(propertyId)}`;
 }
 
+function safeMediaFilename(filename: string, contentType: PropertyMediaMime, kind: PropertyMediaKind): string {
+  const normalized = filename.trim();
+  const extensionStart = normalized.lastIndexOf('.');
+  const extension = extensionStart < 0 ? '' : normalized.slice(extensionStart).toLowerCase();
+  const filenameIsSafe = normalized.length > 0
+    && normalized.length <= 120
+    && !/[\\/\u0000-\u001f\u007f]/u.test(normalized)
+    && MEDIA_FILENAME_EXTENSIONS[contentType].includes(extension);
+  const kindMatchesMime = kind === 'floor_plan' ? contentType === 'application/pdf' : contentType !== 'application/pdf';
+  if (!filenameIsSafe || !kindMatchesMime) throw new Error('Invalid property media filename or type');
+  return normalized;
+}
+
 export async function createProviderProperty(
   input: ProviderPropertyCreate,
   options: ProviderPropertyCreateOptions = {}
@@ -150,9 +169,10 @@ export async function saveProviderPropertyStep(
 
 export async function uploadProviderPropertyMedia(options: ProviderPropertyMediaUploadOptions): Promise<PropertyMediaData> {
   const client = clientFor(options);
+  const filename = safeMediaFilename(options.filename, options.contentType, options.kind);
   const headersInput = propertyMediaUploadHeadersSchema.parse({
     kind: options.kind,
-    filename: options.filename,
+    filename,
     contentType: options.contentType,
     contentLength: options.file.size
   });

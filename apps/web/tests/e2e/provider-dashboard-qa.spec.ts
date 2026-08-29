@@ -83,7 +83,7 @@ async function routeProviderApis(page: import('@playwright/test').Page, status =
 
 test.describe('F4 Provider Dashboard QA', () => {
   test.beforeEach(async ({ page }, testInfo) => {
-    testInfo.annotations.push({ type: 'design-source', description: 'Provider QA covers PRV-01 through PRV-22-3 using the approved local provider exports and Figma prototype node 6017:19032 recorded in DESIGN_SOURCE_MANIFEST.json.' });
+    testInfo.annotations.push({ type: 'design-source', description: 'Provider QA covers PRV-01 through PRV-22-3 using approved local provider exports and the canonical Figma nodes recorded in the Provider Wave 2 ledger: 6017:19032, 6017:19308, 6017:19499, 6017:19679, 6017:19858, 6017:20034, 6017:20229, 6017:20391, 6017:20561, 6017:20737, 6017:21064, 6017:21012, 6017:21123, 6017:20973, 6017:21162, 6017:21368, 6017:21747, 6017:21613, 6017:22088, 6028:10071, 6028:10830, 6028:11337, 6028:11875, 6028:12067; DESIGN_SOURCE_MANIFEST.json.' });
     test.skip(!testInfo.project.name.startsWith('desktop-'), 'Provider Dashboard is approved for desktop only.');
     await routeSession(page);
     await routeProviderApis(page);

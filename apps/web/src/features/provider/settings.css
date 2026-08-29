@@ -63,6 +63,15 @@
   background: #fff;
 }
 
+.provider-settings__panel--contact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.provider-settings__panel--contact h2,
+.provider-settings__panel--contact button {
+  grid-column: 1 / -1;
+}
+
 .provider-settings__panel h2 {
   margin: 0 0 2px;
   font-size: 1.25rem;
@@ -95,7 +104,7 @@
 
 .provider-settings__security-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 18px;
 }
 

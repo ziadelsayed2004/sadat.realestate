@@ -61,6 +61,27 @@ describe('Provider property wizard', () => {
     ]);
   });
 
+  it('preserves approved map URLs, legacy coordinates, and location IDs while rejecting unsafe URLs before the request', async () => {
+    const fetcher = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => success(property(), 'provider-location'));
+    const client = new ApiClient({ fetcher });
+    const location = {
+      version: 2,
+      locationId: 'cccccccccccccccccccccccc',
+      coordinates: { latitude: 30.62, longitude: 30.74 },
+      mapUrl: 'https://maps.example.com/?q=30.62%2C30.74',
+      reason: 'Save property location'
+    };
+
+    await expect(saveProviderPropertyStep(location, { apiClient: client, authorization: authClient, propertyId, step: 'location' })).resolves.toMatchObject({ id: propertyId });
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(String(fetcher.mock.calls[0]?.[1]?.body))).toEqual(location);
+
+    for (const mapUrl of ['http://maps.example.com', '/relative-map', 'javascript:alert(1)', `https://maps.example.com/${'a'.repeat(2048)}`]) {
+      await expect(saveProviderPropertyStep({ version: 2, mapUrl, reason: 'Reject unsafe map URL' }, { apiClient: client, authorization: authClient, propertyId, step: 'location' })).rejects.toThrow();
+    }
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
   it.each(['ar', 'en', 'zh-CN'] as const)('renders the approved wizard direction and contract boundary for %s', locale => {
     const result = renderWithLocale(<ProviderPropertyWizard locale={locale} session={session} authClient={authClient} step="basic" />, { locale });
     const copy = getProviderPropertyCopy(locale);

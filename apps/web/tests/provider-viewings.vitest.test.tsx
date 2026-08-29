@@ -60,6 +60,13 @@ describe('Provider viewing appointments', () => {
     expect(Object.fromEntries(url.searchParams)).toEqual({ status: 'confirmed', page: '2', limit: '5' });
   });
 
+  it.each([{ page: 0, limit: 5 }, { page: 1, limit: 101 }])('rejects invalid viewing pagination before network access: %o', async query => {
+    let calls = 0;
+    const client = new ApiClient({ fetcher: async () => { calls += 1; return success(data, 'provider-viewings-invalid-pagination'); } });
+    await expect(loadProviderViewings({ apiClient: client, authorization: { getAuthorizationHeader: () => 'Bearer provider.viewings.token' }, query })).rejects.toThrow();
+    expect(calls).toBe(0);
+  });
+
   it('uses the implemented transition route with strict versioned input and provider authorization', async () => {
     const requests: Array<{ url: string; method: string; body: unknown; authorization: string | null }> = [];
     const client = new ApiClient({

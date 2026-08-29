@@ -153,6 +153,29 @@ describe('Provider advertising requests and commission', () => {
     expect(upload?.body).toBeInstanceOf(Blob);
   });
 
+  it.each([{ page: 0 }, { page: 1, limit: 101 }])('rejects invalid advertising pagination before network access: %o', async query => {
+    let calls = 0;
+    const client = new ApiClient({ fetcher: async () => { calls += 1; return envelope(data); } });
+    await expect(loadProviderAdvertisingRequests({ apiClient: client, authorization: auth, query })).rejects.toThrow();
+    expect(calls).toBe(0);
+  });
+
+  it('rejects unsafe or MIME-mismatched payment-proof filenames before upload', async () => {
+    let calls = 0;
+    const client = new ApiClient({
+      fetcher: async () => {
+        calls += 1;
+        return envelope(proof);
+      }
+    });
+    const api = createProviderAdvertisingMutationApi({ apiClient: client, authorization: auth });
+    const pdf = new Blob(['test'], { type: 'application/pdf' });
+
+    await expect(api.uploadPaymentProof(requestId, pdf, '../receipt.pdf')).rejects.toThrow('unsafe characters');
+    await expect(api.uploadPaymentProof(requestId, pdf, 'receipt.png')).rejects.toThrow('does not match content type');
+    expect(calls).toBe(0);
+  });
+
   it.each(['ar', 'en', 'zh-CN'] as const)('renders the safe projection and approved direction for %s', async locale => {
     const result = renderWithLocale(<ProviderAdvertising locale={locale} session={session} initialData={data} />, { locale });
     const copy = getProviderAdvertisingCopy(locale);
@@ -168,11 +191,34 @@ describe('Provider advertising requests and commission', () => {
 
   it('shows empty and permission states without calling protected data for anonymous sessions', async () => {
     const load = vi.fn(async () => ({ items: [], page: 1, limit: 5, total: 0 }));
-    renderWithLocale(<ProviderAdvertising locale="en" session={{ status: 'anonymous' }} load={load} />, { locale: 'en' });
+    renderWithLocale(<ProviderAdvertising locale="en" session={{ status: 'anonymous' }} initialData={data} load={load} />, { locale: 'en' });
     expect(screen.getByRole('heading', { name: getProviderAdvertisingCopy('en').states.permission.title })).toBeInTheDocument();
+    expect(screen.queryByTestId('provider-advertising-row')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: getProviderAdvertisingCopy('en').create })).not.toBeInTheDocument();
     expect(load).not.toHaveBeenCalled();
     renderWithLocale(<ProviderAdvertising locale="en" session={session} initialData={{ items: [], page: 1, limit: 5, total: 0 }} />, { locale: 'en' });
     expect(screen.getByRole('heading', { name: getProviderAdvertisingCopy('en').states.empty.title })).toBeInTheDocument();
+  });
+
+  it('hides seeded advertising details from anonymous sessions and restores them after provider authentication', async () => {
+    const loadDetail = vi.fn(async () => detail);
+    const view = renderWithLocale(<ProviderAdvertising locale="en" session={{ status: 'anonymous' }} requestId={requestId} initialDetail={detail} loadDetail={loadDetail} />, { locale: 'en' });
+    expect(screen.getByRole('heading', { name: getProviderAdvertisingCopy('en').states.permission.title })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: getProviderAdvertisingCopy('en').requestDetails, level: 1 })).not.toBeInTheDocument();
+    expect(loadDetail).not.toHaveBeenCalled();
+
+    view.rerender(<ProviderAdvertising locale="en" session={session} requestId={requestId} initialDetail={detail} loadDetail={loadDetail} />);
+    await waitFor(() => expect(screen.getByRole('heading', { name: getProviderAdvertisingCopy('en').requestDetails, level: 1 })).toBeInTheDocument());
+    expect(screen.getByText(detail.placementKey)).toBeInTheDocument();
+    expect(loadDetail).not.toHaveBeenCalled();
+  });
+
+  it('fails closed for anonymous commission sessions even when initial data is supplied', () => {
+    const load = vi.fn(async () => commissionProjection);
+    renderWithLocale(<ProviderCommission locale="en" session={{ status: 'anonymous' }} initialData={commissionProjection} load={load} />, { locale: 'en' });
+    expect(screen.getByRole('heading', { name: getProviderAdvertisingCopy('en').states.permission.title })).toBeInTheDocument();
+    expect(screen.queryByText('2.5%')).not.toBeInTheDocument();
+    expect(load).not.toHaveBeenCalled();
   });
 
   it('requires the quote version and sends payment proof only in the waiting-payment state', async () => {
@@ -199,5 +245,14 @@ describe('Provider advertising requests and commission', () => {
     const unavailable = providerCommissionProjectionSchema.parse({ accountId: providerId, source: 'none', effectiveAt: '2026-08-19T08:00:00.000Z', readOnly: true });
     renderWithLocale(<ProviderCommission locale="en" session={session} initialData={unavailable} />, { locale: 'en' });
     expect(screen.getByRole('heading', { name: getProviderAdvertisingCopy('en').commission.noneTitle, level: 3 })).toBeInTheDocument();
+  });
+
+  it('keeps Arabic commission metadata localized', () => {
+    const result = renderWithLocale(<ProviderCommission locale="ar" session={session} initialData={commissionProjection} />, { locale: 'ar' });
+    expect(result.direction).toBe('rtl');
+    expect(result.container.textContent).toContain('سياسة إدارية');
+    expect(result.container.textContent).toContain('نشطة');
+    expect(result.container.textContent).not.toContain('Administrative policy');
+    expect(result.container.textContent).not.toContain('Active');
   });
 });

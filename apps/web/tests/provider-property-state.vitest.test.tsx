@@ -70,6 +70,14 @@ describe('provider property submission and state screens', () => {
     expect(screen.getAllByText(copy.labels.unavailable).length).toBeGreaterThan(0);
   });
 
+  it('fails closed when the server status does not match the state route', () => {
+    const copy = getProviderPropertyCopy('en');
+    renderWithLocale(<ProviderPropertyStatePage locale="en" session={session} authClient={authClient} route="submitted" propertyId={propertyId} initialData={property({ status: 'draft', availableActions: ['update', 'submit'] })} />, { locale: 'en' });
+
+    expect(screen.getByRole('heading', { name: copy.states.error.title })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: getProviderPropertyStateCopy('en').statuses.pending_review.title, level: 1 })).not.toBeInTheDocument();
+  });
+
   it.each(['ar', 'en', 'zh-CN'] as const)('renders PRV-11 validation errors with the correct %s direction', locale => {
     const copy = getProviderPropertyStateCopy(locale);
     const incomplete = property({ locationId: undefined, price: undefined, contact: undefined, reviewReason: 'Complete the missing property data.' });

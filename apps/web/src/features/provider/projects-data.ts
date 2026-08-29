@@ -2,6 +2,7 @@ import {
   projectCreateSchema,
   projectIdParamsSchema,
   projectListDataSchema,
+  projectListQuerySchema,
   projectSuccessEnvelopeSchema,
   projectPatchSchema,
   projectSubmitRequestSchema,
@@ -9,7 +10,6 @@ import {
   type ProjectCreate,
   type ProjectData,
   type ProjectListData,
-  type ProjectListQuery,
   type ProjectPatch,
   type ProjectSubmitRequest,
   type ProjectStatus
@@ -72,14 +72,14 @@ export async function loadProviderProjects(options: ProviderProjectsLoadOptions 
   const page = options.query?.page ?? 1;
   const limit = options.query?.limit ?? 5;
   const search = options.query?.search?.trim();
-  const query: ProjectListQuery = {
+  const query = projectListQuerySchema.parse({
     page,
     limit,
     sort: 'updatedAt',
     direction: 'desc',
     ...(options.query?.status === undefined ? {} : { status: options.query.status }),
     ...(search === undefined || search === '' ? {} : { search })
-  };
+  });
   const response = await client.request(PROVIDER_PROJECTS_ROUTE, {
     responseSchema: successEnvelopeSchema(projectListDataSchema),
     ...(headers === undefined ? {} : { headers }),
@@ -109,6 +109,7 @@ export function createProviderProjectMutationApi(options: ProviderProjectMutatio
 
   return {
     async create(input) {
+      if (input.organizationId !== undefined) throw new Error('Provider projects cannot set organizationId');
       const request = projectCreateSchema.parse(input);
       const response = await client.request(PROVIDER_PROJECTS_ROUTE, {
         method: 'POST',
@@ -120,6 +121,7 @@ export function createProviderProjectMutationApi(options: ProviderProjectMutatio
     },
     async update(projectId, input) {
       const params = projectIdParamsSchema.parse({ projectId });
+      if (input.organizationId !== undefined) throw new Error('Provider projects cannot set organizationId');
       const request = projectPatchSchema.parse(input);
       const response = await client.request(`${PROVIDER_PROJECTS_ROUTE}/${encodeURIComponent(params.projectId)}`, {
         method: 'PATCH',

@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PRV-14",
+  "classification": "PARTIAL_EXTERNAL",
+  "classificationReason": "The published state gates the public-page action on server status and does not fabricate view counts; the canonical published presentation differs.",
+  "source": {
+    "sourceAuthority": "local_approved_canonical_export",
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4355",
+    "nodeId": "6017:20973",
+    "canonicalExport": "docs/design_sources/final_screens/provider/PRV-14.png",
+    "reviewed": true
+  },
+  "runtime": {
+    "route": "/provider/properties/:id/published",
+    "role": "provider",
+    "requiredRole": "provider",
+    "ownership": "provider-owned",
+    "approvedDevice": "desktop",
+    "locales": [
+      {
+        "locale": "ar",
+        "direction": "rtl"
+      },
+      {
+        "locale": "en",
+        "direction": "ltr"
+      }
+    ],
+    "beforeCapture": null,
+    "afterCaptures": [],
+    "captureNote": "No runtime image was copied into the evidence directory; the normal no-update Playwright run produced retained test-results artifacts."
+  },
+  "directReview": {
+    "reviewed": true,
+    "reviewedAt": "2026-08-29",
+    "reviewer": "Codex",
+    "maskingUsed": false,
+    "observations": [
+      "Local canonical export and current Provider implementation were compared for hierarchy, route, copy direction, ownership, and available contract fields."
+    ],
+    "approvedExternalDifferences": [
+      "Canonical published-state illustration, metrics, and richer public-page content are not represented by the active state contract."
+    ]
+  },
+  "structuredVisualComparison": {
+    "reviewed": true,
+    "metrics": [
+      {
+        "locale": "ar",
+        "direction": "rtl",
+        "expectedDimensions": "1280x1113",
+        "actualDimensions": "1280x1105",
+        "differentPixels": 278943,
+        "differenceRatio": 0.2
+      },
+      {
+        "locale": "en",
+        "direction": "ltr",
+        "expectedDimensions": "1280x1113",
+        "actualDimensions": "1280x1105",
+        "differentPixels": 282233,
+        "differenceRatio": 0.2
+      }
+    ],
+    "note": "Supporting no-update screenshot metrics; not used as a masking or snapshot-update justification."
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "permissionBoundary": "Authenticated provider session, provider role, server-owned actions, and owner-scoped property API boundary were exercised by focused Provider tests.",
+    "safeProjection": "Provider UI does not render internal access tokens, storage keys, administrator assignments, or audit fields.",
+    "securityChecks": [
+      "Email-only Provider identity remains separate from business contact phone/WhatsApp.",
+      "Map values remain server-contract validated; media/document paths remain authorization-bound."
+    ]
+  },
+  "accessibility": {
+    "reviewed": true,
+    "result": "Focused Provider AR/EN tests and desktop E2E accessibility/keyboard assertions passed where reached; visual closure remains partial."
+  },
+  "interactions": {
+    "reviewed": true,
+    "result": "Focused Provider interaction and permission tests passed; normal no-update visual assertions remain failing."
+  },
+  "defects": {
+    "repository": [],
+    "approvedExternal": [
+      "Canonical published-state illustration, metrics, and richer public-page content are not represented by the active state contract."
+    ]
+  },
+  "filesRepaired": [
+    "apps/web/src/features/provider_property/state.tsx"
+  ],
+  "focusedTests": [
+    "Provider Vitest AR/EN selection: exit 0; 52 passed, 12 skipped.",
+    "npm.cmd run typecheck --workspace apps/web: exit 0.",
+    "Scoped Provider ESLint: exit 0.",
+    "Provider desktop-ar/desktop-en Playwright no-update run: exit 1; 16 passed, 28 failed; snapshots unchanged."
+  ],
+  "evidencePaths": {
+    "canonicalExport": "docs/design_sources/final_screens/provider/PRV-14.png",
+    "runtimeCheck": "apps/web/test-results/** retained by Playwright; no evidence-directory capture was fabricated."
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "screenId": "PRV-16",
+  "canonical": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "nodeId": "6017:21368",
+    "route": "/provider/customer-requests",
+    "role": "provider",
+    "directions": ["rtl", "ltr"],
+    "device": "desktop",
+    "export": "docs/design_sources/final_screens/provider/PRV-16.png",
+    "exportSha256": "f40fc7db1a5944ef285eaa885d70ee3c2199bf170daf13a158776fc1827ec083"
+  },
+  "runtime": {
+    "before": ["runtime-before-ar.png", "runtime-before-en.png"],
+    "after": ["runtime-after-final-ar.png", "runtime-after-final-en.png"],
+    "captureNote": "Before captures preserve the pre-final verification capture; after captures are from the latest no-update desktop run."
+  },
+  "classification": "PARTIAL_EXTERNAL",
+  "repositoryOwnedRepairs": [
+    "Validated list queries with the provider request query schema.",
+    "Masked phone and email values in the provider request projection.",
+    "Applied draft status/search filters only after Apply and preserved the authenticated create deep link."
+  ],
+  "externalDifference": "The canonical request export contains richer priority, responsibility, and request metadata than the current typed safe projection; no untyped private payload fields were rendered.",
+  "externalPrerequisite": {
+    "owner": "Provider contracts/API owner",
+    "nextAction": "Confirm and expose approved safe priority, responsibility, and request metadata if canonical content parity is required, then rerun the AR/EN visual gate."
+  },
+  "visualDiff": {
+    "ar": { "expected": "1280px by 852px", "received": "1280px by 844px", "differentPixels": 202057, "ratio": 0.19, "artifact": "diff-final-ar.png" },
+    "en": { "expected": "1280px by 879px", "received": "1280px by 871px", "differentPixels": 212199, "ratio": 0.19, "artifact": "diff-final-en.png" }
+  },
+  "snapshot": {
+    "updated": false,
+    "reason": "The baseline retains the previous dark Provider navigation; snapshot updates are out of scope and the current white navigation agrees with the local canonical export.",
+    "ar": { "path": "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-requests-ar-desktop-ar-win32.png", "sha256": "72aa501df3fa9b7dec348e6bf5d693bfca9094e60a6a9038f7d2845ee6b112e1" },
+    "en": { "path": "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-requests-en-desktop-en-win32.png", "sha256": "6a45cf25e92eb1246f17a8d69c6f6b4c1a44317a8e76b6681ae5ab557948078c" }
+  },
+  "visualGate": {
+    "command": "$env:WEB_BASE_URL = 'http://127.0.0.1:4173'; npm.cmd exec --workspace apps/web -- playwright test tests/e2e/provider-projects.spec.ts tests/e2e/provider-customer-requests.spec.ts tests/e2e/provider-viewings.spec.ts tests/e2e/provider-advertising.spec.ts --project=desktop-ar --project=desktop-en --workers=1",
+    "exitCode": 1,
+    "result": "The list case failed at its screenshot assertion before its later Apply/focus assertions; safe projection, ownership, masking, and permission assertions before the gate passed, with focused Vitest filter coverage green.",
+    "snapshotsUpdated": false
+  }
+}

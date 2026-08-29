@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { PropertyData, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import type { RouteSession } from '../routing/index.ts';
-import { StateMessage } from '../design_system/index.ts';
+import { Badge, StateMessage } from '../design_system/index.ts';
 import { getProviderCopy, type ProviderOverviewBaseState } from './copy.ts';
 import {
   createProviderOverviewLoader,
@@ -112,6 +112,38 @@ function MetricCard({ label, value, tone, unavailable, unavailableBody }: { read
   );
 }
 
+function DashboardInsights({ locale }: { readonly locale: SupportedLocale }) {
+  const copy = getProviderCopy(locale);
+  const chart = copy.overview.chart ?? { title: copy.overview.summaryTitle, unavailable: copy.overview.unavailableMetricBody };
+  const actions = copy.overview.quickActions ?? {
+    title: copy.overview.summaryTitle,
+    properties: copy.nav.properties,
+    addProperty: copy.overview.addProperty,
+    requests: copy.nav.requests,
+    settings: copy.nav.settings
+  };
+  return (
+    <section className="provider-dashboard__insights" aria-label={chart.title}>
+      <div className="provider-dashboard__chart provider-dashboard__empty" data-state="unavailable" aria-labelledby="provider-dashboard-chart-title">
+        <h2 id="provider-dashboard-chart-title">{chart.title}</h2>
+        <div className="provider-dashboard__chart-placeholder provider-dashboard__empty" role="status">
+          <span aria-hidden="true">—</span>
+          <p>{chart.unavailable}</p>
+        </div>
+      </div>
+      <div className="provider-dashboard__quick-actions provider-dashboard__empty" aria-labelledby="provider-dashboard-quick-actions-title">
+        <h2 id="provider-dashboard-quick-actions-title">{actions.title}</h2>
+        <ul>
+          <li><a href={localeForProviderPath(locale, '/provider/properties')}>{actions.properties}<span aria-hidden="true">‹</span></a></li>
+          <li><a href={localeForProviderPath(locale, '/provider/properties/new/basic')}>{actions.addProperty}<span aria-hidden="true">‹</span></a></li>
+          <li><a href={localeForProviderPath(locale, '/provider/customer-requests')}>{actions.requests}<span aria-hidden="true">‹</span></a></li>
+          <li><a href={localeForProviderPath(locale, '/provider/settings')}>{actions.settings}<span aria-hidden="true">‹</span></a></li>
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 function ApplicationStatusPanel({ data, locale }: { readonly data: ProviderOverviewData; readonly locale: SupportedLocale }) {
   const copy = getProviderCopy(locale);
   const application = data.application;
@@ -142,18 +174,32 @@ function RecentProperties({ data, locale }: { readonly data: ProviderOverviewDat
   if (data.properties.total === 0) {
     return <div className="provider-dashboard__empty" data-state="empty"><h3>{copy.overview.recentEmptyTitle}</h3><p>{copy.overview.recentEmptyBody}</p></div>;
   }
+  const columns = copy.overview.recentColumns ?? {
+    code: 'Code',
+    property: copy.overview.recentTitle,
+    status: copy.overview.summaryTitle,
+    views: copy.overview.unavailableMetric,
+    updated: copy.overview.recentTitle
+  };
   return (
-    <ul className="provider-dashboard__property-list" aria-label={copy.overview.recentTitle}>
-      {data.properties.recent.map(property => (
-        <li key={property.id} className="provider-dashboard__property-row">
-          <div>
-            <h3>{localizedValue(property.name, locale)}</h3>
-            <p>{copy.propertyStatuses[property.status]} · {statusDate(property.updatedAt, locale)}</p>
-          </div>
-          <a href={localeForProviderPath(locale, `/provider/properties/${property.id}`)}>{copy.overview.openProperty}</a>
-        </li>
-      ))}
-    </ul>
+    <div className="provider-dashboard__recent-table-wrap provider-properties__table-wrap">
+      <table className="provider-dashboard__recent-table provider-properties__table" aria-label={copy.overview.recentTitle}>
+        <thead>
+          <tr><th scope="col">{columns.code}</th><th scope="col">{columns.property}</th><th scope="col">{columns.status}</th><th scope="col">{columns.views}</th><th scope="col">{columns.updated}</th></tr>
+        </thead>
+        <tbody>
+          {data.properties.recent.map(property => (
+            <tr key={property.id}>
+              <td><code>{property.slug}</code></td>
+              <td><strong>{localizedValue(property.name, locale)}</strong></td>
+              <td><Badge tone="success">{copy.propertyStatuses[property.status]}</Badge></td>
+              <td><span className="provider-dashboard__unavailable-value">{copy.unavailable}</span></td>
+              <td><time dateTime={property.updatedAt}>{statusDate(property.updatedAt, locale)}</time></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -176,10 +222,14 @@ function OverviewContent({ data, locale }: { readonly data: ProviderOverviewData
           <MetricCard label={copy.overview.cards.total} value={numberFormat.format(data.properties.total)} tone="total" />
           <MetricCard label={copy.overview.cards.published} value={numberFormat.format(data.properties.published)} tone="published" />
           <MetricCard label={copy.overview.cards.pending} value={numberFormat.format(data.properties.pendingReview)} tone="pending" />
+          <MetricCard label={copy.overview.additionalCards?.needsChanges ?? copy.overview.unavailableMetric} value={numberFormat.format(data.properties.needsChanges)} tone="needs-changes" />
+          <MetricCard label={copy.overview.additionalCards?.customerRequests ?? copy.overview.unavailableMetric} value={copy.unavailable} tone="customer-requests" unavailable unavailableBody={copy.overview.unavailableMetricBody} />
+          <MetricCard label={copy.overview.additionalCards?.views ?? copy.overview.unavailableMetric} value={copy.unavailable} tone="views" unavailable unavailableBody={copy.overview.unavailableMetricBody} />
           <MetricCard label={copy.overview.cards.drafts} value={numberFormat.format(data.properties.drafts)} tone="drafts" />
-          <MetricCard label={copy.overview.unavailableMetric} value={copy.unavailable} tone="unavailable" unavailable unavailableBody={copy.overview.unavailableMetricBody} />
+          <MetricCard label={copy.overview.additionalCards?.booked ?? copy.overview.unavailableMetric} value={copy.unavailable} tone="booked" unavailable unavailableBody={copy.overview.unavailableMetricBody} />
         </div>
       </section>
+      <DashboardInsights locale={locale} />
       <section className="provider-dashboard__recent" aria-labelledby="provider-recent-title">
         <div className="provider-dashboard__section-heading"><h2 id="provider-recent-title">{copy.overview.recentTitle}</h2></div>
         <RecentProperties data={data} locale={locale} />

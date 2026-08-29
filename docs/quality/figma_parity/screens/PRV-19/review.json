@@ -1,0 +1,45 @@
+{
+  "screenId": "PRV-19",
+  "canonical": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "nodeId": "6017:22088",
+    "route": "/provider/ads",
+    "role": "provider",
+    "directions": ["rtl", "ltr"],
+    "device": "desktop",
+    "export": "docs/design_sources/final_screens/provider/PRV-19.png",
+    "exportSha256": "051c9cfcf1ecb5e492c570e4abc4aade211944656b758b64fe47e8c5d83d11be"
+  },
+  "runtime": {
+    "before": ["runtime-before-ar.png", "runtime-before-en.png"],
+    "after": ["runtime-after-final-ar.png", "runtime-after-final-en.png"],
+    "captureNote": "Before captures preserve the pre-final verification capture; after captures are from the latest no-update desktop run."
+  },
+  "classification": "PARTIAL_EXTERNAL",
+  "repositoryOwnedRepairs": [
+    "Rejected unsafe payment-proof filenames containing path separators or control characters.",
+    "Required the payment-proof extension to match the declared PDF/JPEG/PNG MIME type.",
+    "Preserved provider authorization and server-owned advertising actions."
+  ],
+  "externalDifference": "The canonical advertising export contains content and presentation fields beyond the current safe advertising projection; no unapproved asset or data was fabricated.",
+  "externalPrerequisite": {
+    "owner": "Provider contracts/API owner",
+    "nextAction": "Confirm and expose approved advertising content/projection fields required for canonical table parity, then rerun the AR/EN visual gate."
+  },
+  "visualDiff": {
+    "ar": { "expected": "1280px by 871px", "received": "1280px by 827px", "differentPixels": 218562, "ratio": 0.20, "artifact": "diff-final-ar.png" },
+    "en": { "expected": "1280px by 871px", "received": "1280px by 827px", "differentPixels": 225423, "ratio": 0.21, "artifact": "diff-final-en.png" }
+  },
+  "snapshot": {
+    "updated": false,
+    "reason": "The baseline retains the previous dark Provider navigation; snapshot updates are out of scope and the current white navigation agrees with the local canonical export.",
+    "ar": { "path": "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-advertising-ar-desktop-ar-win32.png", "sha256": "889d6a5f22e945237a6f2885a34b7759a86086ca61a7ef72c97d4b42219c9fd3" },
+    "en": { "path": "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-advertising-en-desktop-en-win32.png", "sha256": "bf75893c5e307ce40dcb31711abc55f2dc87ff85dce09310f872f2360e00de80" }
+  },
+  "visualGate": {
+    "command": "$env:WEB_BASE_URL = 'http://127.0.0.1:4173'; npm.cmd exec --workspace apps/web -- playwright test tests/e2e/provider-projects.spec.ts tests/e2e/provider-customer-requests.spec.ts tests/e2e/provider-viewings.spec.ts tests/e2e/provider-advertising.spec.ts --project=desktop-ar --project=desktop-en --workers=1",
+    "exitCode": 1,
+    "result": "The advertising visual cases failed at their screenshot assertions after their pre-screenshot checks; upload-boundary coverage passed in focused Vitest and protected-content/authorization/keyboard assertions passed before the gate.",
+    "snapshotsUpdated": false
+  }
+}

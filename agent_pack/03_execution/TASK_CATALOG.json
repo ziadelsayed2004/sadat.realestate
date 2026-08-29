@@ -9484,5 +9484,54 @@
       "combined final gates only after all three lanes converge"
     ],
     "sequence": 209
+  },
+  {
+    "id": "frontend_101",
+    "phase": "F7_post_release_assurance",
+    "area": "provider exact visual parity coordination",
+    "title": "Provider Wave 2 Coordinator - PRV-01 through PRV-24",
+    "goal": "Coordinate three non-overlapping Provider lanes, preserve Wave 1 history, and reconcile all Provider screens with reviewed evidence before preparing the dependency-ready Admin cursor.",
+    "kind": "coordination",
+    "screens": [],
+    "sourceRefs": [
+      "08_reality_sync/PROVIDER_WAVE_2_COORDINATOR.md",
+      "08_reality_sync/PROVIDER_WAVE_2_LANE_LEDGER.json",
+      "01_product/SCREEN_REGISTRY.json",
+      "01_product/SCREEN_COVERAGE.json"
+    ],
+    "notes": [
+      "This is the single audited Provider Wave 2 coordinator task and must be the only in_progress Agent Pack task during the wave.",
+      "Existing frontend_040 through frontend_050 records retain historical Provider implementation ownership; this coordination task intentionally has an empty screens array.",
+      "The canonical source is Odl1Epn2u6lIEuIMmABT7o and 0HBdTNGROmmpC6S7OYa3iJ is forbidden.",
+      "Arabic RTL and English LTR are the only execution locales. Existing zh-CN files and snapshots are preserved and excluded.",
+      "Admin remains unopened and may become dependency-ready only after Provider reconciliation."
+    ],
+    "track": "frontend",
+    "dependsOn": ["frontend_100"],
+    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_101.md",
+    "allowedRoots": [
+      "apps/web/src/features/provider/**",
+      "apps/web/src/features/provider_property/**",
+      "apps/web/src/features/provider_auth/**",
+      "apps/web/tests/**",
+      "docs/quality/figma_parity/**",
+      "agent_pack/**"
+    ],
+    "acceptance": [
+      "Maintain exactly one audited in_progress coordinator task and three disjoint Provider lane ledgers.",
+      "Resolve PRV-01 through PRV-24 against exact canonical nodes, routes, devices, directions, states, API behavior, interaction, accessibility, and security evidence.",
+      "Close screens only as REPAIRED_VERIFIED or VERIFIED_NO_CHANGE; retain exact external blockers without inventing inputs.",
+      "Preserve email-only Provider identity, safe HTTPS-only mapUrl, ownership/RBAC/IDOR controls, safe projections, and upload/document authorization.",
+      "Do not test or modify zh-CN, Admin, historical Wave 1 evidence, production SMTP, or production migrations.",
+      "Prepare the smallest dependency-ready Admin task only after Provider closure; do not implement Admin."
+    ],
+    "verification": [
+      "focused Provider lane typecheck, lint, unit, API, accessibility, permission, ownership, security, and normal AR/EN visual checks",
+      "combined Provider typecheck, lint, Vitest/unit, API/contract, AR/EN visual, accessibility, interaction/route, RBAC/ownership/IDOR, upload security, email-only Auth, mapUrl, performance, and build gates",
+      "node agent_pack/scripts/sync_pack.mjs",
+      "node agent_pack/scripts/audit_pack.mjs",
+      "git diff --check"
+    ],
+    "sequence": 210
   }
 ]

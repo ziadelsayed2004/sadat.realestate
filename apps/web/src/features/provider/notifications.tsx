@@ -41,10 +41,17 @@ function mutationErrorFor(error: unknown): Exclude<MutationFeedback, 'markedRead
   return 'error';
 }
 
-function localeForProviderPath(locale: SupportedLocale, path: string): string {
-  const url = new URL(path, 'http://sadat-real-estate.local');
-  url.searchParams.set('lang', locale);
-  return `${url.pathname}${url.search}${url.hash}`;
+function localeForProviderPath(locale: SupportedLocale, path: string): string | undefined {
+  const origin = 'http://sadat-real-estate.local';
+  if (path.trim().length === 0) return undefined;
+  try {
+    const url = new URL(path, origin);
+    if (url.origin !== origin || !url.pathname.startsWith('/')) return undefined;
+    url.searchParams.set('lang', locale);
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return undefined;
+  }
 }
 
 function dateLabel(value: string, locale: SupportedLocale): string {
@@ -75,7 +82,7 @@ function NotificationRow({ item, locale, copy, marking, onMarkRead }: { readonly
   const href = item.link === undefined ? undefined : localeForProviderPath(locale, item.link);
   const read = item.readAt !== null;
   return (
-    <article className="provider-notifications__item" data-testid={`provider-notification-${item.id}`} data-state={read ? 'read' : 'unread'}>
+    <article className="provider-notifications__item" role="listitem" data-testid={`provider-notification-${item.id}`} data-state={read ? 'read' : 'unread'}>
       <span className="provider-notifications__icon" aria-hidden="true">{iconForType(item.type)}</span>
       <div className="provider-notifications__body">
         <div className="provider-notifications__meta">
@@ -118,12 +125,16 @@ export function ProviderNotifications({ locale, session, authClient, apiOrigin, 
     void loadSource({ page, limit: 20, unreadOnly: filter === 'unread' }, controller.signal).then(nextData => {
       if (controller.signal.aborted) return;
       setData(nextData);
-      setState(nextData.items.length === 0 ? 'empty' : 'success');
+      setState(filter === 'all' && nextData.items.length === 0 && nextData.total === 0 ? 'empty' : 'success');
     }).catch(error => { if (!controller.signal.aborted) setState(stateForError(error)); });
     return () => controller.abort();
   }, [attempt, filter, loadSource, page, sessionRole, session.status]);
 
   const markRead = async (notificationId: string) => {
+    if (sessionRole !== 'provider') {
+      setMutationFeedback('permission');
+      return;
+    }
     setMutationFeedback(undefined);
     setMarkingId(notificationId);
     try {
@@ -139,6 +150,10 @@ export function ProviderNotifications({ locale, session, authClient, apiOrigin, 
   };
 
   const markAllRead = async () => {
+    if (sessionRole !== 'provider') {
+      setMutationFeedback('permission');
+      return;
+    }
     setMutationFeedback(undefined);
     setMarkingAll(true);
     try { await actionSource.markAllRead(); setMutationFeedback('markedAll'); setAttempt(value => value + 1); }

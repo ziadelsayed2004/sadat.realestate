@@ -49,13 +49,12 @@ interface ProjectFormState {
   readonly description: Record<SupportedLocale, string>;
   readonly slug: string;
   readonly locationId: string;
-  readonly organizationId: string;
   readonly website: string;
   readonly reason: string;
 }
 
 function blankForm(): ProjectFormState {
-  return { name: { ar: '', en: '', 'zh-CN': '' }, description: { ar: '', en: '', 'zh-CN': '' }, slug: '', locationId: '', organizationId: '', website: '', reason: '' };
+  return { name: { ar: '', en: '', 'zh-CN': '' }, description: { ar: '', en: '', 'zh-CN': '' }, slug: '', locationId: '', website: '', reason: '' };
 }
 
 function formForProject(project: ProjectData): ProjectFormState {
@@ -64,7 +63,6 @@ function formForProject(project: ProjectData): ProjectFormState {
     description: { ar: project.description?.ar ?? '', en: project.description?.en ?? '', 'zh-CN': project.description?.['zh-CN'] ?? '' },
     slug: project.slug,
     locationId: project.locationId ?? '',
-    organizationId: project.organizationId ?? '',
     website: project.website ?? '',
     reason: ''
   };
@@ -155,7 +153,6 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
         slug: form.slug.trim(),
         ...(descriptionValue === undefined ? {} : { description: descriptionValue }),
         ...(form.locationId.trim() === '' ? {} : { locationId: form.locationId.trim() }),
-        ...(form.organizationId.trim() === '' ? {} : { organizationId: form.organizationId.trim() }),
         ...(form.website.trim() === '' ? {} : { website: form.website.trim() }),
         reason
       });
@@ -173,7 +170,6 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
     const candidate: Record<string, unknown> = { version: project.version, slug: form.slug.trim(), description: descriptionValue ?? null, reason };
     if (name !== undefined) candidate.name = name;
     if (form.locationId.trim() !== (project.locationId ?? '')) candidate.locationId = form.locationId.trim() === '' ? null : form.locationId.trim();
-    if (form.organizationId.trim() !== (project.organizationId ?? '')) candidate.organizationId = form.organizationId.trim() === '' ? null : form.organizationId.trim();
     if (form.website.trim() !== (project.website ?? '')) candidate.website = form.website.trim() === '' ? null : form.website.trim();
     const parsed = projectPatchSchema.safeParse(candidate);
     if (!parsed.success) {
@@ -215,7 +211,6 @@ function ProjectFormModal({ locale, copy, mode, project, saving, error, onClose,
         <div className="provider-projects__form-grid">
           <Input id="provider-project-slug" label={copy.form.slug} value={form.slug} onChange={event => update('slug', event.target.value)} placeholder={copy.form.placeholders.slug} required />
           <Input id="provider-project-location" label={copy.form.locationId} value={form.locationId} onChange={event => update('locationId', event.target.value)} placeholder={copy.form.placeholders.locationId} />
-          <Input id="provider-project-organization" label={copy.form.organizationId} value={form.organizationId} onChange={event => update('organizationId', event.target.value)} placeholder={copy.form.placeholders.organizationId} />
           <Input id="provider-project-website" label={copy.form.website} type="url" value={form.website} onChange={event => update('website', event.target.value)} placeholder={copy.form.placeholders.website} />
         </div>
         <Input id="provider-project-reason" label={copy.form.reason} value={form.reason} onChange={event => update('reason', event.target.value)} helpText={copy.form.reasonHelp} required />
@@ -344,7 +339,7 @@ function ProjectsContent({ data, locale, copy, status, searchInput, query, onSta
 }) {
   const pageCount = Math.ceil(data.total / data.limit);
   const numberFormat = new Intl.NumberFormat(locale);
-  const hasFilters = status !== 'all' || query.search !== undefined;
+  const hasFilters = query.status !== undefined || query.search !== undefined;
   return (
     <main aria-labelledby="provider-projects-title">
       <div className="provider-projects__heading provider-dashboard__heading-row">
@@ -386,6 +381,7 @@ export function ProviderProjects({ locale, session, authClient, apiOrigin, load,
   const copy = getProviderProjectsCopy(locale);
   const providerCopy = getProviderCopy(locale);
   const [status, setStatus] = useState<ProviderProjectStatusFilter>('all');
+  const [appliedStatus, setAppliedStatus] = useState<ProviderProjectStatusFilter>('all');
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
@@ -398,7 +394,7 @@ export function ProviderProjects({ locale, session, authClient, apiOrigin, load,
   const [mutationError, setMutationError] = useState<string | undefined>();
   const [feedback, setFeedback] = useState<string | undefined>();
   const [saving, setSaving] = useState(false);
-  const query = useMemo<ProviderProjectsQuery>(() => ({ page, limit: 5, ...(status === 'all' ? {} : { status }), ...(search === '' ? {} : { search }) }), [page, search, status]);
+  const query = useMemo<ProviderProjectsQuery>(() => ({ page, limit: 5, ...(appliedStatus === 'all' ? {} : { status: appliedStatus }), ...(search === '' ? {} : { search }) }), [appliedStatus, page, search]);
   const source = useMemo(() => load ?? createProviderProjectsLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, load]);
   const mutationApi = useMemo(() => mutations ?? createProviderProjectMutationApi({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, mutations]);
   const path = typeof window === 'undefined' ? '/provider/projects' : new URL(window.location.href).pathname.replace(/\/+$/u, '') || '/';
@@ -488,7 +484,7 @@ export function ProviderProjects({ locale, session, authClient, apiOrigin, load,
       <ProviderNavigation locale={locale} activePath={path} />
       <div className="provider-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
-        {(state === 'success' || state === 'empty') && data !== undefined ? <ProjectsContent data={data} locale={locale} copy={copy} status={status} searchInput={searchInput} query={query} onStatusChange={nextStatus => { setStatus(nextStatus); setPage(1); }} onSearchInputChange={setSearchInput} onSubmit={() => { setSearch(searchInput.trim()); setPage(1); }} onClear={() => { setStatus('all'); setSearchInput(''); setSearch(''); setPage(1); }} onPageChange={setPage} onAdd={openCreate} onEdit={openEdit} onSubmitProject={project => { setMutationError(undefined); setFeedback(undefined); setSubmitProject(project); }} /> : null}
+        {(state === 'success' || state === 'empty') && data !== undefined ? <ProjectsContent data={data} locale={locale} copy={copy} status={status} searchInput={searchInput} query={query} onStatusChange={setStatus} onSearchInputChange={setSearchInput} onSubmit={() => { setAppliedStatus(status); setSearch(searchInput.trim()); setPage(1); }} onClear={() => { setStatus('all'); setAppliedStatus('all'); setSearchInput(''); setSearch(''); setPage(1); }} onPageChange={setPage} onAdd={openCreate} onEdit={openEdit} onSubmitProject={project => { setMutationError(undefined); setFeedback(undefined); setSubmitProject(project); }} /> : null}
         {feedback ? <p className="provider-projects__feedback" role="status">{feedback}</p> : null}
       </div>
       {formMode !== undefined ? <ProjectFormModal key={`${formMode}-${editingProject?.id ?? 'new'}`} locale={locale} copy={copy} mode={formMode} project={editingProject} saving={saving} error={mutationError} onClose={closeDialogs} onSave={saveProject} /> : null}

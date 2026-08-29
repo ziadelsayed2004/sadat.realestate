@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PRV-22-1",
+  "classification": "PARTIAL",
+  "classificationReason": "The account projection is email-only as required by the provider contract, with server action gating, AR/EN direction, safe update feedback, and no phone identity field. Visual closure remains open because the no-update desktop snapshot compares a 1280x954 runtime with an existing 1280x1182 baseline; the baseline contains stale account content and the shared Provider shell is outside this lane.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "nodeId": "6028:11337",
+    "route": "/provider/settings",
+    "tab": "account",
+    "localExport": "docs/design_sources/final_screens/provider/PRV-22-1.png",
+    "localExportDimensions": { "width": 6308, "height": 4140 },
+    "reviewed": true
+  },
+  "runtime": {
+    "role": "provider",
+    "deviceScope": "desktop",
+    "locales": [
+      { "locale": "ar", "direction": "rtl" },
+      { "locale": "en", "direction": "ltr" }
+    ],
+    "statesReviewed": ["loading", "success", "empty", "retry", "error", "permission", "validation", "conflict", "save-success"],
+    "authorization": "Anonymous sessions do not load settings; the email input and save action are disabled, and submit is a no-op, when update_email is absent from the server-projected availableActions.",
+    "projection": "The account form renders the projected email only. Phone labels and phone values are absent; contact data is not copied into the account identity form.",
+    "navigationAndFocus": "Account, contact, and security tab links preserve /provider/settings with tab and locale query parameters; labeled form controls and status/alert feedback are exposed."
+  },
+  "repairs": [
+    {
+      "status": "REPAIRED",
+      "owner": "apps/web/src/features/provider/settings.tsx",
+      "defect": "Account and contact save controls could remain actionable regardless of server-projected availableActions.",
+      "effect": "Inputs and submit controls are disabled and the save handler returns without mutation when the corresponding server action is unavailable."
+    },
+    {
+      "status": "REPAIRED",
+      "owner": "apps/web/src/features/provider/settings.tsx",
+      "defect": "Provider settings feedback branches did not clearly group the 401/403 permission statuses.",
+      "effect": "Unauthorized and forbidden update responses consistently map to the permission feedback state."
+    }
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/provider-notifications-settings.vitest.test.tsx --run -t \"uses only|for ar|for en|permission state|fails closed|renders empty|maps notification|honors server|maps settings|contact fields\"",
+      "exitCode": 0,
+      "result": "12 passed; 2 existing zh-CN cases skipped."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-notifications-settings.spec.ts --project=desktop-ar --project=desktop-en --workers=1",
+      "exitCode": 1,
+      "result": "Account route, direction, provider projection, focus, and save-success assertions passed before the no-update snapshot failed at 1280x954 versus the existing 1280x1182 baseline for AR and EN."
+    }
+  ],
+  "visualClosure": {
+    "status": "OPEN",
+    "snapshotsUpdated": false,
+    "baselineMismatch": { "expected": "1280x1182", "actual": "1280x954" }
+  },
+  "blockingDefectIds": [],
+  "evidenceFiles": ["docs/quality/figma_parity/screens/PRV-22-1/review.json"],
+  "constraints": { "zhCN": "Not run or modified.", "sharedFiles": "Not modified." }
+}

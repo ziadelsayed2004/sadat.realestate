@@ -63,10 +63,11 @@ function statusTone(status: PropertyStatus): BadgeTone {
 }
 
 function statusPath(property: PropertyData): string {
-  if (property.status === 'rejected') return `/provider/properties/${property.id}/rejected`;
-  if (property.status === 'pending_review') return `/provider/properties/${property.id}/submitted`;
-  if (property.status === 'approved' || property.status === 'published' || property.status === 'hidden') return `/provider/properties/${property.id}/published`;
-  return `/provider/properties/${property.id}/review`;
+  const propertyId = encodeURIComponent(property.id);
+  if (property.status === 'rejected') return `/provider/properties/${propertyId}/rejected`;
+  if (property.status === 'pending_review') return `/provider/properties/${propertyId}/submitted`;
+  if (property.status === 'approved' || property.status === 'published' || property.status === 'hidden') return `/provider/properties/${propertyId}/published`;
+  return `/provider/properties/${propertyId}/review`;
 }
 
 function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<ProviderPropertiesViewState, 'success' | 'empty'>; readonly locale: SupportedLocale; readonly onRetry: () => void }) {
@@ -88,13 +89,13 @@ function PropertyStatusBadge({ status, locale }: { readonly status: PropertyStat
 function PropertyActions({ property, locale }: { readonly property: PropertyData; readonly locale: SupportedLocale }) {
   const copy = getProviderCopy(locale);
   const name = localizedValue(property.name, locale);
-  const editHref = localeForProviderPath(locale, `/provider/properties/${property.id}/location`);
+  const editHref = localeForProviderPath(locale, `/provider/properties/${encodeURIComponent(property.id)}/location`);
   const viewHref = localeForProviderPath(locale, statusPath(property));
   return (
     <div className="provider-properties__actions">
       <a href={viewHref} aria-label={`${copy.properties.view}: ${name}`}>{copy.properties.view}</a>
       {property.availableActions.includes('update') ? <a href={editHref} aria-label={`${copy.properties.edit}: ${name}`}>{copy.properties.edit}</a> : null}
-      {property.availableActions.includes('submit') ? <a href={localeForProviderPath(locale, `/provider/properties/${property.id}/review`)} aria-label={`${copy.properties.submit}: ${name}`}>{copy.properties.submit}</a> : null}
+      {property.availableActions.includes('submit') ? <a href={localeForProviderPath(locale, `/provider/properties/${encodeURIComponent(property.id)}/review`)} aria-label={`${copy.properties.submit}: ${name}`}>{copy.properties.submit}</a> : null}
     </div>
   );
 }
@@ -165,7 +166,7 @@ function PropertiesContent({ data, locale, query, onPageChange, onStatusChange, 
   readonly status: ProviderPropertyStatusFilter;
 }) {
   const copy = getProviderCopy(locale);
-  const pageCount = Math.ceil(data.total / data.limit);
+  const pageCount = Math.max(1, Math.ceil(data.total / data.limit));
   const numberFormat = new Intl.NumberFormat(locale);
   const hasFilters = status !== 'all' || query.search !== undefined;
   return (

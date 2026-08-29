@@ -193,13 +193,13 @@ export function App({
   const isAdminProviderDetail = adminProviderDetailMatch !== null;
   const providerPropertyBasicMatch = route.kind === 'matched' && route.id === 'provider-dashboard' ? seekerPathname.match(/^\/provider\/properties\/(?:new\/basic|([a-f0-9]{24})\/basic)$/u) : null;
   const providerPropertyLocationMatch = route.kind === 'matched' && route.id === 'provider-dashboard' ? seekerPathname.match(/^\/provider\/properties\/([a-f0-9]{24})\/location$/u) : null;
-  const providerPropertyAdvancedMatch = route.kind === 'matched' && route.id === 'provider-dashboard' ? seekerPathname.match(/^\/provider\/properties\/([a-f0-9]{24})\/(details|price-payment|features-services)$/u) : null;
+  const providerPropertyAdvancedMatch = route.kind === 'matched' && route.id === 'provider-dashboard' ? seekerPathname.match(/^\/provider\/properties\/([a-f0-9]{24})\/(details|price-payment|features(?:-services)?)$/u) : null;
   const providerPropertyCompletionMatch = route.kind === 'matched' && route.id === 'provider-dashboard' ? seekerPathname.match(/^\/provider\/properties\/([a-f0-9]{24})\/(media|contact|review)$/u) : null;
   const providerPropertyStateMatch = route.kind === 'matched' && route.id === 'provider-dashboard' ? seekerPathname.match(/^\/provider\/properties\/([a-f0-9]{24})\/(submitted|rejected|published)$/u) : null;
   const isProviderPropertyState = providerPropertyStateMatch !== null;
   const isProviderPropertyWizard = providerPropertyBasicMatch !== null || providerPropertyLocationMatch !== null || providerPropertyAdvancedMatch !== null || providerPropertyCompletionMatch !== null || isProviderPropertyState;
   const providerPropertyWizardStep = providerPropertyLocationMatch === null ? 'basic' as const : 'location' as const;
-  const providerPropertyAdvancedStep = providerPropertyAdvancedMatch?.[2] as ProviderPropertyAdvancedStep | undefined;
+  const providerPropertyAdvancedStep = providerPropertyAdvancedMatch?.[2] === 'features' ? 'features-services' : providerPropertyAdvancedMatch?.[2] as ProviderPropertyAdvancedStep | undefined;
   const providerPropertyCompletionStep = providerPropertyCompletionMatch?.[2] as ProviderPropertyCompletionStep | undefined;
   const providerPropertyStateRoute = providerPropertyStateMatch?.[2] as ProviderPropertyStateRoute | undefined;
   const providerPropertyWizardId = providerPropertyStateMatch?.[1] ?? providerPropertyCompletionMatch?.[1] ?? providerPropertyAdvancedMatch?.[1] ?? providerPropertyLocationMatch?.[1] ?? providerPropertyBasicMatch?.[1];

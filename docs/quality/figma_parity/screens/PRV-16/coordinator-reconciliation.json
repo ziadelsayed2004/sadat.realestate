@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PRV-16",
+  "classification": "PARTIAL",
+  "status": "COORDINATOR_RECONCILED_PARTIAL",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "nodeId": "6017:21368",
+    "route": "/provider/customer-requests",
+    "role": "provider",
+    "device": "desktop",
+    "localExport": "docs/design_sources/final_screens/provider/PRV-16.png",
+    "localExportSha256": "f40fc7db1a5944ef285eaa885d70ee3c2199bf170daf13a158776fc1827ec083",
+    "reviewed": true
+  },
+  "runtime": {
+    "approvedLocaleScope": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "captures": [
+      {
+        "locale": "ar",
+        "direction": "rtl",
+        "runtimePath": "docs/quality/figma_parity/screens/PRV-16/runtime-after-e2e-2026-08-29-ar.png",
+        "sourceArtifact": "apps/web/test-results/provider-customer-requests-85182-nd-keyboard-visual-evidence-desktop-ar/provider-customer-requests-ar-actual.png",
+        "captureMode": "e2e-2026-08-29",
+        "sha256": "f6ce2b1c492ebfd06a386ee772490212e54a195a835d3f1a3d1de422cbafa5cc",
+        "width": 1280,
+        "height": 844,
+        "visual": {
+          "expected": {
+            "width": 1280,
+            "height": 852
+          },
+          "actual": {
+            "width": 1280,
+            "height": 844
+          },
+          "differentPixels": 202057,
+          "ratio": 0.19,
+          "errorContext": "apps/web/test-results/provider-customer-requests-85182-nd-keyboard-visual-evidence-desktop-ar/error-context.md"
+        }
+      },
+      {
+        "locale": "en",
+        "direction": "ltr",
+        "runtimePath": "docs/quality/figma_parity/screens/PRV-16/runtime-after-e2e-2026-08-29-en.png",
+        "sourceArtifact": "apps/web/test-results/provider-customer-requests-85182-nd-keyboard-visual-evidence-desktop-en/provider-customer-requests-en-actual.png",
+        "captureMode": "e2e-2026-08-29",
+        "sha256": "96202c98caf1561337b601a4da7a1948cf23a00f32224ea119c2d60d664299cd",
+        "width": 1280,
+        "height": 871,
+        "visual": {
+          "expected": {
+            "width": 1280,
+            "height": 879
+          },
+          "actual": {
+            "width": 1280,
+            "height": 871
+          },
+          "differentPixels": 212199,
+          "ratio": 0.19,
+          "errorContext": "apps/web/test-results/provider-customer-requests-85182-nd-keyboard-visual-evidence-desktop-en/error-context.md"
+        }
+      }
+    ],
+    "beforeCapture": {
+      "status": "PRESERVED",
+      "paths": [
+        "docs/quality/figma_parity/screens/PRV-16/runtime-before-ar.png",
+        "docs/quality/figma_parity/screens/PRV-16/runtime-before-en.png"
+      ]
+    },
+    "reachedInCombinedE2E": true,
+    "directCaptureReason": null
+  },
+  "functional": {
+    "status": "PASS_FOR_EXECUTED_ASSERTIONS",
+    "focusedTests": [
+      "apps/web/tests/provider-customer-requests.vitest.test.tsx",
+      "apps/web/tests/e2e/provider-customer-requests.spec.ts"
+    ],
+    "note": "The combined E2E functional and permission assertions passed before the no-update screenshot assertion failed."
+  },
+  "visual": {
+    "status": "OPEN",
+    "snapshotsUpdated": false,
+    "screenshotFailures": [
+      {
+        "locale": "ar",
+        "expected": {
+          "width": 1280,
+          "height": 852
+        },
+        "actual": {
+          "width": 1280,
+          "height": 844
+        },
+        "differentPixels": 202057,
+        "ratio": 0.19,
+        "errorContext": "apps/web/test-results/provider-customer-requests-85182-nd-keyboard-visual-evidence-desktop-ar/error-context.md"
+      },
+      {
+        "locale": "en",
+        "expected": {
+          "width": 1280,
+          "height": 879
+        },
+        "actual": {
+          "width": 1280,
+          "height": 871
+        },
+        "differentPixels": 212199,
+        "ratio": 0.19,
+        "errorContext": "apps/web/test-results/provider-customer-requests-85182-nd-keyboard-visual-evidence-desktop-en/error-context.md"
+      }
+    ],
+    "directReview": "Reviewed against the approved local Provider export and preserved runtime evidence. The current visual gate is not closure-eligible because no-update screenshots show material geometry/content differences.",
+    "repoOwnedDefects": [
+      {
+        "id": "PROVIDER-SHARED-NAV-ICON-GLYPHS",
+        "element": "ProviderNavigation icons",
+        "owner": "Coordinator",
+        "targetFile": "apps/web/src/features/provider/overview.tsx",
+        "description": "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "requiredRepair": "Replace the text glyph map with the approved icon implementation/assets while preserving the existing provider-only routes, locale query, active treatment, and direction behavior."
+      }
+    ],
+    "externalBlockers": [
+      "The current provider request projection is intentionally redacted and does not expose all canonical CRM presentation fields."
+    ]
+  },
+  "repairs": [
+    "apps/web/src/features/provider/customer-requests.tsx",
+    "apps/web/src/features/provider/customer-requests-data.ts"
+  ],
+  "evidenceFiles": [
+    "docs/quality/figma_parity/screens/PRV-16/coordinator-reconciliation.json",
+    "docs/quality/figma_parity/screens/PRV-16/review.json"
+  ],
+  "constraints": {
+    "zhCN": "Excluded from execution and untouched.",
+    "admin": "Unopened and unmodified.",
+    "snapshots": "No snapshot was updated."
+  }
+}

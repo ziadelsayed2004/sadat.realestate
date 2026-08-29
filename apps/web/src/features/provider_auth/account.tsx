@@ -36,7 +36,6 @@ interface AccountFormState {
   readonly displayName: string;
   readonly email: string;
   readonly whatsappNumber: string;
-  readonly secondaryPhone: string;
   readonly preferredLocale: SupportedLocale;
   readonly termsAccepted: boolean;
   readonly privacyAccepted: boolean;
@@ -54,7 +53,6 @@ function formFromApplication(application: ProviderApplicationData): AccountFormS
     displayName: application.displayName ?? '',
     email: application.email ?? '',
     whatsappNumber: application.whatsappNumber ?? '',
-    secondaryPhone: application.secondaryPhone ?? '',
     preferredLocale: application.preferredLocale ?? 'ar',
     termsAccepted: application.termsAcceptedAt !== undefined,
     privacyAccepted: application.privacyAcceptedAt !== undefined
@@ -67,7 +65,6 @@ function emptyForm(locale: SupportedLocale): AccountFormState {
     displayName: '',
     email: '',
     whatsappNumber: '',
-    secondaryPhone: '',
     preferredLocale: locale,
     termsAccepted: false,
     privacyAccepted: false
@@ -126,7 +123,6 @@ function hasAccountValues(form: AccountFormState): boolean {
     // The verified email is prefilled by the registration authority; it must
     // not turn an otherwise untouched account form into the filled variant.
     || form.whatsappNumber.trim() !== ''
-    || form.secondaryPhone.trim() !== ''
     || form.termsAccepted
     || form.privacyAccepted;
 }
@@ -140,7 +136,6 @@ function buildPatch(application: ProviderApplicationData, form: AccountFormState
     preferredLocale: form.preferredLocale
   };
   if (form.whatsappNumber.trim() !== '') patch.whatsappNumber = form.whatsappNumber;
-  if (form.secondaryPhone.trim() !== '') patch.secondaryPhone = form.secondaryPhone;
   if (form.termsAccepted) patch.termsAcceptedAt = new Date().toISOString();
   if (form.privacyAccepted) patch.privacyAcceptedAt = new Date().toISOString();
   return patch;
@@ -349,7 +344,7 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
               required
               state={saveState === 'error' && patchPreview?.success !== true ? 'error' : 'default'}
             />
-            <div className="provider-account-phone-grid">
+            <div className="provider-account-business-contact">
               <Input
                 id="provider-account-whatsapp"
                 label={copy.whatsappLabel}
@@ -359,18 +354,6 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
                 inputMode="tel"
                 value={form.whatsappNumber}
                 onChange={event => update('whatsappNumber', event.currentTarget.value)}
-                dir="ltr"
-              />
-              <Input
-                id="provider-account-secondary-phone"
-                label={copy.secondaryPhoneLabel}
-                name="secondaryPhone"
-                type="tel"
-                autoComplete="tel"
-                inputMode="tel"
-                placeholder={copy.secondaryPhonePlaceholder}
-                value={form.secondaryPhone}
-                onChange={event => update('secondaryPhone', event.currentTarget.value)}
                 dir="ltr"
               />
             </div>

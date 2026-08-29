@@ -1,0 +1,44 @@
+{
+  "screenId": "PRV-20",
+  "canonical": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "nodeId": "6028:10071",
+    "route": "/provider/commission",
+    "role": "provider",
+    "directions": ["rtl", "ltr"],
+    "device": "desktop",
+    "export": "docs/design_sources/final_screens/provider/PRV-20.png",
+    "exportSha256": "4af704419b4f1ccd544c5bd0af8f1cef28aef9a03570ed23c7de7739c5db9e7c"
+  },
+  "runtime": {
+    "before": ["runtime-before-ar.png", "runtime-before-en.png"],
+    "after": ["runtime-after-final-ar.png", "runtime-after-final-en.png"],
+    "captureNote": "Before captures preserve the pre-final verification capture; after captures are from the latest no-update desktop run."
+  },
+  "classification": "PARTIAL_EXTERNAL",
+  "repositoryOwnedRepairs": [
+    "Localized commission source, exemption, and active-state metadata for Arabic without changing the English or Chinese source path.",
+    "Kept the commission screen read-only and rendered only the safe ProviderCommissionProjection."
+  ],
+  "externalDifference": "The canonical commission export includes administrative scope/history detail that the current safe projection intentionally omits; private policy internals were not exposed.",
+  "externalPrerequisite": {
+    "owner": "Provider contracts/API owner",
+    "nextAction": "Confirm and expose any approved provider-visible commission scope/history projection required for canonical parity, then rerun the AR/EN visual gate."
+  },
+  "visualDiff": {
+    "ar": { "expected": "1280px by 908px", "received": "1280px by 900px", "differentPixels": 209345, "ratio": 0.19, "artifact": "diff-final-ar.png" },
+    "en": { "expected": "1280px by 908px", "received": "1280px by 900px", "differentPixels": 210629, "ratio": 0.19, "artifact": "diff-final-en.png" }
+  },
+  "snapshot": {
+    "updated": false,
+    "reason": "The baseline retains the previous dark Provider navigation; snapshot updates are out of scope and the current white navigation agrees with the local canonical export.",
+    "ar": { "path": "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-commission-ar-desktop-ar-win32.png", "sha256": "4358e4b386f6f2ce0547fda48f4f1e8a4de31e8b6e234b71e4dc9b9224db492b" },
+    "en": { "path": "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-commission-en-desktop-en-win32.png", "sha256": "97abcd6dae275c3361d14cbac493fafc5442cad892d64f81cf0ba307fc5cb306" }
+  },
+  "visualGate": {
+    "command": "$env:WEB_BASE_URL = 'http://127.0.0.1:4173'; npm.cmd exec --workspace apps/web -- playwright test tests/e2e/provider-projects.spec.ts tests/e2e/provider-customer-requests.spec.ts tests/e2e/provider-viewings.spec.ts tests/e2e/provider-advertising.spec.ts --project=desktop-ar --project=desktop-en --workers=1",
+    "exitCode": 1,
+    "result": "The commission cases failed only at the screenshot assertions; read-only, protected-content, direction, and authorization assertions passed before the gate.",
+    "snapshotsUpdated": false
+  }
+}

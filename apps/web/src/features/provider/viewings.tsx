@@ -67,6 +67,7 @@ function dateLabel(value: string, timezone: string, locale: SupportedLocale): st
 function dateTimeInputValue(value: string): string {
   try {
     const date = new Date(value);
+    if (!Number.isFinite(date.getTime())) return '';
     const pad = (input: number) => String(input).padStart(2, '0');
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
   } catch {
@@ -81,6 +82,28 @@ function isoFromDateTimeInput(value: string): string | undefined {
 
 function safeReference(value: string): string {
   return value.length > 6 ? `…${value.slice(-6)}` : value;
+}
+
+function dateGroupLabel(value: string, timezone: string, locale: SupportedLocale): string {
+  try {
+    return new Intl.DateTimeFormat(locale, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: timezone }).format(new Date(value));
+  } catch {
+    return '—';
+  }
+}
+
+function groupViewings(items: readonly ViewingData[], locale: SupportedLocale): readonly { readonly label: string; readonly items: readonly ViewingData[] }[] {
+  const groups: Array<{ readonly label: string; readonly items: ViewingData[] }> = [];
+  for (const viewing of items) {
+    const label = dateGroupLabel(viewing.requestedAt, viewing.timezone, locale);
+    const existing = groups.find(group => group.label === label);
+    if (existing !== undefined) {
+      existing.items.push(viewing);
+    } else {
+      groups.push({ label, items: [viewing] });
+    }
+  }
+  return groups;
 }
 
 function errorMessage(error: unknown, copy: ProviderViewingsCopy): string {
@@ -158,25 +181,27 @@ function TransitionModal({ viewing, action, copy, saving, error, onClose, onSubm
   );
 }
 
-function ViewingRow({ viewing, locale, copy, onAction }: { readonly viewing: ViewingData; readonly locale: SupportedLocale; readonly copy: ProviderViewingsCopy; readonly onAction: (viewing: ViewingData, action: ProviderViewingAction) => void }) {
+function ViewingCard({ viewing, locale, copy, onAction }: { readonly viewing: ViewingData; readonly locale: SupportedLocale; readonly copy: ProviderViewingsCopy; readonly onAction: (viewing: ViewingData, action: ProviderViewingAction) => void }) {
   const actions = ACTIONS_BY_STATUS[viewing.status];
   return (
-    <tr data-testid="provider-viewing-row" data-viewing-status={viewing.status}>
-      <td><span className="provider-viewings__reference">{copy.customerReference} {safeReference(viewing.seekerId)}</span></td>
-      <td>
-        <span className="provider-viewings__reference">{copy.propertyReference} {safeReference(viewing.propertyId)}</span>
-        {viewing.note ? <span className="provider-viewings__note">{copy.note}: {viewing.note}</span> : null}
-      </td>
-      <td><time dateTime={viewing.requestedAt}>{dateLabel(viewing.requestedAt, viewing.timezone, locale)}</time></td>
-      <td><code>{viewing.timezone}</code></td>
-      <td><Badge tone={statusTone(viewing.status)} data-viewing-status-badge={viewing.status}>{copy.statuses[viewing.status]}</Badge></td>
-      <td>
-        <div className="provider-viewings__actions">
-          {actions.map(action => <Button key={action} size="xs" variant={action === 'cancel' ? 'ghost' : 'secondary'} onClick={() => onAction(viewing, action)} aria-label={`${copy.actions[action]}: ${copy.propertyReference} ${safeReference(viewing.propertyId)}`}>{copy.actions[action]}</Button>)}
-          {actions.length === 0 ? <span className="provider-viewings__unavailable">{copy.actions.none}</span> : null}
+    <article className="provider-viewings__card" data-testid="provider-viewing-row" data-viewing-status={viewing.status}>
+      <div className="provider-viewings__card-heading">
+        <div>
+          <strong>{copy.propertyReference} {safeReference(viewing.propertyId)}</strong>
+          <span>{copy.customerReference} {safeReference(viewing.seekerId)}</span>
         </div>
-      </td>
-    </tr>
+        <Badge tone={statusTone(viewing.status)} data-viewing-status-badge={viewing.status}>{copy.statuses[viewing.status]}</Badge>
+      </div>
+      <div className="provider-viewings__card-details">
+        <time dateTime={viewing.requestedAt}>{dateLabel(viewing.requestedAt, viewing.timezone, locale)}</time>
+        <code>{viewing.timezone}</code>
+        {viewing.note ? <span className="provider-viewings__note">{copy.note}: {viewing.note}</span> : null}
+      </div>
+      <div className="provider-viewings__actions">
+        {actions.map(action => <Button key={action} size="xs" variant={action === 'cancel' ? 'ghost' : 'secondary'} onClick={() => onAction(viewing, action)} aria-label={`${copy.actions[action]}: ${copy.propertyReference} ${safeReference(viewing.propertyId)}`}>{copy.actions[action]}</Button>)}
+        {actions.length === 0 ? <span className="provider-viewings__unavailable">{copy.actions.none}</span> : null}
+      </div>
+    </article>
   );
 }
 
@@ -193,6 +218,7 @@ function ViewingsContent({ data, locale, copy, status, onStatusChange, onApply, 
 }) {
   const pageCount = Math.ceil(data.total / data.limit);
   const numberFormat = new Intl.NumberFormat(locale);
+  const groups = groupViewings(data.items, locale);
   return (
     <main aria-labelledby="provider-viewings-title">
       <div className="provider-viewings__heading provider-dashboard__heading-row">
@@ -226,12 +252,8 @@ function ViewingsContent({ data, locale, copy, status, onStatusChange, onApply, 
             <p>{copy.emptyBody}</p>
           </div>
         ) : (
-          <div className="provider-viewings__table-wrap">
-            <table className="provider-viewings__table">
-              <caption className="a11y-visually-hidden">{copy.title}</caption>
-              <thead><tr><th scope="col">{copy.columns.customer}</th><th scope="col">{copy.columns.property}</th><th scope="col">{copy.columns.date}</th><th scope="col">{copy.columns.timezone}</th><th scope="col">{copy.columns.status}</th><th scope="col">{copy.columns.actions}</th></tr></thead>
-              <tbody>{data.items.map(viewing => <ViewingRow key={viewing.id} viewing={viewing} locale={locale} copy={copy} onAction={onAction} />)}</tbody>
-            </table>
+          <div className="provider-viewings__groups" aria-label={copy.title}>
+            {groups.map((group, index) => <section key={group.label} className="provider-viewings__group" aria-labelledby={`provider-viewings-group-${index}`}><h3 id={`provider-viewings-group-${index}`}>{group.label}</h3><div className="provider-viewings__cards">{group.items.map(viewing => <ViewingCard key={viewing.id} viewing={viewing} locale={locale} copy={copy} onAction={onAction} />)}</div></section>)}
           </div>
         )}
         <Pagination page={data.page} pageCount={pageCount} onPageChange={onPageChange} previousLabel={copy.previous} nextLabel={copy.next} ariaLabel={copy.pagination} direction={locale === 'ar' ? 'rtl' : 'ltr'} />

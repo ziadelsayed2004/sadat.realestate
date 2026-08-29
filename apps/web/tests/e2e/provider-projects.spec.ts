@@ -72,7 +72,7 @@ async function routeProjects(page: import('@playwright/test').Page): Promise<voi
 test.describe('PRV-15 Provider Projects', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'PRV-15' });
-    testInfo.annotations.push({ type: 'design-source', description: 'PRV-15 docs/design_sources/final_screens/provider/PRV-15.png SHA-256 1856d403d730c82c4793ebbb3ddf7dc4482ecc272b19327411a832c9dcf006ac; Figma node 6017:19032; Drive folder 1JM9TjIqqsFhXnObamIdFGepIPeLUf0ml' });
+    testInfo.annotations.push({ type: 'design-source', description: 'PRV-15 docs/design_sources/final_screens/provider/PRV-15.png SHA-256 1856d403d730c82c4793ebbb3ddf7dc4482ecc272b19327411a832c9dcf006ac; Figma node 6017:21162; Drive folder 1JM9TjIqqsFhXnObamIdFGepIPeLUf0ml' });
     test.skip(!testInfo.project.name.startsWith('desktop-'), 'Provider Dashboard approved device scope is desktop only.');
     void page;
   });

@@ -146,8 +146,12 @@ function setBrowserPath(path: string): void {
   if (typeof window !== 'undefined') window.location.assign(path);
 }
 
+function routeSegment(step: ProviderPropertyStep): string {
+  return step === 'features-services' ? 'features' : step;
+}
+
 function stepPath(locale: SupportedLocale, propertyId: string, step: ProviderPropertyStep): string {
-  return navigationPath(locale, `/provider/properties/${encodeURIComponent(propertyId)}/${step}`);
+  return navigationPath(locale, `/provider/properties/${encodeURIComponent(propertyId)}/${routeSegment(step)}`);
 }
 
 function screenId(step: ProviderPropertyAdvancedStep): string {
@@ -407,11 +411,11 @@ export function ProviderPropertyAdvancedWizard({ locale, session, step, property
   };
 
   if (state !== 'success') {
-    return <section className="provider-dashboard provider-property-wizard" data-screen-id={screenId(step)} data-route={`/provider/properties/${propertyId}/${step}`} data-device-scope="desktop"><ProviderNavigation locale={locale} activePath="/provider/properties" /><div className="provider-dashboard__content provider-property-wizard__content"><WizardSteps step={step} locale={locale} copy={copy} /><StatePanel state={state} copy={copy} onRetry={onRetry} /></div></section>;
+    return <section className="provider-dashboard provider-property-wizard" data-screen-id={screenId(step)} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${routeSegment(step)}`} data-device-scope="desktop"><ProviderNavigation locale={locale} activePath="/provider/properties" /><div className="provider-dashboard__content provider-property-wizard__content"><WizardSteps step={step} locale={locale} copy={copy} /><StatePanel state={state} copy={copy} onRetry={onRetry} /></div></section>;
   }
 
   return (
-    <section className="provider-dashboard provider-property-wizard" data-screen-id={screenId(step)} data-route={`/provider/properties/${propertyId}/${step}`} data-device-scope="desktop">
+    <section className="provider-dashboard provider-property-wizard" data-screen-id={screenId(step)} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${routeSegment(step)}`} data-device-scope="desktop">
       <ProviderNavigation locale={locale} activePath="/provider/properties" />
       <div className="provider-dashboard__content provider-property-wizard__content">
         <WizardSteps step={step} locale={locale} copy={copy} />

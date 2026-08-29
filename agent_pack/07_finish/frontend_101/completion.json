@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "taskId": "frontend_101",
+  "status": "complete",
+  "completedAt": "2026-08-29T04:45:00+03:00",
+  "decision": "PROVIDER_WAVE_FINAL_CLOSURE_BLOCKED",
+  "summary": "Reconciled Provider Wave 2 PRV-01 through PRV-24 in the approved AR-RTL and EN-LTR desktop scope, preserved Wave 1 evidence, recorded current runtime captures and exact visual blockers, and left Admin unopened. The Provider wave is fully processed but not closure-eligible because the no-update visual gate remains open and the shared navigation icon/contract boundaries are recorded as unresolved.",
+  "evidencePath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+  "filesChanged": [
+    "agent_pack/08_reality_sync/PROVIDER_WAVE_2_COORDINATOR.md",
+    "agent_pack/08_reality_sync/PROVIDER_WAVE_2_LANE_LEDGER.json",
+    "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+    "docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json",
+    "docs/quality/figma_parity/FIGMA_PARITY_LEDGER.json",
+    "docs/quality/figma_parity/RUN_CHECKPOINT.json",
+    "apps/web/src/features/provider/overview.tsx",
+    "apps/web/src/features/provider/styles.css",
+    "apps/web/src/features/frontend_foundation/app.tsx"
+  ],
+  "verification": [
+    {
+      "command": "node agent_pack/scripts/reconcile_provider_wave_2.mjs",
+      "result": "passed",
+      "details": "24 Provider rows/evidence records reconciled; 107 non-Provider queue rows and 107 non-Provider parity rows preserved."
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run --config apps/web/vitest.config.ts [Provider Vitest files] --run -t '^(?!.*zh-CN).*$'",
+      "result": "passed",
+      "details": "15 files; 122 AR/EN tests passed; 16 zh-CN parameterized cases skipped by direct Node invocation. An earlier npm.cmd exploratory filter selected one existing zh-CN case because Windows cmd stripped the anchor; no zh-CN artifact changed."
+    },
+    {
+      "command": "node --import tsx --test [Provider API test files]",
+      "result": "passed",
+      "details": "27 passed, 0 failed."
+    },
+    {
+      "command": "npm.cmd run typecheck",
+      "result": "passed",
+      "details": "Syntax, contracts, API, and web typechecks passed."
+    },
+    {
+      "command": "npm.cmd run lint",
+      "result": "passed",
+      "details": "Workspace check and ESLint passed with zero warnings."
+    },
+    {
+      "command": "npm.cmd run test:bundle --workspace apps/web",
+      "result": "passed",
+      "details": "JavaScript 1601680/2560000; stylesheet 409582/409600."
+    },
+    {
+      "command": "npm.cmd exec --workspace apps/web -- playwright test [Provider Wave 2 specs] --project=desktop-ar --project=desktop-en --workers=1",
+      "result": "passed_with_visual_blocker",
+      "details": "70 total; 26 functional/action cases passed; 44 no-update screenshot assertions failed; snapshots were not updated."
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed",
+      "details": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/sync_pack.mjs && node agent_pack/scripts/audit_pack.mjs",
+      "result": "passed",
+      "details": "Agent Pack synchronization and audit are required closure evidence; final audit is recorded in the reconciliation report."
+    }
+  ],
+  "scope": {
+    "screens": 24,
+    "verified": 0,
+    "verifiedNoChange": 0,
+    "partial": 24,
+    "approvedLocales": ["ar-RTL", "en-LTR"],
+    "excludedLocales": ["zh-CN"],
+    "adminOpened": false,
+    "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ"
+  }
+}

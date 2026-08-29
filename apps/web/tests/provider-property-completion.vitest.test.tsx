@@ -122,6 +122,23 @@ describe('provider property media, contact, and review completion', () => {
     await waitFor(() => expect(screen.getByText(copy.media.invalidFileBody)).toBeInTheDocument());
   });
 
+  it('rejects unsafe media filenames and MIME-extension mismatches before the request', async () => {
+    const fetcher = vi.fn(async () => new Response());
+    const apiClient = new ApiClient({ fetcher });
+    const base = {
+      apiClient,
+      authorization: authClient,
+      propertyId,
+      file: new Blob(['jpeg'], { type: 'image/jpeg' }),
+      kind: 'image' as const,
+      contentType: 'image/jpeg' as const
+    };
+
+    await expect(uploadProviderPropertyMedia({ ...base, filename: '../private.jpg' })).rejects.toThrow('Invalid property media filename or type');
+    await expect(uploadProviderPropertyMedia({ ...base, filename: 'floor-plan.pdf' })).rejects.toThrow('Invalid property media filename or type');
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+
   it('requires server permission and all review confirmations before submit', async () => {
     const submit = vi.fn(async () => property({ status: 'pending_review', availableActions: [] }));
     const copy = getProviderPropertyCompletionCopy('en');

@@ -31,12 +31,6 @@ const ROUTE_SCREEN_IDS: Readonly<Record<ProviderPropertyStateRoute, string>> = {
   published: 'PRV-14'
 };
 
-const ROUTE_FALLBACK_STATUS: Readonly<Record<ProviderPropertyStateRoute, ProviderPropertyStateStatus>> = {
-  submitted: 'pending_review',
-  rejected: 'rejected',
-  published: 'published'
-};
-
 function errorState(error: unknown): Exclude<ViewState, 'loading' | 'success'> {
   if (error instanceof ApiClientError && (error.status === 401 || error.status === 403)) return 'permission';
   if (error instanceof ApiClientError && error.status === 404) return 'not_found';
@@ -51,8 +45,10 @@ function localePath(locale: SupportedLocale, path: string): string {
 }
 
 function stateStatus(property: PropertyData, route: ProviderPropertyStateRoute): ProviderPropertyStateStatus | undefined {
-  if (property.status === 'pending_review' || property.status === 'rejected' || property.status === 'approved' || property.status === 'published' || property.status === 'hidden') return property.status;
-  return ROUTE_FALLBACK_STATUS[route];
+  if (route === 'submitted') return property.status === 'pending_review' ? property.status : undefined;
+  if (route === 'rejected') return property.status === 'rejected' ? property.status : undefined;
+  if (property.status === 'approved' || property.status === 'published' || property.status === 'hidden') return property.status;
+  return undefined;
 }
 
 function dateLabel(value: string | undefined, locale: SupportedLocale): string {
@@ -124,8 +120,9 @@ function StatusContent({ locale, property, route }: { readonly locale: Supported
 }
 
 export function ProviderPropertyStatePage({ locale, session, route, propertyId, authClient, apiOrigin, initialData, load }: ProviderPropertyStatePageProps) {
-  const [state, setState] = useState<ViewState>(initialData === undefined ? 'loading' : 'success');
-  const [property, setProperty] = useState<PropertyData | undefined>(initialData);
+  const initialStatus = initialData === undefined ? undefined : stateStatus(initialData, route);
+  const [state, setState] = useState<ViewState>(initialData === undefined ? 'loading' : initialStatus === undefined ? 'error' : 'success');
+  const [property, setProperty] = useState<PropertyData | undefined>(initialStatus === undefined ? undefined : initialData);
   const [attempt, setAttempt] = useState(0);
   const loadAction = useMemo(() => load ?? ((id: string) => loadProviderProperty({ propertyId: id, apiOrigin, authorization: authClient })), [apiOrigin, authClient, load]);
   const screenId = ROUTE_SCREEN_IDS[route];
@@ -138,6 +135,11 @@ export function ProviderPropertyStatePage({ locale, session, route, propertyId, 
       return undefined;
     }
     if (initialData !== undefined && attempt === 0) {
+      if (stateStatus(initialData, route) === undefined) {
+        setProperty(undefined);
+        setState('error');
+        return undefined;
+      }
       setProperty(initialData);
       setState('success');
       return undefined;
@@ -147,16 +149,21 @@ export function ProviderPropertyStatePage({ locale, session, route, propertyId, 
     setProperty(undefined);
     void loadAction(propertyId).then(next => {
       if (controller.signal.aborted) return;
+      if (stateStatus(next, route) === undefined) {
+        setProperty(undefined);
+        setState('error');
+        return;
+      }
       setProperty(next);
       setState('success');
     }).catch(error => {
       if (!controller.signal.aborted) setState(errorState(error));
     });
     return () => controller.abort();
-  }, [attempt, initialData, loadAction, propertyId, sessionRole, session.status]);
+  }, [attempt, initialData, loadAction, propertyId, route, sessionRole, session.status]);
 
   return (
-    <section className="provider-dashboard provider-property-state" data-screen-id={screenId} data-route={`/provider/properties/${propertyId}/${route}`} data-device-scope="desktop">
+    <section className="provider-dashboard provider-property-state" data-screen-id={screenId} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${route}`} data-device-scope="desktop">
       <ProviderNavigation locale={locale} activePath="/provider/properties" />
       <div className="provider-dashboard__content provider-property-state__content">
         {state === 'loading' ? <StateMessage state="loading" title={getProviderPropertyCopy(locale).states.loading.title} message={getProviderPropertyCopy(locale).states.loading.body} /> : null}

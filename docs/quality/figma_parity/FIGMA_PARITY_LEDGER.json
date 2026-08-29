@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "generatedAt": "2026-08-28T19:12:41.452Z",
-  "updatedAt": "2026-08-28T20:57:49.568Z",
+  "updatedAt": "2026-08-29T01:47:21.446Z",
   "policy": "No screen is marked visually verified without direct clone-source and runtime comparison evidence.",
   "rows": [
     {
@@ -2859,13 +2859,108 @@
       "exactCloneNodeId": "6017:19032",
       "sourceChecksum": "1e2b295e6dce82a0b307f4c173a485456d26e713b5950711772cb9ce71b3caed",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-01/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-01/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-01/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-01/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-overview-PRV-01-P-67c0f-mits-internal-provider-data-desktop-ar/provider-overview-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "1c992efbd9231dd28472dda033fe3bbc4b408a0ae8fe353f34686c1c5f327e80",
+            "width": 1280,
+            "height": 1357,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 810
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1357
+              },
+              "differentPixels": 188884,
+              "ratio": 0.11,
+              "errorContext": "apps/web/test-results/provider-overview-PRV-01-P-67c0f-mits-internal-provider-data-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-01/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-overview-PRV-01-P-67c0f-mits-internal-provider-data-desktop-en/provider-overview-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "73bf338044860c9b77c8f9f4360ac9f5f0c934e2c58d088b82b7a2c995a8b7f1",
+            "width": 1280,
+            "height": 1357,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 810
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1357
+              },
+              "differentPixels": 193594,
+              "ratio": 0.12,
+              "errorContext": "apps/web/test-results/provider-overview-PRV-01-P-67c0f-mits-internal-provider-data-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-01/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "The canonical export contains customer-request, views, booked, history, and chart values that are absent from the current safe Provider contract.",
+        "The safe Provider contract exposes property totals but not the canonical customer-request, views, booked, history, or chart series values; the runtime keeps these values explicitly unavailable."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 1357,
+            "expected": {
+              "width": 1280,
+              "height": 810
+            },
+            "materialDifferenceRatio": 0.11,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 1357,
+            "expected": {
+              "width": 1280,
+              "height": 810
+            },
+            "materialDifferenceRatio": 0.12,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-02",
@@ -2874,13 +2969,106 @@
       "exactCloneNodeId": "6017:19308",
       "sourceChecksum": "2a2b739851e2d3557dda12e8a350228b0fdfb4b40a2242b36298d38d2e8e7738",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-02/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-02/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-02/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-02/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-properties-PRV-02-ee935--preserves-locale-direction-desktop-ar/provider-properties-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "cbc8f3896840e6b890236d5f0f110ab4427622eb6cee2111b72cb534e510fb93",
+            "width": 1280,
+            "height": 817,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 908
+              },
+              "actual": {
+                "width": 1280,
+                "height": 817
+              },
+              "differentPixels": 229302,
+              "ratio": 0.2,
+              "errorContext": "apps/web/test-results/provider-properties-PRV-02-ee935--preserves-locale-direction-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-02/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-properties-PRV-02-ee935--preserves-locale-direction-desktop-en/provider-properties-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "aba705bdf534884492af2fc81aab6323c3b9cce75dc2999c41db17f97eaa2db6",
+            "width": 1280,
+            "height": 844,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 935
+              },
+              "actual": {
+                "width": 1280,
+                "height": 844
+              },
+              "differentPixels": 240167,
+              "ratio": 0.21,
+              "errorContext": "apps/web/test-results/provider-properties-PRV-02-ee935--preserves-locale-direction-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-02/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 817,
+            "expected": {
+              "width": 1280,
+              "height": 908
+            },
+            "materialDifferenceRatio": 0.2,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 844,
+            "expected": {
+              "width": 1280,
+              "height": 935
+            },
+            "materialDifferenceRatio": 0.21,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-03",
@@ -2889,13 +3077,107 @@
       "exactCloneNodeId": "6017:19499",
       "sourceChecksum": "82b6e746c740ef4a064a71533b8b025aaafe0bd56bdd2345cd62b40af2463e22",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-03/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-03/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-03/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-03/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-wizard-P-1830e--preserves-locale-direction-desktop-ar/provider-property-basic-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "5b534d748a4629073cf2e6754432abc1bac20a2f85af5ddc7da29901a12909f6",
+            "width": 1280,
+            "height": 1656,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1722
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1656
+              },
+              "differentPixels": 458909,
+              "ratio": 0.21,
+              "errorContext": "apps/web/test-results/provider-property-wizard-P-1830e--preserves-locale-direction-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-03/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-wizard-P-1830e--preserves-locale-direction-desktop-en/provider-property-basic-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "5b681373759b847d96845bb1950408e67c27809eb209443dcfa6f70c0d790c9b",
+            "width": 1280,
+            "height": 1656,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1722
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1656
+              },
+              "differentPixels": 460640,
+              "ratio": 0.21,
+              "errorContext": "apps/web/test-results/provider-property-wizard-P-1830e--preserves-locale-direction-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-03/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "The current provider property create contract does not expose every canonical basic-form field; no fields were fabricated."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 1656,
+            "expected": {
+              "width": 1280,
+              "height": 1722
+            },
+            "materialDifferenceRatio": 0.21,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 1656,
+            "expected": {
+              "width": 1280,
+              "height": 1722
+            },
+            "materialDifferenceRatio": 0.21,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-04",
@@ -2904,13 +3186,107 @@
       "exactCloneNodeId": "6017:19679",
       "sourceChecksum": "870908c5a0b2ac4d1d0475d0e1552a74e99571487831feec50f11e6b80f37106",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-04/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-04/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-04/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-04/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-wizard-P-ff79b-mplemented-location-payload-desktop-ar/provider-property-location-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "32bf8538d3cde4c4a1905ec8dd92572a388a7d0527b26395c300b1b51636f566",
+            "width": 1280,
+            "height": 1420,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1486
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1420
+              },
+              "differentPixels": 393470,
+              "ratio": 0.21,
+              "errorContext": "apps/web/test-results/provider-property-wizard-P-ff79b-mplemented-location-payload-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-04/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-wizard-P-ff79b-mplemented-location-payload-desktop-en/provider-property-location-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "0d435678ecbe59a7f60846078d0c8269f4bee62c05dface5ff10af03ee8af04d",
+            "width": 1280,
+            "height": 1420,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1486
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1420
+              },
+              "differentPixels": 395610,
+              "ratio": 0.21,
+              "errorContext": "apps/web/test-results/provider-property-wizard-P-ff79b-mplemented-location-payload-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-04/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "The current provider location contract does not expose every canonical address field; locationId and coordinates remain preserved and no geocoding/fetch was added."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 1420,
+            "expected": {
+              "width": 1280,
+              "height": 1486
+            },
+            "materialDifferenceRatio": 0.21,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 1420,
+            "expected": {
+              "width": 1280,
+              "height": 1486
+            },
+            "materialDifferenceRatio": 0.21,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-05",
@@ -2919,13 +3295,107 @@
       "exactCloneNodeId": "6017:19858",
       "sourceChecksum": "770e2d4d7877178c19f3ecdf52faf1969d18105623ba4f0682ddd6932d79a0d6",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-05/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-05/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-05/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-05/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-advanced-23308-n-and-safe-catalog-boundary-desktop-ar/provider-property-details-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "67b718c9795473c2e3325c420d0bb19d1784aff662d878009d36944dd55b616d",
+            "width": 1280,
+            "height": 1724,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1848
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1724
+              },
+              "differentPixels": 482213,
+              "ratio": 0.21,
+              "errorContext": "apps/web/test-results/provider-property-advanced-23308-n-and-safe-catalog-boundary-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-05/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-advanced-23308-n-and-safe-catalog-boundary-desktop-en/provider-property-details-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "d00edacec16271ddefb5b629f876555a85b6af6d4c8ba383909130a0eb98a6e6",
+            "width": 1280,
+            "height": 1724,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1848
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1724
+              },
+              "differentPixels": 483393,
+              "ratio": 0.21,
+              "errorContext": "apps/web/test-results/provider-property-advanced-23308-n-and-safe-catalog-boundary-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-05/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "The current provider catalog/detail contract does not expose every canonical extended property field; no unsupported taxonomy or metadata was invented."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 1724,
+            "expected": {
+              "width": 1280,
+              "height": 1848
+            },
+            "materialDifferenceRatio": 0.21,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 1724,
+            "expected": {
+              "width": 1280,
+              "height": 1848
+            },
+            "materialDifferenceRatio": 0.21,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-06",
@@ -2934,13 +3404,107 @@
       "exactCloneNodeId": "6017:20034",
       "sourceChecksum": "0cb52fad5e024a0594c130a4d6b1754dc7423e48ae9576ebf2eef79a5eb49b43",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-06/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-06/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-06/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-06/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-advanced-8cb49-ncy-consistent-payment-plan-desktop-ar/provider-property-price-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "9b8a367c902df55ca2ecd450c810c668cd638a41c7771d3a941c459269612900",
+            "width": 1280,
+            "height": 1847,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1971
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1847
+              },
+              "differentPixels": 504345,
+              "ratio": 0.2,
+              "errorContext": "apps/web/test-results/provider-property-advanced-8cb49-ncy-consistent-payment-plan-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-06/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-advanced-8cb49-ncy-consistent-payment-plan-desktop-en/provider-property-price-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "ccb4b94c1587fca474c8b097eadddc582f49e1165e7567e80591d0183b15097e",
+            "width": 1280,
+            "height": 1873,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1997
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1873
+              },
+              "differentPixels": 516327,
+              "ratio": 0.21,
+              "errorContext": "apps/web/test-results/provider-property-advanced-8cb49-ncy-consistent-payment-plan-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-06/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "The current provider price/payment contract does not expose every canonical commission/payment field; currency consistency and server-owned values remain enforced."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 1847,
+            "expected": {
+              "width": 1280,
+              "height": 1971
+            },
+            "materialDifferenceRatio": 0.2,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 1873,
+            "expected": {
+              "width": 1280,
+              "height": 1997
+            },
+            "materialDifferenceRatio": 0.21,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-07",
@@ -2949,13 +3513,107 @@
       "exactCloneNodeId": "6017:20229",
       "sourceChecksum": "284bf2b8d736d2c422572593a3c7d32a8d06a42eca5530aff15194dbd735ef96",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-07/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-07/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-07/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-07/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-advanced-1ccff-lling-admin-taxonomy-routes-desktop-ar/provider-property-features-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "1dc004f2756a1775199905f21ade215842d0cdb7b7da5454511d32287e4aa7c2",
+            "width": 1280,
+            "height": 1234,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1358
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1234
+              },
+              "differentPixels": 350881,
+              "ratio": 0.21,
+              "errorContext": "apps/web/test-results/provider-property-advanced-1ccff-lling-admin-taxonomy-routes-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-07/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-advanced-1ccff-lling-admin-taxonomy-routes-desktop-en/provider-property-features-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "bf06fba1667c6c182381886f87df76d0ee57647e900f600785c5b721a3e5d563",
+            "width": 1280,
+            "height": 1285,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1409
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1285
+              },
+              "differentPixels": 370925,
+              "ratio": 0.21,
+              "errorContext": "apps/web/test-results/provider-property-advanced-1ccff-lling-admin-taxonomy-routes-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-07/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "The canonical taxonomy/catalog content is not available from the provider contract; the browser route alias is repaired while unsupported catalog values remain unavailable."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 1234,
+            "expected": {
+              "width": 1280,
+              "height": 1358
+            },
+            "materialDifferenceRatio": 0.21,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 1285,
+            "expected": {
+              "width": 1280,
+              "height": 1409
+            },
+            "materialDifferenceRatio": 0.21,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-08",
@@ -2964,13 +3622,107 @@
       "exactCloneNodeId": "6017:20391",
       "sourceChecksum": "d49d11c87ec5544de2ba9b1056860a13b9c57d7bf0b10c5ed53235c89a170021",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-08/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-08/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-08/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-08/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-completi-444ae-xposing-storage-identifiers-desktop-ar/provider-property-media-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "453276a02204563bcd0e91e5dfd117af521fbb84e040b002b9fec151f7398846",
+            "width": 1280,
+            "height": 938,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1004
+              },
+              "actual": {
+                "width": 1280,
+                "height": 938
+              },
+              "differentPixels": 256589,
+              "ratio": 0.2,
+              "errorContext": "apps/web/test-results/provider-property-completi-444ae-xposing-storage-identifiers-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-08/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-completi-444ae-xposing-storage-identifiers-desktop-en/provider-property-media-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "a4b9d2079fc03698938e827df0fffda5019cc72e4c2c3d5676ee165c0eda70a2",
+            "width": 1280,
+            "height": 938,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1004
+              },
+              "actual": {
+                "width": 1280,
+                "height": 938
+              },
+              "differentPixels": 260756,
+              "ratio": 0.21,
+              "errorContext": "apps/web/test-results/provider-property-completi-444ae-xposing-storage-identifiers-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-08/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "The current provider media contract does not expose the canonical cover/minimum-media content; upload authorization and private storage boundaries remain enforced."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 938,
+            "expected": {
+              "width": 1280,
+              "height": 1004
+            },
+            "materialDifferenceRatio": 0.2,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 938,
+            "expected": {
+              "width": 1280,
+              "height": 1004
+            },
+            "materialDifferenceRatio": 0.21,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-09",
@@ -2979,13 +3731,107 @@
       "exactCloneNodeId": "6017:20561",
       "sourceChecksum": "fc5b166453e2d9ca35d3706ed1368eb98a30ece3f3eb23f03ee6bdb81c1b8e09",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-09/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-09/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-09/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-09/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-completi-a58e7--unavailable-internal-notes-desktop-ar/provider-property-contact-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "a361db31433704e9c464dd801a123f253969c1fc14fff1e47b1dee8853000c41",
+            "width": 1280,
+            "height": 872,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1320
+              },
+              "actual": {
+                "width": 1280,
+                "height": 872
+              },
+              "differentPixels": 363531,
+              "ratio": 0.22,
+              "errorContext": "apps/web/test-results/provider-property-completi-a58e7--unavailable-internal-notes-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-09/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-completi-a58e7--unavailable-internal-notes-desktop-en/provider-property-contact-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "afa7c07ddbfca780a9eb7012171aa8bfa986e54fa60fa9e0c9584a8036778a1a",
+            "width": 1280,
+            "height": 872,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1346
+              },
+              "actual": {
+                "width": 1280,
+                "height": 872
+              },
+              "differentPixels": 403502,
+              "ratio": 0.24,
+              "errorContext": "apps/web/test-results/provider-property-completi-a58e7--unavailable-internal-notes-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-09/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "The current provider contact contract does not expose the canonical phone/contact grouping or internal notes; no phone identity field was introduced."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 872,
+            "expected": {
+              "width": 1280,
+              "height": 1320
+            },
+            "materialDifferenceRatio": 0.22,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 872,
+            "expected": {
+              "width": 1280,
+              "height": 1346
+            },
+            "materialDifferenceRatio": 0.24,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-10",
@@ -2994,13 +3840,107 @@
       "exactCloneNodeId": "6017:20737",
       "sourceChecksum": "f34bfb0378ffe6c72625f592ea3c1b108c10cdf05273d53d907ced901aa49497",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-10/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-10/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-10/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-10/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-completi-401ad-all-confirmations-permit-it-desktop-ar/provider-property-review-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "5a9da563f93537d3089895f8ff6b33a0fd3da44a10b309f0b2e83694c029407f",
+            "width": 1280,
+            "height": 1130,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1196
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1130
+              },
+              "differentPixels": 299254,
+              "ratio": 0.2,
+              "errorContext": "apps/web/test-results/provider-property-completi-401ad-all-confirmations-permit-it-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-10/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-completi-401ad-all-confirmations-permit-it-desktop-en/provider-property-review-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "78134ab2f43f7989b1b3b853fe4ea6aeac4aef062b1a59099a565c9ad259106b",
+            "width": 1280,
+            "height": 1156,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1222
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1156
+              },
+              "differentPixels": 312385,
+              "ratio": 0.2,
+              "errorContext": "apps/web/test-results/provider-property-completi-401ad-all-confirmations-permit-it-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-10/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "The current provider review contract does not expose every canonical summary field; the review remains limited to safe server projections and confirmations."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 1130,
+            "expected": {
+              "width": 1280,
+              "height": 1196
+            },
+            "materialDifferenceRatio": 0.2,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 1156,
+            "expected": {
+              "width": 1280,
+              "height": 1222
+            },
+            "materialDifferenceRatio": 0.2,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-11",
@@ -3009,13 +3949,106 @@
       "exactCloneNodeId": "6017:21064",
       "sourceChecksum": "48481a68580fb9afbf5a393f8f8af14e86d5030824df723d5cfb39bd88658fae",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-11/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-11/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-11/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-11/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-state-PR-2741f-he-server-owned-draft-shape-desktop-ar/provider-property-validation-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "94d12823e2ea6ef8c8f8a1a544104b6d9751f1a0ef6f4dde330de4ab375109b5",
+            "width": 1280,
+            "height": 1199,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1207
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1199
+              },
+              "differentPixels": 312893,
+              "ratio": 0.21,
+              "errorContext": "apps/web/test-results/provider-property-state-PR-2741f-he-server-owned-draft-shape-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-11/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-state-PR-2741f-he-server-owned-draft-shape-desktop-en/provider-property-validation-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "dc9261b1fc633a2430039c3d171bd0235df8b4e625e6141c2a51459d1625a918",
+            "width": 1280,
+            "height": 1226,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1234
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1226
+              },
+              "differentPixels": 322377,
+              "ratio": 0.21,
+              "errorContext": "apps/web/test-results/provider-property-state-PR-2741f-he-server-owned-draft-shape-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-11/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 1199,
+            "expected": {
+              "width": 1280,
+              "height": 1207
+            },
+            "materialDifferenceRatio": 0.21,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 1226,
+            "expected": {
+              "width": 1280,
+              "height": 1234
+            },
+            "materialDifferenceRatio": 0.21,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-12",
@@ -3024,13 +4057,106 @@
       "exactCloneNodeId": "6017:21012",
       "sourceChecksum": "639a23d667a4a22de0eed819ea7a01e094e2e59bc4701624751d3b5383cdb625",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-12/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-12/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-12/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-12/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-state-PR-1a094-e-and-read-only-next-action-desktop-ar/provider-property-submitted-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "cae0080fafe28766009919a50dda7268a5a0b191b6e3327cb73303335e83616e",
+            "width": 1280,
+            "height": 1004,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1012
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1004
+              },
+              "differentPixels": 254048,
+              "ratio": 0.2,
+              "errorContext": "apps/web/test-results/provider-property-state-PR-1a094-e-and-read-only-next-action-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-12/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-state-PR-1a094-e-and-read-only-next-action-desktop-en/provider-property-submitted-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "d33d60f43468354eab9ccd1d19536926318d5a608afbf0de8530c4d787507ce5",
+            "width": 1280,
+            "height": 1031,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1039
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1031
+              },
+              "differentPixels": 264509,
+              "ratio": 0.2,
+              "errorContext": "apps/web/test-results/provider-property-state-PR-1a094-e-and-read-only-next-action-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-12/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 1004,
+            "expected": {
+              "width": 1280,
+              "height": 1012
+            },
+            "materialDifferenceRatio": 0.2,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 1031,
+            "expected": {
+              "width": 1280,
+              "height": 1039
+            },
+            "materialDifferenceRatio": 0.2,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-13",
@@ -3039,13 +4165,106 @@
       "exactCloneNodeId": "6017:21123",
       "sourceChecksum": "7da1d3350789a70b0c742d194e070e4e225d20c8d3b401d141928135ff88e031",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-13/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-13/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-13/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-13/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-state-PR-657f6-n-and-no-unsupported-action-desktop-ar/provider-property-rejected-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "5f7f3bb292117222ad813b90014edf2b2d39b4a6927332138ac5d9a124076405",
+            "width": 1280,
+            "height": 1031,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1039
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1031
+              },
+              "differentPixels": 245907,
+              "ratio": 0.19,
+              "errorContext": "apps/web/test-results/provider-property-state-PR-657f6-n-and-no-unsupported-action-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-13/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-state-PR-657f6-n-and-no-unsupported-action-desktop-en/provider-property-rejected-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "640cfe6cd3f966e51b76565f42b1b0c905368c35f0f7bdfcfd80ed1ca01f00c6",
+            "width": 1280,
+            "height": 1031,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1039
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1031
+              },
+              "differentPixels": 248789,
+              "ratio": 0.19,
+              "errorContext": "apps/web/test-results/provider-property-state-PR-657f6-n-and-no-unsupported-action-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-13/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 1031,
+            "expected": {
+              "width": 1280,
+              "height": 1039
+            },
+            "materialDifferenceRatio": 0.19,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 1031,
+            "expected": {
+              "width": 1280,
+              "height": 1039
+            },
+            "materialDifferenceRatio": 0.19,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-14",
@@ -3054,13 +4273,106 @@
       "exactCloneNodeId": "6017:20973",
       "sourceChecksum": "efdfd0bb2b283417e32a19b6089c0e09d78956b42e7f0a585187f0f1455c3ac3",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-14/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-14/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-14/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-14/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-state-PR-a89da-nd-exposes-the-public-route-desktop-ar/provider-property-published-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "2f4ea6354ad47338cbaf2a894c0d0a181a36d17a83df37cd26dd343b7baf5e17",
+            "width": 1280,
+            "height": 1105,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1113
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1105
+              },
+              "differentPixels": 278943,
+              "ratio": 0.2,
+              "errorContext": "apps/web/test-results/provider-property-state-PR-a89da-nd-exposes-the-public-route-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-14/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-property-state-PR-a89da-nd-exposes-the-public-route-desktop-en/provider-property-published-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "ad074e33d66a16d27a06f7ed45e61942f42150cc443028a6ffe79fbdab4afe18",
+            "width": 1280,
+            "height": 1105,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1113
+              },
+              "actual": {
+                "width": 1280,
+                "height": 1105
+              },
+              "differentPixels": 282233,
+              "ratio": 0.2,
+              "errorContext": "apps/web/test-results/provider-property-state-PR-a89da-nd-exposes-the-public-route-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-14/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 1105,
+            "expected": {
+              "width": 1280,
+              "height": 1113
+            },
+            "materialDifferenceRatio": 0.2,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 1105,
+            "expected": {
+              "width": 1280,
+              "height": 1113
+            },
+            "materialDifferenceRatio": 0.2,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-15",
@@ -3069,13 +4381,107 @@
       "exactCloneNodeId": "6017:21162",
       "sourceChecksum": "1856d403d730c82c4793ebbb3ddf7dc4482ecc272b19327411a832c9dcf006ac",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
-      "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "directScreenshotEvidence": true,
+      "runtimeBeforeEvidence": "docs/quality/figma_parity/screens/PRV-15/runtime-before-ar.png;docs/quality/figma_parity/screens/PRV-15/runtime-before-en.png",
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-15/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-15/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-15/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-15/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-projects-PRV-15-P-64031-nd-visual-keyboard-evidence-desktop-ar/provider-projects-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "8bd3cbbcacc0f3f529f1787b8636f1f232014d801f0226bb799952f840e85cc3",
+            "width": 1280,
+            "height": 909,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 917
+              },
+              "actual": {
+                "width": 1280,
+                "height": 909
+              },
+              "differentPixels": 220884,
+              "ratio": 0.19,
+              "errorContext": "apps/web/test-results/provider-projects-PRV-15-P-64031-nd-visual-keyboard-evidence-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-15/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-projects-PRV-15-P-64031-nd-visual-keyboard-evidence-desktop-en/provider-projects-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "76f77fcf7760a4fe8f6ac06313e545ee1b2480f353b25a235f1adc16894592a0",
+            "width": 1280,
+            "height": 937,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 945
+              },
+              "actual": {
+                "width": 1280,
+                "height": 937
+              },
+              "differentPixels": 229737,
+              "ratio": 0.19,
+              "errorContext": "apps/web/test-results/provider-projects-PRV-15-P-64031-nd-visual-keyboard-evidence-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-15/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "The current safe ProjectData projection lacks canonical image, unit, availability, and area metrics; no fields were invented."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 909,
+            "expected": {
+              "width": 1280,
+              "height": 917
+            },
+            "materialDifferenceRatio": 0.19,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 937,
+            "expected": {
+              "width": 1280,
+              "height": 945
+            },
+            "materialDifferenceRatio": 0.19,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-16",
@@ -3084,13 +4490,107 @@
       "exactCloneNodeId": "6017:21368",
       "sourceChecksum": "f40fc7db1a5944ef285eaa885d70ee3c2199bf170daf13a158776fc1827ec083",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
-      "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "directScreenshotEvidence": true,
+      "runtimeBeforeEvidence": "docs/quality/figma_parity/screens/PRV-16/runtime-before-ar.png;docs/quality/figma_parity/screens/PRV-16/runtime-before-en.png",
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-16/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-16/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-16/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-16/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-customer-requests-85182-nd-keyboard-visual-evidence-desktop-ar/provider-customer-requests-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "f6ce2b1c492ebfd06a386ee772490212e54a195a835d3f1a3d1de422cbafa5cc",
+            "width": 1280,
+            "height": 844,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 852
+              },
+              "actual": {
+                "width": 1280,
+                "height": 844
+              },
+              "differentPixels": 202057,
+              "ratio": 0.19,
+              "errorContext": "apps/web/test-results/provider-customer-requests-85182-nd-keyboard-visual-evidence-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-16/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-customer-requests-85182-nd-keyboard-visual-evidence-desktop-en/provider-customer-requests-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "96202c98caf1561337b601a4da7a1948cf23a00f32224ea119c2d60d664299cd",
+            "width": 1280,
+            "height": 871,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 879
+              },
+              "actual": {
+                "width": 1280,
+                "height": 871
+              },
+              "differentPixels": 212199,
+              "ratio": 0.19,
+              "errorContext": "apps/web/test-results/provider-customer-requests-85182-nd-keyboard-visual-evidence-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-16/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "The current provider request projection is intentionally redacted and does not expose all canonical CRM presentation fields."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 844,
+            "expected": {
+              "width": 1280,
+              "height": 852
+            },
+            "materialDifferenceRatio": 0.19,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 871,
+            "expected": {
+              "width": 1280,
+              "height": 879
+            },
+            "materialDifferenceRatio": 0.19,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-17",
@@ -3099,13 +4599,107 @@
       "exactCloneNodeId": "6017:21747",
       "sourceChecksum": "c5737bcda9c5771316253f8174c9ea6c372201ff29510a26e2547bfd87f70281",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
-      "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "directScreenshotEvidence": true,
+      "runtimeBeforeEvidence": "docs/quality/figma_parity/screens/PRV-17/runtime-before-ar.png;docs/quality/figma_parity/screens/PRV-17/runtime-before-en.png",
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-17/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-17/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-17/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-17/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-customer-requests-0fdde-hrough-server-owned-actions-desktop-ar/provider-customer-request-modal-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "3f377721ae515e55e70cf7e0d61825d8da673bdb6c30ad7abaeafc0cf3891795",
+            "width": 1280,
+            "height": 844,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 852
+              },
+              "actual": {
+                "width": 1280,
+                "height": 844
+              },
+              "differentPixels": 41390,
+              "ratio": 0.04,
+              "errorContext": "apps/web/test-results/provider-customer-requests-0fdde-hrough-server-owned-actions-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-17/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-customer-requests-0fdde-hrough-server-owned-actions-desktop-en/provider-customer-request-modal-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "9f232797d7e360c679afbd2a067f3f52696cb3dc084a232ae8b8260dcfbf24a2",
+            "width": 1280,
+            "height": 871,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 879
+              },
+              "actual": {
+                "width": 1280,
+                "height": 871
+              },
+              "differentPixels": 50669,
+              "ratio": 0.05,
+              "errorContext": "apps/web/test-results/provider-customer-requests-0fdde-hrough-server-owned-actions-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-17/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "The current provider request contract is intentionally limited to approved customer fields and server actions; no unsupported details were added."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 844,
+            "expected": {
+              "width": 1280,
+              "height": 852
+            },
+            "materialDifferenceRatio": 0.04,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 871,
+            "expected": {
+              "width": 1280,
+              "height": 879
+            },
+            "materialDifferenceRatio": 0.05,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-18",
@@ -3114,13 +4708,107 @@
       "exactCloneNodeId": "6017:21613",
       "sourceChecksum": "9a7b859c90236e892de44f81fadf1f5e3484ec13f6a173e497bddbf3e2690c57",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
-      "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "directScreenshotEvidence": true,
+      "runtimeBeforeEvidence": "docs/quality/figma_parity/screens/PRV-18/runtime-before-ar.png;docs/quality/figma_parity/screens/PRV-18/runtime-before-en.png",
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-18/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-18/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-18/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-18/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-viewings-PRV-18-P-542d8-eyboard-and-visual-evidence-desktop-ar/provider-viewings-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "153110313c83ead30045d05e562a01b150af393ac7424de3109e3cc5baf6331d",
+            "width": 1280,
+            "height": 878,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 843
+              },
+              "actual": {
+                "width": 1280,
+                "height": 878
+              },
+              "differentPixels": 199589,
+              "ratio": 0.18,
+              "errorContext": "apps/web/test-results/provider-viewings-PRV-18-P-542d8-eyboard-and-visual-evidence-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-18/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-viewings-PRV-18-P-542d8-eyboard-and-visual-evidence-desktop-en/provider-viewings-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "44f483c9ca67938c14ff5f41e89cfc4fbcd7fefb5f497c28a1d8367591811b80",
+            "width": 1280,
+            "height": 905,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 878
+              },
+              "actual": {
+                "width": 1280,
+                "height": 905
+              },
+              "differentPixels": 212697,
+              "ratio": 0.19,
+              "errorContext": "apps/web/test-results/provider-viewings-PRV-18-P-542d8-eyboard-and-visual-evidence-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-18/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "The current provider viewing projection does not expose every canonical appointment presentation field; only contract-defined data is rendered."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 878,
+            "expected": {
+              "width": 1280,
+              "height": 843
+            },
+            "materialDifferenceRatio": 0.18,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 905,
+            "expected": {
+              "width": 1280,
+              "height": 878
+            },
+            "materialDifferenceRatio": 0.19,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-19",
@@ -3129,13 +4817,107 @@
       "exactCloneNodeId": "6017:22088",
       "sourceChecksum": "051c9cfcf1ecb5e492c570e4abc4aade211944656b758b64fe47e8c5d83d11be",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
-      "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "directScreenshotEvidence": true,
+      "runtimeBeforeEvidence": "docs/quality/figma_parity/screens/PRV-19/runtime-before-ar.png;docs/quality/figma_parity/screens/PRV-19/runtime-before-en.png",
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-19/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-19/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-19/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-19/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-advertising-PRV-1-fab83-d-focus-and-visual-evidence-desktop-ar/provider-advertising-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "f42ad34725a3f05cc1c32c0481dac6fc3dfe04d5851e73a57335465bf7e19005",
+            "width": 1280,
+            "height": 827,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 871
+              },
+              "actual": {
+                "width": 1280,
+                "height": 827
+              },
+              "differentPixels": 218562,
+              "ratio": 0.2,
+              "errorContext": "apps/web/test-results/provider-advertising-PRV-1-fab83-d-focus-and-visual-evidence-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-19/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-advertising-PRV-1-fab83-d-focus-and-visual-evidence-desktop-en/provider-advertising-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "12a20628d8cf2e9d8abf721d48ff56899c278036654c9f545fd20cf8f3bc7a8b",
+            "width": 1280,
+            "height": 827,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 871
+              },
+              "actual": {
+                "width": 1280,
+                "height": 827
+              },
+              "differentPixels": 225423,
+              "ratio": 0.21,
+              "errorContext": "apps/web/test-results/provider-advertising-PRV-1-fab83-d-focus-and-visual-evidence-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-19/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "The current advertising projection does not expose every canonical ad/content metric; private upload and quote boundaries remain server-owned."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 827,
+            "expected": {
+              "width": 1280,
+              "height": 871
+            },
+            "materialDifferenceRatio": 0.2,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 827,
+            "expected": {
+              "width": 1280,
+              "height": 871
+            },
+            "materialDifferenceRatio": 0.21,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-20",
@@ -3144,13 +4926,107 @@
       "exactCloneNodeId": "6028:10071",
       "sourceChecksum": "4af704419b4f1ccd544c5bd0af8f1cef28aef9a03570ed23c7de7739c5db9e7c",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
-      "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "directScreenshotEvidence": true,
+      "runtimeBeforeEvidence": "docs/quality/figma_parity/screens/PRV-20/runtime-before-ar.png;docs/quality/figma_parity/screens/PRV-20/runtime-before-en.png",
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-20/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-20/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-20/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-20/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-advertising-PRV-1-fb5ea-s-labeled-protected-content-desktop-ar/provider-commission-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "fc578aff6672d2a18495f15cc527766807a40057e087ecdb86897fe90eb5d035",
+            "width": 1280,
+            "height": 900,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 908
+              },
+              "actual": {
+                "width": 1280,
+                "height": 900
+              },
+              "differentPixels": 209345,
+              "ratio": 0.19,
+              "errorContext": "apps/web/test-results/provider-advertising-PRV-1-fb5ea-s-labeled-protected-content-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-20/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-advertising-PRV-1-fb5ea-s-labeled-protected-content-desktop-en/provider-commission-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "1be91a94995ea0ab9da4bcbafb2523356df898abdd0a1ebbbcb06d6614e2662b",
+            "width": 1280,
+            "height": 900,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 908
+              },
+              "actual": {
+                "width": 1280,
+                "height": 900
+              },
+              "differentPixels": 210629,
+              "ratio": 0.19,
+              "errorContext": "apps/web/test-results/provider-advertising-PRV-1-fb5ea-s-labeled-protected-content-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-20/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "The current commission projection is read-only and omits resolver/administrative fields required by the canonical export."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 900,
+            "expected": {
+              "width": 1280,
+              "height": 908
+            },
+            "materialDifferenceRatio": 0.19,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 900,
+            "expected": {
+              "width": 1280,
+              "height": 908
+            },
+            "materialDifferenceRatio": 0.19,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-21",
@@ -3159,13 +5035,106 @@
       "exactCloneNodeId": "6028:10830",
       "sourceChecksum": "a7904d0b5e7651dff0a33510d1f6188377ca0154c1dcd175f619dde33e0ae71f",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-21/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-21/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-21/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-21/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-notifications-set-cdb3e-actions-and-visual-evidence-desktop-ar/provider-notifications-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "f7c025884af7174c3a915dffb237656fb6c129398e7b431caae98d8cd0c59dd4",
+            "width": 1280,
+            "height": 753,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 881
+              },
+              "actual": {
+                "width": 1280,
+                "height": 753
+              },
+              "differentPixels": 206770,
+              "ratio": 0.19,
+              "errorContext": "apps/web/test-results/provider-notifications-set-cdb3e-actions-and-visual-evidence-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-21/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-notifications-set-cdb3e-actions-and-visual-evidence-desktop-en/provider-notifications-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "ecec3f42f22563b896f865d5553d209a01ba84507d577685172e3bcf463bc82e",
+            "width": 1280,
+            "height": 753,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 881
+              },
+              "actual": {
+                "width": 1280,
+                "height": 753
+              },
+              "differentPixels": 208848,
+              "ratio": 0.19,
+              "errorContext": "apps/web/test-results/provider-notifications-set-cdb3e-actions-and-visual-evidence-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-21/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 753,
+            "expected": {
+              "width": 1280,
+              "height": 881
+            },
+            "materialDifferenceRatio": 0.19,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 753,
+            "expected": {
+              "width": 1280,
+              "height": 881
+            },
+            "materialDifferenceRatio": 0.19,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-22-1",
@@ -3174,13 +5143,106 @@
       "exactCloneNodeId": "6028:11337",
       "sourceChecksum": "ef79e801604e6450a73ec4fc6e33ea0048c1cd9ed3d0e442b86e3b6a84f2fe43",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-22-1/runtime-after-e2e-2026-08-29-ar.png;docs/quality/figma_parity/screens/PRV-22-1/runtime-after-e2e-2026-08-29-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-22-1/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-22-1/runtime-after-e2e-2026-08-29-ar.png",
+            "sourceArtifact": "apps/web/test-results/provider-notifications-set-75e51-navailable-security-actions-desktop-ar/provider-settings-account-ar-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "cf09494c37e02676d4b2ee6bea5529896f6da3a74a1b3b967358e10ba6bb5850",
+            "width": 1280,
+            "height": 946,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1182
+              },
+              "actual": {
+                "width": 1280,
+                "height": 946
+              },
+              "differentPixels": 345693,
+              "ratio": 0.23,
+              "errorContext": "apps/web/test-results/provider-notifications-set-75e51-navailable-security-actions-desktop-ar/error-context.md"
+            }
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-22-1/runtime-after-e2e-2026-08-29-en.png",
+            "sourceArtifact": "apps/web/test-results/provider-notifications-set-75e51-navailable-security-actions-desktop-en/provider-settings-account-en-actual.png",
+            "captureMode": "e2e-2026-08-29",
+            "sha256": "b0494719ef8a897e9e11d28fc91a3d4f1f104b3bf1c5120141a30a215306b679",
+            "width": 1280,
+            "height": 946,
+            "visual": {
+              "expected": {
+                "width": 1280,
+                "height": 1182
+              },
+              "actual": {
+                "width": 1280,
+                "height": 946
+              },
+              "differentPixels": 348752,
+              "ratio": 0.24,
+              "errorContext": "apps/web/test-results/provider-notifications-set-75e51-navailable-security-actions-desktop-en/error-context.md"
+            }
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-22-1/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 946,
+            "expected": {
+              "width": 1280,
+              "height": 1182
+            },
+            "materialDifferenceRatio": 0.23,
+            "captureMode": "e2e-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 946,
+            "expected": {
+              "width": 1280,
+              "height": 1182
+            },
+            "materialDifferenceRatio": 0.24,
+            "captureMode": "e2e-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-22-2",
@@ -3189,13 +5251,77 @@
       "exactCloneNodeId": "6028:11875",
       "sourceChecksum": "9d62741cc4e7283b8fc37ff4b7a65cb0e9c8edb594c4eff7c962ee40bbb75ee4",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-22-2/runtime-after-ar.png;docs/quality/figma_parity/screens/PRV-22-2/runtime-after-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-22-2/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-22-2/runtime-after-ar.png",
+            "sourceArtifact": "docs/quality/figma_parity/screens/PRV-22-2/runtime-after-ar.png",
+            "captureMode": "direct-2026-08-29",
+            "sha256": "b527828d4e944fd06f981350d7e045565f6cf0b9c797afd566ba2a719a853f6e",
+            "width": 1280,
+            "height": 951,
+            "visual": null
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-22-2/runtime-after-en.png",
+            "sourceArtifact": "docs/quality/figma_parity/screens/PRV-22-2/runtime-after-en.png",
+            "captureMode": "direct-2026-08-29",
+            "sha256": "ce1bf0deafb7b80d56b36ac4384070b0194f0faa9a83e011785408f4ca9944ea",
+            "width": 1280,
+            "height": 951,
+            "visual": null
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-22-2/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "The current settings contact projection supports WhatsApp, office address, and website but not the canonical separate phone contact field."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 951,
+            "expected": null,
+            "materialDifferenceRatio": null,
+            "captureMode": "direct-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 951,
+            "expected": null,
+            "materialDifferenceRatio": null,
+            "captureMode": "direct-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "PRV-22-3",
@@ -3204,13 +5330,77 @@
       "exactCloneNodeId": "6028:12067",
       "sourceChecksum": "0787c460a1dc1b49af2edf4cdaabff290da186f6e3c957aa36337e60f5ed7b5e",
       "directMetadataEvidence": true,
-      "directScreenshotEvidence": false,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
-      "runtimeAfterEvidence": null,
-      "visualDiffEvidence": null,
-      "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
-      "runtimeEvidence": null,
-      "materialDefects": []
+      "runtimeAfterEvidence": "docs/quality/figma_parity/screens/PRV-22-3/runtime-after-ar.png;docs/quality/figma_parity/screens/PRV-22-3/runtime-after-en.png",
+      "visualDiffEvidence": "docs/quality/figma_parity/screens/PRV-22-3/coordinator-reconciliation.json",
+      "visualReviewStatus": "REVIEWED_PROVIDER_WAVE_2_PARTIAL_VISUAL_GATE",
+      "runtimeEvidence": {
+        "approvedLocaleScope": [
+          "ar",
+          "en"
+        ],
+        "excludedLocales": [
+          "zh-CN"
+        ],
+        "captures": [
+          {
+            "locale": "ar",
+            "direction": "rtl",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-22-3/runtime-after-ar.png",
+            "sourceArtifact": "docs/quality/figma_parity/screens/PRV-22-3/runtime-after-ar.png",
+            "captureMode": "direct-2026-08-29",
+            "sha256": "fbfc3e342fff607958e23d43ab1ad497ba7acf73fb7ec69d7067905ebea4ec04",
+            "width": 1280,
+            "height": 1482,
+            "visual": null
+          },
+          {
+            "locale": "en",
+            "direction": "ltr",
+            "runtimePath": "docs/quality/figma_parity/screens/PRV-22-3/runtime-after-en.png",
+            "sourceArtifact": "docs/quality/figma_parity/screens/PRV-22-3/runtime-after-en.png",
+            "captureMode": "direct-2026-08-29",
+            "sha256": "2e48bb16c2aff5c743729dc6e3912f9104dbc68380725c854d60c00530467ead",
+            "width": 1280,
+            "height": 1482,
+            "visual": null
+          }
+        ],
+        "reviewPath": "docs/quality/figma_parity/screens/PRV-22-3/coordinator-reconciliation.json",
+        "evidenceComplete": true
+      },
+      "materialDefects": [
+        "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "The current settings contract does not support password-change or account-deletion actions; unsupported actions remain disabled and fail closed."
+      ],
+      "coordinatorReconciliation": {
+        "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "taskId": "frontend_101",
+        "status": "PARTIAL_VISUAL_GATE",
+        "classification": "PARTIAL",
+        "evidenceComplete": true,
+        "closureEligible": false,
+        "latestMetrics": [
+          {
+            "locale": "ar",
+            "width": 1280,
+            "height": 1482,
+            "expected": null,
+            "materialDifferenceRatio": null,
+            "captureMode": "direct-2026-08-29"
+          },
+          {
+            "locale": "en",
+            "width": 1280,
+            "height": 1482,
+            "expected": null,
+            "materialDifferenceRatio": null,
+            "captureMode": "direct-2026-08-29"
+          }
+        ],
+        "reviewedAt": "2026-08-29T01:47:21.446Z"
+      }
     },
     {
       "screenId": "ADM-01",
@@ -4232,16 +6422,93 @@
       "bundleBudget": "stylesheet 407745/409600; JavaScript 1595388/2560000",
       "authV2Metrics": "38/38 reviewed with unchanged values",
       "seekerExternalReviews": "10/10 PARTIAL_EXTERNAL; repository-owned defects 0"
+    },
+    "providerWave2": {
+      "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+      "taskId": "frontend_101",
+      "decision": "PROVIDER_WAVE_FINAL_CLOSURE_BLOCKED",
+      "screenCount": 24,
+      "closureEligible": 0,
+      "adminOpened": false,
+      "approvedLocaleScope": [
+        "ar-RTL",
+        "en-LTR"
+      ],
+      "excludedLocales": [
+        "zh-CN"
+      ],
+      "updatedAt": "2026-08-29T01:47:21.446Z"
     }
   },
   "finalWave1Closure": {
     "reportPath": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
     "decision": "RECONCILED_PROVIDER_READY",
-    "publicAuthScreenIds": ["PUB-01","PUB-02","PUB-03","PUB-04","PUB-05","PUB-06","PUB-07","PUB-08","PUB-09","PUB-10","PUB-11","PUB-12","AUTH-01","AUTH-02","AUTH-03","AUTH-04","AUTH-05","AUTH-06","AUTH-07","AUTH-08","AUTH-09","AUTH-09+","AUTH-10","AUTH-10+","AUTH-11","AUTH-12","AUTH-13","AUTH-14","AUTH-15","AUTH-16","AUTH-17"],
+    "publicAuthScreenIds": [
+      "PUB-01",
+      "PUB-02",
+      "PUB-03",
+      "PUB-04",
+      "PUB-05",
+      "PUB-06",
+      "PUB-07",
+      "PUB-08",
+      "PUB-09",
+      "PUB-10",
+      "PUB-11",
+      "PUB-12",
+      "AUTH-01",
+      "AUTH-02",
+      "AUTH-03",
+      "AUTH-04",
+      "AUTH-05",
+      "AUTH-06",
+      "AUTH-07",
+      "AUTH-08",
+      "AUTH-09",
+      "AUTH-09+",
+      "AUTH-10",
+      "AUTH-10+",
+      "AUTH-11",
+      "AUTH-12",
+      "AUTH-13",
+      "AUTH-14",
+      "AUTH-15",
+      "AUTH-16",
+      "AUTH-17"
+    ],
     "publicAuthRemainingRepositoryOwnedElementDefects": [],
-    "seekerScreenIds": ["SEK-01","SEK-02","SEK-03","SEK-04","SEK-05","SEK-06","SEK-07","SEK-08","SEK-09","SEK-10"],
+    "seekerScreenIds": [
+      "SEK-01",
+      "SEK-02",
+      "SEK-03",
+      "SEK-04",
+      "SEK-05",
+      "SEK-06",
+      "SEK-07",
+      "SEK-08",
+      "SEK-09",
+      "SEK-10"
+    ],
     "seekerRepositoryOwnedDefects": [],
     "seekerExternalPrerequisiteCount": 10,
-    "excludedLocales": ["zh-CN"]
+    "excludedLocales": [
+      "zh-CN"
+    ]
+  },
+  "providerWave2Reconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+    "taskId": "frontend_101",
+    "decision": "PROVIDER_WAVE_FINAL_CLOSURE_BLOCKED",
+    "screenCount": 24,
+    "closureEligible": 0,
+    "adminOpened": false,
+    "approvedLocaleScope": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "updatedAt": "2026-08-29T01:47:21.446Z"
   }
 }

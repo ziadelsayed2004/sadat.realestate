@@ -2,11 +2,11 @@
   "schemaVersion": 2,
   "generatedAt": "2026-08-25T18:46:19.368Z",
   "updatedAt": "2026-08-28T20:57:49.568Z",
-  "executionPaused": true,
-  "coordinatorTaskId": "frontend_100",
-  "implementationMode": "coordinator_wave_1_reconciliation",
+  "executionPaused": false,
+  "coordinatorTaskId": "frontend_101",
+  "implementationMode": "provider_wave_2",
   "hardCheckpointPath": "docs/quality/figma_parity/HARD_CHECKPOINT_2026-08-28.json",
-  "executionMode": "wave_1_reconciliation_blocked",
+  "executionMode": "provider_wave_2",
   "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
   "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
   "canonicalScreenCount": 131,
@@ -95,22 +95,22 @@
     }
   ],
   "cursor": {
-    "phase": "wave-1-reconciliation",
-    "taskId": "frontend_100",
-    "currentScreenId": "PUB-01",
-    "currentSequence": 1,
-    "nextScreenId": "PUB-01",
-    "nextAction": "Keep Wave 1 paused while direct Public/Auth reconciliation and Seeker external prerequisites remain unresolved; do not start Provider or Admin."
+    "phase": "provider-wave-2-closure-blocked",
+    "taskId": "frontend_101",
+    "currentScreenId": "PRV-22-3",
+    "currentSequence": 65,
+    "nextScreenId": null,
+    "nextAction": "Provider Wave 2 is fully reconciled as PARTIAL_VISUAL_GATE; do not open Admin until visual/contract blockers are resolved."
   },
   "counts": {
-    "processed": 41,
-    "pending": 90,
+    "processed": 65,
+    "pending": 66,
     "verifiedWithoutChange": 0,
     "repaired": 0,
-    "partial": 41,
+    "partial": 65,
     "blockedSource": 10,
     "blockedContract": 0,
-    "unreviewed": 90
+    "unreviewed": 66
   },
   "screens": [
     {
@@ -9318,32 +9318,48 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-01",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-01/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-01.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-01/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+          "The canonical export contains customer-request, views, booked, history, and chart values that are absent from the current safe Provider contract."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider/overview.tsx",
+          "apps/web/src/features/provider/copy.ts",
+          "apps/web/src/features/provider/styles.css"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-01/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-01/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-01/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-overview.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-overview.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 43,
@@ -9385,32 +9401,46 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-02",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-02/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-02.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-02/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider/properties.tsx",
+          "apps/web/src/features/provider/styles.css"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-02/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-02/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-02/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-properties.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-properties.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 44,
@@ -9452,32 +9482,46 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-03",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-03/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-03.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-03/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider_property/wizard.tsx",
+          "apps/web/src/features/provider_property/data.ts"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-03/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-03/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-03/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-property-wizard.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-property-wizard.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 45,
@@ -9519,32 +9563,46 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-04",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-04/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-04.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-04/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider_property/wizard.tsx",
+          "apps/web/src/features/provider_property/data.ts"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-04/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-04/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-04/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-property-wizard.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-property-wizard.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 46,
@@ -9586,32 +9644,45 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-05",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-05/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-05.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-05/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider_property/advanced.tsx"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-05/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-05/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-05/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-property-advanced.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-property-advanced.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 47,
@@ -9653,32 +9724,45 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-06",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-06/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-06.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-06/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider_property/advanced.tsx"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-06/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-06/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-06/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-property-advanced.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-property-advanced.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 48,
@@ -9720,32 +9804,47 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-07",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-07/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-07.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-07/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/frontend_foundation/app.tsx",
+          "apps/web/src/features/provider_property/advanced.tsx",
+          "apps/web/src/features/provider_property/completion.tsx"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-07/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-07/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-07/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-property-advanced.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-property-advanced.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 49,
@@ -9787,32 +9886,46 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-08",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-08/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-08.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-08/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider_property/completion.tsx",
+          "apps/web/src/features/provider_property/data.ts"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-08/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-08/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-08/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-property-completion.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-property-completion.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 50,
@@ -9854,32 +9967,45 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-09",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-09/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-09.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-09/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider_property/completion.tsx"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-09/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-09/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-09/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-property-completion.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-property-completion.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 51,
@@ -9921,32 +10047,45 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-10",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-10/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-10.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-10/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider_property/completion.tsx"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-10/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-10/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-10/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-property-completion.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-property-completion.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 52,
@@ -9988,32 +10127,45 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-11",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-11/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-11.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-11/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider_property/state.tsx"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-11/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-11/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-11/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-property-state.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-property-state.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 53,
@@ -10055,32 +10207,45 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-12",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-12/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-12.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-12/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider_property/state.tsx"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-12/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-12/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-12/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-property-state.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-property-state.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 54,
@@ -10122,32 +10287,45 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-13",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-13/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-13.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-13/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider_property/state.tsx"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-13/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-13/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-13/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-property-state.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-property-state.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 55,
@@ -10189,32 +10367,45 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-14",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-14/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-14.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-14/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider_property/state.tsx"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-14/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-14/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-14/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-property-state.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-property-state.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 56,
@@ -10256,32 +10447,49 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-15",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
-        "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-15/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-15.png",
+        "runtimeBefore": [
+          "docs/quality/figma_parity/screens/PRV-15/runtime-before-ar.png",
+          "docs/quality/figma_parity/screens/PRV-15/runtime-before-en.png"
+        ],
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-15/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider/projects.tsx",
+          "apps/web/src/features/provider/projects-data.ts"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-15/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-15/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-15/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-projects.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-projects.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 57,
@@ -10323,32 +10531,49 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-16",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
-        "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-16/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-16.png",
+        "runtimeBefore": [
+          "docs/quality/figma_parity/screens/PRV-16/runtime-before-ar.png",
+          "docs/quality/figma_parity/screens/PRV-16/runtime-before-en.png"
+        ],
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-16/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider/customer-requests.tsx",
+          "apps/web/src/features/provider/customer-requests-data.ts"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-16/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-16/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-16/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-customer-requests.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-customer-requests.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 58,
@@ -10390,32 +10615,49 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-17",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
-        "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-17/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-17.png",
+        "runtimeBefore": [
+          "docs/quality/figma_parity/screens/PRV-17/runtime-before-ar.png",
+          "docs/quality/figma_parity/screens/PRV-17/runtime-before-en.png"
+        ],
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-17/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider/customer-requests.tsx",
+          "apps/web/src/features/provider/customer-requests-data.ts"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-17/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-17/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-17/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-customer-requests.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-customer-requests.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 59,
@@ -10457,32 +10699,48 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-18",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
-        "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-18/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-18.png",
+        "runtimeBefore": [
+          "docs/quality/figma_parity/screens/PRV-18/runtime-before-ar.png",
+          "docs/quality/figma_parity/screens/PRV-18/runtime-before-en.png"
+        ],
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-18/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider/viewings.tsx"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-18/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-18/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-18/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-viewings.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-viewings.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 60,
@@ -10524,32 +10782,49 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-19",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
-        "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-19/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-19.png",
+        "runtimeBefore": [
+          "docs/quality/figma_parity/screens/PRV-19/runtime-before-ar.png",
+          "docs/quality/figma_parity/screens/PRV-19/runtime-before-en.png"
+        ],
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-19/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider/advertising.tsx",
+          "apps/web/src/features/provider/advertising-data.ts"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-19/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-19/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-19/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-advertising.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-advertising.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 61,
@@ -10591,32 +10866,49 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-20",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
-        "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-20/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-20.png",
+        "runtimeBefore": [
+          "docs/quality/figma_parity/screens/PRV-20/runtime-before-ar.png",
+          "docs/quality/figma_parity/screens/PRV-20/runtime-before-en.png"
+        ],
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-20/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider/advertising.tsx",
+          "apps/web/src/features/provider/advertising-data.ts"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-20/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-20/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-20/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-advertising.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-advertising.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 62,
@@ -10658,32 +10950,45 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-21",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-21/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-21.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-21/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider/notifications.tsx"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-21/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-21/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-21/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-notifications-settings.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-notifications-settings.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 63,
@@ -10725,32 +11030,45 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-22-1",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-22-1/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-22-1.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-22-1/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider/settings.tsx"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-22-1/runtime-after-e2e-2026-08-29-ar.png",
+          "docs/quality/figma_parity/screens/PRV-22-1/runtime-after-e2e-2026-08-29-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-22-1/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-notifications-settings.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-notifications-settings.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 64,
@@ -10792,32 +11110,46 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-22-2",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-22-2/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-22-2.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-22-2/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider/settings.tsx",
+          "apps/web/src/features/provider/settings.css"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-22-2/runtime-after-ar.png",
+          "docs/quality/figma_parity/screens/PRV-22-2/runtime-after-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-22-2/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-notifications-settings.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-notifications-settings.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 65,
@@ -10859,32 +11191,46 @@
         ]
       },
       "deterministicState": {
-        "seed": null,
+        "seed": "provider-wave-2-existing-deterministic-fixtures",
         "apiFixtures": [],
         "authSession": null,
         "state": [
           "default"
         ],
-        "status": "PENDING_CAPTURE"
+        "status": "CAPTURED_AFTER_REPAIR",
+        "capturedAt": "2026-08-29T01:47:21.446Z"
       },
       "responsiveCoverage": null,
       "evidenceDir": "docs/quality/figma_parity/screens/PRV-22-3",
       "evidence": {
-        "figmaContext": null,
-        "figmaScreenshot": null,
+        "figmaContext": "docs/quality/figma_parity/screens/PRV-22-3/coordinator-reconciliation.json",
+        "figmaScreenshot": "docs/design_sources/final_screens/provider/PRV-22-3.png",
         "runtimeBefore": null,
-        "structuredVisualComparison": null,
-        "functionalApiComparison": null,
-        "defects": [],
-        "repairedFiles": [],
-        "runtimeAfter": null,
-        "reviewedDiff": null,
-        "focusedTests": [],
-        "accessibility": null
+        "structuredVisualComparison": "docs/quality/figma_parity/screens/PRV-22-3/coordinator-reconciliation.json",
+        "functionalApiComparison": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+        "defects": [
+          "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review."
+        ],
+        "repairedFiles": [
+          "apps/web/src/features/provider/settings.tsx",
+          "apps/web/src/features/provider/settings.css"
+        ],
+        "runtimeAfter": [
+          "docs/quality/figma_parity/screens/PRV-22-3/runtime-after-ar.png",
+          "docs/quality/figma_parity/screens/PRV-22-3/runtime-after-en.png"
+        ],
+        "reviewedDiff": "docs/quality/figma_parity/screens/PRV-22-3/coordinator-reconciliation.json",
+        "focusedTests": [
+          "apps/web/tests/provider-notifications-settings.vitest.test.tsx",
+          "apps/web/tests/e2e/provider-notifications-settings.spec.ts"
+        ],
+        "accessibility": "Provider AR/EN landmark, focus, action-gating, and safe-projection assertions passed where the screen flow reached them."
       },
-      "classification": "PENDING",
-      "processedAt": null,
-      "notes": []
+      "classification": "PARTIAL",
+      "processedAt": "2026-08-29T01:47:21.446Z",
+      "notes": [
+        "Provider Wave 2 coordinator reconciliation: PARTIAL_VISUAL_GATE; no snapshots updated; Admin unopened."
+      ]
     },
     {
       "sequence": 66,
@@ -15308,10 +15654,10 @@
   ],
   "discoveryHalt": {
     "halted": true,
-    "haltedBeforeScreenId": "PRV-01",
-    "haltedBeforeCloneNode": "6017:19032",
-    "haltedBeforeRuntimeRoute": "/provider",
-    "reason": "Wave 1 reconciliation is blocked; do not start Provider or Admin until the bounded repair task closes.",
+    "haltedBeforeScreenId": null,
+    "haltedBeforeCloneNode": null,
+    "haltedBeforeRuntimeRoute": null,
+    "reason": "Provider Wave 2 reached all 24 screens but remains closure-blocked by no-update visual mismatches, the shared navigation-icon residual, and exact contract boundaries. Admin remains unopened.",
     "historicalDiscoveryHalt": {
       "halted": true,
       "haltedBeforeScreenId": "PUB-09",
@@ -15321,433 +15667,286 @@
     }
   },
   "repairQueue": {
-    "taskId": "WAVE1-REPAIR-2026-08-28",
-    "mode": "wave_1_reconciliation_repairs",
+    "taskId": "frontend_101",
+    "mode": "provider_wave_2_reconciliation",
     "pass": 1,
     "status": "BLOCKED",
     "owner": "Coordinator",
-    "scope": "Repair Public visual geometry/typography/raster and homepage lazy-media behavior; manually review Auth v2 metrics and normal visual failures; preserve Seeker external prerequisites without fabrication.",
+    "scope": "Reconcile PRV-01 through PRV-24 in Provider-only AR/EN desktop scope with safe contracts, interaction/accessibility/security evidence, and no snapshot updates.",
     "screenIds": [
       {
-        "sequence": 1,
-        "screenId": "PUB-01",
+        "sequence": 42,
+        "screenId": "PRV-01",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/PUB-01",
-        "cloneNode": "6017:10847",
-        "runtimeRoute": "/",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-01",
+        "cloneNode": "6017:19032",
+        "runtimeRoute": "/provider",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 2,
-        "screenId": "PUB-02",
+        "sequence": 43,
+        "screenId": "PRV-02",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/PUB-02",
-        "cloneNode": "6017:12095",
-        "runtimeRoute": "/properties",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-02",
+        "cloneNode": "6017:19308",
+        "runtimeRoute": "/provider/properties",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 3,
-        "screenId": "PUB-03",
+        "sequence": 44,
+        "screenId": "PRV-03",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/PUB-03",
-        "cloneNode": "6017:12693",
-        "runtimeRoute": "/properties/:slug",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-03",
+        "cloneNode": "6017:19499",
+        "runtimeRoute": "/provider/properties/new/basic",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 4,
-        "screenId": "PUB-04",
+        "sequence": 45,
+        "screenId": "PRV-04",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/PUB-04",
-        "cloneNode": "6017:13838",
-        "runtimeRoute": "/compare",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-04",
+        "cloneNode": "6017:19679",
+        "runtimeRoute": "/provider/properties/:id/location",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 5,
-        "screenId": "PUB-05",
+        "sequence": 46,
+        "screenId": "PRV-05",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/PUB-05",
-        "cloneNode": "6017:11366",
-        "runtimeRoute": "/developers",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-05",
+        "cloneNode": "6017:19858",
+        "runtimeRoute": "/provider/properties/:id/details",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 6,
-        "screenId": "PUB-06",
+        "sequence": 47,
+        "screenId": "PRV-06",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/PUB-06",
-        "cloneNode": "6017:13155",
-        "runtimeRoute": "/developers/:slug",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-06",
+        "cloneNode": "6017:20034",
+        "runtimeRoute": "/provider/properties/:id/price-payment",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 7,
-        "screenId": "PUB-07",
+        "sequence": 48,
+        "screenId": "PRV-07",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/PUB-07",
-        "cloneNode": "6017:11467",
-        "runtimeRoute": "/articles",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-07",
+        "cloneNode": "6017:20229",
+        "runtimeRoute": "/provider/properties/:id/features",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 8,
-        "screenId": "PUB-08",
+        "sequence": 49,
+        "screenId": "PRV-08",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/PUB-08",
-        "cloneNode": "6017:12560",
-        "runtimeRoute": "/articles/:slug",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-08",
+        "cloneNode": "6017:20391",
+        "runtimeRoute": "/provider/properties/:id/media",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 9,
-        "screenId": "PUB-09",
+        "sequence": 50,
+        "screenId": "PRV-09",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/PUB-09",
-        "cloneNode": "6017:11634",
-        "runtimeRoute": "/community",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-09",
+        "cloneNode": "6017:20561",
+        "runtimeRoute": "/provider/properties/:id/contact",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 10,
-        "screenId": "PUB-10",
+        "sequence": 51,
+        "screenId": "PRV-10",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/PUB-10",
-        "cloneNode": "6017:13611",
-        "runtimeRoute": "/community?create=1",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-10",
+        "cloneNode": "6017:20737",
+        "runtimeRoute": "/provider/properties/:id/review",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 11,
-        "screenId": "PUB-11",
+        "sequence": 52,
+        "screenId": "PRV-11",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/PUB-11",
-        "cloneNode": "6017:11830",
-        "runtimeRoute": "/about",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-11",
+        "cloneNode": "6017:21064",
+        "runtimeRoute": "/provider/properties/:id/review",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 12,
-        "screenId": "PUB-12",
+        "sequence": 53,
+        "screenId": "PRV-12",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/PUB-12",
-        "cloneNode": "6017:12006",
-        "runtimeRoute": "/team",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-12",
+        "cloneNode": "6017:21012",
+        "runtimeRoute": "/provider/properties/:id/submitted",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 13,
-        "screenId": "AUTH-01",
+        "sequence": 54,
+        "screenId": "PRV-13",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-01",
-        "cloneNode": "6017:16212",
-        "runtimeRoute": "/auth/login",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-13",
+        "cloneNode": "6017:21123",
+        "runtimeRoute": "/provider/properties/:id/rejected",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 14,
-        "screenId": "AUTH-02",
+        "sequence": 55,
+        "screenId": "PRV-14",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-02",
-        "cloneNode": "6017:15835",
-        "runtimeRoute": "/auth/register/seeker",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-14",
+        "cloneNode": "6017:20973",
+        "runtimeRoute": "/provider/properties/:id/published",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 15,
-        "screenId": "AUTH-03",
+        "sequence": 56,
+        "screenId": "PRV-15",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-03",
-        "cloneNode": "6017:15890",
-        "runtimeRoute": "/auth/register/seeker",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-15",
+        "cloneNode": "6017:21162",
+        "runtimeRoute": "/provider/projects",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 16,
-        "screenId": "AUTH-04",
+        "sequence": 57,
+        "screenId": "PRV-16",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-04",
-        "cloneNode": "6017:15993",
-        "runtimeRoute": "/auth/verify-phone",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-16",
+        "cloneNode": "6017:21368",
+        "runtimeRoute": "/provider/customer-requests",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 17,
-        "screenId": "AUTH-05",
+        "sequence": 58,
+        "screenId": "PRV-17",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-05",
-        "cloneNode": "6017:16113",
-        "runtimeRoute": "/auth/verify-phone",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-17",
+        "cloneNode": "6017:21747",
+        "runtimeRoute": "/provider/customer-requests?create=1",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 18,
-        "screenId": "AUTH-06",
+        "sequence": 59,
+        "screenId": "PRV-18",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-06",
-        "cloneNode": "6017:16158",
-        "runtimeRoute": "/auth/register/seeker/success",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-18",
+        "cloneNode": "6017:21613",
+        "runtimeRoute": "/provider/viewings",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 19,
-        "screenId": "AUTH-07",
+        "sequence": 60,
+        "screenId": "PRV-19",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-07",
-        "cloneNode": "6017:16275",
-        "runtimeRoute": "/auth/register/provider/type",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-19",
+        "cloneNode": "6017:22088",
+        "runtimeRoute": "/provider/ads",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 20,
-        "screenId": "AUTH-08",
+        "sequence": 61,
+        "screenId": "PRV-20",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-08",
-        "cloneNode": "6017:16352",
-        "runtimeRoute": "/auth/register/provider/type",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-20",
+        "cloneNode": "6028:10071",
+        "runtimeRoute": "/provider/commission",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 21,
-        "screenId": "AUTH-09",
+        "sequence": 62,
+        "screenId": "PRV-21",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-09",
-        "cloneNode": "6017:16432",
-        "runtimeRoute": "/auth/register/provider/account",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-21",
+        "cloneNode": "6028:10830",
+        "runtimeRoute": "/provider/notifications",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 22,
-        "screenId": "AUTH-09+",
+        "sequence": 63,
+        "screenId": "PRV-22-1",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-09+",
-        "cloneNode": "6017:16630",
-        "runtimeRoute": "/auth/register/provider/account",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-22-1",
+        "cloneNode": "6028:11337",
+        "runtimeRoute": "/provider/settings",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 23,
-        "screenId": "AUTH-10",
+        "sequence": 64,
+        "screenId": "PRV-22-2",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-10",
-        "cloneNode": "6017:16843",
-        "runtimeRoute": "/auth/register/provider/business",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-22-2",
+        "cloneNode": "6028:11875",
+        "runtimeRoute": "/provider/settings",
+        "evidenceComplete": true,
+        "closureEligible": false
       },
       {
-        "sequence": 24,
-        "screenId": "AUTH-10+",
+        "sequence": 65,
+        "screenId": "PRV-22-3",
         "status": "PARTIAL_VISUAL_GATE",
         "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-10+",
-        "cloneNode": "6017:17120",
-        "runtimeRoute": "/auth/register/provider/business",
-        "evidenceComplete": true
-      },
-      {
-        "sequence": 25,
-        "screenId": "AUTH-11",
-        "status": "PARTIAL_VISUAL_GATE",
-        "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-11",
-        "cloneNode": "6017:17441",
-        "runtimeRoute": "/auth/register/provider/company",
-        "evidenceComplete": true
-      },
-      {
-        "sequence": 26,
-        "screenId": "AUTH-12",
-        "status": "PARTIAL_VISUAL_GATE",
-        "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-12",
-        "cloneNode": "6017:17706",
-        "runtimeRoute": "/auth/register/provider/documents",
-        "evidenceComplete": true
-      },
-      {
-        "sequence": 27,
-        "screenId": "AUTH-13",
-        "status": "PARTIAL_VISUAL_GATE",
-        "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-13",
-        "cloneNode": "6017:17975",
-        "runtimeRoute": "/auth/register/provider/review",
-        "evidenceComplete": true
-      },
-      {
-        "sequence": 28,
-        "screenId": "AUTH-14",
-        "status": "PARTIAL_VISUAL_GATE",
-        "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-14",
-        "cloneNode": "6017:18418",
-        "runtimeRoute": "/provider-application/status",
-        "evidenceComplete": true
-      },
-      {
-        "sequence": 29,
-        "screenId": "AUTH-15",
-        "status": "PARTIAL_VISUAL_GATE",
-        "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-15",
-        "cloneNode": "6017:18529",
-        "runtimeRoute": "/provider-application/status",
-        "evidenceComplete": true
-      },
-      {
-        "sequence": 30,
-        "screenId": "AUTH-16",
-        "status": "PARTIAL_VISUAL_GATE",
-        "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-16",
-        "cloneNode": "6017:18651",
-        "runtimeRoute": "/provider-application/needs-information",
-        "evidenceComplete": true
-      },
-      {
-        "sequence": 31,
-        "screenId": "AUTH-17",
-        "status": "PARTIAL_VISUAL_GATE",
-        "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/AUTH-17",
-        "cloneNode": "6017:18822",
-        "runtimeRoute": "/provider-application/approved",
-        "evidenceComplete": true
-      },
-      {
-        "sequence": 32,
-        "screenId": "SEK-01",
-        "status": "PARTIAL_EXTERNAL",
-        "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/SEK-01",
-        "cloneNode": "6027:3579",
-        "runtimeRoute": "/seeker",
-        "evidenceComplete": true
-      },
-      {
-        "sequence": 33,
-        "screenId": "SEK-02",
-        "status": "PARTIAL_EXTERNAL",
-        "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/SEK-02",
-        "cloneNode": "6027:4046",
-        "runtimeRoute": "/seeker/requests",
-        "evidenceComplete": true
-      },
-      {
-        "sequence": 34,
-        "screenId": "SEK-03",
-        "status": "PARTIAL_EXTERNAL",
-        "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/SEK-03",
-        "cloneNode": "6027:7187",
-        "runtimeRoute": "/seeker/requests/:id",
-        "evidenceComplete": true
-      },
-      {
-        "sequence": 35,
-        "screenId": "SEK-04",
-        "status": "PARTIAL_EXTERNAL",
-        "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/SEK-04",
-        "cloneNode": "6027:7928",
-        "runtimeRoute": "/seeker/requests/:id",
-        "evidenceComplete": true
-      },
-      {
-        "sequence": 36,
-        "screenId": "SEK-05",
-        "status": "PARTIAL_EXTERNAL",
-        "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/SEK-05",
-        "cloneNode": "6027:4477",
-        "runtimeRoute": "/seeker/viewings",
-        "evidenceComplete": true
-      },
-      {
-        "sequence": 37,
-        "screenId": "SEK-06",
-        "status": "PARTIAL_EXTERNAL",
-        "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/SEK-06",
-        "cloneNode": "6027:4748",
-        "runtimeRoute": "/seeker/saved",
-        "evidenceComplete": true
-      },
-      {
-        "sequence": 38,
-        "screenId": "SEK-07",
-        "status": "PARTIAL_EXTERNAL",
-        "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/SEK-07",
-        "cloneNode": "6027:5319",
-        "runtimeRoute": "/seeker/notifications",
-        "evidenceComplete": true
-      },
-      {
-        "sequence": 39,
-        "screenId": "SEK-08",
-        "status": "PARTIAL_EXTERNAL",
-        "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/SEK-08",
-        "cloneNode": "6027:6850",
-        "runtimeRoute": "/seeker/profile?tab=preferences",
-        "evidenceComplete": true
-      },
-      {
-        "sequence": 40,
-        "screenId": "SEK-09",
-        "status": "PARTIAL_EXTERNAL",
-        "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/SEK-09",
-        "cloneNode": "6027:5677",
-        "runtimeRoute": "/seeker/profile?tab=personal",
-        "evidenceComplete": true
-      },
-      {
-        "sequence": 41,
-        "screenId": "SEK-10",
-        "status": "PARTIAL_EXTERNAL",
-        "classification": "PARTIAL",
-        "evidenceDir": "docs/quality/figma_parity/screens/SEK-10",
-        "cloneNode": "6027:6531",
-        "runtimeRoute": "/seeker/settings",
-        "evidenceComplete": true
+        "evidenceDir": "docs/quality/figma_parity/screens/PRV-22-3",
+        "cloneNode": "6028:12067",
+        "runtimeRoute": "/provider/settings",
+        "evidenceComplete": true,
+        "closureEligible": false
       }
     ],
-    "nextScreenId": "PUB-01",
-    "nextSequence": 1,
-    "haltBeforeScreenId": "PRV-01",
+    "nextScreenId": null,
+    "nextSequence": null,
+    "haltBeforeScreenId": null,
     "blockers": [
-      "The current no-update responsive Public AR/EN visual run is 17/48 passed and 31/48 failed on screenshot assertions against stale or mismatched checked-in responsive baselines; no screen is closed.",
-      "The current no-update Auth AR/EN visual run is 24/30 passed and 6/30 failed on screenshot assertions; all 38 v2 metric records are reviewed, and AUTH-01/AUTH-02 retain repository-owned visual parity gaps.",
-      "Bundle budgets pass: stylesheet 407745/409600 bytes and JavaScript 1595388/2560000 bytes.",
-      "The current AR/EN performance run fails all 4 cases because scriptBytes is 11397087 against the 6000000-byte browser budget.",
-      "Seeker approved external identity/media/metadata prerequisites remain unavailable and are recorded per screen."
+      "Combined Provider AR/EN no-update E2E: 26 passed, 44 screenshot assertions failed; every failure is visual-only.",
+      "The shared ProviderNavigation still renders text glyphs instead of the approved navigation icon treatment.",
+      "Several canonical content fields are absent from the current safe Provider contracts; values were left unavailable rather than fabricated.",
+      "PRV-22-2 and PRV-22-3 required separate deterministic tab captures because the sequential settings test stops at the PRV-22-1 screenshot assertion."
     ],
     "historicalQueue": {
       "taskId": "frontend_099",
@@ -15956,6 +16155,77 @@
     "providerStarted": false,
     "adminStarted": false,
     "nextScreenId": "PRV-01",
-    "excludedLocales": ["zh-CN"]
+    "excludedLocales": [
+      "zh-CN"
+    ]
+  },
+  "historicalWave1Reconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
+    "checkpointPath": "docs/quality/figma_parity/HARD_CHECKPOINT_2026-08-28.json",
+    "decision": "BLOCKED",
+    "evidenceComplete": 41,
+    "closureEligible": 0,
+    "providerStarted": false,
+    "adminStarted": false,
+    "latestGateValidation": {
+      "publicVisualArEn": "17/48 passed; 31 screenshot failures; no updates",
+      "authVisualArEn": "24/30 passed; 6 screenshot failures; no updates",
+      "performanceArEn": "0/4 passed; scriptBytes 11397087 exceeded 6000000",
+      "focusedApi": "106/106 passed"
+    }
+  },
+  "historicalWave1FinalReconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+    "decision": "RECONCILED_PROVIDER_READY",
+    "wave1ScreenCount": 41,
+    "publicAuthVerified": 31,
+    "seekerPartialExternal": 10,
+    "remainingRepositoryOwnedElementDefects": [],
+    "providerStarted": false,
+    "adminStarted": false,
+    "nextScreenId": "PRV-01",
+    "excludedLocales": [
+      "zh-CN"
+    ]
+  },
+  "providerWave2Reconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+    "taskId": "frontend_101",
+    "decision": "PROVIDER_WAVE_FINAL_CLOSURE_BLOCKED",
+    "screenCount": 24,
+    "processed": 24,
+    "verified": 0,
+    "verifiedNoChange": 0,
+    "partial": 24,
+    "closureEligible": 0,
+    "approvedLocaleScope": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "adminOpened": false,
+    "updatedAt": "2026-08-29T01:47:21.446Z"
+  },
+  "providerWave2FinalReconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+    "taskId": "frontend_101",
+    "decision": "PROVIDER_WAVE_FINAL_CLOSURE_BLOCKED",
+    "screenCount": 24,
+    "processed": 24,
+    "verified": 0,
+    "verifiedNoChange": 0,
+    "partial": 24,
+    "closureEligible": 0,
+    "approvedLocaleScope": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "adminOpened": false,
+    "updatedAt": "2026-08-29T01:47:21.446Z"
   }
 }

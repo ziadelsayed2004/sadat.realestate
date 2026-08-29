@@ -93,7 +93,7 @@ async function routeProviderProperties(page: import('@playwright/test').Page, fo
 test.describe('PRV-02 My Properties', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'PRV-02' });
-    testInfo.annotations.push({ type: 'design-source', description: 'docs/design_sources/final_screens/provider/PRV-02.png; local SHA-256 2a2b739851e2d3557dda12e8a350228b0fdfb4b40a2242b36298d38d2e8e7738; Figma node 6017-19032; Drive folder 1BmLx4tpZxfEGPmnsbQhay7RdCdpvy1hC' });
+    testInfo.annotations.push({ type: 'design-source', description: 'docs/design_sources/final_screens/provider/PRV-02.png; local SHA-256 2a2b739851e2d3557dda12e8a350228b0fdfb4b40a2242b36298d38d2e8e7738; Figma node 6017:19308; Drive folder 1BmLx4tpZxfEGPmnsbQhay7RdCdpvy1hC' });
     test.skip(!testInfo.project.name.includes('desktop'), 'Provider dashboard is approved for desktop only.');
     void page;
   });

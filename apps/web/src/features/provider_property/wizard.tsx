@@ -403,7 +403,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
       setLocation(locationFromProperty(next, copy));
       setMutationState('success');
       setMutationMessage(copy.wizard.saved);
-      if (continueAfter) setBrowserPath(navigationPath(locale, `/provider/properties/${next.id}/details`), false);
+      if (continueAfter) setBrowserPath(navigationPath(locale, `/provider/properties/${encodeURIComponent(next.id)}/details`), false);
     } catch (error) {
       mutationFailure(error);
     }
@@ -411,7 +411,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
 
   const path = typeof window === 'undefined' ? '/provider/properties' : '/provider/properties';
   return (
-    <section className="provider-dashboard provider-property-wizard" data-screen-id={step === 'basic' ? 'PRV-03' : 'PRV-04'} data-route={step === 'basic' ? '/provider/properties/new/basic' : `/provider/properties/${propertyId ?? ''}/location`} data-device-scope="desktop">
+    <section className="provider-dashboard provider-property-wizard" data-screen-id={step === 'basic' ? 'PRV-03' : 'PRV-04'} data-route={step === 'basic' ? '/provider/properties/new/basic' : `/provider/properties/${propertyId === undefined ? '' : encodeURIComponent(propertyId)}/location`} data-device-scope="desktop">
       <ProviderNavigation locale={locale} activePath={path} />
       <div className="provider-dashboard__content provider-property-wizard__content">
         <WizardSteps step={step} locale={locale} copy={copy} />

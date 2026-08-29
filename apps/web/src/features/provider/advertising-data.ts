@@ -31,6 +31,11 @@ export const PROVIDER_ADVERTISING_PAGE_LIMIT = 5 as const;
 export type ProviderAdvertisingStatus = z.infer<typeof adRequestStatusSchema>;
 
 const providerAdRequestIdSchema = z.string().regex(/^[a-f0-9]{24}$/);
+const PAYMENT_PROOF_EXTENSIONS = {
+  'application/pdf': ['.pdf'],
+  'image/jpeg': ['.jpg', '.jpeg'],
+  'image/png': ['.png']
+} as const;
 
 export interface ProviderAdvertisingQuery {
   readonly status?: ProviderAdvertisingStatus | undefined;
@@ -181,11 +186,17 @@ export function createProviderAdvertisingMutationApi(options: ProviderAdvertisin
       return response.data.data;
     },
     async uploadPaymentProof(id, file, filename, signal) {
+      const normalizedFilename = filename.trim();
+      if (/[/\\\u0000-\u001f\u007f]/u.test(normalizedFilename)) throw new Error('Payment proof filename contains unsafe characters');
       const upload = paymentProofUploadHeadersSchema.parse({
-        filename,
+        filename: normalizedFilename,
         contentType: file.type.toLowerCase(),
         contentLength: file.size
       });
+      const extensionStart = upload.filename.lastIndexOf('.');
+      const extension = extensionStart > 0 ? upload.filename.slice(extensionStart).toLowerCase() : '';
+      const allowedExtensions: readonly string[] = PAYMENT_PROOF_EXTENSIONS[upload.contentType];
+      if (!allowedExtensions.includes(extension)) throw new Error('Payment proof filename extension does not match content type');
       const requestHeaders = headers();
       const response = await client.request(`${PROVIDER_ADVERTISING_ROUTE}/${encodeURIComponent(requestId(id))}/payment-proof`, {
         method: 'POST',

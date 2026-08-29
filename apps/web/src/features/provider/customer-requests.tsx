@@ -59,6 +59,18 @@ function payloadText(request: RequestData, key: 'firstName' | 'lastName' | 'phon
   return typeof value === 'string' && value.trim() !== '' ? value : undefined;
 }
 
+function maskPhone(value: string): string {
+  const normalized = value.trim();
+  return normalized.length > 6 ? `${normalized.slice(0, 3)}••••${normalized.slice(-3)}` : '••••';
+}
+
+function maskEmail(value: string): string {
+  const normalized = value.trim();
+  const separator = normalized.indexOf('@');
+  if (separator <= 0 || separator === normalized.length - 1) return '••••';
+  return `${normalized.slice(0, 1)}•••${normalized.slice(separator)}`;
+}
+
 function customerName(request: RequestData, unavailable: string): string {
   const name = [payloadText(request, 'firstName'), payloadText(request, 'lastName')].filter((value): value is string => value !== undefined).join(' ').trim();
   return name === '' ? unavailable : name;
@@ -218,8 +230,8 @@ function RequestRow({ request, locale, copy, onTransition }: { readonly request:
       <td>
         <div className="provider-customer-requests__identity">
           <strong>{name}</strong>
-          {phone ? <span>{phone}</span> : null}
-          {email ? <span>{email}</span> : null}
+          {phone ? <span>{maskPhone(phone)}</span> : null}
+          {email ? <span>{maskEmail(email)}</span> : null}
         </div>
       </td>
       <td><span>{copy.requestType}</span><small>{copy.source}: {copy.providerSource}</small></td>
@@ -254,7 +266,8 @@ function RequestsContent({ data, locale, copy, status, searchInput, query, onSta
 }) {
   const pageCount = Math.ceil(data.total / data.limit);
   const numberFormat = new Intl.NumberFormat(locale);
-  const hasFilters = status !== 'all' || query.search !== undefined;
+  const hasFilters = query.status !== undefined || query.search !== undefined;
+  const hasPendingFilters = status !== 'all' || searchInput.trim() !== '';
   return (
     <main aria-labelledby="provider-customer-requests-title">
       <div className="provider-customer-requests__heading provider-dashboard__heading-row">
@@ -284,7 +297,7 @@ function RequestsContent({ data, locale, copy, status, searchInput, query, onSta
           </div>
           <div className="provider-customer-requests__filter-actions">
             <Button type="submit" size="sm">{copy.apply}</Button>
-            <Button type="button" variant="secondary" size="sm" onClick={onClear} disabled={!hasFilters}>{copy.clear}</Button>
+            <Button type="button" variant="secondary" size="sm" onClick={onClear} disabled={!hasFilters && !hasPendingFilters}>{copy.clear}</Button>
           </div>
         </form>
         {data.items.length === 0 ? (
@@ -312,18 +325,23 @@ export function ProviderCustomerRequests({ locale, session, authClient, apiOrigi
   const copy = getProviderCustomerRequestsCopy(locale);
   const providerCopy = getProviderCopy(locale);
   const [status, setStatus] = useState<ProviderCustomerRequestStatusFilter>('all');
+  const [appliedStatus, setAppliedStatus] = useState<ProviderCustomerRequestStatusFilter>('all');
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [state, setState] = useState<ProviderCustomerRequestsViewState>('loading');
   const [data, setData] = useState<ProviderCustomerRequestsData | undefined>();
   const [attempt, setAttempt] = useState(0);
-  const [requestFormOpen, setRequestFormOpen] = useState(false);
+  const [requestFormOpen, setRequestFormOpen] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const url = new URL(window.location.href);
+    return url.pathname.replace(/\/+$/u, '') === '/provider/customer-requests' && url.searchParams.get('create') === '1';
+  });
   const [transitionTarget, setTransitionTarget] = useState<{ request: RequestData; action: RequestTransition } | undefined>();
   const [mutationError, setMutationError] = useState<string | undefined>();
   const [feedback, setFeedback] = useState<string | undefined>();
   const [saving, setSaving] = useState(false);
-  const query = useMemo<ProviderCustomerRequestsQuery>(() => ({ page, limit: 5, ...(status === 'all' ? {} : { status }), ...(search === '' ? {} : { search }) }), [page, search, status]);
+  const query = useMemo<ProviderCustomerRequestsQuery>(() => ({ page, limit: 5, ...(appliedStatus === 'all' ? {} : { status: appliedStatus }), ...(search === '' ? {} : { search }) }), [appliedStatus, page, search]);
   const source = useMemo(() => load ?? createProviderCustomerRequestsLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, load]);
   const mutationApi = useMemo(() => mutations ?? createProviderCustomerRequestMutationApi({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, mutations]);
   const path = typeof window === 'undefined' ? '/provider/customer-requests' : new URL(window.location.href).pathname.replace(/\/+$/u, '') || '/';
@@ -396,10 +414,10 @@ export function ProviderCustomerRequests({ locale, session, authClient, apiOrigi
       <ProviderNavigation locale={locale} activePath={path} />
       <div className="provider-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
-        {(state === 'success' || state === 'empty') && data !== undefined ? <RequestsContent data={data} locale={locale} copy={copy} status={status} searchInput={searchInput} query={query} onStatusChange={nextStatus => { setStatus(nextStatus); setPage(1); }} onSearchInputChange={setSearchInput} onApply={() => { setSearch(searchInput.trim()); setPage(1); }} onClear={() => { setStatus('all'); setSearchInput(''); setSearch(''); setPage(1); }} onPageChange={setPage} onAdd={openCreate} onTransition={(request, action) => { setMutationError(undefined); setFeedback(undefined); setTransitionTarget({ request, action }); }} /> : null}
+        {(state === 'success' || state === 'empty') && data !== undefined ? <RequestsContent data={data} locale={locale} copy={copy} status={status} searchInput={searchInput} query={query} onStatusChange={setStatus} onSearchInputChange={setSearchInput} onApply={() => { setAppliedStatus(status); setSearch(searchInput.trim()); setPage(1); }} onClear={() => { setStatus('all'); setAppliedStatus('all'); setSearchInput(''); setSearch(''); setPage(1); }} onPageChange={setPage} onAdd={openCreate} onTransition={(request, action) => { setMutationError(undefined); setFeedback(undefined); setTransitionTarget({ request, action }); }} /> : null}
         {feedback ? <p className="provider-customer-requests__feedback" role="status">{feedback}</p> : null}
       </div>
-      {requestFormOpen ? <div data-screen-id="PRV-17"><RequestFormModal copy={copy} saving={saving} error={mutationError} onClose={closeDialogs} onSave={saveRequest} /></div> : null}
+      {requestFormOpen && session.status === 'authenticated' && sessionRole === 'provider' ? <div data-screen-id="PRV-17"><RequestFormModal copy={copy} saving={saving} error={mutationError} onClose={closeDialogs} onSave={saveRequest} /></div> : null}
       {transitionTarget !== undefined ? <TransitionModal request={transitionTarget.request} action={transitionTarget.action} copy={copy} saving={saving} error={mutationError} onClose={closeDialogs} onConfirm={transitionRequest} /> : null}
       {state === 'permission' ? <span className="a11y-visually-hidden">{providerCopy.states.permission.title}</span> : null}
     </section>

@@ -1,0 +1,46 @@
+{
+  "screenId": "PRV-18",
+  "canonical": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "nodeId": "6017:21613",
+    "route": "/provider/viewings",
+    "role": "provider",
+    "directions": ["rtl", "ltr"],
+    "device": "desktop",
+    "export": "docs/design_sources/final_screens/provider/PRV-18.png",
+    "exportSha256": "9a7b859c90236e892de44f81fadf1f5e3484ec13f6a173e497bddbf3e2690c57"
+  },
+  "runtime": {
+    "before": ["runtime-before-ar.png", "runtime-before-en.png"],
+    "after": ["runtime-after-final-ar.png", "runtime-after-final-en.png"],
+    "captureNote": "Before captures are the table rendering; after captures are the grouped-card rendering from the latest no-update desktop run."
+  },
+  "classification": "PARTIAL_EXTERNAL",
+  "repositoryOwnedRepairs": [
+    "Failed closed for invalid date values in transition forms.",
+    "Grouped appointments by localized date and rendered the approved card hierarchy.",
+    "Added stable localized group heading IDs for accessible aria-labelledby relationships.",
+    "Preserved contract-defined status actions, expected-version transitions, and provider authorization."
+  ],
+  "externalDifference": "The canonical export contains human-readable property and customer names, while ViewingData exposes only safe IDs and appointment fields; no names or private fields were invented.",
+  "externalPrerequisite": {
+    "owner": "Provider contracts/API owner",
+    "nextAction": "Confirm and expose approved provider-safe property and customer display names if canonical card content parity is required, then rerun the AR/EN visual gate."
+  },
+  "visualDiff": {
+    "ar": { "expected": "1280px by 843px", "received": "1280px by 878px", "differentPixels": 199589, "ratio": 0.18, "artifact": "diff-final-ar.png" },
+    "en": { "expected": "1280px by 878px", "received": "1280px by 905px", "differentPixels": 212697, "ratio": 0.19, "artifact": "diff-final-en.png" }
+  },
+  "snapshot": {
+    "updated": false,
+    "reason": "The baseline retains the previous dark Provider navigation; snapshot updates are out of scope and the current white navigation agrees with the local canonical export.",
+    "ar": { "path": "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-ar-desktop-ar-win32.png", "sha256": "3e5db8c2f0ed3780506f506e2c3b44b1793a9645d633cf26256b6f24792d2c8f" },
+    "en": { "path": "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-en-desktop-en-win32.png", "sha256": "15a830c3a1f5f45a8df15cef3303bc40fa57a2534d098298d335661f0747f7d2" }
+  },
+  "visualGate": {
+    "command": "$env:WEB_BASE_URL = 'http://127.0.0.1:4173'; npm.cmd exec --workspace apps/web -- playwright test tests/e2e/provider-projects.spec.ts tests/e2e/provider-customer-requests.spec.ts tests/e2e/provider-viewings.spec.ts tests/e2e/provider-advertising.spec.ts --project=desktop-ar --project=desktop-en --workers=1",
+    "exitCode": 1,
+    "result": "Screenshot assertions failed; grouped-card runtime, transitions, authentication, ownership, and keyboard checks passed.",
+    "snapshotsUpdated": false
+  }
+}

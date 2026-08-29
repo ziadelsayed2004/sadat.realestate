@@ -40,9 +40,15 @@ interface DocumentUiError {
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = new Set(['application/pdf', 'image/jpeg', 'image/png']);
 const ALLOWED_EXTENSIONS = new Set(['.pdf', '.jpg', '.jpeg', '.png']);
+const MIME_EXTENSIONS: Readonly<Record<'application/pdf' | 'image/jpeg' | 'image/png', readonly string[]>> = {
+  'application/pdf': ['.pdf'],
+  'image/jpeg': ['.jpg', '.jpeg'],
+  'image/png': ['.png']
+};
 
 function extension(filename: string): string {
-  return filename.slice(filename.lastIndexOf('.')).toLowerCase();
+  const dot = filename.lastIndexOf('.');
+  return dot <= 0 ? '' : filename.slice(dot).toLowerCase();
 }
 
 function canEditDocuments(application: ProviderApplicationData, providerType: ProviderType): boolean {
@@ -105,9 +111,16 @@ function securityStateLabel(document: ProviderDocumentData, copy: ProviderDocume
 function validateFile(file: File, copy: ProviderDocumentsCopy): DocumentUiError | undefined {
   if (file.size <= 0) return { state: 'error', title: copy.invalidFileTitle, message: copy.invalidFileBody };
   if (file.size > MAX_FILE_BYTES) return { state: 'error', title: copy.fileTooLargeTitle, message: copy.fileTooLargeBody };
-  const fileExtension = extension(file.name);
-  const typeAllowed = file.type === '' ? ALLOWED_EXTENSIONS.has(fileExtension) : ALLOWED_MIME_TYPES.has(file.type);
-  if (!typeAllowed || !ALLOWED_EXTENSIONS.has(fileExtension)) {
+  const filename = file.name.trim();
+  const fileExtension = extension(filename);
+  const mimeExtensions = MIME_EXTENSIONS[file.type as keyof typeof MIME_EXTENSIONS];
+  const typeAllowed = file.type === ''
+    ? ALLOWED_EXTENSIONS.has(fileExtension)
+    : ALLOWED_MIME_TYPES.has(file.type) && mimeExtensions !== undefined && mimeExtensions.includes(fileExtension);
+  const filenameAllowed = filename.length > 0
+    && filename.length <= 120
+    && !/[\\/\u0000-\u001f\u007f]/u.test(filename);
+  if (!filenameAllowed || !typeAllowed) {
     return { state: 'error', title: copy.fileTypeTitle, message: copy.fileTypeBody };
   }
   return undefined;

@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PRV-17",
+  "classification": "PARTIAL",
+  "status": "COORDINATOR_RECONCILED_PARTIAL",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "nodeId": "6017:21747",
+    "route": "/provider/customer-requests?create=1",
+    "role": "provider",
+    "device": "desktop",
+    "localExport": "docs/design_sources/final_screens/provider/PRV-17.png",
+    "localExportSha256": "c5737bcda9c5771316253f8174c9ea6c372201ff29510a26e2547bfd87f70281",
+    "reviewed": true
+  },
+  "runtime": {
+    "approvedLocaleScope": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "captures": [
+      {
+        "locale": "ar",
+        "direction": "rtl",
+        "runtimePath": "docs/quality/figma_parity/screens/PRV-17/runtime-after-e2e-2026-08-29-ar.png",
+        "sourceArtifact": "apps/web/test-results/provider-customer-requests-0fdde-hrough-server-owned-actions-desktop-ar/provider-customer-request-modal-ar-actual.png",
+        "captureMode": "e2e-2026-08-29",
+        "sha256": "3f377721ae515e55e70cf7e0d61825d8da673bdb6c30ad7abaeafc0cf3891795",
+        "width": 1280,
+        "height": 844,
+        "visual": {
+          "expected": {
+            "width": 1280,
+            "height": 852
+          },
+          "actual": {
+            "width": 1280,
+            "height": 844
+          },
+          "differentPixels": 41390,
+          "ratio": 0.04,
+          "errorContext": "apps/web/test-results/provider-customer-requests-0fdde-hrough-server-owned-actions-desktop-ar/error-context.md"
+        }
+      },
+      {
+        "locale": "en",
+        "direction": "ltr",
+        "runtimePath": "docs/quality/figma_parity/screens/PRV-17/runtime-after-e2e-2026-08-29-en.png",
+        "sourceArtifact": "apps/web/test-results/provider-customer-requests-0fdde-hrough-server-owned-actions-desktop-en/provider-customer-request-modal-en-actual.png",
+        "captureMode": "e2e-2026-08-29",
+        "sha256": "9f232797d7e360c679afbd2a067f3f52696cb3dc084a232ae8b8260dcfbf24a2",
+        "width": 1280,
+        "height": 871,
+        "visual": {
+          "expected": {
+            "width": 1280,
+            "height": 879
+          },
+          "actual": {
+            "width": 1280,
+            "height": 871
+          },
+          "differentPixels": 50669,
+          "ratio": 0.05,
+          "errorContext": "apps/web/test-results/provider-customer-requests-0fdde-hrough-server-owned-actions-desktop-en/error-context.md"
+        }
+      }
+    ],
+    "beforeCapture": {
+      "status": "PRESERVED",
+      "paths": [
+        "docs/quality/figma_parity/screens/PRV-17/runtime-before-ar.png",
+        "docs/quality/figma_parity/screens/PRV-17/runtime-before-en.png"
+      ]
+    },
+    "reachedInCombinedE2E": true,
+    "directCaptureReason": null
+  },
+  "functional": {
+    "status": "PASS_FOR_EXECUTED_ASSERTIONS",
+    "focusedTests": [
+      "apps/web/tests/provider-customer-requests.vitest.test.tsx",
+      "apps/web/tests/e2e/provider-customer-requests.spec.ts"
+    ],
+    "note": "The combined E2E functional and permission assertions passed before the no-update screenshot assertion failed."
+  },
+  "visual": {
+    "status": "OPEN",
+    "snapshotsUpdated": false,
+    "screenshotFailures": [
+      {
+        "locale": "ar",
+        "expected": {
+          "width": 1280,
+          "height": 852
+        },
+        "actual": {
+          "width": 1280,
+          "height": 844
+        },
+        "differentPixels": 41390,
+        "ratio": 0.04,
+        "errorContext": "apps/web/test-results/provider-customer-requests-0fdde-hrough-server-owned-actions-desktop-ar/error-context.md"
+      },
+      {
+        "locale": "en",
+        "expected": {
+          "width": 1280,
+          "height": 879
+        },
+        "actual": {
+          "width": 1280,
+          "height": 871
+        },
+        "differentPixels": 50669,
+        "ratio": 0.05,
+        "errorContext": "apps/web/test-results/provider-customer-requests-0fdde-hrough-server-owned-actions-desktop-en/error-context.md"
+      }
+    ],
+    "directReview": "Reviewed against the approved local Provider export and preserved runtime evidence. The current visual gate is not closure-eligible because no-update screenshots show material geometry/content differences.",
+    "repoOwnedDefects": [
+      {
+        "id": "PROVIDER-SHARED-NAV-ICON-GLYPHS",
+        "element": "ProviderNavigation icons",
+        "owner": "Coordinator",
+        "targetFile": "apps/web/src/features/provider/overview.tsx",
+        "description": "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "requiredRepair": "Replace the text glyph map with the approved icon implementation/assets while preserving the existing provider-only routes, locale query, active treatment, and direction behavior."
+      }
+    ],
+    "externalBlockers": [
+      "The current provider request contract is intentionally limited to approved customer fields and server actions; no unsupported details were added."
+    ]
+  },
+  "repairs": [
+    "apps/web/src/features/provider/customer-requests.tsx",
+    "apps/web/src/features/provider/customer-requests-data.ts"
+  ],
+  "evidenceFiles": [
+    "docs/quality/figma_parity/screens/PRV-17/coordinator-reconciliation.json",
+    "docs/quality/figma_parity/screens/PRV-17/review.json"
+  ],
+  "constraints": {
+    "zhCN": "Excluded from execution and untouched.",
+    "admin": "Unopened and unmodified.",
+    "snapshots": "No snapshot was updated."
+  }
+}

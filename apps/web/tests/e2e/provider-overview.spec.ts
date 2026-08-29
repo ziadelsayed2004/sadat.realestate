@@ -88,7 +88,7 @@ async function routeProviderOverview(page: import('@playwright/test').Page): Pro
 test.describe('PRV-01 Provider Overview', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'PRV-01' });
-    testInfo.annotations.push({ type: 'design-source', description: 'docs/design_sources/final_screens/provider/PRV-01.png; Figma node 6017-19032; Drive folder 1-Jda_ykLlQC3ZwlFG8I-t6sq3B8UOg86' });
+    testInfo.annotations.push({ type: 'design-source', description: 'docs/design_sources/final_screens/provider/PRV-01.png; Figma node 6017:19032; Drive folder 1-Jda_ykLlQC3ZwlFG8I-t6sq3B8UOg86' });
     test.skip(!testInfo.project.name.includes('desktop'), 'Provider dashboard is approved for desktop only.');
     void page;
   });

@@ -1,0 +1,45 @@
+{
+  "screenId": "PRV-15",
+  "canonical": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "nodeId": "6017:21162",
+    "route": "/provider/projects",
+    "role": "provider",
+    "directions": ["rtl", "ltr"],
+    "device": "desktop",
+    "export": "docs/design_sources/final_screens/provider/PRV-15.png",
+    "exportSha256": "1856d403d730c82c4793ebbb3ddf7dc4482ecc272b19327411a832c9dcf006ac"
+  },
+  "runtime": {
+    "before": ["runtime-before-ar.png", "runtime-before-en.png"],
+    "after": ["runtime-after-final-ar.png", "runtime-after-final-en.png"],
+    "captureNote": "Before captures preserve the pre-final verification capture; after captures are from the latest no-update desktop run."
+  },
+  "classification": "PARTIAL_EXTERNAL",
+  "repositoryOwnedRepairs": [
+    "Validated list queries with the provider project query schema.",
+    "Rejected provider organizationId mass assignment in create and update inputs.",
+    "Applied draft status/search filters only after Apply and reset them on Clear."
+  ],
+  "externalDifference": "The canonical inventory export includes image, unit, availability, and area metrics that are not present in the current safe ProjectData projection; no fields were invented.",
+  "externalPrerequisite": {
+    "owner": "Provider contracts/API owner",
+    "nextAction": "Confirm and expose approved safe inventory fields for image, units, availability, and area metrics if canonical content parity is required, then rerun the AR/EN visual gate."
+  },
+  "visualDiff": {
+    "ar": { "expected": "1280px by 917px", "received": "1280px by 909px", "differentPixels": 220884, "ratio": 0.19, "artifact": "diff-final-ar.png" },
+    "en": { "expected": "1280px by 945px", "received": "1280px by 937px", "differentPixels": 229737, "ratio": 0.19, "artifact": "diff-final-en.png" }
+  },
+  "snapshot": {
+    "updated": false,
+    "reason": "The baseline retains the previous dark Provider navigation; snapshot updates are out of scope and the current white navigation agrees with the local canonical export.",
+    "ar": { "path": "apps/web/tests/e2e/__snapshots__/provider-projects.spec.ts-snapshots/provider-projects-ar-desktop-ar-win32.png", "sha256": "c596cc002242da48fba68a09b7fb0e19f76c2ee518adedd4ba567c7e7471793a" },
+    "en": { "path": "apps/web/tests/e2e/__snapshots__/provider-projects.spec.ts-snapshots/provider-projects-en-desktop-en-win32.png", "sha256": "25dea83b583ffd96fee54da1a5873b3ec3c0d9eec3231c050d5fd73a99a91f88" }
+  },
+  "visualGate": {
+    "command": "$env:WEB_BASE_URL = 'http://127.0.0.1:4173'; npm.cmd exec --workspace apps/web -- playwright test tests/e2e/provider-projects.spec.ts tests/e2e/provider-customer-requests.spec.ts tests/e2e/provider-viewings.spec.ts tests/e2e/provider-advertising.spec.ts --project=desktop-ar --project=desktop-en --workers=1",
+    "exitCode": 1,
+    "result": "The rendering case failed only at the screenshot assertion; its pre-screenshot assertions and the separate action/permission cases passed.",
+    "snapshotsUpdated": false
+  }
+}

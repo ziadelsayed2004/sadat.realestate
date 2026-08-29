@@ -1,0 +1,605 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-08-29T01:47:21.446Z",
+  "taskId": "provider_wave_2",
+  "status": "PARTIAL_VISUAL_GATE",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "approvedLocaleScope": [
+    "ar-RTL",
+    "en-LTR"
+  ],
+  "excludedLocales": [
+    "zh-CN"
+  ],
+  "currentScreenId": "PRV-22-3",
+  "nextScreenId": null,
+  "adminOpened": false,
+  "providerImplementationStarted": true,
+  "sharedChangeQueue": [
+    {
+      "requestId": "provider_property_entry-to-coordinator-overview",
+      "requester": "provider_property_entry",
+      "screens": [
+        "PRV-01"
+      ],
+      "targetFile": "apps/web/src/features/provider/overview.tsx",
+      "defect": "PRV-01 required the eight-metric dashboard, chart, quick-actions panel, recent-properties table, and canonical navigation treatment; the safe Provider contract does not supply all canonical statistics.",
+      "minimalChange": "Coordinator-owned bounded JSX/markup repair using existing approved components, tokens, assets, safe projections, and current authenticated-provider/status guards; do not add phone identity, private fields, routes, or API behavior.",
+      "expectedEffect": "Align the Provider dashboard structure and navigation hooks for AR/EN without changing ownership, permission, or fail-closed behavior.",
+      "status": "APPLIED_VERIFIED_PARTIAL",
+      "resolution": "Dashboard structure, safe unavailable states, table semantics, and eight-card layout were applied; exact canonical values and icon treatment remain open.",
+      "securityRisk": "Low if the existing session guard, authorization header, application-status gating, and safe projections remain unchanged."
+    },
+    {
+      "requestId": "provider_notifications_settings-to-coordinator-shell",
+      "requester": "provider_notifications_settings",
+      "screens": [
+        "PRV-21",
+        "PRV-22-1",
+        "PRV-22-2",
+        "PRV-22-3"
+      ],
+      "targetFile": "apps/web/src/features/provider/styles.css",
+      "defect": "The shared Provider shell required the light right-side AR rail/left-side EN rail and canonical desktop shell geometry, while the prior shell was dark and opposite.",
+      "minimalChange": "Align only shared shell geometry, rail placement, colors, and active navigation treatment with approved local exports while preserving routes, authorization, ownership, and AR/EN direction.",
+      "expectedEffect": "All Provider screens share the bounded shell repair without changing lane-owned data projections or mutations.",
+      "status": "APPLIED_VERIFIED_PARTIAL",
+      "resolution": "Light shell, direction-aware rail placement, active treatment, metric/insight geometry, and bounded settings layout were applied; exact icon assets and final snapshot parity remain open.",
+      "securityRisk": "Low; navigation routes, provider authorization, locale handling, and unavailable actions remain unchanged."
+    }
+  ],
+  "lanes": [
+    {
+      "laneId": "provider_property_entry",
+      "agentId": "01a04abf-710e-7e43-8622-c766a6b22233",
+      "status": "PARTIAL_VISUAL_GATE",
+      "screenRange": [
+        "PRV-01",
+        "PRV-02",
+        "PRV-03",
+        "PRV-04",
+        "PRV-05",
+        "PRV-06",
+        "PRV-07",
+        "PRV-08",
+        "PRV-09",
+        "PRV-10",
+        "PRV-11",
+        "PRV-12",
+        "PRV-13",
+        "PRV-14"
+      ],
+      "canonicalSourcePage": "6017:4355",
+      "writableFeatureRoots": [
+        "apps/web/src/features/provider/properties.tsx",
+        "apps/web/src/features/provider_property/**",
+        "apps/web/src/features/provider_auth/**"
+      ],
+      "writableTestRoots": [
+        "apps/web/tests/provider-overview.vitest.test.tsx",
+        "apps/web/tests/provider-properties.vitest.test.tsx",
+        "apps/web/tests/provider-property-*.vitest.test.tsx",
+        "apps/web/tests/provider-review.vitest.test.tsx",
+        "apps/web/tests/provider-account.vitest.test.tsx",
+        "apps/web/tests/provider-type.vitest.test.tsx",
+        "apps/web/tests/provider-organization-documents.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-overview.spec.ts",
+        "apps/web/tests/e2e/provider-properties.spec.ts",
+        "apps/web/tests/e2e/provider-property-*.spec.ts",
+        "apps/web/tests/e2e/provider-review*.spec.ts",
+        "apps/web/tests/e2e/provider-account.spec.ts",
+        "apps/web/tests/e2e/provider-type.spec.ts",
+        "apps/web/tests/e2e/provider-organization-documents.spec.ts"
+      ],
+      "writableEvidenceRoots": [
+        "docs/quality/figma_parity/screens/PRV-01/**",
+        "docs/quality/figma_parity/screens/PRV-02/**",
+        "docs/quality/figma_parity/screens/PRV-03/**",
+        "docs/quality/figma_parity/screens/PRV-04/**",
+        "docs/quality/figma_parity/screens/PRV-05/**",
+        "docs/quality/figma_parity/screens/PRV-06/**",
+        "docs/quality/figma_parity/screens/PRV-07/**",
+        "docs/quality/figma_parity/screens/PRV-08/**",
+        "docs/quality/figma_parity/screens/PRV-09/**",
+        "docs/quality/figma_parity/screens/PRV-10/**",
+        "docs/quality/figma_parity/screens/PRV-11/**",
+        "docs/quality/figma_parity/screens/PRV-12/**",
+        "docs/quality/figma_parity/screens/PRV-13/**",
+        "docs/quality/figma_parity/screens/PRV-14/**"
+      ],
+      "cursor": {
+        "screenId": "PRV-14",
+        "node": "6017:20973",
+        "route": "/provider/properties/:id/published",
+        "role": "provider",
+        "directions": [
+          "rtl",
+          "ltr"
+        ],
+        "devices": [
+          "desktop"
+        ]
+      },
+      "screenDecisions": {
+        "PRV-01": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-01/coordinator-reconciliation.json"
+        },
+        "PRV-02": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-02/coordinator-reconciliation.json"
+        },
+        "PRV-03": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-03/coordinator-reconciliation.json"
+        },
+        "PRV-04": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-04/coordinator-reconciliation.json"
+        },
+        "PRV-05": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-05/coordinator-reconciliation.json"
+        },
+        "PRV-06": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-06/coordinator-reconciliation.json"
+        },
+        "PRV-07": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-07/coordinator-reconciliation.json"
+        },
+        "PRV-08": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-08/coordinator-reconciliation.json"
+        },
+        "PRV-09": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-09/coordinator-reconciliation.json"
+        },
+        "PRV-10": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-10/coordinator-reconciliation.json"
+        },
+        "PRV-11": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-11/coordinator-reconciliation.json"
+        },
+        "PRV-12": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-12/coordinator-reconciliation.json"
+        },
+        "PRV-13": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-13/coordinator-reconciliation.json"
+        },
+        "PRV-14": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-14/coordinator-reconciliation.json"
+        }
+      }
+    },
+    {
+      "laneId": "provider_operations",
+      "agentId": "01a04abf-72fe-7be1-a092-f3d6e5939de1",
+      "status": "PARTIAL_VISUAL_GATE",
+      "screenRange": [
+        "PRV-15",
+        "PRV-16",
+        "PRV-17",
+        "PRV-18",
+        "PRV-19",
+        "PRV-20"
+      ],
+      "canonicalSourcePage": "6017:4355",
+      "writableFeatureRoots": [
+        "apps/web/src/features/provider/projects.tsx",
+        "apps/web/src/features/provider/projects-copy.ts",
+        "apps/web/src/features/provider/projects-data.ts",
+        "apps/web/src/features/provider/projects.css",
+        "apps/web/src/features/provider/customer-requests.tsx",
+        "apps/web/src/features/provider/customer-requests-copy.ts",
+        "apps/web/src/features/provider/customer-requests-data.ts",
+        "apps/web/src/features/provider/customer-requests.css",
+        "apps/web/src/features/provider/viewings.tsx",
+        "apps/web/src/features/provider/viewings-copy.ts",
+        "apps/web/src/features/provider/viewings-data.ts",
+        "apps/web/src/features/provider/viewings.css",
+        "apps/web/src/features/provider/advertising.tsx",
+        "apps/web/src/features/provider/advertising-copy.ts",
+        "apps/web/src/features/provider/advertising-data.ts",
+        "apps/web/src/features/provider/advertising.css"
+      ],
+      "writableTestRoots": [
+        "apps/web/tests/provider-projects.vitest.test.tsx",
+        "apps/web/tests/provider-customer-requests.vitest.test.tsx",
+        "apps/web/tests/provider-viewings.vitest.test.tsx",
+        "apps/web/tests/provider-advertising.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-projects.spec.ts",
+        "apps/web/tests/e2e/provider-customer-requests.spec.ts",
+        "apps/web/tests/e2e/provider-viewings.spec.ts",
+        "apps/web/tests/e2e/provider-advertising.spec.ts"
+      ],
+      "writableEvidenceRoots": [
+        "docs/quality/figma_parity/screens/PRV-15/**",
+        "docs/quality/figma_parity/screens/PRV-16/**",
+        "docs/quality/figma_parity/screens/PRV-17/**",
+        "docs/quality/figma_parity/screens/PRV-18/**",
+        "docs/quality/figma_parity/screens/PRV-19/**",
+        "docs/quality/figma_parity/screens/PRV-20/**"
+      ],
+      "cursor": {
+        "screenId": "PRV-20",
+        "node": "6028:10071",
+        "route": "/provider/commission",
+        "role": "provider",
+        "directions": [
+          "rtl",
+          "ltr"
+        ],
+        "devices": [
+          "desktop"
+        ]
+      },
+      "screenDecisions": {
+        "PRV-15": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-15/coordinator-reconciliation.json"
+        },
+        "PRV-16": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-16/coordinator-reconciliation.json"
+        },
+        "PRV-17": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-17/coordinator-reconciliation.json"
+        },
+        "PRV-18": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-18/coordinator-reconciliation.json"
+        },
+        "PRV-19": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-19/coordinator-reconciliation.json"
+        },
+        "PRV-20": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-20/coordinator-reconciliation.json"
+        }
+      }
+    },
+    {
+      "laneId": "provider_notifications_settings",
+      "agentId": "01a04abf-742b-7f23-bca5-ed98b7cdf861",
+      "status": "PARTIAL_VISUAL_GATE",
+      "screenRange": [
+        "PRV-21",
+        "PRV-22-1",
+        "PRV-22-2",
+        "PRV-22-3"
+      ],
+      "canonicalSourcePage": "6017:4355",
+      "writableFeatureRoots": [
+        "apps/web/src/features/provider/notifications.tsx",
+        "apps/web/src/features/provider/notifications-copy.ts",
+        "apps/web/src/features/provider/notifications-data.ts",
+        "apps/web/src/features/provider/notifications.css",
+        "apps/web/src/features/provider/settings.tsx",
+        "apps/web/src/features/provider/settings-copy.ts",
+        "apps/web/src/features/provider/settings-data.ts",
+        "apps/web/src/features/provider/settings.css"
+      ],
+      "writableTestRoots": [
+        "apps/web/tests/provider-notifications-settings.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-notifications-settings.spec.ts"
+      ],
+      "writableEvidenceRoots": [
+        "docs/quality/figma_parity/screens/PRV-21/**",
+        "docs/quality/figma_parity/screens/PRV-22-1/**",
+        "docs/quality/figma_parity/screens/PRV-22-2/**",
+        "docs/quality/figma_parity/screens/PRV-22-3/**"
+      ],
+      "cursor": {
+        "screenId": "PRV-22-3",
+        "node": "6028:12067",
+        "route": "/provider/settings",
+        "role": "provider",
+        "directions": [
+          "rtl",
+          "ltr"
+        ],
+        "devices": [
+          "desktop"
+        ]
+      },
+      "screenDecisions": {
+        "PRV-21": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-21/coordinator-reconciliation.json"
+        },
+        "PRV-22-1": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-22-1/coordinator-reconciliation.json"
+        },
+        "PRV-22-2": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-22-2/coordinator-reconciliation.json"
+        },
+        "PRV-22-3": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-22-3/coordinator-reconciliation.json"
+        }
+      }
+    }
+  ],
+  "canonicalScreens": [
+    {
+      "screenId": "PRV-01",
+      "node": "6017:19032",
+      "route": "/provider",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-01"
+    },
+    {
+      "screenId": "PRV-02",
+      "node": "6017:19308",
+      "route": "/provider/properties",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-02"
+    },
+    {
+      "screenId": "PRV-03",
+      "node": "6017:19499",
+      "route": "/provider/properties/new/basic",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-03"
+    },
+    {
+      "screenId": "PRV-04",
+      "node": "6017:19679",
+      "route": "/provider/properties/:id/location",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-04"
+    },
+    {
+      "screenId": "PRV-05",
+      "node": "6017:19858",
+      "route": "/provider/properties/:id/details",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-05"
+    },
+    {
+      "screenId": "PRV-06",
+      "node": "6017:20034",
+      "route": "/provider/properties/:id/price-payment",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-06"
+    },
+    {
+      "screenId": "PRV-07",
+      "node": "6017:20229",
+      "route": "/provider/properties/:id/features",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-07"
+    },
+    {
+      "screenId": "PRV-08",
+      "node": "6017:20391",
+      "route": "/provider/properties/:id/media",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-08"
+    },
+    {
+      "screenId": "PRV-09",
+      "node": "6017:20561",
+      "route": "/provider/properties/:id/contact",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-09"
+    },
+    {
+      "screenId": "PRV-10",
+      "node": "6017:20737",
+      "route": "/provider/properties/:id/review",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-10"
+    },
+    {
+      "screenId": "PRV-11",
+      "node": "6017:21064",
+      "route": "/provider/properties/:id/review",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-11"
+    },
+    {
+      "screenId": "PRV-12",
+      "node": "6017:21012",
+      "route": "/provider/properties/:id/submitted",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-12"
+    },
+    {
+      "screenId": "PRV-13",
+      "node": "6017:21123",
+      "route": "/provider/properties/:id/rejected",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-13"
+    },
+    {
+      "screenId": "PRV-14",
+      "node": "6017:20973",
+      "route": "/provider/properties/:id/published",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-14"
+    },
+    {
+      "screenId": "PRV-15",
+      "node": "6017:21162",
+      "route": "/provider/projects",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-15"
+    },
+    {
+      "screenId": "PRV-16",
+      "node": "6017:21368",
+      "route": "/provider/customer-requests",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-16"
+    },
+    {
+      "screenId": "PRV-17",
+      "node": "6017:21747",
+      "route": "/provider/customer-requests?create=1",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-17"
+    },
+    {
+      "screenId": "PRV-18",
+      "node": "6017:21613",
+      "route": "/provider/viewings",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-18"
+    },
+    {
+      "screenId": "PRV-19",
+      "node": "6017:22088",
+      "route": "/provider/ads",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-19"
+    },
+    {
+      "screenId": "PRV-20",
+      "node": "6028:10071",
+      "route": "/provider/commission",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-20"
+    },
+    {
+      "screenId": "PRV-21",
+      "node": "6028:10830",
+      "route": "/provider/notifications",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-21"
+    },
+    {
+      "screenId": "PRV-22-1",
+      "node": "6028:11337",
+      "route": "/provider/settings",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-22-1"
+    },
+    {
+      "screenId": "PRV-22-2",
+      "node": "6028:11875",
+      "route": "/provider/settings",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-22-2"
+    },
+    {
+      "screenId": "PRV-22-3",
+      "node": "6028:12067",
+      "route": "/provider/settings",
+      "role": "provider",
+      "device": "desktop",
+      "evidence": "docs/quality/figma_parity/screens/PRV-22-3"
+    }
+  ],
+  "coordinatorTaskId": "frontend_101",
+  "laneStatuses": {
+    "provider_property_entry": "PARTIAL_VISUAL_GATE",
+    "provider_operations": "PARTIAL_VISUAL_GATE",
+    "provider_notifications_settings": "PARTIAL_VISUAL_GATE"
+  },
+  "cursor": {
+    "screenId": "PRV-22-3",
+    "node": "6028:12067",
+    "route": "/provider/settings",
+    "role": "provider",
+    "directions": [
+      "rtl",
+      "ltr"
+    ],
+    "devices": [
+      "desktop"
+    ]
+  },
+  "closureDecision": {
+    "status": "PROVIDER_WAVE_FINAL_CLOSURE_BLOCKED",
+    "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+    "verifiedScreens": 0,
+    "partialScreens": 24,
+    "adminReady": false,
+    "updatedAt": "2026-08-29T01:47:21.446Z"
+  }
+}

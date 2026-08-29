@@ -35,6 +35,11 @@ import './styles.css';
 
 const MAX_MEDIA_BYTES = 10 * 1024 * 1024;
 const MEDIA_MIMES: readonly PropertyMediaMime[] = ['application/pdf', 'image/jpeg', 'image/png'];
+const MEDIA_FILENAME_EXTENSIONS: Readonly<Record<PropertyMediaMime, readonly string[]>> = {
+  'application/pdf': ['.pdf'],
+  'image/jpeg': ['.jpg', '.jpeg'],
+  'image/png': ['.png']
+};
 type ViewState = 'loading' | 'success' | 'retry' | 'error' | 'permission' | 'not_found';
 type MutationState = 'idle' | 'saving' | 'success' | 'error' | 'permission';
 
@@ -85,14 +90,17 @@ function mutationError(error: unknown): MutationState {
   return error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? 'permission' : 'error';
 }
 
-function pathFor(locale: SupportedLocale, propertyId: string, step: ProviderPropertyCompletionStep): string {
-  const url = new URL(`/provider/properties/${encodeURIComponent(propertyId)}/${step}`, 'http://sadat-real-estate.local');
+type ProviderPropertyNavigationStep = ProviderPropertyCompletionStep | 'features-services';
+
+function pathFor(locale: SupportedLocale, propertyId: string, step: ProviderPropertyNavigationStep): string {
+  const routeStep = step === 'features-services' ? 'features' : step;
+  const url = new URL(`/provider/properties/${encodeURIComponent(propertyId)}/${routeStep}`, 'http://sadat-real-estate.local');
   url.searchParams.set('lang', locale);
   return `${url.pathname}${url.search}`;
 }
 
-function navigate(locale: SupportedLocale, propertyId: string, step: ProviderPropertyCompletionStep | 'features-services'): void {
-  if (typeof window !== 'undefined') window.location.assign(pathFor(locale, propertyId, step as ProviderPropertyCompletionStep));
+function navigate(locale: SupportedLocale, propertyId: string, step: ProviderPropertyNavigationStep): void {
+  if (typeof window !== 'undefined') window.location.assign(pathFor(locale, propertyId, step));
 }
 
 function contactFromProperty(property: PropertyData | undefined, locale: SupportedLocale): ContactForm {
@@ -117,15 +125,11 @@ function mediaMimeFor(file: File, kind: PropertyMediaKind): PropertyMediaMime | 
   if (!MEDIA_MIMES.includes(mime)) return undefined;
   if (kind === 'floor_plan' && mime !== 'application/pdf') return undefined;
   if (kind === 'image' && mime === 'application/pdf') return undefined;
+  const filename = file.name.trim();
+  const extensionStart = filename.lastIndexOf('.');
+  const extension = extensionStart < 0 ? '' : filename.slice(extensionStart).toLowerCase();
+  if (filename.length === 0 || filename.length > 120 || /[\\/\u0000-\u001f\u007f]/u.test(filename) || !MEDIA_FILENAME_EXTENSIONS[mime].includes(extension)) return undefined;
   return mime;
-}
-
-function safeName(property: PropertyData, locale: SupportedLocale): string {
-  return property.name[locale] ?? property.name.en ?? property.name.ar ?? property.slug;
-}
-
-function statusLabel(property: PropertyData): string {
-  return property.status.replaceAll('_', ' ');
 }
 
 function reorderItems(items: readonly PropertyMediaData[]): PropertyMediaOrderInput[] {
@@ -153,9 +157,10 @@ function StatePanel({ state, onRetry, copy }: { readonly state: ViewState; reado
 
 function StepRail({ step, locale }: { readonly step: ProviderPropertyCompletionStep; readonly locale: SupportedLocale }) {
   const labels = getProviderPropertyRailLabels(locale);
+  const propertyCopy = getProviderPropertyCopy(locale);
   const currentIndex = PROVIDER_PROPERTY_RAIL_STEPS.indexOf(step);
   return (
-    <ol className="provider-property-completion__steps" aria-label="Property completion steps">
+    <ol className="provider-property-completion__steps" aria-label={propertyCopy.wizard.eyebrow}>
       {PROVIDER_PROPERTY_RAIL_STEPS.map((item, index) => {
         const complete = index < currentIndex;
         const active = index === currentIndex;
@@ -389,12 +394,11 @@ function ReviewView({
         <h2 id="provider-property-review-summary">{review.safeProjectionTitle}</h2>
         <p>{review.safeProjectionBody}</p>
         <dl className="provider-property-completion__summary">
-          <div><dt>{review.status}</dt><dd>{statusLabel(property)}</dd></div>
+          <div><dt>{review.status}</dt><dd>{getProviderPropertyCopy(locale).wizard.statusLabels[property.status]}</dd></div>
           <div><dt>{review.location}</dt><dd>{property.locationId ?? property.mapUrl ?? (property.coordinates ? `${property.coordinates.latitude}, ${property.coordinates.longitude}` : '—')}</dd></div>
           <div><dt>{review.price}</dt><dd>{property.price === undefined ? '—' : `${property.price.amount} ${property.price.currency}`}</dd></div>
           <div><dt>{review.contact}</dt><dd>{property.contact?.contactName ?? property.contact?.email ?? property.contact?.phone ?? '—'}</dd></div>
           <div><dt>{review.media}</dt><dd>{media.length === 0 ? review.noMedia : `${media.length} ${review.mediaCount}`}</dd></div>
-          <div><dt>Property</dt><dd>{safeName(property, locale)}</dd></div>
         </dl>
       </section>
       {!submittedView && missing.length > 0 ? <section className="provider-property-completion__missing" role="alert"><h2>{review.missingTitle}</h2><p>{review.missingBody}</p><ul>{missing.map(item => <li key={item}>{item}</li>)}</ul></section> : null}
@@ -586,7 +590,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   ) : null;
 
   return (
-    <section className="provider-dashboard provider-property-completion" data-screen-id={step === 'media' ? 'PRV-08' : step === 'contact' ? 'PRV-09' : validationState ? 'PRV-11' : 'PRV-10'} data-route={`/provider/properties/${propertyId}/${step}`} data-device-scope="desktop">
+    <section className="provider-dashboard provider-property-completion" data-screen-id={step === 'media' ? 'PRV-08' : step === 'contact' ? 'PRV-09' : validationState ? 'PRV-11' : 'PRV-10'} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${step}`} data-device-scope="desktop">
       <ProviderNavigation locale={locale} activePath="/provider/properties" />
       <div className="provider-dashboard__content provider-property-wizard__content">
         <StepRail step={step} locale={locale} />

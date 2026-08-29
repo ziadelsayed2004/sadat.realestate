@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PRV-22-3",
+  "classification": "PARTIAL",
+  "classificationReason": "Security actions remain fail-closed because the current provider contract exposes no password or account-deletion mutation; focused tests verify both controls are disabled, along with AR/EN direction and settings error/permission states. The desktop security visual assertion was not reached after the account snapshot mismatch, and the shared Provider shell remains outside this lane.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "nodeId": "6028:12067",
+    "route": "/provider/settings",
+    "tab": "security",
+    "localExport": "docs/design_sources/final_screens/provider/PRV-22-3.png",
+    "localExportDimensions": { "width": 6308, "height": 4140 },
+    "reviewed": true
+  },
+  "runtime": {
+    "role": "provider",
+    "deviceScope": "desktop",
+    "locales": [
+      { "locale": "ar", "direction": "rtl" },
+      { "locale": "en", "direction": "ltr" }
+    ],
+    "statesReviewed": ["loading", "success", "empty", "retry", "error", "permission", "unsupported-action"],
+    "authorization": "Security controls do not issue mutations: password and account-deletion actions remain disabled because they are not present in the server contract projection.",
+    "projection": "The screen renders only supported settings data and explicit unavailable security controls; no password or deletion API behavior is invented.",
+    "navigationAndFocus": "The security tab is a canonical /provider/settings tab variant with locale query; disabled controls expose their unavailable state without creating an actionable focus target."
+  },
+  "repairs": [
+    {
+      "status": "REPAIRED",
+      "owner": "apps/web/src/features/provider/settings.css",
+      "defect": "The security panels used a side-by-side grid that did not match the canonical stacked desktop grouping.",
+      "effect": "Password and account-deletion panels use a single-column desktop grid while preserving explicit unavailable states."
+    }
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/provider-notifications-settings.vitest.test.tsx --run -t \"uses only|for ar|for en|permission state|fails closed|renders empty|maps notification|honors server|maps settings|contact fields\"",
+      "exitCode": 0,
+      "result": "12 passed; 2 existing zh-CN cases skipped; unsupported password and deletion actions were verified disabled."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-notifications-settings.spec.ts --project=desktop-ar --project=desktop-en --workers=1",
+      "exitCode": 1,
+      "result": "The no-update visual flow did not reach the security screenshot because the account screenshot failed first; no snapshot was updated."
+    }
+  ],
+  "visualClosure": {
+    "status": "OPEN",
+    "snapshotsUpdated": false,
+    "normalVisualCheck": "Not reached after the PRV-22-1 screenshot assertion failed."
+  },
+  "blockingDefectIds": [],
+  "evidenceFiles": ["docs/quality/figma_parity/screens/PRV-22-3/review.json"],
+  "constraints": { "zhCN": "Not run or modified.", "sharedFiles": "Not modified." }
+}

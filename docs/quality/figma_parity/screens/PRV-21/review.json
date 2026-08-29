@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PRV-21",
+  "classification": "PARTIAL",
+  "classificationReason": "Provider-only authorization, safe projections, notification mutations, empty/filter behavior, AR/EN direction, and focused accessibility checks pass. Visual closure remains open because the no-update desktop snapshot compares a 1280x761 runtime with an existing 1280x881 baseline; the shared Provider shell is outside this lane.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "nodeId": "6028:10830",
+    "route": "/provider/notifications",
+    "localExport": "docs/design_sources/final_screens/provider/PRV-21.png",
+    "localExportDimensions": { "width": 6308, "height": 4140 },
+    "reviewed": true
+  },
+  "runtime": {
+    "role": "provider",
+    "deviceScope": "desktop",
+    "locales": [
+      { "locale": "ar", "direction": "rtl" },
+      { "locale": "en", "direction": "ltr" }
+    ],
+    "statesReviewed": ["loading", "success", "empty", "retry", "error", "permission", "mutation-success", "mutation-not-found", "mutation-permission"],
+    "authorization": "Anonymous sessions do not load provider data; notification read mutations fail closed for a non-provider role and map 401/403/404 responses to safe feedback.",
+    "projection": "Only contract-projected notification fields render; internalNotes, assignedTo, auditData, storageKey, accessToken, and refreshToken are absent from the checked DOM.",
+    "navigationAndFocus": "Same-origin notification links preserve the provider path and locale; AR/EN E2E checks focus the read action and verify direction."
+  },
+  "repairs": [
+    {
+      "status": "REPAIRED",
+      "owner": "apps/web/src/features/provider/notifications.tsx",
+      "defect": "Notification links were not explicitly fail-closed for malformed or cross-origin values.",
+      "effect": "Invalid, empty, and cross-origin values produce no link; approved same-origin paths receive the locale query."
+    },
+    {
+      "status": "REPAIRED",
+      "owner": "apps/web/src/features/provider/notifications.tsx",
+      "defect": "An unread-filter response with no rows could hide the filter toolbar as a top-level empty state.",
+      "effect": "The unread filter preserves its tabs and empty message while the all-notifications zero-total response uses the page empty state."
+    },
+    {
+      "status": "REPAIRED",
+      "owner": "apps/web/src/features/provider/notifications.tsx",
+      "defect": "Mutation handlers did not re-check the current provider role before invoking an action source.",
+      "effect": "Read and mark-all handlers return a permission feedback state without issuing a mutation when the session is no longer a provider."
+    }
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/provider-notifications-settings.vitest.test.tsx --run -t \"uses only|for ar|for en|permission state|fails closed|renders empty|maps notification|honors server|maps settings|contact fields\"",
+      "exitCode": 0,
+      "result": "12 passed; 2 existing zh-CN cases skipped."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-notifications-settings.spec.ts --project=desktop-ar --project=desktop-en --workers=1",
+      "exitCode": 1,
+      "result": "Functional assertions before the screenshot passed; the no-update snapshot failed at 1280x761 versus the existing 1280x881 baseline for AR and EN."
+    }
+  ],
+  "visualClosure": {
+    "status": "OPEN",
+    "snapshotsUpdated": false,
+    "baselineMismatch": { "expected": "1280x881", "actual": "1280x761" }
+  },
+  "blockingDefectIds": [],
+  "evidenceFiles": ["docs/quality/figma_parity/screens/PRV-21/review.json"],
+  "constraints": { "zhCN": "Not run or modified.", "sharedFiles": "Not modified." }
+}

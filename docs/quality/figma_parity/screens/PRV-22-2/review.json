@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PRV-22-2",
+  "classification": "PARTIAL",
+  "classificationReason": "The contact projection, server action gate, contact update payload, AR/EN direction, and safe success/conflict/error handling are covered by the focused Provider tests. The desktop layout received a bounded two-column repair for the canonical contact grouping, but the E2E visual flow stops at the preceding account snapshot mismatch and the shared Provider shell remains outside this lane.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "nodeId": "6028:11875",
+    "route": "/provider/settings",
+    "tab": "contact",
+    "localExport": "docs/design_sources/final_screens/provider/PRV-22-2.png",
+    "localExportDimensions": { "width": 6308, "height": 4140 },
+    "reviewed": true
+  },
+  "runtime": {
+    "role": "provider",
+    "deviceScope": "desktop",
+    "locales": [
+      { "locale": "ar", "direction": "rtl" },
+      { "locale": "en", "direction": "ltr" }
+    ],
+    "statesReviewed": ["loading", "success", "empty", "retry", "error", "permission", "validation", "conflict", "save-success"],
+    "authorization": "The contact form is disabled and its submit handler is a no-op when update_contact is absent from availableActions; supported updates use the server version and the projected contact fields.",
+    "projection": "Only the contract-supported WhatsApp number, office address, and website fields render; no separate phone identity field is introduced.",
+    "navigationAndFocus": "The contact tab is a canonical /provider/settings tab variant with locale query; labeled contact controls and feedback regions remain keyboard-accessible."
+  },
+  "repairs": [
+    {
+      "status": "REPAIRED",
+      "owner": "apps/web/src/features/provider/settings.tsx",
+      "defect": "Contact save controls could remain actionable when update_contact was not projected by the server.",
+      "effect": "All contact inputs and the submit action fail closed when the server action is unavailable."
+    },
+    {
+      "status": "REPAIRED",
+      "owner": "apps/web/src/features/provider/settings.css",
+      "defect": "The desktop contact fields used a single-column panel despite the canonical two-column grouping.",
+      "effect": "WhatsApp, address, and website fields use the bounded two-column desktop panel while the heading and save action span the panel."
+    }
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web -- tests/provider-notifications-settings.vitest.test.tsx --run -t \"uses only|for ar|for en|permission state|fails closed|renders empty|maps notification|honors server|maps settings|contact fields\"",
+      "exitCode": 0,
+      "result": "12 passed; 2 existing zh-CN cases skipped, including contact-field and unsupported-action assertions."
+    },
+    {
+      "command": "npm.cmd run test:e2e --workspace apps/web -- tests/e2e/provider-notifications-settings.spec.ts --project=desktop-ar --project=desktop-en --workers=1",
+      "exitCode": 1,
+      "result": "The no-update visual flow did not reach the contact screenshot because the account screenshot failed first; no snapshot was updated."
+    }
+  ],
+  "visualClosure": {
+    "status": "OPEN",
+    "snapshotsUpdated": false,
+    "normalVisualCheck": "Not reached after the PRV-22-1 screenshot assertion failed."
+  },
+  "blockingDefectIds": [],
+  "evidenceFiles": ["docs/quality/figma_parity/screens/PRV-22-2/review.json"],
+  "constraints": { "zhCN": "Not run or modified.", "sharedFiles": "Not modified." }
+}

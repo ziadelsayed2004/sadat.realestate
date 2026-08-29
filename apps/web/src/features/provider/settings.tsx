@@ -46,7 +46,7 @@ function stateForError(error: unknown): Exclude<ProviderSettingsViewState, 'load
 }
 
 function feedbackForError(error: unknown): Exclude<SettingsFeedback, 'saved' | 'validation'> {
-  if (error instanceof ApiClientError && error.status === 401 || error instanceof ApiClientError && error.status === 403) return 'permission';
+  if (error instanceof ApiClientError && (error.status === 401 || error.status === 403)) return 'permission';
   if (error instanceof ApiClientError && error.status === 409) return 'conflict';
   return 'error';
 }
@@ -89,6 +89,9 @@ export function ProviderSettings({ locale, session, authClient, apiOrigin, tab =
   const sessionRole = session.status === 'authenticated' ? session.role : undefined;
   const loadSource = useMemo(() => load ?? createProviderSettingsLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, load]);
   const actionSource = useMemo(() => actions ?? createProviderSettingsActions({ apiOrigin, authorization: authClient }), [actions, apiOrigin, authClient]);
+  const canSave = data !== undefined && (tab === 'account'
+    ? data.availableActions.includes('update_email')
+    : tab === 'contact' && data.availableActions.includes('update_contact'));
 
   useEffect(() => {
     if (session.status !== 'authenticated' || sessionRole !== 'provider') {
@@ -112,7 +115,7 @@ export function ProviderSettings({ locale, session, authClient, apiOrigin, tab =
   const updateField = (field: keyof SettingsForm) => (event: React.ChangeEvent<HTMLInputElement>) => setForm(current => ({ ...current, [field]: event.target.value }));
   const save = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (data === undefined || tab === 'security') return;
+    if (data === undefined || tab === 'security' || !canSave) return;
     const input: ProviderSettingsPatch = tab === 'account'
       ? { expectedVersion: data.version, email: form.email.trim() }
       : { expectedVersion: data.version, whatsappNumber: form.whatsappNumber.trim() || null, officeAddress: form.officeAddress.trim() || null, website: form.website.trim() || null };
@@ -145,18 +148,18 @@ export function ProviderSettings({ locale, session, authClient, apiOrigin, tab =
             {tab === 'account' ? (
               <form className="provider-settings__panel" onSubmit={event => { void save(event); }} aria-labelledby="provider-settings-account-heading">
                 <h2 id="provider-settings-account-heading">{copy.account.heading}</h2>
-                <Input id="provider-settings-email" type="email" label={copy.account.email} value={form.email} onChange={updateField('email')} disabled={saving} autoComplete="email" />
+                <Input id="provider-settings-email" type="email" label={copy.account.email} value={form.email} onChange={updateField('email')} disabled={saving || !canSave} autoComplete="email" />
                 <p className="provider-settings__notice">{copy.account.legalNotice}</p>
-                <Button type="submit" loading={saving}>{copy.account.saveEmail}</Button>
+                <Button type="submit" loading={saving} disabled={!canSave}>{copy.account.saveEmail}</Button>
               </form>
             ) : null}
             {tab === 'contact' ? (
-              <form className="provider-settings__panel" onSubmit={event => { void save(event); }} aria-labelledby="provider-settings-contact-heading">
+              <form className="provider-settings__panel provider-settings__panel--contact" onSubmit={event => { void save(event); }} aria-labelledby="provider-settings-contact-heading">
                 <h2 id="provider-settings-contact-heading">{copy.contact.heading}</h2>
-                <Input id="provider-settings-whatsapp" type="tel" label={copy.contact.whatsapp} value={form.whatsappNumber} onChange={updateField('whatsappNumber')} disabled={saving} />
-                <Input id="provider-settings-address" type="text" label={copy.contact.address} value={form.officeAddress} onChange={updateField('officeAddress')} disabled={saving} />
-                <Input id="provider-settings-website" type="url" label={copy.contact.website} value={form.website} onChange={updateField('website')} disabled={saving} />
-                <Button type="submit" loading={saving}>{copy.contact.save}</Button>
+                <Input id="provider-settings-whatsapp" type="tel" label={copy.contact.whatsapp} value={form.whatsappNumber} onChange={updateField('whatsappNumber')} disabled={saving || !canSave} />
+                <Input id="provider-settings-address" type="text" label={copy.contact.address} value={form.officeAddress} onChange={updateField('officeAddress')} disabled={saving || !canSave} />
+                <Input id="provider-settings-website" type="url" label={copy.contact.website} value={form.website} onChange={updateField('website')} disabled={saving || !canSave} />
+                <Button type="submit" loading={saving} disabled={!canSave}>{copy.contact.save}</Button>
               </form>
             ) : null}
             {tab === 'security' ? (

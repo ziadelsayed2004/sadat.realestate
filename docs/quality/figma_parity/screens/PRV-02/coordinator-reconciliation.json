@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "screenId": "PRV-02",
+  "classification": "PARTIAL",
+  "status": "COORDINATOR_RECONCILED_PARTIAL",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "nodeId": "6017:19308",
+    "route": "/provider/properties",
+    "role": "provider",
+    "device": "desktop",
+    "localExport": "docs/design_sources/final_screens/provider/PRV-02.png",
+    "localExportSha256": "2a2b739851e2d3557dda12e8a350228b0fdfb4b40a2242b36298d38d2e8e7738",
+    "reviewed": true
+  },
+  "runtime": {
+    "approvedLocaleScope": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "captures": [
+      {
+        "locale": "ar",
+        "direction": "rtl",
+        "runtimePath": "docs/quality/figma_parity/screens/PRV-02/runtime-after-e2e-2026-08-29-ar.png",
+        "sourceArtifact": "apps/web/test-results/provider-properties-PRV-02-ee935--preserves-locale-direction-desktop-ar/provider-properties-ar-actual.png",
+        "captureMode": "e2e-2026-08-29",
+        "sha256": "cbc8f3896840e6b890236d5f0f110ab4427622eb6cee2111b72cb534e510fb93",
+        "width": 1280,
+        "height": 817,
+        "visual": {
+          "expected": {
+            "width": 1280,
+            "height": 908
+          },
+          "actual": {
+            "width": 1280,
+            "height": 817
+          },
+          "differentPixels": 229302,
+          "ratio": 0.2,
+          "errorContext": "apps/web/test-results/provider-properties-PRV-02-ee935--preserves-locale-direction-desktop-ar/error-context.md"
+        }
+      },
+      {
+        "locale": "en",
+        "direction": "ltr",
+        "runtimePath": "docs/quality/figma_parity/screens/PRV-02/runtime-after-e2e-2026-08-29-en.png",
+        "sourceArtifact": "apps/web/test-results/provider-properties-PRV-02-ee935--preserves-locale-direction-desktop-en/provider-properties-en-actual.png",
+        "captureMode": "e2e-2026-08-29",
+        "sha256": "aba705bdf534884492af2fc81aab6323c3b9cce75dc2999c41db17f97eaa2db6",
+        "width": 1280,
+        "height": 844,
+        "visual": {
+          "expected": {
+            "width": 1280,
+            "height": 935
+          },
+          "actual": {
+            "width": 1280,
+            "height": 844
+          },
+          "differentPixels": 240167,
+          "ratio": 0.21,
+          "errorContext": "apps/web/test-results/provider-properties-PRV-02-ee935--preserves-locale-direction-desktop-en/error-context.md"
+        }
+      }
+    ],
+    "beforeCapture": {
+      "status": "NOT_AVAILABLE",
+      "reason": "No pre-Provider-lane capture was available; no before claim is made."
+    },
+    "reachedInCombinedE2E": true,
+    "directCaptureReason": null
+  },
+  "functional": {
+    "status": "PASS_FOR_EXECUTED_ASSERTIONS",
+    "focusedTests": [
+      "apps/web/tests/provider-properties.vitest.test.tsx",
+      "apps/web/tests/e2e/provider-properties.spec.ts"
+    ],
+    "note": "The combined E2E functional and permission assertions passed before the no-update screenshot assertion failed."
+  },
+  "visual": {
+    "status": "OPEN",
+    "snapshotsUpdated": false,
+    "screenshotFailures": [
+      {
+        "locale": "ar",
+        "expected": {
+          "width": 1280,
+          "height": 908
+        },
+        "actual": {
+          "width": 1280,
+          "height": 817
+        },
+        "differentPixels": 229302,
+        "ratio": 0.2,
+        "errorContext": "apps/web/test-results/provider-properties-PRV-02-ee935--preserves-locale-direction-desktop-ar/error-context.md"
+      },
+      {
+        "locale": "en",
+        "expected": {
+          "width": 1280,
+          "height": 935
+        },
+        "actual": {
+          "width": 1280,
+          "height": 844
+        },
+        "differentPixels": 240167,
+        "ratio": 0.21,
+        "errorContext": "apps/web/test-results/provider-properties-PRV-02-ee935--preserves-locale-direction-desktop-en/error-context.md"
+      }
+    ],
+    "directReview": "Reviewed against the approved local Provider export and preserved runtime evidence. The current visual gate is not closure-eligible because no-update screenshots show material geometry/content differences.",
+    "repoOwnedDefects": [
+      {
+        "id": "PROVIDER-SHARED-NAV-ICON-GLYPHS",
+        "element": "ProviderNavigation icons",
+        "owner": "Coordinator",
+        "targetFile": "apps/web/src/features/provider/overview.tsx",
+        "description": "The shared Provider rail still renders text glyphs where the approved local Provider export uses outlined navigation icons; no approved Provider icon asset was found during the local source review.",
+        "requiredRepair": "Replace the text glyph map with the approved icon implementation/assets while preserving the existing provider-only routes, locale query, active treatment, and direction behavior."
+      }
+    ],
+    "externalBlockers": []
+  },
+  "repairs": [
+    "apps/web/src/features/provider/properties.tsx",
+    "apps/web/src/features/provider/styles.css"
+  ],
+  "evidenceFiles": [
+    "docs/quality/figma_parity/screens/PRV-02/coordinator-reconciliation.json",
+    "docs/quality/figma_parity/screens/PRV-02/review.json"
+  ],
+  "constraints": {
+    "zhCN": "Excluded from execution and untouched.",
+    "admin": "Unopened and unmodified.",
+    "snapshots": "No snapshot was updated."
+  }
+}

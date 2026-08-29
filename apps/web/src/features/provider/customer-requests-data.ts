@@ -3,12 +3,12 @@ import {
   requestDataSchema,
   requestIdSchema,
   requestListDataSchema,
+  requestListQuerySchema,
   requestTransitionRequestSchema,
   successEnvelopeSchema,
   type RequestCreate,
   type RequestData,
   type RequestListData,
-  type RequestListQuery,
   type RequestStatus,
   type RequestTransition
 } from '@sadat-real-estate/contracts';
@@ -64,14 +64,14 @@ export async function loadProviderCustomerRequests(options: ProviderCustomerRequ
   const page = options.query?.page ?? 1;
   const limit = options.query?.limit ?? 5;
   const search = options.query?.search?.trim();
-  const query: RequestListQuery = {
+  const query = requestListQuerySchema.parse({
     page,
     limit,
     source: 'provider',
     type: 'provider_customer',
     ...(options.query?.status === undefined ? {} : { status: options.query.status }),
     ...(search === undefined || search === '' ? {} : { search })
-  };
+  });
   const response = await client.request(PROVIDER_CUSTOMER_REQUESTS_ROUTE, {
     responseSchema: successEnvelopeSchema(requestListDataSchema),
     ...(headers === undefined ? {} : { headers }),

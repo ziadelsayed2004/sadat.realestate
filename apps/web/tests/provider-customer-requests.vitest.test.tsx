@@ -58,6 +58,13 @@ describe('Provider customer requests', () => {
     expect(Object.fromEntries(url.searchParams)).toEqual({ source: 'provider', type: 'provider_customer', status: 'new', search: 'Mona', page: '2', limit: '5' });
   });
 
+  it.each([{ page: 0 }, { page: 1, limit: 101 }])('rejects invalid request pagination before network access: %o', async query => {
+    let calls = 0;
+    const client = new ApiClient({ fetcher: async () => { calls += 1; return success(data, 'provider-requests-invalid-pagination'); } });
+    await expect(loadProviderCustomerRequests({ apiClient: client, query })).rejects.toThrow();
+    expect(calls).toBe(0);
+  });
+
   it('uses the implemented create and transition routes with contract validation', async () => {
     const requests: Array<{ url: string; method: string; body: unknown; authorization: string | null }> = [];
     const client = new ApiClient({
@@ -76,6 +83,48 @@ describe('Provider customer requests', () => {
     expect(requests.every(item => item.authorization === 'Bearer provider.requests.token')).toBe(true);
     expect(requests[0]?.body).toEqual({ firstName: 'Mona', lastName: 'Hassan', phone: '01012345678', email: 'mona@example.com', message: 'Hello' });
     expect(requests[1]?.body).toEqual({ transition: 'contact', expectedVersion: 2 });
+  });
+
+  it('masks customer contact details in the Provider list projection', async () => {
+    const load = vi.fn(async (_query: ProviderCustomerRequestsQuery) => data);
+    renderWithLocale(<ProviderCustomerRequests locale="en" session={session} load={load} />, { locale: 'en' });
+    await waitFor(() => expect(screen.getByTestId('provider-customer-requests-count')).toBeInTheDocument());
+    const rowElement = screen.getByTestId(`provider-customer-request-${requestId}`);
+    expect(within(rowElement).getByText('010••••678')).toBeInTheDocument();
+    expect(within(rowElement).getByText('m•••@example.com')).toBeInTheDocument();
+    expect(rowElement).not.toHaveTextContent('01012345678');
+    expect(rowElement).not.toHaveTextContent('mona@example.com');
+  });
+
+  it('opens the Provider create form from the canonical create deep link', async () => {
+    const originalUrl = window.location.href;
+    window.history.pushState({}, '', '/provider/customer-requests?create=1');
+    try {
+      const load = vi.fn(async (_query: ProviderCustomerRequestsQuery) => data);
+      renderWithLocale(<ProviderCustomerRequests locale="en" session={session} load={load} />, { locale: 'en' });
+      await waitFor(() => expect(screen.getByTestId('provider-customer-requests-count')).toBeInTheDocument());
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      expect(screen.getByRole('dialog').closest('[data-screen-id="PRV-17"]')).not.toBeNull();
+    } finally {
+      window.history.replaceState({}, '', originalUrl);
+    }
+  });
+
+  it('does not fetch a draft status filter until Apply is submitted', async () => {
+    const observedQueries: ProviderCustomerRequestsQuery[] = [];
+    const load = vi.fn(async (query: ProviderCustomerRequestsQuery) => {
+      observedQueries.push(query);
+      return data;
+    });
+    const copy = getProviderCustomerRequestsCopy('en');
+    renderWithLocale(<ProviderCustomerRequests locale="en" session={session} load={load} />, { locale: 'en' });
+    await waitFor(() => expect(screen.getByTestId('provider-customer-requests-count')).toBeInTheDocument());
+    expect(observedQueries).toHaveLength(1);
+
+    fireEvent.change(screen.getByLabelText(copy.statusLabel), { target: { value: 'contacted' } });
+    expect(observedQueries).toHaveLength(1);
+    fireEvent.click(screen.getByRole('button', { name: copy.apply }));
+    await waitFor(() => expect(observedQueries.at(-1)).toMatchObject({ status: 'contacted' }));
   });
 
   it.each(['ar', 'en', 'zh-CN'] as const)('renders safe provider projections and direction for %s', async locale => {

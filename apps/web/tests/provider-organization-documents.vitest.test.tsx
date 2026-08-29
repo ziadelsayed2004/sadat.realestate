@@ -5,7 +5,7 @@ import { AuthPage, type AuthFlowClient } from '../src/features/auth/pages.tsx';
 import { AuthClient } from '../src/features/auth/client.ts';
 import { getProviderAccountCopy } from '../src/features/provider_auth/account-copy.ts';
 import { getProviderDocumentsCopy } from '../src/features/provider_auth/documents-copy.ts';
-import { ProviderDocumentsPage } from '../src/features/provider_auth/documents.tsx';
+import { ProviderDocumentsPage, validateFile } from '../src/features/provider_auth/documents.tsx';
 import { getProviderOrganizationCopy } from '../src/features/provider_auth/organization-copy.ts';
 import { ProviderOrganizationPage } from '../src/features/provider_auth/organization.tsx';
 import { renderWithLocale } from '../src/features/testing/index.ts';
@@ -229,6 +229,13 @@ describe('provider organization details', () => {
 });
 
 describe('provider private documents', () => {
+  it('rejects unsafe filenames and MIME-extension mismatches before upload', () => {
+    const copy = getProviderDocumentsCopy('en');
+    expect(validateFile(new File(['pdf'], '../private.pdf', { type: 'application/pdf' }), copy)?.state).toBe('error');
+    expect(validateFile(new File(['jpeg'], 'identity.pdf', { type: 'image/jpeg' }), copy)?.state).toBe('error');
+    expect(validateFile(new File(['png'], 'identity.png', { type: 'image/png' }), copy)).toBeUndefined();
+  });
+
   it('maps the strict provider patch and raw document methods to implemented API routes', async () => {
     const apiClient = { request: vi.fn().mockImplementation(async (path: string) => ({
       data: {
