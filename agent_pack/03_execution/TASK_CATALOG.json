@@ -9773,5 +9773,58 @@
       "api:audit, API inventory, OpenAPI/Postman, node agent_pack/scripts/audit_pack.mjs, and git diff --check"
     ],
     "sequence": 214
+  },
+  {
+    "id": "frontend_106",
+    "phase": "G1_repository_rebaseline",
+    "area": "governance, ownership and provenance",
+    "title": "Fresh Read-Only Baseline and Per-File Ownership/Provenance Manifest",
+    "goal": "Capture a truthful protected baseline before further mutation, including branch synchronization, worktree policy, per-file ownership, SHA-256 hashes, byte sizes, Git provenance, and task-scoped generated-file ownership without reading protected secrets.",
+    "kind": "governance",
+    "screens": [],
+    "sourceRefs": [
+      "03_execution/MANIFEST.json",
+      "03_execution/TASK_STATE.json",
+      "08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_OWNERSHIP_MANIFEST.json",
+      "08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_OWNERSHIP_MANIFEST_2026-08-30.json",
+      "scripts/create_ownership_provenance_manifest.mjs"
+    ],
+    "notes": [
+      "This is the first atomic implementation task of G1. frontend_105 is historical input only; this baseline is dependency-independent and must precede all product, Git-index, database, locale, visual, or infrastructure mutations.",
+      "The pre-mutation read-only capture observed main synchronized with origin/main at 0 ahead and 0 behind, with no status entries at capture time. The tree remains protected/potentially dirty by owner policy.",
+      "The dated manifest records 4,931 tracked files with complete SHA-256, byte size, ownership classification, and local Git commit/author provenance, plus the task-owned generated files observed after baseline creation.",
+      "Protected scopes, secrets, local runtime data, Git internals, documentation images, runtime assets, and user-owned product files were not mutated. No .gitignore rule, index operation, deletion, commit, push, deploy, reset, stash, or history rewrite was performed.",
+      "Canonical Figma is Odl1Epn2u6lIEuIMmABT7o; 0HBdTNGROmmpC6S7OYa3iJ remains forbidden. The next planned atomic task is frontend_107 and is not started in this run."
+    ],
+    "track": "frontend",
+    "dependsOn": [],
+    "atomicTaskFile": "04_tracks/frontend/G1_repository_rebaseline/frontend_106.md",
+    "allowedRoots": [
+      "agent_pack/03_execution/TASK_CATALOG.json",
+      "agent_pack/03_execution/TASK_STATE.json",
+      "agent_pack/03_execution/DEPENDENCIES.json",
+      "agent_pack/03_execution/ATOMIC_TASK_MAP.json",
+      "agent_pack/03_execution/RUN_CHECKPOINT.json",
+      "agent_pack/04_tracks/frontend/G1_repository_rebaseline/frontend_106.md",
+      "agent_pack/07_finish/frontend_106/completion.json",
+      "agent_pack/08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_OWNERSHIP_MANIFEST_2026-08-30.json",
+      "agent_pack/08_reality_sync/FRONTEND_106_BASELINE_2026-08-30.json",
+      "agent_pack/scripts/create_ownership_provenance_manifest.mjs"
+    ],
+    "acceptance": [
+      "Create a new dated ownership/provenance manifest only after a read-only Git preflight.",
+      "Record branch, HEAD, upstream, divergence, protected/potentially-dirty policy, diff-check result, and all observed tracked/untracked status entries.",
+      "Hash every tracked file outside protected scopes and record path, tracked/ignored state, status, SHA-256, bytes, owner, classification, planned action, and last local commit/author provenance.",
+      "Record task-owned generated files without hashing or reading protected secrets, and preserve the distinction between historical files and current task ownership.",
+      "Add no product implementation, locale change, visual deletion, image ignore rule, index change, database change, external artifact upload, commit, push, deploy, or history rewrite."
+    ],
+    "verification": [
+      "Read-only git status --short, git status -sb, git diff --check, git rev-list --left-right --count HEAD...origin/main, git log -1, and git worktree list --porcelain",
+      "node agent_pack/scripts/create_ownership_provenance_manifest.mjs",
+      "Validate manifest schema, tracked-file count, 64-character SHA-256 values, non-empty provenance, untracked task-owned entries, protected-scope exclusion, and baseline divergence",
+      "git diff --check",
+      "node agent_pack/scripts/audit_pack.mjs"
+    ],
+    "sequence": 215
   }
 ]

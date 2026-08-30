@@ -152,5 +152,21 @@
     "officialClosureEligible": 64,
     "normalVisualGate": "68/68 passed without update mode",
     "snapshotsUpdated": true
+  },
+  "supersedingExecution": {
+    "taskId": "frontend_106",
+    "phase": "G1_repository_rebaseline",
+    "status": "complete",
+    "marker": "TASK_frontend_106_COMPLETE",
+    "checkpointAt": "2026-08-30T14:55:26+03:00",
+    "ownershipManifestPath": "08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_OWNERSHIP_MANIFEST_2026-08-30.json",
+    "ownershipManifestSha256": "b7375a5e02090d1fb7904ce06107f6fdcaf3e82adb910cd407621aabd0f3e6e1",
+    "trackedFiles": 4931,
+    "untrackedTaskOwnedGeneratedFiles": 2,
+    "branchDivergence": "0 0",
+    "nextTask": "frontend_107",
+    "nextTaskStarted": false,
+    "noProductOrGitIndexMutation": true,
+    "noCommitPushDeployOrHistoryRewrite": true
   }
 }

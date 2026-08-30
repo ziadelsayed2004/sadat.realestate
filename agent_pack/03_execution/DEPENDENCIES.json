@@ -1283,5 +1283,9 @@
     "dependsOn": [
       "frontend_104"
     ]
+  },
+  {
+    "taskId": "frontend_106",
+    "dependsOn": []
   }
 ]

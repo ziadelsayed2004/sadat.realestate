@@ -1496,5 +1496,12 @@
     "phase": "F7_post_release_assurance",
     "sequence": 214,
     "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_105.md"
+  },
+  {
+    "taskId": "frontend_106",
+    "track": "frontend",
+    "phase": "G1_repository_rebaseline",
+    "sequence": 215,
+    "atomicTaskFile": "04_tracks/frontend/G1_repository_rebaseline/frontend_106.md"
   }
 ]

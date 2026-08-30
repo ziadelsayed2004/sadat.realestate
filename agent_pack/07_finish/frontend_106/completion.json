@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "taskId": "frontend_106",
+  "status": "complete",
+  "completedAt": "2026-08-30T14:55:26+03:00",
+  "completionMarker": "TASK_frontend_106_COMPLETE",
+  "decision": "PROTECTED_BASELINE_CAPTURED",
+  "summary": "Captured the required pre-mutation protected baseline and created a complete per-file ownership/provenance manifest before any product, Git-index, database, visual, or infrastructure mutation.",
+  "evidencePath": "agent_pack/08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_OWNERSHIP_MANIFEST_2026-08-30.json",
+  "manifestSha256": "b7375a5e02090d1fb7904ce06107f6fdcaf3e82adb910cd407621aabd0f3e6e1",
+  "baseline": {
+    "branch": "main",
+    "head": "2c64f10fee46beb7c3c8ca5882028b0a7054f755",
+    "upstream": "origin/main",
+    "divergence": "0 0",
+    "workingTreePolicy": "PROTECTED_POTENTIALLY_DIRTY",
+    "initialStatusObserved": "empty",
+    "trackedFiles": 4931,
+    "untrackedTaskOwnedGeneratedFiles": 2,
+    "missingHashes": 0,
+    "missingProvenance": 0,
+    "secretsReadOrHashed": false,
+    "productOrGitIndexMutation": false,
+    "historyRewrite": false
+  },
+  "filesChanged": [
+    "agent_pack/scripts/create_ownership_provenance_manifest.mjs",
+    "agent_pack/08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_OWNERSHIP_MANIFEST_2026-08-30.json",
+    "agent_pack/04_tracks/frontend/G1_repository_rebaseline/frontend_106.md",
+    "agent_pack/07_finish/frontend_106/completion.json",
+    "agent_pack/03_execution/TASK_CATALOG.json",
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/03_execution/DEPENDENCIES.json",
+    "agent_pack/03_execution/ATOMIC_TASK_MAP.json",
+    "agent_pack/03_execution/TASK_BOARD.md",
+    "agent_pack/03_execution/COUNT_SUMMARY.json",
+    "agent_pack/07_finish/FINISH_INDEX.json",
+    "agent_pack/step_info.json"
+  ],
+  "verification": [
+    {
+      "command": "Read-only Git preflight",
+      "result": "passed",
+      "details": "main tracks origin/main; HEAD...origin/main is 0 0; initial status was empty; diff check passed; one worktree was observed."
+    },
+    {
+      "command": "node agent_pack/scripts/create_ownership_provenance_manifest.mjs",
+      "result": "passed",
+      "details": "Manifest contains 4,931 tracked records and records two task-owned generated untracked entries without hashing protected scopes."
+    },
+    {
+      "command": "Manifest structural validation",
+      "result": "passed",
+      "details": "Schema 2; zero missing SHA-256 values; zero missing local-history provenance values; divergence remains 0 0."
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed",
+      "details": "No whitespace errors."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "result": "passed",
+      "details": "Agent Pack audit exited 0 with zero errors after catalog/state/dependency/map/task evidence synchronization; no product gate was run because this atomic task is governance-only."
+    }
+  ],
+  "scope": {
+    "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "approvedLocales": ["ar", "en"],
+    "mutatedProductPaths": [],
+    "mutatedIndexPaths": [],
+    "imagesDeletedOrUntracked": [],
+    "commitsCreated": false,
+    "pushPerformed": false,
+    "deployPerformed": false
+  },
+  "handoff": {
+    "nextPlannedTask": "frontend_107",
+    "nextTaskStarted": false,
+    "externalArtifactUpload": false,
+    "approvalRequiredBeforeNextMutation": true
+  }
+}

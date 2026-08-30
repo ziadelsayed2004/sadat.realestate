@@ -256,3 +256,6 @@
 - [/] frontend_103 — Admin Wave 3 - ADM-01 through ADM-66
 - [/] frontend_104 — Final 131-Screen Integration and Release Readiness
 - [/] frontend_105 — Pre-Commit Full Platform Audit and Release Candidate Coordinator
+## G1_repository_rebaseline
+
+- [x] frontend_106 — Fresh Read-Only Baseline and Per-File Ownership/Provenance Manifest
