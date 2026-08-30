@@ -8,6 +8,7 @@
   "summary": "Captured the required pre-mutation protected baseline and created a complete per-file ownership/provenance manifest before any product, Git-index, database, visual, or infrastructure mutation.",
   "evidencePath": "agent_pack/08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_OWNERSHIP_MANIFEST_2026-08-30.json",
   "manifestSha256": "b7375a5e02090d1fb7904ce06107f6fdcaf3e82adb910cd407621aabd0f3e6e1",
+  "supersedingCorrectionReference": "agent_pack/07_finish/frontend_106/completion_correction_reference.json",
   "baseline": {
     "branch": "main",
     "head": "2c64f10fee46beb7c3c8ca5882028b0a7054f755",

@@ -127,7 +127,8 @@ const manifest = {
     rule: 'No file becomes TASK_OWNED until a later atomic task explicitly records it.'
   },
   protectedScopes: [
-    '.env* (never read or hashed)',
+    '.env, .env.local, .env.production, and other real secret environment files (never read or hashed)',
+    'tracked .env*.example templates may be hashed as ordinary repository files and must never contain secrets',
     '.local/** (never read or hashed)',
     'node_modules/**',
     'dist/**',
