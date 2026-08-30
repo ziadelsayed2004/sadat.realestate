@@ -9533,5 +9533,245 @@
       "git diff --check"
     ],
     "sequence": 210
+  },
+  {
+    "id": "frontend_102",
+    "phase": "F7_post_release_assurance",
+    "area": "provider integration closure",
+    "title": "Provider Integration Closure and Admin Dependency Gate",
+    "goal": "Close Provider PRV-01 through PRV-24 from the live repository state, reconcile non-admin shared behavior, clean provenance safely, and publish one honest Admin dependency decision without opening Admin.",
+    "kind": "coordination",
+    "screens": [],
+    "sourceRefs": [
+      "08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
+      "08_reality_sync/PROVIDER_WAVE_2_COORDINATOR.md",
+      "01_product/SCREEN_REGISTRY.json",
+      "01_product/SCREEN_COVERAGE.json"
+    ],
+    "notes": [
+      "This is the sole current Coordinator task for the post-Provider integration pass; frontend_101 remains immutable historical provenance and is not rewritten.",
+      "The canonical Figma source is Odl1Epn2u6lIEuIMmABT7o, Provider page 6017:4355; 0HBdTNGROmmpC6S7OYa3iJ is forbidden.",
+      "Arabic RTL and English LTR are the only execution locales. Existing zh-CN files and snapshots are preserved and excluded from execution.",
+      "Admin is not opened, implemented, tested, or modified by this task."
+    ],
+    "track": "frontend",
+    "dependsOn": [
+      "frontend_101"
+    ],
+    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_102.md",
+    "allowedRoots": [
+      "apps/web/src/features/provider/**",
+      "apps/web/src/features/provider_property/**",
+      "apps/web/src/features/provider_auth/**",
+      "apps/web/src/features/frontend_foundation/**",
+      "apps/web/src/features/localization/**",
+      "apps/web/src/features/routing/**",
+      "apps/web/tests/**",
+      "apps/api/src/**",
+      "apps/api/tests/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "packages/contracts/**",
+      "docs/quality/figma_parity/**",
+      "docs/design_sources/final_screens/provider/**",
+      "apps/web/public/assets/canonical/provider/**",
+      "agent_pack/**",
+      "scripts/**"
+    ],
+    "acceptance": [
+      "Maintain exactly one in_progress Coordinator task, frontend_102, while this pass is active; preserve frontend_101 as completed historical provenance.",
+      "Review and classify every PRV-01 through PRV-24 issue against exact Figma nodes, routes, AR/EN direction, safe contracts, runtime evidence, and external ownership.",
+      "Repair the shared Provider navigation with exact exported Figma outlined assets, explicit geometry, RTL/LTR active states, focus behavior, and accessible names; do not use glyphs, emoji, placeholders, or hand-authored paths.",
+      "Close repository-owned Provider defects only after contract, validation, persistence, API, auth/RBAC/ownership, safe projection, UI, tests, OpenAPI, Postman, and inventory impact are reconciled; never invent production data.",
+      "Preserve email-only Seeker/Provider identity, canonical email verification, safe HTTPS-only mapUrl, upload/document authorization, and private-field redaction.",
+      "Review all 44 prior Provider visual failures directly and close only as REPAIRED_VERIFIED, VERIFIED_NO_CHANGE, or PARTIAL_EXTERNAL with an exact external owner and next action.",
+      "Run the limited non-admin AR/EN route, locale, accessibility, security, ownership, mapUrl, and runtime audit; do not test or modify Admin or zh-CN.",
+      "Create a pre-cleanup file manifest, preserve historical evidence and secrets, classify the 13 Chinese snapshot changes, and remove only explicitly created unreferenced temporary artifacts if safe.",
+      "Synchronize current Agent Pack pointers and pass the Agent Pack audit before publishing POST_PROVIDER_INTEGRATION_ADMIN_READY or POST_PROVIDER_INTEGRATION_BLOCKED."
+    ],
+    "verification": [
+      "focused Provider repair and AR/EN functional, accessibility, security, ownership, route, and normal visual checks",
+      "post-convergence workspace, typecheck, lint, unit, integration, API/security, Web, non-admin AR/EN, upload/document, mapUrl, email-only, performance, bundle, build, dependency, inventory, OpenAPI, and Postman gates",
+      "node agent_pack/scripts/sync_pack.mjs",
+      "node agent_pack/scripts/audit_pack.mjs",
+      "git diff --check"
+    ],
+    "sequence": 211
+  },
+  {
+    "id": "frontend_103",
+    "phase": "F7_post_release_assurance",
+    "area": "admin wave 3 reconciliation",
+    "title": "Admin Wave 3 - ADM-01 through ADM-66",
+    "goal": "Reconcile the Admin surface from the transaction-capable local runtime through direct AR/EN route, contract, security, accessibility, responsive, performance, and approved-source evidence.",
+    "kind": "coordination",
+    "screens": [],
+    "sourceRefs": [
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "01_product/SCREEN_REGISTRY.json",
+      "01_product/SCREEN_COVERAGE.json",
+      "08_reality_sync/ADMIN_WAVE_3_OWNERSHIP_MANIFEST.json",
+      "08_reality_sync/ADMIN_WAVE_3_OWNERSHIP_MANIFEST.json"
+    ],
+    "notes": [
+      "This is the dependency-ready Admin Wave 3 coordinator task created after frontend_102; frontend_102 remains immutable historical Provider provenance.",
+      "The canonical Figma file is Odl1Epn2u6lIEuIMmABT7o and 0HBdTNGROmmpC6S7OYa3iJ is forbidden.",
+      "Arabic RTL and English LTR are the only execution locales. Simplified Chinese files and snapshots are preserved and excluded.",
+      "ADM-18 remains BLOCKED_SOURCE unless an exact clone frame or approved current source is available; ADM-54 uses the owner-authored current baseline with explicit provenance.",
+      "No nested workers are assigned. The Coordinator owns shared Admin shell, router, contracts, API, security, evidence, Agent Pack, and final-gate paths."
+    ],
+    "track": "frontend",
+    "dependsOn": [
+      "frontend_102"
+    ],
+    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_103.md",
+    "allowedRoots": [
+      "apps/web/src/features/admin/**",
+      "apps/web/src/features/admin_*/**",
+      "apps/web/src/features/frontend_foundation/**",
+      "apps/web/src/features/routing/**",
+      "apps/web/src/features/design_system/**",
+      "apps/web/tests/admin*.ts",
+      "apps/web/tests/admin*.tsx",
+      "apps/web/tests/e2e/admin*.ts",
+      "apps/api/src/modules/admin/**",
+      "apps/api/src/modules/auth/**",
+      "apps/api/src/modules/security/**",
+      "apps/api/tests/admin/**",
+      "apps/api/tests/auth/**",
+      "apps/api/tests/security/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "packages/contracts/**",
+      "packages/config/**",
+      "scripts/**",
+      "docs/design_sources/final_screens/admin/**",
+      "docs/quality/figma_parity/**",
+      "agent_pack/**"
+    ],
+    "acceptance": [
+      "Verify the isolated single-node Mongo replica set and transactional first Super Admin bootstrap before Admin UI work; bootstrap is safe, idempotent, and does not touch the installed standalone database.",
+      "Process ADM-01 through ADM-66 in canonical order with exact queue route, role, source, Arabic RTL, English LTR, Desktop scope, deterministic state, API projection, ownership, RBAC/IDOR, interaction, accessibility, and direct visual evidence.",
+      "Keep ADM-18 as BLOCKED_SOURCE when its exact source remains unavailable and keep ADM-54 tied to the owner-authored baseline without claiming historical Figma recovery.",
+      "Repair repository-owned defects with the smallest validated change and never use invented data/assets, masks, cropping, screenshot-only UI, weakened assertions, or premature snapshot updates.",
+      "Run normal AR/EN Admin functional, accessibility, responsive, security, performance, API, OpenAPI, Postman, bundle, build, local-runtime, seed-idempotence, and Agent Pack gates once after convergence.",
+      "Publish one Arabic reconciliation report, cleanup manifest, and atomic commit plan without commit or push."
+    ],
+    "verification": [
+      "Admin-focused typecheck, lint, Vitest, API unit/integration/security/RBAC/IDOR/audit/upload tests",
+      "Admin desktop-ar and desktop-en route and interaction E2E without zh-CN",
+      "Normal no-update Admin visual snapshots after direct source review",
+      "Admin accessibility, responsive desktop, performance, and bundle-budget gates",
+      "OpenAPI, Postman, API inventory, dependency audit, local replica-set bootstrap/seed/smoke, and diff check",
+      "node agent_pack/scripts/sync_pack.mjs",
+      "node agent_pack/scripts/audit_pack.mjs"
+    ],
+    "sequence": 212
+  },
+  {
+    "id": "frontend_104",
+    "phase": "F7_post_release_assurance",
+    "area": "final integration and release readiness",
+    "title": "Final 131-Screen Integration and Release Readiness",
+    "goal": "Run the final approved AR/EN integration gates for all 131 canonical screens, reconcile evidence and Agent Pack state, and report release readiness without claiming parity or production readiness beyond verified evidence.",
+    "kind": "coordination",
+    "screens": [],
+    "sourceRefs": [
+      "01_product/SCREEN_REGISTRY.json",
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "08_reality_sync/FINAL_RELEASE_MANIFEST.json",
+      "08_reality_sync/ADMIN_WAVE_3_RECONCILIATION_2026-08-29.json",
+      "08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json"
+    ],
+    "notes": [
+      "This is the separate Final Integration Coordinator task created after Admin Wave 3; prior wave reports remain immutable historical provenance.",
+      "Use canonical Figma file Odl1Epn2u6lIEuIMmABT7o only; 0HBdTNGROmmpC6S7OYa3iJ is forbidden.",
+      "Execute Arabic RTL and English LTR only. Do not execute, edit, or update zh-CN.",
+      "Keep Seeker/Provider external exceptions and ADM-18/ADM-54 source exceptions explicit; do not invent projections, nodes, assets, or data.",
+      "No commit, push, deploy, reset, revert, stash, clean, or destructive cleanup is permitted."
+    ],
+    "track": "frontend",
+    "dependsOn": [
+      "frontend_103"
+    ],
+    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_104.md",
+    "allowedRoots": [
+      "apps/web/tests/**",
+      "apps/api/tests/**",
+      "packages/config/**",
+      "scripts/**",
+      "docs/quality/figma_parity/**",
+      "agent_pack/**"
+    ],
+    "acceptance": [
+      "Reproduce and resolve or document the preserved Provider Web Vitest failures; stale assertions must be aligned to canonical runtime semantics.",
+      "Run focused gates first, then one final 131-screen AR/EN Playwright matrix without update or ignore-snapshot flags.",
+      "Verify typecheck, lint, unit/Vitest, API, contracts, build, bundle, audit, local replica-set runtime, smoke, accessibility, performance, security, SEO, and Agent Pack sync/audit gates.",
+      "Reconcile queue/checkpoint/finish index and preserve all external exceptions and historical evidence.",
+      "Publish the Arabic final integration report and atomic commit plan without creating a commit or push."
+    ],
+    "verification": [
+      "focused Provider and final-release Vitest gates",
+      "final 131-screen Playwright AR/EN matrix in normal no-update mode",
+      "root and workspace typecheck, lint, API, contract, build, bundle, audit, runtime, accessibility, performance, security, and SEO gates",
+      "node agent_pack/scripts/sync_pack.mjs",
+      "node agent_pack/scripts/audit_pack.mjs",
+      "git diff --check"
+    ],
+    "sequence": 213
+  },
+  {
+    "id": "frontend_105",
+    "phase": "F7_post_release_assurance",
+    "area": "pre-commit full platform audit",
+    "title": "Pre-Commit Full Platform Audit and Release Candidate Coordinator",
+    "goal": "Complete the pre-commit full platform audit, hardening, and release-candidate pass across the current 131-screen repository, reconcile the truthful API blueprint and approved-locale evidence, and publish honest readiness evidence without claiming external parity.",
+    "kind": "coordination",
+    "screens": [],
+    "sourceRefs": [
+      "01_product/SCREEN_REGISTRY.json",
+      "01_product/SCREEN_COVERAGE.json",
+      "01_product/API_ENDPOINT_BLUEPRINT.json",
+      "09_sources/DESIGN_SOURCE_MANIFEST.json",
+      "08_reality_sync/FINAL_131_INTEGRATION_REPORT_2026-08-29.json",
+      "08_reality_sync/ADMIN_WAVE_3_RECONCILIATION_2026-08-29.json",
+      "08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_OWNERSHIP_MANIFEST.json"
+    ],
+    "notes": [
+      "This is the active Release Audit Coordinator task after frontend_104; it owns final evidence, Agent Pack synchronization, cleanup classification, and atomic commit planning.",
+      "Canonical Figma is Odl1Epn2u6lIEuIMmABT7o; 0HBdTNGROmmpC6S7OYa3iJ is forbidden.",
+      "Approved execution scope is Arabic RTL and English LTR only. Do not execute, edit, or update zh-CN.",
+      "Preserve the 29 documented external/source exceptions and all historical reports, generated evidence, runtime data, secrets, and unrelated user changes.",
+      "No nested agents, commits, pushes, deploys, resets, reverts, stashes, cleans, destructive deletes, or snapshot updates."
+    ],
+    "track": "frontend",
+    "dependsOn": [
+      "frontend_104"
+    ],
+    "atomicTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_105.md",
+    "allowedRoots": [
+      "apps/web/**",
+      "apps/api/**",
+      "packages/**",
+      "scripts/**",
+      "docs/quality/figma_parity/**",
+      "agent_pack/**"
+    ],
+    "acceptance": [
+      "Inspect current checkpoints and source/reconciliation evidence before changing state.",
+      "Verify all 131 canonical screens, route/RTL/LTR/responsive coverage, and preserve the exact 29 external/source exceptions.",
+      "Run focused gates before one final approved AR/EN 131-screen Playwright matrix without --ignore-snapshots or --update-snapshots; resolve or classify the seven flaky and 65 unexpected cases without changing snapshots.",
+      "Reconcile runtime/API/contract/OpenAPI/Postman route and authorization inventories and preserve planned routes as planned.",
+      "Verify local traffic/smoke/rate-limit behavior, isolated Mongo replica-set readiness, environment/security/upload/RBAC/IDOR/SEO/accessibility/performance gates, CSS/bundle headroom, and dependency audit.",
+      "Publish English-only Agent Pack evidence and an Arabic report/cleanup/atomic commit plan; never claim full parity while external exceptions remain."
+    ],
+    "verification": [
+      "focused frontend/API/security/contract gates",
+      "approved AR/EN Playwright matrix",
+      "root typecheck, lint, build, bundle, dependency audit, and workspace checks",
+      "local status/smoke/env and isolated replica-set readiness",
+      "api:audit, API inventory, OpenAPI/Postman, node agent_pack/scripts/audit_pack.mjs, and git diff --check"
+    ],
+    "sequence": 214
   }
 ]

@@ -3,13 +3,13 @@
 | Field | Value |
 |---|---|
 | Task | `provider_wave_2` |
-| Status | `in_progress` |
+| Status | partial_external |
 | Canonical source | `Odl1Epn2u6lIEuIMmABT7o` |
 | Forbidden source | `0HBdTNGROmmpC6S7OYa3iJ` |
 | Scope | `PRV-01` through `PRV-24` |
 | Locale scope | Arabic RTL and English LTR |
 | Excluded locale | Simplified Chinese (`zh-CN`) — preserved, not tested or changed |
-| Cursor | `PRV-01` |
+| Cursor | PRV-22-3 |
 | Admin | unopened; dependency-ready only after Provider reconciliation |
 
 ## Lane ownership
@@ -34,3 +34,18 @@ Provider-only tests and fixtures may be changed only within the matching lane. A
 - Use one consolidated repair and recapture pass per screen unless a focused regression requires a bounded follow-up.
 - Never test, update, regenerate, or delete `zh-CN` Provider files or snapshots.
 - Admin remains unopened.
+
+## Current integration closure
+
+The current coordinator task is frontend_102. The final Provider AR/EN desktop no-update gate passed 70/70 after the shared navigation and PRV-08 media repairs. Seven screens are REPAIRED_VERIFIED; seventeen are PARTIAL_EXTERNAL because their approved safe contract projections are unavailable. Repository-owned Provider defects are zero. The current decision is POST_PROVIDER_INTEGRATION_BLOCKED, recorded in POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json.
+
+Admin feature workflow remains unopened, unimplemented, and unmodified. The selected non-Admin API security suite included only existing Admin-route boundary probes. Simplified Chinese files and snapshots remain preserved and excluded.
+
+## Pre-Admin handoff status - 2026-08-29
+
+The historical `POST_PROVIDER_INTEGRATION_BLOCKED` decision is preserved above. It is superseded as the current coordination marker by `PRE_ADMIN_RECONCILIATION_READY_WITH_EXTERNAL_EXCEPTIONS` after the optional local Admin bootstrap was explicitly skipped through process-only configuration.
+
+- Provider PRV-01 through PRV-24 remain 7 `REPAIRED_VERIFIED` and 17 `PARTIAL_EXTERNAL`, with zero repository-owned defects. The exact screen-level owners, safe-contract decisions, and next actions are in `agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json`.
+- The final Provider AR/EN desktop no-update gate remains 70/70. No Provider value was fabricated to close an external projection gap.
+- The standalone MongoDB transaction limitation caused the historical `ADMIN_BOOTSTRAP_FAILED` marker. The transactional Admin bootstrap implementation was retained; local non-Admin readiness passed with `LOCAL_AUTO_BOOTSTRAP_ADMIN=false` supplied only as a process override.
+- Provider coordination is complete for this pass and the handoff is ready for `ADM-01`. Admin UI, Admin Figma nodes, and zh-CN files remain unopened and unchanged.

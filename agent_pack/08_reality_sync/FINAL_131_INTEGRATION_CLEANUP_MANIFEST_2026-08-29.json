@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "manifestId": "FINAL_131_INTEGRATION_CLEANUP_MANIFEST_2026-08-29",
+  "generatedAt": "2026-08-29T23:31:00+03:00",
+  "policy": "No material deletion performed; all listed paths are KEEP and remain outside any commit plan unless explicitly selected later.",
+  "entries": [
+    {"path":".local/**","owner":"local runtime","tracked":"ignored","references":"native supervisor and Mongo evidence","decision":"KEEP","reason":"User/runtime state; do not delete."},
+    {"path":"apps/web/test-results/**","owner":"frontend_104","tracked":"ignored","references":"final matrix failure artifacts","decision":"KEEP","reason":"Required preserved evidence."},
+    {"path":"dist/**","owner":"build tooling","tracked":"ignored","references":"build and preview tests","decision":"KEEP","reason":"Generated build output; no destructive cleanup."},
+    {"path":".env.local","owner":"user","tracked":"ignored","references":"runtime configuration","decision":"KEEP","reason":"Not read or printed; never include in commit plan."},
+    {"path":"apps/web/tests/e2e/__snapshots__/**","owner":"prior waves/user","tracked":"mixed","references":"visual baselines and preserved failures","decision":"KEEP","reason":"No snapshot update or deletion performed."},
+    {"path":"docs/quality/figma_parity/**","owner":"reconciliation evidence","tracked":"mixed","references":"131-screen queue and source evidence","decision":"KEEP","reason":"Canonical evidence and historical provenance."},
+    {"path":"agent_pack/**","owner":"Coordinator","tracked":"mixed","references":"task state, reports, audit, and manifests","decision":"KEEP","reason":"Required synchronized release evidence."}
+  ],
+  "materialDeletions": 0
+}

@@ -386,7 +386,7 @@
 .provider-property-completion__privacy { color: #586981; font-size: 0.86rem; line-height: 1.5; }
 
 .provider-property-completion__upload-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
-.provider-property-completion__upload-actions input[type="file"] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.provider-property-completion__card input[type="file"] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .provider-property-completion__file-button { display: inline-flex; min-height: 42px; align-items: center; padding: 10px 14px; border: 1px solid #2f68c9; border-radius: 9px; color: #2f68c9; cursor: pointer; font-weight: 700; }
 .provider-property-completion__file-button:focus-within,
 .provider-property-completion__file-button:focus-visible { outline: 3px solid #89b4ff; outline-offset: 3px; }

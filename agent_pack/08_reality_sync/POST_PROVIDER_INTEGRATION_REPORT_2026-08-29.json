@@ -1,0 +1,1502 @@
+{
+  "schemaVersion": 1,
+  "reportId": "POST_PROVIDER_INTEGRATION_REPORT_2026-08-29",
+  "generatedAt": "2026-08-29T05:40:38.549Z",
+  "taskId": "frontend_102",
+  "taskStatus": "partial",
+  "previousTask": {
+    "id": "frontend_101",
+    "status": "complete",
+    "evidencePath": "07_finish/frontend_101/completion.json",
+    "preservedAsHistoricalProvenance": true
+  },
+  "decision": "BLOCKED",
+  "finalMarker": "POST_PROVIDER_INTEGRATION_BLOCKED",
+  "summary": "Provider AR/EN repository-owned defects were repaired and verified; 17 Provider screens remain PARTIAL_EXTERNAL pending approved contract projections, and local supervisor readiness is blocked by ADMIN_BOOTSTRAP_FAILED. Admin was not opened.",
+  "scope": {
+    "canonicalScreenCount": 131,
+    "providerScreenCount": 24,
+    "providerScreenIds": [
+      "PRV-01",
+      "PRV-02",
+      "PRV-03",
+      "PRV-04",
+      "PRV-05",
+      "PRV-06",
+      "PRV-07",
+      "PRV-08",
+      "PRV-09",
+      "PRV-10",
+      "PRV-11",
+      "PRV-12",
+      "PRV-13",
+      "PRV-14",
+      "PRV-15",
+      "PRV-16",
+      "PRV-17",
+      "PRV-18",
+      "PRV-19",
+      "PRV-20",
+      "PRV-21",
+      "PRV-22-1",
+      "PRV-22-2",
+      "PRV-22-3"
+    ],
+    "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "providerPageId": "6017:4355",
+    "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "locales": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "devices": [
+      "desktop"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "adminOpened": false,
+    "adminModified": false,
+    "adminFeatureWorkflowTested": false,
+    "adminBoundaryProbesInSelectedApiSuite": true
+  },
+  "totals": {
+    "screens": 24,
+    "repairedVerified": 7,
+    "verifiedNoChange": 0,
+    "partialExternal": 17,
+    "closureEligible": 7,
+    "repositoryOwnedDefects": 0,
+    "externalPrerequisiteScreens": 17
+  },
+  "screens": [
+    {
+      "id": "PRV-01",
+      "sequence": 42,
+      "node": "6017:19032",
+      "route": "/provider",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-01",
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The safe Provider contract exposes property totals but not the canonical customer-request, views, booked, history, or chart series values; the runtime keeps these values explicitly unavailable.",
+          "nextAction": "Approve the missing safe projection/data for PRV-01, then recapture its AR/EN visual record."
+        }
+      ],
+      "focusedTests": [
+        "apps/web/tests/provider-overview.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-overview.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-02",
+      "sequence": 43,
+      "node": "6017:19308",
+      "route": "/provider/properties",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-02",
+      "status": "REPAIRED_VERIFIED",
+      "classification": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [],
+      "focusedTests": [
+        "apps/web/tests/provider-properties.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-properties.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-03",
+      "sequence": 44,
+      "node": "6017:19499",
+      "route": "/provider/properties/new/basic",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-03",
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider property create contract does not expose every canonical basic-form field; no fields were fabricated.",
+          "nextAction": "Approve the missing safe projection/data for PRV-03, then recapture its AR/EN visual record."
+        }
+      ],
+      "focusedTests": [
+        "apps/web/tests/provider-property-wizard.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-property-wizard.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-04",
+      "sequence": 45,
+      "node": "6017:19679",
+      "route": "/provider/properties/:id/location",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-04",
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider location contract does not expose every canonical address field; locationId and coordinates remain preserved and no geocoding/fetch was added.",
+          "nextAction": "Approve the missing safe projection/data for PRV-04, then recapture its AR/EN visual record."
+        }
+      ],
+      "focusedTests": [
+        "apps/web/tests/provider-property-wizard.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-property-wizard.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-05",
+      "sequence": 46,
+      "node": "6017:19858",
+      "route": "/provider/properties/:id/details",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-05",
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider catalog/detail contract does not expose every canonical extended property field; no unsupported taxonomy or metadata was invented.",
+          "nextAction": "Approve the missing safe projection/data for PRV-05, then recapture its AR/EN visual record."
+        }
+      ],
+      "focusedTests": [
+        "apps/web/tests/provider-property-advanced.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-property-advanced.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-06",
+      "sequence": 47,
+      "node": "6017:20034",
+      "route": "/provider/properties/:id/price-payment",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-06",
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider price/payment contract does not expose every canonical commission/payment field; currency consistency and server-owned values remain enforced.",
+          "nextAction": "Approve the missing safe projection/data for PRV-06, then recapture its AR/EN visual record."
+        }
+      ],
+      "focusedTests": [
+        "apps/web/tests/provider-property-advanced.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-property-advanced.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-07",
+      "sequence": 48,
+      "node": "6017:20229",
+      "route": "/provider/properties/:id/features",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-07",
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The canonical taxonomy/catalog content is not available from the provider contract; the browser route alias is repaired while unsupported catalog values remain unavailable.",
+          "nextAction": "Approve the missing safe projection/data for PRV-07, then recapture its AR/EN visual record."
+        }
+      ],
+      "focusedTests": [
+        "apps/web/tests/provider-property-advanced.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-property-advanced.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-08",
+      "sequence": 49,
+      "node": "6017:20391",
+      "route": "/provider/properties/:id/media",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-08",
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider media contract does not expose the canonical cover/minimum-media content; upload authorization and private storage boundaries remain enforced.",
+          "nextAction": "Approve the missing safe projection/data for PRV-08, then recapture its AR/EN visual record."
+        }
+      ],
+      "focusedTests": [
+        "apps/web/tests/provider-property-completion.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-property-completion.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-09",
+      "sequence": 50,
+      "node": "6017:20561",
+      "route": "/provider/properties/:id/contact",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-09",
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider contact contract does not expose the canonical phone/contact grouping or internal notes; no phone identity field was introduced.",
+          "nextAction": "Approve the missing safe projection/data for PRV-09, then recapture its AR/EN visual record."
+        }
+      ],
+      "focusedTests": [
+        "apps/web/tests/provider-property-completion.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-property-completion.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-10",
+      "sequence": 51,
+      "node": "6017:20737",
+      "route": "/provider/properties/:id/review",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-10",
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider review contract does not expose every canonical summary field; the review remains limited to safe server projections and confirmations.",
+          "nextAction": "Approve the missing safe projection/data for PRV-10, then recapture its AR/EN visual record."
+        }
+      ],
+      "focusedTests": [
+        "apps/web/tests/provider-property-completion.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-property-completion.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-11",
+      "sequence": 52,
+      "node": "6017:21064",
+      "route": "/provider/properties/:id/review",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-11",
+      "status": "REPAIRED_VERIFIED",
+      "classification": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [],
+      "focusedTests": [
+        "apps/web/tests/provider-property-state.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-property-state.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-12",
+      "sequence": 53,
+      "node": "6017:21012",
+      "route": "/provider/properties/:id/submitted",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-12",
+      "status": "REPAIRED_VERIFIED",
+      "classification": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [],
+      "focusedTests": [
+        "apps/web/tests/provider-property-state.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-property-state.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-13",
+      "sequence": 54,
+      "node": "6017:21123",
+      "route": "/provider/properties/:id/rejected",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-13",
+      "status": "REPAIRED_VERIFIED",
+      "classification": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [],
+      "focusedTests": [
+        "apps/web/tests/provider-property-state.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-property-state.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-14",
+      "sequence": 55,
+      "node": "6017:20973",
+      "route": "/provider/properties/:id/published",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-14",
+      "status": "REPAIRED_VERIFIED",
+      "classification": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [],
+      "focusedTests": [
+        "apps/web/tests/provider-property-state.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-property-state.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-15",
+      "sequence": 56,
+      "node": "6017:21162",
+      "route": "/provider/projects",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-15",
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current safe ProjectData projection lacks canonical image, unit, availability, and area metrics; no fields were invented.",
+          "nextAction": "Approve the missing safe projection/data for PRV-15, then recapture its AR/EN visual record."
+        }
+      ],
+      "focusedTests": [
+        "apps/web/tests/provider-projects.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-projects.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-16",
+      "sequence": 57,
+      "node": "6017:21368",
+      "route": "/provider/customer-requests",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-16",
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider request projection is intentionally redacted and does not expose all canonical CRM presentation fields.",
+          "nextAction": "Approve the missing safe projection/data for PRV-16, then recapture its AR/EN visual record."
+        }
+      ],
+      "focusedTests": [
+        "apps/web/tests/provider-customer-requests.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-customer-requests.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-17",
+      "sequence": 58,
+      "node": "6017:21747",
+      "route": "/provider/customer-requests?create=1",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-17",
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider request contract is intentionally limited to approved customer fields and server actions; no unsupported details were added.",
+          "nextAction": "Approve the missing safe projection/data for PRV-17, then recapture its AR/EN visual record."
+        }
+      ],
+      "focusedTests": [
+        "apps/web/tests/provider-customer-requests.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-customer-requests.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-18",
+      "sequence": 59,
+      "node": "6017:21613",
+      "route": "/provider/viewings",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-18",
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider viewing projection does not expose every canonical appointment presentation field; only contract-defined data is rendered.",
+          "nextAction": "Approve the missing safe projection/data for PRV-18, then recapture its AR/EN visual record."
+        }
+      ],
+      "focusedTests": [
+        "apps/web/tests/provider-viewings.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-viewings.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-19",
+      "sequence": 60,
+      "node": "6017:22088",
+      "route": "/provider/ads",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-19",
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current advertising projection does not expose every canonical ad/content metric; private upload and quote boundaries remain server-owned.",
+          "nextAction": "Approve the missing safe projection/data for PRV-19, then recapture its AR/EN visual record."
+        }
+      ],
+      "focusedTests": [
+        "apps/web/tests/provider-advertising.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-advertising.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-20",
+      "sequence": 61,
+      "node": "6028:10071",
+      "route": "/provider/commission",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-20",
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current commission projection is read-only and omits resolver/administrative fields required by the canonical export.",
+          "nextAction": "Approve the missing safe projection/data for PRV-20, then recapture its AR/EN visual record."
+        }
+      ],
+      "focusedTests": [
+        "apps/web/tests/provider-advertising.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-advertising.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-21",
+      "sequence": 62,
+      "node": "6028:10830",
+      "route": "/provider/notifications",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-21",
+      "status": "REPAIRED_VERIFIED",
+      "classification": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [],
+      "focusedTests": [
+        "apps/web/tests/provider-notifications-settings.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-notifications-settings.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-22-1",
+      "sequence": 63,
+      "node": "6028:11337",
+      "route": "/provider/settings",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-22-1",
+      "status": "REPAIRED_VERIFIED",
+      "classification": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [],
+      "focusedTests": [
+        "apps/web/tests/provider-notifications-settings.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-notifications-settings.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-22-2",
+      "sequence": 64,
+      "node": "6028:11875",
+      "route": "/provider/settings",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-22-2",
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current settings contact projection supports WhatsApp, office address, and website but not the canonical separate phone contact field.",
+          "nextAction": "Approve the missing safe projection/data for PRV-22-2, then recapture its AR/EN visual record."
+        }
+      ],
+      "focusedTests": [
+        "apps/web/tests/provider-notifications-settings.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-notifications-settings.spec.ts"
+      ]
+    },
+    {
+      "id": "PRV-22-3",
+      "sequence": 65,
+      "node": "6028:12067",
+      "route": "/provider/settings",
+      "role": "provider",
+      "device": "desktop",
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
+      "evidenceDir": "docs/quality/figma_parity/screens/PRV-22-3",
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current settings contract does not support password-change or account-deletion actions; unsupported actions remain disabled and fail closed.",
+          "nextAction": "Approve the missing safe projection/data for PRV-22-3, then recapture its AR/EN visual record."
+        }
+      ],
+      "focusedTests": [
+        "apps/web/tests/provider-notifications-settings.vitest.test.tsx",
+        "apps/web/tests/e2e/provider-notifications-settings.spec.ts"
+      ]
+    }
+  ],
+  "fixes": [
+    {
+      "id": "PROVIDER-SHARED-NAV-ICON-GLYPHS",
+      "files": [
+        "apps/web/src/features/provider/overview.tsx"
+      ],
+      "description": "Replaced rail text glyphs with exact exported Figma SVG assets, explicit 19x19 geometry, active-state assets, route-aware selection, RTL/LTR placement, focus, and accessible links."
+    },
+    {
+      "id": "PRV-08-MEDIA-DROPZONE",
+      "files": [
+        "apps/web/src/features/provider_property/completion.tsx",
+        "apps/web/src/features/provider_property/styles.css",
+        "apps/web/public/assets/canonical/provider/navigation/upload-media.svg"
+      ],
+      "description": "Added the bounded media dropzone, exact 22x22 Figma upload asset, accessible file input, and safe empty/media states without inventing contract fields."
+    },
+    {
+      "id": "PROVIDER-COMPLETION-INTRO",
+      "files": [
+        "apps/web/src/features/provider_property/completion.tsx"
+      ],
+      "description": "Aligned AR/EN completion heading/description and shared content geometry with reviewed Provider source."
+    },
+    {
+      "id": "PROVIDER-ACCOUNT-EMAIL-ONLY",
+      "files": [
+        "apps/web/tests/e2e/provider-account.spec.ts"
+      ],
+      "description": "Asserted contact-only WhatsApp support and absence of secondary phone identity controls; no phone/password flow was added."
+    },
+    {
+      "id": "PUBLIC-ASSET-ORIGIN-HARNESS",
+      "files": [
+        "apps/web/tests/e2e/public-fixtures.ts"
+      ],
+      "description": "Made Public fixture assets follow WEB_BASE_URL on a non-default local port, fixing the proven lazy-image performance failure."
+    }
+  ],
+  "contracts": {
+    "auth": "Seeker/Provider remain email-only and passwordless; /auth/verify-email is canonical; /auth/verify-phone is browser-only legacy redirect; Admin auth remains outside this goal.",
+    "mapUrl": "HTTPS absolute URLs only, max 2048; unsafe schemes rejected; locationId and coordinates preserved; no fetch/geocode/preview/synthesized coordinates.",
+    "projections": "Unsupported Provider fields remain explicit unavailable/safe projections; no production data, CRM/internal notes, resolver fields, or Admin/private fields were fabricated.",
+    "uploads": "Private media/documents remain owner-authorized, validated, rate-limited, signed, and redacted; PRV-08 uses an exact local Figma asset.",
+    "settings": "Unsupported password/account-deletion actions remain disabled and fail closed; WhatsApp/office/website remain contact data, not identity."
+  },
+  "visualClosure": {
+    "priorProviderScreenshotFailures": 44,
+    "directReviewCompleted": true,
+    "priorFailureClassification": [
+      "shared runtime defect repaired",
+      "stale baseline or current safe projection",
+      "external contract prerequisite"
+    ],
+    "currentRuntimeRepositoryOwnedDefects": 0,
+    "snapshotsUpdated": 48,
+    "snapshotLocales": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "snapshotReconciliation": [
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-advertising-ar-desktop-ar-win32.png",
+        "oldSha256": "889d6a5f22e945237a6f2885a34b7759a86086ca61a7ef72c97d4b42219c9fd3",
+        "newSha256": "1283c5c06c2e329db605d49c98e89fd981a55af3fa7683df49a7a4012488d748",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-advertising-en-desktop-en-win32.png",
+        "oldSha256": "bf75893c5e307ce40dcb31711abc55f2dc87ff85dce09310f872f2360e00de80",
+        "newSha256": "01d2e8bc18f1f5ae41374828bff21d7740247b73204757b7fb7bab862c7ab015",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-commission-ar-desktop-ar-win32.png",
+        "oldSha256": "4358e4b386f6f2ce0547fda48f4f1e8a4de31e8b6e234b71e4dc9b9224db492b",
+        "newSha256": "ba9efcaeb7c3369958d9488f3e96a547e50dc9b4180dda2b88c262feb4e5b891",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-commission-en-desktop-en-win32.png",
+        "oldSha256": "97abcd6dae275c3361d14cbac493fafc5442cad892d64f81cf0ba307fc5cb306",
+        "newSha256": "536034cb4accfe7661cf9a9f87299ca654b8aa08964376e78621901381fcf0c5",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-request-modal-ar-desktop-ar-win32.png",
+        "oldSha256": "a897fcac0f222b2da3b5eaa6bee01f04a406988404e9744323b3a22ebbd004cc",
+        "newSha256": "c07e3fed9f1e23fb3c3cd2607adc5fc521258db3631d02665c09820618950491",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-request-modal-en-desktop-en-win32.png",
+        "oldSha256": "f75e148cafb282076ba2e8052158e97512edb5df65d3c997148952fa2bfce829",
+        "newSha256": "9f232797d7e360c679afbd2a067f3f52696cb3dc084a232ae8b8260dcfbf24a2",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-requests-ar-desktop-ar-win32.png",
+        "oldSha256": "72aa501df3fa9b7dec348e6bf5d693bfca9094e60a6a9038f7d2845ee6b112e1",
+        "newSha256": "78e9b1ac6aa5fc080e1bd0c9a6c8eee66f7fda2e43109998827e541eb9ba0da4",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-requests-en-desktop-en-win32.png",
+        "oldSha256": "6a45cf25e92eb1246f17a8d69c6f6b4c1a44317a8e76b6681ae5ab557948078c",
+        "newSha256": "d932e7ffdb25e8c73ed681df2049cc645100de05089301cac0851bfb02bafa14",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-notifications-ar-desktop-ar-win32.png",
+        "oldSha256": "a8f5bda35241ba5b1c2ac71a872b2affe7961cbee837120c871e3dd05c8e51e4",
+        "newSha256": "bd9bb99ed47e7b124d00be2446d85c267363b140442ed83f6111062dfef6419a",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-notifications-en-desktop-en-win32.png",
+        "oldSha256": "0490bad198c22787902962768f3a3d3503e9da251aaaafc4ec11223c3cb36b0c",
+        "newSha256": "82a21867662d27eb7838e2f3408cdc31588c5826078bd3f5f8e25ecee35e4892",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-account-ar-desktop-ar-win32.png",
+        "oldSha256": "71ccf99772e568569bd4ee2ebbc238800c7ba2e4d0b77a1ae9f5ca5f9c7af61d",
+        "newSha256": "f1a60c904a08715768aaf89c3f2eea890226798889a939925961389bddf9fc6a",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-account-en-desktop-en-win32.png",
+        "oldSha256": "c40d1c8ba585b5d08e12624a0226cabbf4e7a0b97b36a3f6ddf425056f742599",
+        "newSha256": "d73a858f269087287a071ca0a53515a93991418523c902c8ac11b24ed4931f89",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-contact-ar-desktop-ar-win32.png",
+        "oldSha256": "fe4d1b2010150b527f1f336146b74b4e0296e74d2f412134b833695ca8cb359a",
+        "newSha256": "be512d419caa64061817b4553fbb3d715bcb39b3d3c678ed3c89fd471eafc054",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-contact-en-desktop-en-win32.png",
+        "oldSha256": "5bf48de40b45f66d78c27ab96075f159decf0a2b3a88e31960ed37269610fa3f",
+        "newSha256": "b13925b921a918a991cdd15f39c4b621752866467392f0ebca69d0ccfe6a3232",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-security-ar-desktop-ar-win32.png",
+        "oldSha256": "d5cee893843ddd654b8a26e2ce8d185f130ecbc6c7795fd3a946f193087dca22",
+        "newSha256": "44778dd9eadb174af1ded0254cb6e1d59b331c8ca5e81ebed155f5a43eab8298",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-security-en-desktop-en-win32.png",
+        "oldSha256": "76d4270bd4f8fd0a8d18f4b7764eeec2637a100416398026ca33c596b457e5de",
+        "newSha256": "a20a295cce8464047adb51712ea8e2072ae37075588457bfa672c4f1586d316f",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-overview.spec.ts-snapshots/provider-overview-ar-desktop-ar-win32.png",
+        "oldSha256": "01303e0ab02922d7e0b3fae02a649da496c1f68f80f465b539b3838544479381",
+        "newSha256": "0d66fc606392f8069d8a07a3935ff4fc1fce0507667cafa01348883b1bd96212",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-overview.spec.ts-snapshots/provider-overview-en-desktop-en-win32.png",
+        "oldSha256": "e9b720b80f49e91811ea08d1996d88a680a5ce61c5a95a1a2511a50382e3d6f6",
+        "newSha256": "767d973ffa03cb21f25e42c3141d5f7ae22eff0ace2d0729804be1fc0c390171",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-projects.spec.ts-snapshots/provider-projects-ar-desktop-ar-win32.png",
+        "oldSha256": "c596cc002242da48fba68a09b7fb0e19f76c2ee518adedd4ba567c7e7471793a",
+        "newSha256": "d5a47ded3499f62445b974f28549ce6217804e47b045d1908d8b741f84747056",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-projects.spec.ts-snapshots/provider-projects-en-desktop-en-win32.png",
+        "oldSha256": "25dea83b583ffd96fee54da1a5873b3ec3c0d9eec3231c050d5fd73a99a91f88",
+        "newSha256": "c36c7cf78c4518a02b0160314b0d1186792edd39954158ac252ebe4f9891ae88",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-properties.spec.ts-snapshots/provider-properties-ar-desktop-ar-win32.png",
+        "oldSha256": "fa27845940074be9db5ed94726f1ed2ccff9fceb04b0b3c467fbf000ae117b89",
+        "newSha256": "d5f9059b9edab73c4028d35bdb75ffba92263ee2e312783042364195b87e8a8c",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-properties.spec.ts-snapshots/provider-properties-en-desktop-en-win32.png",
+        "oldSha256": "97c443a0cde4ec7646b0d4756079ff0cb403f9e0c4065478498d58a2fa2b9904",
+        "newSha256": "95f393829f5ea02d35d9ed742ea15d04a648a2c8cbeb13a92b3525c7c90a1172",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-details-ar-desktop-ar-win32.png",
+        "oldSha256": "71ce575b3c93408b340c6b7a512aa329baf8ed050911fd8d4de6eca346b77f55",
+        "newSha256": "9c4cdecdb6ebad984de7a5413472269800fbbfc38a6b8d200fc84c66b6fb4364",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-details-en-desktop-en-win32.png",
+        "oldSha256": "53b54851d21ed00e44e57f066aac43432930798a6e847cc6956f242c1ba4eb1f",
+        "newSha256": "e6a493955cdc7f0d763f4c363edd9aecaf47f3f5edd161af10d5331120c03cb2",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-features-ar-desktop-ar-win32.png",
+        "oldSha256": "792b13ce8bc6bba775a2c0046a126df8c43cfeb9b6551e6c4d5acb1bd3907ca9",
+        "newSha256": "471462153c61be95a6fa30c0a63acb2a65572113d41c578e03d80bfb10bcfa7f",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-features-en-desktop-en-win32.png",
+        "oldSha256": "c434154c2f93ef18ff279b97b68a92f5fcd3d2b6ed705ebf7f73b0b8c58b7c69",
+        "newSha256": "b334229dab340a594d7e4a9146979bd500c6e674ddf9f7a07c480bace947270f",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-price-ar-desktop-ar-win32.png",
+        "oldSha256": "0b02c00d9394ad9111ca9044b600058a42748b236322089c5e98440f039978ee",
+        "newSha256": "2a6b464551e4a3442b738b5ea3963d59b98adabe65745af85d93f3377c5c380f",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-price-en-desktop-en-win32.png",
+        "oldSha256": "90c5dbf05f8fbb4f92b10b5207d25898de66bc8d0cb91d0cdd127d6c34e40ccc",
+        "newSha256": "1e3f0d78b8b03106ee094c0237882b4e153fef051967b5b79be5597c38167efd",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-contact-ar-desktop-ar-win32.png",
+        "oldSha256": "6b1bba47a508df024531afe26881a871773896f2eea922def8a3fde7a619df4c",
+        "newSha256": "b0939eca82eb0b362c5d327fe6d99ef2b0505daf307cf17a71967cc33e66c36f",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-contact-en-desktop-en-win32.png",
+        "oldSha256": "26416a1d3e95fd2a6a503d54f4443176ae5552307149553306014969d5d7834d",
+        "newSha256": "dc6e55849a3fdb8659f904b1b15ed9f74b0f5c174de53f5824aa04d8187be146",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-media-ar-desktop-ar-win32.png",
+        "oldSha256": "133e1784c9c93c5f6842db706e867f5085e2dc0e8a35d287c1ab871ca9fc980b",
+        "newSha256": "e2056664fce7adc90286e5256fc0f1e7477e8df9bb36fa97fd1b54f6bb1b9222",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-media-en-desktop-en-win32.png",
+        "oldSha256": "c401135ba29b92abde83d1b449d752c211b29fb0ad6039ad056bcfe1b39519b2",
+        "newSha256": "afffd71f8ed60246d77a68f474df92834082e71eb6c85759df817da267a059a8",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-review-ar-desktop-ar-win32.png",
+        "oldSha256": "6a8c30fd50286f845a022706da10e68257224b33eb2d016a01f4cb8e2f7fd0fe",
+        "newSha256": "05a0b4179791b8ae238c050f84d8a4fef9dcf9cad85f4ff0aa830e1621ab0097",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-review-en-desktop-en-win32.png",
+        "oldSha256": "9e1bf896231c7e91e07ccb1facfde1e28cc08d240c7d7a18864e899d7d27f364",
+        "newSha256": "ea0a3627dd23cd822c4cef7f5c7702ca17f01e48d531cfee253fed395a02705c",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-published-ar-desktop-ar-win32.png",
+        "oldSha256": "8765e1e8c80a79f793f6d9e6d92e9a818a1486b69b82c3fc9b09fa8742c80eec",
+        "newSha256": "51baac5e7c4a460fa75ec253e3cbae1bacd563c0bb97819ffbe4faa3db645988",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-published-en-desktop-en-win32.png",
+        "oldSha256": "57c212aa84722ce71d559241bc0dd10f68d3fdb78aa9786697388852f2b18fa7",
+        "newSha256": "9e8b0dce35d17cb4f533b73f19b9af7cf83e6e89e491c80abf6194f4b46a389b",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-rejected-ar-desktop-ar-win32.png",
+        "oldSha256": "56aca0bff0f0630b6abc24e96c2feb461263c513f7ca323b95347d9f6f8dace9",
+        "newSha256": "77b3b6454f7621c6ad1ba2b52230ae8c7d028f89d1d1616d101d0455f770bae6",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-rejected-en-desktop-en-win32.png",
+        "oldSha256": "93c31a55cd585546e3e171efc00c94835e9c38edb94a9e10b341ecb1978d51be",
+        "newSha256": "67eaa9a58c19181097af6dd7373d6411208b9eab20d14bffaa6de004fa650a10",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-submitted-ar-desktop-ar-win32.png",
+        "oldSha256": "d992687f4f32045c196bcb821433321b67c78ca8ee38ffc92a736789a9afdebd",
+        "newSha256": "4782ad0b9dfe0e102bea3b2db17c8c0a130c278c21b05ea09a02e46d888693e0",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-submitted-en-desktop-en-win32.png",
+        "oldSha256": "f1175793e02cd8aa0ddaeb07c30426605ed9db59b212fcc174d68c10b18a9c13",
+        "newSha256": "0eba89f5d2bc05d6c8bf079f38069acd6932fe00ca8200cc2224d0530f50beb7",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-validation-ar-desktop-ar-win32.png",
+        "oldSha256": "bf248ea3dff92131b54506dc56592b56a854dbb324964020892839569f7b9506",
+        "newSha256": "af7527da09642cf2b74e8b42cd798e2d1bb97ef90e31655858a36037f96af801",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-validation-en-desktop-en-win32.png",
+        "oldSha256": "6214ee4bf651717a713307b9afea0cbbfc0bf4e656108173c5fc38a5957e438e",
+        "newSha256": "bbe39f2c7bc054b2b419f47dbdb337e68375668cdd4014eddfb50b50c6c1188f",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-basic-ar-desktop-ar-win32.png",
+        "oldSha256": "1ef0ac1e361fb1b146874a9822905f566e46b364d3dda9cf0f03d3e4e94bd3d3",
+        "newSha256": "f48790f9653fe6bc49290fe1a7bf11f9dcb9b57aa16ea6978523da14638c02f8",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-basic-en-desktop-en-win32.png",
+        "oldSha256": "1658e629f4789c6d651750dec384cbf4eec312b42090ee7cafe4bdfafa2cf8ea",
+        "newSha256": "0d1c5edc22aadce1d5bda8b5ee030ac41bc7e16adefd127f78250164d5acb3da",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-location-ar-desktop-ar-win32.png",
+        "oldSha256": "0677f58b1ad554b1aced5e82e0c27197ac0a608a90731c2d2679bdda583f188f",
+        "newSha256": "cb6fc775edc2bb0249f98a828bef20292acd35b367c888a6f3feb9e12adef446",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-location-en-desktop-en-win32.png",
+        "oldSha256": "2238b28bc4f39e7501d1a1798764b0093ff213dda92cc519b14c07d74a5fdb24",
+        "newSha256": "fc40b602b9ebd5d1c91a28ecca7be4ad4cfc58bccf58d4cc03dc55748df8b40e",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-ar-desktop-ar-win32.png",
+        "oldSha256": "3e5db8c2f0ed3780506f506e2c3b44b1793a9645d633cf26256b6f24792d2c8f",
+        "newSha256": "07466d85aa2844239bcdbafba31d438c3673775827e527bbc23221a1916e098b",
+        "locale": "ar-RTL",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      },
+      {
+        "path": "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-en-desktop-en-win32.png",
+        "oldSha256": "15a830c3a1f5f45a8df15cef3303bc40fa57a2534d098298d335661f0747f7d2",
+        "newSha256": "445eb31e64b34f901f167f6d9f00c820b6fda15866cf30bb057e71687833d01b",
+        "locale": "en-LTR",
+        "device": "desktop",
+        "updateReason": "Reviewed current runtime against canonical Provider Figma evidence after shared navigation/media repairs; exact AR/EN Provider baselines only.",
+        "noUpdateVerification": "Passed in final 70-test Provider AR/EN Playwright gate."
+      }
+    ],
+    "finalNoUpdateGate": {
+      "command": "Focused 11 Provider specs, desktop-ar + desktop-en",
+      "exitCode": 0,
+      "passed": 70,
+      "failed": 0,
+      "updatedSnapshots": false
+    }
+  },
+  "figma": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4355",
+    "shellNode": "6017:19032",
+    "providerAssetManifest": "apps/web/public/assets/canonical/provider/navigation/asset-manifest.json",
+    "navigationAssetGeometry": "Exact exported outlined assets; 19x19 rail icons; 22x22 PRV-08 upload asset.",
+    "codeConnect": "Unavailable because the Figma seat lacks Dev or Full access; exact exported asset URLs and SHA256 manifest used instead.",
+    "forbiddenFileNotUsed": true
+  },
+  "gateResults": {
+    "semanticE2E": {
+      "exitCode": 0,
+      "passed": 32,
+      "failed": 0,
+      "locales": [
+        "ar",
+        "en"
+      ],
+      "chineseExecuted": false
+    },
+    "focusedWebVitest": {
+      "exitCode": 0,
+      "passed": 61,
+      "skipped": 7,
+      "failed": 0,
+      "chineseExecuted": false
+    },
+    "focusedApi": {
+      "exitCode": 0,
+      "passed": 115,
+      "failed": 0,
+      "note": "Authorization assertions included existing Admin-route boundary responses; no Admin UI or feature workflow was opened, modified, or tested."
+    },
+    "performance": {
+      "exitCode": 0,
+      "passed": 4,
+      "failed": 0,
+      "fix": "Fixture asset origin now follows WEB_BASE_URL."
+    },
+    "workspaceCheck": {
+      "exitCode": 0
+    },
+    "typecheck": {
+      "exitCode": 0
+    },
+    "lint": {
+      "exitCode": 0
+    },
+    "workspaceTests": {
+      "exitCode": 0,
+      "passed": 16,
+      "failed": 0
+    },
+    "apiInventory": {
+      "exitCode": 0
+    },
+    "openapi": {
+      "exitCode": 0
+    },
+    "postman": {
+      "exitCode": 0
+    },
+    "bundle": {
+      "exitCode": 0,
+      "javascriptBytes": 1604273,
+      "stylesheetBytes": 409572
+    },
+    "build": {
+      "exitCode": 0
+    },
+    "dependencyAudit": {
+      "exitCode": 0,
+      "vulnerabilities": 0
+    },
+    "envCheck": {
+      "exitCode": 0,
+      "mode": "local with process-only overrides; no secret values recorded"
+    },
+    "localDoctor": {
+      "exitCode": 0,
+      "mongo": "127.0.0.1:27017",
+      "ports": "available"
+    },
+    "providerNoUpdateVisual": {
+      "exitCode": 0,
+      "passed": 70,
+      "failed": 0
+    },
+    "browserBootstrap": {
+      "status": "blocked",
+      "reason": "In-app browser session failed because sandboxPolicy was missing; local Playwright fallback was used."
+    },
+    "localRuntime": {
+      "localUpExitCode": 1,
+      "statusAfterAttempt": "stopped",
+      "ready": false,
+      "blocker": "ADMIN_BOOTSTRAP_FAILED",
+      "nextAction": "Fix or explicitly skip the optional local Admin bootstrap; do not enter Admin from this goal."
+    },
+  "gitDiffCheck": {
+      "command": "git diff --check",
+      "exitCode": 0
+    },
+    "agentPackSync": {
+      "command": "node agent_pack/scripts/sync_pack.mjs",
+      "exitCode": 0
+    },
+    "agentPackAudit": {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "exitCode": 0,
+      "tasks": 211,
+      "screens": 131,
+      "endpointBlueprint": 185,
+      "errors": []
+    }
+  },
+  "sharedAudit": {
+    "publicAuthSeeker": "Wave 1 evidence preserved; Auth active contract is email-only/passwordless; Seeker remains external-partial with no repository-owned defects.",
+    "provider": "All 24 Provider routes/evidence reviewed in AR/EN; all repo-owned visual/runtime defects are at zero.",
+    "limitedNonAdminAudit": [
+      "CSS/rail placement and logical direction",
+      "semantic landmarks, focus, labels, loading/empty/error states",
+      "route aliases/deep links/session expiry/fail-closed permissions",
+      "safe projections, ownership/IDOR, private upload/download security",
+      "mapUrl and email-only contracts"
+    ]
+  },
+  "changedFiles": {
+    "source": [
+      "apps/web/src/features/provider/overview.tsx",
+      "apps/web/src/features/provider_property/completion.tsx",
+      "apps/web/src/features/provider_property/styles.css",
+      "apps/web/tests/e2e/public-fixtures.ts"
+    ],
+    "tests": [
+      "apps/web/tests/e2e/provider-account.spec.ts",
+      "apps/web/tests/e2e/provider-property-completion.spec.ts",
+      "apps/web/tests/provider-overview.vitest.test.tsx"
+    ],
+    "providerSnapshots": [
+      "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-advertising-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-advertising-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-commission-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-commission-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-request-modal-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-request-modal-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-requests-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-requests-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-notifications-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-notifications-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-account-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-account-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-contact-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-contact-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-security-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-security-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-overview.spec.ts-snapshots/provider-overview-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-overview.spec.ts-snapshots/provider-overview-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-projects.spec.ts-snapshots/provider-projects-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-projects.spec.ts-snapshots/provider-projects-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-properties.spec.ts-snapshots/provider-properties-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-properties.spec.ts-snapshots/provider-properties-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-details-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-details-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-features-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-features-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-price-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-price-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-contact-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-contact-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-media-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-media-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-review-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-review-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-published-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-published-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-rejected-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-rejected-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-submitted-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-submitted-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-validation-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-validation-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-basic-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-basic-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-location-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-location-en-desktop-en-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-ar-desktop-ar-win32.png",
+      "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-en-desktop-en-win32.png"
+    ],
+    "canonicalProviderAssets": [
+      "apps/web/public/assets/canonical/provider/navigation/overview.svg",
+      "apps/web/public/assets/canonical/provider/navigation/overview-active.svg",
+      "apps/web/public/assets/canonical/provider/navigation/properties.svg",
+      "apps/web/public/assets/canonical/provider/navigation/properties-active.svg",
+      "apps/web/public/assets/canonical/provider/navigation/add-property.svg",
+      "apps/web/public/assets/canonical/provider/navigation/add-property-active.svg",
+      "apps/web/public/assets/canonical/provider/navigation/projects.svg",
+      "apps/web/public/assets/canonical/provider/navigation/projects-active.svg",
+      "apps/web/public/assets/canonical/provider/navigation/requests.svg",
+      "apps/web/public/assets/canonical/provider/navigation/requests-active.svg",
+      "apps/web/public/assets/canonical/provider/navigation/advertising.svg",
+      "apps/web/public/assets/canonical/provider/navigation/advertising-active.svg",
+      "apps/web/public/assets/canonical/provider/navigation/commission.svg",
+      "apps/web/public/assets/canonical/provider/navigation/commission-active.svg",
+      "apps/web/public/assets/canonical/provider/navigation/notifications.svg",
+      "apps/web/public/assets/canonical/provider/navigation/notifications-active.svg",
+      "apps/web/public/assets/canonical/provider/navigation/settings.svg",
+      "apps/web/public/assets/canonical/provider/navigation/settings-active.svg",
+      "apps/web/public/assets/canonical/provider/navigation/logout.svg",
+      "apps/web/public/assets/canonical/provider/navigation/upload-media.svg",
+      "apps/web/public/assets/canonical/provider/navigation/asset-manifest.json"
+    ],
+    "currentPack": [
+      "agent_pack/03_execution/TASK_CATALOG.json",
+      "agent_pack/03_execution/TASK_STATE.json",
+      "agent_pack/03_execution/TASK_BOARD.md",
+      "agent_pack/03_execution/COUNT_SUMMARY.json",
+      "agent_pack/03_execution/MANIFEST.json",
+      "agent_pack/03_execution/EXECUTION_ORDER.md",
+      "agent_pack/03_execution/PARALLEL_WAVE_PLAN.json",
+      "agent_pack/step_info.json",
+      "agent_pack/04_tracks/frontend/F7_post_release_assurance/frontend_102.md",
+      "agent_pack/08_reality_sync/PROVIDER_WAVE_2_COORDINATOR.md",
+      "agent_pack/08_reality_sync/PROVIDER_WAVE_2_LANE_LEDGER.json",
+      "agent_pack/08_reality_sync/CURRENT_STATE.md",
+      "agent_pack/08_reality_sync/DECISION_LOG.md",
+      "docs/quality/figma_parity/RUN_CHECKPOINT.json",
+      "docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json",
+      "docs/quality/figma_parity/COORDINATOR_STATE.json",
+      "agent_pack/08_reality_sync/POST_PROVIDER_CLEANUP_MANIFEST_2026-08-29.json",
+      "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json"
+    ]
+  },
+  "cleanup": {
+    "preCleanupManifest": "agent_pack/08_reality_sync/POST_PROVIDER_CLEANUP_MANIFEST_2026-08-29.json",
+    "materialDeletions": [],
+    "chineseChangedPaths": [],
+    "chineseDecision": "Preserved; no Chinese path appeared in git status and no Chinese test/edit was executed.",
+    "historicalEvidence": "frontend_101 report, Wave 1 reports, Auth interpretation, and prior failure artifacts preserved; historical reports not rewritten.",
+    "ignoredArtifacts": [
+      ".local/native-local.log",
+      "apps/web/test-results"
+    ],
+    "secrets": "No secret values copied, logged, migrated, or sent."
+  },
+  "externalBlockers": [
+    {
+      "id": "PROVIDER-CONTRACT-17-SCREENS",
+      "count": 17,
+      "owner": "External Provider contract/data owner per screens[].externalPrerequisites",
+      "nextAction": "Approve each safe projection/data gap and rerun only affected AR/EN visual records."
+    },
+    {
+      "id": "LOCAL-RUNTIME-ADMIN-BOOTSTRAP",
+      "owner": "Local runtime/bootstrap owner",
+      "nextAction": "Fix or explicitly skip the failing optional Admin bootstrap; rerun non-Admin smoke only after supervisor readiness."
+    },
+    {
+      "id": "FIGMA-CODE-CONNECT-SEAT",
+      "owner": "Figma workspace administrator",
+      "nextAction": "Provide Dev or Full seat if a Code Connect mapping is required; current exact exported assets are sufficient."
+    }
+  ],
+  "adminReadiness": {
+    "ready": false,
+    "marker": "POST_PROVIDER_INTEGRATION_BLOCKED",
+    "reasons": [
+      "17 Provider screens are PARTIAL_EXTERNAL pending approved contract projections.",
+      "local:up cannot reach ready because ADMIN_BOOTSTRAP_FAILED; no Admin UI or feature workflow was entered. Selected non-Admin API security tests included existing Admin-route boundary probes only.",
+      "Admin remains unopened and the next safe action is external prerequisite resolution, not Admin implementation."
+    ]
+  },
+  "atomicCommitPlan": {
+    "singleCommit": true,
+    "include": [
+      "Provider source repairs",
+      "Public fixture-origin fix",
+      "canonical Provider SVG assets and manifest",
+      "Provider AR/EN desktop snapshots",
+      "frontend_102 current pointers and final evidence"
+    ],
+    "exclude": [
+      "historical frontend_101/Wave 1/Auth reports",
+      "Chinese files and snapshots",
+      "Admin implementation or Admin snapshots",
+      "secrets and generated runtime artifacts"
+    ]
+  },
+  "finalEvidence": {
+    "cleanupManifest": "agent_pack/08_reality_sync/POST_PROVIDER_CLEANUP_MANIFEST_2026-08-29.json",
+    "noAdminWork": true,
+    "noAdminFeatureWorkflow": true,
+    "adminBoundaryProbesRecorded": true,
+    "noChineseExecution": true,
+    "stopAfterReport": true
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "screenId": "ADM-18",
+  "classification": "BLOCKED_SOURCE",
+  "classificationReason": "The canonical file is confirmed, but the exact ADM-18 clone frame is unavailable. The checked-in local export is retained as provenance only; no node, historical comparison, or invented replacement source was used, and no visual closure claim is made.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4356",
+    "nodeId": null,
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?page-id=6017%3A4356",
+    "screenshot": {
+      "path": "docs/quality/figma_parity/screens/ADM-18/figma.png",
+      "width": 6308,
+      "height": 3776,
+      "reviewed": true
+    },
+    "getDesignContext": {
+      "tool": "mcp__figma__get_design_context",
+      "resultStatus": "NO_EXACT_CLONE_FRAME",
+      "root": {
+        "id": null,
+        "name": "ADM-18 Requests Management local export",
+        "width": 6308,
+        "height": 3776
+      },
+      "retrievedRegions": [
+        "admin shell",
+        "requests heading",
+        "request filters",
+        "request table",
+        "pagination"
+      ],
+      "reviewed": true,
+      "note": "The local export exists under docs/design_sources/final_screens/admin/ADM-18.png, but the canonical clone registry has no matching node. A local image is not treated as a recovered Figma frame."
+    }
+  },
+  "runtime": {
+    "route": "/admin/requests",
+    "role": "administrator",
+    "permissions": {
+      "requiredRole": "administrator",
+      "ownership": "administrator-scoped operational queue",
+      "availableActionsObserved": [
+        "view request",
+        "filter request list",
+        "paginate request list"
+      ],
+      "source": "Admin request fixture and route contract"
+    },
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "deterministicState": {
+      "seedId": "admin-requests-visual-fixture-ar-2026-08-29",
+      "source": "apps/web/tests/e2e/admin-requests.fixtures.ts",
+      "responseProjection": "one deterministic request fixture"
+    },
+    "response": {
+      "status": 200,
+      "ok": true
+    },
+    "apiRequests": [
+      {
+        "method": "GET",
+        "url": "/api/v1/admin/requests"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "/api/v1/admin/requests",
+        "status": 200
+      }
+    ],
+    "before": {
+      "path": "docs/quality/figma_parity/screens/ADM-18/runtime-before.png",
+      "sha256": "f3454780caf9b0921a93433c21e5bc69d94c89aa30919d4bdf42138d55e3200b",
+      "capture": "First Admin visual capture retained before any ADM-18 repair; no pre-Admin runtime capture exists."
+    },
+    "after": {
+      "path": "docs/quality/figma_parity/screens/ADM-18/runtime-after.png",
+      "sha256": "f3454780caf9b0921a93433c21e5bc69d94c89aa30919d4bdf42138d55e3200b",
+      "capture": "Same current runtime retained because the missing exact source prevents an authorized repair/recapture claim."
+    }
+  },
+  "structuredVisualComparison": {
+    "reviewed": true,
+    "diffPath": "docs/quality/figma_parity/screens/ADM-18/diff.png",
+    "sourceDimensions": {
+      "width": 6308,
+      "height": 3776
+    },
+    "runtimeDimensions": {
+      "width": 1280,
+      "height": 885
+    },
+    "comparisonKind": "preserved Playwright no-update implementation diff; not an exact Figma-node comparison",
+    "observations": [
+      "The Admin request route is rendered in Arabic RTL Desktop scope and the deterministic request row is present.",
+      "The preserved no-update visual run reported an expected 1280x1127 image versus a 1280x885 runtime image, with 9795 different pixels (ratio 0.01).",
+      "The local source and runtime have different provenance and dimensions; the diff is retained as failure evidence, not as source parity proof.",
+      "No snapshot was updated."
+    ],
+    "officialClosureEligible": false
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "requestProjection": "GET /api/v1/admin/requests",
+    "responseProjection": "deterministic Admin request list fixture",
+    "outcome": "The functional Admin route assertion, locale/direction, Desktop marker, keyboard focus, and safe-projection checks passed; visual closure is blocked by source provenance."
+  },
+  "defects": [
+    "External source blocker: the canonical file has no exact clone node for ADM-18.",
+    "The local export cannot establish an exact historical Figma comparison and no replacement source was invented.",
+    "The existing implementation visual mismatch remains open; no repository-owned repair is claimed under the source blocker."
+  ],
+  "filesRepaired": [],
+  "focusedTests": [
+    {
+      "name": "Admin Dashboard QA ADM-01..ADM-66 AR/EN",
+      "result": "134 passed",
+      "exitCode": 0
+    },
+    {
+      "name": "Admin request no-update visual evidence",
+      "result": "visual assertion failed; evidence preserved",
+      "exitCode": 1
+    }
+  ],
+  "accessibility": {
+    "focusedCheck": "Admin AR/EN accessibility suite and route keyboard assertions",
+    "result": "passed",
+    "exitCode": 0
+  },
+  "evidencePaths": {
+    "figma": "docs/quality/figma_parity/screens/ADM-18/figma.png",
+    "runtimeBefore": "docs/quality/figma_parity/screens/ADM-18/runtime-before.png",
+    "runtimeAfter": "docs/quality/figma_parity/screens/ADM-18/runtime-after.png",
+    "diff": "docs/quality/figma_parity/screens/ADM-18/diff.png",
+    "review": "docs/quality/figma_parity/screens/ADM-18/review.json"
+  },
+  "reviewedAt": "2026-08-29T17:30:00+03:00",
+  "externalBlocker": "Provide an exact ADM-18 clone frame or an explicitly approved current source tied to the canonical file, then recapture and re-review without changing snapshots prematurely.",
+  "latestRuntimeVerification": {
+    "source": "Admin request visual test-results and preserved evidence",
+    "phase": "after",
+    "apiResponseStatus": 200,
+    "officialClosureEligible": false
+  }
+}

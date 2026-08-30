@@ -156,9 +156,35 @@ function TableFrame({ title, count, children, note }: { readonly title: string; 
   return <section className="admin-ads__panel"><div className="admin-ads__panel-heading"><div><h2>{title}</h2><p>{count}</p></div>{note !== undefined ? <span className="admin-ads__note">{note}</span> : null}</div>{children}</section>;
 }
 
+interface AdsMetric {
+  readonly label: string;
+  readonly value: number;
+  readonly color: string;
+}
+
+function AdsMetricStrip({ metrics, locale, testId }: { readonly metrics: readonly AdsMetric[]; readonly locale: SupportedLocale; readonly testId: string }) {
+  return <div data-testid={testId} style={{ display: 'flex', flexWrap: 'wrap', gap: 12, maxWidth: 1320, margin: '0 auto 12px' }}>{metrics.map(metric => <article className="admin-dashboard__metric" key={metric.label}><strong style={{ color: metric.color }}>{new Intl.NumberFormat(locale).format(metric.value)}</strong><span>{metric.label}</span></article>)}</div>;
+}
+
 function RequestsTable({ data, locale, onDetail }: { readonly data: AdAdminRequestListData; readonly locale: SupportedLocale; readonly onDetail: (id: string) => void }) {
   const copy = getAdminAdsCopy(locale);
-  return <div className="admin-ads__table-wrap"><table className="admin-ads__table"><thead><tr><th scope="col">{copy.columns.id}</th><th scope="col">{copy.columns.provider}</th><th scope="col">{copy.columns.placement}</th><th scope="col">{copy.columns.status}</th><th scope="col">{copy.columns.quote}</th><th scope="col">{copy.columns.interval}</th><th scope="col">{copy.columns.actions}</th></tr></thead><tbody>{data.items.map(item => <tr key={item.request.id} data-testid={`admin-ad-request-${item.request.id}`}><td><code>{item.request.id}</code></td><td><code>{item.request.providerId}</code></td><td>{item.request.placementKey}</td><td><StatusBadge status={item.request.status} label={copy.requestStatus[item.request.status] ?? item.request.status} /></td><td>{item.quote === undefined ? copy.unavailable : <><StatusBadge status={item.quote.status} label={item.quote.status} /><span className="admin-ads__stacked-value">{moneyLabel(item.quote.totalMinor, item.quote.currency, locale)}</span></>}</td><td>{dateLabel(item.request.intervalStart, locale)}<br />{dateLabel(item.request.intervalEnd, locale)}</td><td><Button size="sm" variant="secondary" onClick={() => onDetail(item.request.id)}>{copy.view}</Button></td></tr>)}</tbody></table></div>;
+  const count = (status: AdAdminRequestListQuery['status']) => data.items.filter(item => item.request.status === status).length;
+  const labels = locale === 'ar'
+    ? ['طلبات جديدة', 'في انتظار التسعير', 'في انتظار الموافقة', 'في انتظار الدفع', 'مجدولة', 'نشطة', 'منتهية', 'مرفوضة'] as const
+    : locale === 'zh-CN'
+      ? ['新请求', '等待定价', '等待批准', '等待付款', '已排期', '进行中', '已结束', '已拒绝'] as const
+      : ['New requests', 'Awaiting pricing', 'Awaiting approval', 'Awaiting payment', 'Scheduled', 'Active', 'Ended', 'Rejected'] as const;
+  const metrics: readonly AdsMetric[] = [
+    { label: labels[0], value: count('draft'), color: '#2f73d9' },
+    { label: labels[1], value: count('waiting_pricing'), color: '#bd7414' },
+    { label: labels[2], value: count('review') + count('quote_sent'), color: '#5b49d6' },
+    { label: labels[3], value: count('waiting_payment'), color: '#d6561d' },
+    { label: labels[4], value: count('scheduled'), color: '#138a4b' },
+    { label: labels[5], value: count('active'), color: '#138a4b' },
+    { label: labels[6], value: count('ended'), color: '#667085' },
+    { label: labels[7], value: count('rejected'), color: '#c81e1e' }
+  ];
+  return <><AdsMetricStrip metrics={metrics} locale={locale} testId="admin-ad-request-metrics" /><div className="admin-ads__table-wrap"><table className="admin-ads__table"><thead><tr><th scope="col">{copy.columns.id}</th><th scope="col">{copy.columns.provider}</th><th scope="col">{copy.columns.placement}</th><th scope="col">{copy.columns.status}</th><th scope="col">{copy.columns.quote}</th><th scope="col">{copy.columns.interval}</th><th scope="col">{copy.columns.actions}</th></tr></thead><tbody>{data.items.map(item => <tr key={item.request.id} data-testid={`admin-ad-request-${item.request.id}`}><td><code>{item.request.id}</code></td><td><code>{item.request.providerId}</code></td><td>{item.request.placementKey}</td><td><StatusBadge status={item.request.status} label={copy.requestStatus[item.request.status] ?? item.request.status} /></td><td>{item.quote === undefined ? copy.unavailable : <><StatusBadge status={item.quote.status} label={item.quote.status} /><span className="admin-ads__stacked-value">{moneyLabel(item.quote.totalMinor, item.quote.currency, locale)}</span></>}</td><td>{dateLabel(item.request.intervalStart, locale)}<br />{dateLabel(item.request.intervalEnd, locale)}</td><td><Button size="sm" variant="secondary" onClick={() => onDetail(item.request.id)}>{copy.view}</Button></td></tr>)}</tbody></table></div></>;
 }
 
 function RequestDetail({ data, locale, onBack }: { readonly data: AdAdminRequest; readonly locale: SupportedLocale; readonly onBack: () => void }) {
@@ -168,7 +194,32 @@ function RequestDetail({ data, locale, onBack }: { readonly data: AdAdminRequest
 
 function PaymentProofTable({ data, locale, review, onReview }: { readonly data: PaymentProofAdminListData; readonly locale: SupportedLocale; readonly review: boolean; readonly onReview: (id: string) => void }) {
   const copy = getAdminAdsCopy(locale);
-  return <div className="admin-ads__table-wrap"><table className="admin-ads__table"><thead><tr><th scope="col">{copy.columns.id}</th><th scope="col">{copy.columns.request}</th><th scope="col">{copy.columns.provider}</th><th scope="col">{copy.columns.filename}</th><th scope="col">{copy.columns.size}</th><th scope="col">{copy.columns.security}</th><th scope="col">{copy.columns.status}</th><th scope="col">{copy.columns.version}</th><th scope="col">{copy.columns.uploaded}</th>{review ? <th scope="col">{copy.columns.actions}</th> : null}</tr></thead><tbody>{data.items.map(item => <tr key={item.id} data-testid={`admin-payment-proof-${item.id}`}><td><code>{item.id}</code></td><td><code>{item.adRequestId}</code></td><td><code>{item.providerId}</code></td><td>{item.originalFilename}</td><td>{Math.round(item.byteSize / 1024)} KB</td><td><StatusBadge status={item.securityState} label={item.securityState} /></td><td><StatusBadge status={item.status} label={copy.proofStatus[item.status] ?? item.status} /></td><td>{item.version}</td><td>{dateLabel(item.uploadedAt, locale)}</td>{review ? <td><Button size="sm" variant="secondary" onClick={() => onReview(item.id)}>{copy.reviewAction}</Button></td> : null}</tr>)}</tbody></table></div>;
+  const countStatus = (status: PaymentProofData['status']) => data.items.filter(item => item.status === status).length;
+  const securityAttention = data.items.filter(item => item.securityState !== 'clean').length;
+  const labels = locale === 'ar'
+    ? ['إجمالي الإثباتات', 'السجلات المعروضة', 'قيد المراجعة', 'تحتاج فحصًا أمنيًا', 'مقبولة', 'مرفوضة', 'ملفات نظيفة', 'قابلة للمراجعة'] as const
+    : locale === 'zh-CN'
+      ? ['证明总数', '当前记录', '审核中', '需要安全检查', '已批准', '已拒绝', '安全文件', '可审核'] as const
+      : ['Total proofs', 'Loaded records', 'Under review', 'Security attention', 'Approved', 'Rejected', 'Clean files', 'Reviewable'] as const;
+  const metrics: readonly AdsMetric[] = review
+    ? [
+        { label: labels[0], value: data.total, color: '#1f355f' },
+        { label: labels[1], value: data.items.length, color: '#4263a5' },
+        { label: labels[2], value: countStatus('pending_review'), color: '#bd7414' },
+        { label: labels[3], value: securityAttention, color: '#d6561d' },
+        { label: labels[4], value: countStatus('approved'), color: '#138a4b' },
+        { label: labels[5], value: countStatus('rejected'), color: '#c81e1e' },
+        { label: labels[6], value: data.items.filter(item => item.securityState === 'clean').length, color: '#138a4b' },
+        { label: labels[7], value: data.items.filter(item => item.status === 'pending_review' && item.securityState === 'clean').length, color: '#5b49d6' }
+      ]
+    : [
+        { label: labels[0], value: data.total, color: '#1f355f' },
+        { label: labels[1], value: data.items.length, color: '#4263a5' },
+        { label: labels[2], value: countStatus('pending_review'), color: '#bd7414' },
+        { label: labels[3], value: securityAttention, color: '#d6561d' }
+      ];
+  const showMetrics = review || data.items.some(item => item.status === 'pending_review');
+  return <>{showMetrics ? <AdsMetricStrip metrics={metrics} locale={locale} testId={review ? 'admin-payment-review-metrics' : 'admin-payment-proof-metrics'} /> : null}<div className="admin-ads__table-wrap"><table className="admin-ads__table"><thead><tr><th scope="col">{copy.columns.id}</th><th scope="col">{copy.columns.request}</th><th scope="col">{copy.columns.provider}</th><th scope="col">{copy.columns.filename}</th><th scope="col">{copy.columns.size}</th><th scope="col">{copy.columns.security}</th><th scope="col">{copy.columns.status}</th><th scope="col">{copy.columns.version}</th><th scope="col">{copy.columns.uploaded}</th>{review ? <th scope="col">{copy.columns.actions}</th> : null}</tr></thead><tbody>{data.items.map(item => <tr key={item.id} data-testid={`admin-payment-proof-${item.id}`}><td><code>{item.id}</code></td><td><code>{item.adRequestId}</code></td><td><code>{item.providerId}</code></td><td>{item.originalFilename}</td><td>{Math.round(item.byteSize / 1024)} KB</td><td><StatusBadge status={item.securityState} label={item.securityState} /></td><td><StatusBadge status={item.status} label={copy.proofStatus[item.status] ?? item.status} /></td><td>{item.version}</td><td>{dateLabel(item.uploadedAt, locale)}</td>{review ? <td><Button size="sm" variant="secondary" onClick={() => onReview(item.id)}>{copy.reviewAction}</Button></td> : null}</tr>)}</tbody></table></div></>;
 }
 
 function ReviewPanel({ proof, locale, review, onSaved }: { readonly proof: PaymentProofData; readonly locale: SupportedLocale; readonly review: AdminAdsPaymentProofReviewMutation; readonly onSaved: () => void }) {
@@ -207,7 +258,21 @@ function CalendarTable({ data, locale }: { readonly data: AdCalendarListData; re
 
 function FinancialTable({ data, locale, onDetail }: { readonly data: AdFinancialReviewListData; readonly locale: SupportedLocale; readonly onDetail: (id: string) => void }) {
   const copy = getAdminAdsCopy(locale);
-  return <div className="admin-ads__table-wrap"><table className="admin-ads__table"><thead><tr><th scope="col">{copy.columns.request}</th><th scope="col">{copy.columns.provider}</th><th scope="col">{copy.columns.placement}</th><th scope="col">{copy.columns.status}</th><th scope="col">{copy.columns.quote}</th><th scope="col">{copy.columns.state}</th><th scope="col">{copy.columns.interval}</th><th scope="col">{copy.columns.actions}</th></tr></thead><tbody>{data.items.map(item => <tr key={item.requestId} data-testid={`admin-financial-row-${item.requestId}`}><td><code>{item.requestId}</code></td><td><code>{item.providerId}</code></td><td>{item.placementKey}</td><td><StatusBadge status={item.requestStatus} label={copy.requestStatus[item.requestStatus] ?? item.requestStatus} /></td><td>{moneyLabel(item.quotedTotalMinor, item.quoteCurrency, locale)}</td><td><StatusBadge status={item.financialState} label={copy.financialState[item.financialState] ?? item.financialState} /><small className="admin-ads__stacked-value">{copy.columns.status}: {item.paymentProofStatus ?? copy.unavailable}</small></td><td>{dateLabel(item.intervalStart, locale)}<br />{dateLabel(item.intervalEnd, locale)}</td><td><Button size="sm" variant="secondary" onClick={() => onDetail(item.requestId)}>{copy.view}</Button></td></tr>)}</tbody></table></div>;
+  const count = (predicate: (item: AdFinancialReviewListData['items'][number]) => boolean) => data.items.filter(predicate).length;
+  const labels = locale === 'ar'
+    ? ['عروض أسعار مرسلة', 'المبالغ في انتظار الدفع', 'إثباتات الدفع قيد المراجعة', 'مدفوعات معتمدة', 'طلبات مغلقة', 'إعلانات نشطة'] as const
+    : locale === 'zh-CN'
+      ? ['已发送报价', '待付款金额', '审核中的付款证明', '已批准付款', '已关闭请求', '活跃广告'] as const
+      : ['Quotes issued', 'Payments awaiting action', 'Proofs under review', 'Approved payments', 'Closed requests', 'Active ads'] as const;
+  const metrics: readonly AdsMetric[] = [
+    { label: labels[0], value: count(item => item.quoteStatus !== undefined), color: '#4263a5' },
+    { label: labels[1], value: count(item => item.financialState === 'payment_proof_pending_review' || item.requestStatus === 'waiting_payment'), color: '#d6561d' },
+    { label: labels[2], value: count(item => item.paymentProofStatus === 'pending_review'), color: '#bd7414' },
+    { label: labels[3], value: count(item => item.paymentProofStatus === 'approved'), color: '#138a4b' },
+    { label: labels[4], value: count(item => item.requestStatus === 'ended'), color: '#667085' },
+    { label: labels[5], value: count(item => item.requestStatus === 'active'), color: '#138a4b' }
+  ];
+  return <><AdsMetricStrip metrics={metrics} locale={locale} testId="admin-financial-metrics" /><div className="admin-ads__table-wrap"><table className="admin-ads__table"><thead><tr><th scope="col">{copy.columns.request}</th><th scope="col">{copy.columns.provider}</th><th scope="col">{copy.columns.placement}</th><th scope="col">{copy.columns.status}</th><th scope="col">{copy.columns.quote}</th><th scope="col">{copy.columns.state}</th><th scope="col">{copy.columns.interval}</th><th scope="col">{copy.columns.actions}</th></tr></thead><tbody>{data.items.map(item => <tr key={item.requestId} data-testid={`admin-financial-row-${item.requestId}`}><td><code>{item.requestId}</code></td><td><code>{item.providerId}</code></td><td>{item.placementKey}</td><td><StatusBadge status={item.requestStatus} label={copy.requestStatus[item.requestStatus] ?? item.requestStatus} /></td><td>{moneyLabel(item.quotedTotalMinor, item.quoteCurrency, locale)}</td><td><StatusBadge status={item.financialState} label={copy.financialState[item.financialState] ?? item.financialState} /><small className="admin-ads__stacked-value">{copy.columns.status}: {item.paymentProofStatus ?? copy.unavailable}</small></td><td>{dateLabel(item.intervalStart, locale)}<br />{dateLabel(item.intervalEnd, locale)}</td><td><Button size="sm" variant="secondary" onClick={() => onDetail(item.requestId)}>{copy.view}</Button></td></tr>)}</tbody></table></div></>;
 }
 
 function LedgerTable({ data, locale }: { readonly data: AdLedgerListData; readonly locale: SupportedLocale }) {

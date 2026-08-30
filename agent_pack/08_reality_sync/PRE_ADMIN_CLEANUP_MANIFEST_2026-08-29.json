@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "manifestType": "pre-cleanup",
+  "generatedAt": "2026-08-29T14:04:09.0424365+03:00",
+  "goal": "Pre-Admin non-Admin reconciliation, safe cleanup, and dependency handoff",
+  "preCleanup": {
+    "gitStatusRead": true,
+    "materialDeletionPerformed": false,
+    "deletionAuthorization": "none",
+    "broadRestoreOrResetPerformed": false,
+    "runtimeSupervisorStartedByCoordinator": true,
+    "runtimeSupervisorStoppedByCoordinator": true
+  },
+  "records": [
+    {
+      "path": ".local/native-local.log",
+      "gitStatus": "ignored",
+      "sizeBytes": 68338,
+      "sha256": "6D1A7619DBCAA6003EE044BCE5DFC84FB874F6C151A7E50096AA1061194F2BC0",
+      "owner": "Local runtime supervisor",
+      "referencedBy": "Bootstrap failure provenance and successful explicit-bootstrap-skip readiness run",
+      "decision": "KEEP",
+      "reason": "Runtime evidence is material and must not be deleted or copied with secrets."
+    },
+    {
+      "path": ".local/mongodb-binaries/mongod-x64-win32-8.0.14.exe",
+      "gitStatus": "ignored",
+      "sizeBytes": 76463104,
+      "sha256": "7BC25F32ED1A42327A4B8EE18624C2C2B604FE966E7D01690A4D8B6CB088BC24",
+      "owner": "Existing local runtime artifact",
+      "referencedBy": "Local runtime directory; no deletion authorization",
+      "decision": "KEEP",
+      "reason": "It is not proven unreferenced; the current successful run used the installed MongoDB service and did not justify deleting this artifact."
+    },
+    {
+      "path": ".local/private-uploads",
+      "gitStatus": "ignored directory",
+      "sizeBytes": null,
+      "sha256": null,
+      "owner": "Private storage runtime",
+      "referencedBy": "Local private upload/quarantine boundary",
+      "decision": "KEEP",
+      "reason": "Private storage roots are protected cleanup targets."
+    },
+    {
+      "path": "apps/web/test-results/.last-run.json",
+      "gitStatus": "ignored",
+      "sizeBytes": 45,
+      "sha256": "91D1C43004802CD49950D78EB11C8FA7D05DA8FFFFE219A8B13B2F561BC00903",
+      "owner": "Playwright runner",
+      "referencedBy": "Current local test-run metadata",
+      "decision": "KEEP",
+      "reason": "Generated test artifacts remain preserved; no cleanup is needed to establish readiness."
+    },
+    {
+      "path": "apps/web/playwright-report/index.html",
+      "gitStatus": "ignored",
+      "sizeBytes": 524551,
+      "sha256": "7FE8B5F5515E80B6058611E040F7E08F5EE9550418D421CD5E74C91774E2DB20",
+      "owner": "Playwright reporter",
+      "referencedBy": "Existing visual/e2e report artifact",
+      "decision": "KEEP",
+      "reason": "Preserve existing evidence and avoid deleting artifacts not created by this pass."
+    },
+    {
+      "path": "docs/quality/figma_parity/screens/AUTH-02/test-artifacts/pass12-baseline-update/.playwright-artifacts-4/traces/e2f6597c4078f7323350-a88046d2d5c3c939676a.trace",
+      "gitStatus": "tracked or evidence-local",
+      "sizeBytes": 603743,
+      "sha256": "5DC23F25DA829F4DE6B68CC2BB9E114A38ECF190A1DFD2B284B9F729E4B6AF68",
+      "owner": "Auth visual evidence",
+      "referencedBy": "Historical Auth baseline-update trace",
+      "decision": "KEEP",
+      "reason": "Historical failure and repair artifacts are explicitly preserved."
+    },
+    {
+      "path": "docs/quality/figma_parity/screens/AUTH-02/test-artifacts/pass12-visual/*/trace.zip",
+      "gitStatus": "tracked or evidence-local",
+      "sizeBytes": 3827064,
+      "sha256": "per-file hashes recorded by preflight; six AR/EN desktop/tablet/mobile traces",
+      "owner": "Auth visual evidence",
+      "referencedBy": "Historical Auth visual trace bundle",
+      "decision": "KEEP",
+      "reason": "Evidence artifacts are not proven temporary and must remain available for audit."
+    },
+    {
+      "path": "agent_pack/08_reality_sync/POST_PROVIDER_CLEANUP_MANIFEST_2026-08-29.json",
+      "gitStatus": "untracked",
+      "sizeBytes": null,
+      "sha256": null,
+      "owner": "Coordinator / Agent Pack",
+      "referencedBy": "Provider reconciliation report",
+      "decision": "KEEP",
+      "reason": "Prior cleanup decisions are historical provenance and must remain immutable."
+    },
+    {
+      "path": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "gitStatus": "untracked",
+      "sizeBytes": null,
+      "sha256": null,
+      "owner": "Coordinator / Agent Pack",
+      "referencedBy": "Current Provider reconciliation and dependency decision",
+      "decision": "KEEP",
+      "reason": "Current evidence is required to reconcile the 65-screen non-Admin queue."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider",
+      "gitStatus": "untracked directory",
+      "sizeBytes": null,
+      "sha256": null,
+      "owner": "Provider implementation",
+      "referencedBy": "Provider shared navigation and PRV-08 media dropzone",
+      "decision": "KEEP",
+      "reason": "Exact exported assets are referenced by current source and the asset manifest."
+    },
+    {
+      "path": "root .tmp-* artifacts",
+      "gitStatus": "absent after recorded 2026-08-27 cleanup",
+      "sizeBytes": 0,
+      "sha256": null,
+      "owner": "Historical cleanup record",
+      "referencedBy": "CLEANUP_2026-08-27.json",
+      "decision": "NO_ACTION",
+      "reason": "Already removed under the prior authorized cleanup; do not repeat or broaden deletion."
+    }
+  ],
+  "deletions": [],
+  "postRuntimeInventory": {
+    "path": ".local/native-local.log",
+    "sizeBytes": 89738,
+    "sha256": "6D1A7619DBCAA6003EE044BCE5DFC84FB874F6C151A7E50096AA1061194F2BC0",
+    "decision": "KEEP",
+    "reason": "The coordinator-owned supervisor appended readiness evidence after the pre-cleanup snapshot; the log remains preserved."
+  },
+  "unknownOrUnowned": [],
+  "chineseSnapshotReview": {
+    "changedPathsDetected": [],
+    "decision": "Preserve all Chinese files and snapshots; no zh-CN test, capture, baseline update, or cleanup was executed."
+  },
+  "policy": "No reset, clean, stash, broad restore, recursive deletion, snapshot masking, or Chinese test/edit."
+}

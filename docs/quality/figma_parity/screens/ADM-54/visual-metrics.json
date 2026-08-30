@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "screenId": "ADM-54",
+  "phase": "after",
+  "source": {
+    "width": 1440,
+    "height": 1080
+  },
+  "runtimeAfter": {
+    "width": 1440,
+    "height": 1341
+  },
+  "comparedWidth": 1440,
+  "comparedHeight": 1080,
+  "comparedPixels": 1555200,
+  "materialDifferencePercent": 52.4088,
+  "antiAliasingOnlyPercent": 6.8265,
+  "threshold": {
+    "materialRgbSumGreaterThan": 24,
+    "antiAliasingRgbSumGreaterThan": 3
+  },
+  "method": "same-width owner-source/runtime canvas comparison over the overlapping document height",
+  "reviewed": true,
+  "reviewedAt": "2026-08-29T17:30:00+03:00"
+}

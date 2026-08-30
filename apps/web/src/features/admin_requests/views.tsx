@@ -101,6 +101,76 @@ function StatusBadge({ label, status }: { readonly label: string; readonly statu
   return <span className="admin-requests__badge" data-tone={toneForStatus(status)}>{label}</span>;
 }
 
+function metricText(locale: SupportedLocale, english: string, arabic: string): string {
+  return locale === 'ar' ? arabic : english;
+}
+
+type RequestMetric = readonly [value: number, label: string];
+
+function requestItems(data: RequestListData | OverdueRequestListData, overdue: boolean): readonly RequestData[] {
+  return overdue
+    ? (data as OverdueRequestListData).items.map(item => item.request)
+    : (data as RequestListData).items;
+}
+
+function RequestMetricStrip({ data, locale, variant }: { readonly data: RequestListData | OverdueRequestListData; readonly locale: SupportedLocale; readonly variant: 'customer' | 'overdue' }) {
+  const items = requestItems(data, variant === 'overdue');
+  const count = (status: RequestStatus) => items.filter(request => request.status === status).length;
+  const metrics: readonly RequestMetric[] = variant === 'customer'
+    ? [
+        [data.total, metricText(locale, 'Total requests', '\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0637\u0644\u0628\u0627\u062a')],
+        [items.length, metricText(locale, 'Loaded records', '\u0627\u0644\u0633\u062c\u0644\u0627\u062a \u0627\u0644\u0645\u062d\u0645\u0644\u0629')],
+        [count('new'), metricText(locale, 'New', '\u062c\u062f\u064a\u062f')],
+        [count('under_review'), metricText(locale, 'Under review', '\u0642\u064a\u062f \u0627\u0644\u0645\u0631\u0627\u062c\u0639\u0629')],
+        [count('contacted'), metricText(locale, 'Contacted', '\u062a\u0645 \u0627\u0644\u062a\u0648\u0627\u0635\u0644')],
+        [count('scheduled'), metricText(locale, 'Scheduled', '\u0645\u062c\u062f\u0648\u0644')],
+        [count('in_progress'), metricText(locale, 'In progress', '\u0642\u064a\u062f \u0627\u0644\u062a\u0646\u0641\u064a\u0630')],
+        [count('resolved'), metricText(locale, 'Resolved', '\u062a\u0645 \u0627\u0644\u062d\u0644')]
+      ]
+    : [
+        [data.total, metricText(locale, 'Total overdue', '\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0645\u062a\u0623\u062e\u0631')],
+        [items.length, metricText(locale, 'Loaded records', '\u0627\u0644\u0633\u062c\u0644\u0627\u062a \u0627\u0644\u0645\u062d\u0645\u0644\u0629')],
+        [count('new'), metricText(locale, 'New', '\u062c\u062f\u064a\u062f')],
+        [count('under_review'), metricText(locale, 'Under review', '\u0642\u064a\u062f \u0627\u0644\u0645\u0631\u0627\u062c\u0639\u0629')],
+        [count('contacted'), metricText(locale, 'Contacted', '\u062a\u0645 \u0627\u0644\u062a\u0648\u0627\u0635\u0644')],
+        [count('in_progress'), metricText(locale, 'In progress', '\u0642\u064a\u062f \u0627\u0644\u062a\u0646\u0641\u064a\u0630')]
+      ];
+  const colors = ['#1b2942', '#2f68c9', '#2f68c9', '#bf6500', '#2f68c9', '#2f68c9', '#bf6500', '#00854a'];
+  return <section aria-label={metricText(locale, 'Request metrics', '\u0645\u0624\u0634\u0631\u0627\u062a \u0627\u0644\u0637\u0644\u0628\u0627\u062a')} className="admin-dashboard__metric-section" style={{ marginBlockStart: 0 }}><div className="admin-dashboard__metric-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}>{metrics.map(([value, label], index) => <article className="admin-dashboard__metric" data-testid={'admin-request-metric-' + variant + '-' + index} key={label}><strong style={{ color: colors[index] ?? '#1b2942' }}>{new Intl.NumberFormat(locale).format(value)}</strong><span>{label}</span></article>)}</div></section>;
+}
+
+function RequestStatusStrip({ locale, selected, onSelect }: { readonly locale: SupportedLocale; readonly selected: RequestStatus | undefined; readonly onSelect: (status: RequestStatus | undefined) => void }) {
+  const copy = getAdminRequestsCopy(locale);
+  const allLabel = metricText(locale, 'All', '\u0627\u0644\u0643\u0644');
+  return <div role="tablist" aria-label={metricText(locale, 'Request status', '\u062d\u0627\u0644\u0629 \u0627\u0644\u0637\u0644\u0628')} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, maxWidth: 1420, margin: '0 auto 12px', padding: 8, border: '1px solid #e3e5e7', borderRadius: 16, background: '#fff', boxShadow: '0 6px 16px #3232320d' }}>
+    {[[undefined, allLabel] as const, ...requestStatuses.map(status => [status, copy.statusLabel[status]] as const)].map(([value, label]) => { const active = selected === value; return <button aria-selected={active} data-filter-value={value ?? 'all'} key={value ?? 'all'} onClick={() => onSelect(value)} role="tab" style={{ minHeight: 38, padding: '8px 16px', border: 0, borderRadius: 999, background: active ? '#155b4f' : 'transparent', color: active ? '#fff' : '#69768b', cursor: 'pointer', fontWeight: 800 }} type="button">{label}</button>; })}
+  </div>;
+}
+
+function ViewingMetricStrip({ data, locale }: { readonly data: ViewingListData; readonly locale: SupportedLocale }) {
+  const count = (status: ViewingStatus) => data.items.filter(viewing => viewing.status === status).length;
+  const assigned = data.items.filter(viewing => viewing.providerId !== undefined).length;
+  const metrics: readonly RequestMetric[] = [
+    [data.total, metricText(locale, 'Total viewings', '\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0645\u0639\u0627\u064a\u0646\u0627\u062a')],
+    [data.items.length, metricText(locale, 'Loaded records', '\u0627\u0644\u0633\u062c\u0644\u0627\u062a \u0627\u0644\u0645\u062d\u0645\u0644\u0629')],
+    [count('requested'), metricText(locale, 'Requested', '\u0645\u0637\u0644\u0648\u0628')],
+    [count('confirmed'), metricText(locale, 'Confirmed', '\u0645\u0624\u0643\u062f')],
+    [count('rescheduled'), metricText(locale, 'Rescheduled', '\u0623\u0639\u064a\u062f\u062a \u062c\u062f\u0648\u0644\u062a\u0647')],
+    [count('cancelled'), metricText(locale, 'Cancelled', '\u0645\u0644\u063a\u0649')],
+    [count('completed'), metricText(locale, 'Completed', '\u0645\u0643\u062a\u0645\u0644')],
+    [assigned, metricText(locale, 'Assigned', '\u0645\u0633\u0646\u062f')]
+  ];
+  const colors = ['#1b2942', '#2f68c9', '#2f68c9', '#00854a', '#bf6500', '#df1c2e', '#00854a', '#2f68c9'];
+  return <section aria-label={metricText(locale, 'Viewing metrics', '\u0645\u0624\u0634\u0631\u0627\u062a \u0627\u0644\u0645\u0639\u0627\u064a\u0646\u0627\u062a')} className="admin-dashboard__metric-section" style={{ marginBlockStart: 0 }}><div className="admin-dashboard__metric-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}>{metrics.map(([value, label], index) => <article className="admin-dashboard__metric" data-testid={'admin-viewing-metric-' + index} key={label}><strong style={{ color: colors[index] ?? '#1b2942' }}>{new Intl.NumberFormat(locale).format(value)}</strong><span>{label}</span></article>)}</div></section>;
+}
+
+function ViewingStatusStrip({ locale, selected, onSelect }: { readonly locale: SupportedLocale; readonly selected: ViewingStatus | undefined; readonly onSelect: (status: ViewingStatus | undefined) => void }) {
+  const copy = getAdminRequestsCopy(locale);
+  const allLabel = metricText(locale, 'All', '\u0627\u0644\u0643\u0644');
+  const statuses: readonly ViewingStatus[] = ['requested', 'confirmed', 'rescheduled', 'cancelled', 'completed'];
+  return <div role="tablist" aria-label={metricText(locale, 'Viewing status', '\u062d\u0627\u0644\u0629 \u0627\u0644\u0645\u0639\u0627\u064a\u0646\u0629')} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, maxWidth: 1420, margin: '0 auto 12px', padding: 8, border: '1px solid #e3e5e7', borderRadius: 16, background: '#fff', boxShadow: '0 6px 16px #3232320d' }}>{[[undefined, allLabel] as const, ...statuses.map(status => [status, copy.viewingStatusLabel[status]] as const)].map(([value, label]) => { const active = selected === value; return <button aria-selected={active} data-filter-value={value ?? 'all'} key={value ?? 'all'} onClick={() => onSelect(value)} role="tab" style={{ minHeight: 38, padding: '8px 16px', border: 0, borderRadius: 999, background: active ? '#155b4f' : 'transparent', color: active ? '#fff' : '#69768b', cursor: 'pointer', fontWeight: 800 }} type="button">{label}</button>; })}</div>;
+}
+
 function RequestTable({ copy, data, locale, onSelect, overdue = false }: { readonly copy: AdminRequestsCopy; readonly data: RequestListData | OverdueRequestListData; readonly locale: SupportedLocale; readonly onSelect: (request: RequestData) => void; readonly overdue?: boolean }) {
   const items = overdue ? (data as OverdueRequestListData).items.map(item => item.request) : (data as RequestListData).items;
   const overdueSeconds = overdue ? new Map((data as OverdueRequestListData).items.map(item => [item.request.id, item.overdueBySeconds])) : undefined;
@@ -177,6 +247,11 @@ function Filters({ copy, screen, query, onApply, onClear }: { readonly copy: Adm
   const [search, setSearch] = useState(query.search ?? '');
   const [status, setStatus] = useState<RequestStatus | ''>(query.status ?? '');
   const [type, setType] = useState<RequestType | ''>(query.type ?? '');
+  useEffect(() => {
+    setSearch(query.search ?? '');
+    setStatus(query.status ?? '');
+    setType(query.type ?? '');
+  }, [query.search, query.status, query.type]);
   return <form className="admin-requests__filters" role="search" aria-label={copy.filters} onSubmit={event => { event.preventDefault(); onApply({ page: 1, ...(search.trim() === '' ? {} : { search: search.trim() }), ...(status === '' ? {} : { status }), ...(type === '' ? {} : { type }) }); }}><div><label htmlFor="admin-requests-search">{copy.search}</label><input id="admin-requests-search" type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder={copy.searchPlaceholder} /></div><div><label htmlFor="admin-requests-status">{copy.status}</label><select id="admin-requests-status" value={status} onChange={event => setStatus(event.target.value as RequestStatus | '')}><option value="">{copy.allStatuses}</option>{requestStatuses.map(item => <option key={item} value={item}>{copy.statusLabel[item]}</option>)}</select></div>{screen === 'all' ? <div><label htmlFor="admin-requests-type">{copy.type}</label><select id="admin-requests-type" value={type} onChange={event => setType(event.target.value as RequestType | '')}><option value="">{copy.allTypes}</option>{requestTypes.map(item => <option key={item} value={item}>{copy.typeLabel[item]}</option>)}</select></div> : null}<div className="admin-requests__filter-actions"><Button type="submit">{copy.apply}</Button><Button type="button" variant="secondary" onClick={() => { setSearch(''); setStatus(''); setType(''); onClear(); }}>{copy.clear}</Button></div></form>;
 }
 
@@ -190,6 +265,7 @@ export function AdminRequests({ locale, session, authClient, apiOrigin, initialR
   const [overdue, setOverdue] = useState<OverdueRequestListData | undefined>(initialOverdue);
   const [viewings, setViewings] = useState<ViewingListData | undefined>(initialViewings);
   const [issues, setIssues] = useState<import('@sadat-real-estate/contracts').RequestIssueListData | undefined>(initialIssues);
+  const [viewingStatus, setViewingStatus] = useState<ViewingStatus | undefined>();
   const [query, setQuery] = useState<Partial<RequestListQuery>>({ page: 1, limit: 20, ...(projection.fixedType === undefined ? {} : { type: projection.fixedType }) });
   const [attempt, setAttempt] = useState(0);
   const [selectedRequest, setSelectedRequest] = useState<RequestData | undefined>();
@@ -215,10 +291,10 @@ export function AdminRequests({ locale, session, authClient, apiOrigin, initialR
     const controller = new AbortController();
     setState('loading');
     const requestQuery: RequestListQuery = { page: query.page ?? 1, limit: query.limit ?? 20, ...(query.search === undefined ? {} : { search: query.search }), ...(query.status === undefined ? {} : { status: query.status }), ...(projection.fixedType === undefined ? (query.type === undefined ? {} : { type: query.type }) : { type: projection.fixedType }) };
-    const requestPromise = projection.screen === 'overdue' ? overdueLoader(requestQuery, controller.signal).then(data => { setOverdue(data); setState(stateForItems(data.items.length)); }) : projection.screen === 'viewing' ? viewingLoader({ page: requestQuery.page, limit: requestQuery.limit }, controller.signal).then(data => { setViewings(data); setState(stateForItems(data.items.length)); }) : projection.screen === 'issues' ? issueLoader(requestQuery.page, requestQuery.limit, controller.signal).then(data => { setIssues(data); setState(stateForItems(data.items.length)); }) : requestLoader(requestQuery, controller.signal).then(data => { setRequests(data); setState(stateForItems(data.items.length)); });
+    const requestPromise = projection.screen === 'overdue' ? overdueLoader(requestQuery, controller.signal).then(data => { setOverdue(data); setState(stateForItems(data.items.length)); }) : projection.screen === 'viewing' ? viewingLoader({ page: requestQuery.page, limit: requestQuery.limit, ...(viewingStatus === undefined ? {} : { status: viewingStatus }) }, controller.signal).then(data => { setViewings(data); setState(stateForItems(data.items.length)); }) : projection.screen === 'issues' ? issueLoader(requestQuery.page, requestQuery.limit, controller.signal).then(data => { setIssues(data); setState(stateForItems(data.items.length)); }) : requestLoader(requestQuery, controller.signal).then(data => { setRequests(data); setState(stateForItems(data.items.length)); });
     void requestPromise.catch(error => { if (!controller.signal.aborted) setState(stateForError(error)); });
     return () => controller.abort();
-  }, [attempt, initialIssues, initialOverdue, initialRequests, initialViewings, issueLoader, overdueLoader, projection.fixedType, projection.screen, query, requestLoader, sessionAllowed, viewingLoader]);
+  }, [attempt, initialIssues, initialOverdue, initialRequests, initialViewings, issueLoader, overdueLoader, projection.fixedType, projection.screen, query, requestLoader, sessionAllowed, viewingLoader, viewingStatus]);
 
   useEffect(() => {
     const requestId = typeof window === 'undefined' ? undefined : new URL(window.location.href).searchParams.get('requestId');
@@ -237,6 +313,7 @@ export function AdminRequests({ locale, session, authClient, apiOrigin, initialR
   }
 
   function applyFilters(next: Partial<RequestListQuery>): void { setQuery(current => ({ ...current, ...next, ...(projection.fixedType === undefined ? {} : { type: projection.fixedType }) })); setAttempt(value => value + 1); setSelectedRequest(undefined); }
+  function applyViewingStatus(status: ViewingStatus | undefined): void { setViewingStatus(status); setQuery(current => ({ ...current, page: 1 })); setAttempt(value => value + 1); }
   function retry(): void { setAttempt(value => value + 1); }
   const data = projection.screen === 'overdue' ? overdue : projection.screen === 'viewing' ? viewings : projection.screen === 'issues' ? issues : requests;
   const total = data?.total ?? 0;
@@ -246,7 +323,7 @@ export function AdminRequests({ locale, session, authClient, apiOrigin, initialR
   const screenDataState = state === 'success' && data !== undefined && data.items.length === 0 ? 'empty' : state;
   const screenTitle = copy.titles[projection.screen];
 
-  return <section className="admin-requests" data-screen-id={`ADM-${18 + ['all', 'customer', 'overdue', 'contact', 'viewing', 'search', 'issues'].indexOf(projection.screen)}`} data-route={projection.route} data-device-scope="desktop" data-admin-requests-state={screenDataState}><AdminNavigation locale={locale} activePath={pathname} /><div className="admin-requests__content"><header className="admin-requests__heading"><div><p className="admin-requests__eyebrow">{copy.eyebrow}</p><h1>{screenTitle}</h1><p>{copy.descriptions[projection.screen]}</p></div><span className="admin-requests__direction-note">{copy.directionNote}</span></header>{projection.screen !== 'viewing' && projection.screen !== 'issues' ? <Filters copy={copy} screen={projection.screen} query={query} onApply={applyFilters} onClear={() => { setQuery({ page: 1, limit: 20, ...(projection.fixedType === undefined ? {} : { type: projection.fixedType }) }); setAttempt(value => value + 1); }} /> : null}{state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={retry} /> : null}{state === 'not_found' ? <NotFoundPanel locale={locale} /> : null}{screenDataState === 'empty' ? <section className="admin-requests__empty" data-state="empty"><h2>{copy.states.empty.title}</h2><p>{copy.states.empty.body}</p></section> : null}{screenDataState === 'success' && projection.screen !== 'viewing' && projection.screen !== 'issues' && (requests !== undefined || overdue !== undefined) ? <section className="admin-requests__panel"><div className="admin-requests__panel-heading"><div><h2>{screenTitle}</h2><p>{copy.count(total)}</p></div></div><RequestTable copy={copy} data={projection.screen === 'overdue' ? overdue! : requests!} locale={locale} overdue={projection.screen === 'overdue'} onSelect={request => { setSelectedRequest(request); const url = new URL(window.location.href); url.searchParams.set('requestId', request.id); window.history.replaceState({}, '', url); }} /><Pagination copy={copy} page={page} totalPages={totalPages} onPage={nextPage => { setQuery(current => ({ ...current, page: nextPage })); setAttempt(value => value + 1); }} /></section> : null}{screenDataState === 'success' && projection.screen === 'viewing' && viewings !== undefined ? <section className="admin-requests__panel"><div className="admin-requests__panel-heading"><div><h2>{screenTitle}</h2><p>{copy.count(total)}</p></div></div><ViewingTable copy={copy} data={viewings} locale={locale} /><Pagination copy={copy} page={page} totalPages={totalPages} onPage={nextPage => { setQuery(current => ({ ...current, page: nextPage })); setAttempt(value => value + 1); }} /></section> : null}{screenDataState === 'success' && projection.screen === 'issues' && issues !== undefined ? <section className="admin-requests__panel"><div className="admin-requests__panel-heading"><div><h2>{screenTitle}</h2><p>{copy.count(total)}</p></div></div><IssueTable copy={copy} data={issues} onSelect={setSelectedIssue} /><Pagination copy={copy} page={page} totalPages={totalPages} onPage={nextPage => { setQuery(current => ({ ...current, page: nextPage })); setAttempt(value => value + 1); }} /></section> : null}{selectedRequest !== undefined ? <RequestDetail copy={copy} locale={locale} request={selectedRequest} onClose={() => { setSelectedRequest(undefined); const url = new URL(window.location.href); url.searchParams.delete('requestId'); window.history.replaceState({}, '', url); }} onTransition={async (id, input, signal) => { const next = await transitionMutation(id, input, signal); replaceRequest(next); return next; }} onAssign={async (id, input, signal) => { const next = await assignmentMutation(id, input, signal); replaceRequest(next); return next; }} onNote={async (id, input, signal) => { const next = await noteMutation(id, input, signal); replaceRequest(next); return next; }} /> : null}{selectedIssue !== undefined ? <IssueDetail copy={copy} issue={selectedIssue} resolve={async (id, input, signal) => { const next = await issueMutation(id, input, signal); setSelectedIssue(next); setIssues(current => current === undefined ? current : { ...current, items: current.items.map(item => item.id === next.id ? next : item) }); return next; }} onClose={() => setSelectedIssue(undefined)} /> : null}</div></section>;
+  return <section className="admin-requests" data-screen-id={`ADM-${18 + ['all', 'customer', 'overdue', 'contact', 'viewing', 'search', 'issues'].indexOf(projection.screen)}`} data-route={projection.route} data-device-scope="desktop" data-admin-requests-state={screenDataState}><AdminNavigation locale={locale} activePath={pathname} /><div className="admin-requests__content"><header className="admin-requests__heading"><div><p className="admin-requests__eyebrow">{copy.eyebrow}</p><h1>{screenTitle}</h1><p>{copy.descriptions[projection.screen]}</p></div><span className="admin-requests__direction-note">{copy.directionNote}</span></header>{screenDataState === 'success' && (projection.screen === 'customer' || projection.screen === 'overdue') && (requests !== undefined || overdue !== undefined) ? <RequestMetricStrip data={projection.screen === 'overdue' ? overdue! : requests!} locale={locale} variant={projection.screen === 'overdue' ? 'overdue' : 'customer'} /> : null}{screenDataState === 'success' && (projection.screen === 'customer' || projection.screen === 'contact') && requests !== undefined ? <RequestStatusStrip locale={locale} selected={query.status} onSelect={status => applyFilters({ page: 1, status })} /> : null}{screenDataState === 'success' && projection.screen === 'viewing' && viewings !== undefined ? <><ViewingMetricStrip data={viewings} locale={locale} /><ViewingStatusStrip locale={locale} selected={viewingStatus} onSelect={applyViewingStatus} /></> : null}{projection.screen !== 'viewing' && projection.screen !== 'issues' ? <Filters copy={copy} screen={projection.screen} query={query} onApply={applyFilters} onClear={() => { setQuery({ page: 1, limit: 20, ...(projection.fixedType === undefined ? {} : { type: projection.fixedType }) }); setAttempt(value => value + 1); }} /> : null}{state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={retry} /> : null}{state === 'not_found' ? <NotFoundPanel locale={locale} /> : null}{screenDataState === 'empty' ? <section className="admin-requests__empty" data-state="empty"><h2>{copy.states.empty.title}</h2><p>{copy.states.empty.body}</p></section> : null}{screenDataState === 'success' && projection.screen !== 'viewing' && projection.screen !== 'issues' && (requests !== undefined || overdue !== undefined) ? <section className="admin-requests__panel"><div className="admin-requests__panel-heading"><div><h2>{screenTitle}</h2><p>{copy.count(total)}</p></div></div><RequestTable copy={copy} data={projection.screen === 'overdue' ? overdue! : requests!} locale={locale} overdue={projection.screen === 'overdue'} onSelect={request => { setSelectedRequest(request); const url = new URL(window.location.href); url.searchParams.set('requestId', request.id); window.history.replaceState({}, '', url); }} /><Pagination copy={copy} page={page} totalPages={totalPages} onPage={nextPage => { setQuery(current => ({ ...current, page: nextPage })); setAttempt(value => value + 1); }} /></section> : null}{screenDataState === 'success' && projection.screen === 'viewing' && viewings !== undefined ? <section className="admin-requests__panel"><div className="admin-requests__panel-heading"><div><h2>{screenTitle}</h2><p>{copy.count(total)}</p></div></div><ViewingTable copy={copy} data={viewings} locale={locale} /><Pagination copy={copy} page={page} totalPages={totalPages} onPage={nextPage => { setQuery(current => ({ ...current, page: nextPage })); setAttempt(value => value + 1); }} /></section> : null}{screenDataState === 'success' && projection.screen === 'issues' && issues !== undefined ? <section className="admin-requests__panel"><div className="admin-requests__panel-heading"><div><h2>{screenTitle}</h2><p>{copy.count(total)}</p></div></div><IssueTable copy={copy} data={issues} onSelect={setSelectedIssue} /><Pagination copy={copy} page={page} totalPages={totalPages} onPage={nextPage => { setQuery(current => ({ ...current, page: nextPage })); setAttempt(value => value + 1); }} /></section> : null}{selectedRequest !== undefined ? <RequestDetail copy={copy} locale={locale} request={selectedRequest} onClose={() => { setSelectedRequest(undefined); const url = new URL(window.location.href); url.searchParams.delete('requestId'); window.history.replaceState({}, '', url); }} onTransition={async (id, input, signal) => { const next = await transitionMutation(id, input, signal); replaceRequest(next); return next; }} onAssign={async (id, input, signal) => { const next = await assignmentMutation(id, input, signal); replaceRequest(next); return next; }} onNote={async (id, input, signal) => { const next = await noteMutation(id, input, signal); replaceRequest(next); return next; }} /> : null}{selectedIssue !== undefined ? <IssueDetail copy={copy} issue={selectedIssue} resolve={async (id, input, signal) => { const next = await issueMutation(id, input, signal); setSelectedIssue(next); setIssues(current => current === undefined ? current : { ...current, items: current.items.map(item => item.id === next.id ? next : item) }); return next; }} onClose={() => setSelectedIssue(undefined)} /> : null}</div></section>;
 }
 
 function Pagination({ copy, page, totalPages, onPage }: { readonly copy: AdminRequestsCopy; readonly page: number; readonly totalPages: number; readonly onPage: (page: number) => void }) {

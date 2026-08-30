@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "retrievedAt": "2026-08-29T00:00:00.000Z",
+  "purpose": "Provider navigation icons exported from the canonical Figma Provider shell.",
+  "figmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "canonicalProviderPage": "6017:4355",
+  "sourceNodes": {
+    "overview": "6017:19032",
+    "properties": "6017:19308",
+    "addProperty": "6017:19499",
+    "projects": "6017:21162",
+    "requests": "6017:21368",
+    "viewingsActiveRequestsState": "6017:21613",
+    "advertising": "6017:22088",
+    "commission": "6028:10071",
+    "notifications": "6028:10830",
+    "settings": "6028:11337"
+  },
+  "assetRules": {
+    "railIcon": "Every navigation icon renders inside an explicit 19x19 outer and leaf box with object-fit contain.",
+    "activeState": "The active variant is the exact white-stroke export from the matching canonical Provider screen.",
+    "defaultState": "The default variant is the exact #4A5565-stroke export from the canonical Provider shell.",
+    "viewings": "Provider viewings uses the canonical Customer Requests active rail item; Figma has no separate Viewings rail item."
+  },
+  "assets": {
+    "overview.svg": { "kind": "default", "sourceNode": "I6017:19498;3:15956", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/600da992-576c-4946-ae2d-6c257f6fd4cf.svg", "sha256": "33cf4dc482e442245a7086722d1ff1adc39cd57d5f63c0ed38855ee8a8632ffa", "width": 19, "height": 19, "usage": "Overview rail item when inactive." },
+    "overview-active.svg": { "kind": "active", "sourceNode": "I6017:19307;3:15782", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/d09da1d7-73c5-4ba4-ad19-108db28f92c6.svg", "sha256": "5749aaf69dd9f2a4a7b898fd69c71a1b9d24c21d5c748d4097c1431bfd0b90cf", "width": 19, "height": 19, "usage": "Overview rail item when active." },
+    "properties.svg": { "kind": "default", "sourceNode": "I6017:19307;3:15790", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/6a55a376-dc8f-46ec-9b23-6bf497eb544d.svg", "sha256": "17234073d2cf46f7289963d628ad1e8ec9f21eeaee84534366c908633fe79e24", "width": 19, "height": 19, "usage": "My properties rail item when inactive." },
+    "properties-active.svg": { "kind": "active", "sourceNode": "I6017:19498;3:15964", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/285e3a33-4d37-47cb-8f20-bbb7727b26f0.svg", "sha256": "941d7131c2b9c20e345164d9630b97ea3e447cb771cf007c35e55a5756a75724", "width": 19, "height": 19, "usage": "My properties rail item when active." },
+    "add-property.svg": { "kind": "default", "sourceNode": "I6017:19498;3:15975", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/bb68800b-6f97-469f-ad51-42114c44d352.svg", "sha256": "6a612977e99b446c4cbc7f2b9abf3adf2b7fe4a84755b3f266ee267d01ba25cf", "width": 19, "height": 19, "usage": "Add property rail item when inactive." },
+    "add-property-active.svg": { "kind": "active", "sourceNode": "I6017:19678;3:15885", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/c8e1e7a3-e72f-4006-a717-0fc59aa3e7bb.svg", "sha256": "d61a3d5a7e05b2f5554463afb236061dd4cb37180ed9599be54fbadf841e69d8", "width": 19, "height": 19, "usage": "Add property rail item when active." },
+    "projects.svg": { "kind": "default", "sourceNode": "I6017:19498;3:15981", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/c2c0a28a-5083-4b52-b8fa-5c302a8dd34d.svg", "sha256": "101b0d5075affca3d5fdd90ab4402afade3ec0f3442f6c4cab319baa7492ca4f", "width": 19, "height": 19, "usage": "Projects rail item when inactive." },
+    "projects-active.svg": { "kind": "active", "sourceNode": "I6017:21162;3:16068", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/75d28b04-c358-479b-921d-765c4a1c24db.svg", "sha256": "77bce3f9a291052a9a234d5bf884aeab7a816cb121a043e1db566fa74a8eca66", "width": 19, "height": 19, "usage": "Projects rail item when active." },
+    "requests.svg": { "kind": "default", "sourceNode": "I6017:19498;3:15990", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/ece1fca2-19da-414e-ba9e-b9fef36e7a02.svg", "sha256": "7752f5058eaf20a99d762c200bc7195cddcc61e5be295ef85bc5de8ce8e721fa", "width": 19, "height": 19, "usage": "Customer Requests rail item when inactive." },
+    "requests-active.svg": { "kind": "active", "sourceNode": "6017:21368", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/9b48f181-7d0d-4bf9-9bdf-b10271004ca0.svg", "sha256": "279f71da4f4a8f8b2296b8fad5ea94cd98ba6c3f785211f34c943d1bc7af754d", "width": 19, "height": 19, "usage": "Customer Requests rail item when active, including the canonical Viewings screen state." },
+    "advertising.svg": { "kind": "default", "sourceNode": "I6017:19498;3:15998", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/4f7b2f11-fba0-4823-84f4-1609545f5eed.svg", "sha256": "7b734fb55f41f941b9018a3bf87f3b80e0fe5a2518794509ef0465af3d5568ba", "width": 19, "height": 19, "usage": "Advertising rail item when inactive." },
+    "advertising-active.svg": { "kind": "active", "sourceNode": "6028:10071", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/a467d9c1-c07d-47eb-846f-5f2adb6c0e92.svg", "sha256": "327a280017536908a3573a331ff7a5e23cfb713833961ed77dec0b5863bfb842", "width": 19, "height": 19, "usage": "Advertising rail item when active." },
+    "commission.svg": { "kind": "default", "sourceNode": "I6017:19498;3:16003", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/779c5e33-0b8f-43d2-9801-3410ab2a1b0d.svg", "sha256": "33b78a61917557fdbe8a7f96127eb2512b089eb1e7ce5f63c6aa863c20146cd9", "width": 19, "height": 19, "usage": "Commission rail item when inactive." },
+    "commission-active.svg": { "kind": "active", "sourceNode": "6028:10071", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/32bd46be-d2c9-470e-a5b1-76f4c0f4ba55.svg", "sha256": "b8fed394a9d2b7b3f4f43b1820a91a84e6a4c46fff12d63937a7583b5e2cb71e", "width": 19, "height": 19, "usage": "Commission rail item when active." },
+    "notifications.svg": { "kind": "default", "sourceNode": "I6017:19498;3:16011", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/49a0ade7-a3e9-430d-b969-e034b5abf02c.svg", "sha256": "5ef69c8d449d0bae42a2f2012be91ed3f083a5a791c1618906f811be7f8c3cce", "width": 19, "height": 19, "usage": "Notifications rail item when inactive." },
+    "notifications-active.svg": { "kind": "active", "sourceNode": "6028:10830", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/0bc243ad-7898-4cd7-96ff-60ce225c89d2.svg", "sha256": "c76ac5e91a5589dc9f3ed8cda1c237f2bd94b18bd1709f12270ac96e9af2074d", "width": 19, "height": 19, "usage": "Notifications rail item when active." },
+    "settings.svg": { "kind": "default", "sourceNode": "I6017:19498;3:16017", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/7ed32141-ce90-4e4a-bf62-01952d9d5932.svg", "sha256": "7dc74d9bb658b1d5386188c6b1c478e21e5de20ab63daf7d4592bdea88234f34", "width": 19, "height": 19, "usage": "Settings rail item when inactive." },
+    "settings-active.svg": { "kind": "active", "sourceNode": "6028:11337", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/fa074451-61ce-43e0-bf8e-d4121b2e5504.svg", "sha256": "190aea8d125bab472092db3ca359d6db16247d6e71f21bbebd607c35507b8d76", "width": 19, "height": 19, "usage": "Settings rail item when active." },
+    "logout.svg": { "kind": "action", "sourceNode": "I6017:19498;3:16029", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/c07c22cc-7f05-4f06-a261-cb18c6ae0328.svg", "sha256": "4b32f314c4b66cad3e49a023ac06af2156f5bea8c54e3d2691d76b6b61a7f69e", "width": 14, "height": 14, "usage": "Canonical logout action asset; reserved for the shared Provider account footer." },
+    "upload-media.svg": { "kind": "content", "sourceNode": "6017:20481", "figmaAssetUrl": "https://www.figma.com/api/mcp/asset/fbe2cb4b-4900-448c-83e2-5fd65a9df69d.svg", "sha256": "1fe7d2c45eb7a1cb2a6c96c6837cf2033ea3b294cdb3d42db64ceb3580cd6800", "width": 22, "height": 22, "usage": "Provider property completion PRV-08 media dropzone upload affordance; rendered at 22x22." }
+  }
+}

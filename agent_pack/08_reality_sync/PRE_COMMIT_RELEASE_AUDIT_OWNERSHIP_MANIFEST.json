@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "manifestId": "PRE_COMMIT_RELEASE_AUDIT_OWNERSHIP_MANIFEST_2026-08-30",
+  "language": "en",
+  "createdAt": "2026-08-30T02:00:00+03:00",
+  "goal": "Pre-commit full platform audit, hardening, and release candidate review",
+  "coordinator": {
+    "owner": "Coordinator",
+    "writeScopes": [
+      "agent_pack/**",
+      "docs/quality/figma_parity/**",
+      "scripts/**",
+      "root package/config/lockfile files when required",
+      "shared router, app entry, styles, components, and Playwright harness only after lane findings"
+    ]
+  },
+  "lanes": [
+    {
+      "id": "FRONTEND_UI_RTL_LTR_AUDIT",
+      "owner": "Frontend audit subagent",
+      "readScopes": ["apps/web/src/features/**", "apps/web/tests/**", "docs/design_sources/**"],
+      "writeScope": "none during audit; exact change requests return to Coordinator"
+    },
+    {
+      "id": "BACKEND_API_SECURITY_AUDIT",
+      "owner": "Backend/API/security audit subagent",
+      "readScopes": ["apps/api/**", "packages/contracts/**", "apps/api/tests/**", "docs/api/**"],
+      "writeScope": "none during audit; bounded repair requests return to Coordinator"
+    },
+    {
+      "id": "RELEASE_CI_TRAFFIC_AUDIT",
+      "owner": "Release/CI/traffic audit subagent",
+      "readScopes": ["apps/web/test-results/**", "scripts/**", "package.json", "package-lock.json", "agent_pack/**"],
+      "writeScope": "none during audit; diagnostics and exact repair requests return to Coordinator"
+    }
+  ],
+  "protectedScopes": [
+    ".local/**",
+    "apps/web/test-results/**",
+    "apps/web/dist/**",
+    "apps/web/tests/e2e/__snapshots__/**",
+    "apps/web/public/assets/**",
+    "Mongo data and running processes",
+    ".env.local and all secrets",
+    "historical Agent Pack and reconciliation evidence",
+    "zh-CN source, tests, snapshots, and evidence"
+  ],
+  "rules": {
+    "noNestedSubagents": true,
+    "noCommitPushDeploy": true,
+    "noResetRevertStashCleanUndoCheckout": true,
+    "noDestructiveCleanup": true,
+    "noChineseExecutionOrEdits": true,
+    "noSnapshotUpdateWithoutDirectCanonicalReview": true,
+    "externalState": "local isolated runtime only; never use production data or credentials"
+  }
+}

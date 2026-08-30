@@ -55,6 +55,36 @@ const navigationItems = [
   ['settings', '/admin/settings']
 ] as const satisfies ReadonlyArray<readonly [keyof ReturnType<typeof getAdminCopy>['nav'], string]>;
 
+const navigationGroups = [
+  { id: 'home', items: [navigationItems[0]] },
+  { id: 'accounts', items: [navigationItems[1], navigationItems[2]] },
+  { id: 'properties', items: [navigationItems[3]] },
+  { id: 'requests', items: [navigationItems[4]] },
+  { id: 'content', items: [navigationItems[5]] },
+  { id: 'revenue', items: [navigationItems[6], navigationItems[7]] },
+  { id: 'system', items: [navigationItems[8], navigationItems[9], navigationItems[10]] }
+] as const;
+
+const navigationGroupLabels: Readonly<Record<SupportedLocale, Readonly<Record<(typeof navigationGroups)[number]['id'], string>>>> = {
+  ar: { home: 'الرئيسية', accounts: 'المستخدمون والحسابات', properties: 'إدارة العقارات', requests: 'إدارة الطلبات', content: 'إدارة المحتوى والمجتمع', revenue: 'الإعلانات والإيرادات', system: 'إدارة المنصة' },
+  en: { home: 'Home', accounts: 'Users and accounts', properties: 'Property management', requests: 'Request management', content: 'Content and community', revenue: 'Advertising and revenue', system: 'Platform management' },
+  'zh-CN': { home: '主页', accounts: '用户与账户', properties: '房产管理', requests: '请求管理', content: '内容与社区', revenue: '广告与收入', system: '平台管理' }
+};
+
+const navigationMatchers: Readonly<Record<(typeof navigationItems)[number][0], readonly string[]>> = {
+  overview: ['/admin', '/admin/overview'],
+  users: ['/admin/users', '/admin/property-seekers', '/admin/account-reports', '/admin/account-restrictions', '/admin/admin-users', '/admin/roles'],
+  providers: ['/admin/providers', '/admin/verification'],
+  properties: ['/admin/properties', '/admin/property-categories', '/admin/locations', '/admin/features', '/admin/projects', '/admin/property-reports'],
+  requests: ['/admin/requests', '/admin/customer-requests', '/admin/overdue-requests', '/admin/contact-requests', '/admin/viewing-requests', '/admin/search-requests', '/admin/request-issues'],
+  content: ['/admin/content', '/admin/articles', '/admin/article-categories', '/admin/community', '/admin/banners'],
+  advertising: ['/admin/advertising', '/admin/ads'],
+  commissions: ['/admin/commissions'],
+  notifications: ['/admin/notifications'],
+  audit: ['/admin/audit-logs'],
+  settings: ['/admin/settings']
+};
+
 const navigationIcons: Readonly<Record<(typeof navigationItems)[number][0], string>> = {
   overview: '⌂',
   users: '♙',
@@ -77,19 +107,26 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
         <span className="admin-dashboard__navigation-kicker">{copy.overview.eyebrow}</span>
         <strong>{copy.nav.overview}</strong>
       </div>
-      <ul>
-        {navigationItems.map(([id, path]) => {
-          const active = id === 'overview' ? activePath === '/admin' || activePath === '/admin/overview' : activePath.startsWith(path);
-          return (
-            <li key={id}>
-              <a href={localePath(locale, path)} aria-current={active ? 'page' : undefined} data-active={active || undefined}>
-                <span aria-hidden="true" className="admin-dashboard__navigation-icon">{navigationIcons[id]}</span>
-                <span>{copy.nav[id]}</span>
-              </a>
-            </li>
-          );
-        })}
-      </ul>
+      <div className="admin-dashboard__navigation-groups">
+        {navigationGroups.map(group => (
+          <div className="admin-dashboard__navigation-group" key={group.id}>
+            <p className="admin-dashboard__navigation-kicker">{navigationGroupLabels[locale][group.id]}</p>
+            <ul>
+              {group.items.map(([id, path]) => {
+                const active = navigationMatchers[id].some(candidate => activePath === candidate || (candidate !== '/admin' && activePath.startsWith(`${candidate}/`)));
+                return (
+                  <li key={id}>
+                    <a href={localePath(locale, path)} aria-current={active ? 'page' : undefined} data-active={active || undefined}>
+                      <span aria-hidden="true" className="admin-dashboard__navigation-icon">{navigationIcons[id]}</span>
+                      <span>{copy.nav[id]}</span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+      </div>
     </nav>
   );
 }
@@ -136,8 +173,8 @@ function MetricSection({ title, metrics, data, locale }: { readonly title: strin
 function UnavailableCard({ label, unavailable }: { readonly label: string; readonly unavailable: string }) {
   return (
     <article className="admin-dashboard__metric admin-dashboard__metric--unavailable" data-state="unavailable">
-      <span className="admin-dashboard__metric-icon" aria-hidden="true">â€”</span>
-      <strong aria-label={unavailable}>â€”</strong>
+      <span className="admin-dashboard__metric-icon" aria-hidden="true">&mdash;</span>
+      <strong aria-label={unavailable}>&mdash;</strong>
       <span>{label}</span>
       <small>{unavailable}</small>
     </article>
@@ -153,7 +190,7 @@ function ExtendedOverview({ data, locale }: { readonly data: AdminOverviewData; 
         { label: copy.overview.metrics.publishedProperties, value: data.metrics.publishedProperties },
         { label: copy.overview.metrics.pendingReviews, value: data.metrics.pendingReviews },
         { label: copy.nav.providers },
-        { label: copy.nav.properties }
+        { label: copy.nav.audit }
       ]
     },
     {
@@ -162,7 +199,7 @@ function ExtendedOverview({ data, locale }: { readonly data: AdminOverviewData; 
         { label: copy.nav.content },
         { label: copy.nav.notifications },
         { label: copy.nav.audit },
-        { label: copy.overview.metrics.pendingReviews, value: data.metrics.pendingReviews }
+        { label: copy.nav.settings }
       ]
     },
     {
@@ -170,14 +207,23 @@ function ExtendedOverview({ data, locale }: { readonly data: AdminOverviewData; 
       cards: [
         { label: copy.nav.advertising },
         { label: copy.nav.commissions },
-        { label: copy.overview.metrics.openRequests, value: data.metrics.openRequests },
-        { label: copy.overview.metrics.pendingReviews, value: data.metrics.pendingReviews }
+        { label: copy.nav.settings },
+        { label: copy.nav.audit }
       ]
     }
   ] as const;
 
+  const quickActions = navigationItems.slice(1, 8);
+
   return (
     <div className="admin-dashboard__extended" data-testid="admin-overview-extended">
+      <section className="admin-dashboard__quick-actions" aria-labelledby="admin-overview-queue-title">
+        <div className="admin-dashboard__section-heading">
+          <h2 id="admin-overview-queue-title">{copy.overview.queueTitle}</h2>
+          <span className="admin-dashboard__metadata">{copy.overview.metrics.openRequests}: {new Intl.NumberFormat(locale).format(data.metrics.openRequests)} · {copy.overview.metrics.pendingReviews}: {new Intl.NumberFormat(locale).format(data.metrics.pendingReviews)}</span>
+        </div>
+        <p className="admin-dashboard__unavailable-message" data-state="unavailable">{copy.overview.queueBody}</p>
+      </section>
       <div className="admin-dashboard__extended-grid">
         {sections.map(section => (
           <section className="admin-dashboard__extended-section" key={section.title} aria-labelledby={`admin-extended-${section.title.replaceAll(' ', '-').toLowerCase()}`}>
@@ -206,10 +252,10 @@ function ExtendedOverview({ data, locale }: { readonly data: AdminOverviewData; 
       </div>
       <section className="admin-dashboard__quick-actions" aria-labelledby="admin-quick-actions-title">
         <div className="admin-dashboard__section-heading">
-          <h2 id="admin-quick-actions-title">{copy.overview.operationsTitle}</h2>
+          <h2 id="admin-quick-actions-title">{copy.overview.activityTitle}</h2>
         </div>
         <div className="admin-dashboard__quick-actions-list">
-          {navigationItems.slice(1, 8).map(([id, path]) => (
+          {quickActions.map(([id, path]) => (
             <a key={id} href={localePath(locale, path)}>{copy.nav[id]}</a>
           ))}
         </div>
@@ -228,6 +274,12 @@ function dateLabel(value: string, locale: SupportedLocale): string {
 
 function OverviewContent({ data, locale }: { readonly data: AdminOverviewData; readonly locale: SupportedLocale }) {
   const copy = getAdminCopy(locale);
+  const headingActions = [
+    [copy.overview.actions.reviewAccounts, '/admin/users'],
+    [copy.overview.actions.reviewProperties, '/admin/properties'],
+    [copy.overview.actions.createArticle, '/admin/content/articles'],
+    [copy.overview.actions.reviewAdvertising, '/admin/advertising']
+  ] as const;
   return (
     <div className="admin-dashboard__main">
       <div className="admin-dashboard__heading-row">
@@ -236,6 +288,9 @@ function OverviewContent({ data, locale }: { readonly data: AdminOverviewData; r
           <h1>{copy.overview.title}</h1>
           <p className="admin-dashboard__description">{copy.overview.description}</p>
           <p className="admin-dashboard__metadata"><span>{copy.overview.rangeLabel}: {dateLabel(data.range.from, locale)} — {dateLabel(data.range.to, locale)}</span><span>{copy.overview.refreshedLabel}: {dateLabel(data.generatedAt, locale)}</span></p>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', alignSelf: 'center', flexWrap: 'wrap', gap: '.55rem', justifyContent: 'flex-end' }}>
+          {headingActions.map(([label, path]) => <a key={path} href={localePath(locale, path)} style={{ display: 'inline-flex', alignItems: 'center', minHeight: '2.35rem', padding: '.45rem .75rem', border: '1px solid #d9d4c9', borderRadius: '999px', color: '#155b4f', fontSize: '.76rem', fontWeight: 800, textDecoration: 'none', whiteSpace: 'nowrap' }}>{label}</a>)}
         </div>
       </div>
       <MetricSection title={copy.overview.platformTitle} metrics={platformMetrics} data={data.metrics} locale={locale} />

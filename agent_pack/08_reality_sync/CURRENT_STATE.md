@@ -140,3 +140,49 @@ This section supersedes the stale visual-gate counts in the preceding Wave 1 che
 - Exactly 32 Public responsive AR/EN files and 12 Auth AR/EN login/paired-OTP files were reconciled. No Chinese snapshot was tested, updated, deleted, or modified by this pass. Auth OTP desktop old working-tree hashes were already dirty before this pass and are explicitly recorded as unavailable rather than guessed.
 - `frontend_100` is complete. Agent Pack sync exited 0; Agent Pack audit exited 0 with zero errors. The visual queue cursor is prepared at `PRV-01`; Provider and Admin implementation remain unopened.
 - The combined performance record was not rerun in this visual-only closure. The final report preserves both the historical combined 0/4 script-budget record and the retained focused Public lane 4/4 record; this did not produce a remaining Public/Auth element defect.
+
+## Provider integration closure - 2026-08-29
+
+This is the current state after frontend_102; the preceding Wave 1 and Provider Wave 2 sections remain historical provenance.
+
+- Provider PRV-01 through PRV-24 were reviewed against canonical Figma file Odl1Epn2u6lIEuIMmABT7o, Provider page 6017:4355, in Arabic RTL and English LTR desktop scope. The forbidden Figma file was not used.
+- The shared Provider rail now uses exact exported outlined assets with explicit 19x19 dimensions and route-aware active states. PRV-08 uses the exact 22x22 upload asset recorded in apps/web/public/assets/canonical/provider/navigation/asset-manifest.json.
+- Seven screens are REPAIRED_VERIFIED; seventeen are PARTIAL_EXTERNAL with screen-specific contract owners and next actions. All repository-owned Provider defects are zero.
+- The final Provider no-update Playwright gate passed 70/70. Focused non-admin semantic E2E passed 32/32, selected API contract/security tests passed 115/115, focused Vitest passed 61 with 7 deliberate skips, and Public AR/EN performance passed 4/4 after the fixture-origin repair.
+- The current decision is POST_PROVIDER_INTEGRATION_BLOCKED because the seventeen safe contract projections remain unavailable and local supervisor readiness stops at ADMIN_BOOTSTRAP_FAILED. No Admin UI or feature workflow was entered; selected non-Admin API security tests included only existing Admin-route boundary probes. Admin remains unimplemented and unmodified.
+- The pre-cleanup manifest is POST_PROVIDER_CLEANUP_MANIFEST_2026-08-29.json. No material deletion occurred. No Chinese path was changed or executed; historical reports, failure artifacts, secrets, and generated runtime artifacts remain preserved.
+
+## Pre-Admin non-Admin reconciliation - 2026-08-29
+
+This is the current handoff state. Earlier Wave 1 and Provider integration sections remain historical provenance.
+
+- The canonical 131-screen baseline remains unchanged: Public 12, Auth 19, Seeker 10, Provider 24, and Admin 66. Only the 65 non-Admin screens were reconciled in approved Arabic RTL and English LTR scope; Admin UI and zh-CN were not opened, tested, updated, or deleted.
+- The 65-screen result is 32 `REPAIRED_VERIFIED`, 6 `VERIFIED_NO_CHANGE`, and 27 `PARTIAL_EXTERNAL`, with zero remaining repository-owned defects. Public is 8 repaired plus 4 no-change; Auth is 17 repaired plus 2 no-change; Seeker is 10 external; Provider is 7 repaired plus 17 external.
+- Every remaining external exception has an affected screen, owner, safe-contract/source decision, and next action in `agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json`. No unsupported Provider or Seeker value was fabricated.
+- The local runtime is ready for the non-Admin pass. Doctor, supervisor startup, API/Web/proxy/mail readiness, Public smoke, two idempotent seed runs, and controlled shutdown passed. The installed standalone MongoDB service remains running and was not modified.
+- The historical `ADMIN_BOOTSTRAP_FAILED` reproduction was caused by MongoDB transaction error code 20 on a standalone server. The optional local Admin bootstrap was explicitly skipped with a process-only override; transactional bootstrap code, validation, authentication, authorization, and RBAC boundaries remain intact. A supported replica-set or mongos is required before enabling first Super Admin bootstrap.
+- The final non-Admin quality command passed: lint, typecheck, 16 workspace tests, 517 API tests, coverage, build, inventory, OpenAPI, Postman, npm audit, and Agent Pack audit. Existing visual evidence also records Public 32/32, Auth 6/6, Provider 70/70, and semantic 32/32 no-update passes.
+- Cleanup was evidence-backed with zero material deletions. The pre-cleanup manifest keeps runtime, private-storage, test, visual, and historical evidence artifacts. No Chinese path changed.
+- Current coordination is `PRE_ADMIN_RECONCILIATION_READY_WITH_EXTERNAL_EXCEPTIONS`. The next task is `ADM-01`; Admin implementation remains false and no Admin screen was entered.
+
+## Admin Wave 3 final reconciliation - 2026-08-29
+
+This section supersedes the stale pre-Admin and blocked Admin bullets above; those entries remain historical provenance.
+
+- Admin `ADM-01` through `ADM-66` were processed in canonical order in Arabic RTL and English LTR Desktop scope. The canonical Figma file remains `Odl1Epn2u6lIEuIMmABT7o`; the forbidden file was not used and `zh-CN` was not executed or edited.
+- The final Admin result is `46 REPAIRED_VERIFIED`, `18 VERIFIED_NO_CHANGE`, `ADM-18 BLOCKED_SOURCE`, and `ADM-54 PARTIAL_EXTERNAL`. All 64 canonical screens have complete source/runtime/diff/review evidence and zero remaining repository-owned Admin defects.
+- The visual matrix passed 68/68 in normal no-update mode after direct source review. Admin functional E2E passed 92/92, Dashboard QA passed 134/134, accessibility 38/38, security 6/6, performance 4/4, Admin Vitest 120/120 across 18 files, and typecheck, lint, build, inventory, OpenAPI, Postman, npm audit, Agent Pack sync/audit, and diff-check passed.
+- Isolated transaction-capable Mongo verification passed on `27018`/`27019`; the installed standalone MongoDB on `27017` was preserved. First Super Admin bootstrap, restart idempotency, commit/rollback probes, seed, smoke, and readiness were verified without printing secrets.
+- `ADM-18` remains blocked because the canonical queue has no exact clone node. `ADM-54` remains partial because its source is owner-authored current material without historical Figma recovery. Neither receives a historical pixel-parity claim.
+- The final coordination marker is `ADMIN_WAVE_READY_WITH_EXTERNAL_EXCEPTIONS`. The next action is a separate Final Integration Goal; the full 131-screen release matrix and `zh-CN` remain outside this goal. No material cleanup, commit, or push occurred.
+- Final evidence is recorded in `ADMIN_WAVE_3_RECONCILIATION_2026-08-29.json`, `ADMIN_WAVE_3_CLEANUP_MANIFEST_2026-08-29.json`, the Admin evidence summary, and the synchronized visual queue/checkpoints.
+
+## ADMIN-WAVE-3-2026-08-29
+
+- **Status:** `ADMIN_WAVE_BLOCKED`; `frontend_103` is `blocked` at the canonical cursor `ADM-01`.
+- **Scope:** Admin UI was opened and exercised only in Arabic RTL and English LTR desktop scope. The canonical Admin source remains Figma file `Odl1Epn2u6lIEuIMmABT7o`; the prohibited file was not used and zh-CN was not executed.
+- **Bootstrap:** An isolated single-node `rs0` Mongo replica set was prepared on local ports 27018/27019 without modifying the installed standalone service. Transaction commit/rollback, first Super Admin creation, restart idempotency, doctor, supervisor, seed, smoke, login/session, RBAC, unauthorized access, and audit-boundary checks passed.
+- **Queue:** Two source exceptions were recorded without advancing the canonical cursor: `ADM-18` is `BLOCKED_SOURCE`, and `ADM-54` is `PARTIAL_EXTERNAL` using the owner-authored current source. The queue has 67 processed records, 64 pending canonical Admin screens, 28 partial records, and one blocked-source record.
+- **Gates:** Admin Vitest 120/120, functional E2E 134 AR/EN, accessibility 38 AR/EN, security 6/6, performance 4/4, typecheck, lint, build, API inventory, OpenAPI, Postman, audit, and npm audit passed. The Admin visual no-update gate remains blocked with 46 failed assertions; no snapshot was updated.
+- **Preservation:** Existing Provider/non-Admin work, evidence, failure artifacts, environment files, and zh-CN assets remain preserved. The full Web Vitest run still has three existing Provider-work failures; no Provider fix was made during this Admin pass. No commit or push was performed.
+- **Evidence:** `agent_pack/08_reality_sync/ADMIN_WAVE_3_RECONCILIATION_2026-08-29.json`, `docs/quality/figma_parity/ADMIN_WAVE_3_RECONCILIATION_2026-08-29.md`, `docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json`, and `docs/quality/figma_parity/RUN_CHECKPOINT.json`.

@@ -183,14 +183,19 @@ try {
   start('api', process.execPath, ['apps/api/dist/server.js'], runtime);
   await waitFor(`${urls.apiUrl}/ready`);
 
-  if (configured.LOCAL_AUTO_SEED !== 'false') {
-    await status('starting', { stage: 'seed', ...urls });
-    await runSeed(runtime);
-  }
-
+  // The first administrator must be created before the synthetic seed. The
+  // seed intentionally includes standard-admin fixtures, while the
+  // bootstrap boundary refuses to create a first Super Admin after any admin
+  // identity already exists. Keeping this order also leaves restarts to the
+  // idempotent bootstrap guard instead of creating duplicates.
   if (configured.LOCAL_AUTO_BOOTSTRAP_ADMIN !== 'false') {
     await status('starting', { stage: 'admin-bootstrap', ...urls });
     await runAdminBootstrap(runtime, configured);
+  }
+
+  if (configured.LOCAL_AUTO_SEED !== 'false') {
+    await status('starting', { stage: 'seed', ...urls });
+    await runSeed(runtime);
   }
 
   await status('starting', { stage: 'web', ...urls });

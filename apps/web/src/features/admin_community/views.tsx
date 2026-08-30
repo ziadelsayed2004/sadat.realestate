@@ -110,15 +110,29 @@ function statusTone(status: string): 'neutral' | 'success' | 'warning' | 'danger
   return 'neutral';
 }
 
-function SummaryCards({ data, locale }: { readonly data: { readonly page: number; readonly limit: number; readonly total: number; readonly items: readonly unknown[] } | undefined; readonly locale: SupportedLocale }) {
+function statusCount(data: { readonly items: readonly unknown[] } | undefined, status: string): number {
+  return data?.items.filter(item => typeof item === 'object' && item !== null && 'status' in item && (item as { readonly status?: unknown }).status === status).length ?? 0;
+}
+
+function SummaryCards({ data, locale, view }: { readonly data: { readonly total: number; readonly items: readonly unknown[] } | undefined; readonly locale: SupportedLocale; readonly view: AdminCommunityView }) {
+  if (data === undefined || view === 'comments') return null;
   const copy = getAdminCommunityCopy(locale);
-  const cards = [
-    [copy.records, data?.total],
-    [copy.visible, data?.items.length],
-    [copy.pageLabel, data?.page],
-    [copy.pageSize, data?.limit]
-  ] as const;
-  return <div className="admin-community__summary" aria-label={copy.records}>{cards.map(([label, value]) => <article key={label} className="admin-community__summary-card"><strong>{value === undefined ? '—' : new Intl.NumberFormat(locale).format(value)}</strong><span>{label}</span></article>)}</div>;
+  const labels = view === 'posts'
+    ? (locale === 'ar' ? ['إجمالي المنشورات', copy.postStatus.published, copy.postStatus.hidden, copy.postStatus.removed] : locale === 'zh-CN' ? ['帖子总数', copy.postStatus.published, copy.postStatus.hidden, copy.postStatus.removed] : ['Total posts', copy.postStatus.published, copy.postStatus.hidden, copy.postStatus.removed])
+    : (locale === 'ar' ? ['إجمالي البلاغات', copy.reportStatus.open, copy.reportStatus.in_review, copy.reportStatus.resolved] : locale === 'zh-CN' ? ['举报总数', copy.reportStatus.open, copy.reportStatus.in_review, copy.reportStatus.resolved] : ['Total reports', copy.reportStatus.open, copy.reportStatus.in_review, copy.reportStatus.resolved]);
+  const statuses = view === 'posts' ? ['published', 'hidden', 'removed'] : ['open', 'in_review', 'resolved'];
+  const values = [data.total, ...statuses.map(status => statusCount(data, status))];
+  const colors = ['#1b2942', '#087b43', '#bf6500', '#b42318'];
+  return <div className="admin-community__summary" aria-label={labels[0]}>{values.map((value, index) => <article key={labels[index]} className="admin-community__summary-card"><strong style={{ color: colors[index] }}>{new Intl.NumberFormat(locale).format(value)}</strong><span>{labels[index]}</span></article>)}</div>;
+}
+
+function StatusStrip({ view, locale, selected, onSelect }: { readonly view: AdminCommunityView; readonly locale: SupportedLocale; readonly selected: string; readonly onSelect: (status: string) => void }) {
+  const copy = getAdminCommunityCopy(locale);
+  const allLabel = locale === 'ar' ? 'الكل' : locale === 'zh-CN' ? '全部' : 'All';
+  const statuses: readonly string[] = view === 'posts' ? postStatuses : view === 'comments' ? commentStatuses : reportStatuses;
+  const label = (status: string): string => view === 'posts' ? copy.postStatus[status as CommunityPostStatus] : view === 'comments' ? copy.commentStatus[status as CommunityCommentStatus] : copy.reportStatus[status as CommunityReportStatus];
+  const options = [['', allLabel] as const, ...statuses.map(status => [status, label(status)] as const)];
+  return <div role="tablist" aria-label={`${copy.status} summary`} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, maxWidth: 1320, margin: '0 auto 12px', padding: 8, border: '1px solid #e3e5e7', borderRadius: 16, background: '#fff', boxShadow: '0 6px 16px #3232320d' }}>{options.map(([status, text]) => { const active = selected === status; return <button key={status || 'all'} type="button" role="tab" aria-selected={active} onClick={() => onSelect(status)} style={{ minHeight: 38, padding: '8px 16px', border: 0, borderRadius: 999, background: active ? '#155b4f' : 'transparent', color: active ? '#fff' : '#69768b', cursor: 'pointer', fontWeight: 800 }}>{text}</button>; })}</div>;
 }
 
 function Filters({ view, locale, onApply, onClear }: { readonly view: AdminCommunityView; readonly locale: SupportedLocale; readonly onApply: (input: Record<string, string>) => void; readonly onClear: () => void }) {
@@ -227,6 +241,23 @@ export function AdminCommunity({ locale, session, authClient, apiOrigin, initial
     else setReportQuery({ page: 1, limit: 20 });
     refresh();
   };
+  const selectedStatus = view === 'posts' ? postQuery.status ?? '' : view === 'comments' ? commentQuery.status ?? '' : reportQuery.status ?? '';
+  const selectStatus = (status: string) => {
+    if (view === 'posts') {
+      const next = { ...postQuery, page: 1 };
+      if (status === '') delete next.status; else next.status = status as CommunityPostStatus;
+      setPostQuery(communityAdminPostListQuerySchema.parse(next));
+    } else if (view === 'comments') {
+      const next = { ...commentQuery, page: 1 };
+      if (status === '') delete next.status; else next.status = status as CommunityCommentStatus;
+      setCommentQuery(communityAdminCommentListQuerySchema.parse(next));
+    } else {
+      const next = { ...reportQuery, page: 1 };
+      if (status === '') delete next.status; else next.status = status as CommunityReportStatus;
+      setReportQuery(communityAdminReportListQuerySchema.parse(next));
+    }
+    refresh();
+  };
   const changePage = (page: number) => {
     if (view === 'posts') setPostQuery(current => ({ ...current, page }));
     else if (view === 'comments') setCommentQuery(current => ({ ...current, page }));
@@ -240,5 +271,5 @@ export function AdminCommunity({ locale, session, authClient, apiOrigin, initial
   };
 
   const title = copy.title[view];
-  return <section className="admin-community" data-screen-id={view === 'posts' ? 'ADM-27' : view === 'comments' ? 'ADM-28' : 'ADM-29'} data-route={pathname} data-device-scope="desktop" data-admin-community-state={state}><AdminNavigation locale={locale} activePath={pathname} /><div className="admin-community__content"><header className="admin-community__heading"><div><p className="admin-community__eyebrow">{copy.eyebrow}</p><h1>{title}</h1><p>{copy.description[view]}</p><span className="admin-community__direction-note">{copy.directionNote}</span></div></header><Tabs locale={locale} view={view} /><SummaryCards data={data} locale={locale} /><Filters view={view} locale={locale} onApply={applyFilters} onClear={clearFilters} />{state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={refresh} /> : null}{state === 'empty' ? <EmptyPanel locale={locale} /> : null}{state === 'success' && data !== undefined ? <section className="admin-community__panel"><div className="admin-community__panel-heading"><div><h2>{title}</h2><span>{copy.page(data.page, Math.max(1, Math.ceil(data.total / Math.max(1, data.limit))))}</span></div></div>{view === 'posts' ? <PostTable items={posts?.items ?? []} locale={locale} /> : view === 'comments' ? <CommentTable items={comments?.items ?? []} locale={locale} /> : <ReportTable items={reports?.items ?? []} locale={locale} onReview={setSelectedReport} />}<Pagination locale={locale} page={data.page} limit={data.limit} total={data.total} onPage={changePage} /></section> : null}{selectedReport !== undefined ? <ReportResolution report={selectedReport} locale={locale} onClose={() => setSelectedReport(undefined)} onResolve={handleResolve} /> : null}</div></section>;
+  return <section className="admin-community" data-screen-id={view === 'posts' ? 'ADM-27' : view === 'comments' ? 'ADM-28' : 'ADM-29'} data-route={pathname} data-device-scope="desktop" data-admin-community-state={state}><AdminNavigation locale={locale} activePath={pathname} /><div className="admin-community__content"><header className="admin-community__heading"><div><p className="admin-community__eyebrow">{copy.eyebrow}</p><h1>{title}</h1><p>{copy.description[view]}</p><span className="admin-community__direction-note">{copy.directionNote}</span></div></header><Tabs locale={locale} view={view} /><SummaryCards data={data} locale={locale} view={view} /><StatusStrip view={view} locale={locale} selected={selectedStatus} onSelect={selectStatus} /><Filters view={view} locale={locale} onApply={applyFilters} onClear={clearFilters} />{state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={refresh} /> : null}{state === 'empty' ? <EmptyPanel locale={locale} /> : null}{state === 'success' && data !== undefined ? <section className="admin-community__panel"><div className="admin-community__panel-heading"><div><h2>{title}</h2><span>{copy.page(data.page, Math.max(1, Math.ceil(data.total / Math.max(1, data.limit))))}</span></div></div>{view === 'posts' ? <PostTable items={posts?.items ?? []} locale={locale} /> : view === 'comments' ? <CommentTable items={comments?.items ?? []} locale={locale} /> : <ReportTable items={reports?.items ?? []} locale={locale} onReview={setSelectedReport} />}<Pagination locale={locale} page={data.page} limit={data.limit} total={data.total} onPage={changePage} /></section> : null}{selectedReport !== undefined ? <ReportResolution report={selectedReport} locale={locale} onClose={() => setSelectedReport(undefined)} onResolve={handleResolve} /> : null}</div></section>;
 }

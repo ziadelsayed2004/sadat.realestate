@@ -129,3 +129,42 @@ Q-004 through Q-012 remain explicitly pending in `01_product/OPEN_QUESTIONS.md`.
 - **Result:** Public 32/32 targeted failed responsive cases passed without update mode; Auth 6/6 targeted failed screenshot cases passed without update mode. Public and Auth have zero remaining repository-owned element-level defects. Seeker remains PARTIAL_EXTERNAL for ten screens with zero repository-owned defects and ten recorded external prerequisites.
 - **Evidence:** `agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json` records screen classifications, canonical evidence, exact old/new snapshot hashes, commands, results, and the final cursor.
 - **Agent Pack:** `frontend_100` is complete with sync exit 0 and audit exit 0 with zero errors. The historical `frontend_099` Partial record is preserved; the dependency-ready visual queue cursor is `PRV-01`. No Provider implementation or Admin work was started.
+
+## PROVIDER-INTEGRATION-CLOSURE-2026-08-29
+
+- **Status:** Blocked with external prerequisites; Provider repository-owned defects are closed for the reviewed AR/EN scope.
+- **Decision:** frontend_102 reconciled all 24 Provider screens. Seven are REPAIRED_VERIFIED and seventeen are PARTIAL_EXTERNAL; unsupported data was not fabricated. The final marker is POST_PROVIDER_INTEGRATION_BLOCKED.
+- **Evidence:** agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json, POST_PROVIDER_CLEANUP_MANIFEST_2026-08-29.json, and the exact Provider asset manifest.
+- **Gates:** Provider no-update AR/EN 70/70; semantic E2E 32/32; focused Web Vitest 61 passed with 7 skips; selected API contracts/security 115/115; Public AR/EN performance 4/4; typecheck, lint, build, inventory, OpenAPI, Postman, bundle, workspace, audit, and environment checks passed.
+- **Blockers:** Seventeen approved Provider contract/data projections remain unavailable. Local local:up stops at ADMIN_BOOTSTRAP_FAILED; no Admin UI or feature workflow was entered. Selected non-Admin API security tests included only existing Admin-route boundary probes.
+- **Preservation:** Admin and zh-CN remain unopened and unchanged. Historical frontend_101 and Wave 1 evidence are preserved.
+
+## PRE-ADMIN-RECONCILIATION-2026-08-29
+
+- **Status:** Ready with external exceptions.
+- **Scope:** All 65 Public, Auth, Seeker, and Provider screens were reconciled against the canonical Figma file `Odl1Epn2u6lIEuIMmABT7o` in Arabic RTL and English LTR. Admin UI and zh-CN remained untouched.
+- **Decision:** Accept 32 `REPAIRED_VERIFIED`, 6 `VERIFIED_NO_CHANGE`, and 27 `PARTIAL_EXTERNAL`; repository-owned defects are zero. Keep each external exception only with its named owner, affected screen, safe-contract/source decision, and next action in `PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json`.
+- **Runtime decision:** Treat `ADMIN_BOOTSTRAP_FAILED` as an optional local-topology boundary, not as a reason to weaken the transactional bootstrap. The failing standalone-Mongo transaction was reproduced once with synthetic values; local readiness was then proven with process-only `LOCAL_AUTO_BOOTSTRAP_ADMIN=false`, while Admin API boundary and RBAC tests remained green.
+- **Cleanup decision:** Perform no material deletion in this pass. Keep all reviewed runtime, private-storage, visual, test, and historical evidence; preserve all Chinese files and snapshots.
+- **Handoff:** Mark the non-Admin pass ready with exceptions and prepare `ADM-01` as the next task. Do not open Admin UI or run the full 131-screen/zh-CN matrix as part of this pass.
+- **Evidence:** `agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json`, `docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json`, `docs/quality/figma_parity/RUN_CHECKPOINT.json`, and `agent_pack/08_reality_sync/PRE_ADMIN_CLEANUP_MANIFEST_2026-08-29.json`.
+
+## ADMIN-WAVE-3-2026-08-29
+
+- **Status:** Active blocker; `frontend_103` is `blocked` and the final marker is `ADMIN_WAVE_BLOCKED`.
+- **Decision:** Keep the Admin canonical cursor at `ADM-01` until source-led visual parity work is completed. Do not classify structural source/runtime mismatches as verified, do not update snapshots, and do not execute zh-CN.
+- **Source exceptions:** Record `ADM-18` as `BLOCKED_SOURCE` because no exact canonical clone frame or formally approved replacement was available. Record `ADM-54` as `PARTIAL_EXTERNAL` using the owner-authored current source and retain its provenance; do not claim historical Figma parity.
+- **Runtime decision:** Preserve the isolated transaction-capable Mongo verification and idempotent bootstrap changes. Keep the installed standalone MongoDB service untouched and keep production credentials external.
+- **Preservation decision:** Provider and other pre-existing dirty-tree work remains outside this Admin task. The full Web Vitest Provider failures remain an external/current-worktree exception and are not repaired here. No commit or push was performed.
+- **Evidence:** `agent_pack/08_reality_sync/ADMIN_WAVE_3_RECONCILIATION_2026-08-29.json`, `docs/quality/figma_parity/ADMIN_WAVE_3_RECONCILIATION_2026-08-29.md`, and `docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json`.
+
+## ADMIN-WAVE-3-FINAL-RECONCILIATION-2026-08-29
+
+- **Status:** Ready with external source exceptions; `frontend_103` is `partial`, and the final marker is `ADMIN_WAVE_READY_WITH_EXTERNAL_EXCEPTIONS`.
+- **Decision:** Process all 66 Admin entries in canonical order. Close 46 as `REPAIRED_VERIFIED` and 18 as `VERIFIED_NO_CHANGE`; preserve `ADM-18` as `BLOCKED_SOURCE` and `ADM-54` as `PARTIAL_EXTERNAL` without historical Figma claims.
+- **Evidence:** All 64 canonical Admin evidence directories contain source, runtime-before, runtime-after, diff, and review files. The normal AR/EN visual matrix passed 68/68 without update mode after the reviewed baseline updates; the queue is 131 processed and 0 pending.
+- **Implementation:** Bootstrap ordering/idempotency, safe Admin identity projection, SSR CSP nonce, overview display, RBAC active navigation, and contract-backed Admin metric/status summaries were verified. Unsupported source-only fields were not fabricated.
+- **Gates:** Admin Vitest 120/120, Dashboard QA 134/134, functional E2E 92/92, accessibility 38/38, security 6/6, performance 4/4, typecheck, lint, build, inventory, OpenAPI, Postman, dependency audit, Agent Pack sync/audit, and diff-check passed.
+- **External boundaries:** `ADM-18` needs an exact canonical clone frame or approved current source. `ADM-54` needs the owner/source decision to change or an exact historical frame. These are the only Admin exceptions; repository-owned Admin defects are zero.
+- **Preservation:** Provider/Public/Seeker dirty-tree work, historical evidence, `zh-CN`, `.env.local`, isolated runtime data, and test artifacts remain preserved. No material deletion, commit, or push was performed.
+- **Next action:** Start a separate Final Integration Goal with the documented external exceptions; do not run the full 131-screen matrix or `zh-CN` in this goal.

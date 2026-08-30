@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "screenId": "ADM-38",
+  "phase": "after",
+  "source": {
+    "width": 6308,
+    "height": 4520
+  },
+  "runtimeBefore": {
+    "width": 1280,
+    "height": 1434
+  },
+  "runtimeAfter": {
+    "width": 1280,
+    "height": 1430
+  },
+  "runtimeBeforeEn": {
+    "width": 1280,
+    "height": 1681
+  },
+  "runtimeAfterEn": {
+    "width": 1280,
+    "height": 1640
+  },
+  "comparedWidth": 1600,
+  "comparedHeight": 1146,
+  "comparedPixels": 1833600,
+  "materialDifferencePercent": 35.8061,
+  "antiAliasingOnlyPercent": 22.3839,
+  "threshold": {
+    "materialRgbSumGreaterThan": 24,
+    "antiAliasingRgbSumGreaterThan": 3
+  },
+  "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height",
+  "supportingEvidenceOnly": true,
+  "reviewed": true,
+  "reviewedAt": "2026-08-29T19:12:59.546Z"
+}

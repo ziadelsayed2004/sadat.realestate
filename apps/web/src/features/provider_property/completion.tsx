@@ -35,6 +35,8 @@ import './styles.css';
 
 const MAX_MEDIA_BYTES = 10 * 1024 * 1024;
 const MEDIA_MIMES: readonly PropertyMediaMime[] = ['application/pdf', 'image/jpeg', 'image/png'];
+const providerMediaUploadIcon = '/assets/canonical/provider/navigation/upload-media.svg';
+const providerPropertyContentStyle = { boxSizing: 'border-box', width: 'min(100%, 768px)', marginInline: 'auto', padding: 24 } as const;
 const MEDIA_FILENAME_EXTENSIONS: Readonly<Record<PropertyMediaMime, readonly string[]>> = {
   'application/pdf': ['.pdf'],
   'image/jpeg': ['.jpg', '.jpeg'],
@@ -155,6 +157,17 @@ function StatePanel({ state, onRetry, copy }: { readonly state: ViewState; reado
   );
 }
 
+function CompletionPageIntro({ locale, fallbackTitle, fallbackDescription }: { readonly locale: SupportedLocale; readonly fallbackTitle: string; readonly fallbackDescription: string }) {
+  const title = locale === 'ar' ? 'إضافة عقار جديد' : locale === 'en' ? 'Add new property' : fallbackTitle;
+  const description = locale === 'ar' ? 'أكمل الخطوات التالية لإضافة عقارك للمنصة' : locale === 'en' ? 'Complete the following steps to add your property to the platform.' : fallbackDescription;
+  return (
+    <div className="provider-property-wizard__intro">
+      <h1 id="provider-property-completion-title">{title}</h1>
+      <p>{description}</p>
+    </div>
+  );
+}
+
 function StepRail({ step, locale }: { readonly step: ProviderPropertyCompletionStep; readonly locale: SupportedLocale }) {
   const labels = getProviderPropertyRailLabels(locale);
   const propertyCopy = getProviderPropertyCopy(locale);
@@ -200,13 +213,9 @@ function ContactView({
   const saving = mutationState === 'saving';
   return (
     <form className="provider-property-completion__form" onSubmit={onSubmit} noValidate>
-      <div className="provider-property-wizard__intro">
-        <p className="provider-dashboard__eyebrow">{copy.steps.contact}</p>
-        <h1 id="provider-property-completion-title">{copy.titles.contact}</h1>
-        <p>{copy.descriptions.contact}</p>
-      </div>
+      <CompletionPageIntro locale={locale} fallbackTitle={copy.titles.contact} fallbackDescription={copy.descriptions.contact} />
       <section className="provider-property-completion__card" aria-labelledby="provider-property-contact-fields">
-        <h2 id="provider-property-contact-fields">{fields.supportedFieldsTitle}</h2>
+        <h2 id="provider-property-contact-fields">{copy.titles.contact}</h2>
         <p>{fields.supportedFieldsBody}</p>
         <div className="provider-property-wizard__grid">
           <Input id="provider-property-contact-name" label={fields.contactName} value={form.contactName} placeholder={fields.contactNamePlaceholder} onChange={event => onChange('contactName', event.target.value)} />
@@ -236,6 +245,7 @@ function ContactView({
 }
 
 function MediaView({
+  locale,
   copy,
   media,
   onFile,
@@ -246,6 +256,7 @@ function MediaView({
   onBack,
   onContinue
 }: {
+  readonly locale: SupportedLocale;
   readonly copy: ReturnType<typeof getProviderPropertyCompletionCopy>;
   readonly media: readonly PropertyMediaData[];
   readonly onFile: (kind: PropertyMediaKind, event: ChangeEvent<HTMLInputElement>) => void;
@@ -257,23 +268,26 @@ function MediaView({
   readonly onContinue: () => void;
 }) {
   const labels = copy.media;
+  const dropzoneTitle = locale === 'ar' ? 'اسحب الصور هنا أو انقر للرفع' : locale === 'en' ? 'Drag images here or click to upload' : labels.emptyTitle;
   return (
     <div className="provider-property-completion__form">
-      <div className="provider-property-wizard__intro">
-        <p className="provider-dashboard__eyebrow">{copy.steps.media}</p>
-        <h1 id="provider-property-completion-title">{copy.titles.media}</h1>
-        <p>{copy.descriptions.media}</p>
-      </div>
+      <CompletionPageIntro locale={locale} fallbackTitle={copy.titles.media} fallbackDescription={copy.descriptions.media} />
       <section className="provider-property-completion__card" aria-labelledby="provider-property-media-upload">
-        <h2 id="provider-property-media-upload">{labels.count}: {media.length}</h2>
+        <h2 id="provider-property-media-upload">{copy.titles.media}</h2>
         <p>{labels.acceptedTypes}</p>
-        <div className="provider-property-completion__upload-actions">
-          <label className="provider-property-completion__file-button" htmlFor="provider-property-media-image">{labels.chooseImage}</label>
+        <div className="provider-property-completion__empty" role="status" style={{ minHeight: 220, display: 'grid', alignContent: 'center', justifyItems: 'center', gap: 12, padding: 24, textAlign: 'center' }}>
+          <img src={providerMediaUploadIcon} alt="" width={22} height={22} style={{ display: 'block', width: 22, height: 22, objectFit: 'contain' }} />
+          <strong>{dropzoneTitle}</strong>
+          <p>{labels.emptyBody}</p>
+          <label className="provider-property-completion__file-button" htmlFor="provider-property-media-image" style={{ minHeight: 36, alignItems: 'center', justifyContent: 'center', padding: '8px 16px', borderColor: '#17233d', borderRadius: 18, background: '#17233d', color: '#fff' }}>{labels.chooseImage}</label>
           <input id="provider-property-media-image" type="file" accept="image/jpeg,image/png" onChange={event => onFile('image', event)} disabled={busy} />
+        </div>
+        <div className="provider-property-completion__upload-actions" style={{ justifyContent: 'center' }}>
+          <span style={{ display: 'inline-flex', minHeight: 28, alignItems: 'center', padding: '6px 12px', borderRadius: 18, background: '#f3f4f6', color: '#586981', fontSize: '0.82rem', fontWeight: 700 }}>{labels.count}: {media.length}</span>
           <label className="provider-property-completion__file-button" htmlFor="provider-property-media-floor-plan">{labels.chooseFloorPlan}</label>
           <input id="provider-property-media-floor-plan" type="file" accept="application/pdf" onChange={event => onFile('floor_plan', event)} disabled={busy} />
         </div>
-        {media.length === 0 ? <div className="provider-property-completion__empty" role="status"><strong>{labels.emptyTitle}</strong><p>{labels.emptyBody}</p></div> : (
+        {media.length > 0 ? (
           <ul className="provider-property-completion__media-list" aria-label={labels.count}>
             {media.map((item, index) => (
               <li key={item.id} className="provider-property-completion__media-item">
@@ -286,7 +300,7 @@ function MediaView({
               </li>
             ))}
           </ul>
-        )}
+        ) : null}
         <p className="provider-property-completion__notice">{labels.existingUnavailableBody}</p>
         <p className="provider-property-completion__privacy">{labels.privacyNote}</p>
         {message !== undefined ? <p className="provider-property-wizard__form-message provider-property-wizard__form-message--error" role="alert">{message}</p> : null}
@@ -384,11 +398,7 @@ function ReviewView({
   const submittedView = submitted || property.status === 'pending_review';
   return (
     <form className="provider-property-completion__form" onSubmit={onSubmit} noValidate>
-      <div className="provider-property-wizard__intro">
-        <p className="provider-dashboard__eyebrow">{copy.steps.review}</p>
-        <h1 id="provider-property-completion-title">{copy.titles.review}</h1>
-        <p>{copy.descriptions.review}</p>
-      </div>
+      <CompletionPageIntro locale={locale} fallbackTitle={copy.titles.review} fallbackDescription={copy.descriptions.review} />
       {submittedView ? <section className="provider-property-completion__submitted" role="status"><h2>{review.submittedTitle}</h2><p>{review.submittedBody}</p><strong>{review.submittedStatus}</strong></section> : null}
       <section className="provider-property-completion__card" aria-labelledby="provider-property-review-summary">
         <h2 id="provider-property-review-summary">{review.safeProjectionTitle}</h2>
@@ -584,7 +594,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   const validationIssues = property === undefined ? [] : getProviderPropertyValidationIssues(property);
   const validationState = step === 'review' && property !== undefined && (property.status === 'draft' || property.status === 'needs_changes') && validationIssues.length > 0;
   const content = state === 'success' && property !== undefined ? (
-    step === 'media' ? <MediaView copy={copy} media={media} onFile={handleFile} onRemove={removeMedia} onMove={moveMedia} busy={mutationState === 'saving'} message={mediaMessage} onBack={goBack} onContinue={goForward} />
+    step === 'media' ? <MediaView locale={locale} copy={copy} media={media} onFile={handleFile} onRemove={removeMedia} onMove={moveMedia} busy={mutationState === 'saving'} message={mediaMessage} onBack={goBack} onContinue={goForward} />
       : step === 'contact' ? <ContactView locale={locale} copy={copy} form={contact} onChange={handleContactChange} onSubmit={handleContactSubmit} onBack={goBack} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} />
         : validationState ? <ValidationView locale={locale} property={property} issues={validationIssues} /> : <ReviewView locale={locale} copy={copy} property={property} media={media} checks={checks} onCheck={field => setChecks(current => ({ ...current, [field]: !current[field] }))} reason={reason} onReason={setReason} onSubmit={handleSubmit} onBack={goBack} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} submitted={submitted} />
   ) : null;
@@ -592,7 +602,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
   return (
     <section className="provider-dashboard provider-property-completion" data-screen-id={step === 'media' ? 'PRV-08' : step === 'contact' ? 'PRV-09' : validationState ? 'PRV-11' : 'PRV-10'} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${step}`} data-device-scope="desktop">
       <ProviderNavigation locale={locale} activePath="/provider/properties" />
-      <div className="provider-dashboard__content provider-property-wizard__content">
+      <div className="provider-dashboard__content provider-property-wizard__content" style={providerPropertyContentStyle}>
         <StepRail step={step} locale={locale} />
         <StatePanel state={state} onRetry={retry} copy={propertyCopy} />
         {content}

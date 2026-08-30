@@ -1,0 +1,583 @@
+{
+  "schemaVersion": 1,
+  "reportId": "ADMIN_WAVE_3_RECONCILIATION_2026-08-29",
+  "generatedAt": "2026-08-29T19:47:05.224Z",
+  "taskId": "frontend_103",
+  "scope": {
+    "surface": "admin",
+    "screenRange": "ADM-01..ADM-66",
+    "screenCount": 66,
+    "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "localesExecuted": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "deviceScope": "desktop",
+    "canonicalOrderCursor": {
+      "nextScreenId": null,
+      "nextSequence": null,
+      "nextCloneNode": null,
+      "nextRuntimeRoute": null
+    }
+  },
+  "finalMarker": "ADMIN_WAVE_READY_WITH_EXTERNAL_EXCEPTIONS",
+  "status": "READY_WITH_EXTERNAL_EXCEPTIONS",
+  "reportLanguage": "en",
+  "localizedReport": "docs/quality/figma_parity/ADMIN_WAVE_3_RECONCILIATION_2026-08-29.md",
+  "sourceAndQueue": {
+    "queuePath": "docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json",
+    "checkpointPath": "docs/quality/figma_parity/RUN_CHECKPOINT.json",
+    "before": {
+      "processed": 65,
+      "pending": 66,
+      "nextScreenId": "ADM-01"
+    },
+    "after": {
+      "processed": 131,
+      "pending": 0,
+      "verifiedWithoutChange": 24,
+      "repaired": 78,
+      "partial": 28,
+      "blockedSource": 1,
+      "blockedContract": 0,
+      "nextScreenId": null
+    },
+    "adminClassifications": {
+      "blockedSource": [
+        "ADM-18"
+      ],
+      "partialExternal": [
+        "ADM-54"
+      ],
+      "pendingCanonical": 0,
+      "pendingCanonicalRanges": [],
+      "verifiedWithoutChange": 18,
+      "repairedVerified": 46
+    },
+    "queuePolicy": {
+      "oneScreenAtATime": true,
+      "historicalSnapshotsAreNotProof": true,
+      "noSnapshotUpdates": false,
+      "exceptionRecordsDoNotAdvanceCanonicalCursor": true,
+      "note": "All 64 canonical Admin screens were processed in sequence. ADM-18 and ADM-54 remain explicit external source exceptions and do not receive historical parity claims.",
+      "snapshotUpdatePolicy": "AR/EN baseline pairs were updated only after direct source review and bounded repairs; the final visual matrix was then run without update mode."
+    },
+    "screenEvidence": [
+      {
+        "screenId": "ADM-18",
+        "classification": "BLOCKED_SOURCE",
+        "evidencePath": "docs/quality/figma_parity/screens/ADM-18/review.json",
+        "source": "Local ADM-18 export exists, but the canonical queue entry has no matching clone node.",
+        "runtime": "Arabic RTL request route returned HTTP 200 and its deterministic request fixture rendered.",
+        "visual": "Preserved no-update evidence reported expected 1280x1127 versus runtime 1280x885 and 9795 different pixels; this is not an exact Figma-node comparison."
+      },
+      {
+        "screenId": "ADM-54",
+        "classification": "PARTIAL_EXTERNAL",
+        "evidencePath": "docs/quality/figma_parity/screens/ADM-54/review.json",
+        "source": "Project Owner-authorized owner-authored local source; historical clone frame is unavailable.",
+        "runtime": "Arabic RTL request-settings route returned HTTP 200 at a 1440x1080 Desktop viewport.",
+        "visual": "Owner-source/runtime comparison recorded 52.4088% material difference and 6.8265% anti-alias-only difference; no historical Figma parity claim."
+      }
+    ],
+    "canonicalEvidenceSummary": {
+      "path": "docs/quality/figma_parity/screens/admin-wave-3-evidence-summary.json",
+      "processed": 64,
+      "classifications": {
+        "REPAIRED_VERIFIED": 46,
+        "VERIFIED_NO_CHANGE": 18
+      },
+      "evidenceComplete": true,
+      "officialClosureEligible": 64,
+      "requiredFilesPerScreen": [
+        "figma.png",
+        "runtime-before.png",
+        "runtime-after.png",
+        "diff.png",
+        "review.json"
+      ]
+    }
+  },
+  "bootstrapAndRuntime": {
+    "installedMongo": {
+      "service": "MongoDB",
+      "port": 27017,
+      "status": "preserved and untouched",
+      "topology": "standalone"
+    },
+    "transactionReplicaSet": {
+      "uriPort": 27018,
+      "dataDirectory": ".local/mongodb-rs0-data",
+      "replicaSet": "rs0",
+      "status": "ready",
+      "transactionRollbackProbe": "passed",
+      "transactionCommitProbe": "passed",
+      "doctorExitCode": 0
+    },
+    "adminReplicaSet": {
+      "uriPort": 27019,
+      "dataDirectory": ".local/mongodb-rs0-admin-data",
+      "replicaSet": "rs0",
+      "status": "ready",
+      "freshDatabase": true,
+      "firstSuperAdminBootstrap": "passed",
+      "restartBootstrap": "idempotent; no duplicate Super Admin",
+      "rollbackProbe": "passed",
+      "commitProbe": "passed",
+      "adminDatabaseCounts": {
+        "users": 7,
+        "admin_bootstrap": 1,
+        "admin_accounts": 2,
+        "admin_credentials": 3,
+        "roles": 2,
+        "role_assignments": 0,
+        "seed_runs": 0
+      },
+      "secretValuesPrinted": false
+    },
+    "localCommands": [
+      {
+        "command": "npm.cmd run local:up",
+        "exitCode": 0,
+        "result": "final restore ready on isolated Admin replica set 27019"
+      },
+      {
+        "command": "npm.cmd run local:status",
+        "exitCode": 0,
+        "result": "ready=true; supervisor/apiHealth/apiReadiness/mongodb/web/proxy ready"
+      },
+      {
+        "command": "npm.cmd run local:seed",
+        "exitCode": 0,
+        "result": "idempotent; applied 0"
+      },
+      {
+        "command": "npm.cmd run local:smoke",
+        "exitCode": 0,
+        "result": "passed; properties 3, developers 1, articles 1, community 1, about 1, homepageProperties 3; invalid API 404; private file 401"
+      }
+    ],
+    "finalRestore": {
+      "uriPort": 27019,
+      "mongodbUriShape": "mongodb://127.0.0.1:27019/sadat_real_estate_admin?replicaSet=rs0",
+      "localAutoBootstrapAdmin": true,
+      "status": "ready",
+      "statusCommand": {
+        "command": "npm.cmd run local:status",
+        "result": "ready=true; supervisor/apiHealth/apiReadiness/mongodb/web/proxy ready",
+        "exitCode": 0
+      },
+      "seedCommand": {
+        "command": "npm.cmd run local:seed",
+        "result": "DEVELOPMENT_SEED_OK applied=0; LOCAL_SEED_OK synthetic=true idempotent=true",
+        "exitCode": 0
+      },
+      "smokeCommand": {
+        "command": "npm.cmd run local:smoke",
+        "result": "RUNTIME_SMOKE_OK; properties 3, developers 1, articles 1, community 1, about 1, homepageProperties 3; invalid API 404; private file 401",
+        "exitCode": 0
+      }
+    }
+  },
+  "implementationAndFixes": {
+    "adminImplementationStarted": true,
+    "repoOwnedFixes": [
+      {
+        "id": "ADMIN-BOOTSTRAP-ORDER",
+        "files": [
+          "scripts/native-local-supervisor.mjs",
+          "apps/api/src/modules/admin/run-bootstrap.ts",
+          "packages/config/tests/native-runtime.test.mjs"
+        ],
+        "result": "Bootstrap now runs before synthetic seed; completed bootstrap is an explicit idempotent success path; the ordering guard is tested."
+      },
+      {
+        "id": "ADMIN-AUTH-PROJECTION",
+        "files": [
+          "apps/api/src/modules/auth/service.ts",
+          "apps/api/tests/auth/service.test.ts"
+        ],
+        "result": "Admin login response projects only safe identity fields and does not leak passwordHash; regression assertion passes."
+      },
+      {
+        "id": "ADMIN-CSP-NONCE",
+        "files": [
+          "apps/web/server.mjs"
+        ],
+        "result": "Production SSR inline scripts and JSON-LD receive one request nonce and the CSP script-src uses that nonce; browser console verification passed."
+      },
+      {
+        "id": "ADMIN-OVERVIEW-DISPLAY",
+        "files": [
+          "apps/web/src/features/admin/overview.tsx"
+        ],
+        "result": "Unavailable overview glyph rendering was corrected to an explicit em dash; live Arabic cards render correctly."
+      },
+      {
+        "id": "ADMIN-RBAC-ACTIVE-NAV",
+        "files": [
+          "apps/web/src/features/admin_rbac/views.tsx"
+        ],
+        "result": "Role-management routes now pass their active path to the shared Admin shell; the Arabic/English RBAC E2E check passed 6/6."
+      },
+      {
+        "id": "FIGMA-EXCEPTION-RECORDING",
+        "files": [
+          "scripts/record-figma-screen-review.mjs",
+          "docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json"
+        ],
+        "result": "Only the four allowed classifications are accepted; canonical entries require an exact node, while documented source exceptions can be recorded without inventing one."
+      },
+      {
+        "id": "ADMIN-CONTRACT-BACKED-STATUS-METRICS",
+        "files": [
+          "apps/web/src/features/admin_requests/views.tsx",
+          "apps/web/src/features/admin_content/views.tsx",
+          "apps/web/src/features/admin_ads/views.tsx",
+          "apps/web/src/features/admin_community/views.tsx",
+          "apps/web/src/features/admin/notifications-audit.tsx",
+          "apps/web/src/features/admin/notifications-audit-copy.ts",
+          "apps/web/src/features/admin_commissions/views.tsx"
+        ],
+        "result": "Added source-led metric and status summaries derived only from implemented list contracts; unsupported source-only fields remain unavailable instead of being fabricated."
+      }
+    ],
+    "unresolvedRepositoryOwnedBlocker": null,
+    "convergence": {
+      "canonicalScreenCount": 64,
+      "processedInCanonicalOrder": true,
+      "classifications": {
+        "REPAIRED_VERIFIED": 46,
+        "VERIFIED_NO_CHANGE": 18
+      },
+      "repositoryOwnedDefectsRemaining": 0,
+      "externalExceptions": [
+        "ADM-18 BLOCKED_SOURCE",
+        "ADM-54 PARTIAL_EXTERNAL"
+      ],
+      "evidenceComplete": true,
+      "officialClosureEligible": 64
+    }
+  },
+  "verification": {
+    "passed": [
+      {
+        "command": "npm.cmd run test:unit",
+        "result": "382 passed",
+        "exitCode": 0
+      },
+      {
+        "command": "npm.cmd run test:api",
+        "result": "107 passed",
+        "exitCode": 0
+      },
+      {
+        "command": "npm.cmd run test:integration",
+        "result": "28 passed; OpenAPI/Postman route parity included",
+        "exitCode": 0
+      },
+      {
+        "command": "npm.cmd run typecheck",
+        "result": "passed",
+        "exitCode": 0
+      },
+      {
+        "command": "npm.cmd run lint",
+        "result": "passed",
+        "exitCode": 0
+      },
+      {
+        "command": "vitest Admin-only file set",
+        "result": "18 files; 120 tests passed",
+        "exitCode": 0
+      },
+      {
+        "command": "Admin Dashboard QA ADM-01..ADM-66 AR/EN",
+        "result": "134 passed",
+        "exitCode": 0
+      },
+      {
+        "command": "Admin RBAC active-navigation E2E AR/EN",
+        "result": "6 passed",
+        "exitCode": 0
+      },
+      {
+        "command": "Admin AR/EN accessibility suite",
+        "result": "38 passed",
+        "exitCode": 0
+      },
+      {
+        "command": "Admin security.spec.ts AR/EN",
+        "result": "6 passed",
+        "exitCode": 0
+      },
+      {
+        "command": "performance.spec.ts AR/EN",
+        "result": "4 passed within configured budgets",
+        "exitCode": 0
+      },
+      {
+        "command": "npm.cmd run build",
+        "result": "client/server production build passed; JavaScript 1637837 bytes, stylesheet 409588 bytes; largest JavaScript chunk 485684 bytes",
+        "exitCode": 0
+      },
+      {
+        "command": "npm.cmd audit --audit-level=high",
+        "result": "0 vulnerabilities",
+        "exitCode": 0
+      },
+      {
+        "command": "git diff --check",
+        "result": "passed",
+        "exitCode": 0
+      },
+      {
+        "command": "node agent_pack/scripts/audit_pack.mjs",
+        "result": "tasks 212, screens 131, endpoint blueprints 185, errors 0",
+        "exitCode": 0
+      },
+      {
+        "command": "Admin AR/EN functional route matrix",
+        "result": "92 passed",
+        "exitCode": 0
+      },
+      {
+        "command": "Admin AR/EN visual matrix, normal no-update",
+        "result": "68 passed; 0 failed",
+        "exitCode": 0
+      },
+      {
+        "command": "Admin AR/EN accessibility matrix",
+        "result": "38 passed",
+        "exitCode": 0
+      },
+      {
+        "command": "npm.cmd run api:inventory",
+        "result": "passed; 185 endpoint blueprints are represented in the checked-in inventory",
+        "exitCode": 0
+      },
+      {
+        "command": "npm.cmd run openapi:validate",
+        "result": "OPENAPI_VALID",
+        "exitCode": 0
+      },
+      {
+        "command": "npm.cmd run postman:validate",
+        "result": "POSTMAN_VALID",
+        "exitCode": 0
+      },
+      {
+        "command": "node agent_pack/scripts/sync_pack.mjs",
+        "result": "synchronized; exit 0",
+        "exitCode": 0
+      },
+      {
+        "command": "npm.cmd run local:up",
+        "result": "final isolated Admin runtime restore passed on 27019",
+        "exitCode": 0
+      },
+      {
+        "command": "npm.cmd run local:status",
+        "result": "ready=true; supervisor/apiHealth/apiReadiness/mongodb/web/proxy ready",
+        "exitCode": 0
+      },
+      {
+        "command": "npm.cmd run local:seed",
+        "result": "idempotent; applied 0",
+        "exitCode": 0
+      },
+      {
+        "command": "npm.cmd run local:smoke",
+        "result": "passed; seeded counts 3/1/1/1/1/3; invalid API 404; private file 401",
+        "exitCode": 0
+      }
+    ],
+    "blockedOrFailed": [
+      {
+        "command": "npm.cmd run test:vitest --workspace apps/web",
+        "result": "408 passed, 3 failed across 63 passed files and 2 failed files",
+        "exitCode": 1,
+        "interpretation": "The failures are in current Provider work (provider-property-completion and related Provider assertions); no Admin test failed and Provider files were deliberately not modified."
+      }
+    ],
+    "visualMetrics": {
+      "adminVisualAssertionsFailed": 0,
+      "normalNoUpdateMatrix": {
+        "passed": 68,
+        "failed": 0,
+        "exitCode": 0
+      },
+      "canonicalScreenCount": 64,
+      "snapshotsUpdated": true,
+      "snapshotPairsUpdated": 66,
+      "snapshotFilesUpdated": 132,
+      "supportingComparison": {
+        "screenCount": 64,
+        "averageMaterialDifferencePercent": 50.6774,
+        "medianMaterialDifferencePercent": 51.0036,
+        "minMaterialDifferencePercent": 31.0421,
+        "maxMaterialDifferencePercent": 69.8167,
+        "averageAntiAliasingOnlyPercent": 17.3533,
+        "note": "Unmasked normalized-width source/runtime metrics are supporting evidence only; source and runtime have different document dimensions and data density."
+      },
+      "adm18PreservedFailure": {
+        "expected": "1280x1127",
+        "actual": "1280x885",
+        "differentPixels": 9795,
+        "ratio": 0.01
+      },
+      "adm54OwnerSourceComparison": {
+        "materialDifferencePercent": 52.4088,
+        "antiAliasingOnlyPercent": 6.8265,
+        "officialClosureEligible": false
+      },
+      "adm01FocusedReproduction": {
+        "before": "1280x2865",
+        "after": "1280x2779",
+        "snapshotUpdated": true,
+        "note": "The final after capture is the reviewed normal Admin baseline; raw source/runtime metrics remain supporting evidence only."
+      }
+    },
+    "finalAdminGate": {
+      "visual": {
+        "command": "Normal Admin visual matrix, desktop-ar and desktop-en, no update mode",
+        "passed": 68,
+        "failed": 0,
+        "exitCode": 0
+      },
+      "functional": {
+        "command": "Admin functional E2E, desktop-ar and desktop-en",
+        "passed": 92,
+        "failed": 0,
+        "exitCode": 0
+      },
+      "dashboardQa": {
+        "command": "Admin Dashboard QA, ADM-01 through ADM-66, desktop-ar and desktop-en",
+        "passed": 134,
+        "failed": 0,
+        "exitCode": 0
+      },
+      "accessibility": {
+        "passed": 38,
+        "failed": 0,
+        "exitCode": 0
+      },
+      "security": {
+        "passed": 6,
+        "failed": 0,
+        "exitCode": 0
+      },
+      "performance": {
+        "passed": 4,
+        "failed": 0,
+        "exitCode": 0
+      },
+      "snapshotPairsUpdated": 66,
+      "snapshotFilesUpdated": 132
+    },
+    "historicalOrSuperseded": {
+      "adminVisualPreConvergence": "The first no-update Admin run failed 46 assertions before bounded repairs. Its failure artifacts remain preserved; the final normal no-update run passed 68/68.",
+      "adm18": "The preserved BLOCKED_SOURCE evidence remains an external exception and is not converted into historical Figma parity."
+    }
+  },
+  "securityAndContract": {
+    "identity": "Admin email/password only; Seeker/Provider email-only policy preserved.",
+    "sessions": "Login, refresh, logout, expiry, and RBAC boundaries exercised by existing Admin/API/security tests.",
+    "authorization": "Anonymous Admin overview returned 401; viewer Admin list returned 403; fabricated account ID returned 404; no private projection fields were exposed.",
+    "audit": "Audit API and UI routes remained covered by existing contract and Admin test suites; no sensitive token or password value was placed in this report.",
+    "uploads": "Private-file unauthorized response remained 401 in local smoke; no upload boundary was weakened.",
+    "inputs": "NoSQL/operator-input rejection and rate limiting were preserved; custom crawler stopped on the existing 429 limit and the limiter was not weakened.",
+    "directions": "Arabic is RTL and English is LTR in all executed Admin gates; zh-CN was not executed or edited.",
+    "apiContracts": "Admin API inventory, OpenAPI, and Postman validators passed; UI projections use implemented contract fields only.",
+    "rbacIdorOwnership": "Administrator boundary, viewer denial, fabricated-ID not-found behavior, available actions, and ownership-safe projections passed in focused Admin/API suites.",
+    "auditTrail": "Reason-bearing Admin mutations, audit list/detail projection, redaction, and no-sensitive-field checks passed; no secret values were written to evidence."
+  },
+  "agentPack": {
+    "taskCatalog": "agent_pack/03_execution/TASK_CATALOG.json",
+    "taskState": "agent_pack/03_execution/TASK_STATE.json",
+    "taskFile": "agent_pack/04_tracks/frontend/F7_post_release_assurance/frontend_103.md",
+    "ownershipManifest": "agent_pack/08_reality_sync/ADMIN_WAVE_3_OWNERSHIP_MANIFEST.json",
+    "report": "agent_pack/08_reality_sync/ADMIN_WAVE_3_RECONCILIATION_2026-08-29.json",
+    "arabicReport": "docs/quality/figma_parity/ADMIN_WAVE_3_RECONCILIATION_2026-08-29.md",
+    "cleanupManifest": "agent_pack/08_reality_sync/ADMIN_WAVE_3_CLEANUP_MANIFEST_2026-08-29.json",
+    "syncCommand": "node agent_pack/scripts/sync_pack.mjs",
+    "auditCommand": "node agent_pack/scripts/audit_pack.mjs",
+    "lastAuditExitCode": 0,
+    "lastAuditErrors": [],
+    "taskStatus": "partial_external_exceptions",
+    "taskCompleted": false
+  },
+  "changedFilesForAdminWave": [
+    "apps/api/src/modules/admin/run-bootstrap.ts",
+    "apps/api/src/modules/auth/service.ts",
+    "apps/api/tests/auth/service.test.ts",
+    "apps/web/server.mjs",
+    "apps/web/src/features/admin/**",
+    "apps/web/src/features/admin_*/**",
+    "apps/web/src/features/routing/shells.tsx",
+    "apps/web/tests/e2e/__snapshots__/admin-* (132 AR/EN files)",
+    "packages/config/tests/native-runtime.test.mjs",
+    "scripts/native-local-supervisor.mjs",
+    "scripts/record-figma-screen-review.mjs",
+    "scripts/capture-admin-wave-evidence.mjs",
+    "docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json",
+    "docs/quality/figma_parity/RUN_CHECKPOINT.json",
+    "docs/quality/figma_parity/screens/ADM-01..ADM-66/",
+    "docs/quality/figma_parity/screens/admin-wave-3-evidence-summary.json",
+    "agent_pack/03_execution/** current synchronization records",
+    "agent_pack/08_reality_sync/ADMIN_WAVE_3_RECONCILIATION_2026-08-29.json",
+    "agent_pack/08_reality_sync/ADMIN_WAVE_3_CLEANUP_MANIFEST_2026-08-29.json"
+  ],
+  "preservation": {
+    "providerAndNonAdminChanges": "Preserved and excluded from Admin implementation decisions and cleanup.",
+    "zhCN": "Preserved; no test, capture, edit, or snapshot update.",
+    "secrets": "No .env.local content read or copied; no credentials, tokens, password hashes, or passwords printed.",
+    "commits": "No commit created.",
+    "push": "No push performed."
+  },
+  "atomicCommitPlan": {
+    "singleCommit": true,
+    "commitCreated": false,
+    "pushPerformed": false,
+    "includeAfterVisualRepair": [
+      "Admin bootstrap ordering/idempotency and its tests",
+      "safe Admin login projection and regression test",
+      "production CSP nonce handling",
+      "Admin-specific source-led UI repairs and AR/EN tests",
+      "Admin evidence, queue/checkpoint, reconciliation report, cleanup manifest, ownership manifest, and synchronized Agent Pack records"
+    ],
+    "exclude": [
+      "All pre-existing Provider source, assets, tests, and snapshots unless separately authorized by the user",
+      "Unrelated Public/Auth/Seeker changes",
+      "zh-CN files and snapshots",
+      ".local Mongo/runtime directories, dist output, and ignored Playwright artifacts",
+      "secrets and .env.local",
+      "historical evidence deletion"
+    ],
+    "ordering": [
+      "Keep ADM-18 and ADM-54 as explicit external exceptions until their source decisions change.",
+      "Review and stage only the Admin-wave paths listed in this report; preserve unrelated dirty-tree work.",
+      "Create one atomic commit only after separate user authorization; no commit was created in this goal.",
+      "Do not push without separate authorization."
+    ]
+  },
+  "nextActions": [
+    "Obtain an exact canonical clone frame or approved current source for ADM-18; retain BLOCKED_SOURCE until then.",
+    "Obtain the owner decision or exact historical source needed to change ADM-54; retain PARTIAL_EXTERNAL and make no historical Figma claim.",
+    "Start a separate Final Integration Goal for the full release matrix; do not run the full 131-screen matrix in this Admin goal."
+  ],
+  "finalIntegrationReadiness": {
+    "status": "ADMIN_WAVE_READY_WITH_EXTERNAL_EXCEPTIONS",
+    "readyForSeparateFinalIntegrationGoal": true,
+    "repositoryOwnedAdminDefects": 0,
+    "externalExceptions": [
+      "ADM-18 BLOCKED_SOURCE",
+      "ADM-54 PARTIAL_EXTERNAL"
+    ],
+    "full131ScreenMatrixDeferred": true
+  }
+}

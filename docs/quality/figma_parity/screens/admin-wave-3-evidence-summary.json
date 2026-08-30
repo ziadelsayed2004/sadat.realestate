@@ -1,0 +1,331 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-29T19:14:15.476Z",
+  "processed": 64,
+  "classifications": {
+    "REPAIRED_VERIFIED": 46,
+    "VERIFIED_NO_CHANGE": 18
+  },
+  "screens": [
+    {
+      "screenId": "ADM-01",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 51.7288
+    },
+    {
+      "screenId": "ADM-02",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 38.7622
+    },
+    {
+      "screenId": "ADM-03",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 59.8328
+    },
+    {
+      "screenId": "ADM-04",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 41.3434
+    },
+    {
+      "screenId": "ADM-05",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 50.8621
+    },
+    {
+      "screenId": "ADM-06",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 55.4317
+    },
+    {
+      "screenId": "ADM-07",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 45.0111
+    },
+    {
+      "screenId": "ADM-08",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 51.9087
+    },
+    {
+      "screenId": "ADM-09",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 31.0421
+    },
+    {
+      "screenId": "ADM-10",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 51.1689
+    },
+    {
+      "screenId": "ADM-11",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 50.4612
+    },
+    {
+      "screenId": "ADM-12",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 50.1601
+    },
+    {
+      "screenId": "ADM-13",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 53.8626
+    },
+    {
+      "screenId": "ADM-14",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 50.3116
+    },
+    {
+      "screenId": "ADM-15",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 57.4828
+    },
+    {
+      "screenId": "ADM-16",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 52.7664
+    },
+    {
+      "screenId": "ADM-17",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 62.9135
+    },
+    {
+      "screenId": "ADM-19",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 42.4555
+    },
+    {
+      "screenId": "ADM-20",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 60.0765
+    },
+    {
+      "screenId": "ADM-21",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 51.9159
+    },
+    {
+      "screenId": "ADM-22",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 48.9954
+    },
+    {
+      "screenId": "ADM-23",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 65.0805
+    },
+    {
+      "screenId": "ADM-24",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 58.374
+    },
+    {
+      "screenId": "ADM-25",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 47.0511
+    },
+    {
+      "screenId": "ADM-26",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 49.0249
+    },
+    {
+      "screenId": "ADM-27",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 35.5305
+    },
+    {
+      "screenId": "ADM-28",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 49.9811
+    },
+    {
+      "screenId": "ADM-29",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 48.8072
+    },
+    {
+      "screenId": "ADM-30",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 48.3238
+    },
+    {
+      "screenId": "ADM-31",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 41.9359
+    },
+    {
+      "screenId": "ADM-32",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 57.9836
+    },
+    {
+      "screenId": "ADM-33",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 45.1336
+    },
+    {
+      "screenId": "ADM-34",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 62.6568
+    },
+    {
+      "screenId": "ADM-35",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 57.1875
+    },
+    {
+      "screenId": "ADM-36",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 42.805
+    },
+    {
+      "screenId": "ADM-37",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 43.6797
+    },
+    {
+      "screenId": "ADM-38",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 35.8061
+    },
+    {
+      "screenId": "ADM-39",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 60.7086
+    },
+    {
+      "screenId": "ADM-40",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 65.7436
+    },
+    {
+      "screenId": "ADM-41",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 57.4612
+    },
+    {
+      "screenId": "ADM-42",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 45.9689
+    },
+    {
+      "screenId": "ADM-43",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 69.8167
+    },
+    {
+      "screenId": "ADM-44",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 64.9074
+    },
+    {
+      "screenId": "ADM-45",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 64.627
+    },
+    {
+      "screenId": "ADM-46",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 45.0314
+    },
+    {
+      "screenId": "ADM-47",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 45.611
+    },
+    {
+      "screenId": "ADM-48",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 55.0079
+    },
+    {
+      "screenId": "ADM-49",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 34.7504
+    },
+    {
+      "screenId": "ADM-50",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 54.2403
+    },
+    {
+      "screenId": "ADM-51",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 50.216
+    },
+    {
+      "screenId": "ADM-52",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 53.0714
+    },
+    {
+      "screenId": "ADM-53",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 51.9993
+    },
+    {
+      "screenId": "ADM-55",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 52.8209
+    },
+    {
+      "screenId": "ADM-56",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 53.1667
+    },
+    {
+      "screenId": "ADM-57",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 50.0622
+    },
+    {
+      "screenId": "ADM-58",
+      "classification": "VERIFIED_NO_CHANGE",
+      "materialDifferencePercent": 53.4424
+    },
+    {
+      "screenId": "ADM-59",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 51.1451
+    },
+    {
+      "screenId": "ADM-60",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 49.1553
+    },
+    {
+      "screenId": "ADM-61",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 35.6468
+    },
+    {
+      "screenId": "ADM-62",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 35.899
+    },
+    {
+      "screenId": "ADM-63",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 50.8
+    },
+    {
+      "screenId": "ADM-64",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 41.1144
+    },
+    {
+      "screenId": "ADM-65",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 51.4761
+    },
+    {
+      "screenId": "ADM-66",
+      "classification": "REPAIRED_VERIFIED",
+      "materialDifferencePercent": 51.608
+    }
+  ]
+}

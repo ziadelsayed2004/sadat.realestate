@@ -94,7 +94,7 @@
       "eligible-users"
     ],
     "purpose": "Start password reset",
-    "status": "implemented",
+    "status": "planned",
     "apiVersion": "v1"
   },
   {
@@ -106,7 +106,7 @@
       "eligible-users"
     ],
     "purpose": "Finish password reset",
-    "status": "implemented",
+    "status": "planned",
     "apiVersion": "v1"
   },
   {
@@ -178,7 +178,7 @@
       "authenticated"
     ],
     "purpose": "List sessions",
-    "status": "implemented",
+    "status": "planned",
     "apiVersion": "v1"
   },
   {
@@ -190,7 +190,7 @@
       "authenticated"
     ],
     "purpose": "Revoke owned session",
-    "status": "implemented",
+    "status": "planned",
     "apiVersion": "v1"
   },
   {
@@ -334,7 +334,7 @@
       "public"
     ],
     "purpose": "Locale/display bootstrap",
-    "status": "implemented",
+    "status": "planned",
     "apiVersion": "v1"
   },
   {
@@ -544,7 +544,7 @@
       "crawler"
     ],
     "purpose": "Sitemap data projection",
-    "status": "implemented",
+    "status": "planned",
     "apiVersion": "v1"
   },
   {
@@ -736,7 +736,7 @@
       "approved-provider"
     ],
     "purpose": "Provider KPIs",
-    "status": "implemented",
+    "status": "planned",
     "apiVersion": "v1"
   },
   {
@@ -772,6 +772,20 @@
       "approved-provider"
     ],
     "purpose": "Owned property details",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/provider/properties/:propertyId/reports",
+    "module": "moderation",
+    "auth": "access-token",
+    "roles": [
+      "verified seeker",
+      "verified provider",
+      "verified admin"
+    ],
+    "purpose": "Report a property with an explicit reason",
     "status": "implemented",
     "apiVersion": "v1"
   },
@@ -1228,6 +1242,18 @@
       "admin:staff.view"
     ],
     "purpose": "Admin user list",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/admin/admin-users/:adminId",
+    "module": "admin-rbac",
+    "auth": "access-token",
+    "roles": [
+      "admin:staff.view"
+    ],
+    "purpose": "Admin user details",
     "status": "implemented",
     "apiVersion": "v1"
   },

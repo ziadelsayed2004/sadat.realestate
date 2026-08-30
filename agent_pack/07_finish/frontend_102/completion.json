@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "taskId": "frontend_102",
+  "status": "complete",
+  "completedAt": "2026-08-29T14:14:28.2025360+03:00",
+  "decision": "PRE_ADMIN_RECONCILIATION_READY_WITH_EXTERNAL_EXCEPTIONS",
+  "summary": "Reconciled all 65 non-Admin Public, Auth, Seeker, and Provider screens in approved Arabic RTL and English LTR scope. Accepted 32 REPAIRED_VERIFIED, 6 VERIFIED_NO_CHANGE, and 27 explicitly owned PARTIAL_EXTERNAL exceptions with zero repository-owned defects. Proved non-Admin local readiness, retained transactional Admin bootstrap security, explicitly skipped only the optional local Admin bootstrap through a process-only topology override, and left Admin UI and zh-CN untouched.",
+  "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
+  "filesChanged": [
+    "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
+    "agent_pack/08_reality_sync/PRE_ADMIN_CLEANUP_MANIFEST_2026-08-29.json",
+    "agent_pack/08_reality_sync/CURRENT_STATE.md",
+    "agent_pack/08_reality_sync/DECISION_LOG.md",
+    "agent_pack/08_reality_sync/PROVIDER_WAVE_2_COORDINATOR.md",
+    "agent_pack/08_reality_sync/PROVIDER_WAVE_2_LANE_LEDGER.json",
+    "docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json",
+    "docs/quality/figma_parity/COORDINATOR_STATE.json",
+    "docs/quality/figma_parity/RUN_CHECKPOINT.json",
+    "docs/quality/figma_parity/PUBLIC_LANE_LEDGER.json",
+    "docs/quality/figma_parity/AUTH_LANE_LEDGER.json",
+    "docs/quality/figma_parity/SEEKER_LANE_LEDGER.json",
+    "agent_pack/03_execution/PARALLEL_WAVE_PLAN.json",
+    "apps/web/src/features/provider/overview.tsx",
+    "apps/web/src/features/provider_property/completion.tsx",
+    "apps/web/src/features/provider/styles.css",
+    "apps/web/public/assets/canonical/provider/",
+    "apps/web/tests/provider-account.spec.ts",
+    "apps/web/tests/provider-property-completion.spec.ts",
+    "apps/web/tests/public-fixtures.ts",
+    "apps/web/tests/provider-overview.vitest.test.tsx"
+  ],
+  "verification": [
+    {
+      "command": "npm.cmd run quality",
+      "result": "passed",
+      "details": "Lint, typecheck, 16 workspace tests, 517 API tests, coverage, production build, API inventory, OpenAPI, Postman, npm audit, and Agent Pack audit completed with exit code 0; npm audit reported 0 vulnerabilities."
+    },
+    {
+      "command": "npm.cmd run local:up with process-only local Mongo/runtime overrides",
+      "result": "passed",
+      "details": "Doctor, supervisor, API/Web/proxy/mail readiness, and bundle budget passed without reading or changing .env.local. Optional Admin bootstrap was disabled only for this local process."
+    },
+    {
+      "command": "npm.cmd run local:smoke",
+      "result": "passed",
+      "details": "Public API seeded counts, homepage/SPA/static checks, invalid API 404, private-file 401, and security headers passed."
+    },
+    {
+      "command": "npm.cmd run local:seed twice",
+      "result": "passed",
+      "details": "Both runs applied 0 records and returned idempotent=true."
+    },
+    {
+      "command": "Admin API boundary, bootstrap safety, authorization, RBAC, and overview tests",
+      "result": "passed",
+      "details": "44/44 passed; no Admin UI or Admin feature workflow was opened."
+    },
+    {
+      "command": "Preserved AR/EN visual and semantic evidence",
+      "result": "passed",
+      "details": "Public 32/32, Auth 6/6, Provider 70/70 no-update visual gates and semantic E2E 32/32 remain green; focused Web Vitest recorded 61 passed and 7 skipped."
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed",
+      "details": "No whitespace errors. Runtime shutdown stopped only the supervisor tree started by this pass; installed MongoDB was preserved."
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "result": "passed",
+      "details": "Final synchronized Agent Pack audit exited 0 with zero errors; no tasks remain in progress."
+    }
+  ],
+  "externalExceptions": {
+    "count": 27,
+    "screens": [
+      "SEK-01", "SEK-02", "SEK-03", "SEK-04", "SEK-05", "SEK-06", "SEK-07", "SEK-08", "SEK-09", "SEK-10",
+      "PRV-01", "PRV-03", "PRV-04", "PRV-05", "PRV-06", "PRV-07", "PRV-08", "PRV-09", "PRV-10", "PRV-15", "PRV-16", "PRV-17", "PRV-18", "PRV-19", "PRV-20", "PRV-22-2", "PRV-22-3"
+    ],
+    "ownerAndNextAction": "Each affected screen has an owner, safe-contract/source decision, and next recapture action in PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json."
+  },
+  "runtimeBoundary": {
+    "historicalMarker": "ADMIN_BOOTSTRAP_FAILED",
+    "rootCause": "Standalone MongoDB rejects transaction numbers with MongoServerError code 20.",
+    "reproductionCount": 1,
+    "retryCount": 0,
+    "resolution": "Optional local Admin bootstrap skipped with process-only LOCAL_AUTO_BOOTSTRAP_ADMIN=false; transactional code and Admin security boundaries retained.",
+    "productionRequirement": "Replica-set member or mongos before enabling first Super Admin bootstrap."
+  },
+  "scope": {
+    "screens": 65,
+    "repairedVerified": 32,
+    "verifiedNoChange": 6,
+    "partialExternal": 27,
+    "closureEligible": 38,
+    "repositoryOwnedDefects": 0,
+    "approvedLocales": ["ar-RTL", "en-LTR"],
+    "excludedLocales": ["zh-CN"],
+    "adminOpened": false,
+    "adminModified": false,
+    "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ"
+  },
+  "handoff": {
+    "nextTask": "ADM-01",
+    "adminImplementationStarted": false,
+    "adminUiOpened": false,
+    "commitCreated": false,
+    "pushPerformed": false,
+    "finalMarker": "PRE_ADMIN_RECONCILIATION_READY_WITH_EXTERNAL_EXCEPTIONS"
+  }
+}

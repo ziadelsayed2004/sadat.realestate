@@ -83,10 +83,15 @@ test('derives a complete negative-authorization matrix from every implemented ro
   const rolePolicies = AUTHORIZATION_ROUTE_POLICIES.filter((policy) => policy.access === 'role');
   assert.ok(rolePolicies.length > 0);
   for (const policy of rolePolicies) {
-    assert.ok(policy.requiredRole);
+    assert.ok(policy.requiredRole || policy.requiredRoles);
     assert.ok(policy.negativeCases.includes('unauthenticated'));
-    assert.ok(policy.negativeCases.includes('wrong-role'));
-    if (policy.requiredRole === 'admin') {
+    if (policy.requiredRoles) {
+      assert.deepEqual(policy.requiredRoles, ['seeker', 'provider', 'admin']);
+      assert.equal(policy.requiredRole, undefined);
+      assert.equal(policy.scope, 'self');
+      assert.ok(policy.negativeCases.includes('ownership-boundary'));
+    } else if (policy.requiredRole === 'admin') {
+      assert.ok(policy.negativeCases.includes('wrong-role'));
       assert.equal(policy.scope, 'permission');
       assert.ok(policy.negativeCases.includes('unverified-admin'));
       assert.ok(policy.negativeCases.includes('permission-boundary'));
@@ -95,6 +100,7 @@ test('derives a complete negative-authorization matrix from every implemented ro
       if (policy.method === 'GET') assert.deepEqual(policy.adminRoleModes, ADMINISTRATIVE_ROLE_MODES);
       else assert.deepEqual(policy.adminRoleModes, ['custom']);
     } else {
+      assert.ok(policy.negativeCases.includes('wrong-role'));
       assert.ok(policy.negativeCases.includes('ownership-boundary'));
     }
   }
@@ -103,6 +109,12 @@ test('derives a complete negative-authorization matrix from every implemented ro
   assert.deepEqual(signedGrant.map(routeKey), ['GET /api/v1/private/provider-documents/:documentId']);
   assert.deepEqual(signedGrant[0]?.negativeCases, ['invalid-grant']);
   assert.equal(AUTHORIZATION_ACCESS_MODES.includes('session'), true);
+  assert.equal(AUTHORIZATION_ACCESS_MODES.includes('otp_grant'), true);
+  assert.equal(getAuthorizationRoutePolicy('post', '/api/v1/provider/application')?.access, 'otp_grant');
+  assert.deepEqual(
+    getAuthorizationRoutePolicy('post', '/api/v1/public/community/posts')?.requiredRoles,
+    ['seeker', 'provider', 'admin']
+  );
   assert.equal(getAuthorizationRoutePolicy('get', '/api/v1/admin/settings/:namespace')?.requiredRole, 'admin');
 });
 

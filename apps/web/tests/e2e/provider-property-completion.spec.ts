@@ -30,6 +30,12 @@ function envelope(data: unknown, requestId: string): string {
   return JSON.stringify({ data, meta: { requestId } });
 }
 
+async function hideSkipLink(page: import('@playwright/test').Page): Promise<void> {
+  await page.locator('.a11y-skip-link').evaluate((element) => {
+    (element as HTMLElement).style.visibility = 'hidden';
+  });
+}
+
 function propertyFixture(overrides: Record<string, unknown> = {}) {
   return {
     id: PROPERTY_ID,
@@ -121,6 +127,7 @@ test.describe('PRV-08, PRV-09, and PRV-10 provider property completion', () => {
     await expect(page.locator('body')).not.toContainText(/storageKey|https?:\/\//u);
     await page.locator('.provider-property-completion__media-item button').last().click();
     await expect(page.locator('.provider-property-completion__media-list')).toHaveCount(0);
+    await hideSkipLink(page);
     await expect(page).toHaveScreenshot(`provider-property-media-${locale}.png`, { fullPage: true });
   });
 

@@ -6,7 +6,7 @@ import {
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import { getProviderCopy } from '../src/features/provider/copy.ts';
-import { loadProviderOverview, ProviderOverview, type ProviderOverviewData } from '../src/features/provider/index.ts';
+import { loadProviderOverview, ProviderNavigation, ProviderOverview, type ProviderOverviewData } from '../src/features/provider/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 
 const providerId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
@@ -87,6 +87,21 @@ describe('Provider overview', () => {
     expect(result.container.querySelector('[data-screen-id="PRV-01"]')).not.toBeNull();
     expect(result.container.textContent).not.toContain(providerId);
     expect(result.container.textContent).not.toMatch(/internalNotes|assignedTo|auditData|storageKey|accessToken|refreshToken/u);
+    result.unmount();
+  });
+
+  it.each(['ar', 'en'] as const)('renders the canonical Provider rail assets and maps viewings to Customer Requests for %s', locale => {
+    const result = renderWithLocale(<ProviderNavigation locale={locale} activePath="/provider/viewings" />, { locale });
+    const links = Array.from(result.container.querySelectorAll('.provider-dashboard__navigation a'));
+    expect(links).toHaveLength(9);
+    expect(result.container.querySelector('.provider-dashboard__navigation a[data-active="true"]')).toHaveAttribute('href', `/provider/customer-requests?lang=${locale}`);
+    expect(result.container.querySelectorAll('.provider-dashboard__navigation img')).toHaveLength(9);
+    for (const image of result.container.querySelectorAll('.provider-dashboard__navigation img')) {
+      expect(image).toHaveAttribute('width', '19');
+      expect(image).toHaveAttribute('height', '19');
+      expect(image.getAttribute('src')).toMatch(/^\/assets\/canonical\/provider\/navigation\/[a-z-]+(?:-active)?\.svg$/u);
+    }
+    expect(result.container.querySelector('.provider-dashboard__navigation a[data-active="true"] img')).toHaveAttribute('src', '/assets/canonical/provider/navigation/requests-active.svg');
     result.unmount();
   });
 

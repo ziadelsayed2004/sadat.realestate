@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-29T01:47:21.446Z",
+  "updatedAt": "2026-08-29T14:14:28.2025360+03:00",
   "taskId": "provider_wave_2",
-  "status": "PARTIAL_VISUAL_GATE",
+  "status": "PARTIAL_EXTERNAL",
   "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
   "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
   "approvedLocaleScope": [
@@ -13,7 +13,7 @@
     "zh-CN"
   ],
   "currentScreenId": "PRV-22-3",
-  "nextScreenId": null,
+  "nextScreenId": "ADM-01",
   "adminOpened": false,
   "providerImplementationStarted": true,
   "sharedChangeQueue": [
@@ -53,7 +53,7 @@
     {
       "laneId": "provider_property_entry",
       "agentId": "01a04abf-710e-7e43-8622-c766a6b22233",
-      "status": "PARTIAL_VISUAL_GATE",
+      "status": "PARTIAL_EXTERNAL",
       "screenRange": [
         "PRV-01",
         "PRV-02",
@@ -123,95 +123,180 @@
       },
       "screenDecisions": {
         "PRV-01": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL_EXTERNAL",
           "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-01/coordinator-reconciliation.json"
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [
+            {
+              "owner": "External Provider contract/data owner",
+              "description": "The safe Provider contract exposes property totals but not the canonical customer-request, views, booked, history, or chart series values; the runtime keeps these values explicitly unavailable.",
+              "nextAction": "Approve the missing safe projection/data for PRV-01, then recapture its AR/EN visual record."
+            }
+          ],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-02": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
-          "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-02/coordinator-reconciliation.json"
+          "status": "REPAIRED_VERIFIED",
+          "classification": "REPAIRED_VERIFIED",
+          "closureEligible": true,
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-03": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL_EXTERNAL",
           "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-03/coordinator-reconciliation.json"
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [
+            {
+              "owner": "External Provider contract/data owner",
+              "description": "The current provider property create contract does not expose every canonical basic-form field; no fields were fabricated.",
+              "nextAction": "Approve the missing safe projection/data for PRV-03, then recapture its AR/EN visual record."
+            }
+          ],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-04": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL_EXTERNAL",
           "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-04/coordinator-reconciliation.json"
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [
+            {
+              "owner": "External Provider contract/data owner",
+              "description": "The current provider location contract does not expose every canonical address field; locationId and coordinates remain preserved and no geocoding/fetch was added.",
+              "nextAction": "Approve the missing safe projection/data for PRV-04, then recapture its AR/EN visual record."
+            }
+          ],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-05": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL_EXTERNAL",
           "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-05/coordinator-reconciliation.json"
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [
+            {
+              "owner": "External Provider contract/data owner",
+              "description": "The current provider catalog/detail contract does not expose every canonical extended property field; no unsupported taxonomy or metadata was invented.",
+              "nextAction": "Approve the missing safe projection/data for PRV-05, then recapture its AR/EN visual record."
+            }
+          ],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-06": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL_EXTERNAL",
           "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-06/coordinator-reconciliation.json"
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [
+            {
+              "owner": "External Provider contract/data owner",
+              "description": "The current provider price/payment contract does not expose every canonical commission/payment field; currency consistency and server-owned values remain enforced.",
+              "nextAction": "Approve the missing safe projection/data for PRV-06, then recapture its AR/EN visual record."
+            }
+          ],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-07": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL_EXTERNAL",
           "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-07/coordinator-reconciliation.json"
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [
+            {
+              "owner": "External Provider contract/data owner",
+              "description": "The canonical taxonomy/catalog content is not available from the provider contract; the browser route alias is repaired while unsupported catalog values remain unavailable.",
+              "nextAction": "Approve the missing safe projection/data for PRV-07, then recapture its AR/EN visual record."
+            }
+          ],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-08": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL_EXTERNAL",
           "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-08/coordinator-reconciliation.json"
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [
+            {
+              "owner": "External Provider contract/data owner",
+              "description": "The current provider media contract does not expose the canonical cover/minimum-media content; upload authorization and private storage boundaries remain enforced.",
+              "nextAction": "Approve the missing safe projection/data for PRV-08, then recapture its AR/EN visual record."
+            }
+          ],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-09": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL_EXTERNAL",
           "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-09/coordinator-reconciliation.json"
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [
+            {
+              "owner": "External Provider contract/data owner",
+              "description": "The current provider contact contract does not expose the canonical phone/contact grouping or internal notes; no phone identity field was introduced.",
+              "nextAction": "Approve the missing safe projection/data for PRV-09, then recapture its AR/EN visual record."
+            }
+          ],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-10": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL_EXTERNAL",
           "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-10/coordinator-reconciliation.json"
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [
+            {
+              "owner": "External Provider contract/data owner",
+              "description": "The current provider review contract does not expose every canonical summary field; the review remains limited to safe server projections and confirmations.",
+              "nextAction": "Approve the missing safe projection/data for PRV-10, then recapture its AR/EN visual record."
+            }
+          ],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-11": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
-          "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-11/coordinator-reconciliation.json"
+          "status": "REPAIRED_VERIFIED",
+          "classification": "REPAIRED_VERIFIED",
+          "closureEligible": true,
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-12": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
-          "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-12/coordinator-reconciliation.json"
+          "status": "REPAIRED_VERIFIED",
+          "classification": "REPAIRED_VERIFIED",
+          "closureEligible": true,
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-13": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
-          "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-13/coordinator-reconciliation.json"
+          "status": "REPAIRED_VERIFIED",
+          "classification": "REPAIRED_VERIFIED",
+          "closureEligible": true,
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-14": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
-          "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-14/coordinator-reconciliation.json"
+          "status": "REPAIRED_VERIFIED",
+          "classification": "REPAIRED_VERIFIED",
+          "closureEligible": true,
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         }
-      }
+      },
+      "historicalStatus": "PARTIAL_VISUAL_GATE",
+      "nextScreenId": "ADM-01",
+      "reconciliationStatus": "READY_WITH_EXTERNAL_EXCEPTIONS"
     },
     {
       "laneId": "provider_operations",
       "agentId": "01a04abf-72fe-7be1-a092-f3d6e5939de1",
-      "status": "PARTIAL_VISUAL_GATE",
+      "status": "PARTIAL_EXTERNAL",
       "screenRange": [
         "PRV-15",
         "PRV-16",
@@ -272,47 +357,98 @@
       },
       "screenDecisions": {
         "PRV-15": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL_EXTERNAL",
           "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-15/coordinator-reconciliation.json"
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [
+            {
+              "owner": "External Provider contract/data owner",
+              "description": "The current safe ProjectData projection lacks canonical image, unit, availability, and area metrics; no fields were invented.",
+              "nextAction": "Approve the missing safe projection/data for PRV-15, then recapture its AR/EN visual record."
+            }
+          ],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-16": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL_EXTERNAL",
           "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-16/coordinator-reconciliation.json"
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [
+            {
+              "owner": "External Provider contract/data owner",
+              "description": "The current provider request projection is intentionally redacted and does not expose all canonical CRM presentation fields.",
+              "nextAction": "Approve the missing safe projection/data for PRV-16, then recapture its AR/EN visual record."
+            }
+          ],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-17": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL_EXTERNAL",
           "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-17/coordinator-reconciliation.json"
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [
+            {
+              "owner": "External Provider contract/data owner",
+              "description": "The current provider request contract is intentionally limited to approved customer fields and server actions; no unsupported details were added.",
+              "nextAction": "Approve the missing safe projection/data for PRV-17, then recapture its AR/EN visual record."
+            }
+          ],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-18": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL_EXTERNAL",
           "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-18/coordinator-reconciliation.json"
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [
+            {
+              "owner": "External Provider contract/data owner",
+              "description": "The current provider viewing projection does not expose every canonical appointment presentation field; only contract-defined data is rendered.",
+              "nextAction": "Approve the missing safe projection/data for PRV-18, then recapture its AR/EN visual record."
+            }
+          ],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-19": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL_EXTERNAL",
           "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-19/coordinator-reconciliation.json"
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [
+            {
+              "owner": "External Provider contract/data owner",
+              "description": "The current advertising projection does not expose every canonical ad/content metric; private upload and quote boundaries remain server-owned.",
+              "nextAction": "Approve the missing safe projection/data for PRV-19, then recapture its AR/EN visual record."
+            }
+          ],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-20": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL_EXTERNAL",
           "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-20/coordinator-reconciliation.json"
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [
+            {
+              "owner": "External Provider contract/data owner",
+              "description": "The current commission projection is read-only and omits resolver/administrative fields required by the canonical export.",
+              "nextAction": "Approve the missing safe projection/data for PRV-20, then recapture its AR/EN visual record."
+            }
+          ],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         }
-      }
+      },
+      "historicalStatus": "PARTIAL_VISUAL_GATE",
+      "nextScreenId": "ADM-01",
+      "reconciliationStatus": "READY_WITH_EXTERNAL_EXCEPTIONS"
     },
     {
       "laneId": "provider_notifications_settings",
       "agentId": "01a04abf-742b-7f23-bca5-ed98b7cdf861",
-      "status": "PARTIAL_VISUAL_GATE",
+      "status": "PARTIAL_EXTERNAL",
       "screenRange": [
         "PRV-21",
         "PRV-22-1",
@@ -355,30 +491,53 @@
       },
       "screenDecisions": {
         "PRV-21": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
-          "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-21/coordinator-reconciliation.json"
+          "status": "REPAIRED_VERIFIED",
+          "classification": "REPAIRED_VERIFIED",
+          "closureEligible": true,
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-22-1": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
-          "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-22-1/coordinator-reconciliation.json"
+          "status": "REPAIRED_VERIFIED",
+          "classification": "REPAIRED_VERIFIED",
+          "closureEligible": true,
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-22-2": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL_EXTERNAL",
           "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-22-2/coordinator-reconciliation.json"
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [
+            {
+              "owner": "External Provider contract/data owner",
+              "description": "The current settings contact projection supports WhatsApp, office address, and website but not the canonical separate phone contact field.",
+              "nextAction": "Approve the missing safe projection/data for PRV-22-2, then recapture its AR/EN visual record."
+            }
+          ],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         },
         "PRV-22-3": {
-          "status": "PARTIAL_VISUAL_GATE",
-          "classification": "PARTIAL",
+          "status": "PARTIAL_EXTERNAL",
+          "classification": "PARTIAL_EXTERNAL",
           "closureEligible": false,
-          "evidencePath": "docs/quality/figma_parity/screens/PRV-22-3/coordinator-reconciliation.json"
+          "repositoryOwnedDefects": [],
+          "externalPrerequisites": [
+            {
+              "owner": "External Provider contract/data owner",
+              "description": "The current settings contract does not support password-change or account-deletion actions; unsupported actions remain disabled and fail closed.",
+              "nextAction": "Approve the missing safe projection/data for PRV-22-3, then recapture its AR/EN visual record."
+            }
+          ],
+          "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
         }
-      }
+      },
+      "historicalStatus": "PARTIAL_VISUAL_GATE",
+      "nextScreenId": "ADM-01",
+      "reconciliationStatus": "READY_WITH_EXTERNAL_EXCEPTIONS"
     }
   ],
   "canonicalScreens": [
@@ -575,11 +734,11 @@
       "evidence": "docs/quality/figma_parity/screens/PRV-22-3"
     }
   ],
-  "coordinatorTaskId": "frontend_101",
+  "coordinatorTaskId": "frontend_102",
   "laneStatuses": {
-    "provider_property_entry": "PARTIAL_VISUAL_GATE",
-    "provider_operations": "PARTIAL_VISUAL_GATE",
-    "provider_notifications_settings": "PARTIAL_VISUAL_GATE"
+    "provider_property_entry": "PARTIAL_EXTERNAL",
+    "provider_operations": "PARTIAL_EXTERNAL",
+    "provider_notifications_settings": "PARTIAL_EXTERNAL"
   },
   "cursor": {
     "screenId": "PRV-22-3",
@@ -592,14 +751,495 @@
     ],
     "devices": [
       "desktop"
-    ]
+    ],
+    "nextScreenId": "ADM-01",
+    "phase": "pre-admin-reconciliation-ready-with-external-exceptions"
   },
   "closureDecision": {
-    "status": "PROVIDER_WAVE_FINAL_CLOSURE_BLOCKED",
-    "reportPath": "agent_pack/08_reality_sync/PROVIDER_WAVE_2_FINAL_RECONCILIATION_2026-08-29.json",
-    "verifiedScreens": 0,
-    "partialScreens": 24,
-    "adminReady": false,
-    "updatedAt": "2026-08-29T01:47:21.446Z"
+    "status": "READY_WITH_EXTERNAL_EXCEPTIONS",
+    "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
+    "verifiedScreens": 7,
+    "partialScreens": 17,
+    "repositoryOwnedDefects": 0,
+    "adminReady": true,
+    "adminOpened": false,
+    "nextScreenId": "ADM-01",
+    "updatedAt": "2026-08-29T14:14:28.2025360+03:00"
+  },
+  "reconciliationStatus": "READY_WITH_EXTERNAL_EXCEPTIONS",
+  "adminReady": true,
+  "historicalScreenDecisions": [
+    {
+      "laneId": "provider_property_entry",
+      "screenDecisions": {
+        "PRV-01": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-01/coordinator-reconciliation.json"
+        },
+        "PRV-02": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-02/coordinator-reconciliation.json"
+        },
+        "PRV-03": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-03/coordinator-reconciliation.json"
+        },
+        "PRV-04": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-04/coordinator-reconciliation.json"
+        },
+        "PRV-05": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-05/coordinator-reconciliation.json"
+        },
+        "PRV-06": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-06/coordinator-reconciliation.json"
+        },
+        "PRV-07": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-07/coordinator-reconciliation.json"
+        },
+        "PRV-08": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-08/coordinator-reconciliation.json"
+        },
+        "PRV-09": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-09/coordinator-reconciliation.json"
+        },
+        "PRV-10": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-10/coordinator-reconciliation.json"
+        },
+        "PRV-11": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-11/coordinator-reconciliation.json"
+        },
+        "PRV-12": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-12/coordinator-reconciliation.json"
+        },
+        "PRV-13": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-13/coordinator-reconciliation.json"
+        },
+        "PRV-14": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-14/coordinator-reconciliation.json"
+        }
+      }
+    },
+    {
+      "laneId": "provider_operations",
+      "screenDecisions": {
+        "PRV-15": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-15/coordinator-reconciliation.json"
+        },
+        "PRV-16": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-16/coordinator-reconciliation.json"
+        },
+        "PRV-17": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-17/coordinator-reconciliation.json"
+        },
+        "PRV-18": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-18/coordinator-reconciliation.json"
+        },
+        "PRV-19": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-19/coordinator-reconciliation.json"
+        },
+        "PRV-20": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-20/coordinator-reconciliation.json"
+        }
+      }
+    },
+    {
+      "laneId": "provider_notifications_settings",
+      "screenDecisions": {
+        "PRV-21": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-21/coordinator-reconciliation.json"
+        },
+        "PRV-22-1": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-22-1/coordinator-reconciliation.json"
+        },
+        "PRV-22-2": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-22-2/coordinator-reconciliation.json"
+        },
+        "PRV-22-3": {
+          "status": "PARTIAL_VISUAL_GATE",
+          "classification": "PARTIAL",
+          "closureEligible": false,
+          "evidencePath": "docs/quality/figma_parity/screens/PRV-22-3/coordinator-reconciliation.json"
+        }
+      }
+    }
+  ],
+  "screenDecisions": {
+    "PRV-01": {
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The safe Provider contract exposes property totals but not the canonical customer-request, views, booked, history, or chart series values; the runtime keeps these values explicitly unavailable.",
+          "nextAction": "Approve the missing safe projection/data for PRV-01, then recapture its AR/EN visual record."
+        }
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-02": {
+      "status": "REPAIRED_VERIFIED",
+      "classification": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-03": {
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider property create contract does not expose every canonical basic-form field; no fields were fabricated.",
+          "nextAction": "Approve the missing safe projection/data for PRV-03, then recapture its AR/EN visual record."
+        }
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-04": {
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider location contract does not expose every canonical address field; locationId and coordinates remain preserved and no geocoding/fetch was added.",
+          "nextAction": "Approve the missing safe projection/data for PRV-04, then recapture its AR/EN visual record."
+        }
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-05": {
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider catalog/detail contract does not expose every canonical extended property field; no unsupported taxonomy or metadata was invented.",
+          "nextAction": "Approve the missing safe projection/data for PRV-05, then recapture its AR/EN visual record."
+        }
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-06": {
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider price/payment contract does not expose every canonical commission/payment field; currency consistency and server-owned values remain enforced.",
+          "nextAction": "Approve the missing safe projection/data for PRV-06, then recapture its AR/EN visual record."
+        }
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-07": {
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The canonical taxonomy/catalog content is not available from the provider contract; the browser route alias is repaired while unsupported catalog values remain unavailable.",
+          "nextAction": "Approve the missing safe projection/data for PRV-07, then recapture its AR/EN visual record."
+        }
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-08": {
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider media contract does not expose the canonical cover/minimum-media content; upload authorization and private storage boundaries remain enforced.",
+          "nextAction": "Approve the missing safe projection/data for PRV-08, then recapture its AR/EN visual record."
+        }
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-09": {
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider contact contract does not expose the canonical phone/contact grouping or internal notes; no phone identity field was introduced.",
+          "nextAction": "Approve the missing safe projection/data for PRV-09, then recapture its AR/EN visual record."
+        }
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-10": {
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider review contract does not expose every canonical summary field; the review remains limited to safe server projections and confirmations.",
+          "nextAction": "Approve the missing safe projection/data for PRV-10, then recapture its AR/EN visual record."
+        }
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-11": {
+      "status": "REPAIRED_VERIFIED",
+      "classification": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-12": {
+      "status": "REPAIRED_VERIFIED",
+      "classification": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-13": {
+      "status": "REPAIRED_VERIFIED",
+      "classification": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-14": {
+      "status": "REPAIRED_VERIFIED",
+      "classification": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-15": {
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current safe ProjectData projection lacks canonical image, unit, availability, and area metrics; no fields were invented.",
+          "nextAction": "Approve the missing safe projection/data for PRV-15, then recapture its AR/EN visual record."
+        }
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-16": {
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider request projection is intentionally redacted and does not expose all canonical CRM presentation fields.",
+          "nextAction": "Approve the missing safe projection/data for PRV-16, then recapture its AR/EN visual record."
+        }
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-17": {
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider request contract is intentionally limited to approved customer fields and server actions; no unsupported details were added.",
+          "nextAction": "Approve the missing safe projection/data for PRV-17, then recapture its AR/EN visual record."
+        }
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-18": {
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current provider viewing projection does not expose every canonical appointment presentation field; only contract-defined data is rendered.",
+          "nextAction": "Approve the missing safe projection/data for PRV-18, then recapture its AR/EN visual record."
+        }
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-19": {
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current advertising projection does not expose every canonical ad/content metric; private upload and quote boundaries remain server-owned.",
+          "nextAction": "Approve the missing safe projection/data for PRV-19, then recapture its AR/EN visual record."
+        }
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-20": {
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current commission projection is read-only and omits resolver/administrative fields required by the canonical export.",
+          "nextAction": "Approve the missing safe projection/data for PRV-20, then recapture its AR/EN visual record."
+        }
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-21": {
+      "status": "REPAIRED_VERIFIED",
+      "classification": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-22-1": {
+      "status": "REPAIRED_VERIFIED",
+      "classification": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-22-2": {
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current settings contact projection supports WhatsApp, office address, and website but not the canonical separate phone contact field.",
+          "nextAction": "Approve the missing safe projection/data for PRV-22-2, then recapture its AR/EN visual record."
+        }
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    },
+    "PRV-22-3": {
+      "status": "PARTIAL_EXTERNAL",
+      "classification": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "externalPrerequisites": [
+        {
+          "owner": "External Provider contract/data owner",
+          "description": "The current settings contract does not support password-change or account-deletion actions; unsupported actions remain disabled and fail closed.",
+          "nextAction": "Approve the missing safe projection/data for PRV-22-3, then recapture its AR/EN visual record."
+        }
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json"
+    }
+  },
+  "currentReconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
+    "decision": "READY_WITH_EXTERNAL_EXCEPTIONS",
+    "providerScreenCount": 24,
+    "repairedVerified": 7,
+    "partialExternal": 17,
+    "closureEligible": 7,
+    "repositoryOwnedDefects": 0,
+    "approvedLocaleScope": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "nextTask": "ADM-01"
   }
 }

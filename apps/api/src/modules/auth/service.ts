@@ -114,7 +114,14 @@ export function createAuthService(dependencies: AuthServiceDependencies): AuthSe
       if (!record || record.status !== 'verified') {
         throw new AuthServiceError('ACCOUNT_NOT_ACTIVE');
       }
-      return issue(record);
+      // AdminLoginRecord carries the credential hash only for verification. Do
+      // not let that repository-only field cross the authentication response
+      // boundary into the session user projection.
+      return issue({
+        id: record.id,
+        roleType: record.roleType,
+        status: record.status
+      });
     },
 
     async issueAccount(account) {

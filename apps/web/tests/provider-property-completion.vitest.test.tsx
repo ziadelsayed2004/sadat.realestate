@@ -101,7 +101,7 @@ describe('provider property media, contact, and review completion', () => {
     const result = renderWithLocale(<ProviderPropertyCompletionWizard locale={locale} session={session} authClient={authClient} step="contact" propertyId={propertyId} initialData={property()} />, { locale });
     const copy = getProviderPropertyCompletionCopy(locale);
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
-    expect(screen.getByRole('heading', { name: copy.titles.contact, level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: copy.titles.contact, level: 2 })).toBeInTheDocument();
     expect(screen.getByText(copy.contact.internalNotesTitle)).toBeInTheDocument();
     expect(result.container.querySelector('[data-screen-id="PRV-09"]')).not.toBeNull();
     expect(result.container.textContent).not.toMatch(/accessToken|refreshToken|storageKey|internalNotes|assignedTo|auditData/u);

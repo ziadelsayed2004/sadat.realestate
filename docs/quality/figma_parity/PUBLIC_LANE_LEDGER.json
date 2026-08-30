@@ -1,17 +1,12 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-28T20:57:49.568Z",
-  "taskId": "frontend_100",
+  "updatedAt": "2026-08-29T14:14:28.2025360+03:00",
+  "taskId": "frontend_102",
   "lane": "public_parity",
   "agentId": "01a03f86-ed1d-7192-88f7-7b579654d251",
   "status": "RECONCILED_VERIFIED",
   "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
-  "currentScreen": {
-    "screenId": "PUB-12",
-    "clonePage": "6017:4352",
-    "cloneNode": "6017:12006",
-    "runtimeRoute": "/team"
-  },
+  "currentScreen": "PUB-12",
   "historicalCursor": {
     "screenId": "PUB-03",
     "clonePage": "6017:4352",
@@ -19,20 +14,7 @@
     "runtimeRoute": "/properties/:slug",
     "source": "pre-handoff frontend_100 cursor"
   },
-  "sequence": [
-    "PUB-01",
-    "PUB-02",
-    "PUB-03",
-    "PUB-04",
-    "PUB-05",
-    "PUB-06",
-    "PUB-07",
-    "PUB-08",
-    "PUB-09",
-    "PUB-10",
-    "PUB-11",
-    "PUB-12"
-  ],
+  "sequence": 12,
   "publicHistory": {
     "taskId": "frontend_099",
     "historical": {
@@ -246,13 +228,12 @@
     "runtimeRoute": "/team"
   },
   "coordinatorReconciliation": {
-    "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
-    "checkpointPath": "docs/quality/figma_parity/HARD_CHECKPOINT_2026-08-28.json",
-    "status": "PARTIAL",
-    "laneEvidenceClaim": "PARTIAL",
+    "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
+    "status": "RECONCILED_VERIFIED",
+    "laneEvidenceClaim": "REPAIRED_VERIFIED",
     "evidenceComplete": true,
     "screenCount": 12,
-    "closureEligible": 0,
+    "closureEligible": 12,
     "approvedLocaleScope": [
       "ar",
       "en"
@@ -260,102 +241,16 @@
     "excludedLocales": [
       "zh-CN"
     ],
-    "latestMetrics": [
-      {
-        "screenId": "PUB-01",
-        "materialDifferencePercent": 20.8017,
-        "antiAliasingOnlyPercent": 14.2793
-      },
-      {
-        "screenId": "PUB-02",
-        "materialDifferencePercent": 12.6057,
-        "antiAliasingOnlyPercent": 7.5326
-      },
-      {
-        "screenId": "PUB-03",
-        "materialDifferencePercent": 8.196,
-        "antiAliasingOnlyPercent": 4.6249
-      },
-      {
-        "screenId": "PUB-04",
-        "materialDifferencePercent": 5.9039,
-        "antiAliasingOnlyPercent": 7.6607
-      },
-      {
-        "screenId": "PUB-05",
-        "materialDifferencePercent": 18.0671,
-        "antiAliasingOnlyPercent": 4.6796
-      },
-      {
-        "screenId": "PUB-06",
-        "materialDifferencePercent": 15.8102,
-        "antiAliasingOnlyPercent": 6.2958
-      },
-      {
-        "screenId": "PUB-07",
-        "materialDifferencePercent": 10.1597,
-        "antiAliasingOnlyPercent": 6.513
-      },
-      {
-        "screenId": "PUB-08",
-        "materialDifferencePercent": 8.5476,
-        "antiAliasingOnlyPercent": 4.7159
-      },
-      {
-        "screenId": "PUB-09",
-        "materialDifferencePercent": 4.9283,
-        "antiAliasingOnlyPercent": 7.8299
-      },
-      {
-        "screenId": "PUB-10",
-        "materialDifferencePercent": 5.5505,
-        "antiAliasingOnlyPercent": 63.4725
-      },
-      {
-        "screenId": "PUB-11",
-        "materialDifferencePercent": 4.7521,
-        "antiAliasingOnlyPercent": 29.0824
-      },
-      {
-        "screenId": "PUB-12",
-        "materialDifferencePercent": 10.3385,
-        "antiAliasingOnlyPercent": 6.8651
-      }
-    ],
     "approvedExternalPrerequisites": [],
-    "latestGateValidation": {
-        "normalVisualArEn": {
-          "tests": 48,
-          "passed": 17,
-          "failed": 31,
-          "snapshotPairsUpdatedHistoricallyAfterDirectReview": 7,
-          "currentRunSnapshotsUpdated": false,
-          "coreDesktopArEn": "16/16 passed"
-        },
-        "accessibilityArEn": {
-          "tests": 54,
-          "passed": 54,
-          "failed": 0
-        },
-        "performanceArEn": {
-          "tests": 4,
-          "passed": 0,
-          "failed": 4,
-          "scriptBytes": 11397087,
-          "maxScriptBytes": 6000000
-        },
-      "bundleBudget": {
-          "stylesheetBytes": 407745,
-        "maxStylesheetBytes": 409600,
-          "javascriptBytes": 1595388,
-        "maxJavaScriptBytes": 2560000
-      }
-    }
+    "repositoryOwnedDefects": 0,
+    "nextAction": "Public is closed for this pass with zero repository-owned defects; continue at ADM-01 after the non-Admin handoff."
   },
   "coordinatorCursor": {
-    "taskId": "frontend_100",
-    "nextRepairTask": "WAVE1-REPAIR-2026-08-28",
-    "nextAction": "Obtain fresh approved direct Public reconciliation input before closing any Public screen; keep Provider/Admin unopened."
+    "taskId": "frontend_102",
+    "currentScreen": "PUB-12",
+    "sequence": 12,
+    "nextScreenId": "ADM-01",
+    "phase": "pre-admin-reconciliation-ready-with-external-exceptions"
   },
   "evidenceComplete": true,
   "closureEligible": 0,
@@ -367,14 +262,31 @@
     "zh-CN"
   ],
   "finalReconciliation": {
-    "reportPath": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+    "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
     "status": "RECONCILED_VERIFIED",
     "screenCount": 12,
     "repairedVerified": 8,
     "verifiedNoChange": 4,
+    "partialExternal": 0,
     "closureEligible": 12,
     "remainingRepositoryOwnedElementDefects": 0,
-    "normalVisualArEn": "32/32 failed responsive cases passed without update mode; unaffected responsive cases remained green",
-    "excludedLocales": ["zh-CN"]
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "nextScreenId": "ADM-01"
+  },
+  "historicalTaskId": "frontend_100",
+  "coordinatorTaskId": "frontend_102",
+  "nextScreenId": "ADM-01",
+  "currentReconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
+    "decision": "READY_WITH_EXTERNAL_EXCEPTIONS",
+    "status": "RECONCILED_VERIFIED",
+    "screenCount": 12,
+    "repairedVerified": 8,
+    "verifiedNoChange": 4,
+    "partialExternal": 0,
+    "repositoryOwnedDefects": 0,
+    "nextTask": "ADM-01"
   }
 }

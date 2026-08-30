@@ -1,18 +1,13 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-28T20:57:49.568Z",
-  "taskId": "frontend_100",
+  "updatedAt": "2026-08-29T14:14:28.2025360+03:00",
+  "taskId": "frontend_102",
   "lane": "seeker_parity",
   "agentId": "01a03f86-ef61-7202-9738-1d4d4eed4fd4",
   "status": "RECONCILED_PARTIAL_EXTERNAL",
   "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
-  "currentScreen": {
-    "screenId": "SEK-10",
-    "clonePage": "6017:4354",
-    "cloneNode": "6027:6531",
-    "runtimeRoute": "/seeker/settings"
-  },
-  "sequence": "SEK-01 through SEK-10",
+  "currentScreen": "SEK-10",
+  "sequence": 10,
   "completedImplementationRange": "SEK-01 through SEK-10",
   "locales": [
     "ar-RTL",
@@ -67,10 +62,9 @@
     "runtimeRoute": "/seeker/settings"
   },
   "coordinatorReconciliation": {
-    "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
-    "checkpointPath": "docs/quality/figma_parity/HARD_CHECKPOINT_2026-08-28.json",
-    "status": "PARTIAL_EXTERNAL",
-    "laneEvidenceClaim": "REPAIRED_VERIFIED",
+    "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
+    "status": "RECONCILED_PARTIAL_EXTERNAL",
+    "laneEvidenceClaim": "RECONCILED_PARTIAL_EXTERNAL",
     "evidenceComplete": true,
     "screenCount": 10,
     "closureEligible": 0,
@@ -81,87 +75,18 @@
     "excludedLocales": [
       "zh-CN"
     ],
-    "latestMetrics": [
-      {
-        "screenId": "SEK-01",
-        "ar": 37.6388,
-        "en": 55.5412
-      },
-      {
-        "screenId": "SEK-02",
-        "ar": 51.0561,
-        "en": 66.0187
-      },
-      {
-        "screenId": "SEK-03",
-        "ar": 40.1473,
-        "en": 47.5624
-      },
-      {
-        "screenId": "SEK-04",
-        "ar": 38.4367,
-        "en": 46.8723
-      },
-      {
-        "screenId": "SEK-05",
-        "ar": 34.7515,
-        "en": 58.2073
-      },
-      {
-        "screenId": "SEK-06",
-        "ar": 48.6991,
-        "en": 59.4172
-      },
-      {
-        "screenId": "SEK-07",
-        "ar": 29.8472,
-        "en": 62.1224
-      },
-      {
-        "screenId": "SEK-08",
-        "ar": 15.1707,
-        "en": 55.2693
-      },
-      {
-        "screenId": "SEK-09",
-        "ar": 27.9429,
-        "en": 58.0248
-      },
-      {
-        "screenId": "SEK-10",
-        "ar": 19.0977,
-        "en": 56.0828
-      }
-    ],
     "approvedExternalPrerequisites": [
-      "Canonical avatar and identity",
-      "Canonical image assets",
-      "Richer rows/status/provider/viewing/notification/preference metadata",
-      "No legacy phone content"
+      "See report externalExceptions for each affected screen."
     ],
-    "externalReconciliation": {
-      "status": "BLOCKED_EXTERNAL",
-      "screenCount": 10,
-      "repositoryOwnedDefects": 0,
-      "reviewPaths": [
-        "docs/quality/figma_parity/screens/SEK-01/review.json",
-        "docs/quality/figma_parity/screens/SEK-02/review.json",
-        "docs/quality/figma_parity/screens/SEK-03/review.json",
-        "docs/quality/figma_parity/screens/SEK-04/review.json",
-        "docs/quality/figma_parity/screens/SEK-05/review.json",
-        "docs/quality/figma_parity/screens/SEK-06/review.json",
-        "docs/quality/figma_parity/screens/SEK-07/review.json",
-        "docs/quality/figma_parity/screens/SEK-08/review.json",
-        "docs/quality/figma_parity/screens/SEK-09/review.json",
-        "docs/quality/figma_parity/screens/SEK-10/review.json"
-      ],
-      "nextAction": "Each named owner supplies the approved prerequisite; then recapture AR/EN and re-review the affected screen."
-    }
+    "repositoryOwnedDefects": 0,
+    "nextAction": "External owners must supply the ten named Seeker assets/projections/contracts before affected AR/EN records can be recaptured."
   },
   "coordinatorCursor": {
-    "taskId": "frontend_100",
-    "nextRepairTask": "WAVE1-REPAIR-2026-08-28",
-    "nextAction": "Keep Seeker screens Partial External until approved identity, media, and richer metadata inputs are supplied; do not fabricate them."
+    "taskId": "frontend_102",
+    "currentScreen": "SEK-10",
+    "sequence": 10,
+    "nextScreenId": "ADM-01",
+    "phase": "pre-admin-reconciliation-ready-with-external-exceptions"
   },
   "latestGateValidation": {
     "focusedVitest": "46/46 passed",
@@ -180,12 +105,31 @@
     "zh-CN"
   ],
   "finalReconciliation": {
-    "reportPath": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
-    "status": "PARTIAL_EXTERNAL",
+    "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
+    "status": "RECONCILED_PARTIAL_EXTERNAL",
     "screenCount": 10,
-    "repositoryOwnedDefects": 0,
-    "externalPrerequisites": 10,
+    "repairedVerified": 0,
+    "verifiedNoChange": 0,
+    "partialExternal": 10,
     "closureEligible": 0,
-    "excludedLocales": ["zh-CN"]
+    "remainingRepositoryOwnedElementDefects": 0,
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "nextScreenId": "ADM-01"
+  },
+  "historicalTaskId": "frontend_100",
+  "coordinatorTaskId": "frontend_102",
+  "nextScreenId": "ADM-01",
+  "currentReconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
+    "decision": "READY_WITH_EXTERNAL_EXCEPTIONS",
+    "status": "RECONCILED_PARTIAL_EXTERNAL",
+    "screenCount": 10,
+    "repairedVerified": 0,
+    "verifiedNoChange": 0,
+    "partialExternal": 10,
+    "repositoryOwnedDefects": 0,
+    "nextTask": "ADM-01"
   }
 }

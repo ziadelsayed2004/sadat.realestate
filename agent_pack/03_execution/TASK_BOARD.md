@@ -252,3 +252,7 @@
 - [/] frontend_099 — Public Exact Figma Parity Closure — PUB-01 through PUB-08
 - [x] frontend_100 — Concurrent Owner-Clone Parity Coordinator - Public, Authentication, and Seeker
 - [x] frontend_101 — Provider Wave 2 Coordinator - PRV-01 through PRV-24
+- [x] frontend_102 — Provider Integration Closure and Admin Dependency Gate
+- [/] frontend_103 — Admin Wave 3 - ADM-01 through ADM-66
+- [/] frontend_104 — Final 131-Screen Integration and Release Readiness
+- [/] frontend_105 — Pre-Commit Full Platform Audit and Release Candidate Coordinator

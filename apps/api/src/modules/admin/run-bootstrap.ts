@@ -59,6 +59,14 @@ if (isEntrypoint()) {
   runAdminBootstrapCommand().then((result) => {
     process.stdout.write(`ADMIN_BOOTSTRAP_OK adminId=${result.adminId}\n`);
   }).catch((error: unknown) => {
+    // A completed first-admin guard is the expected result of an idempotent
+    // local-runtime restart. Keep all other bootstrap failures fatal so a
+    // pre-existing untracked administrator can never be mistaken for a valid
+    // first Super Admin.
+    if (error instanceof AdminServiceError && error.code === 'ADMIN_BOOTSTRAP_ALREADY_COMPLETED') {
+      process.stdout.write('ADMIN_BOOTSTRAP_ALREADY_COMPLETED\n');
+      return;
+    }
     process.stderr.write(`Admin bootstrap failed safely (${safeFailureCode(error)}).\n`);
     process.exitCode = 1;
   });

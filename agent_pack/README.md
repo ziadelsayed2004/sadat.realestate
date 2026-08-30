@@ -10,9 +10,9 @@ See `CHANGELOG.md` for the current pack revision.
 |---|---:|
 | Reference screens and states | 131 |
 | Backend tasks | 124 |
-| Frontend tasks | 85 |
-| Total tasks | 209 |
-| Planned API route blueprints | 185 |
+| Frontend tasks | 90 |
+| Total tasks | 214 |
+| API route blueprints | 187 (178 implemented, 9 planned) |
 | Runtime progress | Read `03_execution/TASK_STATE.json` and `step_info.json` |
 
 ## Language Boundary
@@ -20,6 +20,8 @@ See `CHANGELOG.md` for the current pack revision.
 - The Agent Pack, task contracts, prompts, generated reports, and templates are English-only.
 - The product's primary visual locale is Arabic with RTL direction. English and Simplified Chinese remain supported where the product requirements require them.
 - English-only planning does not authorize replacing, removing, or weakening Arabic product UI, Arabic CMS content, localization, or RTL acceptance criteria.
+
+The active pre-commit coordinator is `frontend_105`. Its approved execution scope is Arabic RTL and English LTR; `zh-CN` is excluded from execution and editing for this audit.
 
 ## Start Here
 

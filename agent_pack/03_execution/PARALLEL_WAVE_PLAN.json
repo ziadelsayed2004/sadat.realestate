@@ -88,10 +88,18 @@
         }
       ],
       "supplementaryHandling": "Historical Auth provenance only; never add a surface or screen count.",
-      "status": "dependency_ready_after_wave-1-closure",
+      "status": "provider_reconciled_partial_external_ready_for_admin_handoff",
       "providerStartAllowed": true,
-      "implementationStarted": false,
-      "nextScreenId": "PRV-01"
+      "implementationStarted": true,
+      "nextScreenId": "ADM-01",
+      "currentCoordinatorTaskId": "frontend_102",
+      "currentDecision": "READY_WITH_EXTERNAL_EXCEPTIONS",
+      "repairedVerified": 7,
+      "partialExternal": 17,
+      "repositoryOwnedDefects": 0,
+      "historicalCurrentDecision": "POST_PROVIDER_INTEGRATION_BLOCKED",
+      "reconciliationReport": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
+      "adminStartAllowed": true
     },
     {
       "id": "wave-3",
@@ -107,8 +115,25 @@
           "allowedRoot": "apps/web/src/features/admin"
         }
       ],
-      "status": "blocked_until_wave-2-closure",
-      "adminStartAllowed": false
+      "status": "admin_reconciled_ready_with_external_exceptions",
+      "adminStartAllowed": true,
+      "historicalStatus": "blocked_until_provider_integration_external_prerequisites_and_runtime_smoke",
+      "nextTask": null,
+      "implementationStarted": true,
+      "uiOpened": true,
+      "reason": "All 66 Admin entries are reconciled; only ADM-18 and ADM-54 remain as explicit external source exceptions.",
+      "currentCoordinatorTaskId": "frontend_103",
+      "currentDecision": "READY_WITH_EXTERNAL_EXCEPTIONS",
+      "finalMarker": "ADMIN_WAVE_READY_WITH_EXTERNAL_EXCEPTIONS",
+      "processed": 66,
+      "canonicalProcessed": 64,
+      "repairedVerified": 46,
+      "verifiedNoChange": 18,
+      "partialExternal": 1,
+      "blockedSource": 1,
+      "repositoryOwnedDefects": 0,
+      "reconciliationReport": "agent_pack/08_reality_sync/ADMIN_WAVE_3_RECONCILIATION_2026-08-29.json",
+      "nextAction": "Separate Final Integration Goal; preserve ADM-18 and ADM-54 source exceptions."
     }
   ],
   "executionRules": {
@@ -124,7 +149,8 @@
     "doNotStartAdminBeforeWave2": true,
     "providerStartRequiresWave1Closure": true,
     "adminStartRequiresProviderClosure": true,
-    "noProviderOrAdminImplementationDuringCoordinatorReconciliation": true,
+    "noUnplannedProviderOrAdminImplementationDuringCoordinatorReconciliation": true,
+    "providerImplementationAllowedAfterWave1Reconciliation": true,
     "approvedLocaleScope": [
       "ar-RTL",
       "en-LTR"
@@ -134,12 +160,12 @@
     ]
   },
   "lastCoordinatorReconciliation": {
-    "at": "2026-08-29T01:13:48.932+03:00",
-    "reportPath": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
-    "decision": "RECONCILED_PROVIDER_READY",
-    "evidenceComplete": 41,
-    "closureEligible": 31,
-    "externalOnly": 10,
+    "at": "2026-08-29T19:47:05.224Z",
+    "reportPath": "agent_pack/08_reality_sync/ADMIN_WAVE_3_RECONCILIATION_2026-08-29.json",
+    "decision": "READY_WITH_EXTERNAL_EXCEPTIONS",
+    "evidenceComplete": 66,
+    "closureEligible": 64,
+    "externalOnly": 2,
     "approvedLocaleScope": [
       "ar-RTL",
       "en-LTR"
@@ -147,7 +173,11 @@
     "excludedLocales": [
       "zh-CN"
     ],
-    "providerOrAdminStarted": false,
-    "nextRepairTask": "WAVE1-REPAIR-2026-08-28"
+    "providerOrAdminStarted": true,
+    "adminOpened": true,
+    "nextRepairTask": null,
+    "currentCoordinatorTaskId": "frontend_103",
+    "repositoryOwnedDefects": 0,
+    "finalMarker": "ADMIN_WAVE_READY_WITH_EXTERNAL_EXCEPTIONS"
   }
 }

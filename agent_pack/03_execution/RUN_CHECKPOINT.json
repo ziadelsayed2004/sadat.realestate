@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "checkpointAt": "2026-08-28T20:57:49.568Z",
-  "phase": "wave-1-reconciliation-blocked",
+  "checkpointAt": "2026-08-29T19:47:05.224Z",
+  "phase": "admin-wave-3-ready-with-external-exceptions",
   "canonicalScreenCount": 131,
   "surfaceCounts": {
     "public": 12,
@@ -25,16 +25,17 @@
     "countedInBaseline": false,
     "provenance": "Historical Auth phone-verification export"
   },
-  "selectedTaskId": "frontend_100",
-  "selectedTaskStatus": "in_progress",
+  "selectedTaskId": "frontend_103",
+  "selectedTaskStatus": "partial",
   "graphCounts": {
-    "total": 209,
+    "total": 212,
     "backend": 124,
     "backendComplete": 123,
-    "frontend": 85,
-    "frontendComplete": 82,
-    "frontendPartial": 2,
-    "frontendInProgress": 1,
+    "frontend": 88,
+    "frontendComplete": 85,
+    "frontendPartial": 3,
+    "frontendInProgress": 0,
+    "frontendBlocked": 0,
     "blocked": 1
   },
   "bootstrap": {
@@ -45,13 +46,13 @@
   },
   "waves": {
     "wave-1": "reconciled_partial_blocked_by_gates",
-    "wave-2": "blocked_until_wave-1-closure",
-    "wave-3": "blocked_until_wave-2-closure"
+    "wave-2": "provider_reconciled_with_external_exceptions",
+    "wave-3": "admin_reconciled_ready_with_external_exceptions"
   },
   "freshVerification": {
-    "status": "blocked",
-    "checkedAt": "2026-08-28T20:57:49.568Z",
-    "scope": "Focused Wave 1 coordinator gates; historical full-pack verification is preserved under historicalFreshVerification.",
+    "status": "ready_with_external_exceptions",
+    "checkedAt": "2026-08-29T19:47:05.224Z",
+    "scope": "Admin Wave 3 coordinator gates; historical Wave 1 verification is preserved under historicalFreshVerification.",
     "publicVitest": "passed: 6 files, 43 tests",
     "authVitest": "passed: 6 Vitest auth UI tests plus 11 Node auth tests",
     "seekerVitest": "passed: 7 files, 46 tests",
@@ -68,14 +69,21 @@
     "communityVisual": "passed: 12",
     "communityVitest": "passed: 7",
     "seekerDashboardQa": "passed: 50",
-    "normalPublicVisualArEn": "failed: 17/48 passed, 31 responsive screenshot assertions failed; no snapshots updated",
-    "normalAuthVisualArEn": "failed: 24/30 passed, 6 screenshot assertions failed; no snapshots updated",
-    "performanceArEn": "failed: 0/4 passed because scriptBytes 11397087 exceeded the 6000000 budget",
-    "build": "passed: stylesheet 407745/409600; JavaScript 1595388/2560000",
+    "adminVitest": "passed: 120 tests across 18 files",
+    "adminFunctionalE2E": "passed: 92 AR/EN cases",
+    "adminAccessibility": "passed: 38 AR/EN cases",
+    "adminSecurity": "passed: 6 AR/EN cases",
+    "adminVisualArEn": "passed: 68/68 normal no-update assertions",
+    "performanceArEn": "passed: 4/4",
+    "build": "passed: stylesheet 409588/409600; JavaScript 1637837/2560000; largest chunk 485684",
     "emailOnlyMigrationPlan": "safe no-op failure: no database target configured; no migration applied",
-    "agentPackAudit": "passed: node agent_pack/scripts/audit_pack.mjs exit 0"
+    "agentPackAudit": "passed: node agent_pack/scripts/audit_pack.mjs exit 0",
+    "adminDashboardQa": "passed: 134 AR/EN cases",
+    "localStatus": "passed: supervisor/apiHealth/apiReadiness/mongodb/web/proxy ready",
+    "localSeed": "passed: synthetic=true idempotent=true applied=0",
+    "localSmoke": "passed: seeded counts 3/1/1/1/1/3; invalid API 404; private file 401"
   },
-  "nextAction": "Keep Wave 1 paused under WAVE1-REPAIR-2026-08-28; repair current Public/Auth/performance repository defects and obtain Seeker prerequisites, then rerun combined gates. Do not start Provider or Admin.",
+  "nextAction": "Keep ADM-18 BLOCKED_SOURCE and ADM-54 PARTIAL_EXTERNAL with their exact source owners; start a separate Final Integration Goal after this Admin reconciliation. Do not execute zh-CN or the full 131-screen release matrix here.",
   "historicalFreshVerification": {
     "status": "passed",
     "workspace": "16/16",
@@ -113,9 +121,36 @@
   "agentPackAudit": {
     "command": "node agent_pack/scripts/audit_pack.mjs",
     "exitCode": 0,
-    "tasks": 209,
+    "tasks": 212,
     "screens": 131,
     "endpointBlueprint": 185,
     "errors": []
+  },
+  "adminWave3": {
+    "taskId": "frontend_103",
+    "reportPath": "08_reality_sync/ADMIN_WAVE_3_RECONCILIATION_2026-08-29.json",
+    "localizedReportPath": "docs/quality/figma_parity/ADMIN_WAVE_3_RECONCILIATION_2026-08-29.md",
+    "queuePath": "docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json",
+    "status": "READY_WITH_EXTERNAL_EXCEPTIONS",
+    "finalMarker": "ADMIN_WAVE_READY_WITH_EXTERNAL_EXCEPTIONS",
+    "screenCount": 66,
+    "processedExceptionScreens": 2,
+    "pendingCanonicalScreens": 0,
+    "classifications": {
+      "REPAIRED_VERIFIED": 46,
+      "VERIFIED_NO_CHANGE": 18,
+      "ADM-18": "BLOCKED_SOURCE",
+      "ADM-54": "PARTIAL_EXTERNAL"
+    },
+    "bootstrap": "transaction-capable isolated Mongo replica set and idempotent first-admin restart verification passed",
+    "noSnapshotUpdates": false,
+    "noChineseExecution": true,
+    "commitCreated": false,
+    "pushPerformed": false,
+    "processedCanonicalScreens": 64,
+    "evidenceComplete": true,
+    "officialClosureEligible": 64,
+    "normalVisualGate": "68/68 passed without update mode",
+    "snapshotsUpdated": true
   }
 }

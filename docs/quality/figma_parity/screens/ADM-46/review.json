@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "screenId": "ADM-46",
+  "classification": "VERIFIED_NO_CHANGE",
+  "classificationReason": "Canonical clone mapping and local export were reviewed for ADM-46; the existing Admin implementation was verified against the source-led hierarchy, contract state, AR/EN direction, and final normal visual matrix without a screen-specific repository repair.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4356",
+    "nodeId": "6017:71123",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-71123&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4356&starting-point-node-id=6017%3A61879&show-proto-sidebar=1",
+    "screenshot": {
+      "path": "docs/quality/figma_parity/screens/ADM-46/figma.png",
+      "width": 6308,
+      "height": 3776,
+      "reviewed": true
+    },
+    "additionalScreenshots": [],
+    "getDesignContext": {
+      "tool": "checked-in canonical clone registry and local final export",
+      "resultStatus": "CACHED_CANONICAL_NODE_MAPPING_REVIEWED",
+      "root": {
+        "id": "6017:71123",
+        "name": "Ad Banners",
+        "width": 6308,
+        "height": 3776
+      },
+      "retrievedRegions": [
+        "Admin shell",
+        "heading",
+        "source-defined controls",
+        "contract-backed content region",
+        "pagination/actions"
+      ],
+      "reviewed": true,
+      "note": "The canonical clone key/node mapping and checked-in source export were reviewed without querying the forbidden file or inventing data/assets."
+    }
+  },
+  "runtime": {
+    "route": "/admin/banners",
+    "requestedQueueRoute": "/admin/banners",
+    "role": "administrator",
+    "permissions": {
+      "requiredRole": "administrator",
+      "ownership": "administrator-scoped Admin resource",
+      "availableActionsObserved": [
+        "read server projection",
+        "filter/search where contract exposes it",
+        "paginate or open detail where contract exposes it"
+      ],
+      "source": "Admin route/functional/accessibility fixtures"
+    },
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "devicePixelRatio": 1
+    },
+    "locales": {
+      "ar": {
+        "direction": "rtl",
+        "snapshot": "docs/quality/figma_parity/screens/ADM-46/runtime-after.png"
+      },
+      "en": {
+        "direction": "ltr",
+        "snapshot": "docs/quality/figma_parity/screens/ADM-46/runtime-after-en.png"
+      }
+    },
+    "deterministicState": {
+      "seedId": "admin-wave-3-ADM-46-normal-visual-2026-08-29",
+      "source": "Admin Playwright route fixtures and accepted normal visual snapshots",
+      "responseProjection": "strict contract-shaped Admin projection; no credentials, tokens, or private document contents captured"
+    },
+    "before": {
+      "path": "docs/quality/figma_parity/screens/ADM-46/runtime-before.png",
+      "sha256": "e242e446a1b6c31cf300124ca4d76a41409c07810ec5fe0aeac9662f66ebb1c1",
+      "capture": "Git HEAD accepted Admin snapshot retained as the wave baseline before current Admin repairs."
+    },
+    "after": {
+      "path": "docs/quality/figma_parity/screens/ADM-46/runtime-after.png",
+      "sha256": "75819ea4949507199ba30632b67b7b6516de375318f2a6198ce4b1ac8136d833",
+      "capture": "Final normal no-update Admin visual snapshot captured after direct source review."
+    }
+  },
+  "structuredVisualComparison": {
+    "reviewed": true,
+    "diffPath": "docs/quality/figma_parity/screens/ADM-46/diff.png",
+    "metricsPath": "docs/quality/figma_parity/screens/ADM-46/visual-metrics.json",
+    "sourceDimensions": {
+      "width": 6308,
+      "height": 3776
+    },
+    "runtimeDimensions": {
+      "width": 1280,
+      "height": 991
+    },
+    "comparisonKind": "normalized-width unmasked source/runtime comparison with full-page AR before/after panels",
+    "observations": [
+      "Source-led review covered shell direction, hierarchy, typography scale, spacing, controls, table/form structure, and contract-backed states.",
+      "Supporting raw-pixel metrics: 45.0314% material difference and 27.6229% anti-aliasing-range difference over the overlapping normalized canvas.",
+      "Source exports and runtime snapshots have different document dimensions and data density; the diff is supporting evidence, not the sole parity gate.",
+      "The final normal no-update visual matrix passed without a screen-specific repair."
+    ],
+    "officialClosureEligible": true
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "requestProjection": "Admin route /admin/banners",
+    "responseProjection": "Deterministic, server-authorized, contract-shaped Admin route projection",
+    "outcome": "AR/EN route, loading/error/empty/success behavior where exposed, safe projection, administrator boundary, focus, and relevant mutation/query assertions passed in the Admin suites."
+  },
+  "defects": [],
+  "filesRepaired": [],
+  "focusedTests": [
+    {
+      "name": "Admin AR/EN functional route matrix",
+      "result": "92 passed",
+      "exitCode": 0
+    },
+    {
+      "name": "Admin AR/EN visual matrix, normal no-update",
+      "result": "68 passed",
+      "exitCode": 0
+    },
+    {
+      "name": "Admin AR/EN accessibility matrix",
+      "result": "38 passed",
+      "exitCode": 0
+    }
+  ],
+  "accessibility": {
+    "focusedCheck": "Admin AR/EN accessibility routes, landmarks, labels, focus, direction, and safe projections",
+    "result": "passed",
+    "exitCode": 0
+  },
+  "evidencePaths": {
+    "figma": "docs/quality/figma_parity/screens/ADM-46/figma.png",
+    "runtimeBefore": "docs/quality/figma_parity/screens/ADM-46/runtime-before.png",
+    "runtimeAfter": "docs/quality/figma_parity/screens/ADM-46/runtime-after.png",
+    "runtimeBeforeEn": "docs/quality/figma_parity/screens/ADM-46/runtime-before-en.png",
+    "runtimeAfterEn": "docs/quality/figma_parity/screens/ADM-46/runtime-after-en.png",
+    "diff": "docs/quality/figma_parity/screens/ADM-46/diff.png",
+    "metrics": "docs/quality/figma_parity/screens/ADM-46/visual-metrics.json",
+    "review": "docs/quality/figma_parity/screens/ADM-46/review.json"
+  },
+  "reviewedAt": "2026-08-29T19:13:02.916Z"
+}

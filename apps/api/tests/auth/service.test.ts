@@ -95,6 +95,11 @@ test('logs in only verified Admin credentials and issues a hashed refresh sessio
     password: 'correct-password'
   });
   assert.equal(result.data.user.roleType, 'admin');
+  assert.deepEqual(result.data.user, {
+    id: account.id,
+    roleType: 'admin',
+    status: 'verified'
+  });
   assert.equal(result.data.accessToken, 'header.payload.signature');
   assert.equal(result.refreshToken.length, 43);
   assert.equal(created?.userId, account.id);

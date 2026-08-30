@@ -174,6 +174,19 @@ function FilterBar({ locale, status, searchInput, onStatusChange, onSearchChange
   );
 }
 
+function ReportStatusStrip({ locale, status, onStatusChange }: { readonly locale: SupportedLocale; readonly status: ReportStatusFilter; readonly onStatusChange: (status: ReportStatusFilter) => void }) {
+  const copy = getAdminAccountReportsCopy(locale);
+  const allLabel = copy.list.all;
+  return (
+    <div role="group" aria-label={copy.list.statusLabel} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, marginBlockEnd: 12, padding: 8, border: '1px solid #e3e5e7', borderRadius: 16, background: '#fff', boxShadow: '0 6px 16px #3232320d' }}>
+      {[['all', allLabel] as const, ...Object.entries(copy.statusLabels)].map(([value, label]) => {
+        const selected = status === value;
+        return <button aria-pressed={selected} data-filter-value={value} key={value} onClick={() => onStatusChange(value as ReportStatusFilter)} style={{ minHeight: 38, padding: '8px 16px', border: 0, borderRadius: 999, background: selected ? '#155b4f' : 'transparent', color: selected ? '#fff' : '#69768b', cursor: 'pointer', fontWeight: 800 }} type="button">{label}</button>;
+      })}
+    </div>
+  );
+}
+
 function ReportDetail({ report, account, locale, reason, mutationError, mutationSuccess, busyAction, onReasonChange, onResolve, onTransition }: { readonly report: AccountReportData; readonly account: AdminAccountUserData | undefined; readonly locale: SupportedLocale; readonly reason: string; readonly mutationError: string | undefined; readonly mutationSuccess: string | undefined; readonly busyAction: string | undefined; readonly onReasonChange: (value: string) => void; readonly onResolve: (action: 'resolve' | 'dismiss') => void; readonly onTransition: (action: AccountTransitionRequest['action']) => void }) {
   const copy = getAdminAccountReportsCopy(locale);
   const canResolve = report.status === 'open' || report.status === 'in_review';
@@ -314,15 +327,16 @@ export function AdminAccountReports({ locale, session, view, reportId, accountId
   const path = typeof window === 'undefined' ? (view === 'restrictions' ? '/admin/account-restrictions' : '/admin/account-reports') : new URL(window.location.href).pathname.replace(/\/+$/u, '') || '/';
   const screenId = view === 'restrictions' ? 'ADM-08' : isDetail ? 'ADM-07' : 'ADM-06';
   const titleCopy = view === 'restrictions' ? copy.restrictions : copy.list;
+  const navigationPath = view === 'restrictions' ? '/admin/account-restrictions' : '/admin/account-reports';
   return (
     <section className="admin-dashboard admin-accounts admin-account-reports" data-screen-id={screenId} data-route={path} data-device-scope="desktop" data-admin-account-reports-state={state}>
-      <AdminNavigation locale={locale} activePath="/admin/users" />
+      <AdminNavigation locale={locale} activePath={navigationPath} />
       <div className="admin-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {state === 'not_found' ? <section className="admin-accounts__state" data-state="not_found" role="alert"><StateMessage state="error" title={copy.states.not_found.title} message={copy.states.not_found.body} /><a className="admin-accounts__back" href={localePath(locale, view === 'restrictions' ? '/admin/account-restrictions' : '/admin/account-reports')}>{copy.back}</a></section> : null}
         {state === 'empty' && !isDetail ? <div className="admin-accounts__empty" data-state="empty"><h1>{titleCopy.emptyTitle}</h1><p>{titleCopy.emptyBody}</p></div> : null}
         {state === 'success' && isDetail && selectedReport !== undefined ? <ReportDetail report={selectedReport} account={account} locale={locale} reason={reason} mutationError={mutationError} mutationSuccess={mutationSuccess} busyAction={busyAction} onReasonChange={setReason} onResolve={action => { void resolve(action); }} onTransition={action => { void transition(action); }} /> : null}
-        {state === 'success' && !isDetail && data !== undefined ? <main className="admin-accounts__main" aria-labelledby="admin-account-reports-title"><div className="admin-accounts__heading"><div><p className="admin-accounts__eyebrow">{titleCopy.eyebrow}</p><h1 id="admin-account-reports-title">{titleCopy.title}</h1><p className="admin-accounts__description">{titleCopy.description}</p></div><div className="admin-accounts__summary" data-testid="admin-account-reports-total"><strong>{numberLabel(data.total, locale)}</strong><span>{view === 'restrictions' ? copy.restrictions.account : copy.list.totalLabel}</span></div></div><section className="admin-accounts__panel" aria-labelledby="admin-account-reports-list-title"><h2 id="admin-account-reports-list-title" className="a11y-visually-hidden">{titleCopy.title}</h2><FilterBar locale={locale} status={statusFilter} searchInput={searchInput} onStatusChange={value => { setStatusFilter(value); setPage(1); setAttempt(attemptValue => attemptValue + 1); }} onSearchChange={setSearchInput} onSubmit={() => { setSearch(searchInput.trim()); setPage(1); setAttempt(attemptValue => attemptValue + 1); }} onClear={() => { setSearchInput(''); setSearch(''); setStatusFilter('all'); setPage(1); setAttempt(attemptValue => attemptValue + 1); }} /><ReportsTable data={data} locale={locale} search={search} view={view} /></section></main> : null}
+        {state === 'success' && !isDetail && data !== undefined ? <main className="admin-accounts__main" aria-labelledby="admin-account-reports-title"><div className="admin-accounts__heading"><div><p className="admin-accounts__eyebrow">{titleCopy.eyebrow}</p><h1 id="admin-account-reports-title">{titleCopy.title}</h1><p className="admin-accounts__description">{titleCopy.description}</p></div></div>{view === 'reports' ? <ReportStatusStrip locale={locale} status={statusFilter} onStatusChange={value => { setStatusFilter(value); setPage(1); setAttempt(attemptValue => attemptValue + 1); }} /> : null}<section className="admin-accounts__panel" aria-labelledby="admin-account-reports-list-title"><h2 id="admin-account-reports-list-title" className="a11y-visually-hidden">{titleCopy.title}</h2><FilterBar locale={locale} status={statusFilter} searchInput={searchInput} onStatusChange={value => { setStatusFilter(value); setPage(1); setAttempt(attemptValue => attemptValue + 1); }} onSearchChange={setSearchInput} onSubmit={() => { setSearch(searchInput.trim()); setPage(1); setAttempt(attemptValue => attemptValue + 1); }} onClear={() => { setSearchInput(''); setSearch(''); setStatusFilter('all'); setPage(1); setAttempt(attemptValue => attemptValue + 1); }} /><ReportsTable data={data} locale={locale} search={search} view={view} /></section></main> : null}
       </div>
     </section>
   );

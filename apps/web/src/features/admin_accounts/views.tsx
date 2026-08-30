@@ -99,6 +99,101 @@ function StatusBadge({ label, value }: { readonly label: string; readonly value:
   return <span className="admin-accounts__badge" data-tone={toneFor(value)} data-status={value}>{label}</span>;
 }
 
+interface AccountMetricDefinition {
+  readonly label: string;
+  readonly value: number;
+  readonly color: string;
+}
+
+function accountMetricLabels(locale: SupportedLocale, view: AdminAccountsView): ReadonlyArray<string> {
+  const arabic = {
+    totalAccounts: '\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u062d\u0633\u0627\u0628\u0627\u062a',
+    totalSeekers: '\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0628\u0627\u062d\u062b\u064a\u0646',
+    loaded: '\u0627\u0644\u0633\u062c\u0644\u0627\u062a \u0627\u0644\u0645\u062d\u0645\u0644\u0629',
+    seekers: '\u0627\u0644\u0628\u0627\u062d\u062b\u0648\u0646 \u0639\u0646 \u0639\u0642\u0627\u0631',
+    providers: '\u0645\u0642\u062f\u0645\u0648 \u0627\u0644\u0639\u0642\u0627\u0631\u0627\u062a',
+    verified: '\u0627\u0644\u062d\u0633\u0627\u0628\u0627\u062a \u0627\u0644\u0645\u0648\u062b\u0642\u0629',
+    pending: '\u0642\u064a\u062f \u0627\u0644\u0645\u0631\u0627\u062c\u0639\u0629',
+    restricted: '\u0627\u0644\u062d\u0633\u0627\u0628\u0627\u062a \u0627\u0644\u0645\u0642\u064a\u062f\u0629',
+    totalProviders: '\u0625\u062c\u0645\u0627\u0644\u064a \u0645\u0642\u062f\u0645\u064a \u0627\u0644\u0639\u0642\u0627\u0631\u0627\u062a',
+    approved: '\u0645\u0639\u062a\u0645\u062f\u0629',
+    rejected: '\u0645\u0631\u0641\u0648\u0636\u0629',
+    suspended: '\u0645\u0648\u0642\u0648\u0641\u0629',
+    totalRequests: '\u0625\u062c\u0645\u0627\u0644\u064a \u0637\u0644\u0628\u0627\u062a \u0627\u0644\u062a\u062d\u0642\u0642',
+    needsInformation: '\u062a\u062d\u062a\u0627\u062c \u0645\u0639\u0644\u0648\u0645\u0627\u062a'
+  } as const;
+  const english = {
+    totalAccounts: 'Total accounts', totalSeekers: 'Total seekers', loaded: 'Loaded records', seekers: 'Seekers', providers: 'Providers', verified: 'Verified accounts', pending: 'Pending review', restricted: 'Restricted accounts', totalProviders: 'Total providers', approved: 'Approved', rejected: 'Rejected', suspended: 'Suspended', totalRequests: 'Total applications', needsInformation: 'Needs information'
+  } as const;
+  const labels = locale === 'ar' ? arabic : english;
+  if (view === 'seekers') return [labels.totalSeekers, labels.loaded, labels.verified, labels.pending, labels.restricted];
+  if (view === 'providers') return [labels.totalProviders, labels.loaded, labels.pending, labels.approved, labels.rejected, labels.suspended];
+  if (view === 'verification') return [labels.totalRequests, labels.loaded, labels.pending, labels.needsInformation, labels.approved, labels.rejected];
+  return [labels.totalAccounts, labels.loaded, labels.seekers, labels.providers, labels.verified, labels.pending];
+}
+
+function accountMetrics(view: AdminAccountsView, data: AdminAccountUserListData | AdminProviderListData): ReadonlyArray<AccountMetricDefinition> {
+  if (view === 'users' || view === 'seekers') {
+    const items = (data as AdminAccountUserListData).items;
+    const count = (predicate: (item: AdminAccountUserListData['items'][number]) => boolean) => items.filter(predicate).length;
+    const values = view === 'seekers'
+      ? [data.total, items.length, count(item => item.status === 'verified'), count(item => item.status === 'pending_review'), count(item => item.status === 'restricted')]
+      : [data.total, items.length, count(item => item.roleType === 'seeker'), count(item => item.roleType === 'provider'), count(item => item.status === 'verified'), count(item => item.status === 'pending_review')];
+    return values.map((value, index) => ({ label: accountMetricLabels('en', view)[index] ?? '', value, color: ['#1b2942', '#2f68c9', '#00854a', '#155b4f', '#00854a', '#bf6500'][index] ?? '#1b2942' }));
+  }
+  const items = (data as AdminProviderListData).items;
+  const count = (predicate: (item: AdminProviderListData['items'][number]) => boolean) => items.filter(predicate).length;
+  const values = view === 'verification'
+    ? [data.total, items.length, count(item => item.applicationStatus === 'pending_review'), count(item => item.applicationStatus === 'needs_information'), count(item => item.applicationStatus === 'approved'), count(item => item.applicationStatus === 'rejected')]
+    : [data.total, items.length, count(item => item.applicationStatus === 'pending_review'), count(item => item.applicationStatus === 'approved'), count(item => item.applicationStatus === 'rejected'), count(item => item.accountStatus === 'suspended')];
+  return values.map((value, index) => ({ label: accountMetricLabels('en', view)[index] ?? '', value, color: ['#1b2942', '#2f68c9', '#bf6500', '#00854a', '#df1c2e', '#bf6500'][index] ?? '#1b2942' }));
+}
+
+function AccountMetricStrip({ view, data, locale }: { readonly view: AdminAccountsView; readonly data: AdminAccountUserListData | AdminProviderListData; readonly locale: SupportedLocale }) {
+  const definitions = accountMetrics(view, data);
+  const localizedLabels = accountMetricLabels(locale, view);
+  return (
+    <section aria-label={locale === 'ar' ? '\u0645\u0624\u0634\u0631\u0627\u062a \u0627\u0644\u0633\u062c\u0644\u0627\u062a' : 'Record metrics'} className="admin-dashboard__metric-section" style={{ marginBlockStart: 0 }}>
+      <div className="admin-dashboard__metric-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}>
+        {definitions.map((definition, index) => (
+          <article className="admin-dashboard__metric" data-testid={`admin-accounts-metric-${index}`} key={`${definition.label}-${index}`}>
+            <strong style={{ color: definition.color }}>{numberLabel(definition.value, locale)}</strong>
+            <span>{localizedLabels[index] ?? definition.label}</span>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function AccountFilterStrips({ view, locale, statusFilter, providerTypeFilter, onStatusChange, onProviderTypeChange }: {
+  readonly view: AdminAccountsView;
+  readonly locale: SupportedLocale;
+  readonly statusFilter: UserStatusFilter | ProviderStatusFilter;
+  readonly providerTypeFilter: ProviderTypeFilter;
+  readonly onStatusChange: (value: UserStatusFilter | ProviderStatusFilter) => void;
+  readonly onProviderTypeChange: (value: ProviderTypeFilter) => void;
+}) {
+  const copy = getAdminAccountsCopy(locale);
+  const allLabel = locale === 'ar' ? '\u0627\u0644\u0643\u0644' : locale === 'zh-CN' ? '\u5168\u90e8' : 'All';
+  const statusEntries = Object.entries(view === 'users' || view === 'seekers' ? copy.accountStatusLabels : copy.statusLabels);
+  const typeEntries = Object.entries(copy.providerTypeLabels);
+  const strip = (label: string, entries: ReadonlyArray<readonly [string, string]>, active: string, onChange: (value: string) => void) => (
+      <div role="group" aria-label={label} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, marginBlockEnd: 12, padding: 8, border: '1px solid #e3e5e7', borderRadius: 16, background: '#fff', boxShadow: '0 6px 16px #3232320d' }}>
+      {[['all', allLabel] as const, ...entries].map(([value, optionLabel]) => {
+        const selected = active === value;
+        return <button aria-pressed={selected} data-filter-value={value} key={value} onClick={() => onChange(value)} style={{ minHeight: 38, padding: '8px 16px', border: 0, borderRadius: 999, background: selected ? '#155b4f' : 'transparent', color: selected ? '#fff' : '#69768b', cursor: 'pointer', fontWeight: 800 }} type="button">{optionLabel}</button>;
+      })}
+    </div>
+  );
+  return (
+    <>
+      {view === 'providers' ? strip(locale === 'ar' ? '\u0646\u0648\u0639 \u0645\u0642\u062f\u0645 \u0627\u0644\u0639\u0642\u0627\u0631' : 'Provider type', typeEntries, providerTypeFilter, value => onProviderTypeChange(value as ProviderTypeFilter)) : null}
+      {view !== 'seekers' ? strip(locale === 'ar' ? '\u062d\u0627\u0644\u0629 \u0627\u0644\u0633\u062c\u0644' : 'Record status', statusEntries, statusFilter, value => onStatusChange(value as UserStatusFilter | ProviderStatusFilter)) : null}
+    </>
+  );
+}
+
 function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<AdminAccountsState, 'success' | 'empty' | 'not_found'>; readonly locale: SupportedLocale; readonly onRetry: () => void }) {
   const copy = getAdminAccountsCopy(locale);
   const message = copy.states[state];
@@ -332,6 +427,8 @@ function ListContent({
         </div>
         <div className="admin-accounts__summary" data-testid="admin-accounts-total"><strong>{numberLabel(total, locale)}</strong><span>{viewCopy.totalLabel}</span></div>
       </div>
+      <AccountMetricStrip view={view} data={data} locale={locale} />
+      <AccountFilterStrips view={view} locale={locale} statusFilter={statusFilter} providerTypeFilter={providerTypeFilter} onStatusChange={onStatusChange} onProviderTypeChange={onProviderTypeChange} />
       <section className="admin-accounts__panel" aria-labelledby="admin-accounts-list-title">
         <h2 id="admin-accounts-list-title" className="a11y-visually-hidden">{viewCopy.title}</h2>
         <FilterBar locale={locale} view={view} searchInput={searchInput} roleFilter={roleFilter} statusFilter={statusFilter} providerTypeFilter={providerTypeFilter} onSearchChange={onSearchChange} onRoleChange={onRoleChange} onStatusChange={onStatusChange} onProviderTypeChange={onProviderTypeChange} onSubmit={onSubmit} onClear={onClear} />

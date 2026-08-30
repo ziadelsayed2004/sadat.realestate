@@ -1,0 +1,1178 @@
+{
+  "schemaVersion": 1,
+  "reportId": "PRE_ADMIN_RECONCILIATION_2026-08-29",
+  "generatedAt": "2026-08-29T14:14:28.2025360+03:00",
+  "taskId": "frontend_102",
+  "decision": "READY_WITH_EXTERNAL_EXCEPTIONS",
+  "finalMarker": "PRE_ADMIN_RECONCILIATION_READY_WITH_EXTERNAL_EXCEPTIONS",
+  "scope": {
+    "canonicalScreenCount": 131,
+    "nonAdminScreenCount": 65,
+    "screenCounts": {
+      "public": 12,
+      "auth": 19,
+      "seeker": 10,
+      "provider": 24,
+      "admin": 66
+    },
+    "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pages": {
+      "public": "6017:4352",
+      "auth": "6017:4353",
+      "seeker": "6017:4354",
+      "provider": "6017:4355"
+    },
+    "approvedLocales": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "adminUiOpened": false,
+    "adminUiModified": false,
+    "adminFeatureWorkflowTested": false,
+    "supplementaryPhoneVerification": {
+      "isCanonicalScreen": false,
+      "handling": "Historical Auth provenance only; no screen or surface count added."
+    }
+  },
+  "screens": [
+    {
+      "screenId": "PUB-01",
+      "surface": "Public",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "PUB-02",
+      "surface": "Public",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "PUB-03",
+      "surface": "Public",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "PUB-04",
+      "surface": "Public",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "PUB-05",
+      "surface": "Public",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "PUB-06",
+      "surface": "Public",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "PUB-07",
+      "surface": "Public",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "PUB-08",
+      "surface": "Public",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "PUB-09",
+      "surface": "Public",
+      "status": "VERIFIED_NO_CHANGE",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "PUB-10",
+      "surface": "Public",
+      "status": "VERIFIED_NO_CHANGE",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "PUB-11",
+      "surface": "Public",
+      "status": "VERIFIED_NO_CHANGE",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "PUB-12",
+      "surface": "Public",
+      "status": "VERIFIED_NO_CHANGE",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-01",
+      "surface": "Auth",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-02",
+      "surface": "Auth",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-03",
+      "surface": "Auth",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-04",
+      "surface": "Auth",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-05",
+      "surface": "Auth",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-06",
+      "surface": "Auth",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-07",
+      "surface": "Auth",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-08",
+      "surface": "Auth",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-09",
+      "surface": "Auth",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-09+",
+      "surface": "Auth",
+      "status": "VERIFIED_NO_CHANGE",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-10",
+      "surface": "Auth",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-10+",
+      "surface": "Auth",
+      "status": "VERIFIED_NO_CHANGE",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-11",
+      "surface": "Auth",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-12",
+      "surface": "Auth",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-13",
+      "surface": "Auth",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-14",
+      "surface": "Auth",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-15",
+      "surface": "Auth",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-16",
+      "surface": "Auth",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "AUTH-17",
+      "surface": "Auth",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json"
+    },
+    {
+      "screenId": "SEK-01",
+      "surface": "Seeker",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+      "externalException": {
+        "screenId": "SEK-01",
+        "owner": "Product/Design and identity projection owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Approved avatar asset and named profile identity projection are unavailable; no identity was fabricated.",
+        "nextAction": "Supply the approved asset/projection, then recapture AR/EN and re-review."
+      }
+    },
+    {
+      "screenId": "SEK-02",
+      "surface": "Seeker",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+      "externalException": {
+        "screenId": "SEK-02",
+        "owner": "Backend/API contract owner and Product",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Approved request-list fixture with canonical rows and totals is unavailable.",
+        "nextAction": "Supply the approved fixture/contract, then recapture AR/EN and re-review."
+      }
+    },
+    {
+      "screenId": "SEK-03",
+      "surface": "Seeker",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+      "externalException": {
+        "screenId": "SEK-03",
+        "owner": "Backend/API contract owner and Product/Design",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Provider/avatar/media projection and richer request status metadata are unavailable.",
+        "nextAction": "Supply the contract/assets, then recapture AR/EN and re-review."
+      }
+    },
+    {
+      "screenId": "SEK-04",
+      "surface": "Seeker",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+      "externalException": {
+        "screenId": "SEK-04",
+        "owner": "Backend/API contract owner and Product",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Approved provider/contact metadata projection for request detail is unavailable.",
+        "nextAction": "Supply the contract decision/data, then recapture AR/EN and re-review."
+      }
+    },
+    {
+      "screenId": "SEK-05",
+      "surface": "Seeker",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+      "externalException": {
+        "screenId": "SEK-05",
+        "owner": "Backend/API contract owner and Product/Design",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Approved property/provider images, viewing metadata, and cancellation state are unavailable.",
+        "nextAction": "Supply the approved inputs, then recapture AR/EN and re-review."
+      }
+    },
+    {
+      "screenId": "SEK-06",
+      "surface": "Seeker",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+      "externalException": {
+        "screenId": "SEK-06",
+        "owner": "Product/Design and approved media owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Canonical property, provider, and avatar media assets are unavailable.",
+        "nextAction": "Supply the assets, then recapture AR/EN and re-review."
+      }
+    },
+    {
+      "screenId": "SEK-07",
+      "surface": "Seeker",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+      "externalException": {
+        "screenId": "SEK-07",
+        "owner": "Backend/API contract owner and Product",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Approved notification inventory and count metadata are unavailable.",
+        "nextAction": "Supply the approved fixture, then recapture AR/EN and re-review."
+      }
+    },
+    {
+      "screenId": "SEK-08",
+      "surface": "Seeker",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+      "externalException": {
+        "screenId": "SEK-08",
+        "owner": "Backend/API contract owner and Product",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Approved preference-area and payment contract fields/assets are unavailable.",
+        "nextAction": "Supply the approved inputs, then recapture AR/EN and re-review."
+      }
+    },
+    {
+      "screenId": "SEK-09",
+      "surface": "Seeker",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+      "externalException": {
+        "screenId": "SEK-09",
+        "owner": "Product/Design and identity projection owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Approved avatar media and current canonical email-only profile composition are unavailable.",
+        "nextAction": "Resolve canonical/asset provenance, then recapture AR/EN and re-review."
+      }
+    },
+    {
+      "screenId": "SEK-10",
+      "surface": "Seeker",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+      "externalException": {
+        "screenId": "SEK-10",
+        "owner": "Product/Design and identity/settings contract owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Current email-only settings export and richer settings action contract are unavailable.",
+        "nextAction": "Resolve canonical/contract provenance, then recapture AR/EN and re-review."
+      }
+    },
+    {
+      "screenId": "PRV-01",
+      "surface": "Provider",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "externalException": {
+        "screenId": "PRV-01",
+        "owner": "External Provider contract/data owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Safe Provider contract lacks canonical customer-request, views, booked, history, and chart series values.",
+        "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+      }
+    },
+    {
+      "screenId": "PRV-02",
+      "surface": "Provider",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json"
+    },
+    {
+      "screenId": "PRV-03",
+      "surface": "Provider",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "externalException": {
+        "screenId": "PRV-03",
+        "owner": "External Provider contract/data owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Provider property create contract lacks every canonical basic-form field.",
+        "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+      }
+    },
+    {
+      "screenId": "PRV-04",
+      "surface": "Provider",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "externalException": {
+        "screenId": "PRV-04",
+        "owner": "External Provider contract/data owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Provider location contract lacks every canonical address field; locationId and coordinates remain preserved.",
+        "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+      }
+    },
+    {
+      "screenId": "PRV-05",
+      "surface": "Provider",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "externalException": {
+        "screenId": "PRV-05",
+        "owner": "External Provider contract/data owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Provider catalog/detail contract lacks every canonical extended property field.",
+        "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+      }
+    },
+    {
+      "screenId": "PRV-06",
+      "surface": "Provider",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "externalException": {
+        "screenId": "PRV-06",
+        "owner": "External Provider contract/data owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Provider price/payment contract lacks every canonical commission/payment field.",
+        "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+      }
+    },
+    {
+      "screenId": "PRV-07",
+      "surface": "Provider",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "externalException": {
+        "screenId": "PRV-07",
+        "owner": "External Provider contract/data owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Canonical taxonomy/catalog content is unavailable from the Provider contract.",
+        "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+      }
+    },
+    {
+      "screenId": "PRV-08",
+      "surface": "Provider",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "externalException": {
+        "screenId": "PRV-08",
+        "owner": "External Provider contract/data owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Provider media contract lacks canonical cover/minimum-media content; private upload boundaries remain enforced.",
+        "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+      }
+    },
+    {
+      "screenId": "PRV-09",
+      "surface": "Provider",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "externalException": {
+        "screenId": "PRV-09",
+        "owner": "External Provider contract/data owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Provider contact contract lacks canonical phone grouping/internal notes; no phone identity field was introduced.",
+        "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+      }
+    },
+    {
+      "screenId": "PRV-10",
+      "surface": "Provider",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "externalException": {
+        "screenId": "PRV-10",
+        "owner": "External Provider contract/data owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Provider review contract lacks every canonical summary field.",
+        "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+      }
+    },
+    {
+      "screenId": "PRV-11",
+      "surface": "Provider",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json"
+    },
+    {
+      "screenId": "PRV-12",
+      "surface": "Provider",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json"
+    },
+    {
+      "screenId": "PRV-13",
+      "surface": "Provider",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json"
+    },
+    {
+      "screenId": "PRV-14",
+      "surface": "Provider",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json"
+    },
+    {
+      "screenId": "PRV-15",
+      "surface": "Provider",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "externalException": {
+        "screenId": "PRV-15",
+        "owner": "External Provider contract/data owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Safe ProjectData projection lacks canonical image, unit, availability, and area metrics.",
+        "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+      }
+    },
+    {
+      "screenId": "PRV-16",
+      "surface": "Provider",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "externalException": {
+        "screenId": "PRV-16",
+        "owner": "External Provider contract/data owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Provider request projection is intentionally redacted and lacks all canonical CRM presentation fields.",
+        "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+      }
+    },
+    {
+      "screenId": "PRV-17",
+      "surface": "Provider",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "externalException": {
+        "screenId": "PRV-17",
+        "owner": "External Provider contract/data owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Provider request contract is limited to approved customer fields and server actions.",
+        "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+      }
+    },
+    {
+      "screenId": "PRV-18",
+      "surface": "Provider",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "externalException": {
+        "screenId": "PRV-18",
+        "owner": "External Provider contract/data owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Provider viewing projection lacks every canonical appointment presentation field.",
+        "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+      }
+    },
+    {
+      "screenId": "PRV-19",
+      "surface": "Provider",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "externalException": {
+        "screenId": "PRV-19",
+        "owner": "External Provider contract/data owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Advertising projection lacks every canonical ad/content metric.",
+        "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+      }
+    },
+    {
+      "screenId": "PRV-20",
+      "surface": "Provider",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "externalException": {
+        "screenId": "PRV-20",
+        "owner": "External Provider contract/data owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Read-only commission projection omits resolver/administrative fields.",
+        "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+      }
+    },
+    {
+      "screenId": "PRV-21",
+      "surface": "Provider",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json"
+    },
+    {
+      "screenId": "PRV-22-1",
+      "surface": "Provider",
+      "status": "REPAIRED_VERIFIED",
+      "closureEligible": true,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json"
+    },
+    {
+      "screenId": "PRV-22-2",
+      "surface": "Provider",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "externalException": {
+        "screenId": "PRV-22-2",
+        "owner": "External Provider contract/data owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Settings contact projection supports WhatsApp, office address, and website but not separate phone contact.",
+        "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+      }
+    },
+    {
+      "screenId": "PRV-22-3",
+      "surface": "Provider",
+      "status": "PARTIAL_EXTERNAL",
+      "closureEligible": false,
+      "repositoryOwnedDefects": [],
+      "evidenceReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+      "externalException": {
+        "screenId": "PRV-22-3",
+        "owner": "External Provider contract/data owner",
+        "decision": "PARTIAL_EXTERNAL",
+        "schema": "Settings contract does not support password-change or account-deletion actions; unsupported actions fail closed.",
+        "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+      }
+    }
+  ],
+  "totals": {
+    "nonAdmin": {
+      "screens": 65,
+      "repairedVerified": 32,
+      "verifiedNoChange": 6,
+      "partialExternal": 27,
+      "closureEligible": 38,
+      "repositoryOwnedDefects": 0
+    },
+    "public": {
+      "screens": 12,
+      "repairedVerified": 8,
+      "verifiedNoChange": 4,
+      "partialExternal": 0
+    },
+    "auth": {
+      "screens": 19,
+      "repairedVerified": 17,
+      "verifiedNoChange": 2,
+      "partialExternal": 0
+    },
+    "seeker": {
+      "screens": 10,
+      "repairedVerified": 0,
+      "verifiedNoChange": 0,
+      "partialExternal": 10
+    },
+    "provider": {
+      "screens": 24,
+      "repairedVerified": 7,
+      "verifiedNoChange": 0,
+      "partialExternal": 17
+    },
+    "admin": {
+      "screens": 66,
+      "status": "NOT_STARTED"
+    }
+  },
+  "evidence": {
+    "wave1Report": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+    "providerReport": "agent_pack/08_reality_sync/POST_PROVIDER_INTEGRATION_REPORT_2026-08-29.json",
+    "queue": "docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json",
+    "cleanupManifest": "agent_pack/08_reality_sync/PRE_ADMIN_CLEANUP_MANIFEST_2026-08-29.json",
+    "historicalCleanup": "agent_pack/08_reality_sync/CLEANUP_2026-08-27.json",
+    "localRuntimeLog": ".local/native-local.log"
+  },
+  "externalExceptions": [
+    {
+      "screenId": "SEK-01",
+      "owner": "Product/Design and identity projection owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Approved avatar asset and named profile identity projection are unavailable; no identity was fabricated.",
+      "nextAction": "Supply the approved asset/projection, then recapture AR/EN and re-review."
+    },
+    {
+      "screenId": "SEK-02",
+      "owner": "Backend/API contract owner and Product",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Approved request-list fixture with canonical rows and totals is unavailable.",
+      "nextAction": "Supply the approved fixture/contract, then recapture AR/EN and re-review."
+    },
+    {
+      "screenId": "SEK-03",
+      "owner": "Backend/API contract owner and Product/Design",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Provider/avatar/media projection and richer request status metadata are unavailable.",
+      "nextAction": "Supply the contract/assets, then recapture AR/EN and re-review."
+    },
+    {
+      "screenId": "SEK-04",
+      "owner": "Backend/API contract owner and Product",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Approved provider/contact metadata projection for request detail is unavailable.",
+      "nextAction": "Supply the contract decision/data, then recapture AR/EN and re-review."
+    },
+    {
+      "screenId": "SEK-05",
+      "owner": "Backend/API contract owner and Product/Design",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Approved property/provider images, viewing metadata, and cancellation state are unavailable.",
+      "nextAction": "Supply the approved inputs, then recapture AR/EN and re-review."
+    },
+    {
+      "screenId": "SEK-06",
+      "owner": "Product/Design and approved media owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Canonical property, provider, and avatar media assets are unavailable.",
+      "nextAction": "Supply the assets, then recapture AR/EN and re-review."
+    },
+    {
+      "screenId": "SEK-07",
+      "owner": "Backend/API contract owner and Product",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Approved notification inventory and count metadata are unavailable.",
+      "nextAction": "Supply the approved fixture, then recapture AR/EN and re-review."
+    },
+    {
+      "screenId": "SEK-08",
+      "owner": "Backend/API contract owner and Product",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Approved preference-area and payment contract fields/assets are unavailable.",
+      "nextAction": "Supply the approved inputs, then recapture AR/EN and re-review."
+    },
+    {
+      "screenId": "SEK-09",
+      "owner": "Product/Design and identity projection owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Approved avatar media and current canonical email-only profile composition are unavailable.",
+      "nextAction": "Resolve canonical/asset provenance, then recapture AR/EN and re-review."
+    },
+    {
+      "screenId": "SEK-10",
+      "owner": "Product/Design and identity/settings contract owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Current email-only settings export and richer settings action contract are unavailable.",
+      "nextAction": "Resolve canonical/contract provenance, then recapture AR/EN and re-review."
+    },
+    {
+      "screenId": "PRV-01",
+      "owner": "External Provider contract/data owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Safe Provider contract lacks canonical customer-request, views, booked, history, and chart series values.",
+      "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+    },
+    {
+      "screenId": "PRV-03",
+      "owner": "External Provider contract/data owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Provider property create contract lacks every canonical basic-form field.",
+      "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+    },
+    {
+      "screenId": "PRV-04",
+      "owner": "External Provider contract/data owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Provider location contract lacks every canonical address field; locationId and coordinates remain preserved.",
+      "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+    },
+    {
+      "screenId": "PRV-05",
+      "owner": "External Provider contract/data owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Provider catalog/detail contract lacks every canonical extended property field.",
+      "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+    },
+    {
+      "screenId": "PRV-06",
+      "owner": "External Provider contract/data owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Provider price/payment contract lacks every canonical commission/payment field.",
+      "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+    },
+    {
+      "screenId": "PRV-07",
+      "owner": "External Provider contract/data owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Canonical taxonomy/catalog content is unavailable from the Provider contract.",
+      "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+    },
+    {
+      "screenId": "PRV-08",
+      "owner": "External Provider contract/data owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Provider media contract lacks canonical cover/minimum-media content; private upload boundaries remain enforced.",
+      "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+    },
+    {
+      "screenId": "PRV-09",
+      "owner": "External Provider contract/data owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Provider contact contract lacks canonical phone grouping/internal notes; no phone identity field was introduced.",
+      "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+    },
+    {
+      "screenId": "PRV-10",
+      "owner": "External Provider contract/data owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Provider review contract lacks every canonical summary field.",
+      "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+    },
+    {
+      "screenId": "PRV-15",
+      "owner": "External Provider contract/data owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Safe ProjectData projection lacks canonical image, unit, availability, and area metrics.",
+      "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+    },
+    {
+      "screenId": "PRV-16",
+      "owner": "External Provider contract/data owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Provider request projection is intentionally redacted and lacks all canonical CRM presentation fields.",
+      "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+    },
+    {
+      "screenId": "PRV-17",
+      "owner": "External Provider contract/data owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Provider request contract is limited to approved customer fields and server actions.",
+      "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+    },
+    {
+      "screenId": "PRV-18",
+      "owner": "External Provider contract/data owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Provider viewing projection lacks every canonical appointment presentation field.",
+      "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+    },
+    {
+      "screenId": "PRV-19",
+      "owner": "External Provider contract/data owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Advertising projection lacks every canonical ad/content metric.",
+      "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+    },
+    {
+      "screenId": "PRV-20",
+      "owner": "External Provider contract/data owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Read-only commission projection omits resolver/administrative fields.",
+      "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+    },
+    {
+      "screenId": "PRV-22-2",
+      "owner": "External Provider contract/data owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Settings contact projection supports WhatsApp, office address, and website but not separate phone contact.",
+      "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+    },
+    {
+      "screenId": "PRV-22-3",
+      "owner": "External Provider contract/data owner",
+      "decision": "PARTIAL_EXTERNAL",
+      "schema": "Settings contract does not support password-change or account-deletion actions; unsupported actions fail closed.",
+      "nextAction": "Approve the missing safe projection/data, then recapture AR/EN."
+    }
+  ],
+  "repositoryOwnedDefects": [],
+  "reconciledRepairs": [
+    "Wave 1 Public/Auth repairs and final AR/EN no-update verification are accepted from the immutable Wave 1 closure report.",
+    "Provider shared navigation uses exact exported SVG assets.",
+    "Provider PRV-08 media dropzone uses the exact exported upload SVG asset.",
+    "Provider completion intro and account email-only assertions are reconciled.",
+    "Public fixture asset origin follows WEB_BASE_URL without changing the product contract."
+  ],
+  "contracts": {
+    "identity": "Email-only seeker/provider registration, login, OTP, and verification; /auth/verify-email is canonical and /auth/verify-phone is a browser-only legacy redirect.",
+    "adminIdentity": "Admin uses email/password; no phone identity or OTP was added.",
+    "contact": "Phone and WhatsApp are contact/business fields only.",
+    "mapUrl": "HTTPS absolute URL only, maximum 2048 characters; no fetch, geocoding, or coordinate URL synthesis.",
+    "projections": "Render only approved safe server projections; missing Provider/Seeker data stays unavailable instead of being fabricated.",
+    "uploads": "Private validated uploads, signed access, redaction, and fail-closed authorization remain enforced.",
+    "adminBootstrap": "First Super Admin creation remains transactional and requires a replica-set member or mongos."
+  },
+  "runtime": {
+    "localDoctor": {
+      "exitCode": 0,
+      "result": "ready",
+      "target": "127.0.0.1:27017"
+    },
+    "localUp": {
+      "exitCode": 0,
+      "result": "ready",
+      "processOnlyOverrides": true,
+      "optionalAdminBootstrap": "skipped"
+    },
+    "localStatus": {
+      "result": "ready",
+      "checks": [
+        "supervisor",
+        "apiHealth",
+        "apiReadiness",
+        "mongodb",
+        "web",
+        "proxy"
+      ]
+    },
+    "localSmoke": {
+      "exitCode": 0,
+      "result": "passed",
+      "seededCounts": {
+        "properties": 3,
+        "developers": 1,
+        "articles": 1,
+        "community": 1,
+        "about": 1,
+        "homepageProperties": 3
+      },
+      "invalidApi": 404,
+      "privateFile": 401
+    },
+    "localSeedRuns": [
+      {
+        "exitCode": 0,
+        "applied": 0,
+        "idempotent": true
+      },
+      {
+        "exitCode": 0,
+        "applied": 0,
+        "idempotent": true
+      }
+    ],
+    "localDown": {
+      "exitCode": 0,
+      "result": "stopped",
+      "repositorySupervisorOnly": true
+    },
+    "postShutdownPorts": {
+      "1025": "closed",
+      "3000": "closed",
+      "4173": "closed",
+      "8025": "closed",
+      "8080": "closed",
+      "27017": "open-installed-mongodb"
+    },
+    "installedMongoPreserved": true,
+    "adminBootstrap": {
+      "historicalFailureMarker": "ADMIN_BOOTSTRAP_FAILED",
+      "rootCause": "MongoServerError code 20: transaction numbers are only allowed on a replica set member or mongos.",
+      "failingReproductionCount": 1,
+      "retryPerformed": false,
+      "resolution": "Optional local Admin bootstrap was explicitly skipped through the process-only LOCAL_AUTO_BOOTSTRAP_ADMIN=false override; transactional bootstrap code and security checks were retained.",
+      "productionRequirement": "Use a supported replica-set or mongos deployment before enabling first Super Admin bootstrap."
+    }
+  },
+  "validation": {
+    "qualityCommand": {
+      "exitCode": 0,
+      "lint": "passed",
+      "typecheck": "passed",
+      "workspaceTests": "16/16 passed",
+      "apiTests": "517/517 passed",
+      "coverage": "passed",
+      "build": "passed",
+      "apiInventory": "passed",
+      "openapi": "passed",
+      "postman": "passed",
+      "dependencyAudit": "0 vulnerabilities",
+      "agentPackAuditAtRun": "passed with frontend_102 in_progress"
+    },
+    "bundle": {
+      "javascriptBytes": 1604273,
+      "stylesheetBytes": 409572,
+      "maxJavaScriptChunkBytes": 665600,
+      "maxStylesheetBytes": 409600
+    },
+    "adminBoundary": {
+      "tests": 44,
+      "passed": 44,
+      "failed": 0,
+      "uiOpened": false
+    },
+    "preservedVisualAndSemanticEvidence": {
+      "publicNoUpdate": "32/32",
+      "authNoUpdate": "6/6",
+      "providerNoUpdate": "70/70",
+      "semanticE2E": "32/32",
+      "focusedWebVitestPassed": 61,
+      "focusedWebVitestSkipped": 7,
+      "accessibility": "54/54 historical Wave 1 evidence",
+      "chineseExecuted": false
+    },
+    "diffCheck": {
+      "exitCode": 0,
+      "result": "passed"
+    }
+  },
+  "cleanup": {
+    "manifest": "agent_pack/08_reality_sync/PRE_ADMIN_CLEANUP_MANIFEST_2026-08-29.json",
+    "materialDeletions": 0,
+    "unknownOrUnowned": 0,
+    "allReviewedArtifactsKept": true,
+    "chineseChangedPaths": [],
+    "historicalCleanupPreserved": true
+  },
+  "agentPack": {
+    "currentReport": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
+    "currentTask": "frontend_102",
+    "nextAdminTask": "ADM-01",
+    "adminImplementationStarted": false,
+    "adminUiOpened": false,
+    "historicalReportsImmutable": true,
+    "finalSyncAndAuditRequired": false,
+    "finalSync": {
+      "syncCommand": "node agent_pack/scripts/sync_pack.mjs",
+      "syncExitCode": 0,
+      "auditCommand": "node agent_pack/scripts/audit_pack.mjs",
+      "auditExitCode": 0,
+      "auditErrors": [],
+      "inProgress": [],
+      "selectorAfterSync": "frontend_099"
+    }
+  },
+  "adminHandoff": {
+    "dependencyReady": true,
+    "ready": true,
+    "nextTask": "ADM-01",
+    "implementationStarted": false,
+    "uiOpened": false,
+    "reason": "All 65 non-Admin screens are reconciled with zero repository-owned defects. The remaining 27 exceptions are explicitly external, owned, and assigned next actions; Admin UI work remains untouched."
+  },
+  "atomicCommitPlan": {
+    "singleCommit": true,
+    "include": [
+      "Current Provider source/asset/test/snapshot changes",
+      "Public fixture origin repair",
+      "Pre-Admin report, cleanup manifest, completion evidence, and synchronized Agent Pack/checkpoints"
+    ],
+    "exclude": [
+      "Admin UI changes",
+      "zh-CN files",
+      "secrets or .env.local",
+      "historical evidence deletion",
+      "generated runtime artifacts not tracked"
+    ],
+    "commitCreated": false,
+    "pushPerformed": false
+  },
+  "finalEvidence": {
+    "noAdminFeatureWorkflow": true,
+    "noChineseExecution": true,
+    "noRepositoryOwnedDefectsInNonAdmin65": true,
+    "externalExceptionCount": 27,
+    "finalMarker": "PRE_ADMIN_RECONCILIATION_READY_WITH_EXTERNAL_EXCEPTIONS"
+  }
+}

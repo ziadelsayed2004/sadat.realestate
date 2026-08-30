@@ -1,4 +1,5 @@
 import { createServer as createHttpServer } from 'node:http';
+import { randomBytes } from 'node:crypto';
 import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -67,7 +68,11 @@ function normalizePublicOrigin(value) {
   }
 }
 
-function applySecurityHeaders(response, html = false, development = false) {
+function createCspNonce() {
+  return randomBytes(18).toString('base64');
+}
+
+function applySecurityHeaders(response, html = false, development = false, cspNonce) {
   response.setHeader('X-Content-Type-Options', 'nosniff');
   response.setHeader('X-Frame-Options', 'DENY');
   response.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -79,7 +84,8 @@ function applySecurityHeaders(response, html = false, development = false) {
   const apiOrigin = normalizePublicOrigin(process.env.WEB_API_ORIGIN);
   const connectSources = apiOrigin === undefined ? "'self'" : `'self' ${apiOrigin}`;
   const imageSources = apiOrigin === undefined ? "'self' data: blob:" : `'self' ${apiOrigin} data: blob:`;
-  const scriptSources = development ? "'self' 'unsafe-inline'" : "'self'";
+  const nonceSource = cspNonce === undefined ? '' : ` 'nonce-${cspNonce}'`;
+  const scriptSources = development ? "'self' 'unsafe-inline'" : `'self'${nonceSource}`;
   const developmentConnectSources = development ? `${connectSources} ws: wss:` : connectSources;
   response.setHeader('Content-Security-Policy', [
     "default-src 'self'",
@@ -118,99 +124,103 @@ function absoluteSeoUrl(origin, pathname) {
   }
 }
 
-function renderHomepageBootstrap(data) {
+function inlineNonceAttribute(cspNonce) {
+  return cspNonce === undefined ? '' : ` nonce="${escapeHtml(cspNonce)}"`;
+}
+
+function renderHomepageBootstrap(data, cspNonce) {
   if (data === undefined) return '';
-  return '<script id="sadat-public-homepage-data" type="application/json">'
+  return `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-homepage-data" type="application/json">`
     + escapeJsonForHtml(JSON.stringify(data))
     + '</script>';
 }
 
-function renderPropertyListBootstrap(data) {
+function renderPropertyListBootstrap(data, cspNonce) {
   if (data === undefined) return '';
-  return '<script id="sadat-public-property-list-data" type="application/json">'
+  return `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-property-list-data" type="application/json">`
     + escapeJsonForHtml(JSON.stringify(data))
     + '</script>';
 }
 
-function renderPropertyDetailsBootstrap(data, state) {
-  const dataScript = data === undefined ? '' : '<script id="sadat-public-property-details-data" type="application/json">'
+function renderPropertyDetailsBootstrap(data, state, cspNonce) {
+  const dataScript = data === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-property-details-data" type="application/json">`
     + escapeJsonForHtml(JSON.stringify(data))
     + '</script>';
-  const stateScript = state === undefined ? '' : '<script id="sadat-public-property-details-state" type="text/plain">'
+  const stateScript = state === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-property-details-state" type="text/plain">`
     + escapeHtml(state)
     + '</script>';
   return dataScript + stateScript;
 }
 
-function renderPropertyComparisonBootstrap(data, state) {
-  const dataScript = data === undefined ? '' : '<script id="sadat-public-property-comparison-data" type="application/json">'
+function renderPropertyComparisonBootstrap(data, state, cspNonce) {
+  const dataScript = data === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-property-comparison-data" type="application/json">`
     + escapeJsonForHtml(JSON.stringify(data))
     + '</script>';
-  const stateScript = state === undefined ? '' : '<script id="sadat-public-property-comparison-state" type="text/plain">'
+  const stateScript = state === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-property-comparison-state" type="text/plain">`
     + escapeHtml(state)
     + '</script>';
   return dataScript + stateScript;
 }
 
-function renderDeveloperListBootstrap(data) {
+function renderDeveloperListBootstrap(data, cspNonce) {
   if (data === undefined) return '';
-  return '<script id="sadat-public-developer-list-data" type="application/json">'
+  return `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-developer-list-data" type="application/json">`
     + escapeJsonForHtml(JSON.stringify(data))
     + '</script>';
 }
 
-function renderDeveloperProfileBootstrap(data, state) {
-  const dataScript = data === undefined ? '' : '<script id="sadat-public-developer-profile-data" type="application/json">'
+function renderDeveloperProfileBootstrap(data, state, cspNonce) {
+  const dataScript = data === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-developer-profile-data" type="application/json">`
     + escapeJsonForHtml(JSON.stringify(data))
     + '</script>';
-  const stateScript = state === undefined ? '' : '<script id="sadat-public-developer-profile-state" type="text/plain">'
+  const stateScript = state === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-developer-profile-state" type="text/plain">`
     + escapeHtml(state)
     + '</script>';
   return dataScript + stateScript;
 }
 
-function renderArticleListBootstrap(data, query, state) {
-  const dataScript = data === undefined ? '' : '<script id="sadat-public-article-list-data" type="application/json">'
+function renderArticleListBootstrap(data, query, state, cspNonce) {
+  const dataScript = data === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-article-list-data" type="application/json">`
     + escapeJsonForHtml(JSON.stringify(data))
     + '</script>';
-  const queryScript = query === undefined ? '' : '<script id="sadat-public-article-list-query" type="application/json">'
+  const queryScript = query === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-article-list-query" type="application/json">`
     + escapeJsonForHtml(JSON.stringify(query))
     + '</script>';
-  const stateScript = state === undefined ? '' : '<script id="sadat-public-article-list-state" type="text/plain">'
+  const stateScript = state === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-article-list-state" type="text/plain">`
     + escapeHtml(state)
     + '</script>';
   return dataScript + queryScript + stateScript;
 }
 
-function renderArticleDetailsBootstrap(data, state) {
-  const dataScript = data === undefined ? '' : '<script id="sadat-public-article-details-data" type="application/json">'
+function renderArticleDetailsBootstrap(data, state, cspNonce) {
+  const dataScript = data === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-article-details-data" type="application/json">`
     + escapeJsonForHtml(JSON.stringify(data))
     + '</script>';
-  const stateScript = state === undefined ? '' : '<script id="sadat-public-article-details-state" type="text/plain">'
+  const stateScript = state === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-article-details-state" type="text/plain">`
     + escapeHtml(state)
     + '</script>';
   return dataScript + stateScript;
 }
 
-function renderCommunityBootstrap(data, state) {
-  const dataScript = data === undefined ? '' : '<script id="sadat-public-community-data" type="application/json">'
+function renderCommunityBootstrap(data, state, cspNonce) {
+  const dataScript = data === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-community-data" type="application/json">`
     + escapeJsonForHtml(JSON.stringify(data))
     + '</script>';
-  const stateScript = state === undefined ? '' : '<script id="sadat-public-community-state" type="text/plain">'
+  const stateScript = state === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-community-state" type="text/plain">`
     + escapeHtml(state)
     + '</script>';
   return dataScript + stateScript;
 }
 
-function renderPublicContentBootstrap(id, data, state) {
-  const dataScript = data === undefined ? '' : '<script id="sadat-public-' + id + '-data" type="application/json">'
+function renderPublicContentBootstrap(id, data, state, cspNonce) {
+  const dataScript = data === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-${id}-data" type="application/json">`
     + escapeJsonForHtml(JSON.stringify(data)) + '</script>';
-  const stateScript = state === undefined ? '' : '<script id="sadat-public-' + id + '-state" type="text/plain">'
+  const stateScript = state === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-${id}-state" type="text/plain">`
     + escapeHtml(state) + '</script>';
   return dataScript + stateScript;
 }
 
-function renderSeoMetadata(seo, publicOrigin) {
+function renderSeoMetadata(seo, publicOrigin, cspNonce) {
   if (seo === undefined) return '';
   const description = seo.description === undefined
     ? ''
@@ -226,28 +236,32 @@ function renderSeoMetadata(seo, publicOrigin) {
     + '<meta property="og:title" content="' + escapeHtml(seo.openGraph.title) + '" />'
     + (seo.openGraph.description === undefined ? '' : '<meta property="og:description" content="' + escapeHtml(seo.openGraph.description) + '" />')
     + '<meta property="og:url" content="' + escapeHtml(absoluteSeoUrl(publicOrigin, seo.openGraph.url)) + '" />';
-  const jsonLd = '<script type="application/ld+json">'
+  const jsonLd = `<script${inlineNonceAttribute(cspNonce)} type="application/ld+json">`
     + escapeJsonForHtml(JSON.stringify(seo.jsonLd))
     + '</script>';
   return description + robots + canonical + alternates + openGraph + jsonLd;
 }
 
-function renderDocument(template, result) {
+function renderDocument(template, result, cspNonce) {
   const metadata = '<html lang="' + result.locale + '" dir="' + result.direction + '">';
   const title = '<title>' + escapeHtml(result.title) + '</title>';
-  const homepageBootstrap = renderHomepageBootstrap(result.homepageData);
-  const propertyListBootstrap = renderPropertyListBootstrap(result.propertyListData);
-  const propertyDetailsBootstrap = renderPropertyDetailsBootstrap(result.propertyDetailsData, result.propertyDetailsInitialState);
-  const propertyComparisonBootstrap = renderPropertyComparisonBootstrap(result.propertyComparisonData, result.propertyComparisonInitialState);
-  const developerListBootstrap = renderDeveloperListBootstrap(result.developerListData);
-  const developerProfileBootstrap = renderDeveloperProfileBootstrap(result.developerProfileData, result.developerProfileInitialState);
-  const articleListBootstrap = renderArticleListBootstrap(result.articleListData, result.articleListQuery, result.articleListInitialState);
-  const articleDetailsBootstrap = renderArticleDetailsBootstrap(result.articleDetailsData, result.articleDetailsInitialState);
-  const communityBootstrap = renderCommunityBootstrap(result.communityData, result.communityInitialState);
-  const aboutBootstrap = renderPublicContentBootstrap('about', result.aboutData, result.aboutInitialState);
-  const teamBootstrap = renderPublicContentBootstrap('team', result.teamData, result.teamInitialState);
-  const seoMetadata = renderSeoMetadata(result.seo, result.publicOrigin);
-  const templateWithoutDefaultDescription = template.replace(/\s*<meta\s+name="description"[^>]*\/?>/i, '');
+  const homepageBootstrap = renderHomepageBootstrap(result.homepageData, cspNonce);
+  const propertyListBootstrap = renderPropertyListBootstrap(result.propertyListData, cspNonce);
+  const propertyDetailsBootstrap = renderPropertyDetailsBootstrap(result.propertyDetailsData, result.propertyDetailsInitialState, cspNonce);
+  const propertyComparisonBootstrap = renderPropertyComparisonBootstrap(result.propertyComparisonData, result.propertyComparisonInitialState, cspNonce);
+  const developerListBootstrap = renderDeveloperListBootstrap(result.developerListData, cspNonce);
+  const developerProfileBootstrap = renderDeveloperProfileBootstrap(result.developerProfileData, result.developerProfileInitialState, cspNonce);
+  const articleListBootstrap = renderArticleListBootstrap(result.articleListData, result.articleListQuery, result.articleListInitialState, cspNonce);
+  const articleDetailsBootstrap = renderArticleDetailsBootstrap(result.articleDetailsData, result.articleDetailsInitialState, cspNonce);
+  const communityBootstrap = renderCommunityBootstrap(result.communityData, result.communityInitialState, cspNonce);
+  const aboutBootstrap = renderPublicContentBootstrap('about', result.aboutData, result.aboutInitialState, cspNonce);
+  const teamBootstrap = renderPublicContentBootstrap('team', result.teamData, result.teamInitialState, cspNonce);
+  const seoMetadata = renderSeoMetadata(result.seo, result.publicOrigin, cspNonce);
+  const inlineScriptPattern = /<script(?![^>]*\bsrc=)/giu;
+  const templateWithNonce = cspNonce === undefined
+    ? template
+    : template.replace(inlineScriptPattern, `<script${inlineNonceAttribute(cspNonce)}`);
+  const templateWithoutDefaultDescription = templateWithNonce.replace(/\s*<meta\s+name="description"[^>]*\/?>/i, '');
   return templateWithoutDefaultDescription
     .replace(/<html\b[^>]*>/i, metadata)
     .replace(/<title>[\s\S]*?<\/title>/i, title)
@@ -284,8 +298,8 @@ function serveCrawlerDocument(request, response, seoHelpers) {
   return true;
 }
 
-function sendHtml(response, statusCode, html, development = false) {
-  applySecurityHeaders(response, true, development);
+function sendHtml(response, statusCode, html, development = false, cspNonce) {
+  applySecurityHeaders(response, true, development, cspNonce);
   response.statusCode = statusCode;
   response.setHeader('Cache-Control', 'no-store');
   response.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -330,7 +344,8 @@ async function renderDevelopmentPage(request, response, vite) {
       ...(publicOrigin === undefined ? {} : { publicOrigin })
     });
     const transformedTemplate = await vite.transformIndexHtml(requestUrl, template);
-    sendHtml(response, result.statusCode, renderDocument(transformedTemplate, result), true);
+    const cspNonce = createCspNonce();
+    sendHtml(response, result.statusCode, renderDocument(transformedTemplate, result, cspNonce), true, cspNonce);
   } catch (error) {
     vite.ssrFixStacktrace(error);
     console.error(error);
@@ -429,7 +444,8 @@ async function createProductionServer() {
         apiOrigin: process.env.WEB_API_ORIGIN,
         ...(publicOrigin === undefined ? {} : { publicOrigin })
       });
-      sendHtml(response, result.statusCode, renderDocument(template, result));
+      const cspNonce = createCspNonce();
+      sendHtml(response, result.statusCode, renderDocument(template, result, cspNonce), false, cspNonce);
     } catch (error) {
       console.error(error);
       sendServerError(response);

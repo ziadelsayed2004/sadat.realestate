@@ -1375,8 +1375,120 @@
       "scripts/**",
       "apps/api/**",
       "apps/web/**",
+      "README.md",
       "docs/operations/**",
       "docs/api/**",
+      "docs/deployment/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_141",
+    "allowedRoots": [
+      "packages/contracts/src/public/**",
+      "packages/contracts/src/organizations/**",
+      "apps/api/src/modules/public/**",
+      "apps/api/src/modules/organizations/**",
+      "apps/api/src/**/__tests__/**",
+      "packages/contracts/src/**/__tests__/**",
+      "docs/api-artifacts/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_142",
+    "allowedRoots": [
+      "packages/contracts/src/public/**",
+      "packages/contracts/src/contracts/**",
+      "apps/api/src/modules/public/**",
+      "apps/api/src/modules/database/seed.ts",
+      "apps/api/tests/public/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_143",
+    "allowedRoots": [
+      "packages/contracts/src/public/**",
+      "packages/contracts/src/contracts/**",
+      "apps/api/src/modules/public/**",
+      "apps/api/src/modules/database/seed.ts",
+      "apps/api/tests/public/**",
+      "apps/web/tests/e2e/public-fixtures.ts",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_144",
+    "allowedRoots": [
+      "packages/contracts/src/search/**",
+      "packages/contracts/src/public/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/tests/search/**",
+      "apps/web/tests/e2e/public-fixtures.ts",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_145",
+    "allowedRoots": [
+      "packages/contracts/src/search/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/tests/search/**",
+      "apps/web/src/features/public/listing-data.ts",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_146",
+    "allowedRoots": [
+      "packages/contracts/src/properties/**",
+      "packages/contracts/src/search/**",
+      "apps/api/src/modules/properties/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/tests/properties/**",
+      "apps/api/tests/search/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_147",
+    "allowedRoots": [
+      "packages/contracts/src/search/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/tests/search/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "docs/api/public-properties-search.md",
+      "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_148",
+    "allowedRoots": [
+      "packages/contracts/src/search/**",
+      "apps/api/src/modules/search/**",
+      "apps/api/tests/search/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "docs/api/public-properties-search.md",
+      "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "backend_149",
+    "allowedRoots": [
+      "packages/contracts/src/public/**",
+      "apps/api/src/modules/public/**",
+      "apps/api/tests/public/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "apps/web/tests/e2e/public-fixtures.ts",
       "agent_pack/**"
     ]
   },
@@ -2303,116 +2415,6 @@
     ]
   },
   {
-    "taskId": "backend_141",
-    "allowedRoots": [
-      "packages/contracts/src/public/**",
-      "packages/contracts/src/organizations/**",
-      "apps/api/src/modules/public/**",
-      "apps/api/src/modules/organizations/**",
-      "apps/api/src/**/__tests__/**",
-      "packages/contracts/src/**/__tests__/**",
-      "docs/api-artifacts/**",
-      "agent_pack/**"
-    ]
-  },
-  {
-    "taskId": "backend_142",
-    "allowedRoots": [
-      "packages/contracts/src/public/**",
-      "packages/contracts/src/contracts/**",
-      "apps/api/src/modules/public/**",
-      "apps/api/src/modules/database/seed.ts",
-      "apps/api/tests/public/**",
-      "agent_pack/**"
-    ]
-  },
-  {
-    "taskId": "backend_143",
-    "allowedRoots": [
-      "packages/contracts/src/public/**",
-      "packages/contracts/src/contracts/**",
-      "apps/api/src/modules/public/**",
-      "apps/api/src/modules/database/seed.ts",
-      "apps/api/tests/public/**",
-      "apps/web/tests/e2e/public-fixtures.ts",
-      "agent_pack/**"
-    ]
-  },
-  {
-    "taskId": "backend_144",
-    "allowedRoots": [
-      "packages/contracts/src/search/**",
-      "packages/contracts/src/public/**",
-      "apps/api/src/modules/search/**",
-      "apps/api/tests/search/**",
-      "apps/web/tests/e2e/public-fixtures.ts",
-      "agent_pack/**"
-    ]
-  },
-  {
-    "taskId": "backend_145",
-    "allowedRoots": [
-      "packages/contracts/src/search/**",
-      "apps/api/src/modules/search/**",
-      "apps/api/tests/search/**",
-      "apps/web/src/features/public/listing-data.ts",
-      "agent_pack/**"
-    ]
-  },
-  {
-    "taskId": "backend_146",
-    "allowedRoots": [
-      "packages/contracts/src/properties/**",
-      "packages/contracts/src/search/**",
-      "apps/api/src/modules/properties/**",
-      "apps/api/src/modules/search/**",
-      "apps/api/tests/properties/**",
-      "apps/api/tests/search/**",
-      "apps/api/openapi/**",
-      "apps/api/postman/**",
-      "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
-      "agent_pack/**"
-    ]
-  },
-  {
-    "taskId": "backend_147",
-    "allowedRoots": [
-      "packages/contracts/src/search/**",
-      "apps/api/src/modules/search/**",
-      "apps/api/tests/search/**",
-      "apps/api/openapi/**",
-      "apps/api/postman/**",
-      "docs/api/public-properties-search.md",
-      "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
-      "agent_pack/**"
-    ]
-  },
-  {
-    "taskId": "backend_148",
-    "allowedRoots": [
-      "packages/contracts/src/search/**",
-      "apps/api/src/modules/search/**",
-      "apps/api/tests/search/**",
-      "apps/api/openapi/**",
-      "apps/api/postman/**",
-      "docs/api/public-properties-search.md",
-      "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
-      "agent_pack/**"
-    ]
-  },
-  {
-    "taskId": "backend_149",
-    "allowedRoots": [
-      "packages/contracts/src/public/**",
-      "apps/api/src/modules/public/**",
-      "apps/api/tests/public/**",
-      "apps/api/openapi/**",
-      "apps/api/postman/**",
-      "apps/web/tests/e2e/public-fixtures.ts",
-      "agent_pack/**"
-    ]
-  },
-  {
     "taskId": "frontend_100",
     "allowedRoots": [
       "apps/web/src/features/public/**",
@@ -2430,6 +2432,88 @@
       "apps/api/**",
       "packages/contracts/**",
       "packages/ui/**",
+      "scripts/**",
+      "docs/quality/figma_parity/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_101",
+    "allowedRoots": [
+      "apps/web/src/features/provider/**",
+      "apps/web/src/features/provider_property/**",
+      "apps/web/src/features/provider_auth/**",
+      "apps/web/tests/**",
+      "docs/quality/figma_parity/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_102",
+    "allowedRoots": [
+      "apps/web/src/features/provider/**",
+      "apps/web/src/features/provider_property/**",
+      "apps/web/src/features/provider_auth/**",
+      "apps/web/src/features/frontend_foundation/**",
+      "apps/web/src/features/localization/**",
+      "apps/web/src/features/routing/**",
+      "apps/web/tests/**",
+      "apps/api/src/**",
+      "apps/api/tests/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "packages/contracts/**",
+      "docs/quality/figma_parity/**",
+      "docs/design_sources/final_screens/provider/**",
+      "apps/web/public/assets/canonical/provider/**",
+      "agent_pack/**",
+      "scripts/**"
+    ]
+  },
+  {
+    "taskId": "frontend_103",
+    "allowedRoots": [
+      "apps/web/src/features/admin/**",
+      "apps/web/src/features/admin_*/**",
+      "apps/web/src/features/frontend_foundation/**",
+      "apps/web/src/features/routing/**",
+      "apps/web/src/features/design_system/**",
+      "apps/web/tests/admin*.ts",
+      "apps/web/tests/admin*.tsx",
+      "apps/web/tests/e2e/admin*.ts",
+      "apps/api/src/modules/admin/**",
+      "apps/api/src/modules/auth/**",
+      "apps/api/src/modules/security/**",
+      "apps/api/tests/admin/**",
+      "apps/api/tests/auth/**",
+      "apps/api/tests/security/**",
+      "apps/api/openapi/**",
+      "apps/api/postman/**",
+      "packages/contracts/**",
+      "packages/config/**",
+      "scripts/**",
+      "docs/design_sources/final_screens/admin/**",
+      "docs/quality/figma_parity/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_104",
+    "allowedRoots": [
+      "apps/web/tests/**",
+      "apps/api/tests/**",
+      "packages/config/**",
+      "scripts/**",
+      "docs/quality/figma_parity/**",
+      "agent_pack/**"
+    ]
+  },
+  {
+    "taskId": "frontend_105",
+    "allowedRoots": [
+      "apps/web/**",
+      "apps/api/**",
+      "packages/**",
       "scripts/**",
       "docs/quality/figma_parity/**",
       "agent_pack/**"

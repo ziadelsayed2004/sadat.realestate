@@ -3,7 +3,7 @@ import { IMPLEMENTED_ROUTE_DEFINITIONS } from '../docs/api-artifacts.js';
 export const ADMINISTRATIVE_ROLE_MODES = ['custom', 'view_only'] as const;
 export type AdministrativeRoleMode = (typeof ADMINISTRATIVE_ROLE_MODES)[number];
 
-export const AUTHORIZATION_ACCESS_MODES = ['anonymous', 'session', 'role', 'signed_grant'] as const;
+export const AUTHORIZATION_ACCESS_MODES = ['anonymous', 'session', 'role', 'signed_grant', 'otp_grant'] as const;
 export type AuthorizationAccessMode = (typeof AUTHORIZATION_ACCESS_MODES)[number];
 
 export const AUTHORIZATION_SCOPES = ['none', 'self', 'owner', 'assigned', 'permission', 'signed_grant'] as const;
@@ -26,6 +26,7 @@ export interface AuthorizationRoutePolicy {
   operationId: string;
   access: AuthorizationAccessMode;
   requiredRole?: 'seeker' | 'provider' | 'admin';
+  requiredRoles?: readonly ('seeker' | 'provider' | 'admin')[];
   scope: AuthorizationScope;
   negativeCases: readonly AuthorizationNegativeCase[];
   adminRoleModes?: readonly AdministrativeRoleMode[];
@@ -72,12 +73,38 @@ function classifyRoute(route: (typeof IMPLEMENTED_ROUTE_DEFINITIONS)[number]): A
     };
   }
 
+  if (route.method === 'POST' && route.path === '/api/v1/provider/application') {
+    return {
+      ...route,
+      access: 'otp_grant',
+      requiredRole: 'provider',
+      scope: 'self',
+      negativeCases: ['invalid-grant']
+    };
+  }
+
+  if (
+    route.method === 'POST'
+    && (
+      route.path === '/api/v1/public/community/posts'
+      || route.path === '/api/v1/public/community/posts/:postId/comments'
+      || route.path === '/api/v1/public/community/posts/:postId/reports'
+    )
+  ) {
+    return {
+      ...route,
+      access: 'role',
+      requiredRoles: ['seeker', 'provider', 'admin'],
+      scope: 'self',
+      negativeCases: ['unauthenticated', 'ownership-boundary']
+    };
+  }
+
   if (
     route.path === '/health'
     || route.path === '/ready'
     || route.path.startsWith('/api/v1/auth/')
     || route.path === '/api/v1/auth/register/seeker'
-    || (route.method === 'POST' && route.path === '/api/v1/provider/application')
     || route.path.startsWith('/api/v1/public/')
   ) {
     return {

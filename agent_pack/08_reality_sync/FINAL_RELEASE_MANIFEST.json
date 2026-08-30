@@ -6,9 +6,9 @@
   "taskCounts": {
     "backendTotal": 124,
     "backendComplete": 123,
-    "frontendTotal": 85,
-    "frontendComplete": 82,
-    "frontendInProgress": "frontend_100"
+    "frontendTotal": 89,
+    "frontendComplete": 85,
+    "frontendInProgress": null
   },
   "qualityGates": {
     "webTypecheck": "passed",

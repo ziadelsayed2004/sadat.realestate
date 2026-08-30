@@ -1,18 +1,13 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-28T20:57:49.568Z",
-  "taskId": "frontend_100",
+  "updatedAt": "2026-08-29T14:14:28.2025360+03:00",
+  "taskId": "frontend_102",
   "lane": "auth_parity",
   "agentId": "01a03f86-ee4f-7e72-babb-f0b86532cb47",
   "status": "RECONCILED_VERIFIED",
   "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
-  "currentScreen": {
-    "screenId": "AUTH-02",
-    "clonePage": "6017:4353",
-    "cloneNode": "6017:15835",
-    "runtimeRoute": "/auth/register/seeker"
-  },
-  "sequence": "AUTH-01 through AUTH-17",
+  "currentScreen": "AUTH-17",
+  "sequence": 19,
   "locales": [
     "ar-RTL",
     "en-LTR"
@@ -87,13 +82,12 @@
     "runtimeRoute": "/auth/register/seeker"
   },
   "coordinatorReconciliation": {
-    "reportPath": "agent_pack/08_reality_sync/WAVE_1_RECONCILIATION_2026-08-28.json",
-    "checkpointPath": "docs/quality/figma_parity/HARD_CHECKPOINT_2026-08-28.json",
-    "status": "PARTIAL",
+    "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
+    "status": "RECONCILED_VERIFIED",
     "laneEvidenceClaim": "REPAIRED_VERIFIED",
     "evidenceComplete": true,
     "screenCount": 19,
-    "closureEligible": 0,
+    "closureEligible": 19,
     "approvedLocaleScope": [
       "ar",
       "en"
@@ -101,133 +95,16 @@
     "excludedLocales": [
       "zh-CN"
     ],
-    "latestMetrics": [
-      {
-        "screenId": "AUTH-01",
-        "en": 2.4825,
-        "ar": 2.3417
-      },
-      {
-        "screenId": "AUTH-02",
-        "en": 2.233,
-        "ar": 1.4181
-      },
-      {
-        "screenId": "AUTH-03",
-        "en": 16.085,
-        "ar": 16.1094
-      },
-      {
-        "screenId": "AUTH-04",
-        "en": 17.6783,
-        "ar": 17.6921
-      },
-      {
-        "screenId": "AUTH-05",
-        "en": 19.4282,
-        "ar": 20.6611
-      },
-      {
-        "screenId": "AUTH-06",
-        "en": 21.5339,
-        "ar": 21.5179
-      },
-      {
-        "screenId": "AUTH-07",
-        "en": 16.7014,
-        "ar": 16.4576
-      },
-      {
-        "screenId": "AUTH-08",
-        "en": 15.7639,
-        "ar": 16.9531
-      },
-      {
-        "screenId": "AUTH-09",
-        "en": 17.1167,
-        "ar": 16.4585
-      },
-      {
-        "screenId": "AUTH-09+",
-        "en": 17.631,
-        "ar": 17.1819
-      },
-      {
-        "screenId": "AUTH-10",
-        "en": 22.078,
-        "ar": 21.6769
-      },
-      {
-        "screenId": "AUTH-10+",
-        "en": 22.7461,
-        "ar": 22.3267
-      },
-      {
-        "screenId": "AUTH-11",
-        "en": 21.1764,
-        "ar": 20.5839
-      },
-      {
-        "screenId": "AUTH-12",
-        "en": 30.8232,
-        "ar": 30.8758
-      },
-      {
-        "screenId": "AUTH-13",
-        "en": 22.9213,
-        "ar": 22.8832
-      },
-      {
-        "screenId": "AUTH-14",
-        "en": 16.7986,
-        "ar": 13.8343
-      },
-      {
-        "screenId": "AUTH-15",
-        "en": 24.2847,
-        "ar": 24.2134
-      },
-      {
-        "screenId": "AUTH-16",
-        "en": 24.1495,
-        "ar": 26.4595
-      },
-      {
-        "screenId": "AUTH-17",
-        "en": 13.3926,
-        "ar": 13.1507
-      }
-    ],
     "approvedExternalPrerequisites": [],
-    "latestGateValidation": {
-          "normalVisualArEn": {
-            "tests": 30,
-            "passed": 24,
-            "failed": 6,
-            "snapshotFilesUpdatedHistoricallyAfterDirectReview": 4,
-            "snapshotPairsUpdatedHistoricallyAfterDirectReview": 2,
-            "currentRunSnapshotsUpdated": false
-          },
-      "focusedVitest": {
-          "files": 2,
-            "tests": 17,
-            "passed": 17,
-        "failed": 0
-      },
-          "v2Metrics": {
-        "files": 38,
-        "reviewed": 38,
-        "unreviewed": 0,
-        "valuesChanged": false,
-        "perMetricReviewFieldsRecorded": true,
-        "closureEligible": 0
-      }
-    }
+    "repositoryOwnedDefects": 0,
+    "nextAction": "Auth is closed for this pass with zero repository-owned defects; continue at ADM-01 after the non-Admin handoff."
   },
   "coordinatorCursor": {
-    "taskId": "frontend_100",
-    "nextRepairTask": "WAVE1-REPAIR-2026-08-28",
-    "nextAction": "Obtain fresh approved direct Auth reconciliation input before closing any Auth screen; preserve the email-only contract and keep Provider/Admin unopened."
+    "taskId": "frontend_102",
+    "currentScreen": "AUTH-17",
+    "sequence": 19,
+    "nextScreenId": "ADM-01",
+    "phase": "pre-admin-reconciliation-ready-with-external-exceptions"
   },
   "nextAction": "Repair the current Auth responsive screenshot mismatches and obtain fresh approved direct Auth reconciliation input before closing any Auth screen; preserve the email-only contract and keep Provider/Admin unopened.",
   "evidenceComplete": true,
@@ -240,15 +117,31 @@
     "zh-CN"
   ],
   "finalReconciliation": {
-    "reportPath": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
+    "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
     "status": "RECONCILED_VERIFIED",
     "screenCount": 19,
     "repairedVerified": 17,
     "verifiedNoChange": 2,
+    "partialExternal": 0,
     "closureEligible": 19,
     "remainingRepositoryOwnedElementDefects": 0,
-    "normalVisualArEn": "6/6 failed screenshot cases passed without update mode",
-    "excludedLocales": ["zh-CN"],
-    "activeIdentityContract": "email-only; /auth/verify-email canonical; /auth/verify-phone browser-only redirect"
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "nextScreenId": "ADM-01"
+  },
+  "historicalTaskId": "frontend_100",
+  "coordinatorTaskId": "frontend_102",
+  "nextScreenId": "ADM-01",
+  "currentReconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
+    "decision": "READY_WITH_EXTERNAL_EXCEPTIONS",
+    "status": "RECONCILED_VERIFIED",
+    "screenCount": 19,
+    "repairedVerified": 17,
+    "verifiedNoChange": 2,
+    "partialExternal": 0,
+    "repositoryOwnedDefects": 0,
+    "nextTask": "ADM-01"
   }
 }

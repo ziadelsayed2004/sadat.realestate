@@ -1,0 +1,855 @@
+{
+  "schemaVersion": 1,
+  "manifestType": "pre-cleanup",
+  "generatedAt": "2026-08-29T05:35:19.7288988Z",
+  "goal": "Provider PRV-01 through PRV-24 closure and Admin dependency decision",
+  "preCleanup": {
+    "gitStatusRead": true,
+    "materialDeletionPerformed": false,
+    "deletionAuthorization": "none",
+    "broadRestoreOrResetPerformed": false
+  },
+  "records": [
+    {
+      "path": "agent_pack/03_execution/COUNT_SUMMARY.json",
+      "gitStatus": "M",
+      "sizeBytes": 524,
+      "sha256": "f4137c43793b8d6c11d7b7527aeb1a6120c5a90c6d13b0936bd0224acb7e16d1",
+      "owner": "Coordinator / Agent Pack",
+      "referencedBy": "Current task, checkpoint, cleanup, or closure report",
+      "decision": "KEEP",
+      "reason": "Current-pointer synchronization or goal evidence; historical reports remain untouched."
+    },
+    {
+      "path": "agent_pack/03_execution/TASK_BOARD.md",
+      "gitStatus": "M",
+      "sizeBytes": 12380,
+      "sha256": "87c45131dff9e87b532af0de2f5d6731dcd4f03ca6f2dad3449481d4d91cc03e",
+      "owner": "Coordinator / Agent Pack",
+      "referencedBy": "Current task, checkpoint, cleanup, or closure report",
+      "decision": "KEEP",
+      "reason": "Current-pointer synchronization or goal evidence; historical reports remain untouched."
+    },
+    {
+      "path": "agent_pack/03_execution/TASK_CATALOG.json",
+      "gitStatus": "M",
+      "sizeBytes": 357446,
+      "sha256": "68cfa2a17df95a46619161c9c70b43cc81b6c7ef51f9c1951faf57ff68db46dd",
+      "owner": "Coordinator / Agent Pack",
+      "referencedBy": "Current task, checkpoint, cleanup, or closure report",
+      "decision": "KEEP",
+      "reason": "Current-pointer synchronization or goal evidence; historical reports remain untouched."
+    },
+    {
+      "path": "agent_pack/03_execution/TASK_STATE.json",
+      "gitStatus": "M",
+      "sizeBytes": 50561,
+      "sha256": "c23b014ca70b436bb24c0b55e95cf18392c43caf02218443fd9befa06977d01e",
+      "owner": "Coordinator / Agent Pack",
+      "referencedBy": "Current task, checkpoint, cleanup, or closure report",
+      "decision": "KEEP",
+      "reason": "Current-pointer synchronization or goal evidence; historical reports remain untouched."
+    },
+    {
+      "path": "agent_pack/step_info.json",
+      "gitStatus": "M",
+      "sizeBytes": 5384,
+      "sha256": "6e5225430ecf9ea2acaf7cb7559e805fd51b7e463715db1bc7467fb67006cd7c",
+      "owner": "Coordinator / Agent Pack",
+      "referencedBy": "Current task, checkpoint, cleanup, or closure report",
+      "decision": "KEEP",
+      "reason": "Current-pointer synchronization or goal evidence; historical reports remain untouched."
+    },
+    {
+      "path": "apps/web/src/features/provider/overview.tsx",
+      "gitStatus": "M",
+      "sizeBytes": 17232,
+      "sha256": "2b8f33140d0be3fa76061cdf153df24a96c20c4d9fbbfd72bd60ce808b0d9dc4",
+      "owner": "Coordinator / Provider implementation",
+      "referencedBy": "Provider routes and shared shell",
+      "decision": "KEEP",
+      "reason": "Bounded repository-owned Provider repair using existing contracts."
+    },
+    {
+      "path": "apps/web/src/features/provider_property/completion.tsx",
+      "gitStatus": "M",
+      "sizeBytes": 37430,
+      "sha256": "d622aab1faa399c26c7051f7e60c7704192ce6f22e88c38c6de308312344c021",
+      "owner": "Coordinator / Provider implementation",
+      "referencedBy": "Provider routes and shared shell",
+      "decision": "KEEP",
+      "reason": "Bounded repository-owned Provider repair using existing contracts."
+    },
+    {
+      "path": "apps/web/src/features/provider_property/styles.css",
+      "gitStatus": "M",
+      "sizeBytes": 15281,
+      "sha256": "8c5889e78bb1d0bf7e36e577330d15a3c0bf6fe52473f63f550e835e8437248f",
+      "owner": "Coordinator / Provider implementation",
+      "referencedBy": "Provider routes and shared shell",
+      "decision": "KEEP",
+      "reason": "Bounded repository-owned Provider repair using existing contracts."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-advertising-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 68517,
+      "sha256": "1283c5c06c2e329db605d49c98e89fd981a55af3fa7683df49a7a4012488d748",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-advertising-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 93035,
+      "sha256": "01d2e8bc18f1f5ae41374828bff21d7740247b73204757b7fb7bab862c7ab015",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-commission-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 56206,
+      "sha256": "ba9efcaeb7c3369958d9488f3e96a547e50dc9b4180dda2b88c262feb4e5b891",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-advertising.spec.ts-snapshots/provider-commission-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 70485,
+      "sha256": "536034cb4accfe7661cf9a9f87299ca654b8aa08964376e78621901381fcf0c5",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-request-modal-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 57295,
+      "sha256": "c07e3fed9f1e23fb3c3cd2607adc5fc521258db3631d02665c09820618950491",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-request-modal-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 73595,
+      "sha256": "9f232797d7e360c679afbd2a067f3f52696cb3dc084a232ae8b8260dcfbf24a2",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-requests-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 65719,
+      "sha256": "78e9b1ac6aa5fc080e1bd0c9a6c8eee66f7fda2e43109998827e541eb9ba0da4",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-customer-requests.spec.ts-snapshots/provider-customer-requests-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 87100,
+      "sha256": "d932e7ffdb25e8c73ed681df2049cc645100de05089301cac0851bfb02bafa14",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-notifications-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 55408,
+      "sha256": "bd9bb99ed47e7b124d00be2446d85c267363b140442ed83f6111062dfef6419a",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-notifications-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 71437,
+      "sha256": "82a21867662d27eb7838e2f3408cdc31588c5826078bd3f5f8e25ecee35e4892",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-account-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 52636,
+      "sha256": "f1a60c904a08715768aaf89c3f2eea890226798889a939925961389bddf9fc6a",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-account-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 68771,
+      "sha256": "d73a858f269087287a071ca0a53515a93991418523c902c8ac11b24ed4931f89",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-contact-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 55140,
+      "sha256": "be512d419caa64061817b4553fbb3d715bcb39b3d3c678ed3c89fd471eafc054",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-contact-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 68938,
+      "sha256": "b13925b921a918a991cdd15f39c4b621752866467392f0ebca69d0ccfe6a3232",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-security-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 64479,
+      "sha256": "44778dd9eadb174af1ded0254cb6e1d59b331c8ca5e81ebed155f5a43eab8298",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-notifications-settings.spec.ts-snapshots/provider-settings-security-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 84624,
+      "sha256": "a20a295cce8464047adb51712ea8e2072ae37075588457bfa672c4f1586d316f",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-overview.spec.ts-snapshots/provider-overview-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 87695,
+      "sha256": "0d66fc606392f8069d8a07a3935ff4fc1fce0507667cafa01348883b1bd96212",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-overview.spec.ts-snapshots/provider-overview-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 116793,
+      "sha256": "767d973ffa03cb21f25e42c3141d5f7ae22eff0ace2d0729804be1fc0c390171",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-projects.spec.ts-snapshots/provider-projects-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 74679,
+      "sha256": "d5a47ded3499f62445b974f28549ce6217804e47b045d1908d8b741f84747056",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-projects.spec.ts-snapshots/provider-projects-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 95084,
+      "sha256": "c36c7cf78c4518a02b0160314b0d1186792edd39954158ac252ebe4f9891ae88",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-properties.spec.ts-snapshots/provider-properties-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 62404,
+      "sha256": "d5f9059b9edab73c4028d35bdb75ffba92263ee2e312783042364195b87e8a8c",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-properties.spec.ts-snapshots/provider-properties-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 84531,
+      "sha256": "95f393829f5ea02d35d9ed742ea15d04a648a2c8cbeb13a92b3525c7c90a1172",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-details-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 103874,
+      "sha256": "9c4cdecdb6ebad984de7a5413472269800fbbfc38a6b8d200fc84c66b6fb4364",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-details-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 127900,
+      "sha256": "e6a493955cdc7f0d763f4c363edd9aecaf47f3f5edd161af10d5331120c03cb2",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-features-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 97824,
+      "sha256": "471462153c61be95a6fa30c0a63acb2a65572113d41c578e03d80bfb10bcfa7f",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-features-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 121521,
+      "sha256": "b334229dab340a594d7e4a9146979bd500c6e674ddf9f7a07c480bace947270f",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-price-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 109289,
+      "sha256": "2a6b464551e4a3442b738b5ea3963d59b98adabe65745af85d93f3377c5c380f",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-advanced.spec.ts-snapshots/provider-property-price-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 135527,
+      "sha256": "1e3f0d78b8b03106ee094c0237882b4e153fef051967b5b79be5597c38167efd",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-contact-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 86551,
+      "sha256": "b0939eca82eb0b362c5d327fe6d99ef2b0505daf307cf17a71967cc33e66c36f",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-contact-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 112941,
+      "sha256": "dc6e55849a3fdb8659f904b1b15ed9f74b0f5c174de53f5824aa04d8187be146",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-media-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 83296,
+      "sha256": "e2056664fce7adc90286e5256fc0f1e7477e8df9bb36fa97fd1b54f6bb1b9222",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-media-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 108193,
+      "sha256": "afffd71f8ed60246d77a68f474df92834082e71eb6c85759df817da267a059a8",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-review-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 83540,
+      "sha256": "05a0b4179791b8ae238c050f84d8a4fef9dcf9cad85f4ff0aa830e1621ab0097",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/provider-property-review-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 106657,
+      "sha256": "ea0a3627dd23cd822c4cef7f5c7702ca17f01e48d531cfee253fed395a02705c",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-published-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 64290,
+      "sha256": "51baac5e7c4a460fa75ec253e3cbae1bacd563c0bb97819ffbe4faa3db645988",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-published-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 86201,
+      "sha256": "9e8b0dce35d17cb4f533b73f19b9af7cf83e6e89e491c80abf6194f4b46a389b",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-rejected-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 60185,
+      "sha256": "77b3b6454f7621c6ad1ba2b52230ae8c7d028f89d1d1616d101d0455f770bae6",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-rejected-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 81219,
+      "sha256": "67eaa9a58c19181097af6dd7373d6411208b9eab20d14bffaa6de004fa650a10",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-submitted-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 64113,
+      "sha256": "4782ad0b9dfe0e102bea3b2db17c8c0a130c278c21b05ea09a02e46d888693e0",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-submitted-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 86798,
+      "sha256": "0eba89f5d2bc05d6c8bf079f38069acd6932fe00ca8200cc2224d0530f50beb7",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-validation-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 83469,
+      "sha256": "af7527da09642cf2b74e8b42cd798e2d1bb97ef90e31655858a36037f96af801",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-state.spec.ts-snapshots/provider-property-validation-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 106068,
+      "sha256": "bbe39f2c7bc054b2b419f47dbdb337e68375668cdd4014eddfb50b50c6c1188f",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-basic-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 108304,
+      "sha256": "f48790f9653fe6bc49290fe1a7bf11f9dcb9b57aa16ea6978523da14638c02f8",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-basic-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 134509,
+      "sha256": "0d1c5edc22aadce1d5bda8b5ee030ac41bc7e16adefd127f78250164d5acb3da",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-location-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 109780,
+      "sha256": "cb6fc775edc2bb0249f98a828bef20292acd35b367c888a6f3feb9e12adef446",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-property-wizard.spec.ts-snapshots/provider-property-location-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 129644,
+      "sha256": "fc40b602b9ebd5d1c91a28ecca7be4ad4cfc58bccf58d4cc03dc55748df8b40e",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-ar-desktop-ar-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 65949,
+      "sha256": "07466d85aa2844239bcdbafba31d438c3673775827e527bbc23221a1916e098b",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/provider-viewings.spec.ts-snapshots/provider-viewings-en-desktop-en-win32.png",
+      "gitStatus": "M",
+      "sizeBytes": 84432,
+      "sha256": "445eb31e64b34f901f167f6d9f00c820b6fda15866cf30bb057e71687833d01b",
+      "owner": "Provider AR/EN visual gate",
+      "referencedBy": "Provider AR/EN desktop no-update Playwright gate",
+      "decision": "KEEP",
+      "reason": "Reviewed Provider AR/EN baseline pair; retained with old/new hash provenance."
+    },
+    {
+      "path": "apps/web/tests/e2e/provider-account.spec.ts",
+      "gitStatus": "M",
+      "sizeBytes": 10818,
+      "sha256": "871694da2623673606e9822c925c51f88eaa08e0fbbf4ce4c599d3370408ffb9",
+      "owner": "Provider/non-admin verification",
+      "referencedBy": "Focused AR/EN semantic or visual tests",
+      "decision": "KEEP",
+      "reason": "Focused regression evidence for the repaired non-admin contract."
+    },
+    {
+      "path": "apps/web/tests/e2e/provider-property-completion.spec.ts",
+      "gitStatus": "M",
+      "sizeBytes": 12441,
+      "sha256": "efe29ed4bdea5c187e909e85702820c999f82b01fb77b6331bee74b8a3eb908c",
+      "owner": "Provider/non-admin verification",
+      "referencedBy": "Focused AR/EN semantic or visual tests",
+      "decision": "KEEP",
+      "reason": "Focused regression evidence for the repaired non-admin contract."
+    },
+    {
+      "path": "apps/web/tests/e2e/public-fixtures.ts",
+      "gitStatus": "M",
+      "sizeBytes": 31355,
+      "sha256": "b00851296b9d26c86c6b6d444336b90872fa29ee2f8a970b10f2a9411c292b74",
+      "owner": "Provider/non-admin verification",
+      "referencedBy": "Focused AR/EN semantic or visual tests",
+      "decision": "KEEP",
+      "reason": "Focused regression evidence for the repaired non-admin contract."
+    },
+    {
+      "path": "apps/web/tests/provider-overview.vitest.test.tsx",
+      "gitStatus": "M",
+      "sizeBytes": 6625,
+      "sha256": "21fc3c87d5f7860db5bd83b52a48d4585603f04d4d360f7e039ddf1cf232a107",
+      "owner": "Provider/non-admin verification",
+      "referencedBy": "Focused AR/EN semantic or visual tests",
+      "decision": "KEEP",
+      "reason": "Focused regression evidence for the repaired non-admin contract."
+    },
+    {
+      "path": "agent_pack/04_tracks/frontend/F7_post_release_assurance/frontend_102.md",
+      "gitStatus": "??",
+      "sizeBytes": 2434,
+      "sha256": "8818974915ec533bbc5ff93e4f5e24ca8bd23f4f75e56f652d3ff7cd7acdc002",
+      "owner": "Coordinator / Agent Pack",
+      "referencedBy": "Current task, checkpoint, cleanup, or closure report",
+      "decision": "KEEP",
+      "reason": "Current-pointer synchronization or goal evidence; historical reports remain untouched."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/add-property-active.svg",
+      "gitStatus": "??",
+      "sizeBytes": 454,
+      "sha256": "d61a3d5a7e05b2f5554463afb236061dd4cb37180ed9599be54fbadf841e69d8",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/add-property.svg",
+      "gitStatus": "??",
+      "sizeBytes": 458,
+      "sha256": "6a612977e99b446c4cbc7f2b9abf3adf2b7fe4a84755b3f266ee267d01ba25cf",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/advertising-active.svg",
+      "gitStatus": "??",
+      "sizeBytes": 1537,
+      "sha256": "327a280017536908a3573a331ff7a5e23cfb713833961ed77dec0b5863bfb842",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/advertising.svg",
+      "gitStatus": "??",
+      "sizeBytes": 1539,
+      "sha256": "7b734fb55f41f941b9018a3bf87f3b80e0fe5a2518794509ef0465af3d5568ba",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/asset-manifest.json",
+      "gitStatus": "??",
+      "sizeBytes": 7906,
+      "sha256": "01c39952ee95ba25a2cb167cdfdc4aeb2c9cbd906f5c7f501f2d243fc9d2de39",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/commission-active.svg",
+      "gitStatus": "??",
+      "sizeBytes": 509,
+      "sha256": "b8fed394a9d2b7b3f4f43b1820a91a84e6a4c46fff12d63937a7583b5e2cb71e",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/commission.svg",
+      "gitStatus": "??",
+      "sizeBytes": 513,
+      "sha256": "33b78a61917557fdbe8a7f96127eb2512b089eb1e7ce5f63c6aa863c20146cd9",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/logout.svg",
+      "gitStatus": "??",
+      "sizeBytes": 789,
+      "sha256": "4b32f314c4b66cad3e49a023ac06af2156f5bea8c54e3d2691d76b6b61a7f69e",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/notifications-active.svg",
+      "gitStatus": "??",
+      "sizeBytes": 1289,
+      "sha256": "c76ac5e91a5589dc9f3ed8cda1c237f2bd94b18bd1709f12270ac96e9af2074d",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/notifications.svg",
+      "gitStatus": "??",
+      "sizeBytes": 1293,
+      "sha256": "5ef69c8d449d0bae42a2f2012be91ed3f083a5a791c1618906f811be7f8c3cce",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/overview-active.svg",
+      "gitStatus": "??",
+      "sizeBytes": 1518,
+      "sha256": "5749aaf69dd9f2a4a7b898fd69c71a1b9d24c21d5c748d4097c1431bfd0b90cf",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/overview.svg",
+      "gitStatus": "??",
+      "sizeBytes": 1526,
+      "sha256": "33cf4dc482e442245a7086722d1ff1adc39cd57d5f63c0ed38855ee8a8632ffa",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/projects-active.svg",
+      "gitStatus": "??",
+      "sizeBytes": 1952,
+      "sha256": "77bce3f9a291052a9a234d5bf884aeab7a816cb121a043e1db566fa74a8eca66",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/projects.svg",
+      "gitStatus": "??",
+      "sizeBytes": 1958,
+      "sha256": "101b0d5075affca3d5fdd90ab4402afade3ec0f3442f6c4cab319baa7492ca4f",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/properties-active.svg",
+      "gitStatus": "??",
+      "sizeBytes": 1860,
+      "sha256": "941d7131c2b9c20e345164d9630b97ea3e447cb771cf007c35e55a5756a75724",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/properties.svg",
+      "gitStatus": "??",
+      "sizeBytes": 1874,
+      "sha256": "17234073d2cf46f7289963d628ad1e8ec9f21eeaee84534366c908633fe79e24",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/requests-active.svg",
+      "gitStatus": "??",
+      "sizeBytes": 1373,
+      "sha256": "279f71da4f4a8f8b2296b8fad5ea94cd98ba6c3f785211f34c943d1bc7af754d",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/requests.svg",
+      "gitStatus": "??",
+      "sizeBytes": 1381,
+      "sha256": "7752f5058eaf20a99d762c200bc7195cddcc61e5be295ef85bc5de8ce8e721fa",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/settings-active.svg",
+      "gitStatus": "??",
+      "sizeBytes": 3197,
+      "sha256": "190aea8d125bab472092db3ca359d6db16247d6e71f21bbebd607c35507b8d76",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/settings.svg",
+      "gitStatus": "??",
+      "sizeBytes": 3201,
+      "sha256": "7dc74d9bb658b1d5386188c6b1c478e21e5de20ab63daf7d4592bdea88234f34",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    },
+    {
+      "path": "apps/web/public/assets/canonical/provider/navigation/upload-media.svg",
+      "gitStatus": "??",
+      "sizeBytes": 799,
+      "sha256": "1fe7d2c45eb7a1cb2a6c96c6837cf2033ea3b294cdb3d42db64ceb3580cd6800",
+      "owner": "Coordinator / canonical Figma asset bundle",
+      "referencedBy": "ProviderNavigation, Provider media dropzone, and asset-manifest.json",
+      "decision": "KEEP",
+      "reason": "Exact exported Provider asset required by the repaired shared UI."
+    }
+  ],
+  "chineseSnapshotReview": {
+    "changedPathsDetected": [],
+    "decision": "No Chinese path is changed in the current git status; preserve all Chinese files and snapshots and do not execute them."
+  },
+  "ignoredArtifactsReviewed": [
+    {
+      "path": ".local/native-local.log",
+      "status": "ignored local runtime artifact",
+      "decision": "KEEP",
+      "reason": "Retained for runtime blocker provenance; no secret values copied into Agent Pack."
+    },
+    {
+      "path": "apps/web/test-results",
+      "status": "ignored generated test artifacts",
+      "decision": "KEEP",
+      "reason": "Retained for reviewed visual/performance evidence; no deletion performed."
+    }
+  ],
+  "deletions": [],
+  "unknownOrUnowned": [],
+  "policy": "No reset, clean, stash, broad restore, recursive deletion, snapshot masking, or Chinese test/edit."
+}

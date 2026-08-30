@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "screenId": "ADM-54",
+  "classification": "PARTIAL_EXTERNAL",
+  "classificationReason": "ADM-54 uses the documented Project Owner-authored local source because no historical clone frame is available. The owner-authored artifact is explicitly marked owner-review-pending, and the live Admin runtime is functionally verified but has a material source/runtime geometry difference; the screen remains open without a historical Figma parity claim.",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "pageId": "6017:4356",
+    "nodeId": null,
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?page-id=6017%3A4356",
+    "screenshot": {
+      "path": "docs/quality/figma_parity/screens/ADM-54/figma.png",
+      "width": 1440,
+      "height": 1080,
+      "reviewed": true
+    },
+    "getDesignContext": {
+      "tool": "owner-authored-local-source",
+      "resultStatus": "OWNER_AUTHORED_LOCAL_SOURCE_NO_HISTORICAL_NODE",
+      "root": {
+        "id": "ADM-54-owner-authored",
+        "name": "ADM-54 Request Settings owner-authored review source",
+        "width": 1440,
+        "height": 1080
+      },
+      "retrievedRegions": [
+        "owner-authored Admin shell",
+        "top bar",
+        "settings heading",
+        "settings tabs",
+        "request settings editor",
+        "empty values state",
+        "change reason and save action"
+      ],
+      "reviewed": true,
+      "note": "Source provenance is docs/design_sources/final_screens/admin/ADM-54.owner-authored.html/.png. The HTML metadata records owner-authored-new-design and owner-review-pending; it is not treated as recovered Figma history."
+    }
+  },
+  "runtime": {
+    "route": "/admin/settings/requests",
+    "role": "administrator",
+    "permissions": {
+      "requiredRole": "administrator",
+      "ownership": "administrator settings",
+      "availableActionsObserved": [
+        "load request settings",
+        "edit change reason",
+        "submit settings update"
+      ],
+      "source": "Admin settings route fixture and current API contract"
+    },
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1440,
+      "height": 1080,
+      "devicePixelRatio": 1
+    },
+    "deterministicState": {
+      "seedId": "admin-settings-requests-fixture-ar-2026-08-29",
+      "source": "apps/web/tests/e2e/admin-settings.fixtures.ts",
+      "responseProjection": "settings namespace request fixture"
+    },
+    "response": {
+      "status": 200,
+      "ok": true
+    },
+    "apiRequests": [
+      {
+        "method": "GET",
+        "url": "/api/v1/admin/settings/requests"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "/api/v1/admin/settings/requests",
+        "status": 200
+      }
+    ],
+    "before": {
+      "path": "docs/quality/figma_parity/screens/ADM-54/runtime-before.png",
+      "sha256": "7ee120f7009aac967007949e05f283614a84b510a9285874cb7fb734e2fcca3b",
+      "capture": "Existing source-review runtime capture retained before the current direct recapture."
+    },
+    "after": {
+      "path": "docs/quality/figma_parity/screens/ADM-54/runtime-after.png",
+      "sha256": "721003e209683e35c9cfd34c9cf55bf73d9cb21750006e9fdde01db100a88ce9",
+      "capture": "Fresh standalone Playwright runtime capture at 1440x1080 viewport; document height 1341px."
+    }
+  },
+  "structuredVisualComparison": {
+    "reviewed": true,
+    "diffPath": "docs/quality/figma_parity/screens/ADM-54/diff.png",
+    "visualMetricsPath": "docs/quality/figma_parity/screens/ADM-54/visual-metrics.json",
+    "sourceDimensions": {
+      "width": 1440,
+      "height": 1080
+    },
+    "runtimeDimensions": {
+      "width": 1440,
+      "height": 1341
+    },
+    "materialDifferencePercent": 52.4088,
+    "antiAliasingOnlyPercent": 6.8265,
+    "comparisonKind": "same-width owner-source/runtime canvas comparison over the overlapping document height",
+    "observations": [
+      "The current route is Arabic RTL, administrator-only, and loads the request settings namespace with HTTP 200.",
+      "The owner-authored source includes a richer grouped Admin shell, top bar, tab row, and editor geometry than the current reduced runtime shell.",
+      "The reviewed comparison has 52.4088% material difference and is not closure-eligible.",
+      "No snapshot was updated."
+    ],
+    "officialClosureEligible": false
+  },
+  "functionalApiComparison": {
+    "reviewed": true,
+    "requestProjection": "GET /api/v1/admin/settings/requests",
+    "responseProjection": "deterministic Admin settings namespace fixture",
+    "outcome": "The route, settings namespace load, Admin role boundary, AR/RTL direction, and shared accessibility assertions passed; source/runtime visual parity remains open."
+  },
+  "defects": [
+    "External provenance blocker: no historical ADM-54 clone frame is available.",
+    "Owner-authored source metadata remains owner-review-pending; Project Owner confirmation is required before treating it as final canonical design.",
+    "Current runtime has a material shell, tabs, spacing, and document-height mismatch against the owner-authored source.",
+    "No repository-owned repair or snapshot update is claimed in this review."
+  ],
+  "filesRepaired": [],
+  "focusedTests": [
+    {
+      "name": "Admin Dashboard QA ADM-01..ADM-66 AR/EN",
+      "result": "134 passed",
+      "exitCode": 0
+    },
+    {
+      "name": "Admin AR/EN accessibility suite",
+      "result": "38 passed",
+      "exitCode": 0
+    },
+    {
+      "name": "ADM-54 direct runtime capture",
+      "result": "HTTP 200 and ADM-54 marker present",
+      "exitCode": 0
+    }
+  ],
+  "accessibility": {
+    "focusedCheck": "Admin AR/EN accessibility suite and route keyboard assertions",
+    "result": "passed",
+    "exitCode": 0
+  },
+  "evidencePaths": {
+    "figma": "docs/quality/figma_parity/screens/ADM-54/figma.png",
+    "runtimeBefore": "docs/quality/figma_parity/screens/ADM-54/runtime-before.png",
+    "runtimeAfter": "docs/quality/figma_parity/screens/ADM-54/runtime-after.png",
+    "diff": "docs/quality/figma_parity/screens/ADM-54/diff.png",
+    "visualMetrics": "docs/quality/figma_parity/screens/ADM-54/visual-metrics.json",
+    "review": "docs/quality/figma_parity/screens/ADM-54/review.json"
+  },
+  "reviewedAt": "2026-08-29T17:30:00+03:00",
+  "externalBlocker": "Obtain Project Owner approval of the current owner-authored source and its intended geometry, or recover an exact canonical clone frame, then perform a bounded repair and fresh AR/EN review.",
+  "latestRuntimeVerification": {
+    "source": "ADM-54 direct Playwright capture and visual-metrics.json",
+    "phase": "after",
+    "apiResponseStatus": 200,
+    "materialDifferencePercent": 52.4088,
+    "antiAliasingOnlyPercent": 6.8265,
+    "officialClosureEligible": false
+  }
+}

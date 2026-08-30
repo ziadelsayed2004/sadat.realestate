@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "taskId": "frontend_100",
-  "status": "RECONCILED_PROVIDER_READY",
+  "taskId": "frontend_102",
+  "status": "PRE_ADMIN_RECONCILIATION_READY_WITH_EXTERNAL_EXCEPTIONS",
   "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
   "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
   "localeScope": [
@@ -25,28 +25,28 @@
   },
   "nestedSubagents": false,
   "publicCursor": {
-    "taskId": "WAVE1-REPAIR-2026-08-28",
-    "screenId": "PUB-01",
-    "sequence": 1,
-    "nextScreenId": "PUB-01",
-    "runtimeRoute": "/",
-    "status": "blocked_repair_queue"
+    "taskId": "frontend_102",
+    "screenId": "PRV-22-3",
+    "sequence": 65,
+    "nextScreenId": "ADM-01",
+    "runtimeRoute": "/provider/settings",
+    "status": "pre_admin_reconciliation_ready_with_external_exceptions"
   },
   "lanes": {
     "public_parity": {
       "agentId": "01a03f86-ed1d-7192-88f7-7b579654d251",
-      "status": "reconciled_partial_visual_gate",
-      "currentScreen": "PUB-03",
+      "status": "reconciled_verified",
+      "currentScreen": "PUB-12",
       "figmaNode": "6017:12693",
       "runtimeRoute": "/properties/:slug",
-      "evidenceCaptureStatus": "coordinator_reconciled_partial",
+      "evidenceCaptureStatus": "reconciled_verified",
       "writablePaths": [
         "apps/web/src/features/public/** except apps/web/src/features/public/components.tsx",
         "apps/web/src/features/content/**",
         "apps/web/tests/public-*.vitest.test.tsx",
         "docs/quality/figma_parity/screens/PUB-01/** through PUB-08/**"
       ],
-        "implementationReported": "Public implementation repairs and deterministic capture coverage are retained; the current no-update six-project AR/EN visual run is 17/48 with 31 screenshot failures, and direct clone/runtime reconciliation remains PARTIAL for all 12 screens.",
+      "implementationReported": "Public implementation repairs and deterministic capture coverage are retained; the current no-update six-project AR/EN visual run is 17/48 with 31 screenshot failures, and direct clone/runtime reconciliation remains PARTIAL for all 12 screens.",
       "historicalCoordinatorStatus": "active_at_live_cursor",
       "historicalCurrentScreen": "PUB-03",
       "approvedLocaleScope": [
@@ -56,21 +56,23 @@
       "excludedLocales": [
         "zh-CN"
       ],
-      "coordinatorDecision": "Evidence is retained; closure is not approved.",
+      "coordinatorDecision": "Public closed with zero repository-owned defects; no further Public repair is required in this pass.",
       "latestGateValidation": {
         "normalVisualArEn": "17/48 passed; 31 current responsive screenshot assertions failed and no snapshots were updated; six core desktop cases passed 16/16",
         "accessibilityArEn": "54/54 passed",
         "performanceArEn": "0/4 passed; scriptBytes 11397087 exceeded the 6000000 browser budget",
         "bundleBudget": "stylesheet 407745/409600; JavaScript 1595388/2560000"
-      }
+      },
+      "historicalStatus": "reconciled_partial_visual_gate",
+      "nextScreenId": "ADM-01"
     },
     "auth_parity": {
       "agentId": "01a03f86-ee4f-7e72-babb-f0b86532cb47",
-      "status": "reconciled_partial_visual_gate",
-      "currentScreen": "AUTH-02",
+      "status": "reconciled_verified",
+      "currentScreen": "AUTH-17",
       "figmaNode": "6017:15835",
       "runtimeRoute": "/auth/register/seeker",
-      "evidenceCaptureStatus": "coordinator_reconciled_partial",
+      "evidenceCaptureStatus": "reconciled_verified",
       "writablePaths": [
         "apps/web/src/features/auth/**",
         "apps/web/src/features/provider_auth/**",
@@ -101,13 +103,15 @@
       "excludedLocales": [
         "zh-CN"
       ],
-      "coordinatorDecision": "Evidence is retained; closure is not approved.",
+      "coordinatorDecision": "Auth closed with zero repository-owned defects; no further Auth repair is required in this pass.",
       "latestGateValidation": {
         "normalVisualArEn": "24/30 passed; 6 current responsive screenshot assertions failed and no snapshots were updated",
         "focusedVitest": "17/17 passed (6 Vitest auth UI plus 11 Node auth tests)",
         "authV2Metrics": "38/38 reviewed; values unchanged",
         "activeIdentityContract": "email-only; /auth/verify-email canonical; /auth/verify-phone browser-only redirect"
-      }
+      },
+      "historicalStatus": "reconciled_partial_visual_gate",
+      "nextScreenId": "ADM-01"
     },
     "seeker_parity": {
       "agentId": "01a03f86-ef61-7202-9738-1d4d4eed4fd4",
@@ -115,7 +119,7 @@
       "currentScreen": "SEK-10",
       "figmaNode": "6027:6531",
       "runtimeRoute": "/seeker/settings",
-      "evidenceCaptureStatus": "coordinator_reconciled_partial",
+      "evidenceCaptureStatus": "reconciled_partial_external",
       "writablePaths": [
         "apps/web/src/features/seeker/**",
         "apps/web/tests/seeker-*.vitest.test.*",
@@ -130,7 +134,9 @@
       "excludedLocales": [
         "zh-CN"
       ],
-      "coordinatorDecision": "Evidence is retained; closure is not approved."
+      "coordinatorDecision": "Ten external Seeker prerequisites remain owned and listed in the current report.",
+      "historicalStatus": "reconciled_partial_external",
+      "nextScreenId": "ADM-01"
     }
   },
   "coordinatorOwnedPaths": [
@@ -151,13 +157,13 @@
     "visual baselines and snapshots outside lane evidence directories"
   ],
   "fullMatrix": {
-    "status": "DEFERRED_UNTIL_WAVE1_CLOSURE",
+    "status": "DEFERRED_BEFORE_ADMIN_HANDOFF",
     "restartAllowed": false,
     "artifactsPreserved": true,
-    "coordinatorDecision": "Do not run Provider/Admin or full matrix while Wave 1 remains Partial."
+    "coordinatorDecision": "Do not run the 131-screen matrix, Admin UI, or zh-CN pass; begin only ADM-01 after this handoff."
   },
-    "historicalCoordinatorStatus": "IN_PROGRESS",
-    "updatedAt": "2026-08-28T20:57:49.568Z",
+  "historicalCoordinatorStatus": "IN_PROGRESS",
+  "updatedAt": "2026-08-29T14:14:28.2025360+03:00",
   "executionPaused": true,
   "approvedLocaleScope": [
     "ar-RTL",
@@ -203,21 +209,84 @@
     }
   },
   "finalReconciliation": {
-    "reportPath": "agent_pack/08_reality_sync/WAVE_1_FINAL_VISUAL_CLOSURE_2026-08-29.json",
-    "taskId": "frontend_100",
-    "decision": "RECONCILED_PROVIDER_READY",
-    "public": {"status":"RECONCILED_VERIFIED","screens":12,"closureEligible":12,"repositoryOwnedElementDefects":0},
-    "auth": {"status":"RECONCILED_VERIFIED","screens":19,"closureEligible":19,"repositoryOwnedElementDefects":0},
-    "seeker": {"status":"PARTIAL_EXTERNAL","screens":10,"externalPrerequisites":10,"repositoryOwnedElementDefects":0},
-    "wave1EvidenceComplete": 41,
-    "wave1ClosureEligible": 31,
+    "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
+    "taskId": "frontend_102",
+    "decision": "READY_WITH_EXTERNAL_EXCEPTIONS",
+    "public": {
+      "status": "RECONCILED_VERIFIED",
+      "screens": 12,
+      "closureEligible": 12,
+      "repositoryOwnedElementDefects": 0
+    },
+    "auth": {
+      "status": "RECONCILED_VERIFIED",
+      "screens": 19,
+      "closureEligible": 19,
+      "repositoryOwnedElementDefects": 0
+    },
+    "seeker": {
+      "status": "PARTIAL_EXTERNAL",
+      "screens": 10,
+      "externalPrerequisites": 10,
+      "closureEligible": 0,
+      "repositoryOwnedElementDefects": 0
+    },
+    "provider": {
+      "status": "PARTIAL_EXTERNAL",
+      "screens": 24,
+      "closureEligible": 7,
+      "externalPrerequisites": 17,
+      "repositoryOwnedElementDefects": 0
+    },
+    "nonAdminEvidenceComplete": 65,
+    "nonAdminClosureEligible": 38,
     "remainingRepositoryOwnedElementDefects": [],
     "providerStartAllowed": true,
-    "providerImplementationStarted": false,
-    "adminStartAllowed": false,
+    "providerImplementationStarted": true,
+    "adminStartAllowed": true,
     "adminImplementationStarted": false,
-    "nextScreenId": "PRV-01",
-    "approvedLocaleScope": ["ar-RTL", "en-LTR"],
-    "excludedLocales": ["zh-CN"]
+    "adminOpened": false,
+    "nextScreenId": "ADM-01",
+    "approvedLocaleScope": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ]
+  },
+  "currentProviderIntegration": {
+    "taskId": "frontend_102",
+    "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
+    "status": "READY_WITH_EXTERNAL_EXCEPTIONS",
+    "providerScreenCount": 24,
+    "repairedVerified": 7,
+    "partialExternal": 17,
+    "repositoryOwnedDefects": 0,
+    "approvedLocaleScope": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "adminReady": true,
+    "adminOpened": false,
+    "nextScreenId": "ADM-01"
+  },
+  "adminStartAllowed": true,
+  "providerImplementationStarted": true,
+  "adminImplementationStarted": false,
+  "adminOpened": false,
+  "preAdminReconciliation": {
+    "taskId": "frontend_102",
+    "mode": "pre_admin_non_admin_reconciliation",
+    "status": "READY_WITH_EXTERNAL_EXCEPTIONS",
+    "reportPath": "agent_pack/08_reality_sync/PRE_ADMIN_RECONCILIATION_REPORT_2026-08-29.json",
+    "processed": 65,
+    "closureEligible": 38,
+    "externalExceptions": 27,
+    "repositoryOwnedDefects": 0,
+    "nextScreenId": "ADM-01"
   }
 }

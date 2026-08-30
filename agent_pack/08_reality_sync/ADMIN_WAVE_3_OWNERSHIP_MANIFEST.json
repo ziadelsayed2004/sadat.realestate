@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "manifestId": "ADMIN_WAVE_3_OWNERSHIP_2026-08-29",
+  "createdAt": "2026-08-29",
+  "taskId": "frontend_103",
+  "status": "dependency_ready",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "screenRange": ["ADM-01", "ADM-66"],
+  "approvedLocales": ["ar-RTL", "en-LTR"],
+  "excludedLocales": ["zh-CN"],
+  "deviceScope": ["desktop"],
+  "workers": [],
+  "coordinatorOwnership": [
+    "apps/web/src/features/admin/**",
+    "apps/web/src/features/admin_*/**",
+    "apps/web/src/features/frontend_foundation/**",
+    "apps/web/src/features/routing/**",
+    "apps/web/src/features/design_system/**",
+    "apps/api/src/modules/admin/**",
+    "apps/api/src/modules/auth/**",
+    "apps/api/src/modules/security/**",
+    "apps/api/tests/admin/**",
+    "apps/api/tests/auth/**",
+    "apps/api/tests/security/**",
+    "apps/web/tests/admin*.ts",
+    "apps/web/tests/admin*.tsx",
+    "apps/web/tests/e2e/admin*.ts",
+    "packages/contracts/**",
+    "packages/config/**",
+    "scripts/**",
+    "docs/design_sources/final_screens/admin/**",
+    "docs/quality/figma_parity/**",
+    "agent_pack/**"
+  ],
+  "nonOverlapRule": "No nested workers are assigned; the Coordinator is the sole owner of shared shell/router/contracts/API/global styles/tokens/Agent Pack paths and may assign only explicitly disjoint Admin feature paths in a later manifest.",
+  "screenSourcePolicy": {
+    "canonicalClone": "Use cached local evidence and exact queue node IDs from SCREEN_EXECUTION_QUEUE.json.",
+    "ADM-18": "BLOCKED_SOURCE unless an exact clone frame or approved current source is available.",
+    "ADM-54": "Use the owner-authored current baseline with provenance; do not claim historical Figma recovery."
+  },
+  "prohibited": [
+    "reset/revert/stash/clean/undo",
+    "branch/worktree creation",
+    "commit/push",
+    "zh-CN execution or snapshot updates",
+    "invented data/assets",
+    "secret or token recording"
+  ]
+}

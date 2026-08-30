@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "screenId": "ADM-14",
+  "phase": "after",
+  "source": {
+    "width": 6308,
+    "height": 3776
+  },
+  "runtimeBefore": {
+    "width": 1280,
+    "height": 1774
+  },
+  "runtimeAfter": {
+    "width": 1296,
+    "height": 1076
+  },
+  "runtimeBeforeEn": {
+    "width": 1280,
+    "height": 1774
+  },
+  "runtimeAfterEn": {
+    "width": 1292,
+    "height": 1076
+  },
+  "comparedWidth": 1600,
+  "comparedHeight": 958,
+  "comparedPixels": 1532800,
+  "materialDifferencePercent": 50.3116,
+  "antiAliasingOnlyPercent": 18.6859,
+  "threshold": {
+    "materialRgbSumGreaterThan": 24,
+    "antiAliasingRgbSumGreaterThan": 3
+  },
+  "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height",
+  "supportingEvidenceOnly": true,
+  "reviewed": true,
+  "reviewedAt": "2026-08-29T19:12:49.822Z"
+}

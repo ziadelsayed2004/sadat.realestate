@@ -58,26 +58,43 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<Provid
 const navigationItems = [
   ['overview', '/provider'],
   ['properties', '/provider/properties'],
+  ['addProperty', '/provider/properties/new/basic'],
   ['projects', '/provider/projects'],
   ['requests', '/provider/customer-requests'],
-  ['viewings', '/provider/viewings'],
   ['advertising', '/provider/ads'],
   ['commission', '/provider/commission'],
   ['notifications', '/provider/notifications'],
   ['settings', '/provider/settings']
 ] as const;
 
-const navigationIcons: Readonly<Record<(typeof navigationItems)[number][0], string>> = {
-  commission: '%',
-  overview: '⌂',
-  properties: '▣',
-  projects: '◆',
-  requests: '◫',
-  viewings: '◷',
-  advertising: '◇',
-  notifications: '♧',
-  settings: '⚙'
+type ProviderNavigationIcon = Readonly<{ readonly default: string; readonly active: string }>;
+
+const providerNavigationAssetRoot = '/assets/canonical/provider/navigation';
+const providerNavigationIconContainerStyle = { display: 'inline-flex', flex: '0 0 19px', width: 19, height: 19, alignItems: 'center', justifyContent: 'center' } as const;
+const providerNavigationIconStyle = { display: 'block', width: 19, height: 19, objectFit: 'contain', pointerEvents: 'none' } as const;
+const navigationIcons: Readonly<Record<(typeof navigationItems)[number][0], ProviderNavigationIcon>> = {
+  overview: { default: `${providerNavigationAssetRoot}/overview.svg`, active: `${providerNavigationAssetRoot}/overview-active.svg` },
+  properties: { default: `${providerNavigationAssetRoot}/properties.svg`, active: `${providerNavigationAssetRoot}/properties-active.svg` },
+  addProperty: { default: `${providerNavigationAssetRoot}/add-property.svg`, active: `${providerNavigationAssetRoot}/add-property-active.svg` },
+  projects: { default: `${providerNavigationAssetRoot}/projects.svg`, active: `${providerNavigationAssetRoot}/projects-active.svg` },
+  requests: { default: `${providerNavigationAssetRoot}/requests.svg`, active: `${providerNavigationAssetRoot}/requests-active.svg` },
+  advertising: { default: `${providerNavigationAssetRoot}/advertising.svg`, active: `${providerNavigationAssetRoot}/advertising-active.svg` },
+  commission: { default: `${providerNavigationAssetRoot}/commission.svg`, active: `${providerNavigationAssetRoot}/commission-active.svg` },
+  notifications: { default: `${providerNavigationAssetRoot}/notifications.svg`, active: `${providerNavigationAssetRoot}/notifications-active.svg` },
+  settings: { default: `${providerNavigationAssetRoot}/settings.svg`, active: `${providerNavigationAssetRoot}/settings-active.svg` }
 };
+
+function navigationLabel(copy: ReturnType<typeof getProviderCopy>, id: (typeof navigationItems)[number][0]): string {
+  return id === 'addProperty' ? copy.overview.addProperty : copy.nav[id];
+}
+
+function navigationItemIsActive(id: (typeof navigationItems)[number][0], path: string, activePath: string): boolean {
+  if (id === 'overview') return activePath === path;
+  if (id === 'properties') return activePath === path || (activePath.startsWith('/provider/properties/') && !activePath.startsWith('/provider/properties/new/'));
+  if (id === 'addProperty') return activePath === path;
+  if (id === 'requests') return activePath.startsWith(path) || activePath === '/provider/viewings';
+  return activePath.startsWith(path);
+}
 
 export function ProviderNavigation({ locale, activePath }: { readonly locale: SupportedLocale; readonly activePath: string }) {
   const copy = getProviderCopy(locale);
@@ -86,12 +103,15 @@ export function ProviderNavigation({ locale, activePath }: { readonly locale: Su
       <span className="provider-dashboard__navigation-title">{copy.overview.eyebrow}</span>
       <ul>
         {navigationItems.map(([id, path]) => {
-          const active = activePath === path || (id !== 'overview' && activePath.startsWith(path));
+          const active = navigationItemIsActive(id, path, activePath);
+          const icon = navigationIcons[id];
           return (
             <li key={id}>
-              <a href={localeForProviderPath(locale, path)} aria-current={active ? 'page' : undefined} data-active={active || undefined}>
-                <span aria-hidden="true" className="provider-dashboard__navigation-icon">{navigationIcons[id]}</span>
-                <span>{copy.nav[id]}</span>
+              <a href={localeForProviderPath(locale, path)} aria-current={active ? 'page' : undefined} data-active={active ? 'true' : undefined}>
+                <span aria-hidden="true" className="provider-dashboard__navigation-icon" style={providerNavigationIconContainerStyle}>
+                  <img src={active ? icon.active : icon.default} alt="" width={19} height={19} style={providerNavigationIconStyle} />
+                </span>
+                <span>{navigationLabel(copy, id)}</span>
               </a>
             </li>
           );

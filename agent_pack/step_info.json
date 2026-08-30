@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-29T01:48:25.707Z",
+  "generatedAt": "2026-08-30T00:14:54.572Z",
   "selectedTaskId": "frontend_099",
   "selectedTaskStatus": "partial",
   "selectedTaskFile": "04_tracks/frontend/F7_post_release_assurance/frontend_099.md",
@@ -78,12 +78,12 @@
       "complete": 123
     },
     "frontend": {
-      "total": 86,
+      "total": 90,
       "open": 0,
       "in_progress": 0,
-      "partial": 2,
+      "partial": 5,
       "blocked": 0,
-      "complete": 84
+      "complete": 85
     }
   },
   "blockedTasks": [
@@ -99,6 +99,24 @@
         {
           "taskId": "backend_139",
           "status": "blocked"
+        }
+      ]
+    },
+    {
+      "taskId": "frontend_104",
+      "unresolved": [
+        {
+          "taskId": "frontend_103",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "taskId": "frontend_105",
+      "unresolved": [
+        {
+          "taskId": "frontend_104",
+          "status": "partial"
         }
       ]
     }

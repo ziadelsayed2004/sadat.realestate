@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "manifestType": "admin-wave-3-cleanup",
+  "generatedAt": "2026-08-29T19:47:05.224Z",
+  "goal": "Preserve evidence and user work while recording Admin Wave 3 readiness with two documented external source exceptions",
+  "preCleanup": {
+    "gitStatusRead": true,
+    "materialDeletionPerformed": false,
+    "deletionAuthorization": "none",
+    "broadRestoreOrResetPerformed": false,
+    "snapshotUpdatePerformed": true,
+    "chineseTestOrEditPerformed": false
+  },
+  "records": [
+    {
+      "path": "docs/quality/figma_parity/screens/ADM-18",
+      "owner": "Admin Wave 3 evidence",
+      "decision": "KEEP",
+      "reason": "Contains the local source, actual Admin route capture, preserved visual failure diff, and BLOCKED_SOURCE review."
+    },
+    {
+      "path": "docs/quality/figma_parity/screens/ADM-54",
+      "owner": "Admin Wave 3 evidence",
+      "decision": "KEEP",
+      "reason": "Contains the owner-authored source comparison, fresh runtime capture, visual metrics, diff, and PARTIAL_EXTERNAL review."
+    },
+    {
+      "path": ".local/mongodb-rs0-data",
+      "owner": "isolated transaction probe",
+      "decision": "KEEP",
+      "reason": "Local ignored runtime data is isolated and required to reproduce transaction-capable readiness; no deletion was authorized."
+    },
+    {
+      "path": ".local/mongodb-rs0-admin-data",
+      "owner": "isolated Admin bootstrap verification",
+      "decision": "KEEP",
+      "reason": "Contains the isolated fresh Admin bootstrap database used for restart/idempotency evidence; it is not the installed MongoDB service data."
+    },
+    {
+      "path": "apps/web/test-results",
+      "owner": "Playwright",
+      "decision": "KEEP",
+      "reason": "Preserves Admin visual failure evidence and the existing Provider failure artifacts; no cleanup was needed."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/*zh-CN*",
+      "owner": "pre-existing user/historical evidence",
+      "decision": "KEEP",
+      "reason": "Chinese snapshots were not executed, edited, or deleted."
+    },
+    {
+      "path": "apps/web/src/features/provider and related Provider assets/snapshots",
+      "owner": "pre-existing Provider work",
+      "decision": "KEEP",
+      "reason": "Preserve all Provider changes and do not include them in Admin cleanup or repair decisions."
+    },
+    {
+      "path": ".env.local",
+      "owner": "environment/secrets",
+      "decision": "KEEP_AND_DO_NOT_READ",
+      "reason": "No environment secret file was read or copied."
+    },
+    {
+      "path": "docs/quality/figma_parity/screens/ADM-01..ADM-66",
+      "owner": "Admin Wave 3 evidence",
+      "decision": "KEEP",
+      "reason": "Per-screen source, runtime-before, runtime-after, diff, review, and supporting visual metrics are the final provenance for the processed Admin queue; ADM-18/ADM-54 remain explicit exceptions."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/admin-*",
+      "owner": "Admin Wave 3 AR/EN final visual gate",
+      "decision": "KEEP",
+      "reason": "Final AR/EN baseline pairs were reviewed and the normal no-update matrix passed 68/68; no zh-CN snapshot was touched."
+    },
+    {
+      "path": "scripts/capture-admin-wave-evidence.mjs",
+      "owner": "Admin Wave 3 evidence tooling",
+      "decision": "KEEP",
+      "reason": "Reproducible source/runtime evidence capture and normalized supporting diff generation used by this goal."
+    },
+    {
+      "path": "scripts/finalize-admin-wave-3.mjs",
+      "owner": "Admin Wave 3 report tooling",
+      "decision": "KEEP",
+      "reason": "Reproducible final report/checkpoint synchronization from the actual queue and evidence files."
+    }
+  ],
+  "deletions": [],
+  "unknownOrUnowned": [],
+  "evidencePolicy": {
+    "historicalReports": "preserved",
+    "runtimeArtifacts": "preserved",
+    "noMasksOrCrops": true,
+    "noSnapshotUpdates": false,
+    "noSecretValues": true,
+    "snapshotUpdatePolicy": "Only reviewed AR/EN Admin baseline pairs were updated; the final matrix ran without update mode. No zh-CN files were executed or changed."
+  },
+  "atomicCommitBoundary": {
+    "includeAfterRepair": [
+      "Admin-specific source fixes and tests",
+      "Admin bootstrap/auth/CSP fixes listed in ADMIN_WAVE_3_RECONCILIATION_2026-08-29.json",
+      "Admin evidence and Agent Pack synchronization records"
+    ],
+    "exclude": [
+      "Provider/Public/Seeker changes not part of the Admin wave",
+      "zh-CN files and snapshots",
+      "ignored .local, dist, and Playwright generated output",
+      "secrets and .env.local",
+      "historical evidence deletion"
+    ],
+    "commitCreated": false,
+    "pushPerformed": false
+  },
+  "finalDecision": "ADMIN_WAVE_READY_WITH_EXTERNAL_EXCEPTIONS"
+}

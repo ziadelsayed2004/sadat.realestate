@@ -223,11 +223,11 @@ test('provider account form exposes accessible labels, keyboard order, and valid
     'provider-account-display-name',
     'provider-account-email',
     'provider-account-whatsapp',
-    'provider-account-secondary-phone',
     'provider-account-locale'
   ]) {
     await expect(form.locator(`label[for="${id}"]`)).toHaveCount(1);
   }
+  await expect(form.locator('[id*="phone"], [name*="phone"]')).toHaveCount(0);
   await expect(form.getByRole('checkbox')).toHaveCount(2);
   await expect(form.getByRole('checkbox', { name: /.+/ })).toHaveCount(2);
 

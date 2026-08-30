@@ -20,6 +20,12 @@ function ShellFrame({ kind, route, locale, copy, assets, children }: RouteShellP
   const dashboard = kind === 'seeker' || kind === 'provider' || kind === 'admin';
   const surfaceLabel = copy.surfaceLabels[route.surface];
   const accessibilityCopy = getAccessibilityCopy(locale);
+  const adminHeader = kind === 'admin' ? {
+    search: locale === 'ar' ? 'ابحث عن مستخدم، عقار، مشروع، مقال أو طلب' : locale === 'en' ? 'Search for a user, property, project, article or request' : '搜索用户、房产、项目、文章或请求',
+    searchLabel: locale === 'ar' ? 'بحث الإدارة' : locale === 'en' ? 'Admin search' : '管理搜索',
+    role: locale === 'ar' ? 'مدير النظام' : locale === 'en' ? 'System administrator' : '系统管理员',
+    menu: locale === 'ar' ? 'قائمة الإدارة' : locale === 'en' ? 'Admin menu' : '管理菜单'
+  } : undefined;
   const body = (
     <main id="main-content" className="app-main" tabIndex={-1}>
       {children}
@@ -40,8 +46,19 @@ function ShellFrame({ kind, route, locale, copy, assets, children }: RouteShellP
       <SkipLink label={accessibilityCopy.skipToContent} />
       <header className="app-header route-shell__header">
         <BrandMark label={copy.brand} assets={assets} />
-        <span className="surface-label" data-shell-surface="true">{surfaceLabel}</span>
-        <span className="locale" data-locale-indicator="true">{copy.localeLabel}: {locale}</span>
+        {adminHeader === undefined ? <><span className="surface-label" data-shell-surface="true">{surfaceLabel}</span><span className="locale" data-locale-indicator="true">{copy.localeLabel}: {locale}</span></> : (
+          <div data-admin-header="true" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '.65rem', order: 0 }}>
+              <span aria-hidden="true" style={{ display: 'grid', width: '2.25rem', height: '2.25rem', placeItems: 'center', borderRadius: '50%', background: '#e4eee9', color: '#155b4f', fontWeight: 800 }}>م</span>
+              <span style={{ display: 'grid', gap: '.1rem', color: '#1b2942', fontSize: '.78rem' }}><strong>{adminHeader.role}</strong><small style={{ color: '#8a94a5' }}>{surfaceLabel}</small></span>
+            </div>
+            <label style={{ display: 'flex', alignItems: 'center', minWidth: 'min(34rem, 48vw)', border: '1px solid #e5d9bd', borderRadius: '999px', background: '#f8efd9', color: '#69768b', padding: '.55rem 1rem' }}>
+              <span className="a11y-visually-hidden">{adminHeader.searchLabel}</span>
+              <input aria-label={adminHeader.searchLabel} placeholder={adminHeader.search} type="search" style={{ width: '100%', border: 0, outline: 0, background: 'transparent', color: 'inherit' }} />
+            </label>
+            <span aria-label={adminHeader.menu} role="img" style={{ color: '#1b2942', fontSize: '1.25rem', lineHeight: 1 }}>☰</span>
+          </div>
+        )}
       </header>
       {dashboard ? (
         <div className="route-shell__body">

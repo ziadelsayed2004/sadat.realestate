@@ -75,6 +75,11 @@ test('local and Production commands use only the checked-in native runtime', () 
   assert.match(localSupervisor, /apps\/api\/dist\/modules\/admin\/run-bootstrap\.js/u);
   assert.match(localEnvironment, /LOCAL_AUTO_BOOTSTRAP_ADMIN=false/u);
   assert.match(localEnvironment, /admin\.demo@example\.invalid/u);
+  assert.match(localSupervisor, /idempotent bootstrap guard/u);
+  assert.ok(
+    localSupervisor.indexOf("stage: 'admin-bootstrap'") < localSupervisor.indexOf("stage: 'seed'"),
+    'Admin bootstrap must run before synthetic admin fixtures are seeded'
+  );
 });
 
 test('native local mail captures an OTP-shaped email without external delivery', { timeout: 10_000 }, async () => {

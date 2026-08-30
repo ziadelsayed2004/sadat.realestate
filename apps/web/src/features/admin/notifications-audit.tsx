@@ -230,6 +230,14 @@ function AuditTable({ locale, data }: { readonly locale: SupportedLocale; readon
   return <div className="admin-notifications-audit__table-wrap"><table className="admin-notifications-audit__table"><caption className="a11y-visually-hidden">{copy.audit.tableLabel}</caption><thead><tr><th scope="col">{copy.audit.date}</th><th scope="col">{copy.audit.actor}</th><th scope="col">{copy.audit.target}</th><th scope="col">{copy.audit.actionLabel}</th><th scope="col">{copy.audit.reason}</th><th scope="col">{copy.audit.details}</th></tr></thead><tbody>{data.items.map(item => <tr key={item.id}><td><time dateTime={item.createdAt}>{dateLabel(item.createdAt, locale)}</time></td><td><strong>{item.actorType}</strong><br /><code>{item.actorId}</code></td><td><strong>{item.targetType}</strong><br /><code>{item.targetId}</code></td><td>{item.action}</td><td>{item.reason}</td><td><a className="admin-notifications-audit__row-link" href={localePath(locale, `${ADMIN_AUDIT_LOGS_ROUTE}/${item.id}`)}>{copy.audit.view}</a></td></tr>)}</tbody></table></div>;
 }
 
+function AuditMetricStrip({ locale, data }: { readonly locale: SupportedLocale; readonly data: AdminAuditLogPage }) {
+  const copy = getAdminNotificationsAuditCopy(locale);
+  const values = [data.total, data.items.length, new Set(data.items.map(item => item.actorId)).size, data.items.length];
+  const labels = [copy.audit.metrics.total, copy.audit.metrics.onPage, copy.audit.metrics.administrators, copy.audit.metrics.redactedSnapshots];
+  const colors = ['#1b2942', '#2f68c9', '#087b43', '#bf6500'];
+  return <div data-testid="admin-audit-metrics" aria-label={copy.audit.metrics.total} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 14, marginBlock: 18 }}>{values.map((value, index) => <article className="admin-dashboard__metric" key={labels[index]}><strong style={{ color: colors[index] }}>{new Intl.NumberFormat(locale).format(value)}</strong><span>{labels[index]}</span></article>)}</div>;
+}
+
 function AuditListView({ locale, session, apiOrigin, authClient, load, initialData }: { readonly locale: SupportedLocale; readonly session: RouteSession; readonly apiOrigin?: string | undefined; readonly authClient?: AdminNotificationsAuditProps['authClient']; readonly load?: AdminAuditLogsLoader | undefined; readonly initialData?: AdminAuditLogPage | undefined }) {
   const copy = getAdminNotificationsAuditCopy(locale);
   const [filters, setFilters] = useState<AuditFilters>(EMPTY_FILTERS);
@@ -260,6 +268,7 @@ function AuditListView({ locale, session, apiOrigin, authClient, load, initialDa
     <Shell locale={locale} path={ADMIN_AUDIT_LOGS_ROUTE} screenId="ADM-66" state={state}>
       <Heading eyebrow={copy.audit.eyebrow} title={copy.audit.title} description={copy.audit.description} />
       {state !== 'success' && state !== 'empty' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
+      {data !== undefined ? <><aside role="note" data-testid="admin-audit-redaction-note" style={{ marginBlockStart: 18, padding: '12px 16px', border: '1px solid #f3c64f', borderRadius: 12, background: '#fff9e7', color: '#a45b00', lineHeight: 1.6 }}>{copy.audit.snapshotNotice}</aside><AuditMetricStrip locale={locale} data={data} /></> : null}
       <section className="admin-notifications-audit__panel"><div className="admin-notifications-audit__toolbar"><h2>{copy.audit.filters}</h2></div><AuditFilterForm locale={locale} filters={filters} onSubmit={submit} onClear={clear} />{filterError !== undefined ? <p className="admin-notifications-audit__feedback" role="alert">{filterError}</p> : null}</section>
       {state === 'empty' ? <section className="admin-notifications-audit__panel"><div className="admin-notifications-audit__empty" data-state="empty"><h2>{copy.states.empty.title}</h2><p>{copy.audit.noEntries}</p></div></section> : null}
       {state === 'success' && data !== undefined ? <section className="admin-notifications-audit__panel" aria-labelledby="admin-audit-table-title"><div className="admin-notifications-audit__toolbar"><h2 id="admin-audit-table-title">{copy.audit.tableLabel}</h2></div><AuditTable locale={locale} data={data} /><Pagination page={data.page} pageCount={pageCount} onPageChange={next => { setQuery(current => ({ ...current, page: next })); setAttempt(value => value + 1); }} previousLabel={copy.previous} nextLabel={copy.next} ariaLabel={copy.pagination} direction={locale === 'ar' ? 'rtl' : 'ltr'} /></section> : null}

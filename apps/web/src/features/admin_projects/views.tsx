@@ -86,6 +86,37 @@ function StatusBadge({ status, locale }: { readonly status: ProjectStatus; reado
   return <span className="admin-projects__badge" data-tone={toneForStatus(status)} data-status={status}>{copy.status[status]}</span>;
 }
 
+function ProjectMetricStrip({ data, locale, review }: { readonly data: AdminProjectListData; readonly locale: SupportedLocale; readonly review?: boolean }) {
+  const copy = getAdminProjectsCopy(locale);
+  const counts = Object.fromEntries(statuses.map(status => [status, data.items.filter(project => project.status === status).length])) as Record<ProjectStatus, number>;
+  const labels = review
+    ? (locale === 'ar' ? ['\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0645\u0634\u0631\u0648\u0639\u0627\u062a', copy.status.pending_review, copy.status.needs_changes, '\u0627\u0644\u0633\u062c\u0644\u0627\u062a \u0627\u0644\u0645\u062d\u0645\u0644\u0629'] : ['Total projects', copy.status.pending_review, copy.status.needs_changes, 'Loaded records'])
+    : (locale === 'ar' ? ['\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0645\u0634\u0631\u0648\u0639\u0627\u062a', '\u0627\u0644\u0633\u062c\u0644\u0627\u062a \u0627\u0644\u0645\u062d\u0645\u0644\u0629', copy.status.published, copy.status.pending_review, copy.status.needs_changes, copy.status.draft]
+      : ['Total projects', 'Loaded records', copy.status.published, copy.status.pending_review, copy.status.needs_changes, copy.status.draft]);
+  const values = review ? [data.total, counts.pending_review, counts.needs_changes, data.items.length] : [data.total, data.items.length, counts.published, counts.pending_review, counts.needs_changes, counts.draft];
+  const colors = review ? ['#1b2942', '#bf6500', '#bf6500', '#2f68c9'] : ['#1b2942', '#2f68c9', '#00854a', '#bf6500', '#bf6500', '#2f68c9'];
+  return (
+    <section aria-label={locale === 'ar' ? '\u0645\u0624\u0634\u0631\u0627\u062a \u0627\u0644\u0645\u0634\u0631\u0648\u0639\u0627\u062a' : 'Project metrics'} className="admin-dashboard__metric-section" style={{ marginBlockStart: 0 }}>
+      <div className="admin-dashboard__metric-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}>
+        {values.map((value, index) => <article className="admin-dashboard__metric" data-testid={`admin-project-metric-${index}`} key={labels[index]}><strong style={{ color: colors[index] }}>{new Intl.NumberFormat(locale).format(value)}</strong><span>{labels[index]}</span></article>)}
+      </div>
+    </section>
+  );
+}
+
+function ProjectStatusStrip({ locale, selected, onSelect }: { readonly locale: SupportedLocale; readonly selected: ProjectStatus | ''; readonly onSelect: (status: ProjectStatus | '') => void }) {
+  const copy = getAdminProjectsCopy(locale);
+  const allLabel = locale === 'ar' ? '\u0627\u0644\u0643\u0644' : locale === 'zh-CN' ? '\u5168\u90e8' : 'All';
+  return (
+    <div role="tablist" aria-label={locale === 'ar' ? '\u062d\u0627\u0644\u0629 \u0627\u0644\u0645\u0634\u0631\u0648\u0639' : 'Project status'} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, maxWidth: 1320, margin: '0 auto 12px', padding: 8, border: '1px solid #e3e5e7', borderRadius: 16, background: '#fff', boxShadow: '0 6px 16px #3232320d' }}>
+      {[['', allLabel] as const, ...statuses.map(status => [status, copy.status[status]] as const)].map(([value, label]) => {
+        const active = selected === value;
+        return <button aria-selected={active} data-filter-value={value || 'all'} key={value || 'all'} onClick={() => onSelect(value)} role="tab" style={{ minHeight: 38, padding: '8px 16px', border: 0, borderRadius: 999, background: active ? '#155b4f' : 'transparent', color: active ? '#fff' : '#69768b', cursor: 'pointer', fontWeight: 800 }} type="button">{label}</button>;
+      })}
+    </div>
+  );
+}
+
 function ProjectTable({ projects, locale, onReview }: { readonly projects: readonly ProjectData[]; readonly locale: SupportedLocale; readonly onReview: (id: string) => void }) {
   const copy = getAdminProjectsCopy(locale);
   return (
@@ -256,6 +287,8 @@ export function AdminProjects({ locale, session, authClient, apiOrigin, initialD
             <div><p className="admin-projects__eyebrow">{copy.eyebrow}</p><h1>{copy.listTitle}</h1><p>{copy.listDescription}</p></div>
             <a className="admin-projects__all-link" href={localePath(locale, ADMIN_PROJECTS_ROUTE)}>{copy.allProjects}</a>
           </div>
+          {state === 'success' && data !== undefined ? <ProjectMetricStrip data={data} locale={locale} /> : null}
+          <ProjectStatusStrip locale={locale} selected={statusInput} onSelect={status => { setStatusInput(status); setQuery(current => ({ ...current, page: 1, ...(status === '' ? { status: undefined } : { status }) })); setAttempt(value => value + 1); }} />
           <form className="admin-projects__filters" role="search" aria-label={copy.searchLabel} onSubmit={event => { event.preventDefault(); applyFilters(); }}>
             <label htmlFor="admin-projects-search">{copy.searchLabel}</label>
             <input id="admin-projects-search" type="search" value={searchInput} onChange={event => setSearchInput(event.target.value)} placeholder={copy.searchPlaceholder} />
@@ -278,6 +311,7 @@ export function AdminProjects({ locale, session, authClient, apiOrigin, initialD
             <div className="admin-projects__pagination"><Button size="sm" variant="secondary" disabled={page <= 1} onClick={() => { setQuery(current => ({ ...current, page: page - 1 })); setAttempt(value => value + 1); }}>{copy.previous}</Button><span>{copy.page(page, totalPages)}</span><Button size="sm" variant="secondary" disabled={page >= totalPages} onClick={() => { setQuery(current => ({ ...current, page: page + 1 })); setAttempt(value => value + 1); }}>{copy.next}</Button></div>
           </section>
         </> : null}
+        {isReview && state === 'success' && data !== undefined ? <ProjectMetricStrip data={data} locale={locale} review /> : null}
         {isReview && state === 'success' && selectedProject !== undefined ? <ReviewPanel project={selectedProject} locale={locale} review={reviewMutation} onBack={() => { window.location.href = localePath(locale, ADMIN_PROJECTS_ROUTE); }} /> : null}
       </div>
     </section>

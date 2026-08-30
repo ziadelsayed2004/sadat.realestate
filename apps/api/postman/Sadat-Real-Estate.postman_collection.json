@@ -19,6 +19,11 @@
       "key": "syntheticBearer",
       "value": "synthetic-admin-token",
       "type": "string"
+    },
+    {
+      "key": "syntheticRefreshCookie",
+      "value": "replace-with-runtime-refresh-cookie",
+      "type": "string"
     }
   ],
   "event": [
@@ -1454,7 +1459,12 @@
       ],
       "request": {
         "method": "POST",
-        "header": [],
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "sadat_refresh={{syntheticRefreshCookie}}"
+          }
+        ],
         "url": {
           "raw": "{{apiV1BaseUrl}}/auth/refresh",
           "host": [
@@ -1485,7 +1495,12 @@
       ],
       "request": {
         "method": "POST",
-        "header": [],
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "sadat_refresh={{syntheticRefreshCookie}}"
+          }
+        ],
         "url": {
           "raw": "{{apiV1BaseUrl}}/auth/logout",
           "host": [
@@ -1572,6 +1587,16 @@
           "path": [
             "me"
           ]
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
         }
       }
     },
@@ -1603,6 +1628,16 @@
           "path": [
             "me"
           ]
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
         }
       }
     },
@@ -1619,6 +1654,16 @@
           "path": [
             "me",
             "preferences"
+          ]
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
           ]
         }
       }
@@ -1651,6 +1696,16 @@
           "path": [
             "me",
             "preferences"
+          ]
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
           ]
         }
       }
@@ -1701,6 +1756,16 @@
             "provider",
             "application"
           ]
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
         }
       }
     },
@@ -1733,6 +1798,16 @@
             "provider",
             "application",
             "account"
+          ]
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
           ]
         }
       }
@@ -1767,6 +1842,16 @@
             "application",
             "business"
           ]
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
         }
       }
     },
@@ -1799,6 +1884,16 @@
             "provider",
             "application",
             "company"
+          ]
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
           ]
         }
       }
@@ -1833,6 +1928,16 @@
             "application",
             "submit"
           ]
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
         }
       }
     },
@@ -1850,6 +1955,16 @@
             "provider",
             "application",
             "status"
+          ]
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
           ]
         }
       }
@@ -1907,7 +2022,17 @@
             "documents"
           ]
         },
-        "description": "Select only an isolated synthetic PDF/JPEG/PNG fixture. The runtime requires a provider bearer session; no token or real document is stored in this collection."
+        "description": "Select only an isolated synthetic PDF/JPEG/PNG fixture. The runtime requires a provider bearer session; no token or real document is stored in this collection.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -1950,7 +2075,17 @@
             }
           ]
         },
-        "description": "Requires fresh provider ownership authorization and returns a 300-second bearer URL. Do not persist or log the response URL."
+        "description": "Requires fresh provider ownership authorization and returns a 300-second bearer URL. Do not persist or log the response URL.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -1998,7 +2133,17 @@
             }
           ]
         },
-        "description": "Requires a transient verified Admin bearer token with admin:documents.review. Use an isolated synthetic clean document only; the short-lived response URL must never be persisted or logged."
+        "description": "Requires a transient verified Admin bearer token with admin:documents.review. Use an isolated synthetic clean document only; the short-lived response URL must never be persisted or logged.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2021,6 +2166,16 @@
             {
               "key": "documentId",
               "value": "000000000000000000000000",
+              "type": "string"
+            }
+          ]
+        },
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
               "type": "string"
             }
           ]
@@ -2078,7 +2233,17 @@
             "roles"
           ]
         },
-        "description": "Requires a transient verified Admin bearer token with admin:roles.view. No token is stored in this collection."
+        "description": "Requires a transient verified Admin bearer token with admin:roles.view. No token is stored in this collection.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2111,7 +2276,17 @@
             "roles"
           ]
         },
-        "description": "Requires a transient verified Admin bearer token with admin:roles.manage and a reason. Persisted wildcard permissions are rejected; the mutation and its audit record commit atomically."
+        "description": "Requires a transient verified Admin bearer token with admin:roles.manage and a reason. Persisted wildcard permissions are rejected; the mutation and its audit record commit atomically.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2152,7 +2327,17 @@
             }
           ]
         },
-        "description": "Requires a transient verified Admin bearer token with admin:roles.manage, the current optimistic version, and a reason. The mutation and its audit record commit atomically."
+        "description": "Requires a transient verified Admin bearer token with admin:roles.manage, the current optimistic version, and a reason. The mutation and its audit record commit atomically.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2180,7 +2365,17 @@
             }
           ]
         },
-        "description": "Requires a transient verified Admin bearer token with admin:audit.view. Results are paginated explicit redacted projections; no token or audit content is stored in this collection."
+        "description": "Requires a transient verified Admin bearer token with admin:audit.view. Results are paginated explicit redacted projections; no token or audit content is stored in this collection.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2206,7 +2401,17 @@
             }
           ]
         },
-        "description": "Requires a transient verified Admin bearer token with admin:audit.view. Replace the synthetic ID only in an isolated non-production environment."
+        "description": "Requires a transient verified Admin bearer token with admin:audit.view. Replace the synthetic ID only in an isolated non-production environment.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2234,7 +2439,17 @@
             }
           ]
         },
-        "description": "Requires a transient verified Admin bearer token with admin:users.view. Results are paginated safe account projections; no bearer token is stored in this collection."
+        "description": "Requires a transient verified Admin bearer token with admin:users.view. Results are paginated safe account projections; no bearer token is stored in this collection.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2260,7 +2475,17 @@
             }
           ]
         },
-        "description": "Requires a transient verified Admin bearer token with admin:users.view. Use only an isolated synthetic non-Admin account; no bearer token is stored in this collection."
+        "description": "Requires a transient verified Admin bearer token with admin:users.view. Use only an isolated synthetic non-Admin account; no bearer token is stored in this collection.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2288,7 +2513,17 @@
             }
           ]
         },
-        "description": "Requires a transient verified Admin bearer token with admin:providers.view. Results exclude private document delivery data; no bearer token is stored in this collection."
+        "description": "Requires a transient verified Admin bearer token with admin:providers.view. Results exclude private document delivery data; no bearer token is stored in this collection.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2314,7 +2549,17 @@
             }
           ]
         },
-        "description": "Requires a transient verified Admin bearer token with admin:providers.view. Document metadata excludes storage keys and permanent URLs; no bearer token is stored in this collection."
+        "description": "Requires a transient verified Admin bearer token with admin:providers.view. Document metadata excludes storage keys and permanent URLs; no bearer token is stored in this collection.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2356,7 +2601,17 @@
             }
           ]
         },
-        "description": "Requires a transient verified Admin bearer token with admin:users.manage. Use only an isolated synthetic non-Admin account. The reason is mandatory; no bearer token is stored in this collection."
+        "description": "Requires a transient verified Admin bearer token with admin:users.manage. Use only an isolated synthetic non-Admin account. The reason is mandatory; no bearer token is stored in this collection.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2398,7 +2653,17 @@
             }
           ]
         },
-        "description": "Requires a transient verified Admin bearer token with admin:providers.review. providerId is the Provider application ID. Verification means manual platform approval only and makes no government or legal verification claim."
+        "description": "Requires a transient verified Admin bearer token with admin:providers.review. providerId is the Provider application ID. Verification means manual platform approval only and makes no government or legal verification claim.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2430,7 +2695,17 @@
             }
           ]
         },
-        "description": "Requires a transient verified Admin bearer token with admin:locations.view. Filters, sorting, and pagination are bounded and allowlisted."
+        "description": "Requires a transient verified Admin bearer token with admin:locations.view. Filters, sorting, and pagination are bounded and allowlisted.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2463,7 +2738,17 @@
             "locations"
           ]
         },
-        "description": "Requires a transient verified Admin bearer token with admin:locations.manage. Uses synthetic values only; localized content, stable slug, and reason are required."
+        "description": "Requires a transient verified Admin bearer token with admin:locations.manage. Uses synthetic values only; localized content, stable slug, and reason are required.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2504,7 +2789,17 @@
             }
           ]
         },
-        "description": "Requires admin:locations.manage, a transient bearer token, current optimistic version, and reason. Replace the ID only in isolated non-production data."
+        "description": "Requires admin:locations.manage, a transient bearer token, current optimistic version, and reason. Replace the ID only in isolated non-production data.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2545,7 +2840,17 @@
             }
           ]
         },
-        "description": "Requires admin:locations.manage. Deletion fails closed for child-neighborhood or Provider references and is intended only for isolated synthetic data."
+        "description": "Requires admin:locations.manage. Deletion fails closed for child-neighborhood or Provider references and is intended only for isolated synthetic data.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2563,7 +2868,17 @@
             "property-categories"
           ]
         },
-        "description": "Requires admin:taxonomy.view and a transient bearer token."
+        "description": "Requires admin:taxonomy.view and a transient bearer token.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2590,7 +2905,17 @@
             "property-categories"
           ]
         },
-        "description": "Requires admin:taxonomy.manage; synthetic data only."
+        "description": "Requires admin:taxonomy.manage; synthetic data only.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2624,7 +2949,17 @@
             }
           ]
         },
-        "description": "Requires admin:taxonomy.manage and current version."
+        "description": "Requires admin:taxonomy.manage and current version.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2658,7 +2993,17 @@
             }
           ]
         },
-        "description": "Fails closed while referenced; isolated synthetic data only."
+        "description": "Fails closed while referenced; isolated synthetic data only.",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        }
       }
     },
     {
@@ -2673,6 +3018,17 @@
           "path": [
             "admin",
             "features"
+          ]
+        },
+        "header": [],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
           ]
         }
       }
@@ -2693,6 +3049,17 @@
           "path": [
             "admin",
             "features"
+          ]
+        },
+        "header": [],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
           ]
         }
       }
@@ -2715,6 +3082,17 @@
             "features",
             ":featureId"
           ]
+        },
+        "header": [],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
         }
       }
     },
@@ -2735,6 +3113,17 @@
             "admin",
             "features",
             ":featureId"
+          ]
+        },
+        "header": [],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
           ]
         }
       }
@@ -2781,7 +3170,17 @@
                 }
               ]
             },
-            "description": "Requires an isolated verified provider session and a safe JPEG/PNG/floor-plan fixture."
+            "description": "Requires an isolated verified provider session and a safe JPEG/PNG/floor-plan fixture.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -2821,6 +3220,16 @@
                   "value": "000000000000000000000000"
                 }
               ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
             }
           }
         },
@@ -2849,6 +3258,16 @@
                 {
                   "key": "assetId",
                   "value": "000000000000000000000000"
+                }
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
                 }
               ]
             }
@@ -3150,7 +3569,17 @@
                 }
               ]
             },
-            "description": "Returns only authenticated provider-owned properties with bounded filters, deterministic ordering, pagination metadata, and state-derived availableActions."
+            "description": "Returns only authenticated provider-owned properties with bounded filters, deterministic ordering, pagination metadata, and state-derived availableActions.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -3182,7 +3611,17 @@
                 "properties"
               ]
             },
-            "description": "Requires an isolated verified provider session. Provider ownership is checked against the bearer subject."
+            "description": "Requires an isolated verified provider session. Provider ownership is checked against the bearer subject.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -3207,7 +3646,17 @@
                 }
               ]
             },
-            "description": "Returns only the authenticated provider-owned property."
+            "description": "Returns only the authenticated provider-owned property.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -3252,7 +3701,17 @@
                 }
               ]
             },
-            "description": "Requires the current optimistic version; set step to basic, location, details, price-payment, features-services, or contact. Location accepts an active locationId, coordinates, or an HTTPS mapUrl (up to 2048 characters) and does not fetch or geocode the URL. Contact data contains no provider identity override or secrets."
+            "description": "Requires the current optimistic version; set step to basic, location, details, price-payment, features-services, or contact. Location accepts an active locationId, coordinates, or an HTTPS mapUrl (up to 2048 characters) and does not fetch or geocode the URL. Contact data contains no provider identity override or secrets.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -3292,7 +3751,17 @@
                 }
               ]
             },
-            "description": "Aggregate validation returns structured field errors; only a valid owned draft can enter pending_review."
+            "description": "Aggregate validation returns structured field errors; only a valid owned draft can enter pending_review.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -3332,7 +3801,17 @@
                 }
               ]
             },
-            "description": "Requires an authorized verified admin and a mandatory reason."
+            "description": "Requires an authorized verified admin and a mandatory reason.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -3372,7 +3851,17 @@
                 }
               ]
             },
-            "description": "Hide, restore, or archive operations require an authorized verified admin and a mandatory reason."
+            "description": "Hide, restore, or archive operations require an authorized verified admin and a mandatory reason.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         }
       ]
@@ -3417,7 +3906,17 @@
                 }
               ]
             },
-            "description": "Requires admin:properties.view. Filters are bounded and results are paginated with safe state-derived actions."
+            "description": "Requires admin:properties.view. Filters are bounded and results are paginated with safe state-derived actions.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -3446,7 +3945,17 @@
                 }
               ]
             },
-            "description": "Requires admin:properties.review. Returns deterministic signals and human-readable explanations only; no AI matching or unverifiable score."
+            "description": "Requires admin:properties.review. Returns deterministic signals and human-readable explanations only; no AI matching or unverifiable score.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -3478,7 +3987,17 @@
                 }
               ]
             },
-            "description": "Requires admin:property-reports.view. Reporter identity is included only for administrators with manage permission."
+            "description": "Requires admin:property-reports.view. Reporter identity is included only for administrators with manage permission.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -3518,7 +4037,17 @@
                 }
               ]
             },
-            "description": "Requires admin:property-reports.manage and the current optimistic version."
+            "description": "Requires admin:property-reports.manage and the current optimistic version.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -3550,7 +4079,17 @@
                 }
               ]
             },
-            "description": "Requires admin:account-reports.view. Reporter identity is included only for administrators with manage permission."
+            "description": "Requires admin:account-reports.view. Reporter identity is included only for administrators with manage permission.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -3590,7 +4129,17 @@
                 }
               ]
             },
-            "description": "Requires admin:account-reports.manage and the current optimistic version."
+            "description": "Requires admin:account-reports.manage and the current optimistic version.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         }
       ]
@@ -3635,7 +4184,17 @@
                 }
               ]
             },
-            "description": "Requires a verified seeker, provider, or administrator token. Replays of the same reason are deduplicated."
+            "description": "Requires a verified seeker, provider, or administrator token. Replays of the same reason are deduplicated.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         }
       ]
@@ -3657,6 +4216,16 @@
                 "seeker",
                 "contact-requests"
               ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
             }
           }
         },
@@ -3674,6 +4243,16 @@
                 "seeker",
                 "search-requests"
               ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
             }
           }
         },
@@ -3690,6 +4269,16 @@
               "path": [
                 "seeker",
                 "requests"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
               ]
             }
           }
@@ -3709,6 +4298,16 @@
                 "requests",
                 ":requestId"
               ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
             }
           }
         },
@@ -3725,6 +4324,16 @@
               "path": [
                 "provider",
                 "customer-requests"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
               ]
             }
           }
@@ -3743,6 +4352,16 @@
                 "provider",
                 "customer-requests"
               ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
             }
           }
         },
@@ -3760,6 +4379,16 @@
                 "provider",
                 "customer-requests",
                 ":requestId"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
               ]
             }
           }
@@ -3780,6 +4409,16 @@
                 ":requestId",
                 "transitions"
               ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
             }
           }
         },
@@ -3796,6 +4435,16 @@
               "path": [
                 "admin",
                 "requests"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
               ]
             }
           }
@@ -3815,6 +4464,16 @@
                 "requests",
                 "overdue"
               ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
             }
           }
         },
@@ -3832,6 +4491,16 @@
                 "admin",
                 "requests",
                 ":requestId"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
               ]
             }
           }
@@ -3852,6 +4521,16 @@
                 ":requestId",
                 "assign"
               ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
             }
           }
         },
@@ -3871,6 +4550,16 @@
                 ":requestId",
                 "notes"
               ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
             }
           }
         },
@@ -3889,6 +4578,16 @@
                 "requests",
                 ":requestId",
                 "transitions"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
               ]
             }
           }
@@ -3915,6 +4614,16 @@
                 {
                   "key": "limit",
                   "value": "20"
+                }
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
                 }
               ]
             }
@@ -3950,6 +4659,16 @@
                 ":issueId",
                 "resolve"
               ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
             }
           }
         }
@@ -3972,6 +4691,16 @@
                 "seeker",
                 "viewings"
               ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
             }
           }
         },
@@ -3988,6 +4717,16 @@
               "path": [
                 "seeker",
                 "viewings"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
               ]
             }
           }
@@ -4006,6 +4745,16 @@
                 "seeker",
                 "viewings",
                 ":viewingId"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
               ]
             }
           }
@@ -4026,6 +4775,16 @@
                 ":viewingId",
                 "cancel"
               ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
             }
           }
         },
@@ -4042,6 +4801,16 @@
               "path": [
                 "provider",
                 "viewings"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
               ]
             }
           }
@@ -4062,6 +4831,16 @@
                 ":viewingId",
                 "transitions"
               ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
             }
           }
         },
@@ -4078,6 +4857,16 @@
               "path": [
                 "admin",
                 "viewings"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
               ]
             }
           }
@@ -4795,7 +5584,17 @@
                 }
               ]
             },
-            "description": "Requires a transient verified administrator token with admin:content.view."
+            "description": "Requires a transient verified administrator token with admin:content.view.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -4827,7 +5626,17 @@
                 "article-categories"
               ]
             },
-            "description": "Requires admin:content.manage. Use isolated non-production data only."
+            "description": "Requires admin:content.manage. Use isolated non-production data only.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -4866,7 +5675,17 @@
                 }
               ]
             },
-            "description": "Requires admin:content.manage and the current optimistic version."
+            "description": "Requires admin:content.manage and the current optimistic version.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -4905,7 +5724,17 @@
                 }
               ]
             },
-            "description": "Deletion fails while any article references the category."
+            "description": "Deletion fails while any article references the category.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -4933,7 +5762,17 @@
                 }
               ]
             },
-            "description": "Requires a transient verified administrator token with admin:content.view."
+            "description": "Requires a transient verified administrator token with admin:content.view.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -4965,7 +5804,17 @@
                 "articles"
               ]
             },
-            "description": "Requires admin:content.manage. The author is derived from the authenticated administrator."
+            "description": "Requires admin:content.manage. The author is derived from the authenticated administrator.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -5004,7 +5853,17 @@
                 }
               ]
             },
-            "description": "Only draft articles are editable; the current optimistic version is required."
+            "description": "Only draft articles are editable; the current optimistic version is required.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -5044,7 +5903,17 @@
                 }
               ]
             },
-            "description": "Draft submission requires admin:content.manage; review/publication transitions require admin:content.publish. A reason and current optimistic version are always required."
+            "description": "Draft submission requires admin:content.manage; review/publication transitions require admin:content.publish. A reason and current optimistic version are always required.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         }
       ]
@@ -5418,7 +6287,17 @@
                 }
               ]
             },
-            "description": "Requires a transient verified provider bearer token. Results are owned-project projections only."
+            "description": "Requires a transient verified provider bearer token. Results are owned-project projections only.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -5450,7 +6329,17 @@
                 "projects"
               ]
             },
-            "description": "Requires an isolated verified provider session; ownership is derived from the bearer identity."
+            "description": "Requires an isolated verified provider session; ownership is derived from the bearer identity.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -5489,7 +6378,17 @@
                 }
               ]
             },
-            "description": "Requires a verified provider bearer token and current optimistic version."
+            "description": "Requires a verified provider bearer token and current optimistic version.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -5529,7 +6428,17 @@
                 }
               ]
             },
-            "description": "Requires a verified provider bearer token and current optimistic version."
+            "description": "Requires a verified provider bearer token and current optimistic version.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         },
         {
@@ -5569,7 +6478,17 @@
                 }
               ]
             },
-            "description": "Requires an isolated verified admin session with admin:projects.review."
+            "description": "Requires an isolated verified admin session with admin:projects.review.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         }
       ]
@@ -5602,7 +6521,17 @@
                 }
               ]
             },
-            "description": "Requires an isolated verified admin session with admin:projects.view. The response is an administrative projection and never accepts a client provider filter."
+            "description": "Requires an isolated verified admin session with admin:projects.view. The response is an administrative projection and never accepts a client provider filter.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
           }
         }
       ]

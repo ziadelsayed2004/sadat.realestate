@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "manifestId": "PRE_COMMIT_RELEASE_AUDIT_CLEANUP_MANIFEST_2026-08-30",
+  "generatedAt": "2026-08-30T03:08:00+03:00",
+  "taskId": "frontend_105",
+  "policy": "No material deletion was performed. All listed paths are KEEP until a later human-directed, selective cleanup decision.",
+  "deleteCandidates": [],
+  "entries": [
+    {
+      "path": ".local/**",
+      "owner": "local runtime",
+      "tracked": "ignored",
+      "decision": "KEEP",
+      "reason": "MongoDB data, supervisor state, and runtime evidence; preserve the user's local environment."
+    },
+    {
+      "path": ".env.local",
+      "owner": "user/runtime",
+      "tracked": "ignored",
+      "decision": "KEEP",
+      "reason": "Local configuration and secrets; it was not printed or included in the commit plan."
+    },
+    {
+      "path": "apps/web/playwright-report/**",
+      "owner": "frontend_105",
+      "tracked": "ignored/generated",
+      "decision": "KEEP",
+      "reason": "HTML report and attachments preserve the final approved-locale matrix evidence."
+    },
+    {
+      "path": "apps/web/test-results/**",
+      "owner": "frontend_105",
+      "tracked": "ignored/generated",
+      "decision": "KEEP",
+      "reason": "Failure contexts, traces, screenshots, and controlled rerun evidence remain required for classification."
+    },
+    {
+      "path": "apps/web/dist/**",
+      "owner": "build and isolated preview",
+      "tracked": "ignored/generated",
+      "decision": "KEEP",
+      "reason": "Rebuilt client and SSR output supports the isolated 4174 audit server."
+    },
+    {
+      "path": "apps/web/tests/e2e/__snapshots__/**",
+      "owner": "prior waves and user",
+      "tracked": "mixed",
+      "decision": "KEEP",
+      "reason": "Visual baselines are protected evidence; no snapshot update or deletion was performed."
+    },
+    {
+      "path": "apps/web/public/assets/**",
+      "owner": "design source/runtime",
+      "tracked": "mixed",
+      "decision": "KEEP",
+      "reason": "Canonical product assets and source-backed runtime media must not be removed."
+    },
+    {
+      "path": "docs/quality/figma_parity/**",
+      "owner": "reconciliation evidence",
+      "tracked": "mixed",
+      "decision": "KEEP",
+      "reason": "Queue, checkpoints, screen evidence, historical reports, and the Arabic release report are canonical evidence."
+    },
+    {
+      "path": "agent_pack/**",
+      "owner": "Coordinator",
+      "tracked": "mixed",
+      "decision": "KEEP",
+      "reason": "Task state, source manifests, reports, generated indexes, and release audit evidence are required for synchronization."
+    },
+    {
+      "path": "historical reports and checkpoints",
+      "owner": "prior waves",
+      "tracked": "mixed",
+      "decision": "KEEP",
+      "reason": "Historical provenance is immutable and was not rewritten."
+    },
+    {
+      "path": "zh-CN source, tests, and snapshots",
+      "owner": "product requirements",
+      "tracked": "mixed",
+      "decision": "KEEP",
+      "reason": "No zh-CN file was edited; the locale is excluded from this audit execution scope."
+    }
+  ],
+  "materialDeletions": 0,
+  "atomicCommitPlan": "agent_pack/08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_REPORT_2026-08-30.json"
+}

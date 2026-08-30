@@ -1,0 +1,439 @@
+{
+  "schemaVersion": 1,
+  "reportId": "PRE_COMMIT_RELEASE_AUDIT_REPORT_2026-08-30",
+  "generatedAt": "2026-08-30T03:08:00+03:00",
+  "taskId": "frontend_105",
+  "decision": "FULL_131_READY_WITH_EXTERNAL_EXCEPTIONS",
+  "finalMarker": "FULL_131_READY_WITH_EXTERNAL_EXCEPTIONS",
+  "reportLanguage": "en",
+  "scope": {
+    "canonicalScreenCount": 131,
+    "surfaces": {
+      "public": 12,
+      "auth": 19,
+      "seeker": 10,
+      "provider": 24,
+      "admin": 66
+    },
+    "queue": {
+      "processed": 131,
+      "pending": 0,
+      "closureEligible": 102,
+      "notClosed": 29
+    },
+    "locales": [
+      "ar-RTL",
+      "en-LTR"
+    ],
+    "devices": [
+      "desktop",
+      "tablet",
+      "mobile"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "canonicalFigmaFile": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFigmaFile": "0HBdTNGROmmpC6S7OYa3iJ",
+    "sourceManifest": "agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json",
+    "queueEvidence": "docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json",
+    "checkpointEvidence": "docs/quality/figma_parity/RUN_CHECKPOINT.json"
+  },
+  "screenReconciliation": {
+    "classifications": {
+      "REPAIRED_VERIFIED": 78,
+      "VERIFIED_NO_CHANGE": 24,
+      "PARTIAL_EXTERNAL": 28,
+      "BLOCKED_SOURCE": 1
+    },
+    "repositoryOwnedDefectsBeforeAudit": 0,
+    "repositoryOwnedDefectsAfterAudit": 0,
+    "notClosedBySurface": {
+      "seeker": {
+        "owner": "external source, fixture, and contract owner",
+        "screenIds": [
+          "SEK-01",
+          "SEK-02",
+          "SEK-03",
+          "SEK-04",
+          "SEK-05",
+          "SEK-06",
+          "SEK-07",
+          "SEK-08",
+          "SEK-09",
+          "SEK-10"
+        ],
+        "classification": "PARTIAL_EXTERNAL"
+      },
+      "provider": {
+        "owner": "external source, fixture, and contract owner",
+        "screenIds": [
+          "PRV-01",
+          "PRV-03",
+          "PRV-04",
+          "PRV-05",
+          "PRV-06",
+          "PRV-07",
+          "PRV-08",
+          "PRV-09",
+          "PRV-10",
+          "PRV-15",
+          "PRV-16",
+          "PRV-17",
+          "PRV-18",
+          "PRV-19",
+          "PRV-20",
+          "PRV-22-2",
+          "PRV-22-3"
+        ],
+        "classification": "PARTIAL_EXTERNAL"
+      },
+      "admin": {
+        "ADM-18": {
+          "owner": "design/source owner",
+          "classification": "BLOCKED_SOURCE",
+          "reason": "The exact canonical clone node is unavailable; no historical Figma parity claim is made."
+        },
+        "ADM-54": {
+          "owner": "project owner and external design-source owner",
+          "classification": "PARTIAL_EXTERNAL",
+          "reason": "Only the owner-authored local baseline is available; the exact historical Figma source is unavailable."
+        }
+      }
+    },
+    "parityClaim": "Full exact parity is not claimed while the 29 external/source exceptions remain open."
+  },
+  "preflight": {
+    "objectiveFile": "C:/Users/Ziad Elsayed/.codex/attachments/970cb740-6fa0-4114-994c-85b9106102c6/goal-objective.md",
+    "ownershipManifest": "agent_pack/08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_OWNERSHIP_MANIFEST.json",
+    "worktreeWasDirtyBeforeAudit": true,
+    "preAuditStatusLineCount": 316,
+    "branch": "main",
+    "remoteDivergence": {
+      "ahead": 0,
+      "behind": 0
+    },
+    "commitsCreated": 0,
+    "pushesPerformed": 0,
+    "deploysPerformed": 0,
+    "destructiveGitActionsPerformed": 0,
+    "preservedRuntime": [
+      "127.0.0.1:4173 existing local runtime",
+      "MongoDB 127.0.0.1:27017 installed standalone service",
+      "MongoDB isolated test replica set on 127.0.0.1:27018",
+      "MongoDB isolated Admin replica set on 127.0.0.1:27019",
+      "127.0.0.1:4174 isolated audit server"
+    ]
+  },
+  "apiReconciliation": {
+    "historicalBlueprint": {
+      "total": 185,
+      "implemented": 183,
+      "planned": 2
+    },
+    "currentTruth": {
+      "blueprintTotal": 187,
+      "implemented": 178,
+      "planned": 9,
+      "runtimeRoutes": 178,
+      "authorizationPolicyRoutes": 178,
+      "apiAuditErrors": 0
+    },
+    "reclassifiedAsPlanned": [
+      "DELETE /api/v1/me/sessions/:sessionId",
+      "GET /api/v1/me/sessions",
+      "GET /api/v1/provider/dashboard",
+      "GET /api/v1/public/bootstrap",
+      "GET /api/v1/public/sitemap",
+      "POST /api/v1/auth/password/forgot",
+      "POST /api/v1/auth/password/reset"
+    ],
+    "addedSourceBackedImplementedRoutes": [
+      "GET /api/v1/admin/admin-users/:adminId",
+      "POST /api/v1/provider/properties/:propertyId/reports"
+    ],
+    "sourceEvidence": [
+      "apps/api/src/modules/admin/administrator-router.ts",
+      "apps/api/src/modules/moderation/router.ts",
+      "docs/api/admin-users.md",
+      "docs/api/property-reports.md"
+    ],
+    "artifactValidators": {
+      "apiInventory": "passed",
+      "openapi": "OPENAPI_VALID",
+      "postman": "POSTMAN_VALID",
+      "apiAudit": "passed with zero errors"
+    },
+    "authorizationHardening": {
+      "providerApplication": "otp_grant with provider role and invalid-grant negative case",
+      "communityMutations": "role-gated seeker/provider/admin self-scope policies",
+      "securityFocusedTests": "17/17 passed"
+    }
+  },
+  "browserMatrix": {
+    "finalAttempt": {
+      "command": "WEB_BASE_URL=http://127.0.0.1:4174 node ../../node_modules/playwright/cli.js test --config playwright.config.ts --workers=6 --project=desktop-ar --project=desktop-en --project=tablet-ar --project=tablet-en --project=mobile-ar --project=mobile-en",
+      "projects": [
+        "desktop-ar",
+        "desktop-en",
+        "tablet-ar",
+        "tablet-en",
+        "mobile-ar",
+        "mobile-en"
+      ],
+      "totalTests": 2010,
+      "passed": 801,
+      "finalFailures": 69,
+      "skipped": 1140,
+      "exitCode": 1,
+      "snapshotUpdateFlags": false,
+      "ignoreSnapshotFlags": false,
+      "status": "completed_with_external_exceptions_and_transient_parallel_failures"
+    },
+    "finalFailureClassification": {
+      "documentedExternalSourceOrFixtureFailures": 64,
+      "transientParallelRuntimeFailures": 5,
+      "transientCases": [
+        "ADM-40 Admin commissions desktop-en visual case",
+        "PRV-03/PRV-04 Provider property wizard desktop-ar case",
+        "public route shell visual desktop-ar",
+        "public route shell visual desktop-en",
+        "public route shell visual mobile-ar"
+      ],
+      "transientControlledReruns": {
+        "adminCommission": "3/3 passed",
+        "providerWizard": "3/3 passed",
+        "publicShell": "9/9 passed",
+        "snapshotsUpdated": false
+      },
+      "externalFailureGroups": {
+        "providerOrganizationDocuments": 12,
+        "providerReview": 12,
+        "providerAccount": 6,
+        "providerType": 6,
+        "seekerRegistration": 6,
+        "seekerRequests": 6,
+        "criticalJourneys": 4,
+        "seekerViewings": 4,
+        "seekerNotifications": 2,
+        "seekerOverview": 2,
+        "seekerProfile": 2,
+        "seekerSaved": 2
+      }
+    },
+    "historicalFlakyAccounting": {
+      "previousUnexpectedCases": 65,
+      "previousFlakyCases": 7,
+      "controlledReproduction": "All seven previously flaky cases passed repeated serial runs on the rebuilt isolated server: public shell 12/12, Provider wizard 6/6, and Admin visual 3/3.",
+      "interpretation": "The flaky cases are environmental/concurrency artifacts, not a reason to update snapshots or weaken assertions."
+    },
+    "approvedLocaleEvidence": "Only the six AR/EN projects above were selected for the final browser matrix. No zh-CN browser project, snapshot, or source was changed.",
+    "evidenceArtifacts": [
+      "apps/web/test-results/**",
+      "apps/web/playwright-report/**"
+    ]
+  },
+  "gates": [
+    {
+      "command": "npm.cmd run typecheck",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run lint",
+      "status": "passed",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run test:workspace",
+      "status": "passed: 16/16",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run test:unit --workspace apps/api",
+      "status": "passed: 382/382",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run test:integration --workspace apps/api",
+      "status": "passed: 28/28",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run test:api --workspace apps/api",
+      "status": "passed: 107/107",
+      "exitCode": 0
+    },
+    {
+      "command": "focused apps/api/tests/security/*.test.ts",
+      "status": "passed: 17/17",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run test:vitest --workspace apps/web",
+      "status": "passed: 411 tests across 65 files",
+      "exitCode": 0,
+      "releaseEvidence": "Not used as approved-locale browser evidence; the existing broad Vitest suite contains a static zh-CN test and must not be rerun for this audit."
+    },
+    {
+      "command": "npm.cmd run build",
+      "status": "passed: client and SSR builds",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd audit --audit-level=high",
+      "status": "passed: 0 vulnerabilities",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run api:inventory --workspace apps/api",
+      "status": "passed: 178 runtime route entries",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run api:audit",
+      "status": "passed: 187 blueprint rows, 178 implemented, 9 planned, 178 runtime routes, 0 errors",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run openapi:validate --workspace apps/api",
+      "status": "OPENAPI_VALID",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run postman:validate --workspace apps/api",
+      "status": "POSTMAN_VALID",
+      "exitCode": 0
+    },
+    {
+      "command": "safe APP_ENV=test npm.cmd run env:check --workspace apps/api",
+      "status": "passed: loopback test environment and deterministic local database configuration",
+      "exitCode": 0,
+      "secretsPrinted": false
+    },
+    {
+      "command": "npm.cmd run local:status",
+      "status": "passed: ready=true; supervisor, API health/readiness, MongoDB, web, and proxy ready",
+      "exitCode": 0
+    },
+    {
+      "command": "npm.cmd run local:smoke",
+      "status": "passed: seeded counts properties=3, developers=1, articles=1, community=1, about=1, homepageProperties=3; invalid API 404; private file 401",
+      "exitCode": 0
+    },
+    {
+      "command": "safe TEST_MONGODB_URI=mongodb://127.0.0.1:27018/?replicaSet=rs0 npm.cmd run test:integration:live --workspace apps/api",
+      "status": "passed: topology=replica_set, ready=true",
+      "exitCode": 0
+    },
+    {
+      "command": "node agent_pack/scripts/sync_pack.mjs",
+      "status": "passed: selected frontend_105",
+      "exitCode": 0
+    },
+    {
+      "command": "node agent_pack/scripts/audit_pack.mjs",
+      "status": "passed with zero errors; final task closure removes the temporary in-progress entry",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "exitCode": 0
+    }
+  ],
+  "bundleAndPerformance": {
+    "stylesheetBytes": 409588,
+    "stylesheetBudgetBytes": 409600,
+    "stylesheetHeadroomBytes": 12,
+    "javascriptBytes": 1636897,
+    "javascriptBudgetBytes": 2560000,
+    "largestJavaScriptChunkBytes": 484744,
+    "largestJavaScriptChunkBudgetBytes": 665600,
+    "localTrafficAndPerformance": "Approved AR/EN browser performance checks passed; rate-limit unit and route checks pass locally, including 429 behavior.",
+    "safeCssChange": "No safe CSS reduction was justified at 12 bytes of remaining headroom; no visual change was made."
+  },
+  "knownProductionGaps": [
+    {
+      "area": "password reset",
+      "status": "planned",
+      "detail": "Password-forgot and password-reset routes remain explicitly planned rather than falsely marked implemented."
+    },
+    {
+      "area": "distributed rate limiting",
+      "status": "external prerequisite",
+      "detail": "Current rate limits are process-local. Local 429 behavior is covered, but a shared production limiter is required for multi-instance deployment."
+    },
+    {
+      "area": "large reads",
+      "status": "hardening follow-up",
+      "detail": "Several advertising, community, and provider repository reads still load broad result sets before in-memory filtering/slicing; production-scale pagination and explain evidence remain required."
+    },
+    {
+      "area": "database topology",
+      "status": "external prerequisite",
+      "detail": "The isolated 27018 and 27019 instances are single-node replica sets for local transaction/bootstrap checks, not a highly available production cluster; 27017 standalone was preserved untouched."
+    },
+    {
+      "area": "external infrastructure",
+      "status": "external prerequisite",
+      "detail": "Production SMTP, private storage, malware scanning, monitoring, native Ubuntu services, backup/restore, and production credentials were not claimed or exercised."
+    },
+    {
+      "area": "legacy phone identity",
+      "status": "policy confirmation required",
+      "detail": "Email-only authentication is enforced, while the identity model retains a normalized phone field/index used by contact/business data; migration policy must be confirmed before production rollout."
+    }
+  ],
+  "changesInThisAudit": [
+    "Corrected authorization policy classification for provider OTP grant and authenticated community mutations.",
+    "Added scripts/audit-api-contracts.mjs and the root api:audit quality gate.",
+    "Reconciled the endpoint blueprint to 187 truthful rows: 178 implemented and 9 planned.",
+    "Added source-backed blueprint records for admin user detail and provider property reports.",
+    "Regenerated OpenAPI security metadata and Postman request authentication from the route policy audit.",
+    "Registered and synchronized frontend_105 as the Release Audit Coordinator task.",
+    "Recorded this report and its cleanup manifest; no snapshots, source assets, or historical reports were deleted or updated."
+  ],
+  "cleanupManifest": "agent_pack/08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_CLEANUP_MANIFEST_2026-08-30.json",
+  "atomicCommitPlan": [
+    {
+      "order": 1,
+      "message": "api: reconcile route contracts and authorization artifacts",
+      "paths": [
+        "apps/api/src/modules/security/authorization-matrix.ts",
+        "apps/api/tests/security/authorization-matrix.test.ts",
+        "apps/api/openapi/openapi.json",
+        "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+        "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json",
+        "scripts/audit-api-contracts.mjs",
+        "package.json"
+      ]
+    },
+    {
+      "order": 2,
+      "message": "web: retain validated Provider and Admin parity repairs",
+      "paths": [
+        "apps/web/tests/provider-property-completion.vitest.test.tsx",
+        "apps/web/src/features/admin_commissions/views.tsx",
+        "apps/web/tests/e2e/provider-property-completion.spec.ts",
+        "apps/web/tests/e2e/__snapshots__/provider-property-completion.spec.ts-snapshots/**"
+      ],
+      "note": "Stage selectively after reviewing pre-existing worktree ownership; snapshot files are not changed by this audit."
+    },
+    {
+      "order": 3,
+      "message": "quality: record approved-locale full-platform release audit",
+      "paths": [
+        "agent_pack/03_execution/**",
+        "agent_pack/04_tracks/frontend/F7_post_release_assurance/frontend_105.md",
+        "agent_pack/08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_REPORT_2026-08-30.json",
+        "agent_pack/08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_CLEANUP_MANIFEST_2026-08-30.json",
+        "docs/quality/figma_parity/PRE_COMMIT_RELEASE_AUDIT_REPORT_2026-08-30.md",
+        "agent_pack/README.md"
+      ]
+    }
+  ],
+  "deploymentReadiness": "Local release candidate is ready with 29 documented external/source exceptions. Production deployment readiness is not claimed until the listed external infrastructure and hardening prerequisites are proven.",
+  "nextAction": "Resolve or formally accept the 29 screen-level external/source exceptions and the listed production prerequisites before claiming FULL_131_RECONCILED_RELEASE_READY.",
+  "taskCloseStatus": "partial"
+}

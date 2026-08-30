@@ -14,6 +14,10 @@ export interface AdminCopy {
     readonly refreshedLabel: string;
     readonly platformTitle: string;
     readonly operationsTitle: string;
+    readonly queueTitle: string;
+    readonly queueBody: string;
+    readonly activityTitle: string;
+    readonly actions: Readonly<{ readonly reviewAccounts: string; readonly reviewProperties: string; readonly createArticle: string; readonly reviewAdvertising: string }>;
     readonly metrics: Readonly<Record<AdminMetricKey, string>>;
     readonly emptyTitle: string;
     readonly emptyBody: string;
@@ -46,6 +50,10 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminCopy>> = {
       refreshedLabel: 'آخر تحديث',
       platformTitle: 'المنصة',
       operationsTitle: 'التشغيل والمراجعة',
+      queueTitle: 'طلبات تحتاج إلى مراجعة',
+      queueBody: 'تفاصيل الطلبات غير متاحة من عقد لوحة المؤشرات الحالي.',
+      activityTitle: 'آخر الإجراءات',
+      actions: { reviewAccounts: 'مراجعة الحسابات', reviewProperties: 'مراجعة العقارات', createArticle: 'إنشاء مقال', reviewAdvertising: 'مراجعة الإعلانات' },
       metrics: {
         users: 'إجمالي المستخدمين',
         seekers: 'الباحثون عن عقار',
@@ -91,6 +99,10 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminCopy>> = {
       refreshedLabel: 'Last refreshed',
       platformTitle: 'Platform',
       operationsTitle: 'Operations and review',
+      queueTitle: 'Requests needing review',
+      queueBody: 'Request details are not available from the current overview contract.',
+      activityTitle: 'Recent activity',
+      actions: { reviewAccounts: 'Review accounts', reviewProperties: 'Review properties', createArticle: 'Create article', reviewAdvertising: 'Review advertising' },
       metrics: {
         users: 'Total users',
         seekers: 'Property seekers',
@@ -136,6 +148,10 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminCopy>> = {
       refreshedLabel: '最后更新',
       platformTitle: '平台',
       operationsTitle: '运营与审核',
+      queueTitle: '需要审核的请求',
+      queueBody: '当前概览契约不提供请求详情。',
+      activityTitle: '最近活动',
+      actions: { reviewAccounts: '审核账户', reviewProperties: '审核房产', createArticle: '创建文章', reviewAdvertising: '审核广告' },
       metrics: {
         users: '用户总数',
         seekers: '找房者',
