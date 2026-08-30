@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "taskId": "backend_150",
+  "status": "complete",
+  "completedAt": "2026-08-30T21:46:33.308Z",
+  "completionMarker": "TASK_backend_150_COMPLETE",
+  "decision": "READ_ONLY_RETIRED_LOCALE_INVENTORY_AND_MONGO_DRY_RUN",
+  "summary": "Completed the bounded retired-locale source inventory and isolated Mongo dry-run without applying a migration or mutating product, database, image, snapshot, or Git-index state.",
+  "evidencePath": "agent_pack/08_reality_sync/BACKEND_150_RETIRED_LOCALE_INVENTORY_2026-08-31.json",
+  "evidenceSha256": "b143e03b66ca31fb805de8c03ad80190ff7267720a41d3c292bfca27cc4cf035",
+  "supersededEvidencePath": "agent_pack/08_reality_sync/BACKEND_150_RETIRED_LOCALE_INVENTORY_2026-08-30.json",
+  "supersededEvidenceSha256": "9e293b8afeff8354bb4fa80683ec975be9314312fed14c8743ab94ae692d1276",
+  "baseline": {
+    "branch": "main",
+    "head": "76423ff3f930f6a8ad5b063c0a308804d6941bdf",
+    "upstream": "origin/main",
+    "divergence": "0 0",
+    "workingTreePolicy": "PROTECTED_POTENTIALLY_DIRTY",
+    "ownershipManifestPath": "agent_pack/08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_OWNERSHIP_MANIFEST_2026-08-30.json",
+    "ownershipManifestSha256": "0d0a5665be9e978d619f9263da529324875ccca6cd76e65c333fc50ff5c55e11",
+    "ownershipManifestVerifiedBeforeTaskWrites": true,
+    "productionDatabaseAccess": false
+  },
+  "sourceInventory": {
+    "scannedFileCount": 2951,
+    "scannedFilenameCount": 4937,
+    "occurrenceCount": 3357,
+    "filenameOccurrenceCount": 187,
+    "occurrenceCountsByCategory": {
+      "HISTORICAL_OR_EVIDENCE_METADATA": 2536,
+      "TEST_OR_SNAPSHOT_REVIEW": 572,
+      "ACTIVE_RUNTIME_OR_CONTRACT_REVIEW": 237,
+      "DATABASE_OR_MIGRATION_REVIEW": 12
+    },
+    "targetPathCounts": {
+      "activeSourceAndContractPaths": 95,
+      "databaseSchemaIndexPaths": 7,
+      "testFixtureSnapshotPaths": 162,
+      "historicalDocsAndAgentPackPaths": 182,
+      "filenameOccurrences": 187,
+      "visualArtifactTargets": 1317
+    },
+    "retiredLocaleVariants": ["zh-CN", "zh_CN", "zhCN"]
+  },
+  "databaseDryRun": {
+    "status": "COMPLETED_READ_ONLY",
+    "targets": [
+      {"name": "local-showcase", "database": "sadat_real_estate_local", "port": 27018, "status": "COMPLETED_READ_ONLY", "collectionCount": 50},
+      {"name": "admin-wave3-main", "database": "sadat_real_estate_admin", "port": 27019, "status": "COMPLETED_READ_ONLY", "collectionCount": 49},
+      {"name": "admin-wave3", "database": "sadat_real_estate_admin_wave3", "port": 27019, "status": "COMPLETED_READ_ONLY", "collectionCount": 54},
+      {"name": "admin-wave3-legacy", "database": "sadat_admin_wave3", "port": 27019, "status": "COMPLETED_READ_ONLY", "collectionCount": 49}
+    ],
+    "aggregate": {
+      "totalDocuments": 337,
+      "recordsWithValidArAndEn": 72,
+      "recordsWithAnyValidArOrEn": 72,
+      "recordsWithRetiredLocale": 72,
+      "recordsWithRetiredLocaleAndAnyArOrEn": 72,
+      "recordsWithRetiredLocaleAndNeitherArNorEn": 0,
+      "recordsWithRetiredLocaleAndArEn": 72,
+      "recordsWithRetiredLocaleOnly": 0,
+      "recordsWithRetiredFieldWithoutValue": 0,
+      "recordsWithRetiredPreferredLocale": 0,
+      "recordsWithLocalizedObjectButNoArOrEn": 0,
+      "localizedObjectCount": 136,
+      "retiredFieldPathCount": 8,
+      "localeIndexCandidateCount": 28
+    },
+    "rawDocumentValuesEmitted": false,
+    "recordIdsOrPiiEmitted": false,
+    "writesAttempted": false,
+    "applyGate": "BLOCKED_UNTIL_BACKUP_RESTORE_PROOF_AND_APPROVALS"
+  },
+  "backupRestore": {
+    "status": "NOT_PERFORMED_DRY_RUN_ONLY",
+    "requiredBeforeApply": true,
+    "productionBackupTouched": false,
+    "futureApproval": "APPROVAL_DB_LOCALE_APPLY"
+  },
+  "verification": [
+    {"command": "Read-only Git preflight", "result": "passed", "details": "main is at 0 ahead and 0 behind origin/main; protected dirty-tree policy retained."},
+    {"command": "node --check agent_pack/scripts/backend_150_retired_locale_dry_run.mjs", "result": "passed", "details": "Bounded inventory tool parses successfully."},
+    {"command": "node agent_pack/scripts/backend_150_retired_locale_dry_run.mjs", "result": "passed", "details": "Source inventory and four isolated Mongo replica-set dry-runs completed with no writes."},
+    {"command": "npm.cmd run locale:audit", "result": "not_passed", "details": "Exit 1: repository script is missing; no pass claim was made."},
+    {"command": "node agent_pack/scripts/audit_pack.mjs", "result": "passed", "details": "Exit 0 with zero errors before task-state synchronization."},
+    {"command": "node agent_pack/scripts/sync_pack.mjs", "result": "passed", "details": "Agent Pack views synchronized; frontend_112 selected and not started."},
+    {"command": "node agent_pack/scripts/select_next_step.mjs", "result": "passed", "details": "The active selector returned frontend_112; no task was started."},
+    {"command": "node agent_pack/scripts/audit_pack.mjs", "result": "passed", "details": "Final exit 0 with zero errors after task-state and checkpoint synchronization."},
+    {"command": "git diff --check", "result": "passed", "details": "No whitespace errors after final Agent Pack updates."}
+  ],
+  "approvalsPending": [
+    "APPROVAL_DB_LOCALE_APPLY",
+    "APPROVAL_ACTIVE_LOCALE_SOURCE_REMOVAL",
+    "APPROVAL_TEST_SNAPSHOT_REMOVAL",
+    "APPROVAL_AGENT_PACK_DOC_SANITIZATION",
+    "APPROVAL_RETIRED_VISUAL_DELETION",
+    "APPROVAL_IMAGE_INDEX_UNTRACKING",
+    "APPROVAL_OPTIONAL_HISTORY_REDUCTION"
+  ],
+  "mutationStatement": {
+    "databaseDataChanged": false,
+    "databaseIndexesChanged": false,
+    "productSourceChanged": false,
+    "testsChanged": false,
+    "snapshotsChanged": false,
+    "imagesChanged": false,
+    "gitIndexChanged": false,
+    "externalServicesChanged": false,
+    "commitsPushesDeploysHistoryRewrite": false
+  },
+  "nextTask": "frontend_112",
+  "nextTaskStarted": false,
+  "noNestedAgents": true
+}

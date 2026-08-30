@@ -1,0 +1,194 @@
+{
+  "schemaVersion": 1,
+  "reportId": "MASTER_REALITY_RECONCILIATION_2026-08-31",
+  "generatedAt": "2026-08-30T21:23:18.954Z",
+  "finalMarker": "MASTER_REALITY_RECONCILED_ACTIVE_PROGRAM_READY",
+  "decision": "ACTIVE_PROGRAM_REGISTERED_AND_EVIDENCE_RECONCILED; NO PRODUCT TASK STARTED",
+  "protectedPreflight": {
+    "head": "76423ff3f930f6a8ad5b063c0a308804d6941bdf",
+    "upstream": "origin/main",
+    "divergence": "0\t0",
+    "branch": "main",
+    "ownershipManifestPath": "agent_pack/08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_OWNERSHIP_MANIFEST_2026-08-30.json",
+    "ownershipManifestSha256": "0d0a5665be9e978d619f9263da529324875ccca6cd76e65c333fc50ff5c55e11",
+    "ownershipCorrectionPath": "agent_pack/08_reality_sync/FRONTEND_106_POST_COMPLETION_RECONCILIATION_2026-08-30.json",
+    "workingTreePolicy": "Protected/potentially dirty; existing user work is preserved.",
+    "currentStatusLines": [
+      "M agent_pack/00_start_here/LANGUAGE_POLICY.md",
+      " M agent_pack/00_start_here/README.md",
+      " M agent_pack/03_execution/ATOMIC_TASK_MAP.json",
+      " M agent_pack/03_execution/COUNT_SUMMARY.json",
+      " M agent_pack/03_execution/DEPENDENCIES.json",
+      " M agent_pack/03_execution/EXECUTION_ORDER.md",
+      " M agent_pack/03_execution/MANIFEST.json",
+      " M agent_pack/03_execution/RUN_CHECKPOINT.json",
+      " M agent_pack/03_execution/STEP_FILE_PLAN.json",
+      " M agent_pack/03_execution/TASK_BOARD.md",
+      " M agent_pack/03_execution/TASK_CATALOG.json",
+      " M agent_pack/03_execution/TASK_STATE.json",
+      " M agent_pack/scripts/audit_pack.mjs",
+      " M agent_pack/scripts/select_next_step.mjs",
+      " M agent_pack/scripts/sync_pack.mjs",
+      " M agent_pack/step_info.json",
+      "?? agent_pack/03_execution/ACTIVE_DELIVERY_PROGRAM.json",
+      "?? agent_pack/04_tracks/backend/G1_repository_rebaseline/",
+      "?? agent_pack/04_tracks/backend/G2_ar_en_runtime/",
+      "?? agent_pack/04_tracks/backend/G3_public_requests_sales_crm/",
+      "?? agent_pack/04_tracks/backend/G4_platform_hardening/",
+      "?? agent_pack/04_tracks/frontend/G1_repository_rebaseline/frontend_112.md",
+      "?? agent_pack/04_tracks/frontend/G2_ar_en_runtime/",
+      "?? agent_pack/04_tracks/frontend/G3_public_requests_sales_crm/",
+      "?? agent_pack/04_tracks/frontend/G4_platform_hardening/",
+      "?? agent_pack/04_tracks/frontend/G5_figma_closure/",
+      "?? agent_pack/04_tracks/frontend/G6_final_integration/",
+      "?? agent_pack/08_reality_sync/ACTIVE_ONE_TASK_LUNA_RUNNER_2026-08-31.md",
+      "?? agent_pack/08_reality_sync/API_DATABASE_RUNTIME_GAP_MATRIX_2026-08-31.json",
+      "?? agent_pack/08_reality_sync/DOCUMENTATION_IMAGE_ARTIFACT_INVENTORY_2026-08-31.json",
+      "?? agent_pack/08_reality_sync/LIVE_PREVIEW_HANDOFF_2026-08-31.md",
+      "?? agent_pack/08_reality_sync/MASTER_131_SCREEN_GAP_MATRIX_2026-08-31.json",
+      "?? agent_pack/08_reality_sync/MASTER_REALITY_RECONCILIATION_2026-08-31.json",
+      "?? agent_pack/08_reality_sync/MASTER_REALITY_RECONCILIATION_COMPLETION_2026-08-31.json",
+      "?? agent_pack/08_reality_sync/MASTER_RISK_APPROVAL_ROLLBACK_MATRIX_2026-08-31.json",
+      "?? agent_pack/08_reality_sync/NEXT_TASK_LUNA_GOAL_BACKEND_150_2026-08-31.md",
+      "?? agent_pack/08_reality_sync/RETIRED_LOCALE_INVENTORY_2026-08-31.json",
+      "?? agent_pack/08_reality_sync/VISUAL_EVIDENCE_MANIFEST_2026-08-31.json",
+      "?? agent_pack/scripts/generate_master_reconciliation_artifacts.mjs",
+      "?? docs/quality/figma_parity/MASTER_131_SCREEN_GAP_REPORT_2026-08-31.md"
+    ],
+    "noMutationScope": [
+      "product code",
+      "databases",
+      "documentation images",
+      "runtime snapshots",
+      "Git index",
+      "commits",
+      "pushes",
+      "deployments",
+      "history"
+    ]
+  },
+  "agentPackTruth": {
+    "activeProgramId": "SADAT_G1_G6_APPROVED_2026-08-30",
+    "activeTaskCount": 25,
+    "historicalTaskCount": 214,
+    "taskCatalogTotal": 239,
+    "taskStatusCounts": {
+      "complete": 209,
+      "blocked": 1,
+      "partial": 5,
+      "open": 24
+    },
+    "activeStatusCounts": {
+      "complete": 1,
+      "open": 24
+    },
+    "frontend106Status": "complete",
+    "nextDependencyReadyTask": "backend_150",
+    "nextTaskFile": "04_tracks/backend/G1_repository_rebaseline/backend_150.md",
+    "noTaskStarted": true,
+    "historicalSelectorExcluded": [
+      "frontend_099",
+      "frontend_103"
+    ]
+  },
+  "screens": {
+    "total": 131,
+    "surfaces": {
+      "public": 12,
+      "auth": 19,
+      "seeker": 10,
+      "provider": 24,
+      "admin": 66
+    },
+    "closureEligible": 102,
+    "externalOrSourceExceptions": 29,
+    "classifications": {
+      "REPAIRED_VERIFIED": 78,
+      "VERIFIED_NO_CHANGE": 24,
+      "PARTIAL_EXTERNAL": 28,
+      "BLOCKED_SOURCE": 1
+    },
+    "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "approvedLocales": [
+      "ar",
+      "en"
+    ],
+    "excludedLocales": [
+      "zh-CN"
+    ],
+    "matrixPath": "agent_pack/08_reality_sync/MASTER_131_SCREEN_GAP_MATRIX_2026-08-31.json",
+    "arabicReportPath": "docs/quality/figma_parity/MASTER_131_SCREEN_GAP_REPORT_2026-08-31.md",
+    "directReviewInThisGoal": false,
+    "noParityClaimFromRuntimeSnapshots": true
+  },
+  "api": {
+    "blueprintTotal": 187,
+    "implementedRuntime": 178,
+    "planned": 9,
+    "exactPlannedPaths": [
+      "POST /api/v1/auth/password/forgot",
+      "POST /api/v1/auth/password/reset",
+      "GET /api/v1/me/sessions",
+      "DELETE /api/v1/me/sessions/:sessionId",
+      "GET /api/v1/public/bootstrap",
+      "GET /api/v1/public/sitemap",
+      "GET /api/v1/provider/dashboard",
+      "POST /api/v1/provider/commission/confirm",
+      "GET /api/v1/admin/properties/:propertyId"
+    ],
+    "matrixPath": "agent_pack/08_reality_sync/API_DATABASE_RUNTIME_GAP_MATRIX_2026-08-31.json",
+    "allPlannedRoutesPendingG4Revalidation": true
+  },
+  "locale": {
+    "inventoryPath": "agent_pack/08_reality_sync/RETIRED_LOCALE_INVENTORY_2026-08-31.json",
+    "activeLocales": [
+      "ar",
+      "en"
+    ],
+    "retiredLocales": [
+      "zh-CN"
+    ],
+    "occurrenceCount": 3320,
+    "noDeletionOrMigration": true
+  },
+  "visualArtifacts": {
+    "inventoryPath": "agent_pack/08_reality_sync/DOCUMENTATION_IMAGE_ARTIFACT_INVENTORY_2026-08-31.json",
+    "manifestPath": "agent_pack/08_reality_sync/VISUAL_EVIDENCE_MANIFEST_2026-08-31.json",
+    "trackedImageCount": 1317,
+    "trackedImageBytes": 375191614,
+    "bundleVersion": "visual-evidence-2026-08-31-reconciliation-1",
+    "bundleSha256": "4e63bc18a30322014937ed7bd8d988aecc1d18881dae745a7219e8ef0da78a71",
+    "externalPublicationStatus": "NOT_PUBLISHED; owner approval/storage is required before untracking.",
+    "indexUntrackingPerformed": false,
+    "historyRewritePerformed": false
+  },
+  "livePreview": {
+    "handoffPath": "agent_pack/08_reality_sync/LIVE_PREVIEW_HANDOFF_2026-08-31.md",
+    "nodeVersion": "v24.19.0",
+    "npmVersion": "11.6.4",
+    "localCheck": {
+      "command": "npm.cmd run local:check",
+      "exitCode": 0,
+      "status": "LOCAL_DOCTOR_OK"
+    },
+    "localStatus": {
+      "command": "npm.cmd run local:status",
+      "exitCode": 1,
+      "status": "LOCAL_STATUS stopped ready=false"
+    },
+    "urls": [
+      "http://localhost:8080",
+      "http://localhost:8025"
+    ],
+    "startSequencePublishedOnly": true,
+    "startedByCoordinator": false
+  },
+  "governance": {
+    "riskMatrixPath": "agent_pack/08_reality_sync/MASTER_RISK_APPROVAL_ROLLBACK_MATRIX_2026-08-31.json",
+    "nextTaskGoalPath": "agent_pack/08_reality_sync/NEXT_TASK_LUNA_GOAL_BACKEND_150_2026-08-31.md",
+    "atomicRunnerPath": "agent_pack/08_reality_sync/ACTIVE_ONE_TASK_LUNA_RUNNER_2026-08-31.md",
+    "noNestedAgents": true,
+    "noCommitPushDeploy": true
+  }
+}

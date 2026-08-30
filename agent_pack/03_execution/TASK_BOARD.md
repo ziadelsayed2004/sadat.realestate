@@ -258,4 +258,38 @@
 - [/] frontend_105 — Pre-Commit Full Platform Audit and Release Candidate Coordinator
 ## G1_repository_rebaseline
 
-- [x] frontend_106 — Fresh Read-Only Baseline and Per-File Ownership/Provenance Manifest
+- [x] frontend_106 — Fresh Read-Only Baseline and Per-File Ownership/Provenance Manifest — ACTIVE_PROGRAM
+- [x] backend_150 — Retired-Locale Inventory and Migration Design — ACTIVE_PROGRAM
+- [ ] frontend_112 — Documentation Image Inventory, External Artifact Bundle, Ignore Policy and Approval Manifest — ACTIVE_PROGRAM
+## G2_ar_en_runtime
+
+- [ ] backend_151 — Two-Locale Contracts, Database/Index Migration and Rollback — ACTIVE_PROGRAM
+- [ ] frontend_107 — AR/EN Runtime, Language Switch, SSR/Hydration and URL Preservation — ACTIVE_PROGRAM
+## G3_public_requests_sales_crm
+
+- [ ] backend_152 — Public Property Request Contract and Validation — ACTIVE_PROGRAM
+- [ ] backend_153 — Transactional Persistence, PII Protection, UUID Reference, Idempotency and Dedupe — ACTIVE_PROGRAM
+- [ ] backend_154 — Sales Teams, Capacity Routing and Assignment History — ACTIVE_PROGRAM
+- [ ] backend_155 — Admin/Sales Request APIs and Assigned-Scope RBAC — ACTIVE_PROGRAM
+- [ ] frontend_108 — Canonical PUB-03 Shared Inquiry/Viewing Form — ACTIVE_PROGRAM
+- [ ] backend_156 — Persist-First WhatsApp Handoff and Audit/Outbox Events — ACTIVE_PROGRAM
+- [ ] frontend_109 — WhatsApp UX, Failure States and Accessibility — ACTIVE_PROGRAM
+- [ ] frontend_110 — Admin/Sales Request Inbox and Customer Detail — ACTIVE_PROGRAM
+- [ ] frontend_111 — Team Capacity and Reassignment UI — ACTIVE_PROGRAM
+## G4_platform_hardening
+
+- [ ] backend_157 — Planned-API Revalidation, Required Route Completion, Shared Rate Limits and Bounded Queries — ACTIVE_PROGRAM
+- [ ] backend_158 — API Artifacts, Safe Migrations and Live Mongo Gates — ACTIVE_PROGRAM
+- [ ] backend_159 — Hostinger SMTP, Storage, Malware Scanning, Monitoring, Backup/Restore and Production Readiness — ACTIVE_PROGRAM
+- [ ] frontend_113 — Route, Dead-Code, RTL/LTR, Design-System and Audit-Derived CSS/Bundle Cleanup — ACTIVE_PROGRAM
+## G5_figma_closure
+
+- [ ] frontend_114 — Authenticated Canonical Figma Refresh and Source Closure — ACTIVE_PROGRAM
+- [ ] frontend_115 — Public and Auth Exact Parity — ACTIVE_PROGRAM
+- [ ] frontend_116 — Seeker Exact Parity — ACTIVE_PROGRAM
+- [ ] frontend_117 — Provider Exact Parity — ACTIVE_PROGRAM
+- [ ] frontend_118 — Admin Exact Parity — ACTIVE_PROGRAM
+- [ ] frontend_119 — Full AR/EN 131-Screen Matrix — ACTIVE_PROGRAM
+## G6_final_integration
+
+- [ ] frontend_120 — Final Platform Release Coordinator — ACTIVE_PROGRAM

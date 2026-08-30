@@ -1503,5 +1503,173 @@
     "phase": "G1_repository_rebaseline",
     "sequence": 215,
     "atomicTaskFile": "04_tracks/frontend/G1_repository_rebaseline/frontend_106.md"
+  },
+  {
+    "taskId": "backend_150",
+    "track": "backend",
+    "phase": "G1_repository_rebaseline",
+    "sequence": 216,
+    "atomicTaskFile": "04_tracks/backend/G1_repository_rebaseline/backend_150.md"
+  },
+  {
+    "taskId": "frontend_112",
+    "track": "frontend",
+    "phase": "G1_repository_rebaseline",
+    "sequence": 217,
+    "atomicTaskFile": "04_tracks/frontend/G1_repository_rebaseline/frontend_112.md"
+  },
+  {
+    "taskId": "backend_151",
+    "track": "backend",
+    "phase": "G2_ar_en_runtime",
+    "sequence": 218,
+    "atomicTaskFile": "04_tracks/backend/G2_ar_en_runtime/backend_151.md"
+  },
+  {
+    "taskId": "frontend_107",
+    "track": "frontend",
+    "phase": "G2_ar_en_runtime",
+    "sequence": 219,
+    "atomicTaskFile": "04_tracks/frontend/G2_ar_en_runtime/frontend_107.md"
+  },
+  {
+    "taskId": "backend_152",
+    "track": "backend",
+    "phase": "G3_public_requests_sales_crm",
+    "sequence": 220,
+    "atomicTaskFile": "04_tracks/backend/G3_public_requests_sales_crm/backend_152.md"
+  },
+  {
+    "taskId": "backend_153",
+    "track": "backend",
+    "phase": "G3_public_requests_sales_crm",
+    "sequence": 221,
+    "atomicTaskFile": "04_tracks/backend/G3_public_requests_sales_crm/backend_153.md"
+  },
+  {
+    "taskId": "backend_154",
+    "track": "backend",
+    "phase": "G3_public_requests_sales_crm",
+    "sequence": 222,
+    "atomicTaskFile": "04_tracks/backend/G3_public_requests_sales_crm/backend_154.md"
+  },
+  {
+    "taskId": "backend_155",
+    "track": "backend",
+    "phase": "G3_public_requests_sales_crm",
+    "sequence": 223,
+    "atomicTaskFile": "04_tracks/backend/G3_public_requests_sales_crm/backend_155.md"
+  },
+  {
+    "taskId": "frontend_108",
+    "track": "frontend",
+    "phase": "G3_public_requests_sales_crm",
+    "sequence": 224,
+    "atomicTaskFile": "04_tracks/frontend/G3_public_requests_sales_crm/frontend_108.md"
+  },
+  {
+    "taskId": "backend_156",
+    "track": "backend",
+    "phase": "G3_public_requests_sales_crm",
+    "sequence": 225,
+    "atomicTaskFile": "04_tracks/backend/G3_public_requests_sales_crm/backend_156.md"
+  },
+  {
+    "taskId": "frontend_109",
+    "track": "frontend",
+    "phase": "G3_public_requests_sales_crm",
+    "sequence": 226,
+    "atomicTaskFile": "04_tracks/frontend/G3_public_requests_sales_crm/frontend_109.md"
+  },
+  {
+    "taskId": "frontend_110",
+    "track": "frontend",
+    "phase": "G3_public_requests_sales_crm",
+    "sequence": 227,
+    "atomicTaskFile": "04_tracks/frontend/G3_public_requests_sales_crm/frontend_110.md"
+  },
+  {
+    "taskId": "frontend_111",
+    "track": "frontend",
+    "phase": "G3_public_requests_sales_crm",
+    "sequence": 228,
+    "atomicTaskFile": "04_tracks/frontend/G3_public_requests_sales_crm/frontend_111.md"
+  },
+  {
+    "taskId": "backend_157",
+    "track": "backend",
+    "phase": "G4_platform_hardening",
+    "sequence": 229,
+    "atomicTaskFile": "04_tracks/backend/G4_platform_hardening/backend_157.md"
+  },
+  {
+    "taskId": "backend_158",
+    "track": "backend",
+    "phase": "G4_platform_hardening",
+    "sequence": 230,
+    "atomicTaskFile": "04_tracks/backend/G4_platform_hardening/backend_158.md"
+  },
+  {
+    "taskId": "backend_159",
+    "track": "backend",
+    "phase": "G4_platform_hardening",
+    "sequence": 231,
+    "atomicTaskFile": "04_tracks/backend/G4_platform_hardening/backend_159.md"
+  },
+  {
+    "taskId": "frontend_113",
+    "track": "frontend",
+    "phase": "G4_platform_hardening",
+    "sequence": 232,
+    "atomicTaskFile": "04_tracks/frontend/G4_platform_hardening/frontend_113.md"
+  },
+  {
+    "taskId": "frontend_114",
+    "track": "frontend",
+    "phase": "G5_figma_closure",
+    "sequence": 233,
+    "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_114.md"
+  },
+  {
+    "taskId": "frontend_115",
+    "track": "frontend",
+    "phase": "G5_figma_closure",
+    "sequence": 234,
+    "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_115.md"
+  },
+  {
+    "taskId": "frontend_116",
+    "track": "frontend",
+    "phase": "G5_figma_closure",
+    "sequence": 235,
+    "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_116.md"
+  },
+  {
+    "taskId": "frontend_117",
+    "track": "frontend",
+    "phase": "G5_figma_closure",
+    "sequence": 236,
+    "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_117.md"
+  },
+  {
+    "taskId": "frontend_118",
+    "track": "frontend",
+    "phase": "G5_figma_closure",
+    "sequence": 237,
+    "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_118.md"
+  },
+  {
+    "taskId": "frontend_119",
+    "track": "frontend",
+    "phase": "G5_figma_closure",
+    "sequence": 238,
+    "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_119.md"
+  },
+  {
+    "taskId": "frontend_120",
+    "track": "frontend",
+    "phase": "G6_final_integration",
+    "sequence": 239,
+    "atomicTaskFile": "04_tracks/frontend/G6_final_integration/frontend_120.md"
   }
 ]

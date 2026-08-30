@@ -7,6 +7,7 @@ const repositoryRoot = path.resolve(pack, '..');
 const read = (p) => JSON.parse(fs.readFileSync(path.join(pack, p), 'utf8'));
 const catalog = read('03_execution/TASK_CATALOG.json');
 const state = read('03_execution/TASK_STATE.json');
+const activeProgram = read('03_execution/ACTIVE_DELIVERY_PROGRAM.json');
 const screens = read('01_product/SCREEN_REGISTRY.json');
 const coverage = read('01_product/SCREEN_COVERAGE.json');
 const endpoints = read('01_product/API_ENDPOINT_BLUEPRINT.json');
@@ -16,10 +17,29 @@ const designSources = read('09_sources/DESIGN_SOURCE_MANIFEST.json');
 const errors = [];
 const sha256 = (file) => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 const ids = catalog.map((task) => task.id);
+const activeIds = activeProgram.activeTaskIds || [];
+const activeIdSet = new Set(activeIds);
+const activeOrder = activeProgram.executionOrder || [];
 if (new Set(ids).size !== ids.length) errors.push('Duplicate task IDs');
 if (new Set(screens.map((screen) => screen.id)).size !== screens.length) errors.push('Duplicate screen IDs');
 if (screens.length !== 131) errors.push('Expected 131 screen IDs, found ' + screens.length);
 if (Object.keys(state.tasks).length !== catalog.length) errors.push('TASK_STATE count mismatch');
+if (new Set(activeIds).size !== activeIds.length) errors.push('Duplicate active-program task IDs');
+if (activeOrder.length !== activeIds.length) errors.push('Active execution order count mismatch');
+for (const taskId of activeIds) {
+  if (!ids.includes(taskId)) errors.push('Active registry references missing catalog task ' + taskId);
+  if (!state.tasks[taskId]) errors.push('Active registry references missing state task ' + taskId);
+}
+for (let i = 0; i < activeOrder.length; i += 1) {
+  const row = activeOrder[i];
+  if (!activeIdSet.has(row.taskId)) errors.push('Active execution order references non-active task ' + row.taskId);
+  const task = catalog.find((item) => item.id === row.taskId);
+  if (!task) continue;
+  if (task.sequence !== row.sequence) errors.push('Active sequence mismatch at ' + row.taskId);
+  if (row.sequence !== 215 + i) errors.push('Active sequence is not contiguous at ' + row.taskId);
+}
+if (activeProgram.selectorPolicy?.historicalFallback !== false) errors.push('Active selector must disable historical fallback');
+if (activeProgram.selectorPolicy?.exactlyOneInProgressMaximum !== true) errors.push('Active selector must preserve one-in-progress invariant');
 if (manifest.packLanguage !== 'en') errors.push('Agent Pack language must be en');
 if (manifest.productLocalization?.primaryLocale !== 'ar' || manifest.productLocalization?.primaryDirection !== 'rtl') {
   errors.push('Product localization must preserve Arabic as the primary RTL locale');
@@ -77,7 +97,7 @@ for (let i = 0; i < catalog.length; i += 1) {
     if (depIndex >= i) errors.push('Forward/cyclic dependency ' + dep + ' -> ' + task.id);
   }
   if (!fs.existsSync(path.join(pack, task.atomicTaskFile))) errors.push('Missing atomic task file for ' + task.id);
-  if (task.track === 'frontend' && catalog.slice(i + 1).some((later) => later.track === 'backend')) errors.push('Backend task appears after frontend at ' + task.id);
+  if (!activeIdSet.has(task.id) && task.track === 'frontend' && catalog.slice(i + 1).some((later) => !activeIdSet.has(later.id) && later.track === 'backend')) errors.push('Historical backend task appears after historical frontend at ' + task.id);
   if (state.tasks[task.id]?.status === 'complete') {
     const evidence = path.join(pack, '07_finish', task.id, 'completion.json');
     if (!fs.existsSync(evidence)) errors.push('Completed task missing evidence: ' + task.id);
@@ -106,6 +126,6 @@ for (const file of jsonFiles) { try { JSON.parse(fs.readFileSync(file, 'utf8'));
 for (const file of textFiles) {
   if (/[\u0600-\u06ff]/u.test(fs.readFileSync(file, 'utf8'))) errors.push('Arabic-script text found in English-only Agent Pack file: ' + path.relative(pack, file));
 }
-const report = { tasks: catalog.length, backend: catalog.filter((task) => task.track === 'backend').length, frontend: catalog.filter((task) => task.track === 'frontend').length, screens: screens.length, endpointBlueprint: endpoints.length, localVisualSourceScreenIds: designSources.screens.filter((screen) => screen.localSources.length).length, jsonFiles: jsonFiles.length, textFilesCheckedForEnglishPolicy: textFiles.length, packLanguage: manifest.packLanguage, primaryProductLocale: manifest.productLocalization?.primaryLocale, inProgress: inProgress.map(([id]) => id), errors };
+const report = { tasks: catalog.length, backend: catalog.filter((task) => task.track === 'backend').length, frontend: catalog.filter((task) => task.track === 'frontend').length, activeProgram: activeProgram.programId, activeTasks: activeIds.length, historicalTasks: catalog.length - activeIds.length, screens: screens.length, endpointBlueprint: endpoints.length, localVisualSourceScreenIds: designSources.screens.filter((screen) => screen.localSources.length).length, jsonFiles: jsonFiles.length, textFilesCheckedForEnglishPolicy: textFiles.length, packLanguage: manifest.packLanguage, primaryProductLocale: manifest.productLocalization?.primaryLocale, inProgress: inProgress.map(([id]) => id), errors };
 console.log(JSON.stringify(report, null, 2));
 if (errors.length) process.exit(1);

@@ -1,17 +1,17 @@
 {
-  "total": 215,
+  "total": 239,
   "byTrack": {
     "backend": {
-      "total": 124,
-      "open": 0,
+      "total": 134,
+      "open": 9,
       "in_progress": 0,
       "partial": 0,
       "blocked": 1,
-      "complete": 123
+      "complete": 124
     },
     "frontend": {
-      "total": 91,
-      "open": 0,
+      "total": 105,
+      "open": 14,
       "in_progress": 0,
       "partial": 5,
       "blocked": 0,
@@ -19,12 +19,33 @@
     }
   },
   "byStatus": {
-    "open": 0,
+    "open": 23,
     "in_progress": 0,
     "partial": 5,
     "blocked": 1,
-    "complete": 209
+    "complete": 210
   },
-  "selectedTaskId": "frontend_099",
-  "updatedAt": "2026-08-30T11:57:12.550Z"
+  "activeProgram": {
+    "programId": "SADAT_G1_G6_APPROVED_2026-08-30",
+    "total": 25,
+    "byStatus": {
+      "open": 23,
+      "in_progress": 0,
+      "partial": 0,
+      "blocked": 0,
+      "complete": 2
+    }
+  },
+  "historical": {
+    "total": 214,
+    "byStatus": {
+      "open": 0,
+      "in_progress": 0,
+      "partial": 5,
+      "blocked": 1,
+      "complete": 208
+    }
+  },
+  "selectedTaskId": "frontend_112",
+  "updatedAt": "2026-08-30T21:46:56.017Z"
 }

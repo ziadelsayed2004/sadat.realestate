@@ -168,5 +168,60 @@
     "nextTaskStarted": false,
     "noProductOrGitIndexMutation": true,
     "noCommitPushDeployOrHistoryRewrite": true
+  },
+  "activeDeliveryProgramRegistration": {
+    "programId": "SADAT_G1_G6_APPROVED_2026-08-30",
+    "registryPath": "03_execution/ACTIVE_DELIVERY_PROGRAM.json",
+    "registeredAt": "2026-08-30T23:58:00+03:00",
+    "historicalTaskCount": 214,
+    "activeTaskCount": 25,
+    "frontend099": "HISTORICAL_PARTIAL_NOT_SELECTABLE",
+    "frontend105": "HISTORICAL_INPUT_ONLY",
+    "frontend106": "ACTIVE_COMPLETE",
+    "g1PendingCandidates": [
+      "backend_150",
+      "frontend_112"
+    ],
+    "selectorPolicy": "active registry only; first dependency-ready open/partial task in registered execution order",
+    "noImplementationStarted": true,
+    "noProductOrGitIndexDatabaseImageSnapshotMutation": true,
+    "currentBaselineHead": "76423ff3f930f6a8ad5b063c0a308804d6941bdf",
+    "currentDivergence": "0 0"
+  },
+  "masterRealityReconciliation": {
+    "reportPath": "agent_pack/08_reality_sync/MASTER_REALITY_RECONCILIATION_2026-08-31.json",
+    "marker": "MASTER_REALITY_RECONCILED_ACTIVE_PROGRAM_READY",
+    "generatedAt": "2026-08-30T21:23:18.954Z",
+    "noTaskStarted": true,
+    "nextDependencyReadyTask": "backend_150",
+    "screenMatrixPath": "agent_pack/08_reality_sync/MASTER_131_SCREEN_GAP_MATRIX_2026-08-31.json",
+    "apiMatrixPath": "agent_pack/08_reality_sync/API_DATABASE_RUNTIME_GAP_MATRIX_2026-08-31.json",
+    "localeInventoryPath": "agent_pack/08_reality_sync/RETIRED_LOCALE_INVENTORY_2026-08-31.json",
+    "visualManifestPath": "agent_pack/08_reality_sync/VISUAL_EVIDENCE_MANIFEST_2026-08-31.json",
+    "livePreviewHandoffPath": "agent_pack/08_reality_sync/LIVE_PREVIEW_HANDOFF_2026-08-31.md"
+  },
+  "backend150Execution": {
+    "taskId": "backend_150",
+    "phase": "G1_repository_rebaseline",
+    "status": "complete",
+    "marker": "TASK_backend_150_COMPLETE",
+    "checkpointAt": "2026-08-30T21:46:33.308Z",
+    "reportPath": "08_reality_sync/BACKEND_150_RETIRED_LOCALE_INVENTORY_2026-08-31.json",
+    "reportSha256": "b143e03b66ca31fb805de8c03ad80190ff7267720a41d3c292bfca27cc4cf035",
+    "sourceOccurrences": 3357,
+    "filenameOccurrences": 187,
+    "mongoTargets": 4,
+    "mongoStatus": "COMPLETED_READ_ONLY",
+    "recordsWithValidArAndEn": 72,
+    "recordsWithRetiredLocaleAndAnyArOrEn": 72,
+    "recordsWithRetiredLocaleOnly": 0,
+    "recordsWithLocalizedObjectButNoArOrEn": 0,
+    "recordsWithRetiredPreferredLocale": 0,
+    "visualTargets": 1317,
+    "backupRestore": "NOT_PERFORMED_DRY_RUN_ONLY",
+    "noProductOrDatabaseOrGitIndexMutation": true,
+    "noCommitPushDeployOrHistoryRewrite": true,
+    "nextTask": "frontend_112",
+    "nextTaskStarted": false
   }
 }

@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "reportId": "MASTER_RISK_APPROVAL_ROLLBACK_MATRIX_2026-08-31",
+  "generatedAt": "2026-08-30T21:23:18.954Z",
+  "status": "GOVERNANCE_MATRIX_NOT_EXECUTION_AUTHORIZATION",
+  "rows": [
+    {
+      "action": "Dirty-tree overwrite",
+      "approval": "No waiver",
+      "prevention": "Per-file ownership/provenance manifest; stop on USER_OWNED or UNKNOWN overlap.",
+      "rollback": "Stop; no mutation."
+    },
+    {
+      "action": "Image index-only untracking",
+      "approval": "Explicit owner approval",
+      "prevention": "External encrypted bundle, restore proof, exact hashed list and dry-run.",
+      "rollback": "Exact target-list re-add before any commit; no broad glob."
+    },
+    {
+      "action": "Retired DB locale/index removal",
+      "approval": "Explicit owner approval",
+      "prevention": "Isolated backup/restore proof, dry-run counts, orphan block.",
+      "rollback": "Restore collections and exact index definitions."
+    },
+    {
+      "action": "Active source locale removal",
+      "approval": "Explicit approval",
+      "prevention": "Exact occurrence manifest and AR/EN tests.",
+      "rollback": "Restore exact approved files/patch."
+    },
+    {
+      "action": "Tests/snapshots deletion",
+      "approval": "Separate explicit approval",
+      "prevention": "Hash inventory and replacement AR/EN coverage.",
+      "rollback": "Restore exact artifacts."
+    },
+    {
+      "action": "Retired visual deletion",
+      "approval": "Separate explicit approval",
+      "prevention": "External encrypted bundle and exact target hashes.",
+      "rollback": "Deterministic bundle restore."
+    },
+    {
+      "action": "Vault key rotation",
+      "approval": "Security/owner approval",
+      "prevention": "Versioned keys, dual-read, checkpointed rewrap/re-index and counts.",
+      "rollback": "Keep previous key read path active."
+    },
+    {
+      "action": "Privacy anonymize/delete",
+      "approval": "Privileged case approval and legal-hold check",
+      "prevention": "Data-subject verification, reason, actor and audit.",
+      "rollback": "Anonymization is generally irreversible; restore only on legal-owner direction."
+    },
+    {
+      "action": "Live SMTP send",
+      "approval": "Separate staging/production approval",
+      "prevention": "Controlled inbox, no OTP/PII, DNS checks, fail-closed readiness.",
+      "rollback": "Previous config/release; no phone fallback."
+    },
+    {
+      "action": "Production migration",
+      "approval": "Deployment approval",
+      "prevention": "Replica-set backup, dry-run, compatibility and restore proof.",
+      "rollback": "Backward-compatible release and restore."
+    },
+    {
+      "action": "Snapshot update",
+      "approval": "Direct canonical reviewer approval",
+      "prevention": "Old/new hashes, direct Figma review and no-update follow-up.",
+      "rollback": "Restore exact prior snapshot."
+    },
+    {
+      "action": "External artifact service loss",
+      "approval": "Operations owner",
+      "prevention": "Separate encrypted backup and restore drill.",
+      "rollback": "Restore exact bundle/service."
+    },
+    {
+      "action": "Single-VPS root compromise",
+      "approval": "Security acceptance",
+      "prevention": "Least privilege, loopback Vault, off-host unseal shares and monitoring.",
+      "rollback": "Isolate VPS, rotate secrets, restore clean host."
+    },
+    {
+      "action": "History rewrite/LFS/force push",
+      "approval": "Extraordinary explicit authorization",
+      "prevention": "Mirror backup, refs/size reports, disposable dry-run, collaborator coordination and fresh-clone proof.",
+      "rollback": "Restore mirror refs/remote."
+    },
+    {
+      "action": "Commit/push/deploy",
+      "approval": "Separate human authorization",
+      "prevention": "Reviewed atomic commit plan; no operation in G1-G6 reconciliation.",
+      "rollback": "Provider-specific release rollback."
+    }
+  ]
+}

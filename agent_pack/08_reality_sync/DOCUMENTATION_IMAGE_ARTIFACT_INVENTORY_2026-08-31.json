@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "reportId": "DOCUMENTATION_IMAGE_ARTIFACT_INVENTORY_2026-08-31",
+  "generatedAt": "2026-08-30T21:23:18.954Z",
+  "scope": {
+    "targetRoots": [
+      "docs/design_sources/final_screens/**",
+      "docs/quality/**"
+    ],
+    "trackedImageCount": 1317,
+    "trackedImageBytes": 375191614,
+    "trackedImageMiB": 357.811,
+    "byRoot": {
+      "design_sources_final_screens": {
+        "count": 135,
+        "bytes": 166422240
+      },
+      "quality": {
+        "count": 1182,
+        "bytes": 208769374
+      }
+    },
+    "nonTargetImages": [
+      {
+        "path": "docs/design_sources/brand/brand-design-system.png",
+        "reason": "brand asset"
+      },
+      {
+        "path": "docs/design_sources/brand/sadat-real-estate-logo.png",
+        "reason": "brand asset"
+      },
+      {
+        "path": "docs/design_sources/recovery_candidates/public/PUB-01.recovered-incomplete.sha256-1a742ce1.png",
+        "reason": "recovery candidate or non-final source"
+      }
+    ]
+  },
+  "hashManifest": {
+    "path": "agent_pack/08_reality_sync/VISUAL_EVIDENCE_MANIFEST_2026-08-31.json",
+    "bundleVersion": "visual-evidence-2026-08-31-reconciliation-1",
+    "bundleSha256": "4e63bc18a30322014937ed7bd8d988aecc1d18881dae745a7219e8ef0da78a71",
+    "includesSha256BytesDimensionsProvenance": true
+  },
+  "gitSizeSemantics": {
+    "ignoreAndIndexOnlyUntracking": "Prevents future/current-tree index tracking but does not shrink existing Git history or old clone size.",
+    "historyReduction": "Dormant optional procedure only; requires mirror backup, size reports, collaborator freeze, protected-branch approval, restore proof and explicit force-push authorization."
+  },
+  "destructiveActions": {
+    "indexUntrackingPerformed": false,
+    "deletionPerformed": false,
+    "exactTargetList": "Use the hash manifest files list only after external publication and restore proof.",
+    "dryRunRequired": true,
+    "explicitApprovalRequired": true
+  }
+}

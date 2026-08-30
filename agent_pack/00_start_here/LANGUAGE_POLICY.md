@@ -16,4 +16,6 @@ This policy changes the language of the Agent Pack only. It does not change prod
 - Shared routes, components, permissions, and API contracts must work across supported locales.
 - UI translation keys and localized CMS values belong in the application runtime, not as Arabic prose in Agent Pack task definitions.
 
+The registered G1-G6 delivery program executes only Arabic RTL and English LTR. `zh-CN` is preserved as deferred historical/PRD provenance and is not an active delivery-program locale until a separate approved product decision registers it.
+
 Any change to the supported product locales requires an approved product decision; it cannot be inferred from this language policy.

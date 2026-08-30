@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "programId": "SADAT_G1_G6_APPROVED_2026-08-30",
+  "status": "active",
+  "createdAt": "2026-08-30T23:40:00+03:00",
+  "objective": "Register the approved G1-G6 delivery program while isolating historical Agent Pack tasks from active selection.",
+  "baseline": {
+    "frontend106Status": "complete",
+    "frontend106Evidence": "FRONTEND_106_EVIDENCE_RECONCILED",
+    "historicalSelectorBeforeRegistration": "frontend_099",
+    "historicalSelectorStatusBeforeRegistration": "partial",
+    "currentHeadAtRegistration": "76423ff3f930f6a8ad5b063c0a308804d6941bdf",
+    "currentUpstream": "origin/main",
+    "currentDivergence": "0 0"
+  },
+  "lifecycle": {
+    "authoritativeRegistry": "This registry is the authoritative active-versus-historical boundary for task selection.",
+    "historicalDefault": "Every catalog task not listed in activeTaskIds remains historical; its state and evidence are immutable inputs.",
+    "historicalStatePreserved": true,
+    "historicalPartialBlockedCompleteStatesPreserved": true,
+    "frontend099": "HISTORICAL_PARTIAL_NEVER_SELECT_OR_EXECUTE",
+    "frontend105": "HISTORICAL_INPUT_ONLY",
+    "frontend106": "ACTIVE_COMPLETE_FIRST_PROGRAM_TASK",
+    "atMostOneInProgress": true
+  },
+  "canonicalTruth": {
+    "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "approvedLocales": ["ar", "en"],
+    "approvedDirections": ["rtl", "ltr"],
+    "noMasksCropsOverlaysHiddenRegionsOrAntiAliasMasks": true,
+    "runtimeSnapshotsAreNotFigmaParity": true,
+    "noSecretsInGitOrAgentPack": true
+  },
+  "activeTaskIds": [
+    "frontend_106",
+    "backend_150",
+    "frontend_112",
+    "backend_151",
+    "frontend_107",
+    "backend_152",
+    "backend_153",
+    "backend_154",
+    "backend_155",
+    "frontend_108",
+    "backend_156",
+    "frontend_109",
+    "frontend_110",
+    "frontend_111",
+    "backend_157",
+    "backend_158",
+    "backend_159",
+    "frontend_113",
+    "frontend_114",
+    "frontend_115",
+    "frontend_116",
+    "frontend_117",
+    "frontend_118",
+    "frontend_119",
+    "frontend_120"
+  ],
+  "phases": [
+    {
+      "id": "G1",
+      "title": "Repository rebaseline and inventories",
+      "taskIds": ["frontend_106", "backend_150", "frontend_112"],
+      "completionGate": "The baseline is complete, locale and visual inventories are recorded, and required approvals/evidence exist before G2."
+    },
+    {
+      "id": "G2",
+      "title": "Arabic/English-only runtime",
+      "taskIds": ["backend_151", "frontend_107"],
+      "completionGate": "Contracts, database/index migration, rollback proof, language switch, SSR/hydration, and URL preservation are verified for ar/en."
+    },
+    {
+      "id": "G3",
+      "title": "PUB-03 and Sales CRM",
+      "taskIds": ["backend_152", "backend_153", "backend_154", "backend_155", "frontend_108", "backend_156", "frontend_109", "frontend_110", "frontend_111"],
+      "completionGate": "Guest request persistence, PII protection, assignment, scoped CRM, and persisted-first WhatsApp behavior are verified."
+    },
+    {
+      "id": "G4",
+      "title": "Platform/API hardening",
+      "taskIds": ["backend_157", "backend_158", "backend_159", "frontend_113"],
+      "completionGate": "API truth, security, SMTP, storage, recovery, route cleanup, and audit-derived CSS evidence are ready without product-boundary drift."
+    },
+    {
+      "id": "G5",
+      "title": "Direct canonical Figma closure",
+      "taskIds": ["frontend_114", "frontend_115", "frontend_116", "frontend_117", "frontend_118", "frontend_119"],
+      "completionGate": "Authenticated canonical direct review and transparent metrics cover the 131-screen ar/en matrix without masks or snapshot substitution."
+    },
+    {
+      "id": "G6",
+      "title": "Final integration",
+      "taskIds": ["frontend_120"],
+      "completionGate": "Final readiness is evidence-based and external/source exceptions remain explicit; no commit, push, or deploy occurs here."
+    }
+  ],
+  "executionOrder": [
+    {"sequence": 215, "taskId": "frontend_106", "phase": "G1", "kind": "governance", "statusSource": "TASK_STATE.json"},
+    {"sequence": 216, "taskId": "backend_150", "phase": "G1", "kind": "inventory_design", "statusSource": "TASK_STATE.json"},
+    {"sequence": 217, "taskId": "frontend_112", "phase": "G1", "kind": "inventory_design", "statusSource": "TASK_STATE.json"},
+    {"sequence": 218, "taskId": "backend_151", "phase": "G2", "kind": "migration_design", "statusSource": "TASK_STATE.json"},
+    {"sequence": 219, "taskId": "frontend_107", "phase": "G2", "kind": "implementation", "statusSource": "TASK_STATE.json"},
+    {"sequence": 220, "taskId": "backend_152", "phase": "G3", "kind": "contract", "statusSource": "TASK_STATE.json"},
+    {"sequence": 221, "taskId": "backend_153", "phase": "G3", "kind": "implementation", "statusSource": "TASK_STATE.json"},
+    {"sequence": 222, "taskId": "backend_154", "phase": "G3", "kind": "implementation", "statusSource": "TASK_STATE.json"},
+    {"sequence": 223, "taskId": "backend_155", "phase": "G3", "kind": "implementation", "statusSource": "TASK_STATE.json"},
+    {"sequence": 224, "taskId": "frontend_108", "phase": "G3", "kind": "implementation", "statusSource": "TASK_STATE.json"},
+    {"sequence": 225, "taskId": "backend_156", "phase": "G3", "kind": "implementation", "statusSource": "TASK_STATE.json"},
+    {"sequence": 226, "taskId": "frontend_109", "phase": "G3", "kind": "implementation", "statusSource": "TASK_STATE.json"},
+    {"sequence": 227, "taskId": "frontend_110", "phase": "G3", "kind": "implementation", "statusSource": "TASK_STATE.json"},
+    {"sequence": 228, "taskId": "frontend_111", "phase": "G3", "kind": "implementation", "statusSource": "TASK_STATE.json"},
+    {"sequence": 229, "taskId": "backend_157", "phase": "G4", "kind": "hardening", "statusSource": "TASK_STATE.json"},
+    {"sequence": 230, "taskId": "backend_158", "phase": "G4", "kind": "hardening", "statusSource": "TASK_STATE.json"},
+    {"sequence": 231, "taskId": "backend_159", "phase": "G4", "kind": "hardening", "statusSource": "TASK_STATE.json"},
+    {"sequence": 232, "taskId": "frontend_113", "phase": "G4", "kind": "hardening", "statusSource": "TASK_STATE.json"},
+    {"sequence": 233, "taskId": "frontend_114", "phase": "G5", "kind": "figma_source", "statusSource": "TASK_STATE.json"},
+    {"sequence": 234, "taskId": "frontend_115", "phase": "G5", "kind": "figma_parity", "statusSource": "TASK_STATE.json"},
+    {"sequence": 235, "taskId": "frontend_116", "phase": "G5", "kind": "figma_parity", "statusSource": "TASK_STATE.json"},
+    {"sequence": 236, "taskId": "frontend_117", "phase": "G5", "kind": "figma_parity", "statusSource": "TASK_STATE.json"},
+    {"sequence": 237, "taskId": "frontend_118", "phase": "G5", "kind": "figma_parity", "statusSource": "TASK_STATE.json"},
+    {"sequence": 238, "taskId": "frontend_119", "phase": "G5", "kind": "figma_matrix", "statusSource": "TASK_STATE.json"},
+    {"sequence": 239, "taskId": "frontend_120", "phase": "G6", "kind": "final_integration", "statusSource": "TASK_STATE.json"}
+  ],
+  "selectorPolicy": {
+    "readRegistry": "03_execution/ACTIVE_DELIVERY_PROGRAM.json",
+    "selectInProgressOnlyIfActive": true,
+    "otherwiseSelectFirstReadyOpenOrPartialInExecutionOrder": true,
+    "historicalFallback": false,
+    "historicalTasksMayRemainPartialOrBlocked": true,
+    "exactlyOneInProgressMaximum": true,
+    "neverStartSelectedTaskDuringRegistration": true
+  },
+  "mutationGates": {
+    "allNewTasksStartOpen": true,
+    "frontend106OnlyCompletedActiveTask": true,
+    "g1InventoryBeforeG2": true,
+    "g2BeforeG3": true,
+    "g3BeforeG4": true,
+    "g4BeforeG5": true,
+    "g5BeforeG6": true,
+    "destructiveActionsNeedSeparateApproval": true,
+    "externalServicesNeedSeparateApproval": true,
+    "productionMigrationForbiddenDuringTaskRegistration": true
+  },
+  "noMutationInRegistration": {
+    "productCode": true,
+    "databases": true,
+    "images": true,
+    "snapshots": true,
+    "localeContent": true,
+    "gitIndex": true,
+    "externalServices": true,
+    "commitPushDeploy": true,
+    "historyRewrite": true
+  }
+}

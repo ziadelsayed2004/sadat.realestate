@@ -274,3 +274,43 @@ Current coordinator state: frontend_105 owns the pre-commit full platform audit 
 ## Current coordinator state after pre-commit audit kickoff - 2026-08-30
 
 `frontend_105` is the active Release Audit Coordinator task. The truthful endpoint baseline is 187 blueprint rows: 178 implemented and 9 planned, with 178 runtime routes reconciled by the API audit. The final approved-locale browser matrix and controlled residual reruns are recorded in the dated release audit report; no snapshot update, commit, push, deploy, reset, revert, stash, or cleanup deletion was performed.
+
+## Active delivery program registered after historical execution — 2026-08-30
+
+The historical 214-task execution order is preserved above. The active delivery
+program is a superseding, dependency-gated graph of 25 tasks across G1 through
+G6. `frontend_106` is the completed governance prerequisite. The next
+dependency-ready task is `backend_150`, which is a read-only retired-locale
+inventory and Mongo dry-run; no implementation task is selected or started by
+this reconciliation.
+
+Active execution order:
+
+215. `frontend_106` - Fresh read-only baseline + per-file ownership/provenance manifest
+216. `backend_150` - Retired-locale code/data/index/asset inventory + Mongo dry-run + exact target manifests
+217. `frontend_112` - Documentation Image Inventory, External Artifact Bundle, Ignore Policy and Approval Manifest
+218. `backend_151` - Apply approved DB field/index/preferred-locale migration
+219. `frontend_107` - Visual artifact manifest and deterministic restore/verify tooling
+220. `backend_152` - Freeze PUB-03 contact-time AR/EN mapping and privacy disclosure version
+221. `backend_153` - Vault Transit, key versions, PII envelope, phone blind index, rotation/recovery tooling
+222. `backend_154` - Public UUID request contract, transaction, idempotency, server-derived metadata
+223. `backend_155` - Sales team/capacity deterministic assignment and history
+224. `frontend_108` - Canonical PUB-03 Shared Inquiry/Viewing Form
+225. `backend_156` - Persist-First WhatsApp Handoff and Audit/Outbox Events
+226. `frontend_109` - WhatsApp UX, Failure States and Accessibility
+227. `frontend_110` - Admin/Sales Request Inbox and Customer Detail
+228. `frontend_111` - Team Capacity and Reassignment UI
+229. `backend_157` - Planned-API Revalidation, Required Route Completion, Shared Rate Limits and Bounded Queries
+230. `backend_158` - API Artifacts, Safe Migrations and Live Mongo Gates
+231. `backend_159` - Hostinger SMTP, Storage, Malware Scanning, Monitoring, Backup/Restore and Production Readiness
+232. `frontend_113` - Route, Dead-Code, RTL/LTR, Design-System and Audit-Derived CSS/Bundle Cleanup
+233. `frontend_114` - Authenticated Canonical Figma Refresh and Source Closure
+234. `frontend_115` - Public and Auth Exact Parity
+235. `frontend_116` - Seeker Exact Parity
+236. `frontend_117` - Provider Exact Parity
+237. `frontend_118` - Admin Exact Parity
+238. `frontend_119` - Full AR/EN 131-Screen Matrix
+239. `frontend_120` - Final Platform Release Coordinator
+
+The registry is authoritative for active selection; the historical selector
+records remain historical evidence and are not candidates for this program.

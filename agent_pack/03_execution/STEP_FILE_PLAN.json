@@ -2518,5 +2518,116 @@
       "docs/quality/figma_parity/**",
       "agent_pack/**"
     ]
+  },
+  {
+    "taskId": "frontend_106",
+    "allowedRoots": [
+      "agent_pack/03_execution/TASK_CATALOG.json",
+      "agent_pack/03_execution/TASK_STATE.json",
+      "agent_pack/03_execution/DEPENDENCIES.json",
+      "agent_pack/03_execution/ATOMIC_TASK_MAP.json",
+      "agent_pack/03_execution/RUN_CHECKPOINT.json",
+      "agent_pack/04_tracks/frontend/G1_repository_rebaseline/frontend_106.md",
+      "agent_pack/07_finish/frontend_106/completion.json",
+      "agent_pack/08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_OWNERSHIP_MANIFEST_2026-08-30.json",
+      "agent_pack/08_reality_sync/FRONTEND_106_BASELINE_2026-08-30.json",
+      "agent_pack/scripts/create_ownership_provenance_manifest.mjs"
+    ]
+  },
+  {
+    "taskId": "backend_150",
+    "allowedRoots": ["agent_pack/03_execution/**", "agent_pack/04_tracks/backend/G1_repository_rebaseline/backend_150.md", "agent_pack/07_finish/backend_150/**", "agent_pack/08_reality_sync/BACKEND_150_RETIRED_LOCALE_INVENTORY_2026-08-30.json", "agent_pack/scripts/**"]
+  },
+  {
+    "taskId": "frontend_112",
+    "allowedRoots": ["agent_pack/03_execution/**", "agent_pack/04_tracks/frontend/G1_repository_rebaseline/frontend_112.md", "agent_pack/07_finish/frontend_112/**", "agent_pack/08_reality_sync/FRONTEND_112_VISUAL_ARTIFACT_INVENTORY_2026-08-30.json", "agent_pack/scripts/**"]
+  },
+  {
+    "taskId": "backend_151",
+    "allowedRoots": ["apps/api/src/modules/localization/**", "apps/api/src/modules/database/**", "apps/api/tests/localization/**", "apps/api/tests/database/**", "packages/contracts/src/localization/**", "packages/contracts/src/database/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "frontend_107",
+    "allowedRoots": ["apps/web/src/features/localization/**", "apps/web/src/features/routing/**", "apps/web/src/app/**", "apps/web/tests/**", "packages/contracts/src/localization/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "backend_152",
+    "allowedRoots": ["packages/contracts/src/requests/**", "apps/api/src/modules/requests/**", "apps/api/tests/requests/**", "apps/api/openapi/**", "apps/api/postman/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "backend_153",
+    "allowedRoots": ["apps/api/src/modules/requests/**", "apps/api/src/modules/security/**", "apps/api/src/modules/crypto/**", "apps/api/src/modules/database/**", "apps/api/tests/requests/**", "apps/api/tests/security/**", "apps/api/tests/crypto/**", "packages/contracts/src/requests/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "backend_154",
+    "allowedRoots": ["apps/api/src/modules/sales/**", "apps/api/src/modules/requests/**", "apps/api/src/modules/database/**", "apps/api/tests/sales/**", "apps/api/tests/requests/**", "packages/contracts/src/sales/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "backend_155",
+    "allowedRoots": ["apps/api/src/modules/admin/**", "apps/api/src/modules/sales/**", "apps/api/src/modules/requests/**", "apps/api/src/modules/audit/**", "apps/api/tests/admin/**", "apps/api/tests/sales/**", "apps/api/tests/requests/**", "apps/api/openapi/**", "apps/api/postman/**", "packages/contracts/src/admin/**", "packages/contracts/src/sales/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "frontend_108",
+    "allowedRoots": ["apps/web/src/features/public/**", "apps/web/tests/**", "packages/contracts/src/requests/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "backend_156",
+    "allowedRoots": ["apps/api/src/modules/requests/**", "apps/api/src/modules/integrations/**", "apps/api/src/modules/audit/**", "apps/api/tests/requests/**", "apps/api/tests/integrations/**", "apps/api/openapi/**", "packages/contracts/src/requests/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "frontend_109",
+    "allowedRoots": ["apps/web/src/features/public/**", "apps/web/src/features/frontend_foundation/**", "apps/web/tests/**", "packages/contracts/src/requests/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "frontend_110",
+    "allowedRoots": ["apps/web/src/features/admin/**", "apps/web/src/features/sales/**", "apps/web/tests/**", "packages/contracts/src/admin/**", "packages/contracts/src/sales/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "frontend_111",
+    "allowedRoots": ["apps/web/src/features/admin/**", "apps/web/src/features/sales/**", "apps/web/tests/**", "packages/contracts/src/sales/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "backend_157",
+    "allowedRoots": ["apps/api/src/**", "apps/api/tests/**", "packages/contracts/**", "apps/api/openapi/**", "apps/api/postman/**", "agent_pack/01_product/API_ENDPOINT_BLUEPRINT.json", "agent_pack/08_reality_sync/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "backend_158",
+    "allowedRoots": ["apps/api/src/modules/database/**", "apps/api/tests/**", "apps/api/openapi/**", "apps/api/postman/**", "packages/contracts/**", "deploy/**", "scripts/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "backend_159",
+    "allowedRoots": ["apps/api/src/modules/email/**", "apps/api/src/modules/uploads/**", "apps/api/src/modules/observability/**", "apps/api/tests/**", "deploy/**", "scripts/**", "docs/deployment/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "frontend_113",
+    "allowedRoots": ["apps/web/src/features/routing/**", "apps/web/src/features/frontend_foundation/**", "apps/web/src/**", "apps/web/tests/**", "apps/web/scripts/**", "scripts/**", "packages/ui/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "frontend_114",
+    "allowedRoots": ["docs/quality/figma_parity/**", "scripts/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "frontend_115",
+    "allowedRoots": ["apps/web/src/features/public/**", "apps/web/src/features/auth/**", "apps/web/src/features/provider_auth/**", "apps/web/tests/**", "packages/ui/**", "packages/contracts/**", "docs/quality/figma_parity/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "frontend_116",
+    "allowedRoots": ["apps/web/src/features/seeker/**", "apps/web/tests/**", "packages/ui/**", "packages/contracts/**", "docs/quality/figma_parity/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "frontend_117",
+    "allowedRoots": ["apps/web/src/features/provider/**", "apps/web/src/features/provider_property/**", "apps/web/src/features/provider_auth/**", "apps/web/tests/**", "packages/ui/**", "packages/contracts/**", "docs/quality/figma_parity/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "frontend_118",
+    "allowedRoots": ["apps/web/src/features/admin/**", "apps/web/src/features/admin_*/**", "apps/web/tests/**", "packages/ui/**", "packages/contracts/**", "docs/quality/figma_parity/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "frontend_119",
+    "allowedRoots": ["apps/web/tests/**", "apps/api/tests/**", "docs/quality/figma_parity/**", "scripts/**", "agent_pack/**"]
+  },
+  {
+    "taskId": "frontend_120",
+    "allowedRoots": ["apps/web/tests/**", "apps/api/tests/**", "packages/config/**", "scripts/**", "docs/api/**", "docs/deployment/**", "docs/quality/figma_parity/**", "agent_pack/**"]
   }
 ]
