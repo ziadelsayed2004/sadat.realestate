@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "reportId": "BACKEND_151_MIGRATION_EVIDENCE_2026-08-31",
+  "taskId": "backend_151",
+  "status": "blocked",
+  "completionMarker": "TASK_backend_151_BLOCKED_OWNERSHIP",
+  "generatedAt": "2026-08-31T13:55:00.000Z",
+  "decision": "OWNERSHIP_BLOCKED_BEFORE_SOURCE_OR_DATABASE_MUTATION",
+  "objective": "Make Arabic and English the only active runtime/data-contract locales and prove a reversible isolated non-production Mongo migration.",
+  "baseline": {
+    "activeProgramId": "SADAT_G1_G6_APPROVED_2026-08-30",
+    "branch": "main",
+    "head": "e07e4b5cddc1b0ddf5da7b4ec35765e483512ebc",
+    "upstream": "origin/main",
+    "divergence": "0 0",
+    "workingTreePolicy": "PROTECTED_POTENTIALLY_DIRTY",
+    "statusAtCapture": "clean",
+    "ownershipManifestPath": "agent_pack/08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_OWNERSHIP_MANIFEST_2026-08-30.json",
+    "ownershipManifestSha256": "0d0a5665be9e978d619f9263da529324875ccca6cd76e65c333fc50ff5c55e11",
+    "taskCardPath": "agent_pack/04_tracks/backend/G2_ar_en_runtime/backend_151.md",
+    "taskCardSha256": "5f58853de69de8bd408a52fd771061389b2c9f9440cd741b72e2e7304115c8a6"
+  },
+  "selector": {
+    "command": "node agent_pack/scripts/select_next_step.mjs",
+    "exitCode": 0,
+    "selectedTaskId": "backend_151",
+    "taskStarted": false,
+    "stepInfo": "The selector side effect was restored exactly to the historical HEAD version; this report records the live selector result."
+  },
+  "dependencies": {
+    "backend_150": "complete",
+    "frontend_112": "complete",
+    "backend_151": "open",
+    "frontend_107": "must_not_start"
+  },
+  "ownership": {
+    "rule": "USER_OWNED, SHARED_COORDINATOR, UNKNOWN, or overlapping paths cannot be mutated without an explicit ownership grant.",
+    "exactTargetManifest": "agent_pack/08_reality_sync/BACKEND_150_RETIRED_LOCALE_INVENTORY_2026-08-31.json#exactTargetManifest",
+    "targetSets": {
+      "activeSourceAndContract": {
+        "count": 95,
+        "classificationCounts": { "USER_OWNED": 95 },
+        "hashMatchesManifest": 95,
+        "hashDrift": 0,
+        "exactPathsRef": "#exactTargetManifest.activeSourceAndContractPaths"
+      },
+      "databaseSchemaAndIndex": {
+        "count": 7,
+        "classificationCounts": { "USER_OWNED": 7 },
+        "hashMatchesManifest": 7,
+        "hashDrift": 0,
+        "exactPathsRef": "#exactTargetManifest.databaseSchemaIndexPaths"
+      },
+      "testFixtureAndSnapshot": {
+        "count": 162,
+        "classificationCounts": { "USER_OWNED": 161, "HISTORICAL": 1 },
+        "hashMatchesManifest": 162,
+        "hashDrift": 0,
+        "exactPathsRef": "#exactTargetManifest.testFixtureSnapshotPaths"
+      }
+    },
+    "additivePaths": [
+      { "path": "package.json", "classification": "USER_OWNED", "owner": "RELEASE_COORDINATOR", "sha256": "661b17f30a9f2192dd5702a40716ef0007cb8867eb8501f1826045bd97031bad", "decision": "BLOCKED_OWNERSHIP" },
+      { "path": "packages/config/scripts/audit-locales.mjs", "classification": "UNKNOWN", "exists": false, "decision": "BLOCKED_OWNERSHIP" },
+      { "path": "packages/config/tests/locale-audit.test.mjs", "classification": "UNKNOWN", "exists": false, "decision": "BLOCKED_OWNERSHIP" },
+      { "path": "agent_pack/04_tracks/backend/G2_ar_en_runtime/backend_151.md", "classification": "UNKNOWN", "sha256": "5f58853de69de8bd408a52fd771061389b2c9f9440cd741b72e2e7304115c8a6", "decision": "NOT_MODIFIED" }
+    ],
+    "safeTaskLocalWritePaths": [
+      "agent_pack/08_reality_sync/BACKEND_151_MIGRATION_EVIDENCE_2026-08-31.json",
+      "agent_pack/07_finish/backend_151/completion.json"
+    ],
+    "queuedChangeRequests": [
+      { "requestId": "CR_backend_151_active_source_ownership", "exactPathsRef": "#exactTargetManifest.activeSourceAndContractPaths", "count": 95, "requestedOwner": "BACKEND_COORDINATOR; SHARED_COORDINATOR review for contracts", "reason": "All active runtime/contract targets are USER_OWNED." },
+      { "requestId": "CR_backend_151_database_ownership", "exactPathsRef": "#exactTargetManifest.databaseSchemaIndexPaths", "count": 7, "requestedOwner": "BACKEND_COORDINATOR", "reason": "All database/schema/index targets are USER_OWNED." },
+      { "requestId": "CR_backend_151_test_ownership", "exactPathsRef": "#exactTargetManifest.testFixtureSnapshotPaths", "count": 162, "requestedOwner": "BACKEND_COORDINATOR; preserve historical target", "reason": "161 test targets are USER_OWNED and one is HISTORICAL." },
+      { "requestId": "CR_backend_151_locale_audit_tooling_ownership", "exactPaths": ["package.json", "packages/config/scripts/audit-locales.mjs", "packages/config/tests/locale-audit.test.mjs"], "requestedOwner": "RELEASE_COORDINATOR/CONFIG_COORDINATOR", "reason": "package.json is USER_OWNED; config paths are unknown/missing." }
+    ]
+  },
+  "localeContract": {
+    "current": { "supportedLocales": ["ar", "en", "zh-CN"], "defaultLocale": "ar", "directions": { "ar": "rtl", "en": "ltr", "zh-CN": "ltr" } },
+    "target": { "supportedLocales": ["ar", "en"], "defaultLocale": "ar", "directions": { "ar": "rtl", "en": "ltr" } },
+    "status": "NOT_APPLIED",
+    "reason": "All required source and contract paths are ownership-blocked."
+  },
+  "localeAudit": {
+    "command": "npm.cmd run locale:audit",
+    "exitCode": 1,
+    "result": "NOT_AVAILABLE_MISSING_SCRIPT",
+    "activeForbiddenIdentifiers": ["zh-CN", "zh_CN", "zhCN"],
+    "recomputedBoundedInventory": {
+      "sourceFiles": 2955,
+      "localeOccurrences": 3544,
+      "filenameOccurrences": 187,
+      "categoryCounts": { "HISTORICAL_OR_EVIDENCE_METADATA": 2723, "TEST_OR_SNAPSHOT_REVIEW": 572, "ACTIVE_RUNTIME_OR_CONTRACT_REVIEW": 237, "DATABASE_OR_MIGRATION_REVIEW": 12 }
+    },
+    "classification": {
+      "activeForbiddenIdentifierOccurrences": 249,
+      "activeRuntimeTargetPathCount": 95,
+      "databaseTargetPathCount": 7,
+      "retiredDatabaseFieldPathCount": 8,
+      "retiredPreferredLocaleValueCount": 0,
+      "localeDependentIndexCandidateCount": 28,
+      "testOnlyOccurrenceCount": 572,
+      "historicalOccurrenceCount": 2723,
+      "filenameOccurrenceCount": 187,
+      "approvedExclusions": ["immutable historical reports and provenance", "test/snapshot review until separately approved", "retired visual evidence until separately approved", "frontend locale targets outside backend_151 ownership"]
+    },
+    "exactRetiredDatabaseFieldPaths": ["$.body.zh-CN", "$.description.zh-CN", "$.eyebrow.zh-CN", "$.highlight.zh-CN", "$.message.zh-CN", "$.name.zh-CN", "$.title.zh-CN", "$.unit.zh-CN"]
+  },
+  "databaseDryRun": {
+    "status": "COMPLETED_READ_ONLY",
+    "targetCount": 4,
+    "targets": [
+      { "name": "local-showcase", "database": "sadat_real_estate_local", "port": 27018, "status": "COMPLETED_READ_ONLY" },
+      { "name": "admin-wave3-main", "database": "sadat_real_estate_admin", "port": 27019, "status": "COMPLETED_READ_ONLY" },
+      { "name": "admin-wave3", "database": "sadat_real_estate_admin_wave3", "port": 27019, "status": "COMPLETED_READ_ONLY" },
+      { "name": "admin-wave3-legacy", "database": "sadat_admin_wave3", "port": 27019, "status": "COMPLETED_READ_ONLY" }
+    ],
+    "aggregate": { "totalDocuments": 337, "recordsWithRetiredLocale": 72, "recordsWithValidArAndEn": 72, "recordsWithRetiredLocaleAndAnyArOrEn": 72, "recordsWithRetiredLocaleAndNeitherArNorEn": 0, "recordsWithRetiredLocaleAndArEn": 72, "recordsWithRetiredLocaleOnly": 0, "recordsWithRetiredFieldWithoutValue": 0, "recordsWithRetiredPreferredLocale": 0, "recordsWithLocalizedObjectButNoArOrEn": 0, "localizedObjectCount": 136 },
+    "orphanAndBlocker": { "orphanCount": 0, "blockerCount": 0, "applyGate": "BLOCKED_UNTIL_EXPLICIT_APPROVAL_AND_BACKUP_RESTORE_PROOF" },
+    "rawDocumentValuesEmitted": false,
+    "recordIdsOrPiiEmitted": false,
+    "writesAttempted": false,
+    "indexCandidateCount": 28,
+    "indexDefinitionsBeforeRef": "agent_pack/08_reality_sync/BACKEND_150_RETIRED_LOCALE_INVENTORY_2026-08-31.json#databaseDryRun.localeIndexCandidatesObserved",
+    "indexDefinitionsAfter": "NOT_APPLIED",
+    "explainEvidence": "NOT_RUN_BECAUSE NO MIGRATION/INDEX APPLY WAS AUTHORIZED"
+  },
+  "authorization": { "requiredToken": "APPROVAL_DB_LOCALE_APPLY_ISOLATED_ONLY", "status": "NOT_GRANTED", "providedByUser": false, "authorizedTargets": [], "productionAuthorization": false },
+  "backupRestore": { "status": "NOT_PERFORMED", "backupIdentity": null, "backupSha256": null, "backupLocation": null, "restoreIdentity": null, "restoreVerification": "NOT_PERFORMED", "reason": "No explicit approval token; no backup or restore command was executed." },
+  "migration": { "applyAttempted": false, "applyCount": 0, "checkpoints": [], "idempotency": "NOT_RUN", "secondApplyAdditionalChanges": null, "indexRebuild": "NOT_APPLIED", "rollbackRehearsal": "NOT_PERFORMED" },
+  "rollback": { "status": "NOT_PERFORMED", "requiredCommands": ["restore exact isolated archive", "restore prior index definitions", "enable prior compatible read contract only inside rollback test", "compare counts, definitions, and deterministic non-PII hashes"] },
+  "runtimeBrowserFigmaEvidence": { "status": "NOT_APPLICABLE", "reason": "Backend-only task; no UI, browser, Figma, image, snapshot, or frontend path was owned." },
+  "verification": [
+    { "command": "Protected Git preflight", "exitCode": 0, "result": "passed" },
+    { "command": "node agent_pack/scripts/select_next_step.mjs", "exitCode": 0, "result": "passed", "note": "backend_151 returned; not started." },
+    { "command": "node --check agent_pack/scripts/backend_150_retired_locale_dry_run.mjs", "exitCode": 0, "result": "passed" },
+    { "command": "node agent_pack/scripts/backend_150_retired_locale_dry_run.mjs", "exitCode": 0, "result": "passed_read_only", "note": "Counts recomputed; generated historical reports restored exactly to HEAD." },
+    { "command": "npm.cmd run locale:audit", "exitCode": 1, "result": "blocked_missing_script" },
+    { "command": "npm.cmd run typecheck --workspace packages/contracts", "exitCode": 0, "result": "passed" },
+    { "command": "npm.cmd run typecheck --workspace apps/api", "exitCode": 0, "result": "passed" },
+    { "command": "npm.cmd run lint", "exitCode": 0, "result": "passed" },
+    { "command": "npm.cmd run test --workspace packages/contracts", "exitCode": 1, "result": "blocked_missing_script" },
+    { "command": "npm.cmd run test:unit --workspace apps/api -- --runInBand", "exitCode": 1, "result": "blocked_harness_argument" },
+    { "command": "npm.cmd run test:unit --workspace apps/api", "exitCode": 0, "result": "passed_382_tests" },
+    { "command": "npm.cmd run test:integration --workspace apps/api", "exitCode": 0, "result": "passed_28_tests" },
+    { "command": "npm.cmd run test:integration --workspace apps/api -- --runInBand", "exitCode": 1, "result": "blocked_harness_argument" },
+    { "command": "focused localization/database test files", "exitCode": 0, "result": "passed_23_tests" },
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "passed_zero_errors" },
+    { "command": "git diff --check", "exitCode": 0, "result": "passed" }
+  ],
+  "mutationStatement": { "sourceChanged": false, "contractsChanged": false, "testsChanged": false, "databaseDataChanged": false, "databaseIndexesChanged": false, "snapshotsChanged": false, "imagesChanged": false, "gitIndexChanged": false, "externalServicesChanged": false, "commitsPushesDeploysHistoryRewrite": false, "historicalAgentPackGeneratedViewsChanged": false, "taskLocalEvidenceOnly": true },
+  "agentPack": { "auditExitCode": 0, "auditErrors": [], "syncPackRun": false, "syncPackReason": "Prospective generated views are HISTORICAL in the ownership manifest.", "taskStateUpdated": false, "checkpointUpdated": false, "dependenciesUpdated": false, "taskCardUpdated": false, "finishIndexUpdated": false, "historicalTruthPreserved": true },
+  "noProductionStatement": "No Production database, installed standalone MongoDB service data, production secrets, or external service was accessed or mutated.",
+  "noFrontendStatement": "No frontend source, UI, Figma retrieval, visual artifact, image, snapshot, or CSS path was touched.",
+  "nextSelectedTask": { "taskId": "backend_151", "taskStarted": false, "frontend_107Started": false },
+  "changedFiles": ["agent_pack/08_reality_sync/BACKEND_151_MIGRATION_EVIDENCE_2026-08-31.json", "agent_pack/07_finish/backend_151/completion.json"],
+  "preservedFiles": ["agent_pack/03_execution/TASK_STATE.json", "agent_pack/03_execution/RUN_CHECKPOINT.json", "agent_pack/03_execution/DEPENDENCIES.json", "agent_pack/03_execution/ATOMIC_TASK_MAP.json", "agent_pack/step_info.json", "agent_pack/04_tracks/backend/G2_ar_en_runtime/backend_151.md", "all USER_OWNED code/tests/contracts", "all images/snapshots/Git index/history/Production data/external services"]
+}
