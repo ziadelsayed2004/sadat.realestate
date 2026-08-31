@@ -6,7 +6,7 @@
 | Phase | G1_repository_rebaseline |
 | Sequence | 217 |
 | Dependencies | `frontend_106` complete |
-| Status | Open; inventory/design only |
+| Status | Complete; inventory/design only |
 
 ## Objective
 
@@ -71,3 +71,10 @@ Execute exactly one atomic task. Do not start G2, edit `.gitignore`, untrack ima
 - UI tasks must record AR/EN browser behavior, accessibility, responsive/device state, and no-update regression evidence.
 - Figma evidence is required only for visual scope and must use the approved canonical source with direct review and transparent full-canvas metrics. Runtime snapshots never prove Figma parity.
 - No masks, crops, overlays, hidden regions, or anti-alias masks are permitted. Missing authenticated source or external evidence is a blocker, not a pass.
+
+## Completion handoff
+
+- Evidence: `agent_pack/08_reality_sync/FRONTEND_112_VISUAL_ARTIFACT_INVENTORY_2026-08-30.json`.
+- The exact inventory is 135 final-screen images plus 1,182 quality images, with no missing hashes, dimensions, provenance, or duplicate paths.
+- The ownership manifest classifies the prospective generated views as `HISTORICAL`; `sync_pack.mjs` was therefore not run and those views were not modified.
+- The external artifact service remains unconfigured; no bundle was created or uploaded. Image deletion, image untracking, `.gitignore` edits, and history reduction remain separately approval-gated.

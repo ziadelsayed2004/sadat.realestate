@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-30T21:46:33.308Z",
+  "updatedAt": "2026-08-31T00:26:41.252Z",
   "tasks": {
     "backend_000": {
       "status": "complete",
@@ -1517,11 +1517,11 @@
       "evidencePath": "07_finish/backend_150/completion.json"
     },
     "frontend_112": {
-      "status": "open",
+      "status": "complete",
       "startedAt": null,
-      "completedAt": null,
-      "reason": null,
-      "evidencePath": null
+      "completedAt": "2026-08-31T00:26:41.252Z",
+      "reason": "Completed the exact 1,317-image read-only ledger, exclusion ledger, runtime-dependency safety review, external bundle restore design, and future image-only ignore/untracking policy. sync_pack was intentionally not run because prospective generated views are HISTORICAL in the ownership manifest.",
+      "evidencePath": "07_finish/frontend_112/completion.json"
     },
     "backend_151": {
       "status": "open",

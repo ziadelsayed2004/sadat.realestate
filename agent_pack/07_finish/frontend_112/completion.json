@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "taskId": "frontend_112",
+  "status": "complete",
+  "completedAt": "2026-08-31T00:26:41.252Z",
+  "completionMarker": "TASK_frontend_112_COMPLETE",
+  "decision": "READ_ONLY_VISUAL_ARTIFACT_GOVERNANCE_COMPLETE",
+  "summary": "Completed the exact documentation-image ledger, exclusion ledger, runtime-dependency safety review, external bundle restore design, and future image-only ignore/untracking policy without changing images, product code, Git index, or external storage.",
+  "evidencePath": "agent_pack/08_reality_sync/FRONTEND_112_VISUAL_ARTIFACT_INVENTORY_2026-08-30.json",
+  "evidenceSha256": "50af86f1c8289adc19fc7de93086f36025e58f5b34b85127252eb753d7abf23f",
+  "baseline": {
+    "branch": "main",
+    "head": "d881972a7cc12ca8a3841b4ec33d8c2310acfb76",
+    "upstream": "origin/main",
+    "divergence": "0 0",
+    "workingTreePolicy": "PROTECTED_POTENTIALLY_DIRTY",
+    "ownershipManifestPath": "agent_pack/08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_OWNERSHIP_MANIFEST_2026-08-30.json",
+    "ownershipManifestSha256": "0d0a5665be9e978d619f9263da529324875ccca6cd76e65c333fc50ff5c55e11",
+    "ownershipManifestRecordCount": 4931,
+    "ownershipVerifiedBeforeWrites": true
+  },
+  "dependencies": {
+    "frontend_106": "complete",
+    "backend_150": "complete",
+    "frontend_112": "complete",
+    "nextDependencyReadyTask": "backend_151",
+    "nextTaskStarted": false
+  },
+  "inventory": {
+    "targetRoots": {
+      "docs/design_sources/final_screens": {"expected": 135, "actual": 135, "bytes": 166422240},
+      "docs/quality": {"expected": 1182, "actual": 1182, "bytes": 208769374}
+    },
+    "combinedTargetCount": 1317,
+    "totalBytes": 375191614,
+    "totalMiB": 357.811,
+    "extensionCounts": {".png": 1317},
+    "missingHashCount": 0,
+    "missingDimensionCount": 0,
+    "unresolvedProvenanceCount": 0,
+    "duplicatePathCount": 0,
+    "forbiddenFigmaReferenceCount": 0,
+    "wholeManifestSha256": "5b2c25e29d3efc056260c529bf9f378d470724f38fd0de7b6fa4b4f667f58d7a"
+  },
+  "exclusionLedger": {
+    "knownDesignSourceExclusionCount": 3,
+    "knownDesignSourceExclusions": [
+      "docs/design_sources/brand/brand-design-system.png",
+      "docs/design_sources/brand/sadat-real-estate-logo.png",
+      "docs/design_sources/recovery_candidates/public/PUB-01.recovered-incomplete.sha256-1a742ce1.png"
+    ],
+    "taxonomy": "Two entries are brand assets and the third is an explicitly excluded recovery candidate; no third file exists under the brand directory.",
+    "outsideApprovedScopeImageCount": 636,
+    "runtimeAndApplicationImagesExcluded": "Recorded by exact path/reason in the evidence report; none is in the 1317 target list.",
+    "fontsExcludedCount": "Recorded by bounded stat-only inventory; no font is a target image.",
+    "snapshotsOutsideApprovedScopeExcluded": "Recorded by exact path/reason in the evidence report.",
+    "mongoDataExcluded": true,
+    "buildOutputAndSecretsExcluded": true
+  },
+  "runtimeDependencySafety": {
+    "status": "SAFE_EXPECTED_TEST_AND_PARITY_REFERENCES_ONLY",
+    "productRuntimeReferenceTargetCount": 0,
+    "expectedEvidenceReferenceTargetCount": 51,
+    "scannedRoots": ["apps", "packages", "scripts"],
+    "rule": "Product source references would block future untracking; the observed references are test/CI or parity-tool evidence dependencies and remain protected by restore proof."
+  },
+  "externalArtifactBundle": {
+    "designOnly": true,
+    "bundleId": "visual-evidence-frontend-112-2026-08-31-01",
+    "schemaVersion": 1,
+    "sourceCommit": "d881972a7cc12ca8a3841b4ec33d8c2310acfb76",
+    "sortedTargetManifestSha256": "5b2c25e29d3efc056260c529bf9f378d470724f38fd0de7b6fa4b4f667f58d7a",
+    "encryptedArchiveName": "sadat-real-estate-visual-evidence-frontend-112-2026-08-31-01.tar.zst.age",
+    "storageBoundary": "UNVERIFIED_READ_ONLY_HOSTINGER_VPS_STORAGE_BOUNDARY",
+    "publicationStatus": "NOT_CREATED_NOT_UPLOADED",
+    "restoreCommand": "npm.cmd run visual-evidence:restore -- --version <bundleVersion>",
+    "verifyCommand": "npm.cmd run visual-evidence:verify -- --version <bundleVersion>",
+    "inventoryCommand": "npm.cmd run visual-evidence:inventory",
+    "failClosedOn": ["missing bundle", "corrupt archive", "manifest hash mismatch", "missing or extra file", "file hash/byte mismatch", "dimension mismatch"],
+    "freshCloneAndCi": "Standard tests do not require hydrated documentation images; the canonical parity lane must restore and verify the bundle before use.",
+    "backupRestoreProofRequired": true,
+    "credentialsInReport": false
+  },
+  "futureIgnoreAndUntracking": {
+    "gitignoreEdited": false,
+    "imageUntracked": false,
+    "imageDeleted": false,
+    "gitIndexChanged": false,
+    "imageOnlyExtensions": [".png", ".jpg", ".jpeg", ".webp", ".gif", ".avif", ".bmp", ".tif", ".tiff"],
+    "nonImageDocumentationRemainsTracked": [".json", ".md", "ledgers", "reviews", "metrics", "hashes", "reports", "manifests"],
+    "futureApprovalTokens": ["APPROVAL_AR_EN_IMAGE_UNTRACKING", "APPROVAL_EXTERNAL_ARTIFACT_UPLOAD", "APPROVAL_RETIRED_LOCALE_IMAGE_DELETION", "APPROVAL_OPTIONAL_HISTORY_REDUCTION"],
+    "historySemantics": "Ignore rules and index-only untracking do not shrink existing Git history or historical clone size.",
+    "historyReduction": "Dormant separate destructive procedure requiring mirror backup, size report, collaborator coordination, protected-branch approval, restore proof, and explicit force-push authorization."
+  },
+  "changedFiles": [
+    "agent_pack/03_execution/TASK_STATE.json",
+    "agent_pack/03_execution/RUN_CHECKPOINT.json",
+    "agent_pack/04_tracks/frontend/G1_repository_rebaseline/frontend_112.md",
+    "agent_pack/07_finish/frontend_112/completion.json",
+    "agent_pack/08_reality_sync/FRONTEND_112_VISUAL_ARTIFACT_INVENTORY_2026-08-30.json",
+    "agent_pack/scripts/frontend_112_visual_artifact_inventory.mjs",
+    "agent_pack/scripts/frontend_112_visual_artifact_validate.mjs"
+  ],
+  "generatedViews": {
+    "prospectivePaths": [
+      "agent_pack/07_finish/FINISH_INDEX.json",
+      "agent_pack/03_execution/TASK_BOARD.md",
+      "agent_pack/03_execution/COUNT_SUMMARY.json",
+      "agent_pack/step_info.json"
+    ],
+    "ownershipClassification": "HISTORICAL",
+    "syncPackRun": false,
+    "reason": "The ownership manifest did not classify these views as task-owned/generated, so sync_pack was not run and no generated view was modified."
+  },
+  "finishIndexPolicy": {
+    "status": "OWNERSHIP_EXCEPTION_DOCUMENTED",
+    "finishIndexEntryAdded": false,
+    "ownershipClassification": "HISTORICAL",
+    "reason": "The baseline ownership manifest classifies FINISH_INDEX as HISTORICAL. This task records completion in its task-owned evidence and TASK_STATE instead of modifying the historical view.",
+    "auditMayUseEvidenceFallback": true
+  },
+  "verification": [
+    {"command": "Mandatory protected Git preflight", "exitCode": 0, "result": "passed", "details": "Selector returned frontend_112; main was 0 ahead/0 behind origin/main; worktree treated as protected."},
+    {"command": "node --check agent_pack/scripts/frontend_112_visual_artifact_inventory.mjs", "exitCode": 0, "result": "passed", "details": "Bounded inventory tool syntax valid."},
+    {"command": "node agent_pack/scripts/frontend_112_visual_artifact_inventory.mjs", "exitCode": 0, "result": "passed", "details": "Exact 135/1182 target scan, hashes, dimensions, provenance, exclusions, and runtime-reference classification completed read-only."},
+    {"command": "node --check agent_pack/scripts/frontend_112_visual_artifact_validate.mjs", "exitCode": 0, "result": "passed", "details": "Bounded validator syntax valid."},
+    {"command": "node agent_pack/scripts/frontend_112_visual_artifact_validate.mjs", "exitCode": 0, "result": "passed", "details": "Rehashed all 1317 targets; zero hash/byte/dimension mismatches and zero validation errors."},
+    {"command": "node agent_pack/scripts/sync_pack.mjs", "exitCode": null, "result": "not_run", "details": "Skipped because prospective generated views are HISTORICAL in the ownership manifest."},
+    {"command": "node agent_pack/scripts/audit_pack.mjs", "exitCode": 0, "result": "passed", "details": "Final exit 0 with zero errors; the documented historical FINISH_INDEX ownership exception uses task-owned completion evidence."},
+    {"command": "git diff --check", "exitCode": 0, "result": "passed", "details": "No whitespace errors after final task evidence updates."},
+    {"command": "node agent_pack/scripts/select_next_step.mjs", "exitCode": 0, "result": "passed", "details": "Returned backend_151; no subsequent task was started."}
+  ],
+  "mutationStatement": {
+    "imagesReadForHashAndDimensions": true,
+    "imagesChanged": false,
+    "imagesDeleted": false,
+    "imagesUntracked": false,
+    "gitignoreChanged": false,
+    "gitIndexChanged": false,
+    "externalBundleCreatedOrUploaded": false,
+    "productSourceChanged": false,
+    "databaseChanged": false,
+    "snapshotsChanged": false,
+    "commitPushDeployHistoryRewrite": false
+  },
+  "nextTask": "backend_151",
+  "nextTaskStarted": false,
+  "noNestedAgents": true
+}

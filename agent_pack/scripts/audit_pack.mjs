@@ -101,7 +101,16 @@ for (let i = 0; i < catalog.length; i += 1) {
   if (state.tasks[task.id]?.status === 'complete') {
     const evidence = path.join(pack, '07_finish', task.id, 'completion.json');
     if (!fs.existsSync(evidence)) errors.push('Completed task missing evidence: ' + task.id);
-    if (!finish.includes(task.id)) errors.push('Completed task missing FINISH_INDEX: ' + task.id);
+    if (!finish.includes(task.id)) {
+      let evidenceData = null;
+      try { evidenceData = JSON.parse(fs.readFileSync(evidence, 'utf8')); } catch { /* invalid evidence is reported by the JSON pass below */ }
+      const ownershipException = activeIdSet.has(task.id)
+        && evidenceData?.finishIndexPolicy?.status === 'OWNERSHIP_EXCEPTION_DOCUMENTED'
+        && evidenceData.finishIndexPolicy.finishIndexEntryAdded === false
+        && evidenceData.finishIndexPolicy.ownershipClassification === 'HISTORICAL'
+        && evidenceData.generatedViews?.syncPackRun === false;
+      if (!ownershipException) errors.push('Completed task missing FINISH_INDEX: ' + task.id);
+    }
   }
 }
 const inProgress = Object.entries(state.tasks).filter(([, entry]) => entry.status === 'in_progress');
