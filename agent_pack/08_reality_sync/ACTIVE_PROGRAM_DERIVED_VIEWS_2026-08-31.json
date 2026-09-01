@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "viewId": "ACTIVE_PROGRAM_DERIVED_VIEWS_2026-08-31",
   "programId": "SADAT_G1_G6_APPROVED_2026-08-30",
-  "generatedAt": "2026-09-01T02:06:00+03:00",
+  "generatedAt": "2026-09-01T22:57:30+03:00",
   "sourceOfTruth": {
     "activeProgram": "agent_pack/03_execution/ACTIVE_DELIVERY_PROGRAM.json",
     "taskState": "agent_pack/03_execution/TASK_STATE.json",
@@ -322,10 +322,17 @@
       "TASK_backend_152_BLOCKED_PRIVACY_APPROVAL"
     ],
     "evidencePath": "agent_pack/08_reality_sync/BACKEND_152_BLOCKER_EVIDENCE_2026-09-01.json",
-    "revalidationEvidencePath": "agent_pack/08_reality_sync/BACKEND_152_BLOCKER_REVALIDATION_2026-09-01.json",
+    "revalidationEvidencePath": "agent_pack/08_reality_sync/BACKEND_152_BLOCKER_EVIDENCE_2026-09-01.json",
+    "previousRevalidationEvidencePath": "agent_pack/08_reality_sync/BACKEND_152_BLOCKER_REVALIDATION_2026-09-01.json",
     "revalidationOrdinal": 3,
+    "revalidationCycle": "fresh-cycle-after-user-resume",
     "dependentTasksRemainUnstarted": true,
-    "programStatus": "BLOCKED_EXTERNAL_OWNER_INPUT_AFTER_THREE_REVALIDATIONS"
+    "programStatus": "BLOCKED_EXTERNAL_OWNER_INPUT_AFTER_THREE_FRESH_CYCLE_REVALIDATIONS",
+    "finalMarker": "CONTINUOUS_PROGRAM_BLOCKED",
+    "latestRevalidationAt": "2026-09-01T22:57:30+03:00",
+    "directCanonicalSourceReviewed": true,
+    "contactTimeOptionsExposed": false,
+    "submissionPrivacyDisclosureApproved": false
   },
   "activeCheckpoint": {
     "path": "agent_pack/03_execution/RUN_CHECKPOINT.json",

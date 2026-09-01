@@ -46,7 +46,37 @@
       "bytes": 4150109,
       "dimensions": "6308x12184"
     },
-    "reviewFinding": "The available full-canvas export shows the Contact time control closed. It does not expose option rows or an approved code-to-AR/EN mapping. Existing repository evidence is historical/local and does not authorize a guessed enum."
+    "reviewFinding": "The available full-canvas export shows the Contact time control closed. It does not expose option rows or an approved code-to-AR/EN mapping. Existing repository evidence is historical/local and does not authorize a guessed enum.",
+    "authenticatedDirectReview": {
+      "reviewedAt": "2026-09-01T22:52:06+03:00",
+      "method": "Figma MCP authenticated metadata and screenshot read",
+      "figmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+      "pub03NodeId": "6017:12693",
+      "pub03ContactTimeControl": {
+        "dropdownNodeId": "6017:12725",
+        "labelTextNodeId": "6017:12730",
+        "labelLocale": "ar",
+        "localizedLabelPresent": true,
+        "state": "CLOSED",
+        "optionsExposed": false,
+        "approvedCodeArEnMapping": false
+      },
+      "screenshot": {
+        "nodeId": "6017:12693",
+        "originalDimensions": "1577x3046",
+        "renderedDimensions": "1061x2048",
+        "masking": false,
+        "ephemeralUrlPersisted": false
+      },
+      "relatedPrivacyTextOutsidePub03": {
+        "screenNodeId": "6017:13155",
+        "screenName": "PUB-06 — Developer Profile",
+        "textNodeId": "6017:13485",
+        "textRepresentation": "Arabic privacy sentence is present in the canonical node; the exact localized copy is intentionally not duplicated in the English-only Agent Pack.",
+        "associatedWithPub03Submission": false,
+        "approvedArEnSubmissionDisclosure": false
+      }
+    }
   },
   "contactTimeFinding": {
     "currentFormPath": "apps/web/src/features/public/details.tsx",
@@ -68,7 +98,28 @@
       "command": "rg -n -i \"privacy|notice|consent|policy\" apps/web/src/features/public/details.tsx apps/web/src/features/public/details-copy.ts packages/contracts/src/requests apps/api/src/modules/requests",
       "result": "No submission-associated approved privacy disclosure/version was found in the active PUB-03 form or request contract."
     },
-    "requiredResolution": "Approve and display a non-disruptive AR/EN privacy disclosure before submission, then record the server-owned privacyNoticeVersion. Until then do not add consentAt or privacyNoticeVersion and keep production activation blocked."
+    "requiredResolution": "Approve and display a non-disruptive AR/EN privacy disclosure before submission, then record the server-owned privacyNoticeVersion. Until then do not add consentAt or privacyNoticeVersion and keep production activation blocked.",
+    "authenticatedDirectReview": "The only privacy sentence found in the permitted Figma metadata is on PUB-06, not PUB-03, and no English counterpart or PUB-03 submission association was exposed. It cannot authorize PUB-03 privacyNoticeVersion or consentAt."
+  },
+  "freshCycleRevalidation": {
+    "resumedBlockedAuditOrdinal": 2,
+    "sameBlockerConfirmed": true,
+    "directCanonicalSourceAvailable": true,
+    "contactTimeBlockerResolved": false,
+    "privacyApprovalBlockerResolved": false,
+    "newProductMutation": false,
+    "nextAction": "Obtain an owner-approved exact PUB03_CONTACT_TIME_MAPPING.json and approved displayed AR/EN submission disclosure, then issue a new exact-hash write grant."
+  },
+  "latestRevalidation": {
+    "resumedBlockedAuditOrdinal": 3,
+    "revalidatedAt": "2026-09-01T22:57:30+03:00",
+    "sameBlockerConfirmed": true,
+    "directCanonicalSourceReviewed": true,
+    "contactTimeOptionsExposed": false,
+    "submissionPrivacyDisclosureApproved": false,
+    "dependencyReadyIndependentTask": false,
+    "newProductMutation": false,
+    "nextAction": "Owner must supply the exact approved contact-time mapping and displayed AR/EN disclosure before backend_152 can be granted product-write ownership."
   },
   "mutationBoundary": {
     "productFilesChanged": false,
