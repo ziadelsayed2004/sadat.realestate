@@ -21,7 +21,7 @@ const application = providerApplicationStatusDataSchema.parse({
 const property = propertyDataSchema.parse({
   id: 'cccccccccccccccccccccccc',
   kind: 'property',
-  name: { ar: 'عقار المزود', en: 'Provider property', 'zh-CN': '提供方房产' },
+  name: { ar: 'عقار المزود', en: 'Provider property',},
   slug: 'provider-property',
   transactionType: 'sale',
   source: { providerId, sourceType: 'individual_broker' },
@@ -75,7 +75,7 @@ describe('Provider overview', () => {
     expect(requests.some(request => request.url.includes('/api/v1/provider/properties?') && request.url.includes('status=published'))).toBe(true);
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders real totals, locale direction, and safe provider projections for %s', locale => {
+  it.each(['ar', 'en',] as const)('renders real totals, locale direction, and safe provider projections for %s', locale => {
     const result = renderWithLocale(<ProviderOverview locale={locale} session={session} initialData={overview} />, { locale });
     const copy = getProviderCopy(locale);
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');

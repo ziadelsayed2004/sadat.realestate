@@ -2,9 +2,8 @@ import { expect, test } from '@playwright/test';
 
 const VERIFICATION_TOKEN = 'A'.repeat(43);
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const projectName = test.info().project.name;
-  if (projectName.endsWith('-zh')) return 'zh-CN';
   if (projectName.endsWith('-en')) return 'en';
   return 'ar';
 }
@@ -90,7 +89,7 @@ async function chooseSeeker(page: import('@playwright/test').Page): Promise<void
   await expect(page).toHaveURL(/\/auth\/verify-email\?purpose=registration&roleType=seeker$/u);
 }
 
-async function completeVerification(page: import('@playwright/test').Page, locale: 'ar' | 'en' | 'zh-CN'): Promise<void> {
+async function completeVerification(page: import('@playwright/test').Page, locale: 'ar' | 'en'): Promise<void> {
   await page.locator('#auth-otp-email').fill('seeker@example.com');
   await page.getByRole('button', { name: /send code|إرسال الرمز|发送验证码/iu }).click();
   await expect(page.locator('[data-screen-id="AUTH-05"]')).toBeVisible();

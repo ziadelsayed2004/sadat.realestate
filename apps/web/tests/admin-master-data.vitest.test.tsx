@@ -28,15 +28,15 @@ const session = { status: 'authenticated' as const, role: 'admin' as const };
 const authorization = { getAuthorizationHeader: () => 'Bearer admin.master-data.test' };
 
 const category = taxonomyDataSchema.parse({
-  id: 'aaaaaaaaaaaaaaaaaaaaaaaa', kind: 'category', name: { ar: 'عقارات', en: 'Properties', 'zh-CN': '房产' }, slug: 'properties', order: 1, active: true, version: 2,
+  id: 'aaaaaaaaaaaaaaaaaaaaaaaa', kind: 'category', name: { ar: 'عقارات', en: 'Properties',}, slug: 'properties', order: 1, active: true, version: 2,
   createdAt: '2026-08-10T08:00:00.000Z', updatedAt: '2026-08-18T08:00:00.000Z', availableActions: ['update', 'delete']
 });
 const location = locationDataSchema.parse({
-  id: 'bbbbbbbbbbbbbbbbbbbbbbbb', kind: 'location', name: { ar: 'مدينة السادات', en: 'Sadat City', 'zh-CN': '萨达特城' }, slug: 'sadat-city', order: 1, active: true, version: 1,
+  id: 'bbbbbbbbbbbbbbbbbbbbbbbb', kind: 'location', name: { ar: 'مدينة السادات', en: 'Sadat City',}, slug: 'sadat-city', order: 1, active: true, version: 1,
   createdAt: '2026-08-10T08:00:00.000Z', updatedAt: '2026-08-18T08:00:00.000Z', availableActions: ['update', 'delete']
 });
 const feature = featureDataSchema.parse({
-  id: 'cccccccccccccccccccccccc', kind: 'feature', groupKey: 'building_amenities', name: { ar: 'مصعد', en: 'Elevator', 'zh-CN': '电梯' }, slug: 'elevator', order: 1, active: true, version: 1,
+  id: 'cccccccccccccccccccccccc', kind: 'feature', groupKey: 'building_amenities', name: { ar: 'مصعد', en: 'Elevator',}, slug: 'elevator', order: 1, active: true, version: 1,
   createdAt: '2026-08-10T08:00:00.000Z', updatedAt: '2026-08-18T08:00:00.000Z', availableActions: ['update', 'delete']
 });
 
@@ -90,7 +90,7 @@ describe('Admin master-data contracts and views', () => {
     expect(requests.find(request => request.method === 'DELETE')?.body).toMatchObject({ version: 1, reason: expect.any(String) });
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders every master-data screen with the locale direction and safe projection for %s', async (locale: SupportedLocale) => {
+  it.each(['ar', 'en',] as const)('renders every master-data screen with the locale direction and safe projection for %s', async (locale: SupportedLocale) => {
     const tabs: Array<{ tab: 'categories' | 'locations' | 'features'; path: string; data: MasterDataList; screen: string }> = [
       { tab: 'categories', path: '/admin/property-categories', data: { items: [category], page: 1, limit: 20, total: 1 }, screen: 'ADM-09' },
       { tab: 'locations', path: '/admin/locations', data: { items: [location], page: 1, limit: 20, total: 1 }, screen: 'ADM-10' },

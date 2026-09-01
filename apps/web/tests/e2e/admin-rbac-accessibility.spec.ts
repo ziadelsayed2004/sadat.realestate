@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { adminId, routeAdminRbacApis } from './admin-rbac.fixtures.ts';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  return project.endsWith('-zh') ? 'zh-CN' : project.endsWith('-en') ? 'en' : 'ar';
+  return project.endsWith('-en') ? 'en' : 'ar';
 }
 
 test('ADM-59 through ADM-64 expose labeled controls, landmarks, and keyboard focus', async ({ page }) => {

@@ -4,9 +4,8 @@ import { getSeekerSavedCopy } from '../../src/features/seeker/saved-copy.ts';
 const firstId = '4123456789abcdef01234567';
 const secondId = '5123456789abcdef01234567';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  if (project.endsWith('-zh')) return 'zh-CN';
   if (project.endsWith('-en')) return 'en';
   return 'ar';
 }
@@ -20,7 +19,7 @@ function favoriteData(id: string, status: 'published' | 'hidden' = 'published') 
     id,
     slug: id === firstId ? 'published-home' : 'central-apartment',
     kind: id === firstId ? 'property' : 'unit',
-    name: id === firstId ? { ar: 'منزل منشور', en: 'Published home', 'zh-CN': '已发布房产' } : { ar: 'شقة مركزية', en: 'Central apartment', 'zh-CN': '中心公寓' },
+    name: id === firstId ? { ar: 'منزل منشور', en: 'Published home',} : { ar: 'شقة مركزية', en: 'Central apartment',},
     transactionType: id === firstId ? 'sale' : 'rent',
     area: { value: id === firstId ? 120 : 90, unit: 'sqm' },
     layout: { bedrooms: 3, bathrooms: 2, floor: 4 },

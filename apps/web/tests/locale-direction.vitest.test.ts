@@ -9,7 +9,7 @@ import {
   type LocaleStorage
 } from '../src/features/localization/index.ts';
 
-const locales = ['ar', 'en', 'zh-CN'] as const;
+const locales = ['ar', 'en',] as const;
 
 class MemoryStorage implements LocaleStorage {
   private readonly values = new Map<string, string>();

@@ -13,7 +13,7 @@ import { renderWithLocale } from '../src/features/testing/index.ts';
 
 const aboutData = cmsPublicContentListDataSchema.parse({
   items: [
-    { key: 'mission', title: { ar: 'رسالتنا', en: 'Our mission', 'zh-CN': '我们的使命' }, body: { en: 'A published mission.' }, order: 0 },
+    { key: 'mission', title: { ar: 'رسالتنا', en: 'Our mission',}, body: { en: 'A published mission.' }, order: 0 },
     { key: 'trust', title: { en: 'Trust' }, body: { en: 'A published trust principle.' }, order: 1 }
   ]
 });
@@ -49,14 +49,12 @@ describe('public About and Team content', () => {
     expect(JSON.stringify(aboutData)).not.toContain('active');
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders published About content with the correct direction for %s', locale => {
+  it.each(['ar', 'en',] as const)('renders published About content with the correct direction for %s', locale => {
     const result = renderWithLocale(<PublicAbout locale={locale} initialData={aboutData} />, { locale });
     const copy = getPublicAboutTeamCopy(locale);
     const howTitle = locale === 'ar'
       ? 'رحلتك معنا خطوة بخطوة'
-      : locale === 'zh-CN'
-        ? '与我们一起一步一步'
-        : 'Your journey with us, step by step';
+      :'Your journey with us, step by step';
 
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(copy.aboutTitle);

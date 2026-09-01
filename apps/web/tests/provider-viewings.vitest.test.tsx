@@ -80,7 +80,7 @@ describe('Provider viewing appointments', () => {
     expect(requests).toEqual([{ url: `/api/v1/provider/viewings/${viewingId}/transitions`, method: 'POST', body: { action: 'confirm', expectedVersion: 2 }, authorization: 'Bearer provider.viewings.token' }]);
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders safe provider projections and direction for %s', async locale => {
+  it.each(['ar', 'en',] as const)('renders safe provider projections and direction for %s', async locale => {
     const load = vi.fn(async () => data);
     const result = renderWithLocale(<ProviderViewings locale={locale} session={session} load={load} />, { locale });
     const copy = getProviderViewingsCopy(locale);

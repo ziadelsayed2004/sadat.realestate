@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { adminProjectFixture } from './admin-projects.fixtures.ts';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  return project.endsWith('-zh') ? 'zh-CN' : project.endsWith('-en') ? 'en' : 'ar';
+  return project.endsWith('-en') ? 'en' : 'ar';
 }
 
 test('ADM-12 and ADM-13 match the approved desktop visual baseline', async ({ page }) => {

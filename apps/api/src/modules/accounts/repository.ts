@@ -103,7 +103,7 @@ interface LeanUser {
   normalizedPhone?: string;
   roleType: AuthRoleType;
   status: AuthAccountState;
-  locale: 'ar' | 'en' | 'zh-CN';
+  locale: 'ar' | 'en';
   statusChangedAt: Date;
   createdAt: Date;
   updatedAt: Date;

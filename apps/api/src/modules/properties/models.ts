@@ -40,8 +40,7 @@ export interface PropertyModels { Property: Model<PropertyRecord>; }
 
 const localized = new Schema<LocalizedText>({
   ar: { type: String, trim: true, maxlength: 20_000 },
-  en: { type: String, trim: true, maxlength: 20_000 },
-  'zh-CN': { type: String, trim: true, maxlength: 20_000 }
+  en: { type: String, trim: true, maxlength: 20_000 }
 }, { _id: false, strict: 'throw' });
 const area = new Schema<PropertyArea>({ value: { type: Number, min: 0, max: 1_000_000 }, unit: { type: String, enum: ['sqm'], immutable: true } }, { _id: false, strict: 'throw' });
 const layout = new Schema<PropertyLayout>({ bedrooms: { type: Number, min: 0, max: 100 }, bathrooms: { type: Number, min: 0, max: 100 }, floor: { type: Number, min: 0, max: 1_000 }, totalFloors: { type: Number, min: 1, max: 1_000 } }, { _id: false, strict: 'throw' });
@@ -52,7 +51,7 @@ const contact = new Schema<PropertyContact>({
   phone: { type: String, trim: true, match: /^\+[1-9]\d{7,14}$/ },
   whatsappNumber: { type: String, trim: true, match: /^\+[1-9]\d{7,14}$/ },
   email: { type: String, trim: true, lowercase: true, maxlength: 254 },
-  preferredLocale: { type: String, enum: ['ar', 'en', 'zh-CN'] }
+  preferredLocale: { type: String, enum: ['ar', 'en'] }
 }, { _id: false, strict: 'throw' });
 
 export const propertySchema = new Schema<PropertyRecord>({
@@ -113,7 +112,7 @@ propertySchema.index({ projectId: 1, status: 1, active: 1 }, { name: 'properties
 propertySchema.index({ status: 1, active: 1, updatedAt: -1 }, { name: 'properties_public_status' });
 propertySchema.index({ locationId: 1, status: 1, active: 1 }, { name: 'properties_location_public' });
 propertySchema.index({ coordinates: '2dsphere' }, { name: 'properties_coordinates_geo', sparse: true });
-propertySchema.index({ 'name.ar': 'text', 'name.en': 'text', 'name.zh-CN': 'text', slug: 'text' }, { name: 'properties_search_text', weights: { slug: 5, 'name.en': 3, 'name.ar': 3, 'name.zh-CN': 3 } });
+ propertySchema.index({ 'name.ar': 'text', 'name.en': 'text', slug: 'text' }, { name: 'properties_search_text', weights: { slug: 5, 'name.en': 3, 'name.ar': 3 } });
 propertySchema.index({ featureIds: 1, status: 1, active: 1 }, { name: 'properties_feature_public', sparse: true });
 propertySchema.index({ serviceIds: 1, status: 1, active: 1 }, { name: 'properties_service_public', sparse: true });
 

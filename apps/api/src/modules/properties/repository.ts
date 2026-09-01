@@ -243,7 +243,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
       const target = await models.Property.findById(propertyId).lean();
       if (!target) return null;
       const targetRecord = target as PropertyRecord & { _id: Types.ObjectId };
-      const targetNames = new Set([targetRecord.name.ar, targetRecord.name.en, targetRecord.name['zh-CN']].map(normalizedName).filter((value): value is string => Boolean(value)));
+      const targetNames = new Set([targetRecord.name.ar, targetRecord.name.en].map(normalizedName).filter((value): value is string => Boolean(value)));
       const or: Record<string, unknown>[] = [{ slug: targetRecord.slug }];
       if (targetRecord.locationId) or.push({ locationId: targetRecord.locationId, transactionType: targetRecord.transactionType });
       for (const [locale, value] of Object.entries(targetRecord.name)) if (value) or.push({ [`name.${locale}`]: value });
@@ -253,7 +253,7 @@ export function createMongoosePropertyRepository(connection: Connection, models:
         const signals: PropertyDuplicateData['items'][number]['signals'] = [];
         if (candidate.slug === targetRecord.slug) signals.push('same_slug');
         if (targetRecord.locationId && candidate.locationId?.toHexString() === targetRecord.locationId.toHexString() && candidate.transactionType === targetRecord.transactionType) signals.push('same_location_transaction');
-        const candidateNames = new Set([candidate.name.ar, candidate.name.en, candidate.name['zh-CN']].map(normalizedName).filter((value): value is string => Boolean(value)));
+        const candidateNames = new Set([candidate.name.ar, candidate.name.en].map(normalizedName).filter((value): value is string => Boolean(value)));
         if ([...targetNames].some(value => candidateNames.has(value))) signals.push('same_localized_name');
         if (!signals.length) return [];
         return [{ candidateId: candidate._id.toHexString(), signals, explanation: `Deterministic signals: ${signals.join(', ')}` }];

@@ -41,8 +41,7 @@ export interface ArticleModels {
 
 const localizedSchema = new Schema<LocalizedText>({
   ar: { type: String, trim: true, minlength: 1, maxlength: 20_000 },
-  en: { type: String, trim: true, minlength: 1, maxlength: 20_000 },
-  'zh-CN': { type: String, trim: true, minlength: 1, maxlength: 20_000 }
+  en: { type: String, trim: true, minlength: 1, maxlength: 20_000 }
 }, { _id: false, strict: 'throw' });
 
 function hasLocalizedValue(value: LocalizedText | undefined): boolean {
@@ -81,10 +80,8 @@ articleCategorySchema.index({ active: 1, displayOrder: 1, slug: 1, _id: 1 }, {
 articleCategorySchema.index({
   'name.ar': 'text',
   'name.en': 'text',
-  'name.zh-CN': 'text',
   'description.ar': 'text',
-  'description.en': 'text',
-  'description.zh-CN': 'text'
+  'description.en': 'text'
 }, {
   name: 'article_category_localized_search',
   default_language: 'none'
@@ -148,10 +145,8 @@ articleSchema.index({ status: 1, updatedAt: -1, _id: 1 }, {
 articleSchema.index({
   'title.ar': 'text',
   'title.en': 'text',
-  'title.zh-CN': 'text',
   'body.ar': 'text',
-  'body.en': 'text',
-  'body.zh-CN': 'text'
+  'body.en': 'text'
 }, {
   name: 'article_localized_search',
   default_language: 'none'

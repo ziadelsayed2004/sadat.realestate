@@ -3,9 +3,8 @@ import { expect, test } from '@playwright/test';
 const PROVIDER_ID = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const NOTIFICATION_ID = 'bbbbbbbbbbbbbbbbbbbbbbbb';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  if (project.endsWith('-zh')) return 'zh-CN';
   if (project.endsWith('-en')) return 'en';
   return 'ar';
 }
@@ -32,7 +31,7 @@ async function routeProviderData(page: import('@playwright/test').Page): Promise
       await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ id: NOTIFICATION_ID, readAt: '2026-08-19T09:00:00.000Z' }, 'provider-notification-read') });
       return;
     }
-    await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ items: [{ id: NOTIFICATION_ID, type: 'request.updated', title: { ar: 'تحديث على طلب', en: 'Request update', 'zh-CN': '请求更新' }, message: { ar: 'تم تحديث حالة الطلب.', en: 'A request status was updated.', 'zh-CN': '请求状态已更新。' }, link: '/provider/customer-requests', readAt: null, createdAt: '2026-08-19T08:00:00.000Z' }], unreadCount: 1, page: 1, limit: 20, total: 1 }, 'provider-notifications-list') });
+    await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ items: [{ id: NOTIFICATION_ID, type: 'request.updated', title: { ar: 'تحديث على طلب', en: 'Request update',}, message: { ar: 'تم تحديث حالة الطلب.', en: 'A request status was updated.',}, link: '/provider/customer-requests', readAt: null, createdAt: '2026-08-19T08:00:00.000Z' }], unreadCount: 1, page: 1, limit: 20, total: 1 }, 'provider-notifications-list') });
   });
   await page.route('**/api/v1/provider/settings', async route => {
     expect(route.request().headers().authorization).toBe('Bearer provider.settings.token');

@@ -65,7 +65,7 @@ function createAuthClient(overrides: Partial<AuthFlowClient> = {}): AuthFlowClie
 }
 
 describe('provider account details', () => {
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the API-backed account form with the correct direction for %s', async (locale) => {
+  it.each(['ar', 'en',] as const)('renders the API-backed account form with the correct direction for %s', async (locale) => {
     const copy = getProviderAccountCopy(locale);
     const getProviderApplication = vi.fn().mockResolvedValue(application());
     renderWithLocale(
@@ -143,12 +143,12 @@ describe('provider account details', () => {
   });
 
   it('fails closed on a direct account route without a provider session', async () => {
-    const copy = getProviderAccountCopy('zh-CN');
+    const copy = getProviderAccountCopy('en');
     const getProviderApplication = vi.fn().mockRejectedValue({ status: 401 });
     const onBack = vi.fn();
     renderWithLocale(
-      <ProviderAccountPage client={{ getProviderApplication }} locale="zh-CN" providerType="individual_broker" onBack={onBack} />,
-      { locale: 'zh-CN' }
+      <ProviderAccountPage client={{ getProviderApplication }} locale="en" providerType="individual_broker" onBack={onBack} />,
+      { locale: 'en' }
     );
 
     await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(copy.permissionTitle));

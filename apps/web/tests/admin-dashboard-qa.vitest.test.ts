@@ -52,7 +52,7 @@ describe('Admin Dashboard QA source and completion matrix', () => {
       expect(source.figmaPrototypeUrl, screen.id).toMatch(/^https:\/\/www\.figma\.com\//u);
       expect(source.deviceScope, screen.id).toEqual(['desktop']);
       expect(source.directionScope, screen.id).toEqual(['rtl', 'ltr']);
-      expect(source.locales, screen.id).toEqual(['ar', 'en', 'zh-CN']);
+      expect(source.locales, screen.id).toEqual(['ar', 'en',]);
 
       if (screen.id === 'ADM-54') {
         expect(source.sourceStatus).toBe('OWNER_AUTHORED_PENDING_REVIEW');

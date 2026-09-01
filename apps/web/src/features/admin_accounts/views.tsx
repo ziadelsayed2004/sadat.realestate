@@ -175,7 +175,7 @@ function AccountFilterStrips({ view, locale, statusFilter, providerTypeFilter, o
   readonly onProviderTypeChange: (value: ProviderTypeFilter) => void;
 }) {
   const copy = getAdminAccountsCopy(locale);
-  const allLabel = locale === 'ar' ? '\u0627\u0644\u0643\u0644' : locale === 'zh-CN' ? '\u5168\u90e8' : 'All';
+  const allLabel = locale === 'ar' ? '\u0627\u0644\u0643\u0644' :'All';
   const statusEntries = Object.entries(view === 'users' || view === 'seekers' ? copy.accountStatusLabels : copy.statusLabels);
   const typeEntries = Object.entries(copy.providerTypeLabels);
   const strip = (label: string, entries: ReadonlyArray<readonly [string, string]>, active: string, onChange: (value: string) => void) => (
@@ -246,8 +246,8 @@ function FilterBar({
           <label htmlFor="admin-accounts-role">{copy.users.roleLabel}</label>
           <select id="admin-accounts-role" value={roleFilter} onChange={event => onRoleChange(event.target.value as UserRoleFilter)}>
             <option value="all">{copy.users.all}</option>
-            <option value="seeker">{locale === 'ar' ? 'باحث عن عقار' : locale === 'zh-CN' ? '求购者' : 'Seeker'}</option>
-            <option value="provider">{locale === 'ar' ? 'مقدم عقار' : locale === 'zh-CN' ? '房产提供方' : 'Provider'}</option>
+            <option value="seeker">{locale === 'ar' ? 'باحث عن عقار' :'Seeker'}</option>
+            <option value="provider">{locale === 'ar' ? 'مقدم عقار' :'Provider'}</option>
           </select>
         </div>
       ) : (
@@ -269,8 +269,8 @@ function FilterBar({
         </>
       )}
       <div className="admin-accounts__filter-actions">
-        <Button type="submit" size="sm">{locale === 'ar' ? 'تطبيق' : locale === 'zh-CN' ? '应用' : 'Apply'}</Button>
-        <Button type="button" variant="secondary" size="sm" onClick={onClear}>{locale === 'ar' ? 'مسح' : locale === 'zh-CN' ? '清除' : 'Clear'}</Button>
+        <Button type="submit" size="sm">{locale === 'ar' ? 'تطبيق' :'Apply'}</Button>
+        <Button type="button" variant="secondary" size="sm" onClick={onClear}>{locale === 'ar' ? 'مسح' :'Clear'}</Button>
       </div>
     </form>
   );
@@ -293,7 +293,7 @@ function UsersTable({ data, locale, search, onPageChange }: { readonly data: Adm
             {filteredItems.map(user => (
               <tr key={user.id} data-testid={`admin-user-${user.id}`}>
                 <td><div className="admin-accounts__identity"><strong>{userName(user)}</strong><small>{user.id}</small></div></td>
-                <td>{user.roleType === 'seeker' ? (locale === 'ar' ? 'باحث عن عقار' : locale === 'zh-CN' ? '求购者' : 'Seeker') : (locale === 'ar' ? 'مقدم عقار' : locale === 'zh-CN' ? '房产提供方' : 'Provider')}</td>
+                <td>{user.roleType === 'seeker' ? (locale === 'ar' ? 'باحث عن عقار' :'Seeker') : (locale === 'ar' ? 'مقدم عقار' :'Provider')}</td>
                 <td>{user.phone ?? <span className="admin-accounts__muted">—</span>}</td>
                 <td>{user.email ?? <span className="admin-accounts__muted">—</span>}</td>
                 <td><StatusBadge label={getAdminAccountsCopy(locale).accountStatusLabels[user.status] ?? user.status} value={user.status} /></td>
@@ -376,9 +376,9 @@ function VerificationRow({ provider, locale }: { readonly provider: AdminProvide
 
 function Pagination({ page, pageCount, locale, onPageChange }: { readonly page: number; readonly pageCount: number; readonly locale: SupportedLocale; readonly onPageChange: (page: number) => void }) {
   if (pageCount <= 1) return null;
-  const previous = locale === 'ar' ? 'السابق' : locale === 'zh-CN' ? '上一页' : 'Previous';
-  const next = locale === 'ar' ? 'التالي' : locale === 'zh-CN' ? '下一页' : 'Next';
-  return <nav className="admin-accounts__pagination" aria-label={locale === 'ar' ? 'ترقيم الصفحات' : locale === 'zh-CN' ? '分页' : 'Pagination'}><button type="button" disabled={page <= 1} onClick={() => onPageChange(page - 1)}>{previous}</button><span>{page} / {pageCount}</span><button type="button" disabled={page >= pageCount} onClick={() => onPageChange(page + 1)}>{next}</button></nav>;
+  const previous = locale === 'ar' ? 'السابق' :'Previous';
+  const next = locale === 'ar' ? 'التالي' :'Next';
+  return <nav className="admin-accounts__pagination" aria-label={locale === 'ar' ? 'ترقيم الصفحات' :'Pagination'}><button type="button" disabled={page <= 1} onClick={() => onPageChange(page - 1)}>{previous}</button><span>{page} / {pageCount}</span><button type="button" disabled={page >= pageCount} onClick={() => onPageChange(page + 1)}>{next}</button></nav>;
 }
 
 function ListContent({
@@ -451,7 +451,7 @@ function UserDetail({ user, locale, onBack }: { readonly user: AdminAccountUserD
         <p className="admin-accounts__eyebrow">{copy.users.eyebrow}</p>
         <h1 id="admin-account-detail-title">{userName(user)}</h1>
         <DetailFields fields={[
-          [copy.users.columns.type, user.roleType === 'seeker' ? (locale === 'ar' ? 'باحث عن عقار' : locale === 'zh-CN' ? '求购者' : 'Seeker') : (locale === 'ar' ? 'مقدم عقار' : locale === 'zh-CN' ? '房产提供方' : 'Provider')],
+          [copy.users.columns.type, user.roleType === 'seeker' ? (locale === 'ar' ? 'باحث عن عقار' :'Seeker') : (locale === 'ar' ? 'مقدم عقار' :'Provider')],
           [copy.users.columns.status, copy.accountStatusLabels[user.status] ?? user.status],
           [copy.users.columns.phone, user.phone ?? '—'],
           [copy.users.columns.email, user.email ?? '—'],
@@ -499,10 +499,10 @@ function ProviderDetail({ provider, locale, onBack, onOpenDocument, openingDocum
         {provider.reviewReason !== undefined ? <p className="admin-accounts__muted">{provider.reviewReason}</p> : null}
       </section>
       <section className="admin-accounts__detail-card" aria-labelledby="admin-provider-documents-title">
-        <h2 id="admin-provider-documents-title">{locale === 'ar' ? 'مستندات مقدم العقار' : locale === 'zh-CN' ? '提供方文件' : 'Provider documents'}</h2>
-        {provider.documents.length === 0 ? <p className="admin-accounts__muted">{locale === 'ar' ? 'لا توجد مستندات نشطة.' : locale === 'zh-CN' ? '没有有效文件。' : 'No active documents are available.'}</p> : (
+        <h2 id="admin-provider-documents-title">{locale === 'ar' ? 'مستندات مقدم العقار' :'Provider documents'}</h2>
+        {provider.documents.length === 0 ? <p className="admin-accounts__muted">{locale === 'ar' ? 'لا توجد مستندات نشطة.' :'No active documents are available.'}</p> : (
           <div className="admin-accounts__documents">
-            <table className="admin-accounts__table"><caption className="a11y-visually-hidden">{locale === 'ar' ? 'مستندات مقدم العقار' : locale === 'zh-CN' ? '提供方文件' : 'Provider documents'}</caption><thead><tr><th scope="col">{locale === 'ar' ? 'المستند' : locale === 'zh-CN' ? '文件' : 'Document'}</th><th scope="col">MIME</th><th scope="col">{locale === 'ar' ? 'الحجم' : locale === 'zh-CN' ? '大小' : 'Size'}</th><th scope="col">{locale === 'ar' ? 'حالة الأمان' : locale === 'zh-CN' ? '安全状态' : 'Security state'}</th><th scope="col">{locale === 'ar' ? 'حالة المراجعة' : locale === 'zh-CN' ? '审核状态' : 'Review state'}</th><th scope="col">{locale === 'ar' ? 'تاريخ الرفع' : locale === 'zh-CN' ? '上传时间' : 'Uploaded'}</th><th scope="col">{locale === 'ar' ? 'الإجراء' : locale === 'zh-CN' ? '操作' : 'Action'}</th></tr></thead><tbody>{provider.documents.map(document => <DocumentRow key={document.id} document={document} locale={locale} onOpen={onOpenDocument} opening={openingDocumentId === document.id} />)}</tbody></table>
+            <table className="admin-accounts__table"><caption className="a11y-visually-hidden">{locale === 'ar' ? 'مستندات مقدم العقار' :'Provider documents'}</caption><thead><tr><th scope="col">{locale === 'ar' ? 'المستند' :'Document'}</th><th scope="col">MIME</th><th scope="col">{locale === 'ar' ? 'الحجم' :'Size'}</th><th scope="col">{locale === 'ar' ? 'حالة الأمان' :'Security state'}</th><th scope="col">{locale === 'ar' ? 'حالة المراجعة' :'Review state'}</th><th scope="col">{locale === 'ar' ? 'تاريخ الرفع' :'Uploaded'}</th><th scope="col">{locale === 'ar' ? 'الإجراء' :'Action'}</th></tr></thead><tbody>{provider.documents.map(document => <DocumentRow key={document.id} document={document} locale={locale} onOpen={onOpenDocument} opening={openingDocumentId === document.id} />)}</tbody></table>
           </div>
         )}
         {documentError !== undefined ? <p className="admin-accounts__document-error" role="alert">{documentError}</p> : null}

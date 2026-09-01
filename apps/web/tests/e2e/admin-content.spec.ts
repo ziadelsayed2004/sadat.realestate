@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { adminArticleCategoryFixture, adminArticleFixture, adminArticleId } from './admin-content.fixtures.ts';
 
-function localeForContent(): 'ar' | 'en' | 'zh-CN' {
+function localeForContent(): 'ar' | 'en' {
   const project = test.info().project.name;
-  return project.endsWith('-zh') ? 'zh-CN' : project.endsWith('-en') ? 'en' : 'ar';
+  return project.endsWith('-en') ? 'en' : 'ar';
 }
 
 async function routeAdminContentApis(page: import('@playwright/test').Page, allow = true): Promise<void> {

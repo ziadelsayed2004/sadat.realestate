@@ -225,7 +225,7 @@ function ContactView({
           <div className="provider-property-completion__field">
             <label htmlFor="provider-property-contact-locale">{fields.preferredLocale}</label>
             <select id="provider-property-contact-locale" value={form.preferredLocale} onChange={event => onChange('preferredLocale', event.target.value)}>
-              {(['ar', 'en', 'zh-CN'] as const).map(value => <option key={value} value={value}>{fields.preferredLocaleLabels[value]}</option>)}
+              {(['ar', 'en',] as const).map(value => <option key={value} value={value}>{fields.preferredLocaleLabels[value]}</option>)}
             </select>
           </div>
         </div>

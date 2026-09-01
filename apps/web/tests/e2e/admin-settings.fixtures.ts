@@ -9,9 +9,9 @@ function success(data: unknown, requestId: string) {
 
 function settings(namespace: AdminSettingsNamespace, version = 4) {
   const values = namespace === 'platform'
-    ? { platform_name: { ar: 'منصة سادات', en: 'Sadat Real Estate', 'zh-CN': '萨达特房地产' }, short_name: { ar: 'سادات', en: 'Sadat', 'zh-CN': '萨达特' }, primary_email: 'ops@example.com' }
+    ? { platform_name: { ar: 'منصة سادات', en: 'Sadat Real Estate',}, short_name: { ar: 'سادات', en: 'Sadat',}, primary_email: 'ops@example.com' }
     : namespace === 'contact'
-      ? { primary_phone: '+201000000000', whatsapp_number: '+201000000001', office_address: { ar: 'مدينة السادات', en: 'Sadat City', 'zh-CN': '萨达特市' }, map_url: 'https://maps.example.com/sadat' }
+      ? { primary_phone: '+201000000000', whatsapp_number: '+201000000001', office_address: { ar: 'مدينة السادات', en: 'Sadat City',}, map_url: 'https://maps.example.com/sadat' }
       : namespace === 'social'
         ? { facebook_url: 'https://facebook.com/sadat', instagram_url: 'https://instagram.com/sadat', linkedin_url: 'https://linkedin.com/company/sadat' }
         : namespace === 'display'

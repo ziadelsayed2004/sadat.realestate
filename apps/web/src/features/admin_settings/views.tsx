@@ -37,7 +37,7 @@ import './styles.css';
 export type AdminSettingsState = 'loading' | 'empty' | 'error' | 'retry' | 'permission' | 'conflict' | 'success' | 'not_found';
 type SettingsNamespace = AdminSettingsNamespace;
 type DraftValues = ReturnType<typeof copySettingsValues>;
-type LocalizedLocale = 'ar' | 'en' | 'zh-CN';
+type LocalizedLocale = 'ar' | 'en';
 
 const SETTINGS_ROUTES: Readonly<Record<SettingsNamespace, string>> = {
   platform: ADMIN_SETTINGS_PLATFORM_ROUTE,
@@ -63,7 +63,7 @@ const SETTINGS_SCREEN_IDS: Readonly<Record<SettingsNamespace, string>> = {
   display: 'ADM-58'
 };
 
-const LOCALES: readonly LocalizedLocale[] = ['ar', 'en', 'zh-CN'];
+const LOCALES: readonly LocalizedLocale[] = ['ar', 'en',];
 
 type Field = {
   readonly key: string;
@@ -140,10 +140,6 @@ function emptyValuesCopy(locale: SupportedLocale): { readonly title: string; rea
   if (locale === 'ar') return {
     title: 'لا توجد إعدادات طلبات مهيّأة بعد',
     body: 'سيتم عرض القيم التي يرسلها API فقط. لا تُضاف قواعد تشغيلية أو قيم إنتاجية غير موثقة من واجهة المستخدم.'
-  };
-  if (locale === 'zh-CN') return {
-    title: '请求设置尚未配置',
-    body: '这里只显示 API 返回的值。界面不会添加未经验证的运营规则或生产值。'
   };
   return {
     title: 'No request settings are configured yet',

@@ -46,7 +46,7 @@ async function completeEmailVerification(copy: ReturnType<typeof getAuthCopy>): 
 }
 
 describe('seeker registration screens', () => {
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders account selection with the supported direction for %s', (locale) => {
+  it.each(['ar', 'en',] as const)('renders account selection with the supported direction for %s', (locale) => {
     const result = renderWithLocale(
       <AuthPage url="/auth/register" locale={locale} client={createClient()} onAuthenticated={vi.fn()} />,
       { locale }
@@ -135,10 +135,10 @@ describe('seeker registration screens', () => {
   });
 
   it('fails closed on a direct success deep link and offers a restart instead of a fake success', () => {
-    const copy = getAuthCopy('zh-CN');
+    const copy = getAuthCopy('en');
     renderWithLocale(
-      <AuthPage url="/auth/register/seeker/success" locale="zh-CN" client={createClient()} onAuthenticated={vi.fn()} />,
-      { locale: 'zh-CN' }
+      <AuthPage url="/auth/register/seeker/success" locale="en" client={createClient()} onAuthenticated={vi.fn()} />,
+      { locale: 'en' }
     );
 
     expect(screen.getByRole('heading', { name: copy.accountSelectionTitle, level: 1 })).toBeInTheDocument();

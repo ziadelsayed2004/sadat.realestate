@@ -129,7 +129,7 @@ function ReportsTable({ data, locale, search, view }: { readonly data: AccountRe
         </table>
       </div>
       {filtered.length === 0 ? <div className="admin-accounts__empty" data-state="empty"><h2>{view === 'reports' ? copy.list.emptyTitle : copy.restrictions.emptyTitle}</h2><p>{view === 'reports' ? copy.list.emptyBody : copy.restrictions.emptyBody}</p></div> : null}
-      {pageCount > 1 ? <nav className="admin-accounts__pagination" aria-label={locale === 'ar' ? 'ترقيم الصفحات' : locale === 'zh-CN' ? '分页' : 'Pagination'}><span>{data.page} / {pageCount}</span></nav> : null}
+      {pageCount > 1 ? <nav className="admin-accounts__pagination" aria-label={locale === 'ar' ? 'ترقيم الصفحات' :'Pagination'}><span>{data.page} / {pageCount}</span></nav> : null}
     </>
   );
 }

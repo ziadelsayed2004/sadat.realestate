@@ -92,33 +92,7 @@ const copy: Readonly<Record<SupportedLocale, ProviderViewingsCopy>> = {
     pagination: 'Viewing appointment pages',
     previous: 'Previous page',
     next: 'Next page'
-  },
-  'zh-CN': {
-    eyebrow: '看房预约管理',
-    title: '看房预约',
-    description: '查看您账户所属房产的预约，并仅执行 API 返回的可用操作。',
-    countSuffix: '个预约',
-    filtersLabel: '筛选看房预约',
-    statusLabel: '状态',
-    allStatuses: '全部状态',
-    apply: '应用',
-    clear: '清除筛选',
-    emptyTitle: '暂无看房预约',
-    emptyBody: '与您所属房产关联的预约将在可用时显示在这里。',
-    columns: { customer: '客户', property: '房产', date: '看房时间', timezone: '时区', status: '状态', actions: '操作' },
-    customerReference: '客户参考',
-    propertyReference: '房产参考',
-    note: '客户备注',
-    statuses: { requested: '已请求', confirmed: '已确认', rescheduled: '已改期', cancelled: '已取消', completed: '已完成' },
-    actions: { confirm: '确认', reschedule: '改期', cancel: '取消', complete: '标记完成', none: '没有可用操作' },
-    dialog: { confirmTitle: '确认看房预约', rescheduleTitle: '重新安排看房', cancelTitle: '取消看房预约', completeTitle: '完成看房预约', confirmDescription: '系统将根据当前记录版本更新状态。', rescheduleDescription: '请输入新的看房时间和时区。', cancelDescription: '请输入取消预约的明确原因。', completeDescription: '根据当前记录版本将预约标记为已完成。', date: '看房时间', timezone: '时区', reason: '原因', reasonHelp: '取消预约时必须填写原因。', confirm: '保存更改', cancel: '取消', close: '关闭' },
-    feedback: { confirmed: '看房预约已确认。', rescheduled: '看房预约已改期。', cancelled: '看房预约已取消。', completed: '看房预约已标记为完成。' },
-    errors: { validation: '保存前请检查必填字段。', generic: '无法更新预约，请重试。', conflict: '服务器上的预约已发生变化。请重新加载列表后再试。' },
-    pagination: '看房预约分页',
-    previous: '上一页',
-    next: '下一页'
-  }
-};
+  },};
 
 export function getProviderViewingsCopy(locale: SupportedLocale): ProviderViewingsCopy {
   return copy[locale];

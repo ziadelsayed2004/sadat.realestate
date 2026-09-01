@@ -4,9 +4,8 @@ import { getSeekerNotificationsCopy } from '../../src/features/seeker/notificati
 const firstId = '4123456789abcdef01234567';
 const secondId = '5123456789abcdef01234567';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  if (project.endsWith('-zh')) return 'zh-CN';
   if (project.endsWith('-en')) return 'en';
   return 'ar';
 }
@@ -20,8 +19,8 @@ function notificationData(id: string, readAt: string | null = null) {
     ? {
         id,
         type: 'viewing.reminder',
-        title: { ar: 'تذكير بموعد المعاينة', en: 'Viewing reminder', 'zh-CN': '看房提醒' },
-        message: { ar: 'لديك موعد معاينة غداً.', en: 'You have a viewing tomorrow.', 'zh-CN': '你明天有看房安排。' },
+        title: { ar: 'تذكير بموعد المعاينة', en: 'Viewing reminder',},
+        message: { ar: 'لديك موعد معاينة غداً.', en: 'You have a viewing tomorrow.',},
         link: `/seeker/viewings?viewing=${id}`,
         readAt,
         createdAt: '2026-08-18T10:00:00.000Z'
@@ -29,8 +28,8 @@ function notificationData(id: string, readAt: string | null = null) {
     : {
         id,
         type: 'request.updated',
-        title: { ar: 'تم تحديث طلبك', en: 'Your request was updated', 'zh-CN': '你的请求已更新' },
-        message: { ar: 'تتوفر تفاصيل جديدة لطلبك.', en: 'New details are available for your request.', 'zh-CN': '你的请求有新的详情。' },
+        title: { ar: 'تم تحديث طلبك', en: 'Your request was updated',},
+        message: { ar: 'تتوفر تفاصيل جديدة لطلبك.', en: 'New details are available for your request.',},
         link: `/seeker/requests/${id}`,
         readAt: readAt ?? '2026-08-17T10:00:00.000Z',
         createdAt: '2026-08-17T09:00:00.000Z'

@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 
-function localeForContent(): 'ar' | 'en' | 'zh-CN' {
+function localeForContent(): 'ar' | 'en' {
   const project = test.info().project.name;
-  return project.endsWith('-zh') ? 'zh-CN' : project.endsWith('-en') ? 'en' : 'ar';
+  return project.endsWith('-en') ? 'en' : 'ar';
 }
 
 test('article administration exposes landmarks, labels, focus, and direction', async ({ page }) => {

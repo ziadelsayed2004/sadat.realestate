@@ -69,7 +69,7 @@ function localePath(locale: SupportedLocale, path: string): string {
 }
 
 function localizedValue(value: PropertyData['name'], locale: SupportedLocale): string {
-  return value[locale] ?? value.ar ?? value.en ?? value['zh-CN'] ?? '';
+  return value[locale] ?? value.ar ?? value.en ?? '';
 }
 
 function dateLabel(value: string, locale: SupportedLocale): string {
@@ -117,7 +117,7 @@ function PropertyMetricStrip({ data, locale, review }: { readonly data: AdminPro
 
 function PropertyStatusStrip({ locale, selected, onSelect }: { readonly locale: SupportedLocale; readonly selected: PropertyStatus | ''; readonly onSelect: (status: PropertyStatus | '') => void }) {
   const copy = getAdminPropertiesCopy(locale);
-  const allLabel = locale === 'ar' ? '\u0627\u0644\u0643\u0644' : locale === 'zh-CN' ? '\u5168\u90e8' : 'All';
+  const allLabel = locale === 'ar' ? '\u0627\u0644\u0643\u0644' :'All';
   return <div role="group" aria-label={locale === 'ar' ? '\u062d\u0627\u0644\u0629 \u0627\u0644\u0639\u0642\u0627\u0631' : 'Property status'} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, maxWidth: 1320, margin: '0 auto 12px', padding: 8, border: '1px solid #e3e5e7', borderRadius: 16, background: '#fff', boxShadow: '0 6px 16px #3232320d' }}>{[['', allLabel] as const, ...propertyStatuses.map(status => [status, copy.status[status]] as const)].map(([value, label]) => { const active = selected === value; return <button aria-pressed={active} data-filter-value={value || 'all'} key={value || 'all'} onClick={() => onSelect(value)} style={{ minHeight: 38, padding: '8px 16px', border: 0, borderRadius: 999, background: active ? '#155b4f' : 'transparent', color: active ? '#fff' : '#69768b', cursor: 'pointer', fontWeight: 800 }} type="button">{label}</button>; })}</div>;
 }
 

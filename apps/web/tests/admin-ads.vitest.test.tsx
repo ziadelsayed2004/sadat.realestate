@@ -158,7 +158,7 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
     await expect(reviewAdminPaymentProof(proof.id, { action: 'approve', expectedVersion: proof.version, reason: 'x' }, { apiClient: client })).rejects.toThrow();
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the six screen projections with the correct direction for %s', async (locale: SupportedLocale) => {
+  it.each(['ar', 'en',] as const)('renders the six screen projections with the correct direction for %s', async (locale: SupportedLocale) => {
     window.history.pushState({}, '', '/admin/ads/requests');
     const result = renderWithLocale(<AdminAds locale={locale} session={session} authClient={authorization} {...loaders} />, { locale });
     await waitFor(() => expect(result.container.querySelector('[data-screen-id="ADM-33"]')).not.toBeNull());

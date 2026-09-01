@@ -76,33 +76,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicAboutTeamCopy>> = {
     bioUnavailable: 'No published biography is available.',
     footerDescription: 'A public platform for properties and content from approved sources.',
     footerLinks: 'Platform links'
-  },
-  'zh-CN': {
-    aboutEyebrow: '关于平台',
-    aboutTitle: '萨达特房地产平台',
-    aboutSubtitle: '展示经批准来源发布的房产和内容的可信公共门户。',
-    teamEyebrow: '团队',
-    teamTitle: '平台背后的团队',
-    teamSubtitle: '专业团队每天持续改善您的体验。',
-    loadingTitle: '正在加载已发布内容',
-    loadingBody: '正在从 CMS 准备内容。',
-    emptyTitle: '暂时没有已发布内容',
-    emptyBody: 'CMS 发布内容后将在此显示。',
-    errorTitle: '无法加载内容',
-    errorBody: '请检查网络连接后重试。',
-    retryTitle: '内容暂时不可用',
-    retryBody: '连接恢复后可以再次尝试。',
-    retryLabel: '重试',
-    permissionTitle: '无法显示此内容',
-    permissionBody: '服务器未允许访问公共内容。',
-    permissionLink: '返回公共首页',
-    imageUnavailable: '图片不可用',
-    roleUnavailable: '职位不可用',
-    bioUnavailable: '暂无已发布简介。',
-    footerDescription: '展示经批准来源发布的房产和内容的公共平台。',
-    footerLinks: '平台链接'
-  }
-};
+  },};
 
 export function getPublicAboutTeamCopy(locale: SupportedLocale): PublicAboutTeamCopy {
   return copyByLocale[locale];

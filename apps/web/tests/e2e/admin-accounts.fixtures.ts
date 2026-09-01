@@ -1,6 +1,6 @@
 import { expect, type Page, type Route } from '@playwright/test';
 
-export type AdminLocale = 'ar' | 'en' | 'zh-CN';
+export type AdminLocale = 'ar' | 'en';
 export type AdminSessionRole = 'admin' | 'seeker';
 
 export const ADMIN_USER_ID = 'aaaaaaaaaaaaaaaaaaaaaaaa';
@@ -9,7 +9,6 @@ export const ADMIN_DOCUMENT_ID = 'dddddddddddddddddddddddd';
 export const ADMIN_INACTIVE_DOCUMENT_ID = 'eeeeeeeeeeeeeeeeeeeeeeee';
 
 export function localeForProject(projectName: string): AdminLocale {
-  if (projectName.endsWith('-zh')) return 'zh-CN';
   if (projectName.endsWith('-en')) return 'en';
   return 'ar';
 }

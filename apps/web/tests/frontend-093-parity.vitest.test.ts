@@ -52,7 +52,7 @@ describe('frontend_093 Seeker design parity evidence', () => {
       expect(screen.approvedSourceSha256).toBe(source?.sha256);
       expect(screen.sourceDimensions).toEqual({ width: source?.width, height: source?.height });
       expect(screen.approvedDevices).toEqual(['desktop']);
-      expect(screen.locales).toEqual(['ar', 'en', 'zh-CN']);
+      expect(screen.locales).toEqual(['ar', 'en',]);
       const sourcePath = path.join(repositoryRoot, screen.approvedSourcePath);
       expect(existsSync(sourcePath), `${screen.screenId} source file is missing`).toBe(true);
       expect(createHash('sha256').update(readFileSync(sourcePath)).digest('hex')).toBe(screen.approvedSourceSha256);

@@ -37,7 +37,7 @@ export const uatFixtureSchema = z.object({
   key: uatFixtureKeySchema,
   surface: uatFixtureSurfaceSchema,
   state: uatFixtureStateSchema,
-  locale: z.enum(['ar', 'en', 'zh-CN']).optional(),
+  locale: z.enum(['ar', 'en',]).optional(),
   synthetic: z.literal(true),
   payload: uatFixturePayloadSchema
 }).strict();

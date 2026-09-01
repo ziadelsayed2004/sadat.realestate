@@ -47,7 +47,7 @@ describe('frontend_095 Admin parity ledger', () => {
       expect(entry?.route, screen.id).toBe(screen.route);
       expect(entry?.approvedSources, screen.id).toHaveLength(source.length);
       expect(entry?.approvedDevices, screen.id).toEqual(['desktop']);
-      expect(entry?.locales, screen.id).toEqual(['ar', 'en', 'zh-CN']);
+      expect(entry?.locales, screen.id).toEqual(['ar', 'en',]);
       expect(entry?.directions, screen.id).toEqual(['rtl', 'ltr']);
       expect(entry?.implementationStatus, screen.id).toBe('verified');
       expect(entry?.comparisonStatus, screen.id).toBe('verified');

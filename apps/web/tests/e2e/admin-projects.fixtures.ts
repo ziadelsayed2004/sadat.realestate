@@ -4,7 +4,7 @@ export function adminProjectFixture() {
   return {
     id: adminProjectId,
     providerId: 'bbbbbbbbbbbbbbbbbbbbbbbb',
-    name: { ar: 'مشروع النيل', en: 'Nile Heights', 'zh-CN': '尼罗高地' },
+    name: { ar: 'مشروع النيل', en: 'Nile Heights',},
     slug: 'nile-heights',
     description: { en: 'A reviewed project.' },
     status: 'pending_review',

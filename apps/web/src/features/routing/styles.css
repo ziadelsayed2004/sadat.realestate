@@ -2,6 +2,7 @@
   flex-wrap: wrap;
 }
 
+
 .route-shell__body {
   display: grid;
   grid-template-columns: minmax(12rem, 15rem) minmax(0, 1fr);

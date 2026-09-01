@@ -22,8 +22,8 @@ import { ROUTE_DEFINITIONS, resolveRoute } from '../src/routes/route-table.ts';
 import { RouteShell } from '../src/features/routing/index.ts';
 
 test('accessibility model preserves supported locale directions and approved device scopes', () => {
-  assert.deepEqual([...ACCESSIBILITY_LOCALES], ['ar', 'en', 'zh-CN']);
-  assert.deepEqual(ACCESSIBILITY_DIRECTIONS, { ar: 'rtl', en: 'ltr', 'zh-CN': 'ltr' });
+  assert.deepEqual([...ACCESSIBILITY_LOCALES], ['ar', 'en',]);
+  assert.deepEqual(ACCESSIBILITY_DIRECTIONS, { ar: 'rtl', en: 'ltr',});
   assert.deepEqual(APPROVED_DEVICE_SCOPES, {
     public: 'desktop/tablet/mobile',
     auth: 'desktop/tablet/mobile',
@@ -71,8 +71,8 @@ test('skip link, main landmark, navigation landmark, and locale direction are re
   assert.match(markup, /dir="rtl"/);
   assert.match(markup, new RegExp(getAccessibilityCopy('ar').skipToContent));
 
-  const ltrMarkup = renderToStaticMarkup(createElement(SkipLink, { label: getAccessibilityCopy('zh-CN').skipToContent }));
-  assert.match(ltrMarkup, /跳转到主要内容/);
+  const ltrMarkup = renderToStaticMarkup(createElement(SkipLink, { label: getAccessibilityCopy('en').skipToContent }));
+  assert.match(ltrMarkup, new RegExp(getAccessibilityCopy('en').skipToContent));
 });
 
 test('modal has a focus target and tabs expose a roving keyboard structure', () => {
@@ -114,4 +114,3 @@ test('focusable selector excludes disabled controls and explicit negative tabind
   assert.match(FOCUSABLE_ELEMENT_SELECTOR, /button:not\(\[disabled\]\)/);
   assert.match(FOCUSABLE_ELEMENT_SELECTOR, /\[tabindex="-1"\]/);
 });
-

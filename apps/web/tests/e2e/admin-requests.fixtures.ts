@@ -46,8 +46,8 @@ export function adminViewingFixture() {
   };
 }
 
-export function localeForAdminRequests(projectName: string): 'ar' | 'en' | 'zh-CN' {
-  return projectName.endsWith('-zh') ? 'zh-CN' : projectName.endsWith('-en') ? 'en' : 'ar';
+export function localeForAdminRequests(projectName: string): 'ar' | 'en' {
+  return projectName.endsWith('-en') ? 'en' : 'ar';
 }
 
 export async function routeAdminRequestApis(page: import('@playwright/test').Page, allow = true): Promise<void> {

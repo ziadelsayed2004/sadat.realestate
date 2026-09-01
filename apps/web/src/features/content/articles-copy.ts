@@ -124,49 +124,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicArticlesCopy>> = {
     notFoundLink: 'Browse articles',
     footerDescription: 'Published real-estate content from approved sources.',
     footerLinks: 'Platform links'
-  },
-  'zh-CN': {
-    title: '文章与专业内容',
-    subtitle: '值得信赖的萨达特城房地产市场指南',
-    searchLabel: '搜索文章',
-    searchPlaceholder: '搜索文章……',
-    allCategories: '全部',
-    categoryLabel: '文章分类',
-    resultCount: count => `${count} 篇已发布文章`,
-    openArticle: '阅读文章',
-    readTime: minutes => `${minutes} 分钟阅读`,
-    publishedAt: '发布日期',
-    authorUnavailable: '公开内容中暂未提供作者信息。',
-    imageUnavailable: '文章图片不可用',
-    noSummary: '此文章暂未提供已发布摘要。',
-    backToArticles: '返回文章',
-    articleBody: '文章内容',
-    introduction: '简介',
-    relatedArticles: '相关文章',
-    relatedProperties: '相关房产',
-    ctaTitle: '正在寻找合适的房产吗？',
-    ctaAction: '立即搜索',
-    noRelatedArticles: '暂时没有已发布的相关文章。',
-    searchNoMatch: '没有符合搜索条件的文章。',
-    loadingTitle: '正在加载文章',
-    loadingBody: '正在准备最新的已发布文章。',
-    emptyTitle: '暂无已发布文章',
-    emptyBody: '经批准的内容发布后会显示在这里。',
-    errorTitle: '无法加载文章',
-    errorBody: '请检查网络连接后重试。',
-    retryTitle: '文章暂时不可用',
-    retryBody: '网络恢复后可以再次尝试。',
-    retryLabel: '重试',
-    permissionTitle: '无法显示这些文章',
-    permissionBody: '服务器未允许访问公开内容。',
-    permissionLink: '返回首页',
-    notFoundTitle: '未找到文章',
-    notFoundBody: '文章可能已不再发布，或链接不正确。',
-    notFoundLink: '浏览文章',
-    footerDescription: '来自已批准来源的已发布房地产内容。',
-    footerLinks: '平台链接'
-  }
-};
+  },};
 
 export function getPublicArticlesCopy(locale: SupportedLocale): PublicArticlesCopy {
   return copyByLocale[locale];

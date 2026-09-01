@@ -366,7 +366,7 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
                 const next = providerLocaleSchema.safeParse(event.currentTarget.value);
                 if (next.success) update('preferredLocale', next.data);
               }}
-              options={(['ar', 'en', 'zh-CN'] as const).map(value => ({ value, label: copy.localeOptions[value] }))}
+              options={(['ar', 'en',] as const).map(value => ({ value, label: copy.localeOptions[value] }))}
             />
             <div className="provider-account-consents">
               <label className="provider-account-checkbox">

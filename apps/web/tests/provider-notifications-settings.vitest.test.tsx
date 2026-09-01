@@ -26,8 +26,8 @@ const session = { status: 'authenticated' as const, role: 'provider' as const };
 const notification = notificationDataSchema.parse({
   id: notificationId,
   type: 'request.updated',
-  title: { ar: 'تحديث على طلب', en: 'Request update', 'zh-CN': '请求更新' },
-  message: { ar: 'تم تحديث حالة الطلب.', en: 'A request status was updated.', 'zh-CN': '请求状态已更新。' },
+  title: { ar: 'تحديث على طلب', en: 'Request update',},
+  message: { ar: 'تم تحديث حالة الطلب.', en: 'A request status was updated.',},
   link: '/provider/customer-requests',
   readAt: null,
   createdAt: '2026-08-19T08:00:00.000Z'
@@ -82,7 +82,7 @@ describe('provider notifications and settings adapters', () => {
 });
 
 describe('Provider notifications', () => {
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders safe notification data and locale direction for %s', async locale => {
+  it.each(['ar', 'en',] as const)('renders safe notification data and locale direction for %s', async locale => {
     const actions: ProviderNotificationActions = {
       markRead: vi.fn(async () => readNotification),
       markAllRead: vi.fn(async () => ({ updatedCount: 1 }))
@@ -168,7 +168,7 @@ describe('Provider notifications', () => {
 });
 
 describe('Provider settings', () => {
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders account data in the approved direction for %s', async locale => {
+  it.each(['ar', 'en',] as const)('renders account data in the approved direction for %s', async locale => {
     const update = vi.fn(async () => settings);
     const copy = locale === 'ar' ? 'حفظ البريد الإلكتروني' : locale === 'en' ? 'Save email address' : '保存电子邮箱';
     const rendered = renderWithLocale(<ProviderSettings locale={locale} session={session} load={async () => settings} actions={{ update }} />, { locale });
@@ -267,6 +267,6 @@ describe('Provider settings', () => {
   });
 });
 
-function getMarkReadLabel(locale: 'ar' | 'en' | 'zh-CN'): string {
+function getMarkReadLabel(locale: 'ar' | 'en'): string {
   return locale === 'ar' ? 'تحديد كمقروء' : locale === 'en' ? 'Mark as read' : '标为已读';
 }

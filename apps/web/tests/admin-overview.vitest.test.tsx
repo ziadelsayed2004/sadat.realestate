@@ -50,7 +50,7 @@ describe('Admin overview', () => {
     expect(url.searchParams.get('to')).toBe('2026-08-19T00:00:00.000Z');
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders real metrics and the correct direction for %s', locale => {
+  it.each(['ar', 'en',] as const)('renders real metrics and the correct direction for %s', locale => {
     const result = renderWithLocale(<AdminOverview locale={locale} session={session} initialData={overview} />, { locale });
     const copy = getAdminCopy(locale);
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');

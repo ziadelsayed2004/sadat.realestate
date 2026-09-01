@@ -60,7 +60,7 @@ describe('Seeker viewing appointments', () => {
     ]);
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders owned appointment states in the approved direction for %s', async locale => {
+  it.each(['ar', 'en',] as const)('renders owned appointment states in the approved direction for %s', async locale => {
     const copy = getSeekerViewingsCopy(locale);
     const result = renderWithLocale(<SeekerViewings locale={locale} session={session} load={async () => list} actions={emptyActions()} />, { locale });
     await waitFor(() => expect(screen.getByTestId(`seeker-viewing-${requested.id}`)).toBeInTheDocument());

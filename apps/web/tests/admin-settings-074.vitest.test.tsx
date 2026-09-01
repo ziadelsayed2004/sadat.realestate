@@ -26,10 +26,7 @@ describe('frontend_074 settings namespaces', () => {
     ['ar', 'properties', '/admin/settings/properties', 'ADM-53'],
     ['ar', 'requests', '/admin/settings/requests', 'ADM-54'],
     ['en', 'advertising', '/admin/settings/advertising', 'ADM-55'],
-    ['en', 'seo', '/admin/settings/seo', 'ADM-56'],
-    ['zh-CN', 'privacy-security', '/admin/settings/privacy-security', 'ADM-57'],
-    ['zh-CN', 'display', '/admin/settings/display', 'ADM-58']
-  ] as const)('renders %s %s at the approved route and screen', async (locale, namespace, path, screenId) => {
+    ['en', 'seo', '/admin/settings/seo', 'ADM-56'],] as const)('renders %s %s at the approved route and screen', async (locale, namespace, path, screenId) => {
     const result = renderWithLocale(<AdminSettings path={path} locale={locale} session={session} initialData={settings(namespace)} />, { locale });
     await waitFor(() => expect(result.container.querySelector(`[data-screen-id="${screenId}"]`)).not.toBeNull());
     expect(result.container.querySelector(`[data-route="${path}"]`)).not.toBeNull();

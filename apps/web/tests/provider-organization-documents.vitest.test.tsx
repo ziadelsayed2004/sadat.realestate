@@ -134,7 +134,7 @@ describe('provider organization details', () => {
     expect(screen.getByText(documentsCopy.requirementsTitle)).toBeInTheDocument();
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the business variant in the supported direction for %s', async (locale) => {
+  it.each(['ar', 'en',] as const)('renders the business variant in the supported direction for %s', async (locale) => {
     const copy = getProviderOrganizationCopy(locale);
     renderWithLocale(
       <ProviderOrganizationPage
@@ -332,15 +332,15 @@ describe('provider private documents', () => {
   });
 
   it('blocks a provider application that lacks the server-provided edit action', async () => {
-    const copy = getProviderDocumentsCopy('zh-CN');
+    const copy = getProviderDocumentsCopy('en');
     renderWithLocale(
       <ProviderDocumentsPage
         client={{ getProviderApplication: vi.fn().mockResolvedValue(application('developer_company', { availableActions: ['view_status'] })) }}
-        locale="zh-CN"
+        locale="en"
         providerType="developer_company"
         onBack={vi.fn()}
       />,
-      { locale: 'zh-CN' }
+      { locale: 'en' }
     );
     await waitFor(() => expect(screen.getByTestId('provider-documents')).toHaveAttribute('data-state', 'permission'));
     expect(screen.getByRole('alert')).toHaveTextContent(copy.permissionTitle);

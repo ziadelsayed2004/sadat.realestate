@@ -16,7 +16,7 @@ function property(overrides: Partial<PropertyData> = {}): PropertyData {
   return propertyDataSchema.parse({
     id: propertyId,
     kind: 'property',
-    name: { ar: 'عقار المزود', en: 'Provider property', 'zh-CN': '提供方房产' },
+    name: { ar: 'عقار المزود', en: 'Provider property',},
     slug: 'provider-property',
     transactionType: 'sale',
     source: { providerId, sourceType: 'individual_broker' },
@@ -97,7 +97,7 @@ describe('provider property media, contact, and review completion', () => {
     expect(requests[5]?.body).toEqual({ version: 2, reason: 'Submit property review' });
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders PRV-08 through PRV-10 with safe projections and direction for %s', locale => {
+  it.each(['ar', 'en',] as const)('renders PRV-08 through PRV-10 with safe projections and direction for %s', locale => {
     const result = renderWithLocale(<ProviderPropertyCompletionWizard locale={locale} session={session} authClient={authClient} step="contact" propertyId={propertyId} initialData={property()} />, { locale });
     const copy = getProviderPropertyCompletionCopy(locale);
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');

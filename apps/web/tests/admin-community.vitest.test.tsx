@@ -88,7 +88,7 @@ describe('admin community contracts and views', () => {
     expect(requests[3]?.body).toEqual({ version: 2, action: 'resolve', reason: 'Moderation decision recorded.' });
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the safe projection and direction for %s', async (locale: SupportedLocale) => {
+  it.each(['ar', 'en',] as const)('renders the safe projection and direction for %s', async (locale: SupportedLocale) => {
     window.history.pushState({}, '', '/admin/community');
     const result = renderWithLocale(<AdminCommunity locale={locale} session={session} initialPosts={posts} />, { locale });
     await waitFor(() => expect(screen.getByTestId(`admin-community-post-${post.id}`)).toBeInTheDocument());

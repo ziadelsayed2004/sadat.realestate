@@ -12,7 +12,7 @@ function property(overrides: Partial<PropertyData> = {}): PropertyData {
   return propertyDataSchema.parse({
     id: 'cccccccccccccccccccccccc',
     kind: 'property',
-    name: { ar: 'عقار المزود', en: 'Provider property', 'zh-CN': '提供方房产' },
+    name: { ar: 'عقار المزود', en: 'Provider property',},
     slug: 'provider-property',
     transactionType: 'sale',
     source: { providerId, sourceType: 'individual_broker' },
@@ -62,7 +62,7 @@ describe('Provider properties', () => {
     expect(Object.fromEntries(requestUrl.searchParams)).toEqual({ status: 'needs_changes', search: 'needs', sort: 'updatedAt', direction: 'desc', page: '2', limit: '5' });
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders safe owned rows, state labels, and direction for %s', async locale => {
+  it.each(['ar', 'en',] as const)('renders safe owned rows, state labels, and direction for %s', async locale => {
     const load = vi.fn(async (_query: ProviderPropertiesQuery) => pageData);
     const result = renderWithLocale(<ProviderProperties locale={locale} session={session} load={load} />, { locale });
     const copy = getProviderCopy(locale);

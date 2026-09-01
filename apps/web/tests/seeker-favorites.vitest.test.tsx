@@ -10,7 +10,7 @@ const saved = favoritePropertySchema.parse({
   id: '4123456789abcdef01234567',
   slug: 'published-home',
   kind: 'property',
-  name: { ar: 'منزل منشور', en: 'Published home', 'zh-CN': '已发布房产' },
+  name: { ar: 'منزل منشور', en: 'Published home',},
   transactionType: 'sale',
   area: { value: 120, unit: 'sqm' },
   layout: { bedrooms: 3, bathrooms: 2, floor: 4 },
@@ -24,7 +24,7 @@ const secondSaved = favoritePropertySchema.parse({
   slug: 'central-apartment',
   kind: 'unit',
   transactionType: 'rent',
-  name: { ar: 'شقة مركزية', en: 'Central apartment', 'zh-CN': '中心公寓' },
+  name: { ar: 'شقة مركزية', en: 'Central apartment',},
   savedAt: '2026-08-17T10:00:00.000Z'
 });
 
@@ -54,7 +54,7 @@ describe('Seeker saved properties', () => {
     ]);
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders safe saved property projections in the approved direction for %s', async locale => {
+  it.each(['ar', 'en',] as const)('renders safe saved property projections in the approved direction for %s', async locale => {
     const copy = getSeekerSavedCopy(locale);
     const result = renderWithLocale(<SeekerSaved locale={locale} session={session} load={async () => list} actions={emptyActions()} />, { locale });
     await waitFor(() => expect(screen.getByTestId(`seeker-saved-property-${saved.id}`)).toBeInTheDocument());

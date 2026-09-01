@@ -62,6 +62,9 @@ test('dashboard shells expose a scoped navigation landmark and preserve locale d
   assert.match(markup, /data-shell="admin"/);
   assert.match(markup, /data-shell-navigation="true"/);
   assert.match(markup, /dir="rtl"/);
+  assert.match(markup, /data-locale-switch="true"/);
+  assert.match(markup, /<option value="ar">/);
+  assert.match(markup, /<option value="en">/);
 
   const seekerMarkup = renderToStaticMarkup(createElement(SeekerShell, {
     route: resolveRoute('/seeker'),
@@ -83,7 +86,7 @@ test('404 and 403 pages expose truthful status markers without protected details
   assert.match(forbidden, /data-status-code="403"/);
   assert.doesNotMatch(forbidden, /internal|assignment|audit data/i);
 
-  const page = renderToStaticMarkup(createElement(ForbiddenPage, { copy: getFoundationCopy('zh-CN') }));
+  const page = renderToStaticMarkup(createElement(ForbiddenPage, { copy: getFoundationCopy('en') }));
   assert.match(page, /data-status-code="403"/);
 });
 
@@ -100,8 +103,8 @@ test('route error boundary switches to a localized safe fallback', () => {
 test('RouteShell renders the selected route surface without adding route data', () => {
   const markup = renderToStaticMarkup(createElement(RouteShell, {
     route: resolveRoute('/provider/properties'),
-    locale: 'zh-CN',
-    copy: getFoundationCopy('zh-CN'),
+    locale: 'en',
+    copy: getFoundationCopy('en'),
     children: createElement('p', null, 'empty state')
   }));
   assert.match(markup, /data-shell="provider"/);

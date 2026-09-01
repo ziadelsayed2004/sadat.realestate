@@ -49,7 +49,7 @@ describe('public community feed and post creation', () => {
     expect(JSON.stringify(listData)).not.toContain('status');
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the public projection and direction for %s', locale => {
+  it.each(['ar', 'en',] as const)('renders the public projection and direction for %s', locale => {
     const result = renderWithLocale(<PublicCommunity locale={locale} initialData={listData} />, { locale });
     const copy = getCommunityCopy(locale);
 

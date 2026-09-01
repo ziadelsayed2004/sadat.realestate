@@ -71,26 +71,6 @@ const catalogs = {
     'state.retry': 'The interface could not load',
     'state.success': 'Loaded',
     'state.permission': 'Authentication required'
-  },
-  'zh-CN': {
-    'app.brand': '\u8428\u8FBE\u7279\u623F\u5730\u4EA7',
-    'shell.title': '\u5E73\u53F0\u5916\u58F3',
-    'shell.description': '\u8428\u8FBE\u7279\u623F\u5730\u4EA7\u5E73\u53F0\u7684\u5171\u4EAB\u524D\u7AEF\u57FA\u7840\u3002',
-    'shell.unavailable': '\u6B64\u8DEF\u5F84\u6682\u65E0\u53EF\u7528\u7684\u9875\u9762\u6570\u636E\u3002',
-    'shell.retry': '\u91CD\u8BD5',
-    'locale.label': '\u8BED\u8A00',
-    'route.label': '\u8DEF\u5F84',
-    'surface.public': '\u516C\u5F00',
-    'surface.auth': '\u8EAB\u4EFD\u9A8C\u8BC1',
-    'surface.seeker': '\u8D2D\u623F\u8005',
-    'surface.provider': '\u623F\u4EA7\u63D0\u4F9B\u65B9',
-    'surface.admin': '\u7BA1\u7406',
-    'state.loading': '\u52A0\u8F7D\u4E2D',
-    'state.empty': '\u6682\u65E0\u6570\u636E',
-    'state.error': '\u627E\u4E0D\u5230\u9875\u9762',
-    'state.retry': '\u754C\u9762\u65E0\u6CD5\u52A0\u8F7D',
-    'state.success': '\u5DF2\u52A0\u8F7D',
-    'state.permission': '\u9700\u8981\u8EAB\u4EFD\u9A8C\u8BC1'
   }
 } as const satisfies Readonly<Record<SupportedLocale, TranslationCatalog>>;
 

@@ -9,8 +9,8 @@ import { renderWithLocale } from '../src/features/testing/index.ts';
 const reminder = notificationDataSchema.parse({
   id: '4123456789abcdef01234567',
   type: 'viewing.reminder',
-  title: { ar: 'تذكير بموعد المعاينة', en: 'Viewing reminder', 'zh-CN': '看房提醒' },
-  message: { ar: 'لديك موعد معاينة غداً.', en: 'You have a viewing tomorrow.', 'zh-CN': '你明天有看房安排。' },
+  title: { ar: 'تذكير بموعد المعاينة', en: 'Viewing reminder',},
+  message: { ar: 'لديك موعد معاينة غداً.', en: 'You have a viewing tomorrow.',},
   link: '/seeker/viewings?viewing=4123456789abcdef01234567',
   readAt: null,
   createdAt: '2026-08-18T10:00:00.000Z'
@@ -19,8 +19,8 @@ const reminder = notificationDataSchema.parse({
 const requestUpdate = notificationDataSchema.parse({
   id: '5123456789abcdef01234567',
   type: 'request.updated',
-  title: { ar: 'تم تحديث طلبك', en: 'Your request was updated', 'zh-CN': '你的请求已更新' },
-  message: { ar: 'تتوفر تفاصيل جديدة لطلبك.', en: 'New details are available for your request.', 'zh-CN': '你的请求有新的详情。' },
+  title: { ar: 'تم تحديث طلبك', en: 'Your request was updated',},
+  message: { ar: 'تتوفر تفاصيل جديدة لطلبك.', en: 'New details are available for your request.',},
   link: '/seeker/requests/5123456789abcdef01234567',
   readAt: '2026-08-17T10:00:00.000Z',
   createdAt: '2026-08-17T09:00:00.000Z'
@@ -58,7 +58,7 @@ describe('Seeker notifications', () => {
     ]);
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders safe notification projections in the approved direction for %s', async locale => {
+  it.each(['ar', 'en',] as const)('renders safe notification projections in the approved direction for %s', async locale => {
     const copy = getSeekerNotificationsCopy(locale);
     const result = renderWithLocale(<SeekerNotifications locale={locale} session={session} load={async () => list} actions={emptyActions()} />, { locale });
     await waitFor(() => expect(screen.getByTestId(`seeker-notification-${reminder.id}`)).toBeInTheDocument());

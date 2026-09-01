@@ -39,7 +39,7 @@ function localePath(locale: SupportedLocale, path: string): string {
 }
 
 function localizedValue(value: ProjectData['name'], locale: SupportedLocale): string {
-  return value[locale] ?? value.ar ?? value.en ?? value['zh-CN'] ?? '';
+  return value[locale] ?? value.ar ?? value.en ?? '';
 }
 
 function dateLabel(value: string, locale: SupportedLocale): string {
@@ -106,7 +106,7 @@ function ProjectMetricStrip({ data, locale, review }: { readonly data: AdminProj
 
 function ProjectStatusStrip({ locale, selected, onSelect }: { readonly locale: SupportedLocale; readonly selected: ProjectStatus | ''; readonly onSelect: (status: ProjectStatus | '') => void }) {
   const copy = getAdminProjectsCopy(locale);
-  const allLabel = locale === 'ar' ? '\u0627\u0644\u0643\u0644' : locale === 'zh-CN' ? '\u5168\u90e8' : 'All';
+  const allLabel = locale === 'ar' ? '\u0627\u0644\u0643\u0644' :'All';
   return (
     <div role="tablist" aria-label={locale === 'ar' ? '\u062d\u0627\u0644\u0629 \u0627\u0644\u0645\u0634\u0631\u0648\u0639' : 'Project status'} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6, maxWidth: 1320, margin: '0 auto 12px', padding: 8, border: '1px solid #e3e5e7', borderRadius: 16, background: '#fff', boxShadow: '0 6px 16px #3232320d' }}>
       {[['', allLabel] as const, ...statuses.map(status => [status, copy.status[status]] as const)].map(([value, label]) => {

@@ -61,10 +61,10 @@ interface LocationForm {
 
 type MutationState = 'idle' | 'saving' | 'success' | 'error' | 'permission';
 
-const LOCALES: readonly SupportedLocale[] = ['ar', 'en', 'zh-CN'];
+const LOCALES: readonly SupportedLocale[] = ['ar', 'en',];
 
 function emptyName(): Record<SupportedLocale, string> {
-  return { ar: '', en: '', 'zh-CN': '' };
+  return { ar: '', en: '',};
 }
 
 function emptyBasic(copy: ProviderPropertyCopy): BasicForm {

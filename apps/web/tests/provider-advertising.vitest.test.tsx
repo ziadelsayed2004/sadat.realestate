@@ -176,7 +176,7 @@ describe('Provider advertising requests and commission', () => {
     expect(calls).toBe(0);
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the safe projection and approved direction for %s', async locale => {
+  it.each(['ar', 'en',] as const)('renders the safe projection and approved direction for %s', async locale => {
     const result = renderWithLocale(<ProviderAdvertising locale={locale} session={session} initialData={data} />, { locale });
     const copy = getProviderAdvertisingCopy(locale);
     await waitFor(() => expect(screen.getByTestId('provider-advertising-row')).toBeInTheDocument());

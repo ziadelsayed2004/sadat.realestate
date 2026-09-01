@@ -171,9 +171,7 @@ function RequestsTable({ data, locale, onDetail }: { readonly data: AdAdminReque
   const count = (status: AdAdminRequestListQuery['status']) => data.items.filter(item => item.request.status === status).length;
   const labels = locale === 'ar'
     ? ['طلبات جديدة', 'في انتظار التسعير', 'في انتظار الموافقة', 'في انتظار الدفع', 'مجدولة', 'نشطة', 'منتهية', 'مرفوضة'] as const
-    : locale === 'zh-CN'
-      ? ['新请求', '等待定价', '等待批准', '等待付款', '已排期', '进行中', '已结束', '已拒绝'] as const
-      : ['New requests', 'Awaiting pricing', 'Awaiting approval', 'Awaiting payment', 'Scheduled', 'Active', 'Ended', 'Rejected'] as const;
+    :['New requests', 'Awaiting pricing', 'Awaiting approval', 'Awaiting payment', 'Scheduled', 'Active', 'Ended', 'Rejected'] as const;
   const metrics: readonly AdsMetric[] = [
     { label: labels[0], value: count('draft'), color: '#2f73d9' },
     { label: labels[1], value: count('waiting_pricing'), color: '#bd7414' },
@@ -198,9 +196,7 @@ function PaymentProofTable({ data, locale, review, onReview }: { readonly data: 
   const securityAttention = data.items.filter(item => item.securityState !== 'clean').length;
   const labels = locale === 'ar'
     ? ['إجمالي الإثباتات', 'السجلات المعروضة', 'قيد المراجعة', 'تحتاج فحصًا أمنيًا', 'مقبولة', 'مرفوضة', 'ملفات نظيفة', 'قابلة للمراجعة'] as const
-    : locale === 'zh-CN'
-      ? ['证明总数', '当前记录', '审核中', '需要安全检查', '已批准', '已拒绝', '安全文件', '可审核'] as const
-      : ['Total proofs', 'Loaded records', 'Under review', 'Security attention', 'Approved', 'Rejected', 'Clean files', 'Reviewable'] as const;
+    :['Total proofs', 'Loaded records', 'Under review', 'Security attention', 'Approved', 'Rejected', 'Clean files', 'Reviewable'] as const;
   const metrics: readonly AdsMetric[] = review
     ? [
         { label: labels[0], value: data.total, color: '#1f355f' },
@@ -261,9 +257,7 @@ function FinancialTable({ data, locale, onDetail }: { readonly data: AdFinancial
   const count = (predicate: (item: AdFinancialReviewListData['items'][number]) => boolean) => data.items.filter(predicate).length;
   const labels = locale === 'ar'
     ? ['عروض أسعار مرسلة', 'المبالغ في انتظار الدفع', 'إثباتات الدفع قيد المراجعة', 'مدفوعات معتمدة', 'طلبات مغلقة', 'إعلانات نشطة'] as const
-    : locale === 'zh-CN'
-      ? ['已发送报价', '待付款金额', '审核中的付款证明', '已批准付款', '已关闭请求', '活跃广告'] as const
-      : ['Quotes issued', 'Payments awaiting action', 'Proofs under review', 'Approved payments', 'Closed requests', 'Active ads'] as const;
+    :['Quotes issued', 'Payments awaiting action', 'Proofs under review', 'Approved payments', 'Closed requests', 'Active ads'] as const;
   const metrics: readonly AdsMetric[] = [
     { label: labels[0], value: count(item => item.quoteStatus !== undefined), color: '#4263a5' },
     { label: labels[1], value: count(item => item.financialState === 'payment_proof_pending_review' || item.requestStatus === 'waiting_payment'), color: '#d6561d' },

@@ -67,9 +67,7 @@ const navigationGroups = [
 
 const navigationGroupLabels: Readonly<Record<SupportedLocale, Readonly<Record<(typeof navigationGroups)[number]['id'], string>>>> = {
   ar: { home: 'الرئيسية', accounts: 'المستخدمون والحسابات', properties: 'إدارة العقارات', requests: 'إدارة الطلبات', content: 'إدارة المحتوى والمجتمع', revenue: 'الإعلانات والإيرادات', system: 'إدارة المنصة' },
-  en: { home: 'Home', accounts: 'Users and accounts', properties: 'Property management', requests: 'Request management', content: 'Content and community', revenue: 'Advertising and revenue', system: 'Platform management' },
-  'zh-CN': { home: '主页', accounts: '用户与账户', properties: '房产管理', requests: '请求管理', content: '内容与社区', revenue: '广告与收入', system: '平台管理' }
-};
+  en: { home: 'Home', accounts: 'Users and accounts', properties: 'Property management', requests: 'Request management', content: 'Content and community', revenue: 'Advertising and revenue', system: 'Platform management' },};
 
 const navigationMatchers: Readonly<Record<(typeof navigationItems)[number][0], readonly string[]>> = {
   overview: ['/admin', '/admin/overview'],

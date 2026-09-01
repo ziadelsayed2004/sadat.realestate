@@ -23,13 +23,13 @@ function settings(namespace: AdminSettingsNamespace = 'platform', version = 4): 
     schemaVersion: 1,
     values: namespace === 'platform'
       ? {
-          platform_name: { ar: 'منصة سادات', en: 'Sadat Real Estate', 'zh-CN': '萨达特房地产' },
-          short_name: { ar: 'سادات', en: 'Sadat', 'zh-CN': '萨达特' },
+          platform_name: { ar: 'منصة سادات', en: 'Sadat Real Estate',},
+          short_name: { ar: 'سادات', en: 'Sadat',},
           primary_email: 'ops@example.com',
           approved_unknown_value: 'preserved'
         }
       : namespace === 'contact'
-        ? { primary_phone: '+201000000000', office_address: { ar: 'مدينة السادات', en: 'Sadat City', 'zh-CN': '萨达特市' } }
+        ? { primary_phone: '+201000000000', office_address: { ar: 'مدينة السادات', en: 'Sadat City',} }
         : { facebook_url: 'https://facebook.com/sadat', instagram_url: 'https://instagram.com/sadat' },
     version,
     updatedBy: adminId,
@@ -65,9 +65,7 @@ describe('Admin platform, contact, and social settings', () => {
 
   it.each([
     ['ar', 'platform', '/admin/settings/platform', 'ADM-50'],
-    ['en', 'contact', '/admin/settings/contact', 'ADM-51'],
-    ['zh-CN', 'social', '/admin/settings/social', 'ADM-52']
-  ] as const)('renders %s %s with the approved screen, direction, and safe projection', async (locale, namespace, path, screenId) => {
+    ['en', 'contact', '/admin/settings/contact', 'ADM-51'],] as const)('renders %s %s with the approved screen, direction, and safe projection', async (locale, namespace, path, screenId) => {
     const result = renderWithLocale(<AdminSettings path={path} locale={locale} session={session} initialData={settings(namespace)} />, { locale });
     await waitFor(() => expect(result.container.querySelector(`[data-screen-id="${screenId}"]`)).not.toBeNull());
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');

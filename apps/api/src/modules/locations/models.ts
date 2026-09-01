@@ -22,8 +22,7 @@ export interface LocationModels {
 
 const localizedTextSubschema = new Schema<LocalizedText>({
   ar: { type: String, trim: true, minlength: 1, maxlength: 20_000 },
-  en: { type: String, trim: true, minlength: 1, maxlength: 20_000 },
-  'zh-CN': { type: String, trim: true, minlength: 1, maxlength: 20_000 }
+  en: { type: String, trim: true, minlength: 1, maxlength: 20_000 }
 }, { _id: false, strict: 'throw' });
 
 const coordinatesSubschema = new Schema({
@@ -78,7 +77,7 @@ locationSchema.index(
   { name: 'locations_hierarchy_active_order' }
 );
 locationSchema.index(
-  { 'name.ar': 'text', 'name.en': 'text', 'name.zh-CN': 'text' },
+  { 'name.ar': 'text', 'name.en': 'text' },
   { name: 'locations_localized_name_search', default_language: 'none' }
 );
 locationSchema.index(

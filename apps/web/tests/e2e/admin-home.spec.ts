@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { adminHomeBannerId, adminHomeSectionId, adminHomeTipId, routeAdminHomeApis } from './admin-home.fixtures.ts';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  return project.endsWith('-zh') ? 'zh-CN' : project.endsWith('-en') ? 'en' : 'ar';
+  return project.endsWith('-en') ? 'en' : 'ar';
 }
 
 test.describe('ADM-46 through ADM-49 homepage administration', () => {

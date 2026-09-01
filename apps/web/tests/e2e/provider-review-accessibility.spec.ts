@@ -2,9 +2,8 @@ import { expect, test } from '@playwright/test';
 
 const APPLICATION_ID = 'a'.repeat(24);
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const projectName = test.info().project.name;
-  if (projectName.endsWith('-zh')) return 'zh-CN';
   if (projectName.endsWith('-en')) return 'en';
   return 'ar';
 }

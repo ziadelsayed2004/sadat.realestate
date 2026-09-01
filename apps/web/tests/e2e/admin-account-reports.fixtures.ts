@@ -1,13 +1,12 @@
 import { expect, type Page, type Route } from '@playwright/test';
 
-export type AdminReportsLocale = 'ar' | 'en' | 'zh-CN';
+export type AdminReportsLocale = 'ar' | 'en';
 export type AdminReportsSessionRole = 'admin' | 'seeker';
 
 export const ADMIN_REPORT_ID = 'ffffffffffffffffffffffff';
 export const ADMIN_REPORT_ACCOUNT_ID = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 
 export function localeForReportsProject(projectName: string): AdminReportsLocale {
-  if (projectName.endsWith('-zh')) return 'zh-CN';
   if (projectName.endsWith('-en')) return 'en';
   return 'ar';
 }

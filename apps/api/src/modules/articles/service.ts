@@ -113,7 +113,7 @@ function articleResult(result: ArticleWriteResult): StoredArticle {
 }
 
 function localized(value: LocalizedText, locale: SupportedLocale): LocalizedText {
-  const selected = value[locale] ?? value.ar ?? value.en ?? value['zh-CN'];
+  const selected = value[locale] ?? value.ar ?? value.en;
   if (selected === undefined) throw new ArticleServiceError('ARTICLE_NOT_FOUND');
   return { [locale]: selected };
 }

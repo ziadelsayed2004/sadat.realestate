@@ -101,7 +101,7 @@ describe('Admin request administration contracts and views', () => {
     expect(requests.at(-1)?.body).toEqual({ action: 'resolve', reason: 'Reviewed and corrected', expectedVersion: 1 });
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the request projection in the locale direction for %s', async (locale: SupportedLocale) => {
+  it.each(['ar', 'en',] as const)('renders the request projection in the locale direction for %s', async (locale: SupportedLocale) => {
     window.history.pushState({}, '', '/admin/requests');
     const result = renderWithLocale(<AdminRequests locale={locale} session={session} initialRequests={requestList} />, { locale });
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');

@@ -11,6 +11,7 @@ import type {
 } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import { PropertyCard } from '../design_system/index.ts';
+import { LOCALE_CHANGE_EVENT } from '../localization/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy, type PublicHomepageCopy } from './copy.ts';
 import { defaultPublicHomepageLoader, type PublicHomepageLoader } from './data.ts';
@@ -83,19 +84,19 @@ const articlePresentation: Readonly<Record<string, {
   readonly author: PublicHomepageLocaleText;
 }>> = Object.freeze({
   buying_guide: {
-    label: { ar: '\u0646\u0635\u0627\u0626\u062d \u0634\u0631\u0627\u0621', en: 'Buying tips', 'zh-CN': '\u8d2d\u623f\u6307\u5357' },
-    duration: { ar: '8 \u062f\u0642\u0627\u0626\u0642', en: '8 min read', 'zh-CN': '\u9605\u8bfb 8 \u5206\u949f' },
-    author: { ar: '\u0623\u062d\u0645\u062f \u0645\u062d\u0645\u0648\u062f', en: 'Ahmed Mahmoud', 'zh-CN': '\u827e\u54c8\u8fc8\u5fb7 \u00b7 \u9a6c\u54c8\u8302\u5fb7' }
+    label: { ar: '\u0646\u0635\u0627\u0626\u062d \u0634\u0631\u0627\u0621', en: 'Buying tips',},
+    duration: { ar: '8 \u062f\u0642\u0627\u0626\u0642', en: '8 min read',},
+    author: { ar: '\u0623\u062d\u0645\u062f \u0645\u062d\u0645\u0648\u062f', en: 'Ahmed Mahmoud',}
   },
   market_news: {
-    label: { ar: '\u0627\u0633\u062a\u062b\u0645\u0627\u0631', en: 'Investment', 'zh-CN': '\u6295\u8d44' },
-    duration: { ar: '6 \u062f\u0642\u0627\u0626\u0642', en: '6 min read', 'zh-CN': '\u9605\u8bfb 6 \u5206\u949f' },
-    author: { ar: '\u0633\u0627\u0631\u0629 \u0623\u062d\u0645\u062f', en: 'Sarah Ahmed', 'zh-CN': '\u8428\u62c9 \u00b7 \u827e\u54c8\u8fc8\u5fb7' }
+    label: { ar: '\u0627\u0633\u062a\u062b\u0645\u0627\u0631', en: 'Investment',},
+    duration: { ar: '6 \u062f\u0642\u0627\u0626\u0642', en: '6 min read',},
+    author: { ar: '\u0633\u0627\u0631\u0629 \u0623\u062d\u0645\u062f', en: 'Sarah Ahmed',}
   },
   city_services: {
-    label: { ar: '\u062e\u062f\u0645\u0627\u062a', en: 'Services', 'zh-CN': '\u670d\u52a1' },
-    duration: { ar: '5 \u062f\u0642\u0627\u0626\u0642', en: '5 min read', 'zh-CN': '\u9605\u8bfb 5 \u5206\u949f' },
-    author: { ar: '\u0645\u062d\u0645\u062f \u0639\u0644\u064a', en: 'Mohamed Ali', 'zh-CN': '\u7a46\u54c8\u9ed8\u5fb7 \u00b7 \u963f\u91cc' }
+    label: { ar: '\u062e\u062f\u0645\u0627\u062a', en: 'Services',},
+    duration: { ar: '5 \u062f\u0642\u0627\u0626\u0642', en: '5 min read',},
+    author: { ar: '\u0645\u062d\u0645\u062f \u0639\u0644\u064a', en: 'Mohamed Ali',}
   }
 });
 
@@ -105,12 +106,12 @@ const communityPresentation: Readonly<Record<string, {
   readonly views: string;
 }>> = Object.freeze({
   community_events: {
-    time: { ar: '\u0645\u0646\u0630 \u064a\u0648\u0645\u064a\u0646', en: '2 days ago', 'zh-CN': '\u4e24\u5929\u524d' },
+    time: { ar: '\u0645\u0646\u0630 \u064a\u0648\u0645\u064a\u0646', en: '2 days ago',},
     comments: '12',
     views: '24'
   },
   community_update: {
-    time: { ar: '\u0645\u0646\u0630 3 \u0623\u064a\u0627\u0645', en: '3 days ago', 'zh-CN': '\u4e09\u5929\u524d' },
+    time: { ar: '\u0645\u0646\u0630 3 \u0623\u064a\u0627\u0645', en: '3 days ago',},
     comments: '34',
     views: '87'
   }
@@ -122,8 +123,8 @@ const bannerPresentation: Readonly<Record<string, {
   readonly providerImage: string;
 }>> = Object.freeze({
   city_banner: {
-    provider: { ar: '\u0634\u0631\u0643\u0629 \u0627\u0644\u0633\u0627\u062f\u0627\u062a \u0644\u0644\u062a\u0637\u0648\u064a\u0631 \u0627\u0644\u0639\u0642\u0627\u0631\u064a', en: 'Sadat Real Estate Development', 'zh-CN': '\u8428\u8fbe\u7279\u623f\u5730\u4ea7\u5f00\u53d1\u516c\u53f8' },
-    installment: { ar: '\u0628\u0645\u0642\u062f\u0645 10% \u0641\u0642\u0637 \u00b7 \u0623\u0642\u0633\u0627\u0637 \u062a\u0635\u0644 \u0625\u0644\u0649 10 \u0633\u0646\u0648\u0627\u062a', en: '10% down payment · installments up to 10 years', 'zh-CN': '\u4ec5需10%首付 · 分期最长10年' },
+    provider: { ar: '\u0634\u0631\u0643\u0629 \u0627\u0644\u0633\u0627\u062f\u0627\u062a \u0644\u0644\u062a\u0637\u0648\u064a\u0631 \u0627\u0644\u0639\u0642\u0627\u0631\u064a', en: 'Sadat Real Estate Development',},
+    installment: { ar: '\u0628\u0645\u0642\u062f\u0645 10% \u0641\u0642\u0637 \u00b7 \u0623\u0642\u0633\u0627\u0637 \u062a\u0635\u0644 \u0625\u0644\u0649 10 \u0633\u0646\u0648\u0627\u062a', en: '10% down payment · installments up to 10 years',},
     providerImage: '/assets/canonical/public/developer-sadat.png'
   }
 });
@@ -188,11 +189,24 @@ export function PublicSiteHeader({
         {links.map(([href, label]) => <a key={href} href={href} aria-current={href === activePath ? 'page' : undefined}>{label}</a>)}
       </nav>
       <div className="public-homepage__actions">
-        <span className="public-homepage__locale" aria-label={copy.localeLabel}>
+        <label className="public-homepage__locale" aria-label={copy.localeLabel}>
           <span aria-hidden="true">⌄</span>
-          <span>{locale.toUpperCase()}</span>
+          <select
+            aria-label={copy.localeLabel}
+            data-locale-switch="true"
+            value={locale}
+            onChange={(event) => {
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent(LOCALE_CHANGE_EVENT, { detail: { locale: event.currentTarget.value } }));
+              }
+            }}
+            style={{ color: 'inherit', background: 'transparent', border: 0, font: 'inherit' }}
+          >
+            <option value="ar">AR</option>
+            <option value="en">EN</option>
+          </select>
           <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><circle cx="8" cy="8" r="6" /><path d="M2 8h12M8 2a9 9 0 0 1 0 12M8 2a9 9 0 0 0 0 12" /></svg>
-        </span>
+        </label>
         <a className="public-homepage__login" href="/auth/login">{copy.login}</a>
         <a className="public-homepage__signup" href="/auth/register">{copy.createAccount}</a>
       </div>
@@ -227,9 +241,7 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
   const footerDescription = description === copy.footerDescription ? description : copy.footerDescription;
   const labels = locale === 'ar'
     ? { explore: 'الصفحات', company: 'الشركة', contact: 'تواصل معنا', follow: 'تابع عقارات السادات', followBody: 'ابقَ على اطلاع بأحدث العروض والأخبار', legal: 'سياسة الخصوصية · الشروط والأحكام', copyright: '© 2026 منصة عقارات السادات — جميع الحقوق محفوظة', phone: '01001234567', whatsapp: 'واتساب متاح 24/7', address: 'مدينة السادات، مصر' }
-    : locale === 'zh-CN'
-      ? { explore: '页面', company: '公司', contact: '联系我们', follow: '关注萨达特房地产', followBody: '及时了解最新房源与资讯', legal: '隐私政策 · 条款与条件', copyright: '© 2026 萨达特房地产平台 — 版权所有', phone: '01001234567', whatsapp: 'WhatsApp 全天候可用', address: '埃及萨达特城' }
-      : { explore: 'Pages', company: 'Company', contact: 'Contact us', follow: 'Follow Sadat Real Estate', followBody: 'Stay informed about the latest listings and news', legal: 'Privacy policy · Terms and conditions', copyright: '© 2026 Sadat Real Estate — All rights reserved', phone: '01001234567', whatsapp: 'WhatsApp available 24/7', address: 'Sadat City, Egypt' };
+    :{ explore: 'Pages', company: 'Company', contact: 'Contact us', follow: 'Follow Sadat Real Estate', followBody: 'Stay informed about the latest listings and news', legal: 'Privacy policy · Terms and conditions', copyright: '© 2026 Sadat Real Estate — All rights reserved', phone: '01001234567', whatsapp: 'WhatsApp available 24/7', address: 'Sadat City, Egypt' };
   const nav = locale === 'ar'
     ? { ...copy.nav, community: '\u0627\u0644\u0643\u0648\u0645\u064a\u0648\u0646\u062a\u064a', about: '\u0645\u0646 \u0646\u062d\u0646', team: '\u0641\u0631\u064a\u0642 \u0627\u0644\u0639\u0645\u0644' }
     : copy.nav;
@@ -314,9 +326,7 @@ function SearchPanel({ copy, locale, categories }: { readonly copy: PublicHomepa
   const [transactionType, setTransactionType] = useState<'sale' | 'rent'>('sale');
   const labels = locale === 'ar'
     ? { type: 'نوع العقار', district: 'المنطقة', price: 'السعر', any: 'الكل' }
-    : locale === 'zh-CN'
-      ? { type: '房产类型', district: '区域', price: '价格', any: '全部' }
-      : { type: 'Property type', district: 'District', price: 'Price', any: 'Any' };
+    :{ type: 'Property type', district: 'District', price: 'Price', any: 'Any' };
   const searchActionLabel = locale === 'ar' ? '\u0627\u0628\u062d\u062b \u0627\u0644\u0622\u0646' : copy.searchAction;
   return (
     <form className="public-homepage__search" action="/properties" method="get" aria-label={copy.searchLabel}>
@@ -437,7 +447,7 @@ function HomepageSummary({
 
   return (
     <section className="public-homepage__summary" aria-label={localizedText(primary.title, locale) ?? primary.key} data-homepage-summary="data-backed">
-      <p className="public-homepage__summary-kicker">{locale === 'ar' ? 'إحصاءات المدينة' : locale === 'zh-CN' ? '城市统计' : 'City statistics'}</p>
+      <p className="public-homepage__summary-kicker">{locale === 'ar' ? 'إحصاءات المدينة' :'City statistics'}</p>
       <h2>{localizedText(primary.title, locale) ?? primary.key}</h2>
       <strong className="public-homepage__summary-primary">{new Intl.NumberFormat(locale).format(primary.value)}</strong>
       {localizedText(primary.unit, locale) === undefined ? null : <p className="public-homepage__summary-unit">{localizedText(primary.unit, locale)}</p>}
@@ -468,8 +478,8 @@ function HomepageCategoryRail({
 
   const firstCategory = categories[0];
   const allPropertiesMetric = metrics.find(metric => metric.key === 'housing_units');
-  const allPropertiesLabel = locale === 'ar' ? '\u0639\u0642\u0627\u0631' : locale === 'zh-CN' ? '\u623f\u4ea7' : 'properties';
-  const allPropertiesTitle = locale === 'ar' ? '\u0639\u0631\u0636 \u0627\u0644\u0643\u0644' : locale === 'zh-CN' ? '\u67e5\u770b\u5168\u90e8' : 'View all';
+  const allPropertiesLabel = locale === 'ar' ? '\u0639\u0642\u0627\u0631' :'properties';
+  const allPropertiesTitle = locale === 'ar' ? '\u0639\u0631\u0636 \u0627\u0644\u0643\u0644' :'View all';
   const renderCategory = (category: PublicHomepageCategory) => (
     <a className="public-homepage__category-card" href={'/properties?propertyTypeId=' + encodeURIComponent(category.id)} key={category.id}>
       <PublicMediaImage className="public-homepage__category-image" src={category.imageUrl ?? publicCategoryAsset(category.slug)} alt="" fallback={<PublicCategoryGlyph slug={category.slug} />} />
@@ -641,8 +651,8 @@ function BannerGrid({
   const highlight = localizedText(banner.highlight, locale);
   const targetUrl = safePublicUrl(banner.targetUrl) ?? '/properties';
   const presentation = bannerPresentation[banner.key];
-  const previousLabel = locale === 'ar' ? '\u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0627\u0644\u0633\u0627\u0628\u0642' : locale === 'zh-CN' ? '\u4e0a\u4e00\u5e7f\u544a' : 'Previous banner';
-  const nextLabel = locale === 'ar' ? '\u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0627\u0644\u062a\u0627\u0644\u064a' : locale === 'zh-CN' ? '\u4e0b\u4e00\u5e7f\u544a' : 'Next banner';
+  const previousLabel = locale === 'ar' ? '\u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0627\u0644\u0633\u0627\u0628\u0642' :'Previous banner';
+  const nextLabel = locale === 'ar' ? '\u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0627\u0644\u062a\u0627\u0644\u064a' :'Next banner';
 
   return (
     <section className="public-homepage__section public-homepage__section--banners" aria-labelledby="public-homepage-banners">
@@ -664,7 +674,7 @@ function BannerGrid({
         <button className="public-homepage__banner-control public-homepage__banner-control--previous" type="button" aria-label={previousLabel} onClick={() => setActiveIndex(index => (index - 1 + carouselBanners.length) % carouselBanners.length)} disabled={carouselBanners.length < 2}>‹</button>
         <button className="public-homepage__banner-control public-homepage__banner-control--next" type="button" aria-label={nextLabel} onClick={() => setActiveIndex(index => (index + 1) % carouselBanners.length)} disabled={carouselBanners.length < 2}>›</button>
       </div>
-      <div className="public-homepage__banner-dots" aria-label={locale === 'ar' ? '\u0627\u062e\u062a\u064a\u0627\u0631 \u0627\u0644\u0625\u0639\u0644\u0627\u0646' : locale === 'zh-CN' ? '\u5e7f\u544a\u9009\u62e9' : 'Banner selection'}>
+      <div className="public-homepage__banner-dots" aria-label={locale === 'ar' ? '\u0627\u062e\u062a\u064a\u0627\u0631 \u0627\u0644\u0625\u0639\u0644\u0627\u0646' :'Banner selection'}>
         {carouselBanners.map((item, index) => <button key={item.key} type="button" aria-label={`${index + 1}`} aria-current={index === activeIndex ? 'true' : undefined} onClick={() => setActiveIndex(index)}><span /></button>)}
       </div>
     </section>

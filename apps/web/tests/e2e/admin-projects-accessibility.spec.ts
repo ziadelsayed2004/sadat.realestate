@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  return project.endsWith('-zh') ? 'zh-CN' : project.endsWith('-en') ? 'en' : 'ar';
+  return project.endsWith('-en') ? 'en' : 'ar';
 }
 
 test('admin project routes expose landmarks, labels, focusable actions, and direction', async ({ page }) => {

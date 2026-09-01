@@ -1,9 +1,8 @@
 import { expect, test, type Page } from '@playwright/test';
 import { PUBLIC_CLONE_ASSETS, routePublicHomepageApi, routePublicPropertyListApi } from './public-fixtures';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const projectName = test.info().project.name;
-  if (projectName.endsWith('-zh')) return 'zh-CN';
   if (projectName.endsWith('-en')) return 'en';
   return 'ar';
 }
@@ -33,23 +32,23 @@ function propertyDetailsFixture() {
     id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
     slug: 'published-home',
     kind: 'property',
-    name: { ar: 'منزل منشور', en: 'Published home', 'zh-CN': '已发布房产' },
+    name: { ar: 'منزل منشور', en: 'Published home',},
     transactionType: 'sale',
-    description: { ar: 'وصف المنزل المنشور', en: 'A published home description', 'zh-CN': '已发布房产描述' },
+    description: { ar: 'وصف المنزل المنشور', en: 'A published home description',},
     area: { value: 120, unit: 'sqm' },
     layout: { bedrooms: 3, bathrooms: 2, floor: 4 },
     price: { amount: 1250000, currency: 'EGP' },
     source: { sourceType: 'developer_company', organizationId: 'bbbbbbbbbbbbbbbbbbbbbbbb' },
     seo: {
-      title: { ar: 'تفاصيل منزل منشور', en: 'Published home details', 'zh-CN': '已发布房产详情' },
-      description: { ar: 'وصف محرك البحث', en: 'Search description', 'zh-CN': '搜索描述' },
+      title: { ar: 'تفاصيل منزل منشور', en: 'Published home details',},
+      description: { ar: 'وصف محرك البحث', en: 'Search description',},
       slug: 'published-home'
     },
     project: {
       id: 'bbbbbbbbbbbbbbbbbbbbbbbb',
       slug: 'central-project',
-      name: { ar: 'المشروع المركزي', en: 'Central project', 'zh-CN': '中央项目' },
-      description: { ar: 'نبذة المشروع', en: 'Project description', 'zh-CN': '项目描述' }
+      name: { ar: 'المشروع المركزي', en: 'Central project',},
+      description: { ar: 'نبذة المشروع', en: 'Project description',}
     },
     media: [],
     features: [],
@@ -65,7 +64,7 @@ function propertyComparisonFixture() {
         id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
         slug: 'garden-villa',
         kind: 'property',
-        name: { ar: 'Garden villa', en: 'Garden villa', 'zh-CN': 'Garden villa' },
+        name: { ar: 'Garden villa', en: 'Garden villa',},
         transactionType: 'sale',
         area: { value: 180, unit: 'sqm' },
         layout: { bedrooms: 4, bathrooms: 3, floor: 1 },
@@ -75,7 +74,7 @@ function propertyComparisonFixture() {
         id: 'bbbbbbbbbbbbbbbbbbbbbbbb',
         slug: 'city-apartment',
         kind: 'unit',
-        name: { ar: 'City apartment', en: 'City apartment', 'zh-CN': 'City apartment' },
+        name: { ar: 'City apartment', en: 'City apartment',},
         transactionType: 'rent',
         area: { value: 120, unit: 'sqm' },
         layout: { bedrooms: 3, bathrooms: 2, floor: 8 },
@@ -93,8 +92,8 @@ function developerDirectoryFixture() {
         id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
         kind: 'developer_company',
         slug: 'approved-builder',
-        name: { ar: 'Ø´Ø±ÙƒØ© Ù…Ø¹ØªÙ…Ø¯Ø©', en: 'Approved builder', 'zh-CN': 'å·²æ‰¹å‡†å¼€å‘å•†' },
-        description: { ar: 'Ø¬Ù‡Ø© Ù…Ù†Ø´ÙˆØ±Ø©', en: 'Published developer description.', 'zh-CN': 'å·²å‘å¸ƒçš„å¼€å‘å•†' },
+        name: { ar: 'Ø´Ø±ÙƒØ© Ù…Ø¹ØªÙ…Ø¯Ø©', en: 'Approved builder',},
+        description: { ar: 'Ø¬Ù‡Ø© Ù…Ù†Ø´ÙˆØ±Ø©', en: 'Published developer description.',},
         verified: true,
         projectCount: 2,
         propertyCount: 4
@@ -114,15 +113,15 @@ function developerProfileFixture() {
       projects: [{
         id: 'bbbbbbbbbbbbbbbbbbbbbbbb',
         slug: 'central-project',
-        name: { ar: 'Ø§Ù„Ù…Ø´Ø±ÙˆØ¹ Ø§Ù„Ù…Ø±ÙƒØ²ÙŠ', en: 'Central project', 'zh-CN': 'ä¸­å¤®é¡¹ç›®' },
-        description: { ar: 'Ù†Ø¨Ø°Ø© Ø§Ù„Ù…Ø´Ø±ÙˆØ¹', en: 'Project description.', 'zh-CN': 'é¡¹ç›®ç®€ä»‹' },
+        name: { ar: 'Ø§Ù„Ù…Ø´Ø±ÙˆØ¹ Ø§Ù„Ù…Ø±ÙƒØ²ÙŠ', en: 'Central project',},
+        description: { ar: 'Ù†Ø¨Ø°Ø© Ø§Ù„Ù…Ø´Ø±ÙˆØ¹', en: 'Project description.',},
         website: 'https://example.com/central-project'
       }],
       properties: [{
         id: 'cccccccccccccccccccccccc',
         slug: 'published-home',
         kind: 'property',
-        name: { ar: 'Ù…Ù†Ø²Ù„ Ù…Ù†Ø´ÙˆØ±', en: 'Published home', 'zh-CN': 'å·²å‘å¸ƒæˆ¿äº§' },
+        name: { ar: 'Ù…Ù†Ø²Ù„ Ù…Ù†Ø´ÙˆØ±', en: 'Published home',},
         transactionType: 'sale',
         projectId: 'bbbbbbbbbbbbbbbbbbbbbbbb'
       }],
@@ -139,8 +138,8 @@ function articleListFixture() {
         id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
         categoryId: 'bbbbbbbbbbbbbbbbbbbbbbbb',
         slug: 'buying-in-sadat',
-        title: { ar: 'Buying in Sadat City', en: 'Buying in Sadat City', 'zh-CN': 'Buying in Sadat City' },
-        body: { ar: 'A practical guide to published homes.', en: 'A practical guide to published homes.', 'zh-CN': 'A practical guide to published homes.' },
+        title: { ar: 'Buying in Sadat City', en: 'Buying in Sadat City',},
+        body: { ar: 'A practical guide to published homes.', en: 'A practical guide to published homes.',},
         seoTitle: { en: 'Buying in Sadat City' },
         seoDescription: { en: 'A practical buying guide.' },
         publishedAt: '2026-08-01T10:00:00+00:00'
@@ -149,8 +148,8 @@ function articleListFixture() {
         id: 'cccccccccccccccccccccccc',
         categoryId: 'dddddddddddddddddddddddd',
         slug: 'rental-tips',
-        title: { ar: 'Rental tips', en: 'Rental tips', 'zh-CN': 'Rental tips' },
-        body: { ar: 'A short rental checklist.', en: 'A short rental checklist.', 'zh-CN': 'A short rental checklist.' },
+        title: { ar: 'Rental tips', en: 'Rental tips',},
+        body: { ar: 'A short rental checklist.', en: 'A short rental checklist.',},
         publishedAt: '2026-07-20T10:00:00+00:00'
       }
     ],

@@ -13,18 +13,42 @@ export interface RouteShellProps {
   readonly locale: SupportedLocale;
   readonly copy: FoundationCopy;
   readonly assets?: DesignAssetCatalog | undefined;
+  readonly onLocaleChange?: ((locale: SupportedLocale) => void) | undefined;
   readonly children: ReactNode;
 }
 
-function ShellFrame({ kind, route, locale, copy, assets, children }: RouteShellProps & { readonly kind: ShellKind }) {
+interface LanguageSwitchProps {
+  readonly locale: SupportedLocale;
+  readonly copy: FoundationCopy;
+  readonly onLocaleChange?: ((locale: SupportedLocale) => void) | undefined;
+}
+
+function LanguageSwitch({ locale, copy, onLocaleChange }: LanguageSwitchProps) {
+  return (
+    <label className="locale-switch">
+      <span className="a11y-visually-hidden">{copy.localeLabel}</span>
+      <select
+        aria-label={copy.localeLabel}
+        data-locale-switch="true"
+        value={locale}
+        onChange={(event) => onLocaleChange?.(event.currentTarget.value as SupportedLocale)}
+      >
+        <option value="ar">العربية</option>
+        <option value="en">English</option>
+      </select>
+    </label>
+  );
+}
+
+function ShellFrame({ kind, route, locale, copy, assets, onLocaleChange, children }: RouteShellProps & { readonly kind: ShellKind }) {
   const dashboard = kind === 'seeker' || kind === 'provider' || kind === 'admin';
   const surfaceLabel = copy.surfaceLabels[route.surface];
   const accessibilityCopy = getAccessibilityCopy(locale);
   const adminHeader = kind === 'admin' ? {
-    search: locale === 'ar' ? 'ابحث عن مستخدم، عقار، مشروع، مقال أو طلب' : locale === 'en' ? 'Search for a user, property, project, article or request' : '搜索用户、房产、项目、文章或请求',
-    searchLabel: locale === 'ar' ? 'بحث الإدارة' : locale === 'en' ? 'Admin search' : '管理搜索',
-    role: locale === 'ar' ? 'مدير النظام' : locale === 'en' ? 'System administrator' : '系统管理员',
-    menu: locale === 'ar' ? 'قائمة الإدارة' : locale === 'en' ? 'Admin menu' : '管理菜单'
+    search: locale === 'ar' ? 'ابحث عن مستخدم، عقار، مشروع، مقال أو طلب' : 'Search for a user, property, project, article or request',
+    searchLabel: locale === 'ar' ? 'بحث الإدارة' : 'Admin search',
+    role: locale === 'ar' ? 'مدير النظام' : 'System administrator',
+    menu: locale === 'ar' ? 'قائمة الإدارة' : 'Admin menu'
   } : undefined;
   const body = (
     <main id="main-content" className="app-main" tabIndex={-1}>
@@ -46,7 +70,7 @@ function ShellFrame({ kind, route, locale, copy, assets, children }: RouteShellP
       <SkipLink label={accessibilityCopy.skipToContent} />
       <header className="app-header route-shell__header">
         <BrandMark label={copy.brand} assets={assets} />
-        {adminHeader === undefined ? <><span className="surface-label" data-shell-surface="true">{surfaceLabel}</span><span className="locale" data-locale-indicator="true">{copy.localeLabel}: {locale}</span></> : (
+          {adminHeader === undefined ? <><span className="surface-label" data-shell-surface="true">{surfaceLabel}</span><LanguageSwitch locale={locale} copy={copy} onLocaleChange={onLocaleChange} /></> : (
           <div data-admin-header="true" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '.65rem', order: 0 }}>
               <span aria-hidden="true" style={{ display: 'grid', width: '2.25rem', height: '2.25rem', placeItems: 'center', borderRadius: '50%', background: '#e4eee9', color: '#155b4f', fontWeight: 800 }}>م</span>
@@ -57,6 +81,7 @@ function ShellFrame({ kind, route, locale, copy, assets, children }: RouteShellP
               <input aria-label={adminHeader.searchLabel} placeholder={adminHeader.search} type="search" style={{ width: '100%', border: 0, outline: 0, background: 'transparent', color: 'inherit' }} />
             </label>
             <span aria-label={adminHeader.menu} role="img" style={{ color: '#1b2942', fontSize: '1.25rem', lineHeight: 1 }}>☰</span>
+            <LanguageSwitch locale={locale} copy={copy} onLocaleChange={onLocaleChange} />
           </div>
         )}
       </header>

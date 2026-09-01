@@ -41,7 +41,7 @@ export interface ProviderProjectsProps {
   readonly mutations?: ProviderProjectMutationApi | undefined;
 }
 
-const LOCALE_KEYS = ['ar', 'en', 'zh-CN'] as const satisfies readonly SupportedLocale[];
+const LOCALE_KEYS = ['ar', 'en',] as const satisfies readonly SupportedLocale[];
 const PROJECT_FORM_ID = 'provider-project-form';
 
 interface ProjectFormState {
@@ -54,13 +54,13 @@ interface ProjectFormState {
 }
 
 function blankForm(): ProjectFormState {
-  return { name: { ar: '', en: '', 'zh-CN': '' }, description: { ar: '', en: '', 'zh-CN': '' }, slug: '', locationId: '', website: '', reason: '' };
+  return { name: { ar: '', en: '',}, description: { ar: '', en: '',}, slug: '', locationId: '', website: '', reason: '' };
 }
 
 function formForProject(project: ProjectData): ProjectFormState {
   return {
-    name: { ar: project.name.ar ?? '', en: project.name.en ?? '', 'zh-CN': project.name['zh-CN'] ?? '' },
-    description: { ar: project.description?.ar ?? '', en: project.description?.en ?? '', 'zh-CN': project.description?.['zh-CN'] ?? '' },
+    name: { ar: project.name.ar ?? '', en: project.name.en ?? '',},
+    description: { ar: project.description?.ar ?? '', en: project.description?.en ?? '',},
     slug: project.slug,
     locationId: project.locationId ?? '',
     website: project.website ?? '',
@@ -78,7 +78,7 @@ function localizedText(values: Record<SupportedLocale, string>): LocalizedText |
 }
 
 function localizedValue(value: ProjectData['name'], locale: SupportedLocale): string {
-  return value[locale] ?? value.ar ?? value.en ?? value['zh-CN'] ?? '—';
+  return value[locale] ?? value.ar ?? value.en ?? '—';
 }
 
 function dateLabel(value: string, locale: SupportedLocale): string {

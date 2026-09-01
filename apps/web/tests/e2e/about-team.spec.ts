@@ -1,8 +1,7 @@
 import { expect, test } from '@playwright/test';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const projectName = test.info().project.name;
-  if (projectName.endsWith('-zh')) return 'zh-CN';
   if (projectName.endsWith('-en')) return 'en';
   return 'ar';
 }
@@ -11,8 +10,8 @@ function aboutFixture() {
   return {
     data: {
       items: [
-        { key: 'about_intro', title: { ar: 'عن المنصة', en: 'About the platform', 'zh-CN': '关于平台' }, body: { ar: 'أنشأنا هذه المنصة لأن السوق العقاري في مدينة السادات يحتاج منصة متخصصة وموثوقة.', en: 'A specialized and trusted real-estate marketplace.', 'zh-CN': '专业且可信的房地产市场。' }, order: 0 },
-        { key: 'trust', title: { ar: 'الثقة', en: 'Trust', 'zh-CN': '信任' }, body: { ar: 'مبدأ ثقة منشور', en: 'A published trust principle.', 'zh-CN': '已发布的信任原则。' }, order: 1 }
+        { key: 'about_intro', title: { ar: 'عن المنصة', en: 'About the platform',}, body: { ar: 'أنشأنا هذه المنصة لأن السوق العقاري في مدينة السادات يحتاج منصة متخصصة وموثوقة.', en: 'A specialized and trusted real-estate marketplace.',}, order: 0 },
+        { key: 'trust', title: { ar: 'الثقة', en: 'Trust',}, body: { ar: 'مبدأ ثقة منشور', en: 'A published trust principle.',}, order: 1 }
       ]
     },
     meta: { requestId: 'e2e-about' }
@@ -24,10 +23,10 @@ function teamFixture() {
     data: {
       items: [{
         key: 'team_ahmed',
-        title: { ar: 'قائد المنصة', en: 'Platform lead', 'zh-CN': '平台负责人' },
-        name: { ar: 'عضو الفريق المنشور', en: 'Published team member', 'zh-CN': '已发布团队成员' },
-        role: { ar: 'قائد المنصة', en: 'Platform lead', 'zh-CN': '平台负责人' },
-        bio: { ar: 'نبذة عامة منشورة.', en: 'A public biography.', 'zh-CN': '已发布的公开简介。' },
+        title: { ar: 'قائد المنصة', en: 'Platform lead',},
+        name: { ar: 'عضو الفريق المنشور', en: 'Published team member',},
+        role: { ar: 'قائد المنصة', en: 'Platform lead',},
+        bio: { ar: 'نبذة عامة منشورة.', en: 'A public biography.',},
         photoAssetId: 'aaaaaaaaaaaaaaaaaaaaaaaa',
         order: 0
       }]

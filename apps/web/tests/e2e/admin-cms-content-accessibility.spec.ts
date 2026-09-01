@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { adminCmsContentFor, adminCmsEnvelope } from './admin-cms-content.fixtures.ts';
 
-function localeForAdminCms(): 'ar' | 'en' | 'zh-CN' {
+function localeForAdminCms(): 'ar' | 'en' {
   const project = test.info().project.name;
-  return project.endsWith('-zh') ? 'zh-CN' : project.endsWith('-en') ? 'en' : 'ar';
+  return project.endsWith('-en') ? 'en' : 'ar';
 }
 
 test('ADM-30 CMS form exposes landmarks, labels, focus, and direction', async ({ page }) => {

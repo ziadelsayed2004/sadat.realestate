@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { auditId, notificationId, routeAdminNotificationsAuditApis } from './admin-notifications-audit.fixtures.ts';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  return project.endsWith('-zh') ? 'zh-CN' : project.endsWith('-en') ? 'en' : 'ar';
+  return project.endsWith('-en') ? 'en' : 'ar';
 }
 
 test.describe('ADM-65 and ADM-66 notifications and audit log', () => {

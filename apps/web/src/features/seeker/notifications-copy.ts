@@ -118,50 +118,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerNotificationsCopy>> = {
       'profile.updated': 'Profile update'
     },
     retry: 'Retry'
-  },
-  'zh-CN': {
-    eyebrow: '求购者工作区',
-    title: '通知',
-    description: '查看与你的账户和请求相关的最新更新。',
-    listLabel: '账户通知',
-    unreadCount: '条未读通知',
-    markAll: '全部标记为已读',
-    markingAll: '正在标记为已读…',
-    tabs: { all: '全部', unread: '未读' },
-    unreadLabel: '未读',
-    markRead: '标记为已读',
-    markedRead: '通知已标记为已读。',
-    openLink: '打开详情',
-    previous: '上一页',
-    next: '下一页',
-    pagination: '通知分页',
-    empty: {
-      all: { title: '暂无通知', body: '与你的账户相关的更新会显示在这里。' },
-      unread: { title: '暂无未读通知', body: '你已读完当前账户可用的所有通知。' }
-    },
-    states: {
-      loading: { title: '正在加载通知', body: '正在从平台获取你的账户通知。' },
-      retry: { title: '无法加载通知', body: '请检查连接后重试。' },
-      error: { title: '通知暂不可用', body: '无法读取账户通知，请稍后重试。' },
-      permission: { title: '需要登录', body: '只有已验证的求购者账户才能查看通知。' }
-    },
-    mutation: {
-      markedRead: '通知已标记为已读。',
-      markedAll: '未读通知已更新。',
-      notFound: '该通知已不再对你的账户可用。',
-      permission: '会话已过期，请登录后重试。',
-      error: '无法更新通知，请重试。'
-    },
-    typeLabels: {
-      'viewing.reminder': '看房提醒',
-      'request.updated': '请求更新',
-      'community.reply': '社区回复',
-      'property.saved': '已保存房产更新',
-      'profile.updated': '个人资料更新'
-    },
-    retry: '重试'
-  }
-};
+  },};
 
 export function getSeekerNotificationsCopy(locale: SupportedLocale): SeekerNotificationsCopy {
   return copy[locale];

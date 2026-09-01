@@ -5,9 +5,8 @@ const PROPERTY_ID = 'bbbbbbbbbbbbbbbbbbbbbbbb';
 const SEEKER_ID = 'cccccccccccccccccccccccc';
 const VIEWING_ID = 'dddddddddddddddddddddddd';
 
-function localeForViewings(): 'ar' | 'en' | 'zh-CN' {
+function localeForViewings(): 'ar' | 'en' {
   const project = test.info().project.name;
-  if (project.endsWith('-zh')) return 'zh-CN';
   if (project.endsWith('-en')) return 'en';
   return 'ar';
 }

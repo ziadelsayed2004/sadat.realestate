@@ -90,7 +90,7 @@ describe('Admin account and verification views', () => {
     expect(requests.every(request => request.authorization === 'Bearer admin.accounts.test')).toBe(true);
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the user list with the correct direction for %s', async locale => {
+  it.each(['ar', 'en',] as const)('renders the user list with the correct direction for %s', async locale => {
     const result = renderWithLocale(<AdminAccounts locale={locale} session={session} view="users" initialListData={userList} />, { locale });
     await waitFor(() => expect(screen.getByTestId('admin-user-aaaaaaaaaaaaaaaaaaaaaaaa')).toBeInTheDocument());
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');

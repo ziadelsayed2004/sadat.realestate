@@ -4,9 +4,8 @@ const requestedId = '4123456789abcdef01234567';
 const confirmedId = '7123456789abcdef01234567';
 const completedId = '9123456789abcdef01234567';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  if (project.endsWith('-zh')) return 'zh-CN';
   if (project.endsWith('-en')) return 'en';
   return 'ar';
 }
@@ -103,7 +102,7 @@ test.describe('SEK-05 Seeker Viewing Requests', () => {
     await expect(page.getByTestId(`seeker-viewing-${requestedId}`)).toBeVisible();
     await expect(page.getByTestId(`seeker-viewing-${confirmedId}`)).toBeVisible();
     await expect(page.locator('body')).not.toContainText(/6123456789abcdef01234567|providerId|accessToken|refreshToken/u);
-    await page.getByRole('tab', { name: locale === 'ar' ? 'السابقة' : locale === 'zh-CN' ? '已完成' : 'Past' }).click();
+    await page.getByRole('tab', { name: locale === 'ar' ? 'السابقة' :'Past' }).click();
     await expect(page.getByTestId(`seeker-viewing-${completedId}`)).toBeVisible();
     await page.locator('.a11y-skip-link').focus();
     await expect(page.locator('.a11y-skip-link')).toBeFocused();
@@ -116,21 +115,21 @@ test.describe('SEK-05 Seeker Viewing Requests', () => {
   test('validates creation and supports rescheduling and confirmed cancellation', async ({ page }) => {
     const locale = localeForProject();
     await page.goto(`/seeker/viewings?lang=${encodeURIComponent(locale)}`);
-    const requestLabel = locale === 'ar' ? 'طلب موعد معاينة' : locale === 'zh-CN' ? '申请看房' : 'Request a viewing';
-    const submitLabel = locale === 'ar' ? 'إرسال الطلب' : locale === 'zh-CN' ? '提交申请' : 'Submit request';
-    const rescheduleLabel = locale === 'ar' ? 'إعادة الجدولة' : locale === 'zh-CN' ? '重新安排' : 'Reschedule';
-    const saveLabel = locale === 'ar' ? 'حفظ الموعد' : locale === 'zh-CN' ? '保存预约' : 'Save appointment';
-    const cancelLabel = locale === 'ar' ? 'إلغاء الموعد' : locale === 'zh-CN' ? '取消预约' : 'Cancel appointment';
+    const requestLabel = locale === 'ar' ? 'طلب موعد معاينة' :'Request a viewing';
+    const submitLabel = locale === 'ar' ? 'إرسال الطلب' :'Submit request';
+    const rescheduleLabel = locale === 'ar' ? 'إعادة الجدولة' :'Reschedule';
+    const saveLabel = locale === 'ar' ? 'حفظ الموعد' :'Save appointment';
+    const cancelLabel = locale === 'ar' ? 'إلغاء الموعد' :'Cancel appointment';
     await page.getByRole('button', { name: requestLabel }).click();
     await page.getByRole('button', { name: submitLabel }).click();
     await expect(page.locator('.seeker-viewing-form__errors')).toBeVisible();
-    const closeLabel = locale === 'ar' ? 'إغلاق' : locale === 'zh-CN' ? '关闭' : 'Close';
+    const closeLabel = locale === 'ar' ? 'إغلاق' :'Close';
     await page.getByRole('button', { name: closeLabel }).click();
     const requestedCard = page.getByTestId(`seeker-viewing-${requestedId}`);
     const rescheduleButton = requestedCard.getByRole('button', { name: rescheduleLabel });
     await expect(rescheduleButton).toBeVisible();
     await rescheduleButton.dispatchEvent('click');
-    await page.getByLabel(locale === 'ar' ? 'موعد المعاينة' : locale === 'zh-CN' ? '看房时间' : 'Viewing time').fill('2026-08-27T11:00');
+    await page.getByLabel(locale === 'ar' ? 'موعد المعاينة' :'Viewing time').fill('2026-08-27T11:00');
     await page.getByRole('button', { name: saveLabel }).dispatchEvent('click');
     await expect(page.locator('.seeker-viewings__feedback[data-state="success"]')).toBeVisible();
 

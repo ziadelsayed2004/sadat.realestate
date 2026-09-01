@@ -8,7 +8,7 @@ import { renderWithLocale } from '../src/features/testing/index.ts';
 const homepageData = publicHomepageDataSchema.parse({
   sections: [{
     key: 'hero',
-    title: { ar: 'عقارات منشورة', en: 'Published homes', 'zh-CN': '已发布房产' },
+    title: { ar: 'عقارات منشورة', en: 'Published homes',},
     body: { en: 'Content supplied by the public homepage contract.' },
     order: 0
   }],

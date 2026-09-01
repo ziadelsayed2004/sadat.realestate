@@ -37,7 +37,7 @@ const propertyComparisonData = {
       id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
       slug: 'garden-villa',
       kind: 'property',
-      name: { ar: 'Garden villa', en: 'Garden villa', 'zh-CN': 'Garden villa' },
+      name: { ar: 'Garden villa', en: 'Garden villa',},
       transactionType: 'sale',
       area: { value: 180, unit: 'sqm' },
       layout: { bedrooms: 4, bathrooms: 3, floor: 1 },
@@ -47,7 +47,7 @@ const propertyComparisonData = {
       id: 'bbbbbbbbbbbbbbbbbbbbbbbb',
       slug: 'city-apartment',
       kind: 'unit',
-      name: { ar: 'City apartment', en: 'City apartment', 'zh-CN': 'City apartment' },
+      name: { ar: 'City apartment', en: 'City apartment',},
       transactionType: 'rent',
       area: { value: 120, unit: 'sqm' },
       layout: { bedrooms: 3, bathrooms: 2, floor: 8 },
@@ -62,7 +62,7 @@ const developerListData = {
     id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
     kind: 'developer_company',
     slug: 'approved-builder',
-    name: { ar: 'Ø´Ø±ÙƒØ© Ù…Ø¹ØªÙ…Ø¯Ø©', en: 'Approved builder', 'zh-CN': 'å·²æ‰¹å‡†å¼€å‘å•†' },
+    name: { ar: 'Ø´Ø±ÙƒØ© Ù…Ø¹ØªÙ…Ø¯Ø©', en: 'Approved builder',},
     description: { en: 'Published developer description.' },
     verified: true,
     projectCount: 1,
@@ -166,9 +166,9 @@ test('SSR keeps protected dashboard routes in a permission-safe shell', async ()
 });
 
 test('SSR returns a real 404 result for unknown routes', async () => {
-  const result = await render('/missing-route', { acceptLanguage: 'zh-CN' });
+  const result = await render('/missing-route', { acceptLanguage: 'fr-FR' });
   assert.equal(result.statusCode, 404);
-  assert.equal(result.locale, 'zh-CN');
+  assert.equal(result.locale, 'ar');
   assert.match(result.html, /data-state="error"/);
   assert.equal(result.seo?.robots, 'noindex,nofollow');
   assert.equal(result.seo?.canonicalPath, '/missing-route');
@@ -191,13 +191,15 @@ test('SSR renders the homepage shell and hydrates CMS data only when supplied', 
   assert.match(result.html, /Published homes/);
   assert.deepEqual(result.homepageData?.sections[0]?.title, { en: 'Published homes' });
   assert.equal(result.seo?.canonicalPath, '/');
-  assert.equal(result.seo?.description, 'Browse published properties from the approved platform data.');
+  assert.equal(result.seo?.description, 'A complete real-estate platform for Sadat City services and properties');
 });
 
 test('SSR renders the property listing with the implemented query and safe list data', async () => {
   const result = await render('/properties?lang=en&search=home&sort=price', {
     propertyListData: {
       items: [],
+      categories: [],
+      propertyTypes: [],
       page: 1,
       limit: 20,
       total: 0
@@ -301,7 +303,7 @@ test('SSR renders the public About projection and safe bootstrap', async () => {
   assert.equal(result.direction, 'ltr');
   assert.match(result.html, /data-page="public-about"/);
   assert.match(result.html, /data-about-state="success"/);
-  assert.match(result.html, /Our mission/);
+  assert.match(result.html, /A gateway to trust and transparency/);
   assert.doesNotMatch(result.html, /updatedBy|status|active/);
   assert.deepEqual(result.aboutData?.items.map(item => item.key), ['mission']);
 });

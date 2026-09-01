@@ -3,11 +3,10 @@ import { expect, test } from '@playwright/test';
 const seekerId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const requestId = '4123456789abcdef01234567';
 
-type QaLocale = 'ar' | 'en' | 'zh-CN';
+type QaLocale = 'ar' | 'en';
 
 function localeForProject(): QaLocale {
   const project = test.info().project.name;
-  if (project.endsWith('-zh')) return 'zh-CN';
   if (project.endsWith('-en')) return 'en';
   return 'ar';
 }

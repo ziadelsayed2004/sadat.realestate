@@ -62,31 +62,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderTypeCopy>> = {
         description: 'For a company that develops and manages real-estate projects.'
       }
     }
-  },
-  'zh-CN': {
-    title: '选择服务提供方类型',
-    description: '选择最符合您房地产业务的类型，以继续填写相应信息。',
-    optionsLabel: '可用的服务提供方类型',
-    continueAction: '继续',
-    backAction: '返回账户类型选择',
-    guidanceTitle: '您的选择将决定下一步',
-    guidanceBody: '下一步将根据您选择的服务提供方类型收集相应字段和文件。申请须经过平台行政审核后才会获批。',
-    options: {
-      individual_broker: {
-        title: '个人经纪人',
-        description: '适用于以个人身份开展业务的房地产专业人士。'
-      },
-      brokerage_office: {
-        title: '经纪公司',
-        description: '适用于代表商业活动的房地产经纪公司。'
-      },
-      developer_company: {
-        title: '开发商公司',
-        description: '适用于开发和管理房地产项目的公司。'
-      }
-    }
-  }
-};
+  },};
 
 export function getProviderTypeCopy(locale: SupportedLocale): ProviderTypeCopy {
   return copyByLocale[locale];

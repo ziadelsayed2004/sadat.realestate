@@ -47,7 +47,7 @@ export const PROVIDER_DOCUMENT_CATEGORIES = [
 ] as const;
 export const providerDocumentCategorySchema = z.enum(PROVIDER_DOCUMENT_CATEGORIES);
 
-export const providerLocaleSchema = z.enum(['ar', 'en', 'zh-CN']);
+export const providerLocaleSchema = z.enum(['ar', 'en']);
 export const providerApplicationVersionSchema = z.number().int().nonnegative();
 
 const opaqueTokenSchema = z.string().regex(/^[A-Za-z0-9_-]{43}$/);

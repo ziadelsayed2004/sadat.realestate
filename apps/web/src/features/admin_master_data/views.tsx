@@ -33,7 +33,6 @@ interface FormState {
   readonly kind: string;
   readonly nameAr: string;
   readonly nameEn: string;
-  readonly nameZh: string;
   readonly slug: string;
   readonly parentId: string;
   readonly categoryId: string;
@@ -71,7 +70,7 @@ function localizedPath(locale: SupportedLocale, path: string): string {
 }
 
 function localizedValue(value: LocalizedText, locale: SupportedLocale): string {
-  return value[locale] ?? value.en ?? value.ar ?? value['zh-CN'] ?? '—';
+  return value[locale] ?? value.en ?? value.ar ?? '—';
 }
 
 function isLocation(item: MasterDataItem): item is LocationData {
@@ -92,7 +91,6 @@ function formFromItem(item: MasterDataItem | undefined, tab: AdminMasterDataTab)
     kind: item?.kind ?? (tab === 'categories' ? 'category' : tab === 'locations' ? 'location' : 'feature'),
     nameAr: name?.ar ?? '',
     nameEn: name?.en ?? '',
-    nameZh: name?.['zh-CN'] ?? '',
     slug: item?.slug ?? '',
     parentId: item !== undefined && isLocation(item) ? item.parentLocationId ?? '' : '',
     categoryId: item !== undefined && isTaxonomy(item) ? item.categoryId ?? '' : '',
@@ -109,7 +107,6 @@ function nameFromForm(form: FormState): LocalizedText {
   return {
     ...(form.nameAr.trim() === '' ? {} : { ar: form.nameAr.trim() }),
     ...(form.nameEn.trim() === '' ? {} : { en: form.nameEn.trim() }),
-    ...(form.nameZh.trim() === '' ? {} : { 'zh-CN': form.nameZh.trim() })
   };
 }
 
@@ -222,7 +219,6 @@ function EditorForm({ tab, form, copy, editing, data, locale, onChange, onSubmit
         <FormField id="admin-master-data-slug" label={copy.labels.slug} value={form.slug} placeholder={copy.placeholders.slug} required onChange={slug => onChange({ slug })} disabled={editing} />
         <FormField id="admin-master-data-name-ar" label={copy.labels.nameAr} value={form.nameAr} placeholder={copy.placeholders.nameAr} onChange={nameAr => onChange({ nameAr })} />
         <FormField id="admin-master-data-name-en" label={copy.labels.nameEn} value={form.nameEn} placeholder={copy.placeholders.nameEn} onChange={nameEn => onChange({ nameEn })} />
-        <FormField id="admin-master-data-name-zh" label={copy.labels.nameZh} value={form.nameZh} placeholder={copy.placeholders.nameZh} onChange={nameZh => onChange({ nameZh })} />
         <FormField id="admin-master-data-order" label={copy.labels.order} value={form.order} type="number" min="0" step="1" required onChange={order => onChange({ order })} />
         {tab === 'categories' && form.kind === 'type' ? <SelectField id="admin-master-data-category" label={copy.labels.category} value={form.categoryId} options={[{ value: '', label: copy.placeholders.category }, ...parentOptions]} onChange={categoryId => onChange({ categoryId })} /> : null}
         {tab === 'locations' && form.kind === 'neighborhood' ? <SelectField id="admin-master-data-parent" label={copy.labels.parent} value={form.parentId} options={[{ value: '', label: copy.placeholders.parent }, ...parentOptions]} onChange={parentId => onChange({ parentId })} /> : null}
@@ -317,7 +313,7 @@ export function AdminMasterData({ locale, session, authClient, apiClient, apiOri
   async function submitEditor(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     if (modal === undefined || modal.mode === 'delete') return;
-    if (nameFromForm(form).ar === undefined && nameFromForm(form).en === undefined && nameFromForm(form)['zh-CN'] === undefined) {
+    if (nameFromForm(form).ar === undefined && nameFromForm(form).en === undefined) {
       setMutationError(copy.mutation.validation);
       return;
     }

@@ -135,8 +135,8 @@ function Gallery({
     <section className="public-property-details__gallery" aria-labelledby="public-property-details-gallery-title" data-gallery="true">
       <h2 id="public-property-details-gallery-title" className="public-property-details__visually-hidden">{copy.galleryTitle}</h2>
       <div className="public-property-details__gallery-badges" aria-label={copy.sale}>
-        {installmentAvailable ? <span className="public-property-details__gallery-badge public-property-details__gallery-badge--installment">{locale === 'ar' ? 'تقسيط' : locale === 'zh-CN' ? '分期' : 'Installments'}</span> : null}
-        <span className="public-property-details__gallery-badge public-property-details__gallery-badge--transaction">{locale === 'ar' ? 'بيع' : locale === 'zh-CN' ? '出售' : copy.sale}</span>
+        {installmentAvailable ? <span className="public-property-details__gallery-badge public-property-details__gallery-badge--installment">{locale === 'ar' ? 'تقسيط' :'Installments'}</span> : null}
+        <span className="public-property-details__gallery-badge public-property-details__gallery-badge--transaction">{locale === 'ar' ? 'بيع' :copy.sale}</span>
       </div>
       <div className="public-property-details__gallery-main">
         <PublicMediaImage
@@ -263,7 +263,6 @@ function detailsPrice(value: PublicPropertyDetailsData['price'], locale: Support
   if (value.amount >= 1_000_000) {
     const millions = new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(value.amount / 1_000_000);
     if (locale === 'ar') return `${millions} مليون جنيه`;
-    if (locale === 'zh-CN') return `${millions} 百万埃镑`;
     return `EGP ${millions}M`;
   }
   return formatMoney(value, locale);
@@ -273,7 +272,6 @@ function detailsRelatedPrice(value: PublicPropertyDetailsData['price'], transact
   if (value === undefined) return undefined;
   if (transactionType === 'rent' && locale === 'ar') return `${new Intl.NumberFormat('ar-EG', { maximumFractionDigits: 0 }).format(value.amount)} جنيه / شهر`;
   if (transactionType === 'rent' && locale === 'en') return `${new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value.amount)} EGP / month`;
-  if (transactionType === 'rent' && locale === 'zh-CN') return `${new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value.amount)} EGP / 月`;
   return detailsPrice(value, locale);
 }
 
@@ -289,9 +287,7 @@ function PropertySummary({
   const title = localizedText(data.name, locale) ?? data.slug;
   const summaryLabels = locale === 'ar'
     ? { location: 'الحي الأول', delivery: 'الاستلام', finishing: 'التشطيب', ready: 'جاهز للتسليم' }
-    : locale === 'zh-CN'
-      ? { location: '第一街区', delivery: '交付', finishing: '装修', ready: '可立即入住' }
-      : { location: 'First District', delivery: 'Delivery', finishing: 'Finishing', ready: 'Ready to move' };
+    :{ location: 'First District', delivery: 'Delivery', finishing: 'Finishing', ready: 'Ready to move' };
   const finishing = data.features.find(item => item.groupKey === 'finishing' || item.slug.includes('finish'));
   const mapUrl = safeMapUrl(data.mapUrl);
   const facts = [
@@ -339,7 +335,7 @@ function SourceAndProject({
       <div className="public-property-details__source-identity">
         {data.source.imageUrl ? <img src={data.source.imageUrl} alt="" width="48" height="48" loading="lazy" decoding="async" /> : null}
         <div>
-          <p className="public-property-details__eyebrow">{locale === 'ar' ? 'مقدم هذا العقار' : locale === 'zh-CN' ? '房产提供方' : 'Property provider'}</p>
+          <p className="public-property-details__eyebrow">{locale === 'ar' ? 'مقدم هذا العقار' :'Property provider'}</p>
           <h2 id="public-property-details-source-title">{sourceName}</h2>
           <p>
             {sourceDescriptorParts.map((part, index) => (
@@ -350,9 +346,9 @@ function SourceAndProject({
             ))}
           </p>
         </div>
-        {data.source.verified ? <span className="public-property-details__verified">{locale === 'ar' ? 'موثق' : locale === 'zh-CN' ? '已验证' : 'Verified'}</span> : null}
+        {data.source.verified ? <span className="public-property-details__verified">{locale === 'ar' ? 'موثق' :'Verified'}</span> : null}
       </div>
-      <a className="public-property-details__profile-link" href={data.source.organizationId ? `/developers/${data.source.organizationId}` : '/developers'}>{locale === 'ar' ? 'عرض ملف المطور' : locale === 'zh-CN' ? '查看开发商资料' : 'View developer profile'}</a>
+      <a className="public-property-details__profile-link" href={data.source.organizationId ? `/developers/${data.source.organizationId}` : '/developers'}>{locale === 'ar' ? 'عرض ملف المطور' :'View developer profile'}</a>
     </section>
   );
 }
@@ -378,9 +374,7 @@ function Description({
 function Amenities({ data, locale }: { readonly data: PublicPropertyDetailsData; readonly locale: SupportedLocale }) {
   const labels = locale === 'ar'
     ? { features: 'المميزات', services: 'الموقع والخدمات المحيطة' }
-    : locale === 'zh-CN'
-      ? { features: '房产特色', services: '附近服务' }
-      : { features: 'Features', services: 'Nearby services' };
+    :{ features: 'Features', services: 'Nearby services' };
   const nearbyNote = locale === 'ar'
     ? '\u0627\u0644\u0645\u0633\u0627\u0641\u0627\u062a \u0648\u0627\u0644\u0623\u0648\u0642\u0627\u062a \u062a\u0642\u0631\u064a\u0628\u064a\u0629 \u0648\u0642\u062f \u062a\u062e\u062a\u0644\u0641 \u062d\u0633\u0628 \u0627\u0644\u0637\u0631\u064a\u0642 \u0648\u062d\u0627\u0644\u0629 \u0627\u0644\u0645\u0631\u0648\u0631.'
     : 'Distances and travel times are estimates and may vary by route.';
@@ -402,9 +396,7 @@ function Amenities({ data, locale }: { readonly data: PublicPropertyDetailsData;
 function LocationAdvisory({ locale }: { readonly locale: SupportedLocale }) {
   const text = locale === 'ar'
     ? { eyebrow: 'ميزة موقع السادات', title: 'نصيحة عقارات السادات', body: 'قرب الوحدة من المدارس والسوق التجاري يجعلها مناسبة للسكن العائلي، كما يعزز من سهولة الوصول إلى الخدمات اليومية. أنصح بمعاينة العقار والمنطقة في أوقات مختلفة قبل اتخاذ قرار الشراء.' }
-    : locale === 'zh-CN'
-      ? { eyebrow: '位置优势', title: '萨达特房地产建议', body: '靠近学校和商业市场，适合家庭居住。建议在购买前于不同时段实地考察。' }
-      : { eyebrow: 'Location advantage', title: 'Sadat Real Estate advice', body: 'Nearby schools and retail make this suitable for family living. Visit the property and area at different times before purchasing.' };
+    :{ eyebrow: 'Location advantage', title: 'Sadat Real Estate advice', body: 'Nearby schools and retail make this suitable for family living. Visit the property and area at different times before purchasing.' };
   return <section className="public-property-details__advisory"><header><span aria-hidden="true"><DetailLineIcon kind="advisory" /></span><div><small>{text.eyebrow}</small><strong>{text.title}</strong></div></header><p>{text.body}</p></section>;
 }
 
@@ -425,7 +417,7 @@ function RelatedProperties({
         {properties.map(property => {
           const relatedTitle = localizedText(property.name, locale) ?? property.slug;
           const relatedFeatures = [
-            ...(property.viewCount === undefined ? [] : [{ label: locale === 'ar' ? '\u0627\u0644\u0645\u0634\u0627\u0647\u062f\u0627\u062a' : locale === 'zh-CN' ? '\u6d4f\u89c8\u91cf' : 'Views', value: <span className="public-property-details__related-feature-value"><DetailLineIcon kind="eye" />{property.viewCount.toLocaleString(locale)}</span> }]),
+            ...(property.viewCount === undefined ? [] : [{ label: locale === 'ar' ? '\u0627\u0644\u0645\u0634\u0627\u0647\u062f\u0627\u062a' :'Views', value: <span className="public-property-details__related-feature-value"><DetailLineIcon kind="eye" />{property.viewCount.toLocaleString(locale)}</span> }]),
             ...(property.layout?.bathrooms === undefined ? [] : [{ label: copy.bathrooms, value: <span className="public-property-details__related-feature-value"><DetailLineIcon kind="bathrooms" />{String(property.layout.bathrooms)}</span> }]),
             ...(property.layout?.bedrooms === undefined ? [] : [{ label: copy.bedrooms, value: <span className="public-property-details__related-feature-value"><DetailLineIcon kind="bedrooms" />{String(property.layout.bedrooms)}</span> }]),
             ...(property.area === undefined ? [] : [{ label: copy.area, value: <span className="public-property-details__related-feature-value"><DetailLineIcon kind="area" />{formatArea(property.area, locale, copy.sqm) ?? '—'}</span> }])
@@ -441,7 +433,7 @@ function RelatedProperties({
               location={relatedLocation === undefined ? undefined : <span className="public-property-details__related-location"><DetailLineIcon kind="location" />{relatedLocation}</span>}
               price={detailsRelatedPrice(property.price, property.transactionType, locale)}
               features={relatedFeatures}
-              source={sourceName === undefined ? undefined : <span className="public-property-details__related-source">{property.sourceImageUrl ? <img src={property.sourceImageUrl} alt="" width="20" height="20" loading="lazy" decoding="async" /> : null}<span>{locale === 'ar' ? '\u0628\u0648\u0627\u0633\u0637\u0629 ' : locale === 'zh-CN' ? '\u7531' : 'By '}{sourceName}</span>{property.sourceVerified || property.sourceType === 'developer_company' ? <b>{locale === 'ar' ? '\u0645\u0648\u062b\u0642' : locale === 'zh-CN' ? '\u5df2\u9a8c\u8bc1' : 'Verified'}</b> : null}</span>}
+              source={sourceName === undefined ? undefined : <span className="public-property-details__related-source">{property.sourceImageUrl ? <img src={property.sourceImageUrl} alt="" width="20" height="20" loading="lazy" decoding="async" /> : null}<span>{locale === 'ar' ? '\u0628\u0648\u0627\u0633\u0637\u0629 ' :'By '}{sourceName}</span>{property.sourceVerified || property.sourceType === 'developer_company' ? <b>{locale === 'ar' ? '\u0645\u0648\u062b\u0642' :'Verified'}</b> : null}</span>}
               mediaOverlay={<><span className={`public-property-details__related-badge public-property-details__related-badge--${property.transactionType}`}>{property.transactionType === 'sale' ? copy.sale : copy.rent}</span>{property.publicCode ? <span className="public-property-details__related-code">{property.publicCode}</span> : null}</>}
               image={<PublicMediaImage src={property.imageUrl} alt={relatedTitle} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />}
               imageAlt={copy.imageUnavailable}
@@ -575,7 +567,7 @@ function RequestPanel({
           {contactValidation ? <p className="public-property-details__validation" role="alert">{copy.contactValidation}</p> : null}
           <Button type="submit" fullWidth className="public-property-details__contact-submit" startIcon={<span className="public-property-details__button-icon"><DetailLineIcon kind="paper-plane" /></span>} loading={contactState === 'submitting'}>{contactState === 'submitting' ? copy.actionLoading : copy.submitContact}</Button>
         </form>
-        <a className="public-property-details__whatsapp" href="/community"><span className="public-property-details__button-icon public-property-details__button-icon--whatsapp" aria-hidden="true"><DetailLineIcon kind="whatsapp" /></span>{locale === 'ar' ? 'واتساب' : locale === 'zh-CN' ? 'WhatsApp' : 'WhatsApp'}</a>
+        <a className="public-property-details__whatsapp" href="/community"><span className="public-property-details__button-icon public-property-details__button-icon--whatsapp" aria-hidden="true"><DetailLineIcon kind="whatsapp" /></span>{locale === 'ar' ? 'واتساب' :'WhatsApp'}</a>
       </section>
       {viewingState === 'success' || viewingState === 'permission' || viewingState === 'error' ? <ActionFeedback state={viewingState} copy={copy} url={url} /> : null}
       <Modal

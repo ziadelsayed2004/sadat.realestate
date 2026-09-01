@@ -64,129 +64,129 @@ export function publicHomepageFixture() {
       sections: [
         {
           key: 'hero',
-          title: { ar: 'ابحث عن عقارك\nالان في السادات', en: 'Find your property\nnow in Sadat City', 'zh-CN': '寻找您的房产\n就在萨达特城' },
-          body: { ar: 'منصة متكاملة لعقارات وخدمات مدينة السادات', en: 'A complete real-estate platform for Sadat City services and properties', 'zh-CN': '萨达特城房产与服务综合平台' },
+          title: { ar: 'ابحث عن عقارك\nالان في السادات', en: 'Find your property\nnow in Sadat City',},
+          body: { ar: 'منصة متكاملة لعقارات وخدمات مدينة السادات', en: 'A complete real-estate platform for Sadat City services and properties',},
            order: 0
         },
         {
           key: 'featured',
-          title: { ar: 'عقارات مميزة', en: 'Featured properties', 'zh-CN': '精选房产' },
+          title: { ar: 'عقارات مميزة', en: 'Featured properties',},
            order: 1
         }
       ],
       categories: [
-        { id: '222222222222222222222222', slug: 'restaurants-cafes', name: { ar: 'مطاعم وكافيهات', en: 'Restaurants and cafés', 'zh-CN': '餐厅和咖啡馆' }, propertyCount: 22, order: 0 },
-        { id: '333333333333333333333333', slug: 'showrooms', name: { ar: 'صالات عرض', en: 'Showrooms', 'zh-CN': '展厅' }, propertyCount: 34, order: 1 },
-        { id: '444444444444444444444444', slug: 'full-commercial-building', name: { ar: 'مبنى تجاري كامل', en: 'Full commercial building', 'zh-CN': '完整商业楼' }, propertyCount: 19, order: 2 },
-        { id: '555555555555555555555555', slug: 'room', name: { ar: 'غرفة', en: 'Room', 'zh-CN': '房间' }, propertyCount: 65, order: 3 },
-        { id: '666666666666666666666666', slug: 'roof', name: { ar: 'روف', en: 'Roof', 'zh-CN': '屋顶' }, propertyCount: 28, order: 4 },
-        { id: '777777777777777777777777', slug: 'duplex', name: { ar: 'دوبلكس', en: 'Duplex', 'zh-CN': '复式' }, propertyCount: 43, order: 5 },
-        { id: '888888888888888888888888', slug: 'villa', name: { ar: 'فيلا', en: 'Villa', 'zh-CN': '别墅' }, propertyCount: 87, order: 6 }
+        { id: '222222222222222222222222', slug: 'restaurants-cafes', name: { ar: 'مطاعم وكافيهات', en: 'Restaurants and cafés',}, propertyCount: 22, order: 0 },
+        { id: '333333333333333333333333', slug: 'showrooms', name: { ar: 'صالات عرض', en: 'Showrooms',}, propertyCount: 34, order: 1 },
+        { id: '444444444444444444444444', slug: 'full-commercial-building', name: { ar: 'مبنى تجاري كامل', en: 'Full commercial building',}, propertyCount: 19, order: 2 },
+        { id: '555555555555555555555555', slug: 'room', name: { ar: 'غرفة', en: 'Room',}, propertyCount: 65, order: 3 },
+        { id: '666666666666666666666666', slug: 'roof', name: { ar: 'روف', en: 'Roof',}, propertyCount: 28, order: 4 },
+        { id: '777777777777777777777777', slug: 'duplex', name: { ar: 'دوبلكس', en: 'Duplex',}, propertyCount: 43, order: 5 },
+        { id: '888888888888888888888888', slug: 'villa', name: { ar: 'فيلا', en: 'Villa',}, propertyCount: 87, order: 6 }
       ],
       metrics: [
-        { key: 'population', title: { ar: 'عدد سكان مدينة السادات', en: 'Sadat City population', 'zh-CN': '萨达特城人口' }, value: 342800, unit: { ar: 'نسمة', en: 'residents', 'zh-CN': '居民' }, order: 0 },
-        { key: 'annual_growth', title: { ar: 'نمو سنوي', en: 'Annual growth', 'zh-CN': '年增长' }, value: 3500, unit: { ar: 'نسمة', en: 'residents', 'zh-CN': '居民' }, order: 1 },
-        { key: 'residential_districts', title: { ar: 'منطقة سكنية', en: 'Residential districts', 'zh-CN': '住宅区' }, value: 18, order: 2 },
-        { key: 'housing_units', title: { ar: 'وحدة سكنية', en: 'Housing units', 'zh-CN': '住房单元' }, value: 1200, order: 3 }
+        { key: 'population', title: { ar: 'عدد سكان مدينة السادات', en: 'Sadat City population',}, value: 342800, unit: { ar: 'نسمة', en: 'residents',}, order: 0 },
+        { key: 'annual_growth', title: { ar: 'نمو سنوي', en: 'Annual growth',}, value: 3500, unit: { ar: 'نسمة', en: 'residents',}, order: 1 },
+        { key: 'residential_districts', title: { ar: 'منطقة سكنية', en: 'Residential districts',}, value: 18, order: 2 },
+        { key: 'housing_units', title: { ar: 'وحدة سكنية', en: 'Housing units',}, value: 1200, order: 3 }
       ],
       properties: [{
         id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
         slug: 'published-home',
         kind: 'property',
-        name: { ar: 'شقة فاخرة في الحي الأول', en: 'Luxury apartment in the First District', 'zh-CN': '第一街区豪华公寓' },
+        name: { ar: 'شقة فاخرة في الحي الأول', en: 'Luxury apartment in the First District',},
         transactionType: 'sale',
         imageUrl: PUBLIC_CLONE_ASSETS.propertyHome,
-        description: { ar: 'وصف المنزل المنشور', en: 'A published home description', 'zh-CN': '已发布房产描述' },
+        description: { ar: 'وصف المنزل المنشور', en: 'A published home description',},
         area: { value: 145, unit: 'sqm' },
         layout: { bedrooms: 3, bathrooms: 2 },
          price: { amount: 1900000, currency: 'EGP' }
        }, {
-         id: 'cccccccccccccccccccccccc', slug: 'published-villa', kind: 'property', name: { ar: 'فيلا مستقلة بالمنطقة الراقية', en: 'Detached villa in the premium district', 'zh-CN': '高档区独栋别墅' }, transactionType: 'sale', imageUrl: PUBLIC_CLONE_ASSETS.propertyVilla, area: { value: 320, unit: 'sqm' }, layout: { bedrooms: 5, bathrooms: 4 }, price: { amount: 5200000, currency: 'EGP' }
+         id: 'cccccccccccccccccccccccc', slug: 'published-villa', kind: 'property', name: { ar: 'فيلا مستقلة بالمنطقة الراقية', en: 'Detached villa in the premium district',}, transactionType: 'sale', imageUrl: PUBLIC_CLONE_ASSETS.propertyVilla, area: { value: 320, unit: 'sqm' }, layout: { bedrooms: 5, bathrooms: 4 }, price: { amount: 5200000, currency: 'EGP' }
        }, {
-         id: 'dddddddddddddddddddddddd', slug: 'published-rental', kind: 'unit', name: { ar: 'دوبلكس فاخر في الحي الخامس', en: 'Luxury duplex in the Fifth District', 'zh-CN': '第五街区豪华复式住宅' }, transactionType: 'sale', imageUrl: PUBLIC_CLONE_ASSETS.propertyDuplex, area: { value: 240, unit: 'sqm' }, layout: { bedrooms: 4, bathrooms: 3 }, price: { amount: 3100000, currency: 'EGP' }
+         id: 'dddddddddddddddddddddddd', slug: 'published-rental', kind: 'unit', name: { ar: 'دوبلكس فاخر في الحي الخامس', en: 'Luxury duplex in the Fifth District',}, transactionType: 'sale', imageUrl: PUBLIC_CLONE_ASSETS.propertyDuplex, area: { value: 240, unit: 'sqm' }, layout: { bedrooms: 4, bathrooms: 3 }, price: { amount: 3100000, currency: 'EGP' }
        }, {
-         id: 'eeeeeeeeeeeeeeeeeeeeeeee', slug: 'published-office', kind: 'unit', name: { ar: 'Published office', en: 'Published office', 'zh-CN': 'Published office' }, transactionType: 'rent', imageUrl: PUBLIC_CLONE_ASSETS.building, area: { value: 150, unit: 'sqm' }, layout: { bedrooms: 2, bathrooms: 1, floor: 2 }, price: { amount: 12000, currency: 'EGP' }
+         id: 'eeeeeeeeeeeeeeeeeeeeeeee', slug: 'published-office', kind: 'unit', name: { ar: 'Published office', en: 'Published office',}, transactionType: 'rent', imageUrl: PUBLIC_CLONE_ASSETS.building, area: { value: 150, unit: 'sqm' }, layout: { bedrooms: 2, bathrooms: 1, floor: 2 }, price: { amount: 12000, currency: 'EGP' }
        }, {
-         id: 'ffffffffffffffffffffffff', slug: 'published-unit', kind: 'property', name: { ar: 'Published unit', en: 'Published unit', 'zh-CN': 'Published unit' }, transactionType: 'sale', imageUrl: PUBLIC_CLONE_ASSETS.hero, area: { value: 135, unit: 'sqm' }, layout: { bedrooms: 3, bathrooms: 2, floor: 5 }, price: { amount: 3100000, currency: 'EGP' }
+         id: 'ffffffffffffffffffffffff', slug: 'published-unit', kind: 'property', name: { ar: 'Published unit', en: 'Published unit',}, transactionType: 'sale', imageUrl: PUBLIC_CLONE_ASSETS.hero, area: { value: 135, unit: 'sqm' }, layout: { bedrooms: 3, bathrooms: 2, floor: 5 }, price: { amount: 3100000, currency: 'EGP' }
        }, {
-         id: '111111111111111111111111', slug: 'published-land', kind: 'property', name: { ar: 'Published land', en: 'Published land', 'zh-CN': 'Published land' }, transactionType: 'sale', imageUrl: PUBLIC_CLONE_ASSETS.house, area: { value: 400, unit: 'sqm' }, price: { amount: 780000, currency: 'EGP' }
+         id: '111111111111111111111111', slug: 'published-land', kind: 'property', name: { ar: 'Published land', en: 'Published land',}, transactionType: 'sale', imageUrl: PUBLIC_CLONE_ASSETS.house, area: { value: 400, unit: 'sqm' }, price: { amount: 780000, currency: 'EGP' }
        }],
       developers: [{
         id: 'bbbbbbbbbbbbbbbbbbbbbbbb',
          slug: 'approved-builder',
          imageUrl: PUBLIC_CLONE_ASSETS.city,
-        name: { ar: 'المطور المعتمد', en: 'Approved builder', 'zh-CN': '已批准开发商' },
-        description: { ar: 'وصف المطور', en: 'Published developer description', 'zh-CN': '已发布开发商描述' }
+        name: { ar: 'المطور المعتمد', en: 'Approved builder',},
+        description: { ar: 'وصف المطور', en: 'Published developer description',}
        }, {
-          id: 'cccccccccccccccccccccccc', slug: 'city-builders', name: { ar: 'City builders', en: 'City builders', 'zh-CN': 'City builders' }, imageUrl: PUBLIC_CLONE_ASSETS.night, description: { en: 'Published developer description', ar: 'Published developer description', 'zh-CN': 'Published developer description' }
+          id: 'cccccccccccccccccccccccc', slug: 'city-builders', name: { ar: 'City builders', en: 'City builders',}, imageUrl: PUBLIC_CLONE_ASSETS.night, description: { en: 'Published developer description', ar: 'Published developer description',}
        }, {
-          id: 'dddddddddddddddddddddddd', slug: 'sadat-brokers', name: { ar: 'Sadat brokers', en: 'Sadat brokers', 'zh-CN': 'Sadat brokers' }, imageUrl: PUBLIC_CLONE_ASSETS.building, description: { en: 'Published brokerage description', ar: 'Published brokerage description', 'zh-CN': 'Published brokerage description' }
+          id: 'dddddddddddddddddddddddd', slug: 'sadat-brokers', name: { ar: 'Sadat brokers', en: 'Sadat brokers',}, imageUrl: PUBLIC_CLONE_ASSETS.building, description: { en: 'Published brokerage description', ar: 'Published brokerage description',}
        }, {
-          id: 'eeeeeeeeeeeeeeeeeeeeeeee', slug: 'new-city-developments', name: { ar: 'New city developments', en: 'New city developments', 'zh-CN': 'New city developments' }, imageUrl: PUBLIC_CLONE_ASSETS.house, description: { en: 'Published developer description', ar: 'Published developer description', 'zh-CN': 'Published developer description' }
+          id: 'eeeeeeeeeeeeeeeeeeeeeeee', slug: 'new-city-developments', name: { ar: 'New city developments', en: 'New city developments',}, imageUrl: PUBLIC_CLONE_ASSETS.house, description: { en: 'Published developer description', ar: 'Published developer description',}
        }],
        content: [
         {
           key: 'buying_guide',
           type: 'article',
-          title: { ar: 'دليلك الكامل للشراء في مدينة السادات 2026', en: 'Your complete guide to buying in Sadat City 2026', 'zh-CN': '2026年萨达特城购房完整指南' },
-          body: { ar: 'كل ما تحتاج معرفته قبل شراء عقار في مدينة السادات.', en: 'Everything you need to know before buying a property in Sadat City.', 'zh-CN': '在萨达特城购买房产前需要了解的一切。' },
+          title: { ar: 'دليلك الكامل للشراء في مدينة السادات 2026', en: 'Your complete guide to buying in Sadat City 2026',},
+          body: { ar: 'كل ما تحتاج معرفته قبل شراء عقار في مدينة السادات.', en: 'Everything you need to know before buying a property in Sadat City.',},
           imageUrl: PUBLIC_CLONE_ASSETS.articleBuyingGuide,
           order: 0
         },
         {
           key: 'community_update',
           type: 'community',
-          title: { ar: 'أحمد محمد', en: 'Ahmed Mohamed', 'zh-CN': '艾哈迈德·穆罕默德' },
-          body: { ar: 'تجربتي بعد سنة كاملة في السادات\nانتقلت من القاهرة للسادات السنة اللي فاتت وعندي شوية ملاحظات وتجارب.', en: 'My experience after a full year in Sadat City\nI moved from Cairo last year and have a few observations and experiences to share.', 'zh-CN': '在萨达特城生活一整年后的体验\n我去年从开罗搬来，有一些观察和体验想分享。' },
+          title: { ar: 'أحمد محمد', en: 'Ahmed Mohamed',},
+          body: { ar: 'تجربتي بعد سنة كاملة في السادات\nانتقلت من القاهرة للسادات السنة اللي فاتت وعندي شوية ملاحظات وتجارب.', en: 'My experience after a full year in Sadat City\nI moved from Cairo last year and have a few observations and experiences to share.',},
           imageUrl: PUBLIC_CLONE_ASSETS.communityHanaa,
           order: 1
         },
         {
           key: 'about_platform',
           type: 'about',
-          title: { ar: 'منصة متكاملة لعقارات مدينة السادات', en: 'A complete real-estate platform for Sadat City', 'zh-CN': '萨达特城综合房地产平台' },
-          body: { ar: 'نحن منصة رقمية متخصصة في السوق العقاري لمدينة السادات، نربط المشترين والمستأجرين بأفضل العروض الموثوقة من المطورين والملاك مباشرة.\nموثوقية تامة\nكل عقار يُتحقق منه\nسرعة الرد\nمتاحون 7 أيام\nخبرة واسعة\n15 عاماً في السوق\nأفضل الأسعار\nمباشرة من المالك', en: 'We are a digital platform focused on the Sadat City real-estate market, connecting buyers and renters with trusted offers directly from developers and owners.\nComplete reliability\nEvery property is verified\nFast response\nAvailable 7 days\nWide experience\n15 years in the market\nBest prices\nDirectly from the owner', 'zh-CN': '我们是专注于萨达特城房地产市场的数字平台，连接买家和租户与开发商及业主的可靠房源。\n完全可靠\n每套房产均经过验证\n快速响应\n每周7天在线\n丰富经验\n深耕市场15年\n最佳价格\n直接来自业主' },
+          title: { ar: 'منصة متكاملة لعقارات مدينة السادات', en: 'A complete real-estate platform for Sadat City',},
+          body: { ar: 'نحن منصة رقمية متخصصة في السوق العقاري لمدينة السادات، نربط المشترين والمستأجرين بأفضل العروض الموثوقة من المطورين والملاك مباشرة.\nموثوقية تامة\nكل عقار يُتحقق منه\nسرعة الرد\nمتاحون 7 أيام\nخبرة واسعة\n15 عاماً في السوق\nأفضل الأسعار\nمباشرة من المالك', en: 'We are a digital platform focused on the Sadat City real-estate market, connecting buyers and renters with trusted offers directly from developers and owners.\nComplete reliability\nEvery property is verified\nFast response\nAvailable 7 days\nWide experience\n15 years in the market\nBest prices\nDirectly from the owner',},
            order: 2
         },
         {
           key: 'market_tip',
           type: 'tip',
-          title: { ar: 'نصيحة عقارية', en: 'Property tip', 'zh-CN': '房产提示' },
+          title: { ar: 'نصيحة عقارية', en: 'Property tip',},
            imageUrl: PUBLIC_CLONE_ASSETS.chart,
            order: 3
          }, {
            key: 'market_news', type: 'article', imageUrl: PUBLIC_CLONE_ASSETS.articleInvestment,
-           title: { ar: 'أفضل المناطق للاستثمار العقاري في السادات', en: 'Best areas for real-estate investment in Sadat', 'zh-CN': '萨达特房地产投资的最佳区域' }, body: { ar: 'تحليل شامل للمناطق ذات العائد الاستثماري الأعلى.', en: 'A complete analysis of the areas with the highest investment returns.', 'zh-CN': '全面分析投资回报率最高的区域。' }, order: 4
+           title: { ar: 'أفضل المناطق للاستثمار العقاري في السادات', en: 'Best areas for real-estate investment in Sadat',}, body: { ar: 'تحليل شامل للمناطق ذات العائد الاستثماري الأعلى.', en: 'A complete analysis of the areas with the highest investment returns.',}, order: 4
          }, {
            key: 'city_services', type: 'article', imageUrl: PUBLIC_CLONE_ASSETS.articleServices,
-           title: { ar: 'خدمات مدينة السادات: ما المتاح وما المخطط له', en: 'Sadat City services: what is available and planned', 'zh-CN': '萨达特城服务：现有与规划中的服务' }, body: { ar: 'استعراض شامل للخدمات المتاحة في المدينة.', en: 'A complete overview of the services available in the city.', 'zh-CN': '全面介绍城市现有的服务。' }, order: 5
+           title: { ar: 'خدمات مدينة السادات: ما المتاح وما المخطط له', en: 'Sadat City services: what is available and planned',}, body: { ar: 'استعراض شامل للخدمات المتاحة في المدينة.', en: 'A complete overview of the services available in the city.',}, order: 5
          }, {
            key: 'community_events', type: 'community',
-           title: { ar: 'محمد السيد', en: 'Mohamed El-Sayed', 'zh-CN': '穆罕默德·赛义德' }, body: { ar: 'ما أفضل حي للسكن بميزانية 2 مليون؟\nأنا وعيلتي بنفكر ننتقل للسادات، ميزانيتنا حوالي 2 مليون جنيه. فين تنصحوني أشتري؟', en: 'What is the best district to live in with a budget of EGP 2 million?\nMy family and I are thinking about moving to Sadat City. Where should we buy?', 'zh-CN': '预算200万埃镑，哪个街区最适合居住？\n我和家人考虑搬到萨达特城，您建议在哪里买？' }, imageUrl: PUBLIC_CLONE_ASSETS.communityMohamed, order: 6
+           title: { ar: 'محمد السيد', en: 'Mohamed El-Sayed',}, body: { ar: 'ما أفضل حي للسكن بميزانية 2 مليون؟\nأنا وعيلتي بنفكر ننتقل للسادات، ميزانيتنا حوالي 2 مليون جنيه. فين تنصحوني أشتري؟', en: 'What is the best district to live in with a budget of EGP 2 million?\nMy family and I are thinking about moving to Sadat City. Where should we buy?',}, imageUrl: PUBLIC_CLONE_ASSETS.communityMohamed, order: 6
          }, {
            key: 'about_sources', type: 'about', imageUrl: PUBLIC_CLONE_ASSETS.aboutTeam,
-           title: { ar: 'مصادر معتمدة', en: 'Approved sources', 'zh-CN': '可靠来源' }, body: { ar: '+500\nصفقة ناجحة', en: '+500\nSuccessful deals', 'zh-CN': '+500\n成功交易' }, order: 7
+           title: { ar: 'مصادر معتمدة', en: 'Approved sources',}, body: { ar: '+500\nصفقة ناجحة', en: '+500\nSuccessful deals',}, order: 7
          }, {
            key: 'tip_checklist', type: 'tip', imageUrl: PUBLIC_CLONE_ASSETS.building,
-           title: { ar: 'Buying checklist', en: 'Buying checklist', 'zh-CN': 'Buying checklist' }, body: { ar: 'Buying checklist', en: 'Buying checklist', 'zh-CN': 'Buying checklist' }, order: 8
+           title: { ar: 'Buying checklist', en: 'Buying checklist',}, body: { ar: 'Buying checklist', en: 'Buying checklist',}, order: 8
          }
       ],
       banners: [{
         key: 'featured_banner',
-        title: { ar: 'اكتشف المزيد', en: 'Discover more', 'zh-CN': '探索更多' },
+        title: { ar: 'اكتشف المزيد', en: 'Discover more',},
         imageUrl: PUBLIC_CLONE_ASSETS.homepageHero,
          order: 0
        }, {
          key: 'city_banner',
-        eyebrow: { ar: 'إعلان مميز', en: 'Featured opportunity', 'zh-CN': '精选机会' },
-         title: { ar: 'كمبوند النخبة — الحي الأول', en: 'Elite Compound — First District', 'zh-CN': '精英社区—第一街区' },
-         body: { ar: 'وحدات سكنية فاخرة بتشطيب سوبر لوكس في أرقى مواقع مدينة السادات. تصميم عصري وإطلالات خضراء مفتوحة.', en: 'Luxury homes with super-lux finishes in one of Sadat City’s finest locations. Modern design with open green views.', 'zh-CN': '位于萨达特城优越地段的豪华住宅，采用超豪华装修。现代设计，享有开阔绿景。' },
-         highlight: { ar: 'تبدأ من 1.2 مليون جنيه', en: 'Starting from EGP 1.2M', 'zh-CN': '120万埃镑起' },
+        eyebrow: { ar: 'إعلان مميز', en: 'Featured opportunity',},
+         title: { ar: 'كمبوند النخبة — الحي الأول', en: 'Elite Compound — First District',},
+         body: { ar: 'وحدات سكنية فاخرة بتشطيب سوبر لوكس في أرقى مواقع مدينة السادات. تصميم عصري وإطلالات خضراء مفتوحة.', en: 'Luxury homes with super-lux finishes in one of Sadat City’s finest locations. Modern design with open green views.',},
+         highlight: { ar: 'تبدأ من 1.2 مليون جنيه', en: 'Starting from EGP 1.2M',},
          imageUrl: PUBLIC_CLONE_ASSETS.homepageBanner,
          targetUrl: publicAsset('/properties'),
          order: 1
        }, {
-           key: 'market_banner', title: { ar: 'Market banner', en: 'Market banner', 'zh-CN': 'Market banner' }, imageUrl: PUBLIC_CLONE_ASSETS.chart, targetUrl: publicAsset('/articles'), order: 2
+           key: 'market_banner', title: { ar: 'Market banner', en: 'Market banner',}, imageUrl: PUBLIC_CLONE_ASSETS.chart, targetUrl: publicAsset('/articles'), order: 2
        }]
     },
     meta: { requestId: 'e2e-public-homepage-success' }
@@ -234,15 +234,15 @@ export function publicPropertyListFixture() {
         id: `${String(index + 1).repeat(24)}`,
         slug,
         kind: index === 2 || index === 3 ? 'unit' : 'property',
-        name: { ar: title, en: title, 'zh-CN': title },
+        name: { ar: title, en: title,},
         transactionType,
-        description: { ar: title, en: title, 'zh-CN': title },
+        description: { ar: title, en: title,},
         area: { value: itemDetails[index]!.area, unit: 'sqm' },
         ...(index === 2 ? {} : { layout: { bedrooms: itemDetails[index]!.bedrooms, bathrooms: itemDetails[index]!.bathrooms, floor: itemDetails[index]!.floor } }),
         price: { amount, currency: 'EGP' },
         imageUrl: itemDetails[index]!.image,
-        locationName: { ar: itemDetails[index]!.location, en: itemDetails[index]!.location, 'zh-CN': itemDetails[index]!.location },
-        sourceName: { ar: itemDetails[index]!.source, en: itemDetails[index]!.source, 'zh-CN': itemDetails[index]!.source },
+        locationName: { ar: itemDetails[index]!.location, en: itemDetails[index]!.location,},
+        sourceName: { ar: itemDetails[index]!.source, en: itemDetails[index]!.source,},
         publicCode: itemDetails[index]!.code,
         viewCount: itemDetails[index]!.views,
         sourceImageUrl: itemDetails[index]!.sourceImage,
@@ -262,7 +262,7 @@ export function publicPropertyListFixture() {
       ] as const).map(([slug, ar, en, propertyCount], index) => ({
         id: (index + 7).toString(16).repeat(24),
         slug,
-        name: { ar, en, 'zh-CN': en },
+        name: { ar, en,},
         propertyCount,
         order: index
       })),
@@ -275,7 +275,7 @@ export function publicPropertyListFixture() {
       ] as const).map(([slug, ar, en, propertyCount], index) => ({
         id: (index + 1).toString(16).repeat(24),
         slug,
-        name: { ar, en, 'zh-CN': en },
+        name: { ar, en,},
         propertyCount,
         order: index
       })),
@@ -333,8 +333,8 @@ export function publicAboutFixture() {
     data: {
       items: [{
         key: 'about_intro',
-        title: { ar: '\u0639\u0646 \u0627\u0644\u0645\u0646\u0635\u0629', en: 'About the platform', 'zh-CN': '\u5173\u4e8e\u5e73\u53f0' },
-        body: { ar: '\u0623\u0646\u0634\u0623\u0646\u0627 \u0647\u0630\u0647 \u0627\u0644\u0645\u0646\u0635\u0629 \u0644\u0623\u0646 \u0627\u0644\u0633\u0648\u0642 \u0627\u0644\u0639\u0642\u0627\u0631\u064a \u0641\u064a \u0645\u062f\u064a\u0646\u0629 \u0627\u0644\u0633\u0627\u062f\u0627\u062a \u064a\u062d\u062a\u0627\u062c \u0645\u0646\u0635\u0629 \u0645\u062a\u062e\u0635\u0635\u0629 \u0648\u0645\u0648\u062b\u0648\u0642\u0629.', en: 'We built this platform because Sadat City needs a specialized and trusted real-estate marketplace.', 'zh-CN': '\u6211\u4eec\u521b\u5efa\u8fd9\u4e2a\u5e73\u53f0\uff0c\u662f\u56e0\u4e3a\u8428\u8fbe\u7279\u57ce\u9700\u8981\u4e00\u4e2a\u4e13\u4e1a\u53ef\u4fe1\u7684\u623f\u5730\u4ea7\u5e02\u573a.' },
+        title: { ar: '\u0639\u0646 \u0627\u0644\u0645\u0646\u0635\u0629', en: 'About the platform',},
+        body: { ar: '\u0623\u0646\u0634\u0623\u0646\u0627 \u0647\u0630\u0647 \u0627\u0644\u0645\u0646\u0635\u0629 \u0644\u0623\u0646 \u0627\u0644\u0633\u0648\u0642 \u0627\u0644\u0639\u0642\u0627\u0631\u064a \u0641\u064a \u0645\u062f\u064a\u0646\u0629 \u0627\u0644\u0633\u0627\u062f\u0627\u062a \u064a\u062d\u062a\u0627\u062c \u0645\u0646\u0635\u0629 \u0645\u062a\u062e\u0635\u0635\u0629 \u0648\u0645\u0648\u062b\u0648\u0642\u0629.', en: 'We built this platform because Sadat City needs a specialized and trusted real-estate marketplace.',},
         order: 0
       }]
     },
@@ -355,10 +355,10 @@ export function publicTeamFixture() {
     data: {
       items: members.map(([key, name, role, bio], order) => ({
         key,
-        title: { ar: role, en: role, 'zh-CN': role },
-        name: { ar: name, en: name, 'zh-CN': name },
-        role: { ar: role, en: role, 'zh-CN': role },
-        bio: { ar: bio, en: bio, 'zh-CN': bio },
+        title: { ar: role, en: role,},
+        name: { ar: name, en: name,},
+        role: { ar: role, en: role,},
+        bio: { ar: bio, en: bio,},
         photoAssetId: `${String(order + 1).repeat(24)}`,
         order
       }))

@@ -112,7 +112,7 @@ export const adminAccountUserDataSchema = z.object({
   status: accountStateSchema,
   email: z.string().email().max(254).optional(),
   phone: z.string().regex(/^\+[1-9]\d{7,14}$/).optional(),
-  locale: z.enum(['ar', 'en', 'zh-CN']),
+  locale: z.enum(['ar', 'en']),
   displayName: z.string().trim().min(1).max(160).optional(),
   version: z.number().int().nonnegative(),
   statusChangedAt: adminAccountDateSchema,

@@ -16,7 +16,7 @@ import {
   type UserRoleType
 } from './account-state.js';
 
-export const SUPPORTED_LOCALES = ['ar', 'en', 'zh-CN'] as const;
+export const SUPPORTED_LOCALES = ['ar', 'en'] as const;
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
 const NORMALIZED_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

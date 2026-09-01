@@ -17,7 +17,7 @@ export const adminBootstrapInputSchema = z.object({
     .refine((value) => !/[\u0000-\u001f\u007f]/.test(value), {
       message: 'Password must not contain control characters'
     }),
-  locale: z.enum(['ar', 'en', 'zh-CN']).default('ar'),
+  locale: z.enum(['ar', 'en']).default('ar'),
   confirmation: z.literal(FIRST_SUPER_ADMIN_CONFIRMATION)
 }).strict();
 

@@ -3,9 +3,8 @@ import { getSeekerProfileCopy } from '../../src/features/seeker/profile-copy.ts'
 
 const profileId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  if (project.endsWith('-zh')) return 'zh-CN';
   if (project.endsWith('-en')) return 'en';
   return 'ar';
 }
@@ -14,7 +13,7 @@ function successMeta(requestId: string) {
   return { meta: { requestId } };
 }
 
-function profileData(locale: 'ar' | 'en' | 'zh-CN', firstName = 'Mohamed') {
+function profileData(locale: 'ar' | 'en', firstName = 'Mohamed') {
   return {
     id: profileId,
     roleType: 'seeker',
@@ -67,7 +66,7 @@ async function routeProfile(page: import('@playwright/test').Page): Promise<void
     const url = new URL(request.url());
     const isPreferences = url.pathname.endsWith('/preferences');
     if (request.method() === 'GET') {
-      const locale = (url.searchParams.get('lang') ?? 'ar') as 'ar' | 'en' | 'zh-CN';
+      const locale = (url.searchParams.get('lang') ?? 'ar') as 'ar' | 'en';
       await route.fulfill({
         status: 200,
         contentType: 'application/json',

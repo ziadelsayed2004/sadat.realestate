@@ -9,8 +9,8 @@ export function adminHomeBannerFixture(overrides: Record<string, unknown> = {}) 
   return {
     id: adminHomeBannerId,
     placementKey: 'homepage.hero',
-    title: { ar: 'بانر الصفحة الرئيسية', en: 'Homepage banner', 'zh-CN': '主页横幅' },
-    altText: { ar: 'بانر الصفحة الرئيسية', en: 'Homepage banner', 'zh-CN': '主页横幅' },
+    title: { ar: 'بانر الصفحة الرئيسية', en: 'Homepage banner',},
+    altText: { ar: 'بانر الصفحة الرئيسية', en: 'Homepage banner',},
     startAt: '2026-08-20T08:00:00.000Z',
     endAt: '2026-09-20T08:00:00.000Z',
     status: 'active',
@@ -28,8 +28,8 @@ export function adminHomeTipFixture() {
   return {
     id: adminHomeTipId,
     key: 'buying_safely',
-    title: { ar: 'نصيحة شراء', en: 'Buying safely', 'zh-CN': '安全购买' },
-    body: { ar: 'تحقق من البيانات المنشورة.', en: 'Check the published data.', 'zh-CN': '请检查已发布的数据。' },
+    title: { ar: 'نصيحة شراء', en: 'Buying safely',},
+    body: { ar: 'تحقق من البيانات المنشورة.', en: 'Check the published data.',},
     order: 1,
     active: true,
     status: 'published',
@@ -44,8 +44,8 @@ export function adminHomeSectionFixture() {
   return {
     id: adminHomeSectionId,
     key: 'featured_properties',
-    title: { ar: 'عقارات مميزة', en: 'Featured properties', 'zh-CN': '精选房产' },
-    body: { ar: 'محتوى الصفحة الرئيسية المعتمد.', en: 'Approved homepage section.', 'zh-CN': '已批准的主页分区。' },
+    title: { ar: 'عقارات مميزة', en: 'Featured properties',},
+    body: { ar: 'محتوى الصفحة الرئيسية المعتمد.', en: 'Approved homepage section.',},
     order: 2,
     visible: true,
     status: 'published',

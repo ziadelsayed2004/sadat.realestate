@@ -61,10 +61,10 @@ interface FeaturesForm {
 type AdvancedForm = DetailsForm | PricingForm | FeaturesForm;
 type MutationState = 'idle' | 'saving' | 'success' | 'error' | 'permission';
 
-const LOCALES: readonly SupportedLocale[] = ['ar', 'en', 'zh-CN'];
+const LOCALES: readonly SupportedLocale[] = ['ar', 'en',];
 
 function emptyLocalized(): Record<SupportedLocale, string> {
-  return { ar: '', en: '', 'zh-CN': '' };
+  return { ar: '', en: '',};
 }
 
 function textMap(values: Record<SupportedLocale, string>): Record<string, string> {

@@ -18,12 +18,7 @@ test('ADM-14 through ADM-17 match the approved desktop visual baseline', async (
     if (name === 'review') await expect(page.locator('#admin-property-reason')).toBeVisible();
     if (name === 'duplicates') await expect(page.getByText(adminPropertyCandidateId)).toBeVisible();
     if (name === 'reports') await expect(page.locator('#admin-property-report-reason')).toBeVisible();
-    const maxDiffPixels =
-      name === 'list' && locale === 'en'
-        ? 400
-        : name === 'list' && locale === 'zh-CN'
-          ? 700
-          : 300;
+    const maxDiffPixels = name === 'list' && locale === 'en' ? 400 : 300;
     await expect(page).toHaveScreenshot(`admin-properties-${locale}-${name}.png`, { fullPage: true, maxDiffPixels });
   }
 });

@@ -64,7 +64,7 @@ const ids = {
   homepageMetric: new Types.ObjectId('67000000000000000000002b')
 } as const;
 
-const localized = (ar: string, en: string, zhCN: string) => ({ ar, en, 'zh-CN': zhCN });
+const localized = (ar: string, en: string) => ({ ar, en });
 
 interface SyntheticSeedDocument {
   _id: Types.ObjectId;
@@ -122,12 +122,10 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
     await insertSyntheticDocuments(connection, 'organizations', [document(ids.organization, {
       providerId: ids.providerProfile,
       kind: 'developer_company',
-      name: localized('شركة السادات التجريبية', 'Sadat Demo Developer', '萨达特演示开发商'),
+      name: localized('شركة السادات التجريبية', 'Sadat Demo Developer'),
       description: localized(
         'هوية مطور اصطناعية لبيئة العرض المحلية فقط.',
-        'Synthetic developer identity for local preview only.',
-        '仅用于本地预览的合成开发商身份。'
-      ),
+        'Synthetic developer identity for local preview only.'),
       slug: 'sadat-demo-developer',
       status: 'approved',
       reviewedAt: SEEDED_AT,
@@ -138,7 +136,7 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
     await insertSyntheticDocuments(connection, 'locations', [
       document(ids.location, {
         kind: 'location',
-        name: localized('مدينة السادات', 'Sadat City', '萨达特城'),
+        name: localized('مدينة السادات', 'Sadat City'),
         slug: 'sadat-city',
         coordinates: { type: 'Point', coordinates: [30.5065, 30.3676] },
         order: 10,
@@ -151,7 +149,7 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
       }),
       document(ids.neighborhood, {
         kind: 'neighborhood',
-        name: localized('الحي السكني التجريبي', 'Demo Residential District', '演示住宅区'),
+        name: localized('الحي السكني التجريبي', 'Demo Residential District'),
         slug: 'demo-residential-district',
         parentLocationId: ids.location,
         order: 20,
@@ -167,13 +165,11 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
       providerId: ids.user,
       organizationId: ids.organization,
       locationId: ids.location,
-      name: localized('مشروع الواحة التجريبي', 'Demo Oasis Project', '演示绿洲项目'),
+      name: localized('مشروع الواحة التجريبي', 'Demo Oasis Project'),
       slug: 'demo-oasis-project',
       description: localized(
         'مشروع اصطناعي لاختبار واجهات المنصة محليًا.',
-        'Synthetic project used to exercise the local platform UI.',
-        '用于测试本地平台界面的合成项目。'
-      ),
+        'Synthetic project used to exercise the local platform UI.'),
       website: 'https://example.invalid/demo-oasis-project',
       status: 'published',
       submittedAt: SEEDED_AT,
@@ -205,18 +201,18 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
     await insertSyntheticDocuments(connection, 'properties', [
       document(ids.propertyOne, {
         ...propertyBase,
-        name: localized('شقة تجريبية بإطلالة مفتوحة', 'Demo Apartment with Open View', '开放景观演示公寓'),
+        name: localized('شقة تجريبية بإطلالة مفتوحة', 'Demo Apartment with Open View'),
         slug: 'demo-open-view-apartment',
-        description: localized('بيانات عرض فقط وليست إعلانًا حقيقيًا.', 'Preview data only; this is not a real listing.', '仅为预览数据，并非真实房源。'),
+        description: localized('بيانات عرض فقط وليست إعلانًا حقيقيًا.', 'Preview data only; this is not a real listing.'),
         area: { value: 145, unit: 'sqm' },
         layout: { bedrooms: 3, bathrooms: 2, floor: 3, totalFloors: 8 },
         price: { amount: 2_450_000, currency: 'EGP' }
       }),
       document(ids.propertyTwo, {
         ...propertyBase,
-        name: localized('دوبلكس تجريبي بحديقة', 'Demo Duplex with Garden', '带花园的演示复式住宅'),
+        name: localized('دوبلكس تجريبي بحديقة', 'Demo Duplex with Garden'),
         slug: 'demo-garden-duplex',
-        description: localized('بيانات اصطناعية لاختبار البحث والمقارنة.', 'Synthetic data for search and comparison testing.', '用于搜索和比较测试的合成数据。'),
+        description: localized('بيانات اصطناعية لاختبار البحث والمقارنة.', 'Synthetic data for search and comparison testing.'),
         area: { value: 220, unit: 'sqm' },
         layout: { bedrooms: 4, bathrooms: 3, floor: 0, totalFloors: 2 },
         price: { amount: 4_100_000, currency: 'EGP' }
@@ -224,9 +220,9 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
       document(ids.propertyThree, {
         ...propertyBase,
         transactionType: 'rent',
-        name: localized('شقة إيجار تجريبية', 'Demo Rental Apartment', '演示出租公寓'),
+        name: localized('شقة إيجار تجريبية', 'Demo Rental Apartment'),
         slug: 'demo-rental-apartment',
-        description: localized('بيانات عرض قابلة للحذف بإزالة حاوية Mongo المحلية.', 'Disposable preview data from the local Mongo volume.', '可通过删除本地 Mongo 卷清除的预览数据。'),
+        description: localized('بيانات عرض قابلة للحذف بإزالة حاوية Mongo المحلية.', 'Disposable preview data from the local Mongo volume.'),
         area: { value: 110, unit: 'sqm' },
         layout: { bedrooms: 2, bathrooms: 1, floor: 2, totalFloors: 6 },
         price: { amount: 12_000, currency: 'EGP' }
@@ -234,8 +230,8 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
     ]);
     await insertSyntheticDocuments(connection, 'article_categories', [document(ids.articleCategory, {
       slug: 'demo-guides',
-      name: localized('أدلة تجريبية', 'Demo Guides', '演示指南'),
-      description: localized('محتوى اصطناعي للمعاينة.', 'Synthetic preview content.', '合成预览内容。'),
+      name: localized('أدلة تجريبية', 'Demo Guides'),
+      description: localized('محتوى اصطناعي للمعاينة.', 'Synthetic preview content.'),
       displayOrder: 10,
       active: true,
       createdBy: ids.user,
@@ -247,12 +243,10 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
     await insertSyntheticDocuments(connection, 'articles', [document(ids.article, {
       categoryId: ids.articleCategory,
       slug: 'demo-home-buying-guide',
-      title: localized('دليل تجريبي لاختيار العقار', 'Demo Guide to Choosing a Property', '演示选房指南'),
+      title: localized('دليل تجريبي لاختيار العقار', 'Demo Guide to Choosing a Property'),
       body: localized(
         'هذا محتوى اصطناعي يساعد على اختبار قائمة المقالات وصفحة التفاصيل.',
-        'This synthetic article exercises the article list and detail views.',
-        '此合成文章用于测试文章列表和详情页面。'
-      ),
+        'This synthetic article exercises the article list and detail views.'),
       authorId: ids.user,
       status: 'published',
       publishedAt: SEEDED_AT,
@@ -273,8 +267,8 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
     })]);
     await insertSyntheticDocuments(connection, 'cms_homepage_sections', [document(ids.homepageSection, {
       key: 'local_preview_intro',
-      title: localized('استكشف مدينة السادات', 'Explore Sadat City', '探索萨达特城'),
-      body: localized('محتوى تجريبي آمن للمعاينة المحلية.', 'Safe synthetic content for local preview.', '用于本地预览的安全合成内容。'),
+      title: localized('استكشف مدينة السادات', 'Explore Sadat City'),
+      body: localized('محتوى تجريبي آمن للمعاينة المحلية.', 'Safe synthetic content for local preview.'),
       order: 10,
       visible: true,
       status: 'published',
@@ -284,15 +278,15 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
       version: 0
     })]);
     await insertSyntheticDocuments(connection, 'cms_homepage_metrics', [
-      document(ids.homepageMetric, { key: 'population', title: localized('عدد سكان مدينة السادات', 'Sadat City population', '萨达特城人口'), value: 342800, unit: localized('نسمة', 'residents', '居民'), order: 0, visible: true, status: 'published', updatedBy: ids.user, createdAt: SEEDED_AT, updatedAt: SEEDED_AT }),
-      document(new Types.ObjectId('67000000000000000000002c'), { key: 'annual_growth', title: localized('نمو سنوي', 'Annual growth', '年增长'), value: 3500, unit: localized('نسمة', 'residents', '居民'), order: 1, visible: true, status: 'published', updatedBy: ids.user, createdAt: SEEDED_AT, updatedAt: SEEDED_AT }),
-      document(new Types.ObjectId('67000000000000000000002d'), { key: 'residential_districts', title: localized('منطقة سكنية', 'Residential districts', '住宅区'), value: 18, order: 2, visible: true, status: 'published', updatedBy: ids.user, createdAt: SEEDED_AT, updatedAt: SEEDED_AT }),
-      document(new Types.ObjectId('67000000000000000000002e'), { key: 'housing_units', title: localized('وحدة سكنية', 'Housing units', '住房单元'), value: 1200, order: 3, visible: true, status: 'published', updatedBy: ids.user, createdAt: SEEDED_AT, updatedAt: SEEDED_AT })
+      document(ids.homepageMetric, { key: 'population', title: localized('عدد سكان مدينة السادات', 'Sadat City population'), value: 342800, unit: localized('نسمة', 'residents'), order: 0, visible: true, status: 'published', updatedBy: ids.user, createdAt: SEEDED_AT, updatedAt: SEEDED_AT }),
+      document(new Types.ObjectId('67000000000000000000002c'), { key: 'annual_growth', title: localized('نمو سنوي', 'Annual growth'), value: 3500, unit: localized('نسمة', 'residents'), order: 1, visible: true, status: 'published', updatedBy: ids.user, createdAt: SEEDED_AT, updatedAt: SEEDED_AT }),
+      document(new Types.ObjectId('67000000000000000000002d'), { key: 'residential_districts', title: localized('منطقة سكنية', 'Residential districts'), value: 18, order: 2, visible: true, status: 'published', updatedBy: ids.user, createdAt: SEEDED_AT, updatedAt: SEEDED_AT }),
+      document(new Types.ObjectId('67000000000000000000002e'), { key: 'housing_units', title: localized('وحدة سكنية', 'Housing units'), value: 1200, order: 3, visible: true, status: 'published', updatedBy: ids.user, createdAt: SEEDED_AT, updatedAt: SEEDED_AT })
     ]);
     await insertSyntheticDocuments(connection, 'cms_about_blocks', [document(ids.about, {
       key: 'local_preview_about',
-      title: localized('عن منصة السادات', 'About the Sadat Platform', '关于萨达特平台'),
-      body: localized('نسخة عرض محلية ببيانات اصطناعية.', 'Local preview with synthetic data.', '使用合成数据的本地预览。'),
+      title: localized('عن منصة السادات', 'About the Sadat Platform'),
+      body: localized('نسخة عرض محلية ببيانات اصطناعية.', 'Local preview with synthetic data.'),
       order: 10,
       active: true,
       status: 'published',
@@ -303,8 +297,8 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
     })]);
     await insertSyntheticDocuments(connection, 'cms_real_estate_tips', [document(ids.tip, {
       key: 'local_preview_tip',
-      title: localized('نصيحة تجريبية', 'Demo Tip', '演示提示'),
-      body: localized('تحقق من المستندات والموقع قبل اتخاذ قرار.', 'Review documents and location before deciding.', '做出决定前请核实文件和位置。'),
+      title: localized('نصيحة تجريبية', 'Demo Tip'),
+      body: localized('تحقق من المستندات والموقع قبل اتخاذ قرار.', 'Review documents and location before deciding.'),
       order: 10,
       active: true,
       status: 'published',
@@ -315,10 +309,10 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
     })]);
     await insertSyntheticDocuments(connection, 'cms_banners', [document(ids.banner, {
       key: 'local_preview_banner',
-      title: localized('بيئة عرض محلية', 'Local Preview Environment', '本地预览环境'),
-      eyebrow: localized('فرصة مميزة', 'Featured opportunity', '精选机会'),
-      body: localized('بيانات منشورة لاختبار بطاقة العرض العامة.', 'Published data for exercising the public promotional card.', '用于测试公共推广卡片的已发布数据。'),
-      highlight: localized('بيانات تجريبية', 'Demo data', '演示数据'),
+      title: localized('بيئة عرض محلية', 'Local Preview Environment'),
+      eyebrow: localized('فرصة مميزة', 'Featured opportunity'),
+      body: localized('بيانات منشورة لاختبار بطاقة العرض العامة.', 'Published data for exercising the public promotional card.'),
+      highlight: localized('بيانات تجريبية', 'Demo data'),
       order: 10,
       active: true,
       status: 'published',
@@ -387,7 +381,7 @@ export const SYNTHETIC_WORKFLOW_SEED_STEP: DevelopmentSeedStep = {
         normalizedPhone: '+201000000013',
         roleType: 'provider',
         status: 'verified',
-        locale: 'zh-CN',
+        locale: 'ar',
         statusChangedAt: SEEDED_AT,
         createdAt: SEEDED_AT,
         updatedAt: SEEDED_AT,
@@ -530,8 +524,8 @@ export const SYNTHETIC_WORKFLOW_SEED_STEP: DevelopmentSeedStep = {
     await insertSyntheticDocuments(connection, 'notifications', [document(ids.notification, {
       recipientId: ids.seekerUser,
       type: 'request.updated',
-      title: localized('تم تحديث طلبك', 'Your request was updated', '您的请求已更新'),
-      message: localized('يمكنك مراجعة حالة الطلب من لوحة الباحث.', 'Review the request from your seeker dashboard.', '请在求购者面板查看请求。'),
+      title: localized('تم تحديث طلبك', 'Your request was updated'),
+      message: localized('يمكنك مراجعة حالة الطلب من لوحة الباحث.', 'Review the request from your seeker dashboard.'),
       link: '/seeker/requests',
       readAt: null,
       audience: 'seeker',

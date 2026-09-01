@@ -58,33 +58,13 @@ const copyByLocale: Readonly<Record<SupportedLocale, FoundationCopy>> = {
       success: { title: 'Loaded', body: 'The interface loaded successfully.' },
       permission: { title: 'Authentication required', body: 'Protected data is not rendered by this foundation shell.' }
     }
-  },
-  'zh-CN': {
-    brand: '萨达特房地产',
-    shellTitle: '平台外壳',
-    shellDescription: '这是前端基础。只有在后端契约可用时才会显示真实数据。',
-    unavailable: '此路径暂时没有可用的页面数据。',
-    retryLabel: '重试',
-    localeLabel: '语言',
-    routeLabel: '路径',
-    surfaceLabels: { public: '公开', auth: '身份验证', seeker: '购房者', provider: '房产提供方', admin: '管理' },
-    states: {
-      loading: { title: '加载中', body: '正在准备界面。' },
-      empty: { title: '暂无数据', body: '实现后端契约可用后，数据将在此显示。' },
-      error: { title: '找不到页面', body: '请检查地址后重试。' },
-      retry: { title: '界面无法加载', body: '连接可用后可以再次尝试。' },
-      success: { title: '已加载', body: '界面已成功加载。' },
-      permission: { title: '需要身份验证', body: '基础外壳不会渲染受保护的数据。' }
-    }
-  }
-};
+  },};
 
 function normalizeLocale(value: unknown): SupportedLocale | undefined {
   if (typeof value !== 'string') return undefined;
   const trimmed = value.trim();
   if (supportedLocaleSet.has(trimmed)) return trimmed as SupportedLocale;
   const normalized = trimmed.toLowerCase();
-  if (normalized === 'zh' || normalized === 'zh-cn') return 'zh-CN';
   if (normalized.startsWith('ar')) return 'ar';
   if (normalized.startsWith('en')) return 'en';
   return undefined;

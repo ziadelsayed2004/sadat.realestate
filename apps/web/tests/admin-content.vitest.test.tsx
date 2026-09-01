@@ -18,11 +18,11 @@ import type { AdminArticleListData, AdminCategoryListData } from '../src/feature
 import { renderWithLocale } from '../src/features/testing/index.ts';
 
 const category = articleCategoryDataSchema.parse({
-  id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'buying-tips', name: { ar: 'نصائح الشراء', en: 'Buying tips', 'zh-CN': '购买建议' }, description: { en: 'Guides' }, displayOrder: 1, active: true, version: 2,
+  id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'buying-tips', name: { ar: 'نصائح الشراء', en: 'Buying tips',}, description: { en: 'Guides' }, displayOrder: 1, active: true, version: 2,
   createdAt: '2026-08-10T10:00:00.000Z', updatedAt: '2026-08-18T10:00:00.000Z', availableActions: ['update', 'delete']
 });
 const article = articleDataSchema.parse({
-  id: 'aaaaaaaaaaaaaaaaaaaaaaaa', categoryId: category.id, slug: 'buying-in-sadat', title: { ar: 'دليل الشراء', en: 'Buying in Sadat', 'zh-CN': '在萨达特购买' }, body: { ar: 'محتوى المقال', en: 'Article body', 'zh-CN': '文章内容' }, authorId: 'cccccccccccccccccccccccc', status: 'draft', version: 3,
+  id: 'aaaaaaaaaaaaaaaaaaaaaaaa', categoryId: category.id, slug: 'buying-in-sadat', title: { ar: 'دليل الشراء', en: 'Buying in Sadat',}, body: { ar: 'محتوى المقال', en: 'Article body',}, authorId: 'cccccccccccccccccccccccc', status: 'draft', version: 3,
   createdAt: '2026-08-10T10:00:00.000Z', updatedAt: '2026-08-18T10:00:00.000Z', availableActions: ['update', 'submit']
 });
 const articles: AdminArticleListData = { items: [article], page: 1, limit: 20, total: 1 };
@@ -71,7 +71,7 @@ describe('Admin article and category management contracts and views', () => {
     expect(requests.every(request => request.body === undefined || typeof request.body === 'object')).toBe(true);
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the article projection with the correct direction for %s', async (locale: SupportedLocale) => {
+  it.each(['ar', 'en',] as const)('renders the article projection with the correct direction for %s', async (locale: SupportedLocale) => {
     window.history.pushState({}, '', '/admin/articles');
     const result = renderWithLocale(<AdminContent locale={locale} session={session} initialArticles={articles} initialCategories={categories} />, { locale });
     await waitFor(() => expect(screen.getByTestId(`admin-article-${article.id}`)).toBeInTheDocument());

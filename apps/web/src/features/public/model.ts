@@ -11,7 +11,7 @@ import type {
 export function localizedText(text: LocalizedText | undefined, locale: SupportedLocale): string | undefined {
   if (text === undefined) return undefined;
 
-  const candidates: readonly SupportedLocale[] = [locale, 'ar', 'en', 'zh-CN'];
+  const candidates: readonly SupportedLocale[] = [locale, 'ar', 'en',];
   for (const candidate of candidates) {
     const value = text[candidate];
     if (value !== undefined && value.trim().length > 0) return value;

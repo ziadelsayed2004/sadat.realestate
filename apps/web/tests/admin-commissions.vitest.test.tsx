@@ -142,7 +142,7 @@ describe('Admin commission policies, exceptions, and confirmations', () => {
     ['/admin/commissions/exceptions/new', 'ADM-44'],
     ['/admin/commissions/confirmations', 'ADM-45']
   ] as const)('renders %s as %s in every locale with desktop state and safe projections', async (path, screenId) => {
-    for (const locale of ['ar', 'en', 'zh-CN'] as const) {
+    for (const locale of ['ar', 'en',] as const) {
       window.history.pushState({}, '', path);
       const result = renderWithLocale(<AdminCommissions locale={locale} session={session} authClient={authorization} {...loaders} />, { locale });
       await waitFor(() => expect(result.container.querySelector(`[data-screen-id="${screenId}"]`)).not.toBeNull());

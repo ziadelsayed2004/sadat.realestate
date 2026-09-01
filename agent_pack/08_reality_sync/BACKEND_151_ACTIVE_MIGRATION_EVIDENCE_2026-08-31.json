@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 2,
+  "taskId": "backend_151",
+  "programId": "SADAT_G1_G6_APPROVED_2026-08-30",
+  "status": "complete",
+  "completionMarker": "TASK_backend_151_COMPLETE",
+  "executedAt": "2026-08-31T19:55:47.0273708Z",
+  "objective": "Make Arabic and English the only active backend runtime and data contract locales with a reversible isolated Mongo migration and index verification.",
+  "supersedes": {
+    "previousEvidencePath": "agent_pack/08_reality_sync/BACKEND_151_MIGRATION_EVIDENCE_2026-08-31.json",
+    "previousEvidenceSha256": "973f076b66d5ef1e83ad0b3f0ade2c8e4244f74c05d7dcafabbfb07991495ed1",
+    "previousDecision": "OWNERSHIP_BLOCKED_BEFORE_SOURCE_OR_DATABASE_MUTATION",
+    "historyPolicy": "Previous blocked evidence remains immutable; this record is additive superseding truth for the authorized active program."
+  },
+  "baseline": {
+    "branch": "main",
+    "head": "a235f15d097cb07c387118cb11aa93d4d14c42d4",
+    "upstream": "origin/main",
+    "divergence": "0 0",
+    "workingTreePolicy": "PROTECTED_POTENTIALLY_DIRTY",
+    "ownershipGrantPath": "agent_pack/08_reality_sync/ACTIVE_PROGRAM_OWNERSHIP_GRANT_2026-08-31_BACKEND_151.json",
+    "ownershipGrantSha256AtPreflight": "a0f26916d6e1836fd947c17e266ac9eb5e36b323278426f69c1cfbf4509bf9b7",
+    "scopeExtensionPath": "agent_pack/08_reality_sync/BACKEND_151_SCOPE_EXTENSION_2026-08-31.json",
+    "scopeExtensionSha256": "8c5e548a2c4d22f23b0fd3c6e6ea3e0595841def13f0c72d8ab03e340b9fda38",
+    "taskCardPath": "agent_pack/04_tracks/backend/G2_ar_en_runtime/backend_151.md",
+    "taskCardSha256": "5f58853de69de8bd408a52fd771061389b2c9f9440cd741b72e2e7304115c8a6",
+    "oldOwnershipManifestReadBeforeMutation": true,
+    "noOwnershipOverlapAtPreflight": true
+  },
+  "authorization": {
+    "ownerAuthorization": "OWNER_AUTHORIZATION_ACTIVE_PROGRAM_PRODUCT_WRITES",
+    "tokens": [
+      "APPROVAL_ACTIVE_LOCALE_SOURCE_REMOVAL",
+      "APPROVAL_DB_LOCALE_APPLY_ISOLATED_ONLY",
+      "APPROVAL_ACTIVE_AR_EN_TEST_AND_FIXTURE_MIGRATION",
+      "APPROVAL_AGENT_PACK_ACTIVE_VIEW_RECONCILIATION",
+      "APPROVAL_DETERMINISTIC_LOCAL_TEST_DATA",
+      "APPROVAL_LOCAL_RUNTIME_AND_BROWSER_VERIFICATION"
+    ],
+    "productionDatabaseMutation": false,
+    "externalSend": false,
+    "secretsReadOrWritten": false,
+    "gitIndexChanged": false,
+    "commitPushDeployHistoryRewrite": false
+  },
+  "implementation": {
+    "supportedLocales": ["ar", "en"],
+    "defaultLocale": "ar",
+    "retiredLocale": "zh-CN",
+    "activeBackendAudit": {
+      "command": "npm.cmd run locale:audit",
+      "exitCode": 0,
+      "scope": "backend",
+      "scannedFiles": 293,
+      "activeViolationCount": 0,
+      "deferredOccurrenceCount": 3,
+      "deferredCategories": ["MIGRATION_PROVENANCE", "FIXTURE"],
+      "status": "PASS"
+    },
+    "deferredScope": "Frontend runtime, frontend tests/fixtures, and the contracts fixture occurrence remain owned by frontend_107 or later approved tasks; no occurrence was hidden or fabricated away.",
+    "indexVerificationImplementation": "explainLocaleTextIndexes uses a synthetic non-PII probe and records only sanitized planner/index metrics.",
+    "noInventedTranslations": true
+  },
+  "database": {
+    "environment": "local",
+    "sourceDatabase": "sadat_real_estate_local",
+    "topology": {
+      "setName": "rs0",
+      "primary": "127.0.0.1:27018",
+      "isWritablePrimary": true,
+      "host": "127.0.0.1",
+      "port": 27018
+    },
+    "preApplyDryRun": {
+      "totalDocumentsInExternalArchive": 50,
+      "recordsWithValidArAndEn": 18,
+      "recordsWithAnyValidArOrEn": 18,
+      "recordsWithRetiredLocale": 18,
+      "recordsWithRetiredLocaleAndAnyArOrEn": 18,
+      "recordsWithRetiredLocaleAndNeitherArNorEn": 0,
+      "recordsWithRetiredLocaleAndArEn": 18,
+      "recordsWithRetiredLocaleOnly": 0,
+      "recordsWithRetiredFieldWithoutValue": 0,
+      "recordsWithRetiredPreferredLocale": 1,
+      "recordsWithLocalizedObjectButNoArOrEn": 0,
+      "localizedObjectCount": 34,
+      "orphanCount": 0,
+      "status": "SAFE_TO_APPLY_ISOLATED_ONLY"
+    },
+    "apply": {
+      "mode": "apply",
+      "confirmed": true,
+      "localizedFieldMatched": 34,
+      "localizedFieldModified": 34,
+      "preferredLocaleMatched": 1,
+      "preferredLocaleModified": 1,
+      "afterRecordsWithRetiredLocale": 0,
+      "afterRecordsWithRetiredPreferredLocale": 0,
+      "afterRecordsWithValidArAndEn": 18,
+      "afterLocalizedObjectCount": 34,
+      "indexActions": [
+        {"collection": "article_categories", "name": "article_category_localized_search", "action": "rebuilt"},
+        {"collection": "articles", "name": "article_localized_search", "action": "rebuilt"},
+        {"collection": "features_services", "name": "features_name_search", "action": "rebuilt"},
+        {"collection": "locations", "name": "locations_localized_name_search", "action": "rebuilt"},
+        {"collection": "projects", "name": "projects_name_search", "action": "rebuilt"},
+        {"collection": "properties", "name": "properties_search_text", "action": "rebuilt"},
+        {"collection": "property_taxonomy", "name": "property_taxonomy_name_search", "action": "rebuilt"}
+      ]
+    },
+    "indexExplain": {
+      "probe": "synthetic non-PII constant",
+      "verifiedCount": 7,
+      "totalCount": 7,
+      "results": [
+        {"collection": "article_categories", "expectedIndexName": "article_category_localized_search", "plannerStage": "TEXT_MATCH", "winningIndexName": "article_category_localized_search", "executionTimeMillis": 0, "totalKeysExamined": 0, "totalDocsExamined": 0, "verified": true},
+        {"collection": "articles", "expectedIndexName": "article_localized_search", "plannerStage": "TEXT_MATCH", "winningIndexName": "article_localized_search", "executionTimeMillis": 0, "totalKeysExamined": 0, "totalDocsExamined": 0, "verified": true},
+        {"collection": "features_services", "expectedIndexName": "features_name_search", "plannerStage": "TEXT_MATCH", "winningIndexName": "features_name_search", "executionTimeMillis": 0, "totalKeysExamined": 0, "totalDocsExamined": 0, "verified": true},
+        {"collection": "locations", "expectedIndexName": "locations_localized_name_search", "plannerStage": "TEXT_MATCH", "winningIndexName": "locations_localized_name_search", "executionTimeMillis": 0, "totalKeysExamined": 0, "totalDocsExamined": 0, "verified": true},
+        {"collection": "projects", "expectedIndexName": "projects_name_search", "plannerStage": "TEXT_MATCH", "winningIndexName": "projects_name_search", "executionTimeMillis": 0, "totalKeysExamined": 0, "totalDocsExamined": 0, "verified": true},
+        {"collection": "properties", "expectedIndexName": "properties_search_text", "plannerStage": "TEXT_MATCH", "winningIndexName": "properties_search_text", "executionTimeMillis": 0, "totalKeysExamined": 0, "totalDocsExamined": 0, "verified": true},
+        {"collection": "property_taxonomy", "expectedIndexName": "property_taxonomy_name_search", "plannerStage": "TEXT_MATCH", "winningIndexName": "property_taxonomy_name_search", "executionTimeMillis": 0, "totalKeysExamined": 0, "totalDocsExamined": 0, "verified": true}
+      ]
+    },
+    "idempotentReplay": {
+      "mode": "apply",
+      "confirmed": true,
+      "localizedFieldMatched": 0,
+      "localizedFieldModified": 0,
+      "preferredLocaleMatched": 0,
+      "preferredLocaleModified": 0,
+      "indexActions": "7 unchanged",
+      "beforeRecordsWithRetiredLocale": 0,
+      "afterRecordsWithRetiredLocale": 0,
+      "beforeRecordsWithRetiredPreferredLocale": 0,
+      "afterRecordsWithRetiredPreferredLocale": 0,
+      "idempotentReplayReady": true
+    }
+  },
+  "externalBackupAndRestore": {
+    "archivePath": "C:/Users/Ziad Elsayed/AppData/Local/SadatRealEstate/backend151/backend151-local-20260831-v3.archive.json",
+    "checksumPath": "C:/Users/Ziad Elsayed/AppData/Local/SadatRealEstate/backend151/backend151-local-20260831-v3.archive.json.sha256",
+    "backupId": "backend151-20260831-v3",
+    "archiveSha256": "4d113e4cf15ca4f6d7dee02bb174b3b042ca866b5cae4d3b9d2c0de9e8081c9c",
+    "archiveBytes": 48194,
+    "collectionCount": 50,
+    "documentCount": 50,
+    "sourceDatabase": "sadat_real_estate_local",
+    "restoreProof": {
+      "status": "verified",
+      "restoreDatabase": "backend151_restore_20260831_v3",
+      "archiveSha256": "4d113e4cf15ca4f6d7dee02bb174b3b042ca866b5cae4d3b9d2c0de9e8081c9c",
+      "collectionCount": 50,
+      "documentCount": 50,
+      "collectionCountMismatch": 0,
+      "documentCountMismatch": 0,
+      "indexDefinitionMismatch": 0
+    },
+    "rollbackProof": {
+      "status": "verified",
+      "rollbackDatabase": "backend151_rollback_20260831_v3",
+      "archiveSha256": "4d113e4cf15ca4f6d7dee02bb174b3b042ca866b5cae4d3b9d2c0de9e8081c9c",
+      "collectionCount": 50,
+      "documentCount": 50,
+      "collectionCountMismatch": 0,
+      "documentCountMismatch": 0,
+      "indexDefinitionMismatch": 0
+    },
+    "backupScope": "Isolated local database only; no Production database or Production secrets were accessed."
+  },
+  "rollback": {
+    "command": "node --import tsx apps/api/src/modules/database/run-locale-migration.ts --apply --confirm --backup=<external-archive> --backup-id=backend151-20260831-v3 --restore-db=backend151_restore_20260831_v3 --rollback-db=backend151_rollback_20260831_v3",
+    "procedure": "Restore the captured archive and index definitions to the approved backend151 rollback database, then re-enable the prior compatible read path if an application rollback is required.",
+    "verified": true,
+    "productionApply": "forbidden"
+  },
+  "contractHashes": {
+    "packages/contracts/src/localization/index.ts": "c838ccaf2e9992e85c1fa09c80ecd489617a9f6c95df98b102ae15c09db5f93e",
+    "packages/contracts/src/accounts/index.ts": "c416ddaee292949401bbeda40f397da9f6a4ac55639d8e82ea967224d415f2fe",
+    "packages/contracts/src/admin/index.ts": "ee1530587eca4400932d2a3babf13a2d4a4bda9a922f2b031b03138bc9ebf10b",
+    "packages/contracts/src/provider/index.ts": "adece3de177c8e956d5c560303ef41299f5805cca54e0384f687e8304f89a78c",
+    "packages/contracts/src/seeker/index.ts": "28f2592f54cc9bcf41d4a392f29a2cebc202723c15a15385f418638664f31bfb",
+    "apps/api/openapi/openapi.json": "741f6c6e5990c4c813cf6d0985392459589dc8156a0a2994efd1227145e12602",
+    "apps/api/postman/Sadat-Real-Estate.postman_collection.json": "819574b4074d717d51905182736f90742eb31ca5312dc7c65f8abcc15823284c"
+  },
+  "postMutationFileHashes": {
+    "apps/api/src/modules/database/locale-migration.ts": "2b37e70371c02175ec44adf5b072308e773a9bb41594fa56d6c0f67416b63f19",
+    "apps/api/src/modules/database/run-locale-migration.ts": "11b6a4ceaef54a8e227b8071aa1abab63ba035c72131a20f96b7cc937db108b6",
+    "apps/api/tests/database/locale-migration.test.ts": "9dddfb073d431865d89782ec1bb2b95c93368a3477cacc6defe4f4b00ccc652b",
+    "packages/config/scripts/audit-locales.mjs": "216fd0cf9bcb2ea11e5085322328568ebe72adc94d8b4d07950a4de0d130c5fc",
+    "packages/config/tests/locale-audit.test.mjs": "80ee0b9e0a6bfda882e4c3228814e2872afd30a351fcf7f9b4d1a4e9cb06e1d1",
+    "apps/api/src/modules/accounts/repository.ts": "d52a930764314ce97dcfad158ffebf840fcf6cec899049f9d4bd8646217841b2",
+    "apps/api/src/modules/ads/service.ts": "86fd5e3a3fa91a71efb56f3ba8bc82d391e1d3437f011b8d1139df44e8b8b704",
+    "apps/api/src/modules/articles/models.ts": "d13e447a3fb62e7770a19713ff3a900c1f0ce9077db271f85f5ea67eaafd2768",
+    "apps/api/src/modules/articles/service.ts": "0669f7155bfb6bb8869158f464fd83772cd852d46a95446a143ceff6a29aa75b",
+    "apps/api/src/modules/cms/about-team-models.ts": "c4c3ecc1a7bd9b483d965907c2407fc30c9bb37e787d3483d8620a2865217b40",
+    "apps/api/src/modules/cms/homepage-display-models.ts": "82d0453b03f5f98b9baa9946d6b21e1da7444c7f10be7932f5e23d5f2022daa2",
+    "apps/api/src/modules/cms/population-models.ts": "92d7aa96d207d756ebb29cef20782b049646e6e6804fd5d3be5f6bf77a4347e2",
+    "apps/api/src/modules/database/seed.ts": "b1f08937b32d3dc12a557bd54927adafb856b902d5b10de7929b60fba123cfe8",
+    "apps/api/src/modules/identity/models.ts": "ef76f251511859cb2a7b5067b710fb4f2274473cb9c0ddefe24830a84f50db",
+    "apps/api/src/modules/locations/models.ts": "bebe0ca87cc679581c0419a7415bd80c49f37ca14ac4079b07ee3d809e8a9cab",
+    "apps/api/src/modules/organizations/models.ts": "2593a47c097441709f256a770abf9858fecc0223ecd03dd16c5eb453f543f18c",
+    "apps/api/src/modules/organizations/public.ts": "7eb72fe24db52327f9127852ececc48d9daf55008c7fd2a70d12dffe7b8eaaaa",
+    "apps/api/src/modules/performance/property-indexes.ts": "82418fc11702e3f5a944fd3147c448588a5c201bbb0d302de1e0f7a37a57b28a",
+    "apps/api/src/modules/projects/models.ts": "983d1b193b726b8a36936ba0e000d2b064338844386dfa548d646f0004d9efd9",
+    "apps/api/src/modules/properties/models.ts": "8c5eeb3f5fe336776fa594605fadbc08e9323c758b4f5dc43b38d9c6e701dcb6",
+    "apps/api/src/modules/properties/repository.ts": "530d4217abf8e3ea02e9202f2eab45dacfc24e53445ff274422d2f89c7e208f1",
+    "apps/api/src/modules/provider/models.ts": "9619f574f26240b5d9c8364f71717ae7fbd845365fd9caccb2c2078dd0277c65",
+    "apps/api/src/modules/quality/localization-audit.ts": "1ac7d12d6f1b502d66cbec18673fe14ea7026362e58b4afaa8b85f9431c47d24",
+    "apps/api/src/modules/settings/models.ts": "3c9d235fdd70b9e57e5073d083d089fe30758e682e131e4f152a9c83c744ddd2",
+    "apps/api/src/modules/taxonomy/features.ts": "8797da3ae09cc3e4a7b722da6636f5d9a2d8dd1956969797af3cddfc75e64ddc",
+    "apps/api/src/modules/taxonomy/runtime.ts": "2a363470f61c9d18253d2c0e93cfa05ec6b20135ee0bfc37dadd8a94879c36f4",
+    "apps/api/tests/localization/content.test.ts": "660a23ef811ebb27c17b295cac92cd5aca7347443379cc56ffd5fd5ef737e922",
+    "package.json": "e55140e39aeb84c08e3cd4e2058b9f1ebd60d7853853e114917ba59be6e0ced5"
+  },
+  "verification": {
+    "commands": [
+      {"command": "npm.cmd run locale:audit", "exitCode": 0},
+      {"command": "npm.cmd run typecheck --workspace @sadat-real-estate/contracts", "exitCode": 0},
+      {"command": "npm.cmd run typecheck --workspace @sadat-real-estate/api", "exitCode": 0},
+      {"command": "node --import tsx --test --test-concurrency=1 apps/api/tests/localization/content.test.ts apps/api/tests/database/locale-migration.test.ts", "exitCode": 0, "testsPassed": 8},
+      {"command": "npm.cmd run test:workspace", "exitCode": 0, "testsPassed": 18},
+      {"command": "npm.cmd run lint", "exitCode": 0},
+      {"command": "npm.cmd run local:doctor", "exitCode": 0},
+      {"command": "git diff --check", "exitCode": 0}
+    ],
+    "runtime": {
+      "databaseTopology": "verified local writable rs0 primary",
+      "browser": "NOT_APPLICABLE: backend_151 owns no UI surface",
+      "figma": "NOT_APPLICABLE: backend_151 owns no visual parity scope",
+      "runtimeSnapshots": "NOT_RUN: backend migration evidence is not runtime snapshot evidence",
+      "figmaParity": "NOT_RUN: canonical Figma direct review belongs to later frontend tasks"
+    },
+    "noMasksCropsOverlaysHiddenRegionsOrAntiAliasMasks": true,
+    "noSecretsOrPiiInEvidence": true
+  },
+  "agentPack": {
+    "historicalEvidencePreserved": true,
+    "activeDerivedViewRequiresSupersedingUpdate": true,
+    "taskStateHistoricalFileNotRewritten": true,
+    "nextDependencyReadyTask": "frontend_107",
+    "nextTaskStarted": false
+  },
+  "unresolved": [
+    "Frontend deferred locale occurrences remain for frontend_107.",
+    "No Production database migration, SMTP send, external Figma review, Git index change, commit, push, or deploy was performed."
+  ]
+}

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { authSessionDataSchema, normalizedEmailSchema } from '../auth/index.js';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
 
-export const seekerLocaleSchema = z.enum(['ar', 'en', 'zh-CN']);
+export const seekerLocaleSchema = z.enum(['ar', 'en']);
 export const registrationTokenSchema = z.string().regex(/^[A-Za-z0-9_-]{43}$/);
 const nameSchema = z.string().trim().min(1).max(80).regex(/^[^\u0000-\u001f\u007f]+$/);
 const identifierSchema = z.string().trim().min(1).max(80).regex(/^[^\u0000-\u001f\u007f]+$/);

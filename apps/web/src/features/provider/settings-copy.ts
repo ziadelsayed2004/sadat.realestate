@@ -30,16 +30,7 @@ const copy: Readonly<Record<SupportedLocale, ProviderSettingsCopy>> = {
     security: { heading: 'Security', password: 'Change password', current: 'Current password', next: 'New password', confirm: 'Confirm password', update: 'Update password', deleteHeading: 'Account deletion request', deleteBody: 'Account deletion requests are not available from this interface yet.', deleteAction: 'Request account deletion', unavailable: 'Currently unavailable' },
     states: { loading: { title: 'Loading settings', body: 'Your provider settings are being retrieved.' }, empty: { title: 'Settings unavailable', body: 'No settings data is available for this account.' }, retry: { title: 'Settings could not load', body: 'Check the connection and try again.' }, error: { title: 'Settings are unavailable', body: 'Your settings could not be read right now.' }, permission: { title: 'Sign-in required', body: 'Settings are available only to a verified provider account.' } },
     feedback: { saved: 'Settings saved successfully.', validation: 'Review the fields and enter valid values.', conflict: 'The data changed. Reload it and try again.', permission: 'Your session has expired. Sign in and try again.', error: 'The settings could not be saved. Try again.' }, retry: 'Retry', unavailable: 'Unavailable'
-  },
-  'zh-CN': {
-    eyebrow: '提供方工作区', title: '设置', description: '查看账户信息并更新账户允许修改的联系方式。', tabs: { account: '账户资料', contact: '联系资料', security: '安全' },
-    account: { heading: '账户资料', email: '电子邮箱', legalNotice: '商业和法律资料不能在此页面修改。', saveEmail: '保存电子邮箱' },
-    contact: { heading: '联系资料', whatsapp: 'WhatsApp', address: '办公地址', website: '网站', save: '保存联系资料' },
-    security: { heading: '安全', password: '修改密码', current: '当前密码', next: '新密码', confirm: '确认密码', update: '更新密码', deleteHeading: '账户删除请求', deleteBody: '当前界面暂不支持账户删除请求。', deleteAction: '请求删除账户', unavailable: '当前不可用' },
-    states: { loading: { title: '正在加载设置', body: '正在获取提供方设置。' }, empty: { title: '设置不可用', body: '此账户没有可显示的设置数据。' }, retry: { title: '无法加载设置', body: '请检查连接后重试。' }, error: { title: '设置不可用', body: '暂时无法读取您的设置。' }, permission: { title: '需要登录', body: '只有已验证的提供方账户可以查看设置。' } },
-    feedback: { saved: '设置已保存。', validation: '请检查字段并输入有效值。', conflict: '数据已更改，请重新加载后重试。', permission: '会话已过期，请登录后重试。', error: '无法保存设置，请重试。' }, retry: '重试', unavailable: '不可用'
-  }
-};
+  },};
 
 export function getProviderSettingsCopy(locale: SupportedLocale): ProviderSettingsCopy {
   return copy[locale];

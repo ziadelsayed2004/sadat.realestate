@@ -24,7 +24,7 @@ const traceId = 'a'.repeat(32);
 
 function notifications(): NotificationListData {
   return notificationListDataSchema.parse({
-    items: [{ id: notificationId, type: 'settings.updated', title: { ar: 'تم تحديث الإعدادات', en: 'Settings updated', 'zh-CN': '设置已更新' }, message: { ar: 'تم حفظ التغيير.', en: 'The change was saved.', 'zh-CN': '更改已保存。' }, link: '/admin/settings/platform', readAt: null, createdAt: '2026-08-20T09:00:00.000Z' }],
+    items: [{ id: notificationId, type: 'settings.updated', title: { ar: 'تم تحديث الإعدادات', en: 'Settings updated',}, message: { ar: 'تم حفظ التغيير.', en: 'The change was saved.',}, link: '/admin/settings/platform', readAt: null, createdAt: '2026-08-20T09:00:00.000Z' }],
     unreadCount: 1,
     page: 1,
     limit: 20,

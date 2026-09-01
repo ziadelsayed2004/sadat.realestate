@@ -16,7 +16,7 @@ import { renderWithLocale } from '../src/features/testing/index.ts';
 const project = projectDataSchema.parse({
   id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
   providerId: 'bbbbbbbbbbbbbbbbbbbbbbbb',
-  name: { ar: 'مشروع النيل', en: 'Nile Heights', 'zh-CN': '尼罗高地' },
+  name: { ar: 'مشروع النيل', en: 'Nile Heights',},
   slug: 'nile-heights',
   description: { en: 'A reviewed project.' },
   status: 'pending_review',
@@ -67,7 +67,7 @@ describe('Admin project management contracts and views', () => {
     await expect(reviewAdminProject(project.id, { version: project.version, action: 'approve', reason: 'x' }, { apiClient: client })).rejects.toThrow();
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the management and review projections in the locale direction for %s', async (locale: SupportedLocale) => {
+  it.each(['ar', 'en',] as const)('renders the management and review projections in the locale direction for %s', async (locale: SupportedLocale) => {
     window.history.pushState({}, '', '/admin/projects');
     const result = renderWithLocale(<AdminProjects locale={locale} session={session} initialData={listData} />, { locale });
     await waitFor(() => expect(screen.getByTestId(`admin-project-${project.id}`)).toBeInTheDocument());

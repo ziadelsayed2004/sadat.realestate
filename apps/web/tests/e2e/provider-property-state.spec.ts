@@ -4,9 +4,8 @@ import { getProviderPropertyStateCopy } from '../../src/features/provider_proper
 const PROVIDER_ID = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const PROPERTY_ID = 'bbbbbbbbbbbbbbbbbbbbbbbb';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  if (project.endsWith('-zh')) return 'zh-CN';
   if (project.endsWith('-en')) return 'en';
   return 'ar';
 }
@@ -19,7 +18,7 @@ function propertyFixture(overrides: Record<string, unknown> = {}) {
   return {
     id: PROPERTY_ID,
     kind: 'property',
-    name: { ar: 'عقار المزود', en: 'Provider property', 'zh-CN': '提供方房产' },
+    name: { ar: 'عقار المزود', en: 'Provider property',},
     slug: 'provider-property',
     transactionType: 'sale',
     source: { providerId: PROVIDER_ID, sourceType: 'individual_broker' },

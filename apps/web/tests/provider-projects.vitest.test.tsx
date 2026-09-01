@@ -21,7 +21,7 @@ function project(overrides: Partial<ProjectData> = {}): ProjectData {
   return projectDataSchema.parse({
     id: projectId,
     providerId,
-    name: { ar: 'مشروع المزود', en: 'Provider project', 'zh-CN': '提供方项目' },
+    name: { ar: 'مشروع المزود', en: 'Provider project',},
     slug: 'provider-project',
     description: { en: 'Provider-owned project.' },
     status: 'draft',
@@ -120,7 +120,7 @@ describe('Provider projects', () => {
     await waitFor(() => expect(observedQueries.at(-1)).toMatchObject({ status: 'published' }));
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders safe owned projects and direction for %s', async locale => {
+  it.each(['ar', 'en',] as const)('renders safe owned projects and direction for %s', async locale => {
     const load = vi.fn(async (_query: ProviderProjectsQuery) => data);
     const result = renderWithLocale(<ProviderProjects locale={locale} session={session} load={load} />, { locale });
     const copy = getProviderProjectsCopy(locale);

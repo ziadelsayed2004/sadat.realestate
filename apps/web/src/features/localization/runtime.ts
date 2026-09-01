@@ -8,6 +8,7 @@ import {
 } from '@sadat-real-estate/contracts';
 
 export const LOCALE_STORAGE_KEY = 'sadat-real-estate.locale';
+export const LOCALE_CHANGE_EVENT = 'sadat-real-estate:locale-change';
 
 export interface LocaleStorage {
   getItem(key: string): string | null;
@@ -30,6 +31,7 @@ export interface LocaleStoreOptions {
   readonly storage?: LocaleStorage | null;
   readonly explicitLocale?: unknown;
   readonly acceptLanguage?: string | null;
+  readonly preferExplicitLocale?: boolean;
 }
 
 export type LocaleListener = (snapshot: LocaleSnapshot) => void;
@@ -43,7 +45,6 @@ export function normalizeLocale(value: unknown): SupportedLocale | undefined {
   if (supportedLocaleSet.has(trimmed)) return trimmed as SupportedLocale;
 
   const normalized = trimmed.toLowerCase();
-  if (normalized === 'zh' || normalized.startsWith('zh-cn') || normalized.startsWith('zh-hans')) return 'zh-CN';
   if (normalized.startsWith('ar')) return 'ar';
   if (normalized.startsWith('en')) return 'en';
   return undefined;
@@ -101,7 +102,8 @@ export class LocaleStore {
   public constructor(options: LocaleStoreOptions = {}) {
     this.storage = options.storage;
     const persisted = readPersistedLocale(this.storage);
-    this.snapshot = snapshotFor(persisted ?? resolveLocale(options.explicitLocale, options.acceptLanguage));
+    const resolved = resolveLocale(options.explicitLocale, options.acceptLanguage);
+    this.snapshot = snapshotFor(options.preferExplicitLocale === true ? resolved : persisted ?? resolved);
   }
 
   public getSnapshot(): LocaleSnapshot {
@@ -138,11 +140,19 @@ export function createBrowserLocaleStore(options: Omit<LocaleStoreOptions, 'stor
   const storage = Object.prototype.hasOwnProperty.call(options, 'storage')
     ? options.storage
     : getBrowserStorage();
-  const storeOptions: { explicitLocale?: unknown; acceptLanguage?: string | null; storage?: LocaleStorage | null } = {};
+  const storeOptions: { explicitLocale?: unknown; acceptLanguage?: string | null; storage?: LocaleStorage | null; preferExplicitLocale?: boolean } = {};
   if (options.explicitLocale !== undefined) storeOptions.explicitLocale = options.explicitLocale;
   if (options.acceptLanguage !== undefined) storeOptions.acceptLanguage = options.acceptLanguage;
   if (storage !== undefined) storeOptions.storage = storage;
+  if (options.preferExplicitLocale !== undefined) storeOptions.preferExplicitLocale = options.preferExplicitLocale;
   return new LocaleStore(storeOptions);
+}
+
+export function replaceLocaleInUrl(url: string, locale: SupportedLocale): string {
+  const parsed = new URL(url, 'http://sadat.local');
+  parsed.searchParams.set('lang', locale);
+  const relative = `${parsed.pathname}${parsed.search}${parsed.hash}`;
+  return /^[a-z][a-z\d+.-]*:\/\//iu.test(url) ? `${parsed.origin}${relative}` : relative;
 }
 
 export function applyLocaleToDocument(locale: SupportedLocale, target?: LocaleDocument): void {

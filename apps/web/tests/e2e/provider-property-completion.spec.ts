@@ -5,14 +5,13 @@ const PROVIDER_ID = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const PROPERTY_ID = 'bbbbbbbbbbbbbbbbbbbbbbbb';
 const MEDIA_ID = 'cccccccccccccccccccccccc';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  if (project.endsWith('-zh')) return 'zh-CN';
   if (project.endsWith('-en')) return 'en';
   return 'ar';
 }
 
-function copyFor(locale: 'ar' | 'en' | 'zh-CN') {
+function copyFor(locale: 'ar' | 'en') {
   const copy = getProviderPropertyCompletionCopy(locale);
   return {
     chooseImage: copy.media.chooseImage,
@@ -40,7 +39,7 @@ function propertyFixture(overrides: Record<string, unknown> = {}) {
   return {
     id: PROPERTY_ID,
     kind: 'property',
-    name: { ar: 'Ø¹Ù‚Ø§Ø± Ø§Ù„Ù…Ø²ÙˆÙ‘Ø¯', en: 'Provider property', 'zh-CN': 'æä¾›æ–¹æˆ¿äº§' },
+    name: { ar: 'Ø¹Ù‚Ø§Ø± Ø§Ù„Ù…Ø²ÙˆÙ‘Ø¯', en: 'Provider property',},
     slug: 'provider-property',
     transactionType: 'sale',
     source: { providerId: PROVIDER_ID, sourceType: 'individual_broker' },

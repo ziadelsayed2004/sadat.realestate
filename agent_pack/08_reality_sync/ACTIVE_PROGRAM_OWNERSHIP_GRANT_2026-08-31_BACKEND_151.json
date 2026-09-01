@@ -1,0 +1,1066 @@
+{
+  "schemaVersion": 1,
+  "grantId": "ACTIVE_PROGRAM_OWNERSHIP_GRANT_2026-08-31_BACKEND_151",
+  "programId": "SADAT_G1_G6_APPROVED_2026-08-30",
+  "generatedAt": "2026-08-31T19:18:30.0162421Z",
+  "status": "ACTIVE_BACKEND_151_SCOPE_GRANTED",
+  "owner": "PROGRAM_COORDINATOR",
+  "purpose": "Additive ownership supersession for the clean backend_151 scope; historical ownership manifest and historical Agent Pack views remain immutable.",
+  "supersedes": {
+    "manifestPath": "agent_pack/08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_OWNERSHIP_MANIFEST_2026-08-30.json",
+    "manifestSha256": "0d0a5665be9e978d619f9263da529324875ccca6cd76e65c333fc50ff5c55e11",
+    "previousBlocker": "agent_pack/08_reality_sync/BACKEND_151_MIGRATION_EVIDENCE_2026-08-31.json:TASK_backend_151_BLOCKED_OWNERSHIP"
+  },
+  "authorization": {
+    "ownerAuthorization": "OWNER_AUTHORIZATION_ACTIVE_PROGRAM_PRODUCT_WRITES",
+    "tokens": [
+      "APPROVAL_ACTIVE_LOCALE_SOURCE_REMOVAL",
+      "APPROVAL_DB_LOCALE_APPLY_ISOLATED_ONLY",
+      "APPROVAL_ACTIVE_AR_EN_TEST_AND_FIXTURE_MIGRATION",
+      "APPROVAL_AGENT_PACK_ACTIVE_VIEW_RECONCILIATION",
+      "APPROVAL_DETERMINISTIC_LOCAL_TEST_DATA",
+      "APPROVAL_LOCAL_RUNTIME_AND_BROWSER_VERIFICATION"
+    ],
+    "boundaries": [
+      "No Production database mutation",
+      "No secrets or environment files",
+      "No commits, pushes, deploys, force pushes or history rewrite",
+      "No broad deletion",
+      "No documentation image deletion before external bundle proof",
+      "No historical Agent Pack rewrite"
+    ]
+  },
+  "preflight": {
+    "branch": "## main...origin/main",
+    "head": "a235f15d097cb07c387118cb11aa93d4d14c42d4",
+    "upstream": "origin/main",
+    "divergence": "0\t0",
+      "worktreeClean": true,
+    "diffCheckExit": 0,
+    "selectorTaskId": "backend_151",
+    "oldManifestReadBeforeMutation": true
+  },
+  "scope": {
+    "currentTaskId": "backend_151",
+    "taskFile": "agent_pack/04_tracks/backend/G2_ar_en_runtime/backend_151.md",
+    "primaryRoots": [
+      "apps/api/src/modules/localization",
+      "apps/api/src/modules/database",
+      "apps/api/tests/localization",
+      "apps/api/tests/database",
+      "packages/contracts/src/localization",
+      "packages/contracts/src/database"
+    ],
+    "inventorySource": "agent_pack/08_reality_sync/BACKEND_150_RETIRED_LOCALE_INVENTORY_2026-08-31.json#exactTargetManifest",
+    "exactInventoryBackendTargetCount": 29,
+    "exactWritableRecordCount": 56,
+    "cleanBaselineEligibleCount": 52,
+    "createAllowedCount": 2,
+    "taskLocalBaselineCount": 2,
+    "mergeRequiredCount": 0
+  },
+  "taskMap": [
+    {
+      "taskId": "backend_151",
+      "sequence": 218,
+      "atomicTaskFile": "04_tracks/backend/G2_ar_en_runtime/backend_151.md"
+    },
+    {
+      "taskId": "frontend_107",
+      "sequence": 219,
+      "atomicTaskFile": "04_tracks/frontend/G2_ar_en_runtime/frontend_107.md"
+    },
+    {
+      "taskId": "backend_152",
+      "sequence": 220,
+      "atomicTaskFile": "04_tracks/backend/G3_public_requests_sales_crm/backend_152.md"
+    },
+    {
+      "taskId": "backend_153",
+      "sequence": 221,
+      "atomicTaskFile": "04_tracks/backend/G3_public_requests_sales_crm/backend_153.md"
+    },
+    {
+      "taskId": "backend_154",
+      "sequence": 222,
+      "atomicTaskFile": "04_tracks/backend/G3_public_requests_sales_crm/backend_154.md"
+    },
+    {
+      "taskId": "backend_155",
+      "sequence": 223,
+      "atomicTaskFile": "04_tracks/backend/G3_public_requests_sales_crm/backend_155.md"
+    },
+    {
+      "taskId": "frontend_108",
+      "sequence": 224,
+      "atomicTaskFile": "04_tracks/frontend/G3_public_requests_sales_crm/frontend_108.md"
+    },
+    {
+      "taskId": "backend_156",
+      "sequence": 225,
+      "atomicTaskFile": "04_tracks/backend/G3_public_requests_sales_crm/backend_156.md"
+    },
+    {
+      "taskId": "frontend_109",
+      "sequence": 226,
+      "atomicTaskFile": "04_tracks/frontend/G3_public_requests_sales_crm/frontend_109.md"
+    },
+    {
+      "taskId": "frontend_110",
+      "sequence": 227,
+      "atomicTaskFile": "04_tracks/frontend/G3_public_requests_sales_crm/frontend_110.md"
+    },
+    {
+      "taskId": "frontend_111",
+      "sequence": 228,
+      "atomicTaskFile": "04_tracks/frontend/G3_public_requests_sales_crm/frontend_111.md"
+    },
+    {
+      "taskId": "backend_157",
+      "sequence": 229,
+      "atomicTaskFile": "04_tracks/backend/G4_platform_hardening/backend_157.md"
+    },
+    {
+      "taskId": "backend_158",
+      "sequence": 230,
+      "atomicTaskFile": "04_tracks/backend/G4_platform_hardening/backend_158.md"
+    },
+    {
+      "taskId": "backend_159",
+      "sequence": 231,
+      "atomicTaskFile": "04_tracks/backend/G4_platform_hardening/backend_159.md"
+    },
+    {
+      "taskId": "frontend_113",
+      "sequence": 232,
+      "atomicTaskFile": "04_tracks/frontend/G4_platform_hardening/frontend_113.md"
+    },
+    {
+      "taskId": "frontend_114",
+      "sequence": 233,
+      "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_114.md"
+    },
+    {
+      "taskId": "frontend_115",
+      "sequence": 234,
+      "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_115.md"
+    },
+    {
+      "taskId": "frontend_116",
+      "sequence": 235,
+      "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_116.md"
+    },
+    {
+      "taskId": "frontend_117",
+      "sequence": 236,
+      "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_117.md"
+    },
+    {
+      "taskId": "frontend_118",
+      "sequence": 237,
+      "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_118.md"
+    },
+    {
+      "taskId": "frontend_119",
+      "sequence": 238,
+      "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_119.md"
+    },
+    {
+      "taskId": "frontend_120",
+      "sequence": 239,
+      "atomicTaskFile": "04_tracks/frontend/G6_final_integration/frontend_120.md"
+    }
+  ],
+  "currentTaskBoard": [
+    {
+      "taskId": "backend_151",
+      "status": "open"
+    },
+    {
+      "taskId": "backend_152",
+      "status": "open"
+    },
+    {
+      "taskId": "backend_153",
+      "status": "open"
+    },
+    {
+      "taskId": "backend_154",
+      "status": "open"
+    },
+    {
+      "taskId": "backend_155",
+      "status": "open"
+    },
+    {
+      "taskId": "backend_156",
+      "status": "open"
+    },
+    {
+      "taskId": "backend_157",
+      "status": "open"
+    },
+    {
+      "taskId": "backend_158",
+      "status": "open"
+    },
+    {
+      "taskId": "backend_159",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_107",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_108",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_109",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_110",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_111",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_113",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_114",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_115",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_116",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_117",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_118",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_119",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_120",
+      "status": "open"
+    }
+  ],
+  "writableFiles": [
+    {
+      "path": "agent_pack/04_tracks/backend/G2_ar_en_runtime/backend_151.md",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "task_local_evidence_or_control",
+      "baselineExists": true,
+      "beforeSha256": "5f58853de69de8bd408a52fd771061389b2c9f9440cd741b72e2e7304115c8a6",
+      "previousManifestSha256": null,
+      "previousClassification": "ABSENT_FROM_OLD_MANIFEST",
+      "previousOwner": "UNASSIGNED",
+      "dirtyOverlap": false,
+      "ownershipDecision": "TASK_LOCAL_BASELINE_NOT_IN_OLD_MANIFEST"
+    },
+    {
+      "path": "agent_pack/07_finish/backend_151/completion.json",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "task_local_evidence_or_control",
+      "baselineExists": true,
+      "beforeSha256": "92c800a957e93295a6f85b2d8ec9db6f15b461512924f138464014fd241a77e9",
+      "previousManifestSha256": null,
+      "previousClassification": "ABSENT_FROM_OLD_MANIFEST",
+      "previousOwner": "UNASSIGNED",
+      "dirtyOverlap": false,
+      "ownershipDecision": "TASK_LOCAL_BASELINE_NOT_IN_OLD_MANIFEST"
+    },
+    {
+      "path": "agent_pack/08_reality_sync/BACKEND_151_MIGRATION_EVIDENCE_2026-08-31.json",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "task_local_evidence_or_control",
+      "baselineExists": true,
+      "beforeSha256": "973f076b66d5ef1e83ad0b3f0ade2c8e4244f74c05d7dcafabbfb07991495ed1",
+      "previousManifestSha256": null,
+      "previousClassification": "ABSENT_FROM_OLD_MANIFEST",
+      "previousOwner": "UNASSIGNED",
+      "dirtyOverlap": false,
+      "ownershipDecision": "TASK_LOCAL_BASELINE_NOT_IN_OLD_MANIFEST"
+    },
+    {
+      "path": "apps/api/openapi/openapi.json",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "1594cf5e2248ab6509e388106bd9fbf2791c81e86b87d0e318aa80d88c4d4181",
+      "previousManifestSha256": "1594cf5e2248ab6509e388106bd9fbf2791c81e86b87d0e318aa80d88c4d4181",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/postman/Sadat-Real-Estate.postman_collection.json",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "d202949cd3a5de119e8d3088b80d24a07e9b88c6f33fcee6192b792fa5bf5970",
+      "previousManifestSha256": "d202949cd3a5de119e8d3088b80d24a07e9b88c6f33fcee6192b792fa5bf5970",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/accounts/repository.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "bcfe1cdda380ee201ab253ce357e1b065f8f9d00dbf239326dc7976133effb6a",
+      "previousManifestSha256": "bcfe1cdda380ee201ab253ce357e1b065f8f9d00dbf239326dc7976133effb6a",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/ads/service.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "f61d99c82a4f648fc751ee2aa562a8fb9a4c0ccc3529aaab016f4a5435f6b561",
+      "previousManifestSha256": "f61d99c82a4f648fc751ee2aa562a8fb9a4c0ccc3529aaab016f4a5435f6b561",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/articles/models.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "28a39a4bc5617c4927ba7104fba18abab6b1c4b923b6763c309caf8941397799",
+      "previousManifestSha256": "28a39a4bc5617c4927ba7104fba18abab6b1c4b923b6763c309caf8941397799",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/articles/service.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "b3f484c3226e67f50d956f0b12cd655aa4191f3dbe221b72d1fd6a9d6ac42180",
+      "previousManifestSha256": "b3f484c3226e67f50d956f0b12cd655aa4191f3dbe221b72d1fd6a9d6ac42180",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/cms/about-team-models.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "48fad143845ce3bfda06389086f1ddb3b4ff60adb17972d7abee039430540050",
+      "previousManifestSha256": "48fad143845ce3bfda06389086f1ddb3b4ff60adb17972d7abee039430540050",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/cms/homepage-display-models.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "da92502da22affe6d66062fd6e6daa54553c3c072e2b980847514e236e10b26d",
+      "previousManifestSha256": "da92502da22affe6d66062fd6e6daa54553c3c072e2b980847514e236e10b26d",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/cms/population-models.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "1013ad85a0a61092adfc728424492a8ea9a7dfca39c335d10e869d5b018e3f96",
+      "previousManifestSha256": "1013ad85a0a61092adfc728424492a8ea9a7dfca39c335d10e869d5b018e3f96",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/database/api-inventory.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "bd11ee8d85773ea27155d62fdb85450964160ce959e134ea387740986d0d0764",
+      "previousManifestSha256": "bd11ee8d85773ea27155d62fdb85450964160ce959e134ea387740986d0d0764",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/database/backup-restore.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "d9286111bff7c4e6c632a3d4a76b21240c0369778afee474e1a3400887d72c53",
+      "previousManifestSha256": "d9286111bff7c4e6c632a3d4a76b21240c0369778afee474e1a3400887d72c53",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/database/connection.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "e2990723c036a43d62f40aa74866841a074efd79c7eaf411cee6fe5c1844fc90",
+      "previousManifestSha256": "e2990723c036a43d62f40aa74866841a074efd79c7eaf411cee6fe5c1844fc90",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/database/environment.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "e221cf65cd2e09ee5930fd5a8a88894bc3d0453ed560ee67db550a90d4839ab3",
+      "previousManifestSha256": "e221cf65cd2e09ee5930fd5a8a88894bc3d0453ed560ee67db550a90d4839ab3",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/database/health.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "a8d0c5de3ef1d1aaf83c00a9226e44dc120529c7fa9809618325a124d583bc39",
+      "previousManifestSha256": "a8d0c5de3ef1d1aaf83c00a9226e44dc120529c7fa9809618325a124d583bc39",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/database/index-policy.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "61129b48f1e6a24a8981a07415ec6126fc715fea9087c3b78829a33210a5ee91",
+      "previousManifestSha256": "61129b48f1e6a24a8981a07415ec6126fc715fea9087c3b78829a33210a5ee91",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/database/index-rollout.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "02f552bd092d15558c61c8af68dfb931716dc97ce949b9da181f7b474607b17f",
+      "previousManifestSha256": "02f552bd092d15558c61c8af68dfb931716dc97ce949b9da181f7b474607b17f",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/database/migrations.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "675c451f0f91694f36450ff7254ef63753256db9e3a0b7c42df3e4b3eccda290",
+      "previousManifestSha256": "675c451f0f91694f36450ff7254ef63753256db9e3a0b7c42df3e4b3eccda290",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/database/run-seed.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "15130d6f934196ef363ea889c3007a2b9786490e21e89267da24b2cbca638e29",
+      "previousManifestSha256": "15130d6f934196ef363ea889c3007a2b9786490e21e89267da24b2cbca638e29",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/database/seed.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "486620df09e2c7e8be47a020dac169a93330fe5bd42df6d2b4390c5dd8a78710",
+      "previousManifestSha256": "486620df09e2c7e8be47a020dac169a93330fe5bd42df6d2b4390c5dd8a78710",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/database/validate-api-artifacts.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "98888d96867e5f5e46a1de753fa2889ba7564b8f6885956db3a511e2a9543c09",
+      "previousManifestSha256": "98888d96867e5f5e46a1de753fa2889ba7564b8f6885956db3a511e2a9543c09",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/identity/models.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "50729ace15cb73a5873a14ce9bcb40eb090fffe338c20c6c3171a0fa9640a729",
+      "previousManifestSha256": "50729ace15cb73a5873a14ce9bcb40eb090fffe338c20c6c3171a0fa9640a729",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/localization/content.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "f8703c20b0fe05d2f0910c67896e7b277ae705e19e2bba128555d8cc7a2010db",
+      "previousManifestSha256": "f8703c20b0fe05d2f0910c67896e7b277ae705e19e2bba128555d8cc7a2010db",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/locations/models.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "25df61050f04e7e0b6d9d777c4fab37c0b0913f4e96e5b31142b11a517a15052",
+      "previousManifestSha256": "25df61050f04e7e0b6d9d777c4fab37c0b0913f4e96e5b31142b11a517a15052",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/organizations/models.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "cca4e56538355507eaf76242ba95cdc6323a79e22c26228edda36e672f965a7e",
+      "previousManifestSha256": "cca4e56538355507eaf76242ba95cdc6323a79e22c26228edda36e672f965a7e",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/organizations/public.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "809021f9ee92b341fc5a9e1823f4e6cc538c48acd6d0c1b3710bd93d91928905",
+      "previousManifestSha256": "809021f9ee92b341fc5a9e1823f4e6cc538c48acd6d0c1b3710bd93d91928905",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/performance/property-indexes.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "7ffc94c097700ae18864106ce9e27242d60f7a8524cf3d012f653f702e54c042",
+      "previousManifestSha256": "7ffc94c097700ae18864106ce9e27242d60f7a8524cf3d012f653f702e54c042",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/projects/models.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "ecd7ae407d721d6ffee48cfd32e3dfdfa83699868baaa15b655956e7c9ad71db",
+      "previousManifestSha256": "ecd7ae407d721d6ffee48cfd32e3dfdfa83699868baaa15b655956e7c9ad71db",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/properties/models.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "5bc9414790c63740af2d61723fb7ceed384f8750dc6f955ecb5a217af8c46bc1",
+      "previousManifestSha256": "5bc9414790c63740af2d61723fb7ceed384f8750dc6f955ecb5a217af8c46bc1",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/properties/repository.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "5bf7b35d8f56db449b0e233a1747e19e18e94596b2c61ed6d7dfcfa92b723c03",
+      "previousManifestSha256": "5bf7b35d8f56db449b0e233a1747e19e18e94596b2c61ed6d7dfcfa92b723c03",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/provider/models.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "414052f684f34bc4f9c217e8cd748619c858bf77956d7ea5b8879f5c4ab35711",
+      "previousManifestSha256": "414052f684f34bc4f9c217e8cd748619c858bf77956d7ea5b8879f5c4ab35711",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/quality/localization-audit.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "a442c497461ac4ab333e3765ace7b5388763b0c280e89ad57d96188fdf1b2808",
+      "previousManifestSha256": "a442c497461ac4ab333e3765ace7b5388763b0c280e89ad57d96188fdf1b2808",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/settings/models.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "25b79646974847213319b1d02b4e397bb2261dc035571d05f4ea415183d70d1c",
+      "previousManifestSha256": "25b79646974847213319b1d02b4e397bb2261dc035571d05f4ea415183d70d1c",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/taxonomy/features.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "82298e9e7ad2f90aa4dac701335b21a6b5afca9b3a7b488f7d6395acc330e286",
+      "previousManifestSha256": "82298e9e7ad2f90aa4dac701335b21a6b5afca9b3a7b488f7d6395acc330e286",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/src/modules/taxonomy/runtime.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "8707efdd63519018f64cb427bcba1d766ffba637a3a87e7c25b55c29cd2e9243",
+      "previousManifestSha256": "8707efdd63519018f64cb427bcba1d766ffba637a3a87e7c25b55c29cd2e9243",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/tests/database/artifacts.test.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "bd32d12fca3a96a4f65f382c74551da096d6949667fac9e603357d48e9eae890",
+      "previousManifestSha256": "bd32d12fca3a96a4f65f382c74551da096d6949667fac9e603357d48e9eae890",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/tests/database/backup-restore.test.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "0c96edb646339876fd7f85f125f966356871d569dd2cfd42ddd4bf55bd56bd1c",
+      "previousManifestSha256": "0c96edb646339876fd7f85f125f966356871d569dd2cfd42ddd4bf55bd56bd1c",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/tests/database/connection.test.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "c808758b8f10493603bd747ac472d000b6088d80ee18ded6868eb882874e5916",
+      "previousManifestSha256": "c808758b8f10493603bd747ac472d000b6088d80ee18ded6868eb882874e5916",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/tests/database/environment.test.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "5b8eed13457d99b0c14016382bd55067c002adc55253844ac555a645720f552b",
+      "previousManifestSha256": "5b8eed13457d99b0c14016382bd55067c002adc55253844ac555a645720f552b",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/tests/database/health.test.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "f081e6cbf8bbcac27707661d131702bf0b2926dbffde1f09e9c609c2b5ada3ec",
+      "previousManifestSha256": "f081e6cbf8bbcac27707661d131702bf0b2926dbffde1f09e9c609c2b5ada3ec",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/tests/database/index-policy.test.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "c18f9bf13a0de828b6c3cd21880702801a8d43b79f9da650eb450ea21837948b",
+      "previousManifestSha256": "c18f9bf13a0de828b6c3cd21880702801a8d43b79f9da650eb450ea21837948b",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/tests/database/index-rollout.test.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "f0daf5e8ef566f5f75d2ba3dbf689638adae947cc194345295781fee0e9a4401",
+      "previousManifestSha256": "f0daf5e8ef566f5f75d2ba3dbf689638adae947cc194345295781fee0e9a4401",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/tests/database/migrations.test.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "293b802d85900205d20e53557188eab65718929464caf1f565a25f734eebc562",
+      "previousManifestSha256": "293b802d85900205d20e53557188eab65718929464caf1f565a25f734eebc562",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/tests/database/seed.test.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "8f2e4030ae7646a97604f6ebaea4eb826c964ecd8a835dffe11a03f8a6380f81",
+      "previousManifestSha256": "8f2e4030ae7646a97604f6ebaea4eb826c964ecd8a835dffe11a03f8a6380f81",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "apps/api/tests/localization/content.test.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "13f0937f6139fbd53c6d0c93d2bd1eb08aa47c2ddb5c2e9bd7509565297fa1b5",
+      "previousManifestSha256": "13f0937f6139fbd53c6d0c93d2bd1eb08aa47c2ddb5c2e9bd7509565297fa1b5",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "BACKEND_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "package.json",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "additive_script_only",
+      "baselineExists": true,
+      "beforeSha256": "661b17f30a9f2192dd5702a40716ef0007cb8867eb8501f1826045bd97031bad",
+      "previousManifestSha256": "661b17f30a9f2192dd5702a40716ef0007cb8867eb8501f1826045bd97031bad",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "RELEASE_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "packages/config/scripts/audit-locales.mjs",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "additive_locale_audit_tooling",
+      "baselineExists": false,
+      "beforeSha256": null,
+      "previousManifestSha256": null,
+      "previousClassification": "ABSENT_FROM_OLD_MANIFEST",
+      "previousOwner": "UNASSIGNED",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CREATE_ALLOWED"
+    },
+    {
+      "path": "packages/config/tests/locale-audit.test.mjs",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "additive_locale_audit_tooling",
+      "baselineExists": false,
+      "beforeSha256": null,
+      "previousManifestSha256": null,
+      "previousClassification": "ABSENT_FROM_OLD_MANIFEST",
+      "previousOwner": "UNASSIGNED",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CREATE_ALLOWED"
+    },
+    {
+      "path": "packages/contracts/src/accounts/index.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "dedae5e13c1ae0dfcda2ef152d0235480ed39430a3beff475590b76a9d1727fc",
+      "previousManifestSha256": "dedae5e13c1ae0dfcda2ef152d0235480ed39430a3beff475590b76a9d1727fc",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "SHARED_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "packages/contracts/src/admin/index.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "22a5ae33da014f92f3073b9cc33b65e7c264c3a683446cd16a3feb9b2d990d4a",
+      "previousManifestSha256": "22a5ae33da014f92f3073b9cc33b65e7c264c3a683446cd16a3feb9b2d990d4a",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "SHARED_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "packages/contracts/src/database/index.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "0ea912b86a14440889e52dc5758586e922f8e1d594497dc26437f4930733a6cf",
+      "previousManifestSha256": "0ea912b86a14440889e52dc5758586e922f8e1d594497dc26437f4930733a6cf",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "SHARED_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "packages/contracts/src/localization/index.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "d30e3f6203e1a018bce803bdcde5c61bbad863e74c28623d474d7656f39a9ba5",
+      "previousManifestSha256": "d30e3f6203e1a018bce803bdcde5c61bbad863e74c28623d474d7656f39a9ba5",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "SHARED_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "packages/contracts/src/provider/index.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "8da22c18bbed6c755324eef04a20b7071ff129e848d43d369c25755909b0a2f3",
+      "previousManifestSha256": "8da22c18bbed6c755324eef04a20b7071ff129e848d43d369c25755909b0a2f3",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "SHARED_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    },
+    {
+      "path": "packages/contracts/src/seeker/index.ts",
+      "taskIds": [
+        "backend_151"
+      ],
+      "category": "backend_locale_contract_or_migration_target",
+      "baselineExists": true,
+      "beforeSha256": "5873e29e9c89878f5fb378da689e3b91e930e2afb8e57a4f0b5c7379ec06392b",
+      "previousManifestSha256": "5873e29e9c89878f5fb378da689e3b91e930e2afb8e57a4f0b5c7379ec06392b",
+      "previousClassification": "USER_OWNED",
+      "previousOwner": "SHARED_COORDINATOR",
+      "dirtyOverlap": false,
+      "ownershipDecision": "CLEAN_BASELINE_ELIGIBLE"
+    }
+  ],
+  "deferredTaskGrantPolicy": "Create a superseding exact-hash grant after every later task preflight; no future task receives implicit ownership from this record.",
+  "forbidden": [
+    ".git/**",
+    ".env*",
+    ".local/**",
+    "node_modules/**",
+    "dist/**",
+    "build/**",
+    "coverage/**",
+    "Production data",
+    "runtime asset roots",
+    "historical Agent Pack evidence",
+    "docs/design_sources/** images",
+    "docs/quality/** images",
+    "Figma file 0HBdTNGROmmpC6S7OYa3iJ"
+  ]
+}

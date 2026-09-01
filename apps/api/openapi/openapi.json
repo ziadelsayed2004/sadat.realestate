@@ -7673,8 +7673,7 @@
             "schema": {
               "enum": [
                 "ar",
-                "en",
-                "zh-CN"
+                "en"
               ],
               "default": "ar"
             }
@@ -7707,8 +7706,7 @@
             "schema": {
               "enum": [
                 "ar",
-                "en",
-                "zh-CN"
+                "en"
               ],
               "default": "ar"
             }
@@ -7778,8 +7776,7 @@
             "schema": {
               "enum": [
                 "ar",
-                "en",
-                "zh-CN"
+                "en"
               ],
               "default": "ar"
             }
@@ -12409,8 +12406,7 @@
           "locale": {
             "enum": [
               "ar",
-              "en",
-              "zh-CN"
+              "en"
             ]
           }
         }
@@ -12433,8 +12429,7 @@
           "locale": {
             "enum": [
               "ar",
-              "en",
-              "zh-CN"
+              "en"
             ]
           }
         }
@@ -12541,8 +12536,7 @@
           "locale": {
             "enum": [
               "ar",
-              "en",
-              "zh-CN"
+              "en"
             ]
           }
         }
@@ -12750,8 +12744,7 @@
           "preferredLocale": {
             "enum": [
               "ar",
-              "en",
-              "zh-CN"
+              "en"
             ]
           },
           "termsAcceptedAt": {
@@ -13058,8 +13051,7 @@
           "preferredLocale": {
             "enum": [
               "ar",
-              "en",
-              "zh-CN"
+              "en"
             ]
           },
           "termsAcceptedAt": {
@@ -14157,11 +14149,6 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 20000
-          },
-          "zh-CN": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 20000
           }
         }
       },
@@ -14764,8 +14751,7 @@
             "type": "string",
             "enum": [
               "ar",
-              "en",
-              "zh-CN"
+              "en"
             ]
           },
           "displayName": {
@@ -16441,8 +16427,7 @@
             "type": "string",
             "enum": [
               "ar",
-              "en",
-              "zh-CN"
+              "en"
             ]
           }
         }

@@ -97,7 +97,7 @@ const applicationSchema = new Schema<ProviderApplicationRecord>({
   email: { type: String, trim: true, lowercase: true, maxlength: 254 },
   primaryLocationId: Schema.Types.ObjectId,
   serviceAreaIds: { type: [Schema.Types.ObjectId], default: undefined },
-  preferredLocale: { type: String, enum: ['ar', 'en', 'zh-CN'] },
+  preferredLocale: { type: String, enum: ['ar', 'en'] },
   termsAcceptedAt: Date,
   privacyAcceptedAt: Date,
   secondaryPhone: { type: String, maxlength: 16 },

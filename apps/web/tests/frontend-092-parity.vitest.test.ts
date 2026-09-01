@@ -113,7 +113,7 @@ describe('frontend_092 public and authentication parity evidence', () => {
       expect(screen.approvedSourceSha256).toBe(source?.sha256);
       expect(screen.sourceDimensions).toEqual({ width: source?.width, height: source?.height });
       expect(screen.approvedDevices).toEqual(['desktop', 'tablet', 'mobile']);
-      expect(screen.locales).toEqual(['ar', 'en', 'zh-CN']);
+      expect(screen.locales).toEqual(['ar', 'en',]);
       expect(screen.runtimeStatesRequired).toEqual(['success', 'loading', 'empty', 'error', 'retry', 'disabled', 'permission']);
 
       const sourcePath = path.join(repositoryRoot, screen.approvedSourcePath);

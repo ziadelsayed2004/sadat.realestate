@@ -1,9 +1,8 @@
 import { expect, test } from '@playwright/test';
 import { routePublicHomepageApi } from './public-fixtures';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const projectName = test.info().project.name;
-  if (projectName.endsWith('-zh')) return 'zh-CN';
   if (projectName.endsWith('-en')) return 'en';
   return 'ar';
 }
@@ -13,24 +12,24 @@ function propertyDetailsFixture() {
     id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
     slug: 'published-home',
     kind: 'property',
-    name: { ar: 'منزل منشور', en: 'Published home', 'zh-CN': '已发布房产' },
+    name: { ar: 'منزل منشور', en: 'Published home',},
     transactionType: 'sale',
     mapUrl: 'https://maps.google.com/?q=Sadat+City',
-    description: { ar: 'وصف المنزل المنشور', en: 'A published home description', 'zh-CN': '已发布房产描述' },
+    description: { ar: 'وصف المنزل المنشور', en: 'A published home description',},
     area: { value: 120, unit: 'sqm' },
     layout: { bedrooms: 3, bathrooms: 2, floor: 4 },
     price: { amount: 1250000, currency: 'EGP' },
     source: { sourceType: 'developer_company', organizationId: 'bbbbbbbbbbbbbbbbbbbbbbbb' },
     seo: {
-      title: { ar: 'تفاصيل منزل منشور', en: 'Published home details', 'zh-CN': '已发布房产详情' },
-      description: { ar: 'وصف محرك البحث', en: 'Search description', 'zh-CN': '搜索描述' },
+      title: { ar: 'تفاصيل منزل منشور', en: 'Published home details',},
+      description: { ar: 'وصف محرك البحث', en: 'Search description',},
       slug: 'published-home'
     },
     project: {
       id: 'bbbbbbbbbbbbbbbbbbbbbbbb',
       slug: 'central-project',
-      name: { ar: 'المشروع المركزي', en: 'Central project', 'zh-CN': '中央项目' },
-      description: { ar: 'نبذة المشروع', en: 'Project description', 'zh-CN': '项目描述' }
+      name: { ar: 'المشروع المركزي', en: 'Central project',},
+      description: { ar: 'نبذة المشروع', en: 'Project description',}
     },
     media: [],
     features: [],
@@ -46,7 +45,7 @@ function propertyComparisonFixture() {
         id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
         slug: 'garden-villa',
         kind: 'property',
-        name: { ar: 'Garden villa', en: 'Garden villa', 'zh-CN': 'Garden villa' },
+        name: { ar: 'Garden villa', en: 'Garden villa',},
         transactionType: 'sale',
         area: { value: 180, unit: 'sqm' },
         layout: { bedrooms: 4, bathrooms: 3, floor: 1 },
@@ -56,7 +55,7 @@ function propertyComparisonFixture() {
         id: 'bbbbbbbbbbbbbbbbbbbbbbbb',
         slug: 'city-apartment',
         kind: 'unit',
-        name: { ar: 'City apartment', en: 'City apartment', 'zh-CN': 'City apartment' },
+        name: { ar: 'City apartment', en: 'City apartment',},
         transactionType: 'rent',
         area: { value: 120, unit: 'sqm' },
         layout: { bedrooms: 3, bathrooms: 2, floor: 8 },
@@ -74,7 +73,7 @@ function developerDirectoryFixture() {
         id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
         kind: 'developer_company',
         slug: 'approved-builder',
-        name: { ar: 'Ø´Ø±ÙƒØ© Ù…Ø¹ØªÙ…Ø¯Ø©', en: 'Approved builder', 'zh-CN': 'å·²æ‰¹å‡†å¼€å‘å•†' },
+        name: { ar: 'Ø´Ø±ÙƒØ© Ù…Ø¹ØªÙ…Ø¯Ø©', en: 'Approved builder',},
         description: { en: 'Published developer description.' },
         verified: true,
         projectCount: 2,
@@ -310,4 +309,18 @@ test('public article details exposes a main landmark, content heading, and safe 
   await expect(details.locator('[data-state="missing_image"]')).toBeVisible();
   await expect(page.locator('main#main-content')).toBeVisible();
   await expect(page.locator('main#main-content main')).toHaveCount(0);
+});
+
+test('shared shell switches between AR and EN without losing the route query or hash', async ({ page }) => {
+  await page.goto('/properties?lang=ar&sort=price#contact', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ar');
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+
+  const switcher = page.locator('select[data-locale-switch="true"]:visible');
+  await expect(switcher).toHaveCount(1);
+  await switcher.selectOption('en');
+
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
+  await expect(page).toHaveURL(/\/properties\?lang=en&sort=price#contact$/u);
 });

@@ -15,7 +15,6 @@ describe('public SEO metadata', () => {
     expect(localizedAlternatePaths('/about')).toEqual([
       { hrefLang: 'ar', href: '/about?lang=ar' },
       { hrefLang: 'en', href: '/about?lang=en' },
-      { hrefLang: 'zh-CN', href: '/about?lang=zh-CN' },
       { hrefLang: 'x-default', href: '/about' }
     ]);
   });

@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "extensionId": "BACKEND_151_SCOPE_EXTENSION_2026-08-31",
+  "taskId": "backend_151",
+  "programId": "SADAT_G1_G6_APPROVED_2026-08-30",
+  "generatedAt": "2026-08-31T19:32:00Z",
+  "status": "ACTIVE_EXACT_CREATE_SCOPE",
+  "parentGrant": {
+    "path": "agent_pack/08_reality_sync/ACTIVE_PROGRAM_OWNERSHIP_GRANT_2026-08-31_BACKEND_151.json",
+    "sha256": "a0f26916d6e1836fd947c17e266ac9eb5e36b323278426f69c1cfbf4509bf9b7"
+  },
+  "reason": "The implementation needs a task-local bounded migration runner, isolated verification test, and additive superseding evidence. These paths were absent at the protected HEAD baseline and do not widen ownership to any existing user file.",
+  "authorization": [
+    "OWNER_AUTHORIZATION_ACTIVE_PROGRAM_PRODUCT_WRITES",
+    "APPROVAL_DB_LOCALE_APPLY_ISOLATED_ONLY",
+    "APPROVAL_DETERMINISTIC_LOCAL_TEST_DATA",
+    "APPROVAL_AGENT_PACK_ACTIVE_VIEW_RECONCILIATION"
+  ],
+  "exactCreateTargets": [
+    {
+      "path": "apps/api/src/modules/database/locale-migration.ts",
+      "baselineExists": false,
+      "beforeSha256": null,
+      "owner": "BACKEND_COORDINATOR",
+      "purpose": "AR/EN-only inspection, bounded migration, text-index rebuild, backup/restore helpers"
+    },
+    {
+      "path": "apps/api/src/modules/database/run-locale-migration.ts",
+      "baselineExists": false,
+      "beforeSha256": null,
+      "owner": "BACKEND_COORDINATOR",
+      "purpose": "Non-production isolated migration command entrypoint"
+    },
+    {
+      "path": "apps/api/tests/database/locale-migration.test.ts",
+      "baselineExists": false,
+      "beforeSha256": null,
+      "owner": "BACKEND_COORDINATOR",
+      "purpose": "Deterministic unit coverage for blockers, idempotency and index definitions"
+    },
+    {
+      "path": "agent_pack/08_reality_sync/BACKEND_151_ACTIVE_MIGRATION_EVIDENCE_2026-08-31.json",
+      "baselineExists": false,
+      "beforeSha256": null,
+      "owner": "PROGRAM_COORDINATOR",
+      "purpose": "Superseding additive task evidence; prior blocked evidence remains immutable"
+    }
+  ],
+  "forbidden": [
+    "Production MongoDB",
+    ".env*",
+    ".local/**",
+    "Git history, index, commits, pushes and deployments",
+    "Any path not listed in the parent grant or this exact extension"
+  ],
+  "rollback": "Delete only newly created task files through an explicitly reviewed follow-up if needed; database rollback is the pre-approved fresh isolated backup restore, never a repository reset."
+}

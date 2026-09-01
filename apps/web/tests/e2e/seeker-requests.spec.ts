@@ -4,9 +4,8 @@ const ownRequestId = '4123456789abcdef01234567';
 const contactedRequestId = '5123456789abcdef01234567';
 const forbiddenRequestId = '6123456789abcdef01234567';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  if (project.endsWith('-zh')) return 'zh-CN';
   if (project.endsWith('-en')) return 'en';
   return 'ar';
 }

@@ -17,7 +17,7 @@ function createAuthClient(): AuthFlowClient {
 }
 
 describe('provider type selection', () => {
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders all contract types in the correct direction for %s', (locale) => {
+  it.each(['ar', 'en',] as const)('renders all contract types in the correct direction for %s', (locale) => {
     const copy = getProviderTypeCopy(locale);
     const result = renderWithLocale(
       <ProviderTypePage url={`/auth/register/provider/type?lang=${encodeURIComponent(locale)}`} locale={locale} />,
@@ -64,7 +64,7 @@ describe('provider type selection', () => {
     rerender(<ProviderTypePage url="/auth/register/provider/type?providerType=unsupported" locale="en" />);
     await waitFor(() => expect(screen.getByTestId('provider-type-selection')).toHaveAttribute('data-screen-id', 'AUTH-07'));
     expect(screen.getByRole('button', { name: copy.continueAction })).toBeDisabled();
-    expect(providerAccountPath('/auth/register/provider/type?lang=zh-CN', 'individual_broker')).toBe('/auth/register/provider/account?providerType=individual_broker&lang=zh-CN');
+    expect(providerAccountPath('/auth/register/provider/type?lang=en', 'individual_broker')).toBe('/auth/register/provider/account?providerType=individual_broker&lang=en');
   });
 
   it('is connected to the existing auth route without exposing the unavailable fallback', () => {

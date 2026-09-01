@@ -4,9 +4,8 @@ const PROVIDER_ID = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const DRAFT_PROJECT_ID = 'bbbbbbbbbbbbbbbbbbbbbbbb';
 const PUBLISHED_PROJECT_ID = 'cccccccccccccccccccccccc';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  if (project.endsWith('-zh')) return 'zh-CN';
   if (project.endsWith('-en')) return 'en';
   return 'ar';
 }
@@ -19,7 +18,7 @@ function projectFixture(id: string, status: string, availableActions: string[] =
   return {
     id,
     providerId: PROVIDER_ID,
-    name: { ar: 'مشروع المزود', en: 'Provider project', 'zh-CN': '提供方项目' },
+    name: { ar: 'مشروع المزود', en: 'Provider project',},
     slug: id === DRAFT_PROJECT_ID ? 'provider-project' : 'published-project',
     description: { en: 'A provider-owned project.' },
     status,

@@ -67,7 +67,7 @@ describe('release visual fidelity source matrix', () => {
       expect(screen.driveUrl, screen.id).toMatch(/^https:\/\/(?:www\.)?google\.com\/|^https:\/\/drive\.google\.com\//u);
       expect(screen.figmaPrototypeUrl, screen.id).toMatch(/^https:\/\/www\.figma\.com\//u);
       expect(screen.directionScope, screen.id).toEqual(['rtl', 'ltr']);
-      expect(screen.locales, screen.id).toEqual(['ar', 'en', 'zh-CN']);
+      expect(screen.locales, screen.id).toEqual(['ar', 'en',]);
 
       if (screen.id === 'ADM-54') {
         expect(screen.visualSourceStatus).toBe('OWNER_AUTHORED_LOCAL_REVIEW_APPROVED');

@@ -16,7 +16,7 @@ export const PROPERTY_INDEX_CATALOG: readonly PropertyIndexCatalogEntry[] = Obje
   { name: 'properties_project_public', kind: 'compound', fields: ['projectId', 'status', 'active'], queryPattern: 'public_project' },
   { name: 'properties_location_public', kind: 'compound', fields: ['locationId', 'status', 'active'], queryPattern: 'public_location' },
   { name: 'properties_coordinates_geo', kind: 'geospatial', fields: ['coordinates'], queryPattern: 'nearby' },
-  { name: 'properties_search_text', kind: 'text', fields: ['name.ar', 'name.en', 'name.zh-CN', 'slug'], queryPattern: 'localized_search' }
+   { name: 'properties_search_text', kind: 'text', fields: ['name.ar', 'name.en', 'slug'], queryPattern: 'localized_search' }
 ]);
 
 const HINTS: Record<PropertyQueryPattern, string> = {

@@ -54,7 +54,7 @@ function routeFor(path: string): AdminHomeRoute {
 
 function localeValue(value: LocalizedText | undefined, locale: SupportedLocale): string {
   if (value === undefined) return '';
-  return value[locale] ?? value.en ?? value.ar ?? value['zh-CN'] ?? '';
+  return value[locale] ?? value.en ?? value.ar ?? '';
 }
 
 function localizedInput(value: DraftLocalized): LocalizedText | undefined {
@@ -63,7 +63,7 @@ function localizedInput(value: DraftLocalized): LocalizedText | undefined {
 }
 
 function draftLocalized(value: LocalizedText | undefined): DraftLocalized {
-  return { ar: value?.ar ?? '', en: value?.en ?? '', 'zh-CN': value?.['zh-CN'] ?? '' };
+  return { ar: value?.ar ?? '', en: value?.en ?? '',};
 }
 
 function dateLabel(value: string, locale: SupportedLocale): string {
@@ -96,7 +96,7 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<AdminH
 }
 
 function LocalizedFields({ prefix, label, value, onChange, multiline = false, copy }: { readonly prefix: string; readonly label: string; readonly value: DraftLocalized; readonly onChange: (locale: SupportedLocale, value: string) => void; readonly multiline?: boolean; readonly copy: AdminHomeCopy }) {
-  const fields: readonly [SupportedLocale, string][] = [['ar', 'العربية / Arabic'], ['en', 'English'], ['zh-CN', '简体中文 / Simplified Chinese']];
+  const fields: readonly [SupportedLocale, string][] = [['ar', 'العربية / Arabic'], ['en', 'English']];
   return (
     <fieldset className="admin-home__localized-fields">
       <legend>{label}</legend>
@@ -161,8 +161,8 @@ function BannerTable({ data, locale, source, onChanged }: { readonly data: AdBan
 
 function BannerCreateForm({ locale, source, onSaved }: { readonly locale: SupportedLocale; readonly source: AdminHomeSource; readonly onSaved: () => void }) {
   const copy = getAdminHomeCopy(locale);
-  const [title, setTitle] = useState<DraftLocalized>({ ar: '', en: '', 'zh-CN': '' });
-  const [altText, setAltText] = useState<DraftLocalized>({ ar: '', en: '', 'zh-CN': '' });
+  const [title, setTitle] = useState<DraftLocalized>({ ar: '', en: '',});
+  const [altText, setAltText] = useState<DraftLocalized>({ ar: '', en: '',});
   const [placementKey, setPlacementKey] = useState('homepage.hero');
   const [targetUrl, setTargetUrl] = useState('');
   const [startAt, setStartAt] = useState('');

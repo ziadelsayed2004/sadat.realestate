@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "evidenceId": "BACKEND_152_RESUMED_REVALIDATION_2026-09-01",
+  "programId": "SADAT_G1_G6_APPROVED_2026-08-30",
+  "taskId": "backend_152",
+  "resumedBlockedAuditOrdinal": 1,
+  "generatedAt": "2026-09-01T02:20:00+03:00",
+  "status": "blocked",
+  "markers": [
+    "TASK_backend_152_BLOCKED_CONTACT_TIME_SOURCE",
+    "TASK_backend_152_BLOCKED_PRIVACY_APPROVAL"
+  ],
+  "objectiveFile": "C:\\Users\\Ziad Elsayed\\.codex\\attachments\\871de01f-a046-488e-9280-00b4554fc01b\\goal-objective.md",
+  "freshCycle": {
+    "previousGoalStatus": "blocked",
+    "userResumed": true,
+    "blockedAuditReset": true,
+    "sameBlockerConfirmed": true
+  },
+  "readOnlyChecks": {
+    "goalObjectiveRead": true,
+    "attachmentSearch": "No PUB03 mapping, contact-time approval or privacy-disclosure artifact found under the Codex attachments root.",
+    "workspaceSearch": "No active property-request contract, PUB03_CONTACT_TIME_MAPPING.json, privacyNoticeVersion or consentAt implementation exists.",
+    "canonicalFigmaEvidence": "The permitted local PUB-03 full-canvas export still shows a closed contact-time select and cannot establish its options or AR/EN code mapping.",
+    "directFigmaAccess": "Unavailable in this environment; the canonical URL cannot be safely opened through the available web connector and the in-app browser connector lacks sandboxPolicy metadata."
+  },
+  "protectedRepositoryState": {
+    "branch": "main",
+    "head": "a235f15d097cb07c387118cb11aa93d4d14c42d4",
+    "remoteDivergence": "0 ahead / 0 behind",
+    "stagedFiles": 0,
+    "backend152ProductFilesChangedThisCycle": false,
+    "databaseChangedThisCycle": false,
+    "externalSend": false,
+    "imageOrIndexChangedThisCycle": false
+  },
+  "dependencyFrontier": {
+    "backend_152": "blocked",
+    "dependentTasks": "unstarted",
+    "dependencyReadyIndependentTask": false,
+    "reason": "The active objective prescribes a dependency chain beginning with backend_152; bypassing it would either violate the graph or require an unapproved contact-time/privacy contract."
+  },
+  "requiredOwnerInputs": [
+    "Approved PUB03_CONTACT_TIME_MAPPING.json containing exact code, AR label, EN label and provenance.",
+    "Approved displayed AR/EN privacy disclosure and version for submission.",
+    "A new exact-hash backend_152 ownership grant after those inputs are available."
+  ],
+  "decision": "Keep the resumed goal Active after this first fresh-cycle blocker audit. Do not call the blocked goal terminal yet; do not implement backend_152 or start any dependent task.",
+  "nextAction": "Re-run backend_152 readiness after the owner supplies the two required inputs."
+}

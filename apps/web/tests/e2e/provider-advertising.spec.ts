@@ -4,9 +4,8 @@ const PROVIDER_ID = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const REQUEST_ID = 'bbbbbbbbbbbbbbbbbbbbbbbb';
 const QUOTE_ID = 'cccccccccccccccccccccccc';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const projectName = test.info().project.name;
-  if (projectName.endsWith('-zh')) return 'zh-CN';
   if (projectName.endsWith('-en')) return 'en';
   return 'ar';
 }

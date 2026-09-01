@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "grantId": "BACKEND_152_OWNERSHIP_GRANT_2026-09-01",
+  "programId": "SADAT_G1_G6_APPROVED_2026-08-30",
+  "taskId": "backend_152",
+  "sequence": 220,
+  "generatedAt": "2026-09-01T01:48:00+03:00",
+  "status": "blocked-before-product-mutation",
+  "owner": "active-program-coordinator",
+  "purpose": "Read-only readiness and provenance gate for PUB-03 contract freeze; no product contract write is authorized until contact-time and privacy approvals exist.",
+  "preflight": {
+    "head": "a235f15d097cb07c387118cb11aa93d4d14c42d4",
+    "branch": "main",
+    "remoteDivergence": "0 ahead / 0 behind",
+    "treePolicy": "protected-and-potentially-dirty",
+    "historicalFilesUntouched": true,
+    "overlapPolicy": "MERGE_REQUIRED on user-owned or unknown product files"
+  },
+  "authorization": {
+    "goalTokens": [
+      "OWNER_AUTHORIZATION_ACTIVE_PROGRAM_PRODUCT_WRITES",
+      "APPROVAL_ACTIVE_LOCALE_SOURCE_REMOVAL",
+      "APPROVAL_DB_LOCALE_APPLY_ISOLATED_ONLY"
+    ],
+    "taskBoundary": "backend_152 contract-only; no database persistence, external send, or frontend mutation",
+    "productWriteEnabled": false,
+    "reasonDisabled": "Readiness failed: exact approved preferredContactTime mapping and privacy disclosure approval are absent."
+  },
+  "allowedWriteTargets": [
+    "agent_pack/08_reality_sync/BACKEND_152_OWNERSHIP_GRANT_2026-09-01.json",
+    "agent_pack/08_reality_sync/BACKEND_152_BLOCKER_EVIDENCE_2026-09-01.json",
+    "agent_pack/08_reality_sync/ACTIVE_PROGRAM_DERIVED_VIEWS_2026-08-31.json"
+  ],
+  "candidateProductRootsReadOnly": [
+    "packages/contracts/src/requests/**",
+    "apps/api/src/modules/requests/**",
+    "apps/api/tests/requests/**",
+    "apps/api/openapi/**",
+    "apps/api/postman/**",
+    "apps/web/src/features/public/**",
+    "apps/web/tests/**"
+  ],
+  "readOnlyProvenance": [
+    { "path": "docs/design_sources/final_screens/public/PUB-03.png", "bytes": 4150109, "sha256": "d1346599fdb04cdc8b217fd99d7323a281810d69c6e6b9265dc3df204735679d", "dimensions": "6308x12184", "use": "visual inspection only" },
+    { "path": "docs/design_sources/figma/SCREEN_FRAME_INVENTORY.json", "bytes": 207235, "sha256": "8be003bdccbd8b9cfd5cd850f177cb44dabedce12d9a2309a30dfb6e3d20de78", "figmaNode": "6017:12693", "use": "canonical source metadata" },
+    { "path": "docs/quality/figma_parity/SCREEN_EXECUTION_QUEUE.json", "bytes": 895203, "sha256": "d4be9659d710498b912792c439e8efebf0d9b84946eaf9583d778bbbd99266ba", "figmaNode": "6017:12693", "use": "existing source/evidence ledger" },
+    { "path": "apps/web/src/features/public/details.tsx", "bytes": 38614, "sha256": "617457a1891efdb09f3b70a99fbf7a1a546cae917a0755b062cf33b83590d532", "use": "read-only current form implementation" },
+    { "path": "apps/web/src/features/public/details-copy.ts", "bytes": 9901, "sha256": "02359f486b873120cd11a7b779a9268993c1ae5976d7c7885f5c4cd2430d96b6", "use": "read-only current copy" }
+  ],
+  "forbidden": [
+    "Inventing preferredContactTime codes or AR/EN labels",
+    "Adding consentAt or privacyNoticeVersion without approved displayed disclosure",
+    "Changing packages/contracts, API routes, OpenAPI, Postman, database, frontend, images or snapshots while blocked",
+    "Using forbidden Figma file 0HBdTNGROmmpC6S7OYa3iJ",
+    "Commit, push, deploy, reset, revert, stash, clean, deletion, history rewrite or nested agents"
+  ],
+  "nextGate": "Obtain authenticated canonical copy/Figma review that exposes the exact contact-time options and approve a non-disruptive AR/EN privacy disclosure; then issue a new exact-hash grant before contract mutation."
+}

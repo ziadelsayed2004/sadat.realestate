@@ -3,14 +3,13 @@ import { expect, test } from '@playwright/test';
 const APPLICATION_ID = 'a'.repeat(24);
 const DOCUMENT_ID = 'c'.repeat(24);
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const projectName = test.info().project.name;
-  if (projectName.endsWith('-zh')) return 'zh-CN';
   if (projectName.endsWith('-en')) return 'en';
   return 'ar';
 }
 
-function copyForLocale(locale: 'ar' | 'en' | 'zh-CN') {
+function copyForLocale(locale: 'ar' | 'en') {
   if (locale === 'ar') {
     return {
       businessTitle: 'بيانات المكتب العقاري',
@@ -22,19 +21,6 @@ function copyForLocale(locale: 'ar' | 'en' | 'zh-CN') {
       commercialRegistration: 'السجل التجاري',
       remove: 'إزالة الملف',
       pending: 'في انتظار المراجعة'
-    };
-  }
-  if (locale === 'zh-CN') {
-    return {
-      businessTitle: '企业信息',
-      companyTitle: '开发商公司信息',
-      legalBusinessName: '企业法定名称',
-      tradeName: '商业名称',
-      address: '主要地址',
-      chooseFile: '选择文件',
-      commercialRegistration: '商业登记',
-      remove: '移除文件',
-      pending: '等待审核'
     };
   }
   return {

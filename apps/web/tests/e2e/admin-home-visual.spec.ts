@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { routeAdminHomeApis } from './admin-home.fixtures.ts';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  return project.endsWith('-zh') ? 'zh-CN' : project.endsWith('-en') ? 'en' : 'ar';
+  return project.endsWith('-en') ? 'en' : 'ar';
 }
 
 test('ADM-46 through ADM-49 match the approved desktop visual matrix', async ({ page }) => {

@@ -84,7 +84,7 @@ function dateLabel(value: string, locale: SupportedLocale): string {
 }
 
 function labelValue(value: string, locale: SupportedLocale): string {
-  return locale === 'ar' ? `معرّف ${value}` : locale === 'zh-CN' ? `编号 ${value}` : `ID ${value}`;
+  return locale === 'ar' ? `معرّف ${value}` :`ID ${value}`;
 }
 
 function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<AdminCommunityState, 'success' | 'empty'>; readonly locale: SupportedLocale; readonly onRetry: () => void }) {
@@ -118,8 +118,8 @@ function SummaryCards({ data, locale, view }: { readonly data: { readonly total:
   if (data === undefined || view === 'comments') return null;
   const copy = getAdminCommunityCopy(locale);
   const labels = view === 'posts'
-    ? (locale === 'ar' ? ['إجمالي المنشورات', copy.postStatus.published, copy.postStatus.hidden, copy.postStatus.removed] : locale === 'zh-CN' ? ['帖子总数', copy.postStatus.published, copy.postStatus.hidden, copy.postStatus.removed] : ['Total posts', copy.postStatus.published, copy.postStatus.hidden, copy.postStatus.removed])
-    : (locale === 'ar' ? ['إجمالي البلاغات', copy.reportStatus.open, copy.reportStatus.in_review, copy.reportStatus.resolved] : locale === 'zh-CN' ? ['举报总数', copy.reportStatus.open, copy.reportStatus.in_review, copy.reportStatus.resolved] : ['Total reports', copy.reportStatus.open, copy.reportStatus.in_review, copy.reportStatus.resolved]);
+    ? (locale === 'ar' ? ['إجمالي المنشورات', copy.postStatus.published, copy.postStatus.hidden, copy.postStatus.removed] :['Total posts', copy.postStatus.published, copy.postStatus.hidden, copy.postStatus.removed])
+    : (locale === 'ar' ? ['إجمالي البلاغات', copy.reportStatus.open, copy.reportStatus.in_review, copy.reportStatus.resolved] :['Total reports', copy.reportStatus.open, copy.reportStatus.in_review, copy.reportStatus.resolved]);
   const statuses = view === 'posts' ? ['published', 'hidden', 'removed'] : ['open', 'in_review', 'resolved'];
   const values = [data.total, ...statuses.map(status => statusCount(data, status))];
   const colors = ['#1b2942', '#087b43', '#bf6500', '#b42318'];
@@ -128,7 +128,7 @@ function SummaryCards({ data, locale, view }: { readonly data: { readonly total:
 
 function StatusStrip({ view, locale, selected, onSelect }: { readonly view: AdminCommunityView; readonly locale: SupportedLocale; readonly selected: string; readonly onSelect: (status: string) => void }) {
   const copy = getAdminCommunityCopy(locale);
-  const allLabel = locale === 'ar' ? 'الكل' : locale === 'zh-CN' ? '全部' : 'All';
+  const allLabel = locale === 'ar' ? 'الكل' :'All';
   const statuses: readonly string[] = view === 'posts' ? postStatuses : view === 'comments' ? commentStatuses : reportStatuses;
   const label = (status: string): string => view === 'posts' ? copy.postStatus[status as CommunityPostStatus] : view === 'comments' ? copy.commentStatus[status as CommunityCommentStatus] : copy.reportStatus[status as CommunityReportStatus];
   const options = [['', allLabel] as const, ...statuses.map(status => [status, label(status)] as const)];

@@ -41,7 +41,7 @@ function localeForProviderPath(locale: SupportedLocale, path: string): string {
 }
 
 function localizedValue(value: PropertyData['name'], locale: SupportedLocale): string {
-  return value[locale] ?? value.ar ?? value.en ?? value['zh-CN'] ?? '—';
+  return value[locale] ?? value.ar ?? value.en ?? '—';
 }
 
 function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<ProviderOverviewViewState, 'success' | 'empty'>; readonly locale: SupportedLocale; readonly onRetry: () => void }) {

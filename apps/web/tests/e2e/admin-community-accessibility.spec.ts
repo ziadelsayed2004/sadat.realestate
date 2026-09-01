@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { adminCommunityPostId, routeAdminCommunityApis } from './admin-community.fixtures.ts';
 
-function localeForCommunity(): 'ar' | 'en' | 'zh-CN' {
+function localeForCommunity(): 'ar' | 'en' {
   const project = test.info().project.name;
-  return project.endsWith('-zh') ? 'zh-CN' : project.endsWith('-en') ? 'en' : 'ar';
+  return project.endsWith('-en') ? 'en' : 'ar';
 }
 
 test('community administration exposes landmarks, labels, focus, and direction', async ({ page }) => {

@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { auditId, routeAdminNotificationsAuditApis } from './admin-notifications-audit.fixtures.ts';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  return project.endsWith('-zh') ? 'zh-CN' : project.endsWith('-en') ? 'en' : 'ar';
+  return project.endsWith('-en') ? 'en' : 'ar';
 }
 
 test('ADM-65 and ADM-66 render stable Admin Desktop implementation baselines', async ({ page }) => {

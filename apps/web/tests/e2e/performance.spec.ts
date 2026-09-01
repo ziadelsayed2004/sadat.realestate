@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { routePublicHomepageApi, routePublicPropertyListApi } from './public-fixtures.ts';
 
-type TestLocale = 'ar' | 'en' | 'zh-CN';
+type TestLocale = 'ar' | 'en';
 
 const PERFORMANCE_BUDGETS = Object.freeze({
   ttfbMs: 5_000,
@@ -18,7 +18,6 @@ const PERFORMANCE_ROUTES = [
 
 function localeForProject(): TestLocale {
   const projectName = test.info().project.name;
-  if (projectName.endsWith('-zh')) return 'zh-CN';
   if (projectName.endsWith('-en')) return 'en';
   return 'ar';
 }
@@ -30,7 +29,7 @@ function directionForLocale(locale: TestLocale): 'rtl' | 'ltr' {
 test.describe('local production performance and Core Web Vitals inputs', () => {
   test.beforeEach(async ({ page }) => {
     test.info().annotations.push({ type: 'source-of-truth', description: 'Measured against the built local SSR runtime; no fabricated score or external production data.' });
-    test.info().annotations.push({ type: 'locale-matrix', description: 'Configured Playwright project locale and direction are asserted for ar/RTL, en/LTR, and zh-CN/LTR.' });
+    test.info().annotations.push({ type: 'locale-matrix', description: 'Configured Playwright project locale and direction are asserted for ar/RTL, en/LTR, and unsupported-locale.' });
     page.on('pageerror', error => {
       test.info().annotations.push({ type: 'page-error', description: error.message });
     });

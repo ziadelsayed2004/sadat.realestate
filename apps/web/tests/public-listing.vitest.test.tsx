@@ -16,14 +16,14 @@ const listingData = publicPropertyListDataSchema.parse({
     id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
     slug: 'published-home',
     kind: 'property',
-    name: { en: 'Published home', ar: 'منزل منشور', 'zh-CN': '已发布房产' },
+    name: { en: 'Published home', ar: 'منزل منشور',},
     transactionType: 'sale',
     area: { value: 120, unit: 'sqm' },
     layout: { bedrooms: 3, bathrooms: 2 },
     price: { amount: 1_250_000, currency: 'EGP' }
   }],
-  categories: [{ id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'apartments', name: { ar: 'شقق', en: 'Apartments', 'zh-CN': '公寓' }, propertyCount: 1, order: 0 }],
-  propertyTypes: [{ id: 'cccccccccccccccccccccccc', slug: 'apartments', name: { ar: 'شقة', en: 'Apartment', 'zh-CN': '公寓' }, propertyCount: 1, order: 0 }],
+  categories: [{ id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'apartments', name: { ar: 'شقق', en: 'Apartments',}, propertyCount: 1, order: 0 }],
+  propertyTypes: [{ id: 'cccccccccccccccccccccccc', slug: 'apartments', name: { ar: 'شقة', en: 'Apartment',}, propertyCount: 1, order: 0 }],
   page: 1,
   limit: 20,
   total: 1

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { messageKeySchema } from '../contracts/envelopes.js';
 
-export const SUPPORTED_LOCALES = ['ar', 'en', 'zh-CN'] as const;
+export const SUPPORTED_LOCALES = ['ar', 'en'] as const;
 export const supportedLocaleSchema = z.enum(SUPPORTED_LOCALES);
 
 export const TEXT_DIRECTIONS = ['rtl', 'ltr'] as const;
@@ -11,8 +11,7 @@ export const DEFAULT_CONTENT_LOCALE = 'ar' as const;
 
 export const LOCALE_DIRECTIONS = Object.freeze({
   ar: 'rtl',
-  en: 'ltr',
-  'zh-CN': 'ltr'
+  en: 'ltr'
 } as const satisfies Readonly<Record<SupportedLocale, TextDirection>>);
 
 const localizedContentValueSchema = z.string()
@@ -23,8 +22,7 @@ const localizedContentValueSchema = z.string()
 
 export const localizedTextSchema = z.object({
   ar: localizedContentValueSchema.optional(),
-  en: localizedContentValueSchema.optional(),
-  'zh-CN': localizedContentValueSchema.optional()
+  en: localizedContentValueSchema.optional()
 }).strict().refine(
   (value) => SUPPORTED_LOCALES.some((locale) => value[locale] !== undefined),
   { message: 'At least one supported locale value is required' }

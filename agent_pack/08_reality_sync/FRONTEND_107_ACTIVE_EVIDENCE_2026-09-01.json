@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "evidenceId": "FRONTEND_107_ACTIVE_EVIDENCE_2026-09-01",
+  "programId": "SADAT_G1_G6_APPROVED_2026-08-30",
+  "taskId": "frontend_107",
+  "sequence": 219,
+  "status": "complete",
+  "completionMarker": "TASK_frontend_107_COMPLETE",
+  "generatedAt": "2026-09-01T01:40:00+03:00",
+  "ownership": {
+    "sourceGrant": "agent_pack/08_reality_sync/FRONTEND_107_OWNERSHIP_GRANT_2026-08-31.json",
+    "testScopeExtension": "agent_pack/08_reality_sync/FRONTEND_107_TEST_SCOPE_EXTENSION_2026-08-31.json",
+    "sourceTargetCount": 79,
+    "testTargetCount": 142,
+    "writesOutsideGrantedTargets": false,
+    "visualPixelsOrSnapshotsChanged": false
+  },
+  "preflight": {
+    "head": "a235f15d097cb07c387118cb11aa93d4d14c42d4",
+    "branch": "main",
+    "remoteDivergence": "0 ahead / 0 behind",
+    "treePolicy": "protected-and-potentially-dirty",
+    "ownershipOverlap": "MERGE_REQUIRED only for unrelated pre-existing work; no overwrite performed",
+    "forbiddenFigmaFileUsed": false,
+    "canonicalFigmaFileUsed": false
+  },
+  "implementation": {
+    "summary": [
+      "Added a supported AR/EN language switch to the shared route shell, including public, auth, seeker, provider and admin shells.",
+      "Added the public-site header switch and connected it to the client locale event without duplicating the visible public control.",
+      "Updates html.lang and html.dir, persists the locale through the existing store, and preserves pathname, query and hash during switching.",
+      "Uses the server-rendered document locale for hydration and reconciles persisted preference after hydration.",
+      "Removed active retired-locale runtime/test references within the granted exact target sets; no snapshot image or canonical evidence was edited.",
+      "Repaired stale SSR fixtures/assertions so they match the current strict public data contracts and current canonical copy; this does not update runtime snapshots."
+    ],
+    "keyFiles": [
+      { "path": "apps/web/src/features/localization/runtime.ts", "bytes": 5943, "sha256": "482e050b73cb6f5e071fd1be4a733717852c630320c55b8b74462da7a2872ee4" },
+      { "path": "apps/web/src/features/localization/index.ts", "bytes": 582, "sha256": "e443e05bcfe68ab28644532453fa002fb39c88b2c5fd73152f9c76dadce803a6" },
+      { "path": "apps/web/src/features/frontend_foundation/app.tsx", "bytes": 30126, "sha256": "732e0c0df1a428f6fc6c61e179e328fe1b66c02edf1af557a8570d17e74eab6b" },
+      { "path": "apps/web/src/features/frontend_foundation/entry-client.tsx", "bytes": 12790, "sha256": "9b4b80b85cdd5c3d51ec1ef49874857c43d7c3665b40e4f3a0ffc86c41800182" },
+      { "path": "apps/web/src/features/routing/shells.tsx", "bytes": 6087, "sha256": "b8cf22d0418684ce5662c8eeea11ed98d429a5903b5d4f82df02ad11e1f9c1ec" },
+      { "path": "apps/web/src/features/public/components.tsx", "bytes": 39449, "sha256": "de50e59054649c8eb3a1a36d5873791bf1a254afb067cd99ab7fddac824cc2c8" },
+      { "path": "apps/web/tests/e2e/accessibility.spec.ts", "bytes": 15878, "sha256": "2a50514116c7fc47c961c3f4fd35e84573df52f2609c6faf25705466e451b6a5" },
+      { "path": "apps/web/tests/testing-harness.vitest.test.tsx", "bytes": 3397, "sha256": "32d5db82763835a70b544bfbc3231af979a96806be675da18e1198f4579f6fdb" },
+      { "path": "apps/web/tests/ssr.test.mjs", "bytes": 14433, "sha256": "5da05d960fc2aeb8fe6d0d72e82297e35319e27d5f6206871cd092efcf14a8b2" }
+    ]
+  },
+  "postMutationInventory": {
+    "source": { "count": 79, "missing": 0, "bytes": 1116130, "inventorySha256": "ccecce019f0e22434ffef6e4773c3506bb96f3776fc1e1793d7109abb7828056" },
+    "testsAndFixtures": { "count": 142, "missing": 0, "bytes": 899353, "inventorySha256": "302b171249d9c90d38d129d6765c2f55ff350d9285e1015f52499ae2b17cfb03" },
+    "inventoryMethod": "Hash the sorted exact target paths from the two grants as compact JSON rows of path, bytes and SHA-256; full path-level preflight remains in the grants."
+  },
+  "verification": [
+    { "command": "npm.cmd run locale:audit", "result": "PASS: backend activeViolationCount=0; deferred provenance occurrences=2" },
+    { "command": "npm.cmd run typecheck --workspace @sadat-real-estate/web", "result": "PASS" },
+    { "command": "npm.cmd run lint", "result": "PASS" },
+    { "command": "npm.cmd run test:locale --workspace apps/web", "result": "PASS: 1 file, 3 tests" },
+    { "command": "npm.cmd run test:vitest --workspace apps/web -- tests/locale-direction.vitest.test.ts tests/provider-type.vitest.test.tsx tests/testing-harness.vitest.test.tsx", "result": "PASS: 3 files, 14 tests" },
+    { "command": "node --test apps/web/tests/ssr.test.mjs", "result": "PASS: 15 tests" },
+    { "command": "npm.cmd run build --workspace apps/web", "result": "PASS: CSS 409588 bytes / temporary cap 409600; JS 1524005 bytes" },
+    { "command": "npx.cmd playwright test --config apps/web/playwright.config.ts --grep \"shared shell switches\" --project=desktop-ar", "result": "PASS: 1 test; URL query/hash and html lang/dir preserved" },
+    { "command": "git diff --check", "result": "PASS" },
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "result": "PASS: errors=[]; historical tasks preserved" }
+  ],
+  "environmentLimitations": [
+    "The in-app browser connector could not initialize because the environment returned missing sandboxPolicy metadata; local Playwright against 127.0.0.1:4173 supplied the browser evidence instead."
+  ],
+  "evidenceSeparation": {
+    "runtimeRegression": "The no-update SSR/Vitest/Playwright/build checks establish runtime stability only.",
+    "figmaParity": "NOT_APPLICABLE for frontend_107; no Figma parity or Full Parity claim is made.",
+    "masksCropsOverlaysHiddenRegions": false,
+    "snapshotUpdateFlags": false
+  },
+  "databaseApiMigration": "none",
+  "rollback": "Restore the exact granted source/test files from their preflight hashes using the approved file-level backup; no Git reset, checkout, stash or broad discard.",
+  "nextTask": "backend_152",
+  "stopCondition": "frontend_107 is complete; stop this atomic task and resume only the dependency-ready next task.",
+  "successMarker": "TASK_frontend_107_COMPLETE"
+}

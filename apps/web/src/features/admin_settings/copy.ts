@@ -9,7 +9,7 @@ export interface AdminSettingsCopy {
   readonly labels: Readonly<Record<AdminSettingsNamespace, string>>;
   readonly descriptions: Readonly<Record<AdminSettingsNamespace, string>>;
   readonly fields: Readonly<Record<string, string>>;
-  readonly locales: Readonly<Record<'ar' | 'en' | 'zh-CN', string>>;
+  readonly locales: Readonly<Record<'ar' | 'en', string>>;
   readonly save: string;
   readonly saving: string;
   readonly retry: string;
@@ -74,7 +74,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminSettingsCopy>> = {
       youtube_url: 'يوتيوب',
       tiktok_url: 'تيك توك'
     },
-    locales: { ar: 'العربية', en: 'English', 'zh-CN': '简体中文' },
+    locales: { ar: 'العربية', en: 'English',},
     save: 'حفظ التغييرات',
     saving: 'جارٍ الحفظ',
     retry: 'إعادة المحاولة',
@@ -146,7 +146,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminSettingsCopy>> = {
       youtube_url: 'YouTube',
       tiktok_url: 'TikTok'
     },
-    locales: { ar: 'Arabic', en: 'English', 'zh-CN': 'Simplified Chinese' },
+    locales: { ar: 'Arabic', en: 'English',},
     save: 'Save changes',
     saving: 'Saving',
     retry: 'Retry',
@@ -170,80 +170,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminSettingsCopy>> = {
       not_found: { title: 'Route not found', body: 'No matching settings namespace exists.' }
     },
     directionNote: 'English LTR — platform settings are approved for desktop.'
-  },
-  'zh-CN': {
-    eyebrow: '平台设置',
-    platform: '平台信息',
-    contact: '联系信息',
-    social: '社交媒体账号',
-    labels: {
-      platform: '平台信息',
-      contact: '联系信息',
-      social: '社交媒体账号',
-      properties: '房产设置',
-      requests: '请求设置',
-      advertising: '广告设置',
-      seo: 'SEO 设置',
-      'privacy-security': '隐私与安全设置',
-      display: '显示设置'
-    },
-    descriptions: {
-      platform: '在保留版本和审计信息的情况下更新已批准的平台数据。',
-      contact: '从已批准的管理投影维护公开联系信息。',
-      social: '从已批准的设置来源管理可选社交链接。',
-      properties: '仅编辑已批准管理投影中存在的房产设置。',
-      requests: '编辑现有请求设置，不虚构运营规则。',
-      advertising: '管理已批准的广告值，不添加统一价格或支付声明。',
-      seo: '管理已批准的 SEO 值，并遵守其发布状态。',
-      'privacy-security': '管理已批准的隐私与安全值，不暴露密钥或私密数据。',
-      display: '管理已批准的显示值，并保留版本与审计信息。'
-    },
-    fields: {
-      platform_name: '平台名称',
-      short_name: '简称',
-      description: '描述',
-      city: '城市',
-      timezone: '时区',
-      currency: '货币',
-      default_locale: '默认语言',
-      primary_email: '电子邮箱',
-      primary_phone: '电话',
-      office_address: '办公室地址',
-      working_hours: '工作时间',
-      whatsapp_number: 'WhatsApp',
-      map_url: '地图链接',
-      facebook_url: 'Facebook',
-      instagram_url: 'Instagram',
-      linkedin_url: 'LinkedIn',
-      youtube_url: 'YouTube',
-      tiktok_url: 'TikTok'
-    },
-    locales: { ar: '阿拉伯语', en: 'English', 'zh-CN': '简体中文' },
-    save: '保存更改',
-    saving: '正在保存',
-    retry: '重试',
-    reason: '更改原因',
-    reasonPlaceholder: '请输入至少三个字符的明确原因',
-    reasonRequired: '必须填写更改原因。',
-    saved: '设置已保存。',
-    validation: '请检查字段后重试。',
-    version: '版本',
-    schemaVersion: '架构版本',
-    preservedValues: '保存此页面时会保留其他已批准的值。',
-    unavailableAction: '创建设置草稿',
-    states: {
-      loading: { title: '正在加载设置', body: '正在获取安全的管理投影。' },
-      empty: { title: '设置尚不可用', body: '此命名空间尚未创建。不添加未经验证的生产值。' },
-      error: { title: '无法加载设置', body: '请检查连接后重试。' },
-      retry: { title: '连接暂时不可用', body: '可以在不丢失当前值的情况下重试。' },
-      permission: { title: '无法访问', body: '此页面需要管理员会话和匹配的 API 权限。' },
-      conflict: { title: '版本冲突', body: '设置在上次加载后发生变化。请重新加载投影并在保存前检查。' },
-      success: { title: '设置已就绪', body: '值来自已批准的管理投影。' },
-      not_found: { title: '未找到路由', body: '不存在匹配的设置命名空间。' }
-    },
-    directionNote: '简体中文 LTR — 平台设置仅批准用于桌面端。'
-  }
-};
+  },};
 
 export function getAdminSettingsCopy(locale: SupportedLocale): AdminSettingsCopy {
   return copyByLocale[locale];

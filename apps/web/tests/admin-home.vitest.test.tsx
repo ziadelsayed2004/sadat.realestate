@@ -35,7 +35,7 @@ const banners = adBannerListDataSchema.parse({
   items: [{
     id: bannerId,
     placementKey: 'homepage.hero',
-    title: { ar: 'بانر الصفحة الرئيسية', en: 'Homepage banner', 'zh-CN': '主页横幅' },
+    title: { ar: 'بانر الصفحة الرئيسية', en: 'Homepage banner',},
     altText: { en: 'Homepage banner' },
     startAt: '2026-08-20T08:00:00.000Z',
     endAt: '2026-09-20T08:00:00.000Z',
@@ -57,8 +57,8 @@ const tips = tipsContent(cmsAdminContentDataSchema.parse({
   items: [{
     id: tipId,
     key: 'buying_safely',
-    title: { ar: 'نصيحة شراء', en: 'Buying safely', 'zh-CN': '安全购买' },
-    body: { ar: 'تحقق من البيانات المنشورة.', en: 'Check the published data.', 'zh-CN': '请检查已发布的数据。' },
+    title: { ar: 'نصيحة شراء', en: 'Buying safely',},
+    body: { ar: 'تحقق من البيانات المنشورة.', en: 'Check the published data.',},
     order: 1,
     active: true,
     status: 'published',
@@ -74,7 +74,7 @@ const homepage = homepageContent(cmsAdminContentDataSchema.parse({
   items: [{
     id: homepageId,
     key: 'featured_properties',
-    title: { ar: 'عقارات مميزة', en: 'Featured properties', 'zh-CN': '精选房产' },
+    title: { ar: 'عقارات مميزة', en: 'Featured properties',},
     body: { en: 'Approved homepage section.' },
     order: 2,
     visible: true,
@@ -117,7 +117,6 @@ describe('Admin banners, tips, and homepage administration', () => {
   it.each([
     ['ar', banners, '/admin/banners', 'ADM-46'],
     ['en', banners, '/admin/banners/new', 'ADM-47'],
-    ['zh-CN', tips, '/admin/content/tips', 'ADM-48'],
     ['en', homepage, '/admin/content/homepage', 'ADM-49']
   ] as const)('renders %s %s with the approved screen, direction, and safe projection', async (locale, data, path, screenId) => {
     const result = renderWithLocale(

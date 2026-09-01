@@ -89,21 +89,7 @@ const copy: Readonly<Record<SupportedLocale, AdminNotificationsAuditCopy>> = {
     },
     states: { loading: { title: 'Loading', body: 'Fetching data from the implemented platform source.' }, empty: { title: 'No data', body: 'There are no real records to display.' }, error: { title: 'Could not load data', body: 'Check the connection and try again.' }, retry: { title: 'The service is temporarily unavailable', body: 'Retry when the connection is available.' }, permission: { title: 'Access is not permitted', body: 'This page requires an authenticated administrator with the required permission.' }, not_found: { title: 'Audit record not found', body: 'The requested audit record is no longer available.' }, success: { title: 'Loaded', body: 'Data was loaded from the implemented source.' } },
     retry: 'Retry', previous: 'Previous', next: 'Next', pagination: 'Result pages'
-  },
-  'zh-CN': {
-    navLabel: '通知与审计日志',
-    notifications: {
-      eyebrow: '通知中心', title: '通知', description: '仅查看发送给当前管理员账户的通知。', listLabel: '通知列表', unreadCount: '未读', markAll: '全部标为已读', markRead: '标为已读', openLink: '打开链接', tabs: { all: '全部', unread: '未读' },
-      empty: { all: { title: '暂无通知', body: '有真实通知时会显示在这里。' }, unread: { title: '没有未读通知', body: '所有可用通知都已查看。' } },
-      mutation: { markedRead: '通知已标为已读。', markedAll: '通知已全部标为已读。', notFound: '此通知已不可用。', permission: '你没有更新此通知的权限。', error: '无法更新通知。' }
-    },
-    audit: {
-      eyebrow: '治理与追踪', title: '审计日志', description: '查看记录的事件以及由服务器脱敏的变更前后快照。', filters: '筛选日志', actorId: '管理员 ID', targetType: '目标类型', targetId: '目标 ID', action: '操作', traceId: '追踪 ID', from: '开始时间', to: '结束时间', apply: '应用筛选', clear: '清除', tableLabel: '审计事件', date: '日期和时间', actor: '管理员', target: '目标', actionLabel: '操作', reason: '原因', details: '详情', before: '变更前', after: '变更后', snapshotNotice: '变更前后快照由服务器脱敏，不包含密码、访问令牌或私人文档。', metrics: { total: '事件总数', onPage: '当前页显示', administrators: '唯一管理员', redactedSnapshots: '脱敏快照' }, requestId: '请求 ID', trace: '追踪', view: '查看详情', back: '返回审计日志', noEntries: '没有符合当前筛选条件的审计事件。'
-    },
-    states: { loading: { title: '正在加载', body: '正在从已实现的平台数据源获取数据。' }, empty: { title: '暂无数据', body: '没有可显示的真实记录。' }, error: { title: '无法加载数据', body: '请检查连接后重试。' }, retry: { title: '服务暂时不可用', body: '连接恢复后可以重试。' }, permission: { title: '无权访问', body: '此页面需要具有相应权限的管理员会话。' }, not_found: { title: '找不到审计记录', body: '请求的审计记录已不可用。' }, success: { title: '已加载', body: '数据已从已实现的数据源加载。' } },
-    retry: '重试', previous: '上一页', next: '下一页', pagination: '结果页'
-  }
-};
+  },};
 
 export function getAdminNotificationsAuditCopy(locale: SupportedLocale): AdminNotificationsAuditCopy {
   return copy[locale];

@@ -46,9 +46,9 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<Seeker
 
 export function SeekerNavigation({ locale, activePath }: { readonly locale: SupportedLocale; readonly activePath: string }) {
   const copy = getSeekerCopy(locale);
-  const searchLabel = locale === 'ar' ? 'ابحث عن عقار في السادات...' : locale === 'zh-CN' ? '搜索萨达特市房源…' : 'Search properties in Sadat City…';
-  const menuLabel = locale === 'ar' ? 'قائمة لوحة الباحث' : locale === 'zh-CN' ? '购房者面板菜单' : 'Seeker dashboard menu';
-  const websiteLabel = locale === 'ar' ? 'عرض الموقع' : locale === 'zh-CN' ? '查看网站' : 'View website';
+  const searchLabel = locale === 'ar' ? 'ابحث عن عقار في السادات...' :'Search properties in Sadat City…';
+  const menuLabel = locale === 'ar' ? 'قائمة لوحة الباحث' :'Seeker dashboard menu';
+  const websiteLabel = locale === 'ar' ? 'عرض الموقع' :'View website';
   const items = [
     ['overview', '/seeker'],
     ['requests', '/seeker/requests'],

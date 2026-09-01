@@ -207,73 +207,7 @@ const arabic: AdminAccountReportsCopy = {
   success: 'تم تنفيذ الإجراء.'
 };
 
-const chinese: AdminAccountReportsCopy = {
-  ...english,
-  list: {
-    ...english.list,
-    eyebrow: '账户审核',
-    title: '账户报告',
-    description: '使用已实现的审核数据查看被报告的账户。',
-    searchLabel: '搜索账户报告',
-    searchPlaceholder: '账户 ID、原因或报告 ID',
-    statusLabel: '报告状态',
-    all: '全部',
-    totalLabel: '份报告',
-    emptyTitle: '未找到账户报告',
-    emptyBody: '没有匹配当前筛选条件的记录。',
-    columns: { account: '账户', type: '类型', reason: '原因', related: '关联', status: '状态', created: '创建时间', updated: '更新时间', actions: '操作' }
-  },
-  detail: {
-    ...english.detail,
-    eyebrow: '账户报告',
-    title: '报告详情',
-    reportId: '报告 ID',
-    accountId: '账户 ID',
-    accountType: '账户类型',
-    reporter: '报告人 ID',
-    reason: '原因',
-    details: '详情',
-    related: '关联报告',
-    created: '创建时间',
-    updated: '更新时间',
-    resolution: '最终状态',
-    resolutionReason: '处理原因',
-    mutationReason: '本次操作原因',
-    mutationReasonHint: '至少输入五个字符。',
-    resolve: '解决报告',
-    dismiss: '忽略报告',
-    openRestrictions: '打开账户限制',
-    accountStatus: '当前账户状态',
-    availableActions: '可用账户操作',
-    beforeAfter: '最近账户变更',
-    transitionReason: '账户操作原因',
-    transition: '应用账户操作',
-    noActions: '当前没有可用操作。',
-    noAccountProjection: '此报告目标的账户数据不可用。'
-  },
-  restrictions: {
-    ...english.restrictions,
-    eyebrow: '账户限制',
-    title: '账户状态与限制',
-    description: '仅使用管理员 API 返回的操作。',
-    account: '账户',
-    status: '状态',
-    action: '操作',
-    view: '查看报告',
-    emptyTitle: '未找到限制目标',
-    emptyBody: '当 API 返回数据时，报告目标会显示在此。'
-  },
-  statusLabels: { ...english.statusLabels, open: '开放', in_review: '审核中', resolved: '已解决', dismissed: '已忽略' },
-  roleLabels: { seeker: '求购者', provider: '房产提供方', admin: '管理员' },
-  actionLabels: { verify: '验证', reject: '拒绝', needs_information: '请求信息', restrict: '限制', suspend: '暂停' },
-  retry: '重试',
-  back: '返回报告',
-  apply: '应用',
-  clear: '清除',
-  success: '操作已应用。'
-};
-
-const copies: Readonly<Record<SupportedLocale, AdminAccountReportsCopy>> = { ar: arabic, en: english, 'zh-CN': chinese };
+const copies: Readonly<Record<SupportedLocale, AdminAccountReportsCopy>> = { ar: arabic, en: english,};
 
 export function getAdminAccountReportsCopy(locale: SupportedLocale): AdminAccountReportsCopy {
   return copies[locale];

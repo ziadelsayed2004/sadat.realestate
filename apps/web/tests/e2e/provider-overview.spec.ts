@@ -1,8 +1,7 @@
 import { expect, test } from '@playwright/test';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  if (project.endsWith('-zh')) return 'zh-CN';
   if (project.endsWith('-en')) return 'en';
   return 'ar';
 }
@@ -66,7 +65,7 @@ async function routeProviderOverview(page: import('@playwright/test').Page): Pro
     const item = {
       id: 'cccccccccccccccccccccccc',
       kind: 'property',
-      name: { ar: 'عقار المزود', en: 'Provider property', 'zh-CN': '提供方房产' },
+      name: { ar: 'عقار المزود', en: 'Provider property',},
       slug: 'provider-property',
       transactionType: 'sale',
       source: { providerId: 'aaaaaaaaaaaaaaaaaaaaaaaa', sourceType: 'individual_broker' },

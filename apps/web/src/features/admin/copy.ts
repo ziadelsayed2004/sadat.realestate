@@ -125,57 +125,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminCopy>> = {
     },
     retry: 'Retry',
     unavailable: 'Unavailable'
-  },
-  'zh-CN': {
-    nav: {
-      overview: '概览',
-      users: '用户与账户',
-      providers: '房产提供方',
-      properties: '房产',
-      requests: '请求',
-      content: '内容与社区',
-      advertising: '广告与收入',
-      commissions: '佣金',
-      notifications: '通知',
-      audit: '审计日志',
-      settings: '设置'
-    },
-    overview: {
-      eyebrow: '系统管理员',
-      title: '概览',
-      description: '在一个页面中查看平台活动以及需要处理的请求。',
-      rangeLabel: '显示范围',
-      refreshedLabel: '最后更新',
-      platformTitle: '平台',
-      operationsTitle: '运营与审核',
-      queueTitle: '需要审核的请求',
-      queueBody: '当前概览契约不提供请求详情。',
-      activityTitle: '最近活动',
-      actions: { reviewAccounts: '审核账户', reviewProperties: '审核房产', createArticle: '创建文章', reviewAdvertising: '审核广告' },
-      metrics: {
-        users: '用户总数',
-        seekers: '找房者',
-        providers: '房产提供方',
-        verifiedProviders: '已验证提供方',
-        publishedProperties: '已发布房产',
-        openRequests: '开放请求',
-        pendingReviews: '待审核项目'
-      },
-      emptyTitle: '此范围内暂无数据',
-      emptyBody: '所选范围内没有运营记录。有真实记录后，数据会显示在这里。'
-    },
-    states: {
-      loading: { title: '正在加载管理面板', body: '正在从平台实际数据源获取指标。' },
-      empty: { title: '此范围内暂无数据', body: '没有可显示的真实运营记录。' },
-      error: { title: '无法加载管理面板', body: '请检查连接后重试。' },
-      retry: { title: '暂时无法访问管理面板', body: '连接恢复后可以重试。' },
-      success: { title: '管理面板已加载', body: '指标已从已实现的数据源加载。' },
-      permission: { title: '无权访问', body: '此页面需要已认证的管理员会话。' }
-    },
-    retry: '重试',
-    unavailable: '不可用'
-  }
-};
+  },};
 
 export function getAdminCopy(locale: SupportedLocale): AdminCopy {
   return copyByLocale[locale];

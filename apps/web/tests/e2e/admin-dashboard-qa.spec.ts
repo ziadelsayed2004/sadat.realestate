@@ -7,12 +7,11 @@ const projectId = 'dddddddddddddddddddddddd';
 const commissionAccountId = 'eeeeeeeeeeeeeeeeeeeeeeee';
 const roleId = 'ffffffffffffffffffffffff';
 
-type QaLocale = 'ar' | 'en' | 'zh-CN';
+type QaLocale = 'ar' | 'en';
 type SessionRole = 'admin' | 'seeker';
 
 function localeForProject(): QaLocale {
   const project = test.info().project.name;
-  if (project.endsWith('-zh')) return 'zh-CN';
   if (project.endsWith('-en')) return 'en';
   return 'ar';
 }

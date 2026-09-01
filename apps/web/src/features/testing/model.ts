@@ -32,7 +32,7 @@ export interface TestMatrixEntry {
 
 export const TEST_MATRIX: readonly TestMatrixEntry[] = Object.freeze(
   TEST_DEVICE_SCOPES.flatMap((device) => TEST_LOCALES.map((locale) => ({
-    name: `${device}-${locale === 'zh-CN' ? 'zh' : locale}`,
+    name: `${device}-${locale}`,
     locale,
     direction: LOCALE_DIRECTIONS[locale],
     device,

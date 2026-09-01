@@ -1,9 +1,12 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { publicHomepageSuccessEnvelopeSchema } from '@sadat-real-estate/contracts';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { Button } from '../src/features/design_system/index.ts';
 import { UxStateView } from '../src/features/ux_states/index.ts';
 import { ApiClient } from '../src/features/contracts/index.ts';
+import { getFoundationCopy } from '../src/features/frontend_foundation/locale.ts';
+import { RouteShell } from '../src/features/routing/index.ts';
+import { resolveRoute } from '../src/routes/route-table.ts';
 import {
   TEST_DEVICE_SCOPES,
   TEST_LOCALES,
@@ -25,7 +28,28 @@ describe('frontend testing harness', () => {
   it('covers every approved device scope and locale combination without adding routes', () => {
     expect(TEST_DEVICE_SCOPES).toEqual(['desktop', 'tablet', 'mobile']);
     expect(TEST_MATRIX).toHaveLength(TEST_DEVICE_SCOPES.length * TEST_LOCALES.length);
-    expect(urlForTestLocale('/properties', 'zh-CN')).toBe('/properties?lang=zh-CN');
+    expect(urlForTestLocale('/properties', 'en')).toBe('/properties?lang=en');
+  });
+
+  it('exposes an AR/EN switch in the shared shell and reports the selected locale', () => {
+    const onLocaleChange = vi.fn();
+    renderWithLocale(
+      <RouteShell
+        route={resolveRoute('/properties')}
+        locale="ar"
+        copy={getFoundationCopy('ar')}
+        onLocaleChange={onLocaleChange}
+      >
+        <p>content</p>
+      </RouteShell>,
+      { locale: 'ar' }
+    );
+
+    const switcher = screen.getByRole('combobox');
+    expect(switcher).toHaveValue('ar');
+    expect(switcher.querySelectorAll('option')).toHaveLength(2);
+    fireEvent.change(switcher, { target: { value: 'en' } });
+    expect(onLocaleChange).toHaveBeenCalledWith('en');
   });
 
   it('covers loading, empty, error, retry, success, and permission UI states', () => {

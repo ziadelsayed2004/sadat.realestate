@@ -40,6 +40,7 @@ import './styles.css';
 export interface AppProps {
   readonly url: string;
   readonly locale: SupportedLocale;
+  readonly onLocaleChange?: ((locale: SupportedLocale) => void) | undefined;
   readonly assets?: DesignAssetCatalog;
   readonly session?: RouteSession;
   readonly authClient?: CommunityAuthClient | undefined;
@@ -74,6 +75,7 @@ export interface AppProps {
 export function App({
   url,
   locale,
+  onLocaleChange,
   assets,
   session = ANONYMOUS_ROUTE_SESSION,
   authClient,
@@ -329,7 +331,7 @@ export function App({
 
   return (
     <RouteErrorBoundary key={`${route.id}:${locale}`} copy={copy}>
-      <RouteShell route={route} locale={locale} copy={copy} assets={assets}>
+      <RouteShell route={route} locale={locale} copy={copy} assets={assets} onLocaleChange={onLocaleChange}>
         {((isPublicHomepage || isPublicPropertyListing || isPublicPropertyDetails || isPublicPropertyComparison || isPublicDevelopers || isPublicDeveloperProfile || isPublicArticles || isPublicArticleDetails || isPublicCommunity || isPublicAbout || isPublicTeam || isAuthRoute || isProviderOverview || isProviderProperties || isProviderProjects || isProviderCustomerRequests || isProviderViewings || isProviderAdvertising || isProviderCommission || isProviderNotifications || isProviderSettings || isProviderPropertyWizard || isSeekerOverview || isSeekerRequests || isSeekerRequestDetails || isSeekerViewings || isSeekerSaved || isSeekerNotifications || isSeekerProfile || isSeekerSettings || isAdminOverview || isAdminAccountReports || isAdminAccountRestrictions || isAdminPropertyCategories || isAdminLocations || isAdminFeatures || isAdminProjects || isAdminProjectReview || isAdminAds || isAdminHome || isAdminSettings || isAdminNotifications || isAdminAudit || isAdminRbac || isAdminCommissions || isAdminRequests || isAdminProperties || isAdminPropertyReview || isAdminPropertyDuplicates || isAdminPropertyReports || isAdminUsers || isAdminSeekers || isAdminProviders || isAdminVerification || isAdminContent || isAdminCmsContent || isAdminCommunity || isAdminCommunityComments || isAdminCommunityModeration || isAdminUserDetail || isAdminProviderDetail) && guard.allowed) ? null : (
           <div className="route-heading">
             <p className="surface-label">{copy.surfaceLabels[route.surface]}</p>

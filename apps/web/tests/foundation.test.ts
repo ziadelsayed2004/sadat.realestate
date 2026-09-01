@@ -10,10 +10,9 @@ import { ROUTE_DEFINITIONS, resolveRoute } from '../src/routes/route-table.ts';
 test('locale resolution keeps Arabic RTL and maps supported LTR locales', () => {
   assert.equal(resolveLocale(undefined, 'ar-EG, en;q=0.8'), 'ar');
   assert.equal(resolveLocale(undefined, 'en-US,en;q=0.8'), 'en');
-  assert.equal(resolveLocale(undefined, 'zh-CN,zh;q=0.8'), 'zh-CN');
+  assert.equal(resolveLocale(undefined, 'fr-FR,fr;q=0.8'), 'ar');
   assert.equal(directionForLocale('ar'), 'rtl');
   assert.equal(directionForLocale('en'), 'ltr');
-  assert.equal(directionForLocale('zh-CN'), 'ltr');
   assert.equal(isSupportedLocale('ar'), true);
   assert.equal(isSupportedLocale('fr'), false);
   assert.equal(getFoundationCopy('ar').brand, 'عقارات السادات');

@@ -4,11 +4,10 @@ const providerId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const propertyId = 'bbbbbbbbbbbbbbbbbbbbbbbb';
 const adRequestId = 'cccccccccccccccccccccccc';
 
-type QaLocale = 'ar' | 'en' | 'zh-CN';
+type QaLocale = 'ar' | 'en';
 
 function localeForProject(): QaLocale {
   const project = test.info().project.name;
-  if (project.endsWith('-zh')) return 'zh-CN';
   if (project.endsWith('-en')) return 'en';
   return 'ar';
 }

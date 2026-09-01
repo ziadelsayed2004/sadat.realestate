@@ -12,8 +12,8 @@ function notification(readAt: string | null = null) {
   return {
     id: notificationId,
     type: 'settings.updated',
-    title: { ar: 'تم تحديث الإعدادات', en: 'Settings updated', 'zh-CN': '设置已更新' },
-    message: { ar: 'تم حفظ التغيير.', en: 'The approved change was saved.', 'zh-CN': '已保存批准的更改。' },
+    title: { ar: 'تم تحديث الإعدادات', en: 'Settings updated',},
+    message: { ar: 'تم حفظ التغيير.', en: 'The approved change was saved.',},
     link: '/admin/settings/platform',
     readAt,
     createdAt: '2026-08-20T09:00:00.000Z'

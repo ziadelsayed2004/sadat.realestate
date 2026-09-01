@@ -24,7 +24,7 @@ const session = { status: 'authenticated' as const, role: 'admin' as const };
 const property = propertyDataSchema.parse({
   id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
   kind: 'property',
-  name: { ar: 'فيلا النيل', en: 'Nile Villa', 'zh-CN': '尼罗别墅' },
+  name: { ar: 'فيلا النيل', en: 'Nile Villa',},
   slug: 'nile-villa',
   transactionType: 'sale',
   source: { providerId: 'bbbbbbbbbbbbbbbbbbbbbbbb', sourceType: 'developer_company', organizationId: 'cccccccccccccccccccccccc' },
@@ -101,7 +101,7 @@ describe('Admin property management contracts and views', () => {
     expect(requests[4]?.body).toEqual({ version: 2, action: 'resolve', reason: 'Reviewed duplicate evidence' });
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the safe property projection with locale direction for %s', async (locale: SupportedLocale) => {
+  it.each(['ar', 'en',] as const)('renders the safe property projection with locale direction for %s', async (locale: SupportedLocale) => {
     window.history.pushState({}, '', '/admin/properties');
     const result = renderWithLocale(<AdminProperties locale={locale} session={session} view="list" initialProperties={properties} />, { locale });
     await waitFor(() => expect(screen.getByTestId(`admin-property-${property.id}`)).toBeInTheDocument());

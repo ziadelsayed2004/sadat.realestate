@@ -103,15 +103,15 @@ export type AdminSettingsAtom = AdminSettingsValues[string];
 export type SettingsDraft = Record<string, AdminSettingsAtom>;
 
 export function isLocalizedText(value: AdminSettingsAtom | undefined): value is LocalizedText {
-  return typeof value === 'object' && value !== null && !Array.isArray(value) && Object.keys(value).some(key => key === 'ar' || key === 'en' || key === 'zh-CN');
+  return typeof value === 'object' && value !== null && !Array.isArray(value) && Object.keys(value).some(key => key === 'ar' || key === 'en');
 }
 
-export function localizedDraft(value: AdminSettingsAtom | undefined): Record<'ar' | 'en' | 'zh-CN', string> {
+export function localizedDraft(value: AdminSettingsAtom | undefined): Record<'ar' | 'en', string> {
   if (isLocalizedText(value)) {
-    return { ar: value.ar ?? '', en: value.en ?? '', 'zh-CN': value['zh-CN'] ?? '' };
+    return { ar: value.ar ?? '', en: value.en ?? '',};
   }
   const fallback = typeof value === 'string' ? value : '';
-  return { ar: fallback, en: '', 'zh-CN': '' };
+  return { ar: fallback, en: '',};
 }
 
 export function stringDraft(value: AdminSettingsAtom | undefined): string {
@@ -132,7 +132,7 @@ export function setTextValue(values: SettingsDraft, key: string, value: string):
   return next;
 }
 
-export function setLocalizedValue(values: SettingsDraft, key: string, locale: 'ar' | 'en' | 'zh-CN', value: string): SettingsDraft {
+export function setLocalizedValue(values: SettingsDraft, key: string, locale: 'ar' | 'en', value: string): SettingsDraft {
   const next = { ...values };
   const current = localizedDraft(next[key]);
   const updated = { ...current, [locale]: value };

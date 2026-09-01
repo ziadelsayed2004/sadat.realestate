@@ -27,15 +27,15 @@ describe('release accessibility audit matrix', () => {
       screens: Array<{ id: string; surface: keyof typeof APPROVED_DEVICE_SCOPES; locales: string[]; directionScope: string[]; deviceScope: string[] }>;
     };
 
-    expect([...ACCESSIBILITY_LOCALES]).toEqual(['ar', 'en', 'zh-CN']);
-    expect(ACCESSIBILITY_DIRECTIONS).toEqual({ ar: 'rtl', en: 'ltr', 'zh-CN': 'ltr' });
+    expect([...ACCESSIBILITY_LOCALES]).toEqual(['ar', 'en',]);
+    expect(ACCESSIBILITY_DIRECTIONS).toEqual({ ar: 'rtl', en: 'ltr',});
     expect(manifest.screens).toHaveLength(131);
 
     for (const route of ROUTE_DEFINITIONS) {
       expect(route.deviceScope, route.id).toBe(APPROVED_DEVICE_SCOPES[route.surface]);
     }
     for (const screen of manifest.screens) {
-      expect(screen.locales, screen.id).toEqual(['ar', 'en', 'zh-CN']);
+      expect(screen.locales, screen.id).toEqual(['ar', 'en',]);
       expect(screen.directionScope, screen.id).toEqual(['rtl', 'ltr']);
       expect(screen.deviceScope, screen.id).toEqual(screen.surface === 'public' || screen.surface === 'auth' ? ['desktop', 'tablet', 'mobile'] : ['desktop']);
     }

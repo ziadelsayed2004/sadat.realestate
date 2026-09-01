@@ -3,9 +3,8 @@ import { expect, test } from '@playwright/test';
 const PROVIDER_ID = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const REQUEST_ID = 'bbbbbbbbbbbbbbbbbbbbbbbb';
 
-function localeForRequests(): 'ar' | 'en' | 'zh-CN' {
+function localeForRequests(): 'ar' | 'en' {
   const project = test.info().project.name;
-  if (project.endsWith('-zh')) return 'zh-CN';
   if (project.endsWith('-en')) return 'en';
   return 'ar';
 }

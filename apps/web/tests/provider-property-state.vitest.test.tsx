@@ -14,7 +14,7 @@ function property(overrides: Partial<PropertyData> = {}): PropertyData {
   return propertyDataSchema.parse({
     id: propertyId,
     kind: 'property',
-    name: { ar: 'عقار المزود', en: 'Provider property', 'zh-CN': '提供方房产' },
+    name: { ar: 'عقار المزود', en: 'Provider property',},
     slug: 'provider-property',
     transactionType: 'sale',
     source: { providerId, sourceType: 'individual_broker' },
@@ -78,7 +78,7 @@ describe('provider property submission and state screens', () => {
     expect(screen.queryByRole('heading', { name: getProviderPropertyStateCopy('en').statuses.pending_review.title, level: 1 })).not.toBeInTheDocument();
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders PRV-11 validation errors with the correct %s direction', locale => {
+  it.each(['ar', 'en',] as const)('renders PRV-11 validation errors with the correct %s direction', locale => {
     const copy = getProviderPropertyStateCopy(locale);
     const incomplete = property({ locationId: undefined, price: undefined, contact: undefined, reviewReason: 'Complete the missing property data.' });
     const result = renderWithLocale(<ProviderPropertyCompletionWizard locale={locale} session={session} authClient={authClient} step="review" propertyId={propertyId} initialData={incomplete} />, { locale });

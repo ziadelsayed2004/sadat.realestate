@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "evidenceId": "BACKEND_152_BLOCKER_EVIDENCE_2026-09-01",
+  "programId": "SADAT_G1_G6_APPROVED_2026-08-30",
+  "taskId": "backend_152",
+  "sequence": 220,
+  "status": "blocked",
+  "generatedAt": "2026-09-01T01:49:00+03:00",
+  "markers": [
+    "TASK_backend_152_BLOCKED_CONTACT_TIME_SOURCE",
+    "TASK_backend_152_BLOCKED_PRIVACY_APPROVAL"
+  ],
+  "dependency": {
+    "frontend_107": "complete",
+    "productContractFreeze": "not started",
+    "nextTasksBlockedByThis": [
+      "backend_153",
+      "backend_154",
+      "backend_155",
+      "frontend_108",
+      "backend_156",
+      "frontend_109",
+      "frontend_110",
+      "frontend_111",
+      "backend_157",
+      "backend_158",
+      "backend_159",
+      "frontend_113",
+      "frontend_114",
+      "frontend_115",
+      "frontend_116",
+      "frontend_117",
+      "frontend_118",
+      "frontend_119",
+      "frontend_120"
+    ]
+  },
+  "canonicalSource": {
+    "figmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4352",
+    "nodeId": "6017:12693",
+    "localExport": {
+      "path": "docs/design_sources/final_screens/public/PUB-03.png",
+      "sha256": "d1346599fdb04cdc8b217fd99d7323a281810d69c6e6b9265dc3df204735679d",
+      "bytes": 4150109,
+      "dimensions": "6308x12184"
+    },
+    "reviewFinding": "The available full-canvas export shows the Contact time control closed. It does not expose option rows or an approved code-to-AR/EN mapping. Existing repository evidence is historical/local and does not authorize a guessed enum."
+  },
+  "contactTimeFinding": {
+    "currentFormPath": "apps/web/src/features/public/details.tsx",
+    "currentFormEvidence": "The current form contains candidate values morning/evening and an Arabic/English label pair; these are explicitly unapproved candidates, not contract values. The exact label text is intentionally not frozen here.",
+    "contractSearch": {
+      "command": "rg -n \"preferredContactTime|property-requests|privacyNoticeVersion|consentAt|handoffChannel\" packages/contracts/src/requests apps/api/src/modules/requests apps/api/tests/requests",
+      "result": "No active PUB-03 contract implementation was found."
+    },
+    "sourceSearch": {
+      "command": "rg -n -i \"contact.?time|best.?time|preferred|morning|evening\" apps/web/src/features/public docs/quality/figma_parity",
+      "result": "Only the current candidate form and historical/source records were found; no approved mapping artifact exists."
+    },
+    "requiredResolution": "Authenticated direct review or an owner-approved canonical copy artifact must publish the exact codes and AR/EN labels in PUB03_CONTACT_TIME_MAPPING.json."
+  },
+  "privacyFinding": {
+    "currentFormPath": "apps/web/src/features/public/details.tsx",
+    "currentCopyPath": "apps/web/src/features/public/details-copy.ts",
+    "disclosureSearch": {
+      "command": "rg -n -i \"privacy|notice|consent|policy\" apps/web/src/features/public/details.tsx apps/web/src/features/public/details-copy.ts packages/contracts/src/requests apps/api/src/modules/requests",
+      "result": "No submission-associated approved privacy disclosure/version was found in the active PUB-03 form or request contract."
+    },
+    "requiredResolution": "Approve and display a non-disruptive AR/EN privacy disclosure before submission, then record the server-owned privacyNoticeVersion. Until then do not add consentAt or privacyNoticeVersion and keep production activation blocked."
+  },
+  "mutationBoundary": {
+    "productFilesChanged": false,
+    "databaseChanged": false,
+    "apiRouteCreated": false,
+    "openApiOrPostmanChanged": false,
+    "whatsappOpened": false,
+    "snapshotsChanged": false,
+    "masksCropsOverlaysHiddenRegions": false,
+    "ownershipGrant": "agent_pack/08_reality_sync/BACKEND_152_OWNERSHIP_GRANT_2026-09-01.json"
+  },
+  "verification": [
+    { "command": "git status -sb", "result": "main; existing protected worktree changes preserved" },
+    { "command": "git rev-list --left-right --count HEAD...origin/main", "result": "0 0" },
+    { "command": "git diff --check", "result": "PASS" },
+    { "command": "node agent_pack/scripts/audit_pack.mjs", "result": "PASS before this additive blocker evidence; no historical rewrite" }
+  ],
+  "rollback": "No product mutation occurred. Remove no files; retain this additive blocker evidence and request the missing approvals/source. Any later contract change needs a new exact-hash grant and task-local rollback.",
+  "unblockChecklist": [
+    "Authenticated canonical Figma/copy review for PUB-03 contact-time options",
+    "Exact PUB03_CONTACT_TIME_MAPPING.json with code, AR label, EN label and provenance",
+    "Approved AR/EN non-disruptive privacy disclosure and version",
+    "Evidence that the disclosure is visible at submission",
+    "New exact-hash backend_152 write grant followed by focused contract/API/OpenAPI/Postman tests"
+  ],
+  "stopCondition": "Stop backend_152 after the blocker markers; do not select or start backend_153 or any dependent task."
+}

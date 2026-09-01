@@ -158,61 +158,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerViewingsCopy>> = {
     },
     statuses: { requested: 'Requested', confirmed: 'Confirmed', rescheduled: 'Rescheduled', cancelled: 'Cancelled', completed: 'Completed' },
     retry: 'Retry'
-  },
-  'zh-CN': {
-    eyebrow: '求购者工作区',
-    title: '看房预约',
-    description: '仅查看与当前账户相关的房产看房预约。',
-    count: '个预约',
-    tabs: { upcoming: '即将到来', past: '已完成', cancelled: '已取消' },
-    property: '房产',
-    date: '日期',
-    time: '时间',
-    timezone: '时区',
-    note: '你的备注',
-    details: '查看详情',
-    hideDetails: '隐藏详情',
-    requestViewing: '申请看房',
-    requestViewingTitle: '申请新的看房预约',
-    reschedule: '重新安排',
-    cancel: '取消预约',
-    cancelConfirm: '取消此预约？',
-    submit: '提交申请',
-    save: '保存预约',
-    close: '关闭',
-    propertyId: '房产 ID',
-    requestedAt: '看房时间',
-    formTimezone: '时区',
-    formNote: '可选备注',
-    required: '此字段为必填项。',
-    invalidProperty: '请输入有效的房产 ID。',
-    invalidDate: '请选择有效的未来预约时间。',
-    invalidTimezone: '请输入有效的时区。',
-    invalidNote: '备注不得超过 1000 个字符。',
-    empty: {
-      upcoming: { title: '暂无即将到来的预约', body: '与账户相关的即将到来的看房预约会显示在这里。' },
-      past: { title: '暂无已完成预约', body: '已完成的看房预约会显示在这里。' },
-      cancelled: { title: '暂无已取消预约', body: '账户取消的预约会显示在这里。' }
-    },
-    states: {
-      loading: { title: '正在加载预约', body: '正在从平台获取你的看房预约。' },
-      retry: { title: '无法加载预约', body: '请检查连接后重试。' },
-      error: { title: '预约暂不可用', body: '无法读取看房预约数据，请稍后重试。' },
-      permission: { title: '需要登录', body: '只有已验证的求购者账户才能查看这些数据。' }
-    },
-    mutation: {
-      saving: '正在保存更改…',
-      created: '看房申请已提交。',
-      updated: '看房预约已更新。',
-      cancelled: '看房预约已取消。',
-      conflict: '此预约已发生变化或不再可用。请刷新后重试。',
-      notFound: '此预约已不在当前账户中。',
-      error: '无法保存更改，请检查信息后重试。'
-    },
-    statuses: { requested: '已申请', confirmed: '已确认', rescheduled: '已重新安排', cancelled: '已取消', completed: '已完成' },
-    retry: '重试'
-  }
-};
+  },};
 
 export function getSeekerViewingsCopy(locale: SupportedLocale): SeekerViewingsCopy {
   return copy[locale];

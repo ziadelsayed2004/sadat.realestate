@@ -127,7 +127,7 @@ describe('Provider customer requests', () => {
     await waitFor(() => expect(observedQueries.at(-1)).toMatchObject({ status: 'contacted' }));
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders safe provider projections and direction for %s', async locale => {
+  it.each(['ar', 'en',] as const)('renders safe provider projections and direction for %s', async locale => {
     const load = vi.fn(async (_query: ProviderCustomerRequestsQuery) => data);
     const result = renderWithLocale(<ProviderCustomerRequests locale={locale} session={session} load={load} />, { locale });
     const copy = getProviderCustomerRequestsCopy(locale);

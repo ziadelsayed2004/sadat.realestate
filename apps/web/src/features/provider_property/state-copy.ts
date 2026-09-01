@@ -87,31 +87,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyStateCopy>>
     },
     labels: { reference: 'Reference', submittedAt: 'Submitted at', reviewedAt: 'Reviewed at', status: 'Status', views: 'Views', unavailable: 'Unavailable', safeTitle: 'Safe data', safeBody: 'This view contains only provider-permitted property contract data.' },
     actions: { back: 'Back to my properties', viewProperty: 'View property', viewPublic: 'View public page', supportUnavailable: 'A support route is not available in the current contract.', retry: 'Retry' }
-  },
-  'zh-CN': {
-    validation: {
-      title: '房产需要修改',
-      body: '请检查以下要求，并在提交前补全房产信息。',
-      reasonLabel: '审核原因',
-      reasonUnavailable: '服务器未提供其他审核原因。',
-      issueLabels: { location: '位置', price: '价格', contact: '联系信息', status: '状态' },
-      back: '返回房产列表',
-      edit: '进行修改',
-      editUnavailable: '当前服务器状态不支持此操作。',
-      safeTitle: '安全摘要',
-      safeBody: '此摘要只显示提供方契约允许的房产数据，不包含管理员备注、分配或审计数据。'
-    },
-    statuses: {
-      pending_review: { title: '房产已提交审核', body: '萨达特房地产审核团队会尽快审核房产信息，并通知你结果。', reasonLabel: '提交原因', reasonUnavailable: '服务器未提供其他原因。' },
-      rejected: { title: '房产未获批准', body: '此房产未通过本次审核的管理标准。', reasonLabel: '拒绝原因', reasonUnavailable: '服务器未提供决定原因。' },
-      approved: { title: '房产已获批准', body: '审核团队已批准此房产，但提供方契约未开放发布操作。', reasonLabel: '批准原因', reasonUnavailable: '服务器未提供其他原因。' },
-      published: { title: '房产已发布', body: '此房产已在萨达特房地产平台公开展示。', reasonLabel: '最近审核原因', reasonUnavailable: '服务器未提供其他原因。' },
-      hidden: { title: '房产当前已隐藏', body: '房产仍保存在你的账户中，但当前状态不支持公开展示。', reasonLabel: '状态原因', reasonUnavailable: '服务器未提供其他原因。' }
-    },
-    labels: { reference: '参考号', submittedAt: '提交时间', reviewedAt: '审核时间', status: '状态', views: '浏览量', unavailable: '不可用', safeTitle: '安全数据', safeBody: '此页面只包含提供方契约允许的房产数据。' },
-    actions: { back: '返回我的房产', viewProperty: '查看房产', viewPublic: '查看公开页面', supportUnavailable: '当前契约没有提供支持路径。', retry: '重试' }
-  }
-};
+  },};
 
 export function getProviderPropertyStateCopy(locale: SupportedLocale): ProviderPropertyStateCopy {
   return copyByLocale[locale];

@@ -1,6 +1,6 @@
 import { expect, type Page, type Route } from '@playwright/test';
 
-export type AdminMasterDataLocale = 'ar' | 'en' | 'zh-CN';
+export type AdminMasterDataLocale = 'ar' | 'en';
 export type AdminMasterDataSessionRole = 'admin' | 'seeker';
 
 export const MASTER_CATEGORY_ID = 'aaaaaaaaaaaaaaaaaaaaaaaa';
@@ -8,7 +8,6 @@ export const MASTER_LOCATION_ID = 'bbbbbbbbbbbbbbbbbbbbbbbb';
 export const MASTER_FEATURE_ID = 'cccccccccccccccccccccccc';
 
 export function localeForMasterDataProject(projectName: string): AdminMasterDataLocale {
-  if (projectName.endsWith('-zh')) return 'zh-CN';
   if (projectName.endsWith('-en')) return 'en';
   return 'ar';
 }
@@ -21,7 +20,7 @@ function categoryFixture() {
   return {
     id: MASTER_CATEGORY_ID,
     kind: 'category',
-    name: { ar: 'عقارات', en: 'Properties', 'zh-CN': '房产' },
+    name: { ar: 'عقارات', en: 'Properties',},
     slug: 'properties',
     order: 1,
     active: true,
@@ -36,7 +35,7 @@ function locationFixture() {
   return {
     id: MASTER_LOCATION_ID,
     kind: 'location',
-    name: { ar: 'مدينة السادات', en: 'Sadat City', 'zh-CN': '萨达特城' },
+    name: { ar: 'مدينة السادات', en: 'Sadat City',},
     slug: 'sadat-city',
     order: 1,
     active: true,
@@ -52,7 +51,7 @@ function featureFixture() {
     id: MASTER_FEATURE_ID,
     kind: 'feature',
     groupKey: 'building_amenities',
-    name: { ar: 'مصعد', en: 'Elevator', 'zh-CN': '电梯' },
+    name: { ar: 'مصعد', en: 'Elevator',},
     slug: 'elevator',
     order: 1,
     active: true,

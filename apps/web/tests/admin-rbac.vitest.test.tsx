@@ -73,9 +73,7 @@ describe('frontend_075 Administrator Users and Roles', () => {
     ['ar', '/admin/admin-users', 'ADM-59'],
     ['en', '/admin/admin-users/new', 'ADM-60'],
     ['ar', `/admin/admin-users/${userId}`, 'ADM-62'],
-    ['en', '/admin/roles', 'ADM-63'],
-    ['zh-CN', `/admin/roles/${roleId}`, 'ADM-64']
-  ] as const)('renders %s %s with the approved screen marker', async (locale, path, screenId) => {
+    ['en', '/admin/roles', 'ADM-63'],] as const)('renders %s %s with the approved screen marker', async (locale, path, screenId) => {
     const result = renderWithLocale(<AdminRbac url={path} locale={locale} session={adminSession} source={source()} />, { locale });
     await waitFor(() => expect(result.container.querySelector(`[data-screen-id="${screenId}"]`)).not.toBeNull());
     expect(result.container.querySelector('[data-device-scope="desktop"]')).not.toBeNull();

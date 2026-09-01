@@ -137,54 +137,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerRequestsCopy>> = {
     },
     types: { contact: 'Contact request', viewing: 'Viewing request', property_search: 'Property search', provider_customer: 'Customer request' },
     retry: 'Retry'
-  },
-  'zh-CN': {
-    list: {
-      eyebrow: '求购者工作区',
-      title: '我的请求',
-      description: '仅查看属于当前账户的找房、联系和看房请求。',
-      count: '个请求',
-      emptyTitle: '暂时没有请求',
-      emptyBody: '发送找房或联系请求后，它们会显示在这里。',
-      requestId: '请求编号',
-      type: '请求类型',
-      status: '状态',
-      submitted: '提交时间',
-      details: '查看详情',
-      previous: '上一页',
-      next: '下一页',
-      pagination: '请求分页'
-    },
-    detail: {
-      eyebrow: '请求详情',
-      title: '请求详情',
-      summary: '请求摘要',
-      timeline: '请求流程',
-      type: '请求类型',
-      status: '当前状态',
-      submitted: '提交时间',
-      updated: '最近更新',
-      property: '关联房源',
-      project: '关联项目',
-      message: '你的留言',
-      note: '你的备注',
-      unavailable: '当前契约没有提供更多详情。',
-      back: '返回请求列表'
-    },
-    states: {
-      loading: { title: '正在加载请求', body: '正在从平台获取你的请求数据。' },
-      retry: { title: '无法加载请求', body: '请检查连接后重试。' },
-      error: { title: '请求暂不可用', body: '无法读取请求数据，请稍后重试。' },
-      permission: { title: '需要登录', body: '只有已验证的求购者账户才能查看这些数据。' },
-      notFound: { title: '未找到请求', body: '该请求不属于当前账户或已不可用。' }
-    },
-    statuses: {
-      new: '新请求', under_review: '审核中', contacted: '已联系', scheduled: '已安排', needs_information: '需要信息', in_progress: '处理中', resolved: '已解决', cancelled: '已取消', closed: '已关闭'
-    },
-    types: { contact: '联系请求', viewing: '看房请求', property_search: '找房请求', provider_customer: '客户请求' },
-    retry: '重试'
-  }
-};
+  },};
 
 export function getSeekerRequestsCopy(locale: SupportedLocale): SeekerRequestsCopy {
   return copy[locale];

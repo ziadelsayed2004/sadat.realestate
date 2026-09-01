@@ -70,19 +70,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminCommissionsCopy>> = {
     actions: { retry: 'Retry', create: 'Create', save: 'Save', apply: 'Apply', previous: 'Previous', next: 'Next', back: 'Back' },
     labels: { key: 'Key', label: 'Label', kind: 'Kind', scope: 'Scope', scopeKey: 'Scope key', status: 'Status', value: 'Value', effectiveFrom: 'Effective from', effectiveTo: 'Effective to', currency: 'Currency', amountMinor: 'Amount in minor units', percentageBps: 'Percentage basis points', accountId: 'Account ID', reason: 'Reason', source: 'Source', policyVersion: 'Policy version', action: 'Action', targetType: 'Target type', targetId: 'Target ID', createdAt: 'Created at', acknowledgedAt: 'Acknowledged at', effectiveAt: 'Effective at', version: 'Version' },
     states: baseStates, kinds: { percentage: 'Percentage', fixed: 'Fixed amount', exempt: 'Exempt' }, statuses: { draft: 'Draft', active: 'Active', inactive: 'Inactive', archived: 'Archived' }, scopes: { default: 'Default', provider_type: 'Provider type', transaction_type: 'Transaction type', property_kind: 'Property kind', organization: 'Organization', account: 'Account' }, sources: { exception: 'Exception', account_override: 'Account override', policy: 'Policy', none: 'None' }, targetTypes: { commission_policy: 'Policy', commission_exception: 'Exception', commission_account_override: 'Account override', commission_confirmation: 'Confirmation' }, noAccount: 'Enter a 24-character hexadecimal accountId.', validation: 'Review the required fields and contract rules.', saved: 'Saved successfully.', count: total => `${total} records`, page: (page, pages) => `Page ${page} of ${pages}`, value: valueLabel
-  },
-  'zh-CN': {
-    eyebrow: '佣金管理',
-    navLabel: '佣金',
-    titles: { policies: '佣金政策', newPolicy: '创建佣金政策', history: '佣金变更历史', account: '账户佣金', exceptions: '佣金例外', newException: '创建例外', confirmations: '佣金确认' },
-    descriptions: { policies: '查看明确的政策及其生效时间。', newPolicy: '根据已批准的合同创建明确政策。', history: '查看敏感变更的时间顺序记录。', account: '查看单个账户的有效政策，并在需要时创建覆盖。', exceptions: '查看与账户关联的佣金例外。', newException: '填写原因和生效日期记录例外。', confirmations: '查看政策、账户和例外确认。' },
-    tabs: [['/admin/commissions', '政策'], ['/admin/commissions/new', '新建政策'], ['/admin/commissions/history', '历史'], ['/admin/commissions/account', '账户'], ['/admin/commissions/exceptions', '例外'], ['/admin/commissions/exceptions/new', '新建例外'], ['/admin/commissions/confirmations', '确认']],
-    actions: { retry: '重试', create: '创建', save: '保存', apply: '应用', previous: '上一页', next: '下一页', back: '返回' },
-    labels: { key: '键', label: '名称', kind: '类型', scope: '范围', scopeKey: '范围键', status: '状态', value: '值', effectiveFrom: '生效时间', effectiveTo: '结束时间', currency: '货币', amountMinor: '最小单位金额', percentageBps: '百分比基点', accountId: '账户 ID', reason: '原因', source: '来源', policyVersion: '政策版本', action: '操作', targetType: '目标类型', targetId: '目标 ID', createdAt: '创建时间', acknowledgedAt: '确认时间', effectiveAt: '生效于', version: '版本' },
-    states: { loading: { title: '正在加载', body: '正在加载佣金数据。' }, empty: { title: '暂无记录', body: '此视图目前没有佣金记录。' }, error: { title: '无法加载', body: '无法安全加载佣金数据。' }, retry: { title: '连接中断', body: '连接恢复后重试佣金请求。' }, permission: { title: '需要权限', body: '当前管理员会话无权查看或更改佣金记录。' }, not_found: { title: '需要账户标识', body: '请使用有效的 accountId 打开此视图。此 API 不提供账户目录。' } },
-    kinds: { percentage: '百分比', fixed: '固定金额', exempt: '豁免' }, statuses: { draft: '草稿', active: '有效', inactive: '无效', archived: '已归档' }, scopes: { default: '默认', provider_type: '提供方类型', transaction_type: '交易类型', property_kind: '房产类型', organization: '组织', account: '账户' }, sources: { exception: '例外', account_override: '账户覆盖', policy: '政策', none: '无' }, targetTypes: { commission_policy: '政策', commission_exception: '例外', commission_account_override: '账户覆盖', commission_confirmation: '确认' }, noAccount: '请输入 24 位十六进制 accountId。', validation: '请检查必填字段和合同规则。', saved: '保存成功。', count: total => `${total} 条记录`, page: (page, pages) => `第 ${page} 页，共 ${pages} 页`, value: valueLabel
-  }
-};
+  },};
 
 export function getAdminCommissionsCopy(locale: SupportedLocale): AdminCommissionsCopy {
   return copyByLocale[locale];

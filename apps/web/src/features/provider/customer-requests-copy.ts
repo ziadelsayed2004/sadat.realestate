@@ -133,41 +133,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderCustomerRequestsCop
     transition: { title: 'Update request status', description: 'Confirm the action using the request version currently shown.', reason: 'Reason or note', reasonHelp: 'A reason is required when cancelling, requesting information, or closing.', cancel: 'Cancel', confirm: 'Confirm action', validation: 'Enter a valid reason for this action.' },
     feedback: { created: 'Customer request created.', transitioned: 'Request status updated.' },
     errors: { generic: 'The operation could not be completed. Try again.', conflict: 'The request changed before it was saved. Reload the list.', validation: 'The entered data is not valid.' }
-  },
-  'zh-CN': {
-    eyebrow: '客户请求管理',
-    title: '客户请求',
-    description: '使用系统返回的数据和操作跟进由提供方账户创建的客户请求。',
-    add: '添加客户请求',
-    countSuffix: '个请求',
-    filtersLabel: '筛选客户请求',
-    searchLabel: '搜索',
-    searchPlaceholder: '按客户姓名或电话搜索',
-    statusLabel: '状态',
-    allStatuses: '全部状态',
-    apply: '应用',
-    clear: '清除',
-    columns: { customer: '客户', request: '请求类型', status: '状态', related: '房产或项目', created: '创建时间', updated: '更新时间', actions: '操作' },
-    statuses: { new: '新请求', under_review: '审核中', contacted: '已联系', scheduled: '已安排', needs_information: '需要信息', in_progress: '跟进中', resolved: '已解决', cancelled: '已取消', closed: '已关闭' },
-    requestType: '客户请求',
-    source: '来源',
-    providerSource: '提供方账户',
-    transitions: { start_review: '开始审核', contact: '标记为已联系', schedule: '安排时间', needs_information: '请求信息', start_progress: '开始跟进', resolve: '解决', cancel: '取消请求', close: '关闭请求', reopen: '重新打开' },
-    noActions: '没有可用操作',
-    emptyTitle: '暂无客户请求',
-    emptyBody: '提供方账户创建的请求将在可用时显示在这里。',
-    noResultsTitle: '没有匹配的请求',
-    noResultsBody: '请尝试更改搜索或状态筛选。',
-    unavailable: '不可用',
-    previous: '上一页',
-    next: '下一页',
-    pagination: '客户请求分页',
-    form: { title: '添加客户请求', description: '输入提供方账户允许使用的客户和请求数据。', customerDetails: '客户信息', firstName: '名字', lastName: '姓氏', phone: '电话号码', email: '电子邮箱', requestDetails: '请求详情', message: '请求详情或消息', propertyId: '房产 ID', projectId: '项目 ID', sourceNote: '来源备注', optional: '可选', cancel: '取消', save: '保存请求', close: '关闭', validation: '保存请求前请检查必填字段。' },
-    transition: { title: '更新请求状态', description: '使用当前显示的请求版本确认操作。', reason: '原因或备注', reasonHelp: '取消、请求信息或关闭时必须填写原因。', cancel: '取消', confirm: '确认操作', validation: '请输入此操作的有效原因。' },
-    feedback: { created: '客户请求已创建。', transitioned: '请求状态已更新。' },
-    errors: { generic: '无法完成操作，请重试。', conflict: '请求在保存前已发生变化，请重新加载列表。', validation: '输入的数据无效。' }
-  }
-};
+  },};
 
 export function getProviderCustomerRequestsCopy(locale: SupportedLocale): ProviderCustomerRequestsCopy {
   return copyByLocale[locale];

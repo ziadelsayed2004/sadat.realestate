@@ -44,7 +44,7 @@ describe('Seeker requests', () => {
     ]);
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the owned request list in the approved direction for %s', async locale => {
+  it.each(['ar', 'en',] as const)('renders the owned request list in the approved direction for %s', async locale => {
     const copy = getSeekerRequestsCopy(locale);
     const result = renderWithLocale(<SeekerRequests locale={locale} session={session} listLoad={async () => list} />, { locale });
     await waitFor(() => expect(screen.getByTestId(`seeker-request-${request.id}`)).toBeInTheDocument());

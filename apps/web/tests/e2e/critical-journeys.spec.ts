@@ -6,11 +6,11 @@ const requestId = 'bbbbbbbbbbbbbbbbbbbbbbbb';
 const viewingId = 'cccccccccccccccccccccccc';
 const providerId = 'dddddddddddddddddddddddd';
 
-type Locale = 'ar' | 'en' | 'zh-CN';
+type Locale = 'ar' | 'en';
 
 function localeForProject(): Locale {
   const project = test.info().project.name;
-  return project.endsWith('-zh') ? 'zh-CN' : project.endsWith('-en') ? 'en' : 'ar';
+  return project.endsWith('-en') ? 'en' : 'ar';
 }
 
 function envelope(data: unknown, requestIdValue: string): string {
@@ -27,14 +27,14 @@ function publishedProperty() {
     id: propertyId,
     slug: 'critical-published-home',
     kind: 'property',
-    name: { ar: 'منزل منشور', en: 'Critical published home', 'zh-CN': '已发布房产' },
+    name: { ar: 'منزل منشور', en: 'Critical published home',},
     transactionType: 'sale',
-    description: { ar: 'وصف المنزل المنشور', en: 'A published home used by the critical journey.', 'zh-CN': '已发布房产描述' },
+    description: { ar: 'وصف المنزل المنشور', en: 'A published home used by the critical journey.',},
     area: { value: 120, unit: 'sqm' },
     layout: { bedrooms: 3, bathrooms: 2, floor: 4 },
     price: { amount: 1250000, currency: 'EGP' },
     source: { sourceType: 'developer_company', organizationId: 'eeeeeeeeeeeeeeeeeeeeeeee' },
-    seo: { title: { ar: 'منزل منشور', en: 'Critical published home', 'zh-CN': '已发布房产' }, description: { en: 'A published home.' }, slug: 'critical-published-home' },
+    seo: { title: { ar: 'منزل منشور', en: 'Critical published home',}, description: { en: 'A published home.' }, slug: 'critical-published-home' },
     project: { id: 'eeeeeeeeeeeeeeeeeeeeeeee', slug: 'critical-project', name: { en: 'Critical project' }, description: { en: 'A published project.' } },
     media: [],
     relatedProperties: []
@@ -104,7 +104,7 @@ async function routeProviderSurfaces(page: Page): Promise<void> {
   await page.route(`**/api/v1/provider/properties/${propertyId}`, async route => {
     expect(route.request().method()).toBe('GET');
     expect(route.request().headers().authorization).toBe('Bearer provider.critical.token');
-    await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ id: propertyId, kind: 'property', name: { ar: 'عقار منشور', en: 'Critical published home', 'zh-CN': '已发布房产' }, slug: 'critical-published-home', transactionType: 'sale', source: { providerId, sourceType: 'individual_broker' }, locationId: 'eeeeeeeeeeeeeeeeeeeeeeee', price: { amount: 1250000, currency: 'EGP' }, contact: { contactName: 'Mona Hassan', phone: '+201000000000', preferredLocale: 'en' }, status: 'published', active: true, version: 4, createdAt: '2026-08-18T08:00:00.000Z', updatedAt: '2026-08-20T11:00:00.000Z', publishedAt: '2026-08-20T11:00:00.000Z', availableActions: [] }, 'critical-provider-property') });
+    await route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ id: propertyId, kind: 'property', name: { ar: 'عقار منشور', en: 'Critical published home',}, slug: 'critical-published-home', transactionType: 'sale', source: { providerId, sourceType: 'individual_broker' }, locationId: 'eeeeeeeeeeeeeeeeeeeeeeee', price: { amount: 1250000, currency: 'EGP' }, contact: { contactName: 'Mona Hassan', phone: '+201000000000', preferredLocale: 'en' }, status: 'published', active: true, version: 4, createdAt: '2026-08-18T08:00:00.000Z', updatedAt: '2026-08-20T11:00:00.000Z', publishedAt: '2026-08-20T11:00:00.000Z', availableActions: [] }, 'critical-provider-property') });
   });
   await page.route('**/api/v1/provider/ads**', async route => {
     expect(route.request().headers().authorization).toBe('Bearer provider.critical.token');
@@ -119,7 +119,7 @@ async function routeProviderSurfaces(page: Page): Promise<void> {
 test.describe('F6 critical cross-surface journeys', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'source-of-truth', description: 'Implemented runtime routes and test-only isolated API fixtures; no production mocks or invented endpoints.' });
-    testInfo.annotations.push({ type: 'locale-matrix', description: 'Arabic RTL, English LTR, and Simplified Chinese LTR on the approved Desktop dashboard scope.' });
+    testInfo.annotations.push({ type: 'locale-matrix', description: 'Arabic RTL, English LTR, and Arabic or English LTR on the approved Desktop dashboard scope.' });
     test.skip(!testInfo.project.name.startsWith('desktop-'), 'The cross-surface journey enters Seeker, Provider, and Admin dashboards, whose approved scope is Desktop-only. Public/auth coverage remains covered by the existing all-device matrices.');
     await page.setViewportSize({ width: 1440, height: 900 });
   });

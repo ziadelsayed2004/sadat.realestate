@@ -1,8 +1,7 @@
 import { expect, test } from '@playwright/test';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  if (project.endsWith('-zh')) return 'zh-CN';
   if (project.endsWith('-en')) return 'en';
   return 'ar';
 }
@@ -75,12 +74,12 @@ async function routeProviderProperties(page: import('@playwright/test').Page, fo
     const filtered = status === 'published' && search === 'villa';
     const total = filtered ? 1 : 7;
     const items = filtered
-      ? [propertyFixture('cccccccccccccccccccccccc', 'published', { ar: 'فيلا المزود', en: 'Provider villa', 'zh-CN': '提供方别墅' })]
+      ? [propertyFixture('cccccccccccccccccccccccc', 'published', { ar: 'فيلا المزود', en: 'Provider villa',})]
       : pageNumber === 2
-        ? [propertyFixture('eeeeeeeeeeeeeeeeeeeeeeee', 'draft', { ar: 'مسودة المزود', en: 'Provider draft', 'zh-CN': '提供方草稿' }, ['update', 'submit'])]
+        ? [propertyFixture('eeeeeeeeeeeeeeeeeeeeeeee', 'draft', { ar: 'مسودة المزود', en: 'Provider draft',}, ['update', 'submit'])]
         : [
-            propertyFixture('cccccccccccccccccccccccc', 'published', { ar: 'فيلا المزود', en: 'Provider villa', 'zh-CN': '提供方别墅' }),
-            propertyFixture('dddddddddddddddddddddddd', 'needs_changes', { ar: 'عقار يحتاج تعديلاً', en: 'Needs changes property', 'zh-CN': '需要修改的房产' }, ['update', 'submit'])
+            propertyFixture('cccccccccccccccccccccccc', 'published', { ar: 'فيلا المزود', en: 'Provider villa',}),
+            propertyFixture('dddddddddddddddddddddddd', 'needs_changes', { ar: 'عقار يحتاج تعديلاً', en: 'Needs changes property',}, ['update', 'submit'])
           ];
     await route.fulfill({
       status: 200,

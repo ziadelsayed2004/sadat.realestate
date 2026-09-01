@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "evidenceId": "BACKEND_152_BLOCKER_REVALIDATION_2026-09-01",
+  "programId": "SADAT_G1_G6_APPROVED_2026-08-30",
+  "taskId": "backend_152",
+  "revalidationOrdinal": 3,
+  "generatedAt": "2026-09-01T02:05:00+03:00",
+  "status": "blocked",
+  "markers": [
+    "TASK_backend_152_BLOCKED_CONTACT_TIME_SOURCE",
+    "TASK_backend_152_BLOCKED_PRIVACY_APPROVAL"
+  ],
+  "objectiveFileRead": "C:\\Users\\Ziad Elsayed\\.codex\\attachments\\871de01f-a046-488e-9280-00b4554fc01b\\goal-objective.md",
+  "revalidation": {
+    "sameBlockerAsPriorChecks": true,
+    "newApprovedMappingFound": false,
+    "newPrivacyApprovalFound": false,
+    "dependencyReadyInternalTaskFound": false
+  },
+  "externalAttachmentSearch": {
+    "root": "C:\\Users\\Ziad Elsayed\\.codex\\attachments",
+    "filenamePatterns": ["PUB03", "CONTACT_TIME", "privacy", "disclosure", "mapping", "preferredContact"],
+    "result": "Only goal-objective files were found; no owner-approved mapping or disclosure artifact was supplied."
+  },
+  "workspaceSearch": {
+    "result": "The only active contact-time values remain unapproved candidates in the existing public details form; no PUB03_CONTACT_TIME_MAPPING.json, active request contract, privacy disclosure, consentAt or privacyNoticeVersion exists."
+  },
+  "canonicalEvidence": {
+    "figmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "nodeId": "6017:12693",
+    "localExport": "docs/design_sources/final_screens/public/PUB-03.png",
+    "finding": "The full-canvas export still shows the contact-time select closed and does not prove its option list or AR/EN mapping.",
+    "forbiddenFileUsed": false
+  },
+  "environmentChecks": {
+    "inAppBrowser": "unavailable: missing sandboxPolicy metadata",
+    "directWebOpen": "unavailable: canonical Figma URL rejected by safe-open policy",
+    "localBrowserEvidence": "Previously verified runtime switch only; it cannot authorize product copy or privacy approval."
+  },
+  "protectedState": {
+    "branchDivergence": "0 ahead / 0 behind",
+    "stagedFiles": 0,
+    "productMutationForBackend152": false,
+    "databaseMutationForBackend152": false,
+    "externalSend": false,
+    "imageOrIndexMutation": false
+  },
+  "decision": "The same genuine external owner-input blocker has been independently revalidated three consecutive goal turns. No dependent active-program task can start without violating the approved dependency graph or inventing contract/privacy semantics.",
+  "unblockInputs": [
+    "Owner-approved PUB03_CONTACT_TIME_MAPPING.json with exact code, AR label, EN label and provenance.",
+    "Owner-approved, displayed AR/EN privacy disclosure and version for submission.",
+    "Fresh exact-hash backend_152 ownership grant after those inputs are present."
+  ],
+  "stopCondition": "Do not start backend_153 or any dependent task until the unblock inputs are present."
+}

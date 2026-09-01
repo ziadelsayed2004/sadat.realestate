@@ -557,7 +557,7 @@ export function createAdSettingsService(seed: {
     },
     async listPublicBanners(surfaceOrLocale: string, localeOrSurface: string, at: Date = clock()) {
       const surfaces = new Set(['homepage', 'search', 'property_detail', 'project_detail', 'community']);
-      const locales = new Set(['ar', 'en', 'zh-CN']);
+      const locales = new Set(['ar', 'en']);
       const surface = surfaces.has(surfaceOrLocale) ? surfaceOrLocale : localeOrSurface;
       const locale = (surfaces.has(surfaceOrLocale) ? localeOrSurface : surfaceOrLocale) as SupportedLocale;
       if (!surfaces.has(surface) || !locales.has(locale)) throw new AdBannerServiceError('NOT_FOUND');

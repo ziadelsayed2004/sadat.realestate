@@ -8,7 +8,7 @@ export function adminPropertyFixture() {
   return {
     id: adminPropertyId,
     kind: 'property',
-    name: { ar: 'فيلا النيل', en: 'Nile Villa', 'zh-CN': '尼罗别墅' },
+    name: { ar: 'فيلا النيل', en: 'Nile Villa',},
     slug: 'nile-villa',
     transactionType: 'sale',
     source: { providerId: 'bbbbbbbbbbbbbbbbbbbbbbbb', sourceType: 'developer_company', organizationId: 'cccccccccccccccccccccccc' },
@@ -40,8 +40,8 @@ export function adminPropertyReportsFixture() {
   };
 }
 
-export function localeForAdminProperties(projectName: string): 'ar' | 'en' | 'zh-CN' {
-  return projectName.endsWith('-zh') ? 'zh-CN' : projectName.endsWith('-en') ? 'en' : 'ar';
+export function localeForAdminProperties(projectName: string): 'ar' | 'en' {
+  return projectName.endsWith('-en') ? 'en' : 'ar';
 }
 
 export async function routeAdminPropertyApis(page: Page, allow = true): Promise<void> {

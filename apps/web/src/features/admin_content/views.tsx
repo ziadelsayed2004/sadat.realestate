@@ -72,7 +72,7 @@ export interface AdminContentProps {
   readonly deleteCategory?: AdminCategoryDeleteMutation | undefined;
 }
 
-const locales: readonly SupportedLocale[] = ['ar', 'en', 'zh-CN'];
+const locales: readonly SupportedLocale[] = ['ar', 'en',];
 const statuses: readonly ArticleStatus[] = ['draft', 'pending_review', 'published', 'archived'];
 const actionToStatus: Readonly<Partial<Record<ArticleAvailableAction, ArticleStatus>>> = {
   submit: 'pending_review', publish: 'published', return_to_draft: 'draft', archive: 'archived', restore: 'draft'
@@ -82,11 +82,11 @@ type LocalizedDraft = Record<SupportedLocale, string>;
 type LocalizedStateSetter = Dispatch<SetStateAction<LocalizedDraft>>;
 
 function localizedDraft(value: LocalizedText | undefined): LocalizedDraft {
-  return { ar: value?.ar ?? '', en: value?.en ?? '', 'zh-CN': value?.['zh-CN'] ?? '' };
+  return { ar: value?.ar ?? '', en: value?.en ?? '',};
 }
 
 function localizedValue(value: LocalizedText | undefined, locale: SupportedLocale): string {
-  return value?.[locale] ?? value?.ar ?? value?.en ?? value?.['zh-CN'] ?? '';
+  return value?.[locale] ?? value?.ar ?? value?.en ?? '';
 }
 
 function parseLocalized(value: LocalizedDraft): LocalizedText {
@@ -216,9 +216,7 @@ function ArticleMetricStrip({ data, locale }: { readonly data: AdminArticleListD
   const counts = Object.fromEntries(statuses.map(status => [status, data.items.filter(article => article.status === status).length])) as Record<ArticleStatus, number>;
   const labels = locale === 'ar'
     ? ['إجمالي المقالات', 'منشورة', 'مسودات', 'قيد المراجعة', 'مؤرشفة']
-    : locale === 'zh-CN'
-      ? ['文章总数', '已发布', '草稿', '审核中', '已归档']
-      : ['Total articles', 'Published', 'Drafts', 'Under review', 'Archived'];
+    :['Total articles', 'Published', 'Drafts', 'Under review', 'Archived'];
   const values = [data.total, counts.published, counts.draft, counts.pending_review, counts.archived];
   const colors = ['#1f355f', '#138a4b', '#4263a5', '#bd7414', '#667085'];
   return <div data-testid="admin-article-metrics" aria-label={labels[0]} style={{ display: 'flex', flexWrap: 'wrap', gap: 12, maxWidth: 1320, margin: '0 auto 12px' }}>{values.map((value, index) => <article className="admin-dashboard__metric" data-testid={`admin-article-metric-${index}`} key={labels[index]}><strong style={{ color: colors[index] }}>{new Intl.NumberFormat(locale).format(value)}</strong><span>{labels[index]}</span></article>)}</div>;
@@ -226,7 +224,7 @@ function ArticleMetricStrip({ data, locale }: { readonly data: AdminArticleListD
 
 function ArticleStatusStrip({ locale, selected, onSelect }: { readonly locale: SupportedLocale; readonly selected: ArticleStatus | ''; readonly onSelect: (status: ArticleStatus | '') => void }) {
   const copy = getAdminContentCopy(locale);
-  const allLabel = locale === 'ar' ? 'كل المقالات' : locale === 'zh-CN' ? '全部文章' : 'All articles';
+  const allLabel = locale === 'ar' ? 'كل المقالات' :'All articles';
   const options = [['', allLabel] as const, ...statuses.map(status => [status, copy.status[status]] as const)];
   return <div role="tablist" aria-label={`${copy.statusLabel} summary`} data-testid="admin-article-status-tabs" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, margin: '0 auto 16px', maxWidth: 1320 }}>{options.map(([status, label]) => <button key={status || 'all'} type="button" role="tab" aria-selected={selected === status} onClick={() => onSelect(status)} style={{ border: '1px solid #d0d5dd', borderRadius: 999, padding: '8px 14px', background: selected === status ? '#1f355f' : '#fff', color: selected === status ? '#fff' : '#344054', cursor: 'pointer' }}>{label}</button>)}</div>;
 }

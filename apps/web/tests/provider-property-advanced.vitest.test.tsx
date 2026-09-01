@@ -18,7 +18,7 @@ function property(overrides: Partial<PropertyData> = {}): PropertyData {
   return propertyDataSchema.parse({
     id: propertyId,
     kind: 'property',
-    name: { ar: 'عقار المزوّد', en: 'Provider property', 'zh-CN': '提供方房产' },
+    name: { ar: 'عقار المزوّد', en: 'Provider property',},
     slug: 'provider-property',
     transactionType: 'sale',
     source: { providerId, sourceType: 'individual_broker' },
@@ -68,7 +68,7 @@ describe('Provider property advanced wizard steps', () => {
     expect(requests[2]?.json).toEqual({ version: 2, price: { amount: 1_000_000, currency: 'EGP' }, paymentPlans: [], reason: 'Save property price' });
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders PRV-05, PRV-06, and PRV-07 with the approved direction for %s', locale => {
+  it.each(['ar', 'en',] as const)('renders PRV-05, PRV-06, and PRV-07 with the approved direction for %s', locale => {
     const current = property();
     const result = renderWithLocale(<ProviderPropertyAdvancedWizard locale={locale} session={session} authClient={authClient} step="details" propertyId={propertyId} initialData={current} />, { locale });
     const copy = getProviderPropertyAdvancedCopy(locale);

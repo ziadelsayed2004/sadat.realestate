@@ -81,37 +81,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyAdvancedCop
     commissionBoundaryBody: 'This form does not show an assumed commission percentage or universal price. Any effective policy must come from approved platform data.',
     invalidReference: 'Check feature and service references. Each must be a unique 24-character hexadecimal ID with no overlap.',
     versionConflict: 'The draft changed after it was loaded. Reload the draft before saving your changes.'
-  },
-  'zh-CN': {
-    titles: { details: '房产详情', 'price-payment': '价格与付款', 'features-services': '特色与服务' },
-    descriptions: {
-      details: '填写当前房产契约支持的面积、户型和描述字段。',
-      'price-payment': '按照当前契约规则填写价格和付款计划。',
-      'features-services': '保存与房产关联的已批准特色和服务引用。'
-    },
-    steps: { details: '房产详情', 'price-payment': '价格与付款', 'features-services': '特色与服务' },
-    labels: {
-      description: '房产描述', propertyTypeId: '房产类型引用 ID', area: '面积（平方米）', bedrooms: '卧室数量', bathrooms: '卫生间数量', floor: '楼层', totalFloors: '总楼层',
-      priceAmount: '总价', currency: '货币', paymentPlan: '付款计划', planName: '计划名称', installments: '分期次数', frequency: '付款频率', downPaymentAmount: '首付款', installmentAmount: '每期金额', featureIds: '特色引用', serviceIds: '服务引用'
-    },
-    placeholders: {
-      description: '填写清晰的房产描述...', propertyTypeId: '24 个十六进制字符', area: '例如：120', bedrooms: '0', bathrooms: '0', floor: '0', totalFloors: '1', priceAmount: '例如：1000000', currency: 'EGP', planName: '分期计划', installments: '12', downPaymentAmount: '可选', installmentAmount: '例如：80000', featureIds: '用逗号分隔的十六进制引用', serviceIds: '用逗号分隔的十六进制引用'
-    },
-    frequencyLabels: { monthly: '每月', quarterly: '每季度', annually: '每年' },
-    propertyTypeCatalogUnavailableTitle: '提供方房产类型目录不可用',
-    propertyTypeCatalogUnavailableBody: '当前提供方契约不提供房产类型列表。不使用管理端路径或虚构标签；可以保留已有引用，或输入已批准的引用。',
-    featureCatalogUnavailableTitle: '提供方特色目录不可用',
-    featureCatalogUnavailableBody: '没有用于显示已批准特色标签的提供方路径。不使用管理端数据或虚构标签；仅保存已批准的引用。',
-    serviceCatalogUnavailableTitle: '提供方服务目录不可用',
-    serviceCatalogUnavailableBody: '没有用于显示已批准服务标签的提供方路径。不使用管理端数据或虚构标签；仅保存已批准的引用。',
-    referenceHelp: '仅使用已批准来源的引用。保存前会检查格式、重复、重叠以及服务端所有权规则。',
-    paymentPlanHelp: '计划货币必须与房产价格货币一致。本表单不显示通用佣金或不受支持的融资声明。',
-    commissionBoundaryTitle: '佣金由平台控制',
-    commissionBoundaryBody: '本表单不显示假定的佣金比例或通用价格。有效政策必须来自已批准的平台数据。',
-    invalidReference: '请检查特色和服务引用。每个引用必须是唯一的 24 位十六进制 ID，且两组不能重叠。',
-    versionConflict: '草稿在加载后已发生变化。请重新加载草稿后再保存。'
-  }
-};
+  },};
 
 export function getProviderPropertyAdvancedCopy(locale: SupportedLocale): ProviderPropertyAdvancedCopy {
   return copyByLocale[locale];

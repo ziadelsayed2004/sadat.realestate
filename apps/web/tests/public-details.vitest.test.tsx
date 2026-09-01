@@ -25,24 +25,24 @@ const detailsData = publicPropertyDetailsSchema.parse({
   id: propertyId,
   slug: 'published-home',
   kind: 'property',
-  name: { ar: 'منزل منشور', en: 'Published home', 'zh-CN': '已发布房产' },
+  name: { ar: 'منزل منشور', en: 'Published home',},
   transactionType: 'sale',
   mapUrl: 'https://maps.google.com/?q=Sadat+City',
-  description: { ar: 'وصف المنزل المنشور', en: 'A published home description', 'zh-CN': '已发布房产描述' },
+  description: { ar: 'وصف المنزل المنشور', en: 'A published home description',},
   area: { value: 120, unit: 'sqm' },
   layout: { bedrooms: 3, bathrooms: 2, floor: 4 },
   price: { amount: 1_250_000, currency: 'EGP' },
   source: { sourceType: 'developer_company', organizationId: projectId },
   seo: {
-    title: { ar: 'تفاصيل منزل منشور', en: 'Published home details', 'zh-CN': '已发布房产详情' },
-    description: { ar: 'وصف محرك البحث', en: 'Search description', 'zh-CN': '搜索描述' },
+    title: { ar: 'تفاصيل منزل منشور', en: 'Published home details',},
+    description: { ar: 'وصف محرك البحث', en: 'Search description',},
     slug: 'published-home'
   },
   project: {
     id: projectId,
     slug: 'central-project',
-    name: { ar: 'المشروع المركزي', en: 'Central project', 'zh-CN': '中央项目' },
-    description: { ar: 'نبذة المشروع', en: 'Project description', 'zh-CN': '项目描述' }
+    name: { ar: 'المشروع المركزي', en: 'Central project',},
+    description: { ar: 'نبذة المشروع', en: 'Project description',}
   },
   media: [{
     id: mediaId,
@@ -60,7 +60,7 @@ const detailsData = publicPropertyDetailsSchema.parse({
     id: relatedId,
     slug: 'related-home',
     kind: 'unit',
-    name: { ar: 'منزل مشابه', en: 'Related home', 'zh-CN': '相似房产' },
+    name: { ar: 'منزل مشابه', en: 'Related home',},
     transactionType: 'rent',
     price: { amount: 20_000, currency: 'EGP' }
   }]

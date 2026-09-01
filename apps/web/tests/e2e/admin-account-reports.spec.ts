@@ -44,10 +44,10 @@ test.describe('F5 account reports and restrictions', () => {
     await page.goto(`/admin/account-reports?reportId=${ADMIN_REPORT_ID}&lang=${encodeURIComponent(locale)}`);
     await expect(page.locator('[data-screen-id="ADM-07"]')).toBeVisible();
     const resolveRequest = page.waitForRequest(request => request.method() === 'POST' && request.url().includes(`/api/v1/admin/account-reports/${ADMIN_REPORT_ID}/resolve`));
-    await page.getByRole('button', { name: locale === 'ar' ? 'إغلاق البلاغ' : locale === 'zh-CN' ? '解决报告' : 'Resolve report' }).click();
-    await expect(page.getByRole('button', { name: locale === 'ar' ? 'إغلاق البلاغ' : locale === 'zh-CN' ? '解决报告' : 'Resolve report' })).toBeVisible();
-    await page.getByLabel(locale === 'ar' ? 'سبب هذا الإجراء' : locale === 'zh-CN' ? '本次操作原因' : 'Reason for this action').fill('Reviewed with evidence');
-    await page.getByRole('button', { name: locale === 'ar' ? 'إغلاق البلاغ' : locale === 'zh-CN' ? '解决报告' : 'Resolve report' }).click();
+    await page.getByRole('button', { name: locale === 'ar' ? 'إغلاق البلاغ' :'Resolve report' }).click();
+    await expect(page.getByRole('button', { name: locale === 'ar' ? 'إغلاق البلاغ' :'Resolve report' })).toBeVisible();
+    await page.getByLabel(locale === 'ar' ? 'سبب هذا الإجراء' :'Reason for this action').fill('Reviewed with evidence');
+    await page.getByRole('button', { name: locale === 'ar' ? 'إغلاق البلاغ' :'Resolve report' }).click();
     const request = await resolveRequest;
     expect(JSON.parse(request.postData() ?? '{}')).toEqual({ version: 1, action: 'resolve', reason: 'Reviewed with evidence' });
     await expect(page.getByRole('status')).toBeVisible();

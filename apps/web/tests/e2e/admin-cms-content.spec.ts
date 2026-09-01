@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { adminCmsAboutId, adminCmsContentFor, adminCmsEnvelope } from './admin-cms-content.fixtures.ts';
 
-function localeForAdminCms(): 'ar' | 'en' | 'zh-CN' {
+function localeForAdminCms(): 'ar' | 'en' {
   const project = test.info().project.name;
-  return project.endsWith('-zh') ? 'zh-CN' : project.endsWith('-en') ? 'en' : 'ar';
+  return project.endsWith('-en') ? 'en' : 'ar';
 }
 
 async function routeAdminCmsApis(page: import('@playwright/test').Page, allow = true): Promise<void> {

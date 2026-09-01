@@ -95,7 +95,7 @@ describe('Admin account reports and restrictions', () => {
     expect(requests.every(request => request.authorization === 'Bearer admin.account-reports.test')).toBe(true);
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the report list with locale direction for %s', async locale => {
+  it.each(['ar', 'en',] as const)('renders the report list with locale direction for %s', async locale => {
     const result = renderWithLocale(<AdminAccountReports locale={locale} session={session} view="reports" initialData={reportList} />, { locale });
     await waitFor(() => expect(screen.getByTestId(`admin-account-report-${report.id}`)).toBeInTheDocument());
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');

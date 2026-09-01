@@ -45,7 +45,7 @@ function status(overrides: Partial<ProviderApplicationStatusData> = {}): Provide
 afterEach(() => cleanup());
 
 describe('provider application review and status', () => {
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the complete review summary in the supported direction for %s', async (locale) => {
+  it.each(['ar', 'en',] as const)('renders the complete review summary in the supported direction for %s', async (locale) => {
     const copy = getProviderReviewCopy(locale);
     renderWithLocale(<ProviderReviewPage client={{}} locale={locale} initialApplication={application()} onBack={vi.fn()} />, { locale });
 

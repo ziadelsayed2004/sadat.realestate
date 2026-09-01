@@ -160,22 +160,7 @@ const arabic: AdminAccountsCopy = {
   actions: { retry: 'إعادة المحاولة', view: 'عرض التفاصيل', back: 'العودة للقائمة', openDocument: 'فتح المستند', unavailableDocument: 'غير متاح', loadingDocument: 'جار الفتح…' }
 };
 
-const chinese: AdminAccountsCopy = {
-  ...english,
-  users: { ...english.users, eyebrow: '账户管理', title: '用户与账户', description: '使用管理员批准的服务端数据查看求购者和房产提供方账户。', searchLabel: '搜索当前页面', searchPlaceholder: '姓名、邮箱、电话或账户 ID', roleLabel: '账户类型', statusLabel: '账户状态', typeLabel: '账户类型', all: '全部', totalLabel: '账户', emptyTitle: '未找到账户', emptyBody: '没有符合当前筛选条件的账户。', columns: { name: '账户', type: '类型', phone: '电话', email: '邮箱', status: '状态', locale: '语言', updated: '更新时间', actions: '操作' } },
-  providers: { ...english.providers, eyebrow: '账户管理', title: '房产提供方', description: '查看提供方申请和账户状态，不暴露私有文件或内部审核数据。', searchLabel: '搜索当前页面', searchPlaceholder: '姓名、公司、邮箱或提供方 ID', statusLabel: '申请状态', typeLabel: '提供方类型', all: '全部', totalLabel: '提供方', emptyTitle: '未找到提供方', emptyBody: '没有符合当前筛选条件的提供方。', columns: { name: '提供方', type: '类型', status: '申请状态', accountStatus: '账户状态', company: '企业', updated: '更新时间', actions: '操作' } },
-  verification: { ...english.verification, eyebrow: '验证工作区', title: '提供方验证', description: '查看提供方申请，并通过短期审核授权仅打开清洁且有效的文件。', searchLabel: '搜索当前页面', searchPlaceholder: '提供方姓名、公司或申请 ID', statusLabel: '申请状态', typeLabel: '提供方类型', all: '全部', totalLabel: '申请', emptyTitle: '未找到验证记录', emptyBody: '没有符合当前筛选条件的提供方申请。', columns: { name: '提供方', type: '类型', status: '申请状态', submitted: '提交时间', updated: '更新时间', actions: '操作' } },
-  states: { ...english.states, loading: { title: '正在加载管理记录', body: '正在从实时 API 获取管理员批准的数据。' }, empty: { title: '未找到记录', body: '当前筛选条件下没有可显示的记录。' }, error: { title: '无法加载管理记录', body: '请检查连接后重试。' }, retry: { title: '管理服务不可用', body: '连接恢复后重试。' }, permission: { title: '不允许访问', body: '此页面需要经过验证的管理员会话和相应读取权限。' }, not_found: { title: '未找到记录', body: '请求的账户或提供方已不在管理员数据中。' } },
-  statusLabels: { draft: '草稿', pending_review: '待审核', needs_information: '需要信息', approved: '已批准', rejected: '已拒绝', suspended: '已暂停' },
-  accountStatusLabels: { draft: '草稿', pending_review: '待审核', verified: '已验证', needs_information: '需要信息', rejected: '已拒绝', restricted: '受限', suspended: '已暂停' },
-  providerTypeLabels: { individual_broker: '个人经纪人', brokerage_office: '经纪办公室', developer_company: '开发公司' },
-  documentCategoryLabels: english.documentCategoryLabels,
-  securityStateLabels: { quarantined: '已隔离', scan_pending: '等待扫描', clean: '干净', infected: '已感染', scan_failed: '扫描失败', deleted: '已删除' },
-  reviewStateLabels: { uploaded: '已上传', pending_review: '待审核', needs_replacement: '需要替换', approved: '已批准', rejected: '已拒绝' },
-  actions: { retry: '重试', view: '查看详情', back: '返回列表', openDocument: '打开文件', unavailableDocument: '不可用', loadingDocument: '正在打开…' }
-};
-
-const copies: Readonly<Record<SupportedLocale, AdminAccountsCopy>> = { ar: arabic, en: english, 'zh-CN': chinese };
+const copies: Readonly<Record<SupportedLocale, AdminAccountsCopy>> = { ar: arabic, en: english,};
 
 export function getAdminAccountsCopy(locale: SupportedLocale): AdminAccountsCopy {
   return copies[locale];

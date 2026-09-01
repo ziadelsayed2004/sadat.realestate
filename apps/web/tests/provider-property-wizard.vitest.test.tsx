@@ -15,7 +15,7 @@ function property(overrides: Partial<PropertyData> = {}): PropertyData {
   return propertyDataSchema.parse({
     id: propertyId,
     kind: 'property',
-    name: { ar: 'عقار المزوّد', en: 'Provider property', 'zh-CN': '提供方房产' },
+    name: { ar: 'عقار المزوّد', en: 'Provider property',},
     slug: 'provider-property',
     transactionType: 'sale',
     source: { providerId, sourceType: 'individual_broker' },
@@ -82,7 +82,7 @@ describe('Provider property wizard', () => {
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders the approved wizard direction and contract boundary for %s', locale => {
+  it.each(['ar', 'en',] as const)('renders the approved wizard direction and contract boundary for %s', locale => {
     const result = renderWithLocale(<ProviderPropertyWizard locale={locale} session={session} authClient={authClient} step="basic" />, { locale });
     const copy = getProviderPropertyCopy(locale);
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');

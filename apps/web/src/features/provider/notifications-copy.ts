@@ -42,15 +42,7 @@ const copy: Readonly<Record<SupportedLocale, ProviderNotificationsCopy>> = {
     states: { loading: { title: 'Loading notifications', body: 'Your provider notifications are being retrieved.' }, empty: { title: 'No notifications available', body: 'There are no account updates available right now.' }, retry: { title: 'Notifications could not load', body: 'Check the connection and try again.' }, error: { title: 'Notifications are unavailable', body: 'Your provider notifications could not be read right now.' }, permission: { title: 'Sign-in required', body: 'Notifications are available only to a verified provider account.' } },
     mutation: { markedRead: 'Notification marked as read.', markedAll: 'Unread notifications were updated.', notFound: 'This notification is no longer available to your account.', permission: 'Your session has expired. Sign in and try again.', error: 'The notification could not be updated. Try again.' },
     typeLabels: { 'viewing.reminder': 'Viewing reminder', 'request.updated': 'Request update', 'property.updated': 'Property update', 'profile.updated': 'Profile update' }, retry: 'Retry'
-  },
-  'zh-CN': {
-    eyebrow: '提供方工作区', title: '通知', description: '查看与您的账户和工作相关的更新。', listLabel: '提供方通知', unreadCount: '条未读通知', markAll: '全部标为已读', markingAll: '正在更新…', tabs: { all: '全部', unread: '未读' }, unreadLabel: '未读', markRead: '标为已读', openLink: '打开详情', previous: '上一页', next: '下一页', pagination: '通知分页',
-    empty: { all: { title: '暂无通知', body: '账户相关更新将在此处显示。' }, unread: { title: '暂无未读通知', body: '当前账户中的通知均已读。' } },
-    states: { loading: { title: '正在加载通知', body: '正在获取提供方通知。' }, empty: { title: '暂无可用通知', body: '当前没有账户更新。' }, retry: { title: '无法加载通知', body: '请检查连接后重试。' }, error: { title: '通知不可用', body: '暂时无法读取提供方通知。' }, permission: { title: '需要登录', body: '只有已验证的提供方账户可以查看通知。' } },
-    mutation: { markedRead: '通知已标为已读。', markedAll: '未读通知已更新。', notFound: '此通知已不再对您的账户可用。', permission: '会话已过期，请登录后重试。', error: '无法更新通知，请重试。' },
-    typeLabels: { 'viewing.reminder': '看房提醒', 'request.updated': '请求更新', 'property.updated': '房产更新', 'profile.updated': '资料更新' }, retry: '重试'
-  }
-};
+  },};
 
 export function getProviderNotificationsCopy(locale: SupportedLocale): ProviderNotificationsCopy {
   return copy[locale];

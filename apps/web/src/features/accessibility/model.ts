@@ -35,9 +35,7 @@ export interface AccessibilityCopy {
 
 const accessibilityCopy: Readonly<Record<SupportedLocale, AccessibilityCopy>> = {
   ar: { skipToContent: '\u062a\u062e\u0637\u064a \u0625\u0644\u0649 \u0627\u0644\u0645\u062d\u062a\u0648\u0649 \u0627\u0644\u0631\u0626\u064a\u0633\u064a' },
-  en: { skipToContent: 'Skip to main content' },
-  'zh-CN': { skipToContent: '\u8df3\u8f6c\u5230\u4e3b\u8981\u5185\u5bb9' }
-};
+  en: { skipToContent: 'Skip to main content' },};
 
 export function getAccessibilityCopy(locale: SupportedLocale): AccessibilityCopy {
   return accessibilityCopy[locale];

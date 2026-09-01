@@ -100,47 +100,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerCopy>> = {
     retry: 'Retry',
     active: 'Current',
     localeLabel: 'Locale'
-  },
-  'zh-CN': {
-    nav: {
-      overview: '概览',
-      requests: '我的请求',
-      viewings: '看房请求',
-      saved: '已保存房源',
-      notifications: '通知',
-      profile: '个人资料与偏好',
-      settings: '账户设置'
-    },
-    overview: {
-      eyebrow: '购房者工作区',
-      title: '欢迎使用萨达特房地产',
-      description: '这里显示你在萨达特房地产平台上的当前活动摘要。',
-      searchProperties: '查找新房源',
-      summaryTitle: '活动摘要',
-      cards: {
-        requests: '请求总数',
-        viewings: '即将进行的看房',
-        savedProperties: '已保存房源',
-        notifications: '未读通知'
-      },
-      activityTitle: '最近活动',
-      activityBody: '当对应的请求、看房和通知契约可用时，详细信息会显示在这里。',
-      unavailableTitle: '活动详情暂不可用',
-      unavailableBody: '此部分只显示摘要契约提供的数据，不会编造数字或内容。',
-      emptyTitle: '暂无活动',
-      emptyBody: '先查找房源，或保存房源以便稍后查看。'
-    },
-    states: {
-      loading: { title: '正在加载购房者面板', body: '正在获取你的活动摘要。' },
-      retry: { title: '无法加载购房者面板', body: '请检查连接后重试。' },
-      error: { title: '购房者面板不可用', body: '无法读取数据，请稍后重试。' },
-      permission: { title: '需要登录', body: '只有已验证的购房者账户才能查看这些数据。' }
-    },
-    retry: '重试',
-    active: '当前',
-    localeLabel: '语言'
-  }
-};
+  },};
 
 export function getSeekerCopy(locale: SupportedLocale): SeekerCopy {
   return copy[locale];

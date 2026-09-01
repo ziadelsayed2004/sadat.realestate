@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { routeAdminCommunityApis } from './admin-community.fixtures.ts';
 
-function localeForCommunity(): 'ar' | 'en' | 'zh-CN' {
+function localeForCommunity(): 'ar' | 'en' {
   const project = test.info().project.name;
-  return project.endsWith('-zh') ? 'zh-CN' : project.endsWith('-en') ? 'en' : 'ar';
+  return project.endsWith('-en') ? 'en' : 'ar';
 }
 
 test('ADM-27 through ADM-29 match the approved desktop visual baseline', async ({ page }) => {

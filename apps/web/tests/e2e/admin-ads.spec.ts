@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { adminAdsProofId, adminAdsRequestId, expectNoPrivateAdminAdsFields, routeAdminAdsApis } from './admin-ads.fixtures.ts';
 
-function localeForProject(): 'ar' | 'en' | 'zh-CN' {
+function localeForProject(): 'ar' | 'en' {
   const project = test.info().project.name;
-  return project.endsWith('-zh') ? 'zh-CN' : project.endsWith('-en') ? 'en' : 'ar';
+  return project.endsWith('-en') ? 'en' : 'ar';
 }
 
 const routes = [
@@ -44,7 +44,7 @@ test.describe('ADM-33 through ADM-38 advertising administration', () => {
     await page.goto(`/admin/ads/financial-review?requestId=${adminAdsRequestId}&lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-screen-id="ADM-38"]')).toBeVisible();
     await expect(page.locator('.admin-ads__detail')).toBeVisible();
-    const nonRealizedPattern = locale === 'ar' ? /\u0645\u062d\u0642\u0642/u : locale === 'zh-CN' ? /\u5df2\u5b9e\u73b0/u : /realized/u;
+    const nonRealizedPattern = locale === 'ar' ? /\u0645\u062d\u0642\u0642/u :/realized/u;
     await expect(page.locator('.admin-ads__notice')).toContainText(nonRealizedPattern);
     await expectNoPrivateAdminAdsFields(page);
   });

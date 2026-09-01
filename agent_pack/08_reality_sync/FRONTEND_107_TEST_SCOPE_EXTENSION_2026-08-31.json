@@ -1,0 +1,911 @@
+{
+  "schemaVersion": 1,
+  "grantId": "FRONTEND_107_TEST_SCOPE_EXTENSION_2026-08-31",
+  "generatedAt": "2026-09-01T00:00:00.000Z",
+  "status": "ACTIVE_FRONTEND_107_TEST_AND_FIXTURE_SCOPE_GRANTED",
+  "owner": "PROGRAM_COORDINATOR",
+  "purpose": "Additive exact-hash ownership extension for the AR/EN test, E2E fixture, parity-test and contract-fixture cleanup required by frontend_107. No image, binary, runtime snapshot or historical Agent Pack deletion is authorized.",
+  "parentGrant": {
+    "path": "agent_pack/08_reality_sync/FRONTEND_107_OWNERSHIP_GRANT_2026-08-31.json",
+    "sha256": "daac705374e3160398940b85d73fac817a3e97ea0985d39b94940ffe8136b5ea"
+  },
+  "authorization": {
+    "ownerAuthorization": "OWNER_AUTHORIZATION_ACTIVE_PROGRAM_PRODUCT_WRITES",
+    "tokens": [
+      "APPROVAL_ACTIVE_LOCALE_SOURCE_REMOVAL",
+      "APPROVAL_ACTIVE_AR_EN_TEST_AND_FIXTURE_MIGRATION",
+      "APPROVAL_AGENT_PACK_ACTIVE_VIEW_RECONCILIATION",
+      "APPROVAL_LOCAL_RUNTIME_AND_BROWSER_VERIFICATION"
+    ],
+    "boundaries": [
+      "Only textual AR/EN test and fixture migration",
+      "No snapshot image or binary mutation",
+      "No API, database, identity, secrets or production changes",
+      "No broad deletion, git index changes, commits, pushes, deploys or history rewrite",
+      "No Figma evidence claim from runtime snapshots"
+    ]
+  },
+  "scope": {
+    "taskId": "frontend_107",
+    "exactTargetCount": 142,
+    "targetMatchCount": 466,
+    "exactTargetFiles": [
+      {
+        "path": "apps/web/tests/about-team.vitest.test.tsx",
+        "bytes": 4511,
+        "sha256": "dd7aa5f925443a2c15c919ff0f32cc4cf4334ce45bef58128b73d2d79385e798",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/accessibility-audit.vitest.test.ts",
+        "bytes": 3850,
+        "sha256": "2d8c4aa485efe119e8490ec931a21e39c3e2c11eeed47f8a1305d26e9aefadb4",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/accessibility.test.ts",
+        "bytes": 4837,
+        "sha256": "763957873b9f41b7001a2a3d241f4aa23eb3105dbe8776e2ee65674a450b5940",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/admin-account-reports.vitest.test.tsx",
+        "bytes": 7753,
+        "sha256": "8493178fac62f1208097e3f8f26d68e1daa63ea5ab0f448c593b2676c4cc0359",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/admin-accounts.vitest.test.tsx",
+        "bytes": 7000,
+        "sha256": "05aa1c9be4a0733b0d9d241eb5a83bf9012f632b3baadb27c8e4c5e1ed5cc546",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/admin-ads.vitest.test.tsx",
+        "bytes": 11207,
+        "sha256": "3d933e707588d25a1126cd918f56c911e3ca8ab43b61ebed6ff68867bbc1c282",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/admin-cms-content.vitest.test.tsx",
+        "bytes": 6053,
+        "sha256": "b150169368f1c4cb69a0dfa1f8a67c76ca8d5b4aa2acf3c0a8b3e3a04060cdcc",
+        "matches": 4
+      },
+      {
+        "path": "apps/web/tests/admin-commissions.vitest.test.tsx",
+        "bytes": 11998,
+        "sha256": "6377d0e440e1993e644502431835c343cd5b652dfb0d333903e091ab963e9a27",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/admin-community.vitest.test.tsx",
+        "bytes": 8777,
+        "sha256": "5aad594dcc55705b0e57150afc10914b4f0f981dff644057725f06d673b69681",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/admin-content.vitest.test.tsx",
+        "bytes": 10196,
+        "sha256": "2e24be1b7aac3d63e79920049fdb422fee19bd6f60dadce3f22da65f8e8d3cdd",
+        "matches": 4
+      },
+      {
+        "path": "apps/web/tests/admin-dashboard-qa.vitest.test.ts",
+        "bytes": 4769,
+        "sha256": "5e2ee9be065f0caad7b6ab878d7ee752347c4bbc43cd0e9a34d686ab28d85858",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/admin-home.vitest.test.tsx",
+        "bytes": 7991,
+        "sha256": "f91a3af2531553dc0e7cec44e3ec75c63440bfc479b4ae1324b2b79df1d87415",
+        "matches": 5
+      },
+      {
+        "path": "apps/web/tests/admin-master-data.vitest.test.tsx",
+        "bytes": 10605,
+        "sha256": "acac54e08374b9541eb8968d3236c26cbb71bc7fffd743ffc17f00907bae0ef7",
+        "matches": 4
+      },
+      {
+        "path": "apps/web/tests/admin-notifications-audit.vitest.test.tsx",
+        "bytes": 7951,
+        "sha256": "cad018c6aa2344c0c3d47368170e4aaef582ba0c07f3db5c200ec98ac64c5406",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/admin-overview.vitest.test.tsx",
+        "bytes": 4993,
+        "sha256": "7ff562f36c6f82677078cf65c6b2745006e26bdab72ed05a5b13ed3b5987f29e",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/admin-projects.vitest.test.tsx",
+        "bytes": 6693,
+        "sha256": "dd37b99394ee35de3a03a08ed9fc5cd0246c032e9e513e53fc02342b4324935f",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/admin-properties.vitest.test.tsx",
+        "bytes": 10849,
+        "sha256": "a4ce45ba63ff7c9b47e2d06cc7ba6454766970a2aa2a095babc8b1eb7d11b120",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/admin-rbac.vitest.test.tsx",
+        "bytes": 6480,
+        "sha256": "d6f2bb6ba875361bda393446bea738ed5171a94d470a6cec25a7288ae8c1b70f",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/admin-requests.vitest.test.tsx",
+        "bytes": 9308,
+        "sha256": "f4e82cf35152ae49f3521a19c4184c10ab70443880bc2944c92c2325f3642f99",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/admin-settings-074.vitest.test.tsx",
+        "bytes": 4390,
+        "sha256": "1d3e09bb0457924399d10d4a2adc3075768c73faa3638881b5c6a41a1a99b252",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/admin-settings.vitest.test.tsx",
+        "bytes": 7815,
+        "sha256": "658d9ef7dffda3c7f4716b91160b411de25a19a7e3fd7e6c35eeafb4c110b1dc",
+        "matches": 4
+      },
+      {
+        "path": "apps/web/tests/community.vitest.test.tsx",
+        "bytes": 6913,
+        "sha256": "b8066fa74982fa9788c7971ffbc8d789e40ad7cfb65503e45efcb9cfc94fab83",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/e2e/about-team-accessibility.spec.ts",
+        "bytes": 2713,
+        "sha256": "98e0b6a5a0b136eb1aef8b0a6284593bcf6ef5a837dfab95f3b847143e2556e0",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/about-team.spec.ts",
+        "bytes": 4261,
+        "sha256": "d08f6f5edcde7e12453a3c495dd547f73a044807e2da1f2b07c8693d6d3f8f96",
+        "matches": 10
+      },
+      {
+        "path": "apps/web/tests/e2e/accessibility.spec.ts",
+        "bytes": 15500,
+        "sha256": "9e331bd36b358d89a27a39b07b944b1ab4be7f4860050d3f3b43af4cf4e0514a",
+        "matches": 11
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-account-reports.fixtures.ts",
+        "bytes": 4239,
+        "sha256": "3cd5ec0f87d6abe760d8d91b8ea1a998bf12c9ea80c4f73d7b2a860b8e26fa53",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-account-reports.spec.ts",
+        "bytes": 5185,
+        "sha256": "19816eff4dad59e2a09ffeadc2b9461a4d0da60aa51b27c4f0b50405219d8093",
+        "matches": 4
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-accounts.fixtures.ts",
+        "bytes": 5100,
+        "sha256": "e0eeed1d752b005f8c93eb8fb1cabbe7843e7dfe0ceb210c5a5f1deea6354a51",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-ads-accessibility.spec.ts",
+        "bytes": 2186,
+        "sha256": "a97e3ea91fcbebb4bfe9e3a6346f953b1dcb183baab243c050946d1007eb4780",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-ads-visual.spec.ts",
+        "bytes": 1511,
+        "sha256": "2a4eab79c8e15c06cf8cd4909908e8d36dc046bb79b726a46e7ad8c0d0ab237c",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-ads.spec.ts",
+        "bytes": 4160,
+        "sha256": "e3ae2ff2492d84fc0938a54f285e858e3cf67f83a87d5aa0ce366d1446c95641",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-cms-content-accessibility.spec.ts",
+        "bytes": 2379,
+        "sha256": "a8d8bb43a8072d55fcdda4e5d6f6ff60b0159557de5b8a26b41569aad3e7aa9d",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-cms-content-visual.spec.ts",
+        "bytes": 2245,
+        "sha256": "6637a18ea06b7bb3b31eab14e8f9f04688c8c630607303d71824c0f7f54cf3fc",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-cms-content.fixtures.ts",
+        "bytes": 2370,
+        "sha256": "e27e281dd13c9b052a5e8f3dbc215444eadab6f2509ada452a9a93d57d837bf2",
+        "matches": 6
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-cms-content.spec.ts",
+        "bytes": 5218,
+        "sha256": "48fbd5b054336dc455ceebc392ade798497c8e90b10605636c00d8de09e15b43",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-commissions-accessibility.spec.ts",
+        "bytes": 2616,
+        "sha256": "05e2b3d720678ce138d00ac9ee3af51e8180107ae536153b98adbcaa81fc638b",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-commissions-visual.spec.ts",
+        "bytes": 2058,
+        "sha256": "ec8a215c402fa94ec044c5c50f5de495ee700278d810f50a1ac9649f603e1bb5",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-commissions.spec.ts",
+        "bytes": 3721,
+        "sha256": "82ccd60f9967cd463df6665995f636d56b39e933871969e4f7557d7e4df41f9e",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-community-accessibility.spec.ts",
+        "bytes": 1305,
+        "sha256": "3f463274fb2252c0ebf0708d09f7d9496dcf8f74e8563c0961730b581162de2a",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-community-visual.spec.ts",
+        "bytes": 1112,
+        "sha256": "23a65d098947f52c74131a293334f27ca150dca220ba4e25e1226af0ac7505f8",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-community.spec.ts",
+        "bytes": 2780,
+        "sha256": "bcb7b7a9ea0a4b00ee9ae62a878206539e67cded7450d2e3d3642257843c138b",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-content-accessibility.spec.ts",
+        "bytes": 2589,
+        "sha256": "4e1a3538b8d8e89895de6dcc7f928e3069830506c64d8c7be77737a569b19391",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-content-visual.spec.ts",
+        "bytes": 2762,
+        "sha256": "1a312926126a36af778fb97dcffa7143ea31378beb5bda7cd069c86baf5252a2",
+        "matches": 6
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-content.fixtures.ts",
+        "bytes": 1344,
+        "sha256": "fa804b9b7ad455c064dcfb0f72f72a5af27b7ddd63f63edf2a76337839e5b728",
+        "matches": 4
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-content.spec.ts",
+        "bytes": 4629,
+        "sha256": "be1c9696ea2b10b7a5a2941979a82e58b0051186db1b37409db97b0fedb341d3",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-dashboard-qa.spec.ts",
+        "bytes": 10198,
+        "sha256": "1c9e1b804a31d7461cb80dc0bef7a770a8dea5f36bb364ae977567979c4f593d",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-home-accessibility.spec.ts",
+        "bytes": 1286,
+        "sha256": "7d8a718872aa3ccffa7fe4e127c2257c1064527053b932c892363272b37f71ae",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-home-visual.spec.ts",
+        "bytes": 1324,
+        "sha256": "c962435b5212b9809f64f030bcdcadd82431a9d34760c63e7479581abbb61a61",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-home.fixtures.ts",
+        "bytes": 5069,
+        "sha256": "8f38f90f1e1d59d6d3a24a265d5beb5a8f46752d0bb994c9b0822d60d76fe13b",
+        "matches": 6
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-home.spec.ts",
+        "bytes": 3233,
+        "sha256": "55b99ae6e9e75b13ef15b97c7ca2042a1d0c45c1e0c4785b6f9f56e3c811e3e3",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-master-data.fixtures.ts",
+        "bytes": 5138,
+        "sha256": "6b1af99df984e95fabba58647ec2679c91362a73b1135387dd49226a63282125",
+        "matches": 5
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-notifications-audit-accessibility.spec.ts",
+        "bytes": 1409,
+        "sha256": "e0c780764761896a6cd0fbeae6a266e90581dee3ba4089bc5e4e420c109cf4ae",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-notifications-audit-visual.spec.ts",
+        "bytes": 1431,
+        "sha256": "1fbff770d1f485af81f096a98c0e21cf5525d5ae4f447bb920cbef0df87690f7",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-notifications-audit.fixtures.ts",
+        "bytes": 3205,
+        "sha256": "a3e213408b465f01b6ed6cedea566cb28a01f8f5495dbd257b9ef777878cb008",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-notifications-audit.spec.ts",
+        "bytes": 3656,
+        "sha256": "620ac19eac09519d3d0ba33611e0cd33e5a463b50066fa4b11c4786f7e85e310",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-overview-accessibility.spec.ts",
+        "bytes": 3129,
+        "sha256": "f4d7de856e15a65785453ea03254f00f0cd650896331401d743c16e895fb0722",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-overview.spec.ts",
+        "bytes": 4555,
+        "sha256": "8f268954b79e273fec199dbdeae7917dfe41811b8a0c1090f4cd83186973115c",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-projects-accessibility.spec.ts",
+        "bytes": 2023,
+        "sha256": "3763b847e9301dfe3bc51931204b664fe5fe0a11edabd22f19097efabeff9b20",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-projects-visual.spec.ts",
+        "bytes": 1934,
+        "sha256": "a24995914d5371197331181befa7762bba004241fb36ed6816a3e7515cb6b94e",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-projects.fixtures.ts",
+        "bytes": 585,
+        "sha256": "aa87bc8f2148e5829f57c1de0386fbc23214da65b7631a540ada518650da6312",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-projects.spec.ts",
+        "bytes": 3611,
+        "sha256": "3010210356876a12ab9bd13161cee2d86972141188d9b3c124ab0345649c6c8f",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-properties-visual.spec.ts",
+        "bytes": 1877,
+        "sha256": "f2c3146d46557593a27292e169b09b75b90f0dbcd1f6dbc4a0417b20e3707f1f",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-properties.fixtures.ts",
+        "bytes": 4389,
+        "sha256": "28b83de46cd33a61fc21aaf024300939736ffa1973edd2e9de274e013ac3a690",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-rbac-accessibility.spec.ts",
+        "bytes": 1446,
+        "sha256": "f8450b50679f2691f7d3c32dfd26e848df5b031b99ea98d6caf2bcbd2a7ceb3d",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-rbac-visual.spec.ts",
+        "bytes": 1825,
+        "sha256": "4849be9b3d518b3d3714a940334c4d1a57e2527a8c97f185af5d5534e7490bd5",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-rbac.spec.ts",
+        "bytes": 3279,
+        "sha256": "4da39451609da606e0e1296d7484a49dbfbf1f075adce5805e096381e021ae0f",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-requests.fixtures.ts",
+        "bytes": 4534,
+        "sha256": "5b1025afcc8ca42c6f49d7b3ef6168558784f29e17bed0b973ec60b822c66cf2",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-settings-accessibility.spec.ts",
+        "bytes": 1811,
+        "sha256": "09b9bafc6540bedeb06ff0f68fce8cc685fe93543b38964a0ed938790d9a896a",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-settings-visual.spec.ts",
+        "bytes": 1903,
+        "sha256": "116392888c34e750b2de44b5d3d0193a0143ea5305de0bf4388a240e67562920",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-settings.fixtures.ts",
+        "bytes": 2412,
+        "sha256": "b08ad7d230076f10f069cc4a970ed7810059a9315d8dfdfa8014b473892af4bb",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/e2e/admin-settings.spec.ts",
+        "bytes": 4331,
+        "sha256": "1e0cdfebfe40a4470e60ce0a7ed254252c7e421828d9795aeb8ec7bb9d0f10c7",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/auth.spec.ts",
+        "bytes": 7899,
+        "sha256": "4b57e8af6fe18d968e8ecd60e205516a2aa4a09f15a1d5231b9b67f1f3b77bb3",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/community.spec.ts",
+        "bytes": 4111,
+        "sha256": "5be608332f31fc6c9558be2421b9e140450ea79a1ed0b2d3085b2378a50a8de3",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/critical-journeys.spec.ts",
+        "bytes": 15713,
+        "sha256": "7feeedea6a415788103b3f27a19e71b66089adb628d859560e1bcfaa1d1f9a2e",
+        "matches": 7
+      },
+      {
+        "path": "apps/web/tests/e2e/performance.spec.ts",
+        "bytes": 6252,
+        "sha256": "5d13317e2956b56ed31051a1ca3f0da5830eb0b962cb43ac455e5d46f7d61e3e",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/e2e/provider-account.spec.ts",
+        "bytes": 10818,
+        "sha256": "871694da2623673606e9822c925c51f88eaa08e0fbbf4ce4c599d3370408ffb9",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/provider-advertising.spec.ts",
+        "bytes": 6224,
+        "sha256": "597dc1a239407e3eae913b17e99e034bf892b4d98cb72056396b6cf6d1e25666",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/provider-customer-requests.spec.ts",
+        "bytes": 8377,
+        "sha256": "57f319ae5fad9c9ffea2c8be2f13e12f3f57ad96d9a76b354f917ba2f207d77d",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/provider-dashboard-qa.spec.ts",
+        "bytes": 8321,
+        "sha256": "f6f7a14d51d3b8a047e93430bb12867a6298d50dd9eb1d5afa3def19ad39bb34",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/provider-notifications-settings.spec.ts",
+        "bytes": 7255,
+        "sha256": "cf709cc7c1eb5625c037948487a8aa579fcfd50456bab595f36fedf7268f0498",
+        "matches": 4
+      },
+      {
+        "path": "apps/web/tests/e2e/provider-organization-documents.spec.ts",
+        "bytes": 12344,
+        "sha256": "374cd54d9a8e324bf58849caeecf1dbb88ebe994bdd6babf5eabc27983442637",
+        "matches": 4
+      },
+      {
+        "path": "apps/web/tests/e2e/provider-overview.spec.ts",
+        "bytes": 6066,
+        "sha256": "72f8313f0349e06e7d3d35026d6fea86980100589b0fbbf2b842b5affb728120",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/e2e/provider-projects.spec.ts",
+        "bytes": 9499,
+        "sha256": "92c4ca6173eef92a44f3c8ede9548766ea81ca83d9c1eed7625a78ab8aa29041",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/e2e/provider-properties.spec.ts",
+        "bytes": 8562,
+        "sha256": "c8ee103512c799befbb9b621e3628ea498aa6bfffad7420bdf144130da11e117",
+        "matches": 6
+      },
+      {
+        "path": "apps/web/tests/e2e/provider-property-advanced.spec.ts",
+        "bytes": 12317,
+        "sha256": "f63dbe83d9cf0356a34273dc225a3a91cd0a3bdebc76b49d9a3e1040c7cacd35",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/e2e/provider-property-completion.spec.ts",
+        "bytes": 12441,
+        "sha256": "efe29ed4bdea5c187e909e85702820c999f82b01fb77b6331bee74b8a3eb908c",
+        "matches": 4
+      },
+      {
+        "path": "apps/web/tests/e2e/provider-property-state.spec.ts",
+        "bytes": 8777,
+        "sha256": "8bce9a8bfe0a1a52ff29ba995dbf8a27fd4a86f5b76f308d90987c100aa5a270",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/e2e/provider-property-wizard.spec.ts",
+        "bytes": 9635,
+        "sha256": "cfc761ead9b821002dd34685fc284c6f9336458161b6adf9de9364db46984448",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/e2e/provider-review-accessibility.spec.ts",
+        "bytes": 4247,
+        "sha256": "aa5cf75754150a7e70e9c06021ab92b8d7b5e646741835c83afa2a958ce0b865",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/provider-review.spec.ts",
+        "bytes": 7175,
+        "sha256": "78ff21729425a35f48d2fae67c53d9278148034761df5bdc6f7f032f689f3586",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/provider-type.spec.ts",
+        "bytes": 3119,
+        "sha256": "911131877b6608bf1831f2be637b061e655241422c248069b6b666ff967466e2",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/provider-viewings.spec.ts",
+        "bytes": 7481,
+        "sha256": "ef3ba651d81852047373d7bff70d4800fe8373a3d5f6ab04c02235caf47bef98",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/public-fixtures.ts",
+        "bytes": 31355,
+        "sha256": "b00851296b9d26c86c6b6d444336b90872fa29ee2f8a970b10f2a9411c292b74",
+        "matches": 66
+      },
+      {
+        "path": "apps/web/tests/e2e/security.spec.ts",
+        "bytes": 3510,
+        "sha256": "a9f7b15e7f757d1dc1cb4d7ae655c151ae7b033487087c5d5d7cff40ddc3d6dc",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/seeker-dashboard-qa.spec.ts",
+        "bytes": 9909,
+        "sha256": "b0e29545ca3516eb4139963b1f254c4ca4544f2daf319d72548b09680267426c",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/seeker-notifications.spec.ts",
+        "bytes": 8328,
+        "sha256": "8e7bf3f94f353bb35545db5ba5fe1212996631d5d37b0e77ec00f0f2e2252c14",
+        "matches": 6
+      },
+      {
+        "path": "apps/web/tests/e2e/seeker-overview.spec.ts",
+        "bytes": 4490,
+        "sha256": "8c058b5021dfb605dd01a57e7d5741a002192713b3b92fc6ed47e9a73d6f5593",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/seeker-profile.spec.ts",
+        "bytes": 7515,
+        "sha256": "3a2037b0df0e8c869b2f51a73992128b53e1dc84a0d26b396103aa496dc204fa",
+        "matches": 4
+      },
+      {
+        "path": "apps/web/tests/e2e/seeker-registration.spec.ts",
+        "bytes": 7858,
+        "sha256": "2eb96900f5039a3b9d212a71daa473a5548d3dc1bbad4c1b65c40c5d26382b62",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/e2e/seeker-requests.spec.ts",
+        "bytes": 8085,
+        "sha256": "701e65ce24b54c114e40cd55c5f10f653124323d38219fe2639847492b1dd2bc",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/e2e/seeker-saved.spec.ts",
+        "bytes": 6901,
+        "sha256": "c9fe90c1d076436fbda881eac479cc1d1b451434122593b65cd789d8bb740318",
+        "matches": 4
+      },
+      {
+        "path": "apps/web/tests/e2e/seeker-viewings.spec.ts",
+        "bytes": 8758,
+        "sha256": "09c4a9e00c645a7564982b771b810037741eab3af68f3b90e477d158f5953ebc",
+        "matches": 10
+      },
+      {
+        "path": "apps/web/tests/e2e/visual.spec.ts",
+        "bytes": 17588,
+        "sha256": "a426d15524696f2ec544ff56bbabcca6b9b20b2f6a8ebc54dffc90590f890d60",
+        "matches": 19
+      },
+      {
+        "path": "apps/web/tests/foundation.test.ts",
+        "bytes": 3117,
+        "sha256": "236931d2f466aa1ed89ef1fbd51bafc92d8b094582f2fee10ddf90a49ff17e3d",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/frontend-092-parity.vitest.test.ts",
+        "bytes": 5693,
+        "sha256": "1f532c3f50205779bb245f13d4f7b54398e1a3dadfb93d7a1ecf5782c8c97151",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/frontend-093-parity.vitest.test.ts",
+        "bytes": 3507,
+        "sha256": "57618f380ea62dfce23734c853668bae77f85cda24896367b452dd73e4597390",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/frontend-094-parity.vitest.test.ts",
+        "bytes": 3754,
+        "sha256": "af775202d48ba5c4e3ab6030cc470bc5be25d866ea728f1d00ba3aa76cb16993",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/frontend-095-parity.vitest.test.ts",
+        "bytes": 4639,
+        "sha256": "8d4e7d80bccc9549d25e0c1542b222b422fbae065b78e4463115837938805496",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/locale-direction.vitest.test.ts",
+        "bytes": 3128,
+        "sha256": "bed5b67a3f250e3f6a58d55243b1df394f93354e107e7149e1aa0b6b2cee4885",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/localization.test.ts",
+        "bytes": 4655,
+        "sha256": "9ad012fee4a8e5f2a5c53a8fc269fb1892dd47445366b5f10e9f6d95ec44ce24",
+        "matches": 14
+      },
+      {
+        "path": "apps/web/tests/provider-account.vitest.test.tsx",
+        "bytes": 9195,
+        "sha256": "7fe9f2373c88b28347fb60c0541ed65a0c2c830d973f1fc3749b9dfb260511ab",
+        "matches": 4
+      },
+      {
+        "path": "apps/web/tests/provider-advertising.vitest.test.tsx",
+        "bytes": 14823,
+        "sha256": "3b400e9f5c42e455e16322abedc2fd5fe72051f8301cec1a80b459e2e3174585",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/provider-customer-requests.vitest.test.tsx",
+        "bytes": 12365,
+        "sha256": "238c076e9f5185c4432d037f01ab27fd7e005dc9da2cdbec333a4277ed4c62bd",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/provider-notifications-settings.vitest.test.tsx",
+        "bytes": 18836,
+        "sha256": "ad002397fb137467251560e32f19d8e565106706d20c276a8f328bbd7369335b",
+        "matches": 5
+      },
+      {
+        "path": "apps/web/tests/provider-organization-documents.vitest.test.tsx",
+        "bytes": 18608,
+        "sha256": "4896355333d5c1c648033d07d57fa4b7a90c4a7a348ce67dedb9f70323d00431",
+        "matches": 4
+      },
+      {
+        "path": "apps/web/tests/provider-overview.vitest.test.tsx",
+        "bytes": 6625,
+        "sha256": "21fc3c87d5f7860db5bd83b52a48d4585603f04d4d360f7e039ddf1cf232a107",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/provider-projects.vitest.test.tsx",
+        "bytes": 11256,
+        "sha256": "e768dd5f50a6a4c24d03909150378760d3a83b6de0c42a9ba4d2ad83392e7681",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/provider-properties.vitest.test.tsx",
+        "bytes": 7467,
+        "sha256": "766740b8e92e550f09d2f67d6eb5fd4ef022c4a18dfffbd89f56016af615fc69",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/provider-property-advanced.vitest.test.tsx",
+        "bytes": 10852,
+        "sha256": "df506103f8e82b49e747abd6da999eba355a69a7c0b5ca26fcd45b67b9cd45c0",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/provider-property-completion.vitest.test.tsx",
+        "bytes": 11699,
+        "sha256": "39d27c0b7d233a3971075cd823940c86e31e2ab672fddf72948a7db63354375d",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/provider-property-state.vitest.test.tsx",
+        "bytes": 7119,
+        "sha256": "3fc2c09a315f810cccc7d76168447df12dae84608c938d5ad0ecc77678b3a5c3",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/provider-property-wizard.vitest.test.tsx",
+        "bytes": 9227,
+        "sha256": "25411fb134e3498de70aeb83bf15ec1c90cab6dfd220a52ad96cb176ad594183",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/provider-review.vitest.test.tsx",
+        "bytes": 7687,
+        "sha256": "3922f82705705f69b28f5539c3cfd6cc445c9c3cbf30aed08c1ce1e08fb5f7fc",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/provider-type.vitest.test.tsx",
+        "bytes": 4380,
+        "sha256": "c79f551dadfa8a0a99865cbe2fc00426c69d7bdd3b03fa6f25d6d75acfd6c510",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/provider-viewings.vitest.test.tsx",
+        "bytes": 8843,
+        "sha256": "53fb9d63e419623bdabeb6754373861e78bb9bc0731c3553ca1b7c159cb2c2c2",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/public-compare.vitest.test.tsx",
+        "bytes": 8942,
+        "sha256": "50cdd2b83067d245adaa02d0a9c3016102a260c4a65740d81f43d1935c9f6bc0",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/public-details.vitest.test.tsx",
+        "bytes": 9938,
+        "sha256": "c99f791faf3ca1831821bb733751fea3ad923260071d9c96d63d36709bed0433",
+        "matches": 7
+      },
+      {
+        "path": "apps/web/tests/public-homepage.vitest.test.tsx",
+        "bytes": 6405,
+        "sha256": "e0e8a8e1ded683af8481284f24e4c574cacb0f469f87ef3b1abf701a8c83cb4a",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/public-listing.vitest.test.tsx",
+        "bytes": 6342,
+        "sha256": "574a003247f5c19b803084cf4ac82e039e0116f03d48942fa94e9a6e3b3725be",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/routing.test.ts",
+        "bytes": 5122,
+        "sha256": "7df0cec6b0c26139f347c1705573a7c54727ffdb003b5319d493d46c1bacac98",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/seeker-favorites.vitest.test.tsx",
+        "bytes": 7414,
+        "sha256": "31e2daca37c035c0a6004e0ed950888b88958a0e66a0d06d234743cd59c284b9",
+        "matches": 3
+      },
+      {
+        "path": "apps/web/tests/seeker-notifications.vitest.test.tsx",
+        "bytes": 7578,
+        "sha256": "7e11bbaa5433b1ec8cb9f520147e4f7ea9c2ee4e1b57372a3d7dcf95d53604d3",
+        "matches": 5
+      },
+      {
+        "path": "apps/web/tests/seeker-overview.vitest.test.tsx",
+        "bytes": 4533,
+        "sha256": "a0c51864331da553031b016307636fe248046286bf1fda48ab0af0130593d7c1",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/seeker-registration.vitest.test.tsx",
+        "bytes": 7901,
+        "sha256": "2fc730d7e2d93f54d0479f9819d46d718908c474a4c2ab9fef6369a51360215d",
+        "matches": 4
+      },
+      {
+        "path": "apps/web/tests/seeker-requests.vitest.test.tsx",
+        "bytes": 4280,
+        "sha256": "59b57f167ce607023ff9d282cc92a16e02be38c0cbd1b2749df6380d28aa6847",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/seeker-viewings.vitest.test.tsx",
+        "bytes": 6932,
+        "sha256": "59bae65d804d425f762bab841cac17494bf875150b5514ddb8852d5e653a4e38",
+        "matches": 1
+      },
+      {
+        "path": "apps/web/tests/seo.vitest.test.ts",
+        "bytes": 2276,
+        "sha256": "724e92a5e4991b188cd5d3905e459ae9b4969a4deda57a5862010537cff14ad9",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/ssr.test.mjs",
+        "bytes": 14463,
+        "sha256": "6ee9058e8d05b494fb7dcacc9ad8ee23ecd7b15e25b24b20c521bf90b93d6b74",
+        "matches": 5
+      },
+      {
+        "path": "apps/web/tests/testing-harness.vitest.test.tsx",
+        "bytes": 2519,
+        "sha256": "8613276b605b4abad9753bd34d7040e032cf627e2eb86f0ece842d521106bdf3",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/uat-matrix.vitest.test.ts",
+        "bytes": 2297,
+        "sha256": "d59bc45b9a060c28c0ce23a14d74e0af2cb76b42c7c359cfd4b1cec4722942b4",
+        "matches": 2
+      },
+      {
+        "path": "apps/web/tests/visual-fidelity.vitest.test.ts",
+        "bytes": 5955,
+        "sha256": "e432f1ef5f88a72b9654267291d2a74440c549cbd67e13cd02a68a60a4b70faa",
+        "matches": 1
+      },
+      {
+        "path": "packages/contracts/src/fixtures/index.ts",
+        "bytes": 2539,
+        "sha256": "fd6924eef07cf676073b8f801c9ab7ba92bf7587071efe4b7e00bf7694354102",
+        "matches": 1
+      }
+    ],
+    "allowedChanges": [
+      "Replace retired locale arrays, unions, fixtures and expectations with supported ar/en values",
+      "Update locale direction and language-switch tests to assert ar/en only",
+      "Preserve runtime snapshot files and visual evidence content; no snapshot update flags",
+      "Keep historical parity task meaning while recording current supported-locale truth"
+    ],
+    "forbiddenChanges": [
+      "Deleting test files or snapshot files",
+      "Changing screenshot pixels or updating snapshots",
+      "Removing canonical Figma/source evidence",
+      "Changing production data or secrets",
+      "Writing outside the exact target list"
+    ]
+  },
+  "verification": {
+    "preflight": "All target hashes captured read-only before mutation; targets were clean at grant creation.",
+    "required": [
+      "npm.cmd run typecheck --workspace @sadat-real-estate/web",
+      "npm.cmd run test:locale --workspace apps/web",
+      "npm.cmd run lint",
+      "git diff --check",
+      "No active retired-locale references in apps/web/tests and packages/contracts/src/fixtures"
+    ]
+  },
+  "nextGate": "After test scope is clean, run frontend_107 locale-switch implementation and focused browser verification."
+}

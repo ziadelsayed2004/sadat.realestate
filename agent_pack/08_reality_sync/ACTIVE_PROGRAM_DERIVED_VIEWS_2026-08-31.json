@@ -1,0 +1,342 @@
+{
+  "schemaVersion": 1,
+  "viewId": "ACTIVE_PROGRAM_DERIVED_VIEWS_2026-08-31",
+  "programId": "SADAT_G1_G6_APPROVED_2026-08-30",
+  "generatedAt": "2026-09-01T02:06:00+03:00",
+  "sourceOfTruth": {
+    "activeProgram": "agent_pack/03_execution/ACTIVE_DELIVERY_PROGRAM.json",
+    "taskState": "agent_pack/03_execution/TASK_STATE.json",
+    "dependencies": "agent_pack/03_execution/DEPENDENCIES.json",
+    "atomicTaskMap": "agent_pack/03_execution/ATOMIC_TASK_MAP.json",
+    "checkpoint": "agent_pack/03_execution/RUN_CHECKPOINT.json",
+    "ownershipGrant": "agent_pack/08_reality_sync/ACTIVE_PROGRAM_OWNERSHIP_GRANT_2026-08-31_BACKEND_151.json"
+  },
+  "historicalPreservation": {
+    "oldManifest": "agent_pack/08_reality_sync/PRE_COMMIT_RELEASE_AUDIT_OWNERSHIP_MANIFEST_2026-08-30.json",
+    "oldManifestUnchanged": true,
+    "historical214TaskProgramUnchanged": true,
+    "historicalStepInfoUnchanged": true
+  },
+  "activeTaskBoard": [
+    {
+      "taskId": "backend_151",
+      "status": "complete",
+      "completionMarker": "TASK_backend_151_COMPLETE",
+      "evidencePath": "agent_pack/08_reality_sync/BACKEND_151_ACTIVE_MIGRATION_EVIDENCE_2026-08-31.json"
+    },
+    {
+      "taskId": "backend_152",
+      "status": "blocked",
+      "blockedMarkers": [
+        "TASK_backend_152_BLOCKED_CONTACT_TIME_SOURCE",
+        "TASK_backend_152_BLOCKED_PRIVACY_APPROVAL"
+      ],
+      "evidencePath": "agent_pack/08_reality_sync/BACKEND_152_BLOCKER_EVIDENCE_2026-09-01.json"
+    },
+    {
+      "taskId": "backend_153",
+      "status": "open"
+    },
+    {
+      "taskId": "backend_154",
+      "status": "open"
+    },
+    {
+      "taskId": "backend_155",
+      "status": "open"
+    },
+    {
+      "taskId": "backend_156",
+      "status": "open"
+    },
+    {
+      "taskId": "backend_157",
+      "status": "open"
+    },
+    {
+      "taskId": "backend_158",
+      "status": "open"
+    },
+    {
+      "taskId": "backend_159",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_107",
+      "status": "complete",
+      "completionMarker": "TASK_frontend_107_COMPLETE",
+      "evidencePath": "agent_pack/08_reality_sync/FRONTEND_107_ACTIVE_EVIDENCE_2026-09-01.json"
+    },
+    {
+      "taskId": "frontend_108",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_109",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_110",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_111",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_113",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_114",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_115",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_116",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_117",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_118",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_119",
+      "status": "open"
+    },
+    {
+      "taskId": "frontend_120",
+      "status": "open"
+    }
+  ],
+  "activeTaskMap": [
+    {
+      "taskId": "backend_151",
+      "sequence": 218,
+      "atomicTaskFile": "04_tracks/backend/G2_ar_en_runtime/backend_151.md"
+    },
+    {
+      "taskId": "frontend_107",
+      "sequence": 219,
+      "atomicTaskFile": "04_tracks/frontend/G2_ar_en_runtime/frontend_107.md"
+    },
+    {
+      "taskId": "backend_152",
+      "sequence": 220,
+      "atomicTaskFile": "04_tracks/backend/G3_public_requests_sales_crm/backend_152.md"
+    },
+    {
+      "taskId": "backend_153",
+      "sequence": 221,
+      "atomicTaskFile": "04_tracks/backend/G3_public_requests_sales_crm/backend_153.md"
+    },
+    {
+      "taskId": "backend_154",
+      "sequence": 222,
+      "atomicTaskFile": "04_tracks/backend/G3_public_requests_sales_crm/backend_154.md"
+    },
+    {
+      "taskId": "backend_155",
+      "sequence": 223,
+      "atomicTaskFile": "04_tracks/backend/G3_public_requests_sales_crm/backend_155.md"
+    },
+    {
+      "taskId": "frontend_108",
+      "sequence": 224,
+      "atomicTaskFile": "04_tracks/frontend/G3_public_requests_sales_crm/frontend_108.md"
+    },
+    {
+      "taskId": "backend_156",
+      "sequence": 225,
+      "atomicTaskFile": "04_tracks/backend/G3_public_requests_sales_crm/backend_156.md"
+    },
+    {
+      "taskId": "frontend_109",
+      "sequence": 226,
+      "atomicTaskFile": "04_tracks/frontend/G3_public_requests_sales_crm/frontend_109.md"
+    },
+    {
+      "taskId": "frontend_110",
+      "sequence": 227,
+      "atomicTaskFile": "04_tracks/frontend/G3_public_requests_sales_crm/frontend_110.md"
+    },
+    {
+      "taskId": "frontend_111",
+      "sequence": 228,
+      "atomicTaskFile": "04_tracks/frontend/G3_public_requests_sales_crm/frontend_111.md"
+    },
+    {
+      "taskId": "backend_157",
+      "sequence": 229,
+      "atomicTaskFile": "04_tracks/backend/G4_platform_hardening/backend_157.md"
+    },
+    {
+      "taskId": "backend_158",
+      "sequence": 230,
+      "atomicTaskFile": "04_tracks/backend/G4_platform_hardening/backend_158.md"
+    },
+    {
+      "taskId": "backend_159",
+      "sequence": 231,
+      "atomicTaskFile": "04_tracks/backend/G4_platform_hardening/backend_159.md"
+    },
+    {
+      "taskId": "frontend_113",
+      "sequence": 232,
+      "atomicTaskFile": "04_tracks/frontend/G4_platform_hardening/frontend_113.md"
+    },
+    {
+      "taskId": "frontend_114",
+      "sequence": 233,
+      "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_114.md"
+    },
+    {
+      "taskId": "frontend_115",
+      "sequence": 234,
+      "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_115.md"
+    },
+    {
+      "taskId": "frontend_116",
+      "sequence": 235,
+      "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_116.md"
+    },
+    {
+      "taskId": "frontend_117",
+      "sequence": 236,
+      "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_117.md"
+    },
+    {
+      "taskId": "frontend_118",
+      "sequence": 237,
+      "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_118.md"
+    },
+    {
+      "taskId": "frontend_119",
+      "sequence": 238,
+      "atomicTaskFile": "04_tracks/frontend/G5_figma_closure/frontend_119.md"
+    },
+    {
+      "taskId": "frontend_120",
+      "sequence": 239,
+      "atomicTaskFile": "04_tracks/frontend/G6_final_integration/frontend_120.md"
+    }
+  ],
+  "activeDependencies": [
+    {
+      "taskId": "backend_151"
+    },
+    {
+      "taskId": "frontend_107"
+    },
+    {
+      "taskId": "backend_152"
+    },
+    {
+      "taskId": "backend_153"
+    },
+    {
+      "taskId": "backend_154"
+    },
+    {
+      "taskId": "backend_155"
+    },
+    {
+      "taskId": "frontend_108"
+    },
+    {
+      "taskId": "backend_156"
+    },
+    {
+      "taskId": "frontend_109"
+    },
+    {
+      "taskId": "frontend_110"
+    },
+    {
+      "taskId": "frontend_111"
+    },
+    {
+      "taskId": "backend_157"
+    },
+    {
+      "taskId": "backend_158"
+    },
+    {
+      "taskId": "backend_159"
+    },
+    {
+      "taskId": "frontend_113"
+    },
+    {
+      "taskId": "frontend_114"
+    },
+    {
+      "taskId": "frontend_115"
+    },
+    {
+      "taskId": "frontend_116"
+    },
+    {
+      "taskId": "frontend_117"
+    },
+    {
+      "taskId": "frontend_118"
+    },
+    {
+      "taskId": "frontend_119"
+    },
+    {
+      "taskId": "frontend_120"
+    }
+  ],
+  "activeSelector": {
+    "selectedTaskId": "backend_152",
+    "selectedTaskFile": "agent_pack/04_tracks/backend/G3_public_requests_sales_crm/backend_152.md",
+    "persistedStepInfoIsHistorical": true
+  },
+  "lastCompletedTask": {
+    "taskId": "frontend_107",
+    "marker": "TASK_frontend_107_COMPLETE",
+    "evidencePath": "agent_pack/08_reality_sync/FRONTEND_107_ACTIVE_EVIDENCE_2026-09-01.json",
+    "nextTaskId": "backend_152",
+    "nextTaskStarted": false
+  },
+  "latestCompletion": {
+    "taskId": "frontend_107",
+    "marker": "TASK_frontend_107_COMPLETE",
+    "evidencePath": "agent_pack/08_reality_sync/FRONTEND_107_ACTIVE_EVIDENCE_2026-09-01.json",
+    "verifiedAt": "2026-09-01T01:42:00+03:00",
+    "nextTaskId": "backend_152"
+  },
+  "blockedFrontier": {
+    "taskId": "backend_152",
+    "markers": [
+      "TASK_backend_152_BLOCKED_CONTACT_TIME_SOURCE",
+      "TASK_backend_152_BLOCKED_PRIVACY_APPROVAL"
+    ],
+    "evidencePath": "agent_pack/08_reality_sync/BACKEND_152_BLOCKER_EVIDENCE_2026-09-01.json",
+    "revalidationEvidencePath": "agent_pack/08_reality_sync/BACKEND_152_BLOCKER_REVALIDATION_2026-09-01.json",
+    "revalidationOrdinal": 3,
+    "dependentTasksRemainUnstarted": true,
+    "programStatus": "BLOCKED_EXTERNAL_OWNER_INPUT_AFTER_THREE_REVALIDATIONS"
+  },
+  "activeCheckpoint": {
+    "path": "agent_pack/03_execution/RUN_CHECKPOINT.json",
+    "sha256": "13dfba40010cf0977a65d29a0fc5e0cce842316c30e5643dc7c6c15b8acbe226",
+    "taskId": "backend_151"
+  },
+  "activeFinishIndex": {
+    "previousCompletionPath": "agent_pack/07_finish/backend_151/completion.json",
+    "previousStatus": "blocked",
+    "supersedingEvidencePath": "agent_pack/08_reality_sync/BACKEND_151_ACTIVE_MIGRATION_EVIDENCE_2026-08-31.json",
+    "supersedingEvidenceStatus": "complete"
+  },
+  "allowedMutationBoundary": "Only clean exact files recorded in the active ownership grant; every later task needs a new exact-hash grant."
+}

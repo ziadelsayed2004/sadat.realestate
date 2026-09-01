@@ -29,7 +29,7 @@ describe('Seeker overview', () => {
     expect(requests).toEqual([{ url: '/api/v1/seeker/overview', authorization: 'Bearer seeker-token' }]);
   });
 
-  it.each(['ar', 'en', 'zh-CN'] as const)('renders real summary values and the approved direction for %s', async locale => {
+  it.each(['ar', 'en',] as const)('renders real summary values and the approved direction for %s', async locale => {
     const result = renderWithLocale(
       <SeekerOverview locale={locale} session={session} initialData={overview} />,
       { locale }
