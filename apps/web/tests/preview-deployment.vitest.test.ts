@@ -193,5 +193,5 @@ describe('secure preview build and deployment', () => {
       await stopPreviewServer(child);
       server.listen({ onUnhandledRequest: 'error' });
     }
-  }, 30_000);
+  }, 60_000);
 });

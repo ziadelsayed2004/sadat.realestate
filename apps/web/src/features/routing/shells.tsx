@@ -6,6 +6,8 @@ import type { FoundationCopy } from '../frontend_foundation/locale.js';
 import { directionForLocale } from '../frontend_foundation/locale.js';
 import type { RouteMatch } from '../../routes/route-table.js';
 
+import { LocaleSwitcher } from '../localization/index.ts';
+
 export type ShellKind = 'public' | 'auth' | 'seeker' | 'provider' | 'admin';
 
 export interface RouteShellProps {
@@ -24,20 +26,7 @@ interface LanguageSwitchProps {
 }
 
 function LanguageSwitch({ locale, copy, onLocaleChange }: LanguageSwitchProps) {
-  return (
-    <label className="locale-switch">
-      <span className="a11y-visually-hidden">{copy.localeLabel}</span>
-      <select
-        aria-label={copy.localeLabel}
-        data-locale-switch="true"
-        value={locale}
-        onChange={(event) => onLocaleChange?.(event.currentTarget.value as SupportedLocale)}
-      >
-        <option value="ar">العربية</option>
-        <option value="en">English</option>
-      </select>
-    </label>
-  );
+  return <LocaleSwitcher locale={locale} label={copy.localeLabel} onLocaleChange={onLocaleChange} />;
 }
 
 function ShellFrame({ kind, route, locale, copy, assets, onLocaleChange, children }: RouteShellProps & { readonly kind: ShellKind }) {
@@ -70,7 +59,18 @@ function ShellFrame({ kind, route, locale, copy, assets, onLocaleChange, childre
       <SkipLink label={accessibilityCopy.skipToContent} />
       <header className="app-header route-shell__header">
         <BrandMark label={copy.brand} assets={assets} />
-          {adminHeader === undefined ? <><span className="surface-label" data-shell-surface="true">{surfaceLabel}</span><LanguageSwitch locale={locale} copy={copy} onLocaleChange={onLocaleChange} /></> : (
+        {adminHeader === undefined ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            {kind === 'auth' ? (
+              <a href="/" style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem', textDecoration: 'none', fontWeight: 600 }}>
+                {locale === 'ar' ? 'الرئيسية' : 'Home'}
+              </a>
+            ) : (
+              <span className="surface-label" data-shell-surface="true">{surfaceLabel}</span>
+            )}
+            <LanguageSwitch locale={locale} copy={copy} onLocaleChange={onLocaleChange} />
+          </div>
+        ) : (
           <div data-admin-header="true" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '.65rem', order: 0 }}>
               <span aria-hidden="true" style={{ display: 'grid', width: '2.25rem', height: '2.25rem', placeItems: 'center', borderRadius: '50%', background: '#e4eee9', color: '#155b4f', fontWeight: 800 }}>م</span>

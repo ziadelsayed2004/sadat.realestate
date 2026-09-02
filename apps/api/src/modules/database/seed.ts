@@ -61,7 +61,18 @@ const ids = {
   commissionPolicy: new Types.ObjectId('670000000000000000000028'),
   commissionConfirmation: new Types.ObjectId('670000000000000000000029'),
   commissionSnapshot: new Types.ObjectId('67000000000000000000002a'),
-  homepageMetric: new Types.ObjectId('67000000000000000000002b')
+  homepageMetric: new Types.ObjectId('67000000000000000000002b'),
+  catResidential: new Types.ObjectId('670000000000000000000030'),
+  catCommercial: new Types.ObjectId('670000000000000000000031'),
+  typeApartment: new Types.ObjectId('670000000000000000000032'),
+  typeDuplex: new Types.ObjectId('670000000000000000000033'),
+  typeVilla: new Types.ObjectId('670000000000000000000034'),
+  teamAhmed: new Types.ObjectId('670000000000000000000041'),
+  teamSara: new Types.ObjectId('670000000000000000000042'),
+  teamMohamed: new Types.ObjectId('670000000000000000000043'),
+  teamNour: new Types.ObjectId('670000000000000000000044'),
+  teamKarim: new Types.ObjectId('670000000000000000000045'),
+  teamAli: new Types.ObjectId('670000000000000000000046')
 } as const;
 
 const localized = (ar: string, en: string) => ({ ar, en });
@@ -90,7 +101,7 @@ async function insertSyntheticDocuments(
   for (const value of documents) {
     await collection.updateOne(
       { _id: value._id },
-      { $setOnInsert: value },
+      { $set: value },
       { upsert: true }
     );
   }
@@ -122,17 +133,88 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
     await insertSyntheticDocuments(connection, 'organizations', [document(ids.organization, {
       providerId: ids.providerProfile,
       kind: 'developer_company',
-      name: localized('شركة السادات التجريبية', 'Sadat Demo Developer'),
+      name: localized('شركة السادات للتطوير العقاري', 'Sadat Real Estate Development'),
       description: localized(
-        'هوية مطور اصطناعية لبيئة العرض المحلية فقط.',
-        'Synthetic developer identity for local preview only.'),
+        'شركة رائدة في التطوير العقاري وإدارة المشاريع السكنية والتجارية بمدينة السادات.',
+        'A leading real estate developer managing residential and commercial projects in Sadat City.'),
       slug: 'sadat-demo-developer',
+      imageUrl: '/assets/canonical/public/developer-sadat.png',
       status: 'approved',
       reviewedAt: SEEDED_AT,
       createdAt: SEEDED_AT,
       updatedAt: SEEDED_AT,
       version: 0
     })]);
+    await insertSyntheticDocuments(connection, 'property_taxonomy', [
+      document(ids.catResidential, {
+        kind: 'category',
+        name: localized('سكني', 'Residential'),
+        slug: 'residential',
+        imageUrl: '/assets/canonical/public/category-all.png',
+        order: 10,
+        active: true,
+        createdBy: ids.user,
+        updatedBy: ids.user,
+        createdAt: SEEDED_AT,
+        updatedAt: SEEDED_AT,
+        version: 0
+      }),
+      document(ids.catCommercial, {
+        kind: 'category',
+        name: localized('تجاري', 'Commercial'),
+        slug: 'commercial',
+        imageUrl: '/assets/canonical/public/category-full-commercial-building.png',
+        order: 20,
+        active: true,
+        createdBy: ids.user,
+        updatedBy: ids.user,
+        createdAt: SEEDED_AT,
+        updatedAt: SEEDED_AT,
+        version: 0
+      }),
+      document(ids.typeApartment, {
+        kind: 'type',
+        categoryId: ids.catResidential,
+        name: localized('شقق', 'Apartments'),
+        slug: 'apartment',
+        imageUrl: '/assets/canonical/public/category-room.png',
+        order: 10,
+        active: true,
+        createdBy: ids.user,
+        updatedBy: ids.user,
+        createdAt: SEEDED_AT,
+        updatedAt: SEEDED_AT,
+        version: 0
+      }),
+      document(ids.typeDuplex, {
+        kind: 'type',
+        categoryId: ids.catResidential,
+        name: localized('دوبلكس', 'Duplexes'),
+        slug: 'duplex',
+        imageUrl: '/assets/canonical/public/category-duplex.png',
+        order: 20,
+        active: true,
+        createdBy: ids.user,
+        updatedBy: ids.user,
+        createdAt: SEEDED_AT,
+        updatedAt: SEEDED_AT,
+        version: 0
+      }),
+      document(ids.typeVilla, {
+        kind: 'type',
+        categoryId: ids.catResidential,
+        name: localized('فيلات', 'Villas'),
+        slug: 'villa',
+        imageUrl: '/assets/canonical/public/category-villa.png',
+        order: 30,
+        active: true,
+        createdBy: ids.user,
+        updatedBy: ids.user,
+        createdAt: SEEDED_AT,
+        updatedAt: SEEDED_AT,
+        version: 0
+      })
+    ]);
     await insertSyntheticDocuments(connection, 'locations', [
       document(ids.location, {
         kind: 'location',
@@ -165,12 +247,12 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
       providerId: ids.user,
       organizationId: ids.organization,
       locationId: ids.location,
-      name: localized('مشروع الواحة التجريبي', 'Demo Oasis Project'),
+      name: localized('مشروع زهرة السادات السكني', 'Zahrat Sadat Residential Project'),
       slug: 'demo-oasis-project',
       description: localized(
-        'مشروع اصطناعي لاختبار واجهات المنصة محليًا.',
-        'Synthetic project used to exercise the local platform UI.'),
-      website: 'https://example.invalid/demo-oasis-project',
+        'مشروع سكني متكامل يضم عمارات سكنية ومساحات خضراء ومول تجاري بالمنطقة المركزية بمدينة السادات.',
+        'Integrated residential community with green areas, modern apartments, and retail mall in Sadat City.'),
+      website: 'https://sadat-realestate.com/projects/zahrat-sadat',
       status: 'published',
       submittedAt: SEEDED_AT,
       reviewedAt: SEEDED_AT,
@@ -188,6 +270,7 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
       projectId: ids.project,
       locationId: ids.neighborhood,
       coordinates: { type: 'Point', coordinates: [30.5065, 30.3676] },
+      mapUrl: 'https://maps.google.com/?q=30.5065,30.3676',
       transactionType: 'sale',
       status: 'published',
       active: true,
@@ -201,28 +284,34 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
     await insertSyntheticDocuments(connection, 'properties', [
       document(ids.propertyOne, {
         ...propertyBase,
-        name: localized('شقة تجريبية بإطلالة مفتوحة', 'Demo Apartment with Open View'),
+        propertyTypeId: ids.typeApartment,
+        imageUrl: '/assets/canonical/public/listing-property-home.png',
+        name: localized('شقة فاخرة بإطلالة مفتوحة في الحي الأول', 'Luxury Open-View Apartment in District 1'),
         slug: 'demo-open-view-apartment',
-        description: localized('بيانات عرض فقط وليست إعلانًا حقيقيًا.', 'Preview data only; this is not a real listing.'),
+        description: localized('شقة مميزة بتشطيب ألترا سوبر لوكس وإطلالة بحرية على الحدائق المركزية، قريبة من كافة المدارس والخدمات.', 'Distinctive apartment with ultra super lux finishing, open view of central parks, and close to top schools and services.'),
         area: { value: 145, unit: 'sqm' },
         layout: { bedrooms: 3, bathrooms: 2, floor: 3, totalFloors: 8 },
         price: { amount: 2_450_000, currency: 'EGP' }
       }),
       document(ids.propertyTwo, {
         ...propertyBase,
-        name: localized('دوبلكس تجريبي بحديقة', 'Demo Duplex with Garden'),
+        propertyTypeId: ids.typeDuplex,
+        imageUrl: '/assets/canonical/public/listing-property-duplex.png',
+        name: localized('دوبلكس راقي بحديقة خاصة في الحي المتميز', 'Premium Duplex with Private Garden in Elite District'),
         slug: 'demo-garden-duplex',
-        description: localized('بيانات اصطناعية لاختبار البحث والمقارنة.', 'Synthetic data for search and comparison testing.'),
+        description: localized('دوبلكس فاخر بمدخل خاص وحديقة منسقة بموقع استراتيجي بالحي المتميز بمدينة السادات مع تسهيلات في السداد.', 'Luxury duplex with private entrance, landscaped garden, and prime location in Sadat Elite District with flexible payment terms.'),
         area: { value: 220, unit: 'sqm' },
         layout: { bedrooms: 4, bathrooms: 3, floor: 0, totalFloors: 2 },
         price: { amount: 4_100_000, currency: 'EGP' }
       }),
       document(ids.propertyThree, {
         ...propertyBase,
+        propertyTypeId: ids.typeApartment,
+        imageUrl: '/assets/canonical/public/listing-property-rental.png',
         transactionType: 'rent',
-        name: localized('شقة إيجار تجريبية', 'Demo Rental Apartment'),
+        name: localized('شقة عصرية للإيجار بالمنطقة المركزية', 'Modern Rental Apartment in Central District'),
         slug: 'demo-rental-apartment',
-        description: localized('بيانات عرض قابلة للحذف بإزالة حاوية Mongo المحلية.', 'Disposable preview data from the local Mongo volume.'),
+        description: localized('شقة مؤثثة بالكامل وجاهزة للسكن الفوري بالقرب من جامعة مدينة السادات والمراكز الحيوية.', 'Fully furnished apartment ready for immediate occupancy near Sadat City University and vital amenities.'),
         area: { value: 110, unit: 'sqm' },
         layout: { bedrooms: 2, bathrooms: 1, floor: 2, totalFloors: 6 },
         price: { amount: 12_000, currency: 'EGP' }
@@ -230,8 +319,8 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
     ]);
     await insertSyntheticDocuments(connection, 'article_categories', [document(ids.articleCategory, {
       slug: 'demo-guides',
-      name: localized('أدلة تجريبية', 'Demo Guides'),
-      description: localized('محتوى اصطناعي للمعاينة.', 'Synthetic preview content.'),
+      name: localized('أدلة الشراء والاستثمار', 'Buying & Investment Guides'),
+      description: localized('مقالات وإرشادات شاملة لاختيار وتوثيق العقارات بمدينة السادات.', 'Comprehensive articles and guidelines for choosing and registering properties in Sadat City.'),
       displayOrder: 10,
       active: true,
       createdBy: ids.user,
@@ -243,10 +332,11 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
     await insertSyntheticDocuments(connection, 'articles', [document(ids.article, {
       categoryId: ids.articleCategory,
       slug: 'demo-home-buying-guide',
-      title: localized('دليل تجريبي لاختيار العقار', 'Demo Guide to Choosing a Property'),
+      imageUrl: '/assets/canonical/public/article-buying-guide.png',
+      title: localized('دليلك الشامل لشراء عقارك الأول في مدينة السادات', 'Complete Guide to Buying Your First Property in Sadat City'),
       body: localized(
-        'هذا محتوى اصطناعي يساعد على اختبار قائمة المقالات وصفحة التفاصيل.',
-        'This synthetic article exercises the article list and detail views.'),
+        'تعد مدينة السادات واحدة من أكثر المدن الواعدة للاستثمار العقاري في مصر بفضل بنيتها التحتية المتطورة وموقعها الاستراتيجي على طريق مصر - الإسكندرية الصحراوي. في هذا الدليل نستعرض أهم المعايير لاختيار الحي المناسب، والتأكد من التراخيص الرسمية، وضمان أفضل عائد على الاستثمار العقاري.',
+        'Sadat City is one of the most promising real estate investment destinations in Egypt, boasting modern infrastructure and strategic positioning on the Cairo-Alexandria Desert Road. In this guide, we explore how to choose the right district, verify official permits, and maximize property return on investment.'),
       authorId: ids.user,
       status: 'published',
       publishedAt: SEEDED_AT,
@@ -259,16 +349,16 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
     await insertSyntheticDocuments(connection, 'community_posts', [document(new Types.ObjectId(ids.communityPost), {
       id: ids.communityPost,
       authorId: ids.user.toHexString(),
-      title: 'سؤال تجريبي عن أحياء مدينة السادات',
-      body: 'منشور اصطناعي لاختبار قائمة المجتمع وحالات العرض المحلية فقط.',
+      title: 'ما هي أفضل المدارس والخدمات التعليمية القريبة من المنطقة الخامسة؟',
+      body: 'أخطط للانتقال مع الأسرة إلى الحي الخامس في مدينة السادات، وأود معرفة تجاربكم مع المدارس الحكومية والخاصة والمستشفيات القريبة من المنطقة. شكراً مقدماً لتعاونكم!',
       status: 'published',
       createdAt: SEEDED_AT.toISOString(),
       updatedAt: SEEDED_AT.toISOString()
     })]);
     await insertSyntheticDocuments(connection, 'cms_homepage_sections', [document(ids.homepageSection, {
       key: 'local_preview_intro',
-      title: localized('استكشف مدينة السادات', 'Explore Sadat City'),
-      body: localized('محتوى تجريبي آمن للمعاينة المحلية.', 'Safe synthetic content for local preview.'),
+      title: localized('وجهتك الأولى لعقارات مدينة السادات', 'Your #1 Destination for Sadat City Real Estate'),
+      body: localized('ابحث، قارن، واختر عقارك المثالي بكل ثقة وشفافية من بين أفضل الشقق والفيلات والدوبلكس المعتمدة.', 'Search, compare, and choose your dream property with trust and full transparency among top verified apartments and villas.'),
       order: 10,
       visible: true,
       status: 'published',
@@ -283,18 +373,114 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
       document(new Types.ObjectId('67000000000000000000002d'), { key: 'residential_districts', title: localized('منطقة سكنية', 'Residential districts'), value: 18, order: 2, visible: true, status: 'published', updatedBy: ids.user, createdAt: SEEDED_AT, updatedAt: SEEDED_AT }),
       document(new Types.ObjectId('67000000000000000000002e'), { key: 'housing_units', title: localized('وحدة سكنية', 'Housing units'), value: 1200, order: 3, visible: true, status: 'published', updatedBy: ids.user, createdAt: SEEDED_AT, updatedAt: SEEDED_AT })
     ]);
-    await insertSyntheticDocuments(connection, 'cms_about_blocks', [document(ids.about, {
-      key: 'local_preview_about',
-      title: localized('عن منصة السادات', 'About the Sadat Platform'),
-      body: localized('نسخة عرض محلية ببيانات اصطناعية.', 'Local preview with synthetic data.'),
-      order: 10,
-      active: true,
-      status: 'published',
-      updatedBy: ids.user,
-      createdAt: SEEDED_AT,
-      updatedAt: SEEDED_AT,
-      version: 0
-    })]);
+    await insertSyntheticDocuments(connection, 'cms_about_blocks', [
+      document(ids.about, {
+        key: 'about_intro',
+        title: localized('عن منصة عقارات السادات', 'About Sadat Real Estate Platform'),
+        body: localized(
+          'المنصة الرقمية الرائدة في توثيق وتسويق العقارات في مدينة السادات، نوفر بيئة آمنة للمشترين والمستثمرين والمطورين مع خدمات بحث ومقارنة ذكية.',
+          'The leading digital platform for property verification and listing in Sadat City, providing a secure environment for buyers, investors, and developers with smart comparison tools.'),
+        order: 10,
+        active: true,
+        status: 'published',
+        updatedBy: ids.user,
+        createdAt: SEEDED_AT,
+        updatedAt: SEEDED_AT,
+        version: 0
+      }),
+      document(new Types.ObjectId('67000000000000000000003f'), {
+        key: 'local_preview_about',
+        title: localized('رؤيتنا وخدماتنا المتكاملة', 'Our Vision & Integrated Services'),
+        body: localized('نهدف إلى تطوير السوق العقاري في مدينة السادات من خلال توفير معلومات دقيقة، واستشارات متخصصة، وتسهيل إجراءات المعاينة والتعاقد.', 'We aim to elevate the real estate market in Sadat City by delivering accurate data, expert advisory, and seamless viewing and contract procedures.'),
+        order: 20,
+        active: true,
+        status: 'published',
+        updatedBy: ids.user,
+        createdAt: SEEDED_AT,
+        updatedAt: SEEDED_AT,
+        version: 0
+      })
+    ]);
+    await insertSyntheticDocuments(connection, 'cms_team_members', [
+      document(ids.teamAhmed, {
+        key: 'team_ahmed',
+        name: localized('أحمد محمود', 'Ahmed Mahmoud'),
+        title: localized('المدير التنفيذي والمؤسس', 'CEO & Founder'),
+        bio: localized('خبرة أكثر من 15 عاماً في التطوير العقاري وإدارة المشروعات في مدينة السادات.', 'Over 15 years of real estate development and project management experience in Sadat City.'),
+        order: 10,
+        active: true,
+        status: 'published',
+        updatedBy: ids.user,
+        createdAt: SEEDED_AT,
+        updatedAt: SEEDED_AT,
+        version: 0
+      }),
+      document(ids.teamSara, {
+        key: 'team_sara',
+        name: localized('سارة إبراهيم', 'Sara Ibrahim'),
+        title: localized('مديرة المبيعات والتسويق', 'Head of Sales & Marketing'),
+        bio: localized('متخصصة في تقديم الاستشارات العقارية وتسهيل أفضل فرص الاستثمار للعملاء.', 'Specialist in real estate advisory and delivering top investment opportunities for clients.'),
+        order: 20,
+        active: true,
+        status: 'published',
+        updatedBy: ids.user,
+        createdAt: SEEDED_AT,
+        updatedAt: SEEDED_AT,
+        version: 0
+      }),
+      document(ids.teamMohamed, {
+        key: 'team_mohamed',
+        name: localized('محمد علي', 'Mohamed Ali'),
+        title: localized('مسؤول خدمة ودعم العملاء', 'Customer Support Lead'),
+        bio: localized('متابعة المعاينات وتنسيق طلبات المشترين والمستأجرين على مدار الساعة.', 'Coordinating viewings and supporting seeker requests around the clock.'),
+        order: 30,
+        active: true,
+        status: 'published',
+        updatedBy: ids.user,
+        createdAt: SEEDED_AT,
+        updatedAt: SEEDED_AT,
+        version: 0
+      }),
+      document(ids.teamNour, {
+        key: 'team_nour',
+        name: localized('نور الدين حسن', 'Nour El-Din Hassan'),
+        title: localized('أخصائي توثيق ومحتوى عقاري', 'Real Estate Content Specialist'),
+        bio: localized('مراجعة بيانات الوحدات وصياغة التقارير الإرشادية لمدينة السادات.', 'Auditing property listings and authoring city guide reports.'),
+        order: 40,
+        active: true,
+        status: 'published',
+        updatedBy: ids.user,
+        createdAt: SEEDED_AT,
+        updatedAt: SEEDED_AT,
+        version: 0
+      }),
+      document(ids.teamKarim, {
+        key: 'team_karim',
+        name: localized('كريم عادل', 'Karim Adel'),
+        title: localized('مستشار مبيعات المشاريع', 'Project Sales Consultant'),
+        bio: localized('مرافقة المستثمرين في جولات المعاينة الميدانية ومطابقة الاحتياجات.', 'Guiding investors through field viewings and finding the ideal property matches.'),
+        order: 50,
+        active: true,
+        status: 'published',
+        updatedBy: ids.user,
+        createdAt: SEEDED_AT,
+        updatedAt: SEEDED_AT,
+        version: 0
+      }),
+      document(ids.teamAli, {
+        key: 'team_ali',
+        name: localized('علي رضا', 'Ali Reda'),
+        title: localized('مسؤول التحقق والجودة', 'Verification & Quality Lead'),
+        bio: localized('فحص صحة المستندات ومطابقة مواصفات الإعلانات مع الواقع.', 'Verifying legal documentation and confirming on-the-ground listing accuracy.'),
+        order: 60,
+        active: true,
+        status: 'published',
+        updatedBy: ids.user,
+        createdAt: SEEDED_AT,
+        updatedAt: SEEDED_AT,
+        version: 0
+      })
+    ]);
     await insertSyntheticDocuments(connection, 'cms_real_estate_tips', [document(ids.tip, {
       key: 'local_preview_tip',
       title: localized('نصيحة تجريبية', 'Demo Tip'),
@@ -313,6 +499,7 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
       eyebrow: localized('فرصة مميزة', 'Featured opportunity'),
       body: localized('بيانات منشورة لاختبار بطاقة العرض العامة.', 'Published data for exercising the public promotional card.'),
       highlight: localized('بيانات تجريبية', 'Demo data'),
+      imageUrl: '/assets/canonical/public/home-hero-sadat-city.png',
       order: 10,
       active: true,
       status: 'published',
@@ -657,10 +844,8 @@ export async function runDevelopmentSeed(
   await ledger.createIndex({ id: 1 }, { unique: true });
   let applied = 0;
   for (const step of steps) {
-    const existing = await ledger.findOne({ id: step.id });
-    if (existing) continue;
     await step.run(connection);
-    await ledger.updateOne({ id: step.id }, { $setOnInsert: { id: step.id, appliedAt: new Date() } }, { upsert: true });
+    await ledger.updateOne({ id: step.id }, { $set: { id: step.id, appliedAt: new Date() } }, { upsert: true });
     applied += 1;
   }
   return applied;

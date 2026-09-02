@@ -9,7 +9,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { Pagination, PropertyCard } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
-import { PublicCategoryGlyph, PublicMediaImage, PublicSiteFooter, PublicSiteHeader, publicCategoryAsset } from './components.tsx';
+import { PublicCategoryGlyph, PublicMediaImage, PublicSiteFooter, PublicSiteHeader, fallbackPropertyImage, publicCategoryAsset } from './components.tsx';
 import {
   defaultPublicPropertyListLoader,
   defaultPublicPropertySearchQuery,
@@ -239,8 +239,8 @@ function PropertyResults({
             source={<span className="public-property-listing__source-identity">{property.sourceImageUrl ? <img src={property.sourceImageUrl} alt="" width="24" height="24" loading="lazy" decoding="async" /> : null}<span>{localizedText(property.sourceName, locale)}{property.sourceType ? <small>{property.sourceType === 'developer_company' ? copy.developerSource : copy.brokerageSource}</small> : null}</span></span>}
             badges={[property.transactionType === 'sale' ? copy.sale : copy.rent, ...(property.installmentAvailable ? [copy.installment] : []), ...(property.featured ? [copy.featured] : []), property.publicCode ?? property.slug.toUpperCase()]}
             features={[...propertyFeatures(property, locale, { area: copy.area, bedrooms: homepageCopy.bedrooms, bathrooms: copy.bathrooms, floor: copy.floor, sqm: copy.sqm }).slice(0, 3), ...(property.viewCount === undefined ? [] : [{ label: copy.views, value: property.viewCount.toLocaleString(locale) }])]}
-            image={<PublicMediaImage src={property.imageUrl} alt={localizedText(property.name, locale) ?? property.slug} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />}
-            imageAlt={copy.imageUnavailable}
+            image={<PublicMediaImage src={property.imageUrl ?? fallbackPropertyImage(property.slug, property.kind)} alt={localizedText(property.name, locale) ?? property.slug} fallback={<img src={fallbackPropertyImage(property.slug, property.kind)} alt={localizedText(property.name, locale) ?? property.slug} />} />}
+            imageAlt={localizedText(property.name, locale) ?? property.slug}
             className="public-property-listing__card"
             action={<button type="button" aria-label={`${copy.addToCompare}: ${localizedText(property.name, locale) ?? property.slug}`}><ListingIcon type="compare" /> {copy.addToCompare}</button>}
           />

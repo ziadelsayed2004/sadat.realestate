@@ -134,7 +134,7 @@ function ViewingForm({ locale, mode, viewing, onClose, onSubmit }: ViewingFormPr
     const date = new Date(requestedAt);
     const isoRequestedAt = Number.isFinite(date.getTime()) ? date.toISOString() : undefined;
     if (mode === 'create' && !/^[a-f0-9]{24}$/u.test(propertyId)) nextErrors.push(copy.invalidProperty);
-    if (isoRequestedAt === undefined || date <= new Date()) nextErrors.push(copy.invalidDate);
+    if (isoRequestedAt === undefined) nextErrors.push(copy.invalidDate);
     if (!/^[A-Za-z_]+(?:\/[A-Za-z0-9_+\-]+)*$/u.test(timezone.trim())) nextErrors.push(copy.invalidTimezone);
     if (note.length > 1_000) nextErrors.push(copy.invalidNote);
     if (nextErrors.length > 0 || isoRequestedAt === undefined) {

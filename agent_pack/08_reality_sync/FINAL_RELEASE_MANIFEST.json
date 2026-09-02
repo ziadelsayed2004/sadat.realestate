@@ -4,10 +4,10 @@
   "releaseStatus": "conditional",
   "graphStatus": "pending_post_release_assurance",
   "taskCounts": {
-    "backendTotal": 124,
-    "backendComplete": 123,
-    "frontendTotal": 89,
-    "frontendComplete": 85,
+    "backendTotal": 134,
+    "backendComplete": 124,
+    "frontendTotal": 105,
+    "frontendComplete": 87,
     "frontendInProgress": null
   },
   "qualityGates": {
@@ -79,12 +79,31 @@
       "rootTemporaryFileCheck": "passed"
     },
     "testCounts": {
-      "workspace": { "passed": 16, "failed": 0 },
-      "apiAll": { "passed": 517, "failed": 0 },
-      "apiUnit": { "passed": 382, "failed": 0 },
-      "apiRouteMatrix": { "passed": 107, "failed": 0 },
-      "webVitest": { "passed": 379, "failed": 0, "files": 65 },
-      "webNodeAuxiliary": { "passed": 76, "failed": 0 }
+      "workspace": {
+        "passed": 16,
+        "failed": 0
+      },
+      "apiAll": {
+        "passed": 517,
+        "failed": 0
+      },
+      "apiUnit": {
+        "passed": 382,
+        "failed": 0
+      },
+      "apiRouteMatrix": {
+        "passed": 107,
+        "failed": 0
+      },
+      "webVitest": {
+        "passed": 379,
+        "failed": 0,
+        "files": 65
+      },
+      "webNodeAuxiliary": {
+        "passed": 76,
+        "failed": 0
+      }
     },
     "visualClosure": {
       "status": "not_claimed",

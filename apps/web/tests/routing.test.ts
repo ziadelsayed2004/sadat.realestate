@@ -63,8 +63,8 @@ test('dashboard shells expose a scoped navigation landmark and preserve locale d
   assert.match(markup, /data-shell-navigation="true"/);
   assert.match(markup, /dir="rtl"/);
   assert.match(markup, /data-locale-switch="true"/);
-  assert.match(markup, /<option value="ar">/);
-  assert.match(markup, /<option value="en">/);
+  assert.match(markup, /<option value="ar"[^>]*>/);
+  assert.match(markup, /<option value="en"[^>]*>/);
 
   const seekerMarkup = renderToStaticMarkup(createElement(SeekerShell, {
     route: resolveRoute('/seeker'),

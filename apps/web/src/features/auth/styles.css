@@ -528,13 +528,13 @@
 
 .route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-login-field__icon {
   position: absolute;
-  z-index: 1;
-  inset-inline-end: 0.875rem;
+  z-index: 2;
+  inset-inline-start: 1rem;
   inset-block-start: 2.125rem;
   display: grid;
   place-items: center;
-  inline-size: 1.125rem;
-  block-size: 1.125rem;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
   color: var(--color-text-muted);
   line-height: 1;
   pointer-events: none;
@@ -546,15 +546,17 @@
 }
 
 .route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-login-field .ui-field__control {
-  padding-inline-end: 2.5rem;
+  padding-inline-start: 2.75rem;
+  padding-inline-end: 2.75rem;
   border-color: #edeef0;
   border-radius: 1.25rem;
+  min-block-size: 3.125rem;
 }
 
 .route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-password-field__toggle {
   position: absolute;
-  z-index: 1;
-  inset-inline-start: 0.75rem;
+  z-index: 3;
+  inset-inline-end: 1rem;
   inset-block-start: 2.125rem;
   display: grid;
   place-items: center;
@@ -564,11 +566,19 @@
   color: var(--color-text-muted);
   font-size: 0;
   line-height: 1;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-password-field__toggle:hover {
+  color: var(--color-brand-primary);
 }
 
 .route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-password-field__toggle .auth-icon {
-  inline-size: 1.125rem;
-  block-size: 1.125rem;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
 }
 
 .route-shell--auth > .app-main > .auth-page.auth-page--login[data-state] .auth-form .ui-button {

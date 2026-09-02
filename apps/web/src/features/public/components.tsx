@@ -10,11 +10,12 @@ import type {
   SupportedLocale
 } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
-import { PropertyCard } from '../design_system/index.ts';
-import { LOCALE_CHANGE_EVENT } from '../localization/index.ts';
+import { CustomSelect, PropertyCard } from '../design_system/index.ts';
+import { LOCALE_CHANGE_EVENT, LocaleSwitcher } from '../localization/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy, type PublicHomepageCopy } from './copy.ts';
 import { defaultPublicHomepageLoader, type PublicHomepageLoader } from './data.ts';
+import { getWhatsAppLink } from '../frontend_foundation/config.ts';
 import {
   formatMoney,
   isHomepageEmpty,
@@ -133,6 +134,16 @@ export function publicCategoryAsset(slug: string): string | undefined {
   return publicCategoryAssets[slug.trim().toLowerCase()];
 }
 
+export function fallbackPropertyImage(slug?: string, kind?: string): string {
+  const key = `${slug ?? ''} ${kind ?? ''}`.toLowerCase();
+  if (key.includes('duplex')) return '/assets/canonical/public/listing-property-duplex.png';
+  if (key.includes('rent')) return '/assets/canonical/public/listing-property-rental.png';
+  if (key.includes('villa')) return '/assets/canonical/public/listing-property-villa.png';
+  if (key.includes('office')) return '/assets/canonical/public/listing-property-office.png';
+  if (key.includes('land')) return '/assets/canonical/public/listing-property-land.png';
+  return '/assets/canonical/public/listing-property-home.png';
+}
+
 function errorState(error: unknown): PublicHomepageViewState {
   if (error instanceof ApiClientError && (error.status === 401 || error.status === 403)) {
     return 'permission';
@@ -189,24 +200,7 @@ export function PublicSiteHeader({
         {links.map(([href, label]) => <a key={href} href={href} aria-current={href === activePath ? 'page' : undefined}>{label}</a>)}
       </nav>
       <div className="public-homepage__actions">
-        <label className="public-homepage__locale" aria-label={copy.localeLabel}>
-          <span aria-hidden="true">⌄</span>
-          <select
-            aria-label={copy.localeLabel}
-            data-locale-switch="true"
-            value={locale}
-            onChange={(event) => {
-              if (typeof window !== 'undefined') {
-                window.dispatchEvent(new CustomEvent(LOCALE_CHANGE_EVENT, { detail: { locale: event.currentTarget.value } }));
-              }
-            }}
-            style={{ color: 'inherit', background: 'transparent', border: 0, font: 'inherit' }}
-          >
-            <option value="ar">AR</option>
-            <option value="en">EN</option>
-          </select>
-          <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><circle cx="8" cy="8" r="6" /><path d="M2 8h12M8 2a9 9 0 0 1 0 12M8 2a9 9 0 0 0 0 12" /></svg>
-        </label>
+        <LocaleSwitcher locale={locale} label={copy.localeLabel} />
         <a className="public-homepage__login" href="/auth/login">{copy.login}</a>
         <a className="public-homepage__signup" href="/auth/register">{copy.createAccount}</a>
       </div>
@@ -241,7 +235,7 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
   const footerDescription = description === copy.footerDescription ? description : copy.footerDescription;
   const labels = locale === 'ar'
     ? { explore: 'الصفحات', company: 'الشركة', contact: 'تواصل معنا', follow: 'تابع عقارات السادات', followBody: 'ابقَ على اطلاع بأحدث العروض والأخبار', legal: 'سياسة الخصوصية · الشروط والأحكام', copyright: '© 2026 منصة عقارات السادات — جميع الحقوق محفوظة', phone: '01001234567', whatsapp: 'واتساب متاح 24/7', address: 'مدينة السادات، مصر' }
-    :{ explore: 'Pages', company: 'Company', contact: 'Contact us', follow: 'Follow Sadat Real Estate', followBody: 'Stay informed about the latest listings and news', legal: 'Privacy policy · Terms and conditions', copyright: '© 2026 Sadat Real Estate — All rights reserved', phone: '01001234567', whatsapp: 'WhatsApp available 24/7', address: 'Sadat City, Egypt' };
+    : { explore: 'Pages', company: 'Company', contact: 'Contact us', follow: 'Follow Sadat Real Estate', followBody: 'Stay informed about the latest listings and news', legal: 'Privacy policy · Terms and conditions', copyright: '© 2026 Sadat Real Estate — All rights reserved', phone: '01001234567', whatsapp: 'WhatsApp available 24/7', address: 'Sadat City, Egypt' };
   const nav = locale === 'ar'
     ? { ...copy.nav, community: '\u0627\u0644\u0643\u0648\u0645\u064a\u0648\u0646\u062a\u064a', about: '\u0645\u0646 \u0646\u062d\u0646', team: '\u0641\u0631\u064a\u0642 \u0627\u0644\u0639\u0645\u0644' }
     : copy.nav;
@@ -271,19 +265,19 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
         <p className="public-homepage__footer-title">{labels.contact}</p>
         <div className="public-homepage__footer-links">
           <a href={`tel:${labels.phone}`}>{labels.phone}</a>
-          <a href="/community">{labels.whatsapp}</a>
+          <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer">{labels.whatsapp}</a>
           <span>{labels.address}</span>
         </div>
       </div>
       <div className="public-site-footer__follow">
         <div><strong>{labels.follow}</strong><span>{labels.followBody}</span></div>
         <div className="public-site-footer__social" aria-label="social links">
-          <a href="/community" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3.31 0-5 1.69-5 5v3H6v4h3v4h4v-4h3l1-4h-4V9c0-.67.33-1 1-1Z" /></svg></a>
-          <a href="/community" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4" /><circle cx="12" cy="12" r="3.5" /><circle cx="17.25" cy="6.75" r=".75" fill="currentColor" stroke="none" /></svg></a>
-          <a href="/community" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3" /><path d="m10 9 5 3-5 3Z" fill="currentColor" stroke="none" /></svg></a>
-          <a href="/community" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4v10.2a3.8 3.8 0 1 1-3-3.7V14a1.8 1.8 0 1 0 1 1.7V4h3c.3 1.7 1.3 2.8 3 3.2v3c-1.1-.1-2.1-.5-3-1.1V14a4.8 4.8 0 1 1-5-4.8V4Z" fill="currentColor" stroke="none" /></svg></a>
-          <a href="/community" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8.5V18H3V8.5h3ZM4.5 3A1.75 1.75 0 1 1 4.5 6.5 1.75 1.75 0 0 1 4.5 3ZM8 8.5h2.9v1.3h.1c.4-.8 1.4-1.7 3-1.7 3.2 0 3.8 2.1 3.8 4.9V18h-3v-4.4c0-1.1 0-2.6-1.6-2.6s-1.9 1.2-1.9 2.5V18H8V8.5Z" fill="currentColor" stroke="none" /></svg></a>
-          <a href="/community" aria-label="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.9L3.5 20.5l4.2-1.1A8.5 8.5 0 1 0 12 3.5Z" /><path d="M9.2 8.7c.2-.3.4-.3.7-.3h.5c.2 0 .4.1.5.4l.7 1.6c.1.2.1.4-.1.6l-.5.6c.5 1 1.3 1.7 2.4 2.2l.7-.7c.2-.2.4-.2.7-.1l1.5.7c.3.1.4.3.3.6-.2.8-.8 1.3-1.6 1.4-1.2.1-3-.8-4.4-2.1-1.3-1.2-2.3-2.8-2.2-4.1 0-.3.2-.6.5-.8Z" fill="currentColor" stroke="none" /></svg></a>
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3.31 0-5 1.69-5 5v3H6v4h3v4h4v-4h3l1-4h-4V9c0-.67.33-1 1-1Z" /></svg></a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4" /><circle cx="12" cy="12" r="3.5" /><circle cx="17.25" cy="6.75" r=".75" fill="currentColor" stroke="none" /></svg></a>
+          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3" /><path d="m10 9 5 3-5 3Z" fill="currentColor" stroke="none" /></svg></a>
+          <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4v10.2a3.8 3.8 0 1 1-3-3.7V14a1.8 1.8 0 1 0 1 1.7V4h3c.3 1.7 1.3 2.8 3 3.2v3c-1.1-.1-2.1-.5-3-1.1V14a4.8 4.8 0 1 1-5-4.8V4Z" fill="currentColor" stroke="none" /></svg></a>
+          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8.5V18H3V8.5h3ZM4.5 3A1.75 1.75 0 1 1 4.5 6.5 1.75 1.75 0 0 1 4.5 3ZM8 8.5h2.9v1.3h.1c.4-.8 1.4-1.7 3-1.7 3.2 0 3.8 2.1 3.8 4.9V18h-3v-4.4c0-1.1 0-2.6-1.6-2.6s-1.9 1.2-1.9 2.5V18H8V8.5Z" fill="currentColor" stroke="none" /></svg></a>
+          <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.9L3.5 20.5l4.2-1.1A8.5 8.5 0 1 0 12 3.5Z" /><path d="M9.2 8.7c.2-.3.4-.3.7-.3h.5c.2 0 .4.1.5.4l.7 1.6c.1.2.1.4-.1.6l-.5.6c.5 1 1.3 1.7 2.4 2.2l.7-.7c.2-.2.4-.2.7-.1l1.5.7c.3.1.4.3.3.6-.2.8-.8 1.3-1.6 1.4-1.2.1-3-.8-4.4-2.1-1.3-1.2-2.3-2.8-2.2-4.1 0-.3.2-.6.5-.8Z" fill="currentColor" stroke="none" /></svg></a>
         </div>
       </div>
       <div className="public-site-footer__bottom">
@@ -308,26 +302,44 @@ function BannerMedia({
   readonly priority?: boolean;
 }) {
   const [failed, setFailed] = useState(false);
-  const imageUrl = safePublicUrl(banner?.imageUrl);
-  const imageAlt = localizedText(banner?.title, locale) ?? copy.imageUnavailable;
+  const fallbackHero = '/assets/canonical/public/home-hero-sadat-city.png';
+  const rawUrl = banner?.imageUrl || fallbackHero;
+  const imageUrl = safePublicUrl(rawUrl);
+  const imageAlt = localizedText(banner?.title, locale) ?? copy.brand;
 
   if (imageUrl === undefined || failed) {
     return (
-      <div className={'public-homepage__missing-media' + (className === undefined ? '' : ' ' + className)}>
-        <UxStateView state="missing_image" title={copy.imageUnavailable} />
-      </div>
+      <img
+        className={'public-homepage__hero-image' + (className === undefined ? '' : ' ' + className)}
+        src={fallbackHero}
+        alt={imageAlt}
+        decoding="async"
+        loading={priority ? 'eager' : 'lazy'}
+      />
     );
   }
 
-  return <img className={className} src={imageUrl} alt={imageAlt} decoding="async" loading={priority ? 'eager' : 'lazy'} onError={() => setFailed(true)} />;
+  return (
+    <img
+      className={'public-homepage__hero-image' + (className === undefined ? '' : ' ' + className)}
+      src={imageUrl}
+      alt={imageAlt}
+      decoding="async"
+      loading={priority ? 'eager' : 'lazy'}
+      onError={() => setFailed(true)}
+    />
+  );
 }
 
 function SearchPanel({ copy, locale, categories }: { readonly copy: PublicHomepageCopy; readonly locale: SupportedLocale; readonly categories: readonly PublicHomepageCategory[] }) {
   const [transactionType, setTransactionType] = useState<'sale' | 'rent'>('sale');
+  const [propertyType, setPropertyType] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
   const labels = locale === 'ar'
     ? { type: 'نوع العقار', district: 'المنطقة', price: 'السعر', any: 'الكل' }
-    :{ type: 'Property type', district: 'District', price: 'Price', any: 'Any' };
+    : { type: 'Property type', district: 'District', price: 'Price', any: 'Any' };
   const searchActionLabel = locale === 'ar' ? '\u0627\u0628\u062d\u062b \u0627\u0644\u0622\u0646' : copy.searchAction;
+
   return (
     <form className="public-homepage__search" action="/properties" method="get" aria-label={copy.searchLabel}>
       <div className="public-homepage__search-tabs" role="tablist" aria-label={locale === 'ar' ? '\u0646\u0648\u0639 \u0627\u0644\u0645\u0639\u0627\u0645\u0644\u0629' : 'Transaction type'}>
@@ -336,10 +348,38 @@ function SearchPanel({ copy, locale, categories }: { readonly copy: PublicHomepa
       </div>
       <input type="hidden" name="transactionType" value={transactionType} readOnly />
       <div className="public-homepage__search-row">
-        <label className="public-homepage__search-control public-homepage__search-control--select"><span>{labels.type}</span><select name="propertyTypeId" defaultValue="" aria-label={labels.type}><option value="">{labels.type}</option>{categories.map(category => <option value={category.id} key={category.id}>{localizedText(category.name, locale) ?? category.slug}</option>)}</select></label>
-        <label className="public-homepage__search-control"><span>{labels.district}</span><input id="public-homepage-search" name="search" type="search" placeholder={labels.district} aria-label={labels.district} /></label>
-        <label className="public-homepage__search-control public-homepage__search-control--select"><span>{labels.price}</span><select name="maxPrice" defaultValue="" aria-label={labels.price}><option value="">{labels.price}</option><option value="1000000">1,000,000</option><option value="3000000">3,000,000</option><option value="5000000">5,000,000</option></select></label>
-        <button type="submit"><svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m13 13 4 4" /></svg>{searchActionLabel}</button>
+        <CustomSelect
+          name="propertyTypeId"
+          label={labels.type}
+          placeholder={labels.type}
+          value={propertyType}
+          onChange={setPropertyType}
+          options={categories.map(category => ({
+            value: category.id,
+            label: localizedText(category.name, locale) ?? category.slug
+          }))}
+        />
+        <label className="public-homepage__search-control">
+          <span>{labels.district}</span>
+          <input id="public-homepage-search" name="search" type="search" placeholder={labels.district} aria-label={labels.district} />
+        </label>
+        <CustomSelect
+          name="maxPrice"
+          label={labels.price}
+          placeholder={labels.price}
+          value={maxPrice}
+          onChange={setMaxPrice}
+          options={[
+            { value: '1000000', label: '1,000,000' },
+            { value: '3000000', label: '3,000,000' },
+            { value: '5000000', label: '5,000,000' },
+            { value: '10000000', label: '10,000,000' }
+          ]}
+        />
+        <button type="submit">
+          <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m13 13 4 4" /></svg>
+          {searchActionLabel}
+        </button>
       </div>
     </form>
   );
@@ -424,8 +464,8 @@ function PropertyGrid({
             price={formatMoney(property.price, locale)}
             badges={[property.transactionType === 'sale' ? copy.sale : copy.rent]}
             features={features}
-            image={<PublicMediaImage src={property.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />}
-            imageAlt={copy.imageUnavailable}
+            image={<PublicMediaImage src={property.imageUrl ?? fallbackPropertyImage(property.slug, property.kind)} alt={title} fallback={<img src={fallbackPropertyImage(property.slug, property.kind)} alt={title} />} />}
+            imageAlt={title}
             className="public-homepage__property-card"
           />
         );
@@ -514,7 +554,7 @@ function PlatformCallout({ copy }: { readonly copy: PublicHomepageCopy }) {
         <p>{copy.readyCtaBody}</p>
       </div>
       <a className="public-homepage__primary-action" href="/properties">{copy.browseProperties}</a>
-      <a className="public-homepage__secondary-action public-homepage__whatsapp-action" href="https://wa.me/201001234567" target="_blank" rel="noopener noreferrer">{copy.whatsappAction}</a>
+      <a className="public-homepage__secondary-action public-homepage__whatsapp-action" href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer">{copy.whatsappAction}</a>
     </section>
   );
 }

@@ -125,15 +125,15 @@ function postPresentation(post: CommunityPublicPost, locale: SupportedLocale): C
   if (known !== undefined) {
     return {
       ...known,
-      author: locale === 'en' ? 'Community member' : '\u793e\u533a\u6210\u5458',
+      author: locale === 'ar' ? 'عضو مجتمع' : 'Community member',
       time: formatDate(post.createdAt, locale),
-      category: locale === 'en' ? 'Post' : '\u5e16\u5b50'
+      category: locale === 'ar' ? 'منشور' : 'Post'
     };
   }
   return {
-    author: locale === 'en' ? 'Community member' : '\u793e\u533a\u6210\u5458',
+    author: locale === 'ar' ? 'عضو مجتمع' : 'Community member',
     time: formatDate(post.createdAt, locale),
-    category: locale === 'en' ? 'Post' : '\u5e16\u5b50',
+    category: locale === 'ar' ? 'منشور' : 'Post',
     categoryKey: 'post', likes: 0, dislikes: 0, comments: post.commentCount
   };
 }
@@ -557,7 +557,7 @@ export function PublicCommunity({
   const modalOpen = composerState !== 'closed';
   const composerTitle = composerState === 'permission' || composerState === 'checking'
     ? copy.authenticationRequired
-    : locale === 'ar' ? '\u0627\u0646\u0634\u0631 \u0628\u0648\u0633\u062a \u062c\u062f\u064a\u062f' : locale === 'en' ? 'Create a new post' : '\u53d1\u5e03\u65b0\u5e16\u5b50';
+    : locale === 'ar' ? 'انشر بوست جديد' : 'Create a new post';
 
   return (
     <div className="public-community" data-page="public-community">
@@ -565,7 +565,7 @@ export function PublicCommunity({
       <div className="public-community__main">
         <header className="public-community__intro">
           <div>
-            <p className="public-community__eyebrow">{locale === 'ar' ? '\u0645\u062c\u062a\u0645\u0639 \u0627\u0644\u0633\u0627\u062f\u0627\u062a' : locale === 'en' ? 'Sadat community' : '\u8428\u8fbe\u7279\u793e\u533a'}</p>
+            <p className="public-community__eyebrow">{locale === 'ar' ? 'مجتمع السادات' : 'Sadat community'}</p>
             <h1>{copy.title}</h1>
           </div>
           <Button variant="accent" onClick={openComposer} startIcon={<span aria-hidden="true">+</span>}>{copy.createPost}</Button>

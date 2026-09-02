@@ -46,9 +46,18 @@
         "figmaPrototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356",
         "status": "historical-source-unavailable-retained-for-provenance"
       },
-      "approvedDevices": ["desktop"],
-      "locales": ["ar", "en", "zh-CN"],
-      "directions": ["rtl", "ltr"],
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en",
+        "zh-CN"
+      ],
+      "directions": [
+        "rtl",
+        "ltr"
+      ],
       "runtimeStatesRequired": [
         "loading",
         "success",

@@ -19,6 +19,7 @@ import {
 } from './details-data.ts';
 import { getPublicPropertyDetailsCopy, type PublicPropertyDetailsCopy } from './details-copy.ts';
 import { formatArea, formatMoney, localizedText } from './model.ts';
+import { getWhatsAppLink } from '../frontend_foundation/config.ts';
 import './details.css';
 
 export type PublicPropertyDetailsInitialState = 'loading' | 'retry' | 'not_found';
@@ -493,15 +494,15 @@ function RequestPanel({
 
   const submitContact = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const trimmedMessage = message.trim();
-    if (trimmedMessage.length === 0) {
+    if (fullName.trim().length === 0 || phone.trim().length === 0 || contactTime.trim().length === 0) {
       setContactValidation(true);
       return;
     }
     setContactValidation(false);
     setContactState('submitting');
+    const trimmedMessage = message.trim();
     const input: PublicContactRequestInput = {
-      message: trimmedMessage,
+      message: trimmedMessage.length > 0 ? trimmedMessage : (locale === 'ar' ? 'طلب تواصل واستفسار' : 'Contact inquiry request'),
       propertyId: data.id,
       ...(data.project?.id === undefined ? {} : { projectId: data.project.id }),
       locale
@@ -510,6 +511,34 @@ function RequestPanel({
       await actions.submitContact(input);
       setContactState('success');
       setMessage('');
+    } catch (error) {
+      setContactState(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? 'permission' : 'error');
+    }
+  };
+
+  const handleWhatsApp = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    if (fullName.trim().length === 0 || phone.trim().length === 0) {
+      setContactValidation(true);
+      return;
+    }
+    setContactValidation(false);
+    setContactState('submitting');
+    const trimmedMessage = message.trim();
+    const input: PublicContactRequestInput = {
+      message: trimmedMessage.length > 0 ? trimmedMessage : (locale === 'ar' ? 'طلب استفسار عبر واتساب' : 'WhatsApp inquiry request'),
+      propertyId: data.id,
+      ...(data.project?.id === undefined ? {} : { projectId: data.project.id }),
+      locale
+    };
+    try {
+      await actions.submitContact(input);
+      setContactState('success');
+      const propTitle = localizedText(data.name, locale) ?? data.slug;
+      const text = locale === 'ar' ? `مرحباً، أود الاستفسار عن العقار: ${propTitle}` : `Hello, I would like to inquire about property: ${propTitle}`;
+      if (typeof window !== 'undefined') {
+        window.open(getWhatsAppLink(text), '_blank', 'noopener,noreferrer');
+      }
     } catch (error) {
       setContactState(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? 'permission' : 'error');
     }
@@ -559,7 +588,6 @@ function RequestPanel({
             id="public-property-contact-message"
             name="message"
             rows={5}
-            required
             value={message}
             placeholder={locale === 'ar' ? 'رسالة إضافية' : copy.messagePlaceholder}
             onChange={event => setMessage(event.target.value)}
@@ -567,7 +595,7 @@ function RequestPanel({
           {contactValidation ? <p className="public-property-details__validation" role="alert">{copy.contactValidation}</p> : null}
           <Button type="submit" fullWidth className="public-property-details__contact-submit" startIcon={<span className="public-property-details__button-icon"><DetailLineIcon kind="paper-plane" /></span>} loading={contactState === 'submitting'}>{contactState === 'submitting' ? copy.actionLoading : copy.submitContact}</Button>
         </form>
-        <a className="public-property-details__whatsapp" href="/community"><span className="public-property-details__button-icon public-property-details__button-icon--whatsapp" aria-hidden="true"><DetailLineIcon kind="whatsapp" /></span>{locale === 'ar' ? 'واتساب' :'WhatsApp'}</a>
+        <button type="button" className="public-property-details__whatsapp" onClick={handleWhatsApp} disabled={contactState === 'submitting'}><span className="public-property-details__button-icon public-property-details__button-icon--whatsapp" aria-hidden="true"><DetailLineIcon kind="whatsapp" /></span>{locale === 'ar' ? 'واتساب' :'WhatsApp'}</button>
       </section>
       {viewingState === 'success' || viewingState === 'permission' || viewingState === 'error' ? <ActionFeedback state={viewingState} copy={copy} url={url} /> : null}
       <Modal

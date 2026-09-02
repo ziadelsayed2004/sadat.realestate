@@ -44,3 +44,4 @@ export type {
 } from './components.tsx';
 export { DESIGN_TOKEN_CSS_VARIABLES, DESIGN_TOKENS } from './tokens.ts';
 export type { DesignTokens } from './tokens.ts';
+export { CustomSelect, type CustomSelectProps, type CustomSelectOption } from './custom-select.tsx';

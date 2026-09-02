@@ -16,10 +16,25 @@
       "route": "/seeker",
       "approvedSourcePath": "docs/design_sources/final_screens/seeker/SEK-01.png",
       "approvedSourceSha256": "683a92a5038ee51e308f83b547b577cbb1bf7b2bdeefdfdd3949fe37ec1bfe75",
-      "sourceDimensions": { "width": 6204, "height": 4132 },
-      "approvedDevices": ["desktop"],
-      "locales": ["ar", "en", "zh-CN"],
-      "runtimeStatesRequired": ["success", "loading", "empty", "error", "retry", "permission"],
+      "sourceDimensions": {
+        "width": 6204,
+        "height": 4132
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission"
+      ],
       "implementationStatus": "verified",
       "comparisonStatus": "verified",
       "runtimeEvidence": [
@@ -29,7 +44,10 @@
       ],
       "comparisonMethod": "Structured direct comparison of shell, summary cards, activity hierarchy, CTA, typography, color, spacing, and direction against the exact approved export.",
       "materialDifferences": [],
-      "repairs": ["Rebuilt the protected Seeker shell and top bar.", "Recomposed the overview into four real summary metrics and the approved two-column activity/CTA hierarchy without fake operational data."],
+      "repairs": [
+        "Rebuilt the protected Seeker shell and top bar.",
+        "Recomposed the overview into four real summary metrics and the approved two-column activity/CTA hierarchy without fake operational data."
+      ],
       "remainingGaps": []
     },
     {
@@ -38,10 +56,26 @@
       "route": "/seeker/requests",
       "approvedSourcePath": "docs/design_sources/final_screens/seeker/SEK-02.png",
       "approvedSourceSha256": "b80d4efa4be801c11d208ffa297da421d043e117764edaa99383ae243d8ea708",
-      "sourceDimensions": { "width": 6204, "height": 3452 },
-      "approvedDevices": ["desktop"],
-      "locales": ["ar", "en", "zh-CN"],
-      "runtimeStatesRequired": ["success", "loading", "empty", "error", "retry", "permission", "pagination"],
+      "sourceDimensions": {
+        "width": 6204,
+        "height": 3452
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "pagination"
+      ],
       "implementationStatus": "verified",
       "comparisonStatus": "verified",
       "runtimeEvidence": [
@@ -51,7 +85,9 @@
       ],
       "comparisonMethod": "Structured direct comparison of the owned-request table, status badges, paging, shell, and direction against the approved export.",
       "materialDifferences": [],
-      "repairs": ["Expanded the request table to the approved content width and removed identifier clipping while retaining the safe API projection."],
+      "repairs": [
+        "Expanded the request table to the approved content width and removed identifier clipping while retaining the safe API projection."
+      ],
       "remainingGaps": []
     },
     {
@@ -60,10 +96,25 @@
       "route": "/seeker/requests/:requestId (under_review)",
       "approvedSourcePath": "docs/design_sources/final_screens/seeker/SEK-03.png",
       "approvedSourceSha256": "1404231bca255b3bdcffa9105b3325e35fc9f0cdbc39c4c2201a00486b83d0bc",
-      "sourceDimensions": { "width": 6204, "height": 3588 },
-      "approvedDevices": ["desktop"],
-      "locales": ["ar", "en", "zh-CN"],
-      "runtimeStatesRequired": ["success", "loading", "error", "retry", "not_found", "permission"],
+      "sourceDimensions": {
+        "width": 6204,
+        "height": 3588
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "error",
+        "retry",
+        "not_found",
+        "permission"
+      ],
       "implementationStatus": "verified",
       "comparisonStatus": "verified",
       "runtimeEvidence": [
@@ -73,7 +124,9 @@
       ],
       "comparisonMethod": "Structured direct comparison of request summary, under-review timeline, safe message projection, back action, and shell.",
       "materialDifferences": [],
-      "repairs": ["Widened the detail composition and added connected timeline treatment while preserving strict exclusion of staff assignments, internal notes, and audit data."],
+      "repairs": [
+        "Widened the detail composition and added connected timeline treatment while preserving strict exclusion of staff assignments, internal notes, and audit data."
+      ],
       "remainingGaps": []
     },
     {
@@ -82,10 +135,25 @@
       "route": "/seeker/requests/:requestId (contacted)",
       "approvedSourcePath": "docs/design_sources/final_screens/seeker/SEK-04.png",
       "approvedSourceSha256": "5adb0a6d0cdca1c0512077bacb46e7b81f7c0dde2d6a824fcf1bce662f6d511f",
-      "sourceDimensions": { "width": 6204, "height": 3448 },
-      "approvedDevices": ["desktop"],
-      "locales": ["ar", "en", "zh-CN"],
-      "runtimeStatesRequired": ["success", "loading", "error", "retry", "not_found", "permission"],
+      "sourceDimensions": {
+        "width": 6204,
+        "height": 3448
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "error",
+        "retry",
+        "not_found",
+        "permission"
+      ],
       "implementationStatus": "verified",
       "comparisonStatus": "verified",
       "runtimeEvidence": [
@@ -95,7 +163,9 @@
       ],
       "comparisonMethod": "Structured direct comparison of the contacted lifecycle timeline, summary, safe seeker note, and shell.",
       "materialDifferences": [],
-      "repairs": ["Aligned the contacted detail hierarchy and timeline with the approved request-detail pattern without exposing private operational fields."],
+      "repairs": [
+        "Aligned the contacted detail hierarchy and timeline with the approved request-detail pattern without exposing private operational fields."
+      ],
       "remainingGaps": []
     },
     {
@@ -104,10 +174,28 @@
       "route": "/seeker/viewings",
       "approvedSourcePath": "docs/design_sources/final_screens/seeker/SEK-05.png",
       "approvedSourceSha256": "1f242f5aee8e92464d210a89cb8cd9adec004e3c87494aa7f3bf99621f630b6e",
-      "sourceDimensions": { "width": 6204, "height": 3448 },
-      "approvedDevices": ["desktop"],
-      "locales": ["ar", "en", "zh-CN"],
-      "runtimeStatesRequired": ["success", "loading", "empty", "error", "retry", "permission", "validation", "conflict", "cancelled"],
+      "sourceDimensions": {
+        "width": 6204,
+        "height": 3448
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "validation",
+        "conflict",
+        "cancelled"
+      ],
       "implementationStatus": "verified",
       "comparisonStatus": "verified",
       "mediaClassification": "content_dynamic",
@@ -121,7 +209,9 @@
       ],
       "comparisonMethod": "Structured direct comparison with only dynamic property-image pixels excluded; card dimensions, media region, schedule details, tabs, CTA, and actions were compared.",
       "materialDifferences": [],
-      "repairs": ["Restored the visible primary viewing CTA and expanded appointment cards to the approved usable desktop width."],
+      "repairs": [
+        "Restored the visible primary viewing CTA and expanded appointment cards to the approved usable desktop width."
+      ],
       "remainingGaps": []
     },
     {
@@ -130,10 +220,27 @@
       "route": "/seeker/saved",
       "approvedSourcePath": "docs/design_sources/final_screens/seeker/SEK-06.png",
       "approvedSourceSha256": "12737b64b336978e3128b47a867f85f22e8fc5f96ed53b4f127e6850cc1bbd08",
-      "sourceDimensions": { "width": 6204, "height": 4912 },
-      "approvedDevices": ["desktop"],
-      "locales": ["ar", "en", "zh-CN"],
-      "runtimeStatesRequired": ["success", "loading", "empty", "error", "retry", "permission", "unavailable", "mutation"],
+      "sourceDimensions": {
+        "width": 6204,
+        "height": 4912
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "unavailable",
+        "mutation"
+      ],
       "implementationStatus": "verified",
       "comparisonStatus": "verified",
       "mediaClassification": "content_dynamic",
@@ -147,7 +254,9 @@
       ],
       "comparisonMethod": "Structured direct comparison with dynamic image pixels narrowly excluded; two-column card layout, image region, facts, actions, paging, and fallback were compared.",
       "materialDifferences": [],
-      "repairs": ["Changed the undersized three-column card layout to the approved two-column desktop composition and retained missing-image fallback coverage."],
+      "repairs": [
+        "Changed the undersized three-column card layout to the approved two-column desktop composition and retained missing-image fallback coverage."
+      ],
       "remainingGaps": []
     },
     {
@@ -156,10 +265,28 @@
       "route": "/seeker/notifications",
       "approvedSourcePath": "docs/design_sources/final_screens/seeker/SEK-07.png",
       "approvedSourceSha256": "cd761da7c995b7206ecff097cff2701469c44dfef40fcb46c0862306de466b87",
-      "sourceDimensions": { "width": 6204, "height": 4040 },
-      "approvedDevices": ["desktop"],
-      "locales": ["ar", "en", "zh-CN"],
-      "runtimeStatesRequired": ["success", "loading", "empty", "error", "retry", "permission", "read", "unread", "pagination"],
+      "sourceDimensions": {
+        "width": 6204,
+        "height": 4040
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "empty",
+        "error",
+        "retry",
+        "permission",
+        "read",
+        "unread",
+        "pagination"
+      ],
       "implementationStatus": "verified",
       "comparisonStatus": "verified",
       "runtimeEvidence": [
@@ -169,7 +296,9 @@
       ],
       "comparisonMethod": "Structured direct comparison of unread/read hierarchy, filters, actions, paging, shell, typography, and spacing.",
       "materialDifferences": [],
-      "repairs": ["Aligned the notification list and separators to the approved dense account-notification surface."],
+      "repairs": [
+        "Aligned the notification list and separators to the approved dense account-notification surface."
+      ],
       "remainingGaps": []
     },
     {
@@ -178,10 +307,27 @@
       "route": "/seeker/profile?tab=preferences",
       "approvedSourcePath": "docs/design_sources/final_screens/seeker/SEK-08.png",
       "approvedSourceSha256": "a2b15e512d63a115e2098d87ce91fcd6051669d7a149e1f381d30bec805ab987",
-      "sourceDimensions": { "width": 6204, "height": 3988 },
-      "approvedDevices": ["desktop"],
-      "locales": ["ar", "en", "zh-CN"],
-      "runtimeStatesRequired": ["success", "loading", "error", "retry", "permission", "validation", "disabled", "save"],
+      "sourceDimensions": {
+        "width": 6204,
+        "height": 3988
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "error",
+        "retry",
+        "permission",
+        "validation",
+        "disabled",
+        "save"
+      ],
       "implementationStatus": "verified",
       "comparisonStatus": "verified",
       "runtimeEvidence": [
@@ -191,7 +337,9 @@
       ],
       "comparisonMethod": "Structured direct comparison of tabs, preference group hierarchy, fields, focus, validation, save action, and shell.",
       "materialDifferences": [],
-      "repairs": ["Expanded profile tabs and preference panels to the approved desktop width and hierarchy."],
+      "repairs": [
+        "Expanded profile tabs and preference panels to the approved desktop width and hierarchy."
+      ],
       "remainingGaps": []
     },
     {
@@ -200,10 +348,27 @@
       "route": "/seeker/profile?tab=profile",
       "approvedSourcePath": "docs/design_sources/final_screens/seeker/SEK-09.png",
       "approvedSourceSha256": "e7f02b852ddcfa1013678e9424f1049fbccfc8124e5db71a2f73092e889bfced",
-      "sourceDimensions": { "width": 6204, "height": 3448 },
-      "approvedDevices": ["desktop"],
-      "locales": ["ar", "en", "zh-CN"],
-      "runtimeStatesRequired": ["success", "loading", "error", "retry", "permission", "validation", "disabled", "save"],
+      "sourceDimensions": {
+        "width": 6204,
+        "height": 3448
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "error",
+        "retry",
+        "permission",
+        "validation",
+        "disabled",
+        "save"
+      ],
       "implementationStatus": "verified",
       "comparisonStatus": "verified",
       "runtimeEvidence": [
@@ -213,7 +378,9 @@
       ],
       "comparisonMethod": "Structured direct comparison of personal-information hierarchy, disabled authority fields, validation, save action, tabs, and shell.",
       "materialDifferences": [],
-      "repairs": ["Aligned personal-information content width, tabs, form density, and focus behavior with the approved Seeker pattern."],
+      "repairs": [
+        "Aligned personal-information content width, tabs, form density, and focus behavior with the approved Seeker pattern."
+      ],
       "remainingGaps": []
     },
     {
@@ -222,10 +389,27 @@
       "route": "/seeker/settings",
       "approvedSourcePath": "docs/design_sources/final_screens/seeker/SEK-10.png",
       "approvedSourceSha256": "877ca8719aa1323159068e121fa6f1c820f7305239cb25260fc4e4dec51ed3e7",
-      "sourceDimensions": { "width": 6204, "height": 7104 },
-      "approvedDevices": ["desktop"],
-      "locales": ["ar", "en", "zh-CN"],
-      "runtimeStatesRequired": ["success", "loading", "error", "retry", "permission", "disabled", "unavailable", "logout"],
+      "sourceDimensions": {
+        "width": 6204,
+        "height": 7104
+      },
+      "approvedDevices": [
+        "desktop"
+      ],
+      "locales": [
+        "ar",
+        "en"
+      ],
+      "runtimeStatesRequired": [
+        "success",
+        "loading",
+        "error",
+        "retry",
+        "permission",
+        "disabled",
+        "unavailable",
+        "logout"
+      ],
       "implementationStatus": "verified",
       "comparisonStatus": "verified",
       "runtimeEvidence": [
@@ -235,7 +419,9 @@
       ],
       "comparisonMethod": "Structured direct comparison of settings section hierarchy, language control, security/account states, disabled controls, logout, and shell.",
       "materialDifferences": [],
-      "repairs": ["Expanded settings panels to the approved content width and retained truthful unavailable states for operations absent from current contracts."],
+      "repairs": [
+        "Expanded settings panels to the approved content width and retained truthful unavailable states for operations absent from current contracts."
+      ],
       "remainingGaps": []
     }
   ]

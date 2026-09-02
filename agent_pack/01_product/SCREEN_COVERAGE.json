@@ -16,8 +16,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/",
     "frontendTaskId": "frontend_010",
@@ -48,8 +47,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/properties",
     "frontendTaskId": "frontend_011",
@@ -80,8 +78,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/properties/:slug",
     "frontendTaskId": "frontend_012",
@@ -112,8 +109,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/compare",
     "frontendTaskId": "frontend_013",
@@ -144,8 +140,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/developers",
     "frontendTaskId": "frontend_014",
@@ -176,8 +171,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/developers/:slug",
     "frontendTaskId": "frontend_014",
@@ -208,8 +202,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/articles",
     "frontendTaskId": "frontend_015",
@@ -240,8 +233,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/articles/:slug",
     "frontendTaskId": "frontend_015",
@@ -272,8 +264,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/community",
     "frontendTaskId": "frontend_016",
@@ -305,8 +296,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/community?create=1",
     "frontendTaskId": "frontend_016",
@@ -338,8 +328,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/about",
     "frontendTaskId": "frontend_017",
@@ -370,8 +359,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/team",
     "frontendTaskId": "frontend_017",
@@ -402,8 +390,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/auth/login",
     "frontendTaskId": "frontend_020",
@@ -435,8 +422,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/auth/register/seeker",
     "frontendTaskId": "frontend_021",
@@ -467,8 +453,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/auth/register/seeker",
     "frontendTaskId": "frontend_021",
@@ -499,8 +484,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/auth/verify-email",
     "frontendTaskId": "frontend_020",
@@ -532,8 +516,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/auth/verify-email",
     "frontendTaskId": "frontend_020",
@@ -565,8 +548,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/auth/register/seeker/success",
     "frontendTaskId": "frontend_021",
@@ -597,8 +579,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/auth/register/provider/type",
     "frontendTaskId": "frontend_022",
@@ -629,8 +610,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/auth/register/provider/type",
     "frontendTaskId": "frontend_022",
@@ -661,8 +641,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/auth/register/provider/account",
     "frontendTaskId": "frontend_023",
@@ -693,8 +672,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/auth/register/provider/account",
     "frontendTaskId": "frontend_023",
@@ -725,8 +703,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/auth/register/provider/business",
     "frontendTaskId": "frontend_024",
@@ -757,8 +734,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/auth/register/provider/business",
     "frontendTaskId": "frontend_024",
@@ -789,8 +765,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/auth/register/provider/company",
     "frontendTaskId": "frontend_024",
@@ -821,8 +796,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/auth/register/provider/documents",
     "frontendTaskId": "frontend_024",
@@ -853,8 +827,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/auth/register/provider/review",
     "frontendTaskId": "frontend_025",
@@ -885,8 +858,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider-application/status",
     "frontendTaskId": "frontend_025",
@@ -917,8 +889,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider-application/status",
     "frontendTaskId": "frontend_025",
@@ -949,8 +920,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider-application/needs-information",
     "frontendTaskId": "frontend_025",
@@ -981,8 +951,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider-application/approved",
     "frontendTaskId": "frontend_025",
@@ -1011,8 +980,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/seeker",
     "frontendTaskId": "frontend_030",
@@ -1041,8 +1009,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/seeker/requests",
     "frontendTaskId": "frontend_031",
@@ -1071,8 +1038,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/seeker/requests/:id",
     "frontendTaskId": "frontend_031",
@@ -1101,8 +1067,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/seeker/requests/:id",
     "frontendTaskId": "frontend_031",
@@ -1131,8 +1096,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/seeker/viewings",
     "frontendTaskId": "frontend_032",
@@ -1161,8 +1125,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/seeker/saved",
     "frontendTaskId": "frontend_033",
@@ -1191,8 +1154,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/seeker/notifications",
     "frontendTaskId": "frontend_034",
@@ -1221,8 +1183,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/seeker/profile?tab=preferences",
     "frontendTaskId": "frontend_035",
@@ -1251,8 +1212,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/seeker/profile?tab=personal",
     "frontendTaskId": "frontend_035",
@@ -1281,8 +1241,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/seeker/settings",
     "frontendTaskId": "frontend_035",
@@ -1311,8 +1270,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider",
     "frontendTaskId": "frontend_040",
@@ -1342,8 +1300,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/properties",
     "frontendTaskId": "frontend_041",
@@ -1372,8 +1329,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/properties/new/basic",
     "frontendTaskId": "frontend_042",
@@ -1408,8 +1364,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/properties/:id/location",
     "frontendTaskId": "frontend_042",
@@ -1444,8 +1399,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/properties/:id/details",
     "frontendTaskId": "frontend_043",
@@ -1480,8 +1434,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/properties/:id/price-payment",
     "frontendTaskId": "frontend_043",
@@ -1516,8 +1469,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/properties/:id/features",
     "frontendTaskId": "frontend_043",
@@ -1552,8 +1504,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/properties/:id/media",
     "frontendTaskId": "frontend_044",
@@ -1588,8 +1539,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/properties/:id/contact",
     "frontendTaskId": "frontend_044",
@@ -1624,8 +1574,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/properties/:id/review",
     "frontendTaskId": "frontend_044",
@@ -1660,8 +1609,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/properties/:id/review",
     "frontendTaskId": "frontend_045",
@@ -1696,8 +1644,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/properties/:id/submitted",
     "frontendTaskId": "frontend_045",
@@ -1732,8 +1679,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/properties/:id/rejected",
     "frontendTaskId": "frontend_045",
@@ -1768,8 +1714,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/properties/:id/published",
     "frontendTaskId": "frontend_045",
@@ -1804,8 +1749,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/projects",
     "frontendTaskId": "frontend_046",
@@ -1834,8 +1778,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/customer-requests",
     "frontendTaskId": "frontend_047",
@@ -1865,8 +1808,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/customer-requests?create=1",
     "frontendTaskId": "frontend_047",
@@ -1896,8 +1838,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/viewings",
     "frontendTaskId": "frontend_048",
@@ -1926,8 +1867,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/ads",
     "frontendTaskId": "frontend_049",
@@ -1957,8 +1897,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/commission",
     "frontendTaskId": "frontend_049",
@@ -1987,8 +1926,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/notifications",
     "frontendTaskId": "frontend_050",
@@ -2017,8 +1955,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/settings",
     "frontendTaskId": "frontend_050",
@@ -2047,8 +1984,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/settings",
     "frontendTaskId": "frontend_050",
@@ -2077,8 +2013,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/provider/settings",
     "frontendTaskId": "frontend_050",
@@ -2107,8 +2042,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin",
     "frontendTaskId": "frontend_060",
@@ -2137,8 +2071,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/users",
     "frontendTaskId": "frontend_061",
@@ -2170,8 +2103,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/property-seekers",
     "frontendTaskId": "frontend_061",
@@ -2203,8 +2135,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/providers",
     "frontendTaskId": "frontend_061",
@@ -2236,8 +2167,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/verification",
     "frontendTaskId": "frontend_061",
@@ -2269,8 +2199,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/account-reports",
     "frontendTaskId": "frontend_062",
@@ -2302,8 +2231,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/account-reports/:id",
     "frontendTaskId": "frontend_062",
@@ -2335,8 +2263,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/account-restrictions",
     "frontendTaskId": "frontend_062",
@@ -2368,8 +2295,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/property-categories",
     "frontendTaskId": "frontend_063",
@@ -2400,8 +2326,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/locations",
     "frontendTaskId": "frontend_063",
@@ -2432,8 +2357,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/features",
     "frontendTaskId": "frontend_063",
@@ -2464,8 +2388,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/projects",
     "frontendTaskId": "frontend_064",
@@ -2499,8 +2422,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/projects/review",
     "frontendTaskId": "frontend_064",
@@ -2534,8 +2456,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/properties",
     "frontendTaskId": "frontend_065",
@@ -2569,8 +2490,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/properties/review",
     "frontendTaskId": "frontend_065",
@@ -2604,8 +2524,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/properties/possible-duplicates",
     "frontendTaskId": "frontend_065",
@@ -2639,8 +2558,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/property-reports",
     "frontendTaskId": "frontend_065",
@@ -2674,8 +2592,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/requests",
     "frontendTaskId": "frontend_066",
@@ -2707,8 +2624,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/customer-requests",
     "frontendTaskId": "frontend_066",
@@ -2740,8 +2656,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/overdue-requests",
     "frontendTaskId": "frontend_066",
@@ -2773,8 +2688,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/contact-requests",
     "frontendTaskId": "frontend_066",
@@ -2806,8 +2720,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/viewing-requests",
     "frontendTaskId": "frontend_066",
@@ -2839,8 +2752,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/search-requests",
     "frontendTaskId": "frontend_066",
@@ -2872,8 +2784,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/request-issues",
     "frontendTaskId": "frontend_066",
@@ -2905,8 +2816,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/articles",
     "frontendTaskId": "frontend_067",
@@ -2940,8 +2850,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/article-categories",
     "frontendTaskId": "frontend_067",
@@ -2975,8 +2884,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/community",
     "frontendTaskId": "frontend_068",
@@ -3010,8 +2918,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/community/comments",
     "frontendTaskId": "frontend_068",
@@ -3045,8 +2952,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/community/moderation",
     "frontendTaskId": "frontend_068",
@@ -3080,8 +2986,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/content/about",
     "frontendTaskId": "frontend_069",
@@ -3115,8 +3020,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/content/team",
     "frontendTaskId": "frontend_069",
@@ -3150,8 +3054,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/content/population-counter",
     "frontendTaskId": "frontend_069",
@@ -3185,8 +3088,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/ads/requests",
     "frontendTaskId": "frontend_070",
@@ -3221,8 +3123,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/ads/payment-proofs/pending",
     "frontendTaskId": "frontend_070",
@@ -3257,8 +3158,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/ads/payment-proofs/approved",
     "frontendTaskId": "frontend_070",
@@ -3293,8 +3193,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/ads/calendar",
     "frontendTaskId": "frontend_070",
@@ -3329,8 +3228,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/ads/payments/pending-review",
     "frontendTaskId": "frontend_070",
@@ -3365,8 +3263,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/ads/financial-review",
     "frontendTaskId": "frontend_070",
@@ -3401,8 +3298,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/commissions",
     "frontendTaskId": "frontend_071",
@@ -3435,8 +3331,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/commissions/new",
     "frontendTaskId": "frontend_071",
@@ -3469,8 +3364,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/commissions/history",
     "frontendTaskId": "frontend_071",
@@ -3503,8 +3397,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/commissions/accounts/:id",
     "frontendTaskId": "frontend_071",
@@ -3537,8 +3430,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/commissions/exceptions",
     "frontendTaskId": "frontend_071",
@@ -3571,8 +3463,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/commissions/exceptions/new",
     "frontendTaskId": "frontend_071",
@@ -3606,8 +3497,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/commissions/confirmations",
     "frontendTaskId": "frontend_071",
@@ -3640,8 +3530,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/banners",
     "frontendTaskId": "frontend_072",
@@ -3673,8 +3562,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/banners/new",
     "frontendTaskId": "frontend_072",
@@ -3706,8 +3594,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/content/tips",
     "frontendTaskId": "frontend_072",
@@ -3739,8 +3626,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/content/homepage",
     "frontendTaskId": "frontend_072",
@@ -3772,8 +3658,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/settings/platform",
     "frontendTaskId": "frontend_073",
@@ -3805,8 +3690,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/settings/contact",
     "frontendTaskId": "frontend_073",
@@ -3838,8 +3722,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/settings/social",
     "frontendTaskId": "frontend_073",
@@ -3871,8 +3754,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/settings/properties",
     "frontendTaskId": "frontend_074",
@@ -3902,8 +3784,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/settings/requests",
     "frontendTaskId": "frontend_074",
@@ -3934,8 +3815,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/settings/advertising",
     "frontendTaskId": "frontend_074",
@@ -3965,8 +3845,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/settings/seo",
     "frontendTaskId": "frontend_074",
@@ -3996,8 +3875,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/settings/privacy-security",
     "frontendTaskId": "frontend_074",
@@ -4027,8 +3905,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/settings/display",
     "frontendTaskId": "frontend_074",
@@ -4058,8 +3935,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/admin-users",
     "frontendTaskId": "frontend_075",
@@ -4090,8 +3966,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/admin-users/new",
     "frontendTaskId": "frontend_075",
@@ -4122,8 +3997,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/admin-users/:id",
     "frontendTaskId": "frontend_075",
@@ -4154,8 +4028,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/admin-users/:id",
     "frontendTaskId": "frontend_075",
@@ -4186,8 +4059,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/roles",
     "frontendTaskId": "frontend_075",
@@ -4218,8 +4090,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/roles/:id",
     "frontendTaskId": "frontend_075",
@@ -4250,8 +4121,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/notifications",
     "frontendTaskId": "frontend_076",
@@ -4280,8 +4150,7 @@
     ],
     "locales": [
       "ar",
-      "en",
-      "zh-CN"
+      "en"
     ],
     "route": "/admin/audit-logs",
     "frontendTaskId": "frontend_076",

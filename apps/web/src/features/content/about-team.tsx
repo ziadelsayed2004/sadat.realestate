@@ -11,6 +11,7 @@ import {
   type PublicContentListLoader
 } from './about-team-data.ts';
 import { getPublicAboutTeamCopy, type PublicAboutTeamCopy } from './about-team-copy.ts';
+import { getWhatsAppLink } from '../frontend_foundation/config.ts';
 import './about-team.css';
 
 export type PublicAboutTeamViewState = Extract<UxState, 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission'>;
@@ -154,26 +155,32 @@ function getAboutUi(locale: SupportedLocale, copy: PublicAboutTeamCopy): AboutUi
   const english = locale === 'en';
   return {
     heroBody: english ? 'We built this platform because Sadat City needs a specialized and trusted real-estate marketplace.' : copy.aboutSubtitle,
-    howEyebrow: english ? 'How it works' : '\u5982\u4f55\u5de5\u4f5c', howTitle: english ? 'Your journey with us, step by step' : '\u4e0e\u6211\u4eec\u4e00\u8d77\u4e00\u6b65\u4e00\u6b65',
-    valuesEyebrow: english ? 'Our values' : '\u6211\u4eec\u7684\u4ef7\u503c', valuesTitle: english ? 'What makes us different' : '\u8ba9\u6211\u4eec\u4e0e\u4f17\u4e0d\u540c',
-    statsEyebrow: english ? 'Our numbers' : '\u6211\u4eec\u7684\u6570\u5b57', statsTitle: english ? 'Achievements that speak for themselves' : '\u7528\u6210\u7ee9\u8bf4\u8bdd',
-    browse: english ? 'Browse properties' : '\u6d4f\u89c8\u623f\u4ea7', whatsapp: 'WhatsApp',
+    howEyebrow: english ? 'How it works' : 'خطوات العمل',
+    howTitle: english ? 'Your journey with us, step by step' : 'رحلتك معنا خطوة بخطوة',
+    valuesEyebrow: english ? 'Our values' : 'قيمنا',
+    valuesTitle: english ? 'What makes us different' : 'ما يميزنا',
+    statsEyebrow: english ? 'Our numbers' : 'أرقامنا',
+    statsTitle: english ? 'Achievements that speak for themselves' : 'إنجازات تتحدث عن نفسها',
+    browse: english ? 'Browse properties' : 'تصفح العقارات',
+    whatsapp: 'واتساب',
     steps: [
-      { number: '01', label: english ? 'Search' : '\u641c\u7d22', detail: english ? 'Find your property' : '\u67e5\u627e\u623f\u4ea7', icon: 'search' },
-      { number: '02', label: english ? 'Connect' : '\u8054\u7cfb', detail: english ? 'Contact the owner directly' : '\u76f4\u63a5\u4e0e\u4e1a\u4e3b\u8054\u7cfb', icon: 'phone' },
-      { number: '03', label: english ? 'Verify' : '\u9a8c\u8bc1', detail: english ? 'We verify the information' : '\u9a8c\u8bc1\u6570\u636e', icon: 'shield' },
-      { number: '04', label: english ? 'Visit' : '\u67e5\u770b', detail: english ? 'Visit the property' : '\u514d\u8d39\u53c2\u89c2\u623f\u4ea7', icon: 'eye' },
-      { number: '05', label: english ? 'Follow-up' : '\u8ddf\u8fdb', detail: english ? 'We follow through to registration' : '\u8ddf\u8fdb\u5230\u767b\u8bb0', icon: 'check' }
+      { number: '01', label: english ? 'Search' : 'البحث', detail: english ? 'Find your property' : 'ابحث عن عقارك المناسب', icon: 'search' },
+      { number: '02', label: english ? 'Connect' : 'التواصل', detail: english ? 'Contact the owner directly' : 'تواصل مع المالك مباشرة', icon: 'phone' },
+      { number: '03', label: english ? 'Verify' : 'التحقق', detail: english ? 'We verify the information' : 'نتحقق من صحة البيانات', icon: 'shield' },
+      { number: '04', label: english ? 'Visit' : 'المعاينة', detail: english ? 'Visit the property' : 'زيارة العقار مجاناً', icon: 'eye' },
+      { number: '05', label: english ? 'Follow-up' : 'المتابعة', detail: english ? 'We follow through to registration' : 'نتابع حتى التسجيل', icon: 'check' }
     ],
     values: [
-      { label: english ? 'Clarity' : '\u6e05\u6670', detail: english ? 'Complete and accurate property information' : '\u5b8c\u6574\u51c6\u786e\u7684\u623f\u4ea7\u4fe1\u606f', icon: 'document' },
-      { label: english ? 'Trust' : '\u4fe1\u4efb', detail: english ? 'Every property goes through verification' : '\u6bcf\u5957\u623f\u4ea7\u90fd\u7ecf\u8fc7\u9a8c\u8bc1', icon: 'shield' },
-      { label: english ? 'Organization' : '\u7ec4\u7ec7', detail: english ? 'Clear, easy-to-use categories' : '\u6e05\u6670\u6613\u7528\u7684\u5206\u7c7b', icon: 'tag' },
-      { label: english ? 'Speed' : '\u901f\u5ea6', detail: english ? 'A team available throughout the week' : '\u5168\u5468\u90fd\u6709\u56e2\u961f\u53ef\u7528', icon: 'bolt' }
+      { label: english ? 'Clarity' : 'وضوح', detail: english ? 'Complete and accurate property information' : 'معلومات شاملة ودقيقة لكل عقار', icon: 'document' },
+      { label: english ? 'Trust' : 'ثقة', detail: english ? 'Every property goes through verification' : 'كل عقار يمر بعملية تحقق', icon: 'shield' },
+      { label: english ? 'Organization' : 'تنظيم', detail: english ? 'Clear, easy-to-use categories' : 'تصنيفات واضحة وسهلة', icon: 'tag' },
+      { label: english ? 'Speed' : 'سرعة', detail: english ? 'A team available throughout the week' : 'فريق متاح طوال الأسبوع', icon: 'bolt' }
     ],
     stats: [
-      { value: '+1,200', label: english ? 'Listed properties' : '\u5df2\u5217\u51fa\u623f\u4ea7' }, { value: '18', label: english ? 'Covered areas' : '\u8986\u76d6\u533a\u57df' },
-      { value: '+3,500', label: english ? 'Active requests' : '\u6709\u6548\u8bf7\u6c42' }, { value: '342K+', label: english ? 'Residents' : '\u5c45\u6c11' }
+      { value: '+1,200', label: english ? 'Listed properties' : 'عقار مدرج' },
+      { value: '18', label: english ? 'Covered areas' : 'منطقة مغطاة' },
+      { value: '+3,500', label: english ? 'Active requests' : 'طلب فعال' },
+      { value: '342K+', label: english ? 'Residents' : 'ساكن' }
     ]
   };
 }
@@ -189,7 +196,7 @@ function AboutContent({ locale, copy, data }: { readonly locale: SupportedLocale
         <div className="public-about__hero-shade" aria-hidden="true" />
         <div className="public-about__hero-content">
           <p className="public-about__eyebrow">{copy.aboutEyebrow}</p>
-          <h1 id="public-about-title"><span>{copy.aboutTitle}</span><strong>{locale === 'ar' ? '\u0628\u0648\u0627\u0628\u0629 \u0627\u0644\u062b\u0642\u0629 \u0648\u0627\u0644\u0634\u0641\u0627\u0641\u064a\u0629' : locale === 'en' ? 'A gateway to trust and transparency' : '\u4fe1\u4efb\u4e0e\u900f\u660e\u7684\u95e8\u6237'}</strong></h1>
+          <h1 id="public-about-title"><span>{copy.aboutTitle}</span><strong>{locale === 'ar' ? 'بوابة الثقة والشفافية' : 'A gateway to trust and transparency'}</strong></h1>
           <p>{heroBody}</p>
         </div>
       </section>
@@ -210,7 +217,7 @@ function AboutContent({ locale, copy, data }: { readonly locale: SupportedLocale
         <div className="public-about__stat-grid">{ui.stats.map(stat => <article key={stat.label}><strong>{stat.value}</strong><span>{stat.label}</span></article>)}</div>
       </section>
       <section className="public-about__cta-section" aria-label={ui.statsTitle}>
-        <div className="public-about__cta"><a href="/properties" className="public-about__cta-button public-about__cta-button--dark"><Icon kind="search" />{ui.browse}</a><a href="/community" className="public-about__cta-button public-about__cta-button--green"><Icon kind="whatsapp" />{ui.whatsapp}</a></div>
+        <div className="public-about__cta"><a href="/properties" className="public-about__cta-button public-about__cta-button--dark"><Icon kind="search" />{ui.browse}</a><a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer" className="public-about__cta-button public-about__cta-button--green"><Icon kind="whatsapp" />{ui.whatsapp}</a></div>
       </section>
     </>
   );
@@ -227,14 +234,11 @@ const teamPresentation: Readonly<Record<string, TeamPresentation>> = {
 };
 
 function teamFilters(locale: SupportedLocale): ReadonlyArray<{ readonly key: string; readonly label: string }> {
-  if (locale === 'ar') return [
-    { key: 'all', label: '\u0627\u0644\u0643\u0644' }, { key: 'management', label: '\u0625\u062f\u0627\u0631\u0629' }, { key: 'sales', label: '\u0645\u0628\u064a\u0639\u0627\u062a' }, { key: 'support', label: '\u062f\u0639\u0645' }, { key: 'content', label: '\u0645\u062d\u062a\u0648\u0649' }
-  ];
   if (locale === 'en') return [
     { key: 'all', label: 'All' }, { key: 'management', label: 'Management' }, { key: 'sales', label: 'Sales' }, { key: 'support', label: 'Support' }, { key: 'content', label: 'Content' }
   ];
   return [
-    { key: 'all', label: '\u5168\u90e8' }, { key: 'management', label: '\u7ba1\u7406' }, { key: 'sales', label: '\u9500\u552e' }, { key: 'support', label: '\u652f\u6301' }, { key: 'content', label: '\u5185\u5bb9' }
+    { key: 'all', label: 'الكل' }, { key: 'management', label: 'إدارة' }, { key: 'sales', label: 'مبيعات' }, { key: 'support', label: 'دعم' }, { key: 'content', label: 'محتوى' }
   ];
 }
 

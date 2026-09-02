@@ -37,6 +37,8 @@ function publishedProperty() {
     seo: { title: { ar: 'منزل منشور', en: 'Critical published home',}, description: { en: 'A published home.' }, slug: 'critical-published-home' },
     project: { id: 'eeeeeeeeeeeeeeeeeeeeeeee', slug: 'critical-project', name: { en: 'Critical project' }, description: { en: 'A published project.' } },
     media: [],
+    features: [],
+    services: [],
     relatedProperties: []
   };
 }
@@ -64,7 +66,7 @@ async function routePublicProperties(page: Page): Promise<void> {
     const pathname = new URL(route.request().url()).pathname;
     const detail = publishedProperty();
     const listItem = { id: detail.id, slug: detail.slug, kind: detail.kind, name: detail.name, transactionType: detail.transactionType, description: detail.description, area: detail.area, layout: detail.layout, price: detail.price };
-    const data = pathname.endsWith('/critical-published-home') ? detail : { items: [listItem], page: 1, limit: 20, total: 1 };
+    const data = pathname.endsWith('/critical-published-home') ? detail : { items: [listItem], categories: [], propertyTypes: [], page: 1, limit: 20, total: 1 };
     await route.fulfill({ status: 200, contentType: 'application/json', body: envelope(data, pathname.endsWith('/critical-published-home') ? 'critical-public-detail' : 'critical-public-search') });
   });
 }

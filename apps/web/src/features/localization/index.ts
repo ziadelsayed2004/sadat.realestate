@@ -26,3 +26,4 @@ export {
   type LocaleStorage,
   type LocaleStoreOptions
 } from './runtime.js';
+export { LocaleSwitcher, type LocaleSwitcherProps } from './switcher.js';

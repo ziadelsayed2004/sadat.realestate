@@ -53,7 +53,7 @@ async function routeSession(page: import('@playwright/test').Page, allowed = tru
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-        body: JSON.stringify({ data: { accessToken: 'seeker.profile.token', tokenType: 'Bearer', expiresInSeconds: 900, user: { id: profileId, roleType: 'seeker', status: 'verified' } }, ...successMeta('profile-refresh') })
+      body: JSON.stringify({ data: { accessToken: 'seeker.profile.token', tokenType: 'Bearer', expiresInSeconds: 900, user: { id: profileId, roleType: 'seeker', status: 'verified' } }, ...successMeta('profile-refresh') })
     });
   });
 }
