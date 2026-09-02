@@ -4,7 +4,7 @@ import { publicPropertyListDataSchema } from '@sadat-real-estate/contracts';
 import { createPublicPropertySearchService, type PublicPropertySearchRepository, type PublicPropertySearchSource } from '../../src/modules/search/properties.js';
 import { buildPropertyQueryPlan, expectedPropertyHint } from '../../src/modules/performance/property-indexes.js';
 
-const localized = { ar: 'Ø´Ù‚Ø©', en: 'Apartment', 'zh-CN': 'å…¬å¯“' };
+const localized = { ar: 'شقة', en: 'Apartment' };
 
 function row(index: number): PublicPropertySearchSource {
   return {

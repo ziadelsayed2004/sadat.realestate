@@ -98,11 +98,11 @@ test('public article HTTP routes expose only published localized projections and
   assert.equal('authorId' in (listBody.data[0] ?? {}), false);
   assert.equal('status' in (listBody.data[0] ?? {}), false);
 
-  const details = await request(origin, 'GET', '/api/v1/public/articles/buying-in-sadat?locale=zh-CN');
+  const details = await request(origin, 'GET', '/api/v1/public/articles/buying-in-sadat?locale=ar');
   assert.equal(details.status, 200);
   const detailsBody = await details.json() as { data: { title: Record<string, string>; category: { name: Record<string, string> } } };
-  assert.equal(detailsBody.data.title['zh-CN'], 'الشراء في السادات');
-  assert.equal(detailsBody.data.category.name['zh-CN'], 'أدلة');
+  assert.equal(detailsBody.data.title.ar, 'الشراء في السادات');
+  assert.equal(detailsBody.data.category.name.ar, 'أدلة');
   const privateDraft = await request(origin, 'GET', '/api/v1/public/articles/private-draft?locale=en');
   assert.equal(privateDraft.status, 404);
   assert.doesNotMatch(privateDraft.headers.get('cache-control') ?? '', /^public/u);

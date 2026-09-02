@@ -48,8 +48,8 @@ export interface OpaqueTokenService {
 
 export interface OtpCodeContext {
   email: string;
-  roleType: 'seeker' | 'provider';
-  purpose: 'login' | 'registration';
+  roleType: 'seeker' | 'provider' | 'admin';
+  purpose: 'login' | 'registration' | 'password_reset';
 }
 
 export interface OtpCodeHasher {

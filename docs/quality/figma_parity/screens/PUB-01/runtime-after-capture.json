@@ -14,26 +14,15 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "775ed3ca971ead2112ab9ee5441005a21f50acbec3f35cd4475eb2678d7bcbd6",
-    "afterHash": "6f1cf039f851e0294d8185b5d148cfd7b157cf197d9f79c1b7ff9a694445617d",
-    "requestedApi": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/home"
-      }
-    ],
-    "apiResponses": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/home",
-        "status": 200
-      }
-    ]
+    "afterHash": "a92aecb6026a78431129b150bf0588b914dabcd70654e83a07f1e2ea245531f3",
+    "requestedApi": [],
+    "apiResponses": []
   },
   "structure": {
     "headers": 2,
     "navs": 1,
     "sections": 9,
-    "cards": 37,
+    "cards": 35,
     "images": 23,
     "forms": 1
   },
@@ -64,7 +53,7 @@
       {
         "family": "Cairo",
         "weight": "500",
-        "status": "unloaded"
+        "status": "loaded"
       },
       {
         "family": "Cairo",
@@ -74,7 +63,7 @@
       {
         "family": "Cairo",
         "weight": "500",
-        "status": "unloaded"
+        "status": "loaded"
       },
       {
         "family": "Cairo",
@@ -105,16 +94,6 @@
         "family": "Cairo",
         "weight": "700",
         "status": "loaded"
-      },
-      {
-        "family": "Cairo",
-        "weight": "800",
-        "status": "loaded"
-      },
-      {
-        "family": "Cairo",
-        "weight": "800",
-        "status": "unloaded"
       },
       {
         "family": "Cairo",
@@ -122,6 +101,16 @@
         "status": "loaded"
       },
       {
+        "family": "Cairo",
+        "weight": "800",
+        "status": "unloaded"
+      },
+      {
+        "family": "Cairo",
+        "weight": "800",
+        "status": "loaded"
+      },
+      {
         "family": "Noto Sans SC",
         "weight": "400",
         "status": "unloaded"
@@ -484,11 +473,6 @@
       {
         "family": "Noto Sans SC",
         "weight": "400",
-        "status": "loaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "400",
         "status": "unloaded"
       },
       {
@@ -505,41 +489,6 @@
         "family": "Noto Sans SC",
         "weight": "400",
         "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "400",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "400",
-        "status": "loaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "400",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "400",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "400",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "400",
-        "status": "loaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "400",
-        "status": "loaded"
       },
       {
         "family": "Noto Sans SC",
@@ -628,12 +577,42 @@
       },
       {
         "family": "Noto Sans SC",
-        "weight": "500",
+        "weight": "400",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "500",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "400",
         "status": "unloaded"
       },
       {
@@ -980,6 +959,11 @@
         "family": "Noto Sans SC",
         "weight": "500",
         "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "500",
+        "status": "loaded"
       },
       {
         "family": "Noto Sans SC",
@@ -1020,6 +1004,11 @@
         "family": "Noto Sans SC",
         "weight": "500",
         "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "500",
+        "status": "loaded"
       },
       {
         "family": "Noto Sans SC",
@@ -1494,11 +1483,6 @@
       {
         "family": "Noto Sans SC",
         "weight": "600",
-        "status": "loaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "600",
         "status": "unloaded"
       },
       {
@@ -1515,41 +1499,6 @@
         "family": "Noto Sans SC",
         "weight": "600",
         "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "600",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "600",
-        "status": "loaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "600",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "600",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "600",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "600",
-        "status": "loaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "600",
-        "status": "loaded"
       },
       {
         "family": "Noto Sans SC",
@@ -1638,6 +1587,46 @@
       },
       {
         "family": "Noto Sans SC",
+        "weight": "600",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "600",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "600",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "600",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "600",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "600",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "600",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "600",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
         "weight": "700",
         "status": "unloaded"
       },
@@ -1999,11 +1988,6 @@
       {
         "family": "Noto Sans SC",
         "weight": "700",
-        "status": "loaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "700",
         "status": "unloaded"
       },
       {
@@ -2015,21 +1999,6 @@
         "family": "Noto Sans SC",
         "weight": "700",
         "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "700",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "700",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "700",
-        "status": "loaded"
       },
       {
         "family": "Noto Sans SC",
@@ -2054,7 +2023,12 @@
       {
         "family": "Noto Sans SC",
         "weight": "700",
-        "status": "loaded"
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "700",
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -2069,7 +2043,22 @@
       {
         "family": "Noto Sans SC",
         "weight": "700",
-        "status": "loaded"
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "700",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "700",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "700",
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -2163,7 +2152,7 @@
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/banner-elite-compound.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/banner-elite-compound-figma.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
@@ -2175,13 +2164,31 @@
       "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-restaurants-cafes.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-all.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
       "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-duplex.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-villa.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-restaurants-cafes.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
@@ -2205,37 +2212,19 @@
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-roof.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-duplex.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-duplex.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-home.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-villa.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/property-home.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/property-villa.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/property-duplex.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-rental.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
@@ -2259,19 +2248,19 @@
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/community-hanaa.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
       "src": "http://127.0.0.1:4173/assets/canonical/public/community-mohamed.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/about-team.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/community-hanaa.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/canonical/public/home-about-dashboard.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
@@ -2334,16 +2323,28 @@
         "href": "/auth/register"
       },
       {
-        "text": "إعلان مميزشركة السادات للتطوير العقاريكمبوند النخبة — الحي الأولوحدات سكنية فاخرة بتشطيب سوبر لوكس في أرقى مواقع مدينة السادات. تصميم عصري وإطلالات خضراء مفتوحة.تبدأ من 1.2 مليون جنيهبمقدم 10% فقط · أقساط تصل إلى 10 سنواتاكتشف المشروع",
-        "href": "http://127.0.0.1:4173/properties"
+        "text": "إعلان مميزشركة السادات للتطوير العقاري✓كمبوند النخبة — الحي الأولوحدات سكنية فاخرة بتشطيب سوبر لوكس في أرقى مواقع مدينة السادات مع إطلالات مفتوحة وخدمات متكاملة.تبدأ من 1.2 مليون جنيهبمقدم 10% فقط · أقساط تصل إلى 10 سنواتاكتشف المشروع",
+        "href": "/properties"
       },
       {
-        "text": "مطاعم وكافيهات22 عقار",
-        "href": "/properties?propertyTypeId=222222222222222222222222"
+        "text": "شقق2 عقار",
+        "href": "/properties?propertyTypeId=670000000000000000000032"
       },
       {
         "text": "عرض الكل1,200+ عقار",
         "href": "/properties"
+      },
+      {
+        "text": "دوبلكس1 عقار",
+        "href": "/properties?propertyTypeId=670000000000000000000033"
+      },
+      {
+        "text": "فيلات0 عقار",
+        "href": "/properties?propertyTypeId=670000000000000000000034"
+      },
+      {
+        "text": "مطاعم وكافيهات22 عقار",
+        "href": "/properties?propertyTypeId=222222222222222222222222"
       },
       {
         "text": "صالات عرض34 عقار",
@@ -2358,32 +2359,20 @@
         "href": "/properties?propertyTypeId=555555555555555555555555"
       },
       {
-        "text": "روف28 عقار",
-        "href": "/properties?propertyTypeId=666666666666666666666666"
-      },
-      {
-        "text": "دوبلكس43 عقار",
-        "href": "/properties?propertyTypeId=777777777777777777777777"
-      },
-      {
-        "text": "فيلا87 عقار",
-        "href": "/properties?propertyTypeId=888888888888888888888888"
-      },
-      {
         "text": "عرض الكل",
         "href": "/properties"
       },
       {
-        "text": "شقة فاخرة في الحي الأول",
-        "href": "/properties/published-home"
+        "text": "دوبلكس راقي بحديقة خاصة في الحي المتميز",
+        "href": "/properties/demo-garden-duplex"
       },
       {
-        "text": "فيلا مستقلة بالمنطقة الراقية",
-        "href": "/properties/published-villa"
+        "text": "شقة فاخرة بإطلالة مفتوحة في الحي الأول",
+        "href": "/properties/demo-open-view-apartment"
       },
       {
-        "text": "دوبلكس فاخر في الحي الخامس",
-        "href": "/properties/published-rental"
+        "text": "شقة عصرية للإيجار بالمنطقة المركزية",
+        "href": "/properties/demo-rental-apartment"
       },
       {
         "text": "عرض الكل",
@@ -2431,34 +2420,42 @@
       },
       {
         "text": "واتساب متاح 24/7",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://facebook.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://instagram.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://youtube.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://tiktok.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://linkedin.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       }
     ],
     "buttons": [
+      {
+        "text": "العربية",
+        "aria": "اللغة"
+      },
+      {
+        "text": "العربية",
+        "aria": "اللغة"
+      },
       {
         "text": "للبيع",
         "aria": null
@@ -2468,24 +2465,36 @@
         "aria": null
       },
       {
+        "text": "نوع العقار",
+        "aria": null
+      },
+      {
+        "text": "السعر",
+        "aria": null
+      },
+      {
         "text": "ابحث الآن",
         "aria": null
       },
       {
-        "text": "‹",
+        "text": "",
         "aria": "الإعلان السابق"
       },
       {
-        "text": "›",
+        "text": "",
         "aria": "الإعلان التالي"
       },
       {
         "text": "",
-        "aria": "1"
+        "aria": "الإعلان 1"
       },
       {
         "text": "",
-        "aria": "2"
+        "aria": "الإعلان 2"
+      },
+      {
+        "text": "",
+        "aria": "الإعلان 3"
       }
     ]
   },
@@ -2514,8 +2523,8 @@
       "comparedWidth": 1549,
       "comparedHeight": 5378,
       "comparedPixels": 8330522,
-      "materialDifferencePercent": 20.8017,
-      "antiAliasingOnlyPercent": 14.2793,
+      "materialDifferencePercent": 24.3544,
+      "antiAliasingOnlyPercent": 14.0523,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

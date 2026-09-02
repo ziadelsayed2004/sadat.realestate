@@ -173,7 +173,7 @@ export const articlePublicSchema = articleDataSchema.pick({
   coverAssetId: true,
   publishedAt: true
 }).extend({
-  imageUrl: z.url().max(2_048).optional(),
+  imageUrl: z.union([z.url().max(2_048), z.string().trim().min(2).max(2_048).regex(/^\/(?!\/)[^\s]*$/u)]).optional(),
   category: articlePublicCategorySchema.optional(),
   authorName: localizedTextSchema.optional(),
   readingTimeMinutes: z.number().int().positive().max(240).optional()

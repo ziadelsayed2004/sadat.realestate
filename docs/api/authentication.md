@@ -15,7 +15,7 @@ Admin authentication uses normalized email addresses and Admin-only Argon2id pas
 | `POST /api/v1/auth/refresh` | `sadat_refresh` cookie | Rotates the opaque token exactly once, revokes the predecessor, and detects reuse. |
 | `POST /api/v1/auth/logout` | `sadat_refresh` cookie | Revokes the current session and clears the cookie. |
 
-Password reset, session listing, and per-session management remain planned. OTP registration verification is only an authority: `backend_013` consumes the Seeker grant, while the Provider application creation route implemented by `backend_014` consumes the Provider grant and creates the Provider identity, owned draft application, and shared session atomically.
+Administrator account recovery is implemented through email OTP and a single-use reset grant. Completing recovery replaces the Argon2id password and revokes existing sessions. Seekers and Providers remain passwordless and authenticate with email OTP. Session listing and per-session management remain planned. OTP registration verification is only an authority: `backend_013` consumes the Seeker grant, while the Provider application creation route implemented by `backend_014` consumes the Provider grant and creates the Provider identity, owned draft application, and shared session atomically.
 
 ## Email-only OTP request contracts
 

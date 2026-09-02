@@ -73,6 +73,8 @@ const ids = {
   teamNour: new Types.ObjectId('670000000000000000000044'),
   teamKarim: new Types.ObjectId('670000000000000000000045'),
   teamAli: new Types.ObjectId('670000000000000000000046')
+  , buyerUser: new Types.ObjectId('670000000000000000000061')
+  , buyerProfile: new Types.ObjectId('670000000000000000000062')
 } as const;
 
 const localized = (ar: string, en: string) => ({ ar, en });
@@ -80,7 +82,7 @@ const localized = (ar: string, en: string) => ({ ar, en });
 interface SyntheticSeedDocument {
   _id: Types.ObjectId;
   synthetic: true;
-  seedKey: 'local-showcase-v1' | 'local-showcase-v2';
+  seedKey: 'local-showcase-v1' | 'local-showcase-v2' | 'figma-public-content-v3' | 'figma-public-catalogue-v4' | 'figma-public-interactions-v5' | 'auth-buyer-v6';
   [key: string]: unknown;
 }
 
@@ -101,7 +103,7 @@ async function insertSyntheticDocuments(
   for (const value of documents) {
     await collection.updateOne(
       { _id: value._id },
-      { $set: value },
+      { $setOnInsert: value },
       { upsert: true }
     );
   }
@@ -244,7 +246,7 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
       })
     ]);
     await insertSyntheticDocuments(connection, 'projects', [document(ids.project, {
-      providerId: ids.user,
+      providerId: ids.providerProfile,
       organizationId: ids.organization,
       locationId: ids.location,
       name: localized('مشروع زهرة السادات السكني', 'Zahrat Sadat Residential Project'),
@@ -263,16 +265,17 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
     })]);
 
     const propertyBase = {
-      providerId: ids.user,
+      providerId: ids.providerProfile,
       sourceType: 'developer_company',
       organizationId: ids.organization,
-      kind: 'unit',
+      kind: 'property',
       projectId: ids.project,
-      locationId: ids.neighborhood,
+      locationId: ids.location,
       coordinates: { type: 'Point', coordinates: [30.5065, 30.3676] },
       mapUrl: 'https://maps.google.com/?q=30.5065,30.3676',
       transactionType: 'sale',
       status: 'published',
+      deliveryStatus: 'ready_to_move',
       active: true,
       submittedAt: SEEDED_AT,
       reviewedAt: SEEDED_AT,
@@ -552,6 +555,16 @@ export const SYNTHETIC_WORKFLOW_SEED_STEP: DevelopmentSeedStep = {
         updatedAt: SEEDED_AT,
         version: 0
       }, 'local-showcase-v2'),
+      document(ids.buyerUser, {
+        normalizedEmail: 'buyer.demo@example.invalid',
+        roleType: 'seeker',
+        status: 'verified',
+        locale: 'ar',
+        statusChangedAt: SEEDED_AT,
+        createdAt: SEEDED_AT,
+        updatedAt: SEEDED_AT,
+        version: 0
+      }, 'local-showcase-v2'),
       document(ids.brokerUser, {
         normalizedEmail: 'broker.demo@example.invalid',
         normalizedPhone: '+201000000012',
@@ -608,6 +621,22 @@ export const SYNTHETIC_WORKFLOW_SEED_STEP: DevelopmentSeedStep = {
         maxPrice: 5_000_000,
         bedroomsMin: 2,
         bedroomsMax: 4
+      },
+      createdAt: SEEDED_AT,
+      updatedAt: SEEDED_AT,
+      version: 0
+    }, 'local-showcase-v2'), document(ids.buyerProfile, {
+      userId: ids.buyerUser,
+      firstName: 'مشتري',
+      lastName: 'تجريبي',
+      preferences: {
+        propertyTypes: ['apartment', 'villa'],
+        locations: [ids.location.toHexString()],
+        purpose: 'buy',
+        minPrice: 1_500_000,
+        maxPrice: 6_000_000,
+        bedroomsMin: 2,
+        bedroomsMax: 5
       },
       createdAt: SEEDED_AT,
       updatedAt: SEEDED_AT,
@@ -822,9 +851,199 @@ export const SYNTHETIC_WORKFLOW_SEED_STEP: DevelopmentSeedStep = {
   }
 };
 
+/**
+ * Keeps the local/UAT public catalogue aligned with the approved Figma Public
+ * screens. These are normal domain records (and therefore visible in the
+ * corresponding dashboards), tagged synthetic only so they can never be
+ * mistaken for production content.
+ */
+export const FIGMA_PUBLIC_CONTENT_SEED_STEP: DevelopmentSeedStep = {
+  id: 'figma-public-content-v3',
+  async run(connection) {
+    const seedKey = 'figma-public-content-v3';
+    const articleRows = [
+      {
+        id: '670000000000000000000071', slug: 'investment-opportunities-sadat', imageUrl: '/assets/canonical/public/article-investment.png',
+        title: localized('أفضل فرص الاستثمار العقاري في مدينة السادات', 'Top real-estate investment opportunities in Sadat City'),
+        body: localized('تعرف على المناطق الأسرع نمواً والعوامل التي تساعدك على اختيار استثمار عقاري ناجح طويل الأجل.', 'Explore the fastest-growing districts and the factors behind a successful long-term property investment.')
+      },
+      {
+        id: '670000000000000000000072', slug: 'services-near-your-home', imageUrl: '/assets/canonical/public/article-services.png',
+        title: localized('دليلك إلى أهم الخدمات بالقرب من عقارك', 'Your guide to essential services near your property'),
+        body: localized('مقارنة عملية بين المدارس والمستشفيات والأسواق ووسائل الانتقال في أحياء مدينة السادات.', 'A practical comparison of schools, hospitals, markets, and transport across Sadat City districts.')
+      }
+    ];
+    await insertSyntheticDocuments(connection, 'articles', articleRows.map((row) => document(new Types.ObjectId(row.id), {
+      categoryId: ids.articleCategory,
+      slug: row.slug,
+      imageUrl: row.imageUrl,
+      title: row.title,
+      body: row.body,
+      authorId: ids.user,
+      status: 'published',
+      publishedAt: SEEDED_AT,
+      createdBy: ids.user,
+      updatedBy: ids.user,
+      createdAt: SEEDED_AT,
+      updatedAt: SEEDED_AT,
+      version: 0
+    }, seedKey)));
+
+    const communityRows = [
+      ['670000000000000000000073', 'تجربتي بعد سنة كاملة في الحي المتميز', 'انتقلت مع أسرتي منذ عام، والخدمات قريبة والهدوء ممتاز. هذه أهم الملاحظات التي قد تفيد المقبلين على السكن.'],
+      ['670000000000000000000074', 'نصيحة مهمة لكل من يبحث عن شراء شقة', 'راجع مستندات الملكية والمرافق، وقارن السعر بالعقارات المشابهة قبل توقيع أي عقد أو دفع مقدم.'],
+      ['670000000000000000000075', 'مطرح جديد ممتاز في الحي الأول', 'افتتح مطعم جديد مناسب للعائلات ويقدم خدمة جيدة وأسعاراً مناسبة. شاركونا تجاربكم.']
+    ] as const;
+    await insertSyntheticDocuments(connection, 'community_posts', communityRows.map(([id, title, body]) => document(new Types.ObjectId(id), {
+      id,
+      authorId: ids.user.toHexString(),
+      title,
+      body,
+      status: 'published',
+      createdAt: SEEDED_AT.toISOString(),
+      updatedAt: SEEDED_AT.toISOString()
+    }, seedKey)));
+
+    await insertSyntheticDocuments(connection, 'cms_banners', [
+      document(new Types.ObjectId('670000000000000000000076'), {
+        key: 'city_banner',
+        title: localized('كمبوند النخبة — الحي الأول', 'Elite Compound — First District'),
+        eyebrow: localized('إعلان مميز', 'Featured ad'),
+        body: localized('وحدات سكنية حديثة بتصميمات متنوعة وخدمات متكاملة في قلب مدينة السادات.', 'Modern homes with varied layouts and integrated services in the heart of Sadat City.'),
+        highlight: localized('تبدأ من 1.2 مليون جنيه', 'Starting from EGP 1.2 million'),
+        imageUrl: '/assets/canonical/public/banner-elite-compound-figma.png',
+        targetUrl: '/properties/demo-open-view-apartment',
+        order: 20,
+        active: true,
+        status: 'published',
+        createdAt: SEEDED_AT,
+        updatedAt: SEEDED_AT,
+        version: 0
+      }, seedKey)
+    ]);
+
+    const publicAssetUpdates = [
+      ['organizations', ids.organization, { imageUrl: '/assets/canonical/public/developer-sadat.png' }],
+      ['properties', ids.propertyOne, { imageUrl: '/assets/canonical/public/listing-property-home.png' }],
+      ['properties', ids.propertyTwo, { imageUrl: '/assets/canonical/public/listing-property-duplex.png' }],
+      ['properties', ids.propertyThree, { imageUrl: '/assets/canonical/public/listing-property-rental.png' }],
+      ['articles', ids.article, { imageUrl: '/assets/canonical/public/article-buying-guide.png' }],
+      ['cms_banners', ids.banner, {
+        key: 'hero',
+        title: localized('ابحث عن عقارك\nالآن في السادات', 'Find your property\nnow in Sadat City'),
+        eyebrow: localized('بوابتك لعقارات مدينة السادات', 'Your Sadat City real-estate portal'),
+        body: localized('منصة متكاملة لعقارات وخدمات مدينة السادات', 'An integrated platform for Sadat City properties and services'),
+        highlight: localized('عقارات موثقة', 'Verified properties'),
+        imageUrl: '/assets/canonical/public/home-hero-sadat-city.png',
+        order: 0,
+        active: true,
+        status: 'published'
+      }]
+    ] as const;
+    for (const [collectionName, id, fields] of publicAssetUpdates) {
+      await connection.collection(collectionName).updateOne(
+        { _id: id, synthetic: true },
+        { $set: { ...fields, updatedAt: SEEDED_AT, seedKey } }
+      );
+    }
+  }
+};
+
+export const FIGMA_PUBLIC_CATALOGUE_SEED_STEP: DevelopmentSeedStep = {
+  id: 'figma-public-catalogue-v4',
+  async run(connection) {
+    const seedKey = 'figma-public-catalogue-v4';
+    await connection.collection('cms_homepage_sections').updateOne(
+      { _id: ids.homepageSection, synthetic: true },
+      { $set: {
+        title: localized('ابحث عن عقارك\nالآن في السادات', 'Find your property\nnow in Sadat City'),
+        body: localized('منصة متكاملة لعقارات وخدمات مدينة السادات', 'An integrated platform for Sadat City properties and services'),
+        seedKey,
+        updatedAt: SEEDED_AT
+      } }
+    );
+    for (const [id, imageUrl] of [
+      [ids.catResidential, '/assets/canonical/public/category-all.png'],
+      [ids.catCommercial, '/assets/canonical/public/category-full-commercial-building.png'],
+      [ids.typeApartment, '/assets/canonical/public/category-room.png'],
+      [ids.typeDuplex, '/assets/canonical/public/category-duplex.png'],
+      [ids.typeVilla, '/assets/canonical/public/category-villa.png']
+    ] as const) {
+      await connection.collection('property_taxonomy').updateOne({ _id: id, synthetic: true }, { $set: { imageUrl, seedKey, updatedAt: SEEDED_AT } });
+    }
+
+    const companies = [
+      ['670000000000000000000077', '670000000000000000000078', '670000000000000000000079', 'nile-real-estate-group', 'مجموعة النيل العقارية', 'Nile Real Estate Group', '/assets/canonical/public/developer-nile.png'],
+      ['67000000000000000000007a', '67000000000000000000007b', '67000000000000000000007c', 'misr-el-gedida-housing', 'شركة مصر الجديدة للإسكان', 'Misr El Gedida Housing', '/assets/canonical/public/listing-provider-delta.png'],
+      ['67000000000000000000007d', '67000000000000000000007e', '67000000000000000000007f', 'delta-real-estate-group', 'مجموعة الدلتا العقارية', 'Delta Real Estate Group', '/assets/canonical/public/listing-provider-hope.png']
+    ] as const;
+    await insertSyntheticDocuments(connection, 'users', companies.map(([userId], index) => document(new Types.ObjectId(userId), {
+      normalizedEmail: `figma.provider.${index + 1}@example.invalid`,
+      roleType: 'provider', status: 'verified', locale: 'ar', statusChangedAt: SEEDED_AT,
+      createdAt: SEEDED_AT, updatedAt: SEEDED_AT, version: 0
+    }, seedKey)));
+    await insertSyntheticDocuments(connection, 'provider_profiles', companies.map(([userId, profileId]) => document(new Types.ObjectId(profileId), {
+      userId: new Types.ObjectId(userId), providerType: 'developer_company', status: 'approved',
+      statusChangedAt: SEEDED_AT, createdAt: SEEDED_AT, updatedAt: SEEDED_AT, version: 0
+    }, seedKey)));
+    await insertSyntheticDocuments(connection, 'organizations', companies.map(([, profileId, organizationId, slug, ar, en, imageUrl]) => document(new Types.ObjectId(organizationId), {
+      providerId: new Types.ObjectId(profileId), kind: 'developer_company', slug,
+      name: localized(ar, en),
+      description: localized('شركة تطوير عقاري معتمدة في مدينة السادات تقدم مشروعات سكنية وخدمات متكاملة.', 'An approved Sadat City developer offering residential projects and integrated services.'),
+      imageUrl, status: 'approved', reviewedAt: SEEDED_AT, createdAt: SEEDED_AT, updatedAt: SEEDED_AT, version: 0
+    }, seedKey)));
+  }
+};
+
+export const FIGMA_PUBLIC_INTERACTIONS_SEED_STEP: DevelopmentSeedStep = {
+  id: 'figma-public-interactions-v5',
+  async run(connection) {
+    const seedKey = 'figma-public-interactions-v5';
+    const taxonomy = [
+      ['670000000000000000000081', ids.catResidential, 'room', 'غرفة', 'Room', '/assets/canonical/public/category-room.png', 40],
+      ['670000000000000000000082', ids.catResidential, 'roof', 'روف', 'Roof', '/assets/canonical/public/category-roof.png', 50],
+      ['670000000000000000000083', ids.catCommercial, 'showrooms', 'صالات عرض', 'Showrooms', '/assets/canonical/public/category-showrooms.png', 60],
+      ['670000000000000000000084', ids.catCommercial, 'full-commercial-building', 'مبنى تجاري كامل', 'Full commercial building', '/assets/canonical/public/category-full-commercial-building.png', 70]
+    ] as const;
+    await insertSyntheticDocuments(connection, 'property_taxonomy', taxonomy.map(([id, categoryId, slug, ar, en, imageUrl, order]) => document(new Types.ObjectId(id), {
+      kind: 'type', categoryId, slug, name: localized(ar, en), imageUrl, order, active: true,
+      createdBy: ids.user, updatedBy: ids.user, createdAt: SEEDED_AT, updatedAt: SEEDED_AT, version: 0
+    }, seedKey)));
+
+    const promotions = [
+      ['670000000000000000000085', 'safwa_tower', 'برج الصفوة التجاري — المنطقة المركزية', 'Al Safwa Commercial Tower — Central Hub', 'مكاتب وعيادات ومحلات تجارية بمساحات متنوعة وتسهيلات سداد مرنة.', 'Offices, clinics, and retail spaces with flexible payment plans.', 'عائد استثماري يصل إلى 15%', 'ROI up to 15%', '/assets/canonical/public/category-full-commercial-building.png', 30],
+      ['670000000000000000000086', 'palm_oasis', 'واحة النخيل السكنية — الحي الخامس', 'Palm Oasis Residential — Fifth District', 'تاون هاوس وفيلات مستقلة بتصميم عصري ومساحات خضراء واسعة.', 'Townhouses and standalone villas with modern design and spacious green areas.', 'مساحات تبدأ من 220 م²', 'Sizes from 220 sqm', '/assets/canonical/public/category-villa.png', 40]
+    ] as const;
+    await insertSyntheticDocuments(connection, 'cms_banners', promotions.map(([id, key, titleAr, titleEn, bodyAr, bodyEn, highlightAr, highlightEn, imageUrl, order]) => document(new Types.ObjectId(id), {
+      key, title: localized(titleAr, titleEn), eyebrow: localized('إعلان مميز', 'Featured ad'),
+      body: localized(bodyAr, bodyEn), highlight: localized(highlightAr, highlightEn), imageUrl,
+      targetUrl: '/properties', order, active: true, status: 'published', createdAt: SEEDED_AT, updatedAt: SEEDED_AT, version: 0
+    }, seedKey)));
+  }
+};
+
+export const AUTH_BUYER_SEED_STEP: DevelopmentSeedStep = {
+  id: 'auth-buyer-v6',
+  async run(connection) {
+    await insertSyntheticDocuments(connection, 'users', [document(ids.buyerUser, {
+      normalizedEmail: 'buyer.demo@example.invalid', roleType: 'seeker', status: 'verified', locale: 'ar',
+      statusChangedAt: SEEDED_AT, createdAt: SEEDED_AT, updatedAt: SEEDED_AT, version: 0
+    }, 'auth-buyer-v6')]);
+    await insertSyntheticDocuments(connection, 'seeker_profiles', [document(ids.buyerProfile, {
+      userId: ids.buyerUser, firstName: 'مشتري', lastName: 'تجريبي',
+      preferences: { propertyTypes: ['apartment', 'villa'], locations: [ids.location.toHexString()], purpose: 'buy', minPrice: 1_500_000, maxPrice: 6_000_000, bedroomsMin: 2, bedroomsMax: 5 },
+      createdAt: SEEDED_AT, updatedAt: SEEDED_AT, version: 0
+    }, 'auth-buyer-v6')]);
+  }
+};
+
 export const DEVELOPMENT_SEED_STEPS: readonly DevelopmentSeedStep[] = [
   SYNTHETIC_SHOWCASE_SEED_STEP,
-  SYNTHETIC_WORKFLOW_SEED_STEP
+  SYNTHETIC_WORKFLOW_SEED_STEP,
+  FIGMA_PUBLIC_CONTENT_SEED_STEP,
+  FIGMA_PUBLIC_CATALOGUE_SEED_STEP,
+  FIGMA_PUBLIC_INTERACTIONS_SEED_STEP,
+  AUTH_BUYER_SEED_STEP
 ];
 
 export function assertDevelopmentSeedAllowed(environment: AppEnvironment): void {
@@ -844,8 +1063,10 @@ export async function runDevelopmentSeed(
   await ledger.createIndex({ id: 1 }, { unique: true });
   let applied = 0;
   for (const step of steps) {
+    const existing = await ledger.findOne({ id: step.id });
+    if (existing) continue;
     await step.run(connection);
-    await ledger.updateOne({ id: step.id }, { $set: { id: step.id, appliedAt: new Date() } }, { upsert: true });
+    await ledger.updateOne({ id: step.id }, { $setOnInsert: { id: step.id, appliedAt: new Date() } }, { upsert: true });
     applied += 1;
   }
   return applied;

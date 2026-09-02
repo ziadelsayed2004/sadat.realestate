@@ -3,7 +3,7 @@
   "screenId": "PUB-04",
   "phase": "after",
   "runtime": {
-    "route": "/compare?propertyIds=aaaaaaaaaaaaaaaaaaaaaaaa&propertyIds=bbbbbbbbbbbbbbbbbbbbbbbb",
+    "route": "/compare?ids=aaaaaaaaaaaaaaaaaaaaaaaa,bbbbbbbbbbbbbbbbbbbbbbbb",
     "locale": "ar",
     "direction": "rtl",
     "viewport": {
@@ -14,27 +14,16 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "8875c50dec55638c801237915262f20c9c47eb7646b3630406753686c5cbb121",
-    "afterHash": "f5a7d4ff9bf81852ab07d5ebc78134c3415690a0c784499c63bf5a17f3a01996",
-    "requestedApi": [
-      {
-        "method": "POST",
-        "url": "http://127.0.0.1:4173/api/v1/public/properties/compare"
-      }
-    ],
-    "apiResponses": [
-      {
-        "method": "POST",
-        "url": "http://127.0.0.1:4173/api/v1/public/properties/compare",
-        "status": 200
-      }
-    ]
+    "afterHash": "3ec7e39a76ab25aef38afa886c223aaf4f798e8f4b5ee74638f6a4b8ee86145e",
+    "requestedApi": [],
+    "apiResponses": []
   },
   "structure": {
     "headers": 2,
     "navs": 1,
-    "sections": 7,
-    "cards": 19,
-    "images": 9,
+    "sections": 1,
+    "cards": 0,
+    "images": 3,
     "forms": 0
   },
   "fonts": {
@@ -484,11 +473,6 @@
       {
         "family": "Noto Sans SC",
         "weight": "400",
-        "status": "loaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "400",
         "status": "unloaded"
       },
       {
@@ -628,6 +612,11 @@
       },
       {
         "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
         "weight": "500",
         "status": "unloaded"
       },
@@ -1494,7 +1483,7 @@
       {
         "family": "Noto Sans SC",
         "weight": "600",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -1999,7 +1988,7 @@
       {
         "family": "Noto Sans SC",
         "weight": "700",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -2157,42 +2146,6 @@
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub08-f.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-f.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "eager"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-b.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "eager"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub08-f.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "eager"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "eager"
-    },
-    {
       "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
@@ -2250,24 +2203,8 @@
         "href": "/auth/register"
       },
       {
-        "text": "فيلا مستقلة بالمنطقة الراقية",
-        "href": "/properties/garden-villa"
-      },
-      {
-        "text": "عرض التفاصيل",
-        "href": "/properties/garden-villa"
-      },
-      {
-        "text": "شقة فاخرة في الحي الأول",
-        "href": "/properties/city-apartment"
-      },
-      {
-        "text": "عرض التفاصيل",
-        "href": "/properties/city-apartment"
-      },
-      {
-        "text": "قارن الآن",
-        "href": "#public-property-comparison-details-title"
+        "text": "تصفح العقارات",
+        "href": "/properties"
       },
       {
         "text": "العقارات",
@@ -2299,61 +2236,41 @@
       },
       {
         "text": "واتساب متاح 24/7",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://facebook.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://instagram.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://youtube.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://tiktok.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://linkedin.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       }
     ],
     "buttons": [
       {
-        "text": "إظهار كل التفاصيل",
-        "aria": null
+        "text": "العربية",
+        "aria": "اللغة"
       },
       {
-        "text": "إظهار الاختلافات فقط",
-        "aria": null
-      },
-      {
-        "text": "إزالة",
-        "aria": null
-      },
-      {
-        "text": "إزالة",
-        "aria": null
-      },
-      {
-        "text": "×",
-        "aria": "إزالة فيلا مستقلة بالمنطقة الراقية"
-      },
-      {
-        "text": "×",
-        "aria": "إزالة شقة فاخرة في الحي الأول"
-      },
-      {
-        "text": "مسح الكل والعودة للبحث",
-        "aria": null
+        "text": "العربية",
+        "aria": "اللغة"
       }
     ]
   },
@@ -2369,7 +2286,7 @@
       },
       {
         "width": 1653,
-        "height": 2314
+        "height": 1064
       }
     ],
     "dimensions": {
@@ -2380,10 +2297,10 @@
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-04/visual-metrics.json",
     "visualMetrics": {
       "comparedWidth": 1653,
-      "comparedHeight": 2314,
-      "comparedPixels": 3825042,
-      "materialDifferencePercent": 5.9039,
-      "antiAliasingOnlyPercent": 7.6607,
+      "comparedHeight": 1064,
+      "comparedPixels": 1758792,
+      "materialDifferencePercent": 42.6151,
+      "antiAliasingOnlyPercent": 10.6187,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

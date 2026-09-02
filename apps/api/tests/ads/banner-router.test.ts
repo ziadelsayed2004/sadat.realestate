@@ -36,7 +36,7 @@ const accessTokens: AccessTokenService = {
 const placement = adPlacementSchema.parse({
   id: '111111111111111111111111', key: 'homepage.hero', surface: 'homepage',
   label: { en: 'Homepage hero' }, width: 1200, height: 400, active: true,
-  sortOrder: 1, allowedLocales: ['ar', 'en', 'zh-CN'], targetUrlRequired: false,
+  sortOrder: 1, allowedLocales: ['ar', 'en'], targetUrlRequired: false,
   version: 0, updatedBy: adminId, updatedAt: '2026-08-20T00:00:00.000Z'
 });
 

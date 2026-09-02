@@ -24,7 +24,7 @@ function assertNoForbiddenKeys(value: unknown, path: string[] = []): void {
 }
 
 const id = '0123456789abcdef01234567';
-const localized = { ar: 'عقار', en: 'Property', 'zh-CN': '房产' };
+const localized = { ar: 'عقار', en: 'Property' };
 const claims = { role: 'seeker', status: 'verified', sub: id } as AccessTokenClaims;
 
 test('public homepage and property details mask workflow, audit, credential, and storage fields', () => {

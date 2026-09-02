@@ -2,9 +2,10 @@ import { Schema, type Connection, type Model, type Types } from 'mongoose';
 import {
   OTP_PURPOSES,
   OTP_ROLE_TYPES,
-  type OtpPurpose,
-  type OtpRoleType
 } from '@sadat-real-estate/contracts';
+
+type StoredOtpRoleType = 'seeker' | 'provider' | 'admin';
+type StoredOtpPurpose = 'login' | 'registration' | 'password_reset';
 
 const ARGON2ID_HASH_PATTERN = /^\$argon2id\$/;
 
@@ -35,8 +36,8 @@ export interface OtpChallengeRecord {
   publicId: string;
   activeKey?: string;
   normalizedEmail: string;
-  roleType: OtpRoleType;
-  purpose: OtpPurpose;
+  roleType: StoredOtpRoleType;
+  purpose: StoredOtpPurpose;
   codeHash: string;
   attemptsRemaining: number;
   status: OtpChallengeState;
@@ -98,8 +99,8 @@ const otpChallengeSchema = new Schema<OtpChallengeRecord>(
       minlength: 3,
       maxlength: 254
     },
-    roleType: { type: String, enum: OTP_ROLE_TYPES, required: true, immutable: true },
-    purpose: { type: String, enum: OTP_PURPOSES, required: true, immutable: true },
+    roleType: { type: String, enum: [...OTP_ROLE_TYPES, 'admin'], required: true, immutable: true },
+    purpose: { type: String, enum: [...OTP_PURPOSES, 'password_reset'], required: true, immutable: true },
     codeHash: {
       type: String,
       required: true,

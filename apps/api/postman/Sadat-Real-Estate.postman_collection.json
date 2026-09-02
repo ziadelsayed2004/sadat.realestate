@@ -1441,6 +1441,33 @@
       }
     },
     {
+      "name": "Auth - Send Admin Password Reset OTP",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin.operations@example.invalid\",\n  \"roleType\": \"admin\",\n  \"purpose\": \"password_reset\"\n}", "options": { "raw": { "language": "json" } } },
+        "url": { "raw": "{{apiV1BaseUrl}}/auth/account-recovery/otp/send", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "account-recovery", "otp", "send"] }
+      }
+    },
+    {
+      "name": "Auth - Verify Admin Password Reset OTP",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin.operations@example.invalid\",\n  \"roleType\": \"admin\",\n  \"purpose\": \"password_reset\",\n  \"challengeId\": \"replace-with-challenge-id\",\n  \"code\": \"000000\"\n}", "options": { "raw": { "language": "json" } } },
+        "url": { "raw": "{{apiV1BaseUrl}}/auth/account-recovery/otp/verify", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "account-recovery", "otp", "verify"] }
+      }
+    },
+    {
+      "name": "Auth - Reset Admin Password",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
+        "body": { "mode": "raw", "raw": "{\n  \"verificationToken\": \"replace-with-single-use-token\",\n  \"newPassword\": \"Replace-With-Strong-Password-1!\"\n}", "options": { "raw": { "language": "json" } } },
+        "url": { "raw": "{{apiV1BaseUrl}}/auth/account-recovery/complete", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "account-recovery", "complete"] }
+      }
+    },
+    {
       "name": "Auth - Refresh",
       "event": [
         {

@@ -5,7 +5,7 @@ import { createPublicPropertySearchService, type PublicPropertySearchRepository,
 
 const id = '0123456789abcdef01234567';
 const other = '1123456789abcdef01234567';
-const localized = { ar: 'شقة', en: 'Apartment', 'zh-CN': '公寓' };
+const localized = { ar: 'شقة', en: 'Apartment' };
 const row = (overrides: Partial<PublicPropertySearchSource> = {}): PublicPropertySearchSource => ({ id, slug: 'apartment', kind: 'property', name: localized, transactionType: 'sale', status: 'published', active: true, price: { amount: 1_000_000, currency: 'EGP' }, layout: { bedrooms: 2 }, ...overrides });
 
 function repository(rows: PublicPropertySearchSource[]): PublicPropertySearchRepository {

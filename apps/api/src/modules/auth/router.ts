@@ -4,7 +4,10 @@ import {
   adminLoginRequestSchema,
   emptyAuthRequestSchema,
   otpSendRequestSchema,
-  otpVerifyRequestSchema
+  otpVerifyRequestSchema,
+  passwordResetOtpSendRequestSchema,
+  passwordResetOtpVerifyRequestSchema,
+  passwordResetRequestSchema
 } from '@sadat-real-estate/contracts';
 import { ApiContractError, toApiErrorResponse } from '../contracts/error-boundary.js';
 import { toSuccessResponse } from '../contracts/response.js';
@@ -18,6 +21,9 @@ export const AUTH_ROUTE_DEFINITIONS = [
   { method: 'POST', path: '/api/v1/auth/login', operationId: 'loginAdmin' },
   { method: 'POST', path: '/api/v1/auth/otp/send', operationId: 'sendEmailOtp' },
   { method: 'POST', path: '/api/v1/auth/otp/verify', operationId: 'verifyEmailOtp' },
+  { method: 'POST', path: '/api/v1/auth/account-recovery/otp/send', operationId: 'sendAdminAccountRecoveryOtp' },
+  { method: 'POST', path: '/api/v1/auth/account-recovery/otp/verify', operationId: 'verifyAdminAccountRecoveryOtp' },
+  { method: 'POST', path: '/api/v1/auth/account-recovery/complete', operationId: 'completeAdminAccountRecovery' },
   { method: 'POST', path: '/api/v1/auth/refresh', operationId: 'refreshSession' },
   { method: 'POST', path: '/api/v1/auth/logout', operationId: 'logoutSession' }
 ] as const;
@@ -166,6 +172,37 @@ export function createAuthRouter(dependencies: AuthRouterDependencies): Router {
       response.status(200).json(toSuccessResponse(result.data, requestId(request)));
     } catch (error) {
       sendError(request, response, error, false, dependencies.cookie);
+    }
+  });
+
+  router.post('/account-recovery/otp/send', async (request, response) => {
+    try {
+      const input = passwordResetOtpSendRequestSchema.parse(request.body ?? {});
+      const result = await dependencies.otpService.send(input);
+      response.status(202).json(toSuccessResponse(result, requestId(request)));
+    } catch (error) {
+      sendError(request, response, error, false, dependencies.cookie);
+    }
+  });
+
+  router.post('/account-recovery/otp/verify', async (request, response) => {
+    try {
+      const input = passwordResetOtpVerifyRequestSchema.parse(request.body ?? {});
+      const result = await dependencies.otpService.verify(input);
+      response.status(200).json(toSuccessResponse(result.data, requestId(request)));
+    } catch (error) {
+      sendError(request, response, error, false, dependencies.cookie);
+    }
+  });
+
+  router.post('/account-recovery/complete', async (request, response) => {
+    try {
+      const input = passwordResetRequestSchema.parse(request.body ?? {});
+      await dependencies.otpService.resetPassword(input);
+      clearRefreshCookie(response, dependencies.cookie);
+      response.status(200).json(toSuccessResponse({ reset: true as const }, requestId(request)));
+    } catch (error) {
+      sendError(request, response, error, true, dependencies.cookie);
     }
   });
 

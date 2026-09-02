@@ -14,20 +14,9 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "23353ebb4686304c57ef06af22eb8889344d717e5cb18bef11e313963d114de3",
-    "afterHash": "258f0584a9ada91994edaa52c4dc3f650aa71d11bff875bfef4cdf5e979add35",
-    "requestedApi": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/team"
-      }
-    ],
-    "apiResponses": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/team",
-        "status": 200
-      }
-    ]
+    "afterHash": "f8f18d3ae3430249f8451a69ebe00680d5171109718a771d966775c12155aeb6",
+    "requestedApi": [],
+    "apiResponses": []
   },
   "structure": {
     "headers": 2,
@@ -484,11 +473,6 @@
       {
         "family": "Noto Sans SC",
         "weight": "400",
-        "status": "loaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "400",
         "status": "unloaded"
       },
       {
@@ -628,6 +612,11 @@
       },
       {
         "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
         "weight": "500",
         "status": "unloaded"
       },
@@ -1494,7 +1483,7 @@
       {
         "family": "Noto Sans SC",
         "weight": "600",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -1999,7 +1988,7 @@
       {
         "family": "Noto Sans SC",
         "weight": "700",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -2279,34 +2268,42 @@
       },
       {
         "text": "واتساب متاح 24/7",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://facebook.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://instagram.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://youtube.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://tiktok.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://linkedin.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       }
     ],
     "buttons": [
+      {
+        "text": "العربية",
+        "aria": "اللغة"
+      },
+      {
+        "text": "العربية",
+        "aria": "اللغة"
+      },
       {
         "text": "الكل",
         "aria": null
@@ -2354,8 +2351,8 @@
       "comparedWidth": 1523,
       "comparedHeight": 1560,
       "comparedPixels": 2375880,
-      "materialDifferencePercent": 10.3385,
-      "antiAliasingOnlyPercent": 6.8651,
+      "materialDifferencePercent": 10.5675,
+      "antiAliasingOnlyPercent": 6.9207,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

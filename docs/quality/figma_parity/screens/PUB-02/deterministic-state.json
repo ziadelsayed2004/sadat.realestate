@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "e2e-public-property-list-success",
-  "responseSha256": "870f0ef90455fb0913895ccf62ddca2c5608a370741dfe8f2a0c6bd4370c1eaa",
+  "responseSha256": "5a5f00b48dd4de8ee7fd3c611007e1e1b14a1a76b125440de26caabde3727719",
   "response": {
     "data": {
       "items": [
@@ -18,15 +18,13 @@
           "kind": "property",
           "name": {
             "ar": "شقة فاخرة في الحي الأول",
-            "en": "شقة فاخرة في الحي الأول",
-            "zh-CN": "شقة فاخرة في الحي الأول"
+            "en": "شقة فاخرة في الحي الأول"
           },
           "transactionType": "sale",
           "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-property-home.png",
           "description": {
             "ar": "شقة فاخرة في الحي الأول",
-            "en": "شقة فاخرة في الحي الأول",
-            "zh-CN": "شقة فاخرة في الحي الأول"
+            "en": "شقة فاخرة في الحي الأول"
           },
           "area": {
             "value": 145,
@@ -43,13 +41,11 @@
           },
           "locationName": {
             "ar": "الحي الأول",
-            "en": "الحي الأول",
-            "zh-CN": "الحي الأول"
+            "en": "الحي الأول"
           },
           "sourceName": {
             "ar": "شركة السادات للتطوير العقاري",
-            "en": "شركة السادات للتطوير العقاري",
-            "zh-CN": "شركة السادات للتطوير العقاري"
+            "en": "شركة السادات للتطوير العقاري"
           },
           "sourceImageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-sadat.png",
           "sourceType": "developer_company",
@@ -65,15 +61,13 @@
           "kind": "property",
           "name": {
             "ar": "فيلا مستقلة بالمنطقة الراقية",
-            "en": "فيلا مستقلة بالمنطقة الراقية",
-            "zh-CN": "فيلا مستقلة بالمنطقة الراقية"
+            "en": "فيلا مستقلة بالمنطقة الراقية"
           },
           "transactionType": "sale",
           "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-property-villa.png",
           "description": {
             "ar": "فيلا مستقلة بالمنطقة الراقية",
-            "en": "فيلا مستقلة بالمنطقة الراقية",
-            "zh-CN": "فيلا مستقلة بالمنطقة الراقية"
+            "en": "فيلا مستقلة بالمنطقة الراقية"
           },
           "area": {
             "value": 320,
@@ -90,13 +84,11 @@
           },
           "locationName": {
             "ar": "المنطقة الراقية",
-            "en": "المنطقة الراقية",
-            "zh-CN": "المنطقة الراقية"
+            "en": "المنطقة الراقية"
           },
           "sourceName": {
             "ar": "مجموعة النيل العقارية",
-            "en": "مجموعة النيل العقارية",
-            "zh-CN": "مجموعة النيل العقارية"
+            "en": "مجموعة النيل العقارية"
           },
           "sourceImageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-nile.png",
           "sourceType": "developer_company",
@@ -112,15 +104,13 @@
           "kind": "unit",
           "name": {
             "ar": "أرض سكنية في الحي السابع",
-            "en": "أرض سكنية في الحي السابع",
-            "zh-CN": "أرض سكنية في الحي السابع"
+            "en": "أرض سكنية في الحي السابع"
           },
           "transactionType": "sale",
           "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-property-land.png",
           "description": {
             "ar": "أرض سكنية في الحي السابع",
-            "en": "أرض سكنية في الحي السابع",
-            "zh-CN": "أرض سكنية في الحي السابع"
+            "en": "أرض سكنية في الحي السابع"
           },
           "area": {
             "value": 400,
@@ -132,13 +122,11 @@
           },
           "locationName": {
             "ar": "الحي السابع",
-            "en": "الحي السابع",
-            "zh-CN": "الحي السابع"
+            "en": "الحي السابع"
           },
           "sourceName": {
             "ar": "مكتب الأمل العقاري",
-            "en": "مكتب الأمل العقاري",
-            "zh-CN": "مكتب الأمل العقاري"
+            "en": "مكتب الأمل العقاري"
           },
           "sourceImageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-hope.png",
           "sourceType": "brokerage_office",
@@ -154,15 +142,13 @@
           "kind": "unit",
           "name": {
             "ar": "شقة للإيجار في الحي الثالث",
-            "en": "شقة للإيجار في الحي الثالث",
-            "zh-CN": "شقة للإيجار في الحي الثالث"
+            "en": "شقة للإيجار في الحي الثالث"
           },
           "transactionType": "rent",
           "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-property-rental.png",
           "description": {
             "ar": "شقة للإيجار في الحي الثالث",
-            "en": "شقة للإيجار في الحي الثالث",
-            "zh-CN": "شقة للإيجار في الحي الثالث"
+            "en": "شقة للإيجار في الحي الثالث"
           },
           "area": {
             "value": 120,
@@ -179,13 +165,11 @@
           },
           "locationName": {
             "ar": "الحي الثالث",
-            "en": "الحي الثالث",
-            "zh-CN": "الحي الثالث"
+            "en": "الحي الثالث"
           },
           "sourceName": {
             "ar": "أحمد حسن",
-            "en": "أحمد حسن",
-            "zh-CN": "أحمد حسن"
+            "en": "أحمد حسن"
           },
           "sourceImageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-ahmed.png",
           "sourceType": "brokerage_office",
@@ -201,15 +185,13 @@
           "kind": "property",
           "name": {
             "ar": "مكتب تجاري في المنطقة الصناعية",
-            "en": "مكتب تجاري في المنطقة الصناعية",
-            "zh-CN": "مكتب تجاري في المنطقة الصناعية"
+            "en": "مكتب تجاري في المنطقة الصناعية"
           },
           "transactionType": "rent",
           "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-property-office.png",
           "description": {
             "ar": "مكتب تجاري في المنطقة الصناعية",
-            "en": "مكتب تجاري في المنطقة الصناعية",
-            "zh-CN": "مكتب تجاري في المنطقة الصناعية"
+            "en": "مكتب تجاري في المنطقة الصناعية"
           },
           "area": {
             "value": 200,
@@ -226,13 +208,11 @@
           },
           "locationName": {
             "ar": "المنطقة الصناعية",
-            "en": "المنطقة الصناعية",
-            "zh-CN": "المنطقة الصناعية"
+            "en": "المنطقة الصناعية"
           },
           "sourceName": {
             "ar": "مجموعة الدلتا العقارية",
-            "en": "مجموعة الدلتا العقارية",
-            "zh-CN": "مجموعة الدلتا العقارية"
+            "en": "مجموعة الدلتا العقارية"
           },
           "sourceImageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-delta.png",
           "sourceType": "developer_company",
@@ -248,15 +228,13 @@
           "kind": "property",
           "name": {
             "ar": "دوبلكس فاخر في الحي الخامس",
-            "en": "دوبلكس فاخر في الحي الخامس",
-            "zh-CN": "دوبلكس فاخر في الحي الخامس"
+            "en": "دوبلكس فاخر في الحي الخامس"
           },
           "transactionType": "sale",
           "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-property-duplex.png",
           "description": {
             "ar": "دوبلكس فاخر في الحي الخامس",
-            "en": "دوبلكس فاخر في الحي الخامس",
-            "zh-CN": "دوبلكس فاخر في الحي الخامس"
+            "en": "دوبلكس فاخر في الحي الخامس"
           },
           "area": {
             "value": 240,
@@ -273,13 +251,11 @@
           },
           "locationName": {
             "ar": "الحي الخامس",
-            "en": "الحي الخامس",
-            "zh-CN": "الحي الخامس"
+            "en": "الحي الخامس"
           },
           "sourceName": {
             "ar": "شركة السادات للتطوير العقاري",
-            "en": "شركة السادات للتطوير العقاري",
-            "zh-CN": "شركة السادات للتطوير العقاري"
+            "en": "شركة السادات للتطوير العقاري"
           },
           "sourceImageUrl": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-sadat-2.png",
           "sourceType": "developer_company",
@@ -296,8 +272,7 @@
           "slug": "restaurants-cafes",
           "name": {
             "ar": "مطاعم وكافيهات",
-            "en": "Restaurants and cafés",
-            "zh-CN": "Restaurants and cafés"
+            "en": "Restaurants and cafés"
           },
           "propertyCount": 22,
           "order": 0
@@ -307,8 +282,7 @@
           "slug": "showrooms",
           "name": {
             "ar": "صالات عرض",
-            "en": "Showrooms",
-            "zh-CN": "Showrooms"
+            "en": "Showrooms"
           },
           "propertyCount": 34,
           "order": 1
@@ -318,8 +292,7 @@
           "slug": "full-commercial-building",
           "name": {
             "ar": "مبنى تجاري كامل",
-            "en": "Full commercial building",
-            "zh-CN": "Full commercial building"
+            "en": "Full commercial building"
           },
           "propertyCount": 19,
           "order": 2
@@ -329,8 +302,7 @@
           "slug": "room",
           "name": {
             "ar": "غرفة",
-            "en": "Room",
-            "zh-CN": "Room"
+            "en": "Room"
           },
           "propertyCount": 65,
           "order": 3
@@ -340,8 +312,7 @@
           "slug": "roof",
           "name": {
             "ar": "روف",
-            "en": "Roof",
-            "zh-CN": "Roof"
+            "en": "Roof"
           },
           "propertyCount": 28,
           "order": 4
@@ -351,8 +322,7 @@
           "slug": "duplex",
           "name": {
             "ar": "دوبلكس",
-            "en": "Duplex",
-            "zh-CN": "Duplex"
+            "en": "Duplex"
           },
           "propertyCount": 43,
           "order": 5
@@ -362,8 +332,7 @@
           "slug": "villa",
           "name": {
             "ar": "فيلا",
-            "en": "Villa",
-            "zh-CN": "Villa"
+            "en": "Villa"
           },
           "propertyCount": 87,
           "order": 6
@@ -375,8 +344,7 @@
           "slug": "apartments",
           "name": {
             "ar": "شقة",
-            "en": "Apartment",
-            "zh-CN": "Apartment"
+            "en": "Apartment"
           },
           "propertyCount": 112,
           "order": 0
@@ -386,8 +354,7 @@
           "slug": "villas",
           "name": {
             "ar": "فيلا",
-            "en": "Villa",
-            "zh-CN": "Villa"
+            "en": "Villa"
           },
           "propertyCount": 64,
           "order": 1
@@ -397,8 +364,7 @@
           "slug": "land",
           "name": {
             "ar": "أرض",
-            "en": "Land",
-            "zh-CN": "Land"
+            "en": "Land"
           },
           "propertyCount": 48,
           "order": 2
@@ -408,8 +374,7 @@
           "slug": "offices",
           "name": {
             "ar": "مكتب",
-            "en": "Office",
-            "zh-CN": "Office"
+            "en": "Office"
           },
           "propertyCount": 31,
           "order": 3
@@ -419,8 +384,7 @@
           "slug": "duplex",
           "name": {
             "ar": "دوبلكس",
-            "en": "Duplex",
-            "zh-CN": "Duplex"
+            "en": "Duplex"
           },
           "propertyCount": 43,
           "order": 4

@@ -289,7 +289,6 @@ function ComparisonCards({
             imageAlt={copy.imageUnavailable}
             action={(
               <div className="public-property-comparison__card-actions">
-                <a className="public-property-comparison__details-link" href={publicPropertyDetailsUrl(property.slug)}>{copy.viewDetails}</a>
                 <Button type="button" variant="danger" size="sm" onClick={() => onRemove(property.id)}>{copy.remove}</Button>
               </div>
             )}
@@ -317,35 +316,39 @@ function ComparisonContent({
   return (
     <>
       <section className="public-property-comparison__intro" aria-labelledby="public-property-comparison-title">
-        <div>
-          <p className="public-property-comparison__eyebrow">{copy.selectedCount(data.items.length)}</p>
+        <div className="public-property-comparison__intro-text">
           <h1 id="public-property-comparison-title">{copy.title}</h1>
           <p>{copy.description}</p>
+          <span className="public-property-comparison__eyebrow">{copy.selectedCount(data.items.length)}</span>
         </div>
-        <div className="public-property-comparison__controls" role="group" aria-label={copy.viewModeLabel}>
-          <button type="button" className={showDifferences ? '' : 'is-active'} aria-pressed={!showDifferences} onClick={() => setShowDifferences(false)}>{copy.showAll}</button>
-          <button type="button" className={showDifferences ? 'is-active' : ''} aria-pressed={showDifferences} onClick={() => setShowDifferences(true)}>{copy.showDifferences}</button>
-        </div>
+        {data.items.length < 2 ? (
+          <a href="/properties" className="public-property-comparison__add-unit">
+            {copy.addAnotherUnit}
+          </a>
+        ) : null}
       </section>
       <section className="public-property-comparison__selection" aria-labelledby="public-property-comparison-selection-title">
         <h2 id="public-property-comparison-selection-title" className="public-property-comparison__visually-hidden">{copy.title}</h2>
         <ComparisonCards data={data} locale={locale} copy={copy} onRemove={onRemove} />
       </section>
+      <div className="public-property-comparison__controls-wrap">
+        <label className="public-property-comparison__toggle">
+          <span className="public-property-comparison__toggle-label">{copy.showDifferences}</span>
+          <input
+            type="checkbox"
+            className="public-property-comparison__toggle-input"
+            checked={showDifferences}
+            onChange={(e) => setShowDifferences(e.target.checked)}
+            aria-label={copy.viewModeLabel}
+          />
+          <span className="public-property-comparison__toggle-track" aria-hidden="true" />
+        </label>
+      </div>
       <ComparisonTables data={data} locale={locale} copy={copy} showDifferences={showDifferences} />
-      <aside className="public-property-comparison__sticky-bar" aria-label={copy.title}>
+      <div className="public-property-comparison__sticky-actions" aria-label={copy.title}>
         <strong>{copy.title}</strong>
-        <div className="public-property-comparison__selected-items" aria-label={copy.selectedCount(data.items.length)}>
-          {data.items.map(property => (
-            <span className="public-property-comparison__selected-item" key={property.id}>
-              {property.imageUrl !== undefined ? <PublicMediaImage src={property.imageUrl} alt="" loading="eager" fallback={<span className="public-property-comparison__selected-image-fallback" aria-hidden="true" />} /> : null}
-              <span>{localizedText(property.name, locale) ?? property.slug}</span>
-              <button type="button" aria-label={copy.remove + ' ' + (localizedText(property.name, locale) ?? property.slug)} onClick={() => onRemove(property.id)}>×</button>
-            </span>
-          ))}
-        </div>
-        <a className="public-property-comparison__compare-action" href="#public-property-comparison-details-title">{copy.compareNow}</a>
         <button type="button" onClick={onClear}>{copy.clearAll}</button>
-      </aside>
+      </div>
     </>
   );
 }

@@ -4,7 +4,7 @@ import { createPublicPropertyDetailsService, publicPropertyDetailsProjection, ty
 
 const id = '0123456789abcdef01234567';
 const relatedId = '1123456789abcdef01234567';
-const localized = { ar: 'شقة', en: 'Apartment', 'zh-CN': '公寓' };
+const localized = { ar: 'شقة', en: 'Apartment' };
 const source = (overrides: Partial<PublicPropertyDetailsSource> = {}): PublicPropertyDetailsSource => ({ id, slug: 'apartment', kind: 'property', name: localized, transactionType: 'sale', sourceType: 'developer_company', organizationId: relatedId, sourceName: localized, sourceImageUrl: 'https://example.com/source.png', sourceVerified: true, status: 'published', active: true, project: { id: relatedId, slug: 'project', name: { en: 'Project' }, status: 'published' }, media: [{ id: relatedId, propertyId: id, kind: 'image', originalFilename: 'cover.png', detectedMime: 'image/png', byteSize: 100, sortOrder: 0, isCover: true, processingState: 'ready', active: true }], features:[{id:relatedId,kind:'feature',groupKey:'interior',name:localized,detail:{en:'Full finish'},slug:'air-conditioning',order:0,active:true}], services:[{id,kind:'service',groupKey:'nearby',name:localized,detail:{en:'Public school'},distanceLabel:{en:'5 minutes'},slug:'school',order:0,active:true}], relatedProperties: [{ id: relatedId, slug: 'related', kind: 'unit', name: localized, transactionType: 'sale', status: 'published', active: true }], ...overrides });
 
 test('projects published property details with SEO, source, map link, media, and related public cards', () => {

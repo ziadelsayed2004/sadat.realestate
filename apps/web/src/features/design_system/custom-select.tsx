@@ -17,6 +17,7 @@ export interface CustomSelectProps {
   readonly onChange?: ((value: string) => void) | undefined;
   readonly className?: string | undefined;
   readonly disabled?: boolean | undefined;
+  readonly required?: boolean | undefined;
   readonly ariaLabel?: string | undefined;
 }
 
@@ -31,6 +32,7 @@ export function CustomSelect({
   onChange,
   className,
   disabled = false,
+  required = false,
   ariaLabel
 }: CustomSelectProps) {
   const generatedId = useId().replaceAll(':', '');
@@ -91,7 +93,6 @@ export function CustomSelect({
         className="custom-select-trigger"
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        aria-label={ariaLabel || label || placeholder}
         disabled={disabled}
         onClick={() => setIsOpen(prev => !prev)}
       >
@@ -156,6 +157,7 @@ export function CustomSelect({
         value={currentValue}
         onChange={event => handleSelect(event.currentTarget.value)}
         disabled={disabled}
+        required={required}
         aria-label={ariaLabel || label || placeholder}
         className="a11y-visually-hidden"
       >

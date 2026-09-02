@@ -4,7 +4,7 @@ import { createPublicOrganizationService, type PublicOrganizationSource } from '
 
 const id = '0123456789abcdef01234567';
 const secondId = '1123456789abcdef01234567';
-const localized = { ar: 'شركة موثوقة', en: 'Trusted Company', 'zh-CN': '可信公司' };
+const localized = { ar: 'شركة موثوقة', en: 'Trusted Company' };
 function source(overrides: Partial<PublicOrganizationSource> = {}): PublicOrganizationSource { return { id, providerId: secondId, kind: 'developer_company', slug: 'trusted-company', name: localized, status: 'approved', providerStatus: 'approved', projects: [{ id, slug: 'published-project', name: localized, status: 'published' }, { id: secondId, slug: 'draft-project', name: localized, status: 'draft' }], properties: [{ id, slug: 'published-home', kind: 'property', name: localized, transactionType: 'sale', status: 'published', active: true }, { id: secondId, slug: 'inactive-home', kind: 'property', name: localized, transactionType: 'rent', status: 'published', active: false }], ...overrides }; }
 
 test('projects approved organizations with only published projects and active properties', async () => {

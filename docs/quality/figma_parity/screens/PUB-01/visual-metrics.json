@@ -13,12 +13,12 @@
   "comparedWidth": 1549,
   "comparedHeight": 5378,
   "comparedPixels": 8330522,
-  "materialDifferencePercent": 20.8017,
-  "antiAliasingOnlyPercent": 14.2793,
+  "materialDifferencePercent": 24.3544,
+  "antiAliasingOnlyPercent": 14.0523,
   "threshold": {
     "materialRgbSumGreaterThan": 24,
     "antiAliasingRgbSumGreaterThan": 3
   },
   "method": "same-width source/runtime canvas comparison over the overlapping document height",
-  "reviewed": true
+  "reviewed": false
 }

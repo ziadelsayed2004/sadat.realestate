@@ -1,4 +1,5 @@
 import { createServer as createHttpServer } from 'node:http';
+import { Readable } from 'node:stream';
 import { randomBytes } from 'node:crypto';
 import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
@@ -192,14 +193,17 @@ function renderArticleListBootstrap(data, query, state, cspNonce) {
   return dataScript + queryScript + stateScript;
 }
 
-function renderArticleDetailsBootstrap(data, state, cspNonce) {
+function renderArticleDetailsBootstrap(data, state, relatedArticles, cspNonce) {
   const dataScript = data === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-article-details-data" type="application/json">`
     + escapeJsonForHtml(JSON.stringify(data))
     + '</script>';
   const stateScript = state === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-article-details-state" type="text/plain">`
     + escapeHtml(state)
     + '</script>';
-  return dataScript + stateScript;
+  const relatedScript = relatedArticles === undefined ? '' : `<script${inlineNonceAttribute(cspNonce)} id="sadat-public-related-articles-data" type="application/json">`
+    + escapeJsonForHtml(JSON.stringify(relatedArticles))
+    + '</script>';
+  return dataScript + stateScript + relatedScript;
 }
 
 function renderCommunityBootstrap(data, state, cspNonce) {
@@ -252,7 +256,7 @@ function renderDocument(template, result, cspNonce) {
   const developerListBootstrap = renderDeveloperListBootstrap(result.developerListData, cspNonce);
   const developerProfileBootstrap = renderDeveloperProfileBootstrap(result.developerProfileData, result.developerProfileInitialState, cspNonce);
   const articleListBootstrap = renderArticleListBootstrap(result.articleListData, result.articleListQuery, result.articleListInitialState, cspNonce);
-  const articleDetailsBootstrap = renderArticleDetailsBootstrap(result.articleDetailsData, result.articleDetailsInitialState, cspNonce);
+  const articleDetailsBootstrap = renderArticleDetailsBootstrap(result.articleDetailsData, result.articleDetailsInitialState, result.relatedArticles, cspNonce);
   const communityBootstrap = renderCommunityBootstrap(result.communityData, result.communityInitialState, cspNonce);
   const aboutBootstrap = renderPublicContentBootstrap('about', result.aboutData, result.aboutInitialState, cspNonce);
   const teamBootstrap = renderPublicContentBootstrap('team', result.teamData, result.teamInitialState, cspNonce);
@@ -331,6 +335,42 @@ function serveHealth(request, response) {
   return true;
 }
 
+async function proxyApiRequest(request, response) {
+  const requestUrl = request.url ?? '/';
+  const pathname = new URL(requestUrl, 'http://sadat.local').pathname;
+  if (!pathname.startsWith('/api/')) return false;
+  const apiOrigin = normalizePublicOrigin(process.env.WEB_API_ORIGIN);
+  if (apiOrigin === undefined) {
+    response.statusCode = 503;
+    response.end();
+    return true;
+  }
+  const target = new URL(requestUrl, `${apiOrigin}/`);
+  const headers = new Headers();
+  for (const [name, value] of Object.entries(request.headers)) {
+    if (value === undefined || name.toLowerCase() === 'host') continue;
+    if (Array.isArray(value)) value.forEach(item => headers.append(name, item));
+    else headers.set(name, value);
+  }
+  try {
+    const method = request.method ?? 'GET';
+    const upstream = await fetch(target, {
+      method,
+      headers,
+      ...(method === 'GET' || method === 'HEAD' ? {} : { body: request, duplex: 'half' })
+    });
+    response.statusCode = upstream.status;
+    upstream.headers.forEach((value, name) => response.setHeader(name, value));
+    if (method === 'HEAD' || upstream.body === null) response.end();
+    else Readable.fromWeb(upstream.body).pipe(response);
+  } catch (error) {
+    console.error(error);
+    response.statusCode = 502;
+    response.end();
+  }
+  return true;
+}
+
 async function renderDevelopmentPage(request, response, vite) {
   try {
     const requestUrl = request.url ?? '/';
@@ -362,7 +402,8 @@ async function createDevelopmentServer() {
       hmr: process.env.WEB_DISABLE_HMR === 'true' ? false : undefined
     }
   });
-  const server = createHttpServer((request, response) => {
+  const server = createHttpServer(async (request, response) => {
+    if (await proxyApiRequest(request, response)) return;
     if (rejectUnsupportedMethod(request, response)) return;
     if (serveHealth(request, response)) return;
     vite.middlewares(request, response, error => {
@@ -432,6 +473,7 @@ async function createProductionServer() {
   const { createRobotsTxt, createSitemapXml, render } = await import(pathToFileURL(entryModulePath).href);
   const seoHelpers = { createRobotsTxt, createSitemapXml };
   const server = createHttpServer(async (request, response) => {
+    if (await proxyApiRequest(request, response)) return;
     if (rejectUnsupportedMethod(request, response)) return;
     if (serveHealth(request, response)) return;
     if (serveCrawlerDocument(request, response, seoHelpers)) return;

@@ -11,10 +11,10 @@
       "height": 720,
       "devicePixelRatio": 1
     },
-    "responseStatus": 200,
-    "responseOk": true,
+    "responseStatus": 404,
+    "responseOk": false,
     "beforeHash": "9dbd074542650cb7e54fd186bce70913fb61ec60fe414b66d51d892c85f57ff1",
-    "afterHash": "b4b67edbe4298ed37520aa39e050b764c3c7de120ae3e8bc965ac7af9cc8d3a6",
+    "afterHash": "c5b3098af180281f40bf5518d8faf10b433019422d736edb476e5b18230bb021",
     "requestedApi": [
       {
         "method": "GET",
@@ -30,12 +30,12 @@
     ]
   },
   "structure": {
-    "headers": 3,
+    "headers": 2,
     "navs": 1,
-    "sections": 9,
-    "cards": 14,
-    "images": 7,
-    "forms": 1
+    "sections": 0,
+    "cards": 0,
+    "images": 3,
+    "forms": 0
   },
   "fonts": {
     "status": "loaded",
@@ -479,12 +479,7 @@
       {
         "family": "Noto Sans SC",
         "weight": "400",
-        "status": "loaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "400",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -628,6 +623,11 @@
       },
       {
         "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
         "weight": "500",
         "status": "unloaded"
       },
@@ -1489,12 +1489,12 @@
       {
         "family": "Noto Sans SC",
         "weight": "600",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
         "weight": "600",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -1994,12 +1994,12 @@
       {
         "family": "Noto Sans SC",
         "weight": "700",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
         "weight": "700",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -2157,30 +2157,6 @@
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "eager"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-b.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-rental.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-f.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
       "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
@@ -2238,22 +2214,6 @@
         "href": "/auth/register"
       },
       {
-        "text": "العودة إلى النتائج",
-        "href": "/properties"
-      },
-      {
-        "text": "عرض ملف المطور",
-        "href": "/developers/bbbbbbbbbbbbbbbbbbbbbbbb"
-      },
-      {
-        "text": "شقة للإيجار في الحي الثالث",
-        "href": "/properties/city-apartment"
-      },
-      {
-        "text": "واتساب",
-        "href": "/community"
-      },
-      {
         "text": "العقارات",
         "href": "/properties"
       },
@@ -2283,44 +2243,44 @@
       },
       {
         "text": "واتساب متاح 24/7",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://facebook.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://instagram.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://youtube.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://tiktok.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://linkedin.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       }
     ],
     "buttons": [
       {
-        "text": "1",
-        "aria": "الوسائط 1"
+        "text": "العربية",
+        "aria": "اللغة"
       },
       {
-        "text": "طلب معاينة",
-        "aria": null
+        "text": "العربية",
+        "aria": "اللغة"
       },
       {
-        "text": "أرسل الطلب",
+        "text": "إعادة المحاولة",
         "aria": null
       }
     ]
@@ -2337,7 +2297,7 @@
       },
       {
         "width": 1577,
-        "height": 3045
+        "height": 945
       }
     ],
     "dimensions": {
@@ -2348,10 +2308,10 @@
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-03/visual-metrics.json",
     "visualMetrics": {
       "comparedWidth": 1577,
-      "comparedHeight": 3045,
-      "comparedPixels": 4801965,
-      "materialDifferencePercent": 8.196,
-      "antiAliasingOnlyPercent": 4.6249,
+      "comparedHeight": 945,
+      "comparedPixels": 1490265,
+      "materialDifferencePercent": 52.4515,
+      "antiAliasingOnlyPercent": 5.0535,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

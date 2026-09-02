@@ -34,13 +34,6 @@ export interface PublicDevelopersProps {
   readonly load?: PublicDeveloperDirectoryLoader | undefined;
 }
 
-interface DirectoryFilterDraft {
-  readonly search: string;
-  readonly kind: '' | 'brokerage_office' | 'developer_company';
-  readonly sort: PublicOrganizationDirectoryQuery['sort'];
-  readonly direction: PublicOrganizationDirectoryQuery['direction'];
-}
-
 function errorState(error: unknown): PublicDevelopersViewState {
   if (error instanceof ApiClientError && (error.status === 401 || error.status === 403)) return 'permission';
   if (error instanceof ApiClientError && error.code === 'NETWORK_ERROR') return 'retry';
@@ -59,28 +52,6 @@ function stateCopy(state: Exclude<PublicDevelopersViewState, 'success'>, copy: P
     case 'retry': return { title: copy.retryTitle, body: copy.retryBody };
     case 'permission': return { title: copy.permissionTitle, body: copy.permissionBody };
   }
-}
-
-function draftFromQuery(query: PublicOrganizationDirectoryQuery): DirectoryFilterDraft {
-  return {
-    search: query.search ?? '',
-    kind: query.kind ?? '',
-    sort: query.sort,
-    direction: query.direction
-  };
-}
-
-function queryFromDraft(draft: DirectoryFilterDraft): PublicOrganizationDirectoryQuery | undefined {
-  const raw: Record<string, string> = {
-    page: '1',
-    limit: '20',
-    sort: draft.sort,
-    direction: draft.direction
-  };
-  if (draft.search.trim().length > 0) raw.search = draft.search;
-  if (draft.kind !== '') raw.kind = draft.kind;
-  const parsed = publicOrganizationDirectoryQuerySchema.safeParse(raw);
-  return parsed.success ? parsed.data : undefined;
 }
 
 function syncBrowserUrl(query: PublicOrganizationDirectoryQuery): void {
@@ -102,57 +73,6 @@ function StateNotice({
       {state === 'empty' || state === 'error' ? <button type="button" onClick={onRetry}>{copy.retryLabel}</button> : null}
       {state === 'permission' ? <a className="public-developer-directory__state-link" href="/">{copy.permissionLink}</a> : null}
     </UxStateView>
-  );
-}
-
-function DirectoryFilters({
-  draft,
-  copy,
-  onChange,
-  onSubmit,
-  onReset,
-  error
-}: {
-  readonly draft: DirectoryFilterDraft;
-  readonly copy: PublicDevelopersCopy;
-  readonly onChange: <K extends keyof DirectoryFilterDraft>(key: K, value: DirectoryFilterDraft[K]) => void;
-  readonly onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-  readonly onReset: () => void;
-  readonly error: boolean;
-}) {
-  return (
-    <aside className="public-developer-directory__filters" aria-labelledby="public-developer-directory-filters-title">
-      <h2 id="public-developer-directory-filters-title">{copy.searchLabel}</h2>
-      <form onSubmit={onSubmit} aria-label={copy.searchLabel}>
-        <div className="public-developer-directory__filter-field">
-          <label htmlFor="public-developer-search">{copy.searchLabel}</label>
-          <input id="public-developer-search" name="search" type="search" value={draft.search} placeholder={copy.searchPlaceholder} onChange={event => onChange('search', event.target.value)} />
-        </div>
-        <fieldset>
-          <legend>{copy.kindLabel}</legend>
-          <label><input type="radio" name="kind" value="" checked={draft.kind === ''} onChange={() => onChange('kind', '')} /> {copy.allKinds}</label>
-          <label><input type="radio" name="kind" value="developer_company" checked={draft.kind === 'developer_company'} onChange={() => onChange('kind', 'developer_company')} /> {copy.developerCompany}</label>
-          <label><input type="radio" name="kind" value="brokerage_office" checked={draft.kind === 'brokerage_office'} onChange={() => onChange('kind', 'brokerage_office')} /> {copy.brokerageOffice}</label>
-        </fieldset>
-        <div className="public-developer-directory__sort-fields">
-          <label htmlFor="public-developer-sort">{copy.sortLabel}</label>
-          <select id="public-developer-sort" value={draft.sort} onChange={event => onChange('sort', event.target.value as DirectoryFilterDraft['sort'])}>
-            <option value="slug">{copy.sortSlug}</option>
-            <option value="name">{copy.sortName}</option>
-          </select>
-          <label htmlFor="public-developer-direction">{copy.directionLabel}</label>
-          <select id="public-developer-direction" value={draft.direction} onChange={event => onChange('direction', event.target.value as DirectoryFilterDraft['direction'])}>
-            <option value="asc">{copy.ascending}</option>
-            <option value="desc">{copy.descending}</option>
-          </select>
-        </div>
-        {error ? <p className="public-developer-directory__filter-error" role="alert">{copy.errorBody}</p> : null}
-        <div className="public-developer-directory__filter-actions">
-          <button className="public-developer-directory__reset" type="button" onClick={onReset}>{copy.resetFilters}</button>
-          <button type="submit">{copy.searchAction}</button>
-        </div>
-      </form>
-    </aside>
   );
 }
 
@@ -217,12 +137,11 @@ export function PublicDevelopers({
   const copy = getPublicDevelopersCopy(locale);
   const sourceUrl = url ?? (typeof window === 'undefined' ? PUBLIC_DEVELOPERS_PATH : window.location.href);
   const [query, setQuery] = useState<PublicOrganizationDirectoryQuery>(() => initialQuery ?? parsePublicDeveloperDirectoryQuery(sourceUrl));
-  const [draft, setDraft] = useState<DirectoryFilterDraft>(() => draftFromQuery(initialQuery ?? parsePublicDeveloperDirectoryQuery(sourceUrl)));
   const initialView: PublicDevelopersViewState = initialData === undefined ? initialState : isDirectoryEmpty(initialData) ? 'empty' : 'success';
   const [data, setData] = useState<PublicOrganizationListData | undefined>(initialData);
   const [view, setView] = useState<PublicDevelopersViewState>(initialView);
   const [attempt, setAttempt] = useState(0);
-  const [filterError, setFilterError] = useState(false);
+  const [search, setSearch] = useState(query.search ?? '');
 
   useEffect(() => {
     if (initialData !== undefined && attempt === 0) return;
@@ -242,33 +161,18 @@ export function PublicDevelopers({
   }, [attempt, initialData, load, query]);
 
   const retry = () => setAttempt(value => value + 1);
-  const changeFilter = <K extends keyof DirectoryFilterDraft>(key: K, value: DirectoryFilterDraft[K]) => {
-    setDraft(current => ({ ...current, [key]: value }));
-  };
-  const submitFilters = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const nextQuery = queryFromDraft(draft);
-    if (nextQuery === undefined) {
-      setFilterError(true);
-      return;
-    }
-    setFilterError(false);
-    setQuery(nextQuery);
-    syncBrowserUrl(nextQuery);
-    setAttempt(value => value + 1);
-  };
-  const resetFilters = () => {
-    const nextQuery = defaultPublicDeveloperDirectoryQuery();
-    setDraft(draftFromQuery(nextQuery));
-    setQuery(nextQuery);
-    setFilterError(false);
-    syncBrowserUrl(nextQuery);
-    setAttempt(value => value + 1);
-  };
   const changePage = (page: number) => {
     const nextQuery = { ...query, page };
     setQuery(nextQuery);
     syncBrowserUrl(nextQuery);
+    setAttempt(value => value + 1);
+  };
+  const submitSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const parsed = publicOrganizationDirectoryQuerySchema.safeParse({ ...query, search: search.trim() || undefined, page: 1 });
+    if (!parsed.success) return;
+    setQuery(parsed.data);
+    syncBrowserUrl(parsed.data);
     setAttempt(value => value + 1);
   };
 
@@ -284,18 +188,27 @@ export function PublicDevelopers({
       </header>
       {view === 'success' && data !== undefined ? (
         <div className="public-developer-directory__body">
-          <DirectoryFilters draft={draft} copy={copy} onChange={changeFilter} onSubmit={submitFilters} onReset={resetFilters} error={filterError} />
+          <aside className="public-developer-directory__filters" aria-label={copy.searchLabel}>
+            <h2>{copy.searchLabel}</h2>
+            <form onSubmit={submitSearch}>
+              <label className="public-developer-directory__filter-field">{copy.searchLabel}<input type="search" value={search} placeholder={copy.searchPlaceholder} onChange={event => setSearch(event.target.value)} /></label>
+              <div className="public-developer-directory__filter-actions"><button type="submit">{copy.searchAction}</button><button type="button" className="public-developer-directory__reset" onClick={() => { setSearch(''); const reset = defaultPublicDeveloperDirectoryQuery(); setQuery(reset); syncBrowserUrl(reset); setAttempt(value => value + 1); }}>{copy.resetFilters}</button></div>
+            </form>
+          </aside>
           <DirectorySuccess data={data} locale={locale} copy={copy} onPageChange={changePage} />
         </div>
       ) : view === 'empty' ? (
-        <>
-          <DirectoryFilters draft={draft} copy={copy} onChange={changeFilter} onSubmit={submitFilters} onReset={resetFilters} error={filterError} />
+        <div className="public-developer-directory__body">
           <StateNotice state="empty" copy={copy} onRetry={retry} />
-        </>
+        </div>
       ) : view === 'success' ? (
-        <StateNotice state="empty" copy={copy} onRetry={retry} />
+        <div className="public-developer-directory__body">
+          <StateNotice state="empty" copy={copy} onRetry={retry} />
+        </div>
       ) : (
-        <StateNotice state={view} copy={copy} onRetry={retry} />
+        <div className="public-developer-directory__body">
+          <StateNotice state={view} copy={copy} onRetry={retry} />
+        </div>
       )}
       <Footer locale={locale} copy={copy} />
     </div>

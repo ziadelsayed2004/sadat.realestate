@@ -307,6 +307,7 @@ export type StateMessages = Partial<Record<NonDefaultComponentState, Omit<StateM
 
 export interface ModalProps {
   readonly open: boolean;
+  readonly className?: string | undefined;
   readonly title: ReactNode;
   readonly description?: ReactNode | undefined;
   readonly children: ReactNode;
@@ -315,7 +316,7 @@ export interface ModalProps {
   readonly footer?: ReactNode | undefined;
 }
 
-export function Modal({ open, title, description, children, closeLabel, onClose, footer }: ModalProps) {
+export function Modal({ open, className, title, description, children, closeLabel, onClose, footer }: ModalProps) {
   const titleId = `ui-modal-title-${useId().replaceAll(':', '')}`;
   const descriptionId = `${titleId}-description`;
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -375,7 +376,7 @@ export function Modal({ open, title, description, children, closeLabel, onClose,
   return (
     <div className="ui-modal-backdrop" data-state="open">
       <div
-        className="ui-modal"
+        className={`ui-modal${className === undefined ? '' : ` ${className}`}`}
         ref={dialogRef}
         role="dialog"
         aria-modal="true"

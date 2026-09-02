@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "fresh-audit-public-about",
-  "responseSha256": "d413de346bf1013158ccd8330b54e1d65a8cf49993ca6e10eb55f0023282fd73",
+  "responseSha256": "1e88c8de3af28a1a11c5bb34ac9b5e6d34b95f1066ea86e762ff2b0f702af9d8",
   "response": {
     "data": {
       "items": [
@@ -16,13 +16,11 @@
           "key": "about_intro",
           "title": {
             "ar": "عن المنصة",
-            "en": "About the platform",
-            "zh-CN": "关于平台"
+            "en": "About the platform"
           },
           "body": {
             "ar": "أنشأنا هذه المنصة لأن السوق العقاري في مدينة السادات يحتاج منصة متخصصة وموثوقة.",
-            "en": "We built this platform because Sadat City needs a specialized and trusted real-estate marketplace.",
-            "zh-CN": "我们创建这个平台，是因为萨达特城需要一个专业可信的房地产市场."
+            "en": "We built this platform because Sadat City needs a specialized and trusted real-estate marketplace."
           },
           "order": 0
         }

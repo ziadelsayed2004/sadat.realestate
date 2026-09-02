@@ -11,7 +11,7 @@ import {
 } from '@sadat-real-estate/contracts';
 import type { AuthSnapshot } from '../auth/index.ts';
 import { ApiClientError } from '../contracts/index.ts';
-import { Button, Input, Modal, StateMessage } from '../design_system/index.ts';
+import { Button, CustomSelect, Input, Modal, StateMessage } from '../design_system/index.ts';
 import { type RouteSession } from '../routing/index.ts';
 import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from '../public/components.tsx';
 import { getPublicHomepageCopy } from '../public/copy.ts';
@@ -324,9 +324,7 @@ function DetailPanel({
           isAuthenticated ? (
             <form onSubmit={onReportSubmit}>
               <label htmlFor="community-report-reason">{copy.reportReason}</label>
-              <select id="community-report-reason" value={report.reason} onChange={event => onReportChange({ reason: event.target.value as ReportReason })}>
-                {(Object.keys(copy.reportReasons) as ReportReason[]).map(reason => <option key={reason} value={reason}>{copy.reportReasons[reason]}</option>)}
-              </select>
+              <CustomSelect id="community-report-reason" value={report.reason} onChange={value => onReportChange({ reason: value as ReportReason })} ariaLabel={copy.reportReason} options={(Object.keys(copy.reportReasons) as ReportReason[]).map(reason => ({ value: reason, label: copy.reportReasons[reason] }))} />
               <label htmlFor="community-report-details">{copy.reportDetails}</label>
               <textarea id="community-report-details" value={report.details} onChange={event => onReportChange({ details: event.target.value })} placeholder={copy.reportDetailsPlaceholder} rows={3} />
               <Button type="submit" variant="danger" loading={mutationState === 'reporting'} disabled={mutationState !== 'idle'}>{copy.submitReport}</Button>
@@ -612,11 +610,15 @@ export function PublicCommunity({
       <PublicSiteFooter locale={locale} description={homepageCopy.footerDescription} />
       <Modal
         open={modalOpen}
+        className={`public-community__composer-modal${composerState === 'permission' || composerState === 'checking' ? ' public-community__composer-modal--permission' : ''}`}
         title={composerTitle}
-        description={composerState === 'permission' || composerState === 'checking' ? copy.signInToContinue : undefined}
         closeLabel={copy.close}
         onClose={closeComposer}
-        footer={composerState === 'open' ? <><Button variant="ghost" onClick={closeComposer}>{copy.cancel}</Button><Button type="submit" form="community-create-form" startIcon={<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 8-18 10 4-10L3 3Z" /></svg>} loading={mutationState === 'creating'} disabled={mutationState !== 'idle'}>{copy.publishPost}</Button></> : undefined}
+        footer={composerState === 'open'
+          ? <><Button variant="ghost" onClick={closeComposer}>{copy.cancel}</Button><Button type="submit" form="community-create-form" startIcon={<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 8-18 10 4-10L3 3Z" /></svg>} loading={mutationState === 'creating'} disabled={mutationState !== 'idle'}>{copy.publishPost}</Button></>
+          : composerState === 'permission'
+            ? <a className="ui-button ui-button--primary public-community__sign-in-action" href="/auth/login">{copy.signIn}</a>
+            : undefined}
       >
         {composerState === 'open' ? (
           <form id="community-create-form" className="public-community__composer" onSubmit={submitPost}>
@@ -632,8 +634,7 @@ export function PublicCommunity({
           </form>
         ) : (
           <div className="public-community__permission">
-            {composerState === 'checking' ? <StateMessage state="loading" title={copy.loadingTitle} message={copy.loadingBody} /> : <StateMessage state="permission" title={copy.authenticationRequired} message={copy.signInToContinue} />}
-            {composerState === 'permission' ? <a className="public-community__sign-in" href="/auth/login">{copy.signIn}</a> : null}
+            <p>{composerState === 'checking' ? copy.loadingBody : copy.signInToContinue}</p>
           </div>
         )}
       </Modal>

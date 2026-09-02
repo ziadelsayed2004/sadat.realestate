@@ -4,7 +4,12 @@ import { propertyAreaSchema, propertyDeliveryStatusSchema, propertyKindSchema, p
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
 
 const publicOrderSchema = z.number().int().nonnegative().max(100_000);
-const publicUrlSchema = z.url().max(2_048);
+// Public media can be an external CDN URL or a same-origin repository asset.
+// Root-relative paths keep local/UAT seed media portable across environments.
+const publicUrlSchema = z.union([
+  z.url().max(2_048),
+  z.string().trim().min(2).max(2_048).regex(/^\/(?!\/)[^\s]*$/u)
+]);
 
 export const publicHomepageSectionSchema = z.object({
   key: z.string().trim().min(2).max(64).regex(/^[a-z][a-z0-9_]*$/),

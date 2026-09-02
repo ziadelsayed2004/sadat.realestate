@@ -432,7 +432,7 @@ export function createAdSettingsService(seed: {
         if (!Number.isSafeInteger(line) || !Number.isSafeInteger(total + line)) throw new AdSettingsServiceError('VERSION_CONFLICT');
         return total + line;
       }, 0);
-      if (new Date(parsed.validUntil) <= new Date()) throw new AdSettingsServiceError('VERSION_CONFLICT');
+      if (new Date(parsed.validUntil) <= clock()) throw new AdSettingsServiceError('VERSION_CONFLICT');
       const stamp = now();
       const quote = adQuoteSchema.parse({ id: id(), ...parsed, providerId: request.providerId, totalMinor, status: 'issued', issuerId: claims.sub, version: 0, decisionHistory: [{ action: 'issued', actorId: claims.sub, actorRole: 'admin', version: 0, createdAt: stamp }], createdAt: stamp, updatedAt: stamp });
       quotes.set(quote.id, quote);

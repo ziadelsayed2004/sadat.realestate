@@ -5,7 +5,7 @@ import { createPublicHomepageService, publicHomepageProjection, type HomepageSou
 
 const id = '0123456789abcdef01234567';
 const secondId = '1123456789abcdef01234567';
-const localized = { ar: 'الرئيسية', en: 'Home', 'zh-CN': '主页' };
+const localized = { ar: 'الرئيسية', en: 'Home' };
 
 function sources(overrides: Partial<HomepageSources> = {}): HomepageSources {
   return {
@@ -59,11 +59,11 @@ test('uses stable order/key sorting and validates supported localized content', 
     sections: [
       { key: 'zeta', title: { en: 'Zeta' }, order: 1, status: 'published', visible: true },
       { key: 'alpha', title: { en: 'Alpha' }, order: 1, status: 'published', visible: true },
-      { key: 'first', title: { 'zh-CN': '第一' }, order: 0, status: 'published', visible: true }
+      { key: 'first', title: { ar: 'الأول' }, order: 0, status: 'published', visible: true }
     ]
   }));
   assert.deepEqual(result.sections.map((item) => item.key), ['first', 'alpha', 'zeta']);
-  assert.equal(result.sections[0]?.title['zh-CN'], '第一');
+  assert.equal(result.sections[0]?.title.ar, 'الأول');
   assert.equal(publicHomepageDataSchema.safeParse(result).success, true);
 });
 

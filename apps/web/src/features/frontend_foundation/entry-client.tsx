@@ -145,6 +145,16 @@ function readArticleDetailsInitialState(): 'loading' | 'retry' | 'not_found' | u
   return state === 'loading' || state === 'retry' || state === 'not_found' ? state : undefined;
 }
 
+function readRelatedArticlesBootstrap(): ArticlePublicListData | undefined {
+  const element = document.getElementById('sadat-public-related-articles-data');
+  if (element?.textContent === null || element?.textContent === undefined || element.textContent.trim() === '') return undefined;
+  try {
+    return articlePublicListDataSchema.parse(JSON.parse(element.textContent));
+  } catch {
+    return undefined;
+  }
+}
+
 function readCommunityBootstrap(): CommunityPublicPostListData | undefined {
   const element = document.getElementById('sadat-public-community-data');
   if (element?.textContent === null || element?.textContent === undefined || element.textContent.trim() === '') return undefined;
@@ -191,6 +201,7 @@ const articleListQuery = readArticleListQueryBootstrap();
 const articleListInitialState = readArticleListInitialState();
 const articleDetailsData = readArticleDetailsBootstrap();
 const articleDetailsInitialState = readArticleDetailsInitialState();
+const relatedArticles = readRelatedArticlesBootstrap();
 const communityData = readCommunityBootstrap();
 const communityInitialState = readCommunityInitialState();
 const aboutData = readPublicContentBootstrap('about');
@@ -215,6 +226,7 @@ const appProps = {
   ...(articleListInitialState === undefined ? {} : { articleListInitialState }),
   ...(articleDetailsData === undefined ? {} : { articleDetailsData }),
   ...(articleDetailsInitialState === undefined ? {} : { articleDetailsInitialState }),
+  ...(relatedArticles === undefined ? {} : { relatedArticles }),
   ...(communityData === undefined ? {} : { communityData }),
   ...(communityInitialState === undefined ? {} : { communityInitialState }),
   ...(aboutData === undefined ? {} : { aboutData }),

@@ -1,7 +1,4 @@
-import type {
-  AdminLoginRequest,
-  AuthSessionData
-} from '@sadat-real-estate/contracts';
+import type { AdminLoginRequest, AuthSessionData } from '@sadat-real-estate/contracts';
 import type {
   AccessTokenService,
   OpaqueTokenService,
@@ -38,6 +35,7 @@ export interface AuthService {
   issueAccount(account: AuthAccount): Promise<IssuedAuthSession>;
   refresh(refreshToken: string): Promise<IssuedAuthSession>;
   logout(refreshToken: string): Promise<void>;
+  resetAdminPassword(email: string, newPassword: string): Promise<void>;
 }
 
 export interface AuthServiceDependencies {
@@ -171,6 +169,15 @@ export function createAuthService(dependencies: AuthServiceDependencies): AuthSe
         now()
       );
       if (!revoked) throw new AuthServiceError('INVALID_REFRESH_TOKEN');
+    },
+
+    async resetAdminPassword(email, newPassword) {
+      const changed = await dependencies.repository.updateAdminPassword(
+        email,
+        await dependencies.passwordHasher.hash(newPassword),
+        now()
+      );
+      if (!changed) throw new AuthServiceError('INVALID_CREDENTIALS');
     }
   };
 }

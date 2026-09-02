@@ -201,6 +201,30 @@
         }
       }
     },
+    "/api/v1/auth/account-recovery/otp/send": {
+      "post": {
+        "operationId": "sendAdminAccountRecoveryOtp",
+        "summary": "Send an email OTP for administrator account recovery",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["email", "roleType", "purpose"], "properties": { "email": { "type": "string", "format": "email" }, "roleType": { "const": "admin" }, "purpose": { "const": "password_reset" } } } } } },
+        "responses": { "202": { "$ref": "#/components/responses/OtpSendSuccess" }, "400": { "$ref": "#/components/responses/ValidationError" }, "429": { "$ref": "#/components/responses/AuthError" }, "503": { "$ref": "#/components/responses/AuthError" } }
+      }
+    },
+    "/api/v1/auth/account-recovery/otp/verify": {
+      "post": {
+        "operationId": "verifyAdminAccountRecoveryOtp",
+        "summary": "Verify an administrator account-recovery email OTP",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["email", "roleType", "purpose", "challengeId", "code"], "properties": { "email": { "type": "string", "format": "email" }, "roleType": { "const": "admin" }, "purpose": { "const": "password_reset" }, "challengeId": { "type": "string", "format": "uuid" }, "code": { "type": "string", "pattern": "^[0-9]{6}$" } } } } } },
+        "responses": { "200": { "$ref": "#/components/responses/OtpVerifySuccess" }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/AuthError" } }
+      }
+    },
+    "/api/v1/auth/account-recovery/complete": {
+      "post": {
+        "operationId": "completeAdminAccountRecovery",
+        "summary": "Complete administrator account recovery using a single-use verified email grant",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["verificationToken", "newPassword"], "properties": { "verificationToken": { "type": "string" }, "newPassword": { "type": "string", "minLength": 12, "maxLength": 128 } } } } } },
+        "responses": { "200": { "description": "Account access updated and existing sessions revoked" }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/AuthError" } }
+      }
+    },
     "/api/v1/auth/refresh": {
       "post": {
         "operationId": "refreshSession",

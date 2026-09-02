@@ -2,12 +2,15 @@ import {
   AUTH_ERROR_CODES,
   adminLoginRequestSchema,
   normalizedEmailSchema,
+  passwordResetRequestSchema,
   seekerRegistrationRequestSchema,
   type AdminLoginRequest,
   type OtpPurpose,
   type OtpRoleType,
   type OtpSendData,
   type OtpVerifyRequest,
+  type PasswordResetRequest,
+  type PasswordResetOtpVerifyRequest,
   type ProviderAccountPatch,
   type ProviderApplicationCreateRequest,
   type ProviderApplicationData,
@@ -50,10 +53,11 @@ export interface AuthFlowClient {
   loginAdmin(input: AdminLoginRequest): Promise<AuthSnapshot>;
   sendOtp(input: {
     readonly email: string;
-    readonly roleType: OtpRoleType;
-    readonly purpose: OtpPurpose;
+    readonly roleType: OtpRoleType | 'admin';
+    readonly purpose: OtpPurpose | 'password_reset';
   }): Promise<OtpSendData>;
-  verifyOtp(input: OtpVerifyRequest): Promise<AuthOtpVerifyResult>;
+  verifyOtp(input: OtpVerifyRequest | PasswordResetOtpVerifyRequest): Promise<AuthOtpVerifyResult>;
+  resetPassword?(input: PasswordResetRequest): Promise<void>;
   registerSeeker(input: SeekerRegistrationRequest): Promise<AuthSnapshot>;
   registerProvider?: ((input: ProviderApplicationCreateRequest) => Promise<ProviderRegistrationData>) | undefined;
   getProviderApplication?: (() => Promise<ProviderApplicationData>) | undefined;
@@ -85,8 +89,8 @@ interface AuthUiError {
 
 interface AuthLocation {
   readonly pathname: string;
-  readonly roleType: OtpRoleType;
-  readonly purpose: OtpPurpose;
+  readonly roleType: OtpRoleType | 'admin';
+  readonly purpose: OtpPurpose | 'password_reset';
   readonly returnTo: string;
 }
 
@@ -99,10 +103,14 @@ function parseAuthLocation(url: string): AuthLocation {
   }
 
   const pathname = parsed.pathname.replace(/\/+$/u, '') || '/';
-  const roleType = parsed.searchParams.get('roleType') === 'provider' ? 'provider' : 'seeker';
-  const purpose = parsed.searchParams.get('purpose') === 'registration' || pathname.startsWith('/auth/register')
-    ? 'registration'
-    : 'login';
+  const roleType = pathname === '/auth/forgot-password'
+    ? 'admin'
+    : parsed.searchParams.get('roleType') === 'provider' ? 'provider' : 'seeker';
+  const purpose = pathname === '/auth/forgot-password'
+    ? 'password_reset'
+    : parsed.searchParams.get('purpose') === 'registration' || pathname.startsWith('/auth/register')
+      ? 'registration'
+      : 'login';
   const candidateReturnTo = parsed.searchParams.get('returnTo');
   const returnTo = candidateReturnTo !== null && candidateReturnTo.startsWith('/') && !candidateReturnTo.startsWith('//')
     ? candidateReturnTo
@@ -296,9 +304,7 @@ function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthF
                   <input type="checkbox" checked={rememberMe} onChange={event => setRememberMe(event.currentTarget.checked)} />
                   <span>{copy.rememberLabel}</span>
                 </label>
-                <button className="auth-forgot" type="button" disabled aria-disabled="true">
-                  {copy.forgotPasswordAction}
-                </button>
+                <a className="auth-forgot" href={`/auth/forgot-password?lang=${locale}`}>{copy.forgotPasswordAction}</a>
               </div>
             ) : null}
             <Button type="submit" fullWidth size="lg" loading={state === 'loading'}>
@@ -319,11 +325,51 @@ function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthF
   );
 }
 
+function ForgotPasswordPage({ client, locale }: { readonly client: AuthFlowClient; readonly locale: SupportedLocale }) {
+  const [grant, setGrant] = useState<string>();
+  const [password, setPassword] = useState('');
+  const [confirmation, setConfirmation] = useState('');
+  const [state, setState] = useState<RequestState>('idle');
+  const copy = getAuthCopy(locale);
+
+  if (grant === undefined) {
+    return <OtpPage client={client} locale={locale} roleType="admin" purpose="password_reset" lockRoleType onAuthenticated={() => undefined} onRegistrationVerified={token => setGrant(token)} />;
+  }
+
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const parsed = passwordResetRequestSchema.safeParse({ verificationToken: grant, newPassword: password });
+    if (!parsed.success || password !== confirmation || client.resetPassword === undefined) {
+      setState('error');
+      return;
+    }
+    setState('loading');
+    try {
+      await client.resetPassword(parsed.data);
+      setState('success');
+    } catch {
+      setState('error');
+    }
+  };
+
+  return <section className="auth-page auth-page--email" data-state={state} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+    <div className="auth-card auth-card--form">
+      <header className="auth-card__heading"><span className="auth-card__icon"><AuthIcon name="lock" /></span><h1>{locale === 'ar' ? 'تعيين كلمة مرور جديدة' : 'Set a new password'}</h1><p>{locale === 'ar' ? 'استخدم كلمة قوية من 12 حرفًا على الأقل.' : 'Use a strong password with at least 12 characters.'}</p></header>
+      <div className="auth-card__body">
+        {state === 'error' ? <StateMessage state="error" title={copy.invalidFormTitle} message={locale === 'ar' ? 'تأكد من تطابق كلمتي المرور واحتوائهما على حرف كبير وصغير ورقم ورمز.' : 'Passwords must match and include upper/lowercase letters, a number, and a symbol.'} /> : null}
+        {state === 'success' ? <StateMessage state="success" title={locale === 'ar' ? 'تم تغيير كلمة المرور' : 'Password changed'} message={locale === 'ar' ? 'يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.' : 'You can now log in with the new password.'} /> : null}
+        {state !== 'success' ? <form className="auth-form" onSubmit={event => void submit(event)}><Input id="auth-new-password" label={locale === 'ar' ? 'كلمة المرور الجديدة' : 'New password'} type="password" autoComplete="new-password" value={password} onChange={event => setPassword(event.currentTarget.value)} required /><Input id="auth-confirm-password" label={locale === 'ar' ? 'تأكيد كلمة المرور' : 'Confirm password'} type="password" autoComplete="new-password" value={confirmation} onChange={event => setConfirmation(event.currentTarget.value)} required /><Button type="submit" fullWidth size="lg" loading={state === 'loading'}>{locale === 'ar' ? 'حفظ كلمة المرور' : 'Save password'}</Button></form> : null}
+        <p className="auth-card__prompt"><a href={`/auth/login?lang=${locale}`}>{copy.loginAction}</a></p>
+      </div>
+    </div>
+  </section>;
+}
+
 interface OtpPageProps {
   readonly client: AuthFlowClient;
   readonly locale: SupportedLocale;
-  readonly roleType: OtpRoleType;
-  readonly purpose: OtpPurpose;
+  readonly roleType: OtpRoleType | 'admin';
+  readonly purpose: OtpPurpose | 'password_reset';
   readonly onAuthenticated: (snapshot: AuthSnapshot) => void;
   readonly onRegistrationVerified?: ((
     verificationToken: string,
@@ -335,7 +381,7 @@ interface OtpPageProps {
 function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthenticated, onRegistrationVerified, lockRoleType = false }: OtpPageProps) {
   const copy = getAuthCopy(locale);
   const [email, setEmail] = useState('');
-  const [roleType, setRoleType] = useState<OtpRoleType>(initialRoleType);
+  const [roleType, setRoleType] = useState<OtpRoleType | 'admin'>(initialRoleType);
   const [stage, setStage] = useState<'request' | 'verify'>('request');
   const [challenge, setChallenge] = useState<OtpSendData | undefined>();
   const [code, setCode] = useState<string[]>(() => Array.from({ length: OTP_LENGTH }, () => ''));
@@ -411,13 +457,9 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
 
     setState('loading');
     setError(undefined);
-    const request: OtpVerifyRequest = {
-      email: normalizedEmail,
-      roleType,
-      purpose,
-      challengeId: challenge.challengeId,
-      code: code.join('')
-    };
+    const request: OtpVerifyRequest | PasswordResetOtpVerifyRequest = roleType === 'admin'
+      ? { email: normalizedEmail, roleType: 'admin', purpose: 'password_reset', challengeId: challenge.challengeId, code: code.join('') }
+      : { email: normalizedEmail, roleType, purpose: purpose === 'registration' ? 'registration' : 'login', challengeId: challenge.challengeId, code: code.join('') };
     try {
       const result = await client.verifyOtp(request);
       setState('success');
@@ -516,10 +558,11 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
                 name="roleType"
                 value={roleType}
                 disabled={lockRoleType}
-                onChange={event => setRoleType(event.currentTarget.value as OtpRoleType)}
+                onChange={event => setRoleType(event.currentTarget.value as OtpRoleType | 'admin')}
                 options={[
                   { value: 'seeker', label: copy.roleSeeker },
-                  { value: 'provider', label: copy.roleProvider }
+                  { value: 'provider', label: copy.roleProvider },
+                  ...(roleType === 'admin' ? [{ value: 'admin', label: locale === 'ar' ? 'مدير النظام' : 'Administrator' }] : [])
                 ]}
               />
               <Button type="submit" fullWidth size="lg" loading={state === 'loading'} disabled={cooldownSeconds > 0}>
@@ -1219,6 +1262,9 @@ export function AuthPage({ url, locale, client: providedClient, onAuthenticated:
 
   if (location.pathname === '/auth/login') {
     return <LoginPage client={client} locale={locale} onAuthenticated={onAuthenticated} />;
+  }
+  if (location.pathname === '/auth/forgot-password') {
+    return <ForgotPasswordPage client={client} locale={locale} />;
   }
   if (location.pathname === '/auth/verify-phone') {
     return <LegacyVerificationRedirect locale={locale} url={url} />;

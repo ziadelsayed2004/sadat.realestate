@@ -77,8 +77,16 @@ async function doctor({ checkPorts = true } = {}) {
   await ensureWritable(localRoot);
   const mongoTarget = safeMongoSummary(config.MONGODB_URI);
   if (!await probeMongo(config.MONGODB_URI)) throw new Error(`MongoDB is unreachable at ${mongoTarget.host}:${mongoTarget.port}`);
-  if (checkPorts) await assertPortsAvailable(config);
-  process.stdout.write(`LOCAL_DOCTOR_OK node=${process.versions.node} npm=${npm} mongo=${mongoTarget.host}:${mongoTarget.port} ports=available dependencies=ready\n`);
+  let portState = 'available';
+  if (checkPorts) {
+    const current = await readStatus();
+    const repositoryRuntime = current?.owner === ownerMarker && pidAlive(current.pid)
+      ? await checkRuntime(current)
+      : undefined;
+    if (repositoryRuntime?.ready) portState = 'owned-by-running-project';
+    else await assertPortsAvailable(config);
+  }
+  process.stdout.write(`LOCAL_DOCTOR_OK node=${process.versions.node} npm=${npm} mongo=${mongoTarget.host}:${mongoTarget.port} ports=${portState} dependencies=ready\n`);
   return config;
 }
 

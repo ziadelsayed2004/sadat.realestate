@@ -4,7 +4,10 @@ import type {
   OtpSendRequest,
   OtpAuthenticatedData,
   OtpVerifiedData,
-  OtpVerifyRequest
+  OtpVerifyRequest,
+  PasswordResetRequest
+  , PasswordResetOtpSendRequest
+  , PasswordResetOtpVerifyRequest
 } from '@sadat-real-estate/contracts';
 import type { OpaqueTokenService, OtpCodeHasher } from './crypto.js';
 import type { OtpCodeGenerator, OtpProvider } from './otp-provider.js';
@@ -43,8 +46,9 @@ export type OtpVerificationResult =
 
 export interface OtpService {
   isReady(): boolean | Promise<boolean>;
-  send(input: OtpSendRequest): Promise<OtpSendData>;
-  verify(input: OtpVerifyRequest): Promise<OtpVerificationResult>;
+  send(input: OtpSendRequest | PasswordResetOtpSendRequest): Promise<OtpSendData>;
+  verify(input: OtpVerifyRequest | PasswordResetOtpVerifyRequest): Promise<OtpVerificationResult>;
+  resetPassword(input: PasswordResetRequest): Promise<void>;
 }
 
 export interface OtpServiceDependencies {
@@ -53,7 +57,7 @@ export interface OtpServiceDependencies {
   codeGenerator: OtpCodeGenerator;
   codeHasher: OtpCodeHasher;
   verificationTokens: OpaqueTokenService;
-  authService: Pick<AuthService, 'issueAccount'>;
+  authService: Pick<AuthService, 'issueAccount' | 'resetAdminPassword'>;
   now?: () => Date;
   createChallengeId?: () => string;
   otpTtlSeconds?: number;
@@ -88,7 +92,7 @@ export function createOtpService(dependencies: OtpServiceDependencies): OtpServi
 
   return Object.freeze({
     isReady: () => dependencies.provider.isReady(),
-    async send(input: OtpSendRequest) {
+    async send(input: OtpSendRequest | PasswordResetOtpSendRequest) {
       if (!await dependencies.provider.isReady()) {
         throw new OtpServiceError('OTP_PROVIDER_UNAVAILABLE');
       }
@@ -132,7 +136,7 @@ export function createOtpService(dependencies: OtpServiceDependencies): OtpServi
       };
     },
 
-    async verify(input: OtpVerifyRequest): Promise<OtpVerificationResult> {
+    async verify(input: OtpVerifyRequest | PasswordResetOtpVerifyRequest): Promise<OtpVerificationResult> {
       const verifiedAt = now();
       const context = {
         email: input.email,
@@ -152,7 +156,7 @@ export function createOtpService(dependencies: OtpServiceDependencies): OtpServi
         throw new OtpServiceError('INVALID_OTP');
       }
 
-      if (input.purpose === 'registration') {
+      if (input.purpose !== 'login') {
         const verificationToken = dependencies.verificationTokens.create();
         const grantExpiresAt = new Date(
           verifiedAt.getTime() + verificationGrantTtlSeconds * 1000
@@ -161,7 +165,8 @@ export function createOtpService(dependencies: OtpServiceDependencies): OtpServi
           challenge.id,
           dependencies.verificationTokens.hash(verificationToken),
           verifiedAt,
-          grantExpiresAt
+          grantExpiresAt,
+          input.purpose
         );
         if (!consumed) throw new OtpServiceError('INVALID_OTP');
         return {
@@ -184,6 +189,15 @@ export function createOtpService(dependencies: OtpServiceDependencies): OtpServi
         throw new OtpServiceError('ACCOUNT_NOT_ACTIVE');
       }
       return asAuthenticated(await dependencies.authService.issueAccount(account));
+    },
+
+    async resetPassword(input: PasswordResetRequest) {
+      const grant = await dependencies.repository.redeemPasswordResetGrant?.(
+        dependencies.verificationTokens.hash(input.verificationToken),
+        now()
+      );
+      if (!grant) throw new OtpServiceError('INVALID_OTP');
+      await dependencies.authService.resetAdminPassword(grant.email, input.newPassword);
     }
   });
 }

@@ -8,7 +8,7 @@ const admin = { iss: 'sadat-realestate-api', aud: 'sadat-realestate', sub: '3123
 const seeker = { ...admin, role: 'seeker' } as AccessTokenClaims;
 test('ad placements use stable keys, bounded settings, admin authorization, and no public price', async () => {
   const service = createAdSettingsService();
-  const placement = await service.createPlacement(admin, { key: 'homepage.hero', surface: 'homepage', label: { ar: 'رئيسي', en: 'Hero' }, width: 1200, height: 400, active: true, sortOrder: 1, allowedLocales: ['ar', 'en', 'zh-CN'], targetUrlRequired: true });
+  const placement = await service.createPlacement(admin, { key: 'homepage.hero', surface: 'homepage', label: { ar: 'رئيسي', en: 'Hero' }, width: 1200, height: 400, active: true, sortOrder: 1, allowedLocales: ['ar', 'en'], targetUrlRequired: true });
   assert.equal(placement.key, 'homepage.hero'); assert.equal('price' in placement, false);
   await assert.rejects(() => service.createPlacement(admin, { key: 'homepage.hero', surface: 'homepage', label: { en: 'Duplicate' }, width: 1, height: 1, active: true, sortOrder: 2, allowedLocales: ['en'], targetUrlRequired: false }), (error) => error instanceof AdSettingsServiceError && error.code === 'DUPLICATE');
   await assert.rejects(() => service.createPlacement(seeker, { key: 'x', surface: 'homepage', label: { en: 'X' }, width: 1, height: 1, active: true, sortOrder: 1, allowedLocales: ['en'], targetUrlRequired: false }), (error) => error instanceof AdSettingsServiceError && error.code === 'FORBIDDEN');

@@ -14,20 +14,9 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "81b3989569f2ce9ea29fc745e0d67dc036d3402f19574f8967c27d971e055347",
-    "afterHash": "17675aec742b02b7eecda2fb0b91c4e35f8fd791cc8adbfda408fe2453ff66fc",
-    "requestedApi": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/about"
-      }
-    ],
-    "apiResponses": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/about",
-        "status": 200
-      }
-    ]
+    "afterHash": "6060cc19ede83e65e7c31145ccb253d18e10546189a382fa89551831ca8b497c",
+    "requestedApi": [],
+    "apiResponses": []
   },
   "structure": {
     "headers": 2,
@@ -484,11 +473,6 @@
       {
         "family": "Noto Sans SC",
         "weight": "400",
-        "status": "loaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "400",
         "status": "unloaded"
       },
       {
@@ -628,6 +612,11 @@
       },
       {
         "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
         "weight": "500",
         "status": "unloaded"
       },
@@ -1494,7 +1483,7 @@
       {
         "family": "Noto Sans SC",
         "weight": "600",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -1999,7 +1988,7 @@
       {
         "family": "Noto Sans SC",
         "weight": "700",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -2225,7 +2214,7 @@
       },
       {
         "text": "واتساب",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       },
       {
         "text": "العقارات",
@@ -2257,34 +2246,43 @@
       },
       {
         "text": "واتساب متاح 24/7",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://facebook.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://instagram.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://youtube.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://tiktok.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://linkedin.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       }
     ],
-    "buttons": []
+    "buttons": [
+      {
+        "text": "العربية",
+        "aria": "اللغة"
+      },
+      {
+        "text": "العربية",
+        "aria": "اللغة"
+      }
+    ]
   },
   "comparison": {
     "sourceDimensions": [
@@ -2311,8 +2309,8 @@
       "comparedWidth": 1524,
       "comparedHeight": 2214,
       "comparedPixels": 3374136,
-      "materialDifferencePercent": 4.7521,
-      "antiAliasingOnlyPercent": 29.0824,
+      "materialDifferencePercent": 4.8244,
+      "antiAliasingOnlyPercent": 29.0429,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

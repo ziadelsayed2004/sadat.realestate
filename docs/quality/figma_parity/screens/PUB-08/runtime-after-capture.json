@@ -11,10 +11,10 @@
       "height": 720,
       "devicePixelRatio": 1
     },
-    "responseStatus": 200,
-    "responseOk": true,
+    "responseStatus": 404,
+    "responseOk": false,
     "beforeHash": "4a4d9f867b0dc38c6eab5a63c59b2579556cd0a57e94bc77659de65d74cfb00d",
-    "afterHash": "b8568b184275e67042e57c871f865671d5947fc9565580d86cb9b6d06303c2cc",
+    "afterHash": "9fa695fafb006889483779d40ae1838209baaeeffea3abb0f8f9c59d8eae37a2",
     "requestedApi": [
       {
         "method": "GET",
@@ -50,9 +50,9 @@
   "structure": {
     "headers": 2,
     "navs": 1,
-    "sections": 2,
-    "cards": 27,
-    "images": 10,
+    "sections": 1,
+    "cards": 0,
+    "images": 3,
     "forms": 0
   },
   "fonts": {
@@ -502,11 +502,6 @@
       {
         "family": "Noto Sans SC",
         "weight": "400",
-        "status": "loaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "400",
         "status": "unloaded"
       },
       {
@@ -646,6 +641,11 @@
       },
       {
         "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
         "weight": "500",
         "status": "unloaded"
       },
@@ -1512,7 +1512,7 @@
       {
         "family": "Noto Sans SC",
         "weight": "600",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -2017,7 +2017,7 @@
       {
         "family": "Noto Sans SC",
         "weight": "700",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -2175,48 +2175,6 @@
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "eager"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub08-f.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "eager"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub08-g.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "eager"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "eager"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub07-d.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
       "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
@@ -2278,42 +2236,6 @@
         "href": "/articles"
       },
       {
-        "text": "شقة فاخرة في الحي الأول1.9 مليون جنيه",
-        "href": "/properties/city-apartment"
-      },
-      {
-        "text": "فيلا مستقلة بالمنطقة الراقية5.2 مليون جنيه",
-        "href": "/properties/garden-villa"
-      },
-      {
-        "text": "أرض سكنية في الحي السابع780,000 جنيه",
-        "href": "/properties/residential-land"
-      },
-      {
-        "text": "أفضل المناطق للاستثمار العقاري في السادات",
-        "href": "/articles/investment-areas"
-      },
-      {
-        "text": "اقرأ المقال",
-        "href": "/articles/investment-areas"
-      },
-      {
-        "text": "خدمات مدينة السادات: ما المتاح وما المخطط له",
-        "href": "/articles/market-outlook"
-      },
-      {
-        "text": "اقرأ المقال",
-        "href": "/articles/market-outlook"
-      },
-      {
-        "text": "قوانين الإيجار الجديدة وما يهمك معرفته",
-        "href": "/articles/first-home-checklist"
-      },
-      {
-        "text": "اقرأ المقال",
-        "href": "/articles/first-home-checklist"
-      },
-      {
         "text": "العقارات",
         "href": "/properties"
       },
@@ -2343,34 +2265,47 @@
       },
       {
         "text": "واتساب متاح 24/7",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://facebook.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://instagram.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://youtube.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://tiktok.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://linkedin.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       }
     ],
-    "buttons": []
+    "buttons": [
+      {
+        "text": "العربية",
+        "aria": "اللغة"
+      },
+      {
+        "text": "العربية",
+        "aria": "اللغة"
+      },
+      {
+        "text": "حاول مرة أخرى",
+        "aria": null
+      }
+    ]
   },
   "comparison": {
     "sourceDimensions": [
@@ -2384,7 +2319,7 @@
       },
       {
         "width": 1523,
-        "height": 1759
+        "height": 1071
       }
     ],
     "dimensions": {
@@ -2395,10 +2330,10 @@
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-08/visual-metrics.json",
     "visualMetrics": {
       "comparedWidth": 1523,
-      "comparedHeight": 1759,
-      "comparedPixels": 2678957,
-      "materialDifferencePercent": 8.5476,
-      "antiAliasingOnlyPercent": 4.7159,
+      "comparedHeight": 1071,
+      "comparedPixels": 1631133,
+      "materialDifferencePercent": 43.8812,
+      "antiAliasingOnlyPercent": 3.9135,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

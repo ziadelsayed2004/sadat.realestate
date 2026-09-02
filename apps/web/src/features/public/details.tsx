@@ -5,7 +5,7 @@ import type {
   SupportedLocale
 } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
-import { Button, Modal, PropertyCard } from '../design_system/index.ts';
+import { Button, CustomSelect, Modal, PropertyCard } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
 import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from './components.tsx';
@@ -581,8 +581,7 @@ function RequestPanel({
           <input id="public-property-contact-name" name="fullName" required value={fullName} placeholder={locale === 'ar' ? 'الاسم الكامل' : 'Full name'} onChange={event => setFullName(event.target.value)} />
           <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-phone">{locale === 'ar' ? 'رقم الهاتف' : 'Phone number'}</label>
           <input id="public-property-contact-phone" name="phone" type="tel" required value={phone} placeholder={locale === 'ar' ? 'رقم الهاتف' : 'Phone number'} onChange={event => setPhone(event.target.value)} />
-          <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-time">{locale === 'ar' ? 'وقت التواصل' : 'Contact time'}</label>
-          <select id="public-property-contact-time" name="contactTime" required value={contactTime} onChange={event => setContactTime(event.target.value)}><option value="">{locale === 'ar' ? 'وقت التواصل' : 'Contact time'}</option><option value="morning">{locale === 'ar' ? 'صباحاً' : 'Morning'}</option><option value="evening">{locale === 'ar' ? 'مساءً' : 'Evening'}</option></select>
+          <CustomSelect id="public-property-contact-time" name="contactTime" value={contactTime} onChange={setContactTime} required placeholder={locale === 'ar' ? 'وقت التواصل' : 'Contact time'} ariaLabel={locale === 'ar' ? 'وقت التواصل' : 'Contact time'} options={[{ value: 'morning', label: locale === 'ar' ? 'صباحاً' : 'Morning' }, { value: 'evening', label: locale === 'ar' ? 'مساءً' : 'Evening' }]} />
           <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-message">{copy.messageLabel}</label>
           <textarea
             id="public-property-contact-message"

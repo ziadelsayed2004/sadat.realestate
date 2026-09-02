@@ -8,6 +8,10 @@ import {
   otpSendSuccessEnvelopeSchema,
   otpVerifyRequestSchema,
   otpVerifySuccessEnvelopeSchema,
+  passwordResetRequestSchema,
+  passwordResetOtpSendRequestSchema,
+  passwordResetOtpVerifyRequestSchema,
+  passwordResetSuccessEnvelopeSchema,
   providerAccountPatchSchema,
   providerApplicationCreateRequestSchema,
   providerApplicationSuccessEnvelopeSchema,
@@ -29,6 +33,9 @@ import {
   type OtpVerifiedData,
   type OtpVerifyData,
   type OtpVerifyRequest,
+  type PasswordResetRequest,
+  type PasswordResetOtpSendRequest,
+  type PasswordResetOtpVerifyRequest,
   type ProviderAccountPatch,
   type ProviderApplicationCreateRequest,
   type ProviderApplicationData,
@@ -125,9 +132,10 @@ export class AuthClient {
     return this.store.setSession(response.data.data);
   }
 
-  async sendOtp(input: OtpSendRequest): Promise<OtpSendData> {
-    const request = otpSendRequestSchema.parse(input);
-    const response = await this.apiClient.request('/auth/otp/send', {
+  async sendOtp(input: OtpSendRequest | PasswordResetOtpSendRequest): Promise<OtpSendData> {
+    const reset = input.roleType === 'admin';
+    const request = reset ? passwordResetOtpSendRequestSchema.parse(input) : otpSendRequestSchema.parse(input);
+    const response = await this.apiClient.request(reset ? '/auth/account-recovery/otp/send' : '/auth/otp/send', {
       method: 'POST',
       json: request,
       responseSchema: otpSendSuccessEnvelopeSchema
@@ -135,9 +143,10 @@ export class AuthClient {
     return response.data.data;
   }
 
-  async verifyOtp(input: OtpVerifyRequest): Promise<AuthOtpVerifyResult> {
-    const request = otpVerifyRequestSchema.parse(input);
-    const response = await this.apiClient.request('/auth/otp/verify', {
+  async verifyOtp(input: OtpVerifyRequest | PasswordResetOtpVerifyRequest): Promise<AuthOtpVerifyResult> {
+    const reset = input.roleType === 'admin';
+    const request = reset ? passwordResetOtpVerifyRequestSchema.parse(input) : otpVerifyRequestSchema.parse(input);
+    const response = await this.apiClient.request(reset ? '/auth/account-recovery/otp/verify' : '/auth/otp/verify', {
       method: 'POST',
       json: request,
       responseSchema: otpVerifySuccessEnvelopeSchema
@@ -155,6 +164,16 @@ export class AuthClient {
       };
     }
     return result;
+  }
+
+  async resetPassword(input: PasswordResetRequest): Promise<void> {
+    const request = passwordResetRequestSchema.parse(input);
+    await this.apiClient.request('/auth/account-recovery/complete', {
+      method: 'POST',
+      json: request,
+      responseSchema: passwordResetSuccessEnvelopeSchema
+    });
+    this.store.clear();
   }
 
   async registerSeeker(input: SeekerRegistrationRequest): Promise<AuthSnapshot> {

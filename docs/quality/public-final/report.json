@@ -1,0 +1,162 @@
+{
+  "report": [
+    {
+      "id": "PUB-01",
+      "path": "/",
+      "status": 200,
+      "title": "عقارات السادات",
+      "scrollWidth": 1524,
+      "clientWidth": 1524,
+      "height": 5427,
+      "images": [
+        "http://127.0.0.1:4173/assets/canonical/public/home-about-dashboard.png"
+      ],
+      "errors": []
+    },
+    {
+      "id": "PUB-02",
+      "path": "/properties",
+      "status": 200,
+      "title": "نتائج البحث عن العقارات",
+      "scrollWidth": 1524,
+      "clientWidth": 1524,
+      "height": 1496,
+      "images": [
+        "https://sadat-realestate.com/assets/canonical/public/category-all.png",
+        "https://sadat-realestate.com/assets/canonical/public/category-full-commercial-building.png"
+      ],
+      "errors": []
+    },
+    {
+      "id": "PUB-03",
+      "path": "/properties/demo-open-view-apartment",
+      "status": 200,
+      "title": "شقة فاخرة بإطلالة مفتوحة في الحي الأول",
+      "scrollWidth": 1524,
+      "clientWidth": 1524,
+      "height": 2737,
+      "images": [],
+      "errors": []
+    },
+    {
+      "id": "PUB-04",
+      "path": "/compare?ids=670000000000000000000007%2C670000000000000000000008",
+      "status": 200,
+      "title": "مقارنة الوحدات",
+      "scrollWidth": 1524,
+      "clientWidth": 1524,
+      "height": 1064,
+      "images": [],
+      "errors": []
+    },
+    {
+      "id": "PUB-05",
+      "path": "/developers",
+      "status": 200,
+      "title": "المطورون والشركات العقارية",
+      "scrollWidth": 1524,
+      "clientWidth": 1524,
+      "height": 1158,
+      "images": [],
+      "errors": []
+    },
+    {
+      "id": "PUB-06",
+      "path": "/developers/sadat-demo-developer",
+      "status": 200,
+      "title": "شركة السادات للتطوير العقاري",
+      "scrollWidth": 1524,
+      "clientWidth": 1524,
+      "height": 2718,
+      "images": [],
+      "errors": []
+    },
+    {
+      "id": "PUB-07",
+      "path": "/articles",
+      "status": 200,
+      "title": "مقالات ومحتوى متخصص",
+      "scrollWidth": 1524,
+      "clientWidth": 1524,
+      "height": 1537,
+      "images": [],
+      "errors": []
+    },
+    {
+      "id": "PUB-08",
+      "path": "/articles/demo-home-buying-guide",
+      "status": 200,
+      "title": "دليلك الشامل لشراء عقارك الأول في مدينة السادات",
+      "scrollWidth": 1524,
+      "clientWidth": 1524,
+      "height": 1453,
+      "images": [],
+      "errors": [
+        "Minified React error #418; visit https://react.dev/errors/418?args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings."
+      ]
+    },
+    {
+      "id": "PUB-09",
+      "path": "/community",
+      "status": 200,
+      "title": "آراء وتجارب المقيمين",
+      "scrollWidth": 1524,
+      "clientWidth": 1524,
+      "height": 1775,
+      "images": [],
+      "errors": []
+    },
+    {
+      "id": "PUB-10",
+      "path": "/community?create=1",
+      "status": 200,
+      "title": "آراء وتجارب المقيمين",
+      "scrollWidth": 1524,
+      "clientWidth": 1524,
+      "height": 1775,
+      "images": [],
+      "errors": []
+    },
+    {
+      "id": "PUB-11",
+      "path": "/about",
+      "status": 200,
+      "title": "منصة السادات للعقارات",
+      "scrollWidth": 1524,
+      "clientWidth": 1524,
+      "height": 2214,
+      "images": [],
+      "errors": []
+    },
+    {
+      "id": "PUB-12",
+      "path": "/team",
+      "status": 200,
+      "title": "الأشخاص خلف المنصة",
+      "scrollWidth": 1524,
+      "clientWidth": 1524,
+      "height": 1560,
+      "images": [],
+      "errors": []
+    }
+  ],
+  "drop": {
+    "top": 728,
+    "bottom": 984,
+    "z": "200",
+    "viewport": 1000
+  },
+  "modal": {
+    "width": 448,
+    "height": 190.796875,
+    "top": 630.09375,
+    "bottom": 820.890625
+  },
+  "mobileModal": {
+    "width": 310,
+    "height": 216.59375,
+    "top": 313.703125,
+    "bottom": 530.296875,
+    "viewport": 844
+  }
+}

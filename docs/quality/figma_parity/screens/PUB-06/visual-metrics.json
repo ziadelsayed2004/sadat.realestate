@@ -8,17 +8,17 @@
   },
   "runtimeAfter": {
     "width": 1534,
-    "height": 2984
+    "height": 871
   },
   "comparedWidth": 1534,
-  "comparedHeight": 2984,
-  "comparedPixels": 4577456,
-  "materialDifferencePercent": 15.8102,
-  "antiAliasingOnlyPercent": 6.2958,
+  "comparedHeight": 871,
+  "comparedPixels": 1336114,
+  "materialDifferencePercent": 63.5502,
+  "antiAliasingOnlyPercent": 1.7938,
   "threshold": {
     "materialRgbSumGreaterThan": 24,
     "antiAliasingRgbSumGreaterThan": 3
   },
   "method": "same-width source/runtime canvas comparison over the overlapping document height",
-  "reviewed": true
+  "reviewed": false
 }

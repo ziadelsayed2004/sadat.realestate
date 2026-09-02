@@ -7,6 +7,7 @@ export interface PublicPropertyComparisonCopy {
   readonly showDifferences: string;
   readonly viewModeLabel: string;
   readonly selectedCount: (count: number) => string;
+  readonly addAnotherUnit: string;
   readonly fieldColumn: string;
   readonly detailsTitle: string;
   readonly basicTitle: string;
@@ -73,6 +74,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyComparisonCop
     showDifferences: 'إظهار الاختلافات فقط',
     viewModeLabel: 'طريقة عرض المقارنة',
     selectedCount: count => String(count) + ' من 2 محدد',
+    addAnotherUnit: '+ إضافة وحدة أخرى',
     fieldColumn: 'البيان',
     detailsTitle: 'تفاصيل المقارنة',
     basicTitle: 'البيانات الأساسية',
@@ -137,6 +139,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyComparisonCop
     showDifferences: 'Show differences only',
     viewModeLabel: 'Comparison view',
     selectedCount: count => String(count) + ' of 2 selected',
+    addAnotherUnit: '+ Add another unit',
     fieldColumn: 'Field',
     detailsTitle: 'Comparison details',
     basicTitle: 'Basic information',

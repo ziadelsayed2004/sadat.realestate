@@ -29,6 +29,10 @@ Open:
 - Platform: `http://localhost:8080`
 - OTP inbox: `http://localhost:8025`
 
+For a client device on the same trusted network, set `LOCAL_PROXY_HOST=0.0.0.0`
+and open `http://<workstation-lan-ip>:8080`. Keep the API, database, and mail
+services bound to loopback; only the reverse proxy is exposed to the LAN.
+
 
 ## Dummy accounts and data
 
@@ -36,10 +40,26 @@ The synthetic Provider identity is:
 
 - Email: `provider.demo@example.invalid`
 
+The regular buyer/Seeker identity is:
+
+- Email: `buyer.demo@example.invalid`
+- Authentication: email OTP (no password)
+
 The Local-only Super Admin (when explicitly bootstrapped on a replica-set/Atlas target) is:
 
 - Email: `admin.demo@example.invalid`
 - Password: `LocalPreview-Admin-Only-2026!`
+
+If an older Local database already contains administrator fixtures and therefore
+cannot create the first Super Admin, use the deterministic operations account:
+
+- Email: `admin.operations@example.invalid`
+- Password: `LocalPreview-Admin-Only-2026!`
+
+Administrators can reset their password from `/auth/forgot-password`. The reset
+code uses the same SMTP adapter as the email-only login flow, is valid for five
+minutes, is attempt-limited, and the resulting reset grant is single-use. A
+successful reset revokes the administrator's existing sessions.
 
 These Admin credentials are intentionally fixed only for the isolated Local preview. They are not written to the Production example and must never be copied to a VPS.
 

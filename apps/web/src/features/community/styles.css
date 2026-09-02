@@ -2,6 +2,58 @@
   position: relative;
 }
 
+/* The unauthenticated gate is intentionally compact; the fixed composer canvas
+   dimensions only apply to the actual create-post form. */
+.public-community .ui-modal.public-community__composer-modal--permission {
+  box-sizing: border-box;
+  inline-size: min(calc(100% - 2rem), 28rem);
+  block-size: auto;
+  min-block-size: 0;
+  max-block-size: calc(100dvh - 2rem);
+  padding: 0;
+  overflow: auto;
+}
+
+.public-community .public-community__composer-modal--permission .ui-modal__header {
+  block-size: auto;
+  min-block-size: 0;
+  flex: none;
+  padding: 1.5rem 1.5rem 0.5rem;
+}
+
+.public-community .public-community__composer-modal--permission .ui-modal__body {
+  block-size: auto;
+  min-block-size: 0;
+  flex: none;
+  padding: 0.5rem 1.5rem 1.25rem;
+}
+
+.public-community__permission p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+}
+
+.public-community .public-community__composer-modal--permission .ui-modal__footer {
+  block-size: auto;
+  min-block-size: 0;
+  flex: none;
+  padding: 0 1.5rem 1.5rem;
+}
+
+.public-community__sign-in-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 100%;
+  min-block-size: 2.875rem;
+  color: var(--color-on-brand) !important;
+  background: var(--color-brand-accent) !important;
+  border-color: var(--color-brand-accent) !important;
+  border-radius: 1.125rem;
+  text-decoration: none;
+}
+
 .public-community__main {
   box-sizing: border-box;
   width: min(100% - 2rem, 61rem);

@@ -3,8 +3,8 @@ import nodemailer from 'nodemailer';
 
 export interface OtpDelivery {
   email: string;
-  roleType: 'seeker' | 'provider';
-  purpose: 'login' | 'registration';
+  roleType: 'seeker' | 'provider' | 'admin';
+  purpose: 'login' | 'registration' | 'password_reset';
   code: string;
   expiresAt: Date;
 }

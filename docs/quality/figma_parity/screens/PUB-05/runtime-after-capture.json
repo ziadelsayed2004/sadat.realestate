@@ -14,28 +14,17 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "7703031256bff4f83c825bfbc37f44601915221ef45ccc2a1b73807195a3442e",
-    "afterHash": "e2e0c33c2fbcec7ebfe1ca8c01196527d5c165aec8ef868f8dfa476f7c57e787",
-    "requestedApi": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/developers?sort=slug&direction=asc&page=1&limit=20"
-      }
-    ],
-    "apiResponses": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/developers?sort=slug&direction=asc&page=1&limit=20",
-        "status": 200
-      }
-    ]
+    "afterHash": "538c5bf6b1f21a7527ba6fc55eeafed7b01a7e628435770a831c816712da2399",
+    "requestedApi": [],
+    "apiResponses": []
   },
   "structure": {
     "headers": 3,
     "navs": 1,
     "sections": 1,
-    "cards": 28,
-    "images": 11,
-    "forms": 1
+    "cards": 5,
+    "images": 4,
+    "forms": 0
   },
   "fonts": {
     "status": "loaded",
@@ -64,7 +53,7 @@
       {
         "family": "Cairo",
         "weight": "500",
-        "status": "unloaded"
+        "status": "loaded"
       },
       {
         "family": "Cairo",
@@ -74,7 +63,7 @@
       {
         "family": "Cairo",
         "weight": "500",
-        "status": "unloaded"
+        "status": "loaded"
       },
       {
         "family": "Cairo",
@@ -484,6 +473,56 @@
       {
         "family": "Noto Sans SC",
         "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "400",
         "status": "loaded"
       },
       {
@@ -578,52 +617,52 @@
       },
       {
         "family": "Noto Sans SC",
-        "weight": "400",
+        "weight": "500",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "400",
+        "weight": "500",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "400",
+        "weight": "500",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "400",
+        "weight": "500",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "400",
+        "weight": "500",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "400",
+        "weight": "500",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "400",
+        "weight": "500",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "400",
+        "weight": "500",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "400",
+        "weight": "500",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "400",
+        "weight": "500",
         "status": "unloaded"
       },
       {
@@ -989,7 +1028,7 @@
       {
         "family": "Noto Sans SC",
         "weight": "500",
-        "status": "unloaded"
+        "status": "loaded"
       },
       {
         "family": "Noto Sans SC",
@@ -1083,52 +1122,52 @@
       },
       {
         "family": "Noto Sans SC",
-        "weight": "500",
+        "weight": "600",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "500",
+        "weight": "600",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "500",
+        "weight": "600",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "500",
+        "weight": "600",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "500",
+        "weight": "600",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "500",
+        "weight": "600",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "500",
+        "weight": "600",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "500",
+        "weight": "600",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "500",
+        "weight": "600",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "500",
+        "weight": "600",
         "status": "unloaded"
       },
       {
@@ -1588,52 +1627,52 @@
       },
       {
         "family": "Noto Sans SC",
-        "weight": "600",
+        "weight": "700",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "600",
+        "weight": "700",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "600",
+        "weight": "700",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "600",
+        "weight": "700",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "600",
+        "weight": "700",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "600",
+        "weight": "700",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "600",
+        "weight": "700",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "600",
+        "weight": "700",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "600",
+        "weight": "700",
         "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
-        "weight": "600",
+        "weight": "700",
         "status": "unloaded"
       },
       {
@@ -2000,56 +2039,6 @@
         "family": "Noto Sans SC",
         "weight": "700",
         "status": "loaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "700",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "700",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "700",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "700",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "700",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "700",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "700",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "700",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "700",
-        "status": "unloaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "700",
-        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -2157,51 +2146,9 @@
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
+      "src": "https://sadat-realestate.com/assets/canonical/public/developer-sadat.png",
       "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-b.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-d.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-f.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-f.png",
-      "complete": true,
-      "decoded": true,
+      "decoded": false,
       "loading": "lazy"
     },
     {
@@ -2262,36 +2209,12 @@
         "href": "/auth/register"
       },
       {
-        "text": "شركة AS للتطوير العقاري",
-        "href": "/developers/approved-builder"
+        "text": "شركة السادات للتطوير العقاري",
+        "href": "/developers/sadat-demo-developer"
       },
       {
         "text": "عرض المطور←",
-        "href": "/developers/approved-builder"
-      },
-      {
-        "text": "مجموعة النيل العقارية",
-        "href": "/developers/city-builders"
-      },
-      {
-        "text": "عرض المطور←",
-        "href": "/developers/city-builders"
-      },
-      {
-        "text": "شركة مصر الجديدة للإسكان",
-        "href": "/developers/sadat-brokers"
-      },
-      {
-        "text": "عرض المطور←",
-        "href": "/developers/sadat-brokers"
-      },
-      {
-        "text": "مجموعة الدلتا العقارية",
-        "href": "/developers/new-city-developments"
-      },
-      {
-        "text": "عرض المطور←",
-        "href": "/developers/new-city-developments"
+        "href": "/developers/sadat-demo-developer"
       },
       {
         "text": "العقارات",
@@ -2323,41 +2246,41 @@
       },
       {
         "text": "واتساب متاح 24/7",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://facebook.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://instagram.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://youtube.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://tiktok.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://linkedin.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       }
     ],
     "buttons": [
       {
-        "text": "إعادة ضبط",
-        "aria": null
+        "text": "العربية",
+        "aria": "اللغة"
       },
       {
-        "text": "بحث",
-        "aria": null
+        "text": "العربية",
+        "aria": "اللغة"
       }
     ]
   },
@@ -2373,7 +2296,7 @@
       },
       {
         "width": 1523,
-        "height": 1536
+        "height": 1158
       }
     ],
     "dimensions": {
@@ -2384,10 +2307,10 @@
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-05/visual-metrics.json",
     "visualMetrics": {
       "comparedWidth": 1523,
-      "comparedHeight": 1536,
-      "comparedPixels": 2339328,
-      "materialDifferencePercent": 18.0671,
-      "antiAliasingOnlyPercent": 4.6796,
+      "comparedHeight": 1158,
+      "comparedPixels": 1763634,
+      "materialDifferencePercent": 47.887,
+      "antiAliasingOnlyPercent": 2.8835,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

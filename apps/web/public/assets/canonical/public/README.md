@@ -1,5 +1,12 @@
 # Canonical Public Figma Assets
 
+The complete raw-image export captured from every approved Public frame lives
+under `../../figma/public/PUB-01` through `PUB-12` (158 source images). Named
+files in this folder are the stable, semantic copies used by the application
+and seed records. Duplicate bytes were verified with SHA-256; the raw archive
+is retained so each visual can be traced back to its screen without depending
+on Figma's short-lived download URLs.
+
 These category illustrations are exact exported image assets from the approved
 Figma file `Odl1Epn2u6lIEuIMmABT7o`, node `6017:10922`
 (`PropertyCategoriesCarousel`). They are used as the repository fallback when

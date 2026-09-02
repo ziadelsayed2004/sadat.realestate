@@ -46,7 +46,12 @@ export {
   otpVerifiedDataSchema,
   otpVerifyDataSchema,
   otpVerifyRequestSchema,
-  otpVerifySuccessEnvelopeSchema
+  otpVerifySuccessEnvelopeSchema,
+  passwordResetDataSchema,
+  passwordResetOtpSendRequestSchema,
+  passwordResetOtpVerifyRequestSchema,
+  passwordResetRequestSchema,
+  passwordResetSuccessEnvelopeSchema
 } from '../auth/index.js';
 
 export {
@@ -223,7 +228,10 @@ export type {
   OtpSendRequest,
   OtpVerifiedData,
   OtpVerifyData,
-  OtpVerifyRequest
+  OtpVerifyRequest,
+  PasswordResetRequest
+  , PasswordResetOtpSendRequest
+  , PasswordResetOtpVerifyRequest
 } from '../auth/index.js';
 
 export {

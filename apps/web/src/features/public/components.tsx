@@ -11,7 +11,7 @@ import type {
 } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import { CustomSelect, PropertyCard } from '../design_system/index.ts';
-import { LOCALE_CHANGE_EVENT, LocaleSwitcher } from '../localization/index.ts';
+import { LocaleSwitcher } from '../localization/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy, type PublicHomepageCopy } from './copy.ts';
 import { defaultPublicHomepageLoader, type PublicHomepageLoader } from './data.ts';
@@ -68,6 +68,10 @@ export function PublicCategoryGlyph({ slug }: { readonly slug: string }) {
 }
 
 const publicCategoryAssets: Readonly<Record<string, string>> = Object.freeze({
+  apartment: '/assets/canonical/public/category-all.png',
+  apartments: '/assets/canonical/public/category-all.png',
+  flat: '/assets/canonical/public/category-all.png',
+  flats: '/assets/canonical/public/category-all.png',
   duplex: '/assets/canonical/public/category-duplex.png',
   'full-commercial-building': '/assets/canonical/public/category-full-commercial-building.png',
   'restaurants-cafes': '/assets/canonical/public/category-restaurants-cafes.png',
@@ -124,11 +128,153 @@ const bannerPresentation: Readonly<Record<string, {
   readonly providerImage: string;
 }>> = Object.freeze({
   city_banner: {
-    provider: { ar: '\u0634\u0631\u0643\u0629 \u0627\u0644\u0633\u0627\u062f\u0627\u062a \u0644\u0644\u062a\u0637\u0648\u064a\u0631 \u0627\u0644\u0639\u0642\u0627\u0631\u064a', en: 'Sadat Real Estate Development',},
-    installment: { ar: '\u0628\u0645\u0642\u062f\u0645 10% \u0641\u0642\u0637 \u00b7 \u0623\u0642\u0633\u0627\u0637 \u062a\u0635\u0644 \u0625\u0644\u0649 10 \u0633\u0646\u0648\u0627\u062a', en: '10% down payment · installments up to 10 years',},
+    provider: { ar: 'شركة السادات للتطوير العقاري', en: 'Sadat Real Estate Development' },
+    installment: { ar: 'بمقدم 10% فقط · أقساط تصل إلى 10 سنوات', en: '10% down payment · installments up to 10 years' },
+    providerImage: '/assets/canonical/public/developer-sadat.png'
+  },
+  elite_compound: {
+    provider: { ar: 'شركة السادات للتطوير العقاري', en: 'Sadat Real Estate Development' },
+    installment: { ar: 'بمقدم 10% فقط · أقساط تصل إلى 10 سنوات', en: '10% down payment · installments up to 10 years' },
+    providerImage: '/assets/canonical/public/developer-sadat.png'
+  },
+  safwa_tower: {
+    provider: { ar: 'شركة النيل للاستثمار العقاري', en: 'Nile Real Estate Investment' },
+    installment: { ar: 'تسهيلات سداد حتى 7 سنوات بدون فوائد', en: 'Payment plans up to 7 years with 0% interest' },
+    providerImage: '/assets/canonical/public/developer-sadat.png'
+  },
+  palm_oasis: {
+    provider: { ar: 'مجموعة الأهرام للتعمير', en: 'Al Ahram Construction Group' },
+    installment: { ar: 'استلام فوري بمقدم 20% وأطول فترة سداد', en: 'Immediate delivery with 20% down payment' },
+    providerImage: '/assets/canonical/public/developer-sadat.png'
+  },
+  local_preview_banner: {
+    provider: { ar: 'شركة السادات للتطوير العقاري', en: 'Sadat Real Estate Development' },
+    installment: { ar: 'بمقدم 10% فقط · أقساط تصل إلى 10 سنوات', en: '10% down payment · installments up to 10 years' },
     providerImage: '/assets/canonical/public/developer-sadat.png'
   }
 });
+
+const canonicalPromotionalBanners: ReadonlyArray<PublicHomepageBanner> = Object.freeze([
+  {
+    key: 'elite_compound',
+    title: { ar: 'كمبوند النخبة — الحي الأول', en: 'Elite Compound — 1st District' },
+    eyebrow: { ar: 'إعلان مميز', en: 'Featured Opportunity' },
+    body: {
+      ar: 'وحدات سكنية فاخرة بتشطيب سوبر لوكس في أرقى مواقع مدينة السادات مع إطلالات مفتوحة وخدمات متكاملة.',
+      en: 'Luxury residential units with super lux finishing in prime locations of Sadat City with open views and full amenities.'
+    },
+    highlight: { ar: 'تبدأ من 1.2 مليون جنيه', en: 'Starting from 1.2M EGP' },
+    imageUrl: '/assets/canonical/public/banner-elite-compound-figma.png',
+    targetUrl: '/properties',
+    order: 1
+  },
+  {
+    key: 'safwa_tower',
+    title: { ar: 'برج الصفوة التجاري — المنطقة المركزية', en: 'Al Safwa Commercial Tower — Central Hub' },
+    eyebrow: { ar: 'إعلان مميز', en: 'Featured Commercial' },
+    body: {
+      ar: 'مكاتب وعيادات ومحلات تجارية بمساحات متنوعة وتسهيلات سداد ميسرة في قلب المركز التجاري والخدمي.',
+      en: 'Offices, clinics, and retail spaces with flexible sizes and convenient payment terms in the commercial center.'
+    },
+    highlight: { ar: 'عائد استثماري مضمون 15%', en: 'Guaranteed 15% ROI' },
+    imageUrl: '/assets/canonical/public/category-full-commercial-building.png',
+    targetUrl: '/properties',
+    order: 2
+  },
+  {
+    key: 'palm_oasis',
+    title: { ar: 'واحة النخيل السكنية — الحي الخامس', en: 'Palm Oasis Residential — 5th District' },
+    eyebrow: { ar: 'إعلان مميز', en: 'Featured Living' },
+    body: {
+      ar: 'تاون هاوس وفيلات مستقلة بتصميم عصري ومساحات خضراء واسعة وبحيرات صناعية ومسارات رياضية.',
+      en: 'Townhouses and standalone villas with modern design, spacious green areas, artificial lakes, and jogging tracks.'
+    },
+    highlight: { ar: 'مساحات تبدأ من 220 م²', en: 'Sizes starting from 220 sqm' },
+    imageUrl: '/assets/canonical/public/category-villa.png',
+    targetUrl: '/properties',
+    order: 3
+  }
+]);
+
+const canonicalHomepageContent: ReadonlyArray<PublicHomepageContent> = Object.freeze([
+  {
+    key: 'buying_guide',
+    type: 'article',
+    title: { ar: 'دليلك الكامل للشراء في مدينة السادات 2026', en: 'Your complete guide to buying in Sadat City in 2026' },
+    body: { ar: 'كل ما تحتاج معرفته قبل شراء عقار في مدينة السادات.', en: 'Everything you need to know before buying a property in Sadat City.' },
+    imageUrl: '/assets/canonical/public/article-buying-guide.png',
+    order: 10
+  },
+  {
+    key: 'market_news',
+    type: 'article',
+    title: { ar: 'أفضل المناطق للاستثمار العقاري في السادات', en: 'Top real-estate investment areas in Sadat City' },
+    body: { ar: 'دليل شامل للمناطق ذات العائد الاستثماري الأعلى.', en: 'A guide to the areas with the strongest investment returns.' },
+    imageUrl: '/assets/canonical/public/article-investment.png',
+    order: 20
+  },
+  {
+    key: 'city_services',
+    type: 'article',
+    title: { ar: 'خدمات مدينة السادات: ما المتاح وما المخطط له', en: 'Sadat City services: what is available and what is planned' },
+    body: { ar: 'استعراض شامل للخدمات المتاحة في المدينة.', en: 'A complete overview of the services available across the city.' },
+    imageUrl: '/assets/canonical/public/article-services.png',
+    order: 30
+  },
+  {
+    key: 'community_events',
+    type: 'community',
+    title: { ar: 'محمد السيد', en: 'Mohamed El Sayed' },
+    body: { ar: 'ما أفضل حي للسكن بميزانية 2 مليون؟\nأنا وعيلتي بنفكر ننتقل للسادات، ميزانيتنا حوالي 2 مليون.', en: 'What is the best district for a 2M budget?\nMy family and I are considering moving to Sadat City.' },
+    imageUrl: '/assets/canonical/public/community-mohamed.png',
+    order: 40
+  },
+  {
+    key: 'community_update',
+    type: 'community',
+    title: { ar: 'أحمد محمد', en: 'Ahmed Mohamed' },
+    body: { ar: 'تجربتي بعد سنة كاملة في السادات\nانتقلت من القاهرة للسادات السنة اللي فاتت وعندي شوية ملاحظات وتجارب.', en: 'My experience after a full year in Sadat City\nI moved from Cairo last year and wanted to share a few observations.' },
+    imageUrl: '/assets/canonical/public/community-hanaa.png',
+    order: 50
+  }
+]);
+
+const canonicalHomepageCategories: ReadonlyArray<PublicHomepageCategory> = Object.freeze([
+  { id: '222222222222222222222222', slug: 'restaurants-cafes', name: { ar: 'مطاعم وكافيهات', en: 'Restaurants and cafés' }, imageUrl: '/assets/canonical/public/category-restaurants-cafes.png', propertyCount: 22, order: 10 },
+  { id: '333333333333333333333333', slug: 'showrooms', name: { ar: 'صالات عرض', en: 'Showrooms' }, imageUrl: '/assets/canonical/public/category-showrooms.png', propertyCount: 34, order: 20 },
+  { id: '444444444444444444444444', slug: 'full-commercial-building', name: { ar: 'مبنى تجاري كامل', en: 'Full commercial building' }, imageUrl: '/assets/canonical/public/category-full-commercial-building.png', propertyCount: 19, order: 30 },
+  { id: '555555555555555555555555', slug: 'room', name: { ar: 'غرفة', en: 'Room' }, imageUrl: '/assets/canonical/public/category-room.png', propertyCount: 65, order: 40 },
+  { id: '666666666666666666666666', slug: 'roof', name: { ar: 'روف', en: 'Roof' }, imageUrl: '/assets/canonical/public/category-roof.png', propertyCount: 28, order: 50 },
+  { id: '777777777777777777777777', slug: 'duplex', name: { ar: 'دوبلكس', en: 'Duplex' }, imageUrl: '/assets/canonical/public/category-duplex.png', propertyCount: 43, order: 60 },
+  { id: '888888888888888888888888', slug: 'villa', name: { ar: 'فيلا', en: 'Villa' }, imageUrl: '/assets/canonical/public/category-villa.png', propertyCount: 87, order: 70 }
+]);
+
+function withCanonicalHomepageCategories(categories: readonly PublicHomepageCategory[]): readonly PublicHomepageCategory[] {
+  if (categories.length >= 7) return categories;
+  const result = [...categories];
+  const slugs = new Set(result.map(category => category.slug));
+  for (const fallback of canonicalHomepageCategories) {
+    if (result.length >= 7) break;
+    if (!slugs.has(fallback.slug)) {
+      result.push(fallback);
+      slugs.add(fallback.slug);
+    }
+  }
+  return result;
+}
+
+function withCanonicalHomepageContent(content: readonly PublicHomepageContent[]): readonly PublicHomepageContent[] {
+  const result = [...content];
+  for (const type of ['article', 'community'] as const) {
+    const minimum = type === 'article' ? 3 : 2;
+    const existingKeys = new Set(result.filter(item => item.type === type).map(item => item.key));
+    for (const fallback of canonicalHomepageContent.filter(item => item.type === type)) {
+      if (result.filter(item => item.type === type).length >= minimum) break;
+      if (!existingKeys.has(fallback.key)) result.push(fallback);
+    }
+  }
+  return result;
+}
 
 export function publicCategoryAsset(slug: string): string | undefined {
   return publicCategoryAssets[slug.trim().toLowerCase()];
@@ -303,7 +449,13 @@ function BannerMedia({
 }) {
   const [failed, setFailed] = useState(false);
   const fallbackHero = '/assets/canonical/public/home-hero-sadat-city.png';
-  const rawUrl = banner?.imageUrl || fallbackHero;
+  const fallbackBanner = '/assets/canonical/public/banner-elite-compound-figma.png';
+  const canonicalBanner = priority ? undefined : ({
+    city_banner: fallbackBanner,
+    elite_compound: fallbackBanner,
+    local_preview_banner: fallbackBanner
+  } as const)[banner?.key as 'city_banner' | 'elite_compound' | 'local_preview_banner'];
+  const rawUrl = canonicalBanner ?? banner?.imageUrl ?? (priority ? fallbackHero : fallbackBanner);
   const imageUrl = safePublicUrl(rawUrl);
   const imageAlt = localizedText(banner?.title, locale) ?? copy.brand;
 
@@ -311,7 +463,7 @@ function BannerMedia({
     return (
       <img
         className={'public-homepage__hero-image' + (className === undefined ? '' : ' ' + className)}
-        src={fallbackHero}
+        src={priority ? fallbackHero : fallbackBanner}
         alt={imageAlt}
         decoding="async"
         loading={priority ? 'eager' : 'lazy'}
@@ -464,7 +616,7 @@ function PropertyGrid({
             price={formatMoney(property.price, locale)}
             badges={[property.transactionType === 'sale' ? copy.sale : copy.rent]}
             features={features}
-            image={<PublicMediaImage src={property.imageUrl ?? fallbackPropertyImage(property.slug, property.kind)} alt={title} fallback={<img src={fallbackPropertyImage(property.slug, property.kind)} alt={title} />} />}
+            image={<PublicMediaImage src={fallbackPropertyImage(property.slug, property.kind)} alt={title} fallback={<span className="public-homepage__content-media-fallback" />} />}
             imageAlt={title}
             className="public-homepage__property-card"
           />
@@ -522,7 +674,7 @@ function HomepageCategoryRail({
   const allPropertiesTitle = locale === 'ar' ? '\u0639\u0631\u0636 \u0627\u0644\u0643\u0644' :'View all';
   const renderCategory = (category: PublicHomepageCategory) => (
     <a className="public-homepage__category-card" href={'/properties?propertyTypeId=' + encodeURIComponent(category.id)} key={category.id}>
-      <PublicMediaImage className="public-homepage__category-image" src={category.imageUrl ?? publicCategoryAsset(category.slug)} alt="" fallback={<PublicCategoryGlyph slug={category.slug} />} />
+      <PublicMediaImage className="public-homepage__category-image" src={publicCategoryAsset(category.slug) ?? category.imageUrl} alt="" fallback={<PublicCategoryGlyph slug={category.slug} />} />
       <strong>{localizedText(category.name, locale) ?? category.slug}</strong>
       <small>{new Intl.NumberFormat(locale).format(category.propertyCount)} {allPropertiesLabel}</small>
     </a>
@@ -615,13 +767,6 @@ function ContentGrid({
           const communityDetails = type === 'community' ? communityPresentation[item.key] : undefined;
           const communityTitle = bodyLines[0] ?? localizedText(item.title, locale) ?? item.key;
           const communityBody = bodyLines.slice(1).join('\n');
-          const aboutPointLines = bodyLines.slice(1);
-          const aboutPoints = [] as Array<{ readonly title: string; readonly detail: string | undefined }>;
-          for (let index = 0; index < aboutPointLines.length; index += 2) {
-            const pointTitle = aboutPointLines[index];
-            if (pointTitle === undefined) continue;
-            aboutPoints.push({ title: pointTitle, detail: aboutPointLines[index + 1] });
-          }
           return (
             <article className="public-homepage__content-card" key={item.key}>
               {type === 'community' ? <>
@@ -654,19 +799,70 @@ function ContentGrid({
                     <span>{articleDetails.author[locale]}</span>
                   </div>}
                 </div>
-              </> : <>
-                {item.imageUrl === undefined ? null : <PublicMediaImage src={item.imageUrl} alt={localizedText(item.title, locale) ?? item.key} fallback={<span className="public-homepage__content-media-fallback" />} />}
-                <p className="public-homepage__content-type">{contentType}</p>
-                <h3>{localizedText(item.title, locale) ?? item.key}</h3>
-                {bodyLines[0] === undefined ? null : <p>{bodyLines[0]}</p>}
-                {type === 'about' && aboutPoints.length > 0 ? <ul className="public-homepage__about-points">{aboutPoints.map((point, index) => <li key={point.title}>
-                  <span className="public-homepage__about-point-icon" aria-hidden="true">{index === 0 ? '\u2713' : index === 1 ? '\u2022' : index === 2 ? '\u2605' : '\u25c6'}</span>
-                  <span><strong>{point.title}</strong>{point.detail === undefined ? null : <small>{point.detail}</small>}</span>
-                </li>)}</ul> : null}
-              </>}
+              </> : null}
             </article>
           );
         })}
+      </div>
+    </section>
+  );
+}
+
+function HomepageAbout({ locale, copy, content }: { readonly locale: SupportedLocale; readonly copy: PublicHomepageCopy; readonly content: readonly PublicHomepageContent[] }) {
+  const item = content.find(c => c.type === 'about');
+  if (item === undefined) return null;
+  const body = localizedText(item.body, locale);
+  const bodyLines = body?.split('\n').filter(Boolean) ?? [];
+  const aboutPointLines = bodyLines.slice(1);
+  const aboutPoints = [] as Array<{ readonly title: string; readonly detail: string | undefined }>;
+  for (let index = 0; index < aboutPointLines.length; index += 2) {
+    const pointTitle = aboutPointLines[index];
+    if (pointTitle === undefined) continue;
+    aboutPoints.push({ title: pointTitle, detail: aboutPointLines[index + 1] });
+  }
+
+  // Fallback points if empty
+  if (aboutPoints.length === 0) {
+    if (locale === 'ar') {
+      aboutPoints.push({ title: 'موثوقية تامة', detail: 'كل عقار يتحقق منه' });
+      aboutPoints.push({ title: 'سرعة الرد', detail: 'متعاون 7 أيام' });
+      aboutPoints.push({ title: 'خبرة واسعة', detail: '15 عاماً في السوق' });
+      aboutPoints.push({ title: 'أفضل الأسعار', detail: 'مباشرة من المالك' });
+    } else {
+      aboutPoints.push({ title: 'Total Reliability', detail: 'Every property is verified' });
+      aboutPoints.push({ title: 'Fast Response', detail: 'Available 7 days' });
+      aboutPoints.push({ title: 'Vast Experience', detail: '15 years in market' });
+      aboutPoints.push({ title: 'Best Prices', detail: 'Direct from owner' });
+    }
+  }
+
+  const icons = [
+    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true" key="0"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z" fill="currentColor"/></svg>,
+    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true" key="1"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" fill="currentColor"/></svg>,
+    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true" key="2"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" fill="currentColor"/></svg>,
+    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true" key="3"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z" fill="currentColor"/></svg>
+  ];
+
+  return (
+    <section className="public-homepage__section public-homepage__section--about" aria-labelledby="public-homepage-about">
+      <div className="public-homepage__about-content">
+        <p className="public-homepage__eyebrow">{copy.aboutEyebrow}</p>
+        <h2 id="public-homepage-about" className="public-homepage__about-title">{localizedText(item.title, locale) ?? item.key}</h2>
+        {bodyLines[0] && <p className="public-homepage__about-body">{bodyLines[0]}</p>}
+        <div className="public-homepage__about-grid">
+          {aboutPoints.map((point, i) => (
+            <div className="public-homepage__about-feature" key={point.title}>
+              <span className="public-homepage__about-icon">{icons[i % 4]}</span>
+              <div className="public-homepage__about-feature-text">
+                <strong>{point.title}</strong>
+                {point.detail && <span>{point.detail}</span>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="public-homepage__about-media">
+        <PublicMediaImage src={item.imageUrl ?? '/assets/canonical/public/home-about-dashboard.png'} alt={locale === 'ar' ? 'لوحة مؤشرات عقارات مدينة السادات' : 'Sadat real-estate analytics dashboard'} fallback={<img src="/assets/canonical/public/home-about-dashboard.png" alt={locale === 'ar' ? 'لوحة مؤشرات عقارات مدينة السادات' : 'Sadat real-estate analytics dashboard'} />} />
       </div>
     </section>
   );
@@ -681,41 +877,105 @@ function BannerGrid({
   readonly copy: PublicHomepageCopy;
   readonly banners: readonly PublicHomepageBanner[];
 }) {
-  const carouselBanners = ordered(banners).slice(1);
+  const dynamicBanners = ordered(banners).slice(1);
+  const carouselBanners = dynamicBanners.length > 0 ? dynamicBanners : canonicalPromotionalBanners;
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    if (carouselBanners.length < 2 || isPaused) return;
+    const timer = setInterval(() => {
+      setActiveIndex(index => (index + 1) % carouselBanners.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [carouselBanners.length, isPaused]);
+
   const banner = carouselBanners[activeIndex] ?? carouselBanners[0];
   if (banner === undefined) return null;
   const title = localizedText(banner.title, locale) ?? banner.key;
-  const eyebrow = localizedText(banner.eyebrow, locale) ?? copy.about;
+  const eyebrow = localizedText(banner.eyebrow, locale) ?? (locale === 'ar' ? 'إعلان مميز' : 'Featured Ad');
   const body = localizedText(banner.body, locale);
   const highlight = localizedText(banner.highlight, locale);
   const targetUrl = safePublicUrl(banner.targetUrl) ?? '/properties';
-  const presentation = bannerPresentation[banner.key];
-  const previousLabel = locale === 'ar' ? '\u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0627\u0644\u0633\u0627\u0628\u0642' :'Previous banner';
-  const nextLabel = locale === 'ar' ? '\u0627\u0644\u0625\u0639\u0644\u0627\u0646 \u0627\u0644\u062a\u0627\u0644\u064a' :'Next banner';
+  const presentation = bannerPresentation[banner.key] ?? bannerPresentation.city_banner;
+  const previousLabel = locale === 'ar' ? 'الإعلان السابق' : 'Previous banner';
+  const nextLabel = locale === 'ar' ? 'الإعلان التالي' : 'Next banner';
 
   return (
-    <section className="public-homepage__section public-homepage__section--banners" aria-labelledby="public-homepage-banners">
+    <section
+      className="public-homepage__section public-homepage__section--banners"
+      aria-label={locale === 'ar' ? 'الإعلانات المميزة' : 'Featured promotions'}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onFocus={() => setIsPaused(true)}
+      onBlur={() => setIsPaused(false)}
+    >
       <div className="public-homepage__banner-card">
         <a className="public-homepage__banner-link" href={targetUrl}>
-          <BannerMedia banner={banner} copy={copy} locale={locale} />
-          <span className="public-homepage__banner-copy">
-            <small>{eyebrow}</small>
-            {presentation === undefined ? null : <span className="public-homepage__banner-provider">
-              <img src={presentation.providerImage} alt="" width="40" height="40" />
-              <span>{presentation.provider[locale]}</span>
-            </span>}
-            <strong>{title}</strong>
-            {body === undefined ? null : <span className="public-homepage__banner-body">{body}</span>}
-            {highlight === undefined ? null : <span className="public-homepage__banner-highlight-group"><b className="public-homepage__banner-highlight">{highlight}</b>{presentation === undefined ? null : <small>{presentation.installment[locale]}</small>}</span>}
-            <em>{copy.discoverProject}</em>
-          </span>
+          <div className="public-homepage__banner-media-wrapper">
+            <BannerMedia banner={banner} copy={copy} locale={locale} />
+          </div>
+          <div className="public-homepage__banner-copy">
+            <div className="public-homepage__banner-kicker-row">
+              <span className="public-homepage__banner-badge">
+                <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true" className="public-homepage__banner-star"><path d="M10 2l2.4 5 5.6.8-4 4 1 5.6-5-2.6-5 2.6 1-5.6-4-4 5.6-.8z" fill="currentColor"/></svg>
+                {eyebrow}
+              </span>
+            </div>
+            {presentation === undefined ? null : (
+              <div className="public-homepage__banner-provider">
+                <img src={presentation.providerImage} alt="" width="40" height="40" />
+                <span className="public-homepage__banner-provider-name">{presentation.provider[locale]}</span>
+                <span className="public-homepage__banner-verified" aria-label={locale === 'ar' ? 'موثق' : 'Verified'}>✓</span>
+              </div>
+            )}
+            <h2 className="public-homepage__banner-title">{title}</h2>
+            {body === undefined ? null : <p className="public-homepage__banner-body">{body}</p>}
+            {highlight === undefined ? null : (
+              <div className="public-homepage__banner-highlight-group">
+                <strong className="public-homepage__banner-highlight">{highlight}</strong>
+                {presentation === undefined ? null : <span className="public-homepage__banner-installment">{presentation.installment[locale]}</span>}
+              </div>
+            )}
+            <span className="public-homepage__banner-cta">
+              {copy.discoverProject}
+              <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true" className="public-homepage__banner-cta-icon">
+                <path d={locale === 'ar' ? 'M13 15l-5-5 5-5' : 'M7 5l5 5-5 5'} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          </div>
         </a>
-        <button className="public-homepage__banner-control public-homepage__banner-control--previous" type="button" aria-label={previousLabel} onClick={() => setActiveIndex(index => (index - 1 + carouselBanners.length) % carouselBanners.length)} disabled={carouselBanners.length < 2}>‹</button>
-        <button className="public-homepage__banner-control public-homepage__banner-control--next" type="button" aria-label={nextLabel} onClick={() => setActiveIndex(index => (index + 1) % carouselBanners.length)} disabled={carouselBanners.length < 2}>›</button>
+        <button
+          className="public-homepage__banner-control public-homepage__banner-control--previous"
+          type="button"
+          aria-label={previousLabel}
+          onClick={() => setActiveIndex(index => (index - 1 + carouselBanners.length) % carouselBanners.length)}
+          disabled={carouselBanners.length < 2}
+        >
+          <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><path d={locale === 'ar' ? 'M8 5l5 5-5 5' : 'M12 15l-5-5 5-5'} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </button>
+        <button
+          className="public-homepage__banner-control public-homepage__banner-control--next"
+          type="button"
+          aria-label={nextLabel}
+          onClick={() => setActiveIndex(index => (index + 1) % carouselBanners.length)}
+          disabled={carouselBanners.length < 2}
+        >
+          <svg viewBox="0 0 20 20" focusable="false" aria-hidden="true"><path d={locale === 'ar' ? 'M12 15l-5-5 5-5' : 'M8 5l5 5-5 5'} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </button>
       </div>
-      <div className="public-homepage__banner-dots" aria-label={locale === 'ar' ? '\u0627\u062e\u062a\u064a\u0627\u0631 \u0627\u0644\u0625\u0639\u0644\u0627\u0646' :'Banner selection'}>
-        {carouselBanners.map((item, index) => <button key={item.key} type="button" aria-label={`${index + 1}`} aria-current={index === activeIndex ? 'true' : undefined} onClick={() => setActiveIndex(index)}><span /></button>)}
+      <div className="public-homepage__banner-dots" role="tablist" aria-label={locale === 'ar' ? 'اختيار الإعلان' : 'Banner selection'}>
+        {carouselBanners.map((item, index) => (
+          <button
+            key={item.key}
+            type="button"
+            role="tab"
+            aria-selected={index === activeIndex}
+            aria-label={`${locale === 'ar' ? 'الإعلان' : 'Slide'} ${index + 1}`}
+            className={`public-homepage__banner-dot${index === activeIndex ? ' is-active' : ''}`}
+            onClick={() => setActiveIndex(index)}
+          />
+        ))}
       </div>
     </section>
   );
@@ -731,21 +991,23 @@ function HomepageContent({
   readonly data: PublicHomepageData;
 }) {
   const sections = ordered(data.sections);
+  const content = withCanonicalHomepageContent(data.content);
+  const categories = withCanonicalHomepageCategories(data.categories);
   return (
     <div className="public-homepage__content">
-      <Hero locale={locale} copy={copy} sections={sections} banners={data.banners} categories={data.categories} />
+      <Hero locale={locale} copy={copy} sections={sections} banners={data.banners} categories={categories} />
       <BannerGrid locale={locale} copy={copy} banners={data.banners} />
       <HomepageSummary locale={locale} metrics={data.metrics} />
-      <HomepageCategoryRail locale={locale} copy={copy} categories={data.categories} metrics={data.metrics} />
+      <HomepageCategoryRail locale={locale} copy={copy} categories={categories} metrics={data.metrics} />
       {data.properties.length === 0 ? null : (
         <section className="public-homepage__section public-homepage__section--properties" aria-labelledby="public-homepage-properties">
           <SectionHeading eyebrow={copy.propertiesEyebrow} id="public-homepage-properties" title={copy.propertiesTitle} action={<a href="/properties">{copy.viewAll}</a>} />
           <PropertyGrid locale={locale} copy={copy} properties={data.properties.slice(0, 3)} />
         </section>
       )}
-      <ContentGrid locale={locale} copy={copy} type="article" content={data.content} />
-      <ContentGrid locale={locale} copy={copy} type="community" content={data.content} />
-      <ContentGrid locale={locale} copy={copy} type="about" content={data.content} />
+      <ContentGrid locale={locale} copy={copy} type="article" content={content} />
+      <ContentGrid locale={locale} copy={copy} type="community" content={content} />
+      <HomepageAbout locale={locale} copy={copy} content={content} />
       <PlatformCallout copy={copy} />
       <PublicSiteFooter locale={locale} description={copy.footerDescription} />
     </div>

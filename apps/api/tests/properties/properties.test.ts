@@ -41,7 +41,7 @@ test('keeps property source identity explicit and backend-derived', () => {
     providerApprovalStatus: 'approved',
     providerDisplayName: { en: 'Fallback' },
     organization: { id: organizationId, kind: 'developer_company', slug: 'trusted-developer', name: { ar: 'مطور موثوق', en: 'Trusted Developer' }, status: 'approved' }
-  }, 'zh-CN');
+  }, 'ar');
   assert.equal(propertySourceIdentitySchema.parse(approved).verified, true);
   assert.equal(derivePropertySourceIdentity({
     providerId,

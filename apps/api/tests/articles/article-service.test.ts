@@ -121,13 +121,13 @@ test('article lifecycle keeps drafts private, derives the author, requires order
   assert.equal(published.status, 'published');
   assert.equal(published.publishedAt, NOW.toISOString());
 
-  const publicResult = await service.listPublic({ locale: 'zh-CN', page: 1, limit: 20 });
+  const publicResult = await service.listPublic({ locale: 'ar', page: 1, limit: 20 });
   assert.equal(publicResult.total, 1);
   const publicArticle = publicResult.data[0]!;
-  assert.equal(publicArticle.title['zh-CN'], 'الشراء في السادات');
-  assert.equal(publicArticle.body['zh-CN'], 'دليل عربي');
-  assert.equal(publicArticle.seoDescription?.['zh-CN'], 'A safe public summary');
-  assert.equal(publicArticle.category?.name['zh-CN'], 'أدلة');
+  assert.equal(publicArticle.title.ar, 'الشراء في السادات');
+  assert.equal(publicArticle.body.ar, 'دليل عربي');
+  assert.equal(publicArticle.seoDescription?.ar, 'A safe public summary');
+  assert.equal(publicArticle.category?.name.ar, 'أدلة');
   assert.equal('authorId' in publicArticle, false);
   assert.equal('status' in publicArticle, false);
   assert.equal('availableActions' in publicArticle, false);

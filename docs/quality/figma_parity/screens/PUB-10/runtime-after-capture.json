@@ -14,23 +14,14 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "8ca5a6e758667ab329ba037e4f47f55ed7ca1a876de7e0674fbd18e85b596e54",
-    "afterHash": "b4613fc45f3ed1b4febd3f43045eb1a22516e3181b8cd768e98970dc728111bb",
+    "afterHash": "2cd73c7859c91cf86b46cc2af24e886f5530455159fb3d0ef681b644ef07aa0f",
     "requestedApi": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/community/posts?page=1&limit=20"
-      },
       {
         "method": "POST",
         "url": "http://127.0.0.1:4173/api/v1/auth/refresh"
       }
     ],
     "apiResponses": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/community/posts?page=1&limit=20",
-        "status": 200
-      },
       {
         "method": "POST",
         "url": "http://127.0.0.1:4173/api/v1/auth/refresh",
@@ -42,8 +33,8 @@
     "headers": 4,
     "navs": 1,
     "sections": 0,
-    "cards": 37,
-    "images": 8,
+    "cards": 9,
+    "images": 3,
     "forms": 1
   },
   "fonts": {
@@ -493,11 +484,6 @@
       {
         "family": "Noto Sans SC",
         "weight": "400",
-        "status": "loaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "400",
         "status": "unloaded"
       },
       {
@@ -637,7 +623,7 @@
       },
       {
         "family": "Noto Sans SC",
-        "weight": "500",
+        "weight": "400",
         "status": "unloaded"
       },
       {
@@ -1142,7 +1128,7 @@
       },
       {
         "family": "Noto Sans SC",
-        "weight": "600",
+        "weight": "500",
         "status": "unloaded"
       },
       {
@@ -1498,7 +1484,7 @@
       {
         "family": "Noto Sans SC",
         "weight": "600",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -1647,6 +1633,11 @@
       },
       {
         "family": "Noto Sans SC",
+        "weight": "600",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
         "weight": "700",
         "status": "unloaded"
       },
@@ -2008,7 +1999,7 @@
       {
         "family": "Noto Sans SC",
         "weight": "700",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -2166,36 +2157,6 @@
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/community-asset-1.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/community-asset-2.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/community-asset-3.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/community-asset-4.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/community-asset-5.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
       "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
@@ -2282,34 +2243,42 @@
       },
       {
         "text": "واتساب متاح 24/7",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://facebook.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://instagram.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://youtube.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://tiktok.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://linkedin.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       }
     ],
     "buttons": [
+      {
+        "text": "العربية",
+        "aria": "اللغة"
+      },
+      {
+        "text": "العربية",
+        "aria": "اللغة"
+      },
       {
         "text": "+انشر بوست",
         "aria": null
@@ -2347,18 +2316,6 @@
         "aria": null
       },
       {
-        "text": "عرض النقاش",
-        "aria": null
-      },
-      {
-        "text": "عرض النقاش",
-        "aria": null
-      },
-      {
-        "text": "عرض النقاش",
-        "aria": null
-      },
-      {
         "text": "×",
         "aria": "إغلاق"
       },
@@ -2384,7 +2341,7 @@
       },
       {
         "width": 1524,
-        "height": 1999
+        "height": 1125
       }
     ],
     "dimensions": {
@@ -2395,10 +2352,10 @@
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-10/visual-metrics.json",
     "visualMetrics": {
       "comparedWidth": 1524,
-      "comparedHeight": 1999,
-      "comparedPixels": 3046476,
-      "materialDifferencePercent": 5.5505,
-      "antiAliasingOnlyPercent": 63.4725,
+      "comparedHeight": 1125,
+      "comparedPixels": 1714500,
+      "materialDifferencePercent": 36.3656,
+      "antiAliasingOnlyPercent": 35.8377,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

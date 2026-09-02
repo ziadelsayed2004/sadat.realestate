@@ -67,6 +67,17 @@ export const otpVerifyRequestSchema = z.object({
   code: z.string().regex(/^\d{6}$/)
 }).strict();
 
+export const passwordResetOtpSendRequestSchema = z.object({
+  email: normalizedEmailSchema,
+  roleType: z.literal('admin'),
+  purpose: z.literal('password_reset')
+}).strict();
+
+export const passwordResetOtpVerifyRequestSchema = passwordResetOtpSendRequestSchema.extend({
+  challengeId: z.string().uuid(),
+  code: z.string().regex(/^\d{6}$/)
+}).strict();
+
 export const otpSendDataSchema = z.object({
   accepted: z.literal(true),
   challengeId: z.string().uuid(),
@@ -78,13 +89,24 @@ export const otpVerifiedDataSchema = z.object({
   outcome: z.literal('verified'),
   verificationToken: z.string().regex(/^[A-Za-z0-9_-]{43}$/),
   expiresInSeconds: z.number().int().positive(),
-  roleType: otpRoleTypeSchema
+  roleType: z.enum([...OTP_ROLE_TYPES, 'admin'])
 }).strict();
 
 export const adminLoginRequestSchema = z.object({
   email: normalizedEmailSchema,
   password: z.string().min(1).max(1024)
 }).strict();
+
+export const passwordResetRequestSchema = z.object({
+  verificationToken: z.string().regex(/^[A-Za-z0-9_-]{43}$/),
+  newPassword: z.string().min(12).max(128)
+    .regex(/[a-z]/)
+    .regex(/[A-Z]/)
+    .regex(/\d/)
+    .regex(/[^A-Za-z0-9]/)
+}).strict();
+
+export const passwordResetDataSchema = z.object({ reset: z.literal(true) }).strict();
 
 export const emptyAuthRequestSchema = z.object({}).strict();
 
@@ -114,6 +136,7 @@ export const otpSendSuccessEnvelopeSchema = successEnvelopeSchema(otpSendDataSch
 export const otpVerifySuccessEnvelopeSchema = successEnvelopeSchema(otpVerifyDataSchema);
 
 export const authSessionSuccessEnvelopeSchema = successEnvelopeSchema(authSessionDataSchema);
+export const passwordResetSuccessEnvelopeSchema = successEnvelopeSchema(passwordResetDataSchema);
 
 export const logoutDataSchema = z.object({ loggedOut: z.literal(true) }).strict();
 export const logoutSuccessEnvelopeSchema = successEnvelopeSchema(logoutDataSchema);
@@ -121,6 +144,7 @@ export const logoutSuccessEnvelopeSchema = successEnvelopeSchema(logoutDataSchem
 export type AuthRoleType = z.infer<typeof authenticatedUserSchema>['roleType'];
 export type AuthAccountState = z.infer<typeof authenticatedUserSchema>['status'];
 export type AdminLoginRequest = z.infer<typeof adminLoginRequestSchema>;
+export type PasswordResetRequest = z.infer<typeof passwordResetRequestSchema>;
 export type AuthenticatedUser = z.infer<typeof authenticatedUserSchema>;
 export type AuthSessionData = z.infer<typeof authSessionDataSchema>;
 export type LogoutData = z.infer<typeof logoutDataSchema>;
@@ -129,6 +153,8 @@ export type OtpPurpose = z.infer<typeof otpPurposeSchema>;
 export type OtpRoleType = z.infer<typeof otpRoleTypeSchema>;
 export type OtpSendRequest = z.infer<typeof otpSendRequestSchema>;
 export type OtpVerifyRequest = z.infer<typeof otpVerifyRequestSchema>;
+export type PasswordResetOtpSendRequest = z.infer<typeof passwordResetOtpSendRequestSchema>;
+export type PasswordResetOtpVerifyRequest = z.infer<typeof passwordResetOtpVerifyRequestSchema>;
 export type OtpSendData = z.infer<typeof otpSendDataSchema>;
 export type OtpAuthenticatedData = z.infer<typeof otpAuthenticatedDataSchema>;
 export type OtpVerifiedData = z.infer<typeof otpVerifiedDataSchema>;

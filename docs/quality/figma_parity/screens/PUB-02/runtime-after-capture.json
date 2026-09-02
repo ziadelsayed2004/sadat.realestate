@@ -14,27 +14,16 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "a8af6e406cb2608007467ab2cae70b71115d7fc68bb35b3c3605f010c22960f9",
-    "afterHash": "98a2c24b3c0feb68fef3c5f768b1f1bc515dc2a2275ad028a1456e625fa2d7da",
-    "requestedApi": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=20"
-      }
-    ],
-    "apiResponses": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=20",
-        "status": 200
-      }
-    ]
+    "afterHash": "44ee4317ee4f4cced313ad1879c08b99345af8780eb1750bccf69efd509cdc04",
+    "requestedApi": [],
+    "apiResponses": []
   },
   "structure": {
     "headers": 2,
     "navs": 2,
     "sections": 2,
-    "cards": 61,
-    "images": 23,
+    "cards": 31,
+    "images": 12,
     "forms": 1
   },
   "fonts": {
@@ -64,7 +53,7 @@
       {
         "family": "Cairo",
         "weight": "500",
-        "status": "unloaded"
+        "status": "loaded"
       },
       {
         "family": "Cairo",
@@ -74,7 +63,7 @@
       {
         "family": "Cairo",
         "weight": "500",
-        "status": "unloaded"
+        "status": "loaded"
       },
       {
         "family": "Cairo",
@@ -484,11 +473,6 @@
       {
         "family": "Noto Sans SC",
         "weight": "400",
-        "status": "loaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "400",
         "status": "unloaded"
       },
       {
@@ -628,6 +612,11 @@
       },
       {
         "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
         "weight": "500",
         "status": "unloaded"
       },
@@ -1494,7 +1483,7 @@
       {
         "family": "Noto Sans SC",
         "weight": "600",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -1999,7 +1988,7 @@
       {
         "family": "Noto Sans SC",
         "weight": "700",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -2157,9 +2146,9 @@
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-restaurants-cafes.png",
+      "src": "https://sadat-realestate.com/assets/canonical/public/category-all.png",
       "complete": true,
-      "decoded": true,
+      "decoded": false,
       "loading": "eager"
     },
     {
@@ -2169,111 +2158,45 @@
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-showrooms.png",
+      "src": "https://sadat-realestate.com/assets/canonical/public/category-full-commercial-building.png",
       "complete": true,
-      "decoded": true,
+      "decoded": false,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-full-commercial-building.png",
+      "src": "https://sadat-realestate.com/assets/canonical/public/listing-property-duplex.png",
       "complete": true,
-      "decoded": true,
-      "loading": "eager"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-room.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "eager"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-roof.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "eager"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-duplex.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "eager"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-villa.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "eager"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-home.png",
-      "complete": true,
-      "decoded": true,
+      "decoded": false,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-sadat.png",
+      "src": "https://sadat-realestate.com/assets/canonical/public/developer-sadat.png",
       "complete": true,
-      "decoded": true,
+      "decoded": false,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-villa.png",
+      "src": "https://sadat-realestate.com/assets/canonical/public/listing-property-home.png",
       "complete": true,
-      "decoded": true,
+      "decoded": false,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-nile.png",
+      "src": "https://sadat-realestate.com/assets/canonical/public/developer-sadat.png",
       "complete": true,
-      "decoded": true,
+      "decoded": false,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-land.png",
+      "src": "https://sadat-realestate.com/assets/canonical/public/listing-property-rental.png",
       "complete": true,
-      "decoded": true,
+      "decoded": false,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-hope.png",
+      "src": "https://sadat-realestate.com/assets/canonical/public/developer-sadat.png",
       "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-rental.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-ahmed.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-office.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-delta.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-duplex.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-sadat-2.png",
-      "complete": true,
-      "decoded": true,
+      "decoded": false,
       "loading": "lazy"
     },
     {
@@ -2334,28 +2257,16 @@
         "href": "/auth/register"
       },
       {
-        "text": "شقة فاخرة في الحي الأول",
-        "href": "/properties/published-home"
+        "text": "دوبلكس راقي بحديقة خاصة في الحي المتميز",
+        "href": "/properties/demo-garden-duplex"
       },
       {
-        "text": "فيلا مستقلة بالمنطقة الراقية",
-        "href": "/properties/published-villa"
+        "text": "شقة فاخرة بإطلالة مفتوحة في الحي الأول",
+        "href": "/properties/demo-open-view-apartment"
       },
       {
-        "text": "أرض سكنية في الحي السابع",
-        "href": "/properties/published-land"
-      },
-      {
-        "text": "شقة للإيجار في الحي الثالث",
-        "href": "/properties/published-rental"
-      },
-      {
-        "text": "مكتب تجاري في المنطقة الصناعية",
-        "href": "/properties/published-office"
-      },
-      {
-        "text": "دوبلكس فاخر في الحي الخامس",
-        "href": "/properties/published-unit"
+        "text": "شقة عصرية للإيجار بالمنطقة المركزية",
+        "href": "/properties/demo-rental-apartment"
       },
       {
         "text": "العقارات",
@@ -2387,36 +2298,44 @@
       },
       {
         "text": "واتساب متاح 24/7",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://facebook.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://instagram.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://youtube.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://tiktok.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://linkedin.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       }
     ],
     "buttons": [
       {
-        "text": "مطاعم وكافيهات22 عقار",
+        "text": "العربية",
+        "aria": "اللغة"
+      },
+      {
+        "text": "العربية",
+        "aria": "اللغة"
+      },
+      {
+        "text": "سكني3 عقار",
         "aria": null
       },
       {
@@ -2424,27 +2343,7 @@
         "aria": null
       },
       {
-        "text": "صالات عرض34 عقار",
-        "aria": null
-      },
-      {
-        "text": "مبنى تجاري كامل19 عقار",
-        "aria": null
-      },
-      {
-        "text": "غرفة65 عقار",
-        "aria": null
-      },
-      {
-        "text": "روف28 عقار",
-        "aria": null
-      },
-      {
-        "text": "دوبلكس43 عقار",
-        "aria": null
-      },
-      {
-        "text": "فيلا87 عقار",
+        "text": "تجاري0 عقار",
         "aria": null
       },
       {
@@ -2452,7 +2351,15 @@
         "aria": null
       },
       {
+        "text": "اختياري",
+        "aria": null
+      },
+      {
         "text": "تطبيق التصفية",
+        "aria": null
+      },
+      {
+        "text": "الأحدث نشرًا",
         "aria": null
       },
       {
@@ -2465,27 +2372,15 @@
       },
       {
         "text": "أضف للمقارنة",
-        "aria": "أضف للمقارنة: شقة فاخرة في الحي الأول"
+        "aria": "أضف للمقارنة: دوبلكس راقي بحديقة خاصة في الحي المتميز"
       },
       {
         "text": "أضف للمقارنة",
-        "aria": "أضف للمقارنة: فيلا مستقلة بالمنطقة الراقية"
+        "aria": "أضف للمقارنة: شقة فاخرة بإطلالة مفتوحة في الحي الأول"
       },
       {
         "text": "أضف للمقارنة",
-        "aria": "أضف للمقارنة: أرض سكنية في الحي السابع"
-      },
-      {
-        "text": "أضف للمقارنة",
-        "aria": "أضف للمقارنة: شقة للإيجار في الحي الثالث"
-      },
-      {
-        "text": "أضف للمقارنة",
-        "aria": "أضف للمقارنة: مكتب تجاري في المنطقة الصناعية"
-      },
-      {
-        "text": "أضف للمقارنة",
-        "aria": "أضف للمقارنة: دوبلكس فاخر في الحي الخامس"
+        "aria": "أضف للمقارنة: شقة عصرية للإيجار بالمنطقة المركزية"
       }
     ]
   },
@@ -2501,7 +2396,7 @@
       },
       {
         "width": 1577,
-        "height": 1981
+        "height": 1496
       }
     ],
     "dimensions": {
@@ -2512,10 +2407,10 @@
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-02/visual-metrics.json",
     "visualMetrics": {
       "comparedWidth": 1577,
-      "comparedHeight": 1981,
-      "comparedPixels": 3124037,
-      "materialDifferencePercent": 12.6057,
-      "antiAliasingOnlyPercent": 7.5326,
+      "comparedHeight": 1496,
+      "comparedPixels": 2359192,
+      "materialDifferencePercent": 43.3057,
+      "antiAliasingOnlyPercent": 3.5596,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

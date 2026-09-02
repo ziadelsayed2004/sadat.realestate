@@ -40,6 +40,7 @@ export type SessionRotationResult =
 
 export interface AuthRepository {
   findAdminLogin(email: string): Promise<AdminLoginRecord | undefined>;
+  updateAdminPassword(email: string, passwordHash: string, now: Date): Promise<boolean>;
   createSession(input: CreateSessionInput): Promise<{ sessionId: string }>;
   rotateSession(input: RotateSessionInput): Promise<SessionRotationResult>;
   revokeSession(tokenHash: string, now: Date): Promise<boolean>;
@@ -47,8 +48,8 @@ export interface AuthRepository {
 
 export interface OtpChallengeContext {
   email: string;
-  roleType: OtpRoleType;
-  purpose: OtpPurpose;
+  roleType: OtpRoleType | 'admin';
+  purpose: OtpPurpose | 'password_reset';
 }
 
 export interface CreateOtpChallengeInput extends OtpChallengeContext {
@@ -81,6 +82,12 @@ export interface RedeemedOtpGrant {
   purpose: 'registration';
 }
 
+export interface RedeemedPasswordResetGrant {
+  email: string;
+  roleType: 'admin';
+  purpose: 'password_reset';
+}
+
 export interface OtpRepository {
   createChallenge(input: CreateOtpChallengeInput): Promise<CreateOtpChallengeResult>;
   cancelChallenge(publicId: string, now: Date): Promise<void>;
@@ -91,7 +98,8 @@ export interface OtpRepository {
     challengeId: string,
     verificationTokenHash: string,
     now: Date,
-    expiresAt: Date
+    expiresAt: Date,
+    purpose?: 'registration' | 'password_reset'
   ): Promise<boolean>;
   findOtpAccount(
     email: string,
@@ -102,6 +110,10 @@ export interface OtpRepository {
     roleType: OtpRoleType,
     now: Date
   ): Promise<RedeemedOtpGrant | undefined>;
+  redeemPasswordResetGrant?(
+    verificationTokenHash: string,
+    now: Date
+  ): Promise<RedeemedPasswordResetGrant | undefined>;
 }
 
 interface LeanUser {
@@ -127,8 +139,8 @@ interface LeanOtpChallenge {
   _id: Types.ObjectId;
   publicId: string;
   normalizedEmail: string;
-  roleType: OtpRoleType;
-  purpose: OtpPurpose;
+  roleType: OtpRoleType | 'admin';
+  purpose: OtpPurpose | 'password_reset';
   codeHash: string;
   attemptsRemaining: number;
   createdAt: Date;
@@ -184,6 +196,21 @@ export function createMongooseAuthRepository(
       return credential
         ? { ...toAccount(user), roleType: 'admin', passwordHash: credential.passwordHash }
         : undefined;
+    },
+
+    async updateAdminPassword(email, passwordHash, now) {
+      const user = await User.findOne({ normalizedEmail: email, roleType: 'admin', status: 'verified' })
+        .select('_id')
+        .lean<{ _id: Types.ObjectId }>()
+        .exec();
+      if (!user) return false;
+      const result = await AdminCredential.updateOne(
+        { userId: user._id },
+        { $set: { passwordHash, passwordChangedAt: now, updatedAt: now } }
+      ).exec();
+      if (result.matchedCount !== 1) return false;
+      await revokeAll(user._id, now);
+      return true;
     },
 
     async createSession(input) {
@@ -411,12 +438,12 @@ export function createMongooseOtpRepository(
       return result.modifiedCount === 1;
     },
 
-    async verifyRegistrationChallenge(challengeId, verificationTokenHash, now, expiresAt) {
+    async verifyRegistrationChallenge(challengeId, verificationTokenHash, now, expiresAt, purpose = 'registration') {
       const result = await OtpChallenge.updateOne(
         {
           _id: new Types.ObjectId(challengeId),
           status: 'pending',
-          purpose: 'registration',
+          purpose,
           expiresAt: { $gt: now }
         },
         {
@@ -459,12 +486,33 @@ export function createMongooseOtpRepository(
         .select('+verificationTokenHash normalizedEmail roleType purpose')
         .lean<LeanOtpChallenge>()
         .exec();
-      return challenge
+          return challenge
         ? {
             email: challenge.normalizedEmail,
-            roleType: challenge.roleType,
+            roleType,
             purpose: 'registration'
           }
+          : undefined;
+    },
+
+    async redeemPasswordResetGrant(verificationTokenHash, now) {
+      const challenge = await OtpChallenge.findOneAndUpdate(
+        {
+          verificationTokenHash,
+          roleType: 'admin',
+          purpose: 'password_reset',
+          status: 'verified',
+          expiresAt: { $gt: now },
+          consumedAt: { $exists: false }
+        },
+        { $set: { status: 'consumed', consumedAt: now } },
+        { new: true }
+      )
+        .select('+verificationTokenHash normalizedEmail roleType purpose')
+        .lean<LeanOtpChallenge>()
+        .exec();
+      return challenge
+        ? { email: challenge.normalizedEmail, roleType: 'admin', purpose: 'password_reset' }
         : undefined;
     }
   };

@@ -5,7 +5,7 @@ import { createFavoriteService, type FavoritePropertySource } from '../../src/mo
 
 const id = '0123456789abcdef01234567';
 const seekerId = '1123456789abcdef01234567';
-const localized = { ar: 'عقار', en: 'Property', 'zh-CN': '房产' };
+const localized = { ar: 'عقار', en: 'Property' };
 const claims = { role: 'seeker', status: 'verified', sub: seekerId } as AccessTokenClaims;
 const property: FavoritePropertySource = { id, slug: 'saved-property', kind: 'property', name: localized, transactionType: 'sale', status: 'published', active: true };
 const favorite = { seekerId, propertyId: id, savedAt: new Date('2026-01-01T00:00:00.000Z') };

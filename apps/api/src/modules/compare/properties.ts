@@ -1,12 +1,12 @@
 import { Types, type Connection } from 'mongoose';
-import { PUBLIC_PROPERTY_COMPARISON_FIELDS, publicPropertyCompareRequestSchema, publicPropertyComparisonDataSchema, publicPropertyRelatedPropertySchema, type PublicPropertyComparisonData } from '@sadat-real-estate/contracts';
+import { PUBLIC_PROPERTY_COMPARISON_FIELDS, publicPropertyCompareRequestSchema, publicPropertyComparisonDataSchema, publicPropertyComparisonItemSchema, type PublicPropertyComparisonData } from '@sadat-real-estate/contracts';
 
 export interface PublicPropertyComparisonSource { id: string; slug: string; kind: string; name: unknown; transactionType: string; imageUrl?: string; locationName?: unknown; propertyTypeName?: unknown; publicCode?: string; deliveryStatus?: string; installmentAvailable?: boolean; sourceType?: string; organizationId?: string; sourceName?: unknown; sourceImageUrl?: string; sourceVerified?: boolean; projectId?: string; description?: unknown; area?: unknown; layout?: unknown; price?: unknown; status: string; active: boolean }
 export interface PublicPropertyComparisonRepository { findPublished(ids: string[]): Promise<PublicPropertyComparisonSource[]> }
 export class PublicPropertyComparisonError extends Error { constructor(readonly code: 'PROPERTY_UNAVAILABLE') { super(code); this.name = 'PublicPropertyComparisonError'; } }
 
 function card(source: PublicPropertyComparisonSource) {
-  const parsed = publicPropertyRelatedPropertySchema.safeParse({
+  const parsed = publicPropertyComparisonItemSchema.safeParse({
     id: source.id,
     slug: source.slug,
     kind: source.kind,
@@ -22,7 +22,6 @@ function card(source: PublicPropertyComparisonSource) {
     ...(source.sourceName !== undefined ? { sourceName: source.sourceName } : {}),
     ...(source.sourceImageUrl ? { sourceImageUrl: source.sourceImageUrl } : {}),
     ...(source.sourceVerified !== undefined ? { sourceVerified: source.sourceVerified } : {}),
-    ...(source.organizationId ? { organizationId: source.organizationId } : {}),
     ...(source.projectId ? { projectId: source.projectId } : {}),
     ...(source.description !== undefined ? { description: source.description } : {}),
     ...(source.area !== undefined ? { area: source.area } : {}),

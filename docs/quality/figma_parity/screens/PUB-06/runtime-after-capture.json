@@ -11,10 +11,10 @@
       "height": 720,
       "devicePixelRatio": 1
     },
-    "responseStatus": 200,
-    "responseOk": true,
+    "responseStatus": 404,
+    "responseOk": false,
     "beforeHash": "4daebbf4536e7db32c9ddcf67bc8068ad708fe4e7fafc16ca526ab9f642788a3",
-    "afterHash": "68b2e2073459059249f4240d94c5b40a3f689e83ef40405bdd302315b5769062",
+    "afterHash": "568a1c85bee3c8128127acd604308f8df64490396f5e684bc0ba84105f40f2f3",
     "requestedApi": [
       {
         "method": "GET",
@@ -31,11 +31,11 @@
   },
   "structure": {
     "headers": 2,
-    "navs": 2,
-    "sections": 8,
-    "cards": 4,
-    "images": 7,
-    "forms": 1
+    "navs": 1,
+    "sections": 1,
+    "cards": 0,
+    "images": 3,
+    "forms": 0
   },
   "fonts": {
     "status": "loaded",
@@ -484,11 +484,6 @@
       {
         "family": "Noto Sans SC",
         "weight": "400",
-        "status": "loaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "400",
         "status": "unloaded"
       },
       {
@@ -628,6 +623,11 @@
       },
       {
         "family": "Noto Sans SC",
+        "weight": "400",
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
         "weight": "500",
         "status": "unloaded"
       },
@@ -1494,7 +1494,7 @@
       {
         "family": "Noto Sans SC",
         "weight": "600",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -1999,7 +1999,7 @@
       {
         "family": "Noto Sans SC",
         "weight": "700",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -2157,30 +2157,6 @@
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "eager"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-b.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "eager"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
       "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
@@ -2238,62 +2214,6 @@
         "href": "/auth/register"
       },
       {
-        "text": "تواصل مع المطور",
-        "href": "#developer-contact"
-      },
-      {
-        "text": "عرض الوحدات المتاحة",
-        "href": "#developer-properties"
-      },
-      {
-        "text": "العودة للمطورين",
-        "href": "/developers"
-      },
-      {
-        "text": "نبذة",
-        "href": "#developer-overview"
-      },
-      {
-        "text": "المشاريع",
-        "href": "#developer-projects"
-      },
-      {
-        "text": "الوحدات المتاحة",
-        "href": "#developer-properties"
-      },
-      {
-        "text": "التواصل",
-        "href": "#developer-contact"
-      },
-      {
-        "text": "01001234567",
-        "href": "tel:01001234567"
-      },
-      {
-        "text": "واتساب متاح",
-        "href": "https://wa.me/201001234567"
-      },
-      {
-        "text": "إرسال الاستفسار",
-        "href": "#developer-contact"
-      },
-      {
-        "text": "عرض المشروع",
-        "href": "/properties?projectId=bbbbbbbbbbbbbbbbbbbbbbbb"
-      },
-      {
-        "text": "عرض المشروع",
-        "href": "/properties?projectId=cccccccccccccccccccccccc"
-      },
-      {
-        "text": "عرض الوحدات المتاحة",
-        "href": "#developer-contact"
-      },
-      {
-        "text": "تواصل عبر واتساب",
-        "href": "https://wa.me/201001234567"
-      },
-      {
         "text": "العقارات",
         "href": "/properties"
       },
@@ -2323,36 +2243,44 @@
       },
       {
         "text": "واتساب متاح 24/7",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://facebook.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://instagram.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://youtube.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://tiktok.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://linkedin.com"
       },
       {
         "text": "",
-        "href": "/community"
+        "href": "https://wa.me/201001234567"
       }
     ],
     "buttons": [
       {
-        "text": "إرسال الاستفسار",
+        "text": "العربية",
+        "aria": "اللغة"
+      },
+      {
+        "text": "العربية",
+        "aria": "اللغة"
+      },
+      {
+        "text": "إعادة المحاولة",
         "aria": null
       }
     ]
@@ -2369,7 +2297,7 @@
       },
       {
         "width": 1534,
-        "height": 2984
+        "height": 871
       }
     ],
     "dimensions": {
@@ -2380,10 +2308,10 @@
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-06/visual-metrics.json",
     "visualMetrics": {
       "comparedWidth": 1534,
-      "comparedHeight": 2984,
-      "comparedPixels": 4577456,
-      "materialDifferencePercent": 15.8102,
-      "antiAliasingOnlyPercent": 6.2958,
+      "comparedHeight": 871,
+      "comparedPixels": 1336114,
+      "materialDifferencePercent": 63.5502,
+      "antiAliasingOnlyPercent": 1.7938,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

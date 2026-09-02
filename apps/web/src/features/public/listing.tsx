@@ -6,7 +6,7 @@ import type {
 } from '@sadat-real-estate/contracts';
 import { publicPropertySearchQuerySchema } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
-import { Pagination, PropertyCard } from '../design_system/index.ts';
+import { CustomSelect, Pagination, PropertyCard } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
 import { PublicCategoryGlyph, PublicMediaImage, PublicSiteFooter, PublicSiteHeader, fallbackPropertyImage, publicCategoryAsset } from './components.tsx';
@@ -19,6 +19,7 @@ import {
 } from './listing-data.ts';
 import { getPublicPropertyListingCopy, type PublicPropertyListingCopy } from './listing-copy.ts';
 import { formatMoney, localizedText, propertyFeatures } from './model.ts';
+import { publicPropertyComparisonUrl } from './compare-data.ts';
 import './listing.css';
 
 export type PublicPropertyListingViewState = Extract<UxState, 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission'>;
@@ -181,18 +182,25 @@ function ListingFilters({
         <fieldset className="public-property-listing__filter-chips public-property-listing__filter-chips--types">
           <legend>{copy.propertyType}</legend>
           <label><input type="radio" name="propertyTypeId" value="" checked={draft.propertyTypeId === ''} onChange={() => onCommit('propertyTypeId', '')} /> {copy.allKinds}</label>
-          {categories.slice(0, 5).map(category => <label key={category.id}><input type="radio" name="propertyTypeId" value={category.id} checked={draft.propertyTypeId === category.id} onChange={() => onCommit('propertyTypeId', category.id)} /> {localizedText(category.name, 'ar') ?? category.slug}</label>)}
+          {categories.map(category => <label key={category.id}><input type="radio" name="propertyTypeId" value={category.id} checked={draft.propertyTypeId === category.id} onChange={() => onCommit('propertyTypeId', category.id)} /> {localizedText(category.name, 'ar') ?? category.slug}</label>)}
         </fieldset>
         <FilterField id="public-property-location" label={copy.locationId}>
           <input id="public-property-location" name="locationId" type="text" value={draft.locationId} placeholder={copy.valuePlaceholder} onChange={event => onChange('locationId', event.target.value)} onBlur={event => onCommit('locationId', event.target.value)} />
         </FilterField>
         <FilterField id="public-property-delivery-status" label={copy.deliveryStatus}>
-          <select id="public-property-delivery-status" name="deliveryStatus" value={draft.deliveryStatus} onChange={event => onCommit('deliveryStatus', event.target.value as ListingFilterDraft['deliveryStatus'])}>
-            <option value="">{copy.valuePlaceholder}</option>
-            <option value="ready_to_move">{copy.readyToMove}</option>
-            <option value="under_construction">{copy.underConstruction}</option>
-            <option value="future_delivery">{copy.futureDelivery}</option>
-          </select>
+          <CustomSelect
+            name="deliveryStatus"
+            value={draft.deliveryStatus}
+            onChange={val => onCommit('deliveryStatus', val as ListingFilterDraft['deliveryStatus'])}
+            placeholder={copy.valuePlaceholder}
+            ariaLabel={copy.deliveryStatus}
+            options={[
+              { value: '', label: copy.valuePlaceholder },
+              { value: 'ready_to_move', label: copy.readyToMove },
+              { value: 'under_construction', label: copy.underConstruction },
+              { value: 'future_delivery', label: copy.futureDelivery }
+            ]}
+          />
         </FilterField>
         {error ? <p className="public-property-listing__filter-error" role="alert">{copy.invalidFilters}</p> : null}
         <button className="public-property-listing__apply" type="submit">{copy.applyFilters}</button>
@@ -216,13 +224,17 @@ function PropertyResults({
   locale,
   copy,
   listMode,
-  onPageChange
+  onPageChange,
+  comparedIds,
+  onToggleCompare
 }: {
   readonly data: PublicPropertyListData;
   readonly locale: SupportedLocale;
   readonly copy: PublicPropertyListingCopy;
   readonly listMode: boolean;
   readonly onPageChange: (page: number) => void;
+  readonly comparedIds: readonly string[];
+  readonly onToggleCompare: (id: string) => void;
 }) {
   const pageCount = Math.ceil(data.total / data.limit);
   const homepageCopy = getPublicHomepageCopy(locale);
@@ -242,7 +254,7 @@ function PropertyResults({
             image={<PublicMediaImage src={property.imageUrl ?? fallbackPropertyImage(property.slug, property.kind)} alt={localizedText(property.name, locale) ?? property.slug} fallback={<img src={fallbackPropertyImage(property.slug, property.kind)} alt={localizedText(property.name, locale) ?? property.slug} />} />}
             imageAlt={localizedText(property.name, locale) ?? property.slug}
             className="public-property-listing__card"
-            action={<button type="button" aria-label={`${copy.addToCompare}: ${localizedText(property.name, locale) ?? property.slug}`}><ListingIcon type="compare" /> {copy.addToCompare}</button>}
+            action={<button type="button" className={comparedIds.includes(property.id) ? 'is-selected' : ''} aria-pressed={comparedIds.includes(property.id)} aria-label={`${copy.addToCompare}: ${localizedText(property.name, locale) ?? property.slug}`} onClick={() => onToggleCompare(property.id)}><ListingIcon type="compare" /> {comparedIds.includes(property.id) ? (locale === 'ar' ? 'تمت الإضافة' : 'Added') : copy.addToCompare}</button>}
           />
         ))}
       </div>
@@ -277,6 +289,27 @@ export function PublicPropertyListing({
   const [attempt, setAttempt] = useState(0);
   const [filterError, setFilterError] = useState(false);
   const [listMode, setListMode] = useState(false);
+  const [comparedIds, setComparedIds] = useState<readonly string[]>([]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const saved = window.localStorage.getItem('sadat-property-comparison');
+    if (saved === null) return;
+    try {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed)) setComparedIds(parsed.filter((id): id is string => typeof id === 'string').slice(0, 2));
+    } catch {
+      window.localStorage.removeItem('sadat-property-comparison');
+    }
+  }, []);
+
+  const toggleCompare = (id: string) => {
+    setComparedIds(previous => {
+      const next = previous.includes(id) ? previous.filter(item => item !== id) : [...previous, id].slice(-2);
+      if (typeof window !== 'undefined') window.localStorage.setItem('sadat-property-comparison', JSON.stringify(next));
+      return next;
+    });
+  };
 
   useEffect(() => {
     if (initialData !== undefined && attempt === 0) return;
@@ -345,8 +378,12 @@ export function PublicPropertyListing({
     navigate({ ...query, propertyCategoryId, propertyTypeId: undefined, page: 1 }, false);
   };
 
-  const categoryRail = data?.categories.slice(0, 7) ?? [];
-  const firstCategory = categoryRail[0];
+  const updatePropertyType = (propertyTypeId: string) => {
+    navigate({ ...query, propertyCategoryId: undefined, propertyTypeId, page: 1 }, false);
+  };
+
+  const categoryRail = data?.categories ?? [];
+  const propertyTypeRail = data?.propertyTypes ?? [];
 
   return (
     <div className="public-property-listing" data-page="public-properties" data-listing-state={view}>
@@ -358,9 +395,9 @@ export function PublicPropertyListing({
         </div>
       </section>
       {view === 'success' && data !== undefined ? <nav className="public-property-listing__category-rail" aria-label={copy.propertyType}>
-        {firstCategory === undefined ? null : <button type="button" key={firstCategory.id} className={query.propertyCategoryId === firstCategory.id ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === firstCategory.id} onClick={() => updatePropertyCategory(firstCategory.id)}><PublicMediaImage src={firstCategory.imageUrl ?? publicCategoryAsset(firstCategory.slug)} alt="" fallback={<PublicCategoryGlyph slug={firstCategory.slug} />} loading="eager" /><strong>{localizedText(firstCategory.name, locale) ?? firstCategory.slug}</strong><span>{firstCategory.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>}
-        <button type="button" className={query.propertyCategoryId === undefined ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === undefined} onClick={() => updatePropertyCategory(undefined)}><img src="/assets/sadat-real-estate-logo.png" alt="" width="72" height="64" decoding="async" loading="eager" /><strong>{copy.allKinds}</strong><span>{copy.allPropertiesCount} {copy.propertyCountLabel}</span></button>
-        {categoryRail.slice(1).map(category => <button type="button" key={category.id} className={query.propertyCategoryId === category.id ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === category.id} onClick={() => updatePropertyCategory(category.id)}><PublicMediaImage src={category.imageUrl ?? publicCategoryAsset(category.slug)} alt="" fallback={<PublicCategoryGlyph slug={category.slug} />} loading="eager" /><strong>{localizedText(category.name, locale) ?? category.slug}</strong><span>{category.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
+        <button type="button" className={query.propertyCategoryId === undefined && query.propertyTypeId === undefined ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === undefined && query.propertyTypeId === undefined} onClick={() => updatePropertyCategory(undefined)}><img src="/assets/sadat-real-estate-logo.png" alt="" width="72" height="64" decoding="async" loading="eager" /><strong>{copy.allKinds}</strong><span>{copy.allPropertiesCount} {copy.propertyCountLabel}</span></button>
+        {categoryRail.map(category => <button type="button" key={`category-${category.id}`} className={query.propertyCategoryId === category.id ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === category.id} onClick={() => updatePropertyCategory(category.id)}><PublicMediaImage src={category.imageUrl ?? publicCategoryAsset(category.slug)} alt="" fallback={<PublicCategoryGlyph slug={category.slug} />} loading="eager" /><strong>{localizedText(category.name, locale) ?? category.slug}</strong><span>{category.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
+        {propertyTypeRail.map(propertyType => <button type="button" key={`type-${propertyType.id}`} className={query.propertyTypeId === propertyType.id ? 'is-active' : ''} aria-pressed={query.propertyTypeId === propertyType.id} onClick={() => updatePropertyType(propertyType.id)}><PublicMediaImage src={propertyType.imageUrl ?? publicCategoryAsset(propertyType.slug)} alt="" fallback={<PublicCategoryGlyph slug={propertyType.slug} />} loading="eager" /><strong>{localizedText(propertyType.name, locale) ?? propertyType.slug}</strong><span>{propertyType.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
       </nav> : null}
       <div className="public-property-listing__body">
         <ListingFilters draft={draft} copy={copy} onChange={onFilterChange} onCommit={commitFilterChange} onSubmit={applyFilters} onReset={() => navigate(defaultPublicPropertySearchQuery())} error={filterError} categories={data?.propertyTypes ?? []} />
@@ -368,25 +405,32 @@ export function PublicPropertyListing({
           <div className="public-property-listing__toolbar">
             <div className="public-property-listing__sort">
               <label className="public-property-listing__visually-hidden" htmlFor="public-property-sort">{copy.sortLabel}</label>
-              <select id="public-property-sort" name="sort" value={query.sort} onChange={event => {
-                const sort = event.target.value as PublicPropertySearchQuery['sort'];
-                setDraft(previous => ({ ...previous, sort }));
-                navigate({ ...query, sort, page: 1 }, false);
-              }}>
-                <option value="publishedAt">{copy.sortPublishedAt}</option>
-                <option value="price">{copy.sortPrice}</option>
-                <option value="name">{copy.sortName}</option>
-                <option value="slug">{copy.sortSlug}</option>
-              </select>
+              <CustomSelect
+                name="sort"
+                value={query.sort}
+                onChange={val => {
+                  const sort = val as PublicPropertySearchQuery['sort'];
+                  setDraft(previous => ({ ...previous, sort }));
+                  navigate({ ...query, sort, page: 1 }, false);
+                }}
+                ariaLabel={copy.sortLabel}
+                options={[
+                  { value: 'publishedAt', label: copy.sortPublishedAt },
+                  { value: 'price', label: copy.sortPrice },
+                  { value: 'name', label: copy.sortName },
+                  { value: 'slug', label: copy.sortSlug }
+                ]}
+              />
             </div>
             <div className="public-property-listing__view-toggle" role="group" aria-label={copy.title}>
               <button type="button" aria-pressed={!listMode} aria-label={copy.gridView} onClick={() => setListMode(false)}><ListingIcon type="grid" /></button>
               <button type="button" aria-pressed={listMode} aria-label={copy.listView} onClick={() => setListMode(true)}><ListingIcon type="list" /></button>
             </div>
           </div>
-          {view === 'success' && data !== undefined ? <PropertyResults data={data} locale={locale} copy={copy} listMode={listMode} onPageChange={page => navigate({ ...query, page })} /> : view === 'success' ? <StateNotice state="empty" copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : <StateNotice state={view} copy={copy} onRetry={() => setAttempt(value => value + 1)} />}
+          {view === 'success' && data !== undefined ? <PropertyResults data={data} locale={locale} copy={copy} listMode={listMode} onPageChange={page => navigate({ ...query, page })} comparedIds={comparedIds} onToggleCompare={toggleCompare} /> : view === 'success' ? <StateNotice state="empty" copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : <StateNotice state={view} copy={copy} onRetry={() => setAttempt(value => value + 1)} />}
         </section>
       </div>
+      {comparedIds.length > 0 ? <aside className="public-property-listing__compare-tray" aria-live="polite"><span>{locale === 'ar' ? `${comparedIds.length} عقار في المقارنة` : `${comparedIds.length} properties selected`}</span><a href={publicPropertyComparisonUrl(comparedIds, `/compare?lang=${locale}`)}>{locale === 'ar' ? 'قارن الآن' : 'Compare now'}</a><button type="button" onClick={() => { setComparedIds([]); if (typeof window !== 'undefined') window.localStorage.removeItem('sadat-property-comparison'); }}>{locale === 'ar' ? 'مسح' : 'Clear'}</button></aside> : null}
       <PublicSiteFooter locale={locale} description={copy.footerDescription} />
     </div>
   );

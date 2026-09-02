@@ -1,0 +1,105 @@
+{
+  "report": [
+    {
+      "id": "PUB-01",
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "nativeVisible": 3,
+      "errors": 0
+    },
+    {
+      "id": "PUB-02",
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "nativeVisible": 3,
+      "errors": 0
+    },
+    {
+      "id": "PUB-03",
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "nativeVisible": 2,
+      "errors": 0
+    },
+    {
+      "id": "PUB-04",
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "nativeVisible": 1,
+      "errors": 0
+    },
+    {
+      "id": "PUB-05",
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "nativeVisible": 1,
+      "errors": 0
+    },
+    {
+      "id": "PUB-06",
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "nativeVisible": 1,
+      "errors": 0
+    },
+    {
+      "id": "PUB-07",
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "nativeVisible": 1,
+      "errors": 0
+    },
+    {
+      "id": "PUB-08",
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "nativeVisible": 1,
+      "errors": 0
+    },
+    {
+      "id": "PUB-09",
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "nativeVisible": 1,
+      "errors": 0
+    },
+    {
+      "id": "PUB-10",
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "nativeVisible": 1,
+      "errors": 0
+    },
+    {
+      "id": "PUB-11",
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "nativeVisible": 1,
+      "errors": 0
+    },
+    {
+      "id": "PUB-12",
+      "status": 200,
+      "overflow": false,
+      "broken": [],
+      "nativeVisible": 1,
+      "errors": 0
+    }
+  ],
+  "banner": {
+    "height": 462.5625,
+    "scrollHeight": 461,
+    "controlsInside": true
+  }
+}

@@ -4,7 +4,7 @@ import { PUBLIC_PROPERTY_COMPARISON_FIELDS } from '@sadat-real-estate/contracts'
 import { createPublicPropertyComparisonService, PublicPropertyComparisonError, type PublicPropertyComparisonRepository, type PublicPropertyComparisonSource } from '../../src/modules/compare/properties.js';
 
 const id = '0123456789abcdef01234567'; const other = '1123456789abcdef01234567';
-const localized = { ar: 'شقة', en: 'Apartment', 'zh-CN': '公寓' };
+const localized = { ar: 'شقة', en: 'Apartment' };
 const row = (value: string, overrides: Partial<PublicPropertyComparisonSource> = {}): PublicPropertyComparisonSource => ({ id: value, slug: value === id ? 'first' : 'second', kind: 'property', name: localized, transactionType: 'sale', status: 'published', active: true, ...overrides });
 function repository(rows: PublicPropertyComparisonSource[]): PublicPropertyComparisonRepository { return { async findPublished(ids) { return rows.filter((item) => ids.includes(item.id) && item.status === 'published' && item.active); } }; }
 

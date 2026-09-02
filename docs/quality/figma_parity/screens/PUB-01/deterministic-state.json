@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "e2e-public-homepage-success",
-  "responseSha256": "a2483848af2ba4d76c923ddfa81686e580fbd357ed1cb181d0046b80cba7bdbd",
+  "responseSha256": "895b522b54cc564fa221f0833e5391372e1d41da82b38f2e89ced0ae4e6aeff1",
   "response": {
     "data": {
       "sections": [
@@ -16,13 +16,11 @@
           "key": "hero",
           "title": {
             "ar": "ابحث عن عقارك\nالان في السادات",
-            "en": "Find your property\nnow in Sadat City",
-            "zh-CN": "寻找您的房产\n就在萨达特城"
+            "en": "Find your property\nnow in Sadat City"
           },
           "body": {
             "ar": "منصة متكاملة لعقارات وخدمات مدينة السادات",
-            "en": "A complete real-estate platform for Sadat City services and properties",
-            "zh-CN": "萨达特城房产与服务综合平台"
+            "en": "A complete real-estate platform for Sadat City services and properties"
           },
           "order": 0
         },
@@ -30,8 +28,7 @@
           "key": "featured",
           "title": {
             "ar": "عقارات مميزة",
-            "en": "Featured properties",
-            "zh-CN": "精选房产"
+            "en": "Featured properties"
           },
           "order": 1
         }
@@ -42,8 +39,7 @@
           "slug": "restaurants-cafes",
           "name": {
             "ar": "مطاعم وكافيهات",
-            "en": "Restaurants and cafés",
-            "zh-CN": "餐厅和咖啡馆"
+            "en": "Restaurants and cafés"
           },
           "propertyCount": 22,
           "order": 0
@@ -53,8 +49,7 @@
           "slug": "showrooms",
           "name": {
             "ar": "صالات عرض",
-            "en": "Showrooms",
-            "zh-CN": "展厅"
+            "en": "Showrooms"
           },
           "propertyCount": 34,
           "order": 1
@@ -64,8 +59,7 @@
           "slug": "full-commercial-building",
           "name": {
             "ar": "مبنى تجاري كامل",
-            "en": "Full commercial building",
-            "zh-CN": "完整商业楼"
+            "en": "Full commercial building"
           },
           "propertyCount": 19,
           "order": 2
@@ -75,8 +69,7 @@
           "slug": "room",
           "name": {
             "ar": "غرفة",
-            "en": "Room",
-            "zh-CN": "房间"
+            "en": "Room"
           },
           "propertyCount": 65,
           "order": 3
@@ -86,8 +79,7 @@
           "slug": "roof",
           "name": {
             "ar": "روف",
-            "en": "Roof",
-            "zh-CN": "屋顶"
+            "en": "Roof"
           },
           "propertyCount": 28,
           "order": 4
@@ -97,8 +89,7 @@
           "slug": "duplex",
           "name": {
             "ar": "دوبلكس",
-            "en": "Duplex",
-            "zh-CN": "复式"
+            "en": "Duplex"
           },
           "propertyCount": 43,
           "order": 5
@@ -108,8 +99,7 @@
           "slug": "villa",
           "name": {
             "ar": "فيلا",
-            "en": "Villa",
-            "zh-CN": "别墅"
+            "en": "Villa"
           },
           "propertyCount": 87,
           "order": 6
@@ -120,14 +110,12 @@
           "key": "population",
           "title": {
             "ar": "عدد سكان مدينة السادات",
-            "en": "Sadat City population",
-            "zh-CN": "萨达特城人口"
+            "en": "Sadat City population"
           },
           "value": 342800,
           "unit": {
             "ar": "نسمة",
-            "en": "residents",
-            "zh-CN": "居民"
+            "en": "residents"
           },
           "order": 0
         },
@@ -135,14 +123,12 @@
           "key": "annual_growth",
           "title": {
             "ar": "نمو سنوي",
-            "en": "Annual growth",
-            "zh-CN": "年增长"
+            "en": "Annual growth"
           },
           "value": 3500,
           "unit": {
             "ar": "نسمة",
-            "en": "residents",
-            "zh-CN": "居民"
+            "en": "residents"
           },
           "order": 1
         },
@@ -150,8 +136,7 @@
           "key": "residential_districts",
           "title": {
             "ar": "منطقة سكنية",
-            "en": "Residential districts",
-            "zh-CN": "住宅区"
+            "en": "Residential districts"
           },
           "value": 18,
           "order": 2
@@ -160,8 +145,7 @@
           "key": "housing_units",
           "title": {
             "ar": "وحدة سكنية",
-            "en": "Housing units",
-            "zh-CN": "住房单元"
+            "en": "Housing units"
           },
           "value": 1200,
           "order": 3
@@ -174,15 +158,13 @@
           "kind": "property",
           "name": {
             "ar": "شقة فاخرة في الحي الأول",
-            "en": "Luxury apartment in the First District",
-            "zh-CN": "第一街区豪华公寓"
+            "en": "Luxury apartment in the First District"
           },
           "transactionType": "sale",
           "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/property-home.png",
           "description": {
             "ar": "وصف المنزل المنشور",
-            "en": "A published home description",
-            "zh-CN": "已发布房产描述"
+            "en": "A published home description"
           },
           "area": {
             "value": 145,
@@ -203,8 +185,7 @@
           "kind": "property",
           "name": {
             "ar": "فيلا مستقلة بالمنطقة الراقية",
-            "en": "Detached villa in the premium district",
-            "zh-CN": "高档区独栋别墅"
+            "en": "Detached villa in the premium district"
           },
           "transactionType": "sale",
           "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/property-villa.png",
@@ -227,8 +208,7 @@
           "kind": "unit",
           "name": {
             "ar": "دوبلكس فاخر في الحي الخامس",
-            "en": "Luxury duplex in the Fifth District",
-            "zh-CN": "第五街区豪华复式住宅"
+            "en": "Luxury duplex in the Fifth District"
           },
           "transactionType": "sale",
           "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/property-duplex.png",
@@ -251,8 +231,7 @@
           "kind": "unit",
           "name": {
             "ar": "Published office",
-            "en": "Published office",
-            "zh-CN": "Published office"
+            "en": "Published office"
           },
           "transactionType": "rent",
           "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
@@ -276,8 +255,7 @@
           "kind": "property",
           "name": {
             "ar": "Published unit",
-            "en": "Published unit",
-            "zh-CN": "Published unit"
+            "en": "Published unit"
           },
           "transactionType": "sale",
           "imageUrl": "http://127.0.0.1:4173/assets/clone/pub06-a.png",
@@ -301,8 +279,7 @@
           "kind": "property",
           "name": {
             "ar": "Published land",
-            "en": "Published land",
-            "zh-CN": "Published land"
+            "en": "Published land"
           },
           "transactionType": "sale",
           "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
@@ -322,14 +299,12 @@
           "slug": "approved-builder",
           "name": {
             "ar": "المطور المعتمد",
-            "en": "Approved builder",
-            "zh-CN": "已批准开发商"
+            "en": "Approved builder"
           },
           "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
           "description": {
             "ar": "وصف المطور",
-            "en": "Published developer description",
-            "zh-CN": "已发布开发商描述"
+            "en": "Published developer description"
           }
         },
         {
@@ -337,14 +312,12 @@
           "slug": "city-builders",
           "name": {
             "ar": "City builders",
-            "en": "City builders",
-            "zh-CN": "City builders"
+            "en": "City builders"
           },
           "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
           "description": {
             "ar": "Published developer description",
-            "en": "Published developer description",
-            "zh-CN": "Published developer description"
+            "en": "Published developer description"
           }
         },
         {
@@ -352,14 +325,12 @@
           "slug": "sadat-brokers",
           "name": {
             "ar": "Sadat brokers",
-            "en": "Sadat brokers",
-            "zh-CN": "Sadat brokers"
+            "en": "Sadat brokers"
           },
           "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
           "description": {
             "ar": "Published brokerage description",
-            "en": "Published brokerage description",
-            "zh-CN": "Published brokerage description"
+            "en": "Published brokerage description"
           }
         },
         {
@@ -367,14 +338,12 @@
           "slug": "new-city-developments",
           "name": {
             "ar": "New city developments",
-            "en": "New city developments",
-            "zh-CN": "New city developments"
+            "en": "New city developments"
           },
           "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-g.png",
           "description": {
             "ar": "Published developer description",
-            "en": "Published developer description",
-            "zh-CN": "Published developer description"
+            "en": "Published developer description"
           }
         }
       ],
@@ -384,14 +353,12 @@
           "type": "article",
           "title": {
             "ar": "دليلك الكامل للشراء في مدينة السادات 2026",
-            "en": "Your complete guide to buying in Sadat City 2026",
-            "zh-CN": "2026年萨达特城购房完整指南"
+            "en": "Your complete guide to buying in Sadat City 2026"
           },
           "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/article-buying-guide.png",
           "body": {
             "ar": "كل ما تحتاج معرفته قبل شراء عقار في مدينة السادات.",
-            "en": "Everything you need to know before buying a property in Sadat City.",
-            "zh-CN": "在萨达特城购买房产前需要了解的一切。"
+            "en": "Everything you need to know before buying a property in Sadat City."
           },
           "order": 0
         },
@@ -400,14 +367,12 @@
           "type": "community",
           "title": {
             "ar": "أحمد محمد",
-            "en": "Ahmed Mohamed",
-            "zh-CN": "艾哈迈德·穆罕默德"
+            "en": "Ahmed Mohamed"
           },
           "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/community-hanaa.png",
           "body": {
             "ar": "تجربتي بعد سنة كاملة في السادات\nانتقلت من القاهرة للسادات السنة اللي فاتت وعندي شوية ملاحظات وتجارب.",
-            "en": "My experience after a full year in Sadat City\nI moved from Cairo last year and have a few observations and experiences to share.",
-            "zh-CN": "在萨达特城生活一整年后的体验\n我去年从开罗搬来，有一些观察和体验想分享。"
+            "en": "My experience after a full year in Sadat City\nI moved from Cairo last year and have a few observations and experiences to share."
           },
           "order": 1
         },
@@ -416,13 +381,11 @@
           "type": "about",
           "title": {
             "ar": "منصة متكاملة لعقارات مدينة السادات",
-            "en": "A complete real-estate platform for Sadat City",
-            "zh-CN": "萨达特城综合房地产平台"
+            "en": "A complete real-estate platform for Sadat City"
           },
           "body": {
             "ar": "نحن منصة رقمية متخصصة في السوق العقاري لمدينة السادات، نربط المشترين والمستأجرين بأفضل العروض الموثوقة من المطورين والملاك مباشرة.\nموثوقية تامة\nكل عقار يُتحقق منه\nسرعة الرد\nمتاحون 7 أيام\nخبرة واسعة\n15 عاماً في السوق\nأفضل الأسعار\nمباشرة من المالك",
-            "en": "We are a digital platform focused on the Sadat City real-estate market, connecting buyers and renters with trusted offers directly from developers and owners.\nComplete reliability\nEvery property is verified\nFast response\nAvailable 7 days\nWide experience\n15 years in the market\nBest prices\nDirectly from the owner",
-            "zh-CN": "我们是专注于萨达特城房地产市场的数字平台，连接买家和租户与开发商及业主的可靠房源。\n完全可靠\n每套房产均经过验证\n快速响应\n每周7天在线\n丰富经验\n深耕市场15年\n最佳价格\n直接来自业主"
+            "en": "We are a digital platform focused on the Sadat City real-estate market, connecting buyers and renters with trusted offers directly from developers and owners.\nComplete reliability\nEvery property is verified\nFast response\nAvailable 7 days\nWide experience\n15 years in the market\nBest prices\nDirectly from the owner"
           },
           "order": 2
         },
@@ -431,8 +394,7 @@
           "type": "tip",
           "title": {
             "ar": "نصيحة عقارية",
-            "en": "Property tip",
-            "zh-CN": "房产提示"
+            "en": "Property tip"
           },
           "imageUrl": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
           "order": 3
@@ -442,14 +404,12 @@
           "type": "article",
           "title": {
             "ar": "أفضل المناطق للاستثمار العقاري في السادات",
-            "en": "Best areas for real-estate investment in Sadat",
-            "zh-CN": "萨达特房地产投资的最佳区域"
+            "en": "Best areas for real-estate investment in Sadat"
           },
           "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/article-investment.png",
           "body": {
             "ar": "تحليل شامل للمناطق ذات العائد الاستثماري الأعلى.",
-            "en": "A complete analysis of the areas with the highest investment returns.",
-            "zh-CN": "全面分析投资回报率最高的区域。"
+            "en": "A complete analysis of the areas with the highest investment returns."
           },
           "order": 4
         },
@@ -458,14 +418,12 @@
           "type": "article",
           "title": {
             "ar": "خدمات مدينة السادات: ما المتاح وما المخطط له",
-            "en": "Sadat City services: what is available and planned",
-            "zh-CN": "萨达特城服务：现有与规划中的服务"
+            "en": "Sadat City services: what is available and planned"
           },
           "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/article-services.png",
           "body": {
             "ar": "استعراض شامل للخدمات المتاحة في المدينة.",
-            "en": "A complete overview of the services available in the city.",
-            "zh-CN": "全面介绍城市现有的服务。"
+            "en": "A complete overview of the services available in the city."
           },
           "order": 5
         },
@@ -474,14 +432,12 @@
           "type": "community",
           "title": {
             "ar": "محمد السيد",
-            "en": "Mohamed El-Sayed",
-            "zh-CN": "穆罕默德·赛义德"
+            "en": "Mohamed El-Sayed"
           },
           "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/community-mohamed.png",
           "body": {
             "ar": "ما أفضل حي للسكن بميزانية 2 مليون؟\nأنا وعيلتي بنفكر ننتقل للسادات، ميزانيتنا حوالي 2 مليون جنيه. فين تنصحوني أشتري؟",
-            "en": "What is the best district to live in with a budget of EGP 2 million?\nMy family and I are thinking about moving to Sadat City. Where should we buy?",
-            "zh-CN": "预算200万埃镑，哪个街区最适合居住？\n我和家人考虑搬到萨达特城，您建议在哪里买？"
+            "en": "What is the best district to live in with a budget of EGP 2 million?\nMy family and I are thinking about moving to Sadat City. Where should we buy?"
           },
           "order": 6
         },
@@ -490,14 +446,12 @@
           "type": "about",
           "title": {
             "ar": "مصادر معتمدة",
-            "en": "Approved sources",
-            "zh-CN": "可靠来源"
+            "en": "Approved sources"
           },
           "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/about-team.png",
           "body": {
             "ar": "+500\nصفقة ناجحة",
-            "en": "+500\nSuccessful deals",
-            "zh-CN": "+500\n成功交易"
+            "en": "+500\nSuccessful deals"
           },
           "order": 7
         },
@@ -506,14 +460,12 @@
           "type": "tip",
           "title": {
             "ar": "Buying checklist",
-            "en": "Buying checklist",
-            "zh-CN": "Buying checklist"
+            "en": "Buying checklist"
           },
           "imageUrl": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
           "body": {
             "ar": "Buying checklist",
-            "en": "Buying checklist",
-            "zh-CN": "Buying checklist"
+            "en": "Buying checklist"
           },
           "order": 8
         }
@@ -523,8 +475,7 @@
           "key": "featured_banner",
           "title": {
             "ar": "اكتشف المزيد",
-            "en": "Discover more",
-            "zh-CN": "探索更多"
+            "en": "Discover more"
           },
           "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/home-hero-sadat-city.png",
           "order": 0
@@ -533,23 +484,19 @@
           "key": "city_banner",
           "title": {
             "ar": "كمبوند النخبة — الحي الأول",
-            "en": "Elite Compound — First District",
-            "zh-CN": "精英社区—第一街区"
+            "en": "Elite Compound — First District"
           },
           "eyebrow": {
             "ar": "إعلان مميز",
-            "en": "Featured opportunity",
-            "zh-CN": "精选机会"
+            "en": "Featured opportunity"
           },
           "body": {
             "ar": "وحدات سكنية فاخرة بتشطيب سوبر لوكس في أرقى مواقع مدينة السادات. تصميم عصري وإطلالات خضراء مفتوحة.",
-            "en": "Luxury homes with super-lux finishes in one of Sadat City’s finest locations. Modern design with open green views.",
-            "zh-CN": "位于萨达特城优越地段的豪华住宅，采用超豪华装修。现代设计，享有开阔绿景。"
+            "en": "Luxury homes with super-lux finishes in one of Sadat City’s finest locations. Modern design with open green views."
           },
           "highlight": {
             "ar": "تبدأ من 1.2 مليون جنيه",
-            "en": "Starting from EGP 1.2M",
-            "zh-CN": "120万埃镑起"
+            "en": "Starting from EGP 1.2M"
           },
           "imageUrl": "http://127.0.0.1:4173/assets/canonical/public/banner-elite-compound.png",
           "targetUrl": "http://127.0.0.1:4173/properties",
@@ -559,8 +506,7 @@
           "key": "market_banner",
           "title": {
             "ar": "Market banner",
-            "en": "Market banner",
-            "zh-CN": "Market banner"
+            "en": "Market banner"
           },
           "imageUrl": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
           "targetUrl": "http://127.0.0.1:4173/articles",
