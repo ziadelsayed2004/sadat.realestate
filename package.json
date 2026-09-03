@@ -49,6 +49,7 @@
     "local:smoke": "node scripts/runtime-smoke.mjs --require-seeded",
     "production:prepare": "node scripts/prepare-environment.mjs production",
     "production:preflight": "node scripts/production-preflight.mjs",
+    "production:repair-mongodb-uri": "node scripts/repair-production-mongodb-uri.mjs",
     "production:config": "node scripts/native-production-check.mjs",
     "production:showcase": "node apps/api/dist/modules/database/run-production-showcase.js",
     "production:demo:seed": "node apps/api/dist/modules/database/run-production-demo.js install",
