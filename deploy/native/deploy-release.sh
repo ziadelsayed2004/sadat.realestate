@@ -18,7 +18,8 @@ CURRENT_LINK=/opt/elsadatrealestate/current
 PREVIOUS=$(readlink -f "$CURRENT_LINK" 2>/dev/null || true)
 mkdir -p "$RELEASE_DIR"
 rsync -a --delete \
-  --exclude node_modules --exclude .git --exclude .local --exclude '.env*' \
+  --exclude node_modules --exclude .git --exclude .local \
+  --include '.env*.example' --exclude '.env*' \
   "$SOURCE_DIR/" "$RELEASE_DIR/"
 
 cd "$RELEASE_DIR"

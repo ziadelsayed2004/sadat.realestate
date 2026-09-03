@@ -67,11 +67,16 @@ test('local and Production commands use only the checked-in native runtime', () 
 
   const healthUnit = fs.readFileSync(path.join(root, 'deploy/systemd/elsadat-healthcheck.service'), 'utf8');
   const healthScript = fs.readFileSync(path.join(root, 'deploy/native/healthcheck.sh'), 'utf8');
+  const releaseScript = fs.readFileSync(path.join(root, 'deploy/native/deploy-release.sh'), 'utf8');
   const localSupervisor = fs.readFileSync(path.join(root, 'scripts/native-local-supervisor.mjs'), 'utf8');
   const localEnvironment = fs.readFileSync(path.join(root, '.env.local.example'), 'utf8');
   assert.match(healthUnit, /deploy\/native\/healthcheck\.sh/u);
   assert.match(healthScript, /127\.0\.0\.1:3000\/ready/u);
   assert.match(healthScript, /127\.0\.0\.1:4173\/health/u);
+  assert.ok(
+    releaseScript.indexOf("--include '.env*.example'") < releaseScript.indexOf("--exclude '.env*'"),
+    'Release packaging must retain checked-in environment examples before excluding secret environment files'
+  );
   assert.match(localSupervisor, /apps\/api\/dist\/modules\/admin\/run-bootstrap\.js/u);
   assert.match(localEnvironment, /LOCAL_AUTO_BOOTSTRAP_ADMIN=false/u);
   assert.match(localEnvironment, /admin\.demo@example\.invalid/u);
