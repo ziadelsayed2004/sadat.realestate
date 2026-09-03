@@ -224,7 +224,15 @@ const preferences = {
 
 function seekerResponse(pathname) {
   if (pathname === '/seeker/overview') return envelope({ requests: 7, viewings: 2, savedProperties: 14, notifications: 3, unreadNotifications: 1 }, `capture-${screenId}-overview`);
-  if (pathname === '/seeker/requests') return envelope({ items: [request, { ...request, id: '111111111111111111111111', status: 'scheduled', type: 'viewing', updatedAt: '2026-07-24T10:00:00.000Z' }, { ...request, id: '222222222222222222222222', status: 'resolved', type: 'contact', updatedAt: '2026-07-25T10:00:00.000Z' }], page: 1, limit: 20, total: 7 }, `capture-${screenId}-requests`);
+  if (pathname === '/seeker/requests') return envelope({ items: [
+    request,
+    { ...request, id: '111111111111111111111111', status: 'scheduled', type: 'viewing', createdAt: '2026-08-03T10:00:00.000Z', updatedAt: '2026-08-03T10:00:00.000Z' },
+    { ...request, id: '222222222222222222222222', status: 'contacted', type: 'contact', createdAt: '2026-07-28T10:00:00.000Z', updatedAt: '2026-07-28T10:00:00.000Z' },
+    { ...request, id: '333333333333333333333333', status: 'resolved', type: 'contact', createdAt: '2026-07-20T10:00:00.000Z', updatedAt: '2026-07-20T10:00:00.000Z' },
+    { ...request, id: '444444444444444444444444', status: 'resolved', type: 'viewing', createdAt: '2026-07-14T10:00:00.000Z', updatedAt: '2026-07-14T10:00:00.000Z' },
+    { ...request, id: '555555555555555555555555', status: 'closed', type: 'contact', createdAt: '2026-07-09T10:00:00.000Z', updatedAt: '2026-07-09T10:00:00.000Z' },
+    { ...request, id: '666666666666666666666666', status: 'new', type: 'property_search', createdAt: '2026-07-01T10:00:00.000Z', updatedAt: '2026-07-01T10:00:00.000Z' }
+  ], page: 1, limit: 20, total: 7 }, `capture-${screenId}-requests`);
   if (pathname === `/seeker/requests/${ids.request}`) return envelope(request, `capture-${screenId}-request-detail`);
   if (pathname === `/seeker/requests/${ids.request}/transitions`) return envelope({ ...request, status: 'cancelled', version: request.version + 1, availableActions: [] }, `capture-${screenId}-request-transition`);
   if (pathname === '/seeker/viewings') return envelope({ items: [viewing, { ...viewing, id: '333333333333333333333333', status: 'requested', requestedAt: '2026-08-18T11:00:00.000+00:00' }], page: 1, limit: 20, total: 2 }, `capture-${screenId}-viewings`);
