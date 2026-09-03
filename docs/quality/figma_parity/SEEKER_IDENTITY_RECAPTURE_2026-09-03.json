@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "figmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "revision": "identity-v3",
+  "locale": "ar",
+  "direction": "rtl",
+  "repair": "Canonical Figma avatar plus authenticated display name from GET /api/v1/me",
+  "screens": [
+    { "screenId": "SEK-01", "materialDifferencePercent": 37.3583, "dimensionsMatch": true },
+    { "screenId": "SEK-02", "materialDifferencePercent": 50.6112, "dimensionsMatch": true },
+    { "screenId": "SEK-03", "materialDifferencePercent": 39.8169, "dimensionsMatch": false },
+    { "screenId": "SEK-04", "materialDifferencePercent": 38.1083, "dimensionsMatch": false },
+    { "screenId": "SEK-05", "materialDifferencePercent": 34.3058, "dimensionsMatch": true },
+    { "screenId": "SEK-06", "materialDifferencePercent": 48.2561, "dimensionsMatch": true },
+    { "screenId": "SEK-07", "materialDifferencePercent": 29.5057, "dimensionsMatch": true },
+    { "screenId": "SEK-08", "materialDifferencePercent": 15.2225, "dimensionsMatch": false },
+    { "screenId": "SEK-09", "materialDifferencePercent": 27.4847, "dimensionsMatch": false },
+    { "screenId": "SEK-10", "materialDifferencePercent": 19.3372, "dimensionsMatch": false }
+  ],
+  "result": "IDENTITY_REPAIR_VERIFIED_VISUAL_CLOSURE_REMAINS_OPEN",
+  "notes": [
+    "Every canonical Seeker route produced a fresh deterministic runtime capture at the canonical source width.",
+    "SEK-03 and SEK-04 now use distinct under_review and contacted capture states; the capture harness previously returned in_progress for both and could not locate their screen markers.",
+    "No baseline or classification was promoted. Remaining geometry and content differences require bounded page-level review."
+  ]
+}

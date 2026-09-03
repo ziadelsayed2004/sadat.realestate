@@ -179,7 +179,7 @@ const request = {
   type: 'property_search',
   source: 'seeker',
   seekerId: ids.seeker,
-  status: 'in_progress',
+  status: screenId === 'SEK-03' ? 'under_review' : screenId === 'SEK-04' ? 'contacted' : 'in_progress',
   payload: { locations: [ids.organization], propertyTypes: ['apartment'], minBudget: 500000, maxBudget: 2500000, minBedrooms: 2, maxBedrooms: 4, note: 'Looking for a finished home in Sadat City.' },
   version: 0,
   availableActions: ['start_review', 'contact', 'schedule'],
