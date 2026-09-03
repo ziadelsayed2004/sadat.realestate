@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "seedId": "capture-SEK-02-ar-after-2026-08-26",
+  "environment": "non-production-browser-fixture",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "screenId": "SEK-02",
+  "source": {
+    "pageId": "6017:4354",
+    "nodeId": "6027:4046",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6027-4046&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4354&starting-point-node-id=6027%3A3579",
+    "screenshot": "docs/quality/figma_parity/screens/SEK-02/figma.png"
+  },
+  "runtime": {
+    "route": "/seeker/requests?lang=ar",
+    "requestedQueueRoute": "/seeker/requests",
+    "role": "seeker",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1551,
+      "height": 863,
+      "deviceScaleFactor": 1
+    }
+  },
+  "authSession": {
+    "roleType": "seeker",
+    "projection": {
+      "accessToken": "capture.header.signature",
+      "tokenType": "Bearer",
+      "expiresInSeconds": 900,
+      "user": {
+        "id": "0123456789abcdef01234567",
+        "roleType": "seeker",
+        "status": "verified"
+      }
+    },
+    "source": "intercepted /api/v1/auth/refresh response"
+  },
+  "api": {
+    "fixtureContract": "real writable API response shapes",
+    "responseRequestIds": [
+      "capture-SEK-02-ar"
+    ],
+    "state": null
+  },
+  "phase": "after",
+  "repair": {
+    "repairId": "SEK-02-search-state-reset",
+    "expectedEffect": "Remove generic state-card geometry from search field and match Figma 384x38 toolbar control"
+  },
+  "seedSha256": "fef7e546b93cdcfd1bf6c000b415aea9eafa8fc4eef6fb841ae2ab404b51940b"
+}

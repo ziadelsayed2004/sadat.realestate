@@ -290,9 +290,10 @@
   margin-block-end: .75rem;
 }
 
-.seeker-requests__toolbar .ui-field {
+.seeker-requests__toolbar .ui-field[data-state][data-state] {
   flex: 0 1 24rem;
   max-inline-size: 24rem;
+  margin-block-start: 0;
   padding: 0;
   background: transparent;
   border: 0;
@@ -309,6 +310,12 @@
   clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
+}
+
+.seeker-requests__toolbar .ui-field__control {
+  min-height: 2.375rem;
+  padding-block: .5rem;
+  border-radius: 1.125rem;
 }
 
 .seeker-requests__toolbar .seeker-requests__count {
@@ -366,6 +373,7 @@
   background: var(--color-surface-soft);
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-bold);
+  min-block-size: 2.25rem;
 }
 
 .seeker-request-row {
@@ -1777,7 +1785,7 @@
     width: min(100%, 64rem);
     max-width: 64rem;
     margin-inline: auto;
-    padding: 2rem 0 4rem;
+    padding: 1.5rem 0 0;
   }
 
   .seeker-dashboard > .seeker-dashboard__content > .seeker-dashboard__heading-row .seeker-dashboard__eyebrow,
