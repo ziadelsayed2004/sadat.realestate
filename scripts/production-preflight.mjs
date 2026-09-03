@@ -46,6 +46,25 @@ function fail(code) {
   process.exitCode = 1;
 }
 
+function validateMongoUri(environment) {
+  let uri;
+  try {
+    uri = new URL(environment.MONGODB_URI);
+  } catch {
+    return 'MONGODB_URI_INVALID';
+  }
+  if (uri.protocol !== 'mongodb:' || uri.hostname !== '127.0.0.1' || uri.port !== '27017'
+    || uri.pathname !== '/sadat') return 'MONGODB_URI_TARGET_MISMATCH';
+  if (decodeURIComponent(uri.username) !== environment.MONGO_APP_USERNAME
+    || decodeURIComponent(uri.password) !== environment.MONGO_APP_PASSWORD) {
+    return 'MONGODB_URI_CREDENTIAL_MISMATCH';
+  }
+  if (uri.searchParams.get('authSource') !== 'sadat') return 'MONGODB_URI_AUTH_SOURCE_MISSING';
+  if (uri.searchParams.get('replicaSet') !== 'rs0') return 'MONGODB_URI_REPLICA_SET_MISSING';
+  if (uri.searchParams.get('directConnection') !== 'true') return 'MONGODB_URI_DIRECT_CONNECTION_MISSING';
+  return undefined;
+}
+
 try {
   const environment = parseEnvironment(await readFile(file, 'utf8'));
   const required = [
@@ -93,12 +112,8 @@ try {
     fail('SMTP_TLS_PORT_MISMATCH');
   } else if (environment.AUTH_ACCESS_TOKEN_SECRET === environment.PRIVATE_DOWNLOAD_SIGNING_SECRET) {
     fail('SIGNING_SECRETS_MUST_DIFFER');
-  } else if (!environment.MONGODB_URI.startsWith(
-    `mongodb://${environment.MONGO_APP_USERNAME}:${environment.MONGO_APP_PASSWORD}@127.0.0.1:27017/sadat?`
-  ) || !environment.MONGODB_URI.includes('authSource=sadat')
-    || !environment.MONGODB_URI.includes('replicaSet=rs0')
-    || !environment.MONGODB_URI.includes('directConnection=true')) {
-    fail('MONGODB_URI_REPLICA_OR_AUTH_SOURCE_MISSING');
+  } else if (validateMongoUri(environment)) {
+    fail(validateMongoUri(environment));
   } else if (environment.PRIVATE_STORAGE_MODE !== 'local-filesystem'
     || environment.PRIVATE_STORAGE_LOCAL_ROOT !== '/var/lib/elsadatrealestate/private'
     || environment.MALWARE_SCANNER_MODE !== 'clamav'

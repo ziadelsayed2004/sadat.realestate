@@ -123,9 +123,7 @@ Production جاهزة أو منشورة.
 
 ```bash
 cd /opt/elsadatrealestate/current
-set -a
-source /etc/elsadatrealestate/production.env
-set +a
+PRODUCTION_ENV_FILE=/etc/elsadatrealestate/production.env \
 PRODUCTION_DEMO_CONFIRM=INSTALL_FULL_LOCAL_DEMO npm run production:demo:seed
 ```
 
@@ -139,9 +137,7 @@ PRODUCTION_DEMO_CONFIRM=INSTALL_FULL_LOCAL_DEMO npm run production:demo:seed
 
 ```bash
 cd /opt/elsadatrealestate/current
-set -a
-source /etc/elsadatrealestate/production.env
-set +a
+PRODUCTION_ENV_FILE=/etc/elsadatrealestate/production.env \
 PRODUCTION_DEMO_RESET_CONFIRM=DELETE_SYNTHETIC_DEMO_DATA npm run production:demo:reset
 ```
 
