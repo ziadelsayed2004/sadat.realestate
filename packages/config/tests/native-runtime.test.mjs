@@ -60,6 +60,7 @@ test('local and Production commands use only the checked-in native runtime', () 
     'deploy/nginx/elsadatrealestate.conf',
     'deploy/systemd/elsadat-api.service',
     'deploy/systemd/elsadat-web.service',
+    'deploy/clamav/elsadat-clamav.socket.conf',
     'deploy/systemd/elsadat-healthcheck.service',
     'deploy/native/healthcheck.sh',
     'deploy/native/deploy-release.sh'

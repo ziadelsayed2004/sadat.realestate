@@ -92,6 +92,9 @@ visudo -cf /etc/sudoers.d/elsadat-deploy
 
 install -m 0644 "$REPOSITORY_ROOT/deploy/systemd/"*.service /etc/systemd/system/
 install -m 0644 "$REPOSITORY_ROOT/deploy/systemd/"*.timer /etc/systemd/system/
+install -d -m 0755 /etc/systemd/system/clamav-daemon.socket.d
+install -m 0644 "$REPOSITORY_ROOT/deploy/clamav/elsadat-clamav.socket.conf" \
+  /etc/systemd/system/clamav-daemon.socket.d/elsadat.conf
 install -m 0644 "$REPOSITORY_ROOT/deploy/nginx/elsadatrealestate-http.conf" /etc/nginx/sites-available/elsadatrealestate.conf
 ln -sfn /etc/nginx/sites-available/elsadatrealestate.conf /etc/nginx/sites-enabled/elsadatrealestate.conf
 rm -f /etc/nginx/sites-enabled/default
@@ -101,7 +104,7 @@ grep -Ev '^[[:space:]]*(#|$)' "$REPOSITORY_ROOT/deploy/clamav/elsadat-clamd.conf
 
 systemctl daemon-reload
 systemctl enable mongod clamav-daemon clamav-freshclam nginx
-systemctl restart clamav-daemon clamav-freshclam
+systemctl restart clamav-daemon.socket clamav-daemon clamav-freshclam
 nginx -t
 systemctl restart nginx
 
