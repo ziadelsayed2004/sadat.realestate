@@ -79,6 +79,8 @@ test('local and Production commands use only the checked-in native runtime', () 
   );
   assert.match(localSupervisor, /apps\/api\/dist\/modules\/admin\/run-bootstrap\.js/u);
   assert.match(localEnvironment, /LOCAL_AUTO_BOOTSTRAP_ADMIN=false/u);
+  assert.match(releaseScript, /readlink -e "\$CURRENT_LINK"/u);
+  assert.doesNotMatch(releaseScript, /PREVIOUS=\$\(readlink -f/u);
   assert.match(localEnvironment, /admin\.demo@example\.invalid/u);
   assert.match(localSupervisor, /idempotent bootstrap guard/u);
   assert.ok(

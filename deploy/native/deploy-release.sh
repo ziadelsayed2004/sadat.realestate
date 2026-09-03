@@ -15,7 +15,10 @@ fi
 RELEASE_ID=$(date -u +%Y%m%dT%H%M%SZ)
 RELEASE_DIR="/opt/elsadatrealestate/releases/$RELEASE_ID"
 CURRENT_LINK=/opt/elsadatrealestate/current
-PREVIOUS=$(readlink -f "$CURRENT_LINK" 2>/dev/null || true)
+PREVIOUS=''
+if [[ -L "$CURRENT_LINK" ]]; then
+  PREVIOUS=$(readlink -e "$CURRENT_LINK" 2>/dev/null || true)
+fi
 mkdir -p "$RELEASE_DIR"
 rsync -a --delete \
   --exclude node_modules --exclude .git --exclude .local \
