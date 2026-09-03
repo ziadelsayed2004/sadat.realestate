@@ -4,6 +4,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { Button, Pagination, PropertyCard, StateMessage } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
 import { UxStateView } from '../ux_states/index.ts';
+import { PublicMediaImage } from '../public/components.tsx';
 import { formatMoney, localizedText, propertyFeatures } from '../public/model.ts';
 import { createSeekerFavoriteActions, createSeekerFavoritesLoader, isAuthenticatedSeekerSession, localeForSeekerPath, type SeekerAuthorizationSource, type SeekerFavoriteActions, type SeekerFavoritesLoader } from './data.ts';
 import { SeekerNavigation } from './overview.tsx';
@@ -75,8 +76,8 @@ function SavedPropertyCard({ property, locale, copy, removing, onRemove }: { rea
       price={formatMoney(property.price, locale)}
       badges={[kind, transaction]}
       features={features}
-      image={<UxStateView state="missing_image" title={copy.imageUnavailable} />}
-      imageAlt={copy.imageUnavailable}
+      image={<PublicMediaImage src={property.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />}
+      imageAlt={title}
       source={<time dateTime={property.savedAt}>{copy.savedAt}: {dateLabel(property.savedAt, locale)}</time>}
       action={(
         <div className="seeker-saved-property-card__actions">
@@ -149,7 +150,6 @@ export function SeekerSaved({ locale, session, authClient, apiOrigin, load, acti
               <div>
                 <p className="seeker-dashboard__eyebrow">{copy.eyebrow}</p>
                 <h1>{copy.title}</h1>
-                <p>{copy.description}</p>
                 <span className="seeker-saved__count">{data.total} {copy.count}</span>
               </div>
               <div className="seeker-saved__view-toggle" role="group" aria-label={locale === 'ar' ? 'طريقة عرض العقارات المحفوظة' : 'Saved properties view'}>

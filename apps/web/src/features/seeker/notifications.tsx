@@ -200,7 +200,6 @@ export function SeekerNotifications({ locale, session, authClient, apiOrigin, lo
               <div>
                 <p className="seeker-dashboard__eyebrow">{copy.eyebrow}</p>
                 <h1>{copy.title}</h1>
-                <p>{copy.description}</p>
                 <span className="seeker-notifications__count" data-testid="seeker-notifications-unread-count">{data.unreadCount} {copy.unreadCount}</span>
               </div>
               <Button variant="secondary" size="sm" loading={markingAll} disabled={data.unreadCount === 0} onClick={() => { void markAllRead(); }}>{markingAll ? copy.markingAll : copy.markAll}</Button>

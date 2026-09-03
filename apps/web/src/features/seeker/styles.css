@@ -1638,6 +1638,16 @@
 .seeker-saved__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
 .seeker-saved-property-card { min-width: 0; border: 0; box-shadow: 0 8px 24px rgb(23 35 61 / 8%); }
 .seeker-saved-property-card .ux-state-view { min-block-size: 15rem; border-radius: 0; }
+.seeker-saved-property-card .ux-state-view[data-state][data-state] {
+  max-width: none;
+  min-block-size: 13rem;
+  margin: 0;
+  padding: 1rem;
+  background: var(--color-surface-soft);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
 
 .seeker-notifications__list { gap: 0; overflow: hidden; border: 1px solid #ebe6dc; border-radius: 1rem; }
 .seeker-notifications__item { border: 0; border-radius: 0; border-block-end: 1px solid #ebe6dc; }
@@ -1895,25 +1905,56 @@
   .seeker-saved__grid {
     direction: ltr;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-block-start: 1.25rem;
   }
+
+  .seeker-saved-property-card { direction: rtl; }
+  .seeker-saved-property-card .ui-property-card__media { min-block-size: 13rem; block-size: 13rem; }
+  .seeker-saved-property-card .ui-property-card__body { gap: .375rem; padding: 1rem; }
+  .seeker-saved-property-card .ui-property-card__features {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: .375rem;
+    padding-block: .5rem;
+  }
+  .seeker-saved-property-card__view { min-block-size: 2.25rem; padding: .375rem .875rem; }
 
   .seeker-notifications__panel {
     width: min(100%, 48rem);
     margin-inline: auto;
     direction: ltr;
+    gap: 1.25rem;
+    margin-block-start: 1.25rem;
   }
+
+  .seeker-notifications__toolbar h2 { display: none; }
+  .seeker-notifications__toolbar { justify-content: flex-start; }
+  .seeker-notifications__tab { min-block-size: 2.375rem; padding: .5rem 1rem; border-radius: 1.125rem; }
 
   .seeker-notifications > .seeker-dashboard__content > .seeker-dashboard__heading-row {
     width: min(100%, 48rem);
     margin-inline: auto;
   }
 
-  .seeker-notifications__item[data-state] {
+  .seeker-notifications__item[data-state][data-state] {
     max-width: none;
     margin-block-start: 0;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: .75rem;
+    min-block-size: 4.25rem;
+    padding: .75rem;
+    background: var(--color-surface);
+    border: 0;
+    border-block-end: 1px solid #ebe6dc;
+    border-radius: 0;
+    box-shadow: none;
     direction: ltr;
     text-align: left;
   }
+  .seeker-notifications__icon { inline-size: 2rem; block-size: 2rem; font-size: 1rem; }
+  .seeker-notifications__item h2 { margin-block-start: .125rem; font-size: .875rem; }
+  .seeker-notifications__item p { margin-block-start: .125rem; font-size: .75rem; line-height: 1.35; }
+  .seeker-notifications__actions { margin-block-start: .25rem; font-size: .75rem; }
 
   .seeker-profile > .seeker-dashboard__content > .seeker-profile__tabs,
   .seeker-profile > .seeker-dashboard__content > .seeker-profile__panel,

@@ -236,8 +236,22 @@ function seekerResponse(pathname) {
   if (pathname === `/seeker/requests/${ids.request}`) return envelope(request, `capture-${screenId}-request-detail`);
   if (pathname === `/seeker/requests/${ids.request}/transitions`) return envelope({ ...request, status: 'cancelled', version: request.version + 1, availableActions: [] }, `capture-${screenId}-request-transition`);
   if (pathname === '/seeker/viewings') return envelope({ items: [viewing, { ...viewing, id: '333333333333333333333333', status: 'requested', requestedAt: '2026-08-18T11:00:00.000+00:00' }], page: 1, limit: 20, total: 2 }, `capture-${screenId}-viewings`);
-  if (pathname === '/seeker/favorites') return envelope({ items: [{ ...property, savedAt: timestamps.updated }, { ...property, id: '444444444444444444444444', slug: 'sadat-villa', kind: 'unit', savedAt: '2026-07-24T10:00:00.000Z' }], page: 1, limit: 20, total: 14 }, `capture-${screenId}-favorites`);
-  if (pathname === '/seeker/notifications') return envelope({ items: [notification, { ...notification, id: '555555555555555555555555', type: 'viewing.confirmed', readAt: timestamps.updated }], unreadCount: 1, page: 1, limit: 20, total: 3 }, `capture-${screenId}-notifications`);
+  if (pathname === '/seeker/favorites') return envelope({ items: [
+    { ...property, imageUrl: PUBLIC_CLONE_ASSETS.propertyHome, savedAt: timestamps.updated },
+    { ...property, id: '444444444444444444444444', slug: 'sadat-villa', kind: 'unit', imageUrl: PUBLIC_CLONE_ASSETS.propertyVilla, name: localized('فيلا مستقلة بالمنطقة الراقية', 'Detached villa in the premium district'), area: { value: 320, unit: 'sqm' }, layout: { bedrooms: 5, bathrooms: 4 }, price: { amount: 5200000, currency: 'EGP' }, savedAt: '2026-07-24T10:00:00.000Z' },
+    { ...property, id: '555555555555555555555555', slug: 'sadat-rental', kind: 'unit', transactionType: 'rent', imageUrl: PUBLIC_CLONE_ASSETS.propertyHome, name: localized('شقة للإيجار في الحي الثالث', 'Apartment for rent in the Third District'), area: { value: 120, unit: 'sqm' }, layout: { bedrooms: 2, bathrooms: 2, floor: 3 }, price: { amount: 8500, currency: 'EGP' }, savedAt: '2026-07-20T10:00:00.000Z' },
+    { ...property, id: '666666666666666666666666', slug: 'sadat-duplex', kind: 'unit', imageUrl: PUBLIC_CLONE_ASSETS.propertyDuplex, name: localized('دوبلكس فاخر في الحي الخامس', 'Luxury duplex in the Fifth District'), area: { value: 240, unit: 'sqm' }, layout: { bedrooms: 4, bathrooms: 3 }, price: { amount: 3100000, currency: 'EGP' }, savedAt: '2026-07-18T10:00:00.000Z' }
+  ], page: 1, limit: 20, total: 4 }, `capture-${screenId}-favorites`);
+  if (pathname === '/seeker/notifications') return envelope({ items: [
+    notification,
+    { ...notification, id: '555555555555555555555555', type: 'viewing.confirmed', readAt: timestamps.updated },
+    { ...notification, id: '666666666666666666666666', type: 'request.updated', createdAt: '2026-07-22T10:00:00.000Z' },
+    { ...notification, id: '777777777777777777777777', type: 'property.updated', readAt: timestamps.updated, createdAt: '2026-07-21T10:00:00.000Z' },
+    { ...notification, id: '888888888888888888888888', type: 'request.updated', readAt: timestamps.updated, createdAt: '2026-07-20T10:00:00.000Z' },
+    { ...notification, id: '999999999999999999999999', type: 'property.updated', readAt: timestamps.updated, createdAt: '2026-07-19T10:00:00.000Z' },
+    { ...notification, id: 'abababababababababababab', type: 'account.updated', readAt: timestamps.updated, createdAt: '2026-07-18T10:00:00.000Z' },
+    { ...notification, id: 'cdcdcdcdcdcdcdcdcdcdcdcd', type: 'viewing.cancelled', readAt: timestamps.updated, createdAt: '2026-07-17T10:00:00.000Z' }
+  ], unreadCount: 4, page: 1, limit: 20, total: 8 }, `capture-${screenId}-notifications`);
   if (pathname === '/me') return envelope(profile, `capture-${screenId}-profile`);
   if (pathname === '/me/preferences') return envelope(preferences, `capture-${screenId}-preferences`);
   return undefined;
