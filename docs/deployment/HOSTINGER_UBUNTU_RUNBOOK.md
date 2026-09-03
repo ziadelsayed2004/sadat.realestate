@@ -47,7 +47,7 @@ Generate the protected environment:
 npm run production:prepare
 sudo install -o root -g elsadat -m 0640 .env.production /etc/elsadatrealestate/production.env
 sudoedit /etc/elsadatrealestate/production.env
-sudo -u elsadat env PRODUCTION_ENV_FILE=/etc/elsadatrealestate/production.env \
+PRODUCTION_ENV_FILE=/etc/elsadatrealestate/production.env \
   node scripts/production-preflight.mjs
 ```
 

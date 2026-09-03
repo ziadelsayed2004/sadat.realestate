@@ -6,7 +6,8 @@
 ## الحالة المثبتة الآن
 
 - سجلا DNS من النوع A للدومين الأساسي و`www` يشيران إلى `72.62.235.228`.
-- اتصال SSH يصل إلى الخادم، لكن المصادقة من بيئة التطوير الحالية مرفوضة لعدم وجود المفتاح الخاص.
+- اتصال SSH نجح بكلمة مرور `root` وفق سجل الخادم؛ لم يتم تشغيل أوامر النشر عن بُعد من بيئة التطوير.
+  فعّل مفتاح SSH لمستخدم sudo غير root قبل التشغيل الدائم.
 - طلب `https://elsadatrealestate.com/health` انتهى بمهلة؛ HTTPS والخدمات لم يُثبت تشغيلها بعد.
 - `npm run lint` و`npm run typecheck` و`npm run build` نجحت محليًا.
 - OpenAPI وPostman صالحان، واختبارات Auth المركزة واختبارات واجهات Auth/Developers/Listing نجحت.
@@ -29,7 +30,7 @@ npm run production:prepare
 ```bash
 sudo install -o root -g elsadat -m 0640 .env.production \
   /etc/elsadatrealestate/production.env
-sudo -u elsadat env PRODUCTION_ENV_FILE=/etc/elsadatrealestate/production.env \
+PRODUCTION_ENV_FILE=/etc/elsadatrealestate/production.env \
   node scripts/production-preflight.mjs
 ```
 
@@ -49,20 +50,32 @@ sudo -u elsadat env PRODUCTION_ENV_FILE=/etc/elsadatrealestate/production.env \
 
 ## أول تثبيت على Ubuntu
 
+بعد دفع الـcommits إلى GitHub، نفّذ على الخادم:
+
 ```bash
-git clone --depth 1 --branch main \
-  https://github.com/ziadelsayed2004/sadat.realestate.git /root/sadat-release
 cd /root/sadat-release
+git pull --ff-only origin main
 sudo bash deploy/native/install-ubuntu.sh
-npm run production:prepare
-# عدّل SMTP_PASSWORD محليًا ثم ثبّت الملف كما في القسم السابق
+test -f .env.production || npm run production:prepare
+sudo install -o root -g elsadat -m 0640 .env.production \
+  /etc/elsadatrealestate/production.env
+sudoedit /etc/elsadatrealestate/production.env
+PRODUCTION_ENV_FILE=/etc/elsadatrealestate/production.env \
+  node scripts/production-preflight.mjs
 sudo PRODUCTION_ENV_FILE=/etc/elsadatrealestate/production.env \
   bash deploy/native/configure-mongodb.sh
-sudo -u elsadat bash deploy/native/deploy-release.sh /root/sadat-release
+sudo rsync -a --delete --exclude='.env*' --exclude='.git' \
+  /root/sadat-release/ /opt/elsadatrealestate/staging/reviewed-source/
+sudo chown -R elsadat:elsadat /opt/elsadatrealestate/staging/reviewed-source
+sudo -u elsadat env RELEASE_REF=main \
+  bash /opt/elsadatrealestate/staging/reviewed-source/deploy/native/deploy-from-github.sh
 sudo systemctl enable --now elsadat-api elsadat-web elsadat-backup.timer elsadat-healthcheck.timer
 sudo bash deploy/native/enable-https.sh
 sudo nginx -t
 ```
+
+لا تضع `EXTERNAL_SMOKE_BASE_URL` في أول نشر؛ لا يُستخدم إلا بعد نجاح إصدار شهادة
+HTTPS. إذا لم تظهر `NATIVE_UBUNTU_PACKAGES_READY` فتوقّف ولا تنفّذ بقية الأوامر.
 
 ثم نفّذ:
 
