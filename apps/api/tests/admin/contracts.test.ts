@@ -24,7 +24,7 @@ test('rejects weak, control-character, unconfirmed, and mass-assigned bootstrap 
     confirmation: FIRST_SUPER_ADMIN_CONFIRMATION
   };
   for (const input of [
-    { ...base, password: 'too-short' },
+    { ...base, password: 'short7' },
     { ...base, password: 'long-password\nvalue' },
     { ...base, confirmation: 'yes' },
     { ...base, role: 'admin' }

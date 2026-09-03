@@ -62,6 +62,19 @@ sudo systemctl enable --now elsadat-api.service elsadat-web.service
 sudo systemctl enable --now elsadat-backup.timer elsadat-healthcheck.timer
 ```
 
+For subsequent deployments directly from the reviewed GitHub branch:
+
+```bash
+sudo -u elsadat env RELEASE_REF=main \
+  EXTERNAL_SMOKE_BASE_URL=https://elsadatrealestate.com \
+  bash /opt/elsadatrealestate/current/deploy/native/deploy-from-github.sh
+```
+
+For the first GitHub deployment, clone the repository into a temporary operator
+directory, run `install-ubuntu.sh`, then invoke `deploy-from-github.sh` from that
+clone. Private repositories require a read-only deploy key; never place a GitHub
+token in the repository URL or shell history.
+
 The deploy script installs locked dependencies, runs typecheck/lint/tests/build/native configuration checks, switches an atomic release symlink, restarts API/Web, waits for loopback readiness, and restores the previous release if readiness fails. Public HTTPS smoke is intentionally deferred until the certificate exists. On later releases, pass `EXTERNAL_SMOKE_BASE_URL=https://elsadatrealestate.com` to include it in the deploy gate.
 
 Inspect:

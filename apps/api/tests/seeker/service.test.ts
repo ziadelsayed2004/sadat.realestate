@@ -60,8 +60,8 @@ function repository(overrides: Partial<SeekerRepository> = {}): SeekerRepository
   };
 }
 
-function authService(): Pick<AuthService, 'issueAccount'> {
-  return { async issueAccount() { return session(); } };
+function authService(): Pick<AuthService, 'issueAccount' | 'setAccountPassword'> {
+  return { async issueAccount() { return session(); }, async setAccountPassword() {} };
 }
 
 function service(repo: SeekerRepository = repository(), redeem = async () => ({
@@ -92,7 +92,7 @@ test('registers a verified seeker from a one-time OTP grant and issues a shared 
       };
     },
     authService: authService()
-  }).register({ verificationToken: 'T'.repeat(43), firstName: 'Salma', lastName: 'Hassan' });
+  }).register({ verificationToken: 'T'.repeat(43), firstName: 'Salma', lastName: 'Hassan', password: 'Abc1!xyz' });
   assert.equal(hashInput, 'T'.repeat(43));
   assert.equal(result.data.outcome, 'registered');
   assert.equal(result.data.session.user.roleType, 'seeker');

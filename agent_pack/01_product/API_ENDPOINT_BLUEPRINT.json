@@ -29,9 +29,11 @@
     "module": "auth",
     "auth": "none",
     "roles": [
+      "seeker",
+      "provider",
       "admin"
     ],
-    "purpose": "Admin email/password login; seeker/provider login completes through OTP verification",
+    "purpose": "Email/password login for seeker, provider, and admin accounts",
     "status": "implemented",
     "apiVersion": "v1"
   },
@@ -87,26 +89,38 @@
   },
   {
     "method": "POST",
-    "path": "/api/v1/auth/password/forgot",
+    "path": "/api/v1/auth/account-recovery/otp/send",
     "module": "auth",
     "auth": "none",
     "roles": [
       "eligible-users"
     ],
-    "purpose": "Start password reset",
-    "status": "planned",
+    "purpose": "Send a password-reset OTP without disclosing whether the account exists",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {
     "method": "POST",
-    "path": "/api/v1/auth/password/reset",
+    "path": "/api/v1/auth/account-recovery/otp/verify",
     "module": "auth",
-    "auth": "reset-challenge",
+    "auth": "none",
     "roles": [
       "eligible-users"
     ],
-    "purpose": "Finish password reset",
-    "status": "planned",
+    "purpose": "Verify a password-reset OTP and issue a one-time reset grant",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/auth/account-recovery/complete",
+    "module": "auth",
+    "auth": "verified-reset-otp",
+    "roles": [
+      "eligible-users"
+    ],
+    "purpose": "Set a new password from a one-time password-reset grant",
+    "status": "implemented",
     "apiVersion": "v1"
   },
   {

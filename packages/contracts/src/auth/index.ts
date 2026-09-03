@@ -69,7 +69,7 @@ export const otpVerifyRequestSchema = z.object({
 
 export const passwordResetOtpSendRequestSchema = z.object({
   email: normalizedEmailSchema,
-  roleType: z.literal('admin'),
+  roleType: z.enum(AUTH_ROLE_TYPES),
   purpose: z.literal('password_reset')
 }).strict();
 
@@ -97,13 +97,19 @@ export const adminLoginRequestSchema = z.object({
   password: z.string().min(1).max(1024)
 }).strict();
 
+// Kept as a separate named contract so consumers can express the role-agnostic
+// password flow without changing the backwards-compatible request shape.
+export const passwordLoginRequestSchema = adminLoginRequestSchema;
+
+export const accountPasswordSchema = z.string().min(8).max(128)
+  .regex(/[a-z]/)
+  .regex(/[A-Z]/)
+  .regex(/\d/)
+  .regex(/[^A-Za-z0-9]/);
+
 export const passwordResetRequestSchema = z.object({
   verificationToken: z.string().regex(/^[A-Za-z0-9_-]{43}$/),
-  newPassword: z.string().min(12).max(128)
-    .regex(/[a-z]/)
-    .regex(/[A-Z]/)
-    .regex(/\d/)
-    .regex(/[^A-Za-z0-9]/)
+  newPassword: accountPasswordSchema
 }).strict();
 
 export const passwordResetDataSchema = z.object({ reset: z.literal(true) }).strict();
@@ -144,6 +150,8 @@ export const logoutSuccessEnvelopeSchema = successEnvelopeSchema(logoutDataSchem
 export type AuthRoleType = z.infer<typeof authenticatedUserSchema>['roleType'];
 export type AuthAccountState = z.infer<typeof authenticatedUserSchema>['status'];
 export type AdminLoginRequest = z.infer<typeof adminLoginRequestSchema>;
+/** Password login is intentionally email-only: normalizedEmail is globally unique across roles. */
+export type PasswordLoginRequest = AdminLoginRequest;
 export type PasswordResetRequest = z.infer<typeof passwordResetRequestSchema>;
 export type AuthenticatedUser = z.infer<typeof authenticatedUserSchema>;
 export type AuthSessionData = z.infer<typeof authSessionDataSchema>;

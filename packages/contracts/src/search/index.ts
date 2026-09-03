@@ -4,6 +4,7 @@ import { publicHomepagePropertySchema } from '../public/index.js';
 import { publicHomepageCategorySchema } from '../public/index.js';
 import { localizedTextSchema } from '../localization/index.js';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
+import { locationKindSchema, locationObjectIdSchema, locationSlugSchema } from '../locations/index.js';
 
 const positiveQuery = (fallback: number, maximum: number) => z.preprocess((value) => value === undefined ? fallback : Number(value), z.number().int().positive().max(maximum));
 const nonNegativeQuery = (maximum: number) => z.preprocess((value) => value === undefined ? undefined : Number(value), z.number().finite().nonnegative().max(maximum)).optional();
@@ -39,10 +40,25 @@ export const publicPropertyListItemSchema = publicHomepagePropertySchema.extend(
   deliveryStatus: propertyDeliveryStatusSchema.optional()
 }).strict();
 
+/**
+ * Safe, public projection of an active admin-managed location.  Properties
+ * continue to store the immutable ObjectId, while clients render the
+ * localized name (and can send the selected id back as a filter).
+ */
+export const publicPropertyLocationSchema = z.object({
+  id: locationObjectIdSchema,
+  kind: locationKindSchema,
+  name: localizedTextSchema,
+  slug: locationSlugSchema,
+  parentLocationId: locationObjectIdSchema.optional(),
+  order: z.number().int().nonnegative().max(1_000_000)
+}).strict();
+
 export const publicPropertyListDataSchema = z.object({
   items: z.array(publicPropertyListItemSchema).max(100),
   categories: z.array(publicHomepageCategorySchema).max(100),
   propertyTypes: z.array(publicHomepageCategorySchema).max(100),
+  locations: z.array(publicPropertyLocationSchema).max(500).optional(),
   page: z.number().int().positive(),
   limit: z.number().int().positive().max(100),
   total: z.number().int().nonnegative()
@@ -52,3 +68,4 @@ export const publicPropertyListSuccessEnvelopeSchema = successEnvelopeSchema(pub
 export type PublicPropertySearchQuery = z.infer<typeof publicPropertySearchQuerySchema>;
 export type PublicPropertyListData = z.infer<typeof publicPropertyListDataSchema>;
 export type PublicPropertyListItem = z.infer<typeof publicPropertyListItemSchema>;
+export type PublicPropertyLocation = z.infer<typeof publicPropertyLocationSchema>;

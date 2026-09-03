@@ -325,15 +325,22 @@ function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthF
   );
 }
 
-function ForgotPasswordPage({ client, locale }: { readonly client: AuthFlowClient; readonly locale: SupportedLocale }) {
+function ForgotPasswordPage({ client, locale, url }: { readonly client: AuthFlowClient; readonly locale: SupportedLocale; readonly url: string }) {
   const [grant, setGrant] = useState<string>();
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
   const [state, setState] = useState<RequestState>('idle');
   const copy = getAuthCopy(locale);
+  let initialRoleType: OtpRoleType | 'admin' = 'seeker';
+  try {
+    const requestedRole = new URL(url, 'http://sadat.local').searchParams.get('roleType');
+    if (requestedRole === 'provider' || requestedRole === 'admin') initialRoleType = requestedRole;
+  } catch {
+    // Keep the safe seeker default for malformed/legacy URLs.
+  }
 
   if (grant === undefined) {
-    return <OtpPage client={client} locale={locale} roleType="admin" purpose="password_reset" lockRoleType onAuthenticated={() => undefined} onRegistrationVerified={token => setGrant(token)} />;
+    return <OtpPage client={client} locale={locale} roleType={initialRoleType} purpose="password_reset" onAuthenticated={() => undefined} onRegistrationVerified={token => setGrant(token)} />;
   }
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
@@ -354,7 +361,7 @@ function ForgotPasswordPage({ client, locale }: { readonly client: AuthFlowClien
 
   return <section className="auth-page auth-page--email" data-state={state} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
     <div className="auth-card auth-card--form">
-      <header className="auth-card__heading"><span className="auth-card__icon"><AuthIcon name="lock" /></span><h1>{locale === 'ar' ? 'تعيين كلمة مرور جديدة' : 'Set a new password'}</h1><p>{locale === 'ar' ? 'استخدم كلمة قوية من 12 حرفًا على الأقل.' : 'Use a strong password with at least 12 characters.'}</p></header>
+      <header className="auth-card__heading"><span className="auth-card__icon"><AuthIcon name="lock" /></span><h1>{locale === 'ar' ? 'تعيين كلمة مرور جديدة' : 'Set a new password'}</h1><p>{locale === 'ar' ? 'استخدم 8 أحرف على الأقل، تشمل حرفًا كبيرًا وصغيرًا ورقمًا ورمزًا.' : 'Use at least 8 characters, including uppercase, lowercase, a number, and a symbol.'}</p></header>
       <div className="auth-card__body">
         {state === 'error' ? <StateMessage state="error" title={copy.invalidFormTitle} message={locale === 'ar' ? 'تأكد من تطابق كلمتي المرور واحتوائهما على حرف كبير وصغير ورقم ورمز.' : 'Passwords must match and include upper/lowercase letters, a number, and a symbol.'} /> : null}
         {state === 'success' ? <StateMessage state="success" title={locale === 'ar' ? 'تم تغيير كلمة المرور' : 'Password changed'} message={locale === 'ar' ? 'يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.' : 'You can now log in with the new password.'} /> : null}
@@ -457,9 +464,9 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
 
     setState('loading');
     setError(undefined);
-    const request: OtpVerifyRequest | PasswordResetOtpVerifyRequest = roleType === 'admin'
-      ? { email: normalizedEmail, roleType: 'admin', purpose: 'password_reset', challengeId: challenge.challengeId, code: code.join('') }
-      : { email: normalizedEmail, roleType, purpose: purpose === 'registration' ? 'registration' : 'login', challengeId: challenge.challengeId, code: code.join('') };
+    const request: OtpVerifyRequest | PasswordResetOtpVerifyRequest = purpose === 'password_reset'
+      ? { email: normalizedEmail, roleType, purpose: 'password_reset', challengeId: challenge.challengeId, code: code.join('') }
+      : { email: normalizedEmail, roleType: roleType === 'admin' ? 'seeker' : roleType, purpose: purpose === 'registration' ? 'registration' : 'login', challengeId: challenge.challengeId, code: code.join('') };
     try {
       const result = await client.verifyOtp(request);
       setState('success');
@@ -562,7 +569,7 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
                 options={[
                   { value: 'seeker', label: copy.roleSeeker },
                   { value: 'provider', label: copy.roleProvider },
-                  ...(roleType === 'admin' ? [{ value: 'admin', label: locale === 'ar' ? 'مدير النظام' : 'Administrator' }] : [])
+                  ...(purpose === 'password_reset' || roleType === 'admin' ? [{ value: 'admin', label: locale === 'ar' ? 'مدير النظام' : 'Administrator' }] : [])
                 ]}
               />
               <Button type="submit" fullWidth size="lg" loading={state === 'loading'} disabled={cooldownSeconds > 0}>
@@ -747,6 +754,8 @@ function SeekerRegistrationForm({ client, locale, email, verificationToken, onRe
   const copy = getAuthCopy(locale);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [state, setState] = useState<RequestState>('idle');
   const [error, setError] = useState<AuthUiError | undefined>();
 
@@ -755,9 +764,10 @@ function SeekerRegistrationForm({ client, locale, email, verificationToken, onRe
       verificationToken,
       firstName,
       lastName,
+      password,
       locale
     });
-    if (!parsed.success) {
+    if (!parsed.success || password !== passwordConfirmation) {
       setState('error');
       setError(inputError(copy));
       return;
@@ -774,7 +784,7 @@ function SeekerRegistrationForm({ client, locale, email, verificationToken, onRe
       setState(nextError.state);
       setError(nextError);
     }
-  }, [client, copy, firstName, lastName, locale, onRegistered, verificationToken]);
+  }, [client, copy, firstName, lastName, locale, onRegistered, password, passwordConfirmation, verificationToken]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
@@ -825,6 +835,9 @@ function SeekerRegistrationForm({ client, locale, email, verificationToken, onRe
               dir="ltr"
               state="success"
             />
+            <Input id="auth-registration-password" label={locale === 'ar' ? 'كلمة المرور' : 'Password'} name="password" type="password" autoComplete="new-password" value={password} onChange={event => setPassword(event.currentTarget.value)} required />
+            <Input id="auth-registration-password-confirmation" label={locale === 'ar' ? 'تأكيد كلمة المرور' : 'Confirm password'} name="passwordConfirmation" type="password" autoComplete="new-password" value={passwordConfirmation} onChange={event => setPasswordConfirmation(event.currentTarget.value)} required />
+            <p className="auth-field-help">{locale === 'ar' ? '8 أحرف على الأقل، تشمل حرفًا كبيرًا وصغيرًا ورقمًا ورمزًا.' : 'At least 8 characters with uppercase, lowercase, a number, and a symbol.'}</p>
             <Button type="submit" fullWidth size="lg" loading={state === 'loading'}>
               {state === 'loading' ? copy.registering : copy.registerAction}
             </Button>
@@ -1047,6 +1060,7 @@ function ProviderRegistrationFlow({ client, locale, url, initialStep, onAuthenti
   const [step, setStep] = useState<ProviderRegistrationStep>(initialStep);
   const [providerType, setProviderType] = useState<ProviderType | undefined>(initialProviderType);
   const [verificationToken, setVerificationToken] = useState<string | undefined>();
+  const [password, setPassword] = useState('');
   const [application, setApplication] = useState<ProviderApplicationData | undefined>();
   const [error, setError] = useState<ProviderRegistrationUiError | undefined>();
 
@@ -1054,6 +1068,7 @@ function ProviderRegistrationFlow({ client, locale, url, initialStep, onAuthenti
     setStep('type');
     setProviderType(undefined);
     setVerificationToken(undefined);
+    setPassword('');
     setApplication(undefined);
     setError(undefined);
     replaceAuthUrl(providerTypePath(undefined, locale));
@@ -1078,7 +1093,7 @@ function ProviderRegistrationFlow({ client, locale, url, initialStep, onAuthenti
     setError(undefined);
     setStep('registering');
     try {
-      const registration = await client.registerProvider({ verificationToken: token, providerType: nextProviderType });
+      const registration = await client.registerProvider({ verificationToken: token, providerType: nextProviderType, password });
       setApplication(registration.application);
       setProviderType(nextProviderType);
       setStep('account');
@@ -1087,9 +1102,10 @@ function ProviderRegistrationFlow({ client, locale, url, initialStep, onAuthenti
       setError(providerRegistrationError(requestError, locale));
       setStep('registration-error');
     }
-  }, [client, locale]);
+  }, [client, locale, password]);
 
-  const handleTypeContinue = useCallback((nextProviderType: ProviderType) => {
+  const handleTypeContinue = useCallback((nextProviderType: ProviderType, _targetPath: string, nextPassword: string) => {
+    setPassword(nextPassword);
     setProviderType(nextProviderType);
     if (application !== undefined && application.providerType === nextProviderType) {
       setStep('account');
@@ -1264,7 +1280,7 @@ export function AuthPage({ url, locale, client: providedClient, onAuthenticated:
     return <LoginPage client={client} locale={locale} onAuthenticated={onAuthenticated} />;
   }
   if (location.pathname === '/auth/forgot-password') {
-    return <ForgotPasswordPage client={client} locale={locale} />;
+    return <ForgotPasswordPage client={client} locale={locale} url={url} />;
   }
   if (location.pathname === '/auth/verify-phone') {
     return <LegacyVerificationRedirect locale={locale} url={url} />;

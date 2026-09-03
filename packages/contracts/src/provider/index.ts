@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { adCalendarStatusSchema, adQuoteLineItemSchema, adRequestStatusSchema } from '../ads/index.js';
-import { authSessionDataSchema, normalizedEmailSchema, normalizedPhoneSchema } from '../auth/index.js';
+import { accountPasswordSchema, authSessionDataSchema, normalizedEmailSchema, normalizedPhoneSchema } from '../auth/index.js';
 import { commissionPolicyKindSchema, commissionResolutionSourceSchema } from '../commissions/index.js';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
 
@@ -65,7 +65,8 @@ export const providerSocialLinkSchema = z.object({
 
 export const providerApplicationCreateRequestSchema = z.object({
   verificationToken: opaqueTokenSchema,
-  providerType: providerTypeSchema
+  providerType: providerTypeSchema,
+  password: accountPasswordSchema
 }).strict();
 
 function draftPatch<T extends z.ZodRawShape>(shape: T) {

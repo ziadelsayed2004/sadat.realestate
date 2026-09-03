@@ -346,7 +346,7 @@ async function proxyApiRequest(request, response) {
     return true;
   }
   const target = new URL(requestUrl, `${apiOrigin}/`);
-  const headers = new Headers();
+  const headers = new globalThis.Headers();
   for (const [name, value] of Object.entries(request.headers)) {
     if (value === undefined || name.toLowerCase() === 'host') continue;
     if (Array.isArray(value)) value.forEach(item => headers.append(name, item));

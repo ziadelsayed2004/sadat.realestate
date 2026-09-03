@@ -1254,7 +1254,7 @@
 
   .public-developer-profile__layout {
     display: grid;
-    grid-template-columns: 24.1875rem minmax(0, 1fr);
+    grid-template-columns: minmax(16rem, 0.72fr) minmax(0, 1.75fr);
     gap: 2.125rem;
     align-items: start;
     direction: ltr;

@@ -13,7 +13,7 @@ import { createMongooseSeekerOverviewRepository, createSeekerOverviewService } f
 
 export function createSeekerRuntime(
   connection: Connection,
-  authService: Pick<AuthService, 'issueAccount'>,
+  authService: Pick<AuthService, 'issueAccount' | 'setAccountPassword'>,
   accessTokens: AccessTokenService,
   cookie: AuthCookiePolicy
 ): SeekerRouterDependencies {

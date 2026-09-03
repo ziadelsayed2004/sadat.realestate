@@ -44,7 +44,7 @@ export interface SeekerServiceDependencies {
     roleType: 'seeker';
     purpose: 'registration';
   } | undefined>;
-  authService: Pick<AuthService, 'issueAccount'>;
+  authService: Pick<AuthService, 'issueAccount' | 'setAccountPassword'>;
   now?: () => Date;
 }
 
@@ -116,6 +116,7 @@ export function createSeekerService(dependencies: SeekerServiceDependencies): Se
         }
         throw error;
       }
+      await dependencies.authService.setAccountPassword(account.id, input.password);
       const session = await dependencies.authService.issueAccount({
         id: account.id,
         roleType: 'seeker',

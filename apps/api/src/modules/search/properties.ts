@@ -1,5 +1,5 @@
 import { Types, type Connection } from 'mongoose';
-import { publicHomepageCategorySchema, publicPropertyListItemSchema, publicPropertyListDataSchema, publicPropertySearchQuerySchema, type PublicHomepageCategory, type PublicPropertyListData, type PublicPropertySearchQuery } from '@sadat-real-estate/contracts';
+import { publicHomepageCategorySchema, publicPropertyListItemSchema, publicPropertyListDataSchema, publicPropertyLocationSchema, publicPropertySearchQuerySchema, type PublicHomepageCategory, type PublicPropertyListData, type PublicPropertyLocation, type PublicPropertySearchQuery } from '@sadat-real-estate/contracts';
 
 export interface PublicPropertySearchSource {
   id: string;
@@ -30,7 +30,7 @@ export interface PublicPropertySearchSource {
 }
 
 export interface PublicPropertySearchRepository {
-  list(query: PublicPropertySearchQuery): Promise<{ items: PublicPropertySearchSource[]; total: number; categories: PublicHomepageCategory[]; propertyTypes: PublicHomepageCategory[] }>;
+  list(query: PublicPropertySearchQuery): Promise<{ items: PublicPropertySearchSource[]; total: number; categories: PublicHomepageCategory[]; propertyTypes: PublicHomepageCategory[]; locations?: PublicPropertyLocation[] }>;
 }
 
 function item(source: PublicPropertySearchSource) {
@@ -68,7 +68,7 @@ export function createPublicPropertySearchService(dependencies: { repository: Pu
         const value = item(source);
         return value ? [value] : [];
       });
-      return publicPropertyListDataSchema.parse({ items, categories: result.categories, propertyTypes: result.propertyTypes, page: query.page, limit: query.limit, total: result.total });
+      return publicPropertyListDataSchema.parse({ items, categories: result.categories, propertyTypes: result.propertyTypes, ...(result.locations === undefined ? {} : { locations: result.locations }), page: query.page, limit: query.limit, total: result.total });
     }
   };
 }
@@ -95,7 +95,7 @@ type MongoPropertyRow = {
   active?: boolean;
 };
 
-type NamedMongoRow = { _id?: unknown; name?: unknown; status?: string; active?: boolean; imageUrl?: string; kind?: string };
+type NamedMongoRow = { _id?: unknown; name?: unknown; status?: string; active?: boolean; imageUrl?: string; kind?: string; slug?: string; order?: number; parentLocationId?: unknown };
 type TaxonomyMongoRow = NamedMongoRow & { slug?: string; imageUrl?: string; order?: number; kind?: string; categoryId?: unknown };
 
 function id(value: unknown): string | undefined {
@@ -138,23 +138,29 @@ export function createMongoosePublicPropertySearchRepository(connection: Connect
       const sortField = query.sort === 'price' ? 'price.amount' : query.sort === 'name' ? 'name.en' : query.sort;
       const sort: Record<string, 1 | -1> = { [sortField]: direction, slug: 1, _id: 1 };
       const collection = connection.collection('properties');
-      const [rows, total, taxonomyRows] = await Promise.all([
+      const [rows, total, taxonomyRows, allLocationRows] = await Promise.all([
         collection.find(filter, { projection: { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, projectId: 1, propertyTypeId: 1, deliveryStatus: 1, locationId: 1, organizationId: 1, viewCount: 1, paymentPlans: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 } }).sort(sort).skip((query.page - 1) * query.limit).limit(query.limit).toArray() as Promise<MongoPropertyRow[]>,
         collection.countDocuments(filter),
-        connection.collection('property_taxonomy').find({ kind: { $in: ['category', 'type'] }, active: true }, { projection: { _id: 1, slug: 1, name: 1, imageUrl: 1, order: 1, kind: 1, categoryId: 1, active: 1 } }).sort({ kind: 1, order: 1, slug: 1, _id: 1 }).limit(200).toArray() as Promise<TaxonomyMongoRow[]>
+        connection.collection('property_taxonomy').find({ kind: { $in: ['category', 'type'] }, active: true }, { projection: { _id: 1, slug: 1, name: 1, imageUrl: 1, order: 1, kind: 1, categoryId: 1, active: 1 } }).sort({ kind: 1, order: 1, slug: 1, _id: 1 }).limit(200).toArray() as Promise<TaxonomyMongoRow[]>,
+        connection.collection('locations').find({ active: true }, { projection: { _id: 1, name: 1, kind: 1, slug: 1, parentLocationId: 1, order: 1, active: 1 } }).sort({ kind: 1, order: 1, slug: 1, _id: 1 }).limit(500).toArray() as Promise<NamedMongoRow[]>
       ]);
-      const locationIds = [...new Set(rows.flatMap((row) => { const value = id(row.locationId); return value ? [value] : []; }))];
       const organizationIds = [...new Set(rows.flatMap((row) => { const value = id(row.organizationId); return value ? [value] : []; }))];
       const typeRows = taxonomyRows.filter((row) => row.kind === 'type');
       const taxonomyIds = typeRows.flatMap((row) => { const value = id(row._id); return value ? [value] : []; });
       const now = new Date();
-      const [locationRows, organizationRows, categoryCounts, featuredRows] = await Promise.all([
-        locationIds.length ? connection.collection('locations').find({ _id: { $in: locationIds.map((value) => new Types.ObjectId(value)) }, active: true }, { projection: { _id: 1, name: 1, active: 1 } }).toArray() as Promise<NamedMongoRow[]> : [],
+      const [organizationRows, categoryCounts, featuredRows] = await Promise.all([
         organizationIds.length ? connection.collection('organizations').find({ _id: { $in: organizationIds.map((value) => new Types.ObjectId(value)) }, status: 'approved' }, { projection: { _id: 1, name: 1, imageUrl: 1, kind: 1, status: 1 } }).toArray() as Promise<NamedMongoRow[]> : [],
         taxonomyIds.length ? collection.aggregate<{ _id: unknown; count: number }>([{ $match: { status: 'published', active: true, propertyTypeId: { $in: taxonomyIds.map((value) => new Types.ObjectId(value)) } } }, { $group: { _id: '$propertyTypeId', count: { $sum: 1 } } }]).toArray() : [],
         rows.length ? connection.collection('ad_banners').find({ status: 'active', startAt: { $lte: now }, endAt: { $gt: now }, $or: rows.map((row) => ({ targetUrl: { $regex: `/properties/${row.slug}$` } })) }, { projection: { targetUrl: 1 } }).limit(100).toArray() as Promise<Array<{ targetUrl?: string }>> : []
       ]);
-      const names = (values: NamedMongoRow[]) => new Map(values.flatMap((row) => { const rowId = id(row._id); return rowId && row.name !== undefined ? [[rowId, row.name] as const] : []; }));
+      const names = new Map(allLocationRows.flatMap((row) => { const rowId = id(row._id); return rowId && row.name !== undefined ? [[rowId, row.name] as const] : []; }));
+      const locations = allLocationRows.flatMap((row) => {
+        const rowId = id(row._id);
+        if (!rowId || row.name === undefined || typeof row.kind !== 'string' || typeof row.slug !== 'string' || typeof row.order !== 'number') return [];
+        const parentLocationId = id(row.parentLocationId);
+        const parsed = publicPropertyLocationSchema.safeParse({ id: rowId, kind: row.kind, name: row.name, slug: row.slug, ...(parentLocationId ? { parentLocationId } : {}), order: row.order });
+        return parsed.success ? [parsed.data] : [];
+      });
       const organizations = new Map(organizationRows.flatMap((row) => { const rowId = id(row._id); return rowId && row.name !== undefined ? [[rowId, { name: row.name, ...(row.imageUrl ? { imageUrl: row.imageUrl } : {}), ...(row.kind ? { kind: row.kind } : {}) }] as const] : []; }));
       const featuredSlugs = new Set(featuredRows.flatMap((row) => typeof row.targetUrl === 'string' ? [row.targetUrl.split('/').at(-1)!] : []));
       const countById = new Map(categoryCounts.flatMap((row) => { const rowId = id(row._id); return rowId ? [[rowId, row.count] as const] : []; }));
@@ -176,7 +182,7 @@ export function createMongoosePublicPropertySearchRepository(connection: Connect
         const parsed = publicHomepageCategorySchema.safeParse({ id: rowId, slug: row.slug, name: row.name, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}), propertyCount: countByCategoryId.get(rowId) ?? 0, order: row.order });
         return parsed.success ? [parsed.data] : [];
       });
-      return { items: rows.flatMap((row) => { const value = source(row, names(locationRows), organizations, featuredSlugs); return value ? [value] : []; }), total, categories, propertyTypes };
+      return { items: rows.flatMap((row) => { const value = source(row, names, organizations, featuredSlugs); return value ? [value] : []; }), total, categories, propertyTypes, locations };
     }
   };
 }

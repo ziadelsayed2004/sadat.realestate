@@ -24,6 +24,8 @@ export type {
 
 export {
   adminLoginRequestSchema,
+  passwordLoginRequestSchema,
+  accountPasswordSchema,
   AUTH_ACCOUNT_STATES,
   AUTH_ERROR_CODES,
   AUTH_ROLE_TYPES,
@@ -230,6 +232,7 @@ export type {
   OtpVerifyData,
   OtpVerifyRequest,
   PasswordResetRequest
+  , PasswordLoginRequest
   , PasswordResetOtpSendRequest
   , PasswordResetOtpVerifyRequest
 } from '../auth/index.js';
@@ -470,8 +473,8 @@ export type { PropertyAdminListQuery, PropertyArea, PropertyAvailableAction, Pro
 
 export { publicHomepageBannerSchema, publicHomepageCategorySchema, publicHomepageContentSchema, publicHomepageDataSchema, publicHomepageDeveloperSchema, publicHomepageMetricSchema, publicHomepagePropertySchema, publicHomepageSectionSchema, publicHomepageSuccessEnvelopeSchema, publicPropertyAmenitySchema, publicPropertyDetailsSchema, publicPropertyDetailsSuccessEnvelopeSchema, publicPropertyMediaSchema, publicPropertyProjectSchema, publicPropertyRelatedPropertySchema, publicPropertySeoSchema, publicPropertySourceSchema } from '../public/index.js';
 export type { PublicHomepageBanner, PublicHomepageCategory, PublicHomepageContent, PublicHomepageData, PublicHomepageDeveloper, PublicHomepageMetric, PublicHomepageProperty, PublicHomepageSection, PublicPropertyAmenity, PublicPropertyDetails, PublicPropertyMedia, PublicPropertyProject, PublicPropertyRelatedProperty, PublicPropertySeo, PublicPropertySource } from '../public/index.js';
-export { publicPropertyListDataSchema, publicPropertyListItemSchema, publicPropertyListSuccessEnvelopeSchema, publicPropertySearchQuerySchema } from '../search/index.js';
-export type { PublicPropertyListData, PublicPropertyListItem, PublicPropertySearchQuery } from '../search/index.js';
+export { publicPropertyListDataSchema, publicPropertyListItemSchema, publicPropertyLocationSchema, publicPropertyListSuccessEnvelopeSchema, publicPropertySearchQuerySchema } from '../search/index.js';
+export type { PublicPropertyListData, PublicPropertyListItem, PublicPropertyLocation, PublicPropertySearchQuery } from '../search/index.js';
 
 export { PUBLIC_PROPERTY_COMPARISON_FIELDS, publicPropertyCompareRequestSchema, publicPropertyComparisonDataSchema, publicPropertyComparisonFieldSchema, publicPropertyComparisonItemSchema, publicPropertyComparisonSuccessEnvelopeSchema } from '../compare/index.js';
 export type { PublicPropertyCompareRequest, PublicPropertyComparisonData, PublicPropertyComparisonField } from '../compare/index.js';

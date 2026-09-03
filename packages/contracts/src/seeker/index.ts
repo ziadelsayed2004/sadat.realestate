@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { authSessionDataSchema, normalizedEmailSchema } from '../auth/index.js';
+import { accountPasswordSchema, authSessionDataSchema, normalizedEmailSchema } from '../auth/index.js';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
 
 export const seekerLocaleSchema = z.enum(['ar', 'en']);
@@ -28,6 +28,7 @@ export const seekerRegistrationRequestSchema = z.object({
   verificationToken: registrationTokenSchema,
   firstName: nameSchema,
   lastName: nameSchema,
+  password: accountPasswordSchema,
   locale: seekerLocaleSchema.optional()
 }).strict();
 

@@ -1,6 +1,6 @@
-import { PROVIDER_TYPES, providerTypeSchema, type ProviderType, type SupportedLocale } from '@sadat-real-estate/contracts';
+import { accountPasswordSchema, PROVIDER_TYPES, providerTypeSchema, type ProviderType, type SupportedLocale } from '@sadat-real-estate/contracts';
 import { useEffect, useMemo, useState } from 'react';
-import { Button } from '../design_system/index.ts';
+import { Button, Input } from '../design_system/index.ts';
 import '../auth/styles.css';
 import { getProviderTypeCopy } from './copy.ts';
 import './styles.css';
@@ -8,7 +8,7 @@ import './styles.css';
 export interface ProviderTypePageProps {
   readonly url: string;
   readonly locale: SupportedLocale;
-  readonly onContinue?: ((providerType: ProviderType, targetPath: string) => void) | undefined;
+  readonly onContinue?: ((providerType: ProviderType, targetPath: string, password: string) => void) | undefined;
 }
 
 export function providerTypeFromUrl(url: string): ProviderType | undefined {
@@ -46,6 +46,8 @@ export function ProviderTypePage({ url, locale, onContinue }: ProviderTypePagePr
   const copy = getProviderTypeCopy(locale);
   const initialProviderType = useMemo(() => providerTypeFromUrl(url), [url]);
   const [selectedProviderType, setSelectedProviderType] = useState<ProviderType | undefined>(initialProviderType);
+  const [password, setPassword] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const selected = selectedProviderType !== undefined;
 
   useEffect(() => {
@@ -53,10 +55,10 @@ export function ProviderTypePage({ url, locale, onContinue }: ProviderTypePagePr
   }, [initialProviderType]);
 
   function continueToAccount(): void {
-    if (selectedProviderType === undefined) return;
+    if (selectedProviderType === undefined || !accountPasswordSchema.safeParse(password).success || password !== passwordConfirmation) return;
     const targetPath = providerAccountPath(url, selectedProviderType);
     if (onContinue !== undefined) {
-      onContinue(selectedProviderType, targetPath);
+      onContinue(selectedProviderType, targetPath, password);
       return;
     }
     navigateToProviderAccount(url, selectedProviderType);
@@ -102,11 +104,16 @@ export function ProviderTypePage({ url, locale, onContinue }: ProviderTypePagePr
               );
             })}
           </div>
+          <div className="auth-form">
+            <Input id="provider-registration-password" label={locale === 'ar' ? 'كلمة المرور' : 'Password'} type="password" autoComplete="new-password" value={password} onChange={event => setPassword(event.currentTarget.value)} required />
+            <Input id="provider-registration-password-confirmation" label={locale === 'ar' ? 'تأكيد كلمة المرور' : 'Confirm password'} type="password" autoComplete="new-password" value={passwordConfirmation} onChange={event => setPasswordConfirmation(event.currentTarget.value)} required />
+            <p className="auth-field-help">{locale === 'ar' ? '8 أحرف على الأقل، تشمل حرفًا كبيرًا وصغيرًا ورقمًا ورمزًا.' : 'At least 8 characters with uppercase, lowercase, a number, and a symbol.'}</p>
+          </div>
           <aside className="provider-type-guidance" role="note">
             <strong>{copy.guidanceTitle}</strong>
             <span>{copy.guidanceBody}</span>
           </aside>
-          <Button type="button" fullWidth size="lg" disabled={!selected} onClick={continueToAccount}>
+          <Button type="button" fullWidth size="lg" disabled={!selected || !accountPasswordSchema.safeParse(password).success || password !== passwordConfirmation} onClick={continueToAccount}>
             {copy.continueAction}
           </Button>
           <p className="auth-card__prompt"><a href="/auth/register">{copy.backAction}</a></p>

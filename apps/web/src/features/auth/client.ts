@@ -133,7 +133,7 @@ export class AuthClient {
   }
 
   async sendOtp(input: OtpSendRequest | PasswordResetOtpSendRequest): Promise<OtpSendData> {
-    const reset = input.roleType === 'admin';
+    const reset = input.purpose === 'password_reset';
     const request = reset ? passwordResetOtpSendRequestSchema.parse(input) : otpSendRequestSchema.parse(input);
     const response = await this.apiClient.request(reset ? '/auth/account-recovery/otp/send' : '/auth/otp/send', {
       method: 'POST',
@@ -144,7 +144,7 @@ export class AuthClient {
   }
 
   async verifyOtp(input: OtpVerifyRequest | PasswordResetOtpVerifyRequest): Promise<AuthOtpVerifyResult> {
-    const reset = input.roleType === 'admin';
+    const reset = input.purpose === 'password_reset';
     const request = reset ? passwordResetOtpVerifyRequestSchema.parse(input) : otpVerifyRequestSchema.parse(input);
     const response = await this.apiClient.request(reset ? '/auth/account-recovery/otp/verify' : '/auth/otp/verify', {
       method: 'POST',

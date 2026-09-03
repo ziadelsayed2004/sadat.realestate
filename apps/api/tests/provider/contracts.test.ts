@@ -19,6 +19,7 @@ test('accepts only the three approved provider types and strict draft creation i
   assert.equal(providerApplicationCreateRequestSchema.safeParse({
     verificationToken: 'T'.repeat(43),
     providerType: 'brokerage_office',
+    password: 'Abc1!xyz',
     injected: true
   }).success, false);
 });

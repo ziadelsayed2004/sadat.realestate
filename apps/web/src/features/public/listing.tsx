@@ -150,22 +150,31 @@ function FilterField({
 function ListingFilters({
   draft,
   copy,
-  onChange,
+  locale,
   onCommit,
   onSubmit,
   onReset,
   error,
-  categories
+  categories,
+  locations
 }: {
   readonly draft: ListingFilterDraft;
   readonly copy: PublicPropertyListingCopy;
-  readonly onChange: <K extends FilterKey>(key: K, value: ListingFilterDraft[K]) => void;
+  readonly locale: SupportedLocale;
   readonly onCommit: <K extends FilterKey>(key: K, value: ListingFilterDraft[K]) => void;
   readonly onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   readonly onReset: () => void;
   readonly error: boolean;
   readonly categories: PublicPropertyListData['categories'];
+  readonly locations: NonNullable<PublicPropertyListData['locations']>;
 }) {
+  const locationNames = new Map(locations.map(location => [location.id, localizedText(location.name, locale) ?? location.slug] as const));
+  const locationOptions = locations.map(location => ({
+    value: location.id,
+    label: location.parentLocationId && locationNames.has(location.parentLocationId)
+      ? `${localizedText(location.name, locale) ?? location.slug} — ${locationNames.get(location.parentLocationId)}`
+      : localizedText(location.name, locale) ?? location.slug
+  }));
   return (
     <aside className="public-property-listing__filters" aria-labelledby="public-property-listing-filters-title">
       <div className="public-property-listing__filters-heading">
@@ -185,7 +194,16 @@ function ListingFilters({
           {categories.map(category => <label key={category.id}><input type="radio" name="propertyTypeId" value={category.id} checked={draft.propertyTypeId === category.id} onChange={() => onCommit('propertyTypeId', category.id)} /> {localizedText(category.name, 'ar') ?? category.slug}</label>)}
         </fieldset>
         <FilterField id="public-property-location" label={copy.locationId}>
-          <input id="public-property-location" name="locationId" type="text" value={draft.locationId} placeholder={copy.valuePlaceholder} onChange={event => onChange('locationId', event.target.value)} onBlur={event => onCommit('locationId', event.target.value)} />
+          <CustomSelect
+            id="public-property-location"
+            name="locationId"
+            value={draft.locationId}
+            onChange={value => onCommit('locationId', value)}
+            placeholder={copy.valuePlaceholder}
+            ariaLabel={copy.locationId}
+            options={locationOptions}
+            disabled={locationOptions.length === 0}
+          />
         </FilterField>
         <FilterField id="public-property-delivery-status" label={copy.deliveryStatus}>
           <CustomSelect
@@ -349,10 +367,6 @@ export function PublicPropertyListing({
     setAttempt(value => value + 1);
   };
 
-  const onFilterChange = <K extends FilterKey>(key: K, value: ListingFilterDraft[K]) => {
-    setDraft(previous => ({ ...previous, [key]: value }));
-  };
-
   const commitFilterChange = <K extends FilterKey>(key: K, value: ListingFilterDraft[K]) => {
     const nextDraft = { ...draft, [key]: value, sort: query.sort, direction: query.direction };
     setDraft(nextDraft);
@@ -400,7 +414,7 @@ export function PublicPropertyListing({
         {propertyTypeRail.map(propertyType => <button type="button" key={`type-${propertyType.id}`} className={query.propertyTypeId === propertyType.id ? 'is-active' : ''} aria-pressed={query.propertyTypeId === propertyType.id} onClick={() => updatePropertyType(propertyType.id)}><PublicMediaImage src={propertyType.imageUrl ?? publicCategoryAsset(propertyType.slug)} alt="" fallback={<PublicCategoryGlyph slug={propertyType.slug} />} loading="eager" /><strong>{localizedText(propertyType.name, locale) ?? propertyType.slug}</strong><span>{propertyType.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
       </nav> : null}
       <div className="public-property-listing__body">
-        <ListingFilters draft={draft} copy={copy} onChange={onFilterChange} onCommit={commitFilterChange} onSubmit={applyFilters} onReset={() => navigate(defaultPublicPropertySearchQuery())} error={filterError} categories={data?.propertyTypes ?? []} />
+        <ListingFilters draft={draft} copy={copy} locale={locale} onCommit={commitFilterChange} onSubmit={applyFilters} onReset={() => navigate(defaultPublicPropertySearchQuery())} error={filterError} categories={data?.propertyTypes ?? []} locations={data?.locations ?? []} />
         <section className="public-property-listing__results" aria-labelledby="public-property-listing-title" aria-busy={view === 'loading'}>
           <div className="public-property-listing__toolbar">
             <div className="public-property-listing__sort">

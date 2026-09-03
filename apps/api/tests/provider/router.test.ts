@@ -219,7 +219,7 @@ test('registers a provider draft through verified authority without accepting ex
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        verificationToken: 'T'.repeat(43), providerType: 'individual_broker'
+        verificationToken: 'T'.repeat(43), providerType: 'individual_broker', password: 'Provider1!'
       })
     });
     assert.equal(response.status, 201);
@@ -230,7 +230,7 @@ test('registers a provider draft through verified authority without accepting ex
     const invalid = await fetch(`${baseUrl}/api/v1/provider/application`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        verificationToken: 'T'.repeat(43), providerType: 'office'
+        verificationToken: 'T'.repeat(43), providerType: 'office', password: 'Provider1!'
       })
     });
     assert.equal(invalid.status, 400);

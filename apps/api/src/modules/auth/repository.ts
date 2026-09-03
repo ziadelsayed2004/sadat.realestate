@@ -14,10 +14,12 @@ export interface AuthAccount {
   status: AuthAccountState;
 }
 
-export interface AdminLoginRecord extends AuthAccount {
-  roleType: 'admin';
+export interface PasswordLoginRecord extends AuthAccount {
   passwordHash: string;
 }
+
+/** @deprecated Use PasswordLoginRecord. Kept for existing admin bootstrap callers. */
+export type AdminLoginRecord = PasswordLoginRecord & { roleType: 'admin' };
 
 export interface CreateSessionInput {
   userId: string;
@@ -40,7 +42,11 @@ export type SessionRotationResult =
 
 export interface AuthRepository {
   findAdminLogin(email: string): Promise<AdminLoginRecord | undefined>;
+  /** Looks up the globally unique email without constraining the account role. */
+  findAccountLogin?(email: string): Promise<PasswordLoginRecord | undefined>;
+  createAccountPassword(userId: string, passwordHash: string, now: Date): Promise<boolean>;
   updateAdminPassword(email: string, passwordHash: string, now: Date): Promise<boolean>;
+  updateAccountPassword?(email: string, roleType: AuthRoleType, passwordHash: string, now: Date): Promise<boolean>;
   createSession(input: CreateSessionInput): Promise<{ sessionId: string }>;
   rotateSession(input: RotateSessionInput): Promise<SessionRotationResult>;
   revokeSession(tokenHash: string, now: Date): Promise<boolean>;
@@ -84,7 +90,7 @@ export interface RedeemedOtpGrant {
 
 export interface RedeemedPasswordResetGrant {
   email: string;
-  roleType: 'admin';
+  roleType: AuthRoleType;
   purpose: 'password_reset';
 }
 
@@ -182,24 +188,63 @@ export function createMongooseAuthRepository(
     ).exec();
   }
 
+  async function findAccountLogin(email: string): Promise<PasswordLoginRecord | undefined> {
+    const user = await User.findOne({ normalizedEmail: email })
+      .select('_id roleType status')
+      .lean<LeanUser>()
+      .exec();
+    if (!user) return undefined;
+    const credential = await AdminCredential.findOne({ userId: user._id })
+      .select('+passwordHash userId')
+      .lean<LeanCredential>()
+      .exec();
+    return credential ? { ...toAccount(user), passwordHash: credential.passwordHash } : undefined;
+  }
+
   return {
+    async findAccountLogin(email) {
+      return findAccountLogin(email);
+    },
+
     async findAdminLogin(email) {
-      const user = await User.findOne({ normalizedEmail: email, roleType: 'admin' })
-        .select('_id roleType status')
-        .lean<LeanUser>()
-        .exec();
-      if (!user || user.roleType !== 'admin') return undefined;
-      const credential = await AdminCredential.findOne({ userId: user._id })
-        .select('+passwordHash userId')
-        .lean<LeanCredential>()
-        .exec();
-      return credential
-        ? { ...toAccount(user), roleType: 'admin', passwordHash: credential.passwordHash }
-        : undefined;
+      const record = await findAccountLogin(email);
+      if (!record || record.roleType !== 'admin') return undefined;
+      return { ...record, roleType: 'admin' } as AdminLoginRecord;
+    },
+
+    async createAccountPassword(userId, passwordHash, now) {
+      if (!/^[a-f0-9]{24}$/.test(userId)) return false;
+      const user = await User.exists({ _id: new Types.ObjectId(userId) });
+      if (!user) return false;
+      const result = await AdminCredential.updateOne(
+        { userId: new Types.ObjectId(userId) },
+        { $setOnInsert: { userId: new Types.ObjectId(userId), passwordHash, passwordChangedAt: now } },
+        { upsert: true }
+      ).exec();
+      return result.upsertedCount === 1 || result.matchedCount === 1;
     },
 
     async updateAdminPassword(email, passwordHash, now) {
       const user = await User.findOne({ normalizedEmail: email, roleType: 'admin', status: 'verified' })
+        .select('_id')
+        .lean<{ _id: Types.ObjectId }>()
+        .exec();
+      if (!user) return false;
+      const result = await AdminCredential.updateOne(
+        { userId: user._id },
+        { $set: { passwordHash, passwordChangedAt: now, updatedAt: now } }
+      ).exec();
+      if (result.matchedCount !== 1) return false;
+      await revokeAll(user._id, now);
+      return true;
+    },
+
+    async updateAccountPassword(email, roleType, passwordHash, now) {
+      const user = await User.findOne({
+        normalizedEmail: email,
+        roleType,
+        status: { $nin: ['rejected', 'suspended'] }
+      })
         .select('_id')
         .lean<{ _id: Types.ObjectId }>()
         .exec();
@@ -499,7 +544,6 @@ export function createMongooseOtpRepository(
       const challenge = await OtpChallenge.findOneAndUpdate(
         {
           verificationTokenHash,
-          roleType: 'admin',
           purpose: 'password_reset',
           status: 'verified',
           expiresAt: { $gt: now },
@@ -512,7 +556,7 @@ export function createMongooseOtpRepository(
         .lean<LeanOtpChallenge>()
         .exec();
       return challenge
-        ? { email: challenge.normalizedEmail, roleType: 'admin', purpose: 'password_reset' }
+        ? { email: challenge.normalizedEmail, roleType: challenge.roleType, purpose: 'password_reset' }
         : undefined;
     }
   };

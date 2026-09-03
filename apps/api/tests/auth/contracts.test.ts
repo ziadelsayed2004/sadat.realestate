@@ -6,11 +6,21 @@ import {
   emptyAuthRequestSchema,
   logoutSuccessEnvelopeSchema,
   normalizedPhoneSchema,
+  passwordResetRequestSchema,
+  passwordResetOtpSendRequestSchema,
   otpSendRequestSchema,
   otpSendSuccessEnvelopeSchema,
   otpVerifyRequestSchema,
   otpVerifySuccessEnvelopeSchema
 } from '@sadat-real-estate/contracts';
+
+test('accepts strong passwords from eight characters and rejects incomplete policies', () => {
+  const verificationToken = 'V'.repeat(43);
+  assert.equal(passwordResetRequestSchema.parse({ verificationToken, newPassword: 'Abc1!xyz' }).newPassword, 'Abc1!xyz');
+  for (const newPassword of ['Ab1!xyz', 'abcdefgh!', 'ABCDEFGH1!', 'Abcdefgh!', 'Abcdefg1']) {
+    assert.throws(() => passwordResetRequestSchema.parse({ verificationToken, newPassword }));
+  }
+});
 
 test('normalizes strict Admin login requests without exposing a password policy to other roles', () => {
   const parsed = adminLoginRequestSchema.parse({
@@ -28,6 +38,16 @@ test('normalizes strict Admin login requests without exposing a password policy 
     /unrecognized/i
   );
   assert.throws(() => adminLoginRequestSchema.parse({ email: 'bad', password: '' }));
+});
+
+test('accepts account recovery OTP requests for every account role', () => {
+  for (const roleType of ['seeker', 'provider', 'admin'] as const) {
+    const parsed = passwordResetOtpSendRequestSchema.parse({
+      email: ' Account@Example.COM ', roleType, purpose: 'password_reset'
+    });
+    assert.equal(parsed.email, 'account@example.com');
+    assert.equal(parsed.roleType, roleType);
+  }
 });
 
 test('keeps contact phone normalization separate and accepts only email OTP identity', () => {

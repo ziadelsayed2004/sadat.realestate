@@ -90,7 +90,9 @@ test('registers and serves only the authenticated seeker projection', async () =
   await withServer(async (baseUrl) => {
     const registered = await fetch(`${baseUrl}/api/v1/auth/register/seeker`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ verificationToken: 'T'.repeat(43), firstName: 'Salma', lastName: 'Hassan' })
+      body: JSON.stringify({
+        verificationToken: 'T'.repeat(43), firstName: 'Salma', lastName: 'Hassan', password: 'Seeker12!'
+      })
     });
     assert.equal(registered.status, 201);
     assert.match(registered.headers.get('set-cookie') ?? '', /^sadat_refresh=/);

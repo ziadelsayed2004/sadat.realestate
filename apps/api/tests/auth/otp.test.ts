@@ -252,6 +252,34 @@ test('returns a hashed, one-time registration authority without creating an acco
   assert.equal(createdSession, false);
 });
 
+test('redeems password-reset grants for non-admin accounts', async () => {
+  let reset: { email: string; roleType: string; password: string } | undefined;
+  const otp = createOtpService({
+    repository: repository({
+      async redeemPasswordResetGrant() {
+        return { email: 'provider@example.com', roleType: 'provider', purpose: 'password_reset' };
+      }
+    }),
+    provider: createDeterministicFakeOtpProvider(),
+    codeGenerator: createDeterministicOtpCodeGenerator(),
+    codeHasher,
+    verificationTokens,
+    authService: {
+      async issueAccount() { throw new Error('not used'); },
+      async resetAdminPassword() { throw new Error('legacy reset must not be called'); },
+      async resetAccountPassword(email, roleType, password) {
+        reset = { email, roleType, password };
+      }
+    },
+    now: () => now,
+    createChallengeId: () => challengeId
+  });
+  await otp.resetPassword({ verificationToken: 'V'.repeat(43), newPassword: 'Abc1!xyz' });
+  assert.deepEqual(reset, {
+    email: 'provider@example.com', roleType: 'provider', password: 'Abc1!xyz'
+  });
+});
+
 test('rejects expired, replayed, missing, or inactive login challenges without account enumeration', async () => {
   await rejectsWithCode(
     () => service(repository({ async findChallenge() { return undefined; } })).verify({

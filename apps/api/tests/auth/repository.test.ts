@@ -54,6 +54,40 @@ test('loads only Admin credentials and creates hashed-token sessions', async () 
   assert.equal('refreshToken' in (created ?? {}), false);
 });
 
+test('creates account credentials without conflicting with schema-managed timestamps', async () => {
+  const userId = new Types.ObjectId('0123456789abcdef01234567');
+  let update: Record<string, unknown> | undefined;
+  const identityModels = {
+    User: { exists: () => Promise.resolve({ _id: userId }) },
+    Session: {}
+  } as unknown as IdentityModels;
+  const authModels = {
+    AdminCredential: {
+      updateOne(_filter: unknown, value: Record<string, unknown>) {
+        update = value;
+        return { async exec() { return { upsertedCount: 1, matchedCount: 0 }; } };
+      }
+    }
+  } as unknown as AuthModels;
+  const repository = createMongooseAuthRepository(identityModels, authModels);
+  const passwordChangedAt = new Date('2026-09-03T00:00:00.000Z');
+
+  assert.equal(await repository.createAccountPassword(
+    userId.toHexString(),
+    '$argon2id$synthetic',
+    passwordChangedAt
+  ), true);
+  assert.deepEqual(update, {
+    $setOnInsert: {
+      userId,
+      passwordHash: '$argon2id$synthetic',
+      passwordChangedAt
+    }
+  });
+  assert.equal('createdAt' in ((update?.$setOnInsert as Record<string, unknown>) ?? {}), false);
+  assert.equal('updatedAt' in ((update?.$setOnInsert as Record<string, unknown>) ?? {}), false);
+});
+
 test('allows one concurrent refresh winner and treats the loser as reuse', async () => {
   const userId = new Types.ObjectId('0123456789abcdef01234567');
   const currentId = new Types.ObjectId('111111111111111111111111');

@@ -24,7 +24,7 @@ import { createProviderService } from './service.js';
 
 export function createProviderRuntime(
   connection: Connection,
-  authService: Pick<AuthService, 'issueAccount'>,
+  authService: Pick<AuthService, 'issueAccount' | 'setAccountPassword'>,
   accessTokens: AccessTokenService,
   cookie: AuthCookiePolicy,
   authorization?: Pick<RbacService, 'authorize'>

@@ -166,6 +166,8 @@ describe('provider account details', () => {
     );
 
     fireEvent.click(screen.getByRole('button', { name: /developer company/iu }));
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'Provider1!' } });
+    fireEvent.change(screen.getByLabelText('Confirm password'), { target: { value: 'Provider1!' } });
     fireEvent.click(screen.getByRole('button', { name: authCopy.continueAction }));
     await waitFor(() => expect(screen.getByRole('heading', { name: authCopy.emailTitle, level: 1 })).toBeInTheDocument());
     fireEvent.change(screen.getByLabelText(authCopy.identifierLabel), { target: { value: 'provider@example.com' } });
@@ -177,7 +179,8 @@ describe('provider account details', () => {
 
     await waitFor(() => expect(client.registerProvider).toHaveBeenCalledWith({
       verificationToken,
-      providerType: 'developer_company'
+      providerType: 'developer_company',
+      password: 'Provider1!'
     }));
     await waitFor(() => expect(screen.getByTestId('provider-account-details')).toBeInTheDocument());
     expect(client.getProviderApplication).toHaveBeenCalled();

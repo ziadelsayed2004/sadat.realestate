@@ -41,10 +41,15 @@ export function CustomSelect({
   const [internalValue, setInternalValue] = useState(defaultValue);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
+  // A caller may provide an explicit empty option as well as a placeholder.
+  // Keep one canonical option so the menu/native fallback never renders the
+  // same "optional" choice twice.
+  const uniqueOptions = options.filter((option, index) => options.findIndex(candidate => candidate.value === option.value) === index);
+
   const isControlled = controlledValue !== undefined;
   const currentValue = isControlled ? controlledValue : internalValue;
 
-  const selectedOption = options.find(opt => opt.value === currentValue);
+  const selectedOption = uniqueOptions.find(opt => opt.value === currentValue);
   const displayLabel = selectedOption ? selectedOption.label : (placeholder || label || '');
 
   function handleSelect(nextValue: string) {
@@ -111,7 +116,7 @@ export function CustomSelect({
 
       {isOpen ? (
         <div className="custom-select-menu" role="listbox" aria-label={ariaLabel || label || placeholder}>
-          {placeholder ? (
+          {placeholder && !uniqueOptions.some(option => option.value === '') ? (
             <button
               type="button"
               role="option"
@@ -127,7 +132,7 @@ export function CustomSelect({
               ) : null}
             </button>
           ) : null}
-          {options.map(option => {
+          {uniqueOptions.map(option => {
             const isSelected = option.value === currentValue;
             return (
               <button
@@ -161,8 +166,8 @@ export function CustomSelect({
         aria-label={ariaLabel || label || placeholder}
         className="a11y-visually-hidden"
       >
-        {placeholder ? <option value="">{placeholder}</option> : null}
-        {options.map(opt => (
+        {placeholder && !uniqueOptions.some(option => option.value === '') ? <option value="">{placeholder}</option> : null}
+        {uniqueOptions.map(opt => (
           <option key={opt.value} value={opt.value} disabled={opt.disabled}>
             {opt.label}
           </option>

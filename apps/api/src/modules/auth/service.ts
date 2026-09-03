@@ -1,4 +1,4 @@
-import type { AdminLoginRequest, AuthSessionData } from '@sadat-real-estate/contracts';
+import type { AdminLoginRequest, AuthRoleType, AuthSessionData } from '@sadat-real-estate/contracts';
 import type {
   AccessTokenService,
   OpaqueTokenService,
@@ -35,7 +35,10 @@ export interface AuthService {
   issueAccount(account: AuthAccount): Promise<IssuedAuthSession>;
   refresh(refreshToken: string): Promise<IssuedAuthSession>;
   logout(refreshToken: string): Promise<void>;
+  setAccountPassword(userId: string, newPassword: string): Promise<void>;
   resetAdminPassword(email: string, newPassword: string): Promise<void>;
+  /** Role-agnostic password recovery used by seeker/provider/admin OTP grants. */
+  resetAccountPassword?(email: string, roleType: AuthRoleType, newPassword: string): Promise<void>;
 }
 
 export interface AuthServiceDependencies {
@@ -105,11 +108,16 @@ export function createAuthService(dependencies: AuthServiceDependencies): AuthSe
 
   return {
     async loginAdmin(input) {
-      const record = await dependencies.repository.findAdminLogin(input.email);
+      // Email is globally unique in the identity model, so the same endpoint
+      // safely authenticates seekers, providers, and administrators. Keep the
+      // legacy repository method as a fallback for test/older adapters.
+      const record = dependencies.repository.findAccountLogin
+        ? await dependencies.repository.findAccountLogin(input.email)
+        : await dependencies.repository.findAdminLogin(input.email);
       if (!await passwordMatches(record?.passwordHash, input.password)) {
         throw new AuthServiceError('INVALID_CREDENTIALS');
       }
-      if (!record || record.status !== 'verified') {
+      if (!record || record.status === 'rejected' || record.status === 'suspended') {
         throw new AuthServiceError('ACCOUNT_NOT_ACTIVE');
       }
       // AdminLoginRecord carries the credential hash only for verification. Do
@@ -171,12 +179,46 @@ export function createAuthService(dependencies: AuthServiceDependencies): AuthSe
       if (!revoked) throw new AuthServiceError('INVALID_REFRESH_TOKEN');
     },
 
-    async resetAdminPassword(email, newPassword) {
-      const changed = await dependencies.repository.updateAdminPassword(
-        email,
+    async setAccountPassword(userId, newPassword) {
+      const created = await dependencies.repository.createAccountPassword(
+        userId,
         await dependencies.passwordHasher.hash(newPassword),
         now()
       );
+      if (!created) throw new AuthServiceError('INVALID_CREDENTIALS');
+    },
+
+    async resetAdminPassword(email, newPassword) {
+      const changed = dependencies.repository.updateAccountPassword
+        ? await dependencies.repository.updateAccountPassword(
+            email,
+            'admin',
+            await dependencies.passwordHasher.hash(newPassword),
+            now()
+          )
+        : await dependencies.repository.updateAdminPassword(
+            email,
+            await dependencies.passwordHasher.hash(newPassword),
+            now()
+          );
+      if (!changed) throw new AuthServiceError('INVALID_CREDENTIALS');
+    },
+
+    async resetAccountPassword(email, roleType, newPassword) {
+      const changed = dependencies.repository.updateAccountPassword
+        ? await dependencies.repository.updateAccountPassword(
+            email,
+            roleType,
+            await dependencies.passwordHasher.hash(newPassword),
+            now()
+          )
+        : roleType === 'admin'
+          ? await dependencies.repository.updateAdminPassword(
+              email,
+              await dependencies.passwordHasher.hash(newPassword),
+              now()
+            )
+          : false;
       if (!changed) throw new AuthServiceError('INVALID_CREDENTIALS');
     }
   };

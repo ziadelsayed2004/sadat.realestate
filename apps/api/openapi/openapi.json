@@ -90,7 +90,7 @@
     "/api/v1/auth/login": {
       "post": {
         "operationId": "loginAdmin",
-        "summary": "Authenticate an Admin with normalized email and password",
+        "summary": "Authenticate a seeker, provider, or administrator with normalized email and password",
         "requestBody": {
           "required": true,
           "content": {
@@ -204,24 +204,24 @@
     "/api/v1/auth/account-recovery/otp/send": {
       "post": {
         "operationId": "sendAdminAccountRecoveryOtp",
-        "summary": "Send an email OTP for administrator account recovery",
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["email", "roleType", "purpose"], "properties": { "email": { "type": "string", "format": "email" }, "roleType": { "const": "admin" }, "purpose": { "const": "password_reset" } } } } } },
+        "summary": "Send an email OTP for account recovery for any account role",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["email", "roleType", "purpose"], "properties": { "email": { "type": "string", "format": "email" }, "roleType": { "enum": ["seeker", "provider", "admin"] }, "purpose": { "const": "password_reset" } } } } } },
         "responses": { "202": { "$ref": "#/components/responses/OtpSendSuccess" }, "400": { "$ref": "#/components/responses/ValidationError" }, "429": { "$ref": "#/components/responses/AuthError" }, "503": { "$ref": "#/components/responses/AuthError" } }
       }
     },
     "/api/v1/auth/account-recovery/otp/verify": {
       "post": {
         "operationId": "verifyAdminAccountRecoveryOtp",
-        "summary": "Verify an administrator account-recovery email OTP",
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["email", "roleType", "purpose", "challengeId", "code"], "properties": { "email": { "type": "string", "format": "email" }, "roleType": { "const": "admin" }, "purpose": { "const": "password_reset" }, "challengeId": { "type": "string", "format": "uuid" }, "code": { "type": "string", "pattern": "^[0-9]{6}$" } } } } } },
+        "summary": "Verify an account-recovery email OTP for any account role",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["email", "roleType", "purpose", "challengeId", "code"], "properties": { "email": { "type": "string", "format": "email" }, "roleType": { "enum": ["seeker", "provider", "admin"] }, "purpose": { "const": "password_reset" }, "challengeId": { "type": "string", "format": "uuid" }, "code": { "type": "string", "pattern": "^[0-9]{6}$" } } } } } },
         "responses": { "200": { "$ref": "#/components/responses/OtpVerifySuccess" }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/AuthError" } }
       }
     },
     "/api/v1/auth/account-recovery/complete": {
       "post": {
         "operationId": "completeAdminAccountRecovery",
-        "summary": "Complete administrator account recovery using a single-use verified email grant",
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["verificationToken", "newPassword"], "properties": { "verificationToken": { "type": "string" }, "newPassword": { "type": "string", "minLength": 12, "maxLength": 128 } } } } } },
+        "summary": "Complete account recovery for any role using a single-use verified email grant",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["verificationToken", "newPassword"], "properties": { "verificationToken": { "type": "string" }, "newPassword": { "type": "string", "minLength": 8, "maxLength": 128, "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).+$" } } } } } },
         "responses": { "200": { "description": "Account access updated and existing sessions revoked" }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/AuthError" } }
       }
     },
@@ -12299,6 +12299,7 @@
       },
       "AdminLoginRequest": {
         "type": "object",
+        "description": "Role-agnostic password login. The normalized email is globally unique across seeker, provider, and administrator accounts.",
         "additionalProperties": false,
         "required": [
           "email",
@@ -12411,7 +12412,8 @@
         "required": [
           "verificationToken",
           "firstName",
-          "lastName"
+          "lastName",
+          "password"
         ],
         "properties": {
           "verificationToken": {
@@ -12426,6 +12428,12 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 80
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 128,
+            "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).+$"
           },
           "locale": {
             "enum": [
@@ -12715,7 +12723,8 @@
         "additionalProperties": false,
         "required": [
           "verificationToken",
-          "providerType"
+          "providerType",
+          "password"
         ],
         "properties": {
           "verificationToken": {
@@ -12723,6 +12732,12 @@
           },
           "providerType": {
             "$ref": "#/components/schemas/ProviderType"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 128,
+            "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).+$"
           }
         }
       },

@@ -33,7 +33,7 @@ describe('provider type selection', () => {
     }
   });
 
-  it('selects a contract provider type, enables continue, and hands off only the type', () => {
+  it('selects a contract provider type, validates its password, and hands off the registration inputs', () => {
     const onContinue = vi.fn();
     const copy = getProviderTypeCopy('en');
     renderWithLocale(
@@ -44,10 +44,16 @@ describe('provider type selection', () => {
     fireEvent.click(screen.getByRole('button', { name: new RegExp(copy.options.developer_company.title) }));
     expect(screen.getByTestId('provider-type-selection')).toHaveAttribute('data-screen-id', 'AUTH-08');
     expect(screen.getByRole('button', { name: new RegExp(copy.options.developer_company.title) })).toHaveAttribute('aria-pressed', 'true');
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'Provider1!' } });
+    fireEvent.change(screen.getByLabelText('Confirm password'), { target: { value: 'Provider1!' } });
     expect(screen.getByRole('button', { name: copy.continueAction })).toBeEnabled();
 
     fireEvent.click(screen.getByRole('button', { name: copy.continueAction }));
-    expect(onContinue).toHaveBeenCalledWith('developer_company', '/auth/register/provider/account?providerType=developer_company&lang=en');
+    expect(onContinue).toHaveBeenCalledWith(
+      'developer_company',
+      '/auth/register/provider/account?providerType=developer_company&lang=en',
+      'Provider1!'
+    );
     expect(document.body.textContent).not.toContain('verificationToken');
     expect(document.body.textContent).not.toContain('accessToken');
   });

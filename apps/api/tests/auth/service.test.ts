@@ -49,6 +49,8 @@ function tokenService(): OpaqueTokenService {
 function repository(overrides: Partial<AuthRepository> = {}): AuthRepository {
   return {
     async findAdminLogin() { return account; },
+    async createAccountPassword() { return true; },
+    async updateAdminPassword() { return true; },
     async createSession() { return { sessionId: 'abcdefabcdefabcdefabcdef' }; },
     async rotateSession() {
       return {
@@ -106,6 +108,40 @@ test('logs in only verified Admin credentials and issues a hashed refresh sessio
   assert.match(created?.tokenHash ?? '', /^hash-/);
   assert.equal(created?.tokenHash.includes(result.refreshToken), true);
   assert.equal(created?.expiresAt.toISOString(), '2026-09-11T12:00:00.000Z');
+});
+
+test('logs in a provider through the same email/password endpoint', async () => {
+  const provider = {
+    id: '111111111111111111111111',
+    roleType: 'provider' as const,
+    status: 'pending_review' as const,
+    passwordHash: 'admin-hash'
+  };
+  const auth = service(repository({
+    async findAccountLogin() { return provider; }
+  }));
+  const result = await auth.loginAdmin({ email: 'provider@example.com', password: 'correct-password' });
+  assert.deepEqual(result.data.user, {
+    id: provider.id,
+    roleType: 'provider',
+    status: 'pending_review'
+  });
+});
+
+test('resets a non-admin account password and revokes its sessions', async () => {
+  let received: { email: string; roleType: string; passwordHash: string } | undefined;
+  const auth = service(repository({
+    async updateAccountPassword(email, roleType, passwordHash) {
+      received = { email, roleType, passwordHash };
+      return true;
+    }
+  }));
+  await auth.resetAccountPassword?.('provider@example.com', 'provider', 'NewPassword1!');
+  assert.deepEqual(received, {
+    email: 'provider@example.com',
+    roleType: 'provider',
+    passwordHash: 'dummy-hash'
+  });
 });
 
 test('uses a dummy Argon2 verification path and returns one generic invalid-credentials error', async () => {

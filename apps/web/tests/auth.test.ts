@@ -263,6 +263,7 @@ test('seeker registration uses the implemented contract and keeps verification a
       verificationToken: 'A'.repeat(43),
       firstName: 'Mona',
       lastName: 'Hassan',
+      password: 'Abc1!xyz',
       locale: 'ar'
     });
     return response({ outcome: 'registered', session: session('seeker', 'registration.payload.signature') });
@@ -273,6 +274,7 @@ test('seeker registration uses the implemented contract and keeps verification a
     verificationToken: 'A'.repeat(43),
     firstName: ' Mona ',
     lastName: ' Hassan ',
+    password: 'Abc1!xyz',
     locale: 'ar'
   });
 

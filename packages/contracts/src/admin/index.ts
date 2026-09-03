@@ -12,7 +12,7 @@ export const adminBootstrapInputSchema = z.object({
   email: normalizedEmailSchema,
   password: z
     .string()
-    .min(12)
+    .min(8)
     .max(128)
     .refine((value) => !/[\u0000-\u001f\u007f]/.test(value), {
       message: 'Password must not contain control characters'

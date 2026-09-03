@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import type { AccessTokenClaims, OpaqueTokenService } from '../../src/modules/auth/crypto.js';
-import type { AuthService, IssuedAuthSession } from '../../src/modules/auth/service.js';
+import type { IssuedAuthSession } from '../../src/modules/auth/service.js';
 import type {
   ProviderApplicationEntity,
   ProviderDocumentInventory,
@@ -135,7 +135,7 @@ function service(
     redeemRegistrationGrant: async () => ({
       phone: '+201000000000', email: 'provider@example.com', roleType: 'provider', purpose: 'registration'
     }),
-    authService: { issueAccount: async () => session() } as Pick<AuthService, 'issueAccount'>,
+    authService: { issueAccount: async () => session(), setAccountPassword: async () => {} },
     now: () => new Date('2026-08-13T02:00:00.000Z')
   });
 }
@@ -166,8 +166,8 @@ test('registers a provider draft from a one-time provider OTP authority and issu
         purpose: 'registration'
       };
     },
-    authService: { issueAccount: async () => session() }
-  }).registerDraft({ verificationToken: 'T'.repeat(43), providerType: 'brokerage_office' });
+    authService: { issueAccount: async () => session(), setAccountPassword: async () => {} }
+  }).registerDraft({ verificationToken: 'T'.repeat(43), providerType: 'brokerage_office', password: 'Abc1!xyz' });
   assert.equal(redeemed, 'hash:' + 'T'.repeat(43));
   assert.equal(result.data.outcome, 'registered_draft');
   assert.equal(result.data.application.providerType, 'brokerage_office');

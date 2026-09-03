@@ -61,7 +61,7 @@ export interface ProviderServiceDependencies {
     roleType: 'provider';
     purpose: 'registration';
   } | undefined>;
-  authService: Pick<AuthService, 'issueAccount'>;
+  authService: Pick<AuthService, 'issueAccount' | 'setAccountPassword'>;
   now?: () => Date;
 }
 
@@ -250,6 +250,7 @@ export function createProviderService(dependencies: ProviderServiceDependencies)
         }
         throw error;
       }
+      await dependencies.authService.setAccountPassword(application.userId, input.password);
       const session = await dependencies.authService.issueAccount({
         id: application.userId,
         roleType: 'provider',

@@ -77,12 +77,15 @@ describe('seeker registration screens', () => {
 
     fireEvent.change(screen.getByLabelText(copy.firstNameLabel), { target: { value: 'Mona' } });
     fireEvent.change(screen.getByLabelText(copy.lastNameLabel), { target: { value: 'Hassan' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'Seeker12!' } });
+    fireEvent.change(screen.getByLabelText('Confirm password'), { target: { value: 'Seeker12!' } });
     fireEvent.click(screen.getByRole('button', { name: copy.registerAction }));
 
     await waitFor(() => expect(registerSeeker).toHaveBeenCalledWith({
       verificationToken: registrationToken,
       firstName: 'Mona',
       lastName: 'Hassan',
+      password: 'Seeker12!',
       locale: 'en'
     }));
     expect(await screen.findByRole('heading', { name: copy.registrationSuccessTitle, level: 1 })).toBeInTheDocument();
@@ -126,6 +129,8 @@ describe('seeker registration screens', () => {
     await completeEmailVerification(copy);
     fireEvent.change(screen.getByLabelText(copy.firstNameLabel), { target: { value: 'Mona' } });
     fireEvent.change(screen.getByLabelText(copy.lastNameLabel), { target: { value: 'Hassan' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'Seeker12!' } });
+    fireEvent.change(screen.getByLabelText('Confirm password'), { target: { value: 'Seeker12!' } });
     fireEvent.click(screen.getByRole('button', { name: copy.registerAction }));
 
     await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(copy.duplicateRegistrationTitle));

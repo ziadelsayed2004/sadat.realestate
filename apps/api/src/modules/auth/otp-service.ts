@@ -57,7 +57,8 @@ export interface OtpServiceDependencies {
   codeGenerator: OtpCodeGenerator;
   codeHasher: OtpCodeHasher;
   verificationTokens: OpaqueTokenService;
-  authService: Pick<AuthService, 'issueAccount' | 'resetAdminPassword'>;
+  authService: Pick<AuthService, 'issueAccount' | 'resetAdminPassword'>
+    & Partial<Pick<AuthService, 'resetAccountPassword'>>;
   now?: () => Date;
   createChallengeId?: () => string;
   otpTtlSeconds?: number;
@@ -197,7 +198,18 @@ export function createOtpService(dependencies: OtpServiceDependencies): OtpServi
         now()
       );
       if (!grant) throw new OtpServiceError('INVALID_OTP');
-      await dependencies.authService.resetAdminPassword(grant.email, input.newPassword);
+      if (dependencies.authService.resetAccountPassword) {
+        await dependencies.authService.resetAccountPassword(
+          grant.email,
+          grant.roleType,
+          input.newPassword
+        );
+      } else if (grant.roleType === 'admin') {
+        // Backwards-compatible adapter support for older runtime/test doubles.
+        await dependencies.authService.resetAdminPassword(grant.email, input.newPassword);
+      } else {
+        throw new OtpServiceError('INVALID_OTP');
+      }
     }
   });
 }
