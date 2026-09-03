@@ -75,6 +75,33 @@ describe('Seeker overview', () => {
     result.unmount();
   });
 
+  it('renders the optional activity projection without exposing internal fields', () => {
+    const projected = seekerOverviewDataSchema.parse({
+      ...overview,
+      recentRequests: [{
+        id: 'aaaaaaaaaaaaaaaaaaaaaaaa', type: 'property_search', status: 'under_review',
+        payload: { locations: ['First District'] },
+        createdAt: '2026-08-01T10:00:00.000Z', updatedAt: '2026-08-02T10:00:00.000Z'
+      }],
+      upcomingViewings: [{
+        id: 'bbbbbbbbbbbbbbbbbbbbbbbb', propertyId: 'cccccccccccccccccccccccc', status: 'confirmed',
+        requestedAt: '2026-08-11T14:00:00.000Z', timezone: 'Africa/Cairo'
+      }],
+      recentNotifications: [{
+        id: 'dddddddddddddddddddddddd', type: 'request.updated',
+        title: { ar: 'تم تحديث طلبك', en: 'Your request was updated' },
+        message: { ar: 'سيتواصل معك الفريق قريباً.', en: 'The team will contact you soon.' },
+        readAt: null, createdAt: '2026-08-03T10:00:00.000Z'
+      }]
+    });
+    const result = renderWithLocale(<SeekerOverview locale="ar" session={session} initialData={projected} />, { locale: 'ar' });
+    expect(result.container.querySelector('[data-activity-state="projected"]')).not.toBeNull();
+    expect(screen.getByText(getSeekerCopy('ar').overview.recent.requests)).toBeInTheDocument();
+    expect(screen.getByText('REQ-AAAA')).toBeInTheDocument();
+    expect(screen.getByText('تم تحديث طلبك')).toBeInTheDocument();
+    expect(result.container.textContent).not.toContain('internalNotes');
+  });
+
   it('supports retry and permission states without fallback data', async () => {
     const copy = getSeekerCopy('en');
     const load = vi.fn()

@@ -2041,3 +2041,147 @@
   .seeker-dashboard__nav { grid-column: 1; grid-row: 2; min-block-size: auto; }
   .seeker-dashboard__content { grid-column: 1; grid-row: 3; width: 100%; max-width: none; padding: 1.5rem; }
 }
+
+/* Projected activity used by the production overview endpoint.  The layout
+   follows the Figma SEK-01 composition: a wide requests panel and two stacked
+   activity panels beside it, with a full-width search CTA below. */
+.seeker-overview__activity {
+  margin-block-start: 1.5rem;
+}
+
+.seeker-overview__activity-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(18rem, .9fr);
+  gap: 1.25rem;
+  direction: rtl;
+}
+
+.seeker-overview__activity-side {
+  display: grid;
+  align-content: start;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.seeker-overview__activity-panel {
+  min-width: 0;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid rgb(23 35 61 / 8%);
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgb(23 35 61 / 5%);
+  direction: rtl;
+}
+
+.seeker-overview__activity-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  min-block-size: 3.75rem;
+  padding: .75rem 1.25rem;
+  border-block-end: 1px solid rgb(23 35 61 / 8%);
+}
+
+.seeker-overview__activity-panel-heading a {
+  color: var(--color-text-strong);
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.seeker-overview__activity-panel-heading span {
+  color: var(--color-accent-text);
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.seeker-overview__activity-list { display: grid; }
+
+.seeker-overview__activity-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .85rem;
+  min-block-size: 5.2rem;
+  padding: .85rem 1.25rem;
+  color: var(--color-text);
+  border-block-end: 1px solid rgb(23 35 61 / 7%);
+  text-decoration: none;
+  transition: background-color .15s ease;
+}
+
+.seeker-overview__activity-row:last-child { border-block-end: 0; }
+.seeker-overview__activity-row:hover { background: rgb(243 232 208 / 35%); }
+
+.seeker-overview__activity-row-main,
+.seeker-overview__activity-row-meta { display: grid; gap: .2rem; min-width: 0; }
+.seeker-overview__activity-row-main strong { overflow: hidden; color: var(--color-text-strong); font-size: .96rem; text-overflow: ellipsis; white-space: nowrap; }
+.seeker-overview__activity-row-main small,
+.seeker-overview__activity-row-meta time { overflow: hidden; color: var(--color-text-secondary); font-size: .76rem; text-overflow: ellipsis; white-space: nowrap; }
+.seeker-overview__activity-row-meta { justify-items: end; text-align: end; }
+.seeker-overview__activity-row-meta b { color: var(--color-text-secondary); font-size: .75rem; font-weight: 600; }
+
+.seeker-overview__status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 1.7rem;
+  padding: .25rem .55rem;
+  color: #0f4a3b;
+  background: #e7f5ed;
+  border: 1px solid #b9ebce;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.seeker-overview__status--new,
+.seeker-overview__status--under_review,
+.seeker-overview__status--scheduled,
+.seeker-overview__status--requested,
+.seeker-overview__status--rescheduled { color: #9b6500; background: #fff8df; border-color: #f5d36a; }
+.seeker-overview__status--cancelled,
+.seeker-overview__status--closed { color: #687385; background: #f2f4f6; border-color: #d9dee5; }
+
+.seeker-overview__notification-dot {
+  display: grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  color: #9ba5b6;
+  background: #f1f4f8;
+  border-radius: 50%;
+  font-size: .8rem;
+}
+.seeker-overview__notification-dot.is-unread { color: #0f4a3b; background: #e4f6ec; }
+
+.seeker-overview__activity-empty { margin: 0; padding: 1.5rem 1.25rem; color: var(--color-text-secondary); font-size: .9rem; }
+
+.seeker-overview__search-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin-block-start: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  color: #fff;
+  background: #0f4a3b;
+  border-radius: 1rem;
+}
+
+.seeker-overview__search-cta > div { display: grid; gap: .25rem; }
+.seeker-overview__search-cta strong { font-size: 1.1rem; }
+.seeker-overview__search-cta span { color: rgb(255 255 255 / 74%); font-size: .85rem; }
+.seeker-overview__search-cta a { display: inline-flex; align-items: center; gap: .45rem; min-block-size: 2.5rem; padding: .5rem 1rem; color: #17233d; background: #d1a044; border-radius: 999px; font-weight: 800; text-decoration: none; white-space: nowrap; }
+.seeker-overview__search-cta a span { color: #17233d; font-size: 1.1rem; }
+
+@media (max-width: 900px) {
+  .seeker-overview__activity-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .seeker-overview__activity-side { gap: 1rem; }
+  .seeker-overview__activity-row { grid-template-columns: auto minmax(0, 1fr); min-block-size: 4.5rem; padding-inline: 1rem; }
+  .seeker-overview__activity-row-meta { grid-column: 2; display: block; justify-items: start; text-align: start; }
+  .seeker-overview__activity-row-meta b { display: none; }
+  .seeker-overview__search-cta { align-items: stretch; flex-direction: column; padding: 1.1rem; }
+  .seeker-overview__search-cta a { justify-content: center; }
+}

@@ -11,6 +11,17 @@ export interface SeekerCopy {
     readonly cards: Readonly<Record<'requests' | 'viewings' | 'savedProperties' | 'notifications', string>>;
     readonly activityTitle: string;
     readonly activityBody: string;
+    readonly recent: Readonly<{
+      requests: string;
+      viewings: string;
+      notifications: string;
+      viewAll: string;
+      empty: string;
+      requestId: string;
+      property: string;
+      status: string;
+      appointment: string;
+    }>;
     readonly unavailableTitle: string;
     readonly unavailableBody: string;
     readonly emptyTitle: string;
@@ -47,6 +58,17 @@ const copy: Readonly<Record<SupportedLocale, SeekerCopy>> = {
       },
       activityTitle: 'آخر النشاط',
       activityBody: 'ستظهر تفاصيل الطلبات والمعاينات والإشعارات هنا عند توفرها من العقود الخاصة بها.',
+      recent: {
+        requests: 'طلباتي النشطة',
+        viewings: 'معاينات قادمة',
+        notifications: 'آخر الإشعارات',
+        viewAll: 'عرض الكل',
+        empty: 'لا توجد بيانات حديثة',
+        requestId: 'رقم الطلب',
+        property: 'العقار',
+        status: 'الحالة',
+        appointment: 'الموعد'
+      },
       unavailableTitle: 'تفاصيل النشاط غير متاحة بعد',
       unavailableBody: 'يعرض هذا القسم البيانات التي يوفرها عقد الملخص فقط، ولا يضيف أرقاماً أو محتوى غير موجود.',
       emptyTitle: 'لا يوجد نشاط بعد',
@@ -86,6 +108,17 @@ const copy: Readonly<Record<SupportedLocale, SeekerCopy>> = {
       },
       activityTitle: 'Recent activity',
       activityBody: 'Request, viewing, and notification details appear here when their own contracts are available.',
+      recent: {
+        requests: 'Active requests',
+        viewings: 'Upcoming viewings',
+        notifications: 'Recent notifications',
+        viewAll: 'View all',
+        empty: 'No recent activity',
+        requestId: 'Request',
+        property: 'Property',
+        status: 'Status',
+        appointment: 'Appointment'
+      },
       unavailableTitle: 'Activity details are unavailable',
       unavailableBody: 'This section renders only the summary contract and never invents counts or content.',
       emptyTitle: 'No activity yet',
@@ -105,4 +138,3 @@ const copy: Readonly<Record<SupportedLocale, SeekerCopy>> = {
 export function getSeekerCopy(locale: SupportedLocale): SeekerCopy {
   return copy[locale];
 }
-

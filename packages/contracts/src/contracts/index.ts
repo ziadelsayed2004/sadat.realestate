@@ -163,7 +163,10 @@ export {
   seekerPreferencesPatchSchema,
   seekerPreferencesSuccessEnvelopeSchema,
   seekerOverviewDataSchema,
+  seekerOverviewNotificationSchema,
+  seekerOverviewRequestSchema,
   seekerOverviewSuccessEnvelopeSchema,
+  seekerOverviewViewingSchema,
   seekerProfileDataSchema,
   seekerProfilePatchSchema,
   seekerProfileSuccessEnvelopeSchema,
@@ -181,7 +184,10 @@ export type {
   SeekerProfilePatch,
   SeekerRegistrationData,
   SeekerRegistrationRequest,
-  SeekerOverviewData
+  SeekerOverviewData,
+  SeekerOverviewNotification,
+  SeekerOverviewRequest,
+  SeekerOverviewViewing
 } from '../seeker/index.js';
 
 export {

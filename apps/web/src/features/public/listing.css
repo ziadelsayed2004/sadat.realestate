@@ -917,6 +917,31 @@
 }
 
 @media (max-width: 40rem) {
+  /* Keep the compare action a real touch target on phones.  The desktop card
+     density rule above intentionally uses a compact label; it should not make
+     the mobile action look unlike the rest of the card controls. */
+  .public-property-listing__card .ui-property-card__action button {
+    min-block-size: 2.75rem;
+    padding: .55rem .8rem;
+    color: #17233f;
+    background: #fff;
+    border: 1px solid #dfe1e4;
+    border-radius: 999px;
+    font-size: .8rem;
+    line-height: 1.25;
+  }
+
+  .public-property-listing__card .ui-property-card__action button.is-selected {
+    color: #17233f;
+    background: #d1a044;
+    border-color: #d1a044;
+  }
+
+  .public-property-listing__card .ui-property-card__action button:focus-visible {
+    outline: 3px solid rgb(209 160 68 / 35%);
+    outline-offset: 2px;
+  }
+
   .public-property-listing__compare-tray {
     inset-inline: 0.75rem;
     flex-wrap: wrap;
