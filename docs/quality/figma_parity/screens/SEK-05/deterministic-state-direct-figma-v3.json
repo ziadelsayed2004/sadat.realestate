@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "seedId": "capture-SEK-05-ar-after-2026-08-26",
+  "environment": "non-production-browser-fixture",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "screenId": "SEK-05",
+  "source": {
+    "pageId": "6017:4354",
+    "nodeId": "6027:4477",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6027-4477&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4354&starting-point-node-id=6027%3A3579",
+    "screenshot": "docs/quality/figma_parity/screens/SEK-05/figma.png"
+  },
+  "runtime": {
+    "route": "/seeker/viewings?lang=ar",
+    "requestedQueueRoute": "/seeker/viewings",
+    "role": "seeker",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1551,
+      "height": 862,
+      "deviceScaleFactor": 1
+    }
+  },
+  "authSession": {
+    "roleType": "seeker",
+    "projection": {
+      "accessToken": "capture.header.signature",
+      "tokenType": "Bearer",
+      "expiresInSeconds": 900,
+      "user": {
+        "id": "0123456789abcdef01234567",
+        "roleType": "seeker",
+        "status": "verified"
+      }
+    },
+    "source": "intercepted /api/v1/auth/refresh response"
+  },
+  "api": {
+    "fixtureContract": "real writable API response shapes",
+    "responseRequestIds": [
+      "capture-SEK-05-ar"
+    ],
+    "state": null
+  },
+  "phase": "after",
+  "repair": {
+    "repairId": "SEK-05-single-heading",
+    "expectedEffect": "Match Figma single heading, compact tabs, and immediate two-card layout"
+  },
+  "seedSha256": "8a7084d355378460ae08452c87aa39228c0228ed1634f55208487acc369d4211"
+}

@@ -1849,6 +1849,30 @@
     text-align: left;
   }
 
+  .seeker-viewings > .seeker-dashboard__content > .seeker-dashboard__heading-row {
+    display: block;
+  }
+
+  .seeker-viewings__heading-actions,
+  .seeker-viewings__toolbar > div:first-child {
+    display: none;
+  }
+
+  .seeker-viewings__panel {
+    margin-block-start: 0;
+  }
+
+  .seeker-viewings__toolbar {
+    justify-content: flex-start;
+    margin-block: 1.25rem;
+  }
+
+  .seeker-viewings__tab {
+    min-block-size: 2.375rem;
+    padding: .5rem 1rem;
+    border-radius: 1.125rem;
+  }
+
   .seeker-viewings__grid {
     width: min(100%, 42rem);
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1863,6 +1887,7 @@
     aspect-ratio: 2.05 / 1;
   }
 
+  .seeker-viewing-card { display: block; }
   .seeker-viewing-card__body { padding: 1rem; direction: rtl; }
   .seeker-viewing-card__summary { margin-block-start: 1rem; }
   .seeker-viewing-card__actions { margin-block-start: 1rem; }
