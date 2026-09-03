@@ -2311,26 +2311,33 @@
   }
 
   .public-homepage__nav.is-open {
-    position: absolute;
-    inset-block-start: 100%;
-    inset-inline: 0;
+    position: fixed;
+    inset-block: 4rem 0;
+    inset-inline-start: auto;
+    inset-inline-end: 0;
     z-index: 30;
     display: grid;
+    align-content: start;
     gap: 0;
-    max-block-size: calc(100vh - 4rem);
+    inline-size: min(86vw, 22rem);
+    max-inline-size: 100%;
+    max-block-size: none;
     overflow-y: auto;
-    padding: 0.5rem 0.75rem 1rem;
+    overscroll-behavior: contain;
+    padding: 0.75rem 1rem max(1rem, env(safe-area-inset-bottom));
     background: var(--color-surface);
-    border-block-end: 1px solid var(--color-border);
-    box-shadow: 0 0.75rem 1.5rem rgb(15 23 42 / 0.12);
+    border-inline-start: 1px solid var(--color-border);
+    box-shadow: 0 0 0 100vmax rgb(15 23 42 / 0.52), -0.75rem 0 2rem rgb(15 23 42 / 0.18);
   }
 
   .public-homepage__nav.is-open a {
     display: flex;
-    min-block-size: 2.75rem;
+    inline-size: 100%;
+    min-block-size: 2.625rem;
     align-items: center;
-    padding-inline: 0.75rem;
+    padding: 0.5rem 0.75rem;
     border-block-end: 1px solid var(--color-border);
+    border-radius: 0;
   }
 
   .public-homepage__nav.is-open a:last-child {
@@ -2340,8 +2347,8 @@
   .public-homepage__nav.is-open .public-homepage__mobile-actions {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 0.75rem;
-    padding-block-start: 0.875rem;
+    gap: 0.625rem;
+    padding-block-start: 0.75rem;
   }
 
   .public-homepage__mobile-actions .custom-locale-switcher {
@@ -2352,7 +2359,7 @@
   .public-homepage__mobile-actions .public-homepage__login,
   .public-homepage__mobile-actions .public-homepage__signup {
     inline-size: 100%;
-    min-block-size: 2.875rem;
+    min-block-size: 2.75rem;
     justify-content: center;
   }
 
@@ -2362,11 +2369,40 @@
   }
 
   .public-homepage__nav.is-open a[aria-current="page"] {
-    padding-block: 0.45rem;
+    color: var(--color-text-strong);
+    background: #fef3c6;
+    border-block-end-color: transparent;
+    border-radius: var(--radius-md);
   }
 
   .public-homepage__menu-toggle {
     display: inline-flex;
+  }
+
+  .public-homepage__menu-toggle[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(0.425rem) rotate(45deg);
+  }
+
+  .public-homepage__menu-toggle[aria-expanded="true"] span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .public-homepage__menu-toggle[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-0.425rem) rotate(-45deg);
+  }
+
+  .public-homepage__menu-toggle span {
+    transition: transform 160ms ease, opacity 160ms ease;
+  }
+
+  .public-homepage img,
+  .public-property-listing img,
+  .public-property-details img,
+  .public-developer-directory img,
+  .public-developer-profile img,
+  .public-articles img,
+  .public-community img {
+    max-inline-size: 100%;
   }
 
   .public-homepage__state[data-state] {
