@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import {
+  passwordChangeRequestSchema,
   seekerPreferencesPatchSchema,
   seekerProfilePatchSchema,
   type SeekerPreferencesData,
@@ -396,6 +397,7 @@ function SettingsContent({
   copy,
   authClient,
   saving,
+  onChangePassword,
   onSignOut
 }: {
   readonly locale: SupportedLocale;
@@ -403,6 +405,7 @@ function SettingsContent({
   readonly copy: ReturnType<typeof getSeekerProfileCopy>;
   readonly authClient: SeekerProfileAuthClient | undefined;
   readonly saving: boolean;
+  readonly onChangePassword: (currentPassword: string, newPassword: string) => Promise<void>;
   readonly onSignOut: () => void;
 }) {
   const surfaceCopy = settingsSurfaceCopy(locale);
@@ -413,6 +416,23 @@ function SettingsContent({
     { id: 'account-alerts', label: surfaceCopy.accountAlerts, body: surfaceCopy.accountAlertsBody, enabled: true },
     { id: 'marketing-messages', label: surfaceCopy.marketingMessages, body: surfaceCopy.marketingMessagesBody, enabled: false }
   ];
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState<string>();
+  const submitPassword = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (newPassword !== confirmPassword || !passwordChangeRequestSchema.safeParse({ currentPassword, newPassword }).success) {
+      setPasswordError(locale === 'ar' ? 'تأكد من تطابق كلمة المرور الجديدة واستيفائها للشروط.' : 'Make sure the new passwords match and meet the requirements.');
+      return;
+    }
+    setPasswordError(undefined);
+    void onChangePassword(currentPassword, newPassword).then(() => {
+      setCurrentPassword(''); setNewPassword(''); setConfirmPassword('');
+    }).catch(() => {
+      setPasswordError(locale === 'ar' ? 'تعذر تغيير كلمة المرور. تأكد من كلمة المرور الحالية وحاول مرة أخرى.' : 'Could not change the password. Check your current password and try again.');
+    });
+  };
   return (
     <div className="seeker-profile__settings">
       <section className="seeker-profile__settings-card seeker-profile__settings-card--value" data-state="unavailable" aria-labelledby="seeker-profile-email-title">
@@ -423,18 +443,18 @@ function SettingsContent({
           <span className="seeker-profile__unavailable-label">{copy.unavailable}</span>
         </div>
       </section>
-      <section className="seeker-profile__settings-card seeker-profile__settings-card--password" data-state="unavailable" aria-labelledby="seeker-profile-password-title">
+      <form className="seeker-profile__settings-card seeker-profile__settings-card--password" onSubmit={submitPassword} aria-labelledby="seeker-profile-password-title">
         <h3 id="seeker-profile-password-title">{surfaceCopy.passwordHeading}</h3>
         <div className="seeker-profile__password-fields">
-          <Input id="seeker-profile-current-password" label={surfaceCopy.currentPassword} type="password" value="" placeholder="••••••••" disabled />
-          <Input id="seeker-profile-new-password" label={surfaceCopy.newPassword} type="password" value="" placeholder="••••••••" disabled />
-          <Input id="seeker-profile-confirm-password" label={surfaceCopy.confirmPassword} type="password" value="" placeholder="••••••••" disabled />
+          <Input id="seeker-profile-current-password" label={surfaceCopy.currentPassword} type="password" value={currentPassword} onChange={event => setCurrentPassword(event.target.value)} autoComplete="current-password" />
+          <Input id="seeker-profile-new-password" label={surfaceCopy.newPassword} type="password" value={newPassword} onChange={event => setNewPassword(event.target.value)} autoComplete="new-password" />
+          <Input id="seeker-profile-confirm-password" label={surfaceCopy.confirmPassword} type="password" value={confirmPassword} onChange={event => setConfirmPassword(event.target.value)} autoComplete="new-password" />
         </div>
+        {passwordError ? <p role="alert">{passwordError}</p> : null}
         <div className="seeker-profile__settings-actions">
-          <Button type="button" disabled>{surfaceCopy.changePassword}</Button>
-          <span className="seeker-profile__unavailable-label">{copy.unavailable}</span>
+          <Button type="submit" loading={saving}>{surfaceCopy.changePassword}</Button>
         </div>
-      </section>
+      </form>
       <section className="seeker-profile__settings-card" data-state="unavailable" aria-labelledby="seeker-profile-notifications-title">
         <h3 id="seeker-profile-notifications-title">{surfaceCopy.notificationsHeading}</h3>
         <div className="seeker-profile__toggle-list">
@@ -580,6 +600,18 @@ export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loa
     void authClient.logout().then(() => setFeedback('signedOut')).catch(() => undefined).finally(() => setSaving(false));
   };
 
+  const changePassword = async (currentPassword: string, newPassword: string) => {
+    setSaving(true);
+    setFeedback(undefined);
+    try {
+      await actionSource.changePassword({ currentPassword, newPassword });
+      setFeedback('signedOut');
+      await authClient?.logout?.().catch(() => undefined);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const activePath = activeTab === 'settings'
     ? '/seeker/settings'
     : activeTab === 'profile'
@@ -622,7 +654,7 @@ export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loa
                 <ProfileForm locale={locale} profile={profile} draft={profileDraft} copy={copy} saving={saving} onChange={patch => { setProfileDraft(current => current === undefined ? current : { ...current, ...patch }); setValidationError(false); }} onSubmit={submitProfile} />
               </section>
             ) : (
-              <SettingsContent locale={locale} profile={profile} copy={copy} authClient={authClient} saving={saving} onSignOut={signOut} />
+              <SettingsContent locale={locale} profile={profile} copy={copy} authClient={authClient} saving={saving} onChangePassword={changePassword} onSignOut={signOut} />
             )}
           </>
         ) : null}

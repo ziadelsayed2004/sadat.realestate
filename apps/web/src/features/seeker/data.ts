@@ -7,6 +7,8 @@ import {
   notificationListSuccessEnvelopeSchema,
   notificationReadAllSuccessEnvelopeSchema,
   notificationReadSuccessEnvelopeSchema,
+  passwordChangeRequestSchema,
+  passwordChangeSuccessEnvelopeSchema,
   requestDataSchema,
   requestListDataSchema,
   requestTransitionRequestSchema,
@@ -32,6 +34,7 @@ import {
   type NotificationListQuery,
   type NotificationReadAllData,
   type NotificationReadData,
+  type PasswordChangeRequest,
   type SeekerPreferencesData,
   type SeekerPreferencesPatch,
   type SeekerOverviewData,
@@ -99,6 +102,7 @@ export interface SeekerNotificationActions {
 export interface SeekerProfileActions {
   updateProfile(input: SeekerProfilePatch, signal?: AbortSignal): Promise<SeekerProfileData>;
   updatePreferences(input: SeekerPreferencesPatch, signal?: AbortSignal): Promise<SeekerPreferencesData>;
+  changePassword(input: PasswordChangeRequest, signal?: AbortSignal): Promise<void>;
 }
 
 function clientFor(options: Pick<SeekerOverviewLoadOptions, 'apiClient' | 'apiOrigin'>): ApiClient {
@@ -429,6 +433,15 @@ export function createSeekerProfileActions(options: SeekerOverviewLoadOptions = 
         ...(signal === undefined ? {} : { signal })
       });
       return response.data.data;
+    },
+    async changePassword(input, signal) {
+      await client.request('/auth/password/change', {
+        method: 'POST',
+        responseSchema: passwordChangeSuccessEnvelopeSchema,
+        ...(headers === undefined ? {} : { headers }),
+        json: passwordChangeRequestSchema.parse(input),
+        ...(signal === undefined ? {} : { signal })
+      });
     }
   };
 }

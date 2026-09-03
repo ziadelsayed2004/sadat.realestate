@@ -144,6 +144,26 @@ test('resets a non-admin account password and revokes its sessions', async () =>
   });
 });
 
+test('changes an authenticated account password only after verifying the current password', async () => {
+  let changed: { userId: string; passwordHash: string } | undefined;
+  const auth = service(repository({
+    async findAccountLoginById() { return account; },
+    async updateAccountPasswordById(userId, passwordHash) {
+      changed = { userId, passwordHash };
+      return true;
+    }
+  }));
+  await auth.changeAccountPassword(account.id, {
+    currentPassword: 'correct-password',
+    newPassword: 'NewPassword1!'
+  });
+  assert.deepEqual(changed, { userId: account.id, passwordHash: 'dummy-hash' });
+  await rejectsWithCode(
+    () => auth.changeAccountPassword(account.id, { currentPassword: 'wrong', newPassword: 'NewPassword1!' }),
+    'INVALID_CREDENTIALS'
+  );
+});
+
 test('uses a dummy Argon2 verification path and returns one generic invalid-credentials error', async () => {
   const auth = service(repository({ async findAdminLogin() { return undefined; } }));
   await rejectsWithCode(

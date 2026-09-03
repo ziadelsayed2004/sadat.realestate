@@ -44,9 +44,11 @@ export interface AuthRepository {
   findAdminLogin(email: string): Promise<AdminLoginRecord | undefined>;
   /** Looks up the globally unique email without constraining the account role. */
   findAccountLogin?(email: string): Promise<PasswordLoginRecord | undefined>;
+  findAccountLoginById?(userId: string): Promise<PasswordLoginRecord | undefined>;
   createAccountPassword(userId: string, passwordHash: string, now: Date): Promise<boolean>;
   updateAdminPassword(email: string, passwordHash: string, now: Date): Promise<boolean>;
   updateAccountPassword?(email: string, roleType: AuthRoleType, passwordHash: string, now: Date): Promise<boolean>;
+  updateAccountPasswordById?(userId: string, passwordHash: string, now: Date): Promise<boolean>;
   createSession(input: CreateSessionInput): Promise<{ sessionId: string }>;
   rotateSession(input: RotateSessionInput): Promise<SessionRotationResult>;
   revokeSession(tokenHash: string, now: Date): Promise<boolean>;
@@ -201,9 +203,27 @@ export function createMongooseAuthRepository(
     return credential ? { ...toAccount(user), passwordHash: credential.passwordHash } : undefined;
   }
 
+  async function findAccountLoginById(userId: string): Promise<PasswordLoginRecord | undefined> {
+    if (!/^[a-f0-9]{24}$/.test(userId)) return undefined;
+    const user = await User.findById(new Types.ObjectId(userId))
+      .select('_id roleType status')
+      .lean<LeanUser>()
+      .exec();
+    if (!user) return undefined;
+    const credential = await AdminCredential.findOne({ userId: user._id })
+      .select('+passwordHash userId')
+      .lean<LeanCredential>()
+      .exec();
+    return credential ? { ...toAccount(user), passwordHash: credential.passwordHash } : undefined;
+  }
+
   return {
     async findAccountLogin(email) {
       return findAccountLogin(email);
+    },
+
+    async findAccountLoginById(userId) {
+      return findAccountLoginById(userId);
     },
 
     async findAdminLogin(email) {
@@ -255,6 +275,20 @@ export function createMongooseAuthRepository(
       ).exec();
       if (result.matchedCount !== 1) return false;
       await revokeAll(user._id, now);
+      return true;
+    },
+
+    async updateAccountPasswordById(userId, passwordHash, now) {
+      if (!/^[a-f0-9]{24}$/.test(userId)) return false;
+      const objectId = new Types.ObjectId(userId);
+      const user = await User.exists({ _id: objectId, status: { $nin: ['rejected', 'suspended'] } });
+      if (!user) return false;
+      const result = await AdminCredential.updateOne(
+        { userId: objectId },
+        { $set: { passwordHash, passwordChangedAt: now, updatedAt: now } }
+      ).exec();
+      if (result.matchedCount !== 1) return false;
+      await revokeAll(objectId, now);
       return true;
     },
 

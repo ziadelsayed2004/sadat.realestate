@@ -1,4 +1,4 @@
-import type { AdminLoginRequest, AuthRoleType, AuthSessionData } from '@sadat-real-estate/contracts';
+import type { AdminLoginRequest, AuthRoleType, AuthSessionData, PasswordChangeRequest } from '@sadat-real-estate/contracts';
 import type {
   AccessTokenService,
   OpaqueTokenService,
@@ -39,6 +39,7 @@ export interface AuthService {
   resetAdminPassword(email: string, newPassword: string): Promise<void>;
   /** Role-agnostic password recovery used by seeker/provider/admin OTP grants. */
   resetAccountPassword?(email: string, roleType: AuthRoleType, newPassword: string): Promise<void>;
+  changeAccountPassword(userId: string, input: PasswordChangeRequest): Promise<void>;
 }
 
 export interface AuthServiceDependencies {
@@ -219,6 +220,23 @@ export function createAuthService(dependencies: AuthServiceDependencies): AuthSe
               now()
             )
           : false;
+      if (!changed) throw new AuthServiceError('INVALID_CREDENTIALS');
+    },
+
+    async changeAccountPassword(userId, input) {
+      const record = dependencies.repository.findAccountLoginById
+        ? await dependencies.repository.findAccountLoginById(userId)
+        : undefined;
+      if (!await passwordMatches(record?.passwordHash, input.currentPassword) || !record) {
+        throw new AuthServiceError('INVALID_CREDENTIALS');
+      }
+      const changed = dependencies.repository.updateAccountPasswordById
+        ? await dependencies.repository.updateAccountPasswordById(
+            userId,
+            await dependencies.passwordHasher.hash(input.newPassword),
+            now()
+          )
+        : false;
       if (!changed) throw new AuthServiceError('INVALID_CREDENTIALS');
     }
   };

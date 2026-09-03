@@ -49,6 +49,9 @@ export {
   otpVerifyDataSchema,
   otpVerifyRequestSchema,
   otpVerifySuccessEnvelopeSchema,
+  passwordChangeDataSchema,
+  passwordChangeRequestSchema,
+  passwordChangeSuccessEnvelopeSchema,
   passwordResetDataSchema,
   passwordResetOtpSendRequestSchema,
   passwordResetOtpVerifyRequestSchema,
@@ -231,10 +234,11 @@ export type {
   OtpVerifiedData,
   OtpVerifyData,
   OtpVerifyRequest,
-  PasswordResetRequest
-  , PasswordLoginRequest
-  , PasswordResetOtpSendRequest
-  , PasswordResetOtpVerifyRequest
+  PasswordChangeRequest,
+  PasswordLoginRequest,
+  PasswordResetRequest,
+  PasswordResetOtpSendRequest,
+  PasswordResetOtpVerifyRequest
 } from '../auth/index.js';
 
 export {

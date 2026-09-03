@@ -41,9 +41,11 @@ describe('Seeker profile, preferences, and settings', () => {
         const url = String(input);
         const method = init?.method ?? 'GET';
         calls.push({ url, method, authorization: new Headers(init?.headers).get('authorization'), body: typeof init?.body === 'string' ? init.body : undefined });
-        const data = url.endsWith('/preferences')
-          ? preferences
-          : profile;
+        const data = url.endsWith('/auth/password/change')
+          ? { changed: true }
+          : url.endsWith('/preferences')
+            ? preferences
+            : profile;
         return new Response(JSON.stringify({ data, meta: { requestId: 'seeker-profile-test' } }), { status: 200 });
       }
     });
@@ -54,12 +56,14 @@ describe('Seeker profile, preferences, and settings', () => {
     const actions = createSeekerProfileActions({ apiClient: client, authorization });
     await expect(actions.updateProfile({ firstName: 'Mariam' })).resolves.toEqual(profile);
     await expect(actions.updatePreferences({ locations: ['sheikh-zayed'] })).resolves.toEqual(preferences);
+    await expect(actions.changePassword({ currentPassword: 'Current-Password-1!', newPassword: 'New-Password-2!' })).resolves.toBeUndefined();
 
     expect(calls).toEqual([
       { url: '/api/v1/me', method: 'GET', authorization: 'Bearer seeker.profile.token', body: undefined },
       { url: '/api/v1/me/preferences', method: 'GET', authorization: 'Bearer seeker.profile.token', body: undefined },
       { url: '/api/v1/me', method: 'PATCH', authorization: 'Bearer seeker.profile.token', body: JSON.stringify({ firstName: 'Mariam' }) },
-      { url: '/api/v1/me/preferences', method: 'PATCH', authorization: 'Bearer seeker.profile.token', body: JSON.stringify({ locations: ['sheikh-zayed'] }) }
+      { url: '/api/v1/me/preferences', method: 'PATCH', authorization: 'Bearer seeker.profile.token', body: JSON.stringify({ locations: ['sheikh-zayed'] }) },
+      { url: '/api/v1/auth/password/change', method: 'POST', authorization: 'Bearer seeker.profile.token', body: JSON.stringify({ currentPassword: 'Current-Password-1!', newPassword: 'New-Password-2!' }) }
     ]);
   });
 
@@ -122,10 +126,27 @@ describe('Seeker profile, preferences, and settings', () => {
     expect(screen.getAllByText(settingsCopy.unavailable).length).toBeGreaterThan(0);
     expect(screen.getByDisplayValue(profile.email)).toBeDisabled();
     expect(settingsResult.container.querySelectorAll('.seeker-profile__settings-card')).toHaveLength(5);
-    expect(screen.getByLabelText('Current password')).toBeDisabled();
+    expect(screen.getByLabelText('Current password')).toBeEnabled();
     expect(screen.getAllByRole('checkbox')).toHaveLength(5);
     expect(screen.getByRole('button', { name: 'Delete account permanently' })).toBeDisabled();
     settingsResult.unmount();
+  });
+
+  it('changes a valid password and signs the current browser out', async () => {
+    const actions = emptyActions();
+    const authClient = {
+      getSnapshot: () => ({ status: 'authenticated' }),
+      getAuthorizationHeader: () => 'Bearer seeker.profile.token',
+      logout: vi.fn().mockResolvedValue(undefined)
+    };
+    renderWithLocale(<SeekerProfile locale="en" session={session} tab="settings" loadProfile={async () => profile} actions={actions} authClient={authClient} />, { locale: 'en' });
+    await waitFor(() => expect(screen.getByLabelText('Current password')).toBeInTheDocument());
+    fireEvent.change(screen.getByLabelText('Current password'), { target: { value: 'Current-Password-1!' } });
+    fireEvent.change(screen.getByLabelText('New password'), { target: { value: 'New-Password-2!' } });
+    fireEvent.change(screen.getByLabelText('Confirm new password'), { target: { value: 'New-Password-2!' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Change password' }));
+    await waitFor(() => expect(actions.changePassword).toHaveBeenCalledWith({ currentPassword: 'Current-Password-1!', newPassword: 'New-Password-2!' }));
+    await waitFor(() => expect(authClient.logout).toHaveBeenCalledTimes(1));
   });
 
   it('resolves the canonical personal profile URL to SEK-09', async () => {
@@ -159,9 +180,10 @@ describe('Seeker profile, preferences, and settings', () => {
   });
 });
 
-function emptyActions(): SeekerProfileActions & { readonly updateProfile: ReturnType<typeof vi.fn>; readonly updatePreferences: ReturnType<typeof vi.fn> } {
+function emptyActions(): SeekerProfileActions & { readonly updateProfile: ReturnType<typeof vi.fn>; readonly updatePreferences: ReturnType<typeof vi.fn>; readonly changePassword: ReturnType<typeof vi.fn> } {
   return {
     updateProfile: vi.fn().mockResolvedValue(profile),
-    updatePreferences: vi.fn().mockResolvedValue(preferences)
+    updatePreferences: vi.fn().mockResolvedValue(preferences),
+    changePassword: vi.fn().mockResolvedValue(undefined)
   };
 }

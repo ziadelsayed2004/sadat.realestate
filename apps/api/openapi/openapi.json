@@ -225,6 +225,15 @@
         "responses": { "200": { "description": "Account access updated and existing sessions revoked" }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/AuthError" } }
       }
     },
+    "/api/v1/auth/password/change": {
+      "post": {
+        "operationId": "changeAccountPassword",
+        "summary": "Change the password for the signed-in verified account",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["currentPassword", "newPassword"], "properties": { "currentPassword": { "type": "string", "minLength": 1, "maxLength": 1024 }, "newPassword": { "type": "string", "minLength": 8, "maxLength": 128, "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).+$" } } } } } },
+        "responses": { "200": { "description": "Password changed and refresh sessions revoked" }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/AuthError" }, "403": { "$ref": "#/components/responses/AuthError" } }
+      }
+    },
     "/api/v1/auth/refresh": {
       "post": {
         "operationId": "refreshSession",

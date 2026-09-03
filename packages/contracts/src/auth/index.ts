@@ -114,6 +114,14 @@ export const passwordResetRequestSchema = z.object({
 
 export const passwordResetDataSchema = z.object({ reset: z.literal(true) }).strict();
 
+export const passwordChangeRequestSchema = z.object({
+  currentPassword: z.string().min(1).max(1024),
+  newPassword: accountPasswordSchema
+}).strict();
+
+export const passwordChangeDataSchema = z.object({ changed: z.literal(true) }).strict();
+export const passwordChangeSuccessEnvelopeSchema = successEnvelopeSchema(passwordChangeDataSchema);
+
 export const emptyAuthRequestSchema = z.object({}).strict();
 
 export const authenticatedUserSchema = z.object({
@@ -153,6 +161,7 @@ export type AdminLoginRequest = z.infer<typeof adminLoginRequestSchema>;
 /** Password login is intentionally email-only: normalizedEmail is globally unique across roles. */
 export type PasswordLoginRequest = AdminLoginRequest;
 export type PasswordResetRequest = z.infer<typeof passwordResetRequestSchema>;
+export type PasswordChangeRequest = z.infer<typeof passwordChangeRequestSchema>;
 export type AuthenticatedUser = z.infer<typeof authenticatedUserSchema>;
 export type AuthSessionData = z.infer<typeof authSessionDataSchema>;
 export type LogoutData = z.infer<typeof logoutDataSchema>;

@@ -58,6 +58,11 @@ function service(): AuthService {
     },
     async logout(token) {
       if (token !== replacementToken) throw new AuthServiceError('INVALID_REFRESH_TOKEN');
+    },
+    async setAccountPassword() {},
+    async resetAdminPassword() {},
+    async changeAccountPassword(_userId, input) {
+      if (input.currentPassword !== 'correct-password') throw new AuthServiceError('INVALID_CREDENTIALS');
     }
   };
 }
@@ -104,6 +109,13 @@ async function withAuthServer(run: (baseUrl: string) => Promise<void>): Promise<
         sameSite: 'Strict',
         secure: true,
         maxAgeSeconds: 2_592_000
+      },
+      accessTokens: {
+        issue() { return 'header.payload.signature'; },
+        verify(token) {
+          if (token !== 'header.payload.signature') throw new Error('invalid');
+          return { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '0123456789abcdef01234567', sid: 'abcdefabcdefabcdefabcdef', role: 'seeker', status: 'verified', iat: 1, exp: 9999999999, jti: 'test' };
+        }
       }
     }
   });
@@ -133,6 +145,27 @@ test('logs in an Admin with strict input, a success envelope, and a secure HttpO
     assert.equal(body.data?.user?.roleType, 'admin');
     assert.equal(body.data?.accessToken, 'header.payload.signature');
     assert.equal(JSON.stringify(body).includes(currentToken), false);
+  });
+});
+
+test('changes the authenticated account password and clears the refresh cookie', async () => {
+  await withAuthServer(async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/api/v1/auth/password/change`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer header.payload.signature' },
+      body: JSON.stringify({ currentPassword: 'correct-password', newPassword: 'NewPassword1!' })
+    });
+    assert.equal(response.status, 200);
+    assert.match(response.headers.get('set-cookie') ?? '', /Max-Age=0/);
+    const body = await response.json() as AuthResponseBody;
+    assert.equal((body.data as { changed?: unknown })?.changed, true);
+
+    const rejected = await fetch(`${baseUrl}/api/v1/auth/password/change`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer header.payload.signature' },
+      body: JSON.stringify({ currentPassword: 'wrong', newPassword: 'NewPassword1!' })
+    });
+    assert.equal(rejected.status, 401);
   });
 });
 

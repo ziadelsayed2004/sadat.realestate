@@ -125,6 +125,18 @@
   },
   {
     "method": "POST",
+    "path": "/api/v1/auth/password/change",
+    "module": "auth",
+    "auth": "bearer",
+    "roles": [
+      "verified-users"
+    ],
+    "purpose": "Change the signed-in account password after verifying the current password",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
     "path": "/api/v1/auth/register/seeker",
     "module": "auth",
     "auth": "verified-otp",
