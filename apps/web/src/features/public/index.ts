@@ -1,4 +1,4 @@
-export { PublicHomepage, PublicSiteHeader } from './components.tsx';
+export { PublicAuthRoleContext, PublicHomepage, PublicSiteHeader } from './components.tsx';
 export type { PublicHomepageProps, PublicHomepageViewState } from './components.tsx';
 export { PublicPropertyListing } from './listing.tsx';
 export type { PublicPropertyListingProps, PublicPropertyListingViewState } from './listing.tsx';

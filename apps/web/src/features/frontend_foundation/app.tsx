@@ -4,7 +4,7 @@ import { resolveRoute } from '../../routes/route-table.js';
 import { PublicCommunity, type CommunityAuthClient } from '../community/index.ts';
 import { defaultPublicArticleListLoader, PublicAbout, PublicArticleDetails, PublicArticles, PublicTeam } from '../content/index.ts';
 import { AuthPage, type AuthFlowClient } from '../auth/pages.tsx';
-import { PublicDeveloperProfile, PublicDevelopers, PublicHomepage, PublicPropertyComparison, PublicPropertyDetails as PublicPropertyDetailsPage, PublicPropertyListing, type PublicDeveloperProfileInitialState, type PublicPropertyComparisonInitialState, type PublicPropertyDetailsInitialState } from '../public/index.ts';
+import { PublicAuthRoleContext, PublicDeveloperProfile, PublicDevelopers, PublicHomepage, PublicPropertyComparison, PublicPropertyDetails as PublicPropertyDetailsPage, PublicPropertyListing, type PublicDeveloperProfileInitialState, type PublicPropertyComparisonInitialState, type PublicPropertyDetailsInitialState } from '../public/index.ts';
 import { ProviderAdvertising, ProviderCommission, ProviderCustomerRequests, ProviderNotifications, ProviderOverview, ProviderProperties, ProviderProjects, ProviderSettings, ProviderViewings } from '../provider/index.ts';
 import { ProviderPropertyAdvancedWizard, ProviderPropertyCompletionWizard, ProviderPropertyStatePage, ProviderPropertyWizard, type ProviderPropertyAdvancedStep, type ProviderPropertyCompletionStep, type ProviderPropertyStateRoute } from '../provider_property/index.ts';
 import { SeekerNotifications, SeekerOverview, SeekerProfile, SeekerRequests, SeekerSaved, SeekerViewings } from '../seeker/index.ts';
@@ -114,7 +114,7 @@ export function App({
     if (authClient === undefined) return undefined;
     setAuthSnapshot(authClient.getSnapshot());
     const unsubscribe = authClient.subscribe(setAuthSnapshot);
-    if (protectedRoute && authClient.getSnapshot().status !== 'authenticated') {
+    if (authClient.getSnapshot().status !== 'authenticated' && authClient.getSnapshot().status !== 'refreshing') {
       void authClient.refresh().catch(() => undefined);
     }
     return unsubscribe;
@@ -357,7 +357,9 @@ export function App({
             <p className="route-label">{copy.routeLabel}: <code>{route.pattern ?? url}</code></p>
           </div>
         )}
-        {content}
+        <PublicAuthRoleContext.Provider value={effectiveSession.status === 'authenticated' ? effectiveSession.role : undefined}>
+          {content}
+        </PublicAuthRoleContext.Provider>
       </RouteShell>
     </RouteErrorBoundary>
   );

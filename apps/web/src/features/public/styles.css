@@ -2692,56 +2692,24 @@
   }
 }
 
-/* The Figma category component is a horizontally overflowing 1,551px rail inside
-   a 1,232px viewport. Keep that interaction on desktop as well as touch sizes. */
 .public-homepage__category-section {
   block-size: auto !important;
-  overflow: visible;
 }
 
 .public-homepage__category-rail {
   display: flex !important;
-  grid-template-columns: none !important;
   gap: 0.75rem;
   inline-size: 100%;
   padding: 0.5rem 0.25rem 0.875rem;
   overflow-x: auto;
-  overflow-y: hidden;
-  overscroll-behavior-inline: contain;
-  scroll-behavior: smooth;
-  scroll-snap-type: inline proximity;
-  scrollbar-width: thin;
-  scrollbar-color: #d1a044 rgb(23 35 61 / 0.1);
-}
-
-.public-homepage__category-rail::-webkit-scrollbar {
-  block-size: 0.5rem;
-}
-
-.public-homepage__category-rail::-webkit-scrollbar-track {
-  background: rgb(23 35 61 / 0.1);
-  border-radius: 999px;
-}
-
-.public-homepage__category-rail::-webkit-scrollbar-thumb {
-  background: #d1a044;
-  border-radius: 999px;
-}
-
-.public-homepage__category-rail:focus-visible {
-  outline: 2px solid #d1a044;
-  outline-offset: 0.25rem;
 }
 
 .public-homepage__category-rail .public-homepage__category-card {
   flex: 0 0 8.625rem;
   min-inline-size: 8.625rem;
   min-block-size: 12.125rem;
-  scroll-snap-align: start;
 }
 
-/* Controls live fully outside the advertising artwork and logical properties
-   mirror their placement automatically between RTL and LTR. */
 @media (min-width: 48.0625rem) {
   .public-homepage__section--banners .public-homepage__banner-control--previous {
     inset-inline-start: -3.25rem;

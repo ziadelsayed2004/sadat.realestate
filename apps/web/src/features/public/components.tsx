@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type {
   PublicHomepageBanner,
   PublicHomepageCategory,
@@ -27,6 +27,8 @@ import {
 import './styles.css';
 
 export type PublicHomepageViewState = Extract<UxState, 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission'>;
+
+export const PublicAuthRoleContext = createContext<AuthRoleType | undefined>(undefined);
 
 export interface PublicHomepageProps {
   readonly locale: SupportedLocale;
@@ -328,6 +330,8 @@ export function PublicSiteHeader({
   readonly activePath?: string;
   readonly authenticatedRole?: AuthRoleType | undefined;
 }) {
+  const contextRole = useContext(PublicAuthRoleContext);
+  const role = authenticatedRole ?? contextRole;
   const [menuOpen, setMenuOpen] = useState(false);
   const nav = locale === 'ar'
     ? { ...copy.nav, community: '\u0627\u0644\u0643\u0648\u0645\u064a\u0648\u0646\u062a\u064a', about: '\u0645\u0646 \u0646\u062d\u0646', team: '\u0641\u0631\u064a\u0642 \u0627\u0644\u0639\u0645\u0644' }
@@ -341,13 +345,13 @@ export function PublicSiteHeader({
     ['/about', nav.about],
     ['/team', nav.team]
   ];
-  const accountHref = authenticatedRole === 'admin'
+  const accountHref = role === 'admin'
     ? '/admin'
-    : authenticatedRole === 'provider'
+    : role === 'provider'
       ? '/provider'
       : '/seeker';
   const accountLabel = locale === 'ar' ? 'حسابي' : 'My account';
-  const accountActions = authenticatedRole === undefined ? <>
+  const accountActions = role === undefined ? <>
     <a className="public-homepage__login" href="/auth/login">{copy.login}</a>
     <a className="public-homepage__signup" href="/auth/register">{copy.createAccount}</a>
   </> : <a className="public-homepage__signup public-homepage__account" href={accountHref}>{accountLabel}</a>;
@@ -370,7 +374,7 @@ export function PublicSiteHeader({
         {links.map(([href, label]) => <a key={href} href={href} aria-current={href === activePath ? 'page' : undefined} onClick={() => setMenuOpen(false)}>{label}</a>)}
         <div className="public-homepage__mobile-actions" aria-hidden={!menuOpen}>
           <LocaleSwitcher locale={locale} label={copy.localeLabel} />
-          {authenticatedRole === undefined ? <>
+          {role === undefined ? <>
             <a className="public-homepage__login" href="/auth/login" onClick={() => setMenuOpen(false)}>{copy.login}</a>
             <a className="public-homepage__signup" href="/auth/register" onClick={() => setMenuOpen(false)}>{copy.createAccount}</a>
           </> : <a className="public-homepage__signup public-homepage__account" href={accountHref} onClick={() => setMenuOpen(false)}>{accountLabel}</a>}

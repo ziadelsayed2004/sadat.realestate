@@ -111,6 +111,26 @@
   border-radius: var(--radius-md);
 }
 
+/* The location filter is backed by the admin-managed locations projection and
+   uses the shared custom select. Keep its trigger aligned with the native
+   fields at every breakpoint; styling only `select` leaves the visible button
+   with a different height and makes the filter panel jump when opened. */
+.public-property-listing__filter-field .custom-select-wrapper {
+  min-inline-size: 0;
+}
+
+.public-property-listing__filter-field .custom-select-trigger {
+  min-block-size: var(--input-height);
+  padding-inline: var(--space-md);
+  border-color: var(--color-border-strong);
+  border-radius: var(--radius-md);
+  text-align: start;
+}
+
+.public-property-listing__filter-field .custom-select-menu {
+  max-block-size: min(20rem, 45vh);
+}
+
 .public-property-listing__filters fieldset {
   display: grid;
   gap: var(--space-sm);
@@ -608,6 +628,17 @@
   .public-property-listing__sort select {
     min-height: 45px;
     border-radius: 11px;
+    font-size: 11px;
+  }
+
+  .public-property-listing__filter-field .custom-select-trigger {
+    min-height: 45px;
+    border-radius: 11px;
+    background: #fbf8f0;
+    font-size: 11px;
+  }
+
+  .public-property-listing__filter-field .custom-select-menu {
     font-size: 11px;
   }
 

@@ -24,6 +24,7 @@ const listingData = publicPropertyListDataSchema.parse({
   }],
   categories: [{ id: 'bbbbbbbbbbbbbbbbbbbbbbbb', slug: 'apartments', name: { ar: 'شقق', en: 'Apartments',}, propertyCount: 1, order: 0 }],
   propertyTypes: [{ id: 'cccccccccccccccccccccccc', slug: 'apartments', name: { ar: 'شقة', en: 'Apartment',}, propertyCount: 1, order: 0 }],
+  locations: [{ id: 'dddddddddddddddddddddddd', kind: 'location', slug: 'sadat-city', name: { en: 'Sadat City' }, order: 0 }, { id: 'eeeeeeeeeeeeeeeeeeeeeeee', kind: 'neighborhood', slug: 'first-district', name: { en: 'First District' }, parentLocationId: 'dddddddddddddddddddddddd', order: 0 }],
   page: 1,
   limit: 20,
   total: 1
@@ -87,6 +88,29 @@ describe('public property listing', () => {
     await waitFor(() => expect(load).toHaveBeenCalledWith(expect.objectContaining({ sort: 'price', page: 1 }), expect.any(AbortSignal)));
     expect(window.location.pathname).toBe('/properties');
     expect(window.location.search).toContain('sort=price');
+  });
+
+  it('renders admin-managed locations as a localized select and sends the selected id', async () => {
+    window.history.replaceState({}, '', '/properties');
+    const load = vi.fn().mockResolvedValue(listingData);
+    const copy = getPublicPropertyListingCopy('en');
+    const result = renderWithLocale(
+      <PublicPropertyListing locale="en" initialData={listingData} initialQuery={defaultPublicPropertySearchQuery()} load={load} />,
+      { locale: 'en' }
+    );
+
+    const locationSelect = result.container.querySelector<HTMLSelectElement>('select[name="locationId"]');
+    expect(locationSelect).toBeInTheDocument();
+    expect(locationSelect?.options).toHaveLength(3);
+    expect(Array.from(locationSelect?.options ?? [], option => option.textContent)).toEqual([
+      copy.valuePlaceholder,
+      'Sadat City',
+      'First District — Sadat City'
+    ]);
+
+    fireEvent.change(locationSelect!, { target: { value: 'eeeeeeeeeeeeeeeeeeeeeeee' } });
+    await waitFor(() => expect(load).toHaveBeenCalledWith(expect.objectContaining({ locationId: 'eeeeeeeeeeeeeeeeeeeeeeee', page: 1 }), expect.any(AbortSignal)));
+    expect(window.location.search).toContain('locationId=eeeeeeeeeeeeeeeeeeeeeeee');
   });
 
   it('supports pagination and kind navigation without inventing query fields', async () => {
