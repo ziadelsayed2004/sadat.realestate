@@ -225,9 +225,9 @@
         "responses": { "200": { "description": "Account access updated and existing sessions revoked" }, "400": { "$ref": "#/components/responses/ValidationError" }, "401": { "$ref": "#/components/responses/AuthError" } }
       }
     },
-    "/api/v1/auth/password/change": {
+    "/api/v1/auth/account-access/change": {
       "post": {
-        "operationId": "changeAccountPassword",
+        "operationId": "updateOwnAccountAccess",
         "summary": "Change the password for the signed-in verified account",
         "security": [{ "bearerAuth": [] }],
         "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["currentPassword", "newPassword"], "properties": { "currentPassword": { "type": "string", "minLength": 1, "maxLength": 1024 }, "newPassword": { "type": "string", "minLength": 8, "maxLength": 128, "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).+$" } } } } } },

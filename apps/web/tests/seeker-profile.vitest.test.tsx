@@ -41,7 +41,7 @@ describe('Seeker profile, preferences, and settings', () => {
         const url = String(input);
         const method = init?.method ?? 'GET';
         calls.push({ url, method, authorization: new Headers(init?.headers).get('authorization'), body: typeof init?.body === 'string' ? init.body : undefined });
-        const data = url.endsWith('/auth/password/change')
+        const data = url.endsWith('/auth/account-access/change')
           ? { changed: true }
           : url.endsWith('/preferences')
             ? preferences
@@ -63,7 +63,7 @@ describe('Seeker profile, preferences, and settings', () => {
       { url: '/api/v1/me/preferences', method: 'GET', authorization: 'Bearer seeker.profile.token', body: undefined },
       { url: '/api/v1/me', method: 'PATCH', authorization: 'Bearer seeker.profile.token', body: JSON.stringify({ firstName: 'Mariam' }) },
       { url: '/api/v1/me/preferences', method: 'PATCH', authorization: 'Bearer seeker.profile.token', body: JSON.stringify({ locations: ['sheikh-zayed'] }) },
-      { url: '/api/v1/auth/password/change', method: 'POST', authorization: 'Bearer seeker.profile.token', body: JSON.stringify({ currentPassword: 'Current-Password-1!', newPassword: 'New-Password-2!' }) }
+      { url: '/api/v1/auth/account-access/change', method: 'POST', authorization: 'Bearer seeker.profile.token', body: JSON.stringify({ currentPassword: 'Current-Password-1!', newPassword: 'New-Password-2!' }) }
     ]);
   });
 

@@ -1476,7 +1476,7 @@
           { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }
         ],
         "body": { "mode": "raw", "raw": "{\n  \"currentPassword\": \"Replace-With-Current-Password-1!\",\n  \"newPassword\": \"Replace-With-New-Password-2!\"\n}", "options": { "raw": { "language": "json" } } },
-        "url": { "raw": "{{apiV1BaseUrl}}/auth/password/change", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "password", "change"] }
+        "url": { "raw": "{{apiV1BaseUrl}}/auth/account-access/change", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "account-access", "change"] }
       }
     },
     {

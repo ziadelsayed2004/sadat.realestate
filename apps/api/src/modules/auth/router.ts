@@ -25,7 +25,7 @@ export const AUTH_ROUTE_DEFINITIONS = [
   { method: 'POST', path: '/api/v1/auth/account-recovery/otp/send', operationId: 'sendAdminAccountRecoveryOtp' },
   { method: 'POST', path: '/api/v1/auth/account-recovery/otp/verify', operationId: 'verifyAdminAccountRecoveryOtp' },
   { method: 'POST', path: '/api/v1/auth/account-recovery/complete', operationId: 'completeAdminAccountRecovery' },
-  { method: 'POST', path: '/api/v1/auth/password/change', operationId: 'changeAccountPassword' },
+  { method: 'POST', path: '/api/v1/auth/account-access/change', operationId: 'updateOwnAccountAccess' },
   { method: 'POST', path: '/api/v1/auth/refresh', operationId: 'refreshSession' },
   { method: 'POST', path: '/api/v1/auth/logout', operationId: 'logoutSession' }
 ] as const;
@@ -208,7 +208,7 @@ export function createAuthRouter(dependencies: AuthRouterDependencies): Router {
     }
   });
 
-  router.post('/password/change', async (request, response) => {
+  router.post('/account-access/change', async (request, response) => {
     try {
       if (!dependencies.accessTokens) throw new ApiContractError('AUTHENTICATION_REQUIRED', 'errors.authenticationRequired', 401);
       const token = request.get('authorization')?.replace(/^Bearer\s+/i, '').trim();

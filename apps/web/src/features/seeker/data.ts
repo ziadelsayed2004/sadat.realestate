@@ -435,7 +435,7 @@ export function createSeekerProfileActions(options: SeekerOverviewLoadOptions = 
       return response.data.data;
     },
     async changePassword(input, signal) {
-      await client.request('/auth/password/change', {
+      await client.request('/auth/account-access/change', {
         method: 'POST',
         responseSchema: passwordChangeSuccessEnvelopeSchema,
         ...(headers === undefined ? {} : { headers }),

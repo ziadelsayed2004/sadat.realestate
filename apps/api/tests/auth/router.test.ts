@@ -150,7 +150,7 @@ test('logs in an Admin with strict input, a success envelope, and a secure HttpO
 
 test('changes the authenticated account password and clears the refresh cookie', async () => {
   await withAuthServer(async (baseUrl) => {
-    const response = await fetch(`${baseUrl}/api/v1/auth/password/change`, {
+    const response = await fetch(`${baseUrl}/api/v1/auth/account-access/change`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer header.payload.signature' },
       body: JSON.stringify({ currentPassword: 'correct-password', newPassword: 'NewPassword1!' })
@@ -160,7 +160,7 @@ test('changes the authenticated account password and clears the refresh cookie',
     const body = await response.json() as AuthResponseBody;
     assert.equal((body.data as { changed?: unknown })?.changed, true);
 
-    const rejected = await fetch(`${baseUrl}/api/v1/auth/password/change`, {
+    const rejected = await fetch(`${baseUrl}/api/v1/auth/account-access/change`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer header.payload.signature' },
       body: JSON.stringify({ currentPassword: 'wrong', newPassword: 'NewPassword1!' })
