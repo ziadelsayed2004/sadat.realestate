@@ -1936,7 +1936,7 @@
     margin-inline: auto;
   }
 
-  .seeker-notifications__item[data-state][data-state] {
+  .seeker-notifications .seeker-notifications__item[data-state][data-state] {
     max-width: none;
     margin-block-start: 0;
     grid-template-columns: 2rem minmax(0, 1fr);
@@ -1962,6 +1962,17 @@
   .seeker-profile > .seeker-dashboard__content > .seeker-profile__feedback {
     width: min(100%, 42rem);
     margin-inline: auto;
+  }
+
+  .seeker-profile__panel > h2 { display: none; }
+  .seeker-profile__panel .ui-field[data-state][data-state] {
+    max-width: none;
+    margin-block-start: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
   }
 
   .seeker-profile > .seeker-dashboard__content > .seeker-profile__tabs {
@@ -2006,7 +2017,15 @@
   .seeker-profile__settings-card {
     margin: 0 !important;
   }
-  .seeker-profile__settings-card .ui-field { margin-block-start: 1rem; }
+  .seeker-profile__settings-card .ui-field[data-state][data-state] {
+    max-width: none;
+    margin-block-start: 1rem;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
   .seeker-profile__password-fields { gap: 1rem; margin-block-start: 1rem; }
   .seeker-profile__toggle-list { margin-block-start: 1rem; }
   .seeker-profile__toggle-row { padding-block: .8rem; }

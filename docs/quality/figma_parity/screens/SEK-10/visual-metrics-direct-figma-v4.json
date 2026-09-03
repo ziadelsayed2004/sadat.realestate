@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "screenId": "SEK-10",
+  "phase": "after",
+  "source": {
+    "width": 1551,
+    "height": 1776
+  },
+  "runtimeBefore": {
+    "width": 1551,
+    "height": 3005
+  },
+  "runtimeAfter": {
+    "width": 1551,
+    "height": 1858
+  },
+  "comparedWidth": 1551,
+  "comparedHeight": 1776,
+  "comparedPixels": 2754576,
+  "materialDifferencePercent": 21.5668,
+  "antiAliasingOnlyPercent": 43.6284,
+  "threshold": {
+    "materialRgbSumGreaterThan": 24,
+    "antiAliasingRgbSumGreaterThan": 3
+  },
+  "method": "unmasked same-width source/runtime canvas comparison over overlapping document height",
+  "comparedCapture": "RUNTIME AFTER (REPAIRED)",
+  "reviewed": false,
+  "reviewedAt": null
+}
