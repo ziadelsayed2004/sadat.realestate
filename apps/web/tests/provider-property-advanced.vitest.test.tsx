@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
-import { propertyDataSchema, type PropertyData } from '@sadat-real-estate/contracts';
+import { propertyDataSchema, publicHomepageCategorySchema, type PropertyData } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClient } from '../src/features/contracts/index.ts';
 import { getProviderPropertyAdvancedCopy } from '../src/features/provider_property/steps-copy.ts';
@@ -68,13 +68,13 @@ describe('Provider property advanced wizard steps', () => {
     expect(requests[2]?.json).toEqual({ version: 2, price: { amount: 1_000_000, currency: 'EGP' }, paymentPlans: [], reason: 'Save property price' });
   });
 
-  it.each(['ar', 'en',] as const)('renders PRV-05, PRV-06, and PRV-07 with the approved direction for %s', locale => {
+  it.each(['ar', 'en',] as const)('renders PRV-05, PRV-06, and PRV-07 with the approved direction for %s', async locale => {
     const current = property();
-    const result = renderWithLocale(<ProviderPropertyAdvancedWizard locale={locale} session={session} authClient={authClient} step="details" propertyId={propertyId} initialData={current} />, { locale });
+    const result = renderWithLocale(<ProviderPropertyAdvancedWizard locale={locale} session={session} authClient={authClient} step="details" propertyId={propertyId} initialData={current} loadPropertyTypes={vi.fn(async () => [])} />, { locale });
     const copy = getProviderPropertyAdvancedCopy(locale);
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(screen.getByRole('heading', { name: copy.titles.details, level: 1 })).toBeInTheDocument();
-    expect(screen.getByText(copy.propertyTypeCatalogUnavailableTitle)).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText(copy.propertyTypeCatalogEmptyTitle)).toBeInTheDocument());
     expect(result.container.querySelector('[data-screen-id="PRV-05"]')).not.toBeNull();
     expect(result.container.textContent).not.toMatch(/accessToken|refreshToken|storageKey|internalNotes|assignedTo|auditData/u);
     result.unmount();
@@ -82,8 +82,11 @@ describe('Provider property advanced wizard steps', () => {
 
   it('conditionally validates and saves property details through the shared schema', async () => {
     const save = vi.fn(async () => property({ version: 3, area: { value: 120, unit: 'sqm' }, layout: { bedrooms: 3, bathrooms: 2, floor: 4, totalFloors: 8 } }));
+    const apartmentType = publicHomepageCategorySchema.parse({ id: 'eeeeeeeeeeeeeeeeeeeeeeee', slug: 'apartment', name: { ar: 'شقة', en: 'Apartment' }, propertyCount: 4, order: 1 });
     const copy = getProviderPropertyAdvancedCopy('en');
-    renderWithLocale(<ProviderPropertyAdvancedWizard locale="en" session={session} authClient={authClient} step="details" propertyId={propertyId} initialData={property()} save={save} />, { locale: 'en' });
+    renderWithLocale(<ProviderPropertyAdvancedWizard locale="en" session={session} authClient={authClient} step="details" propertyId={propertyId} initialData={property()} save={save} loadPropertyTypes={vi.fn(async () => [apartmentType])} />, { locale: 'en' });
+    await waitFor(() => expect(screen.getByRole('option', { name: 'Apartment' })).toBeInTheDocument());
+    fireEvent.change(screen.getByRole('combobox', { name: copy.labels.propertyTypeId }), { target: { value: apartmentType.id } });
     fireEvent.change(screen.getByLabelText(copy.labels.area), { target: { value: '120' } });
     fireEvent.change(screen.getByLabelText(copy.labels.bedrooms), { target: { value: '3' } });
     fireEvent.change(screen.getByLabelText(copy.labels.bathrooms), { target: { value: '2' } });
@@ -91,7 +94,7 @@ describe('Provider property advanced wizard steps', () => {
     fireEvent.change(screen.getByLabelText(copy.labels.totalFloors), { target: { value: '8' } });
     fireEvent.click(screen.getByRole('button', { name: getProviderPropertyCopy('en').wizard.saveDraft }));
     await waitFor(() => expect(save).toHaveBeenCalledTimes(1));
-    expect(save).toHaveBeenCalledWith(propertyId, 'details', expect.objectContaining({ version: 2, area: { value: 120, unit: 'sqm' }, layout: { bedrooms: 3, bathrooms: 2, floor: 4, totalFloors: 8 } }));
+    expect(save).toHaveBeenCalledWith(propertyId, 'details', expect.objectContaining({ version: 2, propertyTypeId: apartmentType.id, area: { value: 120, unit: 'sqm' }, layout: { bedrooms: 3, bathrooms: 2, floor: 4, totalFloors: 8 } }));
   });
 
   it('conditionally validates payment plans and keeps plan currencies aligned with price', async () => {

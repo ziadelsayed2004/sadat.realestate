@@ -11,7 +11,7 @@ import { Button, Input, StateMessage } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
 import { ProviderNavigation } from '../provider/index.ts';
 import type { ProviderPropertyAuthClient, ProviderPropertyLoadAction, ProviderPropertySaveAction } from './wizard.tsx';
-import { loadProviderProperty, saveProviderPropertyStep, type ProviderPropertyStep } from './data.ts';
+import { loadProviderProperty, loadProviderPropertyTypes, saveProviderPropertyStep, type ProviderPropertyStep, type ProviderPropertyTypeOption } from './data.ts';
 import { getProviderPropertyCopy, type ProviderPropertyCopy, type ProviderPropertyWizardState } from './copy.ts';
 import { getProviderPropertyAdvancedCopy, type ProviderPropertyAdvancedCopy, type ProviderPropertyAdvancedStep } from './steps-copy.ts';
 import { getProviderPropertyRailLabels, PROVIDER_PROPERTY_RAIL_STEPS } from './steps.ts';
@@ -27,6 +27,7 @@ export interface ProviderPropertyAdvancedWizardProps {
   readonly initialData?: PropertyData | undefined;
   readonly load?: ProviderPropertyLoadAction | undefined;
   readonly save?: ProviderPropertySaveAction | undefined;
+  readonly loadPropertyTypes?: (signal?: AbortSignal) => Promise<readonly ProviderPropertyTypeOption[]>;
 }
 
 interface DetailsForm {
@@ -192,7 +193,7 @@ function StatePanel({ state, copy, onRetry }: { readonly state: Exclude<Provider
   );
 }
 
-function DetailsFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, mutationState, mutationMessage, validationError }: {
+function DetailsFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, mutationState, mutationMessage, validationError, propertyTypes, propertyTypesState, onRetryPropertyTypes }: {
   readonly locale: SupportedLocale;
   readonly copy: ProviderPropertyCopy;
   readonly advancedCopy: ProviderPropertyAdvancedCopy;
@@ -202,6 +203,9 @@ function DetailsFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, 
   readonly mutationState: MutationState;
   readonly mutationMessage: string | undefined;
   readonly validationError: boolean;
+  readonly propertyTypes: readonly ProviderPropertyTypeOption[];
+  readonly propertyTypesState: 'loading' | 'success' | 'error';
+  readonly onRetryPropertyTypes: () => void;
 }) {
   const saving = mutationState === 'saving';
   const updateDescription = (value: string) => setForm({ ...form, description: { ...form.description, [locale]: value } });
@@ -217,9 +221,9 @@ function DetailsFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, 
           <Input id="provider-property-bathrooms" type="number" min="0" step="1" label={advancedCopy.labels.bathrooms} value={form.bathrooms} placeholder={advancedCopy.placeholders.bathrooms} onChange={event => setForm({ ...form, bathrooms: event.target.value })} aria-invalid={validationError || undefined} />
           <Input id="provider-property-floor" type="number" min="0" step="1" label={advancedCopy.labels.floor} value={form.floor} placeholder={advancedCopy.placeholders.floor} onChange={event => setForm({ ...form, floor: event.target.value })} aria-invalid={validationError || undefined} />
           <Input id="provider-property-total-floors" type="number" min="1" step="1" label={advancedCopy.labels.totalFloors} value={form.totalFloors} placeholder={advancedCopy.placeholders.totalFloors} onChange={event => setForm({ ...form, totalFloors: event.target.value })} aria-invalid={validationError || undefined} />
-          <Input id="provider-property-type-id" label={advancedCopy.labels.propertyTypeId} value={form.propertyTypeId} placeholder={advancedCopy.placeholders.propertyTypeId} onChange={event => setForm({ ...form, propertyTypeId: event.target.value })} aria-invalid={validationError || undefined} />
+          <div className="provider-property-wizard__field"><label htmlFor="provider-property-type-id">{advancedCopy.labels.propertyTypeId}</label><select id="provider-property-type-id" value={form.propertyTypeId} onChange={event => setForm({ ...form, propertyTypeId: event.target.value })} aria-invalid={validationError || undefined} disabled={propertyTypesState !== 'success'}><option value="">{propertyTypesState === 'loading' ? advancedCopy.propertyTypeCatalogLoading : advancedCopy.propertyTypeSelectPlaceholder}</option>{propertyTypes.map(type => <option key={type.id} value={type.id}>{type.name[locale] ?? type.name.ar ?? type.name.en ?? type.slug}</option>)}</select>{propertyTypesState === 'error' ? <button type="button" className="provider-property-wizard__catalog-retry" onClick={onRetryPropertyTypes}>{copy.retry}</button> : null}</div>
         </div>
-        <div className="provider-property-wizard__location-placeholder" role="status"><strong>{advancedCopy.propertyTypeCatalogUnavailableTitle}</strong><p>{advancedCopy.propertyTypeCatalogUnavailableBody}</p></div>
+        {propertyTypesState === 'success' && propertyTypes.length === 0 ? <div className="provider-property-wizard__location-placeholder" role="status"><strong>{advancedCopy.propertyTypeCatalogEmptyTitle}</strong><p>{advancedCopy.propertyTypeCatalogEmptyBody}</p></div> : null}
       </section>
       <ReasonAndMessage copy={copy} formReason={form.reason} onReasonChange={reason => setForm({ ...form, reason })} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} />
       <WizardActions copy={copy} saving={saving} showBack={false} />
@@ -322,7 +326,7 @@ function WizardActions({ copy, saving, showBack }: { readonly copy: ProviderProp
   </div>;
 }
 
-export function ProviderPropertyAdvancedWizard({ locale, session, step, propertyId, authClient, apiOrigin, initialData, load, save }: ProviderPropertyAdvancedWizardProps) {
+export function ProviderPropertyAdvancedWizard({ locale, session, step, propertyId, authClient, apiOrigin, initialData, load, save, loadPropertyTypes }: ProviderPropertyAdvancedWizardProps) {
   const copy = getProviderPropertyCopy(locale);
   const advancedCopy = getProviderPropertyAdvancedCopy(locale);
   const [state, setState] = useState<ProviderPropertyWizardState>(() => session.status !== 'authenticated' || session.role !== 'provider' ? 'permission' : initialData === undefined ? stateForStep() : 'success');
@@ -332,9 +336,13 @@ export function ProviderPropertyAdvancedWizard({ locale, session, step, property
   const [mutationState, setMutationState] = useState<MutationState>('idle');
   const [mutationMessage, setMutationMessage] = useState<string | undefined>();
   const [validationError, setValidationError] = useState(false);
+  const [propertyTypes, setPropertyTypes] = useState<readonly ProviderPropertyTypeOption[]>([]);
+  const [propertyTypesState, setPropertyTypesState] = useState<'loading' | 'success' | 'error'>('loading');
+  const [propertyTypesAttempt, setPropertyTypesAttempt] = useState(0);
   const sessionRole = session.status === 'authenticated' ? session.role : undefined;
   const loadAction = useMemo(() => load ?? ((id: string) => loadProviderProperty({ propertyId: id, apiOrigin, authorization: authClient })), [apiOrigin, authClient, load]);
   const saveAction = useMemo(() => save ?? ((id: string, currentStep: ProviderPropertyStep, input: Parameters<ProviderPropertySaveAction>[2]) => saveProviderPropertyStep(input, { propertyId: id, step: currentStep, apiOrigin, authorization: authClient })), [apiOrigin, authClient, save]);
+  const propertyTypesAction = useMemo(() => loadPropertyTypes ?? ((signal?: AbortSignal) => loadProviderPropertyTypes({ apiOrigin, ...(signal === undefined ? {} : { signal }) })), [apiOrigin, loadPropertyTypes]);
 
   useEffect(() => {
     if (session.status !== 'authenticated' || sessionRole !== 'provider') {
@@ -359,6 +367,20 @@ export function ProviderPropertyAdvancedWizard({ locale, session, step, property
     });
     return () => controller.abort();
   }, [attempt, copy, initialData, loadAction, propertyId, session.status, sessionRole, step]);
+
+  useEffect(() => {
+    if (step !== 'details' || state !== 'success' || session.status !== 'authenticated' || sessionRole !== 'provider') return undefined;
+    const controller = new AbortController();
+    setPropertyTypesState('loading');
+    void propertyTypesAction(controller.signal).then(items => {
+      if (controller.signal.aborted) return;
+      setPropertyTypes(items);
+      setPropertyTypesState('success');
+    }).catch(() => {
+      if (!controller.signal.aborted) setPropertyTypesState('error');
+    });
+    return () => controller.abort();
+  }, [propertyTypesAction, propertyTypesAttempt, session.status, sessionRole, state, step]);
 
   const onRetry = () => setAttempt(value => value + 1);
   const mutationFailure = (error: unknown) => {
@@ -419,7 +441,7 @@ export function ProviderPropertyAdvancedWizard({ locale, session, step, property
       <ProviderNavigation locale={locale} activePath="/provider/properties" />
       <div className="provider-dashboard__content provider-property-wizard__content">
         <WizardSteps step={step} locale={locale} copy={copy} />
-        {step === 'details' ? <DetailsFormView locale={locale} copy={copy} advancedCopy={advancedCopy} form={form as DetailsForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : null}
+        {step === 'details' ? <DetailsFormView locale={locale} copy={copy} advancedCopy={advancedCopy} form={form as DetailsForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} propertyTypes={propertyTypes} propertyTypesState={propertyTypesState} onRetryPropertyTypes={() => setPropertyTypesAttempt(value => value + 1)} /> : null}
         {step === 'price-payment' ? <PricingFormView locale={locale} copy={copy} advancedCopy={advancedCopy} form={form as PricingForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : null}
         {step === 'features-services' ? <FeaturesFormView copy={copy} advancedCopy={advancedCopy} form={form as FeaturesForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : null}
         <div className="provider-property-wizard__back-row"><Button type="button" variant="secondary" disabled={mutationState === 'saving'} onClick={goBack}>{copy.wizard.back}</Button></div>

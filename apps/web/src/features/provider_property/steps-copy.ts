@@ -11,6 +11,10 @@ export interface ProviderPropertyAdvancedCopy {
   readonly frequencyLabels: Readonly<Record<'monthly' | 'quarterly' | 'annually', string>>;
   readonly propertyTypeCatalogUnavailableTitle: string;
   readonly propertyTypeCatalogUnavailableBody: string;
+  readonly propertyTypeCatalogLoading: string;
+  readonly propertyTypeCatalogEmptyTitle: string;
+  readonly propertyTypeCatalogEmptyBody: string;
+  readonly propertyTypeSelectPlaceholder: string;
   readonly featureCatalogUnavailableTitle: string;
   readonly featureCatalogUnavailableBody: string;
   readonly serviceCatalogUnavailableTitle: string;
@@ -42,6 +46,10 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyAdvancedCop
     frequencyLabels: { monthly: 'شهري', quarterly: 'ربع سنوي', annually: 'سنوي' },
     propertyTypeCatalogUnavailableTitle: 'دليل أنواع العقارات غير متاح للمزوّد حالياً',
     propertyTypeCatalogUnavailableBody: 'لا يعرض العقد الحالي قائمة أنواع للمزوّد. لن نستخدم مسار الإدارة أو نخترع نوعاً؛ يمكن الاحتفاظ بمرجع موجود أو إدخال مرجع معتمد من مصدر مصرح به.',
+    propertyTypeCatalogLoading: 'جارٍ تحميل أنواع العقارات…',
+    propertyTypeCatalogEmptyTitle: 'لا توجد أنواع عقارات نشطة',
+    propertyTypeCatalogEmptyBody: 'أضف نوع عقار نشطًا من لوحة الإدارة ليظهر هنا.',
+    propertyTypeSelectPlaceholder: 'اختر نوع العقار',
     featureCatalogUnavailableTitle: 'دليل المميزات غير متاح للمزوّد حالياً',
     featureCatalogUnavailableBody: 'لا يوجد مسار مزوّد لعرض المميزات المعتمدة. لن نستخدم بيانات الإدارة أو أسماء وهمية؛ احفظ مراجع معتمدة فقط.',
     serviceCatalogUnavailableTitle: 'دليل الخدمات غير متاح للمزوّد حالياً',
@@ -71,6 +79,10 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyAdvancedCop
     frequencyLabels: { monthly: 'Monthly', quarterly: 'Quarterly', annually: 'Annually' },
     propertyTypeCatalogUnavailableTitle: 'The provider property-type catalog is unavailable',
     propertyTypeCatalogUnavailableBody: 'The current provider contract does not expose a property-type list. The admin route and invented labels are not used; an existing reference can be retained or an approved reference can be entered.',
+    propertyTypeCatalogLoading: 'Loading property types…',
+    propertyTypeCatalogEmptyTitle: 'No active property types',
+    propertyTypeCatalogEmptyBody: 'Add an active property type from the admin dashboard so it appears here.',
+    propertyTypeSelectPlaceholder: 'Select a property type',
     featureCatalogUnavailableTitle: 'The provider feature catalog is unavailable',
     featureCatalogUnavailableBody: 'There is no provider route for approved feature labels. Admin data and fabricated labels are not used; save approved references only.',
     serviceCatalogUnavailableTitle: 'The provider service catalog is unavailable',

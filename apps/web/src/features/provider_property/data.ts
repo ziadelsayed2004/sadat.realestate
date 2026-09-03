@@ -27,6 +27,7 @@ import {
   type PropertyMediaMime,
   type PropertyMediaOrder,
   type PropertySubmit,
+  type PublicHomepageCategory,
   type PublicPropertyLocation
 } from '@sadat-real-estate/contracts';
 import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
@@ -85,6 +86,7 @@ export interface ProviderPropertySubmitOptions extends ProviderPropertyRequestOp
 
 export type ProviderPropertyCreate = PropertyCreate;
 export type ProviderPropertyLocationOption = PublicPropertyLocation;
+export type ProviderPropertyTypeOption = PublicHomepageCategory;
 export type ProviderPropertyStepInput = PropertyCoreStep | PropertyLocationStep | PropertyDetailsStep | PropertyPricingStep | PropertyFeaturesServicesStep | PropertyContactStep;
 
 function clientFor(options: Pick<ProviderPropertyRequestOptions, 'apiClient' | 'apiOrigin'>): ApiClient {
@@ -110,6 +112,16 @@ export async function loadProviderPropertyLocations(options: ProviderPropertyReq
     ...(options.signal === undefined ? {} : { signal: options.signal })
   });
   return response.data.data.locations ?? [];
+}
+
+export async function loadProviderPropertyTypes(options: ProviderPropertyRequestOptions = {}): Promise<readonly ProviderPropertyTypeOption[]> {
+  const client = clientFor(options);
+  const response = await client.request(PUBLIC_PROPERTY_CATALOG_ROUTE, {
+    responseSchema: publicPropertyListSuccessEnvelopeSchema,
+    query: { page: 1, limit: 1 },
+    ...(options.signal === undefined ? {} : { signal: options.signal })
+  });
+  return response.data.data.propertyTypes;
 }
 
 function safeMediaFilename(filename: string, contentType: PropertyMediaMime, kind: PropertyMediaKind): string {
