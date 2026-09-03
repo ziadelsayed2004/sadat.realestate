@@ -26,12 +26,14 @@ Upload a reviewed source release to a staging directory, then run:
 sudo bash deploy/native/install-ubuntu.sh
 ```
 
+This deployment requires Ubuntu 24.04 LTS (recommended) or 22.04 LTS. Do not use
+Ubuntu 26.04/Resolute: MongoDB Community does not support it and MongoDB 8.0 refuses
+to start on its Linux 6.19+ kernel.
+
 If an earlier run stopped after `NO_PUBKEY 41DE058A4E7DCA05`, do not continue with
 the remaining commands from that same paste. Pull the latest release and rerun the
 installer; it removes only the stale MongoDB source, rebuilds its key with `_apt`
-readable permissions, and requires Node.js 24 before installing MongoDB. Ubuntu 26.04
-(`resolute`) currently uses the MongoDB 8.0 `noble` package channel because MongoDB does
-not publish a `resolute` channel yet.
+readable permissions, and requires Node.js 24 before installing MongoDB.
 
 ```bash
 cd /root/sadat-release

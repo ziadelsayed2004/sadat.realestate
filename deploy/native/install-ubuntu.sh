@@ -10,11 +10,24 @@ fi
 REPOSITORY_ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)
 export DEBIAN_FRONTEND=noninteractive
 
+if [[ ! -r /etc/os-release ]]; then
+  echo 'Cannot identify the Ubuntu release from /etc/os-release.' >&2
+  exit 1
+fi
+# shellcheck disable=SC1091
+source /etc/os-release
+case "${VERSION_ID:-}" in
+  24.04) MONGO_REPO_CODENAME=noble ;;
+  22.04) MONGO_REPO_CODENAME=jammy ;;
+  *)
+    echo "Unsupported Ubuntu release ${VERSION_ID:-unknown}. Use Ubuntu 24.04 LTS (recommended) or 22.04 LTS; MongoDB must not be installed from an LTS repository on a non-LTS kernel." >&2
+    exit 1
+    ;;
+esac
+
 # A previous interrupted run can leave a MongoDB source with a stale key. Remove
 # only that repository before the first apt update; the key and source are rebuilt
-# below with readable permissions. MongoDB does not publish a `resolute` channel yet,
-# so Ubuntu 26.04 uses the compatible Noble package channel by default.
-MONGO_REPO_CODENAME=${MONGO_REPO_CODENAME:-noble}
+# below with readable permissions.
 rm -f /etc/apt/sources.list.d/mongodb-org-8.0.list
 apt-get update
 apt-get install -y ca-certificates curl gnupg nginx certbot python3-certbot-nginx \

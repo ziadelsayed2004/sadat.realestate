@@ -27,10 +27,18 @@ set +a
 install -o root -g root -m 0644 "$REPOSITORY_ROOT/deploy/mongodb/mongod-bootstrap.conf" /etc/mongod.conf
 systemctl restart mongod
 
+MONGO_BOOTSTRAP_READY=false
 for _ in {1..60}; do
-  if mongosh --quiet --host 127.0.0.1 --port 27017 --eval 'db.adminCommand({ping:1}).ok' >/dev/null 2>&1; then break; fi
+  if mongosh --quiet --host 127.0.0.1 --port 27017 --eval 'db.adminCommand({ping:1}).ok' >/dev/null 2>&1; then
+    MONGO_BOOTSTRAP_READY=true
+    break
+  fi
   sleep 1
 done
+if [[ $MONGO_BOOTSTRAP_READY != true ]]; then
+  echo 'MongoDB bootstrap did not become reachable. Inspect: systemctl status mongod and journalctl -u mongod.' >&2
+  exit 1
+fi
 
 mongosh --quiet --host 127.0.0.1 --port 27017 <<'MONGO'
 try { rs.status() } catch (_) { rs.initiate({_id:'rs0', members:[{_id:0, host:'127.0.0.1:27017'}]}) }
@@ -40,6 +48,10 @@ for _ in {1..60}; do
   if mongosh --quiet --host 127.0.0.1 --port 27017 --eval 'quit(rs.isMaster().ismaster ? 0 : 1)' >/dev/null 2>&1; then break; fi
   sleep 1
 done
+if ! mongosh --quiet --host 127.0.0.1 --port 27017 --eval 'quit(rs.isMaster().ismaster ? 0 : 1)' >/dev/null 2>&1; then
+  echo 'MongoDB replica set did not elect a PRIMARY during bootstrap.' >&2
+  exit 1
+fi
 
 mongosh --quiet --host 127.0.0.1 --port 27017 <<'MONGO'
 const admin = db.getSiblingDB('admin');
@@ -71,4 +83,3 @@ done
 
 echo 'MongoDB did not become an authenticated PRIMARY.' >&2
 exit 1
-
