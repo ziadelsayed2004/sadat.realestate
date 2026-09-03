@@ -2,7 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 import { seekerOverviewDataSchema } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
-import { SeekerOverview, getSeekerCopy, loadSeekerOverview } from '../src/features/seeker/index.ts';
+import { SeekerNavigation, SeekerOverview, getSeekerCopy, loadSeekerOverview } from '../src/features/seeker/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 
 const overview = seekerOverviewDataSchema.parse({
@@ -16,6 +16,34 @@ const overview = seekerOverviewDataSchema.parse({
 const session = { status: 'authenticated' as const, role: 'seeker' as const };
 
 describe('Seeker overview', () => {
+  it('loads the authenticated profile name for the shared navigation without rendering the email', async () => {
+    const fetcher = vi.fn(async () => new Response(JSON.stringify({
+      data: {
+        id: '64b7f39d1f5a2a0012345678',
+        roleType: 'seeker',
+        status: 'verified',
+        email: 'private@example.com',
+        firstName: 'Mohamed',
+        lastName: 'Ahmed',
+        locale: 'en'
+      },
+      meta: { requestId: 'seeker-profile-navigation-test' }
+    }), { status: 200 }));
+    vi.stubGlobal('fetch', fetcher);
+
+    const result = renderWithLocale(
+      <SeekerNavigation locale="en" activePath="/seeker" authClient={{ getAuthorizationHeader: () => 'Bearer seeker-token' }} />,
+      { locale: 'en' }
+    );
+
+    await waitFor(() => expect(screen.getAllByText('Mohamed Ahmed')).toHaveLength(2));
+    expect(result.container).not.toHaveTextContent('private@example.com');
+    expect(fetcher).toHaveBeenCalledWith('/api/v1/me', expect.objectContaining({
+      headers: expect.any(Object)
+    }));
+    vi.unstubAllGlobals();
+  });
+
   it('loads the implemented overview route with the seeker authorization header', async () => {
     const requests: Array<{ url: string; authorization: string | null }> = [];
     const client = new ApiClient({

@@ -232,7 +232,7 @@ export function SeekerRequests({ locale, session, authClient, apiOrigin, request
 
   return (
     <section className="seeker-dashboard" data-screen-id={isDetail ? undefined : 'SEK-02'} data-route={isDetail ? '/seeker/requests/:requestId' : '/seeker/requests'}>
-      <SeekerNavigation locale={locale} activePath={activePath} />
+      <SeekerNavigation locale={locale} activePath={activePath} authClient={authClient} apiOrigin={apiOrigin} />
       <div className="seeker-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {state === 'not_found' ? <section className="seeker-dashboard__state" data-state="not_found" data-request-state="not_found" role="alert"><StateMessage state="error" title={copy.states.notFound.title} message={copy.states.notFound.body} /><a className="seeker-dashboard__back-link" href={localeForSeekerPath(locale, '/seeker/requests')}>‹ {copy.detail.back}</a></section> : null}

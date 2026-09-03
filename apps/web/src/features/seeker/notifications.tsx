@@ -190,7 +190,7 @@ export function SeekerNotifications({ locale, session, authClient, apiOrigin, lo
   const emptyCopy = filter === 'unread' ? copy.empty.unread : copy.empty.all;
   return (
     <section className="seeker-dashboard seeker-notifications" data-screen-id="SEK-07" data-route="/seeker/notifications">
-      <SeekerNavigation locale={locale} activePath="/seeker/notifications" />
+      <SeekerNavigation locale={locale} activePath="/seeker/notifications" authClient={authClient} apiOrigin={apiOrigin} />
       <div className="seeker-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {mutationMessage ? <p className="seeker-notifications__feedback" data-state={mutationFeedback === 'markedRead' || mutationFeedback === 'markedAll' ? 'success' : mutationFeedback} role={mutationFeedback === 'markedRead' || mutationFeedback === 'markedAll' ? 'status' : 'alert'}>{mutationMessage}</p> : null}

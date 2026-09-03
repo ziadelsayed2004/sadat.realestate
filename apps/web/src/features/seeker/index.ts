@@ -1,4 +1,4 @@
-export { SeekerOverview } from './overview.tsx';
+export { SeekerNavigation, SeekerOverview } from './overview.tsx';
 export type { SeekerOverviewAuthClient, SeekerOverviewProps, SeekerOverviewViewState } from './overview.tsx';
 export { defaultSeekerOverviewLoader, createSeekerOverviewLoader, loadSeekerOverview, SEEKER_OVERVIEW_ROUTE } from './data.ts';
 export type { SeekerAuthorizationSource, SeekerOverviewLoadOptions, SeekerOverviewLoader } from './data.ts';

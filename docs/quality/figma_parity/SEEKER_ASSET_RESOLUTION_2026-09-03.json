@@ -9,11 +9,18 @@
     "usage": "SeekerNavigation topbar and navigation footer",
     "status": "RESOLVED_FROM_CANONICAL_FIGMA_NODE"
   },
-  "remainingExternalPrerequisite": "A safe authenticated Seeker display-name projection is not part of the current RouteSession or seeker overview response. The UI therefore retains truthful generic account copy instead of inventing the named Figma identity.",
+  "identityProjection": {
+    "source": "GET /api/v1/me",
+    "fields": ["firstName", "lastName"],
+    "usage": "The shared Seeker navigation loads and renders the authenticated user's full name. Email is not rendered, and generic localized copy remains the failure fallback.",
+    "status": "RESOLVED_FROM_EXISTING_AUTHORIZED_API"
+  },
   "verification": [
-    "tests/seeker-overview.vitest.test.tsx: 6 passed",
+    "tests/seeker-overview.vitest.test.tsx: 7 passed",
     "tests/seeker-profile.vitest.test.tsx: 8 passed",
     "tests/visual-fidelity.vitest.test.ts: 3 passed",
+    "Focused Seeker test set: 35 passed",
+    "apps/web typecheck: passed",
     "git diff --check: passed"
   ]
 }

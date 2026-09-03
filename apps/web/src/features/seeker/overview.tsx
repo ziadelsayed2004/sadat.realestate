@@ -4,7 +4,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { Button, StateMessage } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
 import { getSeekerCopy } from './copy.ts';
-import { createSeekerOverviewLoader, isAuthenticatedSeekerSession, localeForSeekerPath, type SeekerAuthorizationSource, type SeekerOverviewLoader } from './data.ts';
+import { createSeekerOverviewLoader, createSeekerProfileLoader, isAuthenticatedSeekerSession, localeForSeekerPath, type SeekerAuthorizationSource, type SeekerOverviewLoader } from './data.ts';
 import './styles.css';
 
 export type SeekerOverviewViewState = 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission';
@@ -44,9 +44,19 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<Seeker
   );
 }
 
-export function SeekerNavigation({ locale, activePath }: { readonly locale: SupportedLocale; readonly activePath: string }) {
+export function SeekerNavigation({ locale, activePath, authClient, apiOrigin }: { readonly locale: SupportedLocale; readonly activePath: string; readonly authClient?: SeekerAuthorizationSource | undefined; readonly apiOrigin?: string | undefined }) {
   const copy = getSeekerCopy(locale);
   const canonicalAvatar = '/assets/canonical/seeker/avatar.png';
+  const [displayName, setDisplayName] = useState<string>();
+  useEffect(() => {
+    if (authClient?.getAuthorizationHeader() === undefined) return undefined;
+    const controller = new AbortController();
+    const loadProfile = createSeekerProfileLoader({ authorization: authClient, apiOrigin });
+    void loadProfile(controller.signal).then(profile => {
+      if (!controller.signal.aborted) setDisplayName(`${profile.firstName} ${profile.lastName}`.trim());
+    }).catch(() => undefined);
+    return () => controller.abort();
+  }, [apiOrigin, authClient]);
   const searchLabel = locale === 'ar' ? 'ابحث عن عقار في السادات...' :'Search properties in Sadat City…';
   const menuLabel = locale === 'ar' ? 'قائمة لوحة الباحث' :'Seeker dashboard menu';
   const websiteLabel = locale === 'ar' ? 'عرض الموقع' :'View website';
@@ -70,7 +80,7 @@ export function SeekerNavigation({ locale, activePath }: { readonly locale: Supp
         </label>
         <a className="seeker-dashboard__topbar-profile" href={localeForSeekerPath(locale, '/seeker/profile?tab=personal')}>
           <span className="seeker-dashboard__avatar" aria-hidden="true"><img src={canonicalAvatar} alt="" /></span>
-          <span><strong>{copy.overview.eyebrow}</strong><small>{copy.nav.profile}</small></span>
+          <span><strong>{displayName ?? copy.overview.eyebrow}</strong><small>{copy.nav.profile}</small></span>
         </a>
       </header>
       <nav className="seeker-dashboard__nav" aria-label={copy.overview.eyebrow}>
@@ -92,7 +102,7 @@ export function SeekerNavigation({ locale, activePath }: { readonly locale: Supp
         </ul>
         <div className="seeker-dashboard__nav-footer">
           <span className="seeker-dashboard__avatar" aria-hidden="true"><img src={canonicalAvatar} alt="" /></span>
-          <span><strong>{copy.overview.eyebrow}</strong><small>{copy.nav.profile}</small></span>
+          <span><strong>{displayName ?? copy.overview.eyebrow}</strong><small>{copy.nav.profile}</small></span>
           <a href={localeForSeekerPath(locale, '/')}>{websiteLabel}<span aria-hidden="true">↗</span></a>
         </div>
       </nav>
@@ -195,7 +205,7 @@ export function SeekerOverview({ locale, session, authClient, apiOrigin, initial
 
   return (
     <section className="seeker-dashboard seeker-overview" data-screen-id="SEK-01" data-route="/seeker">
-      <SeekerNavigation locale={locale} activePath={path} />
+      <SeekerNavigation locale={locale} activePath={path} authClient={authClient} apiOrigin={apiOrigin} />
       <div className="seeker-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {(state === 'success' || state === 'empty') && data !== undefined ? <OverviewContent data={data} locale={locale} /> : null}
