@@ -1424,6 +1424,14 @@
   border: 1px solid #ded3bc;
   border-radius: 50%;
   font-weight: 800;
+  overflow: hidden;
+}
+
+.seeker-dashboard__avatar img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
 }
 
 .seeker-dashboard__nav {

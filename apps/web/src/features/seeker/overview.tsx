@@ -46,6 +46,7 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<Seeker
 
 export function SeekerNavigation({ locale, activePath }: { readonly locale: SupportedLocale; readonly activePath: string }) {
   const copy = getSeekerCopy(locale);
+  const canonicalAvatar = '/assets/canonical/seeker/avatar.png';
   const searchLabel = locale === 'ar' ? 'ابحث عن عقار في السادات...' :'Search properties in Sadat City…';
   const menuLabel = locale === 'ar' ? 'قائمة لوحة الباحث' :'Seeker dashboard menu';
   const websiteLabel = locale === 'ar' ? 'عرض الموقع' :'View website';
@@ -68,7 +69,7 @@ export function SeekerNavigation({ locale, activePath }: { readonly locale: Supp
           <input type="search" placeholder={searchLabel} aria-label={searchLabel} />
         </label>
         <a className="seeker-dashboard__topbar-profile" href={localeForSeekerPath(locale, '/seeker/profile?tab=personal')}>
-          <span className="seeker-dashboard__avatar" aria-hidden="true">S</span>
+          <span className="seeker-dashboard__avatar" aria-hidden="true"><img src={canonicalAvatar} alt="" /></span>
           <span><strong>{copy.overview.eyebrow}</strong><small>{copy.nav.profile}</small></span>
         </a>
       </header>
@@ -90,7 +91,7 @@ export function SeekerNavigation({ locale, activePath }: { readonly locale: Supp
           })}
         </ul>
         <div className="seeker-dashboard__nav-footer">
-          <span className="seeker-dashboard__avatar" aria-hidden="true">S</span>
+          <span className="seeker-dashboard__avatar" aria-hidden="true"><img src={canonicalAvatar} alt="" /></span>
           <span><strong>{copy.overview.eyebrow}</strong><small>{copy.nav.profile}</small></span>
           <a href={localeForSeekerPath(locale, '/')}>{websiteLabel}<span aria-hidden="true">↗</span></a>
         </div>

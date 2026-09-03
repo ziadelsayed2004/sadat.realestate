@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "figmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "screenId": "SEK-01",
+  "sourceNodeId": "6029:51271",
+  "resolvedAt": "2026-09-03",
+  "resolution": {
+    "asset": "apps/web/public/assets/canonical/seeker/avatar.png",
+    "usage": "SeekerNavigation topbar and navigation footer",
+    "status": "RESOLVED_FROM_CANONICAL_FIGMA_NODE"
+  },
+  "remainingExternalPrerequisite": "A safe authenticated Seeker display-name projection is not part of the current RouteSession or seeker overview response. The UI therefore retains truthful generic account copy instead of inventing the named Figma identity.",
+  "verification": [
+    "tests/seeker-overview.vitest.test.tsx: 6 passed",
+    "tests/seeker-profile.vitest.test.tsx: 8 passed",
+    "tests/visual-fidelity.vitest.test.ts: 3 passed",
+    "git diff --check: passed"
+  ]
+}
