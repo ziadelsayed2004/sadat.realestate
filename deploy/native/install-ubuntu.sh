@@ -55,6 +55,7 @@ usermod --shell /bin/bash elsadat
 install -d -o elsadat -g elsadat -m 0750 \
   /opt/elsadatrealestate \
   /opt/elsadatrealestate/releases \
+  /opt/elsadatrealestate/staging \
   /var/lib/elsadatrealestate/private \
   /var/backups/elsadatrealestate \
   /var/log/elsadatrealestate

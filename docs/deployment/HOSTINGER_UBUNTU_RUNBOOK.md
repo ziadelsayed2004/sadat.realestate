@@ -67,26 +67,32 @@ Confirm MongoDB reports PRIMARY state and ClamAV is listening only on `127.0.0.1
 
 ## 5. Deploy the application
 
-Run releases as the application account:
+The operator clone under `/root` is intentionally not readable by `elsadat`. Stage
+only the reviewed deployment scripts outside `/root`, then let the service account
+clone the pushed GitHub ref and run the release gate:
 
 ```bash
-sudo -u elsadat bash deploy/native/deploy-release.sh /absolute/path/to/reviewed-source
+sudo rsync -a --delete --exclude='.env*' --exclude='.git' \
+  /root/sadat-release/ /opt/elsadatrealestate/staging/reviewed-source/
+sudo chown -R elsadat:elsadat /opt/elsadatrealestate/staging/reviewed-source
+sudo -u elsadat env RELEASE_REF=main \
+  bash /opt/elsadatrealestate/staging/reviewed-source/deploy/native/deploy-from-github.sh
 sudo systemctl enable --now elsadat-api.service elsadat-web.service
 sudo systemctl enable --now elsadat-backup.timer elsadat-healthcheck.timer
 ```
 
-For subsequent deployments directly from the reviewed GitHub branch:
+For a deployment from an already staged source tree, the release command is:
 
 ```bash
-sudo -u elsadat env RELEASE_REF=main \
-  EXTERNAL_SMOKE_BASE_URL=https://elsadatrealestate.com \
-  bash /opt/elsadatrealestate/current/deploy/native/deploy-from-github.sh
+sudo -u elsadat bash \
+  /opt/elsadatrealestate/staging/reviewed-source/deploy/native/deploy-release.sh \
+  /opt/elsadatrealestate/staging/reviewed-source
 ```
 
-For the first GitHub deployment, clone the repository into a temporary operator
-directory, run `install-ubuntu.sh`, then invoke `deploy-from-github.sh` from that
-clone. Private repositories require a read-only deploy key; never place a GitHub
-token in the repository URL or shell history.
+Repeat the GitHub command for later releases. Private repositories require a
+read-only deploy key; never place a GitHub token in the repository URL or shell
+history. The `install-ubuntu.sh` step creates the staging directory used by the
+GitHub wrapper.
 
 The deploy script installs locked dependencies, runs typecheck/lint/tests/build/native configuration checks, switches an atomic release symlink, restarts API/Web, waits for loopback readiness, and restores the previous release if readiness fails. Public HTTPS smoke is intentionally deferred until the certificate exists. On later releases, pass `EXTERNAL_SMOKE_BASE_URL=https://elsadatrealestate.com` to include it in the deploy gate.
 
