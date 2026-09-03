@@ -136,7 +136,7 @@ describe('Seeker profile, preferences, and settings', () => {
     const actions = emptyActions();
     const authClient = {
       getSnapshot: () => ({ status: 'authenticated' }),
-      getAuthorizationHeader: () => 'Bearer seeker.profile.token',
+      getAuthorizationHeader: () => undefined,
       logout: vi.fn().mockResolvedValue(undefined)
     };
     renderWithLocale(<SeekerProfile locale="en" session={session} tab="settings" loadProfile={async () => profile} actions={actions} authClient={authClient} />, { locale: 'en' });
