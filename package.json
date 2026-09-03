@@ -34,6 +34,8 @@
     "openapi:validate": "npm run openapi:validate --workspace apps/api",
     "postman:validate": "npm run postman:validate --workspace apps/api",
     "locale:audit": "node packages/config/scripts/audit-locales.mjs",
+    "figma:closure:audit": "node scripts/audit-figma-screen-closure.mjs --write",
+    "figma:closure:gate": "node scripts/audit-figma-screen-closure.mjs --strict",
     "db:seed": "npm run db:seed --workspace apps/api",
     "auth:migrate-email-only": "npm run auth:migrate-email-only --workspace apps/api",
     "local:doctor": "node scripts/native-local.mjs doctor",
