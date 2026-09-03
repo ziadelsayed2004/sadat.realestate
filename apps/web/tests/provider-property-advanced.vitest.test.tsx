@@ -99,8 +99,12 @@ describe('Provider property advanced wizard steps', () => {
 
   it('conditionally validates payment plans and keeps plan currencies aligned with price', async () => {
     const save = vi.fn(async () => property({ version: 3, price: { amount: 1_000_000, currency: 'EGP' }, paymentPlans: [{ name: { en: '12 month plan' }, installments: 12, frequency: 'monthly', installmentAmount: { amount: 80_000, currency: 'EGP' } }] }));
+    const loadCommission = vi.fn(async () => ({ accountId: providerId, source: 'policy' as const, effectiveAt: '2026-08-01T00:00:00.000Z', policyVersion: 3, kind: 'percentage' as const, percentageBps: 250, readOnly: true as const }));
     const copy = getProviderPropertyAdvancedCopy('en');
-    renderWithLocale(<ProviderPropertyAdvancedWizard locale="en" session={session} authClient={authClient} step="price-payment" propertyId={propertyId} initialData={property()} save={save} />, { locale: 'en' });
+    const advancedCopy = getProviderPropertyAdvancedCopy('en');
+    renderWithLocale(<ProviderPropertyAdvancedWizard locale="en" session={session} authClient={authClient} step="price-payment" propertyId={propertyId} initialData={property()} save={save} loadCommission={loadCommission} />, { locale: 'en' });
+    await waitFor(() => expect(screen.getByText('2.5%')).toBeInTheDocument());
+    expect(screen.getByText(advancedCopy.commissionSources.policy)).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText(copy.labels.priceAmount), { target: { value: '1000000' } });
     fireEvent.change(screen.getByLabelText(copy.labels.currency), { target: { value: 'EGP' } });
     fireEvent.click(screen.getByLabelText(copy.labels.paymentPlan));

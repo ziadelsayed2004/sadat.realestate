@@ -4,12 +4,14 @@ import {
   propertyFeaturesServicesStepSchema,
   propertyPricingStepSchema,
   type PropertyData,
+  type ProviderCommissionProjection,
   type SupportedLocale
 } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import { Button, Input, StateMessage } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
 import { ProviderNavigation } from '../provider/index.ts';
+import { loadProviderCommission } from '../provider/advertising-data.ts';
 import type { ProviderPropertyAuthClient, ProviderPropertyLoadAction, ProviderPropertySaveAction } from './wizard.tsx';
 import { loadProviderProperty, loadProviderPropertyTypes, saveProviderPropertyStep, type ProviderPropertyStep, type ProviderPropertyTypeOption } from './data.ts';
 import { getProviderPropertyCopy, type ProviderPropertyCopy, type ProviderPropertyWizardState } from './copy.ts';
@@ -28,6 +30,7 @@ export interface ProviderPropertyAdvancedWizardProps {
   readonly load?: ProviderPropertyLoadAction | undefined;
   readonly save?: ProviderPropertySaveAction | undefined;
   readonly loadPropertyTypes?: (signal?: AbortSignal) => Promise<readonly ProviderPropertyTypeOption[]>;
+  readonly loadCommission?: (signal?: AbortSignal) => Promise<ProviderCommissionProjection>;
 }
 
 interface DetailsForm {
@@ -231,7 +234,7 @@ function DetailsFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, 
   );
 }
 
-function PricingFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, mutationState, mutationMessage, validationError }: {
+function PricingFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, mutationState, mutationMessage, validationError, commission, commissionState, onRetryCommission }: {
   readonly locale: SupportedLocale;
   readonly copy: ProviderPropertyCopy;
   readonly advancedCopy: ProviderPropertyAdvancedCopy;
@@ -241,6 +244,9 @@ function PricingFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, 
   readonly mutationState: MutationState;
   readonly mutationMessage: string | undefined;
   readonly validationError: boolean;
+  readonly commission: ProviderCommissionProjection | undefined;
+  readonly commissionState: 'loading' | 'success' | 'error';
+  readonly onRetryCommission: () => void;
 }) {
   const saving = mutationState === 'saving';
   const updatePlanName = (value: string) => setForm({ ...form, planName: { ...form.planName, [locale]: value } });
@@ -266,7 +272,20 @@ function PricingFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, 
           </div>
         </section> : null}
       </section>
-      <section className="provider-property-wizard__contract-note" aria-label={advancedCopy.commissionBoundaryTitle}><strong>{advancedCopy.commissionBoundaryTitle}</strong><p>{advancedCopy.commissionBoundaryBody}</p></section>
+      <section className="provider-property-wizard__commission" aria-labelledby="provider-property-commission-title">
+        <h2 id="provider-property-commission-title">{advancedCopy.commissionTitle}</h2>
+        {commissionState === 'loading' ? <p role="status">{advancedCopy.commissionLoading}</p> : null}
+        {commissionState === 'error' ? <div><p role="alert">{advancedCopy.commissionError}</p><button type="button" className="provider-property-wizard__catalog-retry" onClick={onRetryCommission}>{copy.retry}</button></div> : null}
+        {commissionState === 'success' && commission?.source === 'none' ? <p>{advancedCopy.commissionNone}</p> : null}
+        {commissionState === 'success' && commission !== undefined && commission.source !== 'none' ? <dl>
+          <div><dt>{advancedCopy.commissionSource}</dt><dd>{advancedCopy.commissionSources[commission.source]}</dd></div>
+          <div><dt>{advancedCopy.commissionKind}</dt><dd>{commission.kind === undefined ? '—' : advancedCopy.commissionKinds[commission.kind]}</dd></div>
+          <div><dt>{advancedCopy.commissionValue}</dt><dd>{commission.kind === 'percentage' ? `${(commission.percentageBps ?? 0) / 100}%` : commission.kind === 'fixed' ? new Intl.NumberFormat(locale, { style: 'currency', currency: commission.currency ?? 'EGP' }).format((commission.fixedAmountMinor ?? 0) / 100) : advancedCopy.commissionExempt}</dd></div>
+          <div><dt>{advancedCopy.commissionEffective}</dt><dd><time dateTime={commission.effectiveAt}>{new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(commission.effectiveAt))}</time></dd></div>
+          <div><dt>{advancedCopy.commissionVersion}</dt><dd>{commission.policyVersion ?? '—'}</dd></div>
+        </dl> : null}
+        <p className="provider-property-wizard__help">{advancedCopy.commissionBoundaryBody}</p>
+      </section>
       <ReasonAndMessage copy={copy} formReason={form.reason} onReasonChange={reason => setForm({ ...form, reason })} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} />
       <WizardActions copy={copy} saving={saving} showBack={false} />
     </form>
@@ -326,7 +345,7 @@ function WizardActions({ copy, saving, showBack }: { readonly copy: ProviderProp
   </div>;
 }
 
-export function ProviderPropertyAdvancedWizard({ locale, session, step, propertyId, authClient, apiOrigin, initialData, load, save, loadPropertyTypes }: ProviderPropertyAdvancedWizardProps) {
+export function ProviderPropertyAdvancedWizard({ locale, session, step, propertyId, authClient, apiOrigin, initialData, load, save, loadPropertyTypes, loadCommission }: ProviderPropertyAdvancedWizardProps) {
   const copy = getProviderPropertyCopy(locale);
   const advancedCopy = getProviderPropertyAdvancedCopy(locale);
   const [state, setState] = useState<ProviderPropertyWizardState>(() => session.status !== 'authenticated' || session.role !== 'provider' ? 'permission' : initialData === undefined ? stateForStep() : 'success');
@@ -339,10 +358,14 @@ export function ProviderPropertyAdvancedWizard({ locale, session, step, property
   const [propertyTypes, setPropertyTypes] = useState<readonly ProviderPropertyTypeOption[]>([]);
   const [propertyTypesState, setPropertyTypesState] = useState<'loading' | 'success' | 'error'>('loading');
   const [propertyTypesAttempt, setPropertyTypesAttempt] = useState(0);
+  const [commission, setCommission] = useState<ProviderCommissionProjection>();
+  const [commissionState, setCommissionState] = useState<'loading' | 'success' | 'error'>('loading');
+  const [commissionAttempt, setCommissionAttempt] = useState(0);
   const sessionRole = session.status === 'authenticated' ? session.role : undefined;
   const loadAction = useMemo(() => load ?? ((id: string) => loadProviderProperty({ propertyId: id, apiOrigin, authorization: authClient })), [apiOrigin, authClient, load]);
   const saveAction = useMemo(() => save ?? ((id: string, currentStep: ProviderPropertyStep, input: Parameters<ProviderPropertySaveAction>[2]) => saveProviderPropertyStep(input, { propertyId: id, step: currentStep, apiOrigin, authorization: authClient })), [apiOrigin, authClient, save]);
   const propertyTypesAction = useMemo(() => loadPropertyTypes ?? ((signal?: AbortSignal) => loadProviderPropertyTypes({ apiOrigin, ...(signal === undefined ? {} : { signal }) })), [apiOrigin, loadPropertyTypes]);
+  const commissionAction = useMemo(() => loadCommission ?? ((signal?: AbortSignal) => loadProviderCommission({ apiOrigin, authorization: authClient, ...(signal === undefined ? {} : { signal }) })), [apiOrigin, authClient, loadCommission]);
 
   useEffect(() => {
     if (session.status !== 'authenticated' || sessionRole !== 'provider') {
@@ -381,6 +404,20 @@ export function ProviderPropertyAdvancedWizard({ locale, session, step, property
     });
     return () => controller.abort();
   }, [propertyTypesAction, propertyTypesAttempt, session.status, sessionRole, state, step]);
+
+  useEffect(() => {
+    if (step !== 'price-payment' || state !== 'success' || session.status !== 'authenticated' || sessionRole !== 'provider') return undefined;
+    const controller = new AbortController();
+    setCommissionState('loading');
+    void commissionAction(controller.signal).then(value => {
+      if (controller.signal.aborted) return;
+      setCommission(value);
+      setCommissionState('success');
+    }).catch(() => {
+      if (!controller.signal.aborted) setCommissionState('error');
+    });
+    return () => controller.abort();
+  }, [commissionAction, commissionAttempt, session.status, sessionRole, state, step]);
 
   const onRetry = () => setAttempt(value => value + 1);
   const mutationFailure = (error: unknown) => {
@@ -442,7 +479,7 @@ export function ProviderPropertyAdvancedWizard({ locale, session, step, property
       <div className="provider-dashboard__content provider-property-wizard__content">
         <WizardSteps step={step} locale={locale} copy={copy} />
         {step === 'details' ? <DetailsFormView locale={locale} copy={copy} advancedCopy={advancedCopy} form={form as DetailsForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} propertyTypes={propertyTypes} propertyTypesState={propertyTypesState} onRetryPropertyTypes={() => setPropertyTypesAttempt(value => value + 1)} /> : null}
-        {step === 'price-payment' ? <PricingFormView locale={locale} copy={copy} advancedCopy={advancedCopy} form={form as PricingForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : null}
+        {step === 'price-payment' ? <PricingFormView locale={locale} copy={copy} advancedCopy={advancedCopy} form={form as PricingForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} commission={commission} commissionState={commissionState} onRetryCommission={() => setCommissionAttempt(value => value + 1)} /> : null}
         {step === 'features-services' ? <FeaturesFormView copy={copy} advancedCopy={advancedCopy} form={form as FeaturesForm} setForm={next => setForm(next)} onSubmit={submit} mutationState={mutationState} mutationMessage={mutationMessage} validationError={validationError} /> : null}
         <div className="provider-property-wizard__back-row"><Button type="button" variant="secondary" disabled={mutationState === 'saving'} onClick={goBack}>{copy.wizard.back}</Button></div>
       </div>

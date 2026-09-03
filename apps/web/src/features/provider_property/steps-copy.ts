@@ -23,6 +23,18 @@ export interface ProviderPropertyAdvancedCopy {
   readonly paymentPlanHelp: string;
   readonly commissionBoundaryTitle: string;
   readonly commissionBoundaryBody: string;
+  readonly commissionTitle: string;
+  readonly commissionLoading: string;
+  readonly commissionError: string;
+  readonly commissionNone: string;
+  readonly commissionSource: string;
+  readonly commissionKind: string;
+  readonly commissionValue: string;
+  readonly commissionEffective: string;
+  readonly commissionVersion: string;
+  readonly commissionExempt: string;
+  readonly commissionSources: Readonly<Record<'exception' | 'account_override' | 'policy', string>>;
+  readonly commissionKinds: Readonly<Record<'percentage' | 'fixed' | 'exempt', string>>;
   readonly invalidReference: string;
   readonly versionConflict: string;
 }
@@ -58,6 +70,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyAdvancedCop
     paymentPlanHelp: 'يجب أن تطابق عملة الخطة عملة السعر. لا يتم عرض عمولة عامة أو قيمة تمويل غير صادرة من الخادم.',
     commissionBoundaryTitle: 'العمولة يحددها النظام',
     commissionBoundaryBody: 'لا يعرض هذا النموذج نسبة عمولة مفترضة أو سعراً عاماً. أي سياسة فعالة يجب أن تأتي من بيانات المنصة المعتمدة.',
+    commissionTitle: 'عمولة عقارات السادات', commissionLoading: 'جارٍ تحميل سياسة العمولة…', commissionError: 'تعذر تحميل سياسة العمولة الحالية.', commissionNone: 'لا توجد سياسة عمولة مطبقة على هذا الحساب حالياً.',
+    commissionSource: 'مصدر السياسة', commissionKind: 'نوع الحساب', commissionValue: 'القيمة', commissionEffective: 'تاريخ السريان', commissionVersion: 'إصدار السياسة', commissionExempt: 'معفى',
+    commissionSources: { exception: 'استثناء', account_override: 'تخصيص الحساب', policy: 'السياسة العامة' }, commissionKinds: { percentage: 'نسبة مئوية', fixed: 'قيمة ثابتة', exempt: 'معفى' },
     invalidReference: 'تحقق من مراجع المميزات والخدمات؛ كل مرجع يجب أن يكون 24 حرفاً سداسياً عشرياً وفريداً.',
     versionConflict: 'تغيرت المسودة منذ تحميلها. أعد تحميلها قبل حفظ تعديلاتك.'
   },
@@ -91,6 +106,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyAdvancedCop
     paymentPlanHelp: 'Plan currencies must match the property price currency. This form does not display a universal commission or an unsupported financing claim.',
     commissionBoundaryTitle: 'Commission is platform-controlled',
     commissionBoundaryBody: 'This form does not show an assumed commission percentage or universal price. Any effective policy must come from approved platform data.',
+    commissionTitle: 'Sadat Real Estate commission', commissionLoading: 'Loading commission policy…', commissionError: 'The current commission policy could not load.', commissionNone: 'No commission policy currently applies to this account.',
+    commissionSource: 'Policy source', commissionKind: 'Calculation type', commissionValue: 'Value', commissionEffective: 'Effective date', commissionVersion: 'Policy version', commissionExempt: 'Exempt',
+    commissionSources: { exception: 'Exception', account_override: 'Account override', policy: 'General policy' }, commissionKinds: { percentage: 'Percentage', fixed: 'Fixed amount', exempt: 'Exempt' },
     invalidReference: 'Check feature and service references. Each must be a unique 24-character hexadecimal ID with no overlap.',
     versionConflict: 'The draft changed after it was loaded. Reload the draft before saving your changes.'
   },};
