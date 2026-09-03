@@ -129,6 +129,30 @@
   justify-content: end;
 }
 
+.public-homepage__menu-toggle {
+  display: none;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0;
+  color: var(--color-text-strong);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.public-homepage__menu-toggle span {
+  display: block;
+  inline-size: 1.2rem;
+  block-size: 0.125rem;
+  border-radius: var(--radius-pill);
+  background: currentColor;
+}
+
 .public-homepage__signup,
 .public-homepage__primary-action {
   display: inline-flex;
@@ -296,7 +320,7 @@
   padding: 0.3rem;
   background: var(--color-surface-soft, #f1f5f9);
   border-radius: 9999px;
-  width: 100%;
+  width: max-content;
   border: 1px solid var(--color-border, #e2e8f0);
 }
 
@@ -2254,6 +2278,10 @@
 
   .public-homepage__header {
     grid-template-columns: auto minmax(0, 1fr);
+    position: relative;
+    z-index: 20;
+    min-block-size: 4.25rem;
+    padding: 0.625rem var(--space-md);
   }
 
   .public-homepage__actions {
@@ -2265,7 +2293,40 @@
   }
 
   .public-homepage__nav {
-    gap: var(--space-lg);
+    display: none;
+  }
+
+  .public-homepage__nav.is-open {
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline: 0;
+    z-index: 30;
+    display: grid;
+    gap: 0;
+    padding: 0.5rem var(--space-md) 0.75rem;
+    background: var(--color-surface);
+    border-block-end: 1px solid var(--color-border);
+    box-shadow: 0 0.75rem 1.5rem rgb(15 23 42 / 0.12);
+  }
+
+  .public-homepage__nav.is-open a {
+    display: flex;
+    min-block-size: 2.75rem;
+    align-items: center;
+    padding-inline: 0.75rem;
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .public-homepage__nav.is-open a:last-child {
+    border-block-end: 0;
+  }
+
+  .public-homepage__nav.is-open a[aria-current="page"] {
+    padding-block: 0.45rem;
+  }
+
+  .public-homepage__menu-toggle {
+    display: inline-flex;
   }
 
   .public-homepage__hero-content {

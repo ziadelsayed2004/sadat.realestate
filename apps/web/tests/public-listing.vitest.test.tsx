@@ -53,6 +53,25 @@ describe('public property listing', () => {
     expect(result.container.textContent).not.toContain('audit');
   });
 
+  it('uses the compact comparison control and an accessible mobile navigation toggle', () => {
+    renderWithLocale(
+      <PublicPropertyListing locale="en" initialData={listingData} initialQuery={defaultPublicPropertySearchQuery()} />,
+      { locale: 'en' }
+    );
+
+    const compareButton = screen.getByRole('button', { name: 'Add to compare: Published home' });
+    expect(compareButton).toHaveClass('public-property-listing__compare-button');
+    expect(compareButton).toHaveAttribute('aria-pressed', 'false');
+
+    const menuButton = screen.getByRole('button', { name: 'Open menu' });
+    expect(menuButton).toHaveAttribute('aria-expanded', 'false');
+    fireEvent.click(menuButton);
+    expect(menuButton).toHaveAttribute('aria-expanded', 'true');
+    expect(document.getElementById('public-site-navigation')).toHaveClass('is-open');
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(menuButton).toHaveAttribute('aria-expanded', 'false');
+  });
+
   it('updates filters, sort, and browser query state through the implemented route', async () => {
     window.history.replaceState({}, '', '/properties');
     const load = vi.fn().mockResolvedValue(listingData);

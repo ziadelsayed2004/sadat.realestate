@@ -26,6 +26,19 @@ Upload a reviewed source release to a staging directory, then run:
 sudo bash deploy/native/install-ubuntu.sh
 ```
 
+If an earlier run stopped after `NO_PUBKEY 41DE058A4E7DCA05`, do not continue with
+the remaining commands from that same paste. Pull the latest release and rerun the
+installer; it removes only the stale MongoDB source, rebuilds its key with `_apt`
+readable permissions, and requires Node.js 24 before installing MongoDB. Ubuntu 26.04
+(`resolute`) currently uses the MongoDB 8.0 `noble` package channel because MongoDB does
+not publish a `resolute` channel yet.
+
+```bash
+cd /root/sadat-release
+git pull --ff-only origin main
+sudo bash deploy/native/install-ubuntu.sh
+```
+
 This installs Node.js when required, Nginx, Certbot, MongoDB Community, database tools, ClamAV, rsync, timers, and restricted service definitions. It creates the `elsadat` application account and application directories.
 
 Generate the protected environment:

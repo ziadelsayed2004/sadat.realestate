@@ -10,25 +10,38 @@ fi
 REPOSITORY_ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)
 export DEBIAN_FRONTEND=noninteractive
 
+# A previous interrupted run can leave a MongoDB source with a stale key. Remove
+# only that repository before the first apt update; the key and source are rebuilt
+# below with readable permissions. MongoDB does not publish a `resolute` channel yet,
+# so Ubuntu 26.04 uses the compatible Noble package channel by default.
+MONGO_REPO_CODENAME=${MONGO_REPO_CODENAME:-noble}
+rm -f /etc/apt/sources.list.d/mongodb-org-8.0.list
 apt-get update
 apt-get install -y ca-certificates curl gnupg nginx certbot python3-certbot-nginx \
   clamav clamav-daemon clamav-freshclam rsync jq ufw logrotate sudo
 
 install -d -m 0755 /etc/apt/keyrings
-if [[ ! -f /etc/apt/keyrings/mongodb-server-8.0.gpg ]]; then
-  curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc \
-    | gpg --dearmor -o /etc/apt/keyrings/mongodb-server-8.0.gpg
-fi
-echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/mongodb-server-8.0.gpg] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" \
+MONGO_KEY_TMP=$(mktemp /tmp/elsadat-mongodb-key.XXXXXX.gpg)
+curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc \
+  | gpg --dearmor --yes -o "$MONGO_KEY_TMP"
+install -m 0644 "$MONGO_KEY_TMP" /etc/apt/keyrings/mongodb-server-8.0.gpg
+rm -f "$MONGO_KEY_TMP"
+echo "deb [arch=amd64,arm64 signed-by=/etc/apt/keyrings/mongodb-server-8.0.gpg] https://repo.mongodb.org/apt/ubuntu ${MONGO_REPO_CODENAME}/mongodb-org/8.0 multiverse" \
   > /etc/apt/sources.list.d/mongodb-org-8.0.list
 
 if ! command -v node >/dev/null 2>&1 \
-  || [[ $(node -p 'Number(process.versions.node.split(".")[0])') -lt 22 ]] \
-  || [[ $(node -p 'Number(process.versions.node.split(".")[0])') -gt 24 ]]; then
+  || [[ $(node -p 'Number(process.versions.node.split(".")[0])') -lt 24 ]] \
+  || [[ $(node -p 'Number(process.versions.node.split(".")[0])') -ge 25 ]]; then
   curl -fsSL https://deb.nodesource.com/setup_24.x -o /tmp/elsadat-nodesource.sh
   bash /tmp/elsadat-nodesource.sh
   rm -f /tmp/elsadat-nodesource.sh
   apt-get install -y nodejs
+fi
+
+if ! command -v node >/dev/null 2>&1 \
+  || [[ $(node -p 'Number(process.versions.node.split(".")[0])') -ne 24 ]]; then
+  echo 'Node.js 24 is required by this release.' >&2
+  exit 1
 fi
 
 apt-get update

@@ -272,7 +272,7 @@ function PropertyResults({
             image={<PublicMediaImage src={property.imageUrl ?? fallbackPropertyImage(property.slug, property.kind)} alt={localizedText(property.name, locale) ?? property.slug} fallback={<img src={fallbackPropertyImage(property.slug, property.kind)} alt={localizedText(property.name, locale) ?? property.slug} />} />}
             imageAlt={localizedText(property.name, locale) ?? property.slug}
             className="public-property-listing__card"
-            action={<button type="button" className={comparedIds.includes(property.id) ? 'is-selected' : ''} aria-pressed={comparedIds.includes(property.id)} aria-label={`${copy.addToCompare}: ${localizedText(property.name, locale) ?? property.slug}`} onClick={() => onToggleCompare(property.id)}><ListingIcon type="compare" /> {comparedIds.includes(property.id) ? (locale === 'ar' ? 'تمت الإضافة' : 'Added') : copy.addToCompare}</button>}
+            action={<button type="button" className={`public-property-listing__compare-button${comparedIds.includes(property.id) ? ' is-selected' : ''}`} aria-pressed={comparedIds.includes(property.id)} aria-label={`${copy.addToCompare}: ${localizedText(property.name, locale) ?? property.slug}`} onClick={() => onToggleCompare(property.id)}><ListingIcon type="compare" /> {comparedIds.includes(property.id) ? (locale === 'ar' ? 'تمت الإضافة' : 'Added') : copy.addToCompare}</button>}
           />
         ))}
       </div>

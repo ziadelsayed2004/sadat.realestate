@@ -324,6 +324,7 @@ export function PublicSiteHeader({
   readonly copy: PublicHomepageCopy;
   readonly activePath?: string;
 }) {
+  const [menuOpen, setMenuOpen] = useState(false);
   const nav = locale === 'ar'
     ? { ...copy.nav, community: '\u0627\u0644\u0643\u0648\u0645\u064a\u0648\u0646\u062a\u064a', about: '\u0645\u0646 \u0646\u062d\u0646', team: '\u0641\u0631\u064a\u0642 \u0627\u0644\u0639\u0645\u0644' }
     : copy.nav;
@@ -337,18 +338,39 @@ export function PublicSiteHeader({
     ['/team', nav.team]
   ];
 
+  useEffect(() => {
+    if (!menuOpen || typeof window === 'undefined') return undefined;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [menuOpen]);
+
   return (
     <header className="public-homepage__header">
       <a className="public-homepage__brand" href="/" aria-label={copy.brand}>
         <img src="/assets/sadat-real-estate-logo.png" alt={copy.brand} width={636} height={557} decoding="async" loading="eager" />
       </a>
-      <nav className="public-homepage__nav" aria-label={nav.home}>
-        {links.map(([href, label]) => <a key={href} href={href} aria-current={href === activePath ? 'page' : undefined}>{label}</a>)}
+      <nav id="public-site-navigation" className={`public-homepage__nav${menuOpen ? ' is-open' : ''}`} aria-label={nav.home}>
+        {links.map(([href, label]) => <a key={href} href={href} aria-current={href === activePath ? 'page' : undefined} onClick={() => setMenuOpen(false)}>{label}</a>)}
       </nav>
       <div className="public-homepage__actions">
         <LocaleSwitcher locale={locale} label={copy.localeLabel} />
         <a className="public-homepage__login" href="/auth/login">{copy.login}</a>
         <a className="public-homepage__signup" href="/auth/register">{copy.createAccount}</a>
+        <button
+          type="button"
+          className="public-homepage__menu-toggle"
+          aria-label={menuOpen ? (locale === 'ar' ? 'إغلاق القائمة' : 'Close menu') : (locale === 'ar' ? 'فتح القائمة' : 'Open menu')}
+          aria-controls="public-site-navigation"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen(value => !value)}
+        >
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+        </button>
       </div>
     </header>
   );
