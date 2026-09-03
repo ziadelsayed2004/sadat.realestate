@@ -20,7 +20,7 @@ import type { AdminUserData } from '@sadat-real-estate/contracts';
 
 const validInput = {
   email: ' First.Admin@Example.COM ',
-  password: 'long synthetic password',
+  password: 'LongSynthetic9!Password',
   locale: 'en' as const,
   confirmation: FIRST_SUPER_ADMIN_CONFIRMATION
 };

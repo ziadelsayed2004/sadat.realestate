@@ -151,3 +151,23 @@ exit
 Replace the example timestamp with an existing backup directory. Always restore to an isolated verification database first; replacing `sadat` additionally requires `RESTORE_CONFIRM=REPLACE_PRODUCTION`.
 
 Monitor uptime, `/ready`, certificate renewal, disk/RAM/CPU, MongoDB state, ClamAV signatures, backup age, and off-server copy success. Record a successful isolated restore before DNS cutover.
+
+## 10. Production demo accounts
+
+Do not run `db:seed` in Production. Create Seeker and Provider demo accounts through the
+real OTP and registration APIs with the guarded interactive helper:
+
+```bash
+cd /opt/elsadatrealestate/current
+export DEMO_ACCOUNT_CONFIRM=CREATE_PRODUCTION_DEMO_ACCOUNT
+sudo -u elsadat --preserve-env=DEMO_ACCOUNT_CONFIRM \
+  bash deploy/native/create-demo-account.sh seeker
+sudo -u elsadat --preserve-env=DEMO_ACCOUNT_CONFIRM \
+  bash deploy/native/create-demo-account.sh provider
+unset DEMO_ACCOUNT_CONFIRM
+```
+
+Use mailboxes or forwarders controlled by the demo team. The helper never commits or logs
+the password. A newly created Provider remains in the normal application workflow and must
+be completed/submitted/approved through the product when an approved Provider is required.
+The Arabic handoff is in `docs/deployment/PRODUCTION_DEMO_ACCOUNTS_AR.md`.

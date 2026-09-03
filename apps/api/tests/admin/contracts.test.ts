@@ -9,7 +9,7 @@ import {
 test('normalizes the bootstrap email and applies the Arabic locale default', () => {
   const input = adminBootstrapInputSchema.parse({
     email: ' First.Admin@Example.COM ',
-    password: 'long synthetic password',
+    password: 'LongSynthetic9!Password',
     confirmation: FIRST_SUPER_ADMIN_CONFIRMATION
   });
   assert.equal(input.email, 'first.admin@example.com');
@@ -20,7 +20,7 @@ test('normalizes the bootstrap email and applies the Arabic locale default', () 
 test('rejects weak, control-character, unconfirmed, and mass-assigned bootstrap input', () => {
   const base = {
     email: 'admin@example.com',
-    password: 'long synthetic password',
+    password: 'LongSynthetic9!Password',
     confirmation: FIRST_SUPER_ADMIN_CONFIRMATION
   };
   for (const input of [

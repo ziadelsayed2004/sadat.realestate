@@ -49,6 +49,8 @@
     "production:preflight": "node scripts/production-preflight.mjs",
     "production:config": "node scripts/native-production-check.mjs",
     "production:smoke": "node scripts/runtime-smoke.mjs",
+    "production:demo:seeker": "bash deploy/native/create-demo-account.sh seeker",
+    "production:demo:provider": "bash deploy/native/create-demo-account.sh provider",
     "smtp:check": "node scripts/smtp-smoke.mjs",
     "smtp:smoke": "node scripts/smtp-smoke.mjs --send",
     "dev": "npm run dev --workspace apps/api",

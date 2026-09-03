@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { normalizedEmailSchema } from '../auth/index.js';
+import { accountPasswordSchema, normalizedEmailSchema } from '../auth/index.js';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
 
 export const ADMIN_ACCESS_LEVELS = ['super_admin', 'standard_admin'] as const;
@@ -10,13 +10,7 @@ export const adminAccessLevelSchema = z.enum(ADMIN_ACCESS_LEVELS);
 
 export const adminBootstrapInputSchema = z.object({
   email: normalizedEmailSchema,
-  password: z
-    .string()
-    .min(8)
-    .max(128)
-    .refine((value) => !/[\u0000-\u001f\u007f]/.test(value), {
-      message: 'Password must not contain control characters'
-    }),
+  password: accountPasswordSchema,
   locale: z.enum(['ar', 'en']).default('ar'),
   confirmation: z.literal(FIRST_SUPER_ADMIN_CONFIRMATION)
 }).strict();

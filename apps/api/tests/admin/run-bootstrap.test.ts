@@ -15,7 +15,7 @@ function environment() {
     API_PORT: '3000',
     MONGODB_URI: 'mongodb://127.0.0.1:27017/sadat_admin_bootstrap_test',
     ADMIN_BOOTSTRAP_EMAIL: 'admin@example.com',
-    ADMIN_BOOTSTRAP_PASSWORD: 'long synthetic password',
+    ADMIN_BOOTSTRAP_PASSWORD: 'LongSynthetic9!Password',
     ADMIN_BOOTSTRAP_LOCALE: 'ar',
     ADMIN_BOOTSTRAP_CONFIRMATION: 'CREATE_FIRST_SUPER_ADMIN'
   };
@@ -47,7 +47,7 @@ test('connects, bootstraps once through the runtime boundary, and always disconn
     () => database,
     () => ({
       async bootstrap(input) {
-        assert.equal(input.password, 'long synthetic password');
+        assert.equal(input.password, 'LongSynthetic9!Password');
         return {
           adminId: '0123456789abcdef01234567',
           email: input.email,
