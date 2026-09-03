@@ -1,14 +1,34 @@
 import { z } from 'zod';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
+import { localizedTextSchema } from '../localization/index.js';
 
 const id = z.string().regex(/^[a-f0-9]{24}$/);
 const body = z.string().trim().min(1).max(5_000).regex(/^[^\u0000-\u001f\u007f]*$/u);
 const page = z.coerce.number().int().min(1).max(1_000_000).default(1);
 const limit = z.coerce.number().int().min(1).max(50).default(20);
+const publicMediaUrl = z.union([
+  z.url().max(2_048),
+  z.string().trim().min(2).max(2_048).regex(/^\/(?!\/)[^\s]*$/u)
+]);
 
 export const communityPostStatusSchema = z.enum(['draft', 'published', 'hidden', 'removed']);
-export const communityPostSchema = z.object({ id, authorId: id, title: z.string().trim().min(1).max(160), body, status: communityPostStatusSchema, createdAt: z.string().datetime({ offset: true }), updatedAt: z.string().datetime({ offset: true }) }).strict();
-export const communityPostCreateSchema = communityPostSchema.pick({ title: true, body: true }).strict();
+export const communityPostCategorySchema = z.enum(['question', 'experience', 'advice', 'service', 'area', 'property']);
+export const communityPostSchema = z.object({
+  id,
+  authorId: id,
+  title: z.string().trim().min(1).max(160),
+  body,
+  category: communityPostCategorySchema.optional(),
+  authorName: localizedTextSchema.optional(),
+  avatarUrl: publicMediaUrl.optional(),
+  imageUrl: publicMediaUrl.optional(),
+  likeCount: z.number().int().nonnegative().optional(),
+  dislikeCount: z.number().int().nonnegative().optional(),
+  status: communityPostStatusSchema,
+  createdAt: z.string().datetime({ offset: true }),
+  updatedAt: z.string().datetime({ offset: true })
+}).strict();
+export const communityPostCreateSchema = communityPostSchema.pick({ title: true, body: true }).extend({ category: communityPostCategorySchema.optional() }).strict();
 export const communityPostPatchSchema = communityPostCreateSchema.partial().strict();
 export type CommunityPost = z.infer<typeof communityPostSchema>;
 export type CommunityPostCreate = z.infer<typeof communityPostCreateSchema>;
@@ -37,6 +57,12 @@ export const communityPublicPostSchema = z.object({
   title: communityPostSchema.shape.title,
   body: communityPostSchema.shape.body,
   createdAt: communityPostSchema.shape.createdAt,
+  category: communityPostCategorySchema,
+  authorName: localizedTextSchema.optional(),
+  avatarUrl: publicMediaUrl.optional(),
+  imageUrl: publicMediaUrl.optional(),
+  likeCount: z.number().int().nonnegative(),
+  dislikeCount: z.number().int().nonnegative(),
   commentCount: z.number().int().nonnegative()
 }).strict();
 export const communityPublicCommentSchema = z.object({

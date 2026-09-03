@@ -128,6 +128,7 @@ test('article lifecycle keeps drafts private, derives the author, requires order
   assert.equal(publicArticle.body.ar, 'دليل عربي');
   assert.equal(publicArticle.seoDescription?.ar, 'A safe public summary');
   assert.equal(publicArticle.category?.name.ar, 'أدلة');
+  assert.equal(publicArticle.readingTimeMinutes, 1);
   assert.equal('authorId' in publicArticle, false);
   assert.equal('status' in publicArticle, false);
   assert.equal('availableActions' in publicArticle, false);

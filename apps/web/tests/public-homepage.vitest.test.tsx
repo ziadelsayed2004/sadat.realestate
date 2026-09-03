@@ -122,6 +122,17 @@ describe('public homepage', () => {
     expect(mobileActions?.querySelector('[data-custom-locale-switcher="true"]')).not.toBeNull();
   });
 
+  it('replaces anonymous actions with the authenticated customer account link', () => {
+    const result = renderWithLocale(
+      <PublicHomepage locale="en" authenticatedRole="seeker" initialData={emptyData} />,
+      { locale: 'en' }
+    );
+
+    expect(screen.queryByRole('link', { name: 'Log in' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Create account' })).not.toBeInTheDocument();
+    expect(result.container.querySelector('.public-homepage__actions a[href="/seeker"]')).toHaveTextContent('My account');
+  });
+
   it('renders loading and success states while reading the homepage contract', async () => {
     let resolve: (value: typeof homepageData) => void = () => undefined;
     const pending = new Promise<typeof homepageData>(value => {

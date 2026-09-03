@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { publicHomepagePropertySchema } from '../public/index.js';
+import { publicPropertyRelatedPropertySchema } from '../public/index.js';
 import { propertyObjectIdSchema } from '../properties/index.js';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
 
 const positiveQuery = (fallback: number, max: number) => z.preprocess(value => value === undefined ? fallback : Number(value), z.number().int().positive().max(max));
 export const favoritePropertyParamsSchema = z.object({ propertyId: propertyObjectIdSchema }).strict();
 export const favoriteListQuerySchema = z.object({ page: positiveQuery(1, 100000), limit: positiveQuery(20, 100) }).strict();
-export const favoritePropertySchema = publicHomepagePropertySchema.extend({ savedAt: z.string().datetime({ offset: true }) }).strict();
+export const favoritePropertySchema = publicPropertyRelatedPropertySchema.extend({ savedAt: z.string().datetime({ offset: true }) }).strict();
 export const favoriteListDataSchema = z.object({ items: z.array(favoritePropertySchema).max(100), page: z.number().int().positive(), limit: z.number().int().positive().max(100), total: z.number().int().nonnegative() }).strict();
 export const favoriteSaveDataSchema = z.object({ saved: z.literal(true), alreadySaved: z.boolean(), item: favoritePropertySchema }).strict();
 export const favoriteRemoveDataSchema = z.object({ removed: z.boolean() }).strict();

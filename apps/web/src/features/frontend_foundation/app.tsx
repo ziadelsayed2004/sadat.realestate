@@ -3,7 +3,7 @@ import type { ArticleListQuery, ArticlePublic, ArticlePublicListData, CmsPublicC
 import { resolveRoute } from '../../routes/route-table.js';
 import { PublicCommunity, type CommunityAuthClient } from '../community/index.ts';
 import { defaultPublicArticleListLoader, PublicAbout, PublicArticleDetails, PublicArticles, PublicTeam } from '../content/index.ts';
-import { AuthPage } from '../auth/pages.tsx';
+import { AuthPage, type AuthFlowClient } from '../auth/pages.tsx';
 import { PublicDeveloperProfile, PublicDevelopers, PublicHomepage, PublicPropertyComparison, PublicPropertyDetails as PublicPropertyDetailsPage, PublicPropertyListing, type PublicDeveloperProfileInitialState, type PublicPropertyComparisonInitialState, type PublicPropertyDetailsInitialState } from '../public/index.ts';
 import { ProviderAdvertising, ProviderCommission, ProviderCustomerRequests, ProviderNotifications, ProviderOverview, ProviderProperties, ProviderProjects, ProviderSettings, ProviderViewings } from '../provider/index.ts';
 import { ProviderPropertyAdvancedWizard, ProviderPropertyCompletionWizard, ProviderPropertyStatePage, ProviderPropertyWizard, type ProviderPropertyAdvancedStep, type ProviderPropertyCompletionStep, type ProviderPropertyStateRoute } from '../provider_property/index.ts';
@@ -123,6 +123,9 @@ export function App({
     ? { status: 'authenticated', role: authSnapshot.user.roleType }
     : ANONYMOUS_ROUTE_SESSION;
   const effectiveSession = session.status === 'authenticated' ? session : liveSession;
+  const authFlowClient = authClient !== undefined && 'loginAdmin' in authClient
+    ? authClient as CommunityAuthClient & AuthFlowClient
+    : undefined;
   const guard = guardRoute(route, effectiveSession);
   const isPublicHomepage = route.kind === 'matched' && route.id === 'public-home';
   const isPublicPropertyListing = route.kind === 'matched' && route.id === 'public-properties';
@@ -211,7 +214,7 @@ export function App({
 
   const content = guard.allowed ? (
     isPublicHomepage ? (
-      <PublicHomepage locale={locale} initialData={homepageData} initialState={homepageInitialState} />
+      <PublicHomepage locale={locale} authenticatedRole={effectiveSession.status === 'authenticated' ? effectiveSession.role : undefined} initialData={homepageData} initialState={homepageInitialState} />
     ) : isPublicPropertyListing ? (
       <PublicPropertyListing url={url} locale={locale} initialData={propertyListData} initialQuery={propertyListQuery} initialState={propertyListInitialState} />
     ) : isPublicPropertyDetails ? (
@@ -233,7 +236,21 @@ export function App({
     ) : isPublicTeam ? (
       <PublicTeam locale={locale} initialData={teamData} initialState={teamInitialState} />
     ) : isAuthRoute ? (
-      <AuthPage url={url} locale={locale} />
+      <AuthPage
+        url={url}
+        locale={locale}
+        client={authFlowClient}
+        onAuthenticated={snapshot => {
+          if (typeof window === 'undefined') return;
+          const requestedReturnTo = new URL(url, window.location.origin).searchParams.get('returnTo');
+          const safeReturnTo = requestedReturnTo !== null && requestedReturnTo.startsWith('/') && !requestedReturnTo.startsWith('//')
+            ? requestedReturnTo
+            : undefined;
+          const role = snapshot.user?.roleType;
+          const roleHome = role === 'admin' ? '/admin' : role === 'provider' ? '/provider' : '/seeker';
+          window.location.assign(safeReturnTo ?? `${roleHome}?lang=${locale}`);
+        }}
+      />
     ) : isProviderOverview ? (
       <ProviderOverview locale={locale} session={effectiveSession} authClient={authClient} />
     ) : isProviderProperties ? (

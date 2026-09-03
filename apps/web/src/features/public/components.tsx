@@ -7,6 +7,7 @@ import type {
   PublicHomepageMetric,
   PublicHomepageProperty,
   PublicHomepageSection,
+  AuthRoleType,
   SupportedLocale
 } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
@@ -29,6 +30,7 @@ export type PublicHomepageViewState = Extract<UxState, 'loading' | 'empty' | 'er
 
 export interface PublicHomepageProps {
   readonly locale: SupportedLocale;
+  readonly authenticatedRole?: AuthRoleType | undefined;
   readonly initialData?: PublicHomepageData | undefined;
   readonly initialState?: 'loading' | 'retry' | undefined;
   readonly load?: PublicHomepageLoader | undefined;
@@ -318,11 +320,13 @@ function stateCopy(state: PublicHomepageViewState, copy: PublicHomepageCopy): { 
 export function PublicSiteHeader({
   locale,
   copy,
-  activePath = '/'
+  activePath = '/',
+  authenticatedRole
 }: {
   readonly locale: SupportedLocale;
   readonly copy: PublicHomepageCopy;
   readonly activePath?: string;
+  readonly authenticatedRole?: AuthRoleType | undefined;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const nav = locale === 'ar'
@@ -337,6 +341,16 @@ export function PublicSiteHeader({
     ['/about', nav.about],
     ['/team', nav.team]
   ];
+  const accountHref = authenticatedRole === 'admin'
+    ? '/admin'
+    : authenticatedRole === 'provider'
+      ? '/provider'
+      : '/seeker';
+  const accountLabel = locale === 'ar' ? 'حسابي' : 'My account';
+  const accountActions = authenticatedRole === undefined ? <>
+    <a className="public-homepage__login" href="/auth/login">{copy.login}</a>
+    <a className="public-homepage__signup" href="/auth/register">{copy.createAccount}</a>
+  </> : <a className="public-homepage__signup public-homepage__account" href={accountHref}>{accountLabel}</a>;
 
   useEffect(() => {
     if (!menuOpen || typeof window === 'undefined') return undefined;
@@ -356,14 +370,15 @@ export function PublicSiteHeader({
         {links.map(([href, label]) => <a key={href} href={href} aria-current={href === activePath ? 'page' : undefined} onClick={() => setMenuOpen(false)}>{label}</a>)}
         <div className="public-homepage__mobile-actions" aria-hidden={!menuOpen}>
           <LocaleSwitcher locale={locale} label={copy.localeLabel} />
-          <a className="public-homepage__login" href="/auth/login" onClick={() => setMenuOpen(false)}>{copy.login}</a>
-          <a className="public-homepage__signup" href="/auth/register" onClick={() => setMenuOpen(false)}>{copy.createAccount}</a>
+          {authenticatedRole === undefined ? <>
+            <a className="public-homepage__login" href="/auth/login" onClick={() => setMenuOpen(false)}>{copy.login}</a>
+            <a className="public-homepage__signup" href="/auth/register" onClick={() => setMenuOpen(false)}>{copy.createAccount}</a>
+          </> : <a className="public-homepage__signup public-homepage__account" href={accountHref} onClick={() => setMenuOpen(false)}>{accountLabel}</a>}
         </div>
       </nav>
       <div className="public-homepage__actions">
         <LocaleSwitcher locale={locale} label={copy.localeLabel} />
-        <a className="public-homepage__login" href="/auth/login">{copy.login}</a>
-        <a className="public-homepage__signup" href="/auth/register">{copy.createAccount}</a>
+        {accountActions}
         <button
           type="button"
           className="public-homepage__menu-toggle"
@@ -712,7 +727,7 @@ function HomepageCategoryRail({
     <section className="public-homepage__category-section" aria-labelledby="public-homepage-categories">
       <SectionHeading eyebrow={copy.categoryEyebrow} id="public-homepage-categories" title={title} />
       <p className="public-homepage__section-description">{copy.categoryDescription}</p>
-      <div className="public-homepage__category-rail">
+      <div className="public-homepage__category-rail" tabIndex={0} aria-label={title}>
         {firstCategory === undefined ? null : renderCategory(firstCategory)}
         {allPropertiesMetric === undefined ? null : <a className="public-homepage__category-card public-homepage__category-card--all" href="/properties" key="all-properties">
           <img className="public-homepage__category-image" src="/assets/sadat-real-estate-logo.png" alt="" width="636" height="557" decoding="async" loading="lazy" />
@@ -1060,7 +1075,7 @@ function StateNotice({
   );
 }
 
-export function PublicHomepage({ locale, initialData, initialState = 'loading', load = defaultPublicHomepageLoader }: PublicHomepageProps) {
+export function PublicHomepage({ locale, authenticatedRole, initialData, initialState = 'loading', load = defaultPublicHomepageLoader }: PublicHomepageProps) {
   const copy = getPublicHomepageCopy(locale);
   const initialView = initialData === undefined
     ? initialState
@@ -1090,7 +1105,7 @@ export function PublicHomepage({ locale, initialData, initialState = 'loading', 
 
   return (
     <div className="public-homepage" data-page="public-home" data-homepage-state={view}>
-      <PublicSiteHeader locale={locale} copy={copy} />
+      <PublicSiteHeader locale={locale} copy={copy} authenticatedRole={authenticatedRole} />
       {view === 'success' && data !== undefined ? (
         <HomepageContent locale={locale} copy={copy} data={data} />
       ) : view === 'success' ? (

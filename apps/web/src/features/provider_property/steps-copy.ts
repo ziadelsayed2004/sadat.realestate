@@ -6,7 +6,7 @@ export interface ProviderPropertyAdvancedCopy {
   readonly titles: Readonly<Record<ProviderPropertyAdvancedStep, string>>;
   readonly descriptions: Readonly<Record<ProviderPropertyAdvancedStep, string>>;
   readonly steps: Readonly<Record<ProviderPropertyAdvancedStep, string>>;
-  readonly labels: Readonly<Record<'description' | 'propertyTypeId' | 'area' | 'bedrooms' | 'bathrooms' | 'floor' | 'totalFloors' | 'priceAmount' | 'currency' | 'paymentPlan' | 'planName' | 'installments' | 'frequency' | 'downPaymentAmount' | 'installmentAmount' | 'featureIds' | 'serviceIds', string>>;
+  readonly labels: Readonly<Record<'description' | 'propertyTypeId' | 'deliveryStatus' | 'area' | 'bedrooms' | 'bathrooms' | 'floor' | 'totalFloors' | 'priceAmount' | 'currency' | 'paymentPlan' | 'planName' | 'installments' | 'frequency' | 'downPaymentAmount' | 'installmentAmount' | 'featureIds' | 'serviceIds', string>>;
   readonly placeholders: Readonly<Record<'description' | 'propertyTypeId' | 'area' | 'bedrooms' | 'bathrooms' | 'floor' | 'totalFloors' | 'priceAmount' | 'currency' | 'planName' | 'installments' | 'downPaymentAmount' | 'installmentAmount' | 'featureIds' | 'serviceIds', string>>;
   readonly frequencyLabels: Readonly<Record<'monthly' | 'quarterly' | 'annually', string>>;
   readonly propertyTypeCatalogUnavailableTitle: string;
@@ -49,7 +49,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyAdvancedCop
     },
     steps: { details: 'تفاصيل العقار', 'price-payment': 'السعر والسداد', 'features-services': 'المميزات والخدمات' },
     labels: {
-      description: 'وصف العقار', propertyTypeId: 'معرّف نوع العقار', area: 'المساحة (م²)', bedrooms: 'عدد غرف النوم', bathrooms: 'عدد دورات المياه', floor: 'الطابق', totalFloors: 'إجمالي الطوابق',
+      description: 'وصف العقار', propertyTypeId: 'معرّف نوع العقار', deliveryStatus: 'حالة التسليم', area: 'المساحة (م²)', bedrooms: 'عدد غرف النوم', bathrooms: 'عدد دورات المياه', floor: 'الطابق', totalFloors: 'إجمالي الطوابق',
       priceAmount: 'السعر الإجمالي', currency: 'العملة', paymentPlan: 'خطة سداد', planName: 'اسم الخطة', installments: 'عدد الأقساط', frequency: 'دورية السداد', downPaymentAmount: 'الدفعة المقدمة', installmentAmount: 'قيمة القسط', featureIds: 'مراجع المميزات', serviceIds: 'مراجع الخدمات'
     },
     placeholders: {
@@ -85,7 +85,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyAdvancedCop
     },
     steps: { details: 'Property details', 'price-payment': 'Price and payment', 'features-services': 'Features and services' },
     labels: {
-      description: 'Property description', propertyTypeId: 'Property type reference ID', area: 'Area (sqm)', bedrooms: 'Bedrooms', bathrooms: 'Bathrooms', floor: 'Floor', totalFloors: 'Total floors',
+      description: 'Property description', propertyTypeId: 'Property type reference ID', deliveryStatus: 'Delivery status', area: 'Area (sqm)', bedrooms: 'Bedrooms', bathrooms: 'Bathrooms', floor: 'Floor', totalFloors: 'Total floors',
       priceAmount: 'Total price', currency: 'Currency', paymentPlan: 'Payment plan', planName: 'Plan name', installments: 'Installments', frequency: 'Payment frequency', downPaymentAmount: 'Down payment', installmentAmount: 'Installment amount', featureIds: 'Feature references', serviceIds: 'Service references'
     },
     placeholders: {

@@ -30,6 +30,7 @@ export interface StoredArticle {
   seoTitle?: LocalizedText;
   seoDescription?: LocalizedText;
   coverAssetId?: string;
+  imageUrl?: string;
   authorId: string;
   status: ArticleStatus;
   publishedAt?: Date;
@@ -134,6 +135,7 @@ function mapArticle(record: ArticleRecord): StoredArticle {
     ...(record.seoTitle ? { seoTitle: record.seoTitle } : {}),
     ...(record.seoDescription ? { seoDescription: record.seoDescription } : {}),
     ...(record.coverAssetId ? { coverAssetId: record.coverAssetId.toHexString() } : {}),
+    ...(record.imageUrl ? { imageUrl: record.imageUrl } : {}),
     authorId: record.authorId.toHexString(),
     status: record.status,
     ...(record.publishedAt ? { publishedAt: record.publishedAt } : {}),

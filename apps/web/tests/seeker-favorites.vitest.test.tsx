@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { favoriteListDataSchema, favoritePropertySchema, type FavoriteRemoveData, type FavoriteSaveData } from '@sadat-real-estate/contracts';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
@@ -12,6 +12,14 @@ const saved = favoritePropertySchema.parse({
   kind: 'property',
   name: { ar: 'منزل منشور', en: 'Published home',},
   transactionType: 'sale',
+  imageUrl: '/assets/canonical/public/listing-property-home.png',
+  locationName: { ar: 'الحي الأول', en: 'District 1' },
+  sourceName: { ar: 'شركة السادات للتطوير العقاري', en: 'Sadat Real Estate Development' },
+  sourceType: 'developer_company',
+  sourceVerified: true,
+  publicCode: 'SDT-1234',
+  installmentAvailable: true,
+  featured: true,
   area: { value: 120, unit: 'sqm' },
   layout: { bedrooms: 3, bathrooms: 2, floor: 4 },
   price: { amount: 1250000, currency: 'EGP' },
@@ -62,6 +70,10 @@ describe('Seeker saved properties', () => {
     expect(screen.getByRole('heading', { name: copy.title, level: 1 })).toBeInTheDocument();
     expect(screen.getAllByRole('link', { name: copy.view })[0]).toHaveAttribute('href', `/properties/${saved.slug}?lang=${locale}`);
     expect(result.container.querySelector('[data-screen-id="SEK-06"]')).not.toBeNull();
+    const savedCard = screen.getByTestId(`seeker-saved-property-${saved.id}`);
+    expect(within(savedCard).getByRole('img', { name: locale === 'ar' ? 'منزل منشور' : 'Published home' })).toHaveAttribute('src', '/assets/canonical/public/listing-property-home.png');
+    expect(within(savedCard).getByText('SDT-1234')).toBeInTheDocument();
+    expect(within(savedCard).getByText(locale === 'ar' ? 'الحي الأول' : 'District 1')).toBeInTheDocument();
     expect(result.container.textContent).not.toContain('seekerId');
     expect(result.container.textContent).not.toContain('providerId');
     result.unmount();

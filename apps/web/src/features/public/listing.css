@@ -311,11 +311,19 @@
     padding: 40px 14px 12px;
     overflow-x: auto;
     overflow-y: hidden;
-    scrollbar-width: none;
+    scroll-padding-inline: 14px;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+    scroll-snap-type: inline proximity;
   }
 
   .public-property-listing__category-rail::-webkit-scrollbar {
-    display: none;
+    height: 5px;
+  }
+
+  .public-property-listing__category-rail::-webkit-scrollbar-thumb {
+    background: #c7aa6a;
+    border-radius: 999px;
   }
 
   .public-property-listing__category-rail button {
@@ -334,6 +342,7 @@
     border-radius: 14px;
     box-shadow: 0 2px 4px rgb(15 23 42 / 0.12);
     cursor: pointer;
+    scroll-snap-align: start;
   }
 
   .public-property-listing__category-rail button.is-active {
@@ -367,7 +376,12 @@
   }
 
   .public-property-listing__category-rail strong {
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-padding-inline: 14px;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+    scroll-snap-type: inline proximity;
     max-width: 100%;
     font-size: 12px;
     line-height: 15px;
@@ -470,7 +484,21 @@
     margin-block-start: 0;
     margin-inline: auto;
     padding: 40px 14px 12px;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-padding-inline: 14px;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+    scroll-snap-type: inline proximity;
+  }
+
+  .public-property-listing__category-rail::-webkit-scrollbar {
+    height: 5px;
+  }
+
+  .public-property-listing__category-rail::-webkit-scrollbar-thumb {
+    background: #c7aa6a;
+    border-radius: 999px;
   }
 
   .public-property-listing__category-rail button {
@@ -489,15 +517,11 @@
     border-radius: 14px;
     box-shadow: 0 2px 4px rgb(15 23 42 / 0.12);
     cursor: pointer;
+    scroll-snap-align: start;
   }
 
   .public-property-listing__category-rail::after {
-    flex: 0 0 140px;
-    content: '';
-    background: #fff;
-    border: 1px solid #dfe1e4;
-    border-radius: 14px;
-    box-shadow: 0 2px 4px rgb(15 23 42 / 0.12);
+    display: none;
   }
 
   .public-property-listing__category-rail button.is-active {

@@ -36,6 +36,7 @@ export interface ProviderPropertyAdvancedWizardProps {
 interface DetailsForm {
   readonly description: Record<SupportedLocale, string>;
   readonly propertyTypeId: string;
+  readonly deliveryStatus: PropertyData['deliveryStatus'] | '';
   readonly area: string;
   readonly bedrooms: string;
   readonly bathrooms: string;
@@ -91,6 +92,7 @@ function detailsForm(property: PropertyData | undefined, copy: ProviderPropertyC
   return {
     description,
     propertyTypeId: property?.propertyTypeId ?? '',
+    deliveryStatus: property?.deliveryStatus ?? '',
     area: property?.area === undefined ? '' : String(property.area.value),
     bedrooms: property?.layout?.bedrooms === undefined ? '' : String(property.layout.bedrooms),
     bathrooms: property?.layout?.bathrooms === undefined ? '' : String(property.layout.bathrooms),
@@ -225,6 +227,7 @@ function DetailsFormView({ locale, copy, advancedCopy, form, setForm, onSubmit, 
           <Input id="provider-property-floor" type="number" min="0" step="1" label={advancedCopy.labels.floor} value={form.floor} placeholder={advancedCopy.placeholders.floor} onChange={event => setForm({ ...form, floor: event.target.value })} aria-invalid={validationError || undefined} />
           <Input id="provider-property-total-floors" type="number" min="1" step="1" label={advancedCopy.labels.totalFloors} value={form.totalFloors} placeholder={advancedCopy.placeholders.totalFloors} onChange={event => setForm({ ...form, totalFloors: event.target.value })} aria-invalid={validationError || undefined} />
           <div className="provider-property-wizard__field"><label htmlFor="provider-property-type-id">{advancedCopy.labels.propertyTypeId}</label><select id="provider-property-type-id" value={form.propertyTypeId} onChange={event => setForm({ ...form, propertyTypeId: event.target.value })} aria-invalid={validationError || undefined} disabled={propertyTypesState !== 'success'}><option value="">{propertyTypesState === 'loading' ? advancedCopy.propertyTypeCatalogLoading : advancedCopy.propertyTypeSelectPlaceholder}</option>{propertyTypes.map(type => <option key={type.id} value={type.id}>{type.name[locale] ?? type.name.ar ?? type.name.en ?? type.slug}</option>)}</select>{propertyTypesState === 'error' ? <button type="button" className="provider-property-wizard__catalog-retry" onClick={onRetryPropertyTypes}>{copy.retry}</button> : null}</div>
+          <div className="provider-property-wizard__field"><label htmlFor="provider-property-delivery-status">{advancedCopy.labels.deliveryStatus}</label><select id="provider-property-delivery-status" value={form.deliveryStatus} onChange={event => setForm({ ...form, deliveryStatus: event.target.value as DetailsForm['deliveryStatus'] })}><option value="">{copy.wizard.unavailable}</option><option value="ready_to_move">{locale === 'ar' ? 'جاهز للسكن' : 'Ready to move'}</option><option value="under_construction">{locale === 'ar' ? 'تحت الإنشاء' : 'Under construction'}</option><option value="future_delivery">{locale === 'ar' ? 'تسليم مستقبلي' : 'Future delivery'}</option></select></div>
         </div>
         {propertyTypesState === 'success' && propertyTypes.length === 0 ? <div className="provider-property-wizard__location-placeholder" role="status"><strong>{advancedCopy.propertyTypeCatalogEmptyTitle}</strong><p>{advancedCopy.propertyTypeCatalogEmptyBody}</p></div> : null}
       </section>
@@ -495,6 +498,7 @@ function detailsInput(form: DetailsForm, version: number) {
     version,
     ...(Object.keys(textMap(form.description)).length ? { description: textMap(form.description) } : {}),
     ...(form.propertyTypeId.trim() === '' ? {} : { propertyTypeId: form.propertyTypeId.trim().toLowerCase() }),
+    ...(form.deliveryStatus === '' ? {} : { deliveryStatus: form.deliveryStatus }),
     ...(area === undefined ? {} : { area: { value: area, unit: 'sqm' } }),
     ...(Object.keys(layout).length ? { layout } : {}),
     reason: form.reason.trim()

@@ -493,9 +493,22 @@
     grid-template-columns: 1fr;
   }
 
-  .public-property-details__actions {
-    order: -1;
+  .public-property-details__main-column {
+    display: contents;
   }
+
+  .public-property-details__gallery { order: 1; }
+  .public-property-details__summary { order: 2; }
+  .public-property-details__actions {
+    order: 3;
+  }
+
+  .public-property-details__source-card { order: 4; }
+  .public-property-details__description { order: 5; }
+  .public-property-details__amenities { order: 6; }
+  .public-property-details__nearby { order: 7; }
+  .public-property-details__advisory { order: 8; }
+  .public-property-details__related { order: 9; }
 
   .public-property-details__contact {
     position: static;

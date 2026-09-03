@@ -3,7 +3,7 @@ import { communityCommentSchema, communityPostSchema } from '@sadat-real-estate/
 import type { CommunityModels, CommunityPostRecord, CommunityCommentRecord } from './models.js';
 import type { CommunityRepository } from './service.js';
 
-const postProjection = { _id: 0, id: 1, authorId: 1, title: 1, body: 1, status: 1, createdAt: 1, updatedAt: 1 } as const;
+const postProjection = { _id: 0, id: 1, authorId: 1, title: 1, body: 1, category: 1, authorName: 1, avatarUrl: 1, imageUrl: 1, likeCount: 1, dislikeCount: 1, status: 1, createdAt: 1, updatedAt: 1 } as const;
 const commentProjection = { _id: 0, id: 1, postId: 1, authorId: 1, body: 1, parentId: 1, depth: 1, status: 1, createdAt: 1 } as const;
 
 function post(row: CommunityPostRecord): CommunityPost {

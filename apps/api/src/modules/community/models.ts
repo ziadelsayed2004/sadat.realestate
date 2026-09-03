@@ -14,6 +14,12 @@ const postSchema = new Schema<CommunityPostRecord>({
   authorId: { type: String, required: true, immutable: true, match: /^[a-f0-9]{24}$/ },
   title: { type: String, required: true, trim: true, maxlength: 160 },
   body: { type: String, required: true, trim: true, maxlength: 5_000 },
+  category: { type: String, enum: ['question', 'experience', 'advice', 'service', 'area', 'property'] },
+  authorName: { type: Schema.Types.Mixed },
+  avatarUrl: { type: String, trim: true, maxlength: 2_048 },
+  imageUrl: { type: String, trim: true, maxlength: 2_048 },
+  likeCount: { type: Number, min: 0, default: 0 },
+  dislikeCount: { type: Number, min: 0, default: 0 },
   status: { type: String, required: true, enum: ['draft', 'published', 'hidden', 'removed'] },
   createdAt: { type: String, required: true, immutable: true },
   updatedAt: { type: String, required: true }

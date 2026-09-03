@@ -67,6 +67,13 @@ function SavedPropertyCard({ property, locale, copy, removing, onRemove }: { rea
   const kind = property.kind === 'property' ? copy.property : copy.unit;
   const href = localeForSeekerPath(locale, `/properties/${property.slug}`);
   const features = propertyFeatures(property, locale, { area: copy.area, bedrooms: copy.bedrooms, bathrooms: copy.bathrooms, floor: copy.floor, sqm: copy.sqm });
+  const location = property.locationName === undefined ? undefined : localizedText(property.locationName, locale);
+  const sourceName = property.sourceName === undefined ? undefined : localizedText(property.sourceName, locale);
+  const badges = [
+    ...(property.featured ? [locale === 'ar' ? 'مميز' : 'Featured'] : []),
+    ...(property.installmentAvailable ? [locale === 'ar' ? 'تقسيط' : 'Installments'] : []),
+    transaction
+  ];
   return (
     <PropertyCard
       className="seeker-saved-property-card"
@@ -74,11 +81,13 @@ function SavedPropertyCard({ property, locale, copy, removing, onRemove }: { rea
       title={title}
       href={href}
       price={formatMoney(property.price, locale)}
-      badges={[kind, transaction]}
+      location={location}
+      badges={badges}
       features={features}
       image={<PublicMediaImage src={property.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} />}
       imageAlt={title}
-      source={<time dateTime={property.savedAt}>{copy.savedAt}: {dateLabel(property.savedAt, locale)}</time>}
+      mediaOverlay={property.publicCode ? <span className="seeker-saved-property-card__code">{property.publicCode}</span> : undefined}
+      source={<>{sourceName ? <span>{property.sourceVerified ? '✓ ' : ''}{sourceName}</span> : <span>{kind}</span>}<time dateTime={property.savedAt}>{copy.savedAt}: {dateLabel(property.savedAt, locale)}</time></>}
       action={(
         <div className="seeker-saved-property-card__actions">
           <a className="seeker-saved-property-card__view" href={href}>{copy.view}</a>

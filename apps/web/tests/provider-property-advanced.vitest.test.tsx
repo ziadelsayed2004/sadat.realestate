@@ -92,9 +92,10 @@ describe('Provider property advanced wizard steps', () => {
     fireEvent.change(screen.getByLabelText(copy.labels.bathrooms), { target: { value: '2' } });
     fireEvent.change(screen.getByLabelText(copy.labels.floor), { target: { value: '4' } });
     fireEvent.change(screen.getByLabelText(copy.labels.totalFloors), { target: { value: '8' } });
+    fireEvent.change(screen.getByLabelText(copy.labels.deliveryStatus), { target: { value: 'ready_to_move' } });
     fireEvent.click(screen.getByRole('button', { name: getProviderPropertyCopy('en').wizard.saveDraft }));
     await waitFor(() => expect(save).toHaveBeenCalledTimes(1));
-    expect(save).toHaveBeenCalledWith(propertyId, 'details', expect.objectContaining({ version: 2, propertyTypeId: apartmentType.id, area: { value: 120, unit: 'sqm' }, layout: { bedrooms: 3, bathrooms: 2, floor: 4, totalFloors: 8 } }));
+    expect(save).toHaveBeenCalledWith(propertyId, 'details', expect.objectContaining({ version: 2, propertyTypeId: apartmentType.id, deliveryStatus: 'ready_to_move', area: { value: 120, unit: 'sqm' }, layout: { bedrooms: 3, bathrooms: 2, floor: 4, totalFloors: 8 } }));
   });
 
   it('conditionally validates payment plans and keeps plan currencies aligned with price', async () => {

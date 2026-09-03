@@ -4,10 +4,38 @@ import test from 'node:test';
 import type { Connection } from 'mongoose';
 import {
   FIGMA_PUBLIC_DETAILS_SEED_STEP,
+  FIGMA_PUBLIC_LISTING_SEED_STEP,
   runDevelopmentSeed,
   SYNTHETIC_SHOWCASE_SEED_STEP,
   SYNTHETIC_WORKFLOW_SEED_STEP
 } from '../../src/modules/database/seed.js';
+
+test('public listing seed adds the missing canonical cards with local media', async () => {
+  const writes: Array<{ collection: string; document: Record<string, unknown> }> = [];
+  const connection = {
+    collection(name: string) {
+      return {
+        async updateOne(_filter: unknown, update: { $setOnInsert: Record<string, unknown> }) {
+          writes.push({ collection: name, document: update.$setOnInsert });
+          return { acknowledged: true };
+        }
+      };
+    }
+  } as unknown as Connection;
+
+  await FIGMA_PUBLIC_LISTING_SEED_STEP.run(connection);
+
+  const properties = writes.filter(write => write.collection === 'properties');
+  assert.equal(properties.length, 3);
+  assert.deepEqual(properties.map(write => write.document.slug), [
+    'demo-upscale-villa',
+    'demo-central-office',
+    'demo-residential-land'
+  ]);
+  assert.ok(properties.every(write => write.document.synthetic === true));
+  assert.ok(properties.every(write => write.document.seedKey === 'figma-public-listing-v10'));
+  assert.ok(properties.every(write => typeof write.document.imageUrl === 'string' && String(write.document.imageUrl).startsWith('/assets/canonical/public/')));
+});
 import { runSeedCommand } from '../../src/modules/database/run-seed.js';
 
 test('public details seed repairs an existing demo property with exact public media and populated amenities', async () => {

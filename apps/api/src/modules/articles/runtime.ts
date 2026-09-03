@@ -1,4 +1,4 @@
-import type { Connection } from 'mongoose';
+import { Types, type Connection } from 'mongoose';
 import type { AccessTokenService } from '../auth/crypto.js';
 import type { AuditWriter } from '../audit/writer.js';
 import type { RbacService } from '../rbac/service.js';
@@ -19,7 +19,15 @@ export function createArticleRuntime(
     service: createArticleService({
       repository: createMongooseArticleRepository(models),
       authorization,
-      audit
+      audit,
+      async resolveAuthorName(authorId) {
+        if (!Types.ObjectId.isValid(authorId)) return undefined;
+        const account = await connection.collection<{ displayName?: string }>('admin_accounts').findOne(
+          { userId: new Types.ObjectId(authorId) },
+          { projection: { _id: 0, displayName: 1 } }
+        );
+        return account?.displayName?.trim() || undefined;
+      }
     })
   };
 }

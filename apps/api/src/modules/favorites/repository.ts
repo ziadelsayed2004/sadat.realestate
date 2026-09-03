@@ -17,6 +17,17 @@ function property(row: Row): FavoritePropertySource | null {
   if (!rowId || typeof row.slug !== 'string' || typeof row.kind !== 'string' || row.name === undefined || typeof row.transactionType !== 'string' || typeof row.status !== 'string' || typeof row.active !== 'boolean') return null;
   return {
     id: rowId, slug: row.slug, kind: row.kind, name: row.name, transactionType: row.transactionType,
+    ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}),
+    ...(row.locationName !== undefined ? { locationName: row.locationName } : {}),
+    ...(row.sourceName !== undefined ? { sourceName: row.sourceName } : {}),
+    ...(typeof row.sourceImageUrl === 'string' ? { sourceImageUrl: row.sourceImageUrl } : {}),
+    ...(typeof row.sourceType === 'string' ? { sourceType: row.sourceType } : {}),
+    ...(typeof row.sourceVerified === 'boolean' ? { sourceVerified: row.sourceVerified } : {}),
+    ...(typeof row.publicCode === 'string' ? { publicCode: row.publicCode } : {}),
+    ...(typeof row.viewCount === 'number' ? { viewCount: row.viewCount } : {}),
+    ...(typeof row.installmentAvailable === 'boolean' ? { installmentAvailable: row.installmentAvailable } : {}),
+    ...(typeof row.featured === 'boolean' ? { featured: row.featured } : {}),
+    ...(typeof row.deliveryStatus === 'string' ? { deliveryStatus: row.deliveryStatus } : {}),
     ...(projectId ? { projectId } : {}), ...(row.description !== undefined ? { description: row.description } : {}),
     ...(row.area !== undefined ? { area: row.area } : {}), ...(row.layout !== undefined ? { layout: row.layout } : {}),
     ...(row.price !== undefined ? { price: row.price } : {}), status: row.status, active: row.active
@@ -35,7 +46,7 @@ const duplicate = (error: unknown) => typeof error === 'object' && error !== nul
 export function createMongooseFavoriteRepository(connection: Connection): FavoriteRepository {
   const favorites = connection.collection('favorites');
   const properties = connection.collection('properties');
-  const projection = { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, projectId: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 };
+  const projection = { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, locationId: 1, organizationId: 1, sourceType: 1, publicCode: 1, viewCount: 1, paymentPlans: 1, featured: 1, deliveryStatus: 1, projectId: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 };
   let indexReady: Promise<unknown> | undefined;
   function ensureIndex(): Promise<unknown> {
     indexReady ??= favorites.createIndex({ seekerId: 1, propertyId: 1 }, { unique: true, name: 'favorites_seeker_property_unique' });
@@ -64,7 +75,20 @@ export function createMongooseFavoriteRepository(connection: Connection): Favori
       const rows = await favorites.find({ seekerId: new Types.ObjectId(seekerId) }, { projection: { _id: 0, seekerId: 1, propertyId: 1, savedAt: 1 } }).sort({ savedAt: -1, propertyId: 1 }).skip((page - 1) * limit).limit(limit).toArray();
       const mapped = rows.flatMap(row => { const value = favorite(row as Row); return value ? [value] : []; });
       if (!mapped.length) return [];
-      const propertiesById = new Map((await properties.find({ _id: { $in: mapped.map(value => new Types.ObjectId(value.propertyId)) } }, { projection }).toArray()).flatMap(row => { const value = property(row as Row); return value ? [[value.id, value] as const] : []; }));
+      const propertyRows = await properties.find({ _id: { $in: mapped.map(value => new Types.ObjectId(value.propertyId)) } }, { projection }).toArray();
+      const locationIds = propertyRows.flatMap(row => { const value = id(row.locationId); return value ? [new Types.ObjectId(value)] : []; });
+      const organizationIds = propertyRows.flatMap(row => { const value = id(row.organizationId); return value ? [new Types.ObjectId(value)] : []; });
+      const [locationRows, organizationRows] = await Promise.all([
+        locationIds.length ? connection.collection('locations').find({ _id: { $in: locationIds }, active: true }, { projection: { _id: 1, name: 1 } }).toArray() : [],
+        organizationIds.length ? connection.collection('organizations').find({ _id: { $in: organizationIds }, status: 'approved' }, { projection: { _id: 1, name: 1, imageUrl: 1 } }).toArray() : []
+      ]);
+      const locations = new Map(locationRows.flatMap(row => { const value = id(row._id); return value && row.name !== undefined ? [[value, row.name] as const] : []; }));
+      const organizations = new Map(organizationRows.flatMap(row => { const value = id(row._id); return value && row.name !== undefined ? [[value, { name: row.name, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}) }] as const] : []; }));
+      const propertiesById = new Map(propertyRows.flatMap(row => {
+        const locationId = id(row.locationId); const organizationId = id(row.organizationId); const organization = organizationId ? organizations.get(organizationId) : undefined;
+        const value = property({ ...row, ...(locationId && locations.has(locationId) ? { locationName: locations.get(locationId) } : {}), ...(organization ? { sourceName: organization.name, ...(organization.imageUrl ? { sourceImageUrl: organization.imageUrl } : {}), sourceVerified: true } : {}), installmentAvailable: Array.isArray(row.paymentPlans) && row.paymentPlans.length > 0 });
+        return value ? [[value.id, value] as const] : [];
+      }));
       return mapped.flatMap(value => { const source = propertiesById.get(value.propertyId); return source ? [{ favorite: value, property: source }] : []; });
     }
   };

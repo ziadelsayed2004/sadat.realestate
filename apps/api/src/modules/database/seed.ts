@@ -28,6 +28,9 @@ const ids = {
   propertyOne: new Types.ObjectId('670000000000000000000007'),
   propertyTwo: new Types.ObjectId('670000000000000000000008'),
   propertyThree: new Types.ObjectId('670000000000000000000009'),
+  propertyFour: new Types.ObjectId('670000000000000000000097'),
+  propertyFive: new Types.ObjectId('6700000000000000000000c0'),
+  propertySix: new Types.ObjectId('6700000000000000000000c1'),
   articleCategory: new Types.ObjectId('67000000000000000000000a'),
   article: new Types.ObjectId('67000000000000000000000b'),
   communityPost: '67000000000000000000000c',
@@ -54,6 +57,9 @@ const ids = {
   request: new Types.ObjectId('670000000000000000000021'),
   viewing: new Types.ObjectId('670000000000000000000022'),
   favorite: new Types.ObjectId('670000000000000000000023'),
+  favoriteTwo: new Types.ObjectId('670000000000000000000098'),
+  favoriteThree: new Types.ObjectId('670000000000000000000099'),
+  favoriteFour: new Types.ObjectId('67000000000000000000009a'),
   notification: new Types.ObjectId('670000000000000000000024'),
   adRequest: new Types.ObjectId('670000000000000000000025'),
   adQuote: new Types.ObjectId('670000000000000000000026'),
@@ -82,7 +88,7 @@ const localized = (ar: string, en: string) => ({ ar, en });
 interface SyntheticSeedDocument {
   _id: Types.ObjectId;
   synthetic: true;
-  seedKey: 'local-showcase-v1' | 'local-showcase-v2' | 'figma-public-content-v3' | 'figma-public-catalogue-v4' | 'figma-public-interactions-v5' | 'auth-buyer-v6' | 'figma-public-details-v9';
+  seedKey: 'local-showcase-v1' | 'local-showcase-v2' | 'figma-public-content-v3' | 'figma-public-catalogue-v4' | 'figma-public-interactions-v5' | 'auth-buyer-v6' | 'figma-public-details-v9' | 'figma-public-listing-v10';
   [key: string]: unknown;
 }
 
@@ -289,6 +295,10 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
         ...propertyBase,
         propertyTypeId: ids.typeApartment,
         imageUrl: '/assets/canonical/public/listing-property-home.png',
+        publicCode: 'SDT-1234',
+        viewCount: 342,
+        featured: true,
+        paymentPlans: [{ label: localized('تقسيط متاح', 'Installments available'), months: 60 }],
         name: localized('شقة فاخرة بإطلالة مفتوحة في الحي الأول', 'Luxury Open-View Apartment in District 1'),
         slug: 'demo-open-view-apartment',
         description: localized('شقة مميزة بتشطيب ألترا سوبر لوكس وإطلالة بحرية على الحدائق المركزية، قريبة من كافة المدارس والخدمات.', 'Distinctive apartment with ultra super lux finishing, open view of central parks, and close to top schools and services.'),
@@ -300,6 +310,9 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
         ...propertyBase,
         propertyTypeId: ids.typeDuplex,
         imageUrl: '/assets/canonical/public/listing-property-duplex.png',
+        publicCode: 'SDT-0567',
+        viewCount: 423,
+        paymentPlans: [{ label: localized('تقسيط متاح', 'Installments available'), months: 60 }],
         name: localized('دوبلكس راقي بحديقة خاصة في الحي المتميز', 'Premium Duplex with Private Garden in Elite District'),
         slug: 'demo-garden-duplex',
         description: localized('دوبلكس فاخر بمدخل خاص وحديقة منسقة بموقع استراتيجي بالحي المتميز بمدينة السادات مع تسهيلات في السداد.', 'Luxury duplex with private entrance, landscaped garden, and prime location in Sadat Elite District with flexible payment terms.'),
@@ -312,12 +325,30 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
         propertyTypeId: ids.typeApartment,
         imageUrl: '/assets/canonical/public/listing-property-rental.png',
         transactionType: 'rent',
+        publicCode: 'SDT-0234',
+        viewCount: 267,
+        paymentPlans: [],
         name: localized('شقة عصرية للإيجار بالمنطقة المركزية', 'Modern Rental Apartment in Central District'),
         slug: 'demo-rental-apartment',
         description: localized('شقة مؤثثة بالكامل وجاهزة للسكن الفوري بالقرب من جامعة مدينة السادات والمراكز الحيوية.', 'Fully furnished apartment ready for immediate occupancy near Sadat City University and vital amenities.'),
         area: { value: 110, unit: 'sqm' },
         layout: { bedrooms: 2, bathrooms: 1, floor: 2, totalFloors: 6 },
         price: { amount: 12_000, currency: 'EGP' }
+      }),
+      document(ids.propertyFour, {
+        ...propertyBase,
+        propertyTypeId: ids.typeVilla,
+        imageUrl: '/assets/canonical/public/listing-property-villa.png',
+        publicCode: 'SDT-0892',
+        viewCount: 512,
+        featured: true,
+        paymentPlans: [{ label: localized('تقسيط متاح', 'Installments available'), months: 60 }],
+        name: localized('فيلا مستقلة بالمنطقة الراقية', 'Independent villa in the upscale district'),
+        slug: 'demo-upscale-villa',
+        description: localized('فيلا مستقلة بحديقة خاصة وتشطيب كامل في المنطقة الراقية بمدينة السادات.', 'Independent villa with a private garden and complete finishing in Sadat City’s upscale district.'),
+        area: { value: 320, unit: 'sqm' },
+        layout: { bedrooms: 5, bathrooms: 4, floor: 0, totalFloors: 2 },
+        price: { amount: 5_200_000, currency: 'EGP' }
       })
     ]);
     await insertSyntheticDocuments(connection, 'article_categories', [document(ids.articleCategory, {
@@ -738,11 +769,12 @@ export const SYNTHETIC_WORKFLOW_SEED_STEP: DevelopmentSeedStep = {
       createdAt: SEEDED_AT,
       updatedAt: SEEDED_AT
     }, 'local-showcase-v2')]);
-    await insertSyntheticDocuments(connection, 'favorites', [document(ids.favorite, {
-      seekerId: ids.seekerUser,
-      propertyId: ids.propertyOne,
-      savedAt: SEEDED_AT
-    }, 'local-showcase-v2')]);
+    await insertSyntheticDocuments(connection, 'favorites', [
+      document(ids.favorite, { seekerId: ids.seekerUser, propertyId: ids.propertyOne, savedAt: new Date('2026-01-15T12:00:00.000Z') }, 'local-showcase-v2'),
+      document(ids.favoriteTwo, { seekerId: ids.seekerUser, propertyId: ids.propertyTwo, savedAt: new Date('2026-01-14T12:00:00.000Z') }, 'local-showcase-v2'),
+      document(ids.favoriteThree, { seekerId: ids.seekerUser, propertyId: ids.propertyThree, savedAt: new Date('2026-01-13T12:00:00.000Z') }, 'local-showcase-v2'),
+      document(ids.favoriteFour, { seekerId: ids.seekerUser, propertyId: ids.propertyFour, savedAt: new Date('2026-01-12T12:00:00.000Z') }, 'local-showcase-v2')
+    ]);
     await insertSyntheticDocuments(connection, 'notifications', [document(ids.notification, {
       recipientId: ids.seekerUser,
       type: 'request.updated',
@@ -1131,6 +1163,81 @@ export const AUTH_BUYER_SEED_STEP: DevelopmentSeedStep = {
   }
 };
 
+export const FIGMA_PUBLIC_LISTING_SEED_STEP: DevelopmentSeedStep = {
+  id: 'figma-public-listing-v10',
+  async run(connection) {
+    const seedKey = 'figma-public-listing-v10' as const;
+    const common = {
+      providerId: ids.providerProfile,
+      sourceType: 'developer_company',
+      organizationId: ids.organization,
+      kind: 'property',
+      projectId: ids.project,
+      locationId: ids.location,
+      coordinates: { type: 'Point', coordinates: [30.5065, 30.3676] },
+      mapUrl: 'https://maps.google.com/?q=30.5065,30.3676',
+      status: 'published',
+      deliveryStatus: 'ready_to_move',
+      active: true,
+      submittedAt: SEEDED_AT,
+      reviewedAt: SEEDED_AT,
+      publishedAt: SEEDED_AT,
+      createdAt: SEEDED_AT,
+      updatedAt: SEEDED_AT,
+      version: 0
+    } as const;
+    await insertSyntheticDocuments(connection, 'properties', [
+      document(ids.propertyFour, {
+        ...common,
+        propertyTypeId: ids.typeVilla,
+        transactionType: 'sale',
+        imageUrl: '/assets/canonical/public/listing-property-villa.png',
+        publicCode: 'SDT-0892',
+        viewCount: 512,
+        featured: true,
+        paymentPlans: [{ label: localized('تقسيط متاح', 'Installments available'), months: 60 }],
+        name: localized('فيلا مستقلة بالمنطقة الراقية', 'Independent villa in the upscale district'),
+        slug: 'demo-upscale-villa',
+        description: localized('فيلا مستقلة بحديقة خاصة وتشطيب كامل في مدينة السادات.', 'Independent villa with a private garden and complete finishing in Sadat City.'),
+        area: { value: 320, unit: 'sqm' },
+        layout: { bedrooms: 5, bathrooms: 4, floor: 0, totalFloors: 2 },
+        price: { amount: 5_200_000, currency: 'EGP' }
+      }, seedKey),
+      document(ids.propertyFive, {
+        ...common,
+        propertyTypeId: new Types.ObjectId('670000000000000000000084'),
+        transactionType: 'sale',
+        imageUrl: '/assets/canonical/public/listing-property-office.png',
+        publicCode: 'SDT-0715',
+        viewCount: 198,
+        paymentPlans: [{ label: localized('تقسيط متاح', 'Installments available'), months: 36 }],
+        name: localized('مكتب إداري في المنطقة المركزية', 'Administrative office in the central district'),
+        slug: 'demo-central-office',
+        description: localized('مكتب إداري جاهز للعمل بالقرب من الخدمات الرئيسية.', 'A ready-to-use office close to the main services.'),
+        area: { value: 95, unit: 'sqm' },
+        layout: { bedrooms: 0, bathrooms: 1, floor: 4, totalFloors: 8 },
+        price: { amount: 1_850_000, currency: 'EGP' }
+      }, seedKey),
+      document(ids.propertySix, {
+        ...common,
+        propertyTypeId: new Types.ObjectId('670000000000000000000082'),
+        transactionType: 'sale',
+        deliveryStatus: 'under_construction',
+        imageUrl: '/assets/canonical/public/listing-property-land.png',
+        publicCode: 'SDT-0641',
+        viewCount: 156,
+        paymentPlans: [],
+        name: localized('قطعة أرض سكنية مميزة', 'Prime residential land plot'),
+        slug: 'demo-residential-land',
+        description: localized('قطعة أرض سكنية في موقع مميز وقريبة من المحاور الرئيسية.', 'A residential plot in a prime location near the main roads.'),
+        area: { value: 420, unit: 'sqm' },
+        layout: { bedrooms: 0, bathrooms: 0, floor: 0 },
+        price: { amount: 1_300_000, currency: 'EGP' }
+      }, seedKey)
+    ]);
+  }
+};
+
 export const DEVELOPMENT_SEED_STEPS: readonly DevelopmentSeedStep[] = [
   SYNTHETIC_SHOWCASE_SEED_STEP,
   SYNTHETIC_WORKFLOW_SEED_STEP,
@@ -1138,6 +1245,7 @@ export const DEVELOPMENT_SEED_STEPS: readonly DevelopmentSeedStep[] = [
   FIGMA_PUBLIC_CATALOGUE_SEED_STEP,
   FIGMA_PUBLIC_INTERACTIONS_SEED_STEP,
   FIGMA_PUBLIC_DETAILS_SEED_STEP,
+  FIGMA_PUBLIC_LISTING_SEED_STEP,
   AUTH_BUYER_SEED_STEP
 ];
 

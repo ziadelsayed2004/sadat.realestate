@@ -7,7 +7,7 @@ const id = '0123456789abcdef01234567';
 const seekerId = '1123456789abcdef01234567';
 const localized = { ar: 'عقار', en: 'Property' };
 const claims = { role: 'seeker', status: 'verified', sub: seekerId } as AccessTokenClaims;
-const property: FavoritePropertySource = { id, slug: 'saved-property', kind: 'property', name: localized, transactionType: 'sale', status: 'published', active: true };
+const property: FavoritePropertySource = { id, slug: 'saved-property', kind: 'property', name: localized, transactionType: 'sale', imageUrl: '/assets/canonical/public/listing-property-home.png', locationName: { ar: 'الحي الأول', en: 'District 1' }, sourceName: { ar: 'شركة السادات', en: 'Sadat Development' }, sourceImageUrl: '/assets/canonical/public/developer-sadat.png', sourceType: 'developer_company', sourceVerified: true, publicCode: 'SDT-1234', viewCount: 342, installmentAvailable: true, featured: true, deliveryStatus: 'ready_to_move', status: 'published', active: true };
 const favorite = { seekerId, propertyId: id, savedAt: new Date('2026-01-01T00:00:00.000Z') };
 
 test('saves idempotently and returns a safe property projection', async () => {
@@ -19,6 +19,9 @@ test('saves idempotently and returns a safe property projection', async () => {
   assert.equal(second.alreadySaved, true);
   assert.equal('status' in first.item, false);
   assert.equal('active' in first.item, false);
+  assert.equal(first.item.imageUrl, '/assets/canonical/public/listing-property-home.png');
+  assert.equal(first.item.publicCode, 'SDT-1234');
+  assert.equal(first.item.sourceVerified, true);
 });
 
 test('requires seeker ownership, rejects invalid/unavailable properties, and hides stale saves', async () => {

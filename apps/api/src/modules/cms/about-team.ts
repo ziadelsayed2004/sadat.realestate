@@ -1,5 +1,77 @@
-import{aboutBlockCreateSchema,aboutBlockPatchSchema,cmsPublicContentSchema,teamMemberCreateSchema,teamMemberPatchSchema,type AboutBlockCreate,type AboutBlockPatch,type TeamMemberCreate,type TeamMemberPatch}from'@sadat-real-estate/contracts';
-export function parseAboutBlock(input:AboutBlockCreate|AboutBlockPatch){return'key'in input?aboutBlockCreateSchema.parse(input):aboutBlockPatchSchema.parse(input)}export function parseTeamMember(input:TeamMemberCreate|TeamMemberPatch){return'key'in input?teamMemberCreateSchema.parse(input):teamMemberPatchSchema.parse(input)}
-export function publicAboutBlock(value:AboutBlockCreate|{key:string;title:AboutBlockCreate['title'];body:AboutBlockCreate['body'];order:number;status:'draft'|'published'|'inactive';active:boolean}){if(value.status!=='published'||!value.active)return null;return cmsPublicContentSchema.parse({key:value.key,title:value.title,body:value.body,order:value.order})}
-export function publicTeamMember(value:TeamMemberCreate|{key:string;name:TeamMemberCreate['name'];title:TeamMemberCreate['title'];bio?:TeamMemberCreate['bio'];photoAssetId?:string;order:number;status:'draft'|'published'|'inactive';active:boolean}){if(value.status!=='published'||!value.active)return null;return cmsPublicContentSchema.parse({key:value.key,title:value.title,name:value.name,role:value.title,bio:value.bio,photoAssetId:value.photoAssetId,order:value.order})}
-export function sortPublished<T extends{order:number;key:string}>(items:T[]){return[...items].sort((a,b)=>a.order-b.order||a.key.localeCompare(b.key))}
+import {
+  aboutBlockCreateSchema,
+  aboutBlockPatchSchema,
+  cmsPublicContentSchema,
+  teamMemberCreateSchema,
+  teamMemberPatchSchema,
+  type AboutBlockCreate,
+  type AboutBlockPatch,
+  type TeamMemberCreate,
+  type TeamMemberPatch,
+} from "@sadat-real-estate/contracts";
+export function parseAboutBlock(input: AboutBlockCreate | AboutBlockPatch) {
+  return "key" in input
+    ? aboutBlockCreateSchema.parse(input)
+    : aboutBlockPatchSchema.parse(input);
+}
+export function parseTeamMember(input: TeamMemberCreate | TeamMemberPatch) {
+  return "key" in input
+    ? teamMemberCreateSchema.parse(input)
+    : teamMemberPatchSchema.parse(input);
+}
+export function publicAboutBlock(
+  value:
+    | AboutBlockCreate
+    | {
+        key: string;
+        title: AboutBlockCreate["title"];
+        body: AboutBlockCreate["body"];
+        order: number;
+        status: "draft" | "published" | "inactive";
+        active: boolean;
+      },
+) {
+  if (value.status !== "published" || !value.active) return null;
+  return cmsPublicContentSchema.parse({
+    key: value.key,
+    title: value.title,
+    body: value.body,
+    order: value.order,
+  });
+}
+export function publicTeamMember(
+  value:
+    | TeamMemberCreate
+    | {
+        key: string;
+        name: TeamMemberCreate["name"];
+        title: TeamMemberCreate["title"];
+        bio?: TeamMemberCreate["bio"];
+        photoAssetId?: string;
+        imageUrl?: string;
+        category?: "management" | "sales" | "support" | "content";
+        order: number;
+        status: "draft" | "published" | "inactive";
+        active: boolean;
+      },
+) {
+  if (value.status !== "published" || !value.active) return null;
+  return cmsPublicContentSchema.parse({
+    key: value.key,
+    title: value.title,
+    name: value.name,
+    role: value.title,
+    bio: value.bio,
+    photoAssetId: value.photoAssetId,
+    imageUrl: value.imageUrl,
+    category: value.category,
+    order: value.order,
+  });
+}
+export function sortPublished<T extends { order: number; key: string }>(
+  items: T[],
+) {
+  return [...items].sort(
+    (a, b) => a.order - b.order || a.key.localeCompare(b.key),
+  );
+}

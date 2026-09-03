@@ -193,16 +193,22 @@ function publicCategory(item: StoredArticleCategory, locale: SupportedLocale): A
   });
 }
 
-function publicArticle(item: PublicStoredArticle, locale: SupportedLocale): ArticlePublic {
+function publicArticle(item: PublicStoredArticle, locale: SupportedLocale, authorName?: string): ArticlePublic {
+  const body = localized(item.article.body, locale);
+  const selectedBody = body[locale] ?? '';
+  const readingTimeMinutes = Math.max(1, Math.ceil(selectedBody.trim().split(/\s+/u).filter(Boolean).length / 200));
   return articlePublicSchema.parse({
     id: item.article.id,
     categoryId: item.article.categoryId,
     slug: item.article.slug,
     title: localized(item.article.title, locale),
-    body: localized(item.article.body, locale),
+    body,
     ...(item.article.seoTitle ? { seoTitle: localized(item.article.seoTitle, locale) } : {}),
     ...(item.article.seoDescription ? { seoDescription: localized(item.article.seoDescription, locale) } : {}),
     ...(item.article.coverAssetId ? { coverAssetId: item.article.coverAssetId } : {}),
+    ...(item.article.imageUrl ? { imageUrl: item.article.imageUrl } : {}),
+    ...(authorName ? { authorName: { ar: authorName, en: authorName } } : {}),
+    readingTimeMinutes,
     ...(item.article.publishedAt ? { publishedAt: item.article.publishedAt.toISOString() } : {}),
     category: publicCategory(item.category, locale)
   });
@@ -212,6 +218,7 @@ export function createArticleService(dependencies: {
   repository: ArticleRepository;
   authorization: ArticleAuthorization;
   audit: Pick<AuditWriter, 'record'>;
+  resolveAuthorName?: (authorId: string) => Promise<string | undefined>;
   now?: () => Date;
 }): ArticleService {
   const now = dependencies.now ?? (() => new Date());
@@ -410,8 +417,12 @@ export function createArticleService(dependencies: {
     async listPublic(unparsedQuery) {
       const query = articleListQuerySchema.parse(unparsedQuery);
       const result = await dependencies.repository.listPublicArticles(query);
+      const authorNames = new Map<string, string | undefined>();
+      await Promise.all([...new Set(result.items.map(({ article }) => article.authorId))].map(async (authorId) => {
+        authorNames.set(authorId, await dependencies.resolveAuthorName?.(authorId));
+      }));
       return {
-        data: result.items.map((item) => publicArticle(item, query.locale)),
+        data: result.items.map((item) => publicArticle(item, query.locale, authorNames.get(item.article.authorId))),
         page: query.page,
         limit: query.limit,
         total: result.total
@@ -423,7 +434,7 @@ export function createArticleService(dependencies: {
       const selectedLocale = supportedLocaleSchema.parse(locale);
       const stored = await dependencies.repository.findPublicArticleBySlug(slug);
       if (!stored) throw new ArticleServiceError('ARTICLE_NOT_FOUND');
-      return publicArticle(stored, selectedLocale);
+      return publicArticle(stored, selectedLocale, await dependencies.resolveAuthorName?.(stored.article.authorId));
     }
   };
 }

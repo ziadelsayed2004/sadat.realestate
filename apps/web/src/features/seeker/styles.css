@@ -1648,6 +1648,9 @@
   border-radius: 0;
   box-shadow: none;
 }
+.seeker-saved-property-card__code { position: absolute; inset-inline-start: .75rem; inset-block-end: .75rem; padding: .25rem .55rem; color: #17233d; background: rgb(255 255 255 / 92%); border-radius: 999px; font-size: .75rem; font-weight: 800; }
+.seeker-saved-property-card .ui-property-card__source { display: flex; justify-content: space-between; gap: .5rem; }
+.seeker-saved-property-card .ui-property-card__source time { color: var(--color-text-secondary); font-size: .72rem; }
 
 .seeker-notifications__list { gap: 0; overflow: hidden; border: 1px solid #ebe6dc; border-radius: 1rem; }
 .seeker-notifications__item { border: 0; border-radius: 0; border-block-end: 1px solid #ebe6dc; }

@@ -73,7 +73,19 @@ export function createMemoryCommunityRepository(seed: CommunityPost[] = []): Com
 }
 
 function publicPost(post: CommunityPost, commentCount: number): CommunityPublicPost {
-  return { id: post.id, title: post.title, body: post.body, createdAt: post.createdAt, commentCount };
+  return {
+    id: post.id,
+    title: post.title,
+    body: post.body,
+    createdAt: post.createdAt,
+    category: post.category ?? 'question',
+    ...(post.authorName === undefined ? {} : { authorName: post.authorName }),
+    ...(post.avatarUrl === undefined ? {} : { avatarUrl: post.avatarUrl }),
+    ...(post.imageUrl === undefined ? {} : { imageUrl: post.imageUrl }),
+    likeCount: post.likeCount ?? 0,
+    dislikeCount: post.dislikeCount ?? 0,
+    commentCount
+  };
 }
 
 function publicComment(comment: CommunityComment): CommunityPublicComment {

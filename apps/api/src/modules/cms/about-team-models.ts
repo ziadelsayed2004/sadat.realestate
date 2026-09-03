@@ -1,7 +1,107 @@
-import{Schema,type Connection,type Model,Types}from'mongoose';import type{LocalizedText}from'@sadat-real-estate/contracts';
-const localized={ar:{type:String,maxLength:20000},en:{type:String,maxLength:20000}};
-export interface AboutBlockDocument { _id:Types.ObjectId; key:string; title:LocalizedText; body:LocalizedText; order:number; active:boolean; status:'draft'|'published'|'inactive'; updatedBy:Types.ObjectId; version:number; createdAt:Date; updatedAt:Date }
-export interface TeamMemberDocument { _id:Types.ObjectId; key:string; name:LocalizedText; title:LocalizedText; bio?:LocalizedText; photoAssetId?:Types.ObjectId; order:number; active:boolean; status:'draft'|'published'|'inactive'; updatedBy:Types.ObjectId; version:number; createdAt:Date; updatedAt:Date }
-export const aboutBlockSchema=new Schema<AboutBlockDocument>({key:{type:String,required:true,match:/^[a-z][a-z0-9_]{1,63}$/},title:localized,body:localized,order:{type:Number,min:0,required:true},active:{type:Boolean,default:true},status:{type:String,enum:['draft','published','inactive'],default:'draft'},updatedBy:{type:Schema.Types.ObjectId,required:true}},{collection:'cms_about_blocks',strict:'throw',timestamps:true,versionKey:'version',optimisticConcurrency:true});aboutBlockSchema.index({status:1,active:1,order:1,key:1},{name:'cms_about_public_order'});aboutBlockSchema.index({key:1},{unique:true,name:'cms_about_key'});
-export const teamMemberSchema=new Schema<TeamMemberDocument>({key:{type:String,required:true,match:/^[a-z][a-z0-9_]{1,63}$/},name:localized,title:localized,bio:localized,photoAssetId:{type:Schema.Types.ObjectId,ref:'Upload'},order:{type:Number,min:0,required:true},active:{type:Boolean,default:true},status:{type:String,enum:['draft','published','inactive'],default:'draft'},updatedBy:{type:Schema.Types.ObjectId,required:true}},{collection:'cms_team_members',strict:'throw',timestamps:true,versionKey:'version',optimisticConcurrency:true});teamMemberSchema.index({status:1,active:1,order:1,key:1},{name:'cms_team_public_order'});teamMemberSchema.index({key:1},{unique:true,name:'cms_team_key'});
-export function registerAboutTeamModels(c:Connection):{about:Model<AboutBlockDocument>;team:Model<TeamMemberDocument>}{return{about:(c.models.CmsAboutBlock as Model<AboutBlockDocument>|undefined)??c.model<AboutBlockDocument>('CmsAboutBlock',aboutBlockSchema),team:(c.models.CmsTeamMember as Model<TeamMemberDocument>|undefined)??c.model<TeamMemberDocument>('CmsTeamMember',teamMemberSchema)}}
+import { Schema, type Connection, type Model, Types } from "mongoose";
+import type { LocalizedText } from "@sadat-real-estate/contracts";
+const localized = {
+  ar: { type: String, maxLength: 20000 },
+  en: { type: String, maxLength: 20000 },
+};
+export interface AboutBlockDocument {
+  _id: Types.ObjectId;
+  key: string;
+  title: LocalizedText;
+  body: LocalizedText;
+  order: number;
+  active: boolean;
+  status: "draft" | "published" | "inactive";
+  updatedBy: Types.ObjectId;
+  version: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+export interface TeamMemberDocument {
+  _id: Types.ObjectId;
+  key: string;
+  name: LocalizedText;
+  title: LocalizedText;
+  bio?: LocalizedText;
+  photoAssetId?: Types.ObjectId;
+  imageUrl?: string;
+  category?: "management" | "sales" | "support" | "content";
+  order: number;
+  active: boolean;
+  status: "draft" | "published" | "inactive";
+  updatedBy: Types.ObjectId;
+  version: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+export const aboutBlockSchema = new Schema<AboutBlockDocument>(
+  {
+    key: { type: String, required: true, match: /^[a-z][a-z0-9_]{1,63}$/ },
+    title: localized,
+    body: localized,
+    order: { type: Number, min: 0, required: true },
+    active: { type: Boolean, default: true },
+    status: {
+      type: String,
+      enum: ["draft", "published", "inactive"],
+      default: "draft",
+    },
+    updatedBy: { type: Schema.Types.ObjectId, required: true },
+  },
+  {
+    collection: "cms_about_blocks",
+    strict: "throw",
+    timestamps: true,
+    versionKey: "version",
+    optimisticConcurrency: true,
+  },
+);
+aboutBlockSchema.index(
+  { status: 1, active: 1, order: 1, key: 1 },
+  { name: "cms_about_public_order" },
+);
+aboutBlockSchema.index({ key: 1 }, { unique: true, name: "cms_about_key" });
+export const teamMemberSchema = new Schema<TeamMemberDocument>(
+  {
+    key: { type: String, required: true, match: /^[a-z][a-z0-9_]{1,63}$/ },
+    name: localized,
+    title: localized,
+    bio: localized,
+    photoAssetId: { type: Schema.Types.ObjectId, ref: "Upload" },
+    imageUrl: { type: String, trim: true, maxlength: 2048 },
+    category: { type: String, enum: ["management", "sales", "support", "content"] },
+    order: { type: Number, min: 0, required: true },
+    active: { type: Boolean, default: true },
+    status: {
+      type: String,
+      enum: ["draft", "published", "inactive"],
+      default: "draft",
+    },
+    updatedBy: { type: Schema.Types.ObjectId, required: true },
+  },
+  {
+    collection: "cms_team_members",
+    strict: "throw",
+    timestamps: true,
+    versionKey: "version",
+    optimisticConcurrency: true,
+  },
+);
+teamMemberSchema.index(
+  { status: 1, active: 1, order: 1, key: 1 },
+  { name: "cms_team_public_order" },
+);
+teamMemberSchema.index({ key: 1 }, { unique: true, name: "cms_team_key" });
+export function registerAboutTeamModels(c: Connection): {
+  about: Model<AboutBlockDocument>;
+  team: Model<TeamMemberDocument>;
+} {
+  return {
+    about:
+      (c.models.CmsAboutBlock as Model<AboutBlockDocument> | undefined) ??
+      c.model<AboutBlockDocument>("CmsAboutBlock", aboutBlockSchema),
+    team:
+      (c.models.CmsTeamMember as Model<TeamMemberDocument> | undefined) ??
+      c.model<TeamMemberDocument>("CmsTeamMember", teamMemberSchema),
+  };
+}
