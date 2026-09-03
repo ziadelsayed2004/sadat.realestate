@@ -99,6 +99,10 @@
   justify-content: center;
 }
 
+.public-homepage__mobile-actions {
+  display: none;
+}
+
 .public-homepage__nav a,
 .public-homepage__actions a,
 .public-homepage__section-heading a,
@@ -2277,19 +2281,29 @@
   }
 
   .public-homepage__header {
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr) auto;
     position: relative;
     z-index: 20;
-    min-block-size: 4.25rem;
-    padding: 0.625rem var(--space-md);
+    min-block-size: 4rem;
+    padding: 0.5rem 0.75rem;
   }
 
   .public-homepage__actions {
     justify-content: end;
   }
 
-  .public-homepage__actions .public-homepage__login {
+  .public-homepage__actions > :not(.public-homepage__menu-toggle) {
     display: none;
+  }
+
+  .public-homepage__brand {
+    inline-size: 3rem;
+    block-size: 3rem;
+  }
+
+  .public-homepage__brand img {
+    block-size: 2.875rem;
+    max-inline-size: 3rem;
   }
 
   .public-homepage__nav {
@@ -2303,7 +2317,9 @@
     z-index: 30;
     display: grid;
     gap: 0;
-    padding: 0.5rem var(--space-md) 0.75rem;
+    max-block-size: calc(100vh - 4rem);
+    overflow-y: auto;
+    padding: 0.5rem 0.75rem 1rem;
     background: var(--color-surface);
     border-block-end: 1px solid var(--color-border);
     box-shadow: 0 0.75rem 1.5rem rgb(15 23 42 / 0.12);
@@ -2321,12 +2337,45 @@
     border-block-end: 0;
   }
 
+  .public-homepage__nav.is-open .public-homepage__mobile-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.75rem;
+    padding-block-start: 0.875rem;
+  }
+
+  .public-homepage__mobile-actions .custom-locale-switcher {
+    grid-column: 1 / -1;
+  }
+
+  .public-homepage__mobile-actions .custom-locale-pill-btn,
+  .public-homepage__mobile-actions .public-homepage__login,
+  .public-homepage__mobile-actions .public-homepage__signup {
+    inline-size: 100%;
+    min-block-size: 2.875rem;
+    justify-content: center;
+  }
+
+  .public-homepage__mobile-actions .public-homepage__login {
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+  }
+
   .public-homepage__nav.is-open a[aria-current="page"] {
     padding-block: 0.45rem;
   }
 
   .public-homepage__menu-toggle {
     display: inline-flex;
+  }
+
+  .public-homepage__state[data-state] {
+    padding: 2rem 1rem;
+  }
+
+  .public-homepage__state h2 {
+    font-size: clamp(1.5rem, 7vw, 2rem);
+    line-height: 1.35;
   }
 
   .public-homepage__hero-content {

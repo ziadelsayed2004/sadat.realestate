@@ -110,6 +110,18 @@ describe('public homepage', () => {
     expect(load).toHaveBeenCalledTimes(1);
   });
 
+  it('opens a mobile navigation panel with locale and account actions', () => {
+    const result = renderWithLocale(<PublicHomepage locale="ar" initialData={emptyData} />, { locale: 'ar' });
+    const mobileActions = result.container.querySelector('.public-homepage__mobile-actions');
+    expect(mobileActions).toHaveAttribute('aria-hidden', 'true');
+    fireEvent.click(screen.getByRole('button', { name: 'فتح القائمة' }));
+    expect(screen.getByRole('button', { name: 'إغلاق القائمة' })).toHaveAttribute('aria-expanded', 'true');
+    expect(mobileActions).toHaveAttribute('aria-hidden', 'false');
+    expect(mobileActions?.querySelector('a[href="/auth/login"]')).not.toBeNull();
+    expect(mobileActions?.querySelector('a[href="/auth/register"]')).not.toBeNull();
+    expect(mobileActions?.querySelector('[data-custom-locale-switcher="true"]')).not.toBeNull();
+  });
+
   it('renders loading and success states while reading the homepage contract', async () => {
     let resolve: (value: typeof homepageData) => void = () => undefined;
     const pending = new Promise<typeof homepageData>(value => {

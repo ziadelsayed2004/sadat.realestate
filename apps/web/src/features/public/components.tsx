@@ -354,6 +354,11 @@ export function PublicSiteHeader({
       </a>
       <nav id="public-site-navigation" className={`public-homepage__nav${menuOpen ? ' is-open' : ''}`} aria-label={nav.home}>
         {links.map(([href, label]) => <a key={href} href={href} aria-current={href === activePath ? 'page' : undefined} onClick={() => setMenuOpen(false)}>{label}</a>)}
+        <div className="public-homepage__mobile-actions" aria-hidden={!menuOpen}>
+          <LocaleSwitcher locale={locale} label={copy.localeLabel} />
+          <a className="public-homepage__login" href="/auth/login" onClick={() => setMenuOpen(false)}>{copy.login}</a>
+          <a className="public-homepage__signup" href="/auth/register" onClick={() => setMenuOpen(false)}>{copy.createAccount}</a>
+        </div>
       </nav>
       <div className="public-homepage__actions">
         <LocaleSwitcher locale={locale} label={copy.localeLabel} />
