@@ -115,6 +115,36 @@ Production جاهزة أو منشورة.
 عملاء Production يسجلون ببريد حقيقي وكلمة مرور يختارونها، ثم يؤكدون البريد
 بالـOTP المرسل من `info@elsadatrealestate.com`. لا تشغّل `db:seed` في Production.
 
+## تركيب نسخة الديمو الكاملة مؤقتًا على Production
+
+عندما يطلب العميل نسخة مطابقة لبيانات المعاينة المحلية، استخدم الأمر المحمي التالي
+بعد اكتمال النشر. ينشئ سجلات MongoDB فعلية ومترابطة ويستخدم الصور المنشورة مع الإصدار؛
+ولا ينشئ بيانات عشوائية في كل تشغيل:
+
+```bash
+cd /opt/elsadatrealestate/current
+set -a
+source /etc/elsadatrealestate/production.env
+set +a
+PRODUCTION_DEMO_CONFIRM=INSTALL_FULL_LOCAL_DEMO npm run production:demo:seed
+```
+
+الأمر idempotent ويمكن تكراره بأمان. حسابات Admin في الجدول أعلاه تعمل بكلمة المرور
+المذكورة، أما حسابات `.invalid` الخاصة بالباحث والمزوّد فهي بيانات workflow ولا يمكنها
+استلام بريد حقيقي. لاختبار تسجيل عميل فعلي استخدم بريدًا حقيقيًا؛ سيذهب OTP إلى البريد
+الذي أدخله المستخدم، وليس إلى صندوق `SMTP_USER`.
+
+بعد انتهاء العرض، يحذف الأمر التالي سجلات الديمو الموسومة فقط بـ`synthetic: true` ولا
+يحذف المستخدمين أو المحتوى الحقيقي الذي أُنشئ من الواجهات:
+
+```bash
+cd /opt/elsadatrealestate/current
+set -a
+source /etc/elsadatrealestate/production.env
+set +a
+PRODUCTION_DEMO_RESET_CONFIRM=DELETE_SYNTHETIC_DEMO_DATA npm run production:demo:reset
+```
+
 ## تحقق Auth الحقيقي على قاعدة البيانات
 
 في 2026-09-03 تم تشغيل المسارات التالية ضد MongoDB المحلية وSMTP المحلي دون mocks:

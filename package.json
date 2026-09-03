@@ -51,6 +51,8 @@
     "production:preflight": "node scripts/production-preflight.mjs",
     "production:config": "node scripts/native-production-check.mjs",
     "production:showcase": "node apps/api/dist/modules/database/run-production-showcase.js",
+    "production:demo:seed": "node apps/api/dist/modules/database/run-production-demo.js install",
+    "production:demo:reset": "node apps/api/dist/modules/database/run-production-demo.js reset",
     "production:smoke": "node scripts/runtime-smoke.mjs",
     "production:demo:seeker": "bash deploy/native/create-demo-account.sh seeker",
     "production:demo:provider": "bash deploy/native/create-demo-account.sh provider",
