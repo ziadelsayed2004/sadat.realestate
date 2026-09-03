@@ -5338,6 +5338,33 @@
         ]
       }
     },
+    "/api/v1/seeker/requests/{requestId}/transitions": {
+      "post": {
+        "operationId": "transitionSeekerRequest",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/AuthSessionSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "404": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "409": {
+            "$ref": "#/components/responses/ProviderError"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/api/v1/provider/customer-requests": {
       "post": {
         "operationId": "createProviderCustomerRequest",

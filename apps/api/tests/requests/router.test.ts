@@ -32,3 +32,23 @@ test('provider customer request route enforces provider role and explicit source
     assert.equal('seekerId' in body.data, false);
   } finally { await stopApiServer(server); }
 });
+
+test('seeker can cancel only an owned request through the versioned transition route', async () => {
+  const repository = createInMemoryRequestRepository();
+  const service = createRequestService({ repository });
+  const seekerClaims = tokens.verify('seeker');
+  const request = await service.create(seekerClaims, { type: 'property_search', payload: { locations: [], propertyTypes: ['apartment'] } });
+  const server = createApiServer({ database: { isReady: async () => true }, requests: { accessTokens: tokens, service } });
+  const address = await startApiServer(server, { host: '127.0.0.1', port: 0 }); const base = `http://127.0.0.1:${address.port}`;
+  try {
+    const forbidden = await fetch(`${base}/api/v1/seeker/requests/${request.id}/transitions`, { method: 'POST', headers: { authorization: 'Bearer provider', 'content-type': 'application/json' }, body: JSON.stringify({ transition: 'cancel', reason: 'No longer needed', expectedVersion: 0 }) });
+    assert.equal(forbidden.status, 403);
+    const invalid = await fetch(`${base}/api/v1/seeker/requests/${request.id}/transitions`, { method: 'POST', headers: { authorization: 'Bearer seeker', 'content-type': 'application/json' }, body: JSON.stringify({ transition: 'contact', expectedVersion: 0 }) });
+    assert.equal(invalid.status, 409);
+    const cancelled = await fetch(`${base}/api/v1/seeker/requests/${request.id}/transitions`, { method: 'POST', headers: { authorization: 'Bearer seeker', 'content-type': 'application/json' }, body: JSON.stringify({ transition: 'cancel', reason: 'No longer needed', expectedVersion: 0 }) });
+    assert.equal(cancelled.status, 200);
+    const body = await cancelled.json() as { data: { status: string; availableActions: string[] } };
+    assert.equal(body.data.status, 'cancelled');
+    assert.deepEqual(body.data.availableActions, []);
+  } finally { await stopApiServer(server); }
+});

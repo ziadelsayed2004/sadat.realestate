@@ -36,6 +36,10 @@ export interface SeekerRequestsCopy {
     readonly propertyTypes: string;
     readonly unavailable: string;
     readonly back: string;
+    readonly cancel: string;
+    readonly cancelReason: string;
+    readonly cancelConfirm: string;
+    readonly cancelError: string;
   };
   readonly states: {
     readonly loading: { readonly title: string; readonly body: string };
@@ -86,6 +90,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerRequestsCopy>> = {
       propertyTypes: 'أنواع العقارات',
       unavailable: 'لا توجد تفاصيل إضافية في العقد المتاح.',
       back: 'العودة إلى الطلبات'
+      ,cancel: 'إلغاء الطلب', cancelReason: 'سبب إلغاء الطلب', cancelConfirm: 'تأكيد الإلغاء', cancelError: 'تعذر إلغاء الطلب. راجع السبب وحاول مجددًا.'
     },
     states: {
       loading: { title: 'جارٍ تحميل الطلبات', body: 'يتم جلب بيانات طلباتك من المنصة.' },
@@ -136,6 +141,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerRequestsCopy>> = {
       propertyTypes: 'Property types',
       unavailable: 'No additional details are available in the implemented contract.',
       back: 'Back to requests'
+      ,cancel: 'Cancel request', cancelReason: 'Cancellation reason', cancelConfirm: 'Confirm cancellation', cancelError: 'The request could not be cancelled. Review the reason and try again.'
     },
     states: {
       loading: { title: 'Loading requests', body: 'Your request data is being retrieved from the platform.' },

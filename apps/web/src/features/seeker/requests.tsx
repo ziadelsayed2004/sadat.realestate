@@ -5,12 +5,14 @@ import { Badge, Button, Input, Pagination, StateMessage } from '../design_system
 import type { RouteSession } from '../routing/index.ts';
 import {
   createSeekerRequestLoader,
+  createSeekerRequestTransition,
   createSeekerRequestsLoader,
   isAuthenticatedSeekerSession,
   localeForSeekerPath,
   type SeekerAuthorizationSource,
   type SeekerRequestLoader,
   type SeekerRequestsLoader
+  ,type SeekerRequestTransition
 } from './data.ts';
 import { getSeekerRequestsCopy } from './requests-copy.ts';
 import { SeekerNavigation } from './overview.tsx';
@@ -30,6 +32,7 @@ export interface SeekerRequestsProps {
   readonly requestId?: string | undefined;
   readonly listLoad?: SeekerRequestsLoader | undefined;
   readonly detailLoad?: SeekerRequestLoader | undefined;
+  readonly transition?: SeekerRequestTransition | undefined;
 }
 
 function stateForError(error: unknown): Exclude<SeekerRequestsViewState, 'loading' | 'empty' | 'success' | 'not_found'> | 'not_found' {
@@ -59,10 +62,6 @@ function requestFilterLabel(locale: SupportedLocale): string {
 
 function requestAllLabel(locale: SupportedLocale): string {
   return locale === 'ar' ? 'الكل' : 'All';
-}
-
-function linkedRequestLabel(locale: SupportedLocale): string {
-  return locale === 'ar' ? 'متاح من خلال الطلب المرتبط' : 'Available through the linked request';
 }
 
 function requestScreenId(request: RequestData): 'SEK-03' | 'SEK-04' | undefined {
@@ -153,7 +152,7 @@ function DetailValue({ label, value }: { readonly label: string; readonly value:
   return <div className="seeker-request-detail__value"><dt>{label}</dt><dd>{value}</dd></div>;
 }
 
-function RequestDetailContent({ request, locale }: { readonly request: RequestData; readonly locale: SupportedLocale }) {
+function RequestDetailContent({ request, locale, onCancel }: { readonly request: RequestData; readonly locale: SupportedLocale; readonly onCancel?: (reason: string) => Promise<void> }) {
   const copy = getSeekerRequestsCopy(locale);
   const message = safePayloadValue(request, 'message');
   const note = safePayloadValue(request, 'note');
@@ -173,6 +172,7 @@ function RequestDetailContent({ request, locale }: { readonly request: RequestDa
         </div>
         <RequestStatusBadge status={request.status} locale={locale} />
       </div>
+      {request.availableActions.includes('cancel') && onCancel !== undefined ? <CancelRequestAction locale={locale} onCancel={onCancel} /> : null}
       <div className="seeker-request-detail__grid">
         <section className="seeker-request-detail__card seeker-request-detail__card--timeline" aria-labelledby="seeker-request-timeline-title">
           <h2 id="seeker-request-timeline-title">{copy.detail.timeline}</h2>
@@ -183,7 +183,6 @@ function RequestDetailContent({ request, locale }: { readonly request: RequestDa
               return <li key={status} data-state={stepState} data-current={stepState === 'current' || undefined}><span aria-hidden="true">{stepState === 'complete' ? '✓' : stepState === 'current' ? '•' : ''}</span><div><strong>{copy.statuses[status]}</strong>{timestamp === undefined ? null : <time dateTime={timestamp}>{dateLabel(timestamp, locale)}</time>}</div></li>;
             })}
           </ol>
-          <p className="seeker-request-detail__muted">{copy.detail.unavailable}</p>
         </section>
         <section className="seeker-request-detail__card seeker-request-detail__card--summary" aria-labelledby="seeker-request-summary-title">
           <h2 id="seeker-request-summary-title">{copy.detail.summary}</h2>
@@ -191,11 +190,7 @@ function RequestDetailContent({ request, locale }: { readonly request: RequestDa
             <DetailValue label={copy.detail.type} value={copy.types[request.type]} />
             <DetailValue label={copy.detail.status} value={copy.statuses[request.status]} />
             <DetailValue label={copy.detail.submitted} value={dateLabel(request.createdAt, locale)} />
-            <DetailValue label={copy.detail.updated} value={dateLabel(request.updatedAt, locale)} />
-            <DetailValue label={copy.detail.property} value={request.propertyId === undefined ? undefined : linkedRequestLabel(locale)} />
-            <DetailValue label={copy.detail.project} value={request.projectId === undefined ? undefined : linkedRequestLabel(locale)} />
           </dl>
-          {message === undefined ? <p className="seeker-request-detail__muted">{copy.detail.unavailable}</p> : null}
           {message === undefined ? null : <div className="seeker-request-detail__payload"><h3>{copy.detail.message}</h3><p>{message}</p></div>}
         </section>
         {hasAdvanced ? <section className="seeker-request-detail__card seeker-request-detail__card--advanced" aria-labelledby="seeker-request-advanced-title">
@@ -213,7 +208,24 @@ function RequestDetailContent({ request, locale }: { readonly request: RequestDa
   );
 }
 
-export function SeekerRequests({ locale, session, authClient, apiOrigin, requestId, listLoad, detailLoad }: SeekerRequestsProps) {
+function CancelRequestAction({ locale, onCancel }: { readonly locale: SupportedLocale; readonly onCancel: (reason: string) => Promise<void> }) {
+  const copy = getSeekerRequestsCopy(locale);
+  const [open, setOpen] = useState(false);
+  const [reason, setReason] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(false);
+  return <div className="seeker-request-detail__cancel">
+    <Button variant="secondary" size="sm" onClick={() => setOpen(value => !value)}>{copy.detail.cancel}</Button>
+    {open ? <form onSubmit={event => { event.preventDefault(); if (reason.trim().length < 2) { setError(true); return; } setSaving(true); setError(false); void onCancel(reason.trim()).then(() => setOpen(false)).catch(() => setError(true)).finally(() => setSaving(false)); }}>
+      <label htmlFor="seeker-request-cancel-reason">{copy.detail.cancelReason}</label>
+      <textarea id="seeker-request-cancel-reason" value={reason} onChange={event => setReason(event.target.value)} maxLength={500} disabled={saving} />
+      {error ? <p role="alert">{copy.detail.cancelError}</p> : null}
+      <Button type="submit" size="sm" loading={saving}>{copy.detail.cancelConfirm}</Button>
+    </form> : null}
+  </div>;
+}
+
+export function SeekerRequests({ locale, session, authClient, apiOrigin, requestId, listLoad, detailLoad, transition }: SeekerRequestsProps) {
   const copy = getSeekerRequestsCopy(locale);
   const isDetail = requestId !== undefined;
   const [page, setPage] = useState(1);
@@ -231,6 +243,7 @@ export function SeekerRequests({ locale, session, authClient, apiOrigin, request
   }), [page, search, statusFilter]);
   const listSource = useMemo(() => listLoad ?? createSeekerRequestsLoader({ apiOrigin, authorization: authClient, query: listQuery }), [apiOrigin, authClient, listLoad, listQuery]);
   const detailSource = useMemo(() => detailLoad ?? (requestId === undefined ? undefined : createSeekerRequestLoader(requestId, { apiOrigin, authorization: authClient })), [apiOrigin, authClient, detailLoad, requestId]);
+  const transitionSource = useMemo(() => transition ?? createSeekerRequestTransition({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, transition]);
   const activePath = isDetail ? `/seeker/requests/${requestId}` : '/seeker/requests';
   const sessionRole = session.status === 'authenticated' ? session.role : undefined;
 
@@ -278,7 +291,7 @@ export function SeekerRequests({ locale, session, authClient, apiOrigin, request
           </div>
           <RequestListContent data={listData} locale={locale} onPageChange={setPage} />
         </section></main> : null}
-        {isDetail && state === 'success' && detailData !== undefined ? <main aria-label={copy.detail.title}><RequestDetailContent request={detailData} locale={locale} /></main> : null}
+        {isDetail && state === 'success' && detailData !== undefined ? <main aria-label={copy.detail.title}><RequestDetailContent request={detailData} locale={locale} onCancel={async reason => { const updated = await transitionSource(detailData.id, { transition: 'cancel', reason, expectedVersion: detailData.version }); setDetailData(updated); }} /></main> : null}
       </div>
     </section>
   );

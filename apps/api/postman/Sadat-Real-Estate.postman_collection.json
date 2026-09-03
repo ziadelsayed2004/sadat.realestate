@@ -4339,6 +4339,44 @@
           }
         },
         {
+          "name": "Cancel seeker request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"transition\":\"cancel\",\"reason\":\"No longer needed\",\"expectedVersion\":0}"
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/seeker/requests/:requestId/transitions",
+              "host": [
+                "{{apiV1BaseUrl}}"
+              ],
+              "path": [
+                "seeker",
+                "requests",
+                ":requestId",
+                "transitions"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{syntheticBearer}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
           "name": "Create provider customer request",
           "request": {
             "method": "POST",

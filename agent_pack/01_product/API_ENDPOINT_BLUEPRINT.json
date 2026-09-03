@@ -599,6 +599,18 @@
   },
   {
     "method": "POST",
+    "path": "/api/v1/seeker/requests/:requestId/transitions",
+    "module": "requests",
+    "auth": "access-token",
+    "roles": [
+      "seeker"
+    ],
+    "purpose": "Cancel an owned request with optimistic concurrency",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
     "path": "/api/v1/seeker/contact-requests",
     "module": "requests",
     "auth": "access-token",

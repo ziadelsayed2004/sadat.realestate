@@ -9,6 +9,7 @@ import {
   notificationReadSuccessEnvelopeSchema,
   requestDataSchema,
   requestListDataSchema,
+  requestTransitionRequestSchema,
   seekerPreferencesPatchSchema,
   seekerPreferencesSuccessEnvelopeSchema,
   seekerOverviewSuccessEnvelopeSchema,
@@ -22,6 +23,7 @@ import {
   type RequestData,
   type RequestListData,
   type RequestListQuery,
+  type RequestTransitionRequest,
   type FavoriteListData,
   type FavoriteListQuery,
   type FavoriteRemoveData,
@@ -71,6 +73,7 @@ export interface SeekerOverviewLoadOptions {
 export type SeekerOverviewLoader = (signal?: AbortSignal) => Promise<SeekerOverviewData>;
 export type SeekerRequestsLoader = (signal?: AbortSignal) => Promise<RequestListData>;
 export type SeekerRequestLoader = (signal?: AbortSignal) => Promise<RequestData>;
+export type SeekerRequestTransition = (requestId: string, input: RequestTransitionRequest, signal?: AbortSignal) => Promise<RequestData>;
 export type SeekerViewingsLoader = (query?: ViewingListQuery, signal?: AbortSignal) => Promise<ViewingListData>;
 export type SeekerFavoritesLoader = (query?: FavoriteListQuery, signal?: AbortSignal) => Promise<FavoriteListData>;
 export type SeekerNotificationsLoader = (query?: NotificationListQuery, signal?: AbortSignal) => Promise<NotificationListData>;
@@ -179,6 +182,21 @@ export function createSeekerRequestLoader(
   options: Omit<SeekerOverviewLoadOptions, 'signal'> = {}
 ): SeekerRequestLoader {
   return signal => loadSeekerRequest(requestId, { ...options, ...(signal === undefined ? {} : { signal }) });
+}
+
+export function createSeekerRequestTransition(options: SeekerOverviewLoadOptions = {}): SeekerRequestTransition {
+  const client = clientFor(options);
+  const headers = authorizationHeaders(options.authorization);
+  return async (requestId, input, signal) => {
+    const response = await client.request(`${SEEKER_REQUESTS_ROUTE}/${encodeURIComponent(requestId)}/transitions`, {
+      method: 'POST',
+      responseSchema: successEnvelopeSchema(requestDataSchema),
+      ...(headers === undefined ? {} : { headers }),
+      json: requestTransitionRequestSchema.parse(input),
+      ...(signal === undefined ? {} : { signal })
+    });
+    return response.data.data;
+  };
 }
 
 function viewingQuery(query: ViewingListQuery | undefined): Readonly<Record<string, string | number | undefined>> | undefined {

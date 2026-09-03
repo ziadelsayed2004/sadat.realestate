@@ -182,7 +182,7 @@ const request = {
   status: screenId === 'SEK-03' ? 'under_review' : screenId === 'SEK-04' ? 'contacted' : 'in_progress',
   payload: { locations: [ids.organization], propertyTypes: ['apartment'], minBudget: 500000, maxBudget: 2500000, minBedrooms: 2, maxBedrooms: 4, note: 'Looking for a finished home in Sadat City.' },
   version: 0,
-  availableActions: ['start_review', 'contact', 'schedule'],
+  availableActions: ['cancel'],
   createdAt: timestamps.created,
   updatedAt: timestamps.updated
 };
@@ -226,6 +226,7 @@ function seekerResponse(pathname) {
   if (pathname === '/seeker/overview') return envelope({ requests: 7, viewings: 2, savedProperties: 14, notifications: 3, unreadNotifications: 1 }, `capture-${screenId}-overview`);
   if (pathname === '/seeker/requests') return envelope({ items: [request, { ...request, id: '111111111111111111111111', status: 'scheduled', type: 'viewing', updatedAt: '2026-07-24T10:00:00.000Z' }, { ...request, id: '222222222222222222222222', status: 'resolved', type: 'contact', updatedAt: '2026-07-25T10:00:00.000Z' }], page: 1, limit: 20, total: 7 }, `capture-${screenId}-requests`);
   if (pathname === `/seeker/requests/${ids.request}`) return envelope(request, `capture-${screenId}-request-detail`);
+  if (pathname === `/seeker/requests/${ids.request}/transitions`) return envelope({ ...request, status: 'cancelled', version: request.version + 1, availableActions: [] }, `capture-${screenId}-request-transition`);
   if (pathname === '/seeker/viewings') return envelope({ items: [viewing, { ...viewing, id: '333333333333333333333333', status: 'requested', requestedAt: '2026-08-18T11:00:00.000+00:00' }], page: 1, limit: 20, total: 2 }, `capture-${screenId}-viewings`);
   if (pathname === '/seeker/favorites') return envelope({ items: [{ ...property, savedAt: timestamps.updated }, { ...property, id: '444444444444444444444444', slug: 'sadat-villa', kind: 'unit', savedAt: '2026-07-24T10:00:00.000Z' }], page: 1, limit: 20, total: 14 }, `capture-${screenId}-favorites`);
   if (pathname === '/seeker/notifications') return envelope({ items: [notification, { ...notification, id: '555555555555555555555555', type: 'viewing.confirmed', readAt: timestamps.updated }], unreadCount: 1, page: 1, limit: 20, total: 3 }, `capture-${screenId}-notifications`);

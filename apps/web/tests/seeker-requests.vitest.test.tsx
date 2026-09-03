@@ -2,7 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 import { requestDataSchema, requestListDataSchema } from '@sadat-real-estate/contracts';
 import { describe, expect, it } from 'vitest';
 import { ApiClient } from '../src/features/contracts/index.ts';
-import { SeekerRequests, getSeekerRequestsCopy, loadSeekerRequest, loadSeekerRequests } from '../src/features/seeker/index.ts';
+import { SeekerRequests, createSeekerRequestTransition, getSeekerRequestsCopy, loadSeekerRequest, loadSeekerRequests } from '../src/features/seeker/index.ts';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 
 const request = requestDataSchema.parse({
@@ -42,6 +42,14 @@ describe('Seeker requests', () => {
       { url: '/api/v1/seeker/requests?type=contact&page=2&limit=5', authorization: 'Bearer seeker.access.token' },
       { url: `/api/v1/seeker/requests/${request.id}`, authorization: 'Bearer seeker.access.token' }
     ]);
+  });
+
+  it('submits an owned cancellation through the strict versioned transition contract', async () => {
+    let submitted: unknown;
+    const client = new ApiClient({ fetcher: async (_input, init) => { submitted = JSON.parse(String(init?.body)); return new Response(JSON.stringify({ data: { ...request, status: 'cancelled', version: 1, availableActions: [] }, meta: { requestId: 'cancel-test' } }), { status: 200 }); } });
+    const cancel = createSeekerRequestTransition({ apiClient: client, authorization: { getAuthorizationHeader: () => 'Bearer seeker.access.token' } });
+    await expect(cancel(request.id, { transition: 'cancel', reason: 'No longer needed', expectedVersion: 0 })).resolves.toMatchObject({ status: 'cancelled', version: 1 });
+    expect(submitted).toEqual({ transition: 'cancel', reason: 'No longer needed', expectedVersion: 0 });
   });
 
   it.each(['ar', 'en',] as const)('renders the owned request list in the approved direction for %s', async locale => {

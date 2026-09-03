@@ -11,7 +11,21 @@ export class RequestServiceError extends Error { constructor(readonly code: Requ
 
 function id(): string { return randomBytes(12).toString('hex'); }
 function active(claims: AccessTokenClaims): boolean { return claims.status === 'verified' && ['seeker', 'provider', 'admin'].includes(claims.role); }
-function available(status: RequestStatus, role: AccessTokenClaims['role']): RequestTransition[] { const map: Record<RequestStatus, RequestTransition[]> = { new: role === 'admin' || role === 'provider' ? ['start_review', 'contact', 'cancel'] : ['cancel'], under_review: ['contact', 'needs_information', 'cancel'], contacted: ['schedule', 'start_progress', 'resolve', 'cancel'], scheduled: ['start_progress', 'cancel'], needs_information: ['start_review', 'cancel'], in_progress: ['resolve', 'cancel'], resolved: role === 'admin' ? ['reopen', 'close'] : [], cancelled: role === 'admin' ? ['reopen', 'close'] : [], closed: role === 'admin' ? ['reopen'] : [] }; return map[status] ?? []; }
+function available(status: RequestStatus, role: AccessTokenClaims['role']): RequestTransition[] {
+  if (role === 'seeker') return ['new', 'under_review', 'contacted', 'scheduled', 'needs_information', 'in_progress'].includes(status) ? ['cancel'] : [];
+  const map: Record<RequestStatus, RequestTransition[]> = {
+    new: ['start_review', 'contact', 'cancel'],
+    under_review: ['contact', 'needs_information', 'cancel'],
+    contacted: ['schedule', 'start_progress', 'resolve', 'cancel'],
+    scheduled: ['start_progress', 'cancel'],
+    needs_information: ['start_review', 'cancel'],
+    in_progress: ['resolve', 'cancel'],
+    resolved: role === 'admin' ? ['reopen', 'close'] : [],
+    cancelled: role === 'admin' ? ['reopen', 'close'] : [],
+    closed: role === 'admin' ? ['reopen'] : []
+  };
+  return map[status] ?? [];
+}
 function project(request: RequestRecord, role: AccessTokenClaims['role']): RequestData { return requestDataSchema.parse({ id: request.id, type: request.type, source: request.source, ...(role === 'admin' ? { creatorId: request.creatorId, seekerId: request.seekerId, providerId: request.providerId, assignedTo: request.assignedTo, dueAt: request.dueAt?.toISOString() } : { ...(request.seekerId ? { seekerId: request.seekerId } : {}), ...(request.providerId ? { providerId: request.providerId } : {}) }), ...(request.propertyId ? { propertyId: request.propertyId } : {}), ...(request.projectId ? { projectId: request.projectId } : {}), status: request.status, payload: request.payload, ...(request.appointmentAt ? { appointmentAt: request.appointmentAt.toISOString(), appointmentTimezone: request.appointmentTimezone } : {}), version: request.version, availableActions: available(request.status, role), createdAt: request.createdAt.toISOString(), updatedAt: request.updatedAt.toISOString() }); }
 function scopeFor(claims: AccessTokenClaims): { seekerId?: string; providerId?: string } | undefined { return claims.role === 'seeker' ? { seekerId: claims.sub } : claims.role === 'provider' ? { providerId: claims.sub } : undefined; }
 

@@ -21,6 +21,9 @@ test('enforces ownership, deterministic listing, and optimistic state transition
   assert.equal((await service.list(seeker, { page: 1, limit: 20 })).total, 1);
   await assert.rejects(() => service.get(provider, created.id), error => (error as { code?: string }).code === 'REQUEST_NOT_FOUND');
   const updated = await service.transition(admin, created.id, { transition: 'start_review', expectedVersion: 0 }); assert.equal(updated.status, 'under_review'); assert.equal(updated.version, 1);
+  const seekerView = await service.get(seeker, created.id);
+  assert.deepEqual(seekerView.availableActions, ['cancel']);
+  await assert.rejects(() => service.transition(seeker, created.id, { transition: 'contact', expectedVersion: 1 }), error => (error as { code?: string }).code === 'REQUEST_INVALID_STATE');
   await assert.rejects(() => service.transition(admin, created.id, { transition: 'contact', expectedVersion: 0 }), error => (error as { code?: string }).code === 'REQUEST_VERSION_CONFLICT');
 });
 
