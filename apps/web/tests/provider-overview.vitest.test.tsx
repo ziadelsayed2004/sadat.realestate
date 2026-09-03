@@ -42,7 +42,8 @@ const overview: ProviderOverviewData = {
     needsChanges: 0,
     drafts: 1,
     recent: [property]
-  }
+  },
+  activity: { customerRequests: 23, bookedViewings: 1 }
 };
 
 const session = { status: 'authenticated' as const, role: 'provider' as const };
@@ -59,6 +60,8 @@ describe('Provider overview', () => {
         const url = new URL(String(input), 'http://sadat-real-estate.local');
         requests.push({ url: `${url.pathname}${url.search}`, authorization: new Headers(init?.headers).get('authorization') });
         if (url.pathname.endsWith('/application/status')) return success(application, 'provider-application-status');
+        if (url.pathname.endsWith('/customer-requests')) return success({ items: [], page: 1, limit: 1, total: 23 }, 'provider-customer-requests');
+        if (url.pathname.endsWith('/viewings')) return success({ items: [], page: 1, limit: 1, total: 1 }, 'provider-viewings');
         const status = url.searchParams.get('status');
         const total = status === null ? 3 : status === 'published' ? 1 : status === 'pending_review' ? 1 : status === 'draft' ? 1 : 0;
         return success({ items: status === null ? [property] : [] }, `provider-properties-${status ?? 'all'}`, total);
@@ -67,9 +70,10 @@ describe('Provider overview', () => {
 
     await expect(loadProviderOverview({ apiClient: client, authorization: { getAuthorizationHeader: () => 'Bearer provider-token' } })).resolves.toMatchObject({
       application,
-      properties: { total: 3, published: 1, pendingReview: 1, needsChanges: 0, drafts: 1, recent: [property] }
+      properties: { total: 3, published: 1, pendingReview: 1, needsChanges: 0, drafts: 1, recent: [property] },
+      activity: { customerRequests: 23, bookedViewings: 1 }
     });
-    expect(requests).toHaveLength(6);
+    expect(requests).toHaveLength(8);
     expect(requests.every(request => request.authorization === 'Bearer provider-token')).toBe(true);
     expect(requests.some(request => request.url === '/api/v1/provider/application/status')).toBe(true);
     expect(requests.some(request => request.url.includes('/api/v1/provider/properties?') && request.url.includes('status=published'))).toBe(true);
@@ -83,6 +87,8 @@ describe('Provider overview', () => {
     expect(screen.getByTestId('provider-summary-published')).toHaveTextContent('1');
     expect(screen.getByTestId('provider-summary-pending')).toHaveTextContent('1');
     expect(screen.getByTestId('provider-summary-drafts')).toHaveTextContent('1');
+    expect(screen.getByTestId('provider-summary-customer-requests')).toHaveTextContent('23');
+    expect(screen.getByTestId('provider-summary-booked')).toHaveTextContent('1');
     expect(screen.getByRole('heading', { name: copy.overview.title, level: 1 })).toBeInTheDocument();
     expect(result.container.querySelector('[data-screen-id="PRV-01"]')).not.toBeNull();
     expect(result.container.textContent).not.toContain(providerId);

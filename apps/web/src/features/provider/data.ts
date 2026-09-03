@@ -1,7 +1,9 @@
 import {
   providerApplicationStatusSuccessEnvelopeSchema,
   propertyListDataSchema,
+  requestListDataSchema,
   successEnvelopeSchema,
+  viewingListDataSchema,
   type PropertyData,
   type PropertyStatus,
   type ProviderApplicationStatusData
@@ -10,6 +12,8 @@ import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
 
 export const PROVIDER_APPLICATION_STATUS_ROUTE = '/provider/application/status' as const;
 export const PROVIDER_PROPERTIES_ROUTE = '/provider/properties' as const;
+export const PROVIDER_CUSTOMER_REQUESTS_ROUTE = '/provider/customer-requests' as const;
+export const PROVIDER_VIEWINGS_ROUTE = '/provider/viewings' as const;
 
 export interface ProviderAuthorizationSource {
   readonly getAuthorizationHeader: () => string | undefined;
@@ -27,6 +31,10 @@ export interface ProviderOverviewProperties {
 export interface ProviderOverviewData {
   readonly application: ProviderApplicationStatusData;
   readonly properties: ProviderOverviewProperties;
+  readonly activity: {
+    readonly customerRequests: number;
+    readonly bookedViewings: number;
+  };
 }
 
 export interface ProviderOverviewLoadOptions {
@@ -120,14 +128,26 @@ export async function loadProviderOverview(options: ProviderOverviewLoadOptions 
     ...(options.signal === undefined ? {} : { signal: options.signal })
   });
   const application = applicationResponse.data.data;
-  if (application.status !== 'approved') return { application, properties: emptyProperties };
+  if (application.status !== 'approved') return { application, properties: emptyProperties, activity: { customerRequests: 0, bookedViewings: 0 } };
 
-  const [all, published, pendingReview, needsChanges, drafts] = await Promise.all([
+  const [all, published, pendingReview, needsChanges, drafts, customerRequestsResponse, bookedViewingsResponse] = await Promise.all([
     loadProperties(client, headers, undefined, options.signal),
     loadProperties(client, headers, 'published', options.signal),
     loadProperties(client, headers, 'pending_review', options.signal),
     loadProperties(client, headers, 'needs_changes', options.signal),
-    loadProperties(client, headers, 'draft', options.signal)
+    loadProperties(client, headers, 'draft', options.signal),
+    client.request(PROVIDER_CUSTOMER_REQUESTS_ROUTE, {
+      responseSchema: successEnvelopeSchema(requestListDataSchema),
+      ...(headers === undefined ? {} : { headers }),
+      query: { page: 1, limit: 1, source: 'provider', type: 'provider_customer' },
+      ...(options.signal === undefined ? {} : { signal: options.signal })
+    }),
+    client.request(PROVIDER_VIEWINGS_ROUTE, {
+      responseSchema: successEnvelopeSchema(viewingListDataSchema),
+      ...(headers === undefined ? {} : { headers }),
+      query: { page: 1, limit: 1, status: 'confirmed' },
+      ...(options.signal === undefined ? {} : { signal: options.signal })
+    })
   ]);
 
   return {
@@ -139,6 +159,10 @@ export async function loadProviderOverview(options: ProviderOverviewLoadOptions 
       needsChanges: needsChanges.total,
       drafts: drafts.total,
       recent: all.items
+    },
+    activity: {
+      customerRequests: customerRequestsResponse.data.data.total,
+      bookedViewings: bookedViewingsResponse.data.data.total
     }
   };
 }

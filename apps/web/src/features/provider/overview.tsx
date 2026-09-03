@@ -243,10 +243,10 @@ function OverviewContent({ data, locale }: { readonly data: ProviderOverviewData
           <MetricCard label={copy.overview.cards.published} value={numberFormat.format(data.properties.published)} tone="published" />
           <MetricCard label={copy.overview.cards.pending} value={numberFormat.format(data.properties.pendingReview)} tone="pending" />
           <MetricCard label={copy.overview.additionalCards?.needsChanges ?? copy.overview.unavailableMetric} value={numberFormat.format(data.properties.needsChanges)} tone="needs-changes" />
-          <MetricCard label={copy.overview.additionalCards?.customerRequests ?? copy.overview.unavailableMetric} value={copy.unavailable} tone="customer-requests" unavailable unavailableBody={copy.overview.unavailableMetricBody} />
+          <MetricCard label={copy.overview.additionalCards?.customerRequests ?? copy.overview.unavailableMetric} value={numberFormat.format(data.activity.customerRequests)} tone="customer-requests" />
           <MetricCard label={copy.overview.additionalCards?.views ?? copy.overview.unavailableMetric} value={copy.unavailable} tone="views" unavailable unavailableBody={copy.overview.unavailableMetricBody} />
           <MetricCard label={copy.overview.cards.drafts} value={numberFormat.format(data.properties.drafts)} tone="drafts" />
-          <MetricCard label={copy.overview.additionalCards?.booked ?? copy.overview.unavailableMetric} value={copy.unavailable} tone="booked" unavailable unavailableBody={copy.overview.unavailableMetricBody} />
+          <MetricCard label={copy.overview.additionalCards?.booked ?? copy.overview.unavailableMetric} value={numberFormat.format(data.activity.bookedViewings)} tone="booked" />
         </div>
       </section>
       <DashboardInsights locale={locale} />
