@@ -11,6 +11,7 @@ import {
   propertyMediaSuccessEnvelopeSchema,
   propertyMediaListSuccessEnvelopeSchema,
   propertyMediaUploadHeadersSchema,
+  publicPropertyListSuccessEnvelopeSchema,
   propertySubmitSchema,
   successEnvelopeSchema,
   type PropertyCoreStep,
@@ -25,12 +26,14 @@ import {
   type PropertyMediaKind,
   type PropertyMediaMime,
   type PropertyMediaOrder,
-  type PropertySubmit
+  type PropertySubmit,
+  type PublicPropertyLocation
 } from '@sadat-real-estate/contracts';
 import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
 import type { ProviderAuthorizationSource } from '../provider/data.ts';
 
 export const PROVIDER_PROPERTY_ROUTE = '/provider/properties' as const;
+export const PUBLIC_PROPERTY_CATALOG_ROUTE = '/public/properties' as const;
 
 const MEDIA_FILENAME_EXTENSIONS: Readonly<Record<PropertyMediaMime, readonly string[]>> = {
   'application/pdf': ['.pdf'],
@@ -81,6 +84,7 @@ export interface ProviderPropertySubmitOptions extends ProviderPropertyRequestOp
 }
 
 export type ProviderPropertyCreate = PropertyCreate;
+export type ProviderPropertyLocationOption = PublicPropertyLocation;
 export type ProviderPropertyStepInput = PropertyCoreStep | PropertyLocationStep | PropertyDetailsStep | PropertyPricingStep | PropertyFeaturesServicesStep | PropertyContactStep;
 
 function clientFor(options: Pick<ProviderPropertyRequestOptions, 'apiClient' | 'apiOrigin'>): ApiClient {
@@ -96,6 +100,16 @@ function authorizationHeaders(source: ProviderAuthorizationSource | undefined): 
 
 function propertyPath(propertyId: string): string {
   return `${PROVIDER_PROPERTY_ROUTE}/${encodeURIComponent(propertyId)}`;
+}
+
+export async function loadProviderPropertyLocations(options: ProviderPropertyRequestOptions = {}): Promise<readonly ProviderPropertyLocationOption[]> {
+  const client = clientFor(options);
+  const response = await client.request(PUBLIC_PROPERTY_CATALOG_ROUTE, {
+    responseSchema: publicPropertyListSuccessEnvelopeSchema,
+    query: { page: 1, limit: 1 },
+    ...(options.signal === undefined ? {} : { signal: options.signal })
+  });
+  return response.data.data.locations ?? [];
 }
 
 function safeMediaFilename(filename: string, contentType: PropertyMediaMime, kind: PropertyMediaKind): string {

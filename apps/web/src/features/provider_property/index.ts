@@ -2,16 +2,19 @@ export {
   createProviderProperty,
   deleteProviderPropertyMedia,
   loadProviderProperty,
+  loadProviderPropertyLocations,
   reorderProviderPropertyMedia,
   saveProviderPropertyStep,
   submitProviderProperty,
   uploadProviderPropertyMedia,
-  PROVIDER_PROPERTY_ROUTE
+  PROVIDER_PROPERTY_ROUTE,
+  PUBLIC_PROPERTY_CATALOG_ROUTE
 } from './data.ts';
 export type {
   ProviderPropertyCreate,
   ProviderPropertyCreateOptions,
   ProviderPropertyLoadOptions,
+  ProviderPropertyLocationOption,
   ProviderPropertyMediaDeleteOptions,
   ProviderPropertyMediaOrderOptions,
   ProviderPropertyMediaUploadOptions,
@@ -45,6 +48,7 @@ export type {
   ProviderPropertyAuthClient,
   ProviderPropertyCreateAction,
   ProviderPropertyLoadAction,
+  ProviderPropertyLocationsLoadAction,
   ProviderPropertySaveAction,
   ProviderPropertyWizardProps
 } from './wizard.tsx';

@@ -28,6 +28,12 @@ export interface ProviderPropertyCopy {
     readonly mutationError: string;
     readonly locationCatalogUnavailableTitle: string;
     readonly locationCatalogUnavailableBody: string;
+    readonly locationCatalogLoading: string;
+    readonly locationCatalogEmptyTitle: string;
+    readonly locationCatalogEmptyBody: string;
+    readonly locationSearchLabel: string;
+    readonly locationSearchPlaceholder: string;
+    readonly locationSelectPlaceholder: string;
     readonly contractBoundaryTitle: string;
     readonly contractBoundaryBody: string;
     readonly coordinateHelp: string;
@@ -69,6 +75,10 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       mutationError: 'تعذر حفظ المسودة. تحقق من الاتصال وحاول مرة أخرى.',
       locationCatalogUnavailableTitle: 'دليل المواقع غير متاح للمزوّد حالياً',
       locationCatalogUnavailableBody: 'لا يعرض العقد الحالي قائمة مواقع للمزوّد. لن نستخدم مسار الإدارة أو بيانات غير معتمدة؛ استخدم معرّف موقع نشطاً من المصدر المصرح به أو الإحداثيات.',
+      locationCatalogLoading: 'جارٍ تحميل المناطق…',
+      locationCatalogEmptyTitle: 'لا توجد مناطق نشطة',
+      locationCatalogEmptyBody: 'أضف منطقة نشطة من لوحة الإدارة أو استخدم الإحداثيات لحين توفرها.',
+      locationSearchLabel: 'البحث عن المنطقة', locationSearchPlaceholder: 'اكتب اسم المدينة أو المنطقة', locationSelectPlaceholder: 'اختر المنطقة',
       contractBoundaryTitle: 'حقول غير مدعومة حالياً',
       contractBoundaryBody: 'حقول العنوان التفصيلية خارج عقد الحفظ. يتم حفظ رابط خريطة HTTPS آمن يضيفه المزوّد كمرجع للموقع.',
       coordinateHelp: 'يمكن تحديد الموقع برابط خريطة HTTPS آمن أو بالإحداثيات أو بمعرّف موقع رئيسي. يجب إدخال خط العرض والطول معاً.',
@@ -113,6 +123,10 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderPropertyCopy>> = {
       mutationError: 'The draft could not be saved. Check the connection and try again.',
       locationCatalogUnavailableTitle: 'The provider location catalog is unavailable',
       locationCatalogUnavailableBody: 'The current provider contract does not expose a location list. The admin route and unapproved data are not used; enter an active location ID from an approved source or coordinates.',
+      locationCatalogLoading: 'Loading locations…',
+      locationCatalogEmptyTitle: 'No active locations',
+      locationCatalogEmptyBody: 'Add an active location from the admin dashboard, or use coordinates until one is available.',
+      locationSearchLabel: 'Search locations', locationSearchPlaceholder: 'Type a city or area name', locationSelectPlaceholder: 'Select a location',
       contractBoundaryTitle: 'Fields not supported by the current contract',
       contractBoundaryBody: 'Detailed address fields are outside the save contract. A safe HTTPS map link is stored as the provider-supplied location reference.',
       coordinateHelp: 'A safe HTTPS map link, coordinates, or a master location ID may identify the location. Latitude and longitude must be supplied together.',

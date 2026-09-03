@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
-import { propertyDataSchema, type PropertyData } from '@sadat-real-estate/contracts';
+import { propertyDataSchema, publicPropertyLocationSchema, type PropertyData } from '@sadat-real-estate/contracts';
 import type { ComponentProps } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
@@ -111,17 +111,24 @@ describe('Provider property wizard', () => {
     expect(screen.getByRole('status')).toHaveTextContent(copy.wizard.saved);
   });
 
-  it('loads location data, submits only the location contract, and exposes the unavailable catalog state', async () => {
+  it('loads admin-managed locations through the safe catalog, filters by localized name, and submits the selected id', async () => {
     const current = property();
     const save = vi.fn(async () => property({ version: current.version + 1 }));
+    const catalog = [
+      publicPropertyLocationSchema.parse({ id: 'dddddddddddddddddddddddd', kind: 'location', name: { ar: 'مدينة السادات', en: 'Sadat City' }, slug: 'sadat-city', order: 1 }),
+      publicPropertyLocationSchema.parse({ id: 'eeeeeeeeeeeeeeeeeeeeeeee', kind: 'neighborhood', name: { ar: 'المنطقة الأولى', en: 'First District' }, slug: 'first-district', parentLocationId: 'dddddddddddddddddddddddd', order: 2 })
+    ];
     const copy = getProviderPropertyCopy('en');
-    renderWithLocale(<ProviderPropertyWizard locale="en" session={session} authClient={authClient} step="location" propertyId={propertyId} initialData={current} save={save} />, { locale: 'en' });
+    renderWithLocale(<ProviderPropertyWizard locale="en" session={session} authClient={authClient} step="location" propertyId={propertyId} initialData={current} save={save} loadLocations={vi.fn(async () => catalog)} />, { locale: 'en' });
     expect(screen.getByDisplayValue('30.62')).toBeInTheDocument();
-    expect(screen.getByText(copy.wizard.locationCatalogUnavailableTitle)).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole('option', { name: 'Sadat City' })).toBeInTheDocument());
+    fireEvent.change(screen.getByRole('searchbox', { name: copy.wizard.locationSearchLabel }), { target: { value: 'First' } });
+    expect(screen.queryByRole('option', { name: 'Sadat City' })).not.toBeInTheDocument();
+    fireEvent.change(screen.getByRole('combobox', { name: copy.wizard.labels.locationId }), { target: { value: 'eeeeeeeeeeeeeeeeeeeeeeee' } });
     fireEvent.change(screen.getByLabelText(copy.wizard.labels.latitude), { target: { value: '30.63' } });
     fireEvent.click(screen.getByRole('button', { name: copy.wizard.saveDraft }));
     await waitFor(() => expect(save).toHaveBeenCalledTimes(1));
-    expect(save).toHaveBeenCalledWith(propertyId, 'location', expect.objectContaining({ version: 2, locationId: 'cccccccccccccccccccccccc', coordinates: { latitude: 30.63, longitude: 30.74 } }));
+    expect(save).toHaveBeenCalledWith(propertyId, 'location', expect.objectContaining({ version: 2, locationId: 'eeeeeeeeeeeeeeeeeeeeeeee', coordinates: { latitude: 30.63, longitude: 30.74 } }));
   });
 
   it('fails closed for anonymous and forbidden property access without fallback data', async () => {
