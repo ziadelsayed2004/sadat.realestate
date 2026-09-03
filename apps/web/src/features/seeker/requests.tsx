@@ -76,6 +76,25 @@ function safePayloadValue(request: RequestData, key: 'message' | 'note'): string
   return typeof value === 'string' && value.trim() !== '' ? value : undefined;
 }
 
+function safePayloadNumber(request: RequestData, key: 'minBudget' | 'maxBudget' | 'minBedrooms' | 'maxBedrooms'): number | undefined {
+  const value = request.payload[key];
+  return typeof value === 'number' && Number.isFinite(value) ? value : undefined;
+}
+
+function safePayloadStrings(request: RequestData, key: 'propertyTypes'): readonly string[] {
+  const value = request.payload[key];
+  return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string' && item.trim() !== '') : [];
+}
+
+function rangeLabel(minimum: number | undefined, maximum: number | undefined, locale: SupportedLocale, currency = false): string | undefined {
+  if (minimum === undefined && maximum === undefined) return undefined;
+  const format = (value: number) => currency
+    ? new Intl.NumberFormat(locale, { style: 'currency', currency: 'EGP', maximumFractionDigits: 0 }).format(value)
+    : new Intl.NumberFormat(locale).format(value);
+  if (minimum !== undefined && maximum !== undefined) return `${format(minimum)} – ${format(maximum)}`;
+  return format(minimum ?? maximum ?? 0);
+}
+
 function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<SeekerRequestsViewState, 'success' | 'empty' | 'not_found'>; readonly locale: SupportedLocale; readonly onRetry: () => void }) {
   const copy = getSeekerRequestsCopy(locale);
   const message = copy.states[state];
@@ -138,6 +157,10 @@ function RequestDetailContent({ request, locale }: { readonly request: RequestDa
   const copy = getSeekerRequestsCopy(locale);
   const message = safePayloadValue(request, 'message');
   const note = safePayloadValue(request, 'note');
+  const budget = rangeLabel(safePayloadNumber(request, 'minBudget'), safePayloadNumber(request, 'maxBudget'), locale, true);
+  const bedrooms = rangeLabel(safePayloadNumber(request, 'minBedrooms'), safePayloadNumber(request, 'maxBedrooms'), locale);
+  const propertyTypes = safePayloadStrings(request, 'propertyTypes');
+  const hasAdvanced = budget !== undefined || bedrooms !== undefined || propertyTypes.length > 0 || note !== undefined;
   const screenId = requestScreenId(request);
   const lifecycle: readonly RequestStatus[] = ['new', 'under_review', 'contacted', 'scheduled', 'resolved'];
   const currentIndex = lifecycle.indexOf(request.status);
@@ -151,7 +174,7 @@ function RequestDetailContent({ request, locale }: { readonly request: RequestDa
         <RequestStatusBadge status={request.status} locale={locale} />
       </div>
       <div className="seeker-request-detail__grid">
-        <section className="seeker-request-detail__card" aria-labelledby="seeker-request-timeline-title">
+        <section className="seeker-request-detail__card seeker-request-detail__card--timeline" aria-labelledby="seeker-request-timeline-title">
           <h2 id="seeker-request-timeline-title">{copy.detail.timeline}</h2>
           <ol className="seeker-request-detail__timeline">
             {lifecycle.map((status, index) => {
@@ -162,7 +185,7 @@ function RequestDetailContent({ request, locale }: { readonly request: RequestDa
           </ol>
           <p className="seeker-request-detail__muted">{copy.detail.unavailable}</p>
         </section>
-        <section className="seeker-request-detail__card" aria-labelledby="seeker-request-summary-title">
+        <section className="seeker-request-detail__card seeker-request-detail__card--summary" aria-labelledby="seeker-request-summary-title">
           <h2 id="seeker-request-summary-title">{copy.detail.summary}</h2>
           <dl className="seeker-request-detail__values">
             <DetailValue label={copy.detail.type} value={copy.types[request.type]} />
@@ -172,10 +195,18 @@ function RequestDetailContent({ request, locale }: { readonly request: RequestDa
             <DetailValue label={copy.detail.property} value={request.propertyId === undefined ? undefined : linkedRequestLabel(locale)} />
             <DetailValue label={copy.detail.project} value={request.projectId === undefined ? undefined : linkedRequestLabel(locale)} />
           </dl>
-          {message === undefined && note === undefined ? <p className="seeker-request-detail__muted">{copy.detail.unavailable}</p> : null}
+          {message === undefined ? <p className="seeker-request-detail__muted">{copy.detail.unavailable}</p> : null}
           {message === undefined ? null : <div className="seeker-request-detail__payload"><h3>{copy.detail.message}</h3><p>{message}</p></div>}
-          {note === undefined ? null : <div className="seeker-request-detail__payload"><h3>{copy.detail.note}</h3><p>{note}</p></div>}
         </section>
+        {hasAdvanced ? <section className="seeker-request-detail__card seeker-request-detail__card--advanced" aria-labelledby="seeker-request-advanced-title">
+          <h2 id="seeker-request-advanced-title">{copy.detail.advanced}</h2>
+          <dl className="seeker-request-detail__values">
+            <DetailValue label={copy.detail.budget} value={budget} />
+            <DetailValue label={copy.detail.bedrooms} value={bedrooms} />
+            <DetailValue label={copy.detail.propertyTypes} value={propertyTypes.length === 0 ? undefined : propertyTypes.join(' · ')} />
+          </dl>
+          {note === undefined ? null : <div className="seeker-request-detail__payload"><h3>{copy.detail.note}</h3><p>{note}</p></div>}
+        </section> : null}
       </div>
       <a className="seeker-dashboard__back-link" href={localeForSeekerPath(locale, '/seeker/requests')}>‹ {copy.detail.back}</a>
     </div>

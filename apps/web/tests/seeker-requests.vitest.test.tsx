@@ -12,7 +12,7 @@ const request = requestDataSchema.parse({
   seekerId: '0123456789abcdef01234567',
   propertyId: '2123456789abcdef01234567',
   status: 'under_review',
-  payload: { message: 'Please call me' },
+  payload: { message: 'Please call me', propertyTypes: ['apartment', 'duplex'], minBudget: 500000, maxBudget: 2500000, minBedrooms: 2, maxBedrooms: 4, note: 'Finished unit only' },
   version: 0,
   availableActions: ['cancel'],
   createdAt: '2026-08-13T10:00:00.000Z',
@@ -64,6 +64,11 @@ describe('Seeker requests', () => {
     await waitFor(() => expect(screen.getByRole('heading', { name: new RegExp(copy.detail.title), level: 1 })).toBeInTheDocument());
     expect(result.container.querySelector('[data-screen-id="SEK-03"]')).not.toBeNull();
     expect(screen.getByText('Please call me')).toBeInTheDocument();
+    expect(screen.getByText('Finished unit only')).toBeInTheDocument();
+    expect(screen.getByText('apartment · duplex')).toBeInTheDocument();
+    expect(screen.getByText(/500,000/)).toBeInTheDocument();
+    expect(screen.getByText('2 – 4')).toBeInTheDocument();
+    expect(result.container.textContent).not.toContain('internalNotes');
     expect(result.container.textContent).not.toContain('2123456789abcdef01234567');
     result.unmount();
 

@@ -30,6 +30,10 @@ export interface SeekerRequestsCopy {
     readonly project: string;
     readonly message: string;
     readonly note: string;
+    readonly advanced: string;
+    readonly budget: string;
+    readonly bedrooms: string;
+    readonly propertyTypes: string;
     readonly unavailable: string;
     readonly back: string;
   };
@@ -76,6 +80,10 @@ const copy: Readonly<Record<SupportedLocale, SeekerRequestsCopy>> = {
       project: 'المشروع المرتبط',
       message: 'رسالتك',
       note: 'ملاحظتك',
+      advanced: 'تفاصيل البحث',
+      budget: 'نطاق الميزانية',
+      bedrooms: 'عدد غرف النوم',
+      propertyTypes: 'أنواع العقارات',
       unavailable: 'لا توجد تفاصيل إضافية في العقد المتاح.',
       back: 'العودة إلى الطلبات'
     },
@@ -122,6 +130,10 @@ const copy: Readonly<Record<SupportedLocale, SeekerRequestsCopy>> = {
       project: 'Linked project',
       message: 'Your message',
       note: 'Your note',
+      advanced: 'Search details',
+      budget: 'Budget range',
+      bedrooms: 'Bedrooms',
+      propertyTypes: 'Property types',
       unavailable: 'No additional details are available in the implemented contract.',
       back: 'Back to requests'
     },
