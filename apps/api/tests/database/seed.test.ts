@@ -3,11 +3,39 @@ import { EventEmitter } from 'node:events';
 import test from 'node:test';
 import type { Connection } from 'mongoose';
 import {
+  FIGMA_PUBLIC_DETAILS_SEED_STEP,
   runDevelopmentSeed,
   SYNTHETIC_SHOWCASE_SEED_STEP,
   SYNTHETIC_WORKFLOW_SEED_STEP
 } from '../../src/modules/database/seed.js';
 import { runSeedCommand } from '../../src/modules/database/run-seed.js';
+
+test('public details seed repairs an existing demo property with exact public media and populated amenities', async () => {
+  const writes: Array<{ collection: string; filter: Record<string, unknown>; update: Record<string, unknown> }> = [];
+  const connection = {
+    collection(name: string) {
+      return {
+        async updateOne(filter: Record<string, unknown>, update: Record<string, unknown>) {
+          writes.push({ collection: name, filter, update });
+          return { acknowledged: true };
+        }
+      };
+    }
+  } as unknown as Connection;
+
+  await FIGMA_PUBLIC_DETAILS_SEED_STEP.run(connection);
+
+  const mediaRepair = writes.find(write => write.collection === 'property_media'
+    && '$set' in write.update
+    && (write.update.$set as Record<string, unknown>).imageUrl === '/assets/figma/public/PUB-03/raw-02.jpg');
+  const propertyRepair = writes.find(write => write.collection === 'properties' && '$set' in write.update);
+  const amenityInserts = writes.filter(write => write.collection === 'features_services' && '$setOnInsert' in write.update);
+  assert.ok(mediaRepair, 'existing media row must be upgraded to the exact public Figma asset');
+  assert.ok(propertyRepair, 'the demo property must receive feature and service references');
+  assert.equal(((propertyRepair.update.$set as Record<string, unknown>).featureIds as unknown[]).length, 15);
+  assert.equal(((propertyRepair.update.$set as Record<string, unknown>).serviceIds as unknown[]).length, 6);
+  assert.equal(amenityInserts.length, 21);
+});
 
 test('development seed refuses non-local environments before writing', async () => {
   const connection = new EventEmitter() as unknown as Connection;

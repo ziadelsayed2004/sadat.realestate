@@ -115,6 +115,10 @@ export function ProviderSettings({ locale, session, authClient, apiOrigin, tab =
   const updateField = (field: keyof SettingsForm) => (event: React.ChangeEvent<HTMLInputElement>) => setForm(current => ({ ...current, [field]: event.target.value }));
   const save = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (sessionRole !== 'provider') {
+      setFeedback('permission');
+      return;
+    }
     if (data === undefined || tab === 'security' || !canSave) return;
     const input: ProviderSettingsPatch = tab === 'account'
       ? { expectedVersion: data.version, email: form.email.trim() }

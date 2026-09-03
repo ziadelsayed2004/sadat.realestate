@@ -135,6 +135,33 @@ describe('public property details', () => {
     expect(result.container.textContent).not.toContain('sha256');
   });
 
+  it('uses a published property cover as the gallery when no ready media rows exist', () => {
+    const fallbackImage = '/assets/canonical/public/listing-property-duplex.png';
+    const fallbackData = publicPropertyDetailsSchema.parse({
+      ...detailsData,
+      imageUrl: fallbackImage,
+      media: []
+    });
+
+    const result = renderWithLocale(
+      <PublicPropertyDetails locale="en" url="/properties/published-home" initialData={fallbackData} />,
+      { locale: 'en' }
+    );
+
+    expect(result.container.querySelector('[data-gallery] img')).toHaveAttribute('src', fallbackImage);
+    expect(result.container.querySelector('[data-gallery] [data-state="missing_image"]')).not.toBeInTheDocument();
+    expect(result.container.querySelector('.public-property-details__media-note')).not.toBeInTheDocument();
+  });
+
+  it('matches the canonical details composition by rendering one related property card', () => {
+    const result = renderWithLocale(
+      <PublicPropertyDetails locale="en" url="/properties/published-home" initialData={detailsData} />,
+      { locale: 'en' }
+    );
+
+    expect(result.container.querySelectorAll('.public-property-details__related-card')).toHaveLength(1);
+  });
+
   it.each(['javascript:alert(1)', 'http://maps.example.com/sadat', 'data:text/plain,sadat'])('fails closed when an unsafe map URL reaches the view: %s', mapUrl => {
     const unsafeData = { ...detailsData, mapUrl } as typeof detailsData;
     const copy = getPublicPropertyDetailsCopy('en');

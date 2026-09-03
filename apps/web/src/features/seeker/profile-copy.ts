@@ -23,10 +23,18 @@ export interface SeekerProfileCopy {
     readonly propertyTypesHelp: string;
     readonly locations: string;
     readonly locationsHelp: string;
+    readonly budgetRange: string;
     readonly minPrice: string;
     readonly maxPrice: string;
+    readonly areaRange: string;
+    readonly minArea: string;
+    readonly maxArea: string;
     readonly bedroomsMin: string;
     readonly bedroomsMax: string;
+    readonly paymentMethod: string;
+    readonly cash: string;
+    readonly installment: string;
+    readonly anyPayment: string;
     readonly save: string;
     readonly saved: string;
     readonly noSavedPreferences: string;
@@ -66,7 +74,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerProfileCopy>> = {
       heading: 'المعلومات الشخصية', firstName: 'الاسم الأول', lastName: 'اسم العائلة', language: 'اللغة المفضلة', save: 'حفظ التغييرات', saved: 'تم حفظ البيانات الشخصية.'
     },
     preferences: {
-      heading: 'تفضيلات البحث', purpose: 'نوع العملية', anyPurpose: 'شراء أو إيجار', buy: 'شراء', rent: 'إيجار', propertyTypes: 'أنواع العقارات', propertyTypesHelp: 'اكتب القيم مفصولة بفواصل.', locations: 'المناطق المفضلة', locationsHelp: 'اكتب المعرفات أو القيم المعتمدة مفصولة بفواصل.', minPrice: 'الحد الأدنى للسعر', maxPrice: 'الحد الأقصى للسعر', bedroomsMin: 'الحد الأدنى لغرف النوم', bedroomsMax: 'الحد الأقصى لغرف النوم', save: 'حفظ التفضيلات', saved: 'تم حفظ تفضيلات البحث.', noSavedPreferences: 'لم تحفظ تفضيلات بحث بعد. يمكنك البدء من الحقول أدناه.', invalid: 'راجع القيم المدخلة وتأكد من صحة النطاقات.'
+      heading: 'تفضيلات البحث', purpose: 'نوع العملية', anyPurpose: 'شراء أو إيجار', buy: 'شراء', rent: 'إيجار', propertyTypes: 'أنواع العقارات', propertyTypesHelp: 'اختر أكثر من نوع.', locations: 'المناطق المفضلة', locationsHelp: 'اختر أكثر من منطقة.', budgetRange: 'نطاق الميزانية (ج.م)', minPrice: 'من', maxPrice: 'إلى', areaRange: 'المساحة المفضلة (م²)', minArea: 'من', maxArea: 'إلى', bedroomsMin: 'عدد غرف النوم', bedroomsMax: 'الحد الأقصى لغرف النوم', paymentMethod: 'طريقة الدفع المفضلة', cash: 'كاش', installment: 'تقسيط', anyPayment: 'كلاهما', save: 'حفظ التغييرات', saved: 'تم حفظ تفضيلات البحث.', noSavedPreferences: 'لم تحفظ تفضيلات بحث بعد. يمكنك البدء من الحقول أدناه.', invalid: 'راجع القيم المدخلة وتأكد من صحة النطاقات.'
     },
     settings: {
       heading: 'إعدادات الحساب', languageHeading: 'لغة الحساب', languageBody: 'تُحفظ اللغة على حسابك وتُستخدم في الواجهات التالية.', securityHeading: 'الأمان والوصول', securityBody: 'تغيير كلمة المرور وإدارة الأجهزة تحتاج إلى عمليات API غير متاحة على هذا السطح بعد.', unavailable: 'هذه الوظيفة غير متاحة حالياً وفق العقود المنفذة.', notificationHeading: 'إعدادات الإشعارات', notificationBody: 'خيارات الإشعارات التفصيلية تحتاج إلى عقد إعدادات منفصل.', sessionsHeading: 'الأجهزة الأخرى', sessionsBody: 'إدارة الجلسات الأخرى غير متاحة حتى يتم تنفيذ عقد الجلسات.', signOut: 'تسجيل الخروج', signedOut: 'تم تسجيل الخروج من الحساب.', accountHeading: 'الحساب', accountBody: 'حذف الحساب إجراء غير قابل للتراجع ويتطلب عقداً صريحاً غير متاح.', deleteAccount: 'حذف الحساب نهائياً'
@@ -88,7 +96,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerProfileCopy>> = {
       heading: 'Personal information', firstName: 'First name', lastName: 'Last name', language: 'Preferred language', save: 'Save changes', saved: 'Personal information saved.'
     },
     preferences: {
-      heading: 'Search preferences', purpose: 'Transaction purpose', anyPurpose: 'Buy or rent', buy: 'Buy', rent: 'Rent', propertyTypes: 'Property types', propertyTypesHelp: 'Enter values separated by commas.', locations: 'Preferred locations', locationsHelp: 'Enter approved identifiers or values separated by commas.', minPrice: 'Minimum price', maxPrice: 'Maximum price', bedroomsMin: 'Minimum bedrooms', bedroomsMax: 'Maximum bedrooms', save: 'Save preferences', saved: 'Search preferences saved.', noSavedPreferences: 'No search preferences are saved yet. Start with the fields below.', invalid: 'Review the entered values and make sure each range is valid.'
+      heading: 'Search preferences', purpose: 'Transaction purpose', anyPurpose: 'Buy or rent', buy: 'Buy', rent: 'Rent', propertyTypes: 'Property types', propertyTypesHelp: 'Choose more than one type.', locations: 'Preferred locations', locationsHelp: 'Choose more than one area.', budgetRange: 'Budget range (EGP)', minPrice: 'From', maxPrice: 'To', areaRange: 'Preferred area (m²)', minArea: 'From', maxArea: 'To', bedroomsMin: 'Bedrooms', bedroomsMax: 'Maximum bedrooms', paymentMethod: 'Preferred payment method', cash: 'Cash', installment: 'Installment', anyPayment: 'Both', save: 'Save changes', saved: 'Search preferences saved.', noSavedPreferences: 'No search preferences are saved yet. Start with the fields below.', invalid: 'Review the entered values and make sure each range is valid.'
     },
     settings: {
       heading: 'Account settings', languageHeading: 'Account language', languageBody: 'The language is saved to your account and used by subsequent surfaces.', securityHeading: 'Security and access', securityBody: 'Password changes and device management require API operations that are not implemented on this surface yet.', unavailable: 'This feature is currently unavailable under the implemented contracts.', notificationHeading: 'Notification settings', notificationBody: 'Detailed notification choices require a separate settings contract.', sessionsHeading: 'Other devices', sessionsBody: 'Other-session management is unavailable until the sessions contract is implemented.', signOut: 'Sign out', signedOut: 'You have been signed out.', accountHeading: 'Account', accountBody: 'Account deletion is irreversible and requires an explicit contract that is not implemented.', deleteAccount: 'Delete account permanently'

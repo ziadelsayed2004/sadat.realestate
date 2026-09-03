@@ -288,6 +288,10 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
   }, [attempt, detailLoader, initialDetail, isProvider, selectedRequestId]);
 
   async function saveRequest(input: AdRequestCreate): Promise<void> {
+    if (!isProvider) {
+      setMutationError(copy.mutationFailed);
+      return;
+    }
     setMutationBusy(true);
     setMutationError(undefined);
     try {
@@ -304,6 +308,10 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
 
   async function acceptQuote(): Promise<void> {
     if (detail?.quote === undefined) return;
+    if (!isProvider) {
+      setMutationError(copy.mutationFailed);
+      return;
+    }
     setMutationBusy(true);
     setMutationError(undefined);
     try {
@@ -319,6 +327,10 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
 
   async function uploadPaymentProof(file: File): Promise<void> {
     if (detail === undefined) return;
+    if (!isProvider) {
+      setMutationError(copy.mutationFailed);
+      return;
+    }
     setMutationBusy(true);
     setMutationError(undefined);
     try {

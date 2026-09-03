@@ -60,8 +60,11 @@ interface PreferencesDraft {
   purpose: '' | 'buy' | 'rent';
   minPrice: string;
   maxPrice: string;
+  minArea: string;
+  maxArea: string;
   bedroomsMin: string;
   bedroomsMax: string;
+  paymentMethod: '' | 'cash' | 'installment' | 'any';
 }
 
 function stateForError(error: unknown): Exclude<SeekerProfileViewState, 'loading' | 'empty' | 'success'> {
@@ -82,8 +85,11 @@ function preferencesDraftFor(data: SeekerPreferencesData | undefined): Preferenc
     purpose: preferences.purpose ?? '',
     minPrice: preferences.minPrice === undefined ? '' : String(preferences.minPrice),
     maxPrice: preferences.maxPrice === undefined ? '' : String(preferences.maxPrice),
+    minArea: preferences.minArea === undefined ? '' : String(preferences.minArea),
+    maxArea: preferences.maxArea === undefined ? '' : String(preferences.maxArea),
     bedroomsMin: preferences.bedroomsMin === undefined ? '' : String(preferences.bedroomsMin),
-    bedroomsMax: preferences.bedroomsMax === undefined ? '' : String(preferences.bedroomsMax)
+    bedroomsMax: preferences.bedroomsMax === undefined ? '' : String(preferences.bedroomsMax),
+    paymentMethod: preferences.paymentMethod ?? ''
   };
 }
 
@@ -144,10 +150,6 @@ function profileTabForLocation(tab: SeekerProfileTab): SeekerProfileTab {
   if (tab !== 'preferences' || typeof window === 'undefined') return tab;
   const url = new URL(window.location.href);
   return url.pathname === '/seeker/profile' && url.searchParams.get('tab') === 'personal' ? 'profile' : tab;
-}
-
-function profileInitials(profile: SeekerProfileData): string {
-  return `${profile.firstName.trim().slice(0, 1)}${profile.lastName.trim().slice(0, 1)}`.toUpperCase() || 'S';
 }
 
 function personalSurfaceCopy(locale: SupportedLocale) {
@@ -251,14 +253,19 @@ function preferencesPatchFor(draft: PreferencesDraft): SeekerPreferencesPatch {
   const maxPrice = numberValue(draft.maxPrice);
   const bedroomsMin = numberValue(draft.bedroomsMin);
   const bedroomsMax = numberValue(draft.bedroomsMax);
+  const minArea = numberValue(draft.minArea);
+  const maxArea = numberValue(draft.maxArea);
   return {
     propertyTypes: listValue(draft.propertyTypes),
     locations: listValue(draft.locations),
     ...(draft.purpose === '' ? {} : { purpose: draft.purpose }),
     ...(minPrice === undefined ? {} : { minPrice }),
     ...(maxPrice === undefined ? {} : { maxPrice }),
+    ...(minArea === undefined ? {} : { minArea }),
+    ...(maxArea === undefined ? {} : { maxArea }),
     ...(bedroomsMin === undefined ? {} : { bedroomsMin }),
-    ...(bedroomsMax === undefined ? {} : { bedroomsMax })
+    ...(bedroomsMax === undefined ? {} : { bedroomsMax }),
+    ...(draft.paymentMethod === '' ? {} : { paymentMethod: draft.paymentMethod })
   };
 }
 
@@ -326,7 +333,7 @@ function ProfileForm({
   return (
     <form className="seeker-profile__form" onSubmit={onSubmit} noValidate>
       <div className="seeker-profile__identity">
-        <span className="seeker-profile__identity-avatar" aria-hidden="true">{profileInitials(profile)}</span>
+        <span className="seeker-profile__identity-avatar" aria-hidden="true"><img src="/assets/canonical/seeker/avatar.png" alt="" /></span>
         <span><strong>{profile.firstName} {profile.lastName}</strong><small>{surfaceCopy.role}</small></span>
       </div>
       <div className="seeker-profile__form-grid">
@@ -372,10 +379,20 @@ function PreferencesForm({
         <PreferenceChoiceField locale={locale} label={copy.preferences.propertyTypes} value={draft.propertyTypes} choices={propertyTypeChoices} onChange={propertyTypes => onChange({ propertyTypes })} />
         <PreferenceChoiceField locale={locale} label={copy.preferences.locations} value={draft.locations} choices={locationChoices} onChange={locations => onChange({ locations })} />
       </div>
-      <div className="seeker-profile__form-grid seeker-profile__form-grid--numeric">
-        <Input id="seeker-preferences-min-price" label={copy.preferences.minPrice} type="number" min="0" step="1" inputMode="numeric" value={draft.minPrice} onChange={event => onChange({ minPrice: event.target.value })} />
-        <Input id="seeker-preferences-max-price" label={copy.preferences.maxPrice} type="number" min="0" step="1" inputMode="numeric" value={draft.maxPrice} onChange={event => onChange({ maxPrice: event.target.value })} />
-      </div>
+      <fieldset className="seeker-profile__fieldset">
+        <legend>{copy.preferences.budgetRange}</legend>
+        <div className="seeker-profile__form-grid seeker-profile__form-grid--numeric">
+          <Input id="seeker-preferences-min-price" label={copy.preferences.minPrice} aria-label={`${copy.preferences.budgetRange} — ${copy.preferences.minPrice}`} type="number" min="0" step="1" inputMode="numeric" value={draft.minPrice} onChange={event => onChange({ minPrice: event.target.value })} />
+          <Input id="seeker-preferences-max-price" label={copy.preferences.maxPrice} aria-label={`${copy.preferences.budgetRange} — ${copy.preferences.maxPrice}`} type="number" min="0" step="1" inputMode="numeric" value={draft.maxPrice} onChange={event => onChange({ maxPrice: event.target.value })} />
+        </div>
+      </fieldset>
+      <fieldset className="seeker-profile__fieldset">
+        <legend>{copy.preferences.areaRange}</legend>
+        <div className="seeker-profile__form-grid seeker-profile__form-grid--numeric">
+          <Input id="seeker-preferences-min-area" label={copy.preferences.minArea} aria-label={`${copy.preferences.areaRange} — ${copy.preferences.minArea}`} type="number" min="0" step="1" inputMode="numeric" value={draft.minArea} onChange={event => onChange({ minArea: event.target.value })} />
+          <Input id="seeker-preferences-max-area" label={copy.preferences.maxArea} aria-label={`${copy.preferences.areaRange} — ${copy.preferences.maxArea}`} type="number" min="0" step="1" inputMode="numeric" value={draft.maxArea} onChange={event => onChange({ maxArea: event.target.value })} />
+        </div>
+      </fieldset>
       <fieldset className="seeker-profile__fieldset seeker-profile__chip-field">
         <legend>{copy.preferences.bedroomsMin}</legend>
         <div className="seeker-profile__choice-list seeker-profile__choice-list--bedrooms" role="group" aria-label={copy.preferences.bedroomsMin}>
@@ -385,6 +402,14 @@ function PreferencesForm({
           })}
         </div>
         {draft.bedroomsMin !== '' && draft.bedroomsMax !== '' && draft.bedroomsMin !== draft.bedroomsMax ? <p className="seeker-profile__field-note">{copy.preferences.bedroomsMin}: {draft.bedroomsMin} · {copy.preferences.bedroomsMax}: {draft.bedroomsMax}</p> : null}
+      </fieldset>
+      <fieldset className="seeker-profile__fieldset">
+        <legend>{copy.preferences.paymentMethod}</legend>
+        <div className="seeker-profile__choice-list" role="group" aria-label={copy.preferences.paymentMethod}>
+          {([['cash', copy.preferences.cash], ['installment', copy.preferences.installment], ['any', copy.preferences.anyPayment]] as const).map(([value, label]) => (
+            <button key={value} type="button" className="seeker-profile__choice" data-selected={draft.paymentMethod === value || undefined} aria-pressed={draft.paymentMethod === value} onClick={() => onChange({ paymentMethod: value })}>{label}</button>
+          ))}
+        </div>
       </fieldset>
       <Button type="submit" loading={saving}>{saving ? copy.saving : copy.preferences.save}</Button>
     </form>
@@ -398,6 +423,7 @@ function SettingsContent({
   authClient,
   saving,
   onChangePassword,
+  onUpdateLocale,
   onSignOut
 }: {
   readonly locale: SupportedLocale;
@@ -406,6 +432,7 @@ function SettingsContent({
   readonly authClient: SeekerProfileAuthClient | undefined;
   readonly saving: boolean;
   readonly onChangePassword: (currentPassword: string, newPassword: string) => Promise<void>;
+  readonly onUpdateLocale: (locale: SupportedLocale) => Promise<void>;
   readonly onSignOut: () => void;
 }) {
   const surfaceCopy = settingsSurfaceCopy(locale);
@@ -435,6 +462,17 @@ function SettingsContent({
   };
   return (
     <div className="seeker-profile__settings">
+      <section className="seeker-profile__settings-card seeker-profile__settings-card--value" aria-labelledby="seeker-profile-language-title">
+        <h3 id="seeker-profile-language-title">{copy.settings.languageHeading}</h3>
+        <p>{copy.settings.languageBody}</p>
+        <label className="seeker-profile__language-field" htmlFor="seeker-profile-settings-language">
+          <span>{copy.profile.language}</span>
+          <select id="seeker-profile-settings-language" value={profile.locale} disabled={saving} onChange={event => { void onUpdateLocale(event.target.value as SupportedLocale); }}>
+            <option value="ar">العربية</option>
+            <option value="en">English</option>
+          </select>
+        </label>
+      </section>
       <section className="seeker-profile__settings-card seeker-profile__settings-card--value" data-state="unavailable" aria-labelledby="seeker-profile-email-title">
         <h3 id="seeker-profile-email-title">{surfaceCopy.emailHeading}</h3>
         <Input id="seeker-profile-settings-email" label={surfaceCopy.currentEmail} value={profile.email} readOnly disabled />
@@ -499,7 +537,7 @@ export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loa
   const [profile, setProfile] = useState<SeekerProfileData | undefined>();
   const [preferences, setPreferences] = useState<SeekerPreferencesData | undefined>();
   const [profileDraft, setProfileDraft] = useState<ProfileDraft | undefined>();
-  const [preferencesDraft, setPreferencesDraft] = useState<PreferencesDraft>({ propertyTypes: '', locations: '', purpose: '', minPrice: '', maxPrice: '', bedroomsMin: '', bedroomsMax: '' });
+  const [preferencesDraft, setPreferencesDraft] = useState<PreferencesDraft>({ propertyTypes: '', locations: '', purpose: '', minPrice: '', maxPrice: '', minArea: '', maxArea: '', bedroomsMin: '', bedroomsMax: '', paymentMethod: '' });
   const [attempt, setAttempt] = useState(0);
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<MutationFeedback | undefined>();
@@ -612,6 +650,10 @@ export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loa
     }
   };
 
+  const updateLocale = async (nextLocale: SupportedLocale) => {
+    await saveProfile({ locale: nextLocale });
+  };
+
   const activePath = activeTab === 'settings'
     ? '/seeker/settings'
     : activeTab === 'profile'
@@ -654,7 +696,7 @@ export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loa
                 <ProfileForm locale={locale} profile={profile} draft={profileDraft} copy={copy} saving={saving} onChange={patch => { setProfileDraft(current => current === undefined ? current : { ...current, ...patch }); setValidationError(false); }} onSubmit={submitProfile} />
               </section>
             ) : (
-              <SettingsContent locale={locale} profile={profile} copy={copy} authClient={authClient} saving={saving} onChangePassword={changePassword} onSignOut={signOut} />
+              <SettingsContent locale={locale} profile={profile} copy={copy} authClient={authClient} saving={saving} onChangePassword={changePassword} onUpdateLocale={updateLocale} onSignOut={signOut} />
             )}
           </>
         ) : null}

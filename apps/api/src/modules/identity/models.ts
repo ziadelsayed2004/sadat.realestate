@@ -44,8 +44,11 @@ export interface SeekerProfileRecord {
     purpose?: 'buy' | 'rent';
     minPrice?: number;
     maxPrice?: number;
+    minArea?: number;
+    maxArea?: number;
     bedroomsMin?: number;
     bedroomsMax?: number;
+    paymentMethod?: 'cash' | 'installment' | 'any';
   };
   createdAt: Date;
   updatedAt: Date;
@@ -157,8 +160,11 @@ const seekerProfileSchema = new Schema<SeekerProfileRecord>(
       purpose: { type: String, enum: ['buy', 'rent'] },
       minPrice: { type: Number, min: 0 },
       maxPrice: { type: Number, min: 0 },
+      minArea: { type: Number, min: 0, max: 1_000_000 },
+      maxArea: { type: Number, min: 0, max: 1_000_000 },
       bedroomsMin: { type: Number, min: 0, max: 100 },
-      bedroomsMax: { type: Number, min: 0, max: 100 }
+      bedroomsMax: { type: Number, min: 0, max: 100 },
+      paymentMethod: { type: String, enum: ['cash', 'installment', 'any'] }
     }
   },
   { ...strictOptions, collection: 'seeker_profiles' }

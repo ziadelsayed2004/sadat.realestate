@@ -27,7 +27,7 @@ const profile = seekerProfileDataSchema.parse({
 });
 
 const preferences: SeekerPreferencesData = {
-  preferences: { propertyTypes: ['apartment'], locations: ['new-cairo'], purpose: 'buy', minPrice: 500000, maxPrice: 1500000, bedroomsMin: 2, bedroomsMax: 4 },
+  preferences: { propertyTypes: ['apartment'], locations: ['new-cairo'], purpose: 'buy', minPrice: 500000, maxPrice: 1500000, minArea: 100, maxArea: 200, bedroomsMin: 2, bedroomsMax: 4, paymentMethod: 'any' },
   updatedAt: '2026-08-18T10:00:00.000Z'
 };
 
@@ -88,13 +88,13 @@ describe('Seeker profile, preferences, and settings', () => {
     const copy = getSeekerProfileCopy('en');
     renderWithLocale(<SeekerProfile locale="en" session={session} tab="preferences" loadProfile={async () => profile} loadPreferences={async () => preferences} actions={actions} />, { locale: 'en' });
     await waitFor(() => expect(screen.getByRole('heading', { name: copy.preferences.heading, level: 2 })).toBeInTheDocument());
-    fireEvent.change(screen.getByLabelText(copy.preferences.minPrice), { target: { value: '2000000' } });
-    fireEvent.change(screen.getByLabelText(copy.preferences.maxPrice), { target: { value: '1000000' } });
+    fireEvent.change(screen.getByLabelText(`${copy.preferences.budgetRange} — ${copy.preferences.minPrice}`), { target: { value: '2000000' } });
+    fireEvent.change(screen.getByLabelText(`${copy.preferences.budgetRange} — ${copy.preferences.maxPrice}`), { target: { value: '1000000' } });
     fireEvent.click(screen.getByRole('button', { name: copy.preferences.save }));
     expect(await screen.findByRole('alert')).toHaveTextContent(copy.validation);
     expect(actions.updatePreferences).not.toHaveBeenCalled();
 
-    fireEvent.change(screen.getByLabelText(copy.preferences.maxPrice), { target: { value: '2500000' } });
+    fireEvent.change(screen.getByLabelText(`${copy.preferences.budgetRange} — ${copy.preferences.maxPrice}`), { target: { value: '2500000' } });
     fireEvent.click(screen.getByRole('button', { name: copy.preferences.save }));
     await waitFor(() => expect(actions.updatePreferences).toHaveBeenCalledWith(expect.objectContaining({ minPrice: 2000000, maxPrice: 2500000 })));
     expect(await screen.findByText(copy.preferences.saved)).toBeInTheDocument();
@@ -107,8 +107,11 @@ describe('Seeker profile, preferences, and settings', () => {
     await waitFor(() => expect(screen.getByRole('heading', { name: copy.preferences.heading, level: 2 })).toBeInTheDocument());
     fireEvent.click(screen.getByRole('button', { name: 'Duplex' }));
     fireEvent.click(screen.getByRole('button', { name: '3' }));
+    fireEvent.change(screen.getByLabelText(`${copy.preferences.areaRange} — ${copy.preferences.minArea}`), { target: { value: '120' } });
+    fireEvent.change(screen.getByLabelText(`${copy.preferences.areaRange} — ${copy.preferences.maxArea}`), { target: { value: '240' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.preferences.installment }));
     fireEvent.click(screen.getByRole('button', { name: copy.preferences.save }));
-    await waitFor(() => expect(actions.updatePreferences).toHaveBeenCalledWith(expect.objectContaining({ propertyTypes: ['apartment', 'duplex'], locations: ['new-cairo'], bedroomsMin: 3, bedroomsMax: 3 })));
+    await waitFor(() => expect(actions.updatePreferences).toHaveBeenCalledWith(expect.objectContaining({ propertyTypes: ['apartment', 'duplex'], locations: ['new-cairo'], minArea: 120, maxArea: 240, bedroomsMin: 3, bedroomsMax: 3, paymentMethod: 'installment' })));
   });
 
   it('renders personal data and settings without unsupported account fields', async () => {
@@ -116,6 +119,7 @@ describe('Seeker profile, preferences, and settings', () => {
     const profileCopy = getSeekerProfileCopy('en');
     await waitFor(() => expect(screen.getByRole('heading', { name: profileCopy.profile.heading, level: 2 })).toBeInTheDocument());
     expect(profileResult.container.querySelector('[data-screen-id="SEK-09"]')).not.toBeNull();
+    expect(profileResult.container.querySelector('.seeker-profile__identity-avatar img')).toHaveAttribute('src', '/assets/canonical/seeker/avatar.png');
     expect(screen.getByDisplayValue(profile.email)).toBeDisabled();
     profileResult.unmount();
 
@@ -125,11 +129,20 @@ describe('Seeker profile, preferences, and settings', () => {
     expect(settingsResult.container.querySelector('[data-screen-id="SEK-10"]')).not.toBeNull();
     expect(screen.getAllByText(settingsCopy.unavailable).length).toBeGreaterThan(0);
     expect(screen.getByDisplayValue(profile.email)).toBeDisabled();
-    expect(settingsResult.container.querySelectorAll('.seeker-profile__settings-card')).toHaveLength(5);
+    expect(settingsResult.container.querySelectorAll('.seeker-profile__settings-card')).toHaveLength(6);
+    expect(screen.getByLabelText(settingsCopy.profile.language)).toHaveValue('ar');
     expect(screen.getByLabelText('Current password')).toBeEnabled();
     expect(screen.getAllByRole('checkbox')).toHaveLength(5);
     expect(screen.getByRole('button', { name: 'Delete account permanently' })).toBeDisabled();
     settingsResult.unmount();
+  });
+
+  it('updates the persisted account locale from settings', async () => {
+    const actions = emptyActions();
+    renderWithLocale(<SeekerProfile locale="en" session={session} tab="settings" loadProfile={async () => profile} actions={actions} />, { locale: 'en' });
+    await waitFor(() => expect(screen.getByLabelText('Preferred language')).toBeInTheDocument());
+    fireEvent.change(screen.getByLabelText('Preferred language'), { target: { value: 'en' } });
+    await waitFor(() => expect(actions.updateProfile).toHaveBeenCalledWith({ locale: 'en' }));
   });
 
   it('changes a valid password and signs the current browser out', async () => {

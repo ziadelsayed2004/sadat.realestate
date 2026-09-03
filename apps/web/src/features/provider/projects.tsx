@@ -440,6 +440,13 @@ export function ProviderProjects({ locale, session, authClient, apiOrigin, load,
   }
 
   async function saveProject(input: ProjectCreate | ProjectPatch): Promise<void> {
+    // Do not issue a write if the provider session changed after the modal
+    // opened. The server remains authoritative, but the client should fail
+    // closed before sending a stale privileged action.
+    if (sessionRole !== 'provider') {
+      setMutationError(copy.errors.generic);
+      return;
+    }
     setSaving(true);
     setMutationError(undefined);
     try {
@@ -465,6 +472,10 @@ export function ProviderProjects({ locale, session, authClient, apiOrigin, load,
 
   async function submitProjectForReview(input: ProjectSubmitRequest): Promise<void> {
     if (submitProject === undefined) return;
+    if (sessionRole !== 'provider') {
+      setMutationError(copy.errors.generic);
+      return;
+    }
     setSaving(true);
     setMutationError(undefined);
     try {

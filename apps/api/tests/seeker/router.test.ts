@@ -117,10 +117,12 @@ test('registers and serves only the authenticated seeker projection', async () =
 
     const updatedPreferences = await fetch(`${baseUrl}/api/v1/me/preferences`, {
       method: 'PATCH', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ locations: ['new-cairo'], minPrice: 100, maxPrice: 200 })
+      body: JSON.stringify({ locations: ['new-cairo'], minPrice: 100, maxPrice: 200, minArea: 90, maxArea: 180, paymentMethod: 'installment' })
     });
     assert.equal(updatedPreferences.status, 200);
-    assert.equal(typeof (await updatedPreferences.json() as { data?: { updatedAt?: string } }).data?.updatedAt, 'string');
+    const preferencesBody = await updatedPreferences.json() as { data?: { preferences?: { minArea?: number; maxArea?: number; paymentMethod?: string }; updatedAt?: string } };
+    assert.equal(typeof preferencesBody.data?.updatedAt, 'string');
+    assert.deepEqual(preferencesBody.data?.preferences, { locations: ['new-cairo'], minPrice: 100, maxPrice: 200, minArea: 90, maxArea: 180, paymentMethod: 'installment' });
 
     const invalid = await fetch(`${baseUrl}/api/v1/me/preferences`, {
       method: 'PATCH', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },

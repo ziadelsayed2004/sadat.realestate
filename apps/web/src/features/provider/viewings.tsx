@@ -300,6 +300,10 @@ export function ProviderViewings({ locale, session, authClient, apiOrigin, load,
 
   async function transition(input: ViewingTransition): Promise<void> {
     if (selectedAction === undefined) return;
+    if (sessionRole !== 'provider') {
+      setMutationError(copy.errors.generic);
+      return;
+    }
     setSaving(true);
     setMutationError(undefined);
     try {

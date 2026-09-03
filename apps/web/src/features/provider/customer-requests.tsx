@@ -379,6 +379,12 @@ export function ProviderCustomerRequests({ locale, session, authClient, apiOrigi
   }
 
   async function saveRequest(input: ProviderCustomerRequestPayload): Promise<void> {
+    // The session can expire while the modal is open. Re-check the role at the
+    // mutation boundary instead of relying only on the render-time guard.
+    if (sessionRole !== 'provider') {
+      setMutationError(copy.errors.generic);
+      return;
+    }
     setSaving(true);
     setMutationError(undefined);
     try {
@@ -395,6 +401,10 @@ export function ProviderCustomerRequests({ locale, session, authClient, apiOrigi
 
   async function transitionRequest(reason: string): Promise<void> {
     if (transitionTarget === undefined) return;
+    if (sessionRole !== 'provider') {
+      setMutationError(copy.errors.generic);
+      return;
+    }
     setSaving(true);
     setMutationError(undefined);
     try {

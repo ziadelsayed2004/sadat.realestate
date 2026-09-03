@@ -84,7 +84,15 @@ test('declares partial identifier uniqueness and role/status lookup indexes', ()
 test('validates seeker, provider, and admin profiles with unique user ownership', async () => {
   const { SeekerProfile, ProviderProfile, AdminProfile } = createModels();
   const userId = new mongoose.Types.ObjectId();
-  await new SeekerProfile({ userId }).validate();
+  const seeker = new SeekerProfile({ userId, preferences: { minArea: 100, maxArea: 200, paymentMethod: 'installment' } });
+  await seeker.validate();
+  assert.equal(seeker.preferences?.minArea, 100);
+  assert.equal(seeker.preferences?.maxArea, 200);
+  assert.equal(seeker.preferences?.paymentMethod, 'installment');
+  await assert.rejects(
+    new SeekerProfile({ userId, preferences: { paymentMethod: 'mortgage' } }).validate(),
+    /paymentMethod/
+  );
   await new AdminProfile({ userId }).validate();
   const provider = new ProviderProfile({ userId, providerType: 'developer_company' });
   await provider.validate();

@@ -30,4 +30,10 @@ test('rejects malformed seeker identifiers, empty patches, and inverted ranges',
   assert.throws(() => seekerPreferencesPatchSchema.parse({ locations: ['new-cairo'], userId: 'other-user' }));
   assert.throws(() => seekerPreferencesSchema.parse({ minPrice: 10, maxPrice: 1 }));
   assert.throws(() => seekerPreferencesSchema.parse({ bedroomsMin: 3, bedroomsMax: 1 }));
+  assert.throws(() => seekerPreferencesSchema.parse({ minArea: 250, maxArea: 100 }));
+  assert.throws(() => seekerPreferencesSchema.parse({ paymentMethod: 'mortgage' }));
+  assert.deepEqual(
+    seekerPreferencesSchema.parse({ minArea: 100, maxArea: 200, paymentMethod: 'installment' }),
+    { minArea: 100, maxArea: 200, paymentMethod: 'installment' }
+  );
 });

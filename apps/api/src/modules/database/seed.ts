@@ -82,7 +82,7 @@ const localized = (ar: string, en: string) => ({ ar, en });
 interface SyntheticSeedDocument {
   _id: Types.ObjectId;
   synthetic: true;
-  seedKey: 'local-showcase-v1' | 'local-showcase-v2' | 'figma-public-content-v3' | 'figma-public-catalogue-v4' | 'figma-public-interactions-v5' | 'auth-buyer-v6';
+  seedKey: 'local-showcase-v1' | 'local-showcase-v2' | 'figma-public-content-v3' | 'figma-public-catalogue-v4' | 'figma-public-interactions-v5' | 'auth-buyer-v6' | 'figma-public-details-v9';
   [key: string]: unknown;
 }
 
@@ -619,8 +619,11 @@ export const SYNTHETIC_WORKFLOW_SEED_STEP: DevelopmentSeedStep = {
         purpose: 'buy',
         minPrice: 1_000_000,
         maxPrice: 5_000_000,
+        minArea: 100,
+        maxArea: 200,
         bedroomsMin: 2,
-        bedroomsMax: 4
+        bedroomsMax: 4,
+        paymentMethod: 'any'
       },
       createdAt: SEEDED_AT,
       updatedAt: SEEDED_AT,
@@ -635,8 +638,11 @@ export const SYNTHETIC_WORKFLOW_SEED_STEP: DevelopmentSeedStep = {
         purpose: 'buy',
         minPrice: 1_500_000,
         maxPrice: 6_000_000,
+        minArea: 100,
+        maxArea: 200,
         bedroomsMin: 2,
-        bedroomsMax: 5
+        bedroomsMax: 5,
+        paymentMethod: 'any'
       },
       createdAt: SEEDED_AT,
       updatedAt: SEEDED_AT,
@@ -1022,6 +1028,94 @@ export const FIGMA_PUBLIC_INTERACTIONS_SEED_STEP: DevelopmentSeedStep = {
   }
 };
 
+/**
+ * Completes the published property fixture after the original showcase seed.
+ * This is a separate, idempotent step so environments that already applied
+ * local-showcase-v1 can receive the public details contract safely.
+ */
+export const FIGMA_PUBLIC_DETAILS_SEED_STEP: DevelopmentSeedStep = {
+  id: 'figma-public-details-v9',
+  async run(connection) {
+    const seedKey = 'figma-public-details-v9' as const;
+    const featureRows = [
+      ['670000000000000000000092', 'private-garden', 'حديقة خاصة', 'Private garden', 'exterior'],
+      ['670000000000000000000093', 'private-entrance', 'مدخل خاص', 'Private entrance', 'exterior'],
+      ['670000000000000000000094', 'landscaped-garden', 'حدائق منسقة', 'Landscaped gardens', 'exterior'],
+      ['670000000000000000000095', 'flexible-payment', 'أنظمة سداد مرنة', 'Flexible payment plans', 'payment'],
+      ['670000000000000000000096', 'ultra-finish', 'تشطيب فاخر', 'Premium finishing', 'finishing'],
+      ['670000000000000000000097', 'balcony', 'شرفة واسعة', 'Spacious balcony', 'interior'],
+      ['670000000000000000000098', 'private-parking', 'جراج خاص', 'Private parking', 'building'],
+      ['670000000000000000000099', 'security', 'أمن وحراسة', 'Security and guarding', 'building'],
+      ['67000000000000000000009a', 'elevator', 'مصعد', 'Elevator', 'building'],
+      ['67000000000000000000009b', 'clubhouse', 'نادي اجتماعي', 'Clubhouse', 'community'],
+      ['67000000000000000000009c', 'smart-home', 'تجهيزات منزل ذكي', 'Smart-home provisions', 'interior'],
+      ['67000000000000000000009d', 'natural-light', 'إضاءة طبيعية', 'Natural light', 'interior'],
+      ['67000000000000000000009e', 'maid-room', 'غرفة للخادمة', 'Maid room', 'layout'],
+      ['67000000000000000000009f', 'verified-documents', 'مستندات موثقة', 'Verified documents', 'trust'],
+      ['6700000000000000000000a0', 'family-friendly', 'مناسب للعائلات', 'Family-friendly layout', 'layout']
+    ] as const;
+    const serviceRows = [
+      ['6700000000000000000000a1', 'schools', 'مدارس قريبة', 'Nearby schools', 'education', '5 دقائق', '5 min'],
+      ['6700000000000000000000a2', 'retail-mall', 'مول تجاري', 'Retail mall', 'shopping', '8 دقائق', '8 min'],
+      ['6700000000000000000000a3', 'hospital', 'مستشفى', 'Hospital', 'healthcare', '10 دقائق', '10 min'],
+      ['6700000000000000000000a4', 'public-transport', 'مواصلات عامة', 'Public transport', 'transport', '4 دقائق', '4 min'],
+      ['6700000000000000000000a5', 'mosque', 'مسجد', 'Mosque', 'community', '3 دقائق', '3 min'],
+      ['6700000000000000000000a6', 'restaurants', 'مطاعم وكافيهات', 'Restaurants and cafés', 'dining', '6 دقائق', '6 min']
+    ] as const;
+    await insertSyntheticDocuments(connection, 'features_services', [
+      ...featureRows.map(([id, slug, ar, en, groupKey], order) => document(new Types.ObjectId(id), {
+        kind: 'feature', groupKey, name: localized(ar, en), slug, order, active: true,
+        createdBy: ids.user, updatedBy: ids.user, createdAt: SEEDED_AT, updatedAt: SEEDED_AT, version: 0
+      }, seedKey)),
+      ...serviceRows.map(([id, slug, ar, en, groupKey, distanceAr, distanceEn], order) => document(new Types.ObjectId(id), {
+        kind: 'service', groupKey, name: localized(ar, en), detail: localized('بالقرب من العقار', 'Close to the property'), distanceLabel: localized(distanceAr, distanceEn), slug, order, active: true,
+        createdBy: ids.user, updatedBy: ids.user, createdAt: SEEDED_AT, updatedAt: SEEDED_AT, version: 0
+      }, seedKey))
+    ]);
+
+    await insertSyntheticDocuments(connection, 'property_media', [document(new Types.ObjectId('670000000000000000000091'), {
+      propertyId: ids.propertyTwo,
+      providerId: ids.providerProfile,
+      kind: 'image',
+      imageUrl: '/assets/figma/public/PUB-03/raw-02.jpg',
+      originalFilename: 'demo-garden-duplex-cover.jpg',
+      declaredMime: 'image/jpeg',
+      detectedMime: 'image/jpeg',
+      byteSize: 1,
+      sha256: 'a'.repeat(64),
+      storageKey: `public/${'a'.repeat(32)}`,
+      sortOrder: 0,
+      isCover: true,
+      processingState: 'ready',
+      active: true,
+      createdAt: SEEDED_AT,
+      updatedAt: SEEDED_AT,
+      version: 0
+    }, seedKey)]);
+    await connection.collection('property_media').updateOne(
+      { _id: new Types.ObjectId('670000000000000000000091'), synthetic: true },
+      { $set: {
+        imageUrl: '/assets/figma/public/PUB-03/raw-02.jpg',
+        originalFilename: 'demo-garden-duplex-cover.jpg',
+        declaredMime: 'image/jpeg',
+        detectedMime: 'image/jpeg',
+        seedKey,
+        updatedAt: SEEDED_AT
+      } }
+    );
+
+    await connection.collection('properties').updateOne(
+      { _id: ids.propertyTwo, synthetic: true },
+      { $set: {
+        featureIds: featureRows.map(([id]) => new Types.ObjectId(id)),
+        serviceIds: serviceRows.map(([id]) => new Types.ObjectId(id)),
+        seedKey,
+        updatedAt: SEEDED_AT
+      } }
+    );
+  }
+};
+
 export const AUTH_BUYER_SEED_STEP: DevelopmentSeedStep = {
   id: 'auth-buyer-v6',
   async run(connection) {
@@ -1031,7 +1125,7 @@ export const AUTH_BUYER_SEED_STEP: DevelopmentSeedStep = {
     }, 'auth-buyer-v6')]);
     await insertSyntheticDocuments(connection, 'seeker_profiles', [document(ids.buyerProfile, {
       userId: ids.buyerUser, firstName: 'مشتري', lastName: 'تجريبي',
-      preferences: { propertyTypes: ['apartment', 'villa'], locations: [ids.location.toHexString()], purpose: 'buy', minPrice: 1_500_000, maxPrice: 6_000_000, bedroomsMin: 2, bedroomsMax: 5 },
+      preferences: { propertyTypes: ['apartment', 'villa'], locations: [ids.location.toHexString()], purpose: 'buy', minPrice: 1_500_000, maxPrice: 6_000_000, minArea: 100, maxArea: 200, bedroomsMin: 2, bedroomsMax: 5, paymentMethod: 'any' },
       createdAt: SEEDED_AT, updatedAt: SEEDED_AT, version: 0
     }, 'auth-buyer-v6')]);
   }
@@ -1043,6 +1137,7 @@ export const DEVELOPMENT_SEED_STEPS: readonly DevelopmentSeedStep[] = [
   FIGMA_PUBLIC_CONTENT_SEED_STEP,
   FIGMA_PUBLIC_CATALOGUE_SEED_STEP,
   FIGMA_PUBLIC_INTERACTIONS_SEED_STEP,
+  FIGMA_PUBLIC_DETAILS_SEED_STEP,
   AUTH_BUYER_SEED_STEP
 ];
 

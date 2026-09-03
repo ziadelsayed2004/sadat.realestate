@@ -15,14 +15,20 @@ export const seekerPreferencesSchema = z.object({
   purpose: z.enum(['buy', 'rent']).optional(),
   minPrice: z.number().int().nonnegative().max(1_000_000_000_000).optional(),
   maxPrice: z.number().int().nonnegative().max(1_000_000_000_000).optional(),
+  minArea: z.number().int().nonnegative().max(1_000_000).optional(),
+  maxArea: z.number().int().nonnegative().max(1_000_000).optional(),
   bedroomsMin: z.number().int().nonnegative().max(100).optional(),
-  bedroomsMax: z.number().int().nonnegative().max(100).optional()
+  bedroomsMax: z.number().int().nonnegative().max(100).optional(),
+  paymentMethod: z.enum(['cash', 'installment', 'any']).optional()
 }).strict().superRefine((value, context) => {
   if (value.minPrice !== undefined && value.maxPrice !== undefined && value.minPrice > value.maxPrice) {
     context.addIssue({ code: 'custom', path: ['minPrice'], message: 'minPrice must not exceed maxPrice' });
   }
   if (value.bedroomsMin !== undefined && value.bedroomsMax !== undefined && value.bedroomsMin > value.bedroomsMax) {
     context.addIssue({ code: 'custom', path: ['bedroomsMin'], message: 'bedroomsMin must not exceed bedroomsMax' });
+  }
+  if (value.minArea !== undefined && value.maxArea !== undefined && value.minArea > value.maxArea) {
+    context.addIssue({ code: 'custom', path: ['minArea'], message: 'minArea must not exceed maxArea' });
   }
 });
 

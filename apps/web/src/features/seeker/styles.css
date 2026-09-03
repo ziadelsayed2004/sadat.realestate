@@ -1677,7 +1677,9 @@
   border-radius: 50%;
   font-size: 1.15rem;
   font-weight: 800;
+  overflow: hidden;
 }
+.seeker-profile__identity-avatar img { inline-size: 100%; block-size: 100%; object-fit: cover; }
 .seeker-profile__identity > span:last-child { display: grid; gap: .35rem; }
 .seeker-profile__identity strong { color: #17233d; font-size: 1.15rem; }
 .seeker-profile__identity small { color: #7d8492; }
@@ -1691,6 +1693,10 @@
   margin-block-start: var(--space-lg);
 }
 .seeker-profile__settings-actions .seeker-profile__unavailable-label { margin-block-start: 0; }
+.seeker-profile__language-field { display: grid; gap: .5rem; margin-block-start: 1rem; }
+.seeker-profile__language-field > span { color: var(--color-text-secondary); font-size: .875rem; font-weight: 700; }
+.seeker-profile__language-field select { min-block-size: 3rem; padding: .65rem .9rem; color: var(--color-text); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); font: inherit; }
+.seeker-profile__language-field select:focus-visible { outline: 3px solid color-mix(in srgb, var(--color-brand-primary) 28%, transparent); outline-offset: 2px; }
 .seeker-profile__settings-card--password .ui-field + .ui-field { margin-block-start: var(--space-lg); }
 .seeker-profile__password-fields { display: grid; gap: var(--space-lg); margin-block-start: var(--space-lg); }
 .seeker-profile__toggle-list { margin-block-start: var(--space-lg); }

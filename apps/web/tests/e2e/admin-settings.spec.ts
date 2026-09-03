@@ -62,5 +62,16 @@ test.describe('ADM-50 through ADM-58 admin settings', () => {
     await expect(page.locator('[data-state="empty-values"]')).toBeVisible();
     await expect(page.getByTestId('admin-settings-requests-form').locator('input, select')).toHaveCount(0);
     await expect(page.getByRole('button', { name: /save changes|حفظ التغييرات|保存更改/iu })).toBeVisible();
+    const geometry = await page.locator('[data-screen-id="ADM-54"]').evaluate(element => {
+      const root = element.getBoundingClientRect();
+      const navigation = element.querySelector('.admin-dashboard__navigation')?.getBoundingClientRect();
+      const editor = element.querySelector('.admin-settings__editor')?.getBoundingClientRect();
+      const tabs = element.querySelector('.admin-settings__tabs')?.getBoundingClientRect();
+      return { rootWidth: root.width, navigationWidth: navigation?.width, editorWidth: editor?.width, tabsHeight: tabs?.height };
+    });
+    expect(geometry.rootWidth).toBe(await page.evaluate(() => window.innerWidth));
+    expect(geometry.navigationWidth).toBe(240);
+    expect(geometry.editorWidth).toBe(860);
+    expect(geometry.tabsHeight).toBeLessThan(80);
   });
 });

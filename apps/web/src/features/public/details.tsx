@@ -170,6 +170,27 @@ function Gallery({
   );
 }
 
+/**
+ * Showcase and older published records may have a cover image on the property
+ * itself before the media workflow has produced a ready row. Keep this
+ * presentation-only fallback scoped to an empty media collection: a non-empty
+ * collection remains authoritative and is still filtered by the API.
+ */
+function galleryMedia(data: PublicPropertyDetailsData): readonly PublicPropertyMedia[] {
+  if (data.media.length > 0 || data.imageUrl === undefined) return data.media;
+  return [{
+    id: data.id,
+    propertyId: data.id,
+    kind: 'image',
+    imageUrl: data.imageUrl,
+    originalFilename: 'property-cover.jpg',
+    detectedMime: 'image/jpeg',
+    byteSize: 1,
+    sortOrder: 0,
+    isCover: true
+  }];
+}
+
 function PropertyFactIcon({ kind }: { readonly kind: 'area' | 'bedrooms' | 'bathrooms' | 'floor' | 'delivery' | 'finishing' }) {
   const icon = (() => {
     switch (kind) {
@@ -415,7 +436,7 @@ function RelatedProperties({
     <section className="public-property-details__related" aria-labelledby="public-property-details-related-title">
       <h2 id="public-property-details-related-title">{copy.relatedTitle}</h2>
       <div className="public-property-details__related-grid">
-        {properties.map(property => {
+        {properties.slice(0, 1).map(property => {
           const relatedTitle = localizedText(property.name, locale) ?? property.slug;
           const relatedFeatures = [
             ...(property.viewCount === undefined ? [] : [{ label: locale === 'ar' ? '\u0627\u0644\u0645\u0634\u0627\u0647\u062f\u0627\u062a' :'Views', value: <span className="public-property-details__related-feature-value"><DetailLineIcon kind="eye" />{property.viewCount.toLocaleString(locale)}</span> }]),
@@ -643,7 +664,7 @@ function SuccessDetails({
         <a className="public-property-details__back" href="/properties"><DetailLineIcon kind="back" />{copy.backToResults}</a>
         <div className="public-property-details__layout">
           <div className="public-property-details__main-column">
-            <Gallery media={data.media} copy={copy} locale={locale} installmentAvailable={data.installmentAvailable} />
+            <Gallery media={galleryMedia(data)} copy={copy} locale={locale} installmentAvailable={data.installmentAvailable} />
             <PropertySummary data={data} locale={locale} copy={copy} />
             <SourceAndProject data={data} locale={locale} copy={copy} />
             <Description data={data} locale={locale} copy={copy} />

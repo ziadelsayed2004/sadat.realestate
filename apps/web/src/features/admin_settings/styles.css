@@ -40,3 +40,44 @@
 .admin-settings input:focus-visible, .admin-settings textarea:focus-visible, .admin-settings__tabs a:focus-visible, .admin-settings button:focus-visible { outline: 3px solid #5a8cf1; outline-offset: 3px; }
 @media (max-width: 980px) { .admin-settings { grid-template-columns: 1fr; } .admin-settings > .admin-dashboard__navigation { border-inline-end: 0; border-block-end: 1px solid #e4e7ec; } .admin-settings__content { padding-inline: 18px; } }
 @media (max-width: 700px) { .admin-settings__fields, .admin-settings__localized-grid { grid-template-columns: 1fr; } .admin-settings__heading { padding: 22px 18px; } .admin-settings__editor-heading { align-items: flex-start; flex-direction: column; padding: 18px; } .admin-settings__editor form { padding-inline: 18px; } .admin-settings__version { white-space: normal; } }
+
+/* ADM-54 is compared with the current owner-authored 1440 × 1080 desktop source. */
+.route-shell--admin:has(.admin-settings[data-screen-id='ADM-54']) > .route-shell__header { display: none; }
+.route-shell--admin .admin-settings[data-screen-id='ADM-54'] { position: relative; grid-template-columns: 240px minmax(0, 1fr); min-height: 1080px; padding-top: 74px; }
+.admin-settings[data-screen-id='ADM-54']::after { content: '●  مدير النظام'; position: absolute; z-index: 1; inset: 0 240px auto 0; height: 74px; display: flex; align-items: center; padding-left: 38px; border-bottom: 1px solid #e3e4e6; background: #fff; color: #788296; font-size: 14px; font-weight: 700; direction: ltr; }
+.admin-settings[data-screen-id='ADM-54']::before { content: '☰    ⌕    ابحث عن مستخدم، عقار، مشروع، مقال أو طلب'; position: absolute; z-index: 2; top: 16px; left: 38px; width: 465px; height: 42px; display: flex; align-items: center; justify-content: center; border: 1px solid #dfd3b6; border-radius: 24px; background: #f5e9cb; color: #788296; font-size: 14px; word-spacing: 8px; direction: rtl; }
+.route-shell--admin .route-shell__body > .app-main > .admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation { position: relative; z-index: 3; grid-row: 1; width: 240px; min-height: 1080px; margin-top: -74px; padding: 126px 16px 18px; border-inline-end: 1px solid #e3e4e6; }
+.admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation::before { content: ''; position: absolute; inset: 20px 16px auto; height: 88px; border-bottom: 1px solid #e3e4e6; background: url('/assets/sadat-real-estate-logo.png') center 2px / 102px auto no-repeat; }
+.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation-heading { display: none; }
+.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation-groups { display: grid; gap: 0; }
+.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation-group { padding-block: 0 14px; border-bottom: 1px solid #eff0f1; }
+.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation-group + .admin-dashboard__navigation-group { padding-block-start: 14px; }
+.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation-kicker { margin: 0; padding: 0 10px 8px; color: #a3adbd; font-size: 13px; letter-spacing: 0; text-transform: none; }
+.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation a { min-height: 42px; padding: 0 10px; border-radius: 12px; font-size: 14px; }
+.admin-settings[data-screen-id='ADM-54'] .admin-dashboard__navigation a[data-active='true'] { background: #f8efd9; color: #0e5849; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__content { z-index: 2; padding: 32px 42px 76px; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__heading { max-width: none; margin: 0 0 24px; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__eyebrow { margin-bottom: 8px; color: #0e5849; font-size: 13px; letter-spacing: 0; text-transform: none; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__heading h1 { margin-bottom: 8px; font-size: 34px; line-height: 1.25; letter-spacing: -.3px; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__heading p:not(.admin-settings__eyebrow) { max-width: none; font-size: 16px; line-height: normal; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__tabs { max-width: none; flex-wrap: nowrap; gap: 8px; margin: 0 0 26px; padding: 10px; overflow: hidden; border: 1px solid #e3e4e6; border-radius: 18px; background: #fff; box-shadow: 0 8px 24px rgb(27 41 66 / 8%); }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__tabs a { min-height: auto; flex: 0 0 auto; padding: 12px 17px; border: 0; color: #788296; font-size: 14px; border-radius: 999px; white-space: nowrap; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__tabs a[data-active='true'] { color: #fff; background: #0e5849; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__editor { width: min(860px, 100%); max-width: none; margin-right: 0; margin-left: auto; border-color: #e3e4e6; box-shadow: 0 8px 24px rgb(27 41 66 / 8%); }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__editor-heading { align-items: flex-start; padding: 24px 28px 20px; background: #fff; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__editor-heading h2 { font-size: 23px; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__editor-heading p { margin-top: 7px; font-size: 14px; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__version { padding: 8px 12px; border: 1px solid #e3e4e6; border-radius: 999px; font-size: 12px; font-weight: 400; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__editor form { gap: 0; padding: 26px 28px 28px; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__empty-values { min-height: 160px; grid-template-columns: 1fr; gap: 0; padding: 22px 30px; place-items: center; text-align: center; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__empty-icon { margin: 0 auto 10px; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__empty-values h3 { font-size: 17px; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__empty-values p { max-width: 540px; margin-top: 7px; font-size: 13px; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__editor form > .admin-settings__hint { margin: 22px 0; font-size: 13px; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__editor form > label { gap: 8px; color: #1b2942; font-size: 14px; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__editor form > label textarea { min-height: 92px; padding: 13px 15px; border-color: #d9d9d5; border-radius: 14px; background: #faf8f2; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__actions { justify-content: flex-start; margin-top: 18px; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__actions .ui-button--primary { min-height: auto; padding: 12px 24px; border-radius: 999px; }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__direction-note { width: min(860px, 100%); max-width: none; margin: 20px 0 0 auto; font-size: 12px; text-align: left; }
+@media (max-width: 980px) { .admin-settings[data-screen-id='ADM-54'] { grid-template-columns: 1fr; min-height: 100vh; padding-top: 0; } .admin-settings[data-screen-id='ADM-54']::before, .admin-settings[data-screen-id='ADM-54']::after { display: none; } .admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation { grid-row: auto; min-height: auto; margin-top: 0; padding: 20px 18px; } .admin-settings[data-screen-id='ADM-54'] > .admin-dashboard__navigation::before { display: none; } }
+@media (max-width: 700px) { .admin-settings[data-screen-id='ADM-54'] .admin-settings__content { padding: 24px 18px 44px; } .admin-settings[data-screen-id='ADM-54'] .admin-settings__tabs { overflow-x: auto; } .admin-settings[data-screen-id='ADM-54'] .admin-settings__editor-heading { flex-direction: column; } }
