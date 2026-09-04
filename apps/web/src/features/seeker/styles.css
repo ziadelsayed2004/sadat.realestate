@@ -2061,7 +2061,7 @@
   }
 
   .seeker-profile > .seeker-dashboard__content > .seeker-profile__tabs {
-    width: min(100%, 18.5rem);
+    width: max-content;
     margin-left: max(0px, calc((100% - 42rem) / 2));
     margin-right: auto;
     padding: .25rem;

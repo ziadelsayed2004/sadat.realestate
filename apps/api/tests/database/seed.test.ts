@@ -3,12 +3,37 @@ import { EventEmitter } from 'node:events';
 import test from 'node:test';
 import type { Connection } from 'mongoose';
 import {
+  FIGMA_PUBLIC_ABOUT_SEED_STEP,
   FIGMA_PUBLIC_DETAILS_SEED_STEP,
   FIGMA_PUBLIC_LISTING_SEED_STEP,
   runDevelopmentSeed,
   SYNTHETIC_SHOWCASE_SEED_STEP,
   SYNTHETIC_WORKFLOW_SEED_STEP
 } from '../../src/modules/database/seed.js';
+
+test('public About seed repairs the existing local intro with canonical copy', async () => {
+  let receivedFilter: Record<string, unknown> | undefined;
+  let receivedUpdate: Record<string, unknown> | undefined;
+  const connection = {
+    collection() {
+      return {
+        async updateOne(filter: Record<string, unknown>, update: Record<string, unknown>) {
+          receivedFilter = filter;
+          receivedUpdate = update;
+          return { acknowledged: true };
+        }
+      };
+    }
+  } as unknown as Connection;
+
+  await FIGMA_PUBLIC_ABOUT_SEED_STEP.run(connection);
+
+  assert.equal(receivedFilter?.synthetic, true);
+  assert.equal(receivedFilter?.key, 'about_intro');
+  const body = (receivedUpdate?.$set as Record<string, unknown>).body as { ar: string; en: string };
+  assert.match(body.ar, /أنشأنا هذه المنصة/);
+  assert.match(body.en, /specialized and trusted/);
+});
 
 test('public listing seed adds the missing canonical cards with local media', async () => {
   const writes: Array<{ collection: string; document: Record<string, unknown> }> = [];

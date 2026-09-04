@@ -113,10 +113,10 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
       <header className="provider-dashboard__topbar">
         <span className="provider-dashboard__topbar-arrow" aria-hidden="true">›</span>
         <span className="provider-dashboard__topbar-spacer" />
+        <span className="provider-dashboard__topbar-avatar" aria-hidden="true">{locale === 'ar' ? 'م' : 'P'}</span>
         <a className="provider-dashboard__topbar-notifications" href={localeForProviderPath(locale, '/provider/notifications')} aria-label={copy.nav.notifications}>
           <img src={navigationIcons.notifications.default} alt="" width="18" height="18" /><i />
         </a>
-        <span className="provider-dashboard__topbar-avatar" aria-hidden="true">{locale === 'ar' ? 'م' : 'P'}</span>
       </header>
       <nav className="provider-dashboard__navigation" aria-label={copy.overview.eyebrow}>
         <a className="provider-dashboard__brand" href={localeForProviderPath(locale, '/provider')} aria-label={copy.overview.eyebrow}>
@@ -155,7 +155,7 @@ function MetricCard({ label, value, tone, unavailable, unavailableBody }: { read
       <span className="provider-dashboard__metric-icon" aria-hidden="true">{unavailable ? '—' : '•'}</span>
       <strong>{value}</strong>
       <span>{label}</span>
-      {unavailableBody ? <small>{unavailableBody}</small> : null}
+      {unavailableBody ? <small title={unavailableBody}>{unavailableBody}</small> : null}
     </article>
   );
 }

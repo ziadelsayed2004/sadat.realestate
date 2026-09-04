@@ -209,6 +209,23 @@ test.describe('Seeker adaptive desktop shell', () => {
     await page.goto(localizedPath('/seeker', 'ar'), { waitUntil: 'domcontentloaded' });
     await expect(page.locator('.seeker-dashboard__nav')).toBeVisible();
     await expect(page.locator('.seeker-dashboard__summary-card')).toHaveCount(4);
+    const brand = page.locator('.seeker-dashboard__brand');
+    await expect(brand).toHaveCount(1);
+    await expect(brand).not.toHaveAttribute('href', /./u);
+    expect(await brand.evaluate(node => {
+      const style = getComputedStyle(node);
+      return {
+        tagName: node.tagName,
+        borderRadius: style.borderRadius,
+        backgroundColor: style.backgroundColor,
+        borderWidth: style.borderWidth
+      };
+    })).toEqual({
+      tagName: 'DIV',
+      borderRadius: '0px',
+      backgroundColor: 'rgba(0, 0, 0, 0)',
+      borderWidth: '0px'
+    });
 
     const geometry = await page.evaluate(() => {
       const rect = (selector: string) => document.querySelector<HTMLElement>(selector)?.getBoundingClientRect();

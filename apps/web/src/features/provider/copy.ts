@@ -65,12 +65,12 @@ export interface ProviderCopy {
 const copyByLocale: Readonly<Record<SupportedLocale, ProviderCopy>> = {
   ar: {
     nav: {
-      overview: 'نظرة عامة',
+      overview: 'لوحة التحكم',
       properties: 'عقاراتي',
-      projects: 'مشروعاتي',
+      projects: 'المشاريع',
       requests: 'طلبات العملاء',
       viewings: 'المعاينات',
-      advertising: 'طلبات الإعلان',
+      advertising: 'الإعلانات',
       commission: 'العمولة',
       notifications: 'الإشعارات',
       settings: 'الإعدادات'
@@ -156,12 +156,12 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderCopy>> = {
   },
   en: {
     nav: {
-      overview: 'Overview',
+      overview: 'Dashboard',
       properties: 'My properties',
       projects: 'Projects',
       requests: 'Customer requests',
       viewings: 'Viewings',
-      advertising: 'Advertising requests',
+      advertising: 'Advertising',
       commission: 'Commission',
       notifications: 'Notifications',
       settings: 'Settings'

@@ -126,7 +126,16 @@ test.describe('PRV-01 Provider Overview', () => {
     await expect(page.getByTestId('provider-summary-pending')).toContainText('1');
     await expect(page.getByTestId('provider-summary-drafts')).toContainText('1');
     await expect(page.locator('.provider-dashboard__navigation a[data-active="true"]')).toHaveAttribute('href', `/provider?lang=${locale}`);
+    await expect(page.locator('.provider-dashboard__navigation a[data-active="true"]')).toContainText(locale === 'ar' ? 'لوحة التحكم' : 'Dashboard');
     await expect(page.locator('body')).not.toContainText(/assignedTo|internalNotes|auditData|storageKey|accessToken|refreshToken/u);
+
+    const viewportWidth = page.viewportSize()?.width ?? 0;
+    const dashboardBox = await page.locator('.provider-dashboard').boundingBox();
+    const navigationBox = await page.locator('.provider-dashboard__navigation').boundingBox();
+    expect(navigationBox).not.toBeNull();
+    expect(navigationBox?.width).toBe(240);
+    expect(navigationBox?.x).toBe(locale === 'ar' ? viewportWidth - 240 : 0);
+    expect(navigationBox?.height).toBeGreaterThanOrEqual((dashboardBox?.height ?? 0) - 1);
 
     await page.locator('.a11y-skip-link').focus();
     await expect(page.locator('.a11y-skip-link')).toBeFocused();
@@ -143,5 +152,35 @@ test.describe('PRV-01 Provider Overview', () => {
     await page.goto(`/provider?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-access="authentication-required"]')).toBeVisible();
     await expect(page.locator('[data-screen-id="PRV-01"]')).toHaveCount(0);
+  });
+
+  test('keeps the canonical 1577px desktop frame geometry', async ({ page }, testInfo) => {
+    const locale = localeForProject();
+    await page.setViewportSize({ width: 1577, height: 1067 });
+    await routeProviderSession(page);
+    await routeProviderOverview(page);
+    await page.goto(`/provider?lang=${encodeURIComponent(locale)}`);
+
+    const navigationBox = await page.locator('.provider-dashboard__navigation').boundingBox();
+    const topbarBox = await page.locator('.provider-dashboard__topbar').boundingBox();
+    const contentBox = await page.locator('.provider-dashboard__content').boundingBox();
+    const insightsBox = await page.locator('.provider-dashboard__insights').boundingBox();
+    const chartBox = await page.locator('.provider-dashboard__chart').boundingBox();
+    const quickActionsBox = await page.locator('.provider-dashboard__quick-actions').boundingBox();
+    const recentBox = await page.locator('.provider-dashboard__recent').boundingBox();
+    const metricGrid = page.locator('.provider-dashboard__metric-grid');
+    expect(navigationBox).not.toBeNull();
+    expect(topbarBox).not.toBeNull();
+    expect(contentBox).not.toBeNull();
+    expect(navigationBox?.width).toBe(240);
+    expect(navigationBox?.x).toBe(locale === 'ar' ? 1337 : 0);
+    expect(topbarBox?.width).toBe(1337);
+    expect(topbarBox?.height).toBe(56);
+    expect(contentBox?.width).toBe(1337);
+    expect(insightsBox?.height).toBe(277);
+    expect(chartBox?.y).toBe(quickActionsBox?.y);
+    expect(chartBox?.height).toBe(277);
+    await expect(metricGrid).toHaveCSS('grid-template-columns', '313.25px 313.25px 313.25px 313.25px');
+    await page.screenshot({ path: testInfo.outputPath(`provider-1577-${locale}.png`), fullPage: true });
   });
 });
