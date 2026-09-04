@@ -124,7 +124,10 @@ export function App({
     updateSnapshot(initialSnapshot);
     const unsubscribe = authClient.subscribe(updateSnapshot);
     if (initialSnapshot.status === 'anonymous') {
-      const shouldRefresh = protectedRoute || authClient.hasSessionHint?.() !== false;
+      // Public and authentication routes should not probe an absent session.
+      // A successful login/refresh persists an authenticated hint, so session
+      // aware public navigation still refreshes without producing a guest 401.
+      const shouldRefresh = protectedRoute || authClient.hasSessionHint?.() === true;
       if (shouldRefresh) {
         setAuthResolutionComplete(false);
         void authClient.refresh().then(updateSnapshot, () => setAuthResolutionComplete(true));

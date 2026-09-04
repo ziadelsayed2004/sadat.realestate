@@ -1626,7 +1626,7 @@
 .seeker-notifications__panel { margin-block-start: 2rem; }
 .seeker-requests__panel { margin-block-start: .5rem; }
 .seeker-dashboard__summary-grid { gap: 1rem; }
-.seeker-dashboard__summary-card { min-block-size: 8.5rem; align-content: center; padding: 1.35rem; border: 0; box-shadow: none; }
+.seeker-dashboard__summary-card { min-block-size: 8rem; align-content: center; padding: 1.35rem; border: 0; box-shadow: none; }
 .seeker-dashboard__summary-card strong { font-size: 2rem; }
 
 .seeker-dashboard__overview-grid {
