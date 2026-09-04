@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "e2e-public-homepage-success",
-  "responseSha256": "895b522b54cc564fa221f0833e5391372e1d41da82b38f2e89ced0ae4e6aeff1",
+  "responseSha256": "a00de6d8f9349bf003c3887a571e3d9ba6485b0856bfbffc62c5e712dc50306b",
   "response": {
     "data": {
       "sections": [
@@ -103,6 +103,27 @@
           },
           "propertyCount": 87,
           "order": 6
+        }
+      ],
+      "locations": [
+        {
+          "id": "999999999999999999999999",
+          "kind": "location",
+          "name": {
+            "en": "Sadat City"
+          },
+          "slug": "sadat-city",
+          "order": 0
+        },
+        {
+          "id": "aaaaaaaaaaaaaaaaaaaaaaab",
+          "kind": "neighborhood",
+          "name": {
+            "en": "First District"
+          },
+          "slug": "first-district",
+          "parentLocationId": "999999999999999999999999",
+          "order": 1
         }
       ],
       "metrics": [

@@ -14,7 +14,7 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "775ed3ca971ead2112ab9ee5441005a21f50acbec3f35cd4475eb2678d7bcbd6",
-    "afterHash": "a92aecb6026a78431129b150bf0588b914dabcd70654e83a07f1e2ea245531f3",
+    "afterHash": "4b1c275f29086b48b4bf9f26fd7641edf165f00b8e0519304aeb75ccc2ba81e7",
     "requestedApi": [],
     "apiResponses": []
   },
@@ -53,7 +53,7 @@
       {
         "family": "Cairo",
         "weight": "500",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Cairo",
@@ -63,7 +63,7 @@
       {
         "family": "Cairo",
         "weight": "500",
-        "status": "loaded"
+        "status": "unloaded"
       },
       {
         "family": "Cairo",
@@ -963,11 +963,6 @@
       {
         "family": "Noto Sans SC",
         "weight": "500",
-        "status": "loaded"
-      },
-      {
-        "family": "Noto Sans SC",
-        "weight": "500",
         "status": "unloaded"
       },
       {
@@ -1008,7 +1003,12 @@
       {
         "family": "Noto Sans SC",
         "weight": "500",
-        "status": "loaded"
+        "status": "unloaded"
+      },
+      {
+        "family": "Noto Sans SC",
+        "weight": "500",
+        "status": "unloaded"
       },
       {
         "family": "Noto Sans SC",
@@ -2188,7 +2188,13 @@
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-restaurants-cafes.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-room.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-roof.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
@@ -2206,7 +2212,7 @@
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-room.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-office.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
@@ -2219,12 +2225,6 @@
     },
     {
       "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-home.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-rental.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
@@ -2284,47 +2284,55 @@
       },
       {
         "text": "",
-        "href": "/"
+        "href": "/?lang=ar"
       },
       {
         "text": "الرئيسية",
-        "href": "/"
+        "href": "/?lang=ar"
       },
       {
         "text": "العقارات",
-        "href": "/properties"
+        "href": "/properties?lang=ar"
       },
       {
         "text": "المطورون",
-        "href": "/developers"
+        "href": "/developers?lang=ar"
       },
       {
         "text": "المقالات",
-        "href": "/articles"
+        "href": "/articles?lang=ar"
       },
       {
         "text": "الكوميونتي",
-        "href": "/community"
+        "href": "/community?lang=ar"
       },
       {
         "text": "من نحن",
-        "href": "/about"
+        "href": "/about?lang=ar"
       },
       {
         "text": "فريق العمل",
-        "href": "/team"
+        "href": "/team?lang=ar"
       },
       {
         "text": "تسجيل الدخول",
-        "href": "/auth/login"
+        "href": "/auth/login?lang=ar"
       },
       {
         "text": "إنشاء حساب",
-        "href": "/auth/register"
+        "href": "/auth/register?lang=ar"
       },
       {
-        "text": "إعلان مميزشركة السادات للتطوير العقاري✓كمبوند النخبة — الحي الأولوحدات سكنية فاخرة بتشطيب سوبر لوكس في أرقى مواقع مدينة السادات مع إطلالات مفتوحة وخدمات متكاملة.تبدأ من 1.2 مليون جنيهبمقدم 10% فقط · أقساط تصل إلى 10 سنواتاكتشف المشروع",
-        "href": "/properties"
+        "text": "تسجيل الدخول",
+        "href": "/auth/login?lang=ar"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register?lang=ar"
+      },
+      {
+        "text": "إعلان مميزشركة السادات للتطوير العقاري✓كمبوند النخبة — الحي الأولوحدات سكنية حديثة بتصميمات متنوعة وخدمات متكاملة في قلب مدينة السادات.تبدأ من 1.2 مليون جنيهبمقدم 10% فقط · أقساط تصل إلى 10 سنواتاكتشف المشروع",
+        "href": "/properties/demo-open-view-apartment"
       },
       {
         "text": "شقق2 عقار",
@@ -2339,28 +2347,32 @@
         "href": "/properties?propertyTypeId=670000000000000000000033"
       },
       {
-        "text": "فيلات0 عقار",
+        "text": "فيلات1 عقار",
         "href": "/properties?propertyTypeId=670000000000000000000034"
       },
       {
-        "text": "مطاعم وكافيهات22 عقار",
-        "href": "/properties?propertyTypeId=222222222222222222222222"
+        "text": "غرفة0 عقار",
+        "href": "/properties?propertyTypeId=670000000000000000000081"
       },
       {
-        "text": "صالات عرض34 عقار",
-        "href": "/properties?propertyTypeId=333333333333333333333333"
+        "text": "روف1 عقار",
+        "href": "/properties?propertyTypeId=670000000000000000000082"
       },
       {
-        "text": "مبنى تجاري كامل19 عقار",
-        "href": "/properties?propertyTypeId=444444444444444444444444"
+        "text": "صالات عرض0 عقار",
+        "href": "/properties?propertyTypeId=670000000000000000000083"
       },
       {
-        "text": "غرفة65 عقار",
-        "href": "/properties?propertyTypeId=555555555555555555555555"
+        "text": "مبنى تجاري كامل1 عقار",
+        "href": "/properties?propertyTypeId=670000000000000000000084"
       },
       {
         "text": "عرض الكل",
         "href": "/properties"
+      },
+      {
+        "text": "مكتب إداري في المنطقة المركزية",
+        "href": "/properties/demo-central-office"
       },
       {
         "text": "دوبلكس راقي بحديقة خاصة في الحي المتميز",
@@ -2369,10 +2381,6 @@
       {
         "text": "شقة فاخرة بإطلالة مفتوحة في الحي الأول",
         "href": "/properties/demo-open-view-apartment"
-      },
-      {
-        "text": "شقة عصرية للإيجار بالمنطقة المركزية",
-        "href": "/properties/demo-rental-apartment"
       },
       {
         "text": "عرض الكل",
@@ -2453,8 +2461,20 @@
         "aria": "اللغة"
       },
       {
+        "text": "",
+        "aria": "إغلاق خلفية القائمة"
+      },
+      {
         "text": "العربية",
         "aria": "اللغة"
+      },
+      {
+        "text": "العربية",
+        "aria": "اللغة"
+      },
+      {
+        "text": "",
+        "aria": "فتح القائمة"
       },
       {
         "text": "للبيع",
@@ -2466,6 +2486,10 @@
       },
       {
         "text": "نوع العقار",
+        "aria": null
+      },
+      {
+        "text": "المنطقة",
         "aria": null
       },
       {
@@ -2510,12 +2534,12 @@
       },
       {
         "width": 1549,
-        "height": 5378
+        "height": 5493
       }
     ],
     "dimensions": {
       "width": 1489,
-      "height": 1873
+      "height": 1912
     },
     "diffPath": "docs/quality/figma_parity/screens/PUB-01/diff.png",
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-01/visual-metrics.json",
@@ -2523,8 +2547,8 @@
       "comparedWidth": 1549,
       "comparedHeight": 5378,
       "comparedPixels": 8330522,
-      "materialDifferencePercent": 24.3544,
-      "antiAliasingOnlyPercent": 14.0523,
+      "materialDifferencePercent": 33.6181,
+      "antiAliasingOnlyPercent": 12.0791,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

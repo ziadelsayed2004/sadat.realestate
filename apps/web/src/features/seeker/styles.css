@@ -1943,6 +1943,14 @@
     text-align: start;
   }
 
+  [dir="rtl"] .seeker-viewings > .seeker-dashboard__content > .seeker-dashboard__heading-row,
+  [dir="rtl"] .seeker-saved > .seeker-dashboard__content > .seeker-dashboard__heading-row,
+  [dir="rtl"] .seeker-notifications > .seeker-dashboard__content > .seeker-dashboard__heading-row,
+  [dir="rtl"] .seeker-profile > .seeker-dashboard__content > .seeker-dashboard__heading-row {
+    text-align: right;
+    direction: rtl;
+  }
+
   .seeker-viewings > .seeker-dashboard__content > .seeker-dashboard__heading-row {
     display: block;
   }
