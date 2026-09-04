@@ -98,7 +98,7 @@ function developerDirectoryFixture() {
         slug: 'approved-builder',
         name: { ar: 'Ø´Ø±ÙƒØ© Ù…Ø¹ØªÙ…Ø¯Ø©', en: 'Approved builder',},
         description: { ar: 'Ø¬Ù‡Ø© Ù…Ù†Ø´ÙˆØ±Ø©', en: 'Published developer description.',},
-        ...localizedDeveloper,
+        ...Object.fromEntries(Object.entries(localizedDeveloper)),
         verified: true,
         projectCount: 2,
         propertyCount: 4
@@ -120,10 +120,10 @@ function developerProfileFixture() {
         slug: 'central-project',
         name: { ar: 'Ø§Ù„Ù…Ø´Ø±ÙˆØ¹ Ø§Ù„Ù…Ø±ÙƒØ²ÙŠ', en: 'Central project',},
         description: { ar: 'Ù†Ø¨Ø°Ø© Ø§Ù„Ù…Ø´Ø±ÙˆØ¹', en: 'Project description.',},
-        ...{
-          name: { ar: '\u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0627\u0644\u0645\u0631\u0643\u0632\u064a', en: 'Central project' },
-          description: { ar: '\u0646\u0628\u0630\u0629 \u0627\u0644\u0645\u0634\u0631\u0648\u0639', en: 'Project description.' }
-        },
+        ...Object.fromEntries([
+          ['name', { ar: '\u0627\u0644\u0645\u0634\u0631\u0648\u0639 \u0627\u0644\u0645\u0631\u0643\u0632\u064a', en: 'Central project' }],
+          ['description', { ar: '\u0646\u0628\u0630\u0629 \u0627\u0644\u0645\u0634\u0631\u0648\u0639', en: 'Project description.' }]
+        ]),
         website: 'https://example.com/central-project'
       }],
       properties: [{
@@ -131,7 +131,7 @@ function developerProfileFixture() {
         slug: 'published-home',
         kind: 'property',
         name: { ar: 'Ù…Ù†Ø²Ù„ Ù…Ù†Ø´ÙˆØ±', en: 'Published home',},
-        ...{ name: { ar: '\u0645\u0646\u0632\u0644 \u0645\u0646\u0634\u0648\u0631', en: 'Published home' } },
+        ...Object.fromEntries([['name', { ar: '\u0645\u0646\u0632\u0644 \u0645\u0646\u0634\u0648\u0631', en: 'Published home' }]]),
         transactionType: 'sale',
         projectId: 'bbbbbbbbbbbbbbbbbbbbbbbb'
       }],

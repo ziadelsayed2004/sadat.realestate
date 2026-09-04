@@ -540,8 +540,10 @@
   .provider-property-wizard__commission dl { grid-template-columns: minmax(0, 1fr); }
 
   .provider-property-wizard__steps li:not(:last-child)::after {
-    width: 20px;
+    display: none;
   }
+
+  .provider-property-completion__steps li:not(:last-child)::after { display: none; }
 
   .provider-property-completion__steps,
   .provider-property-completion__summary { grid-template-columns: minmax(0, 1fr); }
