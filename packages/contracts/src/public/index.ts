@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { localizedTextSchema } from '../localization/index.js';
 import { propertyAreaSchema, propertyDeliveryStatusSchema, propertyKindSchema, propertyLayoutSchema, propertyMapUrlSchema, propertyMoneySchema, propertyObjectIdSchema, propertySlugSchema, propertyTransactionTypeSchema } from '../properties/index.js';
 import { successEnvelopeSchema } from '../contracts/envelopes.js';
+import { locationKindSchema, locationObjectIdSchema, locationSlugSchema } from '../locations/index.js';
 
 const publicOrderSchema = z.number().int().nonnegative().max(100_000);
 // Public media can be an external CDN URL or a same-origin repository asset.
@@ -25,6 +26,20 @@ export const publicHomepageCategorySchema = z.object({
   imageUrl: publicUrlSchema.optional(),
   propertyCount: z.number().int().nonnegative(),
   order: publicOrderSchema
+}).strict();
+
+/**
+ * Safe public projection of an active location managed by the admin location
+ * workspace.  The immutable id is submitted as the search filter so renamed
+ * locations do not invalidate existing property references.
+ */
+export const publicHomepageLocationSchema = z.object({
+  id: locationObjectIdSchema,
+  kind: locationKindSchema,
+  name: localizedTextSchema,
+  slug: locationSlugSchema,
+  parentLocationId: locationObjectIdSchema.optional(),
+  order: z.number().int().nonnegative().max(1_000_000)
 }).strict();
 
 export const publicHomepageMetricSchema = z.object({
@@ -80,6 +95,7 @@ export const publicHomepageBannerSchema = z.object({
 export const publicHomepageDataSchema = z.object({
   sections: z.array(publicHomepageSectionSchema).max(100),
   categories: z.array(publicHomepageCategorySchema).max(100),
+  locations: z.array(publicHomepageLocationSchema).max(500).optional(),
   metrics: z.array(publicHomepageMetricSchema).max(100),
   properties: z.array(publicHomepagePropertySchema).max(100),
   developers: z.array(publicHomepageDeveloperSchema).max(100),
@@ -163,6 +179,7 @@ export const publicPropertyDetailsSuccessEnvelopeSchema = successEnvelopeSchema(
 
 export type PublicHomepageSection = z.infer<typeof publicHomepageSectionSchema>;
 export type PublicHomepageCategory = z.infer<typeof publicHomepageCategorySchema>;
+export type PublicHomepageLocation = z.infer<typeof publicHomepageLocationSchema>;
 export type PublicHomepageMetric = z.infer<typeof publicHomepageMetricSchema>;
 export type PublicPropertyAmenity = z.infer<typeof publicPropertyAmenitySchema>;
 export type PublicPropertyDetails = z.infer<typeof publicPropertyDetailsSchema>;

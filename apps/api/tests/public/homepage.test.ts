@@ -67,6 +67,17 @@ test('uses stable order/key sorting and validates supported localized content', 
   assert.equal(publicHomepageDataSchema.safeParse(result).success, true);
 });
 
+test('projects only active admin-managed locations for the hero search', () => {
+  const result = publicHomepageProjection(sources({
+    locations: [
+      { id: secondId, kind: 'neighborhood', name: localized, slug: 'first-district', parentLocationId: id, order: 2, active: true },
+      { id, kind: 'location', name: localized, slug: 'sadat-city', order: 1, active: true },
+      { id: '2123456789abcdef01234567', kind: 'location', name: localized, slug: 'hidden-city', order: 0, active: false }
+    ]
+  }));
+  assert.deepEqual(result.locations?.map((item) => [item.id, item.parentLocationId]), [[id, undefined], [secondId, id]]);
+});
+
 test('drops malformed persisted public rows and supports a safe empty state', async () => {
   const service = createPublicHomepageService({ repository: { async read() { return sources({ sections: [{ key: 'bad key', title: {}, order: -1, status: 'published', visible: true }] as never, properties: [], developers: [], content: [], banners: [] }); } } });
   assert.deepEqual(await service.read(), { sections: [], categories: [{ id, slug: 'apartments', name: localized, propertyCount: 7, order: 0 }], metrics: [{ key: 'population', title: localized, value: 342800, order: 0 }], properties: [], developers: [], content: [], banners: [] });

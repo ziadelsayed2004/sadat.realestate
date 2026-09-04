@@ -167,6 +167,8 @@ export const teamMemberPatchSchema = z
     title: localizedTextSchema.optional(),
     bio: localizedTextSchema.optional(),
     photoAssetId: objectId.nullish(),
+    imageUrl: publicAssetUrl.nullish(),
+    category: teamCategory.optional(),
     order,
     active: z.boolean().optional(),
     status: cmsSettingStatusSchema.optional(),
@@ -186,6 +188,8 @@ export const cmsPublicContentSchema = z
     role: localizedTextSchema.optional(),
     bio: localizedTextSchema.optional(),
     photoAssetId: objectId.optional(),
+    imageUrl: publicAssetUrl.optional(),
+    category: teamCategory.optional(),
     order,
   })
   .strict();

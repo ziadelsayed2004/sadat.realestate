@@ -18155,6 +18155,8 @@
         "additionalProperties": false,
         "required": [
           "sections",
+          "categories",
+          "metrics",
           "properties",
           "developers",
           "content",
@@ -18166,6 +18168,27 @@
             "maxItems": 100,
             "items": {
               "$ref": "#/components/schemas/PublicHomepageSection"
+            }
+          },
+          "categories": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/PublicHomepageCategory"
+            }
+          },
+          "locations": {
+            "type": "array",
+            "maxItems": 500,
+            "items": {
+              "$ref": "#/components/schemas/PublicHomepageLocation"
+            }
+          },
+          "metrics": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/PublicHomepageMetric"
             }
           },
           "properties": {
@@ -21798,6 +21821,82 @@
             }
           }
         ]
+      },
+      "PublicHomepageMetric": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "title",
+          "value",
+          "order"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 64,
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "title": {
+            "$ref": "#/components/schemas/LocalizedText"
+          },
+          "value": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1000000000000
+          },
+          "unit": {
+            "$ref": "#/components/schemas/LocalizedText"
+          },
+          "order": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100000
+          }
+        }
+      },
+      "PublicHomepageLocation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "name",
+          "slug",
+          "order"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "location",
+              "neighborhood"
+            ]
+          },
+          "name": {
+            "$ref": "#/components/schemas/LocalizedText"
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 80,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "parentLocationId": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{24}$"
+          },
+          "order": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          }
+        }
       },
       "PublicHomepageCategory": {
         "type": "object",

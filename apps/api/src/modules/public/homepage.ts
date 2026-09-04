@@ -5,14 +5,17 @@ import {
   publicHomepageContentSchema,
   publicHomepageDataSchema,
   publicHomepageDeveloperSchema,
+  publicHomepageLocationSchema,
   publicHomepageMetricSchema,
   publicHomepagePropertySchema,
   publicHomepageSectionSchema,
-  type PublicHomepageData
+  type PublicHomepageData,
+  type PublicHomepageLocation
 } from '@sadat-real-estate/contracts';
 
 export interface HomepageSectionSource { key: string; title: unknown; body?: unknown; order: number; status: string; visible: boolean }
 export interface HomepageCategorySource { id: string; slug: string; name: unknown; imageUrl?: string; propertyCount: number; order: number; active: boolean }
+export interface HomepageLocationSource { id: string; kind: string; name: unknown; slug: string; parentLocationId?: string; order: number; active: boolean }
 export interface HomepageMetricSource { key: string; title: unknown; value: number; unit?: unknown; order: number; status: string; visible: boolean }
 export interface HomepagePropertySource { id: string; slug: string; kind: string; name: unknown; transactionType: string; imageUrl?: string; projectId?: string; description?: unknown; area?: unknown; layout?: unknown; price?: unknown; status: string; active: boolean }
 export interface HomepageDeveloperSource { id: string; slug: string; name: unknown; imageUrl?: string; description?: unknown; kind: string; status: string }
@@ -22,6 +25,7 @@ export interface HomepageBannerSource { key: string; title?: unknown; eyebrow?: 
 export interface HomepageSources {
   sections: HomepageSectionSource[];
   categories?: HomepageCategorySource[];
+  locations?: HomepageLocationSource[];
   metrics?: HomepageMetricSource[];
   properties: HomepagePropertySource[];
   developers: HomepageDeveloperSource[];
@@ -34,6 +38,23 @@ function publicCategories(items: HomepageCategorySource[] = []) {
     const parsed = publicHomepageCategorySchema.safeParse({ id: item.id, slug: item.slug, name: item.name, ...(item.imageUrl ? { imageUrl: item.imageUrl } : {}), propertyCount: item.propertyCount, order: item.order });
     return parsed.success ? [parsed.data] : [];
   });
+}
+
+function publicLocations(items: HomepageLocationSource[] = []): PublicHomepageLocation[] {
+  return [...items]
+    .filter((item) => item.active)
+    .sort((left, right) => left.order - right.order || left.kind.localeCompare(right.kind, 'en') || left.slug.localeCompare(right.slug, 'en') || left.id.localeCompare(right.id, 'en'))
+    .flatMap((item) => {
+      const parsed = publicHomepageLocationSchema.safeParse({
+        id: item.id,
+        kind: item.kind,
+        name: item.name,
+        slug: item.slug,
+        ...(item.parentLocationId ? { parentLocationId: item.parentLocationId } : {}),
+        order: item.order
+      });
+      return parsed.success ? [parsed.data] : [];
+    });
 }
 
 function publicMetrics(items: HomepageMetricSource[] = []) {
@@ -93,6 +114,7 @@ export function publicHomepageProjection(sources: HomepageSources): PublicHomepa
   return publicHomepageDataSchema.parse({
     sections: publicSections(sources.sections),
     categories: publicCategories(sources.categories),
+    ...(sources.locations === undefined ? {} : { locations: publicLocations(sources.locations) }),
     metrics: publicMetrics(sources.metrics),
     properties: publicProperties(sources.properties),
     developers: publicDevelopers(sources.developers),
@@ -128,6 +150,7 @@ type MongoRow = {
   imageUrl?: string;
   targetUrl?: string;
   propertyTypeId?: unknown;
+  parentLocationId?: unknown;
   value?: number;
   unit?: unknown;
 };
@@ -144,7 +167,7 @@ async function findRows(connection: Connection, collection: string, filter: Reco
 export function createMongoosePublicHomepageRepository(connection: Connection): PublicHomepageRepository {
   return {
     async read() {
-      const [sections, properties, developers, about, tips, banners, categories, metrics] = await Promise.all([
+      const [sections, properties, developers, about, tips, banners, categories, metrics, locations] = await Promise.all([
         findRows(connection, 'cms_homepage_sections', { status: 'published', visible: true }, { _id: 1, key: 1, title: 1, body: 1, order: 1, status: 1, visible: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'properties', { status: 'published', active: true }, { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, projectId: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 }, { slug: 1, _id: 1 }, 100),
         findRows(connection, 'organizations', { status: 'approved', kind: 'developer_company' }, { _id: 1, slug: 1, name: 1, imageUrl: 1, description: 1, kind: 1, status: 1 }, { slug: 1, _id: 1 }, 100),
@@ -152,7 +175,8 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
         findRows(connection, 'cms_real_estate_tips', { status: 'published', active: true }, { _id: 1, key: 1, title: 1, body: 1, order: 1, status: 1, active: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'cms_banners', { status: 'published', active: true }, { _id: 1, key: 1, title: 1, eyebrow: 1, body: 1, highlight: 1, imageUrl: 1, targetUrl: 1, order: 1, status: 1, active: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'property_taxonomy', { kind: 'type', active: true }, { _id: 1, slug: 1, name: 1, imageUrl: 1, order: 1, active: 1 }, { order: 1, slug: 1, _id: 1 }, 100),
-        findRows(connection, 'cms_homepage_metrics', { status: 'published', visible: true }, { _id: 1, key: 1, title: 1, value: 1, unit: 1, order: 1, status: 1, visible: 1 }, { order: 1, key: 1, _id: 1 }, 100)
+        findRows(connection, 'cms_homepage_metrics', { status: 'published', visible: true }, { _id: 1, key: 1, title: 1, value: 1, unit: 1, order: 1, status: 1, visible: 1 }, { order: 1, key: 1, _id: 1 }, 100),
+        findRows(connection, 'locations', { active: true }, { _id: 1, kind: 1, name: 1, slug: 1, parentLocationId: 1, order: 1, active: 1 }, { order: 1, kind: 1, slug: 1, _id: 1 }, 500)
       ]);
       const categoryIds = categories.flatMap((row) => { const value=id(row._id); return value ? [value] : []; });
       const categoryCounts = categoryIds.length ? await connection.collection('properties').aggregate<{_id: unknown; count: number}>([
@@ -164,6 +188,7 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
       return {
         sections: sections.flatMap((row) => mapId(row) && typeof row.key === 'string' && typeof row.order === 'number' && typeof row.status === 'string' && typeof row.visible === 'boolean' ? [{ key: row.key, title: row.title, ...(row.body !== undefined ? { body: row.body } : {}), order: row.order, status: row.status, visible: row.visible }] : []),
         categories: categories.flatMap((row) => { const rowId=mapId(row); return rowId && typeof row.slug==='string' && row.name!==undefined && typeof row.order==='number' && typeof row.active==='boolean' ? [{id:rowId,slug:row.slug,name:row.name,...(typeof row.imageUrl==='string'?{imageUrl:row.imageUrl}:{}),propertyCount:countById.get(rowId)??0,order:row.order,active:row.active}] : []; }),
+        locations: locations.flatMap((row) => { const rowId = mapId(row); const parentLocationId = id(row.parentLocationId); return rowId && typeof row.kind === 'string' && row.name !== undefined && typeof row.slug === 'string' && typeof row.order === 'number' && typeof row.active === 'boolean' ? [{ id: rowId, kind: row.kind, name: row.name, slug: row.slug, ...(parentLocationId ? { parentLocationId } : {}), order: row.order, active: row.active }] : []; }),
         metrics: metrics.flatMap((row)=>typeof row.key==='string'&&row.title!==undefined&&typeof row.value==='number'&&typeof row.order==='number'&&typeof row.status==='string'&&typeof row.visible==='boolean'?[{key:row.key,title:row.title,value:row.value,...(row.unit!==undefined?{unit:row.unit}:{}),order:row.order,status:row.status,visible:row.visible}]:[]),
         properties: properties.flatMap((row) => { const rowId = mapId(row); const projectId = id(row.projectId); return rowId && typeof row.slug === 'string' && typeof row.kind === 'string' && row.name !== undefined && typeof row.transactionType === 'string' && typeof row.status === 'string' && typeof row.active === 'boolean' ? [{ id: rowId, slug: row.slug, kind: row.kind, name: row.name, transactionType: row.transactionType, ...(row.imageUrl ? { imageUrl: row.imageUrl } : {}), ...(projectId ? { projectId } : {}), ...(row.description !== undefined ? { description: row.description } : {}), ...(row.area !== undefined ? { area: row.area } : {}), ...(row.layout !== undefined ? { layout: row.layout } : {}), ...(row.price !== undefined ? { price: row.price } : {}), status: row.status, active: row.active }] : []; }),
         developers: developers.flatMap((row) => { const rowId = mapId(row); return rowId && typeof row.slug === 'string' && row.name !== undefined && typeof row.kind === 'string' && typeof row.status === 'string' ? [{ id: rowId, slug: row.slug, name: row.name, ...(row.imageUrl ? { imageUrl: row.imageUrl } : {}), ...(row.description !== undefined ? { description: row.description } : {}), kind: row.kind, status: row.status }] : [] }),

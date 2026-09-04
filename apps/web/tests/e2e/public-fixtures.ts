@@ -83,6 +83,10 @@ export function publicHomepageFixture() {
         { id: '777777777777777777777777', slug: 'duplex', name: { ar: 'دوبلكس', en: 'Duplex',}, propertyCount: 43, order: 5 },
         { id: '888888888888888888888888', slug: 'villa', name: { ar: 'فيلا', en: 'Villa',}, propertyCount: 87, order: 6 }
       ],
+      locations: [
+        { id: '999999999999999999999999', kind: 'location', slug: 'sadat-city', name: { en: 'Sadat City' }, order: 0 },
+        { id: 'aaaaaaaaaaaaaaaaaaaaaaab', kind: 'neighborhood', slug: 'first-district', name: { en: 'First District' }, parentLocationId: '999999999999999999999999', order: 1 }
+      ],
       metrics: [
         { key: 'population', title: { ar: 'عدد سكان مدينة السادات', en: 'Sadat City population',}, value: 342800, unit: { ar: 'نسمة', en: 'residents',}, order: 0 },
         { key: 'annual_growth', title: { ar: 'نمو سنوي', en: 'Annual growth',}, value: 3500, unit: { ar: 'نسمة', en: 'residents',}, order: 1 },

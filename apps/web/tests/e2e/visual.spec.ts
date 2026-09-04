@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { PUBLIC_CLONE_ASSETS, routePublicHomepageApi, routePublicPropertyListApi } from './public-fixtures';
+import { routePublicHomepageApi, routePublicPropertyListApi } from './public-fixtures';
 
 function localeForProject(): 'ar' | 'en' {
   const projectName = test.info().project.name;
@@ -226,7 +226,28 @@ test('public homepage renders its SSR shell across approved locales and devices'
   await expect(homepage).toHaveAttribute('data-homepage-state', 'success');
   const heroImage = homepage.locator('.public-homepage__hero-media img');
   await expect(heroImage).toBeVisible();
-  await expect(heroImage).toHaveAttribute('src', PUBLIC_CLONE_ASSETS.homepageHero);
+  // The server may emit the canonical asset as a same-origin relative URL;
+  // browsers resolve it to the same clone asset as the absolute fixture URL.
+  await expect(heroImage).toHaveAttribute('src', /home-hero-sadat-city\.png$/u);
+  const homepageGeometry = await page.evaluate(() => {
+    const rail = document.querySelector<HTMLElement>('.public-homepage__category-rail');
+    const banner = document.querySelector<HTMLElement>('.public-homepage__banner-card');
+    const controls = Array.from(document.querySelectorAll<HTMLElement>('.public-homepage__banner-control'));
+    const bannerRect = banner?.getBoundingClientRect();
+    return {
+      categoryScrollWidth: rail?.scrollWidth ?? 0,
+      categoryClientWidth: rail?.clientWidth ?? 0,
+      viewportWidth: window.innerWidth,
+      controlsOutside: bannerRect !== undefined && controls.length === 2 && controls.every(control => {
+        const rect = control.getBoundingClientRect();
+        const outsideHorizontally = rect.right <= bannerRect.left + 1 || rect.left >= bannerRect.right - 1;
+        const outsideBelow = rect.top >= bannerRect.bottom - 1;
+        return outsideHorizontally || outsideBelow;
+      })
+    };
+  });
+  expect(homepageGeometry.categoryScrollWidth).toBeGreaterThan(homepageGeometry.categoryClientWidth);
+  expect(homepageGeometry.controlsOutside).toBeTruthy();
   await waitForHomepageMediaToSettle(page);
   await expect(page).toHaveScreenshot('public-homepage-' + locale + '.png', { fullPage: true });
 });

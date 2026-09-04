@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { routePublicHomepageApi } from './public-fixtures';
 
 function localeForProject(): 'ar' | 'en' {
   const projectName = test.info().project.name;
@@ -11,12 +12,29 @@ function successMeta(requestId: string) {
 }
 
 async function routeAuthApi(page: import('@playwright/test').Page) {
+  await page.route('**/api/v1/auth/refresh', async route => {
+    expect(route.request().method()).toBe('POST');
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        data: {
+          accessToken: 'refresh.payload.signature',
+          tokenType: 'Bearer',
+          expiresInSeconds: 900,
+          user: { id: 'aaaaaaaaaaaaaaaaaaaaaaaa', roleType: 'admin', status: 'verified' }
+        },
+        ...successMeta('e2e-auth-refresh')
+      })
+    });
+  });
   await page.route('**/api/v1/auth/login', async route => {
     expect(route.request().method()).toBe('POST');
     const body = route.request().postDataJSON() as { email?: string; password?: string };
     expect(body).toEqual({ email: 'admin@example.com', password: 'secret' });
     await route.fulfill({
       status: 200,
+      headers: { 'set-cookie': 'refreshToken=e2e-refresh; Path=/api/v1/auth; HttpOnly; SameSite=Lax' },
       contentType: 'application/json',
       body: JSON.stringify({
         data: {
@@ -64,6 +82,27 @@ async function routeAuthApi(page: import('@playwright/test').Page) {
     });
   });
 }
+
+test('login refreshes the public header into the authenticated customer account', async ({ page }) => {
+  test.skip(!test.info().project.name.startsWith('desktop-'), 'The navigation assertion is covered once on the desktop matrix.');
+  const locale = localeForProject();
+  await routeAuthApi(page);
+  await routePublicHomepageApi(page);
+
+  await page.goto(`/auth/login?lang=${encodeURIComponent(locale)}`);
+  await page.locator('#auth-login-email').fill('admin@example.com');
+  await page.locator('#auth-login-password').fill('secret');
+  await page.locator('[data-screen-id="AUTH-01"] button[type="submit"]').click();
+  await page.waitForURL(url => url.pathname === '/admin' && url.searchParams.get('lang') === locale);
+
+  await page.goto(`/?lang=${encodeURIComponent(locale)}`);
+  await expect(page.locator('[data-page="public-home"][data-homepage-state="success"]')).toBeVisible();
+  const accountLink = page.locator('.public-homepage__actions a[href="/admin"]');
+  await expect(accountLink).toHaveAttribute('href', '/admin');
+  expect((await accountLink.textContent())?.trim()).toBeTruthy();
+  await expect(page.locator('.public-homepage__actions a[href="/auth/login"]')).toHaveCount(0);
+  await expect(page.locator('.public-homepage__actions a[href="/auth/register"]')).toHaveCount(0);
+});
 
 test('login screen renders approved locale, direction, responsive shell, and safe navigation', async ({ page }) => {
   const locale = localeForProject();

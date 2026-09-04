@@ -99,6 +99,24 @@ describe('public homepage', () => {
     expect(result.container.querySelector('.public-homepage__category-card--all')).toHaveTextContent('1,200+ properties');
   });
 
+  it('renders the hero district control from active admin-managed locations', () => {
+    const data = publicHomepageDataSchema.parse({
+      ...homepageData,
+      locations: [
+        { id: 'dddddddddddddddddddddddd', kind: 'location', slug: 'sadat-city', name: { en: 'Sadat City' }, order: 1 },
+        { id: 'eeeeeeeeeeeeeeeeeeeeeeee', kind: 'neighborhood', slug: 'first-district', name: { en: 'First District' }, parentLocationId: 'dddddddddddddddddddddddd', order: 2 }
+      ]
+    });
+    const result = renderWithLocale(<PublicHomepage locale="en" initialData={data} />, { locale: 'en' });
+    const locationSelect = result.container.querySelector<HTMLSelectElement>('select[name="locationId"]');
+
+    expect(locationSelect).toHaveValue('');
+    expect(locationSelect?.querySelector('option[value="eeeeeeeeeeeeeeeeeeeeeeee"]')).toHaveTextContent('First District — Sadat City');
+    fireEvent.change(locationSelect!, { target: { value: 'eeeeeeeeeeeeeeeeeeeeeeee' } });
+    expect(locationSelect).toHaveValue('eeeeeeeeeeeeeeeeeeeeeeee');
+    expect(result.container.querySelector('input#public-homepage-search')).toHaveAttribute('name', 'search');
+  });
+
   it('renders a truthful empty state and can retry the implemented loader', async () => {
     const load = vi.fn().mockResolvedValue(homepageData);
     renderWithLocale(<PublicHomepage locale="en" initialData={emptyData} load={load} />, { locale: 'en' });

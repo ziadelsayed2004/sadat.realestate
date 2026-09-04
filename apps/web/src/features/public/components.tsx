@@ -4,6 +4,7 @@ import type {
   PublicHomepageCategory,
   PublicHomepageContent,
   PublicHomepageData,
+  PublicHomepageLocation,
   PublicHomepageMetric,
   PublicHomepageProperty,
   PublicHomepageSection,
@@ -529,14 +530,22 @@ function BannerMedia({
   );
 }
 
-function SearchPanel({ copy, locale, categories }: { readonly copy: PublicHomepageCopy; readonly locale: SupportedLocale; readonly categories: readonly PublicHomepageCategory[] }) {
+function SearchPanel({ copy, locale, categories, locations }: { readonly copy: PublicHomepageCopy; readonly locale: SupportedLocale; readonly categories: readonly PublicHomepageCategory[]; readonly locations: readonly PublicHomepageLocation[] }) {
   const [transactionType, setTransactionType] = useState<'sale' | 'rent'>('sale');
   const [propertyType, setPropertyType] = useState('');
+  const [locationId, setLocationId] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const labels = locale === 'ar'
     ? { type: 'نوع العقار', district: 'المنطقة', price: 'السعر', any: 'الكل' }
     : { type: 'Property type', district: 'District', price: 'Price', any: 'Any' };
   const searchActionLabel = locale === 'ar' ? '\u0627\u0628\u062d\u062b \u0627\u0644\u0622\u0646' : copy.searchAction;
+  const locationNames = new Map(locations.map(location => [location.id, localizedText(location.name, locale) ?? location.slug] as const));
+  const locationOptions = locations.map(location => ({
+    value: location.id,
+    label: location.parentLocationId && locationNames.has(location.parentLocationId)
+      ? `${localizedText(location.name, locale) ?? location.slug} — ${locationNames.get(location.parentLocationId)}`
+      : localizedText(location.name, locale) ?? location.slug
+  }));
 
   return (
     <form className="public-homepage__search" action="/properties" method="get" aria-label={copy.searchLabel}>
@@ -557,10 +566,21 @@ function SearchPanel({ copy, locale, categories }: { readonly copy: PublicHomepa
             label: localizedText(category.name, locale) ?? category.slug
           }))}
         />
-        <label className="public-homepage__search-control">
-          <span>{labels.district}</span>
-          <input id="public-homepage-search" name="search" type="search" placeholder={labels.district} aria-label={labels.district} />
-        </label>
+        <CustomSelect
+          id="public-homepage-location"
+          name="locationId"
+          label={labels.district}
+          placeholder={labels.district}
+          value={locationId}
+          onChange={setLocationId}
+          ariaLabel={labels.district}
+          options={locationOptions}
+          disabled={locationOptions.length === 0}
+        />
+        {/* Kept as a non-visual compatibility field for clients that still
+            submit the legacy homepage search key.  The visible district
+            control above is always backed by admin-managed location ids. */}
+        <input id="public-homepage-search" name="search" type="search" className="a11y-visually-hidden" tabIndex={-1} aria-hidden="true" />
         <CustomSelect
           name="maxPrice"
           label={labels.price}
@@ -588,13 +608,15 @@ function Hero({
   copy,
   sections,
   banners,
-  categories
+  categories,
+  locations
 }: {
   readonly locale: SupportedLocale;
   readonly copy: PublicHomepageCopy;
   readonly sections: readonly PublicHomepageSection[];
   readonly banners: readonly PublicHomepageBanner[];
   readonly categories: readonly PublicHomepageCategory[];
+  readonly locations: readonly PublicHomepageLocation[];
 }) {
   const section = sections[0];
   const banner = banners[0];
@@ -612,7 +634,7 @@ function Hero({
         <p className="public-homepage__eyebrow">{copy.heroLabel}</p>
         <h1 id="public-homepage-hero-title"><span>{titleLines[0]}</span>{titleLines.slice(1).map(line => <strong key={line}>{line}</strong>)}</h1>
         <p className="public-homepage__hero-body">{body}</p>
-        <SearchPanel copy={copy} locale={locale} categories={categories} />
+        <SearchPanel copy={copy} locale={locale} categories={categories} locations={locations} />
       </div>
     </section>
   );
@@ -1039,9 +1061,10 @@ function HomepageContent({
   const sections = ordered(data.sections);
   const content = withCanonicalHomepageContent(data.content);
   const categories = withCanonicalHomepageCategories(data.categories);
+  const locations = data.locations ?? [];
   return (
     <div className="public-homepage__content">
-      <Hero locale={locale} copy={copy} sections={sections} banners={data.banners} categories={categories} />
+      <Hero locale={locale} copy={copy} sections={sections} banners={data.banners} categories={categories} locations={locations} />
       <BannerGrid locale={locale} copy={copy} banners={data.banners} />
       <HomepageSummary locale={locale} metrics={data.metrics} />
       <HomepageCategoryRail locale={locale} copy={copy} categories={categories} metrics={data.metrics} />
