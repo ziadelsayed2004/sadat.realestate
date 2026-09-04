@@ -2636,9 +2636,13 @@
 }
 
 @media (max-width: 48rem) {
+  .public-homepage__section--banners {
+    padding-block-end: 4.75rem;
+  }
+
   .public-homepage__section--banners .public-homepage__banner-control {
     top: auto;
-    bottom: -1.25rem;
+    bottom: -2.75rem;
     transform: none;
   }
 
