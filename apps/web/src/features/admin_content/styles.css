@@ -37,7 +37,7 @@
 .admin-content__editor, .admin-content__action-panel { margin-block-start: 24px; overflow: hidden; }
 .admin-content__editor form, .admin-content__action-panel form { display: grid; gap: 18px; padding: 24px 26px 30px; }
 .admin-content__form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-.admin-content__localized-fields { display: grid; gap: 8px; }
+.admin-content__localized-fields { display: grid; min-inline-size: 0; gap: 8px; margin: 0; padding: 0; border: 0; }
 .admin-content__field-label { color: #5e6b80; font-size: .85rem; font-weight: 800; }
 .admin-content__localized-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .admin-content__localized-grid textarea { min-height: 120px; resize: vertical; }

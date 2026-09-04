@@ -75,7 +75,7 @@ test('public Team renders safe published projections across approved locales and
   await expect(page.locator('.route-shell')).toHaveAttribute('data-route-id', 'public-team');
   const team = page.locator('[data-page="public-team"]');
   await expect(team).toHaveAttribute('data-team-state', 'success');
-  await expect(team.locator('.public-team__card')).toHaveCount(1);
-  await expect(team.locator('[data-media-state="success"]')).toHaveCount(1);
+  await expect(team.locator('.public-team__card')).toHaveCount(6);
+  await expect(team.locator('[data-media-state="success"]')).toHaveCount(6);
   await expect(page).toHaveScreenshot(`public-team-${locale}.png`, { fullPage: true });
 });

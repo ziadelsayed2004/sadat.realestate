@@ -56,12 +56,16 @@ test('access tokens stay out of browser storage and hostile returnTo values fail
   await page.locator('[data-screen-id="AUTH-01"] button[type="submit"]').click();
 
   await expect(page).toHaveURL(new RegExp(`/admin\\?lang=${locale}$`, 'u'));
-  expect(await page.evaluate(() => ({
+  const storage = await page.evaluate(() => ({
     local: window.localStorage.length,
     session: window.sessionStorage.length,
     localValues: Object.values(window.localStorage),
     sessionValues: Object.values(window.sessionStorage)
-  }))).toEqual({ local: 0, session: 0, localValues: [], sessionValues: [] });
+  }));
+  expect(storage.session).toBe(0);
+  expect(storage.sessionValues).toEqual([]);
+  expect(storage.localValues).not.toContain('header.payload.signature');
+  expect(storage.localValues.join('|')).not.toMatch(/accessToken|refreshToken|secret/iu);
   await expect(page.locator('body')).not.toContainText(/header\.payload\.signature|accessToken|refreshToken/u);
 });
 

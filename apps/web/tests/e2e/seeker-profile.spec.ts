@@ -136,7 +136,7 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
     const locale = localeForProject();
     const copy = getSeekerProfileCopy(locale);
     await page.goto(`/seeker/profile?tab=preferences&lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
-    await page.getByLabel(copy.preferences.maxPrice).fill('2500000');
+    await page.locator('#seeker-preferences-max-price').fill('2500000');
     await page.getByRole('button', { name: copy.preferences.save }).click();
     await expect(page.locator('.seeker-profile__feedback[data-state="success"]')).toContainText(copy.preferences.saved);
 

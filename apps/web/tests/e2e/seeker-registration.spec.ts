@@ -55,6 +55,7 @@ async function routeRegistrationApi(page: import('@playwright/test').Page) {
       verificationToken: VERIFICATION_TOKEN,
       firstName: 'Mona',
       lastName: 'Hassan',
+      password: 'Seeker12!',
       locale: localeForProject()
     });
     await route.fulfill({
@@ -122,6 +123,8 @@ test('seeker registration follows the verified OTP authority through the impleme
 
   await page.getByLabel(/first name|الاسم الأول|名字/iu).fill('Mona');
   await page.getByLabel(/last name|اسم العائلة|姓氏/iu).fill('Hassan');
+  await page.locator('#auth-registration-password').fill('Seeker12!');
+  await page.locator('#auth-registration-password-confirmation').fill('Seeker12!');
   await page.getByRole('button', { name: /create account|إنشاء الحساب|创建账号/iu }).click();
   await expect(page.locator('[data-screen-id="AUTH-06"]')).toBeVisible();
   await expect(page).toHaveURL(/\/auth\/register\/seeker\/success$/u);
@@ -165,6 +168,8 @@ test('seeker registration role, form, and success states have responsive visual 
 
   await page.getByLabel(/first name|الاسم الأول|名字/iu).fill('Mona');
   await page.getByLabel(/last name|اسم العائلة|姓氏/iu).fill('Hassan');
+  await page.locator('#auth-registration-password').fill('Seeker12!');
+  await page.locator('#auth-registration-password-confirmation').fill('Seeker12!');
   await page.getByRole('button', { name: /create account|إنشاء الحساب|创建账号/iu }).click();
   await expect(page.locator('[data-screen-id="AUTH-06"]')).toBeVisible();
   await hideSkipLink(page);

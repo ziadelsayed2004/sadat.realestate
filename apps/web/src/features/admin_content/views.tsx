@@ -131,7 +131,7 @@ function StatusBadge({ status, locale }: { readonly status: ArticleStatus; reado
 }
 
 function LocalizedFields({ label, value, onChange, multiline = false }: { readonly label: string; readonly value: LocalizedDraft; readonly onChange: (locale: SupportedLocale, value: string) => void; readonly multiline?: boolean }) {
-  return <div className="admin-content__localized-fields"><span className="admin-content__field-label">{label}</span><div className="admin-content__localized-grid">{locales.map(locale => <label key={locale} htmlFor={`${label}-${locale}`}>{locale.toUpperCase()} {label}{multiline ? <textarea id={`${label}-${locale}`} value={value[locale]} onChange={event => onChange(locale, event.target.value)} rows={4} /> : <input id={`${label}-${locale}`} value={value[locale]} onChange={event => onChange(locale, event.target.value)} />}</label>)}</div></div>;
+  return <fieldset className="admin-content__localized-fields" aria-label={label}><legend className="admin-content__field-label">{label}</legend><div className="admin-content__localized-grid">{locales.map(locale => <label key={locale} htmlFor={`${label}-${locale}`}>{locale.toUpperCase()} {label}{multiline ? <textarea id={`${label}-${locale}`} value={value[locale]} onChange={event => onChange(locale, event.target.value)} rows={4} /> : <input id={`${label}-${locale}`} value={value[locale]} onChange={event => onChange(locale, event.target.value)} />}</label>)}</div></fieldset>;
 }
 
 function ArticleEditor({ article, categories, locale, onCancel, onSave }: { readonly article?: Article; readonly categories: readonly ArticleCategory[]; readonly locale: SupportedLocale; readonly onCancel: () => void; readonly onSave: (input: ArticleCreate | ArticlePatch, articleId?: string) => Promise<void> }) {

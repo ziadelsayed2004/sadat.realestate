@@ -88,7 +88,7 @@ const localized = (ar: string, en: string) => ({ ar, en });
 interface SyntheticSeedDocument {
   _id: Types.ObjectId;
   synthetic: true;
-  seedKey: 'local-showcase-v1' | 'local-showcase-v2' | 'figma-public-content-v3' | 'figma-public-catalogue-v4' | 'figma-public-interactions-v5' | 'auth-buyer-v6' | 'figma-public-details-v9' | 'figma-public-listing-v10';
+  seedKey: 'local-showcase-v1' | 'local-showcase-v2' | 'figma-public-content-v3' | 'figma-public-catalogue-v4' | 'figma-public-interactions-v5' | 'auth-buyer-v6' | 'figma-public-details-v9' | 'figma-public-listing-v10' | 'figma-public-about-v1';
   [key: string]: unknown;
 }
 
@@ -987,6 +987,26 @@ export const FIGMA_PUBLIC_CONTENT_SEED_STEP: DevelopmentSeedStep = {
   }
 };
 
+/**
+ * Repairs the local synthetic About intro when an older showcase seed has
+ * already been applied. The copy is taken from the canonical Figma screen.
+ */
+export const FIGMA_PUBLIC_ABOUT_SEED_STEP: DevelopmentSeedStep = {
+  id: 'figma-public-about-v1',
+  async run(connection) {
+    await connection.collection('cms_about_blocks').updateOne(
+      { _id: ids.about, synthetic: true, key: 'about_intro' },
+      { $set: {
+        body: localized(
+          'أنشأنا هذه المنصة لأن السوق العقاري في مدينة السادات يحتاج منصة متخصصة وموثوقة.',
+          'We built this platform because Sadat City needs a specialized and trusted real-estate marketplace.'),
+        seedKey: 'figma-public-about-v1',
+        updatedAt: SEEDED_AT
+      } }
+    );
+  }
+};
+
 export const FIGMA_PUBLIC_CATALOGUE_SEED_STEP: DevelopmentSeedStep = {
   id: 'figma-public-catalogue-v4',
   async run(connection) {
@@ -1242,6 +1262,7 @@ export const DEVELOPMENT_SEED_STEPS: readonly DevelopmentSeedStep[] = [
   SYNTHETIC_SHOWCASE_SEED_STEP,
   SYNTHETIC_WORKFLOW_SEED_STEP,
   FIGMA_PUBLIC_CONTENT_SEED_STEP,
+  FIGMA_PUBLIC_ABOUT_SEED_STEP,
   FIGMA_PUBLIC_CATALOGUE_SEED_STEP,
   FIGMA_PUBLIC_INTERACTIONS_SEED_STEP,
   FIGMA_PUBLIC_DETAILS_SEED_STEP,

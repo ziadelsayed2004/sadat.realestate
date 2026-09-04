@@ -1550,7 +1550,7 @@
   border-inline-end: 1px solid #e4e0d7;
 }
 
-.seeker-dashboard__brand { display: grid; place-items: center; min-block-size: 3.8rem; margin-block-end: 1rem; }
+.seeker-dashboard__brand { display: grid; place-items: center; min-block-size: 3.8rem; margin-block-end: 1rem; color: inherit; border: 0; border-radius: 0; background: transparent; }
 .seeker-dashboard__brand img { inline-size: auto; block-size: 3.2rem; object-fit: contain; }
 .seeker-dashboard__nav ul { gap: .35rem; margin: .5rem 0 2rem; }
 .seeker-dashboard__nav a { min-block-size: 3.55rem; padding: .8rem 1rem; border-radius: 1rem; font-weight: 700; }
@@ -1861,7 +1861,6 @@
   .seeker-dashboard__brand {
     min-block-size: 4rem;
     margin: 0;
-    border-block-end: 1px solid rgb(23 35 61 / 8%);
   }
 
   .seeker-dashboard__brand img { max-inline-size: 8.5rem; block-size: 2.25rem; }

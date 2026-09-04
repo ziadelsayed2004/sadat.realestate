@@ -166,9 +166,9 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, on
         <button className="seeker-dashboard__nav-close" type="button" aria-label={closeMenuLabel} onClick={() => setMenuOpen(false)}>
           <span aria-hidden="true" className="seeker-dashboard__menu-glyph"><i /><i /><i /></span>
         </button>
-        <a className="seeker-dashboard__brand" href={localeForSeekerPath(locale, '/')} aria-label={websiteLabel} onClick={() => setMenuOpen(false)}>
+        <div className="seeker-dashboard__brand">
           <img src="/assets/sadat-real-estate-logo.png" alt="" />
-        </a>
+        </div>
         <ul>
           {items.map(([id, path]) => {
             const active = activePath === path || (id === 'profile' && activePath.startsWith('/seeker/profile'));
