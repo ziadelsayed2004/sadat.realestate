@@ -74,6 +74,9 @@ test.describe('PRV-05, PRV-06, and PRV-07 advanced property wizard', () => {
     const locale = localeForProject();
     await routeProviderSession(page);
     await routeProviderProperty(page);
+    await page.route('**/api/v1/public/properties**', async route => {
+      await route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: { code: 'CATALOG_UNAVAILABLE', messageKey: 'errors.catalogUnavailable', details: [], requestId: 'advanced-catalog-unavailable' } }) });
+    });
     await page.route(`**/api/v1/provider/properties/${propertyId}/steps/details`, async route => {
       expect(route.request().method()).toBe('PATCH');
       expect(route.request().headers().authorization).toBe('Bearer provider.advanced.token');

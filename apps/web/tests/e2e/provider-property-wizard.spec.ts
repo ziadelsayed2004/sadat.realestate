@@ -127,6 +127,9 @@ test.describe('PRV-03 and PRV-04 Add Property wizard', () => {
     const locale = localeForProject();
     await routeProviderSession(page);
     await routeProviderProperty(page);
+    await page.route('**/api/v1/public/properties**', async route => {
+      await route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: { code: 'CATALOG_UNAVAILABLE', messageKey: 'errors.catalogUnavailable', details: [], requestId: 'wizard-catalog-unavailable' } }) });
+    });
     const response = await page.goto(`/provider/properties/${propertyId}/location?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     expect(response?.ok()).toBeTruthy();
     await expect(page.locator('[data-screen-id="PRV-04"]')).toBeVisible();
