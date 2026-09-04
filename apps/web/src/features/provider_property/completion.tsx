@@ -601,7 +601,7 @@ export function ProviderPropertyCompletionWizard({ locale, session, step, proper
 
   return (
     <section className="provider-dashboard provider-property-completion" data-screen-id={step === 'media' ? 'PRV-08' : step === 'contact' ? 'PRV-09' : validationState ? 'PRV-11' : 'PRV-10'} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${step}`} data-device-scope="desktop">
-      <ProviderNavigation locale={locale} activePath="/provider/properties" />
+      <ProviderNavigation locale={locale} activePath="/provider/properties" authClient={authClient} />
       <div className="provider-dashboard__content provider-property-wizard__content" style={providerPropertyContentStyle}>
         <StepRail step={step} locale={locale} />
         <StatePanel state={state} onRetry={retry} copy={propertyCopy} />

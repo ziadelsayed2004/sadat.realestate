@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 const VERIFICATION_TOKEN = 'V'.repeat(43);
 const ACCESS_TOKEN = 'header.payload.signature';
 const EMAIL = 'provider@example.com';
+const PASSWORD = 'Provider1!';
 const APPLICATION_ID = 'a'.repeat(24);
 const USER_ID = 'b'.repeat(24);
 
@@ -71,7 +72,7 @@ async function mockProviderApplicationApi(page: import('@playwright/test').Page)
     const request = route.request();
     if (request.method() === 'POST') {
       const body = request.postDataJSON() as Record<string, unknown>;
-      expect(body).toEqual({ verificationToken: VERIFICATION_TOKEN, providerType: 'developer_company' });
+      expect(body).toEqual({ verificationToken: VERIFICATION_TOKEN, providerType: 'developer_company', password: PASSWORD });
       savedApplication = application();
       await route.fulfill({
         status: 201,
@@ -121,6 +122,8 @@ async function mockProviderApplicationApi(page: import('@playwright/test').Page)
 async function reachAccountDetails(page: import('@playwright/test').Page, locale: string): Promise<void> {
   await page.goto(`/auth/register/provider/type?lang=${encodeURIComponent(locale)}`);
   await page.locator('[data-provider-type="developer_company"]').click();
+  await page.locator('#provider-registration-password').fill(PASSWORD);
+  await page.locator('#provider-registration-password-confirmation').fill(PASSWORD);
   await page.getByRole('button', { name: /continue|متابعة|继续/iu }).click();
   await expect(page.locator('[data-screen-id="AUTH-04"]')).toBeVisible();
   await page.locator('#auth-otp-email').fill(EMAIL);

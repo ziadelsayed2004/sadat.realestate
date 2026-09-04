@@ -64,6 +64,23 @@ export interface AuthApiClient {
 export interface AuthClientOptions {
   apiClient?: AuthApiClient;
   store?: AuthStore;
+  sessionHintStorage?: AuthSessionHintStorage | undefined;
+}
+
+export interface AuthSessionHintStorage {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+}
+
+export const AUTH_SESSION_HINT_KEY = 'sadat-real-estate.auth.session-hint' as const;
+
+function browserSessionHintStorage(): AuthSessionHintStorage | undefined {
+  if (typeof window === 'undefined') return undefined;
+  try {
+    return window.localStorage;
+  } catch {
+    return undefined;
+  }
 }
 
 export type AuthenticatedOtpResult = {
@@ -83,11 +100,13 @@ function isInvalidRefreshError(error: unknown): boolean {
 export class AuthClient {
   readonly store: AuthStore;
   private readonly apiClient: AuthApiClient;
+  private readonly sessionHintStorage: AuthSessionHintStorage | undefined;
   private refreshPromise: Promise<AuthSnapshot> | undefined;
 
   constructor(options: AuthClientOptions = {}) {
     this.apiClient = options.apiClient ?? new ApiClient();
     this.store = options.store ?? new AuthStore();
+    this.sessionHintStorage = options.sessionHintStorage ?? browserSessionHintStorage();
   }
 
   getSnapshot(): AuthSnapshot {
@@ -110,6 +129,17 @@ export class AuthClient {
     return this.store.getRouteSession();
   }
 
+  hasSessionHint(): boolean | undefined {
+    try {
+      const hint = this.sessionHintStorage?.getItem(AUTH_SESSION_HINT_KEY);
+      if (hint === 'authenticated') return true;
+      if (hint === 'anonymous') return false;
+    } catch {
+      // Storage access is optional; an unknown hint safely falls back to refresh.
+    }
+    return undefined;
+  }
+
   hasRole(role: AuthRoleType): boolean {
     return this.store.hasRole(role);
   }
@@ -129,7 +159,7 @@ export class AuthClient {
       json: request,
       responseSchema: authSessionSuccessEnvelopeSchema
     });
-    return this.store.setSession(response.data.data);
+    return this.setSession(response.data.data);
   }
 
   async sendOtp(input: OtpSendRequest | PasswordResetOtpSendRequest): Promise<OtpSendData> {
@@ -155,7 +185,7 @@ export class AuthClient {
     if (result.outcome === 'authenticated') {
       return {
         outcome: 'authenticated',
-        snapshot: this.store.setSession({
+        snapshot: this.setSession({
           accessToken: result.accessToken,
           tokenType: result.tokenType,
           expiresInSeconds: result.expiresInSeconds,
@@ -173,6 +203,7 @@ export class AuthClient {
       json: request,
       responseSchema: passwordResetSuccessEnvelopeSchema
     });
+    this.markSessionHint(false);
     this.store.clear();
   }
 
@@ -183,7 +214,7 @@ export class AuthClient {
       json: request,
       responseSchema: seekerRegistrationSuccessEnvelopeSchema
     });
-    return this.store.setSession(response.data.data.session);
+    return this.setSession(response.data.data.session);
   }
 
   async registerProvider(input: ProviderApplicationCreateRequest): Promise<ProviderRegistrationData> {
@@ -194,7 +225,7 @@ export class AuthClient {
       responseSchema: providerRegistrationSuccessEnvelopeSchema
     });
     const registration = response.data.data;
-    this.store.setSession(registration.session, registration.application.availableActions);
+    this.setSession(registration.session, registration.application.availableActions);
     return registration;
   }
 
@@ -327,6 +358,7 @@ export class AuthClient {
       });
       return response.data.data;
     } finally {
+      this.markSessionHint(false);
       this.store.clear();
     }
   }
@@ -343,9 +375,12 @@ export class AuthClient {
         json: {},
         responseSchema: authSessionSuccessEnvelopeSchema
       });
-      return this.store.setSession(response.data.data);
+      return this.setSession(response.data.data);
     } catch (error: unknown) {
-      if (isInvalidRefreshError(error)) return this.store.clear();
+      if (isInvalidRefreshError(error)) {
+        this.markSessionHint(false);
+        return this.store.clear();
+      }
       const requestId = error instanceof ApiClientError ? error.requestId : undefined;
       this.store.setError(requestId);
       throw error;
@@ -355,6 +390,20 @@ export class AuthClient {
   private authorizationHeaders(): HeadersInit | undefined {
     const authorization = this.getAuthorizationHeader();
     return authorization === undefined ? undefined : { authorization };
+  }
+
+  private setSession(session: unknown, availableActions?: unknown): AuthSnapshot {
+    const snapshot = this.store.setSession(session, availableActions);
+    this.markSessionHint(true);
+    return snapshot;
+  }
+
+  private markSessionHint(authenticated: boolean): void {
+    try {
+      this.sessionHintStorage?.setItem(AUTH_SESSION_HINT_KEY, authenticated ? 'authenticated' : 'anonymous');
+    } catch {
+      // A blocked storage API must not affect authentication correctness.
+    }
   }
 }
 

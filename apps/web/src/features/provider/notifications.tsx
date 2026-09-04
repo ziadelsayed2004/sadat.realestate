@@ -167,7 +167,7 @@ export function ProviderNotifications({ locale, session, authClient, apiOrigin, 
   const activePath = typeof window === 'undefined' ? '/provider/notifications' : new URL(window.location.href).pathname;
   return (
     <section className="provider-dashboard provider-notifications" data-testid="provider-notifications-page" data-screen-id="PRV-21" data-route="/provider/notifications" data-device-scope="desktop">
-      <ProviderNavigation locale={locale} activePath={activePath} />
+      <ProviderNavigation locale={locale} activePath={activePath} authClient={authClient} />
       <div className="provider-dashboard__content">
         {state !== 'success' && state !== 'empty' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {mutationMessage ? <p className="provider-notifications__feedback" data-state={mutationFeedback === 'markedRead' || mutationFeedback === 'markedAll' ? 'success' : mutationFeedback} role={mutationFeedback === 'markedRead' || mutationFeedback === 'markedAll' ? 'status' : 'alert'}>{mutationMessage}</p> : null}

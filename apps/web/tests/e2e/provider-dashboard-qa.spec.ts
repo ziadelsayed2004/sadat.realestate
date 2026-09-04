@@ -83,7 +83,6 @@ async function routeProviderApis(page: import('@playwright/test').Page, status =
 test.describe('F4 Provider Dashboard QA', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'design-source', description: 'Provider QA covers PRV-01 through PRV-22-3 using approved local provider exports and the canonical Figma nodes recorded in the Provider Wave 2 ledger: 6017:19032, 6017:19308, 6017:19499, 6017:19679, 6017:19858, 6017:20034, 6017:20229, 6017:20391, 6017:20561, 6017:20737, 6017:21064, 6017:21012, 6017:21123, 6017:20973, 6017:21162, 6017:21368, 6017:21747, 6017:21613, 6017:22088, 6028:10071, 6028:10830, 6028:11337, 6028:11875, 6028:12067; DESIGN_SOURCE_MANIFEST.json.' });
-    test.skip(!testInfo.project.name.startsWith('desktop-'), 'Provider Dashboard is approved for desktop only.');
     await routeSession(page);
     await routeProviderApis(page);
   });
@@ -98,9 +97,29 @@ test.describe('F4 Provider Dashboard QA', () => {
       await expect(page.locator('.route-shell--provider'), routeCase.label).toHaveAttribute('data-device-scope', 'desktop');
       await expect(page.locator('#main-content'), routeCase.label).toBeVisible();
       await expect(page.locator('.provider-dashboard__navigation'), routeCase.label).toHaveAttribute('aria-label', /.+/u);
+      await expect(page.locator('.provider-dashboard__topbar'), routeCase.label).toBeVisible();
       await expect(page.locator('[data-screen-id]'), routeCase.label).toHaveCount(1);
       await expect(page.locator('[data-screen-id][data-device-scope="desktop"]'), routeCase.label).toHaveCount(1);
       await expect(page.locator('body')).not.toContainText(/internalNotes|assignedTo|auditData|providerId|storageKey|accessToken|refreshToken|password|secret/u);
+
+      const shellGeometry = await page.evaluate(() => ({
+        navWidth: document.querySelector('.provider-dashboard__navigation')?.getBoundingClientRect().width ?? 0,
+        topbarHeight: document.querySelector('.provider-dashboard__topbar')?.getBoundingClientRect().height ?? 0,
+        viewportWidth: document.documentElement.clientWidth,
+        documentWidth: document.documentElement.scrollWidth
+      }));
+      const compactNavigation = shellGeometry.viewportWidth <= 900;
+      if (!compactNavigation) {
+        await expect(page.locator('.provider-dashboard__brand'), routeCase.label).toBeVisible();
+        await expect(page.locator('.provider-dashboard__navigation-footer button'), routeCase.label).toBeVisible();
+        expect(shellGeometry.navWidth, routeCase.label).toBeCloseTo(240, 0);
+      } else {
+        await expect(page.locator('.provider-dashboard__brand'), routeCase.label).toBeHidden();
+        await expect(page.locator('.provider-dashboard__navigation-footer'), routeCase.label).toBeHidden();
+        expect(shellGeometry.navWidth, routeCase.label).toBeCloseTo(shellGeometry.viewportWidth, 0);
+      }
+      expect(shellGeometry.topbarHeight, routeCase.label).toBeCloseTo(56, 0);
+      expect(shellGeometry.documentWidth, routeCase.label).toBeLessThanOrEqual(shellGeometry.viewportWidth);
 
       const skipLink = page.locator('.a11y-skip-link');
       await skipLink.focus();
@@ -138,5 +157,13 @@ test.describe('F4 Provider Dashboard QA', () => {
     await expect(page.locator('[data-screen-id="PRV-19"]')).toBeVisible();
     await expect(page.locator('[data-screen-id="PRV-19"] [data-state="permission"]').first()).toBeVisible();
     await expect(page.locator('body')).not.toContainText(/commissionRate|paymentProof|bankVerified|internalNotes|assignedTo/u);
+  });
+
+  test('signs out through the canonical provider footer action', async ({ page }) => {
+    const locale = localeForProject();
+    await page.route('**/api/v1/auth/logout', route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ loggedOut: true }, 'provider-dashboard-qa-logout') }));
+    await page.goto(localizedPath('/provider', locale), { waitUntil: 'domcontentloaded' });
+    await page.locator('.provider-dashboard__navigation-footer button').click();
+    await page.waitForURL(url => url.pathname === '/auth/login' && url.searchParams.get('lang') === locale);
   });
 });

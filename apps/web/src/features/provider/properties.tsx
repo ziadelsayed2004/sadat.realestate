@@ -252,7 +252,7 @@ export function ProviderProperties({ locale, session, authClient, apiOrigin, loa
 
   return (
     <section className="provider-dashboard provider-properties" data-screen-id="PRV-02" data-route="/provider/properties" data-device-scope="desktop">
-      <ProviderNavigation locale={locale} activePath={path} />
+      <ProviderNavigation locale={locale} activePath={path} authClient={authClient} />
       <div className="provider-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {(state === 'success' || state === 'empty') && data !== undefined ? <PropertiesContent data={data} locale={locale} query={query} onPageChange={setPage} onStatusChange={nextStatus => { setStatus(nextStatus); setPage(1); }} onSearchInputChange={setSearchInput} onSubmit={() => { setSearch(searchInput.trim()); setPage(1); }} onClear={() => { setStatus('all'); setSearchInput(''); setSearch(''); setPage(1); }} searchInput={searchInput} status={status} /> : null}

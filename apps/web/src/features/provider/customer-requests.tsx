@@ -421,7 +421,7 @@ export function ProviderCustomerRequests({ locale, session, authClient, apiOrigi
 
   return (
     <section className="provider-dashboard provider-customer-requests" data-screen-id="PRV-16" data-route="/provider/customer-requests" data-device-scope="desktop">
-      <ProviderNavigation locale={locale} activePath={path} />
+      <ProviderNavigation locale={locale} activePath={path} authClient={authClient} />
       <div className="provider-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {(state === 'success' || state === 'empty') && data !== undefined ? <RequestsContent data={data} locale={locale} copy={copy} status={status} searchInput={searchInput} query={query} onStatusChange={setStatus} onSearchInputChange={setSearchInput} onApply={() => { setAppliedStatus(status); setSearch(searchInput.trim()); setPage(1); }} onClear={() => { setStatus('all'); setAppliedStatus('all'); setSearchInput(''); setSearch(''); setPage(1); }} onPageChange={setPage} onAdd={openCreate} onTransition={(request, action) => { setMutationError(undefined); setFeedback(undefined); setTransitionTarget({ request, action }); }} /> : null}

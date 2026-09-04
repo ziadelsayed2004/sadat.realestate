@@ -347,7 +347,7 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
   const currentState = selectedRequestId === undefined ? state : detailState;
   return (
     <section className="provider-dashboard provider-advertising" data-screen-id="PRV-19" data-route="/provider/ads" data-device-scope="desktop" data-advertising-state={currentState}>
-      <ProviderNavigation locale={locale} activePath={selectedRequestId === undefined ? '/provider/ads' : `/provider/ads/${selectedRequestId}`} />
+      <ProviderNavigation locale={locale} activePath={selectedRequestId === undefined ? '/provider/ads' : `/provider/ads/${selectedRequestId}`} authClient={authClient} />
       <div className="provider-dashboard__content">
         {!isProvider ? <StatePanel state="permission" locale={locale} copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : selectedRequestId === undefined ? <>
           <div className="provider-dashboard__heading-row provider-advertising__heading"><div><p className="provider-dashboard__eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1><p>{copy.description}</p></div><Button onClick={() => { setMutationError(undefined); setCreateOpen(true); }}>{copy.create}</Button></div>
@@ -421,7 +421,7 @@ export function ProviderCommission({ locale, session, authClient, apiOrigin, ini
 
   return (
     <section className="provider-dashboard provider-commission" data-screen-id="PRV-20" data-route="/provider/commission" data-device-scope="desktop" data-commission-state={state}>
-      <ProviderNavigation locale={locale} activePath="/provider/commission" />
+      <ProviderNavigation locale={locale} activePath="/provider/commission" authClient={authClient} />
       <div className="provider-dashboard__content">{!isProvider ? <StatePanel state="permission" locale={locale} copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : <><div className="provider-dashboard__heading-row provider-commission__heading"><div><p className="provider-dashboard__eyebrow">{copy.commission.eyebrow}</p><h1>{copy.commission.title}</h1><p>{copy.commission.description}</p></div></div>{state === 'loading' || state === 'error' || state === 'retry' ? <StatePanel state={state} locale={locale} copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : null}{state === 'success' && data !== undefined ? <CommissionContent data={data} locale={locale} copy={copy} /> : null}</>}</div>
     </section>
   );

@@ -140,7 +140,7 @@ export function ProviderSettings({ locale, session, authClient, apiOrigin, tab =
   const screenId = tab === 'account' ? 'PRV-22-1' : tab === 'contact' ? 'PRV-22-2' : 'PRV-22-3';
   return (
     <section className="provider-dashboard provider-settings" data-testid="provider-settings-page" data-screen-id={screenId} data-route="/provider/settings" data-device-scope="desktop">
-      <ProviderNavigation locale={locale} activePath="/provider/settings" />
+      <ProviderNavigation locale={locale} activePath="/provider/settings" authClient={authClient} />
       <div className="provider-dashboard__content">
         {state !== 'success' && state !== 'empty' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {state === 'empty' ? <div className="provider-settings__empty" data-state="empty"><h1>{copy.states.empty.title}</h1><p>{copy.states.empty.body}</p></div> : null}

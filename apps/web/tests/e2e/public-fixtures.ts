@@ -299,6 +299,9 @@ export function publicCommunityFixture() {
           id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
           title: '\u0645\u0627 \u0623\u0641\u0636\u0644 \u062d\u064a \u0644\u0644\u0633\u0643\u0646 \u0628\u0645\u064a\u0632\u0627\u0646\u064a\u0629 2 \u0645\u0644\u064a\u0648\u0646\u061f',
           body: '\u0623\u0646\u0627 \u0648\u0639\u0627\u0626\u0644\u062a\u064a \u0628\u0646\u0641\u0643\u0631 \u0646\u0646\u0642\u0644 \u0644\u0644\u0633\u0627\u062f\u0627\u062a\u060c \u0645\u064a\u0632\u0627\u0646\u064a\u062a\u0646\u0627 \u062d\u0648\u0627\u0644\u064a 2 \u0645\u0644\u064a\u0648\u0646 \u062c\u0646\u064a\u0647. \u0641\u064a\u0646 \u062a\u0646\u0635\u062d\u0648\u0646\u064a \u0623\u0634\u062a\u0631\u064a\u061f',
+          category: 'question',
+          likeCount: 24,
+          dislikeCount: 2,
           createdAt: '2026-08-26T10:00:00+00:00',
           commentCount: 12
         },
@@ -306,6 +309,9 @@ export function publicCommunityFixture() {
           id: 'bbbbbbbbbbbbbbbbbbbbbbbb',
           title: '\u062a\u062c\u0631\u0628\u062a\u064a \u0628\u0639\u062f \u0633\u0646\u0629 \u0643\u0627\u0645\u0644\u0629 \u0641\u064a \u0627\u0644\u0633\u0627\u062f\u0627\u062a',
           body: '\u0627\u0646\u062a\u0642\u0644\u062a \u0645\u0646 \u0627\u0644\u0642\u0627\u0647\u0631\u0629 \u0644\u0644\u0633\u0627\u062f\u0627\u062a \u0627\u0644\u0633\u0646\u0629 \u0627\u0644\u0644\u064a \u0641\u0627\u062a\u062a \u0648\u0639\u0646\u062f\u064a \u0634\u0648\u064a\u0629 \u0645\u0644\u0627\u062d\u0638\u0627\u062a \u0648\u062a\u062c\u0627\u0631\u0628.',
+          category: 'experience',
+          likeCount: 31,
+          dislikeCount: 1,
           createdAt: '2026-08-25T10:00:00+00:00',
           commentCount: 34
         },
@@ -313,6 +319,9 @@ export function publicCommunityFixture() {
           id: 'cccccccccccccccccccccccc',
           title: '\u0646\u0635\u064a\u062d\u0629 \u0645\u0647\u0645\u0629 \u0644\u0643\u0644 \u0645\u0646 \u064a\u0641\u0643\u0631 \u0641\u064a \u0627\u0644\u0634\u0631\u0627\u0621 \u0639\u0644\u0649 \u0627\u0644\u062e\u0631\u064a\u0637\u0629',
           body: '\u0628\u0639\u062f \u062a\u062c\u0631\u0628\u062a\u064a \u0634\u0631\u0627\u0621 \u0648\u062d\u062f\u0629 \u0639\u0644\u0649 \u0627\u0644\u062e\u0631\u064a\u0637\u0629 \u0645\u0646 \u0645\u0637\u0648\u0631 \u0645\u062d\u062a\u0631\u0645\u060c \u0639\u0646\u062f\u064a \u0646\u0635\u0627\u0626\u062d \u0645\u0647\u0645\u0629 \u062c\u062f\u0627\u064b.',
+          category: 'advice',
+          likeCount: 42,
+          dislikeCount: 3,
           createdAt: '2026-08-21T10:00:00+00:00',
           commentCount: 45
         },
@@ -320,6 +329,9 @@ export function publicCommunityFixture() {
           id: 'dddddddddddddddddddddddd',
           title: '\u0645\u0637\u0639\u0645 \u062c\u062f\u064a\u062f \u0645\u0645\u062a\u0627\u0632 \u0641\u064a \u0627\u0644\u062d\u064a \u0627\u0644\u0623\u0648\u0644',
           body: '\u0627\u0641\u062a\u062a\u062d \u0645\u0637\u0639\u0645 \u062c\u062f\u064a\u062f \u0641\u064a \u0627\u0644\u062d\u064a \u0627\u0644\u0623\u0648\u0644 \u0627\u0644\u0623\u0643\u0644 \u0641\u064a\u0647 \u0645\u0645\u062a\u0627\u0632 \u0648\u0623\u0633\u0639\u0627\u0631 \u0645\u0639\u0642\u0648\u0644\u0629.',
+          category: 'service',
+          likeCount: 18,
+          dislikeCount: 0,
           createdAt: '2026-08-24T10:00:00+00:00',
           commentCount: 18
         }

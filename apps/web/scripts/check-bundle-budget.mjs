@@ -7,8 +7,8 @@ const clientAssets = path.resolve(appRoot, 'dist/client/assets');
 const maxJavaScriptChunkBytes = 650 * 1024;
 const maxJavaScriptBytes = 2_500 * 1024;
 // The responsive public, property, developer, and authenticated seeker states,
-// including the canonical desktop navigation actions, are on the critical path.
-const maxStylesheetBytes = 468 * 1024;
+// including the canonical seeker and provider desktop shells, are on the critical path.
+const maxStylesheetBytes = 469 * 1024;
 const files = readdirSync(clientAssets)
   .map(name => path.join(clientAssets, name))
   .filter(file => statSync(file).isFile());

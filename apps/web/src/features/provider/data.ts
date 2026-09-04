@@ -17,6 +17,7 @@ export const PROVIDER_VIEWINGS_ROUTE = '/provider/viewings' as const;
 
 export interface ProviderAuthorizationSource {
   readonly getAuthorizationHeader: () => string | undefined;
+  readonly logout?: () => Promise<unknown>;
 }
 
 export interface ProviderOverviewProperties {

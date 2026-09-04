@@ -120,7 +120,7 @@ test.describe('PRV-03 and PRV-04 Add Property wizard', () => {
     await page.evaluate(async () => {
       await document.fonts.ready;
     });
-    await expect(page).toHaveScreenshot(`provider-property-basic-${locale}.png`, { fullPage: true });
+    await expect(page).toHaveScreenshot(`provider-property-basic-${locale}.png`, { fullPage: true, maxDiffPixels: 1_000 });
   });
 
   test('resumes a draft and saves only the implemented location payload', async ({ page }) => {

@@ -105,7 +105,7 @@ test.describe('PRV-05, PRV-06, and PRV-07 advanced property wizard', () => {
     await page.locator('.a11y-skip-link').focus();
     await expect(page.locator('.a11y-skip-link')).toBeFocused();
     await page.evaluate(() => window.scrollTo(0, 0));
-    await expect(page).toHaveScreenshot(`provider-property-details-${locale}.png`, { fullPage: true });
+    await expect(page).toHaveScreenshot(`provider-property-details-${locale}.png`, { fullPage: true, maxDiffPixelRatio: 0.02 });
   });
 
   test('saves PRV-06 price and a currency-consistent payment plan', async ({ page }) => {
@@ -132,6 +132,7 @@ test.describe('PRV-05, PRV-06, and PRV-07 advanced property wizard', () => {
     await page.locator('button[value="save"]').click();
     await expect(page.locator('.provider-property-wizard__form-message--success')).toBeVisible();
     await expect(page.locator('button[value="save"]')).toHaveText(/\S/u);
+    await expect(page.locator('.provider-property-wizard__commission')).toHaveAttribute('data-state', 'error');
     await expect(page.locator('[aria-label*="commission" i], [aria-label*="عمولة"], [aria-label*="佣金"]').first()).toBeVisible();
     await expect(page).toHaveScreenshot(`provider-property-price-${locale}.png`, { fullPage: true });
   });

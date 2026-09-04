@@ -96,28 +96,56 @@ function navigationItemIsActive(id: (typeof navigationItems)[number][0], path: s
   return activePath.startsWith(path);
 }
 
-export function ProviderNavigation({ locale, activePath }: { readonly locale: SupportedLocale; readonly activePath: string }) {
+export function ProviderNavigation({ locale, activePath, authClient }: { readonly locale: SupportedLocale; readonly activePath: string; readonly authClient?: ProviderAuthorizationSource | undefined }) {
   const copy = getProviderCopy(locale);
+  const [signingOut, setSigningOut] = useState(false);
+  const providerLabel = locale === 'ar' ? 'مزود عقار' : 'Property provider';
+  const logoutLabel = signingOut ? (locale === 'ar' ? 'جاري تسجيل الخروج…' : 'Signing out…') : (locale === 'ar' ? 'تسجيل الخروج' : 'Sign out');
+  const signOut = () => {
+    if (signingOut) return;
+    setSigningOut(true);
+    void (authClient?.logout?.() ?? Promise.resolve()).catch(() => undefined).finally(() => {
+      if (typeof window !== 'undefined') window.location.assign(localeForProviderPath(locale, '/auth/login'));
+    });
+  };
   return (
-    <nav className="provider-dashboard__navigation" aria-label={copy.overview.eyebrow}>
-      <span className="provider-dashboard__navigation-title">{copy.overview.eyebrow}</span>
-      <ul>
-        {navigationItems.map(([id, path]) => {
-          const active = navigationItemIsActive(id, path, activePath);
-          const icon = navigationIcons[id];
-          return (
-            <li key={id}>
-              <a href={localeForProviderPath(locale, path)} aria-current={active ? 'page' : undefined} data-active={active ? 'true' : undefined}>
-                <span aria-hidden="true" className="provider-dashboard__navigation-icon" style={providerNavigationIconContainerStyle}>
-                  <img src={active ? icon.active : icon.default} alt="" width={19} height={19} style={providerNavigationIconStyle} />
-                </span>
-                <span>{navigationLabel(copy, id)}</span>
-              </a>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
+    <>
+      <header className="provider-dashboard__topbar">
+        <span className="provider-dashboard__topbar-arrow" aria-hidden="true">›</span>
+        <span className="provider-dashboard__topbar-spacer" />
+        <a className="provider-dashboard__topbar-notifications" href={localeForProviderPath(locale, '/provider/notifications')} aria-label={copy.nav.notifications}>
+          <img src={navigationIcons.notifications.default} alt="" width="18" height="18" /><i />
+        </a>
+        <span className="provider-dashboard__topbar-avatar" aria-hidden="true">{locale === 'ar' ? 'م' : 'P'}</span>
+      </header>
+      <nav className="provider-dashboard__navigation" aria-label={copy.overview.eyebrow}>
+        <a className="provider-dashboard__brand" href={localeForProviderPath(locale, '/provider')} aria-label={copy.overview.eyebrow}>
+          <img src="/assets/sadat-real-estate-logo.png" alt="" width="636" height="557" />
+          <span>{copy.overview.eyebrow}</span>
+        </a>
+        <span className="provider-dashboard__navigation-title">{copy.overview.eyebrow}</span>
+        <ul>
+          {navigationItems.map(([id, path]) => {
+            const active = navigationItemIsActive(id, path, activePath);
+            const icon = navigationIcons[id];
+            return (
+              <li key={id}>
+                <a href={localeForProviderPath(locale, path)} aria-current={active ? 'page' : undefined} data-active={active ? 'true' : undefined}>
+                  <span aria-hidden="true" className="provider-dashboard__navigation-icon" style={providerNavigationIconContainerStyle}>
+                    <img src={active ? icon.active : icon.default} alt="" width={19} height={19} style={providerNavigationIconStyle} />
+                  </span>
+                  <span>{navigationLabel(copy, id)}</span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+        <footer className="provider-dashboard__navigation-footer">
+          <strong>{providerLabel}</strong><small>{locale === 'ar' ? 'شركة' : 'Company'}</small>
+          <button type="button" onClick={signOut} disabled={signingOut}><img src={`${providerNavigationAssetRoot}/logout.svg`} alt="" width="16" height="16" />{logoutLabel}</button>
+        </footer>
+      </nav>
+    </>
   );
 }
 
@@ -226,15 +254,17 @@ function RecentProperties({ data, locale }: { readonly data: ProviderOverviewDat
 function OverviewContent({ data, locale }: { readonly data: ProviderOverviewData; readonly locale: SupportedLocale }) {
   const copy = getProviderCopy(locale);
   const numberFormat = new Intl.NumberFormat(locale);
+  const dashboardTitle = locale === 'ar' ? 'لوحة التحكم' : 'Dashboard';
+  const dashboardWelcome = locale === 'ar' ? 'مرحباً، شركة عقارات النيل' : 'Welcome, Nile Real Estate';
   return (
     <>
       <div className="provider-dashboard__heading-row">
         <div>
           <p className="provider-dashboard__eyebrow">{copy.overview.eyebrow}</p>
-          <h1>{copy.overview.title}</h1>
-          <p>{copy.overview.description}</p>
+          <h1>{dashboardTitle}</h1>
+          <p>{dashboardWelcome}</p>
         </div>
-        <a className="provider-dashboard__primary-action" href={localeForProviderPath(locale, '/provider/properties/new/basic')}>{copy.overview.addProperty}</a>
+        <a className="provider-dashboard__primary-action" href={localeForProviderPath(locale, '/provider/properties/new/basic')}><span aria-hidden="true">＋</span>{copy.overview.addProperty}</a>
       </div>
       <section className="provider-dashboard__summary" aria-labelledby="provider-summary-title">
         <div className="provider-dashboard__section-heading"><h2 id="provider-summary-title">{copy.overview.summaryTitle}</h2></div>
@@ -243,10 +273,10 @@ function OverviewContent({ data, locale }: { readonly data: ProviderOverviewData
           <MetricCard label={copy.overview.cards.published} value={numberFormat.format(data.properties.published)} tone="published" />
           <MetricCard label={copy.overview.cards.pending} value={numberFormat.format(data.properties.pendingReview)} tone="pending" />
           <MetricCard label={copy.overview.additionalCards?.needsChanges ?? copy.overview.unavailableMetric} value={numberFormat.format(data.properties.needsChanges)} tone="needs-changes" />
-          <MetricCard label={copy.overview.additionalCards?.customerRequests ?? copy.overview.unavailableMetric} value={numberFormat.format(data.activity.customerRequests)} tone="customer-requests" />
-          <MetricCard label={copy.overview.additionalCards?.views ?? copy.overview.unavailableMetric} value={copy.unavailable} tone="views" unavailable unavailableBody={copy.overview.unavailableMetricBody} />
-          <MetricCard label={copy.overview.cards.drafts} value={numberFormat.format(data.properties.drafts)} tone="drafts" />
           <MetricCard label={copy.overview.additionalCards?.booked ?? copy.overview.unavailableMetric} value={numberFormat.format(data.activity.bookedViewings)} tone="booked" />
+          <MetricCard label={copy.overview.cards.drafts} value={numberFormat.format(data.properties.drafts)} tone="drafts" />
+          <MetricCard label={copy.overview.additionalCards?.views ?? copy.overview.unavailableMetric} value={copy.unavailable} tone="views" unavailable unavailableBody={copy.overview.unavailableMetricBody} />
+          <MetricCard label={copy.overview.additionalCards?.customerRequests ?? copy.overview.unavailableMetric} value={numberFormat.format(data.activity.customerRequests)} tone="customer-requests" />
         </div>
       </section>
       <DashboardInsights locale={locale} />
@@ -287,7 +317,7 @@ export function ProviderOverview({ locale, session, authClient, apiOrigin, initi
 
   return (
     <section className="provider-dashboard" data-screen-id="PRV-01" data-route="/provider" data-device-scope="desktop">
-      <ProviderNavigation locale={locale} activePath={path} />
+      <ProviderNavigation locale={locale} activePath={path} authClient={authClient} />
       <div className="provider-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {(state === 'success' || state === 'empty') && data !== undefined ? (

@@ -13,6 +13,9 @@ function communityListFixture() {
         id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
         title: 'Published community question',
         body: 'A safe public community post for browser verification.',
+        category: 'question',
+        likeCount: 0,
+        dislikeCount: 0,
         createdAt: '2026-08-01T10:00:00+00:00',
         commentCount: 0
       }],

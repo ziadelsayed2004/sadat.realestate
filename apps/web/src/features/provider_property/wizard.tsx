@@ -278,10 +278,10 @@ function LocationFormView({
             <label htmlFor="provider-property-location-search">{wizard.locationSearchLabel}</label>
             <input id="provider-property-location-search" type="search" value={locationSearch} placeholder={wizard.locationSearchPlaceholder} onChange={event => setLocationSearch(event.target.value)} />
             <label htmlFor="provider-property-location-id">{wizard.labels.locationId}</label>
-            <select id="provider-property-location-id" value={form.locationId} onChange={event => setForm({ ...form, locationId: event.target.value })} aria-invalid={validationError || undefined} disabled={locationsState !== 'success'}>
+            {locationsState === 'error' ? <input id="provider-property-location-id" value={form.locationId} placeholder={wizard.placeholders.locationId} onChange={event => setForm({ ...form, locationId: event.target.value })} aria-invalid={validationError || undefined} /> : <select id="provider-property-location-id" value={form.locationId} onChange={event => setForm({ ...form, locationId: event.target.value })} aria-invalid={validationError || undefined} disabled={locationsState !== 'success'}>
               <option value="">{locationsState === 'loading' ? wizard.locationCatalogLoading : wizard.locationSelectPlaceholder}</option>
               {visibleLocations.map(location => <option key={location.id} value={location.id}>{location.name[locale] ?? location.name.ar ?? location.name.en ?? location.slug}</option>)}
-            </select>
+            </select>}
             {locationsState === 'error' ? <button type="button" className="provider-property-wizard__catalog-retry" onClick={onRetryLocations}>{copy.retry}</button> : null}
           </div>
           <Input id="provider-property-map-url" label={wizard.labels.mapUrl} value={form.mapUrl} placeholder={wizard.placeholders.mapUrl} onChange={event => setForm({ ...form, mapUrl: event.target.value })} type="url" inputMode="url" aria-invalid={validationError || undefined} />
@@ -290,6 +290,7 @@ function LocationFormView({
         </div>
         <p className="provider-property-wizard__help">{wizard.coordinateHelp}</p>
         {locationsState === 'success' && locations.length === 0 ? <div className="provider-property-wizard__location-placeholder" role="status"><strong>{wizard.locationCatalogEmptyTitle}</strong><p>{wizard.locationCatalogEmptyBody}</p></div> : null}
+        {locationsState === 'error' ? <div className="provider-property-wizard__location-placeholder" role="status"><strong>{wizard.locationCatalogUnavailableTitle}</strong><p>{wizard.locationCatalogUnavailableBody}</p></div> : null}
       </section>
       <section className="provider-property-wizard__contract-note" aria-label={wizard.contractBoundaryTitle}><strong>{wizard.contractBoundaryTitle}</strong><p>{wizard.contractBoundaryBody}</p></section>
       <div className="provider-property-wizard__field provider-property-wizard__reason"><label htmlFor="provider-property-reason">{wizard.labels.reason}</label><textarea id="provider-property-reason" rows={2} value={form.reason} placeholder={wizard.placeholders.reason} onChange={event => setForm({ ...form, reason: event.target.value })} required /></div>
@@ -457,7 +458,7 @@ export function ProviderPropertyWizard({ locale, session, step, propertyId, auth
   const path = typeof window === 'undefined' ? '/provider/properties' : '/provider/properties';
   return (
     <section className="provider-dashboard provider-property-wizard" data-screen-id={step === 'basic' ? 'PRV-03' : 'PRV-04'} data-route={step === 'basic' ? '/provider/properties/new/basic' : `/provider/properties/${propertyId === undefined ? '' : encodeURIComponent(propertyId)}/location`} data-device-scope="desktop">
-      <ProviderNavigation locale={locale} activePath={path} />
+      <ProviderNavigation locale={locale} activePath={path} authClient={authClient} />
       <div className="provider-dashboard__content provider-property-wizard__content">
         <WizardSteps step={step} locale={locale} copy={copy} />
         {state !== 'success' ? <StatePanel state={state} copy={copy} onRetry={onRetry} /> : null}

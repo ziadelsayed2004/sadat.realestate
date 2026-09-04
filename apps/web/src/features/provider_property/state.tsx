@@ -164,7 +164,7 @@ export function ProviderPropertyStatePage({ locale, session, route, propertyId, 
 
   return (
     <section className="provider-dashboard provider-property-state" data-screen-id={screenId} data-route={`/provider/properties/${encodeURIComponent(propertyId)}/${route}`} data-device-scope="desktop">
-      <ProviderNavigation locale={locale} activePath="/provider/properties" />
+      <ProviderNavigation locale={locale} activePath="/provider/properties" authClient={authClient} />
       <div className="provider-dashboard__content provider-property-state__content">
         {state === 'loading' ? <StateMessage state="loading" title={getProviderPropertyCopy(locale).states.loading.title} message={getProviderPropertyCopy(locale).states.loading.body} /> : null}
         {state === 'retry' || state === 'error' || state === 'permission' || state === 'not_found' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}

@@ -124,11 +124,16 @@ export function App({
     updateSnapshot(initialSnapshot);
     const unsubscribe = authClient.subscribe(updateSnapshot);
     if (initialSnapshot.status === 'anonymous') {
-      setAuthResolutionComplete(false);
-      void authClient.refresh().then(updateSnapshot, () => setAuthResolutionComplete(true));
+      const shouldRefresh = protectedRoute || authClient.hasSessionHint?.() !== false;
+      if (shouldRefresh) {
+        setAuthResolutionComplete(false);
+        void authClient.refresh().then(updateSnapshot, () => setAuthResolutionComplete(true));
+      } else {
+        setAuthResolutionComplete(true);
+      }
     }
     return unsubscribe;
-  }, [authClient]);
+  }, [authClient, protectedRoute]);
   const liveSession: RouteSession = authSnapshot?.status === 'authenticated' && authSnapshot.user !== undefined && (authSnapshot.user.roleType === 'seeker' || authSnapshot.user.roleType === 'provider' || authSnapshot.user.roleType === 'admin')
     ? { status: 'authenticated', role: authSnapshot.user.roleType }
     : ANONYMOUS_ROUTE_SESSION;

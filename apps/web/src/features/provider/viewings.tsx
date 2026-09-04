@@ -320,7 +320,7 @@ export function ProviderViewings({ locale, session, authClient, apiOrigin, load,
 
   return (
     <section className="provider-dashboard provider-viewings" data-screen-id="PRV-18" data-route="/provider/viewings" data-device-scope="desktop" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-      <ProviderNavigation locale={locale} activePath={path} />
+      <ProviderNavigation locale={locale} activePath={path} authClient={authClient} />
       <div className="provider-dashboard__content">
         {feedback ? <p className="provider-viewings__feedback" role="status" aria-live="polite">{feedback}</p> : null}
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => { setFeedback(undefined); setAttempt(value => value + 1); }} /> : null}

@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 
+const PASSWORD = 'Provider1!';
+
 function localeForProject(): 'ar' | 'en' {
   const projectName = test.info().project.name;
   if (projectName.endsWith('-en')) return 'en';
@@ -34,6 +36,8 @@ test('provider type selection supports keyboard choice and preserves only the se
   await page.keyboard.press('Enter');
   await expect(page.locator('[data-screen-id="AUTH-08"]')).toBeVisible();
   await expect(developerCard).toHaveAttribute('aria-pressed', 'true');
+  await page.locator('#provider-registration-password').fill(PASSWORD);
+  await page.locator('#provider-registration-password-confirmation').fill(PASSWORD);
   await expect(page.getByRole('button', { name: /continue|متابعة|继续/iu })).toBeEnabled();
 
   await Promise.all([

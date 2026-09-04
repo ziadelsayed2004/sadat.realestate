@@ -7,6 +7,7 @@ import {
 } from '../src/features/contracts/index.ts';
 import {
   AuthClient,
+  AUTH_SESSION_HINT_KEY,
   AuthStore,
   BrowserAuthSync,
   type AuthApiClient,
@@ -107,6 +108,18 @@ class TestChannel implements BroadcastChannelLike {
   }
 }
 
+class TestSessionHintStorage {
+  readonly values = new Map<string, string>();
+
+  getItem(key: string): string | null {
+    return this.values.get(key) ?? null;
+  }
+
+  setItem(key: string, value: string): void {
+    this.values.set(key, value);
+  }
+}
+
 test('admin login normalizes input, keeps the access token in memory, and exposes a safe snapshot', async () => {
   const sync = new TestSync();
   const apiClient = new FakeApiClient(async (path, options) => {
@@ -125,6 +138,22 @@ test('admin login normalizes input, keeps the access token in memory, and expose
   assert.equal(client.getAuthorizationHeader(), 'Bearer header.payload.signature');
   assert.equal('accessToken' in snapshot, false);
   assert.equal(sync.publishCount, 0);
+  client.dispose();
+});
+
+test('session hint distinguishes known guests from sessions that should be refreshed', async () => {
+  const sessionHintStorage = new TestSessionHintStorage();
+  const apiClient = new FakeApiClient(async () => response(session('seeker')));
+  const client = new AuthClient({ apiClient, store: new AuthStore({ sync: new TestSync() }), sessionHintStorage });
+
+  assert.equal(client.hasSessionHint(), undefined);
+  await client.refresh();
+  assert.equal(client.hasSessionHint(), true);
+  assert.equal(sessionHintStorage.getItem(AUTH_SESSION_HINT_KEY), 'authenticated');
+
+  await client.logout();
+  assert.equal(client.hasSessionHint(), false);
+  assert.equal(sessionHintStorage.getItem(AUTH_SESSION_HINT_KEY), 'anonymous');
   client.dispose();
 });
 

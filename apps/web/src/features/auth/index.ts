@@ -1,9 +1,10 @@
-export { AuthClient } from './client.ts';
+export { AuthClient, AUTH_SESSION_HINT_KEY } from './client.ts';
 export type {
   AuthApiClient,
   AuthenticatedOtpResult,
   AuthClientOptions,
-  AuthOtpVerifyResult
+  AuthOtpVerifyResult,
+  AuthSessionHintStorage
 } from './client.ts';
 export { AuthStore } from './store.ts';
 export type {
