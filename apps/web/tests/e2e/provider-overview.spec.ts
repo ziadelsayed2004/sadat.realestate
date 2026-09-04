@@ -167,7 +167,6 @@ test.describe('PRV-01 Provider Overview', () => {
     const insightsBox = await page.locator('.provider-dashboard__insights').boundingBox();
     const chartBox = await page.locator('.provider-dashboard__chart').boundingBox();
     const quickActionsBox = await page.locator('.provider-dashboard__quick-actions').boundingBox();
-    const recentBox = await page.locator('.provider-dashboard__recent').boundingBox();
     const metricGrid = page.locator('.provider-dashboard__metric-grid');
     expect(navigationBox).not.toBeNull();
     expect(topbarBox).not.toBeNull();
