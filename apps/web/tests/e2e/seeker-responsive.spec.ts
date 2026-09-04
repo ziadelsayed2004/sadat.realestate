@@ -107,6 +107,8 @@ test.describe('Seeker responsive shell', () => {
       await expect(page.locator('.seeker-dashboard__nav')).toHaveClass(/is-open/u);
       await expect(page.locator('.seeker-dashboard__backdrop')).toHaveClass(/is-open/u);
       await expect(page.locator('body')).toHaveCSS('overflow', 'hidden');
+      await expect(page.locator('.seeker-dashboard__nav-close')).toBeVisible();
+      await page.waitForTimeout(260);
 
       const openNav = await page.locator('.seeker-dashboard__nav').evaluate(element => {
         const rect = element.getBoundingClientRect();

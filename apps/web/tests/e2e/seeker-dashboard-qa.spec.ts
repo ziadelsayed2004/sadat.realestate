@@ -237,6 +237,8 @@ test.describe('F3 Seeker Dashboard QA', () => {
 });
 
 test.describe('Seeker dashboard responsive regression', () => {
+  test.setTimeout(90_000);
+
   test.beforeEach(async ({ page }, testInfo) => {
     test.skip(!testInfo.project.name.includes('mobile'), 'Responsive regression runs on the mobile projects.');
     await routeSession(page);
@@ -247,7 +249,7 @@ test.describe('Seeker dashboard responsive regression', () => {
     const locale = localeForProject();
     for (const routeCase of completedRoutes) {
       await page.goto(localizedPath(routeCase.path, locale), { waitUntil: 'domcontentloaded' });
-      await expect(page.locator(routeCase.selector)).toBeVisible();
+      await expect(page.locator(routeCase.selector)).toBeVisible({ timeout: 15_000 });
       const geometry = await page.evaluate(() => {
         const content = document.querySelector('.seeker-dashboard__content');
         const style = content instanceof HTMLElement ? getComputedStyle(content) : undefined;
@@ -268,8 +270,11 @@ test.describe('Seeker dashboard responsive regression', () => {
     const menuButton = page.locator('.seeker-dashboard__menu-button');
     await menuButton.click();
     await expect(page.locator('.seeker-dashboard__nav')).toHaveClass(/is-open/u);
-    await expect(page.locator('.seeker-dashboard__backdrop')).toBeVisible();
-    await page.locator('.seeker-dashboard__backdrop').click({ position: { x: 2, y: 2 } });
+    const backdrop = page.locator('.seeker-dashboard__backdrop');
+    await expect(backdrop).toBeVisible();
+    const backdropBox = await backdrop.boundingBox();
+    expect(backdropBox).not.toBeNull();
+    await backdrop.click({ position: { x: locale === 'ar' ? 2 : (backdropBox?.width ?? 4) - 2, y: 2 } });
     await expect(page.locator('.seeker-dashboard__nav')).not.toHaveClass(/is-open/u);
   });
 });

@@ -2219,6 +2219,10 @@
   font-size: 0;
 }
 
+.seeker-dashboard__nav-close {
+  display: none;
+}
+
 .seeker-dashboard__nav a[data-active="true"] .seeker-dashboard__nav-icon .seeker-dashboard__icon {
   filter: brightness(0) invert(1);
 }
@@ -2348,8 +2352,51 @@
     transition: transform .22s ease, visibility 0s linear .22s;
   }
 
+  .seeker-dashboard__nav-close {
+    position: absolute;
+    inset-block-start: .75rem;
+    inset-inline-start: .75rem;
+    display: grid;
+    place-items: center;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    padding: 0;
+    color: #17233d;
+    background: transparent;
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .seeker-dashboard__nav-close:hover,
+  .seeker-dashboard__nav-close:focus-visible {
+    background: #f3e8d0;
+  }
+
+  .seeker-dashboard__nav-close .seeker-dashboard__menu-glyph {
+    transform: rotate(0deg);
+  }
+
+  .seeker-dashboard__nav-close .seeker-dashboard__menu-glyph i:first-child {
+    transform: translateY(.4rem) rotate(45deg);
+  }
+
+  .seeker-dashboard__nav-close .seeker-dashboard__menu-glyph i:nth-child(2) {
+    opacity: 0;
+  }
+
+  .seeker-dashboard__nav-close .seeker-dashboard__menu-glyph i:last-child {
+    transform: translateY(-.4rem) rotate(-45deg);
+  }
+
+  .seeker-dashboard__brand {
+    margin-block-start: 2.5rem;
+  }
+
   [dir="rtl"] .seeker-dashboard__nav {
-    inset-inline-end: 0;
+    /* In RTL the dashboard rail is on the visual right.  Inline-start maps
+       to that edge, so the drawer opens from the same side as desktop. */
+    inset-inline-start: 0;
     transform: translateX(100%);
   }
 

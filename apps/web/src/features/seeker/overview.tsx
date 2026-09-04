@@ -133,8 +133,11 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin }: 
           <span><strong>{displayName ?? copy.overview.eyebrow}</strong><small>{copy.nav.profile}</small></span>
         </a>
       </header>
-      <button className={`seeker-dashboard__backdrop${menuOpen ? ' is-open' : ''}`} type="button" aria-label={closeMenuLabel} aria-hidden={!menuOpen} tabIndex={menuOpen ? 0 : -1} onClick={() => setMenuOpen(false)} />
+      <button className={`seeker-dashboard__backdrop${menuOpen ? ' is-open' : ''}`} type="button" aria-label={closeMenuLabel} aria-hidden={!menuOpen} tabIndex={menuOpen ? 0 : -1} disabled={!menuOpen} onClick={() => setMenuOpen(false)} />
       <nav id="seeker-dashboard-navigation" className={`seeker-dashboard__nav${menuOpen ? ' is-open' : ''}`} aria-label={copy.overview.eyebrow}>
+        <button className="seeker-dashboard__nav-close" type="button" aria-label={closeMenuLabel} onClick={() => setMenuOpen(false)}>
+          <span aria-hidden="true" className="seeker-dashboard__menu-glyph"><i /><i /><i /></span>
+        </button>
         <a className="seeker-dashboard__brand" href={localeForSeekerPath(locale, '/')} aria-label={websiteLabel} onClick={() => setMenuOpen(false)}>
           <img src="/assets/sadat-real-estate-logo.png" alt="" />
         </a>
