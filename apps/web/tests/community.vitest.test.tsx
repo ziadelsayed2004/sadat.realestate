@@ -17,6 +17,9 @@ const post = {
   id: 'aaaaaaaaaaaaaaaaaaaaaaaa',
   title: 'A published community question',
   body: 'A safe public community post body.',
+  category: 'question' as const,
+  likeCount: 24,
+  dislikeCount: 2,
   createdAt: '2026-08-01T10:00:00+00:00',
   commentCount: 1
 };

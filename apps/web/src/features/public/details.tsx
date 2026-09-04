@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import type {
   PublicPropertyDetails as PublicPropertyDetailsData,
   PublicPropertyMedia,
@@ -10,6 +10,7 @@ import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
 import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from './components.tsx';
 import {
+  createPublicPropertyDetailsActions,
   defaultPublicPropertyDetailsActions,
   defaultPublicPropertyDetailsLoader,
   propertyDetailsSlugFromUrl,
@@ -32,6 +33,7 @@ export interface PublicPropertyDetailsProps {
   readonly initialState?: PublicPropertyDetailsInitialState | undefined;
   readonly load?: PublicPropertyDetailsLoader | undefined;
   readonly actions?: PublicPropertyDetailsActions | undefined;
+  readonly authClient?: { getAuthorizationHeader(): string | undefined } | undefined;
 }
 
 function errorState(error: unknown): PublicPropertyDetailsViewState {
@@ -524,6 +526,9 @@ function RequestPanel({
     const trimmedMessage = message.trim();
     const input: PublicContactRequestInput = {
       message: trimmedMessage.length > 0 ? trimmedMessage : (locale === 'ar' ? 'طلب تواصل واستفسار' : 'Contact inquiry request'),
+      fullName: fullName.trim(),
+      phone: phone.trim(),
+      preferredContactTime: contactTime as 'morning' | 'evening',
       propertyId: data.id,
       ...(data.project?.id === undefined ? {} : { projectId: data.project.id }),
       locale
@@ -537,33 +542,10 @@ function RequestPanel({
     }
   };
 
-  const handleWhatsApp = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    if (fullName.trim().length === 0 || phone.trim().length === 0) {
-      setContactValidation(true);
-      return;
-    }
-    setContactValidation(false);
-    setContactState('submitting');
-    const trimmedMessage = message.trim();
-    const input: PublicContactRequestInput = {
-      message: trimmedMessage.length > 0 ? trimmedMessage : (locale === 'ar' ? 'طلب استفسار عبر واتساب' : 'WhatsApp inquiry request'),
-      propertyId: data.id,
-      ...(data.project?.id === undefined ? {} : { projectId: data.project.id }),
-      locale
-    };
-    try {
-      await actions.submitContact(input);
-      setContactState('success');
-      const propTitle = localizedText(data.name, locale) ?? data.slug;
-      const text = locale === 'ar' ? `مرحباً، أود الاستفسار عن العقار: ${propTitle}` : `Hello, I would like to inquire about property: ${propTitle}`;
-      if (typeof window !== 'undefined') {
-        window.open(getWhatsAppLink(text), '_blank', 'noopener,noreferrer');
-      }
-    } catch (error) {
-      setContactState(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? 'permission' : 'error');
-    }
-  };
+  const propTitle = localizedText(data.name, locale) ?? data.slug;
+  const whatsappText = locale === 'ar'
+    ? `مرحباً، أود الاستفسار عن العقار: ${propTitle}`
+    : `Hello, I would like to inquire about property: ${propTitle}`;
 
   const submitViewing = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -615,7 +597,7 @@ function RequestPanel({
           {contactValidation ? <p className="public-property-details__validation" role="alert">{copy.contactValidation}</p> : null}
           <Button type="submit" fullWidth className="public-property-details__contact-submit" startIcon={<span className="public-property-details__button-icon"><DetailLineIcon kind="paper-plane" /></span>} loading={contactState === 'submitting'}>{contactState === 'submitting' ? copy.actionLoading : copy.submitContact}</Button>
         </form>
-        <button type="button" className="public-property-details__whatsapp" onClick={handleWhatsApp} disabled={contactState === 'submitting'}><span className="public-property-details__button-icon public-property-details__button-icon--whatsapp" aria-hidden="true"><DetailLineIcon kind="whatsapp" /></span>{locale === 'ar' ? 'واتساب' :'WhatsApp'}</button>
+        <a className="public-property-details__whatsapp" href={getWhatsAppLink(whatsappText)} target="_blank" rel="noopener noreferrer"><span className="public-property-details__button-icon public-property-details__button-icon--whatsapp" aria-hidden="true"><DetailLineIcon kind="whatsapp" /></span><span>{locale === 'ar' ? 'تواصل عبر واتساب' :'Contact on WhatsApp'}</span></a>
       </section>
       {viewingState === 'success' || viewingState === 'permission' || viewingState === 'error' ? <ActionFeedback state={viewingState} copy={copy} url={url} /> : null}
       <Modal
@@ -685,7 +667,8 @@ export function PublicPropertyDetails({
   initialData,
   initialState,
   load = defaultPublicPropertyDetailsLoader,
-  actions = defaultPublicPropertyDetailsActions
+  actions,
+  authClient
 }: PublicPropertyDetailsProps) {
   const copy = getPublicPropertyDetailsCopy(locale);
   const sourceUrl = url ?? (typeof window === 'undefined' ? '/' : window.location.href);
@@ -694,6 +677,12 @@ export function PublicPropertyDetails({
   const [data, setData] = useState<PublicPropertyDetailsData | undefined>(initialData);
   const [view, setView] = useState<PublicPropertyDetailsViewState>(initialView);
   const [attempt, setAttempt] = useState(0);
+  const resolvedActions = useMemo(
+    () => actions ?? (authClient === undefined
+      ? defaultPublicPropertyDetailsActions
+      : createPublicPropertyDetailsActions({ authorizationHeader: () => authClient.getAuthorizationHeader() })),
+    [actions, authClient]
+  );
 
   useEffect(() => {
     if (initialData !== undefined && attempt === 0) return;
@@ -721,7 +710,7 @@ export function PublicPropertyDetails({
   return (
     <div className="public-property-details" data-page="public-property-details" data-details-state={view}>
       <PublicSiteHeader locale={locale} copy={getPublicHomepageCopy(locale)} activePath="/properties" />
-      {view === 'success' && data !== undefined ? <SuccessDetails data={data} locale={locale} copy={copy} url={url} actions={actions} /> : view === 'not_found' ? <NotFoundNotice copy={copy} /> : <StateNotice state={view === 'success' ? 'empty' : view} copy={copy} url={url} onRetry={retry} />}
+      {view === 'success' && data !== undefined ? <SuccessDetails data={data} locale={locale} copy={copy} url={url} actions={resolvedActions} /> : view === 'not_found' ? <NotFoundNotice copy={copy} /> : <StateNotice state={view === 'success' ? 'empty' : view} copy={copy} url={url} onRetry={retry} />}
       <Footer locale={locale} />
     </div>
   );

@@ -91,7 +91,7 @@ interface AuthLocation {
   readonly pathname: string;
   readonly roleType: OtpRoleType | 'admin';
   readonly purpose: OtpPurpose | 'password_reset';
-  readonly returnTo: string;
+  readonly returnTo?: string | undefined;
 }
 
 function parseAuthLocation(url: string): AuthLocation {
@@ -114,14 +114,20 @@ function parseAuthLocation(url: string): AuthLocation {
   const candidateReturnTo = parsed.searchParams.get('returnTo');
   const returnTo = candidateReturnTo !== null && candidateReturnTo.startsWith('/') && !candidateReturnTo.startsWith('//')
     ? candidateReturnTo
-    : '/';
+    : undefined;
 
   return { pathname, roleType, purpose, returnTo };
 }
 
-function navigateAfterAuthentication(returnTo: string): void {
+function navigateAfterAuthentication(snapshot: AuthSnapshot, returnTo: string | undefined, locale: SupportedLocale): void {
   if (typeof window === 'undefined') return;
-  window.location.assign(returnTo);
+  if (returnTo !== undefined) {
+    window.location.assign(returnTo);
+    return;
+  }
+  const role = snapshot.user?.roleType;
+  const dashboard = role === 'admin' ? '/admin' : role === 'provider' ? '/provider' : '/seeker';
+  window.location.assign(`${dashboard}?lang=${encodeURIComponent(locale)}`);
 }
 
 function getApiErrorCode(error: unknown): string | undefined {
@@ -1269,7 +1275,7 @@ export function AuthPage({ url, locale, client: providedClient, onAuthenticated:
   const client = useMemo<AuthFlowClient>(() => providedClient ?? new AuthClient(), [providedClient]);
   const location = useMemo(() => parseAuthLocation(url), [url]);
   const copy = getAuthCopy(locale);
-  const onAuthenticated = providedOnAuthenticated ?? (() => navigateAfterAuthentication(location.returnTo));
+  const onAuthenticated = providedOnAuthenticated ?? ((snapshot: AuthSnapshot) => navigateAfterAuthentication(snapshot, location.returnTo, locale));
 
   useEffect(() => {
     if (providedClient !== undefined) return undefined;

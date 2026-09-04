@@ -55,7 +55,7 @@ test('access tokens stay out of browser storage and hostile returnTo values fail
   await page.locator('#auth-login-password').fill('secret');
   await page.locator('[data-screen-id="AUTH-01"] button[type="submit"]').click();
 
-  await expect(page).toHaveURL(/\/$/u);
+  await expect(page).toHaveURL(new RegExp(`/admin\\?lang=${locale}$`, 'u'));
   expect(await page.evaluate(() => ({
     local: window.localStorage.length,
     session: window.sessionStorage.length,

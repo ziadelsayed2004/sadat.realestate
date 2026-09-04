@@ -138,6 +138,11 @@ describe('public homepage', () => {
     expect(mobileActions?.querySelector('a[href="/auth/login"]')).not.toBeNull();
     expect(mobileActions?.querySelector('a[href="/auth/register"]')).not.toBeNull();
     expect(mobileActions?.querySelector('[data-custom-locale-switcher="true"]')).not.toBeNull();
+    expect(result.container.querySelector('.public-homepage__menu-backdrop.is-open')).toBeInTheDocument();
+    expect(document.body.style.overflow).toBe('hidden');
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(document.body.style.overflow).toBe('');
+    expect(result.container.querySelector('.public-homepage__nav')).not.toHaveClass('is-open');
   });
 
   it('replaces anonymous actions with the authenticated customer account link', () => {

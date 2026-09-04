@@ -7,7 +7,15 @@ const requestType = z.enum(['contact', 'viewing', 'property_search', 'provider_c
 const requestSource = z.enum(['public', 'seeker', 'provider', 'admin']);
 const requestStatus = z.enum(['new', 'under_review', 'contacted', 'scheduled', 'needs_information', 'in_progress', 'resolved', 'cancelled', 'closed']);
 const requestTransition = z.enum(['start_review', 'contact', 'schedule', 'needs_information', 'start_progress', 'resolve', 'cancel', 'close', 'reopen']);
-const contactPayload = z.object({ message: safeText(2_000), propertyId: objectId.optional(), projectId: objectId.optional(), locale: supportedLocaleSchema.optional() }).strict();
+const contactPayload = z.object({
+  message: safeText(2_000),
+  fullName: safeText(160).optional(),
+  phone: z.string().trim().min(7).max(40).regex(/^[+\d][\d\s()-]+$/u).optional(),
+  preferredContactTime: z.enum(['morning', 'evening']).optional(),
+  propertyId: objectId.optional(),
+  projectId: objectId.optional(),
+  locale: supportedLocaleSchema.optional()
+}).strict();
 const viewingPayload = z.object({ propertyId: objectId, requestedAt: z.string().datetime({ offset: true }), timezone: z.string().trim().min(1).max(80), note: safeText(1_000).optional() }).strict();
 const searchPayload = z.object({ locations: z.array(objectId).max(20).default([]), propertyTypes: z.array(safeText(40)).max(20).default([]), minBudget: z.number().nonnegative().finite().optional(), maxBudget: z.number().nonnegative().finite().optional(), minBedrooms: z.number().int().nonnegative().max(50).optional(), maxBedrooms: z.number().int().nonnegative().max(50).optional(), note: safeText(1_000).optional(), locale: supportedLocaleSchema.optional() }).strict().superRefine((value, ctx) => { if (value.minBudget !== undefined && value.maxBudget !== undefined && value.minBudget > value.maxBudget) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['maxBudget'], message: 'maxBudget must be greater than or equal to minBudget' }); if (value.minBedrooms !== undefined && value.maxBedrooms !== undefined && value.minBedrooms > value.maxBedrooms) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['maxBedrooms'], message: 'maxBedrooms must be greater than or equal to minBedrooms' }); });
 const providerCustomerPayload = z.object({ firstName: safeText(80), lastName: safeText(80), phone: safeText(40), email: z.string().email().max(254).optional(), message: safeText(2_000).optional(), propertyId: objectId.optional(), projectId: objectId.optional(), sourceNote: safeText(500).optional() }).strict();

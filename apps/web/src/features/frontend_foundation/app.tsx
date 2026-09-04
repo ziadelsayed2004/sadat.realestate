@@ -218,7 +218,7 @@ export function App({
     ) : isPublicPropertyListing ? (
       <PublicPropertyListing url={url} locale={locale} initialData={propertyListData} initialQuery={propertyListQuery} initialState={propertyListInitialState} />
     ) : isPublicPropertyDetails ? (
-      <PublicPropertyDetailsPage url={url} locale={locale} initialData={propertyDetailsData} initialState={propertyDetailsInitialState} />
+      <PublicPropertyDetailsPage url={url} locale={locale} initialData={propertyDetailsData} initialState={propertyDetailsInitialState} authClient={authClient} />
     ) : isPublicPropertyComparison ? (
       <PublicPropertyComparison url={url} locale={locale} initialData={propertyComparisonData} initialState={propertyComparisonInitialState} />
     ) : isPublicDevelopers ? (

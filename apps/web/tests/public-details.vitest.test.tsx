@@ -8,6 +8,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { ApiClient, ApiClientError } from '../src/features/contracts/index.ts';
 import {
   PublicPropertyDetails,
+  createPublicPropertyDetailsActions,
   getPublicPropertyDetailsCopy,
   loadPublicPropertyDetails,
   propertyDetailsSlugFromUrl,
@@ -133,6 +134,7 @@ describe('public property details', () => {
     expect(result.container.textContent).not.toContain('providerId');
     expect(result.container.textContent).not.toContain('storageKey');
     expect(result.container.textContent).not.toContain('sha256');
+    expect(screen.getByRole('link', { name: locale === 'ar' ? 'تواصل عبر واتساب' : 'Contact on WhatsApp' })).toHaveAttribute('href', expect.stringContaining('https://wa.me/'));
   });
 
   it('uses a published property cover as the gallery when no ready media rows exist', () => {
@@ -184,6 +186,9 @@ describe('public property details', () => {
     fireEvent.click(screen.getByRole('button', { name: copy.submitContact }));
     await waitFor(() => expect(submitContact).toHaveBeenCalledWith({
       message: 'Please share the details.',
+      fullName: 'Example Seeker',
+      phone: '01001234567',
+      preferredContactTime: 'morning',
       propertyId,
       projectId,
       locale: 'en'
@@ -199,6 +204,47 @@ describe('public property details', () => {
       requestedAt: expect.any(String),
       timezone: 'Africa/Cairo'
     }));
+  });
+
+  it('sends the current authenticated session and complete lead fields to the contact API', async () => {
+    let requestInit: RequestInit | undefined;
+    const client = new ApiClient({
+      fetcher: async (_input, init) => {
+        requestInit = init;
+        return new Response(JSON.stringify({ data: contactResponse, meta: { requestId: 'contact-request' } }), {
+          status: 201,
+          headers: { 'content-type': 'application/json' }
+        });
+      }
+    });
+    const actions = createPublicPropertyDetailsActions({
+      apiClient: client,
+      authorizationHeader: () => 'Bearer current-session-token'
+    });
+
+    await expect(actions.submitContact({
+      message: 'Please share the details.',
+      fullName: 'Example Seeker',
+      phone: '+201001234567',
+      preferredContactTime: 'evening',
+      propertyId,
+      projectId,
+      locale: 'en'
+    })).resolves.toEqual(contactResponse);
+
+    expect(new Headers(requestInit?.headers).get('authorization')).toBe('Bearer current-session-token');
+    expect(JSON.parse(String(requestInit?.body))).toEqual({
+      type: 'contact',
+      payload: {
+        message: 'Please share the details.',
+        fullName: 'Example Seeker',
+        phone: '+201001234567',
+        preferredContactTime: 'evening',
+        propertyId,
+        projectId,
+        locale: 'en'
+      }
+    });
   });
 
   it('renders loading, retry, permission, and not-found states without exposing protected data', async () => {

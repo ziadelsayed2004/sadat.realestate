@@ -82,6 +82,24 @@ async function routeProviderOverview(page: import('@playwright/test').Page): Pro
       body: JSON.stringify({ data: { items: status === null ? [item] : [] }, ...successMeta(`provider-properties-${status ?? 'all'}`, total) })
     });
   });
+  await page.route('**/api/v1/provider/customer-requests**', async route => {
+    expect(route.request().method()).toBe('GET');
+    expect(route.request().headers().authorization).toBe('Bearer provider.access.token');
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ data: { items: [], page: 1, limit: 1, total: 0 }, ...successMeta('provider-customer-requests') })
+    });
+  });
+  await page.route('**/api/v1/provider/viewings**', async route => {
+    expect(route.request().method()).toBe('GET');
+    expect(route.request().headers().authorization).toBe('Bearer provider.access.token');
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ data: { items: [], page: 1, limit: 1, total: 0 }, ...successMeta('provider-viewings') })
+    });
+  });
 }
 
 test.describe('PRV-01 Provider Overview', () => {

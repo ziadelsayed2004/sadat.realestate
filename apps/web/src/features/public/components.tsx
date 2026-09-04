@@ -359,11 +359,16 @@ export function PublicSiteHeader({
 
   useEffect(() => {
     if (!menuOpen || typeof window === 'undefined') return undefined;
+    const previousOverflow = document.body.style.overflow;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setMenuOpen(false);
     };
+    document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', onKeyDown);
+    };
   }, [menuOpen]);
 
   return (
@@ -371,7 +376,19 @@ export function PublicSiteHeader({
       <a className="public-homepage__brand" href="/" aria-label={copy.brand}>
         <img src="/assets/sadat-real-estate-logo.png" alt={copy.brand} width={636} height={557} decoding="async" loading="eager" />
       </a>
+      <button
+        type="button"
+        className={`public-homepage__menu-backdrop${menuOpen ? ' is-open' : ''}`}
+        aria-label={locale === 'ar' ? 'إغلاق خلفية القائمة' : 'Close menu backdrop'}
+        aria-hidden={!menuOpen}
+        tabIndex={menuOpen ? 0 : -1}
+        onClick={() => setMenuOpen(false)}
+      />
       <nav id="public-site-navigation" className={`public-homepage__nav${menuOpen ? ' is-open' : ''}`} aria-label={nav.home}>
+        <div className="public-homepage__mobile-menu-heading">
+          <span>{locale === 'ar' ? 'القائمة الرئيسية' : 'Main menu'}</span>
+          <small>{copy.brand}</small>
+        </div>
         {links.map(([href, label]) => <a key={href} href={href} aria-current={href === activePath ? 'page' : undefined} onClick={() => setMenuOpen(false)}>{label}</a>)}
         <div className="public-homepage__mobile-actions" aria-hidden={!menuOpen}>
           <LocaleSwitcher locale={locale} label={copy.localeLabel} />

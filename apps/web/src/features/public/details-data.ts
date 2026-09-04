@@ -31,6 +31,9 @@ export type PublicPropertyDetailsLoader = (
 
 export interface PublicContactRequestInput {
   readonly message: string;
+  readonly fullName: string;
+  readonly phone: string;
+  readonly preferredContactTime: 'morning' | 'evening';
   readonly propertyId: string;
   readonly projectId?: string | undefined;
   readonly locale?: SupportedLocale | undefined;
@@ -44,7 +47,7 @@ export interface PublicPropertyDetailsActions {
 export interface PublicPropertyDetailsActionOptions {
   readonly apiClient?: ApiClient | undefined;
   readonly apiOrigin?: string | undefined;
-  readonly authorizationHeader?: string | undefined;
+  readonly authorizationHeader?: string | (() => string | undefined) | undefined;
 }
 
 function clientFor(options: { readonly apiClient?: ApiClient | undefined; readonly apiOrigin?: string | undefined }): ApiClient {
@@ -54,7 +57,10 @@ function clientFor(options: { readonly apiClient?: ApiClient | undefined; readon
 }
 
 function actionHeaders(options: PublicPropertyDetailsActionOptions): HeadersInit | undefined {
-  return options.authorizationHeader === undefined ? undefined : { Authorization: options.authorizationHeader };
+  const authorization = typeof options.authorizationHeader === 'function'
+    ? options.authorizationHeader()
+    : options.authorizationHeader;
+  return authorization === undefined ? undefined : { Authorization: authorization };
 }
 
 export function propertyDetailsSlugFromUrl(source: URL | string): string | undefined {
@@ -94,16 +100,19 @@ export const defaultPublicPropertyDetailsLoader = createPublicPropertyDetailsLoa
 
 export function createPublicPropertyDetailsActions(options: PublicPropertyDetailsActionOptions = {}): PublicPropertyDetailsActions {
   const client = clientFor(options);
-  const headers = actionHeaders(options);
   const requestResponseSchema = successEnvelopeSchema(requestDataSchema);
   const viewingResponseSchema = successEnvelopeSchema(viewingDataSchema);
 
   return {
     async submitContact(input) {
+      const headers = actionHeaders(options);
       const request = requestCreateSchema.parse({
         type: 'contact',
         payload: {
           message: input.message,
+          fullName: input.fullName,
+          phone: input.phone,
+          preferredContactTime: input.preferredContactTime,
           propertyId: input.propertyId,
           ...(input.projectId === undefined ? {} : { projectId: input.projectId }),
           ...(input.locale === undefined ? {} : { locale: input.locale })
@@ -118,6 +127,7 @@ export function createPublicPropertyDetailsActions(options: PublicPropertyDetail
       return response.data.data;
     },
     async submitViewing(input) {
+      const headers = actionHeaders(options);
       const request = viewingCreateSchema.parse(input);
       const response = await client.request('/seeker/viewings', {
         method: 'POST',
