@@ -210,7 +210,7 @@
   margin-block-start: 0;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .seeker-dashboard {
     grid-template-columns: 1fr;
   }
@@ -630,7 +630,7 @@
   justify-self: start;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .seeker-requests__toolbar {
     align-items: stretch;
     flex-direction: column;
@@ -1407,7 +1407,7 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .seeker-saved__grid {
     grid-template-columns: 1fr;
   }
@@ -1755,7 +1755,7 @@
   .seeker-dashboard__overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .seeker-viewing-card { grid-template-columns: 1fr; }
 }
 
@@ -1763,13 +1763,13 @@
   .seeker-saved__grid:not([data-view="list"]) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .seeker-saved__grid:not([data-view="list"]) { grid-template-columns: 1fr; }
 }
 
 /* Canonical SEK-01..SEK-10 desktop frame: keep the rail independent from the
    content header and use the approved 1024px working canvas. */
-@media (min-width: 901px) {
+@media (min-width: 1101px) {
   .seeker-dashboard {
     grid-template-columns: 16rem minmax(0, 1fr);
     grid-template-rows: 4rem minmax(calc(100vh - 4rem), auto);
@@ -1801,10 +1801,11 @@
   .seeker-dashboard__content {
     grid-column: 2;
     grid-row: 2;
-    width: min(100%, 64rem);
-    max-width: 64rem;
+    box-sizing: border-box;
+    width: min(calc(100% - 3rem), 80rem);
+    max-width: 80rem;
     margin-inline: auto;
-    padding: 1.5rem 0 0;
+    padding: 1.5rem 0 2.5rem;
   }
 
   .seeker-dashboard > .seeker-dashboard__content > .seeker-dashboard__heading-row .seeker-dashboard__eyebrow,
@@ -1825,7 +1826,7 @@
   .seeker-requests__panel,
   .seeker-viewings__panel,
   .seeker-notifications__panel { margin-block-start: 1.5rem; }
-  .seeker-dashboard__overview-grid[data-state="success"] {
+  .seeker-dashboard__overview-grid {
     width: 100% !important;
     max-width: none !important;
     margin: 0 !important;
@@ -2040,7 +2041,7 @@
   .seeker-profile__toggle-row { padding-block: .8rem; }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .seeker-dashboard {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
@@ -2185,7 +2186,7 @@
 .seeker-overview__search-cta a { display: inline-flex; align-items: center; gap: .45rem; min-block-size: 2.5rem; padding: .5rem 1rem; color: #17233d; background: #d1a044; border-radius: 999px; font-weight: 800; text-decoration: none; white-space: nowrap; }
 .seeker-overview__search-cta a span { color: #17233d; font-size: 1.1rem; }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .seeker-overview__activity-grid { grid-template-columns: 1fr; gap: 1rem; }
   .seeker-overview__activity-side { gap: 1rem; }
   .seeker-overview__activity-row { grid-template-columns: auto minmax(0, 1fr); min-block-size: 4.5rem; padding-inline: 1rem; }
@@ -2275,13 +2276,13 @@
   flex: 0 0 1rem;
 }
 
-@media (min-width: 901px) {
+@media (min-width: 1101px) {
   .seeker-dashboard__backdrop {
     display: none !important;
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .seeker-dashboard {
     position: relative;
     grid-template-columns: minmax(0, 1fr);

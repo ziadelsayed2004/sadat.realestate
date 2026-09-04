@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 
 const seekerId = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const requestId = '4123456789abcdef01234567';
+const contactedRequestId = '5123456789abcdef01234567';
 
 function localeForProject(): 'ar' | 'en' {
   return test.info().project.name.endsWith('-en') ? 'en' : 'ar';
@@ -34,9 +35,11 @@ async function routeSeekerApis(page: import('@playwright/test').Page): Promise<v
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { requests: 1, viewings: 1, savedProperties: 1, notifications: 1, unreadNotifications: 1 }, ...meta('seeker-responsive-overview') }) });
   });
   await page.route('**/api/v1/seeker/requests**', async route => {
-    const detail = new URL(route.request().url()).pathname.endsWith(`/${requestId}`);
+    const pathname = new URL(route.request().url()).pathname;
+    const detail = pathname.endsWith(`/${requestId}`) || pathname.endsWith(`/${contactedRequestId}`);
+    const contacted = pathname.endsWith(`/${contactedRequestId}`);
     const data = detail
-      ? { id: requestId, type: 'contact', source: 'seeker', propertyId: 'bbbbbbbbbbbbbbbbbbbbbbbb', status: 'under_review', payload: { message: 'Responsive test request' }, version: 0, availableActions: [], createdAt: '2026-08-18T10:00:00.000Z', updatedAt: '2026-08-18T10:00:00.000Z' }
+      ? { id: contacted ? contactedRequestId : requestId, type: 'contact', source: 'seeker', propertyId: 'bbbbbbbbbbbbbbbbbbbbbbbb', status: contacted ? 'contacted' : 'under_review', payload: { message: 'Responsive test request' }, version: 0, availableActions: [], createdAt: '2026-08-18T10:00:00.000Z', updatedAt: '2026-08-18T10:00:00.000Z' }
       : { items: [], page: 1, limit: 20, total: 0 };
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data, ...meta('seeker-responsive-requests') }) });
   });
@@ -62,6 +65,7 @@ const seekerRoutes = [
   '/seeker',
   '/seeker/requests',
   `/seeker/requests/${requestId}`,
+  `/seeker/requests/${contactedRequestId}`,
   '/seeker/viewings',
   '/seeker/saved',
   '/seeker/notifications',
@@ -121,6 +125,79 @@ test.describe('Seeker responsive shell', () => {
       await expect(menu).toHaveAttribute('aria-expanded', 'false');
       await expect(page.locator('.seeker-dashboard__nav')).not.toHaveClass(/is-open/u);
       await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
+    });
+  }
+
+  test('releases the mobile drawer lock when the viewport crosses to desktop', async ({ page }) => {
+    const locale = localeForProject();
+    await page.goto(localizedPath('/seeker', locale), { waitUntil: 'domcontentloaded' });
+
+    const menu = page.locator('.seeker-dashboard__menu-button');
+    await menu.click();
+    await expect(menu).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('body')).toHaveCSS('overflow', 'hidden');
+
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await expect(menu).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.locator('.seeker-dashboard__nav')).not.toHaveClass(/is-open/u);
+    await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
+    await expect(page.locator('.seeker-dashboard__nav')).toBeVisible();
+
+    const dimensions = await page.evaluate(() => ({
+      viewport: window.innerWidth,
+      documentWidth: document.documentElement.scrollWidth
+    }));
+    expect(dimensions.documentWidth).toBeLessThanOrEqual(dimensions.viewport + 1);
+  });
+});
+
+test.describe('Seeker adaptive desktop shell', () => {
+  test.setTimeout(120_000);
+
+  test.beforeEach(async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop-ar', 'Adaptive desktop coverage runs once in the Arabic desktop project.');
+    await routeSession(page);
+    await routeSeekerApis(page);
+  });
+
+  for (const viewportWidth of [1024, 1920]) {
+    test(`keeps every seeker page usable at ${viewportWidth}px`, async ({ page }) => {
+      await page.setViewportSize({ width: viewportWidth, height: 900 });
+      for (const path of seekerRoutes) {
+        await page.goto(localizedPath(path, 'ar'), { waitUntil: 'domcontentloaded' });
+        await expect(page.locator('.seeker-dashboard')).toBeVisible();
+        if (viewportWidth === 1024) {
+          const menu = page.locator('.seeker-dashboard__menu-button');
+          await menu.click();
+          await expect(menu).toHaveAttribute('aria-expanded', 'true');
+          await expect(page.locator('.seeker-dashboard__nav')).toHaveClass(/is-open/u);
+          await expect(page.locator('body')).toHaveCSS('overflow', 'hidden');
+          await page.keyboard.press('Escape');
+          await expect(menu).toHaveAttribute('aria-expanded', 'false');
+          await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
+        }
+        const geometry = await page.evaluate(() => {
+          const content = document.querySelector<HTMLElement>('.seeker-dashboard__content');
+          const nav = document.querySelector<HTMLElement>('.seeker-dashboard__nav');
+          const contentRect = content?.getBoundingClientRect();
+          return {
+            viewport: window.innerWidth,
+            documentWidth: document.documentElement.scrollWidth,
+            contentLeft: contentRect?.left ?? -1,
+            contentRight: contentRect?.right ?? window.innerWidth + 1,
+            contentWidth: contentRect?.width ?? 0,
+            navTransform: nav === null ? 'missing' : getComputedStyle(nav).transform
+          };
+        });
+        expect(geometry.documentWidth, path).toBeLessThanOrEqual(geometry.viewport + 1);
+        expect(geometry.contentLeft, path).toBeGreaterThanOrEqual(-1);
+        expect(geometry.contentRight, path).toBeLessThanOrEqual(geometry.viewport + 1);
+        if (viewportWidth === 1024) expect(geometry.navTransform, path).not.toBe('none');
+        else {
+          expect(geometry.navTransform, path).toBe('none');
+          expect(geometry.contentWidth, path).toBeGreaterThanOrEqual(1200);
+        }
+      }
     });
   }
 });

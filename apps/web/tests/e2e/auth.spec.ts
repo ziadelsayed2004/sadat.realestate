@@ -97,11 +97,72 @@ test('login refreshes the public header into the authenticated customer account'
 
   await page.goto(`/?lang=${encodeURIComponent(locale)}`);
   await expect(page.locator('[data-page="public-home"][data-homepage-state="success"]')).toBeVisible();
-  const accountLink = page.locator('.public-homepage__actions a[href="/admin"]');
-  await expect(accountLink).toHaveAttribute('href', '/admin');
+  const accountLink = page.locator('.public-homepage__actions a.public-homepage__account');
+  await expect(accountLink).toHaveAttribute('href', /^\/admin(?:\?|$)/u);
   expect((await accountLink.textContent())?.trim()).toBeTruthy();
   await expect(page.locator('.public-homepage__actions a[href="/auth/login"]')).toHaveCount(0);
   await expect(page.locator('.public-homepage__actions a[href="/auth/register"]')).toHaveCount(0);
+});
+
+test('seeker login enters the customer dashboard and keeps the authenticated session', async ({ page }) => {
+  test.skip(!test.info().project.name.startsWith('desktop-'), 'The seeker login journey is covered once on the desktop matrix.');
+  const locale = localeForProject();
+  await page.route('**/api/v1/auth/login', async route => {
+    expect(route.request().method()).toBe('POST');
+    expect(route.request().postDataJSON()).toEqual({ email: 'seeker@example.com', password: 'secret' });
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        data: {
+          accessToken: 'seeker.login.token',
+          tokenType: 'Bearer',
+          expiresInSeconds: 900,
+          user: { id: 'bbbbbbbbbbbbbbbbbbbbbbbb', roleType: 'seeker', status: 'verified' }
+        },
+        ...successMeta('e2e-seeker-login')
+      })
+    });
+  });
+  await page.route('**/api/v1/auth/refresh', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        data: {
+          accessToken: 'seeker.refresh.token',
+          tokenType: 'Bearer',
+          expiresInSeconds: 900,
+          user: { id: 'bbbbbbbbbbbbbbbbbbbbbbbb', roleType: 'seeker', status: 'verified' }
+        },
+        ...successMeta('e2e-seeker-refresh')
+      })
+    });
+  });
+  await page.route('**/api/v1/seeker/overview', async route => {
+    expect(route.request().headers().authorization).toBe('Bearer seeker.refresh.token');
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ data: { requests: 0, viewings: 0, savedProperties: 0, notifications: 0, unreadNotifications: 0 }, ...successMeta('e2e-seeker-overview') })
+    });
+  });
+  await page.route('**/api/v1/me**', async route => {
+    expect(route.request().headers().authorization).toBe('Bearer seeker.refresh.token');
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ data: { id: 'bbbbbbbbbbbbbbbbbbbbbbbb', roleType: 'seeker', status: 'verified', email: 'seeker@example.com', firstName: 'Seeker', lastName: 'Customer', locale }, ...successMeta('e2e-seeker-profile') })
+    });
+  });
+
+  await page.goto(`/auth/login?lang=${encodeURIComponent(locale)}&roleType=seeker`);
+  await page.locator('#auth-login-email').fill('seeker@example.com');
+  await page.locator('#auth-login-password').fill('secret');
+  await page.locator('[data-screen-id="AUTH-01"] button[type="submit"]').click();
+  await page.waitForURL(url => url.pathname === '/seeker' && url.searchParams.get('lang') === locale);
+  await expect(page.locator('[data-screen-id="SEK-01"]')).toBeVisible();
+  await expect(page.locator('.seeker-dashboard__topbar-profile')).toContainText('Seeker Customer');
 });
 
 test('login screen renders approved locale, direction, responsive shell, and safe navigation', async ({ page }) => {

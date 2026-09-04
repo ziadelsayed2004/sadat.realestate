@@ -31,6 +31,7 @@ export interface SeekerOverviewProps {
 }
 
 export type SeekerIconName = 'overview' | 'requests' | 'viewings' | 'saved' | 'notifications' | 'profile' | 'settings' | 'search';
+const SEEKER_DRAWER_MEDIA_QUERY = '(max-width: 1100px)';
 
 const seekerIconAssets: Readonly<Record<SeekerIconName, string>> = {
   overview: '/assets/canonical/provider/navigation/overview.svg',
@@ -84,7 +85,7 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin }: 
   }, [apiOrigin, authClient]);
   useEffect(() => {
     if (!menuOpen) return undefined;
-    const isMobile = typeof window === 'undefined' || typeof window.matchMedia !== 'function' || window.matchMedia('(max-width: 900px)').matches;
+    const isMobile = typeof window === 'undefined' || typeof window.matchMedia !== 'function' || window.matchMedia(SEEKER_DRAWER_MEDIA_QUERY).matches;
     if (!isMobile) return undefined;
     const previousOverflow = document.body.style.overflow;
     const closeOnEscape = (event: KeyboardEvent) => {
@@ -92,9 +93,14 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin }: 
     };
     document.body.style.overflow = 'hidden';
     document.addEventListener('keydown', closeOnEscape);
+    const closeOnDesktopResize = () => {
+      if (typeof window.matchMedia === 'function' && !window.matchMedia(SEEKER_DRAWER_MEDIA_QUERY).matches) setMenuOpen(false);
+    };
+    window.addEventListener('resize', closeOnDesktopResize);
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener('keydown', closeOnEscape);
+      window.removeEventListener('resize', closeOnDesktopResize);
     };
   }, [menuOpen]);
   useEffect(() => {
@@ -105,7 +111,7 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin }: 
   const closeMenuLabel = locale === 'ar' ? 'إغلاق قائمة لوحة الباحث' :'Close seeker dashboard menu';
   const websiteLabel = locale === 'ar' ? 'عرض الموقع' :'View website';
   const toggleMenu = () => {
-    const isMobile = typeof window === 'undefined' || typeof window.matchMedia !== 'function' || window.matchMedia('(max-width: 900px)').matches;
+    const isMobile = typeof window === 'undefined' || typeof window.matchMedia !== 'function' || window.matchMedia(SEEKER_DRAWER_MEDIA_QUERY).matches;
     if (isMobile) setMenuOpen(current => !current);
   };
   const items = [
@@ -301,7 +307,7 @@ function OverviewActivity({ data, locale }: { readonly data: SeekerOverviewData;
       <section className="seeker-dashboard__activity" aria-labelledby="seeker-activity-title">
         <div className="seeker-dashboard__section-heading"><h2 id="seeker-activity-title">{copy.overview.activityTitle}</h2></div>
         {empty ? <div className="seeker-dashboard__empty" data-state="empty"><h3>{copy.overview.emptyTitle}</h3><p>{copy.overview.emptyBody}</p></div> : (
-          <div className="seeker-dashboard__overview-grid" data-state="summary-only">
+          <div className="seeker-dashboard__overview-grid" data-overview-state="summary-only">
             <a href={localeForSeekerPath(locale, '/seeker/requests')} className="seeker-dashboard__overview-panel seeker-dashboard__overview-panel--requests"><span aria-hidden="true"><SeekerIcon name="requests" /></span><div><strong>{copy.nav.requests}</strong><small>{data.requests} {copy.overview.cards.requests}</small></div><b>{data.requests}</b></a>
             <a href={localeForSeekerPath(locale, '/seeker/viewings')} className="seeker-dashboard__overview-panel seeker-dashboard__overview-panel--viewings"><span aria-hidden="true"><SeekerIcon name="viewings" /></span><div><strong>{copy.nav.viewings}</strong><small>{data.viewings} {copy.overview.cards.viewings}</small></div><b>{data.viewings}</b></a>
             <a href={localeForSeekerPath(locale, '/seeker/notifications')} className="seeker-dashboard__overview-panel seeker-dashboard__overview-panel--notifications"><span aria-hidden="true"><SeekerIcon name="notifications" /></span><div><strong>{copy.nav.notifications}</strong><small>{data.unreadNotifications} {copy.overview.cards.notifications}</small></div><b>{data.unreadNotifications}</b></a>
