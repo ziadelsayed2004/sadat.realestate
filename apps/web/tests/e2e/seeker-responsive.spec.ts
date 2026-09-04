@@ -160,7 +160,7 @@ test.describe('Seeker adaptive desktop shell', () => {
     await routeSeekerApis(page);
   });
 
-  for (const viewportWidth of [1024, 1920]) {
+  for (const viewportWidth of [1024, 1551, 1920]) {
     test(`keeps every seeker page usable at ${viewportWidth}px`, async ({ page }) => {
       await page.setViewportSize({ width: viewportWidth, height: 900 });
       for (const path of seekerRoutes) {
@@ -195,9 +195,62 @@ test.describe('Seeker adaptive desktop shell', () => {
         if (viewportWidth === 1024) expect(geometry.navTransform, path).not.toBe('none');
         else {
           expect(geometry.navTransform, path).toBe('none');
-          expect(geometry.contentWidth, path).toBeGreaterThanOrEqual(1200);
+          expect(geometry.contentWidth, path).toBeGreaterThanOrEqual(1023);
+          expect(geometry.contentWidth, path).toBeLessThanOrEqual(1025);
+          await expect(page.locator('.seeker-dashboard__logout')).toBeVisible();
+          await expect(page.locator('.seeker-dashboard__topbar-notifications')).toBeVisible();
         }
       }
     });
   }
+
+  test('matches the SEK-01 desktop frame geometry at the Figma viewport', async ({ page }) => {
+    await page.setViewportSize({ width: 1551, height: 1033 });
+    await page.goto(localizedPath('/seeker', 'ar'), { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('.seeker-dashboard__nav')).toBeVisible();
+    await expect(page.locator('.seeker-dashboard__summary-card')).toHaveCount(4);
+
+    const geometry = await page.evaluate(() => {
+      const rect = (selector: string) => document.querySelector<HTMLElement>(selector)?.getBoundingClientRect();
+      const nav = rect('.seeker-dashboard__nav');
+      const topbar = rect('.seeker-dashboard__topbar');
+      const content = rect('.seeker-dashboard__content');
+      const search = rect('.seeker-dashboard__search');
+      const firstLink = rect('.seeker-dashboard__nav ul a');
+      const cards = [...document.querySelectorAll<HTMLElement>('.seeker-dashboard__summary-card')].map(card => card.getBoundingClientRect());
+      return {
+        nav: nav && { width: nav.width },
+        topbar: topbar && { height: topbar.height },
+        content: content && { width: content.width },
+        search: search && { width: search.width, height: search.height },
+        firstLink: firstLink && { height: firstLink.height },
+        cards: cards.map(card => ({ width: card.width, height: card.height }))
+      };
+    });
+
+    expect(geometry.nav?.width).toBeCloseTo(256, 0);
+    expect(geometry.topbar?.height).toBeCloseTo(64, 0);
+    expect(geometry.content?.width).toBeCloseTo(1024, 0);
+    expect(geometry.search?.width).toBeCloseTo(448, 0);
+    expect(geometry.search?.height).toBeCloseTo(38, 0);
+    expect(geometry.firstLink?.height).toBeCloseTo(44, 0);
+    expect(geometry.cards).toHaveLength(4);
+    for (const card of geometry.cards) {
+      expect(card.width).toBeCloseTo(247, 0);
+      expect(card.height).toBeCloseTo(128, 0);
+    }
+  });
+
+  test('signs out from the Figma footer action and returns to login', async ({ page }) => {
+    await page.route('**/api/v1/auth/logout', route => route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ data: { loggedOut: true }, ...meta('seeker-responsive-logout') })
+    }));
+    await page.goto(localizedPath('/seeker', 'ar'), { waitUntil: 'domcontentloaded' });
+    const logout = page.locator('.seeker-dashboard__logout');
+    await expect(logout).toBeVisible();
+    await logout.click();
+    await page.waitForURL(url => url.pathname === '/auth/login' && url.searchParams.get('lang') === 'ar');
+  });
 });

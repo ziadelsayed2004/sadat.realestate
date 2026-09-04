@@ -60,6 +60,7 @@ export const SEEKER_PREFERENCES_ROUTE = '/me/preferences' as const;
 
 export interface SeekerAuthorizationSource {
   readonly getAuthorizationHeader: () => string | undefined;
+  readonly logout?: () => Promise<unknown>;
 }
 
 export function isAuthenticatedSeekerSession(session: RouteSession): boolean {

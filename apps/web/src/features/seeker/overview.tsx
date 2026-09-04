@@ -30,7 +30,7 @@ export interface SeekerOverviewProps {
   readonly load?: SeekerOverviewLoader | undefined;
 }
 
-export type SeekerIconName = 'overview' | 'requests' | 'viewings' | 'saved' | 'notifications' | 'profile' | 'settings' | 'search';
+export type SeekerIconName = 'overview' | 'requests' | 'viewings' | 'saved' | 'notifications' | 'profile' | 'settings' | 'search' | 'logout';
 const SEEKER_DRAWER_MEDIA_QUERY = '(max-width: 1100px)';
 
 const seekerIconAssets: Readonly<Record<SeekerIconName, string>> = {
@@ -41,7 +41,8 @@ const seekerIconAssets: Readonly<Record<SeekerIconName, string>> = {
   notifications: '/assets/canonical/provider/navigation/notifications.svg',
   profile: '/assets/canonical/seeker/navigation/profile.svg',
   settings: '/assets/canonical/provider/navigation/settings.svg',
-  search: '/assets/canonical/seeker/navigation/search.svg'
+  search: '/assets/canonical/seeker/navigation/search.svg',
+  logout: '/assets/canonical/provider/navigation/logout.svg'
 };
 
 export function SeekerIcon({ name, className = '' }: { readonly name: SeekerIconName; readonly className?: string }) {
@@ -69,20 +70,25 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<Seeker
   );
 }
 
-export function SeekerNavigation({ locale, activePath, authClient, apiOrigin }: { readonly locale: SupportedLocale; readonly activePath: string; readonly authClient?: SeekerAuthorizationSource | undefined; readonly apiOrigin?: string | undefined }) {
+export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, onDisplayNameChange }: { readonly locale: SupportedLocale; readonly activePath: string; readonly authClient?: SeekerAuthorizationSource | undefined; readonly apiOrigin?: string | undefined; readonly onDisplayNameChange?: ((displayName: string) => void) | undefined }) {
   const copy = getSeekerCopy(locale);
   const canonicalAvatar = '/assets/canonical/seeker/avatar.png';
   const [displayName, setDisplayName] = useState<string>();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
   useEffect(() => {
     if (authClient?.getAuthorizationHeader() === undefined) return undefined;
     const controller = new AbortController();
     const loadProfile = createSeekerProfileLoader({ authorization: authClient, apiOrigin });
     void loadProfile(controller.signal).then(profile => {
-      if (!controller.signal.aborted) setDisplayName(`${profile.firstName} ${profile.lastName}`.trim());
+      if (!controller.signal.aborted) {
+        const nextDisplayName = `${profile.firstName} ${profile.lastName}`.trim();
+        setDisplayName(nextDisplayName);
+        onDisplayNameChange?.(nextDisplayName);
+      }
     }).catch(() => undefined);
     return () => controller.abort();
-  }, [apiOrigin, authClient]);
+  }, [apiOrigin, authClient, onDisplayNameChange]);
   useEffect(() => {
     if (!menuOpen) return undefined;
     const isMobile = typeof window === 'undefined' || typeof window.matchMedia !== 'function' || window.matchMedia(SEEKER_DRAWER_MEDIA_QUERY).matches;
@@ -110,6 +116,17 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin }: 
   const menuLabel = locale === 'ar' ? 'قائمة لوحة الباحث' :'Seeker dashboard menu';
   const closeMenuLabel = locale === 'ar' ? 'إغلاق قائمة لوحة الباحث' :'Close seeker dashboard menu';
   const websiteLabel = locale === 'ar' ? 'عرض الموقع' :'View website';
+  const roleLabel = locale === 'ar' ? 'باحث عن عقار' : 'Property seeker';
+  const notificationsLabel = locale === 'ar' ? 'الإشعارات' : 'Notifications';
+  const signOutLabel = locale === 'ar' ? 'تسجيل الخروج' : 'Sign out';
+  const signOut = () => {
+    if (signingOut) return;
+    setSigningOut(true);
+    const request = authClient?.logout?.() ?? Promise.resolve();
+    void request.catch(() => undefined).finally(() => {
+      window.location.assign(localeForSeekerPath(locale, '/auth/login'));
+    });
+  };
   const toggleMenu = () => {
     const isMobile = typeof window === 'undefined' || typeof window.matchMedia !== 'function' || window.matchMedia(SEEKER_DRAWER_MEDIA_QUERY).matches;
     if (isMobile) setMenuOpen(current => !current);
@@ -134,10 +151,15 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin }: 
           <SeekerIcon name="search" className="seeker-dashboard__search-icon" />
           <input type="search" placeholder={searchLabel} aria-label={searchLabel} />
         </label>
-        <a className="seeker-dashboard__topbar-profile" href={localeForSeekerPath(locale, '/seeker/profile?tab=personal')}>
-          <span className="seeker-dashboard__avatar" aria-hidden="true"><img src={canonicalAvatar} alt="" /></span>
-          <span><strong>{displayName ?? copy.overview.eyebrow}</strong><small>{copy.nav.profile}</small></span>
-        </a>
+        <div className="seeker-dashboard__topbar-actions">
+          <a className="seeker-dashboard__topbar-notifications" href={localeForSeekerPath(locale, '/seeker/notifications')} aria-label={notificationsLabel}>
+            <SeekerIcon name="notifications" /><i aria-hidden="true" />
+          </a>
+          <a className="seeker-dashboard__topbar-profile" href={localeForSeekerPath(locale, '/seeker/profile?tab=personal')}>
+            <span className="seeker-dashboard__avatar" aria-hidden="true"><img src={canonicalAvatar} alt="" /></span>
+            <span><strong>{displayName ?? copy.overview.eyebrow}</strong><small>{roleLabel}</small></span>
+          </a>
+        </div>
       </header>
       <button className={`seeker-dashboard__backdrop${menuOpen ? ' is-open' : ''}`} type="button" aria-label={closeMenuLabel} aria-hidden={!menuOpen} tabIndex={menuOpen ? 0 : -1} disabled={!menuOpen} onClick={() => setMenuOpen(false)} />
       <nav id="seeker-dashboard-navigation" className={`seeker-dashboard__nav${menuOpen ? ' is-open' : ''}`} aria-label={copy.overview.eyebrow}>
@@ -161,9 +183,14 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin }: 
           })}
         </ul>
         <div className="seeker-dashboard__nav-footer">
-          <span className="seeker-dashboard__avatar" aria-hidden="true"><img src={canonicalAvatar} alt="" /></span>
-          <span><strong>{displayName ?? copy.overview.eyebrow}</strong><small>{copy.nav.profile}</small></span>
+          <div className="seeker-dashboard__nav-footer-profile">
+            <span className="seeker-dashboard__avatar" aria-hidden="true"><img src={canonicalAvatar} alt="" /></span>
+            <span><strong>{displayName ?? copy.overview.eyebrow}</strong><small>{roleLabel}</small></span>
+          </div>
           <a href={localeForSeekerPath(locale, '/')} onClick={() => setMenuOpen(false)}>{websiteLabel}<span aria-hidden="true">↗</span></a>
+          <button className="seeker-dashboard__logout" type="button" disabled={signingOut} onClick={signOut}>
+            <span>{signOutLabel}</span><SeekerIcon name="logout" />
+          </button>
         </div>
       </nav>
     </>
@@ -329,11 +356,15 @@ function OverviewActivity({ data, locale }: { readonly data: SeekerOverviewData;
   );
 }
 
-function OverviewContent({ data, locale }: { readonly data: SeekerOverviewData; readonly locale: SupportedLocale }) {
+function OverviewContent({ data, locale, displayName }: { readonly data: SeekerOverviewData; readonly locale: SupportedLocale; readonly displayName?: string | undefined }) {
   const copy = getSeekerCopy(locale);
+  const firstName = displayName?.trim().split(/\s+/u)[0];
+  const heading = firstName === undefined || firstName === ''
+    ? copy.overview.title
+    : locale === 'ar' ? `أهلاً، ${firstName} 👋` : `Welcome, ${firstName} 👋`;
   return (
     <>
-      <div className="seeker-dashboard__heading-row"><div><p className="seeker-dashboard__eyebrow">{copy.overview.eyebrow}</p><h1>{copy.overview.title}</h1><p>{copy.overview.description}</p></div><a className="seeker-dashboard__primary-link" href={localeForSeekerPath(locale, '/properties')}><SeekerIcon name="search" />{copy.overview.searchProperties}</a></div>
+      <div className="seeker-dashboard__heading-row"><div><p className="seeker-dashboard__eyebrow">{copy.overview.eyebrow}</p><h1>{heading}</h1><p>{copy.overview.description}</p></div><a className="seeker-dashboard__primary-link" href={localeForSeekerPath(locale, '/properties')}><SeekerIcon name="search" />{copy.overview.searchProperties}</a></div>
       <section className="seeker-dashboard__summary" aria-labelledby="seeker-summary-title"><div className="seeker-dashboard__section-heading"><h2 id="seeker-summary-title">{copy.overview.summaryTitle}</h2></div><div className="seeker-dashboard__summary-grid"><SummaryCard label={copy.overview.cards.requests} value={data.requests} tone="requests" testId="seeker-summary-requests" /><SummaryCard label={copy.overview.cards.viewings} value={data.viewings} tone="viewings" testId="seeker-summary-viewings" /><SummaryCard label={copy.overview.cards.savedProperties} value={data.savedProperties} tone="saved" testId="seeker-summary-saved" /><SummaryCard label={copy.overview.cards.notifications} value={data.unreadNotifications} tone="notifications" testId="seeker-summary-notifications" /></div></section>
       <OverviewActivity data={data} locale={locale} />
     </>
@@ -351,6 +382,7 @@ export function SeekerOverview({ locale, session, authClient, apiOrigin, initial
         ? 'empty'
         : 'success');
   const [data, setData] = useState<SeekerOverviewData | undefined>(initialData);
+  const [displayName, setDisplayName] = useState<string>();
   const [attempt, setAttempt] = useState(0);
   const path = typeof window === 'undefined' ? '/seeker' : new URL(window.location.href).pathname;
 
@@ -375,10 +407,10 @@ export function SeekerOverview({ locale, session, authClient, apiOrigin, initial
 
   return (
     <section className="seeker-dashboard seeker-overview" data-screen-id="SEK-01" data-route="/seeker">
-      <SeekerNavigation locale={locale} activePath={path} authClient={authClient} apiOrigin={apiOrigin} />
+      <SeekerNavigation locale={locale} activePath={path} authClient={authClient} apiOrigin={apiOrigin} onDisplayNameChange={setDisplayName} />
       <div className="seeker-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
-        {(state === 'success' || state === 'empty') && data !== undefined ? <OverviewContent data={data} locale={locale} /> : null}
+        {(state === 'success' || state === 'empty') && data !== undefined ? <OverviewContent data={data} locale={locale} displayName={displayName} /> : null}
       </div>
     </section>
   );
