@@ -127,6 +127,13 @@ function hasAccountValues(form: AccountFormState): boolean {
     || form.privacyAccepted;
 }
 
+function normalizeEgyptianPhone(value: string): string {
+  const compact = value.trim().replace(/[\s().-]/g, '');
+  if (/^01\d{9}$/.test(compact)) return `+20${compact.slice(1)}`;
+  if (/^0020\d{10}$/.test(compact)) return `+${compact.slice(2)}`;
+  return value;
+}
+
 function buildPatch(application: ProviderApplicationData, form: AccountFormState): unknown {
   const patch: Record<string, unknown> = {
     version: application.version,
@@ -135,10 +142,17 @@ function buildPatch(application: ProviderApplicationData, form: AccountFormState
     email: form.email,
     preferredLocale: form.preferredLocale
   };
-  if (form.whatsappNumber.trim() !== '') patch.whatsappNumber = form.whatsappNumber;
+  if (form.whatsappNumber.trim() !== '') patch.whatsappNumber = normalizeEgyptianPhone(form.whatsappNumber);
   if (form.termsAccepted) patch.termsAcceptedAt = new Date().toISOString();
   if (form.privacyAccepted) patch.privacyAcceptedAt = new Date().toISOString();
   return patch;
+}
+
+function hasPatchFieldError(
+  preview: ReturnType<typeof providerAccountPatchSchema.safeParse> | undefined,
+  field: string
+): boolean {
+  return preview?.success === false && preview.error.issues.some(issue => issue.path[0] === field);
 }
 
 function FormNotice({ error, copy, onRetry }: { readonly error: AccountUiError; readonly copy: ProviderAccountCopy; readonly onRetry?: (() => void) | undefined }) {
@@ -318,7 +332,7 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
               value={form.accountOwnerFullName}
               onChange={event => update('accountOwnerFullName', event.currentTarget.value)}
               required
-              state={saveState === 'error' && form.accountOwnerFullName.trim() === '' ? 'error' : 'default'}
+              state={saveState === 'error' && hasPatchFieldError(patchPreview, 'accountOwnerFullName') ? 'error' : 'default'}
             />
             <Input
               id="provider-account-display-name"
@@ -329,7 +343,7 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
               value={form.displayName}
               onChange={event => update('displayName', event.currentTarget.value)}
               required
-              state={saveState === 'error' && form.displayName.trim() === '' ? 'error' : 'default'}
+              state={saveState === 'error' && hasPatchFieldError(patchPreview, 'displayName') ? 'error' : 'default'}
             />
             <Input
               id="provider-account-email"
@@ -342,7 +356,7 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
               value={form.email}
               onChange={event => update('email', event.currentTarget.value)}
               required
-              state={saveState === 'error' && patchPreview?.success !== true ? 'error' : 'default'}
+              state={saveState === 'error' && hasPatchFieldError(patchPreview, 'email') ? 'error' : 'default'}
             />
             <div className="provider-account-business-contact">
               <Input
@@ -355,6 +369,8 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
                 value={form.whatsappNumber}
                 onChange={event => update('whatsappNumber', event.currentTarget.value)}
                 dir="ltr"
+                state={saveState === 'error' && hasPatchFieldError(patchPreview, 'whatsappNumber') ? 'error' : 'default'}
+                error={copy.invalidWhatsappBody}
               />
             </div>
             <Select

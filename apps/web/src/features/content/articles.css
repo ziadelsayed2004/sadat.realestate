@@ -314,11 +314,18 @@
   min-block-size: var(--button-height-md);
   align-items: center;
   padding-inline: var(--space-lg);
-  color: var(--color-brand-secondary);
-  background: var(--color-surface);
+  gap: 0.5rem;
+  color: var(--color-on-brand);
+  background: var(--color-brand-accent);
   border-radius: var(--radius-md);
   font-weight: var(--font-weight-bold);
   text-decoration: none;
+}
+
+.public-articles__cta > a svg {
+  flex: 0 0 auto;
+  inline-size: 1rem;
+  block-size: 1rem;
 }
 
 .public-article-details__content {
@@ -629,14 +636,8 @@
   }
 
   .public-articles__cta > a {
-    gap: 0.5rem;
     color: var(--color-on-brand);
     background: var(--color-brand-accent);
-  }
-
-  .public-articles__cta > a svg {
-    inline-size: 1rem;
-    block-size: 1rem;
   }
 
   .public-article-details__back {

@@ -296,7 +296,7 @@ export function SeekerViewings({ locale, session, authClient, apiOrigin, load, a
   };
 
   return (
-    <section className="seeker-dashboard seeker-viewings" data-screen-id="SEK-05" data-route="/seeker/viewings">
+    <section className="seeker-dashboard seeker-viewings" data-screen-id="SEK-05" data-route="/seeker/viewings" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <SeekerNavigation locale={locale} activePath="/seeker/viewings" authClient={authClient} apiOrigin={apiOrigin} />
       <div className="seeker-dashboard__content">
         <div className="seeker-dashboard__heading-row">

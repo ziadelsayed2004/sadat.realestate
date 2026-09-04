@@ -240,6 +240,7 @@ test('provider account form exposes accessible labels, keyboard order, and valid
   await form.locator('.provider-account-actions button').nth(1).click();
   await expect(page.locator('#provider-account-owner-name')).toHaveAttribute('aria-invalid', 'true');
   await expect(page.locator('#provider-account-display-name')).toHaveAttribute('aria-invalid', 'true');
-  await expect(page.locator('#provider-account-email')).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.locator('#provider-account-email')).not.toHaveAttribute('aria-invalid', 'true');
+  await expect(page.locator('#provider-account-whatsapp')).not.toHaveAttribute('aria-invalid', 'true');
   await expect(page.locator('.provider-account-missing[role="status"]')).toBeVisible();
 });

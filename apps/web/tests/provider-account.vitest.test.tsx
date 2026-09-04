@@ -142,6 +142,43 @@ describe('provider account details', () => {
     expect(screen.getByText(copy.savedTitle)).toBeInTheDocument();
   });
 
+  it('does not mark the verified email when the WhatsApp value is invalid and accepts a local Egyptian number', async () => {
+    const copy = getProviderAccountCopy('ar');
+    const getProviderApplication = vi.fn().mockResolvedValue(application({ providerType: 'individual_broker' }));
+    const updateProviderAccount = vi.fn().mockResolvedValue(application({ version: 1 }));
+    renderWithLocale(
+      <ProviderAccountPage
+        client={{ getProviderApplication, updateProviderAccount }}
+        locale="ar"
+        providerType="individual_broker"
+        onBack={vi.fn()}
+      />,
+      { locale: 'ar' }
+    );
+    await waitFor(() => expect(screen.getByRole('heading', { name: copy.title, level: 1 })).toBeInTheDocument());
+
+    fireEvent.change(screen.getByLabelText(copy.accountOwnerFullNameLabel), { target: { value: 'Ziad Elsayed' } });
+    fireEvent.change(screen.getByLabelText(copy.displayNameLabel), { target: { value: 'Ziad Properties' } });
+    fireEvent.change(screen.getByLabelText(copy.whatsappLabel), { target: { value: '123' } });
+    fireEvent.click(screen.getByLabelText(copy.termsLabel));
+    fireEvent.click(screen.getByLabelText(copy.privacyLabel));
+    fireEvent.click(screen.getByRole('button', { name: copy.saveDraftAction }));
+
+    await waitFor(() => expect(screen.getByLabelText(copy.whatsappLabel)).toHaveAttribute('aria-invalid', 'true'));
+    expect(screen.getByLabelText(copy.emailLabel)).not.toHaveAttribute('aria-invalid', 'true');
+    expect(updateProviderAccount).not.toHaveBeenCalled();
+
+    fireEvent.change(screen.getByLabelText(copy.whatsappLabel), { target: { value: '01020572730' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.saveDraftAction }));
+
+    await waitFor(() => expect(updateProviderAccount).toHaveBeenCalledTimes(1));
+    expect(updateProviderAccount.mock.calls[0]?.[0]).toMatchObject({
+      email: 'provider@example.com',
+      whatsappNumber: '+201020572730'
+    });
+    expect(screen.getByLabelText(copy.emailLabel)).not.toHaveAttribute('aria-invalid', 'true');
+  });
+
   it('fails closed on a direct account route without a provider session', async () => {
     const copy = getProviderAccountCopy('en');
     const getProviderApplication = vi.fn().mockRejectedValue({ status: 401 });

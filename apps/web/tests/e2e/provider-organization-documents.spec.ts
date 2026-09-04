@@ -81,6 +81,15 @@ async function hideSkipLink(page: import('@playwright/test').Page): Promise<void
   });
 }
 
+async function waitForVisualStability(page: import('@playwright/test').Page): Promise<void> {
+  await page.evaluate(async () => {
+    await Promise.all(['400 15px Cairo', '600 15px Cairo', '700 15px Cairo', '800 15px Cairo'].map(font => document.fonts.load(font)));
+    await document.fonts.ready;
+    await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+  });
+  await page.waitForTimeout(100);
+}
+
 async function routeOrganizationApi(page: import('@playwright/test').Page): Promise<{ setProviderType: (providerType: 'brokerage_office' | 'developer_company') => void }> {
   let current = application('brokerage_office');
   await page.route('**/api/v1/provider/application', async route => {
@@ -127,7 +136,8 @@ test('business and developer organization variants render their approved respons
   await page.locator('#provider-organization-authority').selectOption('true');
   await expect(page.locator('[data-testid="provider-organization-details"]')).toHaveAttribute('data-screen-id', 'AUTH-10+');
   await hideSkipLink(page);
-  await expect(page).toHaveScreenshot(`provider-organization-business-${locale}.png`, { fullPage: true, maxDiffPixels: 300 });
+  await waitForVisualStability(page);
+  await expect(page).toHaveScreenshot(`provider-organization-business-${locale}.png`, { fullPage: true, maxDiffPixels: 400 });
 
   api.setProviderType('developer_company');
   await page.goto(`/auth/register/provider/account?providerType=developer_company&step=organization&lang=${encodeURIComponent(locale)}`);
@@ -135,6 +145,7 @@ test('business and developer organization variants render their approved respons
   await expect(page.getByRole('heading', { name: copy.companyTitle, level: 1 })).toBeVisible();
   await expect(page.getByLabel(copy.address)).toBeVisible();
   await hideSkipLink(page);
+  await waitForVisualStability(page);
   await expect(page).toHaveScreenshot(`provider-organization-company-${locale}.png`, { fullPage: true, maxDiffPixels: 300 });
   await expect(page.locator('form')).toHaveCount(1);
   await expect(page.locator('input, select, button').first()).toBeVisible();

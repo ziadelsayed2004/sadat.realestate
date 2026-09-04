@@ -147,7 +147,7 @@ export function SeekerSaved({ locale, session, authClient, apiOrigin, load, acti
   const mutationMessage = mutationError === undefined ? undefined : copy.mutation[mutationError];
   const pageCount = data === undefined ? 0 : Math.ceil(data.total / data.limit);
   return (
-    <section className="seeker-dashboard seeker-saved" data-screen-id="SEK-06" data-route="/seeker/saved">
+    <section className="seeker-dashboard seeker-saved" data-screen-id="SEK-06" data-route="/seeker/saved" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <SeekerNavigation locale={locale} activePath="/seeker/saved" authClient={authClient} apiOrigin={apiOrigin} />
       <div className="seeker-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}

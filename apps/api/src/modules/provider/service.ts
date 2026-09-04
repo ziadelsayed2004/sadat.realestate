@@ -130,6 +130,12 @@ function applicationData(
   missingFields: string[],
   missingDocuments: ProviderDocumentCategory[]
 ): ProviderApplicationData {
+  const requirementsSnapshot = application.requirementsSnapshot
+    ?? providerRequirementSnapshot(
+      application.providerType,
+      application.accountOwnerHasRegisteredAuthority,
+      application.requirementVersion
+    );
   return {
     id: application.id,
     providerType: application.providerType,
@@ -163,7 +169,7 @@ function applicationData(
     ...(application.accountOwnerHasRegisteredAuthority !== undefined
       ? { accountOwnerHasRegisteredAuthority: application.accountOwnerHasRegisteredAuthority }
       : {}),
-    ...(application.requirementsSnapshot ? { requirementsSnapshot: application.requirementsSnapshot } : {}),
+    requirementsSnapshot,
     missingFields,
     missingDocuments,
     availableActions: availableProviderActions(application.providerType, application.status),

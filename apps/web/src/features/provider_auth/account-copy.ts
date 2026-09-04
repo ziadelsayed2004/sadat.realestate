@@ -12,6 +12,7 @@ export interface ProviderAccountCopy {
   readonly emailLabel: string;
   readonly emailPlaceholder: string;
   readonly whatsappLabel: string;
+  readonly invalidWhatsappBody: string;
   readonly secondaryPhoneLabel: string;
   readonly secondaryPhonePlaceholder: string;
   readonly preferredLocaleLabel: string;
@@ -62,6 +63,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAccountCopy>> = {
     displayNamePlaceholder: 'الاسم الذي سيظهر في ملف مقدم العقار',
     emailLabel: 'البريد الإلكتروني للتواصل',
     emailPlaceholder: 'name@example.com',
+    invalidWhatsappBody: '\u0623\u062f\u062e\u0644 \u0631\u0642\u0645 \u0648\u0627\u062a\u0633\u0627\u0628 \u0635\u062d\u064a\u062d\u064b\u0627\u060c \u0645\u062b\u0644 +20 100 000 0000.',
     whatsappLabel: 'رقم واتساب',
     secondaryPhoneLabel: 'رقم هاتف إضافي (اختياري)',
     secondaryPhonePlaceholder: '+20 100 000 0000',
@@ -120,6 +122,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAccountCopy>> = {
     displayNamePlaceholder: 'Name shown on the provider profile',
     emailLabel: 'Contact email',
     emailPlaceholder: 'name@example.com',
+    invalidWhatsappBody: 'Enter a valid WhatsApp number, for example +20 100 000 0000.',
     whatsappLabel: 'WhatsApp number',
     secondaryPhoneLabel: 'Secondary phone (optional)',
     secondaryPhonePlaceholder: '+20 100 000 0000',

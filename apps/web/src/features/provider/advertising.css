@@ -65,17 +65,18 @@
 }
 
 .provider-advertising__field input,
-.provider-advertising__field select,
+.provider-advertising__field select[id],
 .provider-advertising__field textarea,
 .provider-advertising__upload input {
   box-sizing: border-box;
-  min-height: 44px;
-  padding: 9px 12px;
+  min-height: 47px;
+  padding: 8px 12px;
   border: 1px solid #cfd8e7;
   border-radius: 10px;
-  background: #fff;
+  background-color: #fff;
   color: #24334f;
   font: inherit;
+  font-size: 0.9375rem;
 }
 
 .provider-advertising__field textarea {

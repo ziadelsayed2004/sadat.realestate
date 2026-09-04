@@ -1940,8 +1940,7 @@
   .seeker-saved > .seeker-dashboard__content > .seeker-dashboard__heading-row,
   .seeker-notifications > .seeker-dashboard__content > .seeker-dashboard__heading-row,
   .seeker-profile > .seeker-dashboard__content > .seeker-dashboard__heading-row {
-    direction: ltr;
-    text-align: left;
+    text-align: start;
   }
 
   .seeker-viewings > .seeker-dashboard__content > .seeker-dashboard__heading-row {
@@ -1971,7 +1970,6 @@
   .seeker-viewings__grid {
     width: min(100%, 42rem);
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    direction: ltr;
   }
 
   [dir="rtl"] .seeker-viewings__grid { margin-left: auto; margin-right: 0; }
@@ -1988,7 +1986,6 @@
   .seeker-viewing-card__actions { margin-block-start: 1rem; }
 
   .seeker-saved__grid {
-    direction: ltr;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1.25rem;
     margin-block-start: 1.25rem;
@@ -2007,7 +2004,6 @@
   .seeker-notifications__panel {
     width: min(100%, 48rem);
     margin-inline: auto;
-    direction: ltr;
     gap: 1.25rem;
     margin-block-start: 1.25rem;
   }
@@ -2033,8 +2029,7 @@
     border-block-end: 1px solid #ebe6dc;
     border-radius: 0;
     box-shadow: none;
-    direction: ltr;
-    text-align: left;
+    text-align: start;
   }
   .seeker-notifications__icon { inline-size: 2rem; block-size: 2rem; font-size: 1rem; }
   .seeker-notifications__item h2 { margin-block-start: .125rem; font-size: .875rem; }
@@ -2087,7 +2082,7 @@
     padding: 1.5rem;
   }
 
-  .seeker-profile__panel { direction: ltr; text-align: left; }
+  .seeker-profile__panel { text-align: start; }
   .seeker-profile__tabs { direction: rtl; }
   .seeker-profile__form { gap: 1rem; margin-block-start: 1rem; }
   .seeker-profile__form-grid { gap: .75rem; }
@@ -2098,7 +2093,7 @@
   .seeker-profile__choice-list { gap: .4rem; }
   .seeker-profile__choice-list--bedrooms { gap: .6rem; }
   .seeker-profile__field-note { margin: .5rem 0 0; }
-  .seeker-profile__settings { gap: 1rem; direction: ltr; text-align: left; }
+  .seeker-profile__settings { gap: 1rem; text-align: start; }
   .seeker-profile__settings-card {
     margin: 0 !important;
   }

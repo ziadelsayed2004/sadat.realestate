@@ -10,6 +10,15 @@ function localeForProject(): 'ar' | 'en' {
   return 'ar';
 }
 
+async function waitForVisualStability(page: import('@playwright/test').Page): Promise<void> {
+  await page.evaluate(async () => {
+    await Promise.all(['400 15px Cairo', '600 15px Cairo', '700 15px Cairo', '800 15px Cairo'].map(font => document.fonts.load(font)));
+    await document.fonts.ready;
+    await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+  });
+  await page.waitForTimeout(100);
+}
+
 function envelope(data: unknown, requestId: string, meta: Record<string, unknown> = {}): string {
   return JSON.stringify({ data, meta: { requestId, ...meta } });
 }
@@ -90,6 +99,7 @@ test.describe('PRV-19 and PRV-20 Provider advertising and commission', () => {
     await expect(action).toBeFocused();
     await expect(page.locator('body')).not.toContainText(new RegExp(PROVIDER_ID));
     await expect(page.locator('body')).not.toContainText(/storageKey|accessToken|refreshToken|bank verification/u);
+    await waitForVisualStability(page);
     await expect(page).toHaveScreenshot(`provider-advertising-${locale}.png`, { fullPage: true });
   });
 

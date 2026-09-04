@@ -171,6 +171,8 @@ test('registers a provider draft from a one-time provider OTP authority and issu
   assert.equal(redeemed, 'hash:' + 'T'.repeat(43));
   assert.equal(result.data.outcome, 'registered_draft');
   assert.equal(result.data.application.providerType, 'brokerage_office');
+  assert.equal(result.data.application.requirementsSnapshot?.providerType, 'brokerage_office');
+  assert.ok(result.data.application.requirementsSnapshot?.requirements.some((requirement) => requirement.key === 'commercial_registration'));
   assert.equal(result.data.session.user.roleType, 'provider');
 });
 

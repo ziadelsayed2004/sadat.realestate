@@ -668,7 +668,7 @@ export function SeekerProfile({ locale, session, tab, authClient, apiOrigin, loa
         : undefined;
 
   return (
-    <section className="seeker-dashboard seeker-profile" data-screen-id={activeTab === 'preferences' ? 'SEK-08' : activeTab === 'profile' ? 'SEK-09' : 'SEK-10'} data-route={activePath}>
+    <section className="seeker-dashboard seeker-profile" data-screen-id={activeTab === 'preferences' ? 'SEK-08' : activeTab === 'profile' ? 'SEK-09' : 'SEK-10'} data-route={activePath} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <SeekerNavigation locale={locale} activePath={activePath} authClient={authClient} apiOrigin={apiOrigin} />
       <div className="seeker-dashboard__content">
         {pageState === 'loading' || pageState === 'retry' || pageState === 'error' || pageState === 'permission' ? <StatePanel state={pageState} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
