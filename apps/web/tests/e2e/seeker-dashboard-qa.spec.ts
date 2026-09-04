@@ -235,3 +235,41 @@ test.describe('F3 Seeker Dashboard QA', () => {
     });
   }
 });
+
+test.describe('Seeker dashboard responsive regression', () => {
+  test.beforeEach(async ({ page }, testInfo) => {
+    test.skip(!testInfo.project.name.includes('mobile'), 'Responsive regression runs on the mobile projects.');
+    await routeSession(page);
+    await routeSeekerApis(page);
+  });
+
+  test('keeps every completed seeker route inside the viewport with consistent spacing', async ({ page }) => {
+    const locale = localeForProject();
+    for (const routeCase of completedRoutes) {
+      await page.goto(localizedPath(routeCase.path, locale), { waitUntil: 'domcontentloaded' });
+      await expect(page.locator(routeCase.selector)).toBeVisible();
+      const geometry = await page.evaluate(() => {
+        const content = document.querySelector('.seeker-dashboard__content');
+        const style = content instanceof HTMLElement ? getComputedStyle(content) : undefined;
+        return {
+          viewport: document.documentElement.clientWidth,
+          document: document.documentElement.scrollWidth,
+          content: content?.scrollWidth ?? 0,
+          contentClient: content?.clientWidth ?? 0,
+          paddingInlineStart: style?.paddingInlineStart
+        };
+      });
+      expect(geometry.document, routeCase.path).toBeLessThanOrEqual(geometry.viewport);
+      expect(geometry.content, routeCase.path).toBeLessThanOrEqual(geometry.contentClient);
+      expect(Number.parseFloat(geometry.paddingInlineStart ?? '0'), routeCase.path).toBeGreaterThanOrEqual(16);
+    }
+
+    await page.goto(localizedPath('/seeker', locale), { waitUntil: 'domcontentloaded' });
+    const menuButton = page.locator('.seeker-dashboard__menu-button');
+    await menuButton.click();
+    await expect(page.locator('.seeker-dashboard__nav')).toHaveClass(/is-open/u);
+    await expect(page.locator('.seeker-dashboard__backdrop')).toBeVisible();
+    await page.locator('.seeker-dashboard__backdrop').click({ position: { x: 2, y: 2 } });
+    await expect(page.locator('.seeker-dashboard__nav')).not.toHaveClass(/is-open/u);
+  });
+});

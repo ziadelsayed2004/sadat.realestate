@@ -9,6 +9,7 @@ import {
 
 export const LOCALE_STORAGE_KEY = 'sadat-real-estate.locale';
 export const LOCALE_CHANGE_EVENT = 'sadat-real-estate:locale-change';
+export const LOCALE_COOKIE_KEY = 'sadat-real-estate.locale';
 
 export interface LocaleStorage {
   getItem(key: string): string | null;
@@ -90,6 +91,15 @@ function persistLocale(storage: LocaleStorage | null | undefined, locale: Suppor
   }
 }
 
+export function persistLocaleCookie(locale: SupportedLocale): void {
+  if (typeof document === 'undefined') return;
+  try {
+    document.cookie = `${LOCALE_COOKIE_KEY}=${encodeURIComponent(locale)}; Path=/; Max-Age=31536000; SameSite=Lax`;
+  } catch {
+    // Cookies can be unavailable in sandboxed or privacy-restricted contexts.
+  }
+}
+
 function snapshotFor(locale: SupportedLocale): LocaleSnapshot {
   return Object.freeze({ locale, direction: directionForLocale(locale) });
 }
@@ -113,10 +123,11 @@ export class LocaleStore {
   public setLocale(value: unknown): LocaleSnapshot {
     const locale = normalizeLocale(value);
     if (locale === undefined) throw new RangeError('Unsupported locale');
+    persistLocale(this.storage, locale);
+    persistLocaleCookie(locale);
     if (locale === this.snapshot.locale) return this.snapshot;
 
     this.snapshot = snapshotFor(locale);
-    persistLocale(this.storage, locale);
     for (const listener of this.listeners) listener(this.snapshot);
     return this.snapshot;
   }

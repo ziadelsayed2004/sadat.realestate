@@ -14,6 +14,7 @@ export { createRobotsTxt, createSitemapXml } from '../seo/index.ts';
 
 export interface ServerRenderOptions {
   readonly acceptLanguage?: string;
+  readonly preferredLocale?: string;
   readonly apiOrigin?: string;
   readonly publicOrigin?: string;
   readonly homepageData?: PublicHomepageData;
@@ -200,7 +201,7 @@ function unavailableDetailSeo(routeId: string, locale: SupportedLocale, url: str
 
 export async function render(url: string, options: ServerRenderOptions = {}): Promise<ServerRenderResult> {
   const parsedUrl = new URL(url, 'http://sadat.local');
-  const locale = resolveLocale(parsedUrl.searchParams.get('lang'), options.acceptLanguage);
+  const locale = resolveLocale(parsedUrl.searchParams.get('lang') ?? options.preferredLocale, options.acceptLanguage);
   const route = resolveRoute(url);
   const copy = getFoundationCopy(locale);
   let homepageData = options.homepageData;

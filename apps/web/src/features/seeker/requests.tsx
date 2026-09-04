@@ -15,7 +15,7 @@ import {
   ,type SeekerRequestTransition
 } from './data.ts';
 import { getSeekerRequestsCopy } from './requests-copy.ts';
-import { SeekerNavigation } from './overview.tsx';
+import { SeekerIcon, SeekerNavigation } from './overview.tsx';
 import './styles.css';
 
 export type SeekerRequestsViewState = 'loading' | 'empty' | 'error' | 'retry' | 'success' | 'permission' | 'not_found';
@@ -116,7 +116,7 @@ function RequestRow({ request, locale }: { readonly request: RequestData; readon
   return (
     <article className="seeker-request-row" data-testid={`seeker-request-${request.id}`}>
       <div className="seeker-request-row__identity">
-        <span className="seeker-request-row__icon" aria-hidden="true">▤</span>
+        <span className="seeker-request-row__icon" aria-hidden="true"><SeekerIcon name="requests" /></span>
         <div>
           <strong>{shortRequestId(request.id)}</strong>
           <span>{copy.types[request.type]}</span>

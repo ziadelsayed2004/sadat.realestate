@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { articleListQuerySchema, articlePublicListDataSchema, articlePublicSchema, cmsPublicContentListDataSchema, communityPublicPostListDataSchema, publicHomepageDataSchema, publicOrganizationListDataSchema, publicOrganizationProfileSchema, publicPropertyComparisonDataSchema, publicPropertyDetailsSchema, publicPropertyListDataSchema, type ArticleListQuery, type ArticlePublic, type ArticlePublicListData, type CmsPublicContentListData, type CommunityPublicPostListData, type PublicHomepageData, type PublicOrganizationListData, type PublicOrganizationProfile, type PublicPropertyComparisonData, type PublicPropertyDetails, type PublicPropertyListData, type SupportedLocale } from '@sadat-real-estate/contracts';
 import { App } from './app.js';
 import { AuthClient } from '../auth/index.ts';
-import { applyLocaleToDocument, createBrowserLocaleStore, getBrowserStorage, LOCALE_CHANGE_EVENT, LOCALE_STORAGE_KEY, normalizeLocale, replaceLocaleInUrl } from '../localization/index.js';
+import { applyLocaleToDocument, createBrowserLocaleStore, LOCALE_CHANGE_EVENT, normalizeLocale, persistLocaleCookie, replaceLocaleInUrl } from '../localization/index.js';
 import type { PublicDeveloperProfileInitialState, PublicPropertyComparisonInitialState, PublicPropertyDetailsInitialState } from '../public/index.ts';
 
 const root = document.getElementById('app');
@@ -16,6 +16,8 @@ const localeStore = createBrowserLocaleStore({
 });
 const { locale } = localeStore.getSnapshot();
 applyLocaleToDocument(locale);
+localeStore.setLocale(locale);
+persistLocaleCookie(locale);
 
 function readHomepageBootstrap(): PublicHomepageData | undefined {
   const element = document.getElementById('sadat-public-homepage-data');
@@ -239,18 +241,6 @@ const appProps = {
 function ClientApp(props: typeof appProps) {
   const [url, setUrl] = useState(props.url);
   const [currentLocale, setCurrentLocale] = useState(props.locale);
-
-  useEffect(() => {
-    const persistedLocale = normalizeLocale(getBrowserStorage()?.getItem(LOCALE_STORAGE_KEY));
-    if (persistedLocale === undefined || persistedLocale === currentLocale) return;
-
-    const snapshot = localeStore.setLocale(persistedLocale);
-    applyLocaleToDocument(snapshot.locale);
-    const nextUrl = replaceLocaleInUrl(window.location.href, snapshot.locale);
-    window.history.replaceState(window.history.state, '', nextUrl);
-    setCurrentLocale(snapshot.locale);
-    setUrl(window.location.href);
-  }, [currentLocale]);
 
   const handleLocaleChange = (nextLocale: SupportedLocale) => {
     const snapshot = localeStore.setLocale(nextLocale);

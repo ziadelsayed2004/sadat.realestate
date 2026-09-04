@@ -138,6 +138,12 @@
   justify-content: end;
 }
 
+@media (min-width: 1101px) {
+  .public-homepage__actions {
+    min-inline-size: 18rem;
+  }
+}
+
 .public-homepage__menu-toggle {
   display: none;
   inline-size: 2.75rem;

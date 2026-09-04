@@ -2194,3 +2194,391 @@
   .seeker-overview__search-cta { align-items: stretch; flex-direction: column; padding: 1.1rem; }
   .seeker-overview__search-cta a { justify-content: center; }
 }
+
+/* Responsive seeker shell: the navigation is a real logical-side drawer on
+   small screens, while the desktop frame keeps the Figma rail visible. */
+.seeker-dashboard__backdrop {
+  display: none;
+}
+
+.seeker-dashboard__icon {
+  display: block;
+  inline-size: 1.2rem;
+  block-size: 1.2rem;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.seeker-dashboard__nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.35rem;
+  block-size: 1.35rem;
+  flex: 0 0 1.35rem;
+  font-size: 0;
+}
+
+.seeker-dashboard__nav a[data-active="true"] .seeker-dashboard__nav-icon .seeker-dashboard__icon {
+  filter: brightness(0) invert(1);
+}
+
+.seeker-dashboard__summary-icon .seeker-dashboard__icon,
+.seeker-dashboard__overview-panel > span .seeker-dashboard__icon {
+  inline-size: 1.35rem;
+  block-size: 1.35rem;
+}
+
+.seeker-dashboard__primary-link .seeker-dashboard__icon {
+  filter: brightness(0) invert(1);
+}
+
+.seeker-dashboard__menu-glyph {
+  display: grid;
+  gap: .28rem;
+  inline-size: 1.2rem;
+}
+
+.seeker-dashboard__menu-glyph i {
+  display: block;
+  inline-size: 100%;
+  block-size: 2px;
+  background: currentColor;
+  border-radius: 999px;
+  transition: transform .18s ease, opacity .18s ease;
+}
+
+.seeker-dashboard__menu-button[aria-expanded="true"] .seeker-dashboard__menu-glyph i:first-child {
+  transform: translateY(.4rem) rotate(45deg);
+}
+
+.seeker-dashboard__menu-button[aria-expanded="true"] .seeker-dashboard__menu-glyph i:nth-child(2) {
+  opacity: 0;
+}
+
+.seeker-dashboard__menu-button[aria-expanded="true"] .seeker-dashboard__menu-glyph i:last-child {
+  transform: translateY(-.4rem) rotate(-45deg);
+}
+
+.seeker-dashboard__search {
+  box-sizing: border-box;
+  inline-size: 100%;
+}
+
+.seeker-dashboard__search-icon {
+  inline-size: 1rem;
+  block-size: 1rem;
+  flex: 0 0 1rem;
+}
+
+@media (min-width: 901px) {
+  .seeker-dashboard__backdrop {
+    display: none !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .seeker-dashboard {
+    position: relative;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    min-block-size: 100dvh;
+    overflow-x: clip;
+  }
+
+  .seeker-dashboard__topbar {
+    grid-column: 1;
+    grid-row: 1;
+    grid-template-columns: 2.75rem minmax(0, 1fr) auto;
+    gap: .6rem;
+    min-block-size: 4rem;
+    padding: .55rem .75rem;
+  }
+
+  [dir="rtl"] .seeker-dashboard__topbar {
+    grid-template-columns: auto minmax(0, 1fr) 2.75rem;
+  }
+
+  .seeker-dashboard__menu-button {
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    padding: 0;
+  }
+
+  .seeker-dashboard__search {
+    min-inline-size: 0;
+    padding: .62rem .8rem;
+    gap: .5rem;
+    font-size: .86rem;
+  }
+
+  .seeker-dashboard__search input {
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .seeker-dashboard__topbar-profile {
+    min-inline-size: 0;
+    gap: .5rem;
+  }
+
+  .seeker-dashboard__topbar-profile .seeker-dashboard__avatar {
+    inline-size: 2.45rem;
+    block-size: 2.45rem;
+  }
+
+  .seeker-dashboard__nav {
+    position: fixed;
+    inset-block: 0;
+    z-index: 40;
+    display: flex;
+    inline-size: min(88vw, 22rem);
+    max-inline-size: 100%;
+    min-block-size: 100dvh;
+    margin: 0;
+    padding: 1.25rem .9rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: #fff;
+    border: 0;
+    box-shadow: 0 1.25rem 3rem rgb(23 35 61 / 20%);
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform .22s ease, visibility 0s linear .22s;
+  }
+
+  [dir="rtl"] .seeker-dashboard__nav {
+    inset-inline-end: 0;
+    transform: translateX(100%);
+  }
+
+  [dir="ltr"] .seeker-dashboard__nav {
+    inset-inline-start: 0;
+    transform: translateX(-100%);
+  }
+
+  .seeker-dashboard__nav.is-open {
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
+  }
+
+  .seeker-dashboard__nav ul {
+    grid-template-columns: 1fr;
+    gap: .35rem;
+    margin-block: .5rem 1.5rem;
+  }
+
+  .seeker-dashboard__nav a {
+    justify-content: flex-start;
+    min-block-size: 3.25rem;
+    padding: .75rem 1rem;
+    text-align: start;
+  }
+
+  .seeker-dashboard__nav a span:last-child {
+    display: inline;
+  }
+
+  .seeker-dashboard__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 35;
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: rgb(23 35 61 / 42%);
+    border: 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .22s ease, visibility 0s linear .22s;
+  }
+
+  .seeker-dashboard__backdrop.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
+  }
+
+  .seeker-dashboard__content {
+    grid-column: 1;
+    grid-row: 2;
+    inline-size: 100%;
+    max-inline-size: none;
+    box-sizing: border-box;
+    padding: 1.35rem clamp(1rem, 4vw, 1.5rem) 2.5rem;
+  }
+
+  .seeker-dashboard__heading-row {
+    gap: 1rem;
+  }
+
+  .seeker-dashboard__heading-row h1 {
+    max-inline-size: 100%;
+    font-size: clamp(1.7rem, 7vw, 2.35rem);
+    line-height: 1.2;
+  }
+
+  .seeker-dashboard__heading-row p:last-child {
+    max-inline-size: 100%;
+    font-size: .9rem;
+  }
+
+  .seeker-dashboard__summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .75rem;
+  }
+
+  .seeker-dashboard__summary-card {
+    min-block-size: 7.5rem;
+    padding: 1rem;
+  }
+
+  .seeker-dashboard__summary-icon {
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+  }
+
+  .seeker-dashboard__summary-card strong {
+    font-size: 1.65rem;
+  }
+
+  .seeker-dashboard__overview-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas: "requests" "viewings" "notifications" "cta";
+  }
+
+  [dir="rtl"] .seeker-dashboard__overview-grid {
+    grid-template-areas: "requests" "viewings" "notifications" "cta";
+  }
+
+  .seeker-dashboard__overview-panel {
+    min-block-size: 6.5rem;
+    padding: 1rem;
+  }
+
+  .seeker-overview__activity-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .seeker-viewings__grid,
+  .seeker-saved__grid,
+  .seeker-saved__grid:not([data-view="list"]) {
+    grid-template-columns: 1fr;
+    inline-size: 100%;
+    max-inline-size: none;
+  }
+
+  .seeker-requests__toolbar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: .75rem;
+  }
+
+  .seeker-requests__toolbar .ui-field[data-state][data-state] {
+    max-inline-size: none;
+    flex-basis: auto;
+  }
+
+  .seeker-requests__columns {
+    display: none;
+  }
+
+  .seeker-request-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: .65rem;
+    padding: .9rem 1rem;
+  }
+
+  .seeker-request-row__icon {
+    display: grid;
+  }
+
+  .seeker-request-detail__grid {
+    grid-template-columns: 1fr;
+    grid-template-areas: "summary" "timeline" "advanced";
+  }
+
+  .seeker-viewing-card {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .seeker-viewing-card__image {
+    min-block-size: 0;
+    aspect-ratio: 16 / 9;
+  }
+
+  .seeker-notifications__panel,
+  .seeker-profile > .seeker-dashboard__content > .seeker-profile__tabs,
+  .seeker-profile > .seeker-dashboard__content > .seeker-profile__panel,
+  .seeker-profile > .seeker-dashboard__content > .seeker-profile__settings,
+  .seeker-profile > .seeker-dashboard__content > .seeker-profile__feedback {
+    inline-size: 100%;
+    max-inline-size: none;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 640px) {
+  .seeker-dashboard__topbar-profile > span:last-child {
+    display: none;
+  }
+
+  .seeker-dashboard__topbar-profile .seeker-dashboard__avatar {
+    inline-size: 2.3rem;
+    block-size: 2.3rem;
+  }
+
+  .seeker-dashboard__summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .seeker-dashboard__summary-card {
+    min-block-size: 6.25rem;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: .75rem;
+  }
+
+  .seeker-dashboard__summary-card > span:last-child {
+    text-align: end;
+  }
+
+  .seeker-dashboard__summary-card strong {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .seeker-dashboard__summary-card > span:last-child {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .seeker-dashboard__summary-icon {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .seeker-overview__search-cta {
+    margin-block-start: 1rem;
+  }
+
+  .seeker-overview__activity-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seeker-dashboard__nav,
+  .seeker-dashboard__backdrop,
+  .seeker-dashboard__menu-glyph i {
+    transition: none;
+  }
+}

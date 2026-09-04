@@ -6,9 +6,9 @@ const appRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const clientAssets = path.resolve(appRoot, 'dist/client/assets');
 const maxJavaScriptChunkBytes = 650 * 1024;
 const maxJavaScriptBytes = 2_500 * 1024;
-// The responsive public-navigation and property-details states are part of the
-// critical mobile path. Keep a small, explicit allowance for those styles.
-const maxStylesheetBytes = 460 * 1024;
+// The responsive public, property, developer, and authenticated seeker states
+// are part of the critical mobile path. Keep a small, explicit allowance for them.
+const maxStylesheetBytes = 464 * 1024;
 const files = readdirSync(clientAssets)
   .map(name => path.join(clientAssets, name))
   .filter(file => statSync(file).isFile());

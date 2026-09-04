@@ -108,17 +108,27 @@ export function App({
 }: AppProps) {
   const route = resolveRoute(url);
   const copy = getFoundationCopy(locale);
-  const [authSnapshot, setAuthSnapshot] = useState<AuthSnapshot | undefined>(() => authClient?.getSnapshot());
   const protectedRoute = route.kind === 'matched' && route.requiresAuthentication;
+  const [authSnapshot, setAuthSnapshot] = useState<AuthSnapshot | undefined>(() => authClient?.getSnapshot());
+  const [authResolutionComplete, setAuthResolutionComplete] = useState(() => !protectedRoute || session.status === 'authenticated');
   useEffect(() => {
-    if (authClient === undefined) return undefined;
-    setAuthSnapshot(authClient.getSnapshot());
-    const unsubscribe = authClient.subscribe(setAuthSnapshot);
-    if (authClient.getSnapshot().status !== 'authenticated' && authClient.getSnapshot().status !== 'refreshing') {
-      void authClient.refresh().catch(() => undefined);
+    if (authClient === undefined) {
+      setAuthResolutionComplete(true);
+      return undefined;
+    }
+    const updateSnapshot = (snapshot: AuthSnapshot) => {
+      setAuthSnapshot(snapshot);
+      if (snapshot.status !== 'refreshing') setAuthResolutionComplete(true);
+    };
+    const initialSnapshot = authClient.getSnapshot();
+    updateSnapshot(initialSnapshot);
+    const unsubscribe = authClient.subscribe(updateSnapshot);
+    if (initialSnapshot.status === 'anonymous') {
+      setAuthResolutionComplete(false);
+      void authClient.refresh().then(updateSnapshot, () => setAuthResolutionComplete(true));
     }
     return unsubscribe;
-  }, [authClient, protectedRoute]);
+  }, [authClient]);
   const liveSession: RouteSession = authSnapshot?.status === 'authenticated' && authSnapshot.user !== undefined && (authSnapshot.user.roleType === 'seeker' || authSnapshot.user.roleType === 'provider' || authSnapshot.user.roleType === 'admin')
     ? { status: 'authenticated', role: authSnapshot.user.roleType }
     : ANONYMOUS_ROUTE_SESSION;
@@ -212,7 +222,11 @@ export function App({
   const seekerProfileTab = seekerProfileQueryTab === 'personal' || seekerProfileQueryTab === 'profile' ? 'profile' : 'preferences';
   const providerSettingsTab = seekerUrl.searchParams.get('tab') === 'contact' ? 'contact' : seekerUrl.searchParams.get('tab') === 'security' ? 'security' : 'account';
 
-  const content = guard.allowed ? (
+  const content = protectedRoute && !authResolutionComplete ? (
+    <div className="route-auth-resolving" data-auth-resolution="pending">
+      <RouteStateView state="loading" copy={copy} />
+    </div>
+  ) : guard.allowed ? (
     isPublicHomepage ? (
       <PublicHomepage locale={locale} authenticatedRole={effectiveSession.status === 'authenticated' ? effectiveSession.role : undefined} initialData={homepageData} initialState={homepageInitialState} />
     ) : isPublicPropertyListing ? (

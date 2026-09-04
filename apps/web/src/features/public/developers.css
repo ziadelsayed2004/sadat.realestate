@@ -6,9 +6,17 @@
   }
 }
 
+.public-developer-directory,
+.public-developer-profile {
+  max-inline-size: 100%;
+  overflow-x: clip;
+}
+
 .public-developer-directory__intro,
 .public-developer-directory__body,
 .public-developer-profile__content {
+  box-sizing: border-box;
+  min-inline-size: 0;
   width: min(100% - clamp(2rem, 8vw, 8rem), 82rem);
   margin-inline: auto;
 }
@@ -83,6 +91,9 @@
 
 .public-developer-directory__filters input,
 .public-developer-directory__filters select {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
   min-block-size: var(--input-height);
   padding: var(--space-sm) var(--space-md);
   color: var(--color-text-strong);
@@ -179,6 +190,7 @@
 
 .public-developer-directory__card {
   display: grid;
+  min-inline-size: 0;
   overflow: hidden;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -402,9 +414,10 @@
   }
 
   .public-developer-profile__hero-media {
-    inline-size: 100vw;
+    inline-size: 100dvw;
+    max-inline-size: 100dvw;
     block-size: 31rem;
-    margin-inline-start: calc(50% - 50vw);
+    margin-inline-start: calc(50% - 50dvw);
   }
 
   .public-developer-profile__hero-media > img {
@@ -1126,8 +1139,9 @@
   }
 
   .public-developer-profile__hero {
-    inline-size: 100vw;
-    margin-inline-start: calc(50% - 50vw);
+    inline-size: 100dvw;
+    max-inline-size: 100dvw;
+    margin-inline-start: calc(50% - 50dvw);
     overflow: visible;
     background: transparent;
     border: 0;

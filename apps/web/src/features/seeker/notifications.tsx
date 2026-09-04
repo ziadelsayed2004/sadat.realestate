@@ -13,7 +13,7 @@ import {
   type SeekerNotificationActions,
   type SeekerNotificationsLoader
 } from './data.ts';
-import { SeekerNavigation } from './overview.tsx';
+import { SeekerIcon, SeekerNavigation, type SeekerIconName } from './overview.tsx';
 import { getSeekerNotificationsCopy } from './notifications-copy.ts';
 import './styles.css';
 
@@ -51,12 +51,12 @@ function dateLabel(value: string, locale: SupportedLocale): string {
   return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value));
 }
 
-function iconForType(type: string): string {
-  if (type.startsWith('viewing.')) return '◷';
-  if (type.startsWith('request.')) return '▤';
-  if (type.startsWith('property.')) return '♡';
-  if (type.startsWith('community.')) return '◌';
-  return '•';
+function iconForType(type: string): SeekerIconName {
+  if (type.startsWith('viewing.')) return 'viewings';
+  if (type.startsWith('request.')) return 'requests';
+  if (type.startsWith('property.')) return 'saved';
+  if (type.startsWith('community.')) return 'notifications';
+  return 'notifications';
 }
 
 function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<SeekerNotificationsViewState, 'success' | 'empty'>; readonly locale: SupportedLocale; readonly onRetry: () => void }) {
@@ -90,7 +90,7 @@ function NotificationRow({
   const read = item.readAt !== null;
   return (
     <article className="seeker-notifications__item" data-testid={`seeker-notification-${item.id}`} data-state={read ? 'read' : 'unread'}>
-      <span className="seeker-notifications__icon" aria-hidden="true">{iconForType(item.type)}</span>
+      <span className="seeker-notifications__icon" aria-hidden="true"><SeekerIcon name={iconForType(item.type)} /></span>
       <div className="seeker-notifications__body">
         <div className="seeker-notifications__meta">
           <span className="seeker-notifications__type">{typeLabel}</span>

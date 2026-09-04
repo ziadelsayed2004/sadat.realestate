@@ -37,6 +37,23 @@ function getAcceptLanguage(request) {
   return Array.isArray(header) ? header.join(',') : header;
 }
 
+function getPreferredLocale(request) {
+  const header = request.headers.cookie;
+  const cookie = Array.isArray(header) ? header.join(';') : header;
+  if (typeof cookie !== 'string') return undefined;
+  for (const part of cookie.split(';')) {
+    const [rawName, ...rawValue] = part.trim().split('=');
+    if (rawName !== 'sadat-real-estate.locale') continue;
+    try {
+      const value = decodeURIComponent(rawValue.join('='));
+      return value === 'ar' || value === 'en' ? value : undefined;
+    } catch {
+      return undefined;
+    }
+  }
+  return undefined;
+}
+
 function escapeHtml(value) {
   return value.replace(/[&<>"']/g, character => ({
     '&': '&amp;',
@@ -380,6 +397,7 @@ async function renderDevelopmentPage(request, response, vite) {
     const publicOrigin = requestPublicOrigin(request);
     const result = await entry.render(requestUrl, {
       acceptLanguage: getAcceptLanguage(request),
+      preferredLocale: getPreferredLocale(request),
       apiOrigin: process.env.WEB_API_ORIGIN,
       ...(publicOrigin === undefined ? {} : { publicOrigin })
     });
@@ -483,6 +501,7 @@ async function createProductionServer() {
       const publicOrigin = requestPublicOrigin(request);
       const result = await render(requestUrl, {
         acceptLanguage: getAcceptLanguage(request),
+        preferredLocale: getPreferredLocale(request),
         apiOrigin: process.env.WEB_API_ORIGIN,
         ...(publicOrigin === undefined ? {} : { publicOrigin })
       });

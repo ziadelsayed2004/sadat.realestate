@@ -135,8 +135,8 @@ describe('public homepage', () => {
     fireEvent.click(screen.getByRole('button', { name: 'فتح القائمة' }));
     expect(screen.getByRole('button', { name: 'إغلاق القائمة' })).toHaveAttribute('aria-expanded', 'true');
     expect(mobileActions).toHaveAttribute('aria-hidden', 'false');
-    expect(mobileActions?.querySelector('a[href="/auth/login"]')).not.toBeNull();
-    expect(mobileActions?.querySelector('a[href="/auth/register"]')).not.toBeNull();
+    expect(mobileActions?.querySelector('a[href="/auth/login?lang=ar"]')).not.toBeNull();
+    expect(mobileActions?.querySelector('a[href="/auth/register?lang=ar"]')).not.toBeNull();
     expect(mobileActions?.querySelector('[data-custom-locale-switcher="true"]')).not.toBeNull();
     expect(result.container.querySelector('.public-homepage__menu-backdrop.is-open')).toBeInTheDocument();
     expect(document.body.style.overflow).toBe('hidden');
@@ -153,7 +153,7 @@ describe('public homepage', () => {
 
     expect(screen.queryByRole('link', { name: 'Log in' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Create account' })).not.toBeInTheDocument();
-    expect(result.container.querySelector('.public-homepage__actions a[href="/seeker"]')).toHaveTextContent('My account');
+    expect(result.container.querySelector('.public-homepage__actions a[href="/seeker?lang=en"]')).toHaveTextContent('My account');
   });
 
   it('renders loading and success states while reading the homepage contract', async () => {

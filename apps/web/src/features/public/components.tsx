@@ -13,7 +13,7 @@ import type {
 } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import { CustomSelect, PropertyCard } from '../design_system/index.ts';
-import { LocaleSwitcher } from '../localization/index.ts';
+import { LocaleSwitcher, replaceLocaleInUrl } from '../localization/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy, type PublicHomepageCopy } from './copy.ts';
 import { defaultPublicHomepageLoader, type PublicHomepageLoader } from './data.ts';
@@ -351,11 +351,12 @@ export function PublicSiteHeader({
     : role === 'provider'
       ? '/provider'
       : '/seeker';
+  const localeHref = (href: string) => replaceLocaleInUrl(href, locale);
   const accountLabel = locale === 'ar' ? 'حسابي' : 'My account';
   const accountActions = role === undefined ? <>
-    <a className="public-homepage__login" href="/auth/login">{copy.login}</a>
-    <a className="public-homepage__signup" href="/auth/register">{copy.createAccount}</a>
-  </> : <a className="public-homepage__signup public-homepage__account" href={accountHref}>{accountLabel}</a>;
+    <a className="public-homepage__login" href={localeHref('/auth/login')}>{copy.login}</a>
+    <a className="public-homepage__signup" href={localeHref('/auth/register')}>{copy.createAccount}</a>
+  </> : <a className="public-homepage__signup public-homepage__account" href={localeHref(accountHref)}>{accountLabel}</a>;
 
   useEffect(() => {
     if (!menuOpen || typeof window === 'undefined') return undefined;
@@ -373,7 +374,7 @@ export function PublicSiteHeader({
 
   return (
     <header className="public-homepage__header">
-      <a className="public-homepage__brand" href="/" aria-label={copy.brand}>
+      <a className="public-homepage__brand" href={localeHref('/')} aria-label={copy.brand}>
         <img src="/assets/sadat-real-estate-logo.png" alt={copy.brand} width={636} height={557} decoding="async" loading="eager" />
       </a>
       <button
@@ -389,13 +390,13 @@ export function PublicSiteHeader({
           <span>{locale === 'ar' ? 'القائمة الرئيسية' : 'Main menu'}</span>
           <small>{copy.brand}</small>
         </div>
-        {links.map(([href, label]) => <a key={href} href={href} aria-current={href === activePath ? 'page' : undefined} onClick={() => setMenuOpen(false)}>{label}</a>)}
+        {links.map(([href, label]) => <a key={href} href={localeHref(href)} aria-current={href === activePath ? 'page' : undefined} onClick={() => setMenuOpen(false)}>{label}</a>)}
         <div className="public-homepage__mobile-actions" aria-hidden={!menuOpen}>
           <LocaleSwitcher locale={locale} label={copy.localeLabel} />
           {role === undefined ? <>
-            <a className="public-homepage__login" href="/auth/login" onClick={() => setMenuOpen(false)}>{copy.login}</a>
-            <a className="public-homepage__signup" href="/auth/register" onClick={() => setMenuOpen(false)}>{copy.createAccount}</a>
-          </> : <a className="public-homepage__signup public-homepage__account" href={accountHref} onClick={() => setMenuOpen(false)}>{accountLabel}</a>}
+            <a className="public-homepage__login" href={localeHref('/auth/login')} onClick={() => setMenuOpen(false)}>{copy.login}</a>
+            <a className="public-homepage__signup" href={localeHref('/auth/register')} onClick={() => setMenuOpen(false)}>{copy.createAccount}</a>
+          </> : <a className="public-homepage__signup public-homepage__account" href={localeHref(accountHref)} onClick={() => setMenuOpen(false)}>{accountLabel}</a>}
         </div>
       </nav>
       <div className="public-homepage__actions">

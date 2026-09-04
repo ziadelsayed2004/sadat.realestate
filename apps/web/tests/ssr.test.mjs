@@ -156,13 +156,22 @@ test('SSR renders the public shell with requested locale and LTR direction', asy
   assert.equal(result.seo?.alternatePaths.at(-1)?.hrefLang, 'x-default');
 });
 
-test('SSR keeps protected dashboard routes in a permission-safe shell', async () => {
+test('SSR keeps protected dashboard routes stable while session restoration is pending', async () => {
   const result = await render('/admin/audit-logs', { acceptLanguage: 'ar' });
   assert.equal(result.statusCode, 200);
   assert.equal(result.locale, 'ar');
   assert.equal(result.direction, 'rtl');
-  assert.match(result.html, /data-state="permission"/);
-  assert.match(result.html, /data-auth-required="true"/);
+  assert.match(result.html, /data-auth-resolution="pending"/);
+  assert.match(result.html, /data-state="loading"/);
+});
+
+test('SSR uses the locale preference when the URL has no explicit language', async () => {
+  const preferred = await render('/properties', { acceptLanguage: 'en', preferredLocale: 'ar' });
+  const explicit = await render('/properties?lang=en', { acceptLanguage: 'ar', preferredLocale: 'ar' });
+  assert.equal(preferred.locale, 'ar');
+  assert.equal(preferred.direction, 'rtl');
+  assert.equal(explicit.locale, 'en');
+  assert.equal(explicit.direction, 'ltr');
 });
 
 test('SSR returns a real 404 result for unknown routes', async () => {
