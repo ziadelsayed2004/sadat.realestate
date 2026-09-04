@@ -224,7 +224,6 @@
 
 .public-developer-directory__card-body h2 a,
 .public-developer-directory__card-body > a {
-  color: inherit;
   text-decoration: none;
 }
 
@@ -1254,7 +1253,6 @@
 
   .public-developer-profile__layout {
     display: grid;
-    grid-template-columns: minmax(16rem, 0.72fr) minmax(0, 1.75fr);
     gap: 2.125rem;
     align-items: start;
     direction: ltr;
