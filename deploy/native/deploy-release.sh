@@ -33,6 +33,19 @@ npm test
 npm run build
 PRODUCTION_ENV_FILE=/etc/elsadatrealestate/production.env npm run production:config
 
+# Design-source exports and test-only screenshots are needed by the release
+# gate above, but they are not runtime assets and must not remain in the active
+# production release.
+if [[ "$RELEASE_DIR" != /opt/elsadatrealestate/releases/* ]]; then
+  echo 'INVALID_RELEASE_PRUNE_TARGET' >&2
+  exit 1
+fi
+rm -rf -- \
+  "$RELEASE_DIR/docs/design_sources" \
+  "$RELEASE_DIR/apps/web/tests/e2e" \
+  "$RELEASE_DIR/apps/web/test-results" \
+  "$RELEASE_DIR/apps/web/playwright-report"
+
 ln -sfn "$RELEASE_DIR" /opt/elsadatrealestate/current.next
 mv -Tf /opt/elsadatrealestate/current.next "$CURRENT_LINK"
 sudo systemctl restart elsadat-api.service elsadat-web.service

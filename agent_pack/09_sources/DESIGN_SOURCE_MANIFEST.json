@@ -3799,12 +3799,6 @@
       "visualSourceStatus": "OWNER_AUTHORED_LOCAL_REVIEW_APPROVED",
       "localSources": [
         {
-          "localPath": "docs/design_sources/final_screens/admin/ADM-54.owner-authored.html",
-          "sha256": "db4b978a09f1d0487f2bcd253c9de61ee587b0cf4bf690fe4b7aaf3d491c12d0",
-          "width": 1440,
-          "height": 1080
-        },
-        {
           "localPath": "docs/design_sources/final_screens/admin/ADM-54.owner-authored.png",
           "sha256": "7d9ee8a2cc7552c6a02031af888c1981c50928bcfc25591c121d33950674a364",
           "width": 1440,

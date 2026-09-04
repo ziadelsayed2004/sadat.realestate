@@ -81,7 +81,6 @@ describe('Provider overview', () => {
 
   it.each(['ar', 'en',] as const)('renders real totals, locale direction, and safe provider projections for %s', locale => {
     const result = renderWithLocale(<ProviderOverview locale={locale} session={session} initialData={overview} />, { locale });
-    const copy = getProviderCopy(locale);
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(screen.getByTestId('provider-summary-total')).toHaveTextContent('3');
     expect(screen.getByTestId('provider-summary-published')).toHaveTextContent('1');
@@ -89,7 +88,7 @@ describe('Provider overview', () => {
     expect(screen.getByTestId('provider-summary-drafts')).toHaveTextContent('1');
     expect(screen.getByTestId('provider-summary-customer-requests')).toHaveTextContent('23');
     expect(screen.getByTestId('provider-summary-booked')).toHaveTextContent('1');
-    expect(screen.getByRole('heading', { name: copy.overview.title, level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: locale === 'ar' ? 'لوحة التحكم' : 'Dashboard', level: 1 })).toBeInTheDocument();
     expect(result.container.querySelector('[data-screen-id="PRV-01"]')).not.toBeNull();
     expect(result.container.textContent).not.toContain(providerId);
     expect(result.container.textContent).not.toMatch(/internalNotes|assignedTo|auditData|storageKey|accessToken|refreshToken/u);
@@ -98,11 +97,11 @@ describe('Provider overview', () => {
 
   it.each(['ar', 'en'] as const)('renders the canonical Provider rail assets and maps viewings to Customer Requests for %s', locale => {
     const result = renderWithLocale(<ProviderNavigation locale={locale} activePath="/provider/viewings" />, { locale });
-    const links = Array.from(result.container.querySelectorAll('.provider-dashboard__navigation a'));
+    const links = Array.from(result.container.querySelectorAll('.provider-dashboard__navigation ul a'));
     expect(links).toHaveLength(9);
     expect(result.container.querySelector('.provider-dashboard__navigation a[data-active="true"]')).toHaveAttribute('href', `/provider/customer-requests?lang=${locale}`);
-    expect(result.container.querySelectorAll('.provider-dashboard__navigation img')).toHaveLength(9);
-    for (const image of result.container.querySelectorAll('.provider-dashboard__navigation img')) {
+    expect(result.container.querySelectorAll('.provider-dashboard__navigation ul img')).toHaveLength(9);
+    for (const image of result.container.querySelectorAll('.provider-dashboard__navigation ul img')) {
       expect(image).toHaveAttribute('width', '19');
       expect(image).toHaveAttribute('height', '19');
       expect(image.getAttribute('src')).toMatch(/^\/assets\/canonical\/provider\/navigation\/[a-z-]+(?:-active)?\.svg$/u);

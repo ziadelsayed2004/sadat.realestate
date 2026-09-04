@@ -73,7 +73,6 @@ describe('release visual fidelity source matrix', () => {
         expect(screen.visualSourceStatus).toBe('OWNER_AUTHORED_LOCAL_REVIEW_APPROVED');
         expect(screen.sourceStatus).toBe('OWNER_AUTHORED_PENDING_REVIEW');
         expect(screen.localSources.map(source => source.localPath)).toEqual([
-          'docs/design_sources/final_screens/admin/ADM-54.owner-authored.html',
           'docs/design_sources/final_screens/admin/ADM-54.owner-authored.png'
         ]);
         for (const localSource of screen.localSources) {
