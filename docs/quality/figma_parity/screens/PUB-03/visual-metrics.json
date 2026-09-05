@@ -8,13 +8,13 @@
   },
   "runtimeAfter": {
     "width": 1577,
-    "height": 3086
+    "height": 3045
   },
   "comparedWidth": 1577,
-  "comparedHeight": 3046,
-  "comparedPixels": 4803542,
-  "materialDifferencePercent": 17.6572,
-  "antiAliasingOnlyPercent": 4.0065,
+  "comparedHeight": 3045,
+  "comparedPixels": 4801965,
+  "materialDifferencePercent": 17.6241,
+  "antiAliasingOnlyPercent": 4.115,
   "threshold": {
     "materialRgbSumGreaterThan": 24,
     "antiAliasingRgbSumGreaterThan": 3

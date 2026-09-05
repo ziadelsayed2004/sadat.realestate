@@ -14,7 +14,7 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "a8af6e406cb2608007467ab2cae70b71115d7fc68bb35b3c3605f010c22960f9",
-    "afterHash": "c6c2898175dbba02d8aba186b8b45231a507ed6217941fa728e1004e9cc4ea61",
+    "afterHash": "ab8521916764e07b6dbd58bb3a819f330fc71df76a8ebe36bba78224332f48af",
     "requestedApi": [],
     "apiResponses": []
   },
@@ -2608,7 +2608,7 @@
       },
       {
         "width": 1577,
-        "height": 1941
+        "height": 1981
       }
     ],
     "dimensions": {
@@ -2619,10 +2619,10 @@
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-02/visual-metrics.json",
     "visualMetrics": {
       "comparedWidth": 1577,
-      "comparedHeight": 1941,
-      "comparedPixels": 3060957,
-      "materialDifferencePercent": 22.042,
-      "antiAliasingOnlyPercent": 4.582,
+      "comparedHeight": 1981,
+      "comparedPixels": 3124037,
+      "materialDifferencePercent": 13.0226,
+      "antiAliasingOnlyPercent": 7.4369,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

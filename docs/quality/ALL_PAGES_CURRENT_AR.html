@@ -6,7 +6,7 @@
 <h1>تقرير كل الصفحات — آخر حالة مثبتة</h1>
 <p>6 سبتمبر 2026 · 131 شاشة/حالة. المرجع البصري المعتمد هو ملف Figma <code>Odl1Epn2u6lIEuIMmABT7o</code>، ودليل المستخدم مرجع للآلية مع اعتماد البريد الإلكتروني وOTP بدل التسجيل القديم بالهاتف.</p>
 <section><h2>الخلاصة بالأرقام</h2><div class="cards">
-<div class="card"><strong>131</strong>إجمالي الشاشات/الحالات المسجلة</div><div class="card"><strong>1/131</strong>نسب Figma الحالية المقاسة للديسكتوب</div><div class="card"><strong>0/131</strong>نسب Figma الحالية المقاسة للريسبونسيف</div><div class="card"><strong>72/72</strong>فحص صفحات Public كاملًا + 72/72 للفوتر</div></div>
+<div class="card"><strong>131</strong>إجمالي الشاشات/الحالات المسجلة</div><div class="card"><strong>2/131</strong>نسب Figma الحالية المقاسة للديسكتوب</div><div class="card"><strong>0/131</strong>نسب Figma الحالية المقاسة للريسبونسيف</div><div class="card"><strong>72/72</strong>فحص صفحات Public كاملًا + 72/72 للفوتر</div></div>
 <p class="warn"><strong>لا توجد حتى الآن نسبة مطابقة حديثة موثوقة للصفحات الكاملة؛ «غير مقاسة» لا تعني 0% ولا 100%.</strong> القياسات التاريخية تعرض فرقًا قديمًا فقط، ولا يصح تحويلها إلى نسبة حالية بطرحها من 100.</p><p>public: 12 · auth: 19 · seeker: 10 · provider: 24 · admin: 66</p></section>
 <section><h2>تحديث الفوتر العام PUB-01 إلى PUB-12</h2><p class="ok"><strong>تم إصلاح الفوتر المشترك والتحقق منه على كل صفحات Public الاثنتي عشرة.</strong></p>
 <p>طابق التنفيذ بنية عقدتي Figma: الديسكتوب <code>6017:11365</code> والموبايل <code>6129:7924</code> داخل الشاشة <code>6017:110792</code>. أُصلح ترتيب RTL، وتقسيم الأعمدة 4/2/1 للديسكتوب/التابلت/الموبايل، وصف المتابعة والحقوق، والروابط الحافظة للغة، وأيقونات التواصل والنسخة المختصرة للموبايل.</p><p>72/72 Playwright cases passed across 12 public routes, AR/EN and widths 1440/768/390. No horizontal overflow, broken footer images, locale loss, browser errors or structural mismatches. 12/12 focused component tests, targeted lint, diff check, full build and runtime smoke passed.</p>
@@ -24,11 +24,11 @@
 </tr><tr data-surface="public">
   <td><strong>PUB-02</strong><br>قائمة العقارات</td>
   <td><code>/properties</code></td>
+  <td>86.9774%</td>
   <td>غير مقاسة حاليًا</td>
-  <td>غير مقاسة حاليًا</td>
-  <td>12.7013% اختلاف تاريخي — same-width source/runtime canvas comparison over the overlapping document height</td>
-  <td>خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
-  <td>مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات — الفوتر المشترك فقط: ناجح ضمن 72/72 حالة على 12 صفحة ولغتين وثلاثة مقاسات؛ لا يمثل قياس الصفحة كاملة.</td>
+  <td>13.0226% اختلاف تاريخي — same-width source/runtime canvas comparison over the overlapping document height</td>
+  <td>قياس ديسكتوب حديث بتاريخ 6 سبتمبر على عرض 1577px بعد استعادة فراغ 40px الموثق قبل الفوتر: أبعاد الصفحة 1577×1981 مطابقة، واتفاق البكسلات المادي 86.9774% وفرق 13.0226%. الفروق الباقية أساسًا في رسومات الفئات والصور الرمزية غير المطابقة للأصول المرجعية.<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
+  <td>تشغيل الصفحة ضمن 72/72 حالة Public ناجح عبر اللغتين والمقاسات الثلاثة، وشارات الكروت محصورة داخلها؛ لا تتوفر بعد نسبة Figma موحدة للتابلت والموبايل — الفوتر المشترك فقط: ناجح ضمن 72/72 حالة على 12 صفحة ولغتين وثلاثة مقاسات؛ لا يمثل قياس الصفحة كاملة.</td>
 </tr><tr data-surface="public">
   <td><strong>PUB-03</strong><br>تفاصيل العقار</td>
   <td><code>/properties/:slug</code></td>

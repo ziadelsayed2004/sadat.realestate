@@ -298,7 +298,7 @@ for (const item of articleRelatedPropertyFixture.data.items) {
 const fixtureConfig = fixtureKind === 'public-home'
   ? { fixture: publicHomepageFixture(), apiPath: '/api/v1/public/home', apiPattern: '**/api/v1/public/home**', pageName: 'public-home', stateAttribute: 'data-homepage-state', regions: ['header', 'hero/search', 'advertising banner', 'population counter', 'property categories', 'featured properties', 'articles', 'community', 'about', 'CTA', 'footer'] }
   : fixtureKind === 'public-details'
-    ? { fixture: propertyDetailsFixture, apiPath: '/api/v1/public/properties/published-home', apiPattern: '**/api/v1/public/properties/published-home**', pageName: 'public-property-details', stateAttribute: 'data-details-state', regions: ['header', 'back link', 'media/gallery', 'property summary', 'amenities', 'provider/project details', 'actions', 'related properties', 'footer'] }
+    ? { fixture: propertyDetailsFixture, apiPath: '/api/v1/public/properties/:slug', apiPattern: '**/api/v1/public/properties/*', pageName: 'public-property-details', stateAttribute: 'data-details-state', regions: ['header', 'back link', 'media/gallery', 'property summary', 'amenities', 'provider/project details', 'actions', 'related properties', 'footer'] }
   : fixtureKind === 'public-comparison'
     ? { fixture: propertyComparisonFixture, apiPath: '/api/v1/public/properties/compare', apiPattern: '**/api/v1/public/properties/compare**', pageName: 'public-comparison', stateAttribute: 'data-comparison-state', regions: ['header', 'comparison heading', 'difference/details toggle', 'comparison cards', 'comparison tables', 'sticky comparison bar', 'footer'] }
   : fixtureKind === 'public-developers'

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T22:27:10.538Z",
+  "generatedAt": "2026-09-05T22:39:30.852Z",
   "baseUrl": "http://127.0.0.1:4173",
   "cases": 72,
   "passed": 72,
@@ -28,7 +28,7 @@
       "errors": [],
       "clientWidth": 1440,
       "scrollWidth": 1440,
-      "scrollHeight": 1941,
+      "scrollHeight": 1981,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [
@@ -970,7 +970,7 @@
       "errors": [],
       "clientWidth": 1440,
       "scrollWidth": 1440,
-      "scrollHeight": 1941,
+      "scrollHeight": 1981,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [

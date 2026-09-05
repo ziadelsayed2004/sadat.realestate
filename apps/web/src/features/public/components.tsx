@@ -451,7 +451,7 @@ const PUBLIC_SITE_FOOTER_RESPONSIVE_CSS = `
 }
 @media (min-width:1051px){
 .public-homepage__footer.public-site-footer{block-size:25.875rem;min-block-size:25.875rem;margin-block-start:5rem}
-.public-site-footer__main{grid-template-columns:repeat(4,minmax(0,1fr));column-gap:2rem;row-gap:0;block-size:13.5rem;padding:3.5rem 1.5rem}
+.public-site-footer__main{grid-template-columns:repeat(4,minmax(0,1fr));column-gap:2rem;row-gap:0;block-size:13.5rem;padding:1.5rem 3.5rem 1.5rem}
 .public-site-footer__logo{inline-size:10rem;block-size:7.0625rem;margin-block-end:1rem}
 .public-site-footer__brand{inline-size:100%;max-inline-size:none}
 .public-site-footer__brand>p{inline-size:min(16.625rem,100%);margin-inline:auto;padding-block-start:1rem;font-size:.875rem;line-height:1.625;text-align:center}
