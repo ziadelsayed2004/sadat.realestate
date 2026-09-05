@@ -197,12 +197,12 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, on
   );
 }
 
-function SummaryCard({ label, value, tone, testId }: { readonly label: string; readonly value: number; readonly tone: string; readonly testId: string }) {
-  const iconName: SeekerIconName = tone === 'requests' ? 'requests' : tone === 'viewings' ? 'viewings' : tone === 'saved' ? 'saved' : 'notifications';
+function SummaryCard({ label, value, tone, testId }: { readonly label: string; readonly value: number | undefined; readonly tone: string; readonly testId: string }) {
+  const iconName: SeekerIconName = tone === 'requests' || tone === 'active-requests' ? 'requests' : tone === 'viewings' ? 'viewings' : tone === 'saved' ? 'saved' : 'notifications';
   return (
     <article className={`seeker-dashboard__summary-card seeker-dashboard__summary-card--${tone}`} data-testid={testId}>
       <span className="seeker-dashboard__summary-icon" aria-hidden="true"><SeekerIcon name={iconName} /></span>
-      <strong>{value}</strong>
+      <strong>{value ?? '—'}</strong>
       <span>{label}</span>
     </article>
   );
@@ -337,7 +337,7 @@ function OverviewActivity({ data, locale }: { readonly data: SeekerOverviewData;
           <div className="seeker-dashboard__overview-grid" data-overview-state="summary-only">
             <a href={localeForSeekerPath(locale, '/seeker/requests')} className="seeker-dashboard__overview-panel seeker-dashboard__overview-panel--requests"><span aria-hidden="true"><SeekerIcon name="requests" /></span><div><strong>{copy.nav.requests}</strong><small>{data.requests} {copy.overview.cards.requests}</small></div><b>{data.requests}</b></a>
             <a href={localeForSeekerPath(locale, '/seeker/viewings')} className="seeker-dashboard__overview-panel seeker-dashboard__overview-panel--viewings"><span aria-hidden="true"><SeekerIcon name="viewings" /></span><div><strong>{copy.nav.viewings}</strong><small>{data.viewings} {copy.overview.cards.viewings}</small></div><b>{data.viewings}</b></a>
-            <a href={localeForSeekerPath(locale, '/seeker/notifications')} className="seeker-dashboard__overview-panel seeker-dashboard__overview-panel--notifications"><span aria-hidden="true"><SeekerIcon name="notifications" /></span><div><strong>{copy.nav.notifications}</strong><small>{data.unreadNotifications} {copy.overview.cards.notifications}</small></div><b>{data.unreadNotifications}</b></a>
+            <a href={localeForSeekerPath(locale, '/seeker/requests')} className="seeker-dashboard__overview-panel seeker-dashboard__overview-panel--active-requests"><span aria-hidden="true"><SeekerIcon name="requests" /></span><div><strong>{copy.overview.cards.activeRequests}</strong><small>{data.activeRequests ?? '—'}</small></div><b>{data.activeRequests ?? '—'}</b></a>
             <a href={localeForSeekerPath(locale, '/seeker/saved')} className="seeker-dashboard__overview-panel seeker-dashboard__overview-panel--wide"><span aria-hidden="true"><SeekerIcon name="saved" /></span><div><strong>{copy.nav.saved}</strong><small>{copy.overview.activityBody}</small></div><b>{data.savedProperties}</b></a>
           </div>
         )}
@@ -365,7 +365,7 @@ function OverviewContent({ data, locale, displayName }: { readonly data: SeekerO
   return (
     <>
       <div className="seeker-dashboard__heading-row"><div><p className="seeker-dashboard__eyebrow">{copy.overview.eyebrow}</p><h1>{heading}</h1><p>{copy.overview.description}</p></div><a className="seeker-dashboard__primary-link" href={localeForSeekerPath(locale, '/properties')}><SeekerIcon name="search" />{copy.overview.searchProperties}</a></div>
-      <section className="seeker-dashboard__summary" aria-labelledby="seeker-summary-title"><div className="seeker-dashboard__section-heading"><h2 id="seeker-summary-title">{copy.overview.summaryTitle}</h2></div><div className="seeker-dashboard__summary-grid"><SummaryCard label={copy.overview.cards.requests} value={data.requests} tone="requests" testId="seeker-summary-requests" /><SummaryCard label={copy.overview.cards.viewings} value={data.viewings} tone="viewings" testId="seeker-summary-viewings" /><SummaryCard label={copy.overview.cards.savedProperties} value={data.savedProperties} tone="saved" testId="seeker-summary-saved" /><SummaryCard label={copy.overview.cards.notifications} value={data.unreadNotifications} tone="notifications" testId="seeker-summary-notifications" /></div></section>
+      <section className="seeker-dashboard__summary" aria-labelledby="seeker-summary-title"><div className="seeker-dashboard__section-heading"><h2 id="seeker-summary-title">{copy.overview.summaryTitle}</h2></div><div className="seeker-dashboard__summary-grid"><SummaryCard label={copy.overview.cards.requests} value={data.requests} tone="requests" testId="seeker-summary-requests" /><SummaryCard label={copy.overview.cards.activeRequests} value={data.activeRequests} tone="active-requests" testId="seeker-summary-active-requests" /><SummaryCard label={copy.overview.cards.viewings} value={data.viewings} tone="viewings" testId="seeker-summary-viewings" /><SummaryCard label={copy.overview.cards.savedProperties} value={data.savedProperties} tone="saved" testId="seeker-summary-saved" /></div></section>
       <OverviewActivity data={data} locale={locale} />
     </>
   );

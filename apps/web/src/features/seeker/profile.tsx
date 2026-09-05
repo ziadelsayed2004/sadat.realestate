@@ -389,8 +389,8 @@ function PreferencesForm({
       <fieldset className="seeker-profile__fieldset">
         <legend>{copy.preferences.areaRange}</legend>
         <div className="seeker-profile__form-grid seeker-profile__form-grid--numeric">
-          <Input id="seeker-preferences-min-area" label={copy.preferences.minArea} aria-label={`${copy.preferences.areaRange} — ${copy.preferences.minArea}`} type="number" min="0" step="1" inputMode="numeric" value={draft.minArea} onChange={event => onChange({ minArea: event.target.value })} />
-          <Input id="seeker-preferences-max-area" label={copy.preferences.maxArea} aria-label={`${copy.preferences.areaRange} — ${copy.preferences.maxArea}`} type="number" min="0" step="1" inputMode="numeric" value={draft.maxArea} onChange={event => onChange({ maxArea: event.target.value })} />
+          <Input id="seeker-preferences-min-area" label={copy.preferences.minArea} aria-label={`${copy.preferences.areaRange} — ${locale === 'ar' ? '\u0627\u0644\u062d\u062f \u0627\u0644\u0623\u062f\u0646\u0649' : 'Minimum'}`} type="number" min="0" step="1" inputMode="numeric" value={draft.minArea} onChange={event => onChange({ minArea: event.target.value })} />
+          <Input id="seeker-preferences-max-area" label={copy.preferences.maxArea} aria-label={`${copy.preferences.areaRange} — ${locale === 'ar' ? '\u0627\u0644\u062d\u062f \u0627\u0644\u0623\u0642\u0635\u0649' : 'Maximum'}`} type="number" min="0" step="1" inputMode="numeric" value={draft.maxArea} onChange={event => onChange({ maxArea: event.target.value })} />
         </div>
       </fieldset>
       <fieldset className="seeker-profile__fieldset seeker-profile__chip-field">

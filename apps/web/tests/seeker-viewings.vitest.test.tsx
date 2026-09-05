@@ -74,6 +74,30 @@ describe('Seeker viewing appointments', () => {
     result.unmount();
   });
 
+  it('renders the optional public property projection when the API provides it', async () => {
+    const richViewing = viewingDataSchema.parse({
+      ...requested,
+      property: {
+        id: requested.propertyId,
+        slug: 'luxury-apartment',
+        kind: 'property',
+        name: { ar: 'شقة فاخرة', en: 'Luxury apartment' },
+        transactionType: 'sale',
+        imageUrl: '/assets/canonical/public/listing-property-home.png',
+        locationName: { ar: 'الحي الأول', en: 'First District' },
+        sourceName: { ar: 'شركة النيل', en: 'Nile Real Estate' },
+        sourceType: 'developer_company',
+        publicCode: 'SDT-1234'
+      }
+    });
+    const richList = viewingListDataSchema.parse({ items: [richViewing], page: 1, limit: 100, total: 1 });
+    renderWithLocale(<SeekerViewings locale="en" session={session} load={async () => richList} actions={emptyActions()} />, { locale: 'en' });
+    await waitFor(() => expect(screen.getByTestId(`seeker-viewing-${richViewing.id}`)).toBeInTheDocument());
+    expect(screen.getByRole('link', { name: 'View property: Luxury apartment' })).toHaveAttribute('href', '/properties/luxury-apartment?lang=en');
+    expect(screen.getByText('First District')).toBeInTheDocument();
+    expect(screen.getByText('Nile Real Estate')).toBeInTheDocument();
+  });
+
   it('validates new requests and sends reschedule and cancel actions only after confirmation', async () => {
     const actions = emptyActions();
     const result = renderWithLocale(<SeekerViewings locale="en" session={session} load={async () => list} actions={actions} />, { locale: 'en' });

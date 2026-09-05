@@ -393,9 +393,12 @@
   gap: var(--space-xs);
 }
 
-.seeker-request-row__identity strong {
+.seeker-request-row__identity strong,
+.seeker-request-row__property {
   color: var(--color-text-strong);
+  font-weight: var(--font-weight-bold);
   letter-spacing: .04em;
+  text-decoration: none;
 }
 
 .seeker-request-row__identity span:not(.seeker-request-row__icon) {
@@ -1634,14 +1637,14 @@
   grid-template-columns: minmax(14rem, .8fr) minmax(20rem, 1.35fr);
   grid-template-areas:
     "viewings requests"
-    "notifications requests"
+    "active requests"
     "cta cta";
   gap: 1rem;
 }
 [dir="rtl"] .seeker-dashboard__overview-grid {
   grid-template-areas:
     "requests viewings"
-    "requests notifications"
+    "requests active"
     "cta cta";
 }
 .seeker-dashboard__overview-panel {
@@ -1663,7 +1666,7 @@
 .seeker-dashboard__overview-panel b { color: #0f4a3b; font-size: 1.65rem; }
 .seeker-dashboard__overview-panel--requests { grid-area: requests; align-content: center; }
 .seeker-dashboard__overview-panel--viewings { grid-area: viewings; }
-.seeker-dashboard__overview-panel--notifications { grid-area: notifications; }
+.seeker-dashboard__overview-panel--active-requests { grid-area: active; }
 .seeker-dashboard__overview-panel--wide { grid-area: cta; color: #fff; background: #0f4a3b; }
 .seeker-dashboard__overview-panel--wide > span { color: #fff; background: rgb(255 255 255 / 14%); }
 .seeker-dashboard__overview-panel--wide small,
@@ -2577,11 +2580,11 @@
 
   .seeker-dashboard__overview-grid {
     grid-template-columns: 1fr;
-    grid-template-areas: "requests" "viewings" "notifications" "cta";
+    grid-template-areas: "requests" "active" "viewings" "cta";
   }
 
   [dir="rtl"] .seeker-dashboard__overview-grid {
-    grid-template-areas: "requests" "viewings" "notifications" "cta";
+    grid-template-areas: "requests" "active" "viewings" "cta";
   }
 
   .seeker-dashboard__overview-panel {
@@ -2708,3 +2711,5 @@
     transition: none;
   }
 }
+
+.seeker-viewing-card--rich .seeker-viewing-card__image>img{display:block;inline-size:100%;block-size:100%;object-fit:cover}.seeker-viewing-card__code{display:block;font-size:.75rem;font-weight:var(--font-weight-bold);color:var(--color-text-secondary)}@media (min-width:1101px){.seeker-viewings__grid[data-rich="true"]{width:100%;grid-template-columns:repeat(3,minmax(0,1fr))}}

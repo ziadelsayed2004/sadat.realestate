@@ -45,7 +45,7 @@ async function routeOverview(page: import('@playwright/test').Page): Promise<voi
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify({
-        data: { requests: 2, viewings: 1, savedProperties: 7, notifications: 3, unreadNotifications: 2 },
+        data: { requests: 2, activeRequests: 2, viewings: 1, savedProperties: 7, notifications: 3, unreadNotifications: 2 },
         ...successMeta('seeker-overview')
       })
     });
@@ -72,9 +72,9 @@ test.describe('SEK-01 Seeker Overview', () => {
     await expect(page.locator('[data-screen-id="SEK-01"]')).toBeVisible();
     await expect(page.locator('.route-shell--seeker')).toHaveAttribute('data-device-scope', 'desktop');
     await expect(page.getByTestId('seeker-summary-requests')).toContainText('2');
+    await expect(page.getByTestId('seeker-summary-active-requests')).toContainText('2');
     await expect(page.getByTestId('seeker-summary-viewings')).toContainText('1');
     await expect(page.getByTestId('seeker-summary-saved')).toContainText('7');
-    await expect(page.getByTestId('seeker-summary-notifications')).toContainText('2');
     await expect(page.locator('.seeker-dashboard__nav a[data-active="true"]')).toHaveAttribute('href', `/seeker?lang=${locale}`);
     await expect(page.locator('body')).not.toContainText(/assignedTo|internalNotes|auditData|accessToken|refreshToken/u);
 

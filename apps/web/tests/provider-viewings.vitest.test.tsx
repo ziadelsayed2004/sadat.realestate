@@ -80,8 +80,14 @@ describe('Provider viewing appointments', () => {
     expect(requests).toEqual([{ url: `/api/v1/provider/viewings/${viewingId}/transitions`, method: 'POST', body: { action: 'confirm', expectedVersion: 2 }, authorization: 'Bearer provider.viewings.token' }]);
   });
 
-  it.each(['ar', 'en',] as const)('renders safe provider projections and direction for %s', async locale => {
-    const load = vi.fn(async () => data);
+  it.each([
+    { locale: 'ar' as const, enriched: false },
+    { locale: 'en' as const, enriched: false },
+    { locale: 'ar' as const, enriched: true },
+    { locale: 'en' as const, enriched: true }
+  ])('renders safe provider projections and direction for $locale (enriched: $enriched)', async ({ locale, enriched }) => {
+    const property = { id: propertyId, slug: 'viewing-apartment', kind: 'property' as const, name: { ar: 'شقة الحي الأول', en: 'First district apartment' }, locationName: { ar: 'الحي الأول', en: 'First district' }, transactionType: 'sale' as const };
+    const load = vi.fn(async () => enriched ? { ...data, items: [viewing({ property })] } : data);
     const result = renderWithLocale(<ProviderViewings locale={locale} session={session} load={load} />, { locale });
     const copy = getProviderViewingsCopy(locale);
     await waitFor(() => expect(screen.getByTestId('provider-viewings-count')).toBeInTheDocument());
@@ -89,6 +95,11 @@ describe('Provider viewing appointments', () => {
     expect(screen.getByRole('heading', { name: copy.title, level: 1 })).toBeInTheDocument();
     const rowElement = screen.getByTestId('provider-viewing-row');
     expect(within(rowElement).getByText(copy.statuses.requested)).toBeInTheDocument();
+    if (enriched) {
+      expect(within(rowElement).getByText(property.name[locale])).toBeInTheDocument();
+      expect(within(rowElement).getByText(property.locationName[locale])).toBeInTheDocument();
+      expect(within(rowElement).getByRole('button', { name: `${copy.actions.confirm}: ${property.name[locale]}` })).toBeInTheDocument();
+    }
     expect(within(rowElement).getByText(/Customer reference|مرجع العميل|客户参考/u)).toBeInTheDocument();
     expect(result.container.querySelector('[data-screen-id="PRV-18"]')).not.toBeNull();
     expect(result.container.textContent).not.toContain(seekerId);

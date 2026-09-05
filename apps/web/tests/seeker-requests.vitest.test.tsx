@@ -11,6 +11,17 @@ const request = requestDataSchema.parse({
   source: 'seeker',
   seekerId: '0123456789abcdef01234567',
   propertyId: '2123456789abcdef01234567',
+  property: {
+    id: '2123456789abcdef01234567',
+    slug: 'seeker-property',
+    kind: 'property',
+    name: { ar: 'عقار الباحث', en: 'Seeker property' },
+    transactionType: 'sale',
+    locationName: { ar: 'المنطقة الأولى', en: 'First district' },
+    sourceName: { ar: 'مزود العقار', en: 'Property provider' },
+    sourceType: 'individual_broker',
+    publicCode: 'P-2042'
+  },
   status: 'under_review',
   payload: { message: 'Please call me', propertyTypes: ['apartment', 'duplex'], minBudget: 500000, maxBudget: 2500000, minBedrooms: 2, maxBedrooms: 4, note: 'Finished unit only' },
   version: 0,
@@ -59,6 +70,8 @@ describe('Seeker requests', () => {
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(screen.getByRole('heading', { name: copy.list.title, level: 1 })).toBeInTheDocument();
     expect(screen.getByText('REQ-4567')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: locale === 'ar' ? 'عقار الباحث' : 'Seeker property' })).toHaveAttribute('href', `/properties/seeker-property?lang=${locale}`);
+    expect(screen.getByText(locale === 'ar' ? 'مزود العقار · المنطقة الأولى' : 'Property provider · First district')).toBeInTheDocument();
     expect(screen.getAllByText(copy.statuses.under_review).length).toBeGreaterThan(0);
     expect(result.container.querySelector('[data-screen-id="SEK-02"]')).not.toBeNull();
     expect(result.container.textContent).not.toContain('assignedTo');
@@ -73,6 +86,7 @@ describe('Seeker requests', () => {
     expect(result.container.querySelector('[data-screen-id="SEK-03"]')).not.toBeNull();
     expect(screen.getByText('Please call me')).toBeInTheDocument();
     expect(screen.getByText('Finished unit only')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Seeker property' })).toHaveAttribute('href', '/properties/seeker-property?lang=en');
     expect(screen.getByText('apartment · duplex')).toBeInTheDocument();
     expect(screen.getByText(/500,000/)).toBeInTheDocument();
     expect(screen.getByText('2 – 4')).toBeInTheDocument();

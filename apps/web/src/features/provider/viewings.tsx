@@ -9,6 +9,7 @@ import {
 import { ApiClientError } from '../contracts/index.ts';
 import { Badge, Button, Input, Modal, Pagination, StateMessage, type BadgeTone } from '../design_system/index.ts';
 import type { RouteSession } from '../routing/index.ts';
+import { localizedText } from '../public/model.ts';
 import { getProviderCopy } from './copy.ts';
 import { ProviderNavigation } from './overview.tsx';
 import {
@@ -183,11 +184,14 @@ function TransitionModal({ viewing, action, copy, saving, error, onClose, onSubm
 
 function ViewingCard({ viewing, locale, copy, onAction }: { readonly viewing: ViewingData; readonly locale: SupportedLocale; readonly copy: ProviderViewingsCopy; readonly onAction: (viewing: ViewingData, action: ProviderViewingAction) => void }) {
   const actions = ACTIONS_BY_STATUS[viewing.status];
+  const propertyLabel = localizedText(viewing.property?.name, locale) ?? `${copy.propertyReference} ${safeReference(viewing.propertyId)}`;
+  const location = localizedText(viewing.property?.locationName, locale);
   return (
     <article className="provider-viewings__card" data-testid="provider-viewing-row" data-viewing-status={viewing.status}>
       <div className="provider-viewings__card-heading">
         <div>
-          <strong>{copy.propertyReference} {safeReference(viewing.propertyId)}</strong>
+          <strong>{propertyLabel}</strong>
+          {location ? <span>{location}</span> : null}
           <span>{copy.customerReference} {safeReference(viewing.seekerId)}</span>
         </div>
         <Badge tone={statusTone(viewing.status)} data-viewing-status-badge={viewing.status}>{copy.statuses[viewing.status]}</Badge>
@@ -198,7 +202,7 @@ function ViewingCard({ viewing, locale, copy, onAction }: { readonly viewing: Vi
         {viewing.note ? <span className="provider-viewings__note">{copy.note}: {viewing.note}</span> : null}
       </div>
       <div className="provider-viewings__actions">
-        {actions.map(action => <Button key={action} size="xs" variant={action === 'cancel' ? 'ghost' : 'secondary'} onClick={() => onAction(viewing, action)} aria-label={`${copy.actions[action]}: ${copy.propertyReference} ${safeReference(viewing.propertyId)}`}>{copy.actions[action]}</Button>)}
+        {actions.map(action => <Button key={action} size="xs" variant={action === 'cancel' ? 'ghost' : 'secondary'} onClick={() => onAction(viewing, action)} aria-label={`${copy.actions[action]}: ${propertyLabel}`}>{copy.actions[action]}</Button>)}
         {actions.length === 0 ? <span className="provider-viewings__unavailable">{copy.actions.none}</span> : null}
       </div>
     </article>

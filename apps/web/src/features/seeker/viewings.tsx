@@ -11,11 +11,15 @@ import {
 } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import { Badge, Button, Input, StateMessage } from '../design_system/index.ts';
+import { PublicMediaImage } from '../public/components.tsx';
+import { localizedText } from '../public/model.ts';
 import type { RouteSession } from '../routing/index.ts';
+import { UxStateView } from '../ux_states/index.ts';
 import {
   createSeekerViewingActions,
   createSeekerViewingsLoader,
   isAuthenticatedSeekerSession,
+  localeForSeekerPath,
   type SeekerAuthorizationSource,
   type SeekerViewingActions,
   type SeekerViewingsLoader
@@ -215,17 +219,29 @@ function ViewingCard({
   const copy = getSeekerViewingsCopy(locale);
   const canReschedule = viewing.status === 'requested' || viewing.status === 'rescheduled';
   const canCancel = viewing.status !== 'cancelled' && viewing.status !== 'completed';
+  const property = viewing.property;
+  const propertyTitle = property === undefined ? shortId(viewing.propertyId, 'PROP') : localizedText(property.name, locale) ?? shortId(viewing.propertyId, 'PROP');
+  const propertyLocation = property?.locationName === undefined ? undefined : localizedText(property.locationName, locale);
+  const providerName = property?.sourceName === undefined ? undefined : localizedText(property.sourceName, locale);
+  const propertyHref = property === undefined ? undefined : localeForSeekerPath(locale, `/properties/${property.slug}`);
   return (
-    <article className="seeker-viewing-card" data-testid={`seeker-viewing-${viewing.id}`} data-viewing-status={viewing.status}>
-      <div className="seeker-viewing-card__image" aria-hidden="true">⌂</div>
+    <article className={`seeker-viewing-card${property === undefined ? '' : ' seeker-viewing-card--rich'}`} data-testid={`seeker-viewing-${viewing.id}`} data-viewing-status={viewing.status}>
+      <div className="seeker-viewing-card__image">
+        {property === undefined ? <span aria-hidden="true">⌂</span> : <PublicMediaImage src={property.imageUrl} alt={propertyTitle} fallback={<UxStateView state="missing_image" title={copy.property} />} />}
+      </div>
       <div className="seeker-viewing-card__body">
         <div className="seeker-viewing-card__topline">
           <div>
             <p className="seeker-dashboard__eyebrow">{copy.property}</p>
-            <h2>{shortId(viewing.propertyId, 'PROP')}</h2>
+            <h2>{propertyHref === undefined ? propertyTitle : <a href={propertyHref} aria-label={`${copy.openProperty}: ${propertyTitle}`}>{propertyTitle}</a>}</h2>
+            {property?.publicCode ? <small className="seeker-viewing-card__code">{property.publicCode}</small> : null}
           </div>
           <Badge tone={statusTone(viewing.status)}>{copy.statuses[viewing.status]}</Badge>
         </div>
+        {propertyLocation || providerName ? <div className="seeker-viewing-card__property-meta">
+          {propertyLocation ? <span><strong>{copy.location}:</strong> {propertyLocation}</span> : null}
+          {providerName ? <span><strong>{copy.source}:</strong> {providerName}</span> : null}
+        </div> : null}
         <dl className="seeker-viewing-card__summary">
           <div><dt>{copy.date}</dt><dd>{dateLabel(viewing.requestedAt, locale)}</dd></div>
           <div><dt>{copy.time}</dt><dd>{timeLabel(viewing.requestedAt, locale)}</dd></div>
@@ -323,7 +339,7 @@ export function SeekerViewings({ locale, session, authClient, apiOrigin, load, a
             </div>
           </div>
           {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
-          {(state === 'success' || state === 'empty') ? (visibleItems.length === 0 ? <div className="seeker-dashboard__empty" data-state="empty"><h3>{copy.empty[tab].title}</h3><p>{copy.empty[tab].body}</p></div> : <div className="seeker-viewings__grid" role="list" aria-label={copy.tabs[tab]}>{visibleItems.map(viewing => <ViewingCard key={viewing.id} viewing={viewing} locale={locale} expanded={expandedId === viewing.id} editing={editingId === viewing.id} confirmingCancel={confirmingCancelId === viewing.id} onToggleDetails={() => setExpandedId(current => current === viewing.id ? undefined : viewing.id)} onReschedule={input => runMutation(() => actionSource.reschedule(viewing.id, input), copy.mutation.updated)} onCancel={() => { setConfirmingCancelId(current => current === viewing.id ? undefined : viewing.id); setEditingId(undefined); }} onConfirmCancel={() => { void runMutation(() => actionSource.cancel(viewing.id, viewing.version), copy.mutation.cancelled); }} onCloseForm={() => setEditingId(current => current === viewing.id ? undefined : viewing.id)} />)}</div>) : null}
+          {(state === 'success' || state === 'empty') ? (visibleItems.length === 0 ? <div className="seeker-dashboard__empty" data-state="empty"><h3>{copy.empty[tab].title}</h3><p>{copy.empty[tab].body}</p></div> : <div className="seeker-viewings__grid" data-rich={visibleItems.some(viewing => viewing.property !== undefined) || undefined} role="list" aria-label={copy.tabs[tab]}>{visibleItems.map(viewing => <ViewingCard key={viewing.id} viewing={viewing} locale={locale} expanded={expandedId === viewing.id} editing={editingId === viewing.id} confirmingCancel={confirmingCancelId === viewing.id} onToggleDetails={() => setExpandedId(current => current === viewing.id ? undefined : viewing.id)} onReschedule={input => runMutation(() => actionSource.reschedule(viewing.id, input), copy.mutation.updated)} onCancel={() => { setConfirmingCancelId(current => current === viewing.id ? undefined : viewing.id); setEditingId(undefined); }} onConfirmCancel={() => { void runMutation(() => actionSource.cancel(viewing.id, viewing.version), copy.mutation.cancelled); }} onCloseForm={() => setEditingId(current => current === viewing.id ? undefined : viewing.id)} />)}</div>) : null}
         </section>
       </div>
     </section>

@@ -96,6 +96,8 @@ function notificationProjection(row: Row): SeekerOverviewNotification | undefine
   return parsed.success ? parsed.data : undefined;
 }
 
+const activeRequestStatuses = ['new', 'under_review', 'contacted', 'scheduled', 'needs_information', 'in_progress'] as const;
+
 export function createMongooseSeekerOverviewRepository(connection: Connection): SeekerOverviewRepository {
   return { async summary(seekerId) {
     // All seeker-owned collections persist references as ObjectIds.  Using the
@@ -107,8 +109,9 @@ export function createMongooseSeekerOverviewRepository(connection: Connection): 
     const requestsCollection = connection.collection('requests');
     const viewingsCollection = connection.collection('viewings');
     const notificationsCollection = connection.collection('notifications');
-    const [requests, viewings, savedProperties, notifications, unreadNotifications] = await Promise.all([
+    const [requests, activeRequests, viewings, savedProperties, notifications, unreadNotifications] = await Promise.all([
       requestsCollection.countDocuments(owner),
+      requestsCollection.countDocuments({ ...owner, status: { $in: activeRequestStatuses } }),
       viewingsCollection.countDocuments(owner),
       connection.collection('favorites').countDocuments(owner),
       notificationsCollection.countDocuments(recipient),
@@ -124,6 +127,7 @@ export function createMongooseSeekerOverviewRepository(connection: Connection): 
     ]);
     return seekerOverviewDataSchema.parse({
       requests,
+      activeRequests,
       viewings,
       savedProperties,
       notifications,

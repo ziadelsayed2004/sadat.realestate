@@ -7,6 +7,7 @@ import { renderWithLocale } from '../src/features/testing/index.ts';
 
 const overview = seekerOverviewDataSchema.parse({
   requests: 2,
+  activeRequests: 2,
   viewings: 1,
   savedProperties: 7,
   notifications: 3,
@@ -65,9 +66,9 @@ describe('Seeker overview', () => {
     const copy = getSeekerCopy(locale);
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(screen.getByTestId('seeker-summary-requests')).toHaveTextContent('2');
+    expect(screen.getByTestId('seeker-summary-active-requests')).toHaveTextContent('2');
     expect(screen.getByTestId('seeker-summary-viewings')).toHaveTextContent('1');
     expect(screen.getByTestId('seeker-summary-saved')).toHaveTextContent('7');
-    expect(screen.getByTestId('seeker-summary-notifications')).toHaveTextContent('2');
     expect(screen.getByRole('heading', { name: copy.overview.title, level: 1 })).toBeInTheDocument();
     expect(result.container.querySelector('[data-screen-id="SEK-01"]')).not.toBeNull();
     expect(result.container.textContent).not.toContain('assignedTo');

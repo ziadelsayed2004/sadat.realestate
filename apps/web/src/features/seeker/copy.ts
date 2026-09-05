@@ -8,7 +8,7 @@ export interface SeekerCopy {
     readonly description: string;
     readonly searchProperties: string;
     readonly summaryTitle: string;
-    readonly cards: Readonly<Record<'requests' | 'viewings' | 'savedProperties' | 'notifications', string>>;
+    readonly cards: Readonly<Record<'requests' | 'activeRequests' | 'viewings' | 'savedProperties' | 'notifications', string>>;
     readonly activityTitle: string;
     readonly activityBody: string;
     readonly recent: Readonly<{
@@ -51,6 +51,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerCopy>> = {
       searchProperties: 'ابحث عن عقار جديد',
       summaryTitle: 'ملخص النشاط',
       cards: {
+        activeRequests: '\u0627\u0644\u0637\u0644\u0628\u0627\u062a \u0627\u0644\u0646\u0634\u0637\u0629',
         requests: 'إجمالي الطلبات',
         viewings: 'المعاينات القادمة',
         savedProperties: 'العقارات المحفوظة',
@@ -102,6 +103,7 @@ const copy: Readonly<Record<SupportedLocale, SeekerCopy>> = {
       summaryTitle: 'Activity summary',
       cards: {
         requests: 'Total requests',
+        activeRequests: 'Active requests',
         viewings: 'Upcoming viewings',
         savedProperties: 'Saved properties',
         notifications: 'Unread notifications'

@@ -9,6 +9,9 @@ export interface SeekerViewingsCopy {
   readonly count: string;
   readonly tabs: Readonly<Record<SeekerViewingTab, string>>;
   readonly property: string;
+  readonly location: string;
+  readonly source: string;
+  readonly openProperty: string;
   readonly date: string;
   readonly time: string;
   readonly timezone: string;
@@ -60,6 +63,9 @@ const copy: Readonly<Record<SupportedLocale, SeekerViewingsCopy>> = {
     count: 'مواعيد',
     tabs: { upcoming: 'القادمة', past: 'السابقة', cancelled: 'الملغاة' },
     property: 'العقار',
+    location: 'الموقع',
+    source: 'المزوّد',
+    openProperty: 'عرض العقار',
     date: 'التاريخ',
     time: 'الوقت',
     timezone: 'المنطقة الزمنية',
@@ -113,6 +119,9 @@ const copy: Readonly<Record<SupportedLocale, SeekerViewingsCopy>> = {
     count: 'appointments',
     tabs: { upcoming: 'Upcoming', past: 'Past', cancelled: 'Cancelled' },
     property: 'Property',
+    location: 'Location',
+    source: 'Provider',
+    openProperty: 'View property',
     date: 'Date',
     time: 'Time',
     timezone: 'Timezone',

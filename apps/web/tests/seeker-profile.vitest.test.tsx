@@ -107,8 +107,8 @@ describe('Seeker profile, preferences, and settings', () => {
     await waitFor(() => expect(screen.getByRole('heading', { name: copy.preferences.heading, level: 2 })).toBeInTheDocument());
     fireEvent.click(screen.getByRole('button', { name: 'Duplex' }));
     fireEvent.click(screen.getByRole('button', { name: '3' }));
-    fireEvent.change(screen.getByLabelText(`${copy.preferences.areaRange} — ${copy.preferences.minArea}`), { target: { value: '120' } });
-    fireEvent.change(screen.getByLabelText(`${copy.preferences.areaRange} — ${copy.preferences.maxArea}`), { target: { value: '240' } });
+    fireEvent.change(screen.getByLabelText(`${copy.preferences.areaRange} — Minimum`), { target: { value: '120' } });
+    fireEvent.change(screen.getByLabelText(`${copy.preferences.areaRange} — Maximum`), { target: { value: '240' } });
     fireEvent.click(screen.getByRole('button', { name: copy.preferences.installment }));
     fireEvent.click(screen.getByRole('button', { name: copy.preferences.save }));
     await waitFor(() => expect(actions.updatePreferences).toHaveBeenCalledWith(expect.objectContaining({ propertyTypes: ['apartment', 'duplex'], locations: ['new-cairo'], minArea: 120, maxArea: 240, bedroomsMin: 3, bedroomsMax: 3, paymentMethod: 'installment' })));

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { RequestData, RequestListData, RequestStatus, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import { Badge, Button, Input, Pagination, StateMessage } from '../design_system/index.ts';
+import { localizedText } from '../public/model.ts';
 import type { RouteSession } from '../routing/index.ts';
 import {
   createSeekerRequestLoader,
@@ -113,13 +114,20 @@ function RequestStatusBadge({ status, locale }: { readonly status: RequestStatus
 
 function RequestRow({ request, locale }: { readonly request: RequestData; readonly locale: SupportedLocale }) {
   const copy = getSeekerRequestsCopy(locale);
+  const propertyName = localizedText(request.property?.name, locale);
+  const propertySource = localizedText(request.property?.sourceName, locale);
+  const propertyLocation = localizedText(request.property?.locationName, locale);
+  const propertyMeta = [propertySource, propertyLocation].filter((value): value is string => value !== undefined).join(' · ');
+  const propertyHref = request.property?.slug === undefined ? undefined : localeForSeekerPath(locale, `/properties/${request.property.slug}`);
   return (
     <article className="seeker-request-row" data-testid={`seeker-request-${request.id}`}>
       <div className="seeker-request-row__identity">
         <span className="seeker-request-row__icon" aria-hidden="true"><SeekerIcon name="requests" /></span>
         <div>
-          <strong>{shortRequestId(request.id)}</strong>
-          <span>{copy.types[request.type]}</span>
+          {propertyHref === undefined ? <strong>{propertyName ?? shortRequestId(request.id)}</strong> : <a className="seeker-request-row__property" href={propertyHref}>{propertyName}</a>}
+          <span>{propertyMeta || copy.types[request.type]}</span>
+          <span>{shortRequestId(request.id)}</span>
+          {request.property?.publicCode ? <><span aria-hidden="true">·</span><span>{request.property.publicCode}</span></> : null}
         </div>
       </div>
       <div className="seeker-request-row__status"><RequestStatusBadge status={request.status} locale={locale} /></div>
@@ -150,6 +158,15 @@ function RequestListContent({ data, locale, onPageChange }: { readonly data: Req
 function DetailValue({ label, value }: { readonly label: string; readonly value: string | undefined }) {
   if (value === undefined) return null;
   return <div className="seeker-request-detail__value"><dt>{label}</dt><dd>{value}</dd></div>;
+}
+
+function RequestPropertyValue({ request, locale, label }: { readonly request: RequestData; readonly locale: SupportedLocale; readonly label: string }) {
+  const property = request.property;
+  const title = localizedText(property?.name, locale);
+  if (title === undefined && request.propertyId === undefined) return null;
+  const href = property?.slug === undefined ? undefined : localeForSeekerPath(locale, `/properties/${property.slug}`);
+  const details = [localizedText(property?.sourceName, locale), localizedText(property?.locationName, locale), property?.publicCode].filter((value): value is string => value !== undefined).join(' · ');
+  return <div className="seeker-request-detail__value"><dt>{label}</dt><dd>{href === undefined ? (title ?? shortRequestId(request.propertyId ?? '')) : <a href={href}>{title}</a>}{details ? <small>{details}</small> : null}</dd></div>;
 }
 
 function RequestDetailContent({ request, locale, onCancel }: { readonly request: RequestData; readonly locale: SupportedLocale; readonly onCancel?: (reason: string) => Promise<void> }) {
@@ -190,6 +207,7 @@ function RequestDetailContent({ request, locale, onCancel }: { readonly request:
             <DetailValue label={copy.detail.type} value={copy.types[request.type]} />
             <DetailValue label={copy.detail.status} value={copy.statuses[request.status]} />
             <DetailValue label={copy.detail.submitted} value={dateLabel(request.createdAt, locale)} />
+            <RequestPropertyValue request={request} locale={locale} label={copy.detail.property} />
           </dl>
           {message === undefined ? null : <div className="seeker-request-detail__payload"><h3>{copy.detail.message}</h3><p>{message}</p></div>}
         </section>

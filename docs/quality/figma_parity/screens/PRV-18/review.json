@@ -22,10 +22,18 @@
     "Added stable localized group heading IDs for accessible aria-labelledby relationships.",
     "Preserved contract-defined status actions, expected-version transitions, and provider authorization."
   ],
-  "externalDifference": "The canonical export contains human-readable property and customer names, while ViewingData exposes only safe IDs and appointment fields; no names or private fields were invented.",
+  "externalDifference": "The current ViewingData includes an optional published-property projection. Provider cards now render its localized name and location, with a safe-ID fallback. Customer display names are still unavailable. Current responsive visual parity remains unverified; the historical screenshots below predate this change.",
+  "continuation20260905": {
+    "source": "Live canonical get_design_context for 6017:21613",
+    "repair": "Connected localized property name and location to appointment cards and localized action labels.",
+    "verification": "provider-viewings.vitest.test.tsx: 11 tests passed, covering Arabic/English enriched cards, missing-property fallback, and existing versioned actions.",
+    "responsiveVerification": "Six Playwright cases passed on desktop/tablet/mobile in Arabic and English after rebuilding and restarting local runtime. Enriched card content, document/card horizontal bounds and reschedule dialog/date input visibility checked. Arabic desktop and mobile screenshots inspected. Fixtures mock authentication and viewing data; this does not prove end-to-end customer identity or exact Figma parity.",
+    "responsiveCommand": "WEB_BASE_URL=http://127.0.0.1:4173 playwright test tests/e2e/provider-viewings.spec.ts --grep 'enriched appointments' --project=desktop-ar --project=desktop-en --project=tablet-ar --project=tablet-en --project=mobile-ar --project=mobile-en",
+    "remaining": "Customer display names and exact canonical visual parity. Responsive behavior is verified for the enriched fixture."
+  },
   "externalPrerequisite": {
     "owner": "Provider contracts/API owner",
-    "nextAction": "Confirm and expose approved provider-safe property and customer display names if canonical card content parity is required, then rerun the AR/EN visual gate."
+    "nextAction": "Provide an authorized customer display-name projection, then rerun the AR/EN visual gate including responsive sizes. Published-property name and location are now connected."
   },
   "visualDiff": {
     "ar": { "expected": "1280px by 843px", "received": "1280px by 878px", "differentPixels": 199589, "ratio": 0.18, "artifact": "diff-final-ar.png" },

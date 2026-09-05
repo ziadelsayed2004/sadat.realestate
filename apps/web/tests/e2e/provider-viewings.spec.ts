@@ -1,4 +1,29 @@
 import { expect, test } from '@playwright/test';
+import { getProviderViewingsCopy } from '../../src/features/provider/viewings-copy.ts';
+
+test('PRV-18 enriched appointments fit every device and open reschedule', async ({ page }, testInfo) => {
+  const locale = localeForViewings();
+  const copy = getProviderViewingsCopy(locale);
+  const property = { id: PROPERTY_ID, slug: 'viewing-apartment', kind: 'property', transactionType: 'sale', name: { ar: 'شقة واسعة في الحي الأول بالقرب من الخدمات', en: 'Spacious first district apartment near local services' }, locationName: { ar: 'الحي الأول، مدينة السادات', en: 'First district, Sadat City' } };
+  await routeSession(page);
+  await page.route('**/api/v1/provider/viewings**', route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ items: [{ ...viewingFixture(), property }], page: 1, limit: 5, total: 1 }, 'responsive-viewings') }));
+  await page.goto(`/provider/viewings?lang=${locale}`);
+  const card = page.getByTestId('provider-viewing-row');
+  await expect(card.getByText(property.name[locale])).toBeVisible();
+  await expect(card.getByText(property.locationName[locale])).toBeVisible();
+  const fits = () => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1);
+  expect(await fits()).toBeTruthy();
+  const box = await card.boundingBox();
+  expect(box).not.toBeNull();
+  expect(box!.x).toBeGreaterThanOrEqual(0);
+  expect(box!.x + box!.width).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
+  await page.screenshot({ path: testInfo.outputPath('appointments.png'), fullPage: true });
+  await card.getByRole('button', { name: `${copy.actions.reschedule}: ${property.name[locale]}`, exact: true }).click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.getByLabel(copy.dialog.date, { exact: true })).toBeVisible();
+  expect(await fits()).toBeTruthy();
+  await page.screenshot({ path: testInfo.outputPath('reschedule.png'), fullPage: true });
+});
 
 const PROVIDER_ID = 'aaaaaaaaaaaaaaaaaaaaaaaa';
 const PROPERTY_ID = 'bbbbbbbbbbbbbbbbbbbbbbbb';

@@ -120,6 +120,7 @@ export const seekerOverviewNotificationSchema = z.object({
 
 export const seekerOverviewDataSchema = z.object({
   requests: z.number().int().nonnegative(),
+  activeRequests: z.number().int().nonnegative().optional(),
   viewings: z.number().int().nonnegative(),
   savedProperties: z.number().int().nonnegative(),
   notifications: z.number().int().nonnegative(),
