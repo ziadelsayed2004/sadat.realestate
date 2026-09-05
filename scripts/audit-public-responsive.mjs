@@ -1,35 +1,41 @@
 import { chromium } from '@playwright/test';
+import { mkdir, writeFile } from 'node:fs/promises';
 
 const baseUrl = process.argv[2] ?? 'http://127.0.0.1:4173';
 const routes = [
-  ['PUB-01', '/?lang=ar'],
-  ['PUB-02', '/properties?lang=ar'],
-  ['PUB-03', '/properties/demo-garden-duplex?lang=ar'],
-  ['PUB-04', '/compare?lang=ar&propertyIds=670000000000000000000007&propertyIds=670000000000000000000008'],
-  ['PUB-05', '/developers?lang=ar'],
-  ['PUB-06', '/developers/sadat-demo-developer?lang=ar'],
-  ['PUB-07', '/articles?lang=ar'],
-  ['PUB-08', '/articles/buying-in-sadat?lang=ar'],
-  ['PUB-09', '/community?lang=ar'],
-  ['PUB-10', '/community?create=1&lang=ar'],
-  ['PUB-11', '/about?lang=ar'],
-  ['PUB-12', '/team?lang=ar']
+  ['PUB-01', '/'],
+  ['PUB-02', '/properties'],
+  ['PUB-03', '/properties/demo-garden-duplex'],
+  ['PUB-04', '/compare?propertyIds=670000000000000000000007&propertyIds=670000000000000000000008'],
+  ['PUB-05', '/developers'],
+  ['PUB-06', '/developers/sadat-demo-developer'],
+  ['PUB-07', '/articles'],
+  ['PUB-08', '/articles/buying-in-sadat'],
+  ['PUB-09', '/community'],
+  ['PUB-10', '/community?create=1'],
+  ['PUB-11', '/about'],
+  ['PUB-12', '/team']
 ];
 const viewports = [
   ['desktop', { width: 1440, height: 1000 }],
+  ['tablet', { width: 768, height: 1024 }],
   ['mobile', { width: 390, height: 844 }]
 ];
+const locales = ['ar', 'en'];
 
 const browser = await chromium.launch({ headless: true });
 const results = [];
-for (const [device, viewport] of viewports) {
-  const context = await browser.newContext({ viewport, locale: 'ar' });
-  for (const [screenId, route] of routes) {
+for (const locale of locales) {
+  for (const [device, viewport] of viewports) {
+    const context = await browser.newContext({ viewport, locale });
+    for (const [screenId, route] of routes) {
     const page = await context.newPage();
     const errors = [];
     page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
     page.on('pageerror', error => errors.push(error.message));
-    const response = await page.goto(new URL(route, baseUrl).toString(), { waitUntil: 'domcontentloaded', timeout: 45_000 });
+    const url = new URL(route, baseUrl);
+    url.searchParams.set('lang', locale);
+    const response = await page.goto(url.toString(), { waitUntil: 'domcontentloaded', timeout: 45_000 });
     await page.waitForTimeout(750);
     const metrics = await page.evaluate(() => {
       const root = document.documentElement;
@@ -49,10 +55,17 @@ for (const [device, viewport] of viewports) {
         overflow
       };
     });
-    results.push({ screenId, device, status: response?.status() ?? null, errors, ...metrics });
+    results.push({ screenId, locale, device, status: response?.status() ?? null, errors, ...metrics });
     await page.close();
+    }
+    await context.close();
   }
-  await context.close();
 }
 await browser.close();
-process.stdout.write(`${JSON.stringify({ baseUrl, results }, null, 2)}\n`);
+const failures = results.filter(result => result.status !== 200 || result.errors.length || result.brokenImages.length || result.overflow.length || result.scrollWidth > result.clientWidth + 1);
+const report = { generatedAt: new Date().toISOString(), baseUrl, cases: results.length, passed: results.length - failures.length, failed: failures.length, failures, results };
+const outputDirectory = new URL('../docs/quality/public-responsive-2026-09-06/', import.meta.url);
+await mkdir(outputDirectory, { recursive: true });
+await writeFile(new URL('results.json', outputDirectory), `${JSON.stringify(report, null, 2)}\n`);
+process.stdout.write(`${JSON.stringify({ cases: report.cases, passed: report.passed, failed: report.failed, output: 'docs/quality/public-responsive-2026-09-06/results.json' })}\n`);
+if (failures.length) process.exitCode = 1;

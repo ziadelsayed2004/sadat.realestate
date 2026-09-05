@@ -72,6 +72,19 @@ describe('public homepage', () => {
     expect(result.container.textContent).not.toContain('audit');
   });
 
+  it.each(['ar', 'en'] as const)('renders the shared three-row Figma footer and locale-safe links for %s', locale => {
+    const result = renderWithLocale(<PublicHomepage locale={locale} initialData={homepageData} />, { locale });
+    const footer = result.container.querySelector('.public-site-footer');
+
+    expect(footer?.querySelector(':scope > .public-site-footer__main')).not.toBeNull();
+    expect(footer?.querySelector(':scope > .public-site-footer__follow > .public-site-footer__follow-inner')).not.toBeNull();
+    expect(footer?.querySelector(':scope > .public-site-footer__bottom')).toHaveTextContent('2026');
+    expect(footer?.querySelector(`a[href="/properties?lang=${locale}"]`)).not.toBeNull();
+    expect(footer?.querySelector(`a[href="/community?lang=${locale}"]`)).not.toBeNull();
+    expect(footer?.querySelector('.public-site-footer__mobile-description')).toHaveTextContent(locale === 'ar' ? 'بيعاً وإيجاراً' : 'sales and rentals');
+    expect(footer?.querySelector('.public-site-footer__mobile-policy')).toHaveTextContent(locale === 'ar' ? 'سياسة الخصوصية' : 'Privacy policy');
+  });
+
   it('submits the selected transaction type and renders the data-backed all-properties card', () => {
     const data = publicHomepageDataSchema.parse({
       ...homepageData,

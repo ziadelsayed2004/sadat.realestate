@@ -1415,9 +1415,6 @@
   .public-property-details > .public-site-footer {
     min-height: 414px;
     margin-top: 121px;
-    grid-template-rows: 224px 89px 53px;
-    padding-bottom: 0;
-    padding: 48px max(calc((100vw - 1235px) / 2), 48px) 0;
   }
 }
 

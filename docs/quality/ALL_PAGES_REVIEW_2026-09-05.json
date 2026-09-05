@@ -1,7 +1,21 @@
 {
-  "date": "2026-09-05",
+  "date": "2026-09-06",
   "followUp": {
     "status": "implementation_in_progress_not_100_percent",
+    "publicFooterResponsive": {
+      "screens": ["PUB-01", "PUB-02", "PUB-03", "PUB-04", "PUB-05", "PUB-06", "PUB-07", "PUB-08", "PUB-09", "PUB-10", "PUB-11", "PUB-12"],
+      "figma": "Canonical desktop footer node 6017:11365 and mobile footer node 6129:7924 inside responsive screen 6017:110792.",
+      "implementation": "Rebuilt the shared public footer into main, follow and legal rows; fixed RTL ordering, desktop/tablet/mobile layouts, locale-preserving links, canonical contact/social icons and mobile privacy copy.",
+      "validation": "72/72 Playwright cases passed across 12 public routes, AR/EN and widths 1440/768/390. No horizontal overflow, broken footer images, locale loss, browser errors or structural mismatches. 12/12 focused component tests, targeted lint, diff check, full build and runtime smoke passed.",
+      "limitations": ["This validates the shared footer, not pixel parity of every full public page", "No current Figma parity percentage is awarded without a fresh normalized screenshot comparison for each full screen"],
+      "evidence": "public-footer-responsive-2026-09-06/results.json"
+    },
+    "providerIndividualProductionSubmission": {
+      "screens": ["AUTH-12", "AUTH-13", "AUTH-14"],
+      "evidence": "Owner-provided production screenshots on 2026-09-06 show the individual-provider form reaching submitted/pending-review status after email OTP and document entry.",
+      "result": "Optional documents no longer appear to block submission; the request reached pending review.",
+      "limitations": ["Screenshot evidence was supplied by the owner and was not independently replayed in this audit", "Admin approval/rejection and post-approval account behavior remain unverified"]
+    },
     "documentSecurityGate": "Fixed local upload completeness: keep server missingDocuments authoritative, require active clean acceptable required metadata, remain busy during refresh, and exclude optional scan-pending documents from the gate. 22 component tests, web typecheck, targeted lint and diff check passed. New browser/production verification remains pending. Evidence: provider-document-security-gate-2026-09-05.json.",
     "documentListApiDocumentation": "Added GET document list to implemented blueprint. api:audit passed with 184 implemented/runtime/policy routes, 7 planned and no errors. OpenAPI and Postman validation passed. Does not prove end-to-end persistence or production deployment.",
     "providerDocumentRehydration": "Verified locally with real email OTP registration, account PATCH, two required synthetic PDF uploads and owner-scoped list. Optional documents absent; application reports complete. Six browser cases AR/EN at 1440/768/390 restore both files after reload, enable review and show no overflow. Real session bootstrap injected; no browser upload, submission or production verification. Isolated Mongo probe verifies owner/application isolation and deleted/inactive exclusion. API documentation audit passes: 184 implemented routes/policies, 7 planned. Evidence: provider-document-live-api-2026-09-05.json, provider-document-live-browser/results.json, document-list-live-mongo-2026-09-05.json.",
@@ -436,7 +450,7 @@
       "surface": "auth",
       "route": "/auth/register/provider/documents",
       "name": "المستندات",
-      "latestAssessment": "تحقق محلي فعلي: تسجيل بإيميل وOTP، حفظ البيانات ورفع المستندين المطلوبين عبر API دون الاختياري. استرجاع الملفين بعد تحديث المتصفح وزر المراجعة مفعّل في 6 حالات AR/EN على 1440 و768 و390 دون خروج أفقي. تهيئة الجلسة محقونة؛ الرفع من واجهة المتصفح والإرسال النهائي والاعتماد والإنتاج لم تُثبت. ليس قياس مطابقة فيجما.",
+      "latestAssessment": "تحقق محلي فعلي: تسجيل بإيميل وOTP وحفظ البيانات ورفع المطلوب دون اشتراط الاختياري، مع 6 حالات AR/EN على 1440 و768 و390. وفي 6 سبتمبر أظهرت لقطة إنتاج قدّمها صاحب المشروع وصول طلب العارض الفردي إلى قيد المراجعة. اعتماد الإدارة وما بعد الاعتماد غير مثبتين، وهذا ليس قياس مطابقة فيجما.",
       "status": "REPAIRED_VERIFIED",
       "audit": "REPAIRED_VERIFIED",
       "metrics": [],

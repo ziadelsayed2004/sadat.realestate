@@ -433,6 +433,38 @@ export function PublicMediaImage({
   return <img className={className} src={imageUrl} alt={alt} decoding="async" loading={loading} onError={() => setFailed(true)} />;
 }
 
+const PUBLIC_SITE_FOOTER_RESPONSIVE_CSS = `
+@media (min-width:701px){
+.public-homepage__footer.public-site-footer{padding:0}
+.public-site-footer__main{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2rem;max-inline-size:80rem;margin-inline:auto;padding:2.5rem 2rem}
+.public-site-footer__desktop-description,.public-site-footer__desktop-legal{display:inline}
+.public-site-footer__mobile-description,.public-site-footer__mobile-policy{display:none}
+.public-site-footer__contact-links a:nth-child(2),.public-site-footer__social a:nth-child(n+4){display:inline-grid}
+.public-site-footer__mobile-social{display:none!important}
+.public-site-footer__contact-links img{display:block}
+.public-site-footer__follow{margin:0;border-block-start:1px solid rgb(255 255 255/.1)}
+.public-site-footer__follow-inner{justify-content:space-between;gap:var(--space-lg);max-inline-size:80rem;margin-inline:auto;padding:1.25rem 2rem}
+.public-site-footer__follow-copy{display:grid;gap:.25rem}
+.public-site-footer__social a{inline-size:2.25rem;block-size:2.25rem}
+.public-site-footer__social svg{inline-size:1rem;block-size:1rem}
+.public-site-footer__bottom{margin:0;padding:1rem 0;font-size:var(--font-size-small);line-height:inherit}
+}
+@media (min-width:1051px){
+.public-homepage__footer.public-site-footer{block-size:25.875rem;min-block-size:25.875rem;margin-block-start:5rem}
+.public-site-footer__main{grid-template-columns:repeat(4,minmax(0,1fr));column-gap:2rem;row-gap:0;block-size:13.5rem;padding:3.5rem 1.5rem}
+.public-site-footer__logo{inline-size:10rem;block-size:7.0625rem;margin-block-end:1rem}
+.public-site-footer__brand{inline-size:100%;max-inline-size:none}
+.public-site-footer__brand>p{inline-size:min(16.625rem,100%);margin-inline:auto;padding-block-start:1rem;font-size:.875rem;line-height:1.625;text-align:center}
+.public-site-footer__follow{block-size:5.5625rem}
+.public-site-footer__follow-inner{padding:1.5rem}
+.public-site-footer__follow strong{font-size:.875rem;line-height:1.25rem}
+.public-site-footer__follow span{display:block;padding-block-start:.25rem;color:rgb(255 255 255/.4);font-size:.75rem;line-height:1rem}
+.public-site-footer__social{gap:.625rem}
+.public-site-footer__social a{inline-size:2.5rem;block-size:2.5rem;border-radius:1.125rem}
+.public-site-footer__social svg{inline-size:1.25rem;block-size:1.25rem}
+.public-site-footer__bottom{block-size:3.3125rem;padding:1.0625rem 0 1rem;color:rgb(255 255 255/.4);font-size:.875rem;line-height:1.25rem}
+}`;
+
 export function PublicSiteFooter({ locale, description }: { readonly locale: SupportedLocale; readonly description?: string | undefined }) {
   const copy = getPublicHomepageCopy(locale);
   // The approved public design uses one platform-level footer description on every
@@ -440,55 +472,61 @@ export function PublicSiteFooter({ locale, description }: { readonly locale: Sup
   // feature-specific description change the shared visual/content contract.
   const footerDescription = description === copy.footerDescription ? description : copy.footerDescription;
   const labels = locale === 'ar'
-    ? { explore: 'الصفحات', company: 'الشركة', contact: 'تواصل معنا', follow: 'تابع عقارات السادات', followBody: 'ابقَ على اطلاع بأحدث العروض والأخبار', legal: 'سياسة الخصوصية · الشروط والأحكام', copyright: '© 2026 منصة عقارات السادات — جميع الحقوق محفوظة', phone: '01001234567', whatsapp: 'واتساب متاح 24/7', address: 'مدينة السادات، مصر' }
-    : { explore: 'Pages', company: 'Company', contact: 'Contact us', follow: 'Follow Sadat Real Estate', followBody: 'Stay informed about the latest listings and news', legal: 'Privacy policy · Terms and conditions', copyright: '© 2026 Sadat Real Estate — All rights reserved', phone: '01001234567', whatsapp: 'WhatsApp available 24/7', address: 'Sadat City, Egypt' };
+    ? { explore: 'الصفحات', company: 'الشركة', contact: 'تواصل معنا', follow: 'تابع عقارات السادات', followBody: 'ابقَ على اطلاع بأحدث العروض والأخبار', privacy: 'سياسة الخصوصية', legal: 'سياسة الخصوصية · الشروط والأحكام', copyright: '© 2026 منصة السادات للعقارات — جميع الحقوق محفوظة', mobileDescription: 'بوابتك الموثوقة لعقارات مدينة السادات — بيعاً وإيجاراً بأعلى موثوقية.', phone: '01001234567', whatsapp: 'واتساب متاح 24/7', address: 'مدينة السادات، مصر' }
+    : { explore: 'Pages', company: 'Company', contact: 'Contact us', follow: 'Follow Sadat Real Estate', followBody: 'Stay informed about the latest listings and news', privacy: 'Privacy policy', legal: 'Privacy policy · Terms and conditions', copyright: '© 2026 Sadat Real Estate — All rights reserved', mobileDescription: 'Your trusted gateway to Sadat City real estate — sales and rentals with confidence.', phone: '01001234567', whatsapp: 'WhatsApp available 24/7', address: 'Sadat City, Egypt' };
   const nav = locale === 'ar'
     ? { ...copy.nav, community: '\u0627\u0644\u0643\u0648\u0645\u064a\u0648\u0646\u062a\u064a', about: '\u0645\u0646 \u0646\u062d\u0646', team: '\u0641\u0631\u064a\u0642 \u0627\u0644\u0639\u0645\u0644' }
     : copy.nav;
   return (
     <footer className="public-homepage__footer public-site-footer">
-      <div className="public-site-footer__brand">
-        <img className="public-site-footer__logo" src="/assets/sadat-real-estate-logo.png" alt="" width={636} height={557} decoding="async" loading="lazy" />
-        <p>{footerDescription}</p>
-      </div>
-      <div>
-        <p className="public-homepage__footer-title">{labels.explore}</p>
-        <div className="public-homepage__footer-links">
-          <a href="/properties">{nav.properties}</a>
-          <a href="/developers">{nav.developers}</a>
-          <a href="/articles">{nav.articles}</a>
-          <a href="/community">{nav.community}</a>
+      <style>{PUBLIC_SITE_FOOTER_RESPONSIVE_CSS}</style>
+      <div className="public-site-footer__main">
+        <div className="public-site-footer__brand">
+          <img className="public-site-footer__logo" src="/assets/sadat-real-estate-logo.png" alt="" width={636} height={557} decoding="async" loading="lazy" />
+          <p><span className="public-site-footer__desktop-description">{footerDescription}</span><span className="public-site-footer__mobile-description">{labels.mobileDescription}</span></p>
         </div>
-      </div>
-      <div>
-        <p className="public-homepage__footer-title">{labels.company}</p>
-        <div className="public-homepage__footer-links">
-          <a href="/about">{nav.about}</a>
-          <a href="/team">{nav.team}</a>
+        <div>
+          <p className="public-homepage__footer-title">{labels.explore}</p>
+          <div className="public-homepage__footer-links">
+            <a href={`/properties?lang=${locale}`}>{nav.properties}</a>
+            <a href={`/developers?lang=${locale}`}>{nav.developers}</a>
+            <a href={`/articles?lang=${locale}`}>{nav.articles}</a>
+            <a href={`/community?lang=${locale}`}>{nav.community}</a>
+          </div>
         </div>
-      </div>
-      <div>
-        <p className="public-homepage__footer-title">{labels.contact}</p>
-        <div className="public-homepage__footer-links">
-          <a href={`tel:${labels.phone}`}>{labels.phone}</a>
-          <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer">{labels.whatsapp}</a>
-          <span>{labels.address}</span>
+        <div>
+          <p className="public-homepage__footer-title">{labels.company}</p>
+          <div className="public-homepage__footer-links">
+            <a href={`/about?lang=${locale}`}>{nav.about}</a>
+            <a href={`/team?lang=${locale}`}>{nav.team}</a>
+            <span className="public-site-footer__mobile-policy">{labels.privacy}</span>
+          </div>
+        </div>
+        <div>
+          <p className="public-homepage__footer-title">{labels.contact}</p>
+          <div className="public-homepage__footer-links public-site-footer__contact-links">
+            <a href={`tel:${labels.phone}`}>{labels.phone}<img src="/assets/figma/public-footer-phone.svg" alt="" /></a>
+            <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer">{labels.whatsapp}<img src="/assets/figma/public-footer-whatsapp.svg" alt="" /></a>
+            <span>{labels.address}<img src="/assets/figma/public-footer-location.svg" alt="" /></span>
+          </div>
         </div>
       </div>
       <div className="public-site-footer__follow">
-        <div><strong>{labels.follow}</strong><span>{labels.followBody}</span></div>
-        <div className="public-site-footer__social" aria-label="social links">
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3.31 0-5 1.69-5 5v3H6v4h3v4h4v-4h3l1-4h-4V9c0-.67.33-1 1-1Z" /></svg></a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4" /><circle cx="12" cy="12" r="3.5" /><circle cx="17.25" cy="6.75" r=".75" fill="currentColor" stroke="none" /></svg></a>
-          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3" /><path d="m10 9 5 3-5 3Z" fill="currentColor" stroke="none" /></svg></a>
-          <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4v10.2a3.8 3.8 0 1 1-3-3.7V14a1.8 1.8 0 1 0 1 1.7V4h3c.3 1.7 1.3 2.8 3 3.2v3c-1.1-.1-2.1-.5-3-1.1V14a4.8 4.8 0 1 1-5-4.8V4Z" fill="currentColor" stroke="none" /></svg></a>
-          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8.5V18H3V8.5h3ZM4.5 3A1.75 1.75 0 1 1 4.5 6.5 1.75 1.75 0 0 1 4.5 3ZM8 8.5h2.9v1.3h.1c.4-.8 1.4-1.7 3-1.7 3.2 0 3.8 2.1 3.8 4.9V18h-3v-4.4c0-1.1 0-2.6-1.6-2.6s-1.9 1.2-1.9 2.5V18H8V8.5Z" fill="currentColor" stroke="none" /></svg></a>
-          <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.9L3.5 20.5l4.2-1.1A8.5 8.5 0 1 0 12 3.5Z" /><path d="M9.2 8.7c.2-.3.4-.3.7-.3h.5c.2 0 .4.1.5.4l.7 1.6c.1.2.1.4-.1.6l-.5.6c.5 1 1.3 1.7 2.4 2.2l.7-.7c.2-.2.4-.2.7-.1l1.5.7c.3.1.4.3.3.6-.2.8-.8 1.3-1.6 1.4-1.2.1-3-.8-4.4-2.1-1.3-1.2-2.3-2.8-2.2-4.1 0-.3.2-.6.5-.8Z" fill="currentColor" stroke="none" /></svg></a>
+        <div className="public-site-footer__follow-inner">
+          <div className="public-site-footer__follow-copy"><strong>{labels.follow}</strong><span>{labels.followBody}</span></div>
+          <div className="public-site-footer__social" aria-label="social links">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3.31 0-5 1.69-5 5v3H6v4h3v4h4v-4h3l1-4h-4V9c0-.67.33-1 1-1Z" /></svg></a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4" /><circle cx="12" cy="12" r="3.5" /><circle cx="17.25" cy="6.75" r=".75" fill="currentColor" stroke="none" /></svg></a>
+            <a className="public-site-footer__mobile-social" href="https://x.com" target="_blank" rel="noopener noreferrer" aria-label="X"><img src="/assets/figma/public-footer-x.svg" alt="" /></a>
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3" /><path d="m10 9 5 3-5 3Z" fill="currentColor" stroke="none" /></svg></a>
+            <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4v10.2a3.8 3.8 0 1 1-3-3.7V14a1.8 1.8 0 1 0 1 1.7V4h3c.3 1.7 1.3 2.8 3 3.2v3c-1.1-.1-2.1-.5-3-1.1V14a4.8 4.8 0 1 1-5-4.8V4Z" fill="currentColor" stroke="none" /></svg></a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8.5V18H3V8.5h3ZM4.5 3A1.75 1.75 0 1 1 4.5 6.5 1.75 1.75 0 0 1 4.5 3ZM8 8.5h2.9v1.3h.1c.4-.8 1.4-1.7 3-1.7 3.2 0 3.8 2.1 3.8 4.9V18h-3v-4.4c0-1.1 0-2.6-1.6-2.6s-1.9 1.2-1.9 2.5V18H8V8.5Z" fill="currentColor" stroke="none" /></svg></a>
+            <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.9L3.5 20.5l4.2-1.1A8.5 8.5 0 1 0 12 3.5Z" /><path d="M9.2 8.7c.2-.3.4-.3.7-.3h.5c.2 0 .4.1.5.4l.7 1.6c.1.2.1.4-.1.6l-.5.6c.5 1 1.3 1.7 2.4 2.2l.7-.7c.2-.2.4-.2.7-.1l1.5.7c.3.1.4.3.3.6-.2.8-.8 1.3-1.6 1.4-1.2.1-3-.8-4.4-2.1-1.3-1.2-2.3-2.8-2.2-4.1 0-.3.2-.6.5-.8Z" fill="currentColor" stroke="none" /></svg></a>
+          </div>
         </div>
       </div>
       <div className="public-site-footer__bottom">
-        <span>{labels.copyright}</span>
-        <span>{labels.legal}</span>
+        <span>{labels.copyright}<span className="public-site-footer__desktop-legal"> · {labels.legal}</span></span>
       </div>
     </footer>
   );

@@ -1556,44 +1556,55 @@
 }
 
 .public-homepage__footer {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: var(--space-3xl);
-  padding: clamp(var(--space-2xl), 6vw, var(--space-4xl)) min(8vw, 10rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  inline-size: 100%;
+  padding: 3rem 1rem 2rem;
   color: var(--color-on-brand);
   background: var(--color-brand-secondary);
 }
 
-.public-site-footer {
-  grid-template-columns: 1.5fr repeat(3, 1fr);
-  row-gap: 0;
+.public-site-footer__main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  inline-size: 100%;
 }
 
 .public-site-footer__logo {
   display: block;
-  inline-size: 5rem;
+  inline-size: 6.25rem;
   block-size: 4.375rem;
-  margin-block-end: var(--space-md);
+  margin-block-end: 1rem;
   object-fit: contain;
 }
 
 .public-site-footer__brand {
-  max-inline-size: 24rem;
+  max-inline-size: none;
+}
+
+.public-site-footer__brand>p {
+  color: rgb(255 255 255 / 0.6);
+  font-size: 0.8125rem;
+  line-height: normal;
+  text-align: start;
 }
 
 .public-site-footer__follow {
-  display: flex;
-  grid-column: 1 / -1;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-lg);
-  padding-block: 1.25rem;
-  border-block-start: 1px solid rgb(255 255 255 / 0.16);
+  inline-size: 100%;
+  margin-block-start: 1.25rem;
 }
 
-.public-site-footer__follow>div:first-child {
-  display: grid;
-  gap: 0.25rem;
+.public-site-footer__follow-inner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  inline-size: 100%;
+}
+
+.public-site-footer__follow-copy {
+  display: none;
 }
 
 .public-site-footer__follow span {
@@ -1609,8 +1620,8 @@
 
 .public-site-footer__social a {
   display: inline-grid;
-  inline-size: 2.25rem;
-  block-size: 2.25rem;
+  inline-size: 1.875rem;
+  block-size: 1.875rem;
   place-items: center;
   color: rgb(255 255 255 / 0.75);
   background: rgb(255 255 255 / 0.11);
@@ -1620,8 +1631,8 @@
 }
 
 .public-site-footer__social svg {
-  inline-size: 1rem;
-  block-size: 1rem;
+  inline-size: 0.875rem;
+  block-size: 0.875rem;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -1634,27 +1645,49 @@
   border-color: #159a59;
 }
 
+.public-site-footer__social img { inline-size: 0.875rem; block-size: 0.875rem; }
+
+.public-site-footer__contact-links a,
+.public-site-footer__contact-links span { display: flex; align-items: center; gap: 0.5rem; }
+
+.public-site-footer__contact-links img { display: none; inline-size: 0.8125rem; block-size: 0.8125rem; }
+
+.public-site-footer__social a:nth-child(n+4),
+.public-site-footer__contact-links a:nth-child(2) { display: none; }
+
 .public-site-footer__bottom {
-  display: flex;
-  grid-column: 1 / -1;
-  justify-content: space-between;
-  gap: var(--space-lg);
-  padding-block: 1rem 0;
-  color: rgb(255 255 255 / 0.64);
-  border-block-start: 1px solid rgb(255 255 255 / 0.16);
-  font-size: var(--font-size-small);
+  display: block;
+  inline-size: 100%;
+  margin-block-start: 2rem;
+  padding: 2rem 0 0;
+  color: rgb(255 255 255 / 0.4);
+  border-block-start: 1px solid rgb(255 255 255 / 0.1);
+  font-size: 0.75rem;
+  line-height: normal;
+  text-align: center;
 }
+
+.public-site-footer__desktop-description,
+.public-site-footer__desktop-legal { display: none; }
+
+.public-site-footer__mobile-description,
+.public-site-footer__mobile-policy { display: inline; }
 
 .public-homepage__footer-links {
   align-items: flex-start;
   flex-direction: column;
-  gap: var(--space-sm);
-  margin-block-start: var(--space-md);
+  gap: 0.75rem;
+  margin-block-start: 0.75rem;
 }
 
-.public-homepage__footer a {
-  color: rgb(255 255 255 / 0.84);
+.public-homepage__footer a,
+.public-homepage__footer-links span {
+  color: rgb(255 255 255 / 0.7);
+  font-size: 0.8125rem;
+  font-weight: 400;
 }
+
+.public-homepage__footer .public-homepage__footer-title { color: var(--color-brand-accent); }
 
 .public-homepage__state[data-state] {
   display: grid;
@@ -2016,85 +2049,6 @@
 
   .public-homepage__content-card>img {
     block-size: 13rem;
-  }
-
-  .public-homepage__footer {
-    block-size: 25.875rem;
-    min-block-size: 25.875rem;
-    grid-template-rows: 13.5rem 5.5625rem 3.3125rem;
-    padding-bottom: 0;
-    padding: 3.5rem max(calc((100vw - 80rem) / 2 + 1.5rem), 2.5rem) 0;
-    margin-block-start: 5rem;
-  }
-
-  /* The desktop Figma footer is a 1,280px shell with 24px inner padding:
-     four 284px columns separated by 32px. The public footer keeps the same
-     grid contract while remaining fluid below the canonical frame width. */
-  .public-site-footer {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    column-gap: 2rem;
-    row-gap: 0;
-  }
-
-  .public-site-footer__logo {
-    inline-size: 10rem;
-    block-size: 7.0625rem;
-    margin-block-end: 1rem;
-  }
-
-  .public-site-footer__brand {
-    inline-size: 100%;
-    max-inline-size: none;
-  }
-
-  .public-site-footer__brand>p {
-    inline-size: min(16.625rem, 100%);
-    margin-inline: auto;
-    padding-block-start: 1rem;
-    color: rgb(255 255 255 / 0.6);
-    font-size: 0.875rem;
-    line-height: 1.625;
-    text-align: center;
-  }
-
-  .public-site-footer__follow {
-    padding-block: 1.5rem;
-  }
-
-  .public-site-footer__follow strong {
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-  }
-
-  .public-site-footer__follow span {
-    display: block;
-    padding-block-start: 0.25rem;
-    color: rgb(255 255 255 / 0.4);
-    font-size: 0.75rem;
-    line-height: 1rem;
-  }
-
-  .public-site-footer__social {
-    gap: 0.625rem;
-  }
-
-  .public-site-footer__social a {
-    inline-size: 2.5rem;
-    block-size: 2.5rem;
-    border-radius: 1.125rem;
-  }
-
-  .public-site-footer__social svg {
-    inline-size: 1.25rem;
-    block-size: 1.25rem;
-  }
-
-  .public-site-footer__bottom {
-    align-items: flex-start;
-    padding: 1.0625rem 0 1rem;
-    color: rgb(255 255 255 / 0.4);
-    font-size: 0.875rem;
-    line-height: 1.25rem;
   }
 
   .public-homepage__platform-callout {

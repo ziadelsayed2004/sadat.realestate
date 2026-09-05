@@ -1,8 +1,7 @@
 @media (min-width: 1051px) {
   .public-developer-directory > .public-site-footer,
   .public-developer-profile > .public-site-footer {
-    grid-template-rows: 13.5rem 5.5625rem 3.3125rem;
-    padding-bottom: 0;
+    min-block-size: 25.875rem;
   }
 }
 
