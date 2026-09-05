@@ -1,0 +1,1380 @@
+{
+  "generatedAt": "2026-09-05T13:17:35.112Z",
+  "scope": "Real local provider API, synthetic broker, injected session bootstrap; layout/read-only route audit, not Figma parity or mutation journeys",
+  "rows": [
+    {
+      "route": "/provider",
+      "locale": "ar",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "rtl",
+      "headings": [],
+      "state": "error",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/application/status",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/properties",
+      "locale": "ar",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "rtl",
+      "headings": [
+        "عقاراتي"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/properties",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/projects",
+      "locale": "ar",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "rtl",
+      "headings": [
+        "المشاريع"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/projects",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/customer-requests",
+      "locale": "ar",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "rtl",
+      "headings": [
+        "طلبات العملاء"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/customer-requests",
+          "status": 200
+        }
+      ],
+      "failures": [],
+      "screenshot": "ar-desktop-3.png"
+    },
+    {
+      "route": "/provider/viewings",
+      "locale": "ar",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "rtl",
+      "headings": [
+        "مواعيد المعاينات"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/viewings",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/ads",
+      "locale": "ar",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "rtl",
+      "headings": [
+        "طلبات الإعلان"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/ads",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/commission",
+      "locale": "ar",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "rtl",
+      "headings": [
+        "العمولة"
+      ],
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/commission",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/notifications",
+      "locale": "ar",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "rtl",
+      "headings": [
+        "لا توجد إشعارات"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/notifications",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=account",
+      "locale": "ar",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "rtl",
+      "headings": [
+        "الإعدادات غير متاحة"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=contact",
+      "locale": "ar",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "rtl",
+      "headings": [
+        "الإعدادات غير متاحة"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=security",
+      "locale": "ar",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "rtl",
+      "headings": [
+        "الإعدادات غير متاحة"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider",
+      "locale": "ar",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "rtl",
+      "headings": [],
+      "state": "error",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/application/status",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/properties",
+      "locale": "ar",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "rtl",
+      "headings": [
+        "عقاراتي"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/properties",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/projects",
+      "locale": "ar",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "rtl",
+      "headings": [
+        "المشاريع"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/projects",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/customer-requests",
+      "locale": "ar",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "rtl",
+      "headings": [
+        "طلبات العملاء"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/customer-requests",
+          "status": 200
+        }
+      ],
+      "failures": [],
+      "screenshot": "ar-tablet-3.png"
+    },
+    {
+      "route": "/provider/viewings",
+      "locale": "ar",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "rtl",
+      "headings": [
+        "مواعيد المعاينات"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/viewings",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/ads",
+      "locale": "ar",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "rtl",
+      "headings": [
+        "طلبات الإعلان"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/ads",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/commission",
+      "locale": "ar",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "rtl",
+      "headings": [
+        "العمولة"
+      ],
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/commission",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/notifications",
+      "locale": "ar",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "rtl",
+      "headings": [
+        "لا توجد إشعارات"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/notifications",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=account",
+      "locale": "ar",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "rtl",
+      "headings": [
+        "الإعدادات غير متاحة"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=contact",
+      "locale": "ar",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "rtl",
+      "headings": [
+        "الإعدادات غير متاحة"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=security",
+      "locale": "ar",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "rtl",
+      "headings": [
+        "الإعدادات غير متاحة"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider",
+      "locale": "ar",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "rtl",
+      "headings": [],
+      "state": "error",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/application/status",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/properties",
+      "locale": "ar",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "rtl",
+      "headings": [
+        "عقاراتي"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/properties",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/projects",
+      "locale": "ar",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "rtl",
+      "headings": [
+        "المشاريع"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/projects",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/customer-requests",
+      "locale": "ar",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "rtl",
+      "headings": [
+        "طلبات العملاء"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/customer-requests",
+          "status": 200
+        }
+      ],
+      "failures": [],
+      "screenshot": "ar-mobile-3.png"
+    },
+    {
+      "route": "/provider/viewings",
+      "locale": "ar",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "rtl",
+      "headings": [
+        "مواعيد المعاينات"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/viewings",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/ads",
+      "locale": "ar",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "rtl",
+      "headings": [
+        "طلبات الإعلان"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/ads",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/commission",
+      "locale": "ar",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "rtl",
+      "headings": [
+        "العمولة"
+      ],
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/commission",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/notifications",
+      "locale": "ar",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "rtl",
+      "headings": [
+        "لا توجد إشعارات"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/notifications",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=account",
+      "locale": "ar",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "rtl",
+      "headings": [
+        "الإعدادات غير متاحة"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=contact",
+      "locale": "ar",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "rtl",
+      "headings": [
+        "الإعدادات غير متاحة"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=security",
+      "locale": "ar",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "rtl",
+      "headings": [
+        "الإعدادات غير متاحة"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider",
+      "locale": "en",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "ltr",
+      "headings": [],
+      "state": "error",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/application/status",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/properties",
+      "locale": "en",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "ltr",
+      "headings": [
+        "My properties"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/properties",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/projects",
+      "locale": "en",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "ltr",
+      "headings": [
+        "Projects"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/projects",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/customer-requests",
+      "locale": "en",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "ltr",
+      "headings": [
+        "Customer requests"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/customer-requests",
+          "status": 200
+        }
+      ],
+      "failures": [],
+      "screenshot": "en-desktop-3.png"
+    },
+    {
+      "route": "/provider/viewings",
+      "locale": "en",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "ltr",
+      "headings": [
+        "Viewing appointments"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/viewings",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/ads",
+      "locale": "en",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "ltr",
+      "headings": [
+        "Advertising requests"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/ads",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/commission",
+      "locale": "en",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "ltr",
+      "headings": [
+        "Commission"
+      ],
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/commission",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/notifications",
+      "locale": "en",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "ltr",
+      "headings": [
+        "No notifications"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/notifications",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=account",
+      "locale": "en",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "ltr",
+      "headings": [
+        "Settings unavailable"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=contact",
+      "locale": "en",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "ltr",
+      "headings": [
+        "Settings unavailable"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=security",
+      "locale": "en",
+      "viewport": "desktop",
+      "width": 1577,
+      "documentWidth": 1577,
+      "direction": "ltr",
+      "headings": [
+        "Settings unavailable"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider",
+      "locale": "en",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "ltr",
+      "headings": [],
+      "state": "error",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/application/status",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/properties",
+      "locale": "en",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "ltr",
+      "headings": [
+        "My properties"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/properties",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/projects",
+      "locale": "en",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "ltr",
+      "headings": [
+        "Projects"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/projects",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/customer-requests",
+      "locale": "en",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "ltr",
+      "headings": [
+        "Customer requests"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/customer-requests",
+          "status": 200
+        }
+      ],
+      "failures": [],
+      "screenshot": "en-tablet-3.png"
+    },
+    {
+      "route": "/provider/viewings",
+      "locale": "en",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "ltr",
+      "headings": [
+        "Viewing appointments"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/viewings",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/ads",
+      "locale": "en",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "ltr",
+      "headings": [
+        "Advertising requests"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/ads",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/commission",
+      "locale": "en",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "ltr",
+      "headings": [
+        "Commission"
+      ],
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/commission",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/notifications",
+      "locale": "en",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "ltr",
+      "headings": [
+        "No notifications"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/notifications",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=account",
+      "locale": "en",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "ltr",
+      "headings": [
+        "Settings unavailable"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=contact",
+      "locale": "en",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "ltr",
+      "headings": [
+        "Settings unavailable"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=security",
+      "locale": "en",
+      "viewport": "tablet",
+      "width": 768,
+      "documentWidth": 768,
+      "direction": "ltr",
+      "headings": [
+        "Settings unavailable"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider",
+      "locale": "en",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "ltr",
+      "headings": [],
+      "state": "error",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/application/status",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/properties",
+      "locale": "en",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "ltr",
+      "headings": [
+        "My properties"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/properties",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/projects",
+      "locale": "en",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "ltr",
+      "headings": [
+        "Projects"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/projects",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/customer-requests",
+      "locale": "en",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "ltr",
+      "headings": [
+        "Customer requests"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/customer-requests",
+          "status": 200
+        }
+      ],
+      "failures": [],
+      "screenshot": "en-mobile-3.png"
+    },
+    {
+      "route": "/provider/viewings",
+      "locale": "en",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "ltr",
+      "headings": [
+        "Viewing appointments"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/viewings",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/ads",
+      "locale": "en",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "ltr",
+      "headings": [
+        "Advertising requests"
+      ],
+      "state": "default",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/ads",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/commission",
+      "locale": "en",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "ltr",
+      "headings": [
+        "Commission"
+      ],
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/commission",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/notifications",
+      "locale": "en",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "ltr",
+      "headings": [
+        "No notifications"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/notifications",
+          "status": 200
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=account",
+      "locale": "en",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "ltr",
+      "headings": [
+        "Settings unavailable"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=contact",
+      "locale": "en",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "ltr",
+      "headings": [
+        "Settings unavailable"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    },
+    {
+      "route": "/provider/settings?tab=security",
+      "locale": "en",
+      "viewport": "mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "direction": "ltr",
+      "headings": [
+        "Settings unavailable"
+      ],
+      "state": "empty",
+      "activeLinks": 1,
+      "overflow": false,
+      "apiResponses": [
+        {
+          "path": "/api/v1/provider/settings",
+          "status": 404
+        }
+      ],
+      "failures": []
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import { Types, type Connection } from 'mongoose';
 import { argon2id, hash as argon2Hash } from 'argon2';
 import type { AppEnvironment } from '../config/environment.js';
 import { isSeedEnvironmentAllowed } from './environment.js';
+import { PROVIDER_REQUIREMENT_VERSION, providerRequirementSnapshot } from '../provider/requirements.js';
 
 export interface DevelopmentSeedStep {
   id: string;
@@ -1871,6 +1872,39 @@ export const FIGMA_PUBLIC_TEAM_SEED_STEP: DevelopmentSeedStep = {
   }
 };
 
+// Restore the application side of the existing synthetic broker identity. Never
+// change an existing application or attach a fixture to a non-synthetic account.
+export const SYNTHETIC_BROKER_APPLICATION_SEED_STEP: DevelopmentSeedStep = {
+  id: 'local-broker-application-v22',
+  async run(connection) {
+    const user = await connection.collection('users').findOne({
+      _id: ids.brokerUser, synthetic: true, normalizedEmail: 'broker.demo@example.invalid',
+      roleType: 'provider', status: 'verified'
+    });
+    const profile = await connection.collection('provider_profiles').findOne({
+      _id: ids.brokerProfile, userId: ids.brokerUser, synthetic: true,
+      providerType: 'individual_broker', status: 'approved'
+    });
+    if (!user || !profile) throw new Error('SYNTHETIC_BROKER_APPLICATION_SOURCE_MISSING');
+    await connection.collection('provider_applications').updateOne(
+      { userId: ids.brokerUser },
+      { $setOnInsert: {
+        synthetic: true, seedKey: 'local-broker-application-v22',
+        userId: ids.brokerUser, providerType: 'individual_broker', status: 'approved',
+        accountOwnerFullName: 'Demo Broker', displayName: 'Demo Broker',
+        email: 'broker.demo@example.invalid', whatsappNumber: '+201000000013',
+        primaryLocationId: ids.location, serviceAreaIds: [ids.location], preferredLocale: 'ar',
+        termsAcceptedAt: SEEDED_AT, privacyAcceptedAt: SEEDED_AT,
+        requirementVersion: PROVIDER_REQUIREMENT_VERSION,
+        requirementsSnapshot: providerRequirementSnapshot('individual_broker', undefined),
+        statusChangedAt: SEEDED_AT, submittedAt: SEEDED_AT,
+        createdAt: SEEDED_AT, updatedAt: SEEDED_AT, version: 0
+      } },
+      { upsert: true }
+    );
+  }
+};
+
 export const DEVELOPMENT_SEED_STEPS: readonly DevelopmentSeedStep[] = [
   SYNTHETIC_SHOWCASE_SEED_STEP,
   SYNTHETIC_WORKFLOW_SEED_STEP,
@@ -1890,7 +1924,8 @@ export const DEVELOPMENT_SEED_STEPS: readonly DevelopmentSeedStep[] = [
   FIGMA_PUBLIC_ARTICLE_DATES_SEED_STEP,
   FIGMA_PUBLIC_COMMUNITY_SEED_STEP,
   FIGMA_PUBLIC_TEAM_SEED_STEP,
-  AUTH_BUYER_SEED_STEP
+  AUTH_BUYER_SEED_STEP,
+  SYNTHETIC_BROKER_APPLICATION_SEED_STEP
 ];
 
 export function assertDevelopmentSeedAllowed(environment: AppEnvironment): void {

@@ -8,8 +8,42 @@ import {
   FIGMA_PUBLIC_LISTING_SEED_STEP,
   runDevelopmentSeed,
   SYNTHETIC_SHOWCASE_SEED_STEP,
-  SYNTHETIC_WORKFLOW_SEED_STEP
+  SYNTHETIC_WORKFLOW_SEED_STEP,
+  SYNTHETIC_BROKER_APPLICATION_SEED_STEP
 } from '../../src/modules/database/seed.js';
+
+test('broker application fixture is insert-only and requires both synthetic identity records', async () => {
+  const reads: Array<{ collection: string; filter: Record<string, unknown> }> = [];
+  const writes: Array<{ filter: Record<string, unknown>; update: Record<string, Record<string, unknown>> }> = [];
+  let sourcePresent = true;
+  const connection = {
+    collection(name: string) {
+      return {
+        async findOne(filter: Record<string, unknown>) {
+          reads.push({ collection: name, filter });
+          return sourcePresent ? filter : null;
+        },
+        async updateOne(filter: Record<string, unknown>, update: Record<string, Record<string, unknown>>) {
+          assert.equal(name, 'provider_applications');
+          writes.push({ filter, update });
+        }
+      };
+    }
+  } as unknown as Connection;
+  await SYNTHETIC_BROKER_APPLICATION_SEED_STEP.run(connection);
+  assert.equal(writes.length, 1);
+  assert.ok(reads.every(read => read.filter.synthetic === true));
+  assert.deepEqual(Object.keys(writes[0]!.update), ['$setOnInsert']);
+  const application = writes[0]!.update.$setOnInsert!;
+  assert.equal(application.synthetic, true);
+  assert.equal(application.providerType, 'individual_broker');
+  assert.equal(application.status, 'approved');
+  assert.equal(String(writes[0]!.filter.userId), String(application.userId));
+  assert.ok(application.requirementsSnapshot);
+  sourcePresent = false;
+  await assert.rejects(SYNTHETIC_BROKER_APPLICATION_SEED_STEP.run(connection), /SOURCE_MISSING/);
+  assert.equal(writes.length, 1);
+});
 
 test('public About seed repairs the existing local intro with canonical copy', async () => {
   let receivedFilter: Record<string, unknown> | undefined;

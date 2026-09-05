@@ -1,0 +1,7 @@
+{
+  "scope": "shared ProviderNavigation, verified inside PRV-16",
+  "fixes": ["Reveal active link within horizontal navigation on mobile/tablet and resize", "Expose keyboard-accessible mobile logout control with at least 44px hit width"],
+  "tests": { "componentPassed": 20, "browserPassed": 6, "locales": ["ar", "en"], "devices": ["desktop", "tablet", "mobile"], "typecheck": "passed", "fullBuild": "passed" },
+  "limitations": ["Logout network request not exercised in this test", "Not a full provider route sweep", "No mobile Figma pixel-parity claim"],
+  "complete": false
+}
