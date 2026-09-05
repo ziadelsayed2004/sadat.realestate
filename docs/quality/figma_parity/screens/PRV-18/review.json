@@ -22,18 +22,21 @@
     "Added stable localized group heading IDs for accessible aria-labelledby relationships.",
     "Preserved contract-defined status actions, expected-version transitions, and provider authorization."
   ],
-  "externalDifference": "The current ViewingData includes an optional published-property projection. Provider cards now render its localized name and location, with a safe-ID fallback. Customer display names are still unavailable. Current responsive visual parity remains unverified; the historical screenshots below predate this change.",
+  "externalDifference": "Property names, locations and customer names are now connected. Exact canonical visual parity remains unproven; the historical screenshots below predate these changes. The prior customer-name API prerequisite is resolved.",
   "continuation20260905": {
     "source": "Live canonical get_design_context for 6017:21613",
     "repair": "Connected localized property name and location to appointment cards and localized action labels.",
     "verification": "provider-viewings.vitest.test.tsx: 11 tests passed, covering Arabic/English enriched cards, missing-property fallback, and existing versioned actions.",
     "responsiveVerification": "Six Playwright cases passed on desktop/tablet/mobile in Arabic and English after rebuilding and restarting local runtime. Enriched card content, document/card horizontal bounds and reschedule dialog/date input visibility checked. Arabic desktop and mobile screenshots inspected. Fixtures mock authentication and viewing data; this does not prove end-to-end customer identity or exact Figma parity.",
     "responsiveCommand": "WEB_BASE_URL=http://127.0.0.1:4173 playwright test tests/e2e/provider-viewings.spec.ts --grep 'enriched appointments' --project=desktop-ar --project=desktop-en --project=tablet-ar --project=tablet-en --project=mobile-ar --project=mobile-en",
-    "remaining": "Customer display names and exact canonical visual parity. Responsive behavior is verified for the enriched fixture."
+    "customerVerification": "Local seeded admin viewing endpoint returned HTTP 200 with customerName and property. Profile lookup projects only userId, firstName and lastName. Service test proves an unrelated provider cannot list, get or transition the named appointment. All six responsive browser cases passed again with customerName asserted. Full build, web typecheck and local smoke passed.",
+    "layoutContinuation": "Customer name promoted above property/location; group date and actions aligned to logical start; heading reduced to canonical 20px; outer list panel chrome removed and card padding reduced to 16px. Removed obsolete table-only CSS after confirming no TSX consumers. Full build, 11 unit tests and six responsive browser cases passed; Arabic desktop capture inspected.",
+    "timeTileContinuation": "Added a 48px compact time tile beside the customer, formatted in the viewing timezone with localized day period and preserved minutes. Accessible full timestamp retained on time element; duplicate date/time detail row removed. Full build, lint, 11 unit tests and six responsive browser cases passed; Arabic mobile screenshot inspected.",
+    "remaining": "Exact canonical visual parity: heading/filter arrangement and remaining card detail spacing. Responsive behavior is verified for the enriched fixture including customer name and time tile."
   },
   "externalPrerequisite": {
     "owner": "Provider contracts/API owner",
-    "nextAction": "Provide an authorized customer display-name projection, then rerun the AR/EN visual gate including responsive sizes. Published-property name and location are now connected."
+    "nextAction": "Customer-name projection prerequisite resolved locally. Continue canonical visual comparison and remaining layout repairs."
   },
   "visualDiff": {
     "ar": { "expected": "1280px by 843px", "received": "1280px by 878px", "differentPixels": 199589, "ratio": 0.18, "artifact": "diff-final-ar.png" },

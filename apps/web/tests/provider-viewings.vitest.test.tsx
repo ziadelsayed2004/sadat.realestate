@@ -87,7 +87,7 @@ describe('Provider viewing appointments', () => {
     { locale: 'en' as const, enriched: true }
   ])('renders safe provider projections and direction for $locale (enriched: $enriched)', async ({ locale, enriched }) => {
     const property = { id: propertyId, slug: 'viewing-apartment', kind: 'property' as const, name: { ar: 'شقة الحي الأول', en: 'First district apartment' }, locationName: { ar: 'الحي الأول', en: 'First district' }, transactionType: 'sale' as const };
-    const load = vi.fn(async () => enriched ? { ...data, items: [viewing({ property })] } : data);
+    const load = vi.fn(async () => enriched ? { ...data, items: [viewing({ property, customerName: 'Local Customer' })] } : data);
     const result = renderWithLocale(<ProviderViewings locale={locale} session={session} load={load} />, { locale });
     const copy = getProviderViewingsCopy(locale);
     await waitFor(() => expect(screen.getByTestId('provider-viewings-count')).toBeInTheDocument());
@@ -100,7 +100,7 @@ describe('Provider viewing appointments', () => {
       expect(within(rowElement).getByText(property.locationName[locale])).toBeInTheDocument();
       expect(within(rowElement).getByRole('button', { name: `${copy.actions.confirm}: ${property.name[locale]}` })).toBeInTheDocument();
     }
-    expect(within(rowElement).getByText(/Customer reference|مرجع العميل|客户参考/u)).toBeInTheDocument();
+    expect(within(rowElement).getByText(enriched ? 'Local Customer' : /Customer reference|مرجع العميل|客户参考/u)).toBeInTheDocument();
     expect(result.container.querySelector('[data-screen-id="PRV-18"]')).not.toBeNull();
     expect(result.container.textContent).not.toContain(seekerId);
     expect(result.container.textContent).not.toContain(propertyId);

@@ -46,7 +46,7 @@ const copy: Readonly<Record<SupportedLocale, ProviderViewingsCopy>> = {
   ar: {
     eyebrow: 'إدارة المعاينات',
     title: 'مواعيد المعاينات',
-    description: 'راجع مواعيد معاينة العقارات التابعة لك ونفّذ الإجراءات التي يسمح بها النظام.',
+    description: 'مواعيد المعاينة المجدولة والقادمة',
     countSuffix: 'مواعيد',
     filtersLabel: 'تصفية المعاينات',
     statusLabel: 'الحالة',
@@ -71,7 +71,7 @@ const copy: Readonly<Record<SupportedLocale, ProviderViewingsCopy>> = {
   en: {
     eyebrow: 'Viewing management',
     title: 'Viewing appointments',
-    description: 'Review appointments for properties owned by your provider account and use only the actions returned by the API.',
+    description: 'Scheduled and upcoming viewing appointments',
     countSuffix: 'appointments',
     filtersLabel: 'Filter viewing appointments',
     statusLabel: 'Status',

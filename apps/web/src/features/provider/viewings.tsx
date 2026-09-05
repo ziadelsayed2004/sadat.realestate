@@ -182,6 +182,17 @@ function TransitionModal({ viewing, action, copy, saving, error, onClose, onSubm
   );
 }
 
+function ViewingTime({ viewing, locale }: { readonly viewing: ViewingData; readonly locale: SupportedLocale }) {
+  let clock = '—';
+  let period = '';
+  try {
+    const parts = new Intl.DateTimeFormat(locale, { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: viewing.timezone }).formatToParts(new Date(viewing.requestedAt));
+    clock = parts.filter(part => ['hour', 'minute', 'literal'].includes(part.type)).map(part => part.value).join('').trim();
+    period = parts.find(part => part.type === 'dayPeriod')?.value ?? '';
+  } catch { /* Invalid legacy timestamps retain the unavailable label. */ }
+  return <time className="provider-viewings__clock" dateTime={viewing.requestedAt} aria-label={dateLabel(viewing.requestedAt, viewing.timezone, locale)} title={viewing.timezone}><b>{clock}</b><small>{period}</small></time>;
+}
+
 function ViewingCard({ viewing, locale, copy, onAction }: { readonly viewing: ViewingData; readonly locale: SupportedLocale; readonly copy: ProviderViewingsCopy; readonly onAction: (viewing: ViewingData, action: ProviderViewingAction) => void }) {
   const actions = ACTIONS_BY_STATUS[viewing.status];
   const propertyLabel = localizedText(viewing.property?.name, locale) ?? `${copy.propertyReference} ${safeReference(viewing.propertyId)}`;
@@ -189,18 +200,15 @@ function ViewingCard({ viewing, locale, copy, onAction }: { readonly viewing: Vi
   return (
     <article className="provider-viewings__card" data-testid="provider-viewing-row" data-viewing-status={viewing.status}>
       <div className="provider-viewings__card-heading">
+        <ViewingTime viewing={viewing} locale={locale} />
         <div>
-          <strong>{propertyLabel}</strong>
+          <strong>{viewing.customerName ?? `${copy.customerReference} ${safeReference(viewing.seekerId)}`}</strong>
+          <span>{propertyLabel}</span>
           {location ? <span>{location}</span> : null}
-          <span>{copy.customerReference} {safeReference(viewing.seekerId)}</span>
         </div>
         <Badge tone={statusTone(viewing.status)} data-viewing-status-badge={viewing.status}>{copy.statuses[viewing.status]}</Badge>
       </div>
-      <div className="provider-viewings__card-details">
-        <time dateTime={viewing.requestedAt}>{dateLabel(viewing.requestedAt, viewing.timezone, locale)}</time>
-        <code>{viewing.timezone}</code>
-        {viewing.note ? <span className="provider-viewings__note">{copy.note}: {viewing.note}</span> : null}
-      </div>
+      {viewing.note ? <p className="provider-viewings__note">{copy.note}: {viewing.note}</p> : null}
       <div className="provider-viewings__actions">
         {actions.map(action => <Button key={action} size="xs" variant={action === 'cancel' ? 'ghost' : 'secondary'} onClick={() => onAction(viewing, action)} aria-label={`${copy.actions[action]}: ${propertyLabel}`}>{copy.actions[action]}</Button>)}
         {actions.length === 0 ? <span className="provider-viewings__unavailable">{copy.actions.none}</span> : null}
@@ -227,16 +235,13 @@ function ViewingsContent({ data, locale, copy, status, onStatusChange, onApply, 
     <main aria-labelledby="provider-viewings-title">
       <div className="provider-viewings__heading provider-dashboard__heading-row">
         <div>
-          <p className="provider-dashboard__eyebrow">{copy.eyebrow}</p>
           <h1 id="provider-viewings-title">{copy.title}</h1>
           <p>{copy.description}</p>
         </div>
       </div>
-      <section className="provider-viewings__panel" aria-labelledby="provider-viewings-list-title">
-        <div className="provider-dashboard__section-heading">
-          <h2 id="provider-viewings-list-title">{copy.title}</h2>
-          <span className="provider-viewings__count" data-testid="provider-viewings-count">{numberFormat.format(data.total)} {copy.countSuffix}</span>
-        </div>
+      <section className="provider-viewings__panel" aria-label={copy.title}>
+        <details className="provider-viewings__filter-disclosure">
+          <summary>{copy.filtersLabel}<span className="provider-viewings__count" data-testid="provider-viewings-count"> — {numberFormat.format(data.total)} {copy.countSuffix}</span>{status !== 'all' ? ` · ${copy.statuses[status]}` : ''}</summary>
         <form className="provider-viewings__filters" role="search" aria-label={copy.filtersLabel} onSubmit={event => { event.preventDefault(); onApply(); }}>
           <div className="provider-viewings__field">
             <label htmlFor="provider-viewings-status">{copy.statusLabel}</label>
@@ -250,6 +255,7 @@ function ViewingsContent({ data, locale, copy, status, onStatusChange, onApply, 
             <Button type="button" variant="secondary" size="sm" onClick={onClear} disabled={status === 'all'}>{copy.clear}</Button>
           </div>
         </form>
+        </details>
         {data.items.length === 0 ? (
           <div className="provider-viewings__empty" data-state="empty">
             <h3>{copy.emptyTitle}</h3>

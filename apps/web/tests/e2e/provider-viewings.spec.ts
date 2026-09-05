@@ -6,11 +6,19 @@ test('PRV-18 enriched appointments fit every device and open reschedule', async 
   const copy = getProviderViewingsCopy(locale);
   const property = { id: PROPERTY_ID, slug: 'viewing-apartment', kind: 'property', transactionType: 'sale', name: { ar: 'شقة واسعة في الحي الأول بالقرب من الخدمات', en: 'Spacious first district apartment near local services' }, locationName: { ar: 'الحي الأول، مدينة السادات', en: 'First district, Sadat City' } };
   await routeSession(page);
-  await page.route('**/api/v1/provider/viewings**', route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ items: [{ ...viewingFixture(), property }], page: 1, limit: 5, total: 1 }, 'responsive-viewings') }));
+  await page.route('**/api/v1/provider/viewings**', route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ items: [{ ...viewingFixture(), property, customerName: 'Local Customer' }], page: 1, limit: 5, total: 1 }, 'responsive-viewings') }));
   await page.goto(`/provider/viewings?lang=${locale}`);
   const card = page.getByTestId('provider-viewing-row');
   await expect(card.getByText(property.name[locale])).toBeVisible();
   await expect(card.getByText(property.locationName[locale])).toBeVisible();
+  await expect(card.getByText('Local Customer', { exact: true })).toBeVisible();
+  await expect(card.locator('.provider-viewings__clock')).toBeVisible();
+  await expect(card.locator('.provider-viewings__clock')).toHaveAttribute('title', 'Africa/Cairo');
+  await expect(card.locator('.provider-viewings__clock')).toHaveAttribute('datetime', viewingFixture().requestedAt);
+  await expect(page.getByRole('combobox', { name: copy.statusLabel })).not.toBeVisible();
+  await page.locator('.provider-viewings__filter-disclosure summary').click();
+  await expect(page.getByRole('combobox', { name: copy.statusLabel })).toBeVisible();
+  await page.locator('.provider-viewings__filter-disclosure summary').click();
   const fits = () => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1);
   expect(await fits()).toBeTruthy();
   const box = await card.boundingBox();
@@ -113,6 +121,7 @@ test.describe('PRV-18 Provider Viewing Appointments', () => {
     await expect(page.locator('body')).not.toContainText(new RegExp(SEEKER_ID));
     await expect(page.locator('body')).not.toContainText(/assignedTo|internalNotes|auditData|storageKey|accessToken|refreshToken/u);
 
+    await page.locator('.provider-viewings__filter-disclosure summary').click();
     await page.getByRole('combobox', { name: /Status|الحالة|状态/u }).selectOption('confirmed');
     await page.getByRole('button', { name: /Apply|تطبيق|应用/u }).click();
     await expect(page.getByTestId('provider-viewing-row')).toHaveAttribute('data-viewing-status', 'confirmed');

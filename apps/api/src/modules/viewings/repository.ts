@@ -47,7 +47,21 @@ export function createMongooseViewingRepository(connection: Connection): Viewing
   const collection = connection.collection('viewings');
   const properties = connection.collection('properties');
 
-  async function enrich(items: readonly ViewingRecord[]): Promise<ViewingRecord[]> {
+  async function enrich(records: readonly ViewingRecord[]): Promise<ViewingRecord[]> {
+    if (records.length === 0) return [];
+    const profiles = await connection.collection('seeker_profiles').find(
+      { userId: { $in: publicRelatedObjectIds(publicRelatedUnique(records.map(item => item.seekerId))) } },
+      { projection: { userId: 1, firstName: 1, lastName: 1 } }
+    ).toArray();
+    const names = new Map(profiles.flatMap(profile => {
+      const userId = publicRelatedId(profile.userId);
+      const name = [profile.firstName, profile.lastName].filter((part): part is string => typeof part === 'string').map(part => part.trim()).filter(Boolean).join(' ');
+      return userId && name && name.length <= 401 ? [[userId, name] as const] : [];
+    }));
+    const items = records.map(item => {
+      const customerName = names.get(item.seekerId);
+      return customerName ? { ...item, customerName } : item;
+    });
     const propertyIds = publicRelatedUnique(items.map(item => item.propertyId));
     const propertyObjectIds = publicRelatedObjectIds(propertyIds);
     if (propertyObjectIds.length === 0) return [...items];
