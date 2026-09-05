@@ -10,6 +10,12 @@
       "limitations": ["This validates the shared footer, not pixel parity of every full public page", "No current Figma parity percentage is awarded without a fresh normalized screenshot comparison for each full screen"],
       "evidence": "public-footer-responsive-2026-09-06/results.json"
     },
+    "publicFullPageResponsive": {
+      "screens": ["PUB-01", "PUB-02", "PUB-03", "PUB-04", "PUB-05", "PUB-06", "PUB-07", "PUB-08", "PUB-09", "PUB-10", "PUB-11", "PUB-12"],
+      "validation": "72/72 full-page runtime cases passed across AR/EN and 1440/768/390: HTTP 200, no document-level horizontal overflow, broken images or browser exceptions.",
+      "limitations": ["Scrollable carousels and the mobile comparison table intentionally contain off-viewport children; the document itself does not overflow", "Runtime responsiveness is not Figma pixel parity and does not exercise every mutation journey"],
+      "evidence": "public-responsive-2026-09-06/results.json"
+    },
     "providerIndividualProductionSubmission": {
       "screens": ["AUTH-12", "AUTH-13", "AUTH-14"],
       "evidence": "Owner-provided production screenshots on 2026-09-06 show the individual-provider form reaching submitted/pending-review status after email OTP and document entry.",

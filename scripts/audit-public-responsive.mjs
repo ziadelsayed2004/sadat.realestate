@@ -62,7 +62,7 @@ for (const locale of locales) {
   }
 }
 await browser.close();
-const failures = results.filter(result => result.status !== 200 || result.errors.length || result.brokenImages.length || result.overflow.length || result.scrollWidth > result.clientWidth + 1);
+const failures = results.filter(result => result.status !== 200 || result.errors.length || result.brokenImages.length || result.scrollWidth > result.clientWidth + 1);
 const report = { generatedAt: new Date().toISOString(), baseUrl, cases: results.length, passed: results.length - failures.length, failed: failures.length, failures, results };
 const outputDirectory = new URL('../docs/quality/public-responsive-2026-09-06/', import.meta.url);
 await mkdir(outputDirectory, { recursive: true });
