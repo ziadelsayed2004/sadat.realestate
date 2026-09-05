@@ -2,6 +2,11 @@
   align-items: center;
 }
 
+.provider-customer-requests .provider-customer-requests__heading h1 {
+  font-size: 20px;
+  line-height: 28px;
+}
+
 /* Provider foundation state selectors also match Button's data-state attribute. */
 .provider-customer-requests .ui-button[data-state] {
   max-width: none;
@@ -35,12 +40,8 @@
 }
 
 .provider-customer-requests__panel {
-  margin-top: 30px;
-  padding: 24px;
-  border: 1px solid #e2e8f2;
-  border-radius: 18px;
-  background: #fff;
-  box-shadow: 0 12px 32px rgb(35 48 73 / 5%);
+  margin-top: 20px;
+  min-width: 0;
 }
 
 .provider-customer-requests__count {
@@ -57,7 +58,7 @@
   padding: 16px;
   border: 1px solid #e2e8f2;
   border-radius: 14px;
-  background: #f7f9fc;
+  background: #fff;
 }
 
 .provider-customer-requests__field {
@@ -110,14 +111,14 @@
 
 .provider-customer-requests__table {
   width: 100%;
-  min-width: 1180px;
+  min-width: 760px;
   border-collapse: collapse;
   color: #24334f;
 }
 
 .provider-customer-requests__table th,
 .provider-customer-requests__table td {
-  padding: 16px 14px;
+  padding: 12px 10px;
   border-bottom: 1px solid #edf1f6;
   text-align: start;
   vertical-align: middle;
@@ -137,13 +138,13 @@
 
 .provider-customer-requests__identity {
   display: grid;
-  min-width: 180px;
+  min-width: 120px;
   gap: 5px;
 }
 
 .provider-customer-requests__identity strong {
   color: #1b2942;
-  font-size: 1rem;
+  font-size: 0.875rem;
 }
 
 .provider-customer-requests__identity span,
@@ -281,5 +282,16 @@
 @media (max-width: 900px) {
   .provider-customer-requests__form-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .provider-customer-requests__filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .provider-customer-requests__field input,
+  .provider-customer-requests__field select {
+    min-width: 0;
+    width: 100%;
   }
 }

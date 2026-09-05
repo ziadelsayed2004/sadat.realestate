@@ -1,5 +1,10 @@
 {
   "date": "2026-09-05",
+  "followUp": {
+    "status": "implementation_in_progress_not_100_percent",
+    "viewingOwnership": "Local fix: MongoDB creation resolves the owner of an active published property and persists providerId; 7 focused tests and API typecheck passed. Historical orphaned appointments are not migrated; production is not verified.",
+    "PRV16": "Fresh canonical design context read from 6017:21368. Duplicate heading/outer panel removed; compact table, mobile filters, keyboard-scrollable region, and safe localized property title implemented. 12 component tests passed; responsive browser verification pending. No parity percentage awarded."
+  },
   "scope": "131 canonical screen states; local source/evidence audit, not a full fresh visual or production audit",
   "guide": "Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "authentication": "Email + OTP; production success reported by user",

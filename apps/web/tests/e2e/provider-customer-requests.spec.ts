@@ -61,6 +61,25 @@ async function routeRequests(page: import('@playwright/test').Page): Promise<voi
   });
 }
 
+test('PRV-16 responsive layout keeps filters and request actions usable', async ({ page }, testInfo) => {
+  const locale = localeForRequests();
+  await routeSession(page);
+  await routeRequests(page);
+  await page.goto(`/provider/customer-requests?lang=${locale}`);
+  await expect(page.getByTestId(`provider-customer-request-${REQUEST_ID}`)).toBeVisible();
+  const dimensions = await page.evaluate(() => ({ width: innerWidth, content: document.documentElement.scrollWidth }));
+  expect(dimensions.content).toBeLessThanOrEqual(dimensions.width + 1);
+  const filters = page.locator('.provider-customer-requests__filters');
+  await expect(filters).toBeVisible();
+  await page.locator('#provider-customer-requests-status').selectOption('contacted');
+  await filters.locator('button[type="submit"]').click();
+  await expect(page.getByTestId(`provider-customer-request-${REQUEST_ID}`)).toHaveAttribute('data-request-status', 'contacted');
+  const region = page.locator('.provider-customer-requests__table-wrap');
+  await region.focus();
+  await expect(region).toBeFocused();
+  await page.screenshot({ path: testInfo.outputPath(`responsive-${locale}.png`), fullPage: true });
+});
+
 test.describe('PRV-16/PRV-17 Provider Customer Requests', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'screen-id', description: 'PRV-16, PRV-17' });

@@ -76,7 +76,8 @@ function customerName(request: RequestData, unavailable: string): string {
   return name === '' ? unavailable : name;
 }
 
-function relatedLabel(request: RequestData, copy: ProviderCustomerRequestsCopy): string {
+function relatedLabel(request: RequestData, copy: ProviderCustomerRequestsCopy, locale: SupportedLocale): string {
+  if (request.property) return request.property.title[locale] ?? request.property.title.ar;
   if (payloadText(request, 'propertyId') !== undefined || request.propertyId !== undefined) return copy.form.propertyId;
   if (payloadText(request, 'projectId') !== undefined || request.projectId !== undefined) return copy.form.projectId;
   return copy.unavailable;
@@ -236,7 +237,7 @@ function RequestRow({ request, locale, copy, onTransition }: { readonly request:
       </td>
       <td><span>{copy.requestType}</span><small>{copy.source}: {copy.providerSource}</small></td>
       <td><RequestStatusBadge status={request.status} copy={copy} /></td>
-      <td>{relatedLabel(request, copy)}</td>
+      <td>{relatedLabel(request, copy, locale)}</td>
       <td><time dateTime={request.createdAt}>{dateLabel(request.createdAt, locale)}</time></td>
       <td><time dateTime={request.updatedAt}>{dateLabel(request.updatedAt, locale)}</time></td>
       <td>
@@ -272,7 +273,6 @@ function RequestsContent({ data, locale, copy, status, searchInput, query, onSta
     <main aria-labelledby="provider-customer-requests-title">
       <div className="provider-customer-requests__heading provider-dashboard__heading-row">
         <div>
-          <p className="provider-dashboard__eyebrow">{copy.eyebrow}</p>
           <h1 id="provider-customer-requests-title">{copy.title}</h1>
           <p>{copy.description}</p>
         </div>
@@ -280,7 +280,7 @@ function RequestsContent({ data, locale, copy, status, searchInput, query, onSta
       </div>
       <section className="provider-customer-requests__panel" aria-labelledby="provider-customer-requests-list-title">
         <div className="provider-dashboard__section-heading">
-          <h2 id="provider-customer-requests-list-title">{copy.title}</h2>
+          <h2 id="provider-customer-requests-list-title" className="a11y-visually-hidden">{copy.title}</h2>
           <span className="provider-customer-requests__count" data-testid="provider-customer-requests-count">{numberFormat.format(data.total)} {copy.countSuffix}</span>
         </div>
         <form className="provider-customer-requests__filters" role="search" aria-label={copy.filtersLabel} onSubmit={event => { event.preventDefault(); onApply(); }}>
@@ -307,7 +307,7 @@ function RequestsContent({ data, locale, copy, status, searchInput, query, onSta
             {!hasFilters ? <Button onClick={onAdd}>{copy.add}</Button> : null}
           </div>
         ) : (
-          <div className="provider-customer-requests__table-wrap">
+          <div className="provider-customer-requests__table-wrap" role="region" aria-label={copy.title} tabIndex={0}>
             <table className="provider-customer-requests__table">
               <caption className="a11y-visually-hidden">{copy.title}</caption>
               <thead><tr><th scope="col">{copy.columns.customer}</th><th scope="col">{copy.columns.request}</th><th scope="col">{copy.columns.status}</th><th scope="col">{copy.columns.related}</th><th scope="col">{copy.columns.created}</th><th scope="col">{copy.columns.updated}</th><th scope="col">{copy.columns.actions}</th></tr></thead>
