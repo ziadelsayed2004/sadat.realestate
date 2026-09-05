@@ -1,6 +1,6 @@
 {
   "seedId": "fresh-audit-PUB-02-ar-v1",
-  "fixtureKind": "public-list",
+  "fixtureKind": "public-listing",
   "request": {
     "method": "GET",
     "path": "/api/v1/public/properties",

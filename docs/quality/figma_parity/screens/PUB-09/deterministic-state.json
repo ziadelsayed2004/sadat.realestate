@@ -8,7 +8,7 @@
     "direction": "rtl"
   },
   "responseRequestId": "fresh-audit-public-community",
-  "responseSha256": "a54cede97ea5087be2662b225296e5555cfb182576d2ce2919c7fc0eae4b7e75",
+  "responseSha256": "55fa2c457ca4b60b530f3b12c5162fd9ec8247cf7425b7155613d6c5bb3b9496",
   "response": {
     "data": {
       "items": [
@@ -17,6 +17,9 @@
           "title": "ما أفضل حي للسكن بميزانية 2 مليون؟",
           "body": "أنا وعائلتي بنفكر ننقل للسادات، ميزانيتنا حوالي 2 مليون جنيه. فين تنصحوني أشتري؟",
           "createdAt": "2026-08-26T10:00:00+00:00",
+          "category": "question",
+          "likeCount": 24,
+          "dislikeCount": 2,
           "commentCount": 12
         },
         {
@@ -24,6 +27,9 @@
           "title": "تجربتي بعد سنة كاملة في السادات",
           "body": "انتقلت من القاهرة للسادات السنة اللي فاتت وعندي شوية ملاحظات وتجارب.",
           "createdAt": "2026-08-25T10:00:00+00:00",
+          "category": "experience",
+          "likeCount": 31,
+          "dislikeCount": 1,
           "commentCount": 34
         },
         {
@@ -31,6 +37,9 @@
           "title": "نصيحة مهمة لكل من يفكر في الشراء على الخريطة",
           "body": "بعد تجربتي شراء وحدة على الخريطة من مطور محترم، عندي نصائح مهمة جداً.",
           "createdAt": "2026-08-21T10:00:00+00:00",
+          "category": "advice",
+          "likeCount": 42,
+          "dislikeCount": 3,
           "commentCount": 45
         },
         {
@@ -38,6 +47,9 @@
           "title": "مطعم جديد ممتاز في الحي الأول",
           "body": "افتتح مطعم جديد في الحي الأول الأكل فيه ممتاز وأسعار معقولة.",
           "createdAt": "2026-08-24T10:00:00+00:00",
+          "category": "service",
+          "likeCount": 18,
+          "dislikeCount": 0,
           "commentCount": 18
         }
       ],

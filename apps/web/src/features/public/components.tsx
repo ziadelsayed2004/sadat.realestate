@@ -16,6 +16,7 @@ import { CustomSelect, PropertyCard } from '../design_system/index.ts';
 import { LocaleSwitcher, replaceLocaleInUrl } from '../localization/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy, type PublicHomepageCopy } from './copy.ts';
+import { getPublicPropertyListingCopy } from './listing-copy.ts';
 import { defaultPublicHomepageLoader, type PublicHomepageLoader } from './data.ts';
 import { getWhatsAppLink } from '../frontend_foundation/config.ts';
 import {
@@ -244,7 +245,7 @@ const canonicalHomepageContent: ReadonlyArray<PublicHomepageContent> = Object.fr
   }
 ]);
 
-const canonicalHomepageCategories: ReadonlyArray<PublicHomepageCategory> = Object.freeze([
+export const canonicalHomepageCategories: ReadonlyArray<PublicHomepageCategory> = Object.freeze([
   { id: '222222222222222222222222', slug: 'restaurants-cafes', name: { ar: 'مطاعم وكافيهات', en: 'Restaurants and cafés' }, imageUrl: '/assets/canonical/public/category-restaurants-cafes.png', propertyCount: 22, order: 10 },
   { id: '333333333333333333333333', slug: 'showrooms', name: { ar: 'صالات عرض', en: 'Showrooms' }, imageUrl: '/assets/canonical/public/category-showrooms.png', propertyCount: 34, order: 20 },
   { id: '444444444444444444444444', slug: 'full-commercial-building', name: { ar: 'مبنى تجاري كامل', en: 'Full commercial building' }, imageUrl: '/assets/canonical/public/category-full-commercial-building.png', propertyCount: 19, order: 30 },
@@ -255,17 +256,11 @@ const canonicalHomepageCategories: ReadonlyArray<PublicHomepageCategory> = Objec
 ]);
 
 function withCanonicalHomepageCategories(categories: readonly PublicHomepageCategory[]): readonly PublicHomepageCategory[] {
-  if (categories.length >= 7) return categories;
-  const result = [...categories];
-  const slugs = new Set(result.map(category => category.slug));
-  for (const fallback of canonicalHomepageCategories) {
-    if (result.length >= 7) break;
-    if (!slugs.has(fallback.slug)) {
-      result.push(fallback);
-      slugs.add(fallback.slug);
-    }
-  }
-  return result;
+  const bySlug = new Map(categories.map(category => [category.slug, category] as const));
+  return canonicalHomepageCategories.map(fallback => {
+    const current = bySlug.get(fallback.slug);
+    return current === undefined ? fallback : { ...fallback, id: current.id, imageUrl: current.imageUrl ?? fallback.imageUrl };
+  });
 }
 
 function withCanonicalHomepageContent(content: readonly PublicHomepageContent[]): readonly PublicHomepageContent[] {
@@ -689,22 +684,48 @@ function PropertyGrid({
   readonly copy: PublicHomepageCopy;
   readonly properties: readonly PublicHomepageProperty[];
 }) {
+  const listingCopy = getPublicPropertyListingCopy(locale);
+  const [comparedIds, setComparedIds] = useState<readonly string[]>([]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const saved = window.localStorage.getItem('sadat-property-comparison');
+    if (saved === null) return;
+    try {
+      const parsed: unknown = JSON.parse(saved);
+      if (Array.isArray(parsed)) setComparedIds(parsed.filter((id): id is string => typeof id === 'string').slice(0, 2));
+    } catch {
+      window.localStorage.removeItem('sadat-property-comparison');
+    }
+  }, []);
+
+  const toggleCompare = (id: string) => setComparedIds(previous => {
+    const next = previous.includes(id) ? previous.filter(value => value !== id) : [...previous, id].slice(-2);
+    if (typeof window !== 'undefined') window.localStorage.setItem('sadat-property-comparison', JSON.stringify(next));
+    return next;
+  });
+
   return (
     <div className="public-homepage__property-grid">
       {properties.map(property => {
         const title = localizedText(property.name, locale) ?? property.slug;
         const features = propertyFeatures(property, locale, copy);
+        const compared = comparedIds.includes(property.id);
+        const sourceName = localizedText(property.sourceName, locale);
         return (
           <PropertyCard
             key={property.id}
             title={title}
             href={'/properties/' + property.slug}
             price={formatMoney(property.price, locale)}
-            badges={[property.transactionType === 'sale' ? copy.sale : copy.rent]}
+            location={localizedText(property.locationName, locale)}
+            source={sourceName === undefined ? undefined : <span className="public-homepage__source-identity"><img src={property.sourceImageUrl ?? '/assets/sadat-real-estate-logo.png'} alt="" width="24" height="24" loading="lazy" decoding="async" /><span>{sourceName}{property.sourceType ? <small>{property.sourceType === 'developer_company' ? listingCopy.developerSource : listingCopy.brokerageSource}</small> : null}</span></span>}
+            badges={[property.transactionType === 'sale' ? copy.sale : copy.rent, ...(property.installmentAvailable ? [listingCopy.installment] : []), ...(property.featured ? [listingCopy.featured] : []), ...(property.publicCode ? [property.publicCode] : [])]}
             features={features}
-            image={<PublicMediaImage src={fallbackPropertyImage(property.slug, property.kind)} alt={title} fallback={<span className="public-homepage__content-media-fallback" />} />}
+            image={<PublicMediaImage src={property.imageUrl ?? fallbackPropertyImage(property.slug, property.kind)} alt={title} fallback={<span className="public-homepage__content-media-fallback" />} />}
             imageAlt={title}
-            className="public-homepage__property-card"
+            className="public-property-listing__card public-homepage__property-card"
+            action={<button type="button" className={`public-property-listing__compare-button${compared ? ' is-selected' : ''}`} aria-pressed={compared} onClick={() => toggleCompare(property.id)}>{compared ? (locale === 'ar' ? 'تمت الإضافة' : 'Added') : listingCopy.addToCompare}</button>}
           />
         );
       })}

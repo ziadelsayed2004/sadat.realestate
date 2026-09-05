@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import type {
+  PublicHomepageCategory,
   PublicPropertyListData,
   PublicPropertySearchQuery,
   SupportedLocale
@@ -9,7 +10,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { CustomSelect, Pagination, PropertyCard } from '../design_system/index.ts';
 import { UxStateView, type UxState } from '../ux_states/index.ts';
 import { getPublicHomepageCopy } from './copy.ts';
-import { PublicCategoryGlyph, PublicMediaImage, PublicSiteFooter, PublicSiteHeader, fallbackPropertyImage, publicCategoryAsset } from './components.tsx';
+import { PublicCategoryGlyph, PublicMediaImage, PublicSiteFooter, PublicSiteHeader, canonicalHomepageCategories, fallbackPropertyImage, publicCategoryAsset } from './components.tsx';
 import {
   defaultPublicPropertyListLoader,
   defaultPublicPropertySearchQuery,
@@ -46,6 +47,49 @@ interface ListingFilterDraft {
   readonly deliveryStatus: '' | 'ready_to_move' | 'under_construction' | 'future_delivery';
   readonly sort: PublicPropertySearchQuery['sort'];
   readonly direction: PublicPropertySearchQuery['direction'];
+}
+
+const propertyTypeFilterOrder = ['apartments', 'villa', 'land', 'offices', 'duplex'] as const;
+
+type ListingRailItem = PublicHomepageCategory & {
+  readonly actualId?: string;
+  readonly actualKind?: 'category' | 'type';
+};
+
+function listingRailItems(data: PublicPropertyListData): ReadonlyArray<ListingRailItem> {
+  const categories = new Map(data.categories.map(item => [item.slug, item] as const));
+  const propertyTypes = new Map(data.propertyTypes.map(item => [item.slug, item] as const));
+  const canonical = canonicalHomepageCategories.map(item => {
+    const actual = categories.get(item.slug) ?? propertyTypes.get(item.slug);
+    return actual === undefined
+      ? item
+      : {
+          ...item,
+          id: actual.id,
+          ...(actual.imageUrl ? { imageUrl: actual.imageUrl } : {}),
+          actualId: actual.id,
+          actualKind: categories.has(item.slug) ? 'category' as const : 'type' as const
+        };
+  });
+  const canonicalSlugs = new Set(canonical.map(item => item.slug));
+  const extras: ListingRailItem[] = [];
+  for (const item of data.categories) {
+    if (!canonicalSlugs.has(item.slug)) extras.push({ ...item, actualId: item.id, actualKind: 'category' });
+  }
+  for (const item of data.propertyTypes) {
+    if (!canonicalSlugs.has(item.slug) && !extras.some(extra => extra.slug === item.slug)) {
+      extras.push({ ...item, actualId: item.id, actualKind: 'type' });
+    }
+  }
+  return [...canonical, ...extras];
+}
+
+function listingFilterTypes(data: PublicPropertyListData): PublicHomepageCategory[] {
+  const propertyTypes = new Map(data.propertyTypes.map(item => [item.slug, item] as const));
+  return propertyTypeFilterOrder.flatMap(slug => {
+    const item = propertyTypes.get(slug);
+    return item === undefined || item.propertyCount === 0 ? [] : [item];
+  });
 }
 
 type FilterKey = keyof ListingFilterDraft;
@@ -396,8 +440,18 @@ export function PublicPropertyListing({
     navigate({ ...query, propertyCategoryId: undefined, propertyTypeId, page: 1 }, false);
   };
 
-  const categoryRail = data?.categories ?? [];
-  const propertyTypeRail = data?.propertyTypes ?? [];
+  const railItemActive = (item: ListingRailItem): boolean => item.actualKind === 'category'
+    ? query.propertyCategoryId === item.actualId
+    : item.actualKind === 'type' && query.propertyTypeId === item.actualId;
+
+  const selectRailItem = (item: ListingRailItem): void => {
+    if (item.actualId === undefined) return;
+    if (item.actualKind === 'category') updatePropertyCategory(item.actualId);
+    else updatePropertyType(item.actualId);
+  };
+
+  const railItems = data === undefined ? [] : listingRailItems(data);
+  const filterTypes = data === undefined ? [] : listingFilterTypes(data);
 
   return (
     <div className="public-property-listing" data-page="public-properties" data-listing-state={view}>
@@ -409,12 +463,12 @@ export function PublicPropertyListing({
         </div>
       </section>
       {view === 'success' && data !== undefined ? <nav className="public-property-listing__category-rail" aria-label={copy.propertyType}>
+        {railItems.slice(0, 1).map(item => <button type="button" key={`rail-${item.slug}`} className={railItemActive(item) ? 'is-active' : ''} aria-pressed={railItemActive(item)} disabled={item.actualId === undefined} onClick={() => selectRailItem(item)}><PublicMediaImage src={item.imageUrl ?? publicCategoryAsset(item.slug)} alt="" fallback={<PublicCategoryGlyph slug={item.slug} />} loading="eager" /><strong>{localizedText(item.name, locale) ?? item.slug}</strong><span>{item.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
         <button type="button" className={query.propertyCategoryId === undefined && query.propertyTypeId === undefined ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === undefined && query.propertyTypeId === undefined} onClick={() => updatePropertyCategory(undefined)}><img src="/assets/sadat-real-estate-logo.png" alt="" width="72" height="64" decoding="async" loading="eager" /><strong>{copy.allKinds}</strong><span>{copy.allPropertiesCount} {copy.propertyCountLabel}</span></button>
-        {categoryRail.map(category => <button type="button" key={`category-${category.id}`} className={query.propertyCategoryId === category.id ? 'is-active' : ''} aria-pressed={query.propertyCategoryId === category.id} onClick={() => updatePropertyCategory(category.id)}><PublicMediaImage src={category.imageUrl ?? publicCategoryAsset(category.slug)} alt="" fallback={<PublicCategoryGlyph slug={category.slug} />} loading="eager" /><strong>{localizedText(category.name, locale) ?? category.slug}</strong><span>{category.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
-        {propertyTypeRail.map(propertyType => <button type="button" key={`type-${propertyType.id}`} className={query.propertyTypeId === propertyType.id ? 'is-active' : ''} aria-pressed={query.propertyTypeId === propertyType.id} onClick={() => updatePropertyType(propertyType.id)}><PublicMediaImage src={propertyType.imageUrl ?? publicCategoryAsset(propertyType.slug)} alt="" fallback={<PublicCategoryGlyph slug={propertyType.slug} />} loading="eager" /><strong>{localizedText(propertyType.name, locale) ?? propertyType.slug}</strong><span>{propertyType.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
+        {railItems.slice(1).map(item => <button type="button" key={`rail-${item.slug}`} className={railItemActive(item) ? 'is-active' : ''} aria-pressed={railItemActive(item)} disabled={item.actualId === undefined} onClick={() => selectRailItem(item)}><PublicMediaImage src={item.imageUrl ?? publicCategoryAsset(item.slug)} alt="" fallback={<PublicCategoryGlyph slug={item.slug} />} loading="eager" /><strong>{localizedText(item.name, locale) ?? item.slug}</strong><span>{item.propertyCount.toLocaleString(locale)} {copy.propertyCountLabel}</span></button>)}
       </nav> : null}
       <div className="public-property-listing__body">
-        <ListingFilters draft={draft} copy={copy} locale={locale} onCommit={commitFilterChange} onSubmit={applyFilters} onReset={() => navigate(defaultPublicPropertySearchQuery())} error={filterError} categories={data?.propertyTypes ?? []} locations={data?.locations ?? []} />
+        <ListingFilters draft={draft} copy={copy} locale={locale} onCommit={commitFilterChange} onSubmit={applyFilters} onReset={() => navigate(defaultPublicPropertySearchQuery())} error={filterError} categories={filterTypes} locations={data?.locations ?? []} />
         <section className="public-property-listing__results" aria-labelledby="public-property-listing-title" aria-busy={view === 'loading'}>
           <div className="public-property-listing__toolbar">
             <div className="public-property-listing__sort">

@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-16",
+  "phase": "before",
+  "html": {
+    "lang": "ar",
+    "dir": "rtl"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-16",
+    "state": "ready",
+    "applicationStatus": "needs_information",
+    "providerVariant": null,
+    "route": "/provider-application/needs-information?lang=ar",
+    "html": {
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 1457,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 1463
+    },
+    "structure": {
+      "headings": 2,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 2,
+      "cards": 5,
+      "forms": 0,
+      "buttons": 3,
+      "links": 3,
+      "inputs": 1,
+      "unlabeledControls": 0
+    },
+    "controls": [
+      {
+        "tag": "select",
+        "id": null,
+        "name": null,
+        "type": null,
+        "required": false,
+        "ariaLabel": "اللغة",
+        "autocomplete": null
+      }
+    ],
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "الرئيسية",
+        "href": "/"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "العربية",
+        "ariaLabel": "اللغة",
+        "disabled": false
+      },
+      {
+        "text": "تعديل الطلب",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "رجوع",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  }
+}

@@ -398,6 +398,7 @@ function ArticleDetailsView({
     ? categoryName(article.categoryId, locale, categories)
     : localizedText(article.category.name, locale);
   const publishedAt = formatPublishedAt(article.publishedAt, locale);
+  const authorName = localizedText(article.authorName, locale) ?? copy.authorUnavailable;
   const related = relatedArticles?.filter(item => item.slug !== article.slug).slice(0, 3) ?? [];
   const hasRelatedProperties = (relatedProperties?.items.length ?? 0) > 0;
   return (
@@ -410,6 +411,7 @@ function ArticleDetailsView({
           {category === undefined ? null : <Badge tone="warning">{category}</Badge>}
           <h1 id="public-article-details-title">{title}</h1>
           <dl className="public-article-details__meta">
+            <div><dt>{copy.authorLabel}</dt><dd>{authorName}</dd></div>
             <div><dt>{copy.publishedAt}</dt><dd>{publishedAt ?? '—'}</dd></div>
             <div><dt>{copy.readTime(1)}</dt><dd>{copy.readTime(article.readingTimeMinutes ?? readTime(localizedText(article.body, locale)))}</dd></div>
           </dl>

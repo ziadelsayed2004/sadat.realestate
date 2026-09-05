@@ -3,7 +3,7 @@
   "screenId": "PUB-09",
   "phase": "after",
   "runtime": {
-    "route": "/community",
+    "route": "/community?lang=ar",
     "locale": "ar",
     "direction": "rtl",
     "viewport": {
@@ -13,8 +13,8 @@
     },
     "responseStatus": 200,
     "responseOk": true,
-    "beforeHash": "1deb2fe3805e85d2bf595244eaccf3013fb18fe79e37c2cec6776ea72735013f",
-    "afterHash": "7bb2604d14b0250b21fe1dbc0c5a31a27f58303374b7dfb2442fad6eff8e17df",
+    "beforeHash": "e037e4df190405d171e299a41d821e4882ea49775b9d8a9c808b7412e5e27dcb",
+    "afterHash": "a3214c295f3d85a00200878335b2f16a4ad5c2b2f513c0d81f0332d96e445b21",
     "requestedApi": [],
     "apiResponses": []
   },
@@ -22,8 +22,8 @@
     "headers": 3,
     "navs": 1,
     "sections": 0,
-    "cards": 9,
-    "images": 3,
+    "cards": 37,
+    "images": 8,
     "forms": 0
   },
   "fonts": {
@@ -2146,6 +2146,36 @@
       "loading": "eager"
     },
     {
+      "src": "http://127.0.0.1:4173/assets/canonical/public/community-asset-1.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/canonical/public/community-asset-2.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/canonical/public/community-asset-3.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/canonical/public/community-asset-4.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/canonical/public/community-asset-5.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
       "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
@@ -2164,43 +2194,51 @@
       },
       {
         "text": "",
-        "href": "/"
+        "href": "/?lang=ar"
       },
       {
         "text": "الرئيسية",
-        "href": "/"
+        "href": "/?lang=ar"
       },
       {
         "text": "العقارات",
-        "href": "/properties"
+        "href": "/properties?lang=ar"
       },
       {
         "text": "المطورون",
-        "href": "/developers"
+        "href": "/developers?lang=ar"
       },
       {
         "text": "المقالات",
-        "href": "/articles"
+        "href": "/articles?lang=ar"
       },
       {
         "text": "الكوميونتي",
-        "href": "/community"
+        "href": "/community?lang=ar"
       },
       {
         "text": "من نحن",
-        "href": "/about"
+        "href": "/about?lang=ar"
       },
       {
         "text": "فريق العمل",
-        "href": "/team"
+        "href": "/team?lang=ar"
       },
       {
         "text": "تسجيل الدخول",
-        "href": "/auth/login"
+        "href": "/auth/login?lang=ar"
       },
       {
         "text": "إنشاء حساب",
-        "href": "/auth/register"
+        "href": "/auth/register?lang=ar"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login?lang=ar"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register?lang=ar"
       },
       {
         "text": "العقارات",
@@ -2265,8 +2303,20 @@
         "aria": "اللغة"
       },
       {
+        "text": "",
+        "aria": "إغلاق خلفية القائمة"
+      },
+      {
         "text": "العربية",
         "aria": "اللغة"
+      },
+      {
+        "text": "العربية",
+        "aria": "اللغة"
+      },
+      {
+        "text": "",
+        "aria": "فتح القائمة"
       },
       {
         "text": "+انشر بوست",
@@ -2303,6 +2353,18 @@
       {
         "text": "عرض النقاش",
         "aria": null
+      },
+      {
+        "text": "عرض النقاش",
+        "aria": null
+      },
+      {
+        "text": "عرض النقاش",
+        "aria": null
+      },
+      {
+        "text": "عرض النقاش",
+        "aria": null
       }
     ]
   },
@@ -2314,11 +2376,11 @@
       },
       {
         "width": 1524,
-        "height": 1895
+        "height": 1775
       },
       {
         "width": 1524,
-        "height": 1125
+        "height": 1999
       }
     ],
     "dimensions": {
@@ -2329,10 +2391,10 @@
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-09/visual-metrics.json",
     "visualMetrics": {
       "comparedWidth": 1524,
-      "comparedHeight": 1125,
-      "comparedPixels": 1714500,
-      "materialDifferencePercent": 41.0548,
-      "antiAliasingOnlyPercent": 7.3736,
+      "comparedHeight": 1999,
+      "comparedPixels": 3046476,
+      "materialDifferencePercent": 4.9396,
+      "antiAliasingOnlyPercent": 7.8542,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

@@ -289,6 +289,7 @@ function ComparisonCards({
             imageAlt={copy.imageUnavailable}
             action={(
               <div className="public-property-comparison__card-actions">
+                <a className="public-property-comparison__details-link" href={publicPropertyDetailsUrl(property.slug)}>{copy.viewDetails}</a>
                 <Button type="button" variant="danger" size="sm" onClick={() => onRemove(property.id)}>{copy.remove}</Button>
               </div>
             )}
@@ -327,23 +328,16 @@ function ComparisonContent({
           </a>
         ) : null}
       </section>
+      <div className="public-property-comparison__controls-wrap">
+        <div className="public-property-comparison__controls" aria-label={copy.viewModeLabel}>
+          <button type="button" className={showDifferences ? undefined : 'is-active'} aria-pressed={!showDifferences} onClick={() => setShowDifferences(false)}>{copy.showAll}</button>
+          <button type="button" className={showDifferences ? 'is-active' : undefined} aria-pressed={showDifferences} onClick={() => setShowDifferences(true)}>{copy.showDifferences}</button>
+        </div>
+      </div>
       <section className="public-property-comparison__selection" aria-labelledby="public-property-comparison-selection-title">
         <h2 id="public-property-comparison-selection-title" className="public-property-comparison__visually-hidden">{copy.title}</h2>
         <ComparisonCards data={data} locale={locale} copy={copy} onRemove={onRemove} />
       </section>
-      <div className="public-property-comparison__controls-wrap">
-        <label className="public-property-comparison__toggle">
-          <span className="public-property-comparison__toggle-label">{copy.showDifferences}</span>
-          <input
-            type="checkbox"
-            className="public-property-comparison__toggle-input"
-            checked={showDifferences}
-            onChange={(e) => setShowDifferences(e.target.checked)}
-            aria-label={copy.viewModeLabel}
-          />
-          <span className="public-property-comparison__toggle-track" aria-hidden="true" />
-        </label>
-      </div>
       <ComparisonTables data={data} locale={locale} copy={copy} showDifferences={showDifferences} />
       <div className="public-property-comparison__sticky-actions" aria-label={copy.title}>
         <strong>{copy.title}</strong>

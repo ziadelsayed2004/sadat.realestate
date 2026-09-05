@@ -3,7 +3,7 @@
   "screenId": "PUB-08",
   "phase": "after",
   "runtime": {
-    "route": "/articles/buying-in-sadat",
+    "route": "/articles/buying-in-sadat?lang=ar",
     "locale": "ar",
     "direction": "rtl",
     "viewport": {
@@ -11,35 +11,17 @@
       "height": 720,
       "devicePixelRatio": 1
     },
-    "responseStatus": 404,
-    "responseOk": false,
+    "responseStatus": 200,
+    "responseOk": true,
     "beforeHash": "4a4d9f867b0dc38c6eab5a63c59b2579556cd0a57e94bc77659de65d74cfb00d",
-    "afterHash": "9fa695fafb006889483779d40ae1838209baaeeffea3abb0f8f9c59d8eae37a2",
+    "afterHash": "a4b0eb1d52fd7f61f11db808b552039e18f0fb1b71dd27df6c6e1a62f193ec8c",
     "requestedApi": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/articles/buying-in-sadat?locale=ar"
-      },
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/articles?locale=ar&page=1&limit=20"
-      },
       {
         "method": "GET",
         "url": "http://127.0.0.1:4173/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=3"
       }
     ],
     "apiResponses": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/articles/buying-in-sadat?locale=ar",
-        "status": 200
-      },
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/articles?locale=ar&page=1&limit=20",
-        "status": 200
-      },
       {
         "method": "GET",
         "url": "http://127.0.0.1:4173/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=3",
@@ -50,9 +32,9 @@
   "structure": {
     "headers": 2,
     "navs": 1,
-    "sections": 1,
-    "cards": 0,
-    "images": 3,
+    "sections": 2,
+    "cards": 30,
+    "images": 10,
     "forms": 0
   },
   "fonts": {
@@ -2175,6 +2157,48 @@
       "loading": "eager"
     },
     {
+      "src": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "eager"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/clone/pub08-f.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "eager"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/clone/pub08-g.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "eager"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "eager"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/clone/pub07-b.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/clone/pub07-c.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/clone/pub07-d.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
       "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
@@ -2193,47 +2217,91 @@
       },
       {
         "text": "",
-        "href": "/"
+        "href": "/?lang=ar"
       },
       {
         "text": "الرئيسية",
-        "href": "/"
+        "href": "/?lang=ar"
       },
       {
         "text": "العقارات",
-        "href": "/properties"
+        "href": "/properties?lang=ar"
       },
       {
         "text": "المطورون",
-        "href": "/developers"
+        "href": "/developers?lang=ar"
       },
       {
         "text": "المقالات",
-        "href": "/articles"
+        "href": "/articles?lang=ar"
       },
       {
         "text": "الكوميونتي",
-        "href": "/community"
+        "href": "/community?lang=ar"
       },
       {
         "text": "من نحن",
-        "href": "/about"
+        "href": "/about?lang=ar"
       },
       {
         "text": "فريق العمل",
-        "href": "/team"
+        "href": "/team?lang=ar"
       },
       {
         "text": "تسجيل الدخول",
-        "href": "/auth/login"
+        "href": "/auth/login?lang=ar"
       },
       {
         "text": "إنشاء حساب",
-        "href": "/auth/register"
+        "href": "/auth/register?lang=ar"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login?lang=ar"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register?lang=ar"
       },
       {
         "text": "العودة للمقالات",
         "href": "/articles"
+      },
+      {
+        "text": "شقة فاخرة في الحي الأول1.9 مليون جنيه",
+        "href": "/properties/city-apartment"
+      },
+      {
+        "text": "فيلا مستقلة بالمنطقة الراقية5.2 مليون جنيه",
+        "href": "/properties/garden-villa"
+      },
+      {
+        "text": "أرض سكنية في الحي السابع780,000 جنيه",
+        "href": "/properties/residential-land"
+      },
+      {
+        "text": "أفضل المناطق للاستثمار العقاري في السادات",
+        "href": "/articles/investment-opportunities-sadat"
+      },
+      {
+        "text": "اقرأ المقال",
+        "href": "/articles/investment-opportunities-sadat"
+      },
+      {
+        "text": "خدمات مدينة السادات: ما المتاح وما المخطط له",
+        "href": "/articles/services-near-your-home"
+      },
+      {
+        "text": "اقرأ المقال",
+        "href": "/articles/services-near-your-home"
+      },
+      {
+        "text": "قوانين الإيجار الجديدة وما يهمك معرفته",
+        "href": "/articles/new-rental-laws-guide"
+      },
+      {
+        "text": "اقرأ المقال",
+        "href": "/articles/new-rental-laws-guide"
       },
       {
         "text": "العقارات",
@@ -2298,12 +2366,20 @@
         "aria": "اللغة"
       },
       {
+        "text": "",
+        "aria": "إغلاق خلفية القائمة"
+      },
+      {
         "text": "العربية",
         "aria": "اللغة"
       },
       {
-        "text": "حاول مرة أخرى",
-        "aria": null
+        "text": "العربية",
+        "aria": "اللغة"
+      },
+      {
+        "text": "",
+        "aria": "فتح القائمة"
       }
     ]
   },
@@ -2319,21 +2395,21 @@
       },
       {
         "width": 1523,
-        "height": 1071
+        "height": 1839
       }
     ],
     "dimensions": {
       "width": 1471,
-      "height": 642
+      "height": 669
     },
     "diffPath": "docs/quality/figma_parity/screens/PUB-08/diff.png",
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-08/visual-metrics.json",
     "visualMetrics": {
       "comparedWidth": 1523,
-      "comparedHeight": 1071,
-      "comparedPixels": 1631133,
-      "materialDifferencePercent": 43.8812,
-      "antiAliasingOnlyPercent": 3.9135,
+      "comparedHeight": 1759,
+      "comparedPixels": 2678957,
+      "materialDifferencePercent": 19.0309,
+      "antiAliasingOnlyPercent": 5.3647,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

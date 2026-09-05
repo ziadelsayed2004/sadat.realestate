@@ -11,6 +11,7 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react
 import { ApiClientError } from '../contracts/index.ts';
 import { Button, StateMessage } from '../design_system/index.ts';
 import { getProviderAccountCopy } from './account-copy.ts';
+import { missingRequiredDocumentCategories } from './completeness.ts';
 import { getProviderDocumentsCopy } from './documents-copy.ts';
 import { getProviderOrganizationCopy } from './organization-copy.ts';
 import { getProviderReviewCopy, type ProviderReviewCopy } from './review-copy.ts';
@@ -182,7 +183,8 @@ function ApplicationSummary({ application, copy }: { readonly application: Provi
 }
 
 function MissingList({ application, copy, locale }: { readonly application: ProviderApplicationData; readonly copy: ProviderReviewCopy; readonly locale: SupportedLocale }) {
-  const complete = application.missingFields.length === 0 && application.missingDocuments.length === 0;
+  const missingDocuments = missingRequiredDocumentCategories(application);
+  const complete = application.missingFields.length === 0 && missingDocuments.length === 0;
   return (
     <section className="provider-review-section" aria-labelledby="provider-review-documents-title">
       <h2 id="provider-review-documents-title">{copy.documentsTitle}</h2>
@@ -195,10 +197,10 @@ function MissingList({ application, copy, locale }: { readonly application: Prov
               <ul>{application.missingFields.map(field => <li key={field}>{missingFieldLabel(application, locale, field)}</li>)}</ul>
             </div>
           )}
-          {application.missingDocuments.length === 0 ? null : (
+          {missingDocuments.length === 0 ? null : (
             <div>
               <strong>{copy.missingDocumentsLabel}</strong>
-              <ul>{application.missingDocuments.map(document => <li key={document}>{missingDocumentLabel(locale, document)}</li>)}</ul>
+              <ul>{missingDocuments.map(document => <li key={document}>{missingDocumentLabel(locale, document)}</li>)}</ul>
             </div>
           )}
         </div>
@@ -255,7 +257,7 @@ function ReviewDraft({
   readonly onSubmit: () => void;
   readonly onBack: () => void;
 }) {
-  const complete = application.missingFields.length === 0 && application.missingDocuments.length === 0;
+  const complete = application.missingFields.length === 0 && missingRequiredDocumentCategories(application).length === 0;
   return (
     <PageFrame locale={locale} screenId="AUTH-13" state="ready" status={application.status}>
       <div className="auth-card auth-card--form provider-review-card">
@@ -482,7 +484,7 @@ export function ProviderReviewPage({ client, locale, providerType, initialApplic
       setActionError({ state: 'error', title: copy.submitUnavailableTitle, message: copy.submitUnavailableBody });
       return;
     }
-    if (application.missingFields.length > 0 || application.missingDocuments.length > 0 || !application.availableActions.includes('submit')) {
+    if (application.missingFields.length > 0 || missingRequiredDocumentCategories(application).length > 0 || !application.availableActions.includes('submit')) {
       setActionState('error');
       setActionError({ state: 'error', title: copy.submitUnavailableTitle, message: copy.submitUnavailableBody });
       return;

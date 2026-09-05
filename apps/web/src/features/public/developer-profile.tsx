@@ -133,28 +133,47 @@ function NotFoundNotice({ copy }: { readonly copy: PublicDevelopersCopy }) {
 
 function ProfileHero({ data, locale, copy }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) {
   const title = localizedText(data.name, locale) ?? data.slug;
+  const description = localizedText(data.description, locale);
   const locations = localizedValues(data.locations, locale);
   return (
     <section className="public-developer-profile__hero" aria-label={title}>
       <div className="public-developer-profile__hero-media">
         <PublicMediaImage src={data.imageUrl} alt={title} fallback={<UxStateView state="missing_image" title={copy.imageUnavailable} />} loading="eager" />
       </div>
-      <div className="public-developer-profile__hero-content">
-        <div className="public-developer-profile__hero-logo">
-          {data.logoUrl ? <PublicMediaImage src={data.logoUrl} alt="" loading="eager" fallback={<span className="public-developer-profile__hero-logo-fallback" />} /> : <span className="public-developer-profile__hero-logo-fallback" aria-hidden="true" />}
+      <div className="public-developer-profile__identity">
+        <div className="public-developer-profile__identity-actions">
+          <a className="public-developer-profile__identity-action public-developer-profile__identity-action--primary" href="#developer-contact"><ProfileIcon name="phone" />{copy.contactDeveloper}</a>
+          <a className="public-developer-profile__identity-action public-developer-profile__identity-action--secondary" href="#developer-properties"><ProfileIcon name="unit" />{copy.availableUnitsAction}</a>
         </div>
-        <div className="public-developer-profile__hero-info">
-          <h1 id="public-developer-profile-title">{title}</h1>
-          <p className="public-developer-profile__hero-kind">{kindLabel(data.kind, copy)}</p>
-          {locations.length > 0 ? <div className="public-developer-profile__hero-locations"><ProfileIcon name="location" /> {locations.join(', ')}</div> : null}
+        <div className="public-developer-profile__identity-copy">
+          <div className="public-developer-profile__identity-heading">
+            <div className="public-developer-profile__badges">
+              <span className="public-developer-profile__verified"><ProfileIcon name="check" />{copy.verified}</span>
+              <span className="public-developer-profile__kind">{kindLabel(data.kind, copy)}</span>
+            </div>
+            <h1 id="public-developer-profile-title">{title}</h1>
+          </div>
+          {description ? <p>{description}</p> : null}
+          {locations.length > 0 ? <div className="public-developer-profile__identity-locations">{locations.map(location => <span key={location}><ProfileIcon name="location" />{location}</span>)}</div> : null}
         </div>
-        <div className="public-developer-profile__hero-actions">
-          <a className="public-developer-profile__hero-action" href="#developer-contact">
-            {copy.contactDeveloper}
-          </a>
+        <div className="public-developer-profile__identity-logo">
+          {data.logoUrl ? <PublicMediaImage src={data.logoUrl} alt="" loading="eager" fallback={<span className="public-developer-profile__identity-logo-fallback" />} /> : <span className="public-developer-profile__identity-logo-fallback" aria-hidden="true" />}
+          <span className="public-developer-profile__identity-logo-check"><ProfileIcon name="check" /></span>
+          <a className="public-developer-profile__back" href="/developers"><ProfileIcon name="arrow" />{copy.backToDirectory}</a>
         </div>
       </div>
     </section>
+  );
+}
+
+function ProfileTabs({ copy }: { readonly copy: PublicDevelopersCopy }) {
+  return (
+    <nav className="public-developer-profile__tabs" aria-label={copy.profileOverview}>
+      <a className="is-active" aria-current="page" href="#developer-overview">{copy.profileOverview}</a>
+      <a href="#developer-projects">{copy.profileProjects}</a>
+      <a href="#developer-properties">{copy.profileProperties}</a>
+      <a href="#developer-contact">{copy.profileContact}</a>
+    </nav>
   );
 }
 
@@ -237,21 +256,60 @@ function PropertiesSection({ data, locale, copy }: { readonly data: PublicOrgani
 
 function ProfileOverview({ data, locale, copy }: { readonly data: PublicOrganizationProfile; readonly locale: SupportedLocale; readonly copy: PublicDevelopersCopy }) {
   const description = localizedText(data.description, locale) ?? copy.noDescription;
-  const stats = data.stats;
-  const areas = stats.activeAreas ?? data.activeAreas?.length ?? 0;
+  const groups: ReadonlyArray<readonly [string, readonly LocalizedValue[] | undefined, IconName]> = [
+    [copy.activeAreasTitle, data.activeAreas, 'location'],
+    [copy.projectTypesTitle, data.projectTypes, 'project'],
+    [copy.propertyTypesTitle, data.propertyTypes, 'unit'],
+    [copy.paymentPlansTitle, data.paymentPlans, 'check']
+  ];
   return (
     <section className="public-developer-profile__section public-developer-profile__overview-section" id="developer-overview" aria-labelledby="developer-overview-title">
       <h2 id="developer-overview-title">{copy.descriptionTitle}</h2>
       <div className="public-developer-profile__overview-content">
         <p>{description}</p>
-        <div className="public-developer-profile__overview-metrics">
-          <ProfileMetric value={stats.publishedProjects} label={copy.projects} icon="project" />
-          <ProfileMetric value={stats.availableUnits ?? stats.availableProperties} label={copy.availableUnits} icon="unit" />
-          <ProfileMetric value={areas} label={copy.activeAreas} icon="location" />
-          <ProfileMetric value={stats.soldUnits ?? 0} label={copy.soldUnits} icon="unit" />
+        <div className="public-developer-profile__details">
+          {groups.map(([title, values, icon]) => {
+            const labels = localizedValues(values, locale);
+            return labels.length > 0 ? <div className="public-developer-profile__detail-group" key={title}><h3><ProfileIcon name={icon} />{title}</h3><div className="public-developer-profile__tags">{labels.map(label => <span key={label}>{label}</span>)}</div></div> : null;
+          })}
         </div>
       </div>
     </section>
+  );
+}
+
+function ProfileAside({ data, copy }: { readonly data: PublicOrganizationProfile; readonly copy: PublicDevelopersCopy }) {
+  const stats = data.stats;
+  const areas = stats.activeAreas ?? data.activeAreas?.length ?? 0;
+  const metricRows: ReadonlyArray<readonly [number, string, IconName]> = [
+    [stats.availableUnits ?? stats.availableProperties, copy.availableUnits, 'unit'],
+    [stats.totalUnits ?? 0, copy.totalUnits, 'unit'],
+    [stats.soldUnits ?? 0, copy.soldUnits, 'unit'],
+    [stats.reservedUnits ?? 0, copy.reservedUnits, 'calendar'],
+    [areas, copy.activeAreas, 'location'],
+    [stats.publishedProjects, copy.projects, 'project']
+  ];
+  const phone = data.contactPhone;
+  const whatsapp = safePublicUrl(data.whatsappUrl);
+  return (
+    <aside className="public-developer-profile__aside">
+      <section className="public-developer-profile__activity" aria-labelledby="developer-activity-title">
+        <h2 id="developer-activity-title"><ProfileIcon name="project" />{copy.activitySummary}</h2>
+        <div className="public-developer-profile__metrics">{metricRows.map(([value, label, icon]) => <ProfileMetric key={label} value={value} label={label} icon={icon} />)}</div>
+        <dl className="public-developer-profile__activity-meta">
+          <div><dt>{copy.lastUpdated}</dt><dd>{stats.lastUpdated ?? '—'}</dd></div>
+          <div><dt>{copy.profileKind}</dt><dd>{kindLabel(data.kind, copy)}</dd></div>
+          <div><dt>{copy.verified}</dt><dd className="public-developer-profile__verified-mini"><ProfileIcon name="check" />{copy.verified}</dd></div>
+        </dl>
+      </section>
+      <section className="public-developer-profile__contact-card" aria-labelledby="developer-contact-card-title">
+        <h2 id="developer-contact-card-title"><ProfileIcon name="phone" />{copy.profileContact}</h2>
+        {phone ? <a href={`tel:${phone}`}><ProfileIcon name="phone" />{phone}</a> : null}
+        {whatsapp ? <a href={whatsapp}><ProfileIcon name="whatsapp" />{copy.contactWhatsappAvailable}</a> : null}
+        <a className="public-developer-profile__aside-cta" href="#developer-contact"><ProfileIcon name="mail" />{copy.sendInquiry}</a>
+      </section>
+      <div className="public-developer-profile__advisory"><ProfileIcon name="shield" /><div><strong>{copy.advisoryTitle}</strong><p>{copy.advisoryBody}</p></div></div>
+    </aside>
   );
 }
 
@@ -268,8 +326,8 @@ function ContactSection({ data, locale, copy }: { readonly data: PublicOrganizat
         <label><span>{copy.fieldName} <span className="public-developer-profile__required-mark" aria-hidden="true">*</span></span><input name="name" autoComplete="name" required /></label>
         <label><span>{copy.fieldPhone} <span className="public-developer-profile__required-mark" aria-hidden="true">*</span></span><input name="phone" type="tel" autoComplete="tel" required placeholder="0100xxxxxxxx" /></label>
         <label className="public-developer-profile__inquiry-wide">{copy.fieldEmail}<input name="email" type="email" autoComplete="email" placeholder="example@mail.com" /></label>
-        <label>{copy.fieldRequestType}<CustomSelect name="requestType" defaultValue="" placeholder={copy.fieldRequestType} ariaLabel={copy.fieldRequestType} options={[{ value: 'unit', label: copy.availableUnits }, { value: 'project', label: copy.profileProjects }]} /></label>
-        <label>{copy.fieldPreferredTime}<CustomSelect name="preferredTime" defaultValue="" placeholder={copy.fieldPreferredTime} ariaLabel={copy.fieldPreferredTime} options={[{ value: 'morning', label: '09:00 - 12:00' }, { value: 'evening', label: '16:00 - 20:00' }]} /></label>
+        <label>{copy.fieldRequestType}<CustomSelect name="requestType" defaultValue="" placeholder="" ariaLabel={copy.fieldRequestType} options={[{ value: 'unit', label: copy.availableUnits }, { value: 'project', label: copy.profileProjects }]} /></label>
+        <label>{copy.fieldPreferredTime}<CustomSelect name="preferredTime" defaultValue="" placeholder="" ariaLabel={copy.fieldPreferredTime} options={[{ value: 'morning', label: '09:00 - 12:00' }, { value: 'evening', label: '16:00 - 20:00' }]} /></label>
         <label className="public-developer-profile__inquiry-wide">{copy.fieldMessage}<textarea name="message" rows={4} required placeholder={copy.messagePlaceholder} /></label>
         <div className="public-developer-profile__inquiry-actions">
           <button type="submit">{copy.sendInquiry}<ProfileIcon name="arrow" /></button>
@@ -285,7 +343,9 @@ function ProfileSuccess({ data, locale, copy }: { readonly data: PublicOrganizat
   return (
     <div className="public-developer-profile__content">
       <ProfileHero data={data} locale={locale} copy={copy} />
+      <ProfileTabs copy={copy} />
       <div className="public-developer-profile__layout">
+        <ProfileAside data={data} copy={copy} />
         <div className="public-developer-profile__main">
           <ProfileOverview data={data} locale={locale} copy={copy} />
           <ProjectsSection data={data} locale={locale} copy={copy} />

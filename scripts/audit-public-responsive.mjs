@@ -9,7 +9,7 @@ const routes = [
   ['PUB-05', '/developers?lang=ar'],
   ['PUB-06', '/developers/sadat-demo-developer?lang=ar'],
   ['PUB-07', '/articles?lang=ar'],
-  ['PUB-08', '/articles/demo-home-buying-guide?lang=ar'],
+  ['PUB-08', '/articles/buying-in-sadat?lang=ar'],
   ['PUB-09', '/community?lang=ar'],
   ['PUB-10', '/community?create=1&lang=ar'],
   ['PUB-11', '/about?lang=ar'],

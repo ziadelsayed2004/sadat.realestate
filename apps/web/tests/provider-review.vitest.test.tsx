@@ -83,6 +83,44 @@ describe('provider application review and status', () => {
     expect(screen.getByText(copy.underReviewTitle)).toBeInTheDocument();
   });
 
+  it('allows submission when only an optional document is listed as missing', async () => {
+    const copy = getProviderReviewCopy('en');
+    const optionalDocumentMissing = application({
+      requirementsSnapshot: {
+        version: '2026-08-13.1',
+        providerType: 'developer_company',
+        requirements: [
+          { key: 'commercial_registration', labelKey: 'provider.documents.commercialRegistration', classification: 'required', applies: true },
+          { key: 'tax_card', labelKey: 'provider.documents.taxCard', classification: 'required', applies: true },
+          { key: 'authorized_representative_id_front', labelKey: 'provider.documents.authorizedRepresentativeIdFront', classification: 'required', applies: true },
+          { key: 'authorized_representative_id_back', labelKey: 'provider.documents.authorizedRepresentativeIdBack', classification: 'required', applies: true },
+          { key: 'developer_license', labelKey: 'provider.documents.developerLicense', classification: 'optional', applies: true }
+        ]
+      },
+      missingDocuments: ['developer_license']
+    });
+    const submitProviderApplication = vi.fn().mockResolvedValue(application({
+      status: 'pending_review',
+      version: 4,
+      submittedAt: '2026-08-14T00:00:00.000Z',
+      availableActions: ['view_status']
+    }));
+    renderWithLocale(
+      <ProviderReviewPage
+        client={{ submitProviderApplication }}
+        locale="en"
+        initialApplication={optionalDocumentMissing}
+        onBack={vi.fn()}
+      />,
+      { locale: 'en' }
+    );
+
+    await waitFor(() => expect(screen.getByRole('button', { name: copy.submitAction })).toBeEnabled());
+    expect(screen.getByText(copy.documentsCompleteLabel)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: copy.submitAction }));
+    await waitFor(() => expect(submitProviderApplication).toHaveBeenCalledWith({ version: 3 }));
+  });
+
   it('renders the separate tracking view and refreshes status through the implemented status contract', async () => {
     const copy = getProviderReviewCopy('en');
     const getProviderApplicationStatus = vi.fn().mockResolvedValue(status());

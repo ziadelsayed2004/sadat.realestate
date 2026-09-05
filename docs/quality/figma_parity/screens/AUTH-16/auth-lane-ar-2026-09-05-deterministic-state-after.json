@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "seedId": "auth-lane-AUTH-16-ar-after-2026-08-27",
+  "environment": "non-production-browser-fixture",
+  "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "forbiddenFigmaFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "screenId": "AUTH-16",
+  "source": {
+    "pageId": "6017:4353",
+    "nodeId": "6017:18651",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-18651&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "screenshot": "docs/quality/figma_parity/screens/AUTH-16/figma.png"
+  },
+  "runtime": {
+    "route": "/provider-application/needs-information?lang=ar",
+    "requestedQueueRoute": "/provider-application/needs-information",
+    "role": "anonymous",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1577,
+      "height": 1457
+    }
+  },
+  "authSession": {
+    "roleType": "provider",
+    "projection": {
+      "accessToken": "capture.header.signature",
+      "tokenType": "Bearer",
+      "expiresInSeconds": 900,
+      "user": {
+        "id": "abcdef0123456789abcdef01",
+        "roleType": "provider",
+        "status": "verified"
+      }
+    },
+    "source": "intercepted /api/v1/auth/refresh response"
+  },
+  "api": {
+    "fixtureContract": "real writable API response shapes",
+    "state": {
+      "id": "abcdef0123456789abcdef01",
+      "providerType": "developer_company",
+      "status": "needs_information",
+      "version": 0,
+      "requirementVersion": "2026-08-13.1",
+      "email": "capture@example.com",
+      "accountOwnerFullName": "Ahmed Mohamed Ali",
+      "displayName": "Sadat Real Estate Development",
+      "whatsappNumber": "+201000000001",
+      "preferredLocale": "ar",
+      "termsAcceptedAt": "2026-08-27T08:30:00.000Z",
+      "privacyAcceptedAt": "2026-08-27T08:30:00.000Z",
+      "legalCompanyName": "Sadat Real Estate Development Company",
+      "brandName": "Sadat Real Estate",
+      "commercialRegistrationNumber": "CR-2026-00128",
+      "taxRegistrationNumber": "TX-2026-00128",
+      "authorizedRepresentativeFullName": "Ahmed Mohamed Ali",
+      "authorizedRepresentativeTitle": "Managing Director",
+      "accountOwnerHasRegisteredAuthority": true,
+      "requirementsSnapshot": {
+        "version": "2026-08-13.1",
+        "providerType": "developer_company",
+        "requirements": [
+          {
+            "key": "commercial_registration",
+            "labelKey": "provider.documents.commercialRegistration",
+            "classification": "required",
+            "applies": true
+          },
+          {
+            "key": "tax_card",
+            "labelKey": "provider.documents.taxCard",
+            "classification": "required",
+            "applies": true
+          },
+          {
+            "key": "authorized_representative_id_front",
+            "labelKey": "provider.documents.authorizedRepresentativeIdFront",
+            "classification": "required",
+            "applies": true
+          },
+          {
+            "key": "authorized_representative_id_back",
+            "labelKey": "provider.documents.authorizedRepresentativeIdBack",
+            "classification": "required",
+            "applies": true
+          },
+          {
+            "key": "company_profile",
+            "labelKey": "provider.documents.companyProfile",
+            "classification": "optional",
+            "applies": true
+          },
+          {
+            "key": "developer_license",
+            "labelKey": "provider.documents.developerLicense",
+            "classification": "optional",
+            "applies": true
+          },
+          {
+            "key": "additional_supporting_document",
+            "labelKey": "provider.documents.additionalSupportingDocument",
+            "classification": "optional",
+            "applies": true
+          }
+        ]
+      },
+      "missingFields": [
+        "businessAddress"
+      ],
+      "missingDocuments": [
+        "authorized_representative_id_back"
+      ],
+      "availableActions": [
+        "edit_company",
+        "view_status"
+      ],
+      "reviewReason": "Please complete the requested business information and upload the missing document.",
+      "createdAt": "2026-08-27T08:00:00.000Z",
+      "updatedAt": "2026-08-27T09:00:00.000Z"
+    }
+  },
+  "phase": "after",
+  "hashes": {
+    "canonical": "91cb2341d059b4a3f2e0bba0b6d6c8f458b28601213ab8e34a4860d06f3d5a9c",
+    "before": "1785ef9cc105affb822df654583c7256566389b882f821735e8b6702a63bd3a9",
+    "after": "1785ef9cc105affb822df654583c7256566389b882f821735e8b6702a63bd3a9"
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-12",
+  "phase": "after",
+  "html": {
+    "lang": "ar",
+    "dir": "rtl"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-12",
+    "state": "ready",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/register/provider/account?providerType=developer_company&step=documents&lang=ar",
+    "html": {
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 2094,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 2319
+    },
+    "structure": {
+      "headings": 9,
+      "h1": 1,
+      "main": 1,
+      "headers": 9,
+      "sections": 1,
+      "cards": 34,
+      "forms": 0,
+      "buttons": 3,
+      "links": 3,
+      "inputs": 8,
+      "unlabeledControls": 0
+    },
+    "controls": [
+      {
+        "tag": "select",
+        "id": null,
+        "name": null,
+        "type": null,
+        "required": false,
+        "ariaLabel": "اللغة",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-commercial_registration",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: السجل التجاري",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-tax_card",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: البطاقة الضريبية",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-authorized_representative_id_front",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: هوية الممثل المفوض - الوجه الأمامي",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-authorized_representative_id_back",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: هوية الممثل المفوض - الوجه الخلفي",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-company_profile",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: ملف الشركة",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-developer_license",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: ترخيص المطور",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-additional_supporting_document",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: مستند داعم إضافي",
+        "autocomplete": null
+      }
+    ],
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "الرئيسية",
+        "href": "/"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "العربية",
+        "ariaLabel": "اللغة",
+        "disabled": false
+      },
+      {
+        "text": "رجوع",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "مراجعة الطلب",
+        "ariaLabel": null,
+        "disabled": true
+      }
+    ]
+  }
+}

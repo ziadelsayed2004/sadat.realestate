@@ -3,7 +3,7 @@
   "screenId": "PUB-07",
   "phase": "after",
   "runtime": {
-    "route": "/articles",
+    "route": "/articles?lang=ar",
     "locale": "ar",
     "direction": "rtl",
     "viewport": {
@@ -13,8 +13,8 @@
     },
     "responseStatus": 200,
     "responseOk": true,
-    "beforeHash": "c1fd8847a16c267d8386fdce6d6c49d2b3f0ea38d116698a5f7fb247355ffb5b",
-    "afterHash": "69880f20b48b4f4e2da252c390d86e50ce232265e6d35649763c9a915d3db250",
+    "beforeHash": "d0b451a635abcd2110d61368e4a0b09b282229b0a577064d56b2402977146116",
+    "afterHash": "951995fa78edafee4835cc5edd30d1103eb6bc9bd8e40e1ab8467a17835f9d4e",
     "requestedApi": [
       {
         "method": "GET",
@@ -33,8 +33,8 @@
     "headers": 2,
     "navs": 2,
     "sections": 3,
-    "cards": 10,
-    "images": 3,
+    "cards": 60,
+    "images": 9,
     "forms": 0
   },
   "fonts": {
@@ -2157,6 +2157,42 @@
       "loading": "eager"
     },
     {
+      "src": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/clone/pub07-b.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/clone/pub07-c.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/clone/pub07-d.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/clone/pub07-e.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
       "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
@@ -2175,51 +2211,99 @@
       },
       {
         "text": "",
-        "href": "/"
+        "href": "/?lang=ar"
       },
       {
         "text": "الرئيسية",
-        "href": "/"
+        "href": "/?lang=ar"
       },
       {
         "text": "العقارات",
-        "href": "/properties"
+        "href": "/properties?lang=ar"
       },
       {
         "text": "المطورون",
-        "href": "/developers"
+        "href": "/developers?lang=ar"
       },
       {
         "text": "المقالات",
-        "href": "/articles"
+        "href": "/articles?lang=ar"
       },
       {
         "text": "الكوميونتي",
-        "href": "/community"
+        "href": "/community?lang=ar"
       },
       {
         "text": "من نحن",
-        "href": "/about"
+        "href": "/about?lang=ar"
       },
       {
         "text": "فريق العمل",
-        "href": "/team"
+        "href": "/team?lang=ar"
       },
       {
         "text": "تسجيل الدخول",
-        "href": "/auth/login"
+        "href": "/auth/login?lang=ar"
       },
       {
         "text": "إنشاء حساب",
-        "href": "/auth/register"
+        "href": "/auth/register?lang=ar"
       },
       {
-        "text": "دليلك الشامل لشراء عقارك الأول في مدينة السادات",
+        "text": "تسجيل الدخول",
+        "href": "/auth/login?lang=ar"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register?lang=ar"
+      },
+      {
+        "text": "دليلك الكامل للشراء في مدينة السادات 2024",
         "href": "/articles/demo-home-buying-guide"
       },
       {
         "text": "اقرأ المقال",
         "href": "/articles/demo-home-buying-guide"
+      },
+      {
+        "text": "أفضل المناطق للاستثمار العقاري في السادات",
+        "href": "/articles/investment-opportunities-sadat"
+      },
+      {
+        "text": "اقرأ المقال",
+        "href": "/articles/investment-opportunities-sadat"
+      },
+      {
+        "text": "خدمات مدينة السادات: ما المتاح وما المخطط له",
+        "href": "/articles/services-near-your-home"
+      },
+      {
+        "text": "اقرأ المقال",
+        "href": "/articles/services-near-your-home"
+      },
+      {
+        "text": "قوانين الإيجار الجديدة وما يهمك معرفته",
+        "href": "/articles/new-rental-laws-guide"
+      },
+      {
+        "text": "اقرأ المقال",
+        "href": "/articles/new-rental-laws-guide"
+      },
+      {
+        "text": "الحياة في مدينة السادات: تجارب السكان",
+        "href": "/articles/life-in-sadat-city"
+      },
+      {
+        "text": "اقرأ المقال",
+        "href": "/articles/life-in-sadat-city"
+      },
+      {
+        "text": "نصائح للمستأجر الأول: تجنب هذه الأخطاء",
+        "href": "/articles/first-time-renter-mistakes"
+      },
+      {
+        "text": "اقرأ المقال",
+        "href": "/articles/first-time-renter-mistakes"
       },
       {
         "text": "ابحث الآن",
@@ -2288,15 +2372,47 @@
         "aria": "اللغة"
       },
       {
+        "text": "",
+        "aria": "إغلاق خلفية القائمة"
+      },
+      {
         "text": "العربية",
         "aria": "اللغة"
+      },
+      {
+        "text": "العربية",
+        "aria": "اللغة"
+      },
+      {
+        "text": "",
+        "aria": "فتح القائمة"
       },
       {
         "text": "الكل",
         "aria": null
       },
       {
-        "text": "أدلة الشراء والاستثمار",
+        "text": "نصائح شراء",
+        "aria": null
+      },
+      {
+        "text": "استثمار",
+        "aria": null
+      },
+      {
+        "text": "خدمات",
+        "aria": null
+      },
+      {
+        "text": "قوانين",
+        "aria": null
+      },
+      {
+        "text": "مناطق",
+        "aria": null
+      },
+      {
+        "text": "نصائح إيجار",
         "aria": null
       }
     ]
@@ -2308,26 +2424,26 @@
         "height": 1783
       },
       {
-        "width": 1280,
-        "height": 1340
+        "width": 1523,
+        "height": 1537
       },
       {
         "width": 1523,
-        "height": 1537
+        "height": 1802
       }
     ],
     "dimensions": {
-      "width": 1471,
-      "height": 650
+      "width": 1554,
+      "height": 657
     },
     "diffPath": "docs/quality/figma_parity/screens/PUB-07/diff.png",
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-07/visual-metrics.json",
     "visualMetrics": {
       "comparedWidth": 1523,
-      "comparedHeight": 1537,
-      "comparedPixels": 2340851,
-      "materialDifferencePercent": 40.43,
-      "antiAliasingOnlyPercent": 2.082,
+      "comparedHeight": 1783,
+      "comparedPixels": 2715509,
+      "materialDifferencePercent": 16.5285,
+      "antiAliasingOnlyPercent": 6.6344,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

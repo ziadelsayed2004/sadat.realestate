@@ -1,0 +1,222 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-12",
+  "phase": "before",
+  "capturedAt": "2026-09-05T02:28:00.570Z",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4353",
+    "nodeId": "6017:17706",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-17706&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "dimensions": {
+      "width": 1577,
+      "height": 2094
+    }
+  },
+  "runtime": {
+    "route": "/auth/register/provider/account?providerType=developer_company&step=documents&lang=ar",
+    "requestedQueueRoute": "/auth/register/provider/documents",
+    "role": "anonymous",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1577,
+      "height": 2094,
+      "devicePixelRatio": 1
+    },
+    "capture": {
+      "path": "docs/quality/figma_parity/screens/AUTH-12/runtime-before-auth-lane-ar-2026-09-05.png",
+      "sha256": "f45d1157869edd0f54fd6459e55212869739cb2484eeb8b54c044d169abf0c81"
+    },
+    "beforeHash": "f45d1157869edd0f54fd6459e55212869739cb2484eeb8b54c044d169abf0c81",
+    "afterHash": null,
+    "apiRequests": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/provider/application"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4173/api/v1/provider/application",
+        "status": 200
+      }
+    ],
+    "routeHits": [
+      {
+        "method": "GET",
+        "pathname": "/provider/application"
+      }
+    ]
+  },
+  "page": {
+    "screenId": "AUTH-12",
+    "state": "ready",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/register/provider/account?providerType=developer_company&step=documents&lang=ar",
+    "html": {
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 2094,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 2319
+    },
+    "structure": {
+      "headings": 9,
+      "h1": 1,
+      "main": 1,
+      "headers": 9,
+      "sections": 1,
+      "cards": 34,
+      "forms": 0,
+      "buttons": 3,
+      "links": 3,
+      "inputs": 8,
+      "unlabeledControls": 0
+    },
+    "controls": [
+      {
+        "tag": "select",
+        "id": null,
+        "name": null,
+        "type": null,
+        "required": false,
+        "ariaLabel": "اللغة",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-commercial_registration",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: السجل التجاري",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-tax_card",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: البطاقة الضريبية",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-authorized_representative_id_front",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: هوية الممثل المفوض - الوجه الأمامي",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-authorized_representative_id_back",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: هوية الممثل المفوض - الوجه الخلفي",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-company_profile",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: ملف الشركة",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-developer_license",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: ترخيص المطور",
+        "autocomplete": null
+      },
+      {
+        "tag": "input",
+        "id": "provider-document-input-additional_supporting_document",
+        "name": null,
+        "type": "file",
+        "required": false,
+        "ariaLabel": "اختيار ملف: مستند داعم إضافي",
+        "autocomplete": null
+      }
+    ],
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "الرئيسية",
+        "href": "/"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "العربية",
+        "ariaLabel": "اللغة",
+        "disabled": false
+      },
+      {
+        "text": "رجوع",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "مراجعة الطلب",
+        "ariaLabel": null,
+        "disabled": true
+      }
+    ]
+  },
+  "comparison": {
+    "diffPath": "docs/quality/figma_parity/screens/AUTH-12/auth-lane-ar-2026-09-05-diff-before.png",
+    "visualMetrics": {
+      "schemaVersion": 1,
+      "screenId": "AUTH-12",
+      "phase": "before",
+      "source": {
+        "width": 1577,
+        "height": 2094
+      },
+      "runtimeBefore": {
+        "width": 1577,
+        "height": 2319
+      },
+      "runtimeAfter": null,
+      "comparedWidth": 1577,
+      "comparedHeight": 2094,
+      "comparedPixels": 3302238,
+      "materialDifferencePercent": 30.9442,
+      "antiAliasingOnlyPercent": 2.9176,
+      "threshold": {
+        "materialRgbSumGreaterThan": 24,
+        "antiAliasingRgbSumGreaterThan": 3
+      },
+      "method": "unmasked same-width source/runtime canvas comparison over overlapping document height",
+      "comparedCapture": "RUNTIME BEFORE (CURRENT)",
+      "reviewed": false,
+      "reviewedAt": null
+    }
+  }
+}

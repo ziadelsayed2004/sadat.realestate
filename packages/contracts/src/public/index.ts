@@ -50,6 +50,9 @@ export const publicHomepageMetricSchema = z.object({
   order: publicOrderSchema
 }).strict();
 
+const publicPropertyCodeSchema = z.string().trim().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/);
+const publicPropertySourceTypeSchema = z.enum(['individual_broker', 'brokerage_office', 'developer_company']);
+
 export const publicHomepagePropertySchema = z.object({
   id: propertyObjectIdSchema,
   slug: propertySlugSchema,
@@ -61,7 +64,17 @@ export const publicHomepagePropertySchema = z.object({
   description: localizedTextSchema.optional(),
   area: propertyAreaSchema.optional(),
   layout: propertyLayoutSchema.optional(),
-  price: propertyMoneySchema.optional()
+  price: propertyMoneySchema.optional(),
+  locationName: localizedTextSchema.optional(),
+  sourceName: localizedTextSchema.optional(),
+  sourceImageUrl: publicUrlSchema.optional(),
+  sourceType: publicPropertySourceTypeSchema.optional(),
+  sourceVerified: z.boolean().optional(),
+  publicCode: publicPropertyCodeSchema.optional(),
+  viewCount: z.number().int().nonnegative().optional(),
+  installmentAvailable: z.boolean().optional(),
+  featured: z.boolean().optional(),
+  deliveryStatus: propertyDeliveryStatusSchema.optional()
 }).strict();
 
 export const publicHomepageDeveloperSchema = z.object({
@@ -112,9 +125,6 @@ export const publicPropertySourceSchema = z.object({
   imageUrl: publicUrlSchema.optional(),
   verified: z.boolean().optional()
 }).strict();
-
-const publicPropertyCodeSchema = z.string().trim().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/);
-const publicPropertySourceTypeSchema = z.enum(['individual_broker', 'brokerage_office', 'developer_company']);
 
 export const publicPropertyRelatedPropertySchema = publicHomepagePropertySchema.extend({
   locationName: localizedTextSchema.optional(),

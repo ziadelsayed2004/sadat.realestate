@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "screenId": "PUB-11",
   "classification": "PARTIAL",
-  "classificationReason": "Fresh source and runtime capture completed after the Public-11 repair; residual visual differences remain, so this screen is not eligible for official closure.",
+  "classificationReason": "Fresh source and runtime capture completed; direct repair/parity confirmation is not complete.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",
@@ -38,7 +38,7 @@
     }
   },
   "runtime": {
-    "route": "/about",
+    "route": "/about?lang=ar",
     "role": "public",
     "permissions": {
       "requiredRole": "public",
@@ -55,43 +55,51 @@
           },
           {
             "text": "",
-            "href": "/"
+            "href": "/?lang=ar"
           },
           {
             "text": "الرئيسية",
-            "href": "/"
+            "href": "/?lang=ar"
           },
           {
             "text": "العقارات",
-            "href": "/properties"
+            "href": "/properties?lang=ar"
           },
           {
             "text": "المطورون",
-            "href": "/developers"
+            "href": "/developers?lang=ar"
           },
           {
             "text": "المقالات",
-            "href": "/articles"
+            "href": "/articles?lang=ar"
           },
           {
             "text": "الكوميونتي",
-            "href": "/community"
+            "href": "/community?lang=ar"
           },
           {
             "text": "من نحن",
-            "href": "/about"
+            "href": "/about?lang=ar"
           },
           {
             "text": "فريق العمل",
-            "href": "/team"
+            "href": "/team?lang=ar"
           },
           {
             "text": "تسجيل الدخول",
-            "href": "/auth/login"
+            "href": "/auth/login?lang=ar"
           },
           {
             "text": "إنشاء حساب",
-            "href": "/auth/register"
+            "href": "/auth/register?lang=ar"
+          },
+          {
+            "text": "تسجيل الدخول",
+            "href": "/auth/login?lang=ar"
+          },
+          {
+            "text": "إنشاء حساب",
+            "href": "/auth/register?lang=ar"
           },
           {
             "text": "تصفح العقارات",
@@ -99,7 +107,7 @@
           },
           {
             "text": "واتساب",
-            "href": "/community"
+            "href": "https://wa.me/201001234567"
           },
           {
             "text": "العقارات",
@@ -131,34 +139,55 @@
           },
           {
             "text": "واتساب متاح 24/7",
-            "href": "/community"
+            "href": "https://wa.me/201001234567"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://facebook.com"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://instagram.com"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://youtube.com"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://tiktok.com"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://linkedin.com"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://wa.me/201001234567"
           }
         ],
-        "buttons": []
+        "buttons": [
+          {
+            "text": "العربية",
+            "aria": "اللغة"
+          },
+          {
+            "text": "",
+            "aria": "إغلاق خلفية القائمة"
+          },
+          {
+            "text": "العربية",
+            "aria": "اللغة"
+          },
+          {
+            "text": "العربية",
+            "aria": "اللغة"
+          },
+          {
+            "text": "",
+            "aria": "فتح القائمة"
+          }
+        ]
       },
       "source": "runtime DOM and route contract"
     },
@@ -172,32 +201,21 @@
     "deterministicState": {
       "path": "docs/quality/figma_parity/screens/PUB-11/deterministic-state.json",
       "seedId": "fresh-audit-PUB-11-ar-v1",
-      "responseSha256": "d413de346bf1013158ccd8330b54e1d65a8cf49993ca6e10eb55f0023282fd73"
+      "responseSha256": "1e88c8de3af28a1a11c5bb34ac9b5e6d34b95f1066ea86e762ff2b0f702af9d8"
     },
     "response": {
       "status": 200,
       "ok": true
     },
-    "apiRequests": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/about"
-      }
-    ],
-    "apiResponses": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/about",
-        "status": 200
-      }
-    ],
+    "apiRequests": [],
+    "apiResponses": [],
     "before": {
       "path": "docs/quality/figma_parity/screens/PUB-11/runtime-before.png",
-      "sha256": "81b3989569f2ce9ea29fc745e0d67dc036d3402f19574f8967c27d971e055347"
+      "sha256": "bf8cf8abcb97c844bd7b01ef137318886d759a9cca99c6061161cfb83e09661e"
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-11/runtime-after.png",
-      "sha256": "17675aec742b02b7eecda2fb0b91c4e35f8fd791cc8adbfda408fe2453ff66fc"
+      "sha256": "6060cc19ede83e65e7c31145ccb253d18e10546189a382fa89551831ca8b497c"
     }
   },
   "structuredVisualComparison": {
@@ -219,32 +237,26 @@
     ],
     "observations": [
       "Figma source is 1524px wide and 2214px high for PUB-11.",
-      "Runtime is 1524px wide at the approved Desktop Chrome viewport and now has the canonical 2214px document height.",
-      "The after capture confirms the canonical platform hero, five-step journey, four values, four statistics, CTA pair, and shared footer geometry.",
-      "The after capture now matches the Figma section boundaries and geometry; residual typography, content rasterization, and component-level differences remain visible in diff.png; no baseline was updated and official closure is not claimed."
+      "Runtime is 1524px wide at the approved Desktop Chrome viewport and has 2214px document height.",
+      "The side-by-side diff is evidence for review only; no baseline was updated.",
+      "Exact typography, spacing, imagery, control states, responsive variants, and prototype transitions remain to be checked against focused fixtures."
     ]
   },
   "functionalApiComparison": {
     "reviewed": true,
     "requestProjection": "GET /api/v1/public/about",
     "responseProjection": "public-about fixture captured and hashed",
-    "outcome": "route loaded with the deterministic public-about fixture and returned HTTP 200; hero, sections, statistics, CTAs, and footer were reviewed with residual visual differences recorded."
+    "outcome": "route loaded with a public-about fixture; complete CTA/prototype/API projection comparison remains pending"
   },
   "defects": [
-    "Residual visual differences remain in typography, exact imagery rasterization, and component details; official closure is intentionally withheld.",
+    "Full per-screen parity review is incomplete.",
     "Figma get_design_context returned sparse metadata because the full frame exceeded context limits."
   ],
-  "filesRepaired": [
-    "apps/web/src/features/content/about-team.tsx",
-    "apps/web/src/features/content/about-team.css",
-    "apps/web/src/features/content/about-team-copy.ts",
-    "apps/web/tests/e2e/public-fixtures.ts",
-    "scripts/capture-figma-parity-runtime.mjs"
-  ],
+  "filesRepaired": [],
   "focusedTests": [],
   "accessibility": {
-    "focusedCheck": "Public about/team accessibility assertions are covered by the focused Playwright public batch.",
-    "exitCode": 0
+    "focusedCheck": "not yet run",
+    "exitCode": null
   },
   "evidencePaths": {
     "figma": "docs/quality/figma_parity/screens/PUB-11/figma.png",
@@ -252,14 +264,5 @@
     "runtimeAfter": "docs/quality/figma_parity/screens/PUB-11/runtime-after.png",
     "diff": "docs/quality/figma_parity/screens/PUB-11/diff.png",
     "review": "docs/quality/figma_parity/screens/PUB-11/review.json"
-  },
-  "reviewedAt": "2026-08-28T13:40:00.000Z",
-  "latestRuntimeVerification": {
-    "source": "runtime-after-capture.json and visual-metrics.json",
-    "phase": "after",
-    "apiResponseStatus": 200,
-    "materialDifferencePercent": 4.7521,
-    "antiAliasingOnlyPercent": 29.0824,
-    "officialClosureEligible": false
   }
 }

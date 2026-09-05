@@ -291,6 +291,10 @@ const articleRelatedPropertyFixture = {
   },
   meta: { requestId: 'fresh-audit-public-article-related-properties' }
 };
+for (const item of articleRelatedPropertyFixture.data.items) {
+  delete item.name['zh-CN'];
+  if (item.locationName !== undefined) delete item.locationName['zh-CN'];
+}
 const fixtureConfig = fixtureKind === 'public-home'
   ? { fixture: publicHomepageFixture(), apiPath: '/api/v1/public/home', apiPattern: '**/api/v1/public/home**', pageName: 'public-home', stateAttribute: 'data-homepage-state', regions: ['header', 'hero/search', 'advertising banner', 'population counter', 'property categories', 'featured properties', 'articles', 'community', 'about', 'CTA', 'footer'] }
   : fixtureKind === 'public-details'

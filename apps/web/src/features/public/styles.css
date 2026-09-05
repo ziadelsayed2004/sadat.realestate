@@ -465,10 +465,6 @@
   min-height: 442px;
 }
 
-.public-homepage__banner-card:hover {
-  box-shadow: 0 20px 35px -5px rgb(0 0 0 / 0.12), 0 10px 10px -5px rgb(0 0 0 / 0.04);
-}
-
 .public-homepage__banner-link {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -477,11 +473,6 @@
   color: inherit;
   min-height: 442px;
 }
-
-/* In RTL (Arabic), copy is on the right and media is on the left matching Figma PUB-01 */
-/* [dir="rtl"] .public-homepage__banner-link {
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-} */
 
 [dir="rtl"] .public-homepage__banner-media-wrapper {
   order: 2;
@@ -506,10 +497,6 @@
   object-fit: cover;
   display: block;
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.public-homepage__banner-card:hover .public-homepage__banner-media-wrapper img {
-  transform: scale(1.04);
 }
 
 .public-homepage__banner-copy {
@@ -650,11 +637,6 @@
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.public-homepage__banner-card:hover .public-homepage__banner-cta {
-  background: var(--color-brand-primary-hover, #0d9488);
-  transform: translateY(-1px);
-}
-
 .public-homepage__banner-cta-icon {
   width: 1rem;
   height: 1rem;
@@ -780,14 +762,16 @@
 .public-homepage__category-card {
   display: grid;
   justify-items: center;
-  gap: var(--space-sm);
-  min-block-size: 8.5rem;
-  padding: var(--space-lg) var(--space-md);
+  gap: 0.75rem;
+  padding: 21px 17px;
   color: var(--color-text-strong);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
+  font-size: 12px;
+  line-height: 15px;
+  white-space: nowrap;
   text-decoration: none;
 }
 
@@ -807,8 +791,8 @@
 
 .public-category-glyph {
   display: grid;
-  inline-size: 4.75rem;
-  block-size: 4.75rem;
+  inline-size: 78px;
+  block-size: 78px;
   place-items: center;
   color: var(--color-brand-primary);
   background: var(--color-surface-soft);
@@ -827,8 +811,8 @@
 
 .public-homepage__category-image {
   display: block;
-  inline-size: 4.75rem;
-  block-size: 4.75rem;
+  inline-size: 78px;
+  block-size: 78px;
   object-fit: contain;
 }
 
@@ -1045,7 +1029,7 @@
 }
 
 .public-homepage__platform-callout h2 {
-  margin-block: var(--space-sm);
+  margin: 0;
   color: var(--color-text-strong);
 }
 
@@ -1697,7 +1681,6 @@
   font-weight: var(--font-weight-bold);
 }
 
-/* Canonical desktop geometry shared by PUB-01 through PUB-08. */
 @media (min-width: 1051px) {
   .public-homepage__header {
     block-size: 5.625rem;
@@ -1912,7 +1895,7 @@
   }
 
   .public-homepage__section--banners {
-    block-size: 30.875rem;
+    block-size: 30.875rem !important;
     padding-block: 1.9375rem 1.4375rem;
   }
 
@@ -1938,35 +1921,37 @@
   }
 
   .public-homepage__category-section {
-    block-size: 33.0625rem;
-    padding-block: 5rem 4rem;
+    block-size: 29.875rem;
+    padding: 3.5rem 1.5rem;
   }
 
   .public-homepage__category-section .public-homepage__section-heading {
-    margin-block-end: 1rem;
+    margin-block-end: 0;
   }
 
   .public-homepage__category-section .public-homepage__section-description {
-    margin-block: -0.5rem 2.5rem;
+    margin-block: -0.5rem 3.375rem;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
   }
 
   .public-homepage__section--properties {
-    block-size: 42.875rem;
-    padding-block: 3rem;
+    block-size: 46.0625rem;
+    padding-block: 4rem;
   }
 
   .public-homepage__section--properties .public-homepage__section-heading {
-    margin-block-end: 3.9375rem;
+    block-size: 6.5rem;
+    margin-block-end: 2.5rem;
   }
 
   .public-homepage__section--properties .public-homepage__property-card {
-    block-size: 29.25rem;
+    block-size: 29.0625rem;
   }
 
   .public-homepage__section--properties .ui-property-card__media,
   .public-homepage__section--properties .ui-property-card__media>img {
-    min-block-size: 14rem;
-    block-size: 14rem;
+    block-size: 13rem;
   }
 
   .public-homepage__section--article {
@@ -1995,7 +1980,7 @@
   }
 
   .public-homepage__section--community {
-    block-size: 28.4375rem;
+    block-size: 28.375rem;
     padding-block: 6rem 4.5rem;
   }
 
@@ -2025,8 +2010,8 @@
 
   .public-homepage .ui-property-card__media,
   .public-homepage .ui-property-card__media>img {
-    min-block-size: 15.5rem;
-    block-size: 15.5rem;
+    min-block-size: 13rem;
+    block-size: 13rem;
   }
 
   .public-homepage__content-card>img {
@@ -2039,6 +2024,7 @@
     grid-template-rows: 13.5rem 5.5625rem 3.3125rem;
     padding-bottom: 0;
     padding: 3.5rem max(calc((100vw - 80rem) / 2 + 1.5rem), 2.5rem) 0;
+    margin-block-start: 5rem;
   }
 
   /* The desktop Figma footer is a 1,280px shell with 24px inner padding:
@@ -2112,10 +2098,11 @@
   }
 
   .public-homepage__platform-callout {
-    block-size: 19.5rem;
-    min-block-size: 19.5rem;
-    margin-block: 2rem;
-    padding-block: 2.5rem;
+    min-block-size: 18.5rem;
+    margin-block: 0;
+    padding: 4rem 1rem;
+    gap: 0;
+    grid-template-rows: 4.5rem 6rem;
   }
 
   .public-homepage__platform-callout h2 {
@@ -2126,6 +2113,7 @@
   .public-homepage__platform-callout p {
     font-size: 1.125rem;
     line-height: 1.75rem;
+    padding-block-start: 0.5rem;
   }
 
   .public-homepage__platform-callout .public-homepage__primary-action,
@@ -2136,6 +2124,9 @@
     font-size: 1.125rem;
     line-height: 1.75rem;
     font-weight: var(--font-weight-semibold);
+    align-self: start;
+    margin-block-start: 2.5rem;
+    border-width: 0;
   }
 
   .public-homepage .public-homepage__section--about {
@@ -2507,8 +2498,6 @@
   }
 }
 
-/* Final Figma parity safeguards: keep the hero controls and carousel in their own
-   visible stacking layer, without fixed heights clipping content. */
 .public-homepage__hero {
   z-index: 2;
   overflow: visible;
@@ -2560,15 +2549,15 @@
 
 .public-homepage__section--banners {
   z-index: 0;
-  block-size: auto !important;
+  block-size: auto;
   min-block-size: 0;
   overflow: visible;
 }
 
 .public-homepage__section--banners .public-homepage__banner-card,
 .public-homepage__section--banners .public-homepage__banner-link {
-  block-size: auto !important;
-  min-block-size: 34.75rem;
+  block-size: auto;
+  min-block-size: 27.765625rem;
 }
 
 .public-homepage__section--banners .public-homepage__banner-card {
@@ -2581,8 +2570,8 @@
 }
 
 .public-homepage__section--banners .public-homepage__banner-copy {
-  block-size: auto !important;
-  min-block-size: 34.75rem;
+  block-size: auto;
+  min-block-size: 27.765625rem;
   color: #fff;
   background: #17233d;
 }
@@ -2701,10 +2690,6 @@
   }
 }
 
-.public-homepage__category-section {
-  block-size: auto !important;
-}
-
 .public-homepage__category-rail {
   display: flex !important;
   gap: 0.75rem;
@@ -2717,14 +2702,17 @@
 .public-homepage__category-rail .public-homepage__category-card {
   flex: 0 0 8.625rem;
   min-inline-size: 8.625rem;
-  min-block-size: 12.125rem;
   scroll-snap-align: start;
 }
 
 @media (min-width: 64.0625rem) {
+  .public-homepage__category-rail {
+    padding: 2.5rem 2.5rem 0.75rem;
+  }
+
   .public-homepage__category-rail .public-homepage__category-card {
-    flex-basis: 9rem;
-    min-inline-size: 9rem;
+    flex-basis: 8.625rem;
+    min-inline-size: 8.625rem;
   }
 }
 

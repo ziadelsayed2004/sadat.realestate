@@ -3,7 +3,7 @@
   "screenId": "PUB-03",
   "phase": "after",
   "runtime": {
-    "route": "/properties/demo-garden-duplex",
+    "route": "/properties/demo-open-view-apartment?lang=ar",
     "locale": "ar",
     "direction": "rtl",
     "viewport": {
@@ -14,7 +14,7 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "9dbd074542650cb7e54fd186bce70913fb61ec60fe414b66d51d892c85f57ff1",
-    "afterHash": "60d8cee736a6982cb1cb492ca884a0141b935cd1ec2a2e6efce344694d991ed1",
+    "afterHash": "07ac8db5eda687a4c240f421afa08f6d77fb7a58efc51cd47ab8b998c749e367",
     "requestedApi": [],
     "apiResponses": []
   },
@@ -2146,7 +2146,7 @@
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/figma/public/PUB-03/raw-02.jpg",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-home.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
@@ -2158,13 +2158,13 @@
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-home.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-rental.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/developer-sadat.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-provider-ahmed.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
@@ -2188,51 +2188,51 @@
       },
       {
         "text": "",
-        "href": "/"
+        "href": "/?lang=ar"
       },
       {
         "text": "الرئيسية",
-        "href": "/"
+        "href": "/?lang=ar"
       },
       {
         "text": "العقارات",
-        "href": "/properties"
+        "href": "/properties?lang=ar"
       },
       {
         "text": "المطورون",
-        "href": "/developers"
+        "href": "/developers?lang=ar"
       },
       {
         "text": "المقالات",
-        "href": "/articles"
+        "href": "/articles?lang=ar"
       },
       {
         "text": "الكوميونتي",
-        "href": "/community"
+        "href": "/community?lang=ar"
       },
       {
         "text": "من نحن",
-        "href": "/about"
+        "href": "/about?lang=ar"
       },
       {
         "text": "فريق العمل",
-        "href": "/team"
+        "href": "/team?lang=ar"
       },
       {
         "text": "تسجيل الدخول",
-        "href": "/auth/login"
+        "href": "/auth/login?lang=ar"
       },
       {
         "text": "إنشاء حساب",
-        "href": "/auth/register"
+        "href": "/auth/register?lang=ar"
       },
       {
         "text": "تسجيل الدخول",
-        "href": "/auth/login"
+        "href": "/auth/login?lang=ar"
       },
       {
         "text": "إنشاء حساب",
-        "href": "/auth/register"
+        "href": "/auth/register?lang=ar"
       },
       {
         "text": "العودة إلى النتائج",
@@ -2247,8 +2247,12 @@
         "href": "/developers/670000000000000000000003"
       },
       {
-        "text": "شقة فاخرة بإطلالة مفتوحة في الحي الأول",
-        "href": "/properties/demo-open-view-apartment"
+        "text": "شقة للإيجار في الحي الثالث",
+        "href": "/properties/demo-rental-apartment"
+      },
+      {
+        "text": "تواصل عبر واتساب",
+        "href": "https://wa.me/201001234567?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%A7%D9%84%D8%B9%D9%82%D8%A7%D8%B1%3A%20%D8%B4%D9%82%D8%A9%20%D9%81%D8%A7%D8%AE%D8%B1%D8%A9%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%AD%D9%8A%20%D8%A7%D9%84%D8%A3%D9%88%D9%84"
       },
       {
         "text": "العقارات",
@@ -2313,6 +2317,10 @@
         "aria": "اللغة"
       },
       {
+        "text": "",
+        "aria": "إغلاق خلفية القائمة"
+      },
+      {
         "text": "العربية",
         "aria": "اللغة"
       },
@@ -2339,10 +2347,6 @@
       {
         "text": "أرسل الطلب",
         "aria": null
-      },
-      {
-        "text": "واتساب",
-        "aria": null
       }
     ]
   },
@@ -2358,21 +2362,21 @@
       },
       {
         "width": 1577,
-        "height": 3045
+        "height": 3086
       }
     ],
     "dimensions": {
       "width": 1507,
-      "height": 1080
+      "height": 1093
     },
     "diffPath": "docs/quality/figma_parity/screens/PUB-03/diff.png",
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-03/visual-metrics.json",
     "visualMetrics": {
       "comparedWidth": 1577,
-      "comparedHeight": 3045,
-      "comparedPixels": 4801965,
-      "materialDifferencePercent": 9.2912,
-      "antiAliasingOnlyPercent": 4.4366,
+      "comparedHeight": 3046,
+      "comparedPixels": 4803542,
+      "materialDifferencePercent": 17.6572,
+      "antiAliasingOnlyPercent": 4.0065,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

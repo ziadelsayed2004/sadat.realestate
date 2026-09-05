@@ -3,7 +3,7 @@
   "screenId": "PUB-12",
   "phase": "after",
   "runtime": {
-    "route": "/team",
+    "route": "/team?lang=ar",
     "locale": "ar",
     "direction": "rtl",
     "viewport": {
@@ -13,8 +13,8 @@
     },
     "responseStatus": 200,
     "responseOk": true,
-    "beforeHash": "23353ebb4686304c57ef06af22eb8889344d717e5cb18bef11e313963d114de3",
-    "afterHash": "f8f18d3ae3430249f8451a69ebe00680d5171109718a771d966775c12155aeb6",
+    "beforeHash": "f8f18d3ae3430249f8451a69ebe00680d5171109718a771d966775c12155aeb6",
+    "afterHash": "2335b37b9b43009bdc27fcfcef53826f8283912b135b53112ceac8f18b4ff262",
     "requestedApi": [],
     "apiResponses": []
   },
@@ -2200,43 +2200,51 @@
       },
       {
         "text": "",
-        "href": "/"
+        "href": "/?lang=ar"
       },
       {
         "text": "الرئيسية",
-        "href": "/"
+        "href": "/?lang=ar"
       },
       {
         "text": "العقارات",
-        "href": "/properties"
+        "href": "/properties?lang=ar"
       },
       {
         "text": "المطورون",
-        "href": "/developers"
+        "href": "/developers?lang=ar"
       },
       {
         "text": "المقالات",
-        "href": "/articles"
+        "href": "/articles?lang=ar"
       },
       {
         "text": "الكوميونتي",
-        "href": "/community"
+        "href": "/community?lang=ar"
       },
       {
         "text": "من نحن",
-        "href": "/about"
+        "href": "/about?lang=ar"
       },
       {
         "text": "فريق العمل",
-        "href": "/team"
+        "href": "/team?lang=ar"
       },
       {
         "text": "تسجيل الدخول",
-        "href": "/auth/login"
+        "href": "/auth/login?lang=ar"
       },
       {
         "text": "إنشاء حساب",
-        "href": "/auth/register"
+        "href": "/auth/register?lang=ar"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login?lang=ar"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register?lang=ar"
       },
       {
         "text": "العقارات",
@@ -2301,8 +2309,20 @@
         "aria": "اللغة"
       },
       {
+        "text": "",
+        "aria": "إغلاق خلفية القائمة"
+      },
+      {
         "text": "العربية",
         "aria": "اللغة"
+      },
+      {
+        "text": "العربية",
+        "aria": "اللغة"
+      },
+      {
+        "text": "",
+        "aria": "فتح القائمة"
       },
       {
         "text": "الكل",
@@ -2334,7 +2354,7 @@
       },
       {
         "width": 1523,
-        "height": 1532
+        "height": 1560
       },
       {
         "width": 1523,
@@ -2351,8 +2371,8 @@
       "comparedWidth": 1523,
       "comparedHeight": 1560,
       "comparedPixels": 2375880,
-      "materialDifferencePercent": 10.5675,
-      "antiAliasingOnlyPercent": 6.9207,
+      "materialDifferencePercent": 6.7041,
+      "antiAliasingOnlyPercent": 7.0369,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

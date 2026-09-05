@@ -299,6 +299,27 @@ describe('provider private documents', () => {
     await waitFor(() => expect(screen.queryByText('commercial-registration.pdf')).not.toBeInTheDocument());
   });
 
+  it('does not block review when the API reports an optional document as missing', async () => {
+    const copy = getProviderDocumentsCopy('en');
+    const initial = application('developer_company', {
+      missingFields: [],
+      missingDocuments: ['developer_license']
+    });
+    renderWithLocale(
+      <ProviderDocumentsPage
+        client={{ getProviderApplication: vi.fn().mockResolvedValue(initial) }}
+        locale="en"
+        providerType="developer_company"
+        onBack={vi.fn()}
+      />,
+      { locale: 'en' }
+    );
+
+    await waitFor(() => expect(screen.getByTestId('provider-documents')).toHaveAttribute('data-state', 'ready'));
+    expect(screen.getByRole('button', { name: copy.reviewAction })).toBeEnabled();
+    expect(screen.queryByText(copy.reviewUnavailableTitle)).not.toBeInTheDocument();
+  });
+
   it('fails closed for oversized files and unavailable requirements', async () => {
     const copy = getProviderDocumentsCopy('en');
     const uploadProviderDocument = vi.fn();

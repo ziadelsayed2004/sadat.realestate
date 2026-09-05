@@ -25,6 +25,7 @@ export interface ArticleRecord {
   seoDescription?: LocalizedText;
   coverAssetId?: Types.ObjectId;
   imageUrl?: string;
+  readingTimeMinutes?: number;
   authorId: Types.ObjectId;
   status: 'draft' | 'pending_review' | 'published' | 'archived';
   publishedAt?: Date;
@@ -109,6 +110,7 @@ const articleSchema = new Schema<ArticleRecord>({
   seoDescription: { type: localizedSchema },
   coverAssetId: { type: Schema.Types.ObjectId },
   imageUrl: { type: String, trim: true, maxlength: 2_048 },
+  readingTimeMinutes: { type: Number, min: 1, max: 10_000 },
   authorId: { type: Schema.Types.ObjectId, required: true, immutable: true },
   status: {
     type: String,

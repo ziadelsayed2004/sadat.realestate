@@ -291,15 +291,13 @@
             "kind": "unit",
             "name": {
               "ar": "شقة فاخرة في الحي الأول",
-              "en": "Luxury apartment in the First District",
-              "zh-CN": "第一区豪华公寓"
+              "en": "Luxury apartment in the First District"
             },
             "transactionType": "sale",
             "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
             "locationName": {
               "ar": "الحي الأول",
-              "en": "First District",
-              "zh-CN": "第一区"
+              "en": "First District"
             },
             "area": {
               "value": 145,
@@ -320,15 +318,13 @@
             "kind": "property",
             "name": {
               "ar": "فيلا مستقلة بالمنطقة الراقية",
-              "en": "Garden villa in Al Raqia",
-              "zh-CN": "高级区独立别墅"
+              "en": "Garden villa in Al Raqia"
             },
             "transactionType": "sale",
             "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-f.png",
             "locationName": {
               "ar": "المنطقة الراقية",
-              "en": "Al Raqia district",
-              "zh-CN": "高级区"
+              "en": "Al Raqia district"
             },
             "area": {
               "value": 320,
@@ -349,15 +345,13 @@
             "kind": "property",
             "name": {
               "ar": "أرض سكنية في الحي السابع",
-              "en": "Residential land in the Seventh District",
-              "zh-CN": "第七区住宅用地"
+              "en": "Residential land in the Seventh District"
             },
             "transactionType": "sale",
             "imageUrl": "http://127.0.0.1:4173/assets/clone/pub08-g.png",
             "locationName": {
               "ar": "الحي السابع",
-              "en": "Seventh District",
-              "zh-CN": "第七区"
+              "en": "Seventh District"
             },
             "area": {
               "value": 420,

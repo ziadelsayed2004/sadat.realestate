@@ -11,6 +11,7 @@ export interface PublicArticlesCopy {
   readonly openArticle: string;
   readonly readTime: (minutes: number) => string;
   readonly publishedAt: string;
+  readonly authorLabel: string;
   readonly authorUnavailable: string;
   readonly imageUnavailable: string;
   readonly noSummary: string;
@@ -54,6 +55,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicArticlesCopy>> = {
     openArticle: 'اقرأ المقال',
     readTime: minutes => `${minutes} دقائق`,
     publishedAt: 'تاريخ النشر',
+    authorLabel: '\u0627\u0644\u0643\u0627\u062a\u0628',
     authorUnavailable: 'بيانات الكاتب غير متاحة في المحتوى العام',
     imageUnavailable: 'صورة المقال غير متاحة',
     noSummary: 'لا يوجد ملخص منشور لهذا المقال.',
@@ -95,6 +97,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicArticlesCopy>> = {
     openArticle: 'Read article',
     readTime: minutes => `${minutes} min read`,
     publishedAt: 'Published',
+    authorLabel: 'Author',
     authorUnavailable: 'Author details are not available in the public content projection.',
     imageUnavailable: 'Article image unavailable',
     noSummary: 'No published summary is available for this article.',

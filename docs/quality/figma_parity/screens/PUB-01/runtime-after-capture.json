@@ -3,7 +3,7 @@
   "screenId": "PUB-01",
   "phase": "after",
   "runtime": {
-    "route": "/",
+    "route": "/?lang=ar",
     "locale": "ar",
     "direction": "rtl",
     "viewport": {
@@ -14,7 +14,7 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "775ed3ca971ead2112ab9ee5441005a21f50acbec3f35cd4475eb2678d7bcbd6",
-    "afterHash": "4b1c275f29086b48b4bf9f26fd7641edf165f00b8e0519304aeb75ccc2ba81e7",
+    "afterHash": "0088113cbc9782c27e5f18c01d187fe0be1914fa43cc3c687feb29092ba7f261",
     "requestedApi": [],
     "apiResponses": []
   },
@@ -22,8 +22,8 @@
     "headers": 2,
     "navs": 1,
     "sections": 9,
-    "cards": 35,
-    "images": 23,
+    "cards": 44,
+    "images": 26,
     "forms": 1
   },
   "fonts": {
@@ -2164,37 +2164,13 @@
       "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-all.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-restaurants-cafes.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
       "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-duplex.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-villa.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-room.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-roof.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
@@ -2212,7 +2188,49 @@
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-office.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-room.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-roof.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-duplex.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/canonical/public/category-villa.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-home.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/canonical/public/developer-sadat.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-villa.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/canonical/public/developer-nile.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
@@ -2224,7 +2242,7 @@
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-home.png",
+      "src": "http://127.0.0.1:4173/assets/canonical/public/developer-sadat.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
@@ -2335,52 +2353,52 @@
         "href": "/properties/demo-open-view-apartment"
       },
       {
-        "text": "شقق2 عقار",
-        "href": "/properties?propertyTypeId=670000000000000000000032"
+        "text": "مطاعم وكافيهات22 عقار",
+        "href": "/properties?propertyTypeId=222222222222222222222222"
       },
       {
         "text": "عرض الكل1,200+ عقار",
         "href": "/properties"
       },
       {
-        "text": "دوبلكس1 عقار",
-        "href": "/properties?propertyTypeId=670000000000000000000033"
-      },
-      {
-        "text": "فيلات1 عقار",
-        "href": "/properties?propertyTypeId=670000000000000000000034"
-      },
-      {
-        "text": "غرفة0 عقار",
-        "href": "/properties?propertyTypeId=670000000000000000000081"
-      },
-      {
-        "text": "روف1 عقار",
-        "href": "/properties?propertyTypeId=670000000000000000000082"
-      },
-      {
-        "text": "صالات عرض0 عقار",
+        "text": "صالات عرض34 عقار",
         "href": "/properties?propertyTypeId=670000000000000000000083"
       },
       {
-        "text": "مبنى تجاري كامل1 عقار",
+        "text": "مبنى تجاري كامل19 عقار",
         "href": "/properties?propertyTypeId=670000000000000000000084"
+      },
+      {
+        "text": "غرفة65 عقار",
+        "href": "/properties?propertyTypeId=670000000000000000000081"
+      },
+      {
+        "text": "روف28 عقار",
+        "href": "/properties?propertyTypeId=670000000000000000000082"
+      },
+      {
+        "text": "دوبلكس43 عقار",
+        "href": "/properties?propertyTypeId=670000000000000000000033"
+      },
+      {
+        "text": "فيلا87 عقار",
+        "href": "/properties?propertyTypeId=670000000000000000000034"
       },
       {
         "text": "عرض الكل",
         "href": "/properties"
       },
       {
-        "text": "مكتب إداري في المنطقة المركزية",
-        "href": "/properties/demo-central-office"
-      },
-      {
-        "text": "دوبلكس راقي بحديقة خاصة في الحي المتميز",
-        "href": "/properties/demo-garden-duplex"
-      },
-      {
-        "text": "شقة فاخرة بإطلالة مفتوحة في الحي الأول",
+        "text": "شقة فاخرة في الحي الأول",
         "href": "/properties/demo-open-view-apartment"
+      },
+      {
+        "text": "فيلا مستقلة بالمنطقة الراقية",
+        "href": "/properties/demo-upscale-villa"
+      },
+      {
+        "text": "دوبلكس فاخر في الحي الخامس",
+        "href": "/properties/demo-garden-duplex"
       },
       {
         "text": "عرض الكل",
@@ -2519,6 +2537,18 @@
       {
         "text": "",
         "aria": "الإعلان 3"
+      },
+      {
+        "text": "أضف للمقارنة",
+        "aria": null
+      },
+      {
+        "text": "أضف للمقارنة",
+        "aria": null
+      },
+      {
+        "text": "أضف للمقارنة",
+        "aria": null
       }
     ]
   },
@@ -2534,21 +2564,21 @@
       },
       {
         "width": 1549,
-        "height": 5493
+        "height": 5377
       }
     ],
     "dimensions": {
       "width": 1489,
-      "height": 1912
+      "height": 1873
     },
     "diffPath": "docs/quality/figma_parity/screens/PUB-01/diff.png",
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-01/visual-metrics.json",
     "visualMetrics": {
       "comparedWidth": 1549,
-      "comparedHeight": 5378,
-      "comparedPixels": 8330522,
-      "materialDifferencePercent": 33.6181,
-      "antiAliasingOnlyPercent": 12.0791,
+      "comparedHeight": 5377,
+      "comparedPixels": 8328973,
+      "materialDifferencePercent": 18.6345,
+      "antiAliasingOnlyPercent": 15.4297,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

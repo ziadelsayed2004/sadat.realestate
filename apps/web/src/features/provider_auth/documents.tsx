@@ -9,6 +9,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ApiClientError } from '../contracts/index.ts';
 import { Button, StateMessage } from '../design_system/index.ts';
+import { missingRequiredDocumentCategories } from './completeness.ts';
 import { getProviderDocumentsCopy, type ProviderDocumentsCopy } from './documents-copy.ts';
 import './styles.css';
 
@@ -349,11 +350,12 @@ export function ProviderDocumentsPage({ client, locale, providerType, initialApp
   }
 
   const canEdit = application !== undefined && canEditDocuments(application, providerType);
+  const missingRequiredDocuments = application === undefined ? [] : missingRequiredDocumentCategories(application);
   const canSubmit = canEdit
     && application !== undefined
     && application.availableActions.includes('submit')
     && application.missingFields.length === 0
-    && application.missingDocuments.length === 0;
+    && missingRequiredDocuments.length === 0;
   return (
     <section className="auth-page provider-documents-page" data-testid="provider-documents" data-screen-id="AUTH-12" data-state="ready" data-can-edit={canEdit} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <div className="auth-card auth-card--form provider-documents-card">

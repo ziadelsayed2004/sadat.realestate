@@ -3,7 +3,7 @@
   "screenId": "PUB-11",
   "phase": "after",
   "runtime": {
-    "route": "/about",
+    "route": "/about?lang=ar",
     "locale": "ar",
     "direction": "rtl",
     "viewport": {
@@ -13,8 +13,8 @@
     },
     "responseStatus": 200,
     "responseOk": true,
-    "beforeHash": "81b3989569f2ce9ea29fc745e0d67dc036d3402f19574f8967c27d971e055347",
-    "afterHash": "6060cc19ede83e65e7c31145ccb253d18e10546189a382fa89551831ca8b497c",
+    "beforeHash": "bf8cf8abcb97c844bd7b01ef137318886d759a9cca99c6061161cfb83e09661e",
+    "afterHash": "bf8cf8abcb97c844bd7b01ef137318886d759a9cca99c6061161cfb83e09661e",
     "requestedApi": [],
     "apiResponses": []
   },
@@ -2170,43 +2170,51 @@
       },
       {
         "text": "",
-        "href": "/"
+        "href": "/?lang=ar"
       },
       {
         "text": "الرئيسية",
-        "href": "/"
+        "href": "/?lang=ar"
       },
       {
         "text": "العقارات",
-        "href": "/properties"
+        "href": "/properties?lang=ar"
       },
       {
         "text": "المطورون",
-        "href": "/developers"
+        "href": "/developers?lang=ar"
       },
       {
         "text": "المقالات",
-        "href": "/articles"
+        "href": "/articles?lang=ar"
       },
       {
         "text": "الكوميونتي",
-        "href": "/community"
+        "href": "/community?lang=ar"
       },
       {
         "text": "من نحن",
-        "href": "/about"
+        "href": "/about?lang=ar"
       },
       {
         "text": "فريق العمل",
-        "href": "/team"
+        "href": "/team?lang=ar"
       },
       {
         "text": "تسجيل الدخول",
-        "href": "/auth/login"
+        "href": "/auth/login?lang=ar"
       },
       {
         "text": "إنشاء حساب",
-        "href": "/auth/register"
+        "href": "/auth/register?lang=ar"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login?lang=ar"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register?lang=ar"
       },
       {
         "text": "تصفح العقارات",
@@ -2279,8 +2287,20 @@
         "aria": "اللغة"
       },
       {
+        "text": "",
+        "aria": "إغلاق خلفية القائمة"
+      },
+      {
         "text": "العربية",
         "aria": "اللغة"
+      },
+      {
+        "text": "العربية",
+        "aria": "اللغة"
+      },
+      {
+        "text": "",
+        "aria": "فتح القائمة"
       }
     ]
   },
@@ -2292,7 +2312,7 @@
       },
       {
         "width": 1524,
-        "height": 2000
+        "height": 2214
       },
       {
         "width": 1524,
@@ -2309,8 +2329,8 @@
       "comparedWidth": 1524,
       "comparedHeight": 2214,
       "comparedPixels": 3374136,
-      "materialDifferencePercent": 4.8244,
-      "antiAliasingOnlyPercent": 29.0429,
+      "materialDifferencePercent": 4.7616,
+      "antiAliasingOnlyPercent": 29.103,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

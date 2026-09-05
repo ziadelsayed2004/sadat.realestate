@@ -196,7 +196,8 @@ function publicCategory(item: StoredArticleCategory, locale: SupportedLocale): A
 function publicArticle(item: PublicStoredArticle, locale: SupportedLocale, authorName?: string): ArticlePublic {
   const body = localized(item.article.body, locale);
   const selectedBody = body[locale] ?? '';
-  const readingTimeMinutes = Math.max(1, Math.ceil(selectedBody.trim().split(/\s+/u).filter(Boolean).length / 200));
+  const readingTimeMinutes = item.article.readingTimeMinutes
+    ?? Math.max(1, Math.ceil(selectedBody.trim().split(/\s+/u).filter(Boolean).length / 200));
   return articlePublicSchema.parse({
     id: item.article.id,
     categoryId: item.article.categoryId,

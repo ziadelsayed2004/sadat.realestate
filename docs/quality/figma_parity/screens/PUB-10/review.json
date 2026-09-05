@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "screenId": "PUB-10",
   "classification": "PARTIAL",
-  "classificationReason": "Fresh source and authenticated create-post runtime capture completed after the Public-10 repair; modal geometry now follows the canonical 512x470 design, while residual typography, raster, and background-feed differences remain, so this screen is not eligible for official closure.",
+  "classificationReason": "Fresh source and runtime capture completed; direct repair/parity confirmation is not complete.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",
@@ -39,7 +39,7 @@
     }
   },
   "runtime": {
-    "route": "/community?create=1",
+    "route": "/community?create=1&lang=ar",
     "role": "public",
     "permissions": {
       "requiredRole": "public",
@@ -56,43 +56,43 @@
           },
           {
             "text": "",
-            "href": "/"
+            "href": "/?lang=ar"
           },
           {
             "text": "الرئيسية",
-            "href": "/"
+            "href": "/?lang=ar"
           },
           {
             "text": "العقارات",
-            "href": "/properties"
+            "href": "/properties?lang=ar"
           },
           {
             "text": "المطورون",
-            "href": "/developers"
+            "href": "/developers?lang=ar"
           },
           {
             "text": "المقالات",
-            "href": "/articles"
+            "href": "/articles?lang=ar"
           },
           {
             "text": "الكوميونتي",
-            "href": "/community"
+            "href": "/community?lang=ar"
           },
           {
             "text": "من نحن",
-            "href": "/about"
+            "href": "/about?lang=ar"
           },
           {
             "text": "فريق العمل",
-            "href": "/team"
+            "href": "/team?lang=ar"
           },
           {
-            "text": "تسجيل الدخول",
-            "href": "/auth/login"
+            "text": "حسابي",
+            "href": "/seeker?lang=ar"
           },
           {
-            "text": "إنشاء حساب",
-            "href": "/auth/register"
+            "text": "حسابي",
+            "href": "/seeker?lang=ar"
           },
           {
             "text": "العقارات",
@@ -124,34 +124,54 @@
           },
           {
             "text": "واتساب متاح 24/7",
-            "href": "/community"
+            "href": "https://wa.me/201001234567"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://facebook.com"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://instagram.com"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://youtube.com"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://tiktok.com"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://linkedin.com"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://wa.me/201001234567"
           }
         ],
         "buttons": [
+          {
+            "text": "العربية",
+            "aria": "اللغة"
+          },
+          {
+            "text": "",
+            "aria": "إغلاق خلفية القائمة"
+          },
+          {
+            "text": "العربية",
+            "aria": "اللغة"
+          },
+          {
+            "text": "العربية",
+            "aria": "اللغة"
+          },
+          {
+            "text": "",
+            "aria": "فتح القائمة"
+          },
           {
             "text": "+انشر بوست",
             "aria": null
@@ -209,7 +229,7 @@
             "aria": null
           },
           {
-            "text": "انشر بوست",
+            "text": "نشر البوست",
             "aria": null
           }
         ]
@@ -226,7 +246,7 @@
     "deterministicState": {
       "path": "docs/quality/figma_parity/screens/PUB-10/deterministic-state.json",
       "seedId": "fresh-audit-PUB-10-ar-v1",
-      "responseSha256": "a54cede97ea5087be2662b225296e5555cfb182576d2ce2919c7fc0eae4b7e75"
+      "responseSha256": "55fa2c457ca4b60b530f3b12c5162fd9ec8247cf7425b7155613d6c5bb3b9496"
     },
     "response": {
       "status": 200,
@@ -234,20 +254,11 @@
     },
     "apiRequests": [
       {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/community/posts?page=1&limit=20"
-      },
-      {
         "method": "POST",
         "url": "http://127.0.0.1:4173/api/v1/auth/refresh"
       }
     ],
     "apiResponses": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/community/posts?page=1&limit=20",
-        "status": 200
-      },
       {
         "method": "POST",
         "url": "http://127.0.0.1:4173/api/v1/auth/refresh",
@@ -256,11 +267,11 @@
     ],
     "before": {
       "path": "docs/quality/figma_parity/screens/PUB-10/runtime-before.png",
-      "sha256": "8ca5a6e758667ab329ba037e4f47f55ed7ca1a876de7e0674fbd18e85b596e54"
+      "sha256": "56005b5be02e6ce911f0758953ff2e7ecc75526e04321860642bb0f99b03bc87"
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-10/runtime-after.png",
-      "sha256": "b4613fc45f3ed1b4febd3f43045eb1a22516e3181b8cd768e98970dc728111bb"
+      "sha256": "2cd73c7859c91cf86b46cc2af24e886f5530455159fb3d0ef681b644ef07aa0f"
     }
   },
   "structuredVisualComparison": {
@@ -277,38 +288,31 @@
       },
       {
         "width": 1524,
-        "height": 1999
+        "height": 1125
       }
     ],
     "observations": [
       "Figma source is 1524px wide and 1999px high for PUB-10.",
-      "Runtime is 1524px wide at the approved Desktop Chrome viewport and now has the canonical 1999px document height.",
-      "The authenticated modal now matches the Figma container geometry at 512px by 470px, including the 464px form width, 46px action row, and main-content-only overlay bounds.",
-      "The after capture uses a deterministic authenticated seeker refresh only for the protected create-post modal and confirms the canonical form fields, moderation notice, actions, background feed, and footer geometry.",
-      "Modal geometry and main-only overlay bounds remain aligned to the canonical frame; residual typography, raster, and background-feed differences remain visible in diff.png; no baseline was updated and official closure is not claimed."
+      "Runtime is 1524px wide at the approved Desktop Chrome viewport and has 1999px document height.",
+      "The side-by-side diff is evidence for review only; no baseline was updated.",
+      "Exact typography, spacing, imagery, control states, responsive variants, and prototype transitions remain to be checked against focused fixtures."
     ]
   },
   "functionalApiComparison": {
     "reviewed": true,
     "requestProjection": "GET /api/v1/public/community/posts",
     "responseProjection": "public-community-create fixture captured and hashed",
-    "outcome": "route loaded with the deterministic public-community-create fixture; the public posts GET and auth refresh both returned HTTP 200, and the protected create-post modal was reviewed."
+    "outcome": "route loaded with a public-community-create fixture; complete CTA/prototype/API projection comparison remains pending"
   },
   "defects": [
-    "Residual visual differences remain in the modal, typography, and background feed rendering; official closure is intentionally withheld.",
+    "Full per-screen parity review is incomplete.",
     "Figma get_design_context returned sparse metadata because the full frame exceeded context limits."
   ],
-  "filesRepaired": [
-    "apps/web/src/features/community/components.tsx",
-    "apps/web/src/features/community/copy.ts",
-    "apps/web/src/features/community/styles.css",
-    "apps/web/tests/e2e/public-fixtures.ts",
-    "scripts/capture-figma-parity-runtime.mjs"
-  ],
+  "filesRepaired": [],
   "focusedTests": [],
   "accessibility": {
-    "focusedCheck": "Public community create-post accessibility assertions are covered by the focused Playwright public batch.",
-    "exitCode": 0
+    "focusedCheck": "not yet run",
+    "exitCode": null
   },
   "evidencePaths": {
     "figma": "docs/quality/figma_parity/screens/PUB-10/figma.png",
@@ -316,14 +320,5 @@
     "runtimeAfter": "docs/quality/figma_parity/screens/PUB-10/runtime-after.png",
     "diff": "docs/quality/figma_parity/screens/PUB-10/diff.png",
     "review": "docs/quality/figma_parity/screens/PUB-10/review.json"
-  },
-  "reviewedAt": "2026-08-28T13:50:00.000Z",
-  "latestRuntimeVerification": {
-    "source": "runtime-after-capture.json and visual-metrics.json",
-    "phase": "after",
-    "apiResponseStatus": 200,
-    "materialDifferencePercent": 5.5505,
-    "antiAliasingOnlyPercent": 63.4725,
-    "officialClosureEligible": false
   }
 }

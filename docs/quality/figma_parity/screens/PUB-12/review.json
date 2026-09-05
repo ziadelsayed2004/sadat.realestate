@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "screenId": "PUB-12",
   "classification": "PARTIAL",
-  "classificationReason": "Fresh source and runtime capture completed after the Public-12 repair; residual visual differences remain, so this screen is not eligible for official closure.",
+  "classificationReason": "Fresh source and runtime capture completed; direct repair/parity confirmation is not complete.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",
@@ -36,7 +36,7 @@
     }
   },
   "runtime": {
-    "route": "/team",
+    "route": "/team?lang=ar",
     "role": "public",
     "permissions": {
       "requiredRole": "public",
@@ -53,43 +53,51 @@
           },
           {
             "text": "",
-            "href": "/"
+            "href": "/?lang=ar"
           },
           {
             "text": "الرئيسية",
-            "href": "/"
+            "href": "/?lang=ar"
           },
           {
             "text": "العقارات",
-            "href": "/properties"
+            "href": "/properties?lang=ar"
           },
           {
             "text": "المطورون",
-            "href": "/developers"
+            "href": "/developers?lang=ar"
           },
           {
             "text": "المقالات",
-            "href": "/articles"
+            "href": "/articles?lang=ar"
           },
           {
             "text": "الكوميونتي",
-            "href": "/community"
+            "href": "/community?lang=ar"
           },
           {
             "text": "من نحن",
-            "href": "/about"
+            "href": "/about?lang=ar"
           },
           {
             "text": "فريق العمل",
-            "href": "/team"
+            "href": "/team?lang=ar"
           },
           {
             "text": "تسجيل الدخول",
-            "href": "/auth/login"
+            "href": "/auth/login?lang=ar"
           },
           {
             "text": "إنشاء حساب",
-            "href": "/auth/register"
+            "href": "/auth/register?lang=ar"
+          },
+          {
+            "text": "تسجيل الدخول",
+            "href": "/auth/login?lang=ar"
+          },
+          {
+            "text": "إنشاء حساب",
+            "href": "/auth/register?lang=ar"
           },
           {
             "text": "العقارات",
@@ -121,34 +129,54 @@
           },
           {
             "text": "واتساب متاح 24/7",
-            "href": "/community"
+            "href": "https://wa.me/201001234567"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://facebook.com"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://instagram.com"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://youtube.com"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://tiktok.com"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://linkedin.com"
           },
           {
             "text": "",
-            "href": "/community"
+            "href": "https://wa.me/201001234567"
           }
         ],
         "buttons": [
+          {
+            "text": "العربية",
+            "aria": "اللغة"
+          },
+          {
+            "text": "",
+            "aria": "إغلاق خلفية القائمة"
+          },
+          {
+            "text": "العربية",
+            "aria": "اللغة"
+          },
+          {
+            "text": "العربية",
+            "aria": "اللغة"
+          },
+          {
+            "text": "",
+            "aria": "فتح القائمة"
+          },
           {
             "text": "الكل",
             "aria": null
@@ -183,32 +211,21 @@
     "deterministicState": {
       "path": "docs/quality/figma_parity/screens/PUB-12/deterministic-state.json",
       "seedId": "fresh-audit-PUB-12-ar-v1",
-      "responseSha256": "0fceb9d431937c15142e80392127526d49b0184e388ff9d101215f5b3a8236b7"
+      "responseSha256": "68f04b2b8367464e10b23257bdabbfba2dd0f06587b482d14b98644ce43477d7"
     },
     "response": {
       "status": 200,
       "ok": true
     },
-    "apiRequests": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/team"
-      }
-    ],
-    "apiResponses": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/team",
-        "status": 200
-      }
-    ],
+    "apiRequests": [],
+    "apiResponses": [],
     "before": {
       "path": "docs/quality/figma_parity/screens/PUB-12/runtime-before.png",
-      "sha256": "23353ebb4686304c57ef06af22eb8889344d717e5cb18bef11e313963d114de3"
+      "sha256": "f8f18d3ae3430249f8451a69ebe00680d5171109718a771d966775c12155aeb6"
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-12/runtime-after.png",
-        "sha256": "258f0584a9ada91994edaa52c4dc3f650aa71d11bff875bfef4cdf5e979add35"
+      "sha256": "f8f18d3ae3430249f8451a69ebe00680d5171109718a771d966775c12155aeb6"
     }
   },
   "structuredVisualComparison": {
@@ -230,31 +247,26 @@
     ],
     "observations": [
       "Figma source is 1523px wide and 1560px high for PUB-12.",
-      "Runtime is 1523px wide at the approved Desktop Chrome viewport and now has the canonical 1560px document height.",
-      "The after capture confirms all six canonical team portraits, names, roles, bios, category filters, and shared footer geometry.",
-      "Residual typography, card detail, and exact raster differences remain visible in diff.png; no baseline was updated and official closure is not claimed."
+      "Runtime is 1523px wide at the approved Desktop Chrome viewport and has 1560px document height.",
+      "The side-by-side diff is evidence for review only; no baseline was updated.",
+      "Exact typography, spacing, imagery, control states, responsive variants, and prototype transitions remain to be checked against focused fixtures."
     ]
   },
   "functionalApiComparison": {
     "reviewed": true,
     "requestProjection": "GET /api/v1/public/team",
     "responseProjection": "public-team fixture captured and hashed",
-    "outcome": "route loaded with the deterministic public-team fixture and returned HTTP 200; filters, six member cards, portraits, and footer were reviewed with residual visual differences recorded."
+    "outcome": "route loaded with a public-team fixture; complete CTA/prototype/API projection comparison remains pending"
   },
   "defects": [
-    "Residual visual differences remain in typography, card details, and exact raster rendering; official closure is intentionally withheld.",
+    "Full per-screen parity review is incomplete.",
     "Figma get_design_context returned sparse metadata because the full frame exceeded context limits."
   ],
-  "filesRepaired": [
-    "apps/web/src/features/content/about-team.tsx",
-    "apps/web/src/features/content/about-team.css",
-    "apps/web/tests/e2e/public-fixtures.ts",
-    "scripts/capture-figma-parity-runtime.mjs"
-  ],
+  "filesRepaired": [],
   "focusedTests": [],
   "accessibility": {
-    "focusedCheck": "Public about/team accessibility assertions are covered by the focused Playwright public batch.",
-    "exitCode": 0
+    "focusedCheck": "not yet run",
+    "exitCode": null
   },
   "evidencePaths": {
     "figma": "docs/quality/figma_parity/screens/PUB-12/figma.png",
@@ -262,14 +274,5 @@
     "runtimeAfter": "docs/quality/figma_parity/screens/PUB-12/runtime-after.png",
     "diff": "docs/quality/figma_parity/screens/PUB-12/diff.png",
     "review": "docs/quality/figma_parity/screens/PUB-12/review.json"
-  },
-  "reviewedAt": "2026-08-28T13:35:00.000Z",
-  "latestRuntimeVerification": {
-    "source": "runtime-after-capture.json and visual-metrics.json",
-    "phase": "after",
-    "apiResponseStatus": 200,
-    "materialDifferencePercent": 10.3385,
-    "antiAliasingOnlyPercent": 6.8651,
-    "officialClosureEligible": false
   }
 }

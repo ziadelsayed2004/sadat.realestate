@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "screenId": "PUB-07",
   "classification": "PARTIAL",
-  "classificationReason": "Second cached-Figma pass remains open: measured material visual differences remain after the latest repair capture; this screen is not eligible for REPAIRED_VERIFIED.",
+  "classificationReason": "Fresh source and runtime capture completed; direct repair/parity confirmation is not complete.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",
@@ -17,7 +17,7 @@
     "getDesignContext": {
       "tool": "mcp__figma__get_design_context",
       "skill": "resource:figma-design-to-code",
-      "resultStatus": "FULL_REFERENCE_CODE_RETURNED",
+      "resultStatus": "SPARSE_METADATA_DUE_TO_CONTEXT_LIMIT",
       "root": {
         "id": "6017:11467",
         "name": "Articles Listing",
@@ -34,23 +34,11 @@
         "footer"
       ],
       "reviewed": true,
-      "responseSummary": {
-        "contentBlocks": 4,
-        "textLengths": [
-          96133,
-          551,
-          83,
-          354
-        ],
-        "referenceCodeReturned": true,
-        "assetMapReturned": true,
-        "screenshotExcluded": true
-      },
-      "note": "The canonical get_design_context call returned the full React/Tailwind reference and asset constants for this frame. The reference was used for direct comparison only; the generated code was not copied into the runtime."
+      "note": "The tool explicitly returned sparse metadata and instructed sublayer retrieval for full code; this is recorded as an incomplete context result, not treated as parity proof."
     }
   },
   "runtime": {
-    "route": "/articles",
+    "route": "/articles?lang=ar",
     "role": "public",
     "permissions": {
       "requiredRole": "public",
@@ -67,63 +55,79 @@
           },
           {
             "text": "",
-            "href": "/"
+            "href": "/?lang=ar"
           },
           {
             "text": "الرئيسية",
-            "href": "/"
+            "href": "/?lang=ar"
           },
           {
             "text": "العقارات",
-            "href": "/properties"
+            "href": "/properties?lang=ar"
           },
           {
             "text": "المطورون",
-            "href": "/developers"
+            "href": "/developers?lang=ar"
           },
           {
             "text": "المقالات",
-            "href": "/articles"
+            "href": "/articles?lang=ar"
           },
           {
-            "text": "المجتمع",
-            "href": "/community"
+            "text": "الكوميونتي",
+            "href": "/community?lang=ar"
           },
           {
-            "text": "عن المنصة",
-            "href": "/about"
+            "text": "من نحن",
+            "href": "/about?lang=ar"
           },
           {
-            "text": "فريقنا",
-            "href": "/team"
+            "text": "فريق العمل",
+            "href": "/team?lang=ar"
           },
           {
             "text": "تسجيل الدخول",
-            "href": "/auth/login"
+            "href": "/auth/login?lang=ar"
           },
           {
             "text": "إنشاء حساب",
-            "href": "/auth/register"
+            "href": "/auth/register?lang=ar"
           },
           {
-            "text": "الشراء في مدينة السادات",
-            "href": "/articles/buying-in-sadat"
+            "text": "تسجيل الدخول",
+            "href": "/auth/login?lang=ar"
+          },
+          {
+            "text": "إنشاء حساب",
+            "href": "/auth/register?lang=ar"
+          },
+          {
+            "text": "دليلك الشامل لشراء عقارك الأول في مدينة السادات",
+            "href": "/articles/demo-home-buying-guide"
           },
           {
             "text": "اقرأ المقال",
-            "href": "/articles/buying-in-sadat"
+            "href": "/articles/demo-home-buying-guide"
           },
           {
-            "text": "نصائح الإيجار",
-            "href": "/articles/rental-tips"
+            "text": "أفضل فرص الاستثمار العقاري في مدينة السادات",
+            "href": "/articles/investment-opportunities-sadat"
           },
           {
             "text": "اقرأ المقال",
-            "href": "/articles/rental-tips"
+            "href": "/articles/investment-opportunities-sadat"
           },
           {
-            "text": "الرئيسية",
-            "href": "/"
+            "text": "دليلك إلى أهم الخدمات بالقرب من عقارك",
+            "href": "/articles/services-near-your-home"
+          },
+          {
+            "text": "اقرأ المقال",
+            "href": "/articles/services-near-your-home"
+          },
+          {
+            "text": "ابحث الآن",
+            "href": "/properties"
           },
           {
             "text": "العقارات",
@@ -136,19 +140,79 @@
           {
             "text": "المقالات",
             "href": "/articles"
+          },
+          {
+            "text": "الكوميونتي",
+            "href": "/community"
+          },
+          {
+            "text": "من نحن",
+            "href": "/about"
+          },
+          {
+            "text": "فريق العمل",
+            "href": "/team"
+          },
+          {
+            "text": "01001234567",
+            "href": "tel:01001234567"
+          },
+          {
+            "text": "واتساب متاح 24/7",
+            "href": "https://wa.me/201001234567"
+          },
+          {
+            "text": "",
+            "href": "https://facebook.com"
+          },
+          {
+            "text": "",
+            "href": "https://instagram.com"
+          },
+          {
+            "text": "",
+            "href": "https://youtube.com"
+          },
+          {
+            "text": "",
+            "href": "https://tiktok.com"
+          },
+          {
+            "text": "",
+            "href": "https://linkedin.com"
+          },
+          {
+            "text": "",
+            "href": "https://wa.me/201001234567"
           }
         ],
         "buttons": [
+          {
+            "text": "العربية",
+            "aria": "اللغة"
+          },
+          {
+            "text": "",
+            "aria": "إغلاق خلفية القائمة"
+          },
+          {
+            "text": "العربية",
+            "aria": "اللغة"
+          },
+          {
+            "text": "العربية",
+            "aria": "اللغة"
+          },
+          {
+            "text": "",
+            "aria": "فتح القائمة"
+          },
           {
             "text": "الكل",
             "aria": null
           },
           {
-            "text": "نصائح شراء",
-            "aria": null
-          },
-          {
-            "text": "نصائح إيجار",
+            "text": "أدلة الشراء والاستثمار",
             "aria": null
           }
         ]
@@ -158,14 +222,14 @@
     "locale": "ar",
     "direction": "rtl",
     "viewport": {
-      "width": 1280,
+      "width": 1523,
       "height": 720,
       "devicePixelRatio": 1
     },
     "deterministicState": {
       "path": "docs/quality/figma_parity/screens/PUB-07/deterministic-state.json",
       "seedId": "fresh-audit-PUB-07-ar-v1",
-      "responseSha256": "a7ed866526515d1b56b85753b01ae7d7743c70d5f0571de4120b1d1e05807213"
+      "responseSha256": "90d3b005688bc3e4ec465dca46832313eb81bca393f63f994c1d870273b17bf8"
     },
     "response": {
       "status": 200,
@@ -174,32 +238,23 @@
     "apiRequests": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4175/api/v1/public/article-categories?locale=ar"
-      },
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4175/api/v1/public/articles?locale=ar&page=1&limit=20"
+        "url": "http://127.0.0.1:4173/api/v1/public/article-categories?locale=ar"
       }
     ],
     "apiResponses": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4175/api/v1/public/article-categories?locale=ar",
-        "status": 200
-      },
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4175/api/v1/public/articles?locale=ar&page=1&limit=20",
+        "url": "http://127.0.0.1:4173/api/v1/public/article-categories?locale=ar",
         "status": 200
       }
     ],
     "before": {
       "path": "docs/quality/figma_parity/screens/PUB-07/runtime-before.png",
-      "sha256": "c1fd8847a16c267d8386fdce6d6c49d2b3f0ea38d116698a5f7fb247355ffb5b"
+      "sha256": "d0b451a635abcd2110d61368e4a0b09b282229b0a577064d56b2402977146116"
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-07/runtime-after.png",
-        "sha256": "463296f485ca3b59a08aa7dcf0c595a236b383c3c55ed3285e95ff82bb9e7875"
+      "sha256": "69880f20b48b4f4e2da252c390d86e50ce232265e6d35649763c9a915d3db250"
     }
   },
   "structuredVisualComparison": {
@@ -212,118 +267,41 @@
       },
       {
         "width": 1523,
-        "height": 1783
+        "height": 1537
       },
       {
         "width": 1523,
-        "height": 1783
+        "height": 1537
       }
     ],
     "observations": [
-      "The after capture is a fresh 1523px-wide Arabic RTL runtime capture after the article listing/media repair.",
-      "GET /api/v1/public/articles returned HTTP 200 and six deterministic article cards render approved local media.",
-      "Search, category filters, result grid, CTA, navigation, and shared footer are present and independently reviewed.",
-      "The desktop footer separators now use the canonical three-row geometry while preserving the 414px footer frame.",
-      "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
-    ],
-    "dimensions": {
-      "width": 1471,
-      "height": 650
-    }
+      "Figma source is 1523px wide and 1783px high for PUB-07.",
+      "Runtime is 1523px wide at the approved Desktop Chrome viewport and has 1537px document height.",
+      "The side-by-side diff is evidence for review only; no baseline was updated.",
+      "Exact typography, spacing, imagery, control states, responsive variants, and prototype transitions remain to be checked against focused fixtures."
+    ]
   },
   "functionalApiComparison": {
     "reviewed": true,
     "requestProjection": "GET /api/v1/public/articles",
     "responseProjection": "public-articles fixture captured and hashed",
-    "outcome": "2 deterministic API response(s) observed; all returned success after the bounded repair."
+    "outcome": "route loaded with a public-articles fixture; complete CTA/prototype/API projection comparison remains pending"
   },
   "defects": [
-    "Resolved: article cards now consume approved imageUrl values through the public article contract and deterministic fixture.",
-    "Resolved: the listing now renders six deterministic article cards with category controls, search, CTA, and shared footer structure.",
-    "Resolved: article media errors remain safe through the shared public image fallback component.",
-    "Reviewed residual diff: clone-specific article card geometry, typography, spacing, and exact image composition remain visible in diff.png; no baseline was changed."
+    "Full per-screen parity review is incomplete.",
+    "Figma get_design_context returned sparse metadata because the full frame exceeded context limits."
   ],
-  "filesRepaired": [
-    "apps/web/src/features/public/components.tsx",
-    "apps/web/src/features/content/articles.tsx",
-    "apps/web/src/features/content/articles.css",
-    "apps/web/src/features/frontend_foundation/app.tsx",
-    "apps/web/tests/e2e/public-fixtures.ts",
-    "scripts/capture-figma-parity-runtime.mjs",
-    "packages/contracts/src/articles/index.ts"
-  ],
-  "focusedTests": [
-    {
-      "name": "contracts build",
-      "command": "npm.cmd run build --workspace @sadat-real-estate/contracts",
-      "exitCode": 0
-    },
-    {
-      "name": "apps/web typecheck",
-      "command": "npm.cmd run typecheck --workspace apps/web",
-      "exitCode": 0
-    },
-    {
-      "name": "apps/api typecheck",
-      "command": "npm.cmd run typecheck --workspace apps/api",
-      "exitCode": 0
-    },
-    {
-      "name": "affected web lint",
-      "command": "npm.cmd exec --workspace apps/web -- eslint \"src/features/public/**/*.{ts,tsx}\" \"src/features/content/**/*.{ts,tsx}\" \"src/features/frontend_foundation/app.tsx\" \"tests/e2e/public-fixtures.ts\" \"tests/e2e/visual.spec.ts\" --max-warnings=0",
-      "exitCode": 0
-    },
-    {
-      "name": "affected API lint",
-      "command": "npm.cmd exec --workspace apps/api -- eslint \"src/modules/public/**/*.ts\" \"src/modules/search/**/*.ts\" \"src/modules/compare/**/*.ts\" \"src/modules/organizations/**/*.ts\" \"src/modules/articles/**/*.ts\" --max-warnings=0",
-      "exitCode": 0
-    },
-    {
-      "name": "focused public Vitest",
-      "command": "npm.cmd exec --workspace apps/web -- vitest run --config vitest.config.ts tests/public-homepage.vitest.test.tsx tests/public-listing.vitest.test.tsx tests/public-details.vitest.test.tsx tests/public-compare.vitest.test.tsx tests/public-developers.vitest.test.tsx tests/public-articles.vitest.test.tsx",
-      "exitCode": 0
-    },
-    {
-      "name": "focused public API/integration tests",
-      "command": "npm.cmd exec --workspace apps/api -- node --import tsx --test tests/public/homepage.test.ts tests/public/properties.test.ts tests/search/properties.test.ts tests/compare/properties.test.ts tests/organizations/public.test.ts",
-      "exitCode": 0
-    },
-    {
-      "name": "focused Playwright visual/route assertions",
-      "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/visual.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\" --ignore-snapshots",
-      "exitCode": 0
-    },
-    {
-      "name": "focused Playwright accessibility assertions",
-      "command": "npm.cmd exec --workspace apps/web -- playwright test tests/e2e/accessibility.spec.ts --config=playwright.config.ts --project=desktop-ar --grep \"public\"",
-      "exitCode": 0
-    },
-    {
-      "name": "focused Figma/runtime visual comparison",
-      "command": "node --import tsx scripts/capture-figma-parity-runtime.mjs --screen-id PUB-07 --fixture public-articles --route /articles --phase after",
-      "exitCode": 0
-    }
-  ],
+  "filesRepaired": [],
+  "focusedTests": [],
   "accessibility": {
-    "focusedCheck": "Focused public accessibility Playwright batch for the repaired public surface.",
-    "exitCode": 0
+    "focusedCheck": "not yet run",
+    "exitCode": null
   },
   "evidencePaths": {
     "figma": "docs/quality/figma_parity/screens/PUB-07/figma.png",
     "runtimeBefore": "docs/quality/figma_parity/screens/PUB-07/runtime-before.png",
     "runtimeAfter": "docs/quality/figma_parity/screens/PUB-07/runtime-after.png",
     "diff": "docs/quality/figma_parity/screens/PUB-07/diff.png",
-    "review": "docs/quality/figma_parity/screens/PUB-07/review.json",
-    "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-07/runtime-after-capture.json"
-  },
-  "reviewedAt": "2026-08-28T09:07:39.573Z",
-  "repairedAt": "2026-08-28T04:55:00.000Z",
-  "latestRuntimeVerification": {
-    "source": "runtime-after-capture.json and visual-metrics.json",
-    "phase": "after",
-    "apiResponseStatus": 200,
-    "materialDifferencePercent": 10.1597,
-    "antiAliasingOnlyPercent": 6.513,
-    "officialClosureEligible": false
+    "review": "docs/quality/figma_parity/screens/PUB-07/review.json"
   }
 }

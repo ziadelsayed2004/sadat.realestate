@@ -31,6 +31,7 @@ export interface StoredArticle {
   seoDescription?: LocalizedText;
   coverAssetId?: string;
   imageUrl?: string;
+  readingTimeMinutes?: number;
   authorId: string;
   status: ArticleStatus;
   publishedAt?: Date;
@@ -136,6 +137,7 @@ function mapArticle(record: ArticleRecord): StoredArticle {
     ...(record.seoDescription ? { seoDescription: record.seoDescription } : {}),
     ...(record.coverAssetId ? { coverAssetId: record.coverAssetId.toHexString() } : {}),
     ...(record.imageUrl ? { imageUrl: record.imageUrl } : {}),
+    ...(record.readingTimeMinutes !== undefined ? { readingTimeMinutes: record.readingTimeMinutes } : {}),
     authorId: record.authorId.toHexString(),
     status: record.status,
     ...(record.publishedAt ? { publishedAt: record.publishedAt } : {}),

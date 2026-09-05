@@ -3,7 +3,7 @@
   "screenId": "PUB-06",
   "phase": "after",
   "runtime": {
-    "route": "/developers/approved-builder",
+    "route": "/developers/approved-builder?lang=ar",
     "locale": "ar",
     "direction": "rtl",
     "viewport": {
@@ -11,31 +11,20 @@
       "height": 720,
       "devicePixelRatio": 1
     },
-    "responseStatus": 404,
-    "responseOk": false,
+    "responseStatus": 200,
+    "responseOk": true,
     "beforeHash": "4daebbf4536e7db32c9ddcf67bc8068ad708fe4e7fafc16ca526ab9f642788a3",
-    "afterHash": "568a1c85bee3c8128127acd604308f8df64490396f5e684bc0ba84105f40f2f3",
-    "requestedApi": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/developers/approved-builder"
-      }
-    ],
-    "apiResponses": [
-      {
-        "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/developers/approved-builder",
-        "status": 200
-      }
-    ]
+    "afterHash": "f7b4a4cdb959ef65d9a1b3637885c96d2ae6f2f0a8930faafb16ece94ac1942a",
+    "requestedApi": [],
+    "apiResponses": []
   },
   "structure": {
     "headers": 2,
-    "navs": 1,
-    "sections": 1,
-    "cards": 0,
-    "images": 3,
-    "forms": 0
+    "navs": 2,
+    "sections": 7,
+    "cards": 3,
+    "images": 7,
+    "forms": 1
   },
   "fonts": {
     "status": "loaded",
@@ -2157,6 +2146,30 @@
       "loading": "eager"
     },
     {
+      "src": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "eager"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/clone/pub05-b.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "eager"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/clone/pub05-e.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/clone/pub05-a.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "lazy"
+    },
+    {
       "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
@@ -2175,43 +2188,107 @@
       },
       {
         "text": "",
-        "href": "/"
+        "href": "/?lang=ar"
       },
       {
         "text": "الرئيسية",
-        "href": "/"
+        "href": "/?lang=ar"
       },
       {
         "text": "العقارات",
-        "href": "/properties"
+        "href": "/properties?lang=ar"
       },
       {
         "text": "المطورون",
-        "href": "/developers"
+        "href": "/developers?lang=ar"
       },
       {
         "text": "المقالات",
-        "href": "/articles"
+        "href": "/articles?lang=ar"
       },
       {
         "text": "الكوميونتي",
-        "href": "/community"
+        "href": "/community?lang=ar"
       },
       {
         "text": "من نحن",
-        "href": "/about"
+        "href": "/about?lang=ar"
       },
       {
         "text": "فريق العمل",
-        "href": "/team"
+        "href": "/team?lang=ar"
       },
       {
         "text": "تسجيل الدخول",
-        "href": "/auth/login"
+        "href": "/auth/login?lang=ar"
       },
       {
         "text": "إنشاء حساب",
-        "href": "/auth/register"
+        "href": "/auth/register?lang=ar"
+      },
+      {
+        "text": "تسجيل الدخول",
+        "href": "/auth/login?lang=ar"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register?lang=ar"
+      },
+      {
+        "text": "تواصل مع المطور",
+        "href": "#developer-contact"
+      },
+      {
+        "text": "عرض الوحدات المتاحة",
+        "href": "#developer-properties"
+      },
+      {
+        "text": "العودة للمطورين",
+        "href": "/developers"
+      },
+      {
+        "text": "نبذة",
+        "href": "#developer-overview"
+      },
+      {
+        "text": "المشاريع",
+        "href": "#developer-projects"
+      },
+      {
+        "text": "الوحدات المتاحة",
+        "href": "#developer-properties"
+      },
+      {
+        "text": "التواصل",
+        "href": "#developer-contact"
+      },
+      {
+        "text": "01001234567",
+        "href": "tel:01001234567"
+      },
+      {
+        "text": "واتساب متاح",
+        "href": "https://wa.me/201001234567"
+      },
+      {
+        "text": "إرسال الاستفسار",
+        "href": "#developer-contact"
+      },
+      {
+        "text": "عرض المشروع",
+        "href": "/properties?projectId=6700000000000000000000dc"
+      },
+      {
+        "text": "عرض المشروع",
+        "href": "/properties?projectId=6700000000000000000000dd"
+      },
+      {
+        "text": "عرض الوحدات المتاحة",
+        "href": "#developer-contact"
+      },
+      {
+        "text": "تواصل عبر واتساب",
+        "href": "https://wa.me/201001234567"
       },
       {
         "text": "العقارات",
@@ -2276,11 +2353,31 @@
         "aria": "اللغة"
       },
       {
+        "text": "",
+        "aria": "إغلاق خلفية القائمة"
+      },
+      {
         "text": "العربية",
         "aria": "اللغة"
       },
       {
-        "text": "إعادة المحاولة",
+        "text": "العربية",
+        "aria": "اللغة"
+      },
+      {
+        "text": "",
+        "aria": "فتح القائمة"
+      },
+      {
+        "text": "",
+        "aria": null
+      },
+      {
+        "text": "",
+        "aria": null
+      },
+      {
+        "text": "إرسال الاستفسار",
         "aria": null
       }
     ]
@@ -2297,21 +2394,21 @@
       },
       {
         "width": 1534,
-        "height": 871
+        "height": 2991
       }
     ],
     "dimensions": {
       "width": 1479,
-      "height": 1059
+      "height": 1061
     },
     "diffPath": "docs/quality/figma_parity/screens/PUB-06/diff.png",
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-06/visual-metrics.json",
     "visualMetrics": {
       "comparedWidth": 1534,
-      "comparedHeight": 871,
-      "comparedPixels": 1336114,
-      "materialDifferencePercent": 63.5502,
-      "antiAliasingOnlyPercent": 1.7938,
+      "comparedHeight": 2985,
+      "comparedPixels": 4578990,
+      "materialDifferencePercent": 17.0273,
+      "antiAliasingOnlyPercent": 6.6046,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

@@ -84,8 +84,10 @@ type MongoPropertyRow = {
   propertyTypeId?: unknown;
   locationId?: unknown;
   organizationId?: unknown;
+  publicCode?: string;
   viewCount?: number;
   paymentPlans?: unknown[];
+  featured?: boolean;
   deliveryStatus?: string;
   description?: unknown;
   area?: unknown;
@@ -114,7 +116,7 @@ function source(row: MongoPropertyRow, locations = new Map<string, unknown>(), o
   const locationId = id(row.locationId);
   const organizationId = id(row.organizationId);
   const organization = organizationId ? organizations.get(organizationId) : undefined;
-  return { id: rowId, slug: row.slug, kind: row.kind, name: row.name, transactionType: row.transactionType, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}), ...(projectId ? { projectId } : {}), ...(propertyTypeId ? { propertyTypeId } : {}), ...(typeof row.deliveryStatus === 'string' ? { deliveryStatus: row.deliveryStatus } : {}), ...(locationId ? { locationId, ...(locations.has(locationId) ? { locationName: locations.get(locationId) } : {}) } : {}), ...(organizationId ? { organizationId, ...(organization ? { sourceName: organization.name, ...(organization.imageUrl ? { sourceImageUrl: organization.imageUrl } : {}), ...(organization.kind ? { sourceType: organization.kind } : {}) } : {}) } : {}), ...(typeof row.viewCount === 'number' ? { viewCount: row.viewCount } : {}), ...(row.paymentPlans ? { installmentAvailable: row.paymentPlans.length > 0 } : {}), ...(featuredSlugs.has(row.slug) ? { featured: true } : {}), ...(row.description !== undefined ? { description: row.description } : {}), ...(row.area !== undefined ? { area: row.area } : {}), ...(row.layout !== undefined ? { layout: row.layout } : {}), ...(row.price !== undefined ? { price: row.price } : {}), status: row.status, active: row.active };
+  return { id: rowId, slug: row.slug, kind: row.kind, name: row.name, transactionType: row.transactionType, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}), ...(projectId ? { projectId } : {}), ...(propertyTypeId ? { propertyTypeId } : {}), ...(typeof row.deliveryStatus === 'string' ? { deliveryStatus: row.deliveryStatus } : {}), ...(locationId ? { locationId, ...(locations.has(locationId) ? { locationName: locations.get(locationId) } : {}) } : {}), ...(organizationId ? { organizationId, ...(organization ? { sourceName: organization.name, ...(organization.imageUrl ? { sourceImageUrl: organization.imageUrl } : {}), ...(organization.kind ? { sourceType: organization.kind } : {}) } : {}) } : {}), ...(typeof row.publicCode === 'string' ? { publicCode: row.publicCode } : {}), ...(typeof row.viewCount === 'number' ? { viewCount: row.viewCount } : {}), ...(row.paymentPlans ? { installmentAvailable: row.paymentPlans.length > 0 } : {}), ...(typeof row.featured === 'boolean' ? { featured: row.featured } : featuredSlugs.has(row.slug) ? { featured: true } : {}), ...(row.description !== undefined ? { description: row.description } : {}), ...(row.area !== undefined ? { area: row.area } : {}), ...(row.layout !== undefined ? { layout: row.layout } : {}), ...(row.price !== undefined ? { price: row.price } : {}), status: row.status, active: row.active };
 }
 
 export function createMongoosePublicPropertySearchRepository(connection: Connection): PublicPropertySearchRepository {
@@ -139,7 +141,7 @@ export function createMongoosePublicPropertySearchRepository(connection: Connect
       const sort: Record<string, 1 | -1> = { [sortField]: direction, slug: 1, _id: 1 };
       const collection = connection.collection('properties');
       const [rows, total, taxonomyRows, allLocationRows] = await Promise.all([
-        collection.find(filter, { projection: { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, projectId: 1, propertyTypeId: 1, deliveryStatus: 1, locationId: 1, organizationId: 1, viewCount: 1, paymentPlans: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 } }).sort(sort).skip((query.page - 1) * query.limit).limit(query.limit).toArray() as Promise<MongoPropertyRow[]>,
+        collection.find(filter, { projection: { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, projectId: 1, propertyTypeId: 1, publicCode: 1, deliveryStatus: 1, locationId: 1, organizationId: 1, viewCount: 1, paymentPlans: 1, featured: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 } }).sort(sort).skip((query.page - 1) * query.limit).limit(query.limit).toArray() as Promise<MongoPropertyRow[]>,
         collection.countDocuments(filter),
         connection.collection('property_taxonomy').find({ kind: { $in: ['category', 'type'] }, active: true }, { projection: { _id: 1, slug: 1, name: 1, imageUrl: 1, order: 1, kind: 1, categoryId: 1, active: 1 } }).sort({ kind: 1, order: 1, slug: 1, _id: 1 }).limit(200).toArray() as Promise<TaxonomyMongoRow[]>,
         connection.collection('locations').find({ active: true }, { projection: { _id: 1, name: 1, kind: 1, slug: 1, parentLocationId: 1, order: 1, active: 1 } }).sort({ kind: 1, order: 1, slug: 1, _id: 1 }).limit(500).toArray() as Promise<NamedMongoRow[]>
