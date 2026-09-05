@@ -16,6 +16,26 @@
       "limitations": ["Scrollable carousels and the mobile comparison table intentionally contain off-viewport children; the document itself does not overflow", "Runtime responsiveness is not Figma pixel parity and does not exercise every mutation journey"],
       "evidence": "public-responsive-2026-09-06/results.json"
     },
+    "publicComparisonTray": {
+      "screens": ["PUB-04"],
+      "figma": "Fresh canonical design context read from 6017:13838.",
+      "implementation": "Restored the fixed comparison tray with two localized property chips, thumbnails, per-item removal, compare-now action and clear action. Mobile uses compact thumbnails and localized short clear copy without losing accessible names.",
+      "validation": "4/4 live-browser cases passed for AR/EN desktop and mobile: fixed tray aligned to the viewport bottom, two items, both actions, no broken thumbnails, document overflow or browser errors. 7/7 component tests, targeted lint and full build passed.",
+      "limitations": ["The current full-page Figma parity percentage remains unmeasured", "The compare-now action scrolls to the comparison cards because the page already displays the active comparison"],
+      "evidence": "public-comparison-tray-2026-09-06/results.json"
+    },
+    "PUB01CurrentDesktopMeasurement": {
+      "screen": "PUB-01",
+      "figmaNode": "6017:10847",
+      "viewportWidth": 1549,
+      "sourceHeight": 5378,
+      "runtimeHeight": 5377,
+      "materialPixelAgreementPercent": 81.2636,
+      "materialDifferencePercent": 18.7364,
+      "method": "Same-width source/runtime canvas comparison over the overlapping document height; RGB-sum material threshold greater than 24.",
+      "limitations": ["Large unchanged backgrounds contribute to pixel agreement", "This desktop metric does not prove tablet/mobile parity or functional journey completion"],
+      "evidence": "figma_parity/screens/PUB-01/visual-metrics.json"
+    },
     "providerIndividualProductionSubmission": {
       "screens": ["AUTH-12", "AUTH-13", "AUTH-14"],
       "evidence": "Owner-provided production screenshots on 2026-09-06 show the individual-provider form reaching submitted/pending-review status after email OTP and document entry.",
@@ -57,18 +77,19 @@
       "surface": "public",
       "route": "/",
       "name": "الرئيسية",
+      "latestAssessment": "قياس ديسكتوب حديث بتاريخ 6 سبتمبر على عرض 1549px بعد إصلاح تموضع شارات كروت العقارات: اتفاق بكسلات مادي 81.2636% وفرق 18.7364% عبر ارتفاع متداخل 5377px، مع نجاح التشغيل. هذه نسبة كانفاس ديسكتوب وليست اكتمالًا وظيفيًا أو ريسبونسيف.",
       "status": "PARTIAL",
       "metrics": [
         {
           "path": "docs/quality/figma_parity/screens/PUB-01/visual-metrics.json",
-          "diff": 18.6345,
+          "diff": 18.7364,
           "method": "same-width source/runtime canvas comparison over the overlapping document height"
         }
       ],
-      "currentDesktopParityPercent": null,
+      "currentDesktopParityPercent": 81.2636,
       "currentResponsiveParityPercent": null,
       "backendAssessment": "خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل",
-      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+      "responsiveAssessment": "72/72 حالات Public نجحت بعد إضافة gate يمنع خروج شارات العقار من حدود الكارت؛ لا تتوفر بعد نسبة Figma موحدة للتابلت والموبايل"
     },
     {
       "id": "PUB-02",
@@ -111,6 +132,7 @@
       "surface": "public",
       "route": "/compare",
       "name": "مقارنة الوحدات",
+      "latestAssessment": "أُعيد شريط المقارنة الثابت طبقًا لعقدة Figma 6017:13838: عقاران بصور وأسماء محلية، إزالة مستقلة، قارن الآن، ومسح الكل، مع تخطيط موبايل مضغوط بلا تداخل. نجحت 4/4 حالات متصفح AR/EN ديسكتوب وموبايل و7/7 اختبارات مكوّن والبناء الكامل. نسبة الصفحة الكاملة ما زالت غير مقاسة.",
       "status": "PARTIAL",
       "metrics": [
         {
@@ -122,7 +144,7 @@
       "currentDesktopParityPercent": null,
       "currentResponsiveParityPercent": null,
       "backendAssessment": "خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل",
-      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+      "responsiveAssessment": "شريط المقارنة مثبت 4/4 على AR/EN ديسكتوب وموبايل بلا خروج أفقي؛ باقي مطابقة الصفحة الكاملة غير مقاس"
     },
     {
       "id": "PUB-05",

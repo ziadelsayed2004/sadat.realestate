@@ -1,0 +1,69 @@
+{
+  "generatedAt": "2026-09-05T22:10:17.022Z",
+  "baseUrl": "http://127.0.0.1:4173",
+  "cases": 4,
+  "passed": 4,
+  "failed": 0,
+  "results": [
+    {
+      "locale": "ar",
+      "device": "desktop",
+      "status": 200,
+      "errors": [],
+      "trayPosition": "fixed",
+      "trayBottom": 1000,
+      "viewportHeight": 1000,
+      "itemCount": 2,
+      "compareButtonCount": 1,
+      "clearButtonCount": 1,
+      "brokenImages": 0,
+      "documentOverflow": false,
+      "passed": true
+    },
+    {
+      "locale": "ar",
+      "device": "mobile",
+      "status": 200,
+      "errors": [],
+      "trayPosition": "fixed",
+      "trayBottom": 844,
+      "viewportHeight": 844,
+      "itemCount": 2,
+      "compareButtonCount": 1,
+      "clearButtonCount": 1,
+      "brokenImages": 0,
+      "documentOverflow": false,
+      "passed": true
+    },
+    {
+      "locale": "en",
+      "device": "desktop",
+      "status": 200,
+      "errors": [],
+      "trayPosition": "fixed",
+      "trayBottom": 1000,
+      "viewportHeight": 1000,
+      "itemCount": 2,
+      "compareButtonCount": 1,
+      "clearButtonCount": 1,
+      "brokenImages": 0,
+      "documentOverflow": false,
+      "passed": true
+    },
+    {
+      "locale": "en",
+      "device": "mobile",
+      "status": 200,
+      "errors": [],
+      "trayPosition": "fixed",
+      "trayBottom": 844,
+      "viewportHeight": 844,
+      "itemCount": 2,
+      "compareButtonCount": 1,
+      "clearButtonCount": 1,
+      "brokenImages": 0,
+      "documentOverflow": false,
+      "passed": true
+    }
+  ]
+}

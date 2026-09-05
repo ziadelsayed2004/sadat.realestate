@@ -124,6 +124,8 @@ describe('public property comparison', () => {
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
     expect(screen.getByRole('heading', { name: copy.title, level: 1 })).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: copy.remove })).toHaveLength(2);
+    expect(screen.getByRole('button', { name: copy.compareNow })).toBeInTheDocument();
+    expect(result.container.querySelectorAll('.public-property-comparison__sticky-item')).toHaveLength(2);
     expect(screen.getAllByRole('table')).toHaveLength(4);
     expect(screen.getByText(copy.area)).toBeInTheDocument();
     expect(result.container.querySelector('[data-page="public-comparison"]')).toHaveAttribute('data-comparison-state', 'success');

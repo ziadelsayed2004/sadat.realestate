@@ -46,13 +46,24 @@ for (const locale of locales) {
         const rect = element.getBoundingClientRect();
         return { selector: element.className || element.tagName.toLowerCase(), left: Math.round(rect.left), right: Math.round(rect.right), width: Math.round(rect.width) };
       });
+      const escapedPropertyBadges = [...document.querySelectorAll('.ui-property-card__badges')].filter(element => {
+        const card = element.closest('.ui-property-card');
+        if (!card) return true;
+        const badgeRect = element.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        return badgeRect.top < cardRect.top - 1 || badgeRect.left < cardRect.left - 1 || badgeRect.right > cardRect.right + 1;
+      }).map(element => ({
+        text: element.textContent?.trim() ?? '',
+        offsetParent: element.offsetParent?.className || element.offsetParent?.tagName.toLowerCase() || null
+      }));
       return {
         clientWidth: root.clientWidth,
         scrollWidth: root.scrollWidth,
         scrollHeight: root.scrollHeight,
         h1Count: document.querySelectorAll('h1').length,
         brokenImages: [...document.images].filter(image => image.complete && image.naturalWidth === 0).map(image => image.currentSrc || image.src),
-        overflow
+        overflow,
+        escapedPropertyBadges
       };
     });
     results.push({ screenId, locale, device, status: response?.status() ?? null, errors, ...metrics });
@@ -62,7 +73,7 @@ for (const locale of locales) {
   }
 }
 await browser.close();
-const failures = results.filter(result => result.status !== 200 || result.errors.length || result.brokenImages.length || result.scrollWidth > result.clientWidth + 1);
+const failures = results.filter(result => result.status !== 200 || result.errors.length || result.brokenImages.length || result.escapedPropertyBadges.length || result.scrollWidth > result.clientWidth + 1);
 const report = { generatedAt: new Date().toISOString(), baseUrl, cases: results.length, passed: results.length - failures.length, failed: failures.length, failures, results };
 const outputDirectory = new URL('../docs/quality/public-responsive-2026-09-06/', import.meta.url);
 await mkdir(outputDirectory, { recursive: true });

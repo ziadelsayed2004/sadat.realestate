@@ -597,6 +597,7 @@
     grid-template-columns: 288px 920px;
     gap: 24px;
     box-sizing: border-box;
+    margin-block-end: 40px;
     padding: 24px 0 0;
   }
 

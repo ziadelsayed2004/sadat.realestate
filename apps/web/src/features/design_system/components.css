@@ -546,6 +546,7 @@ select:not(.a11y-visually-hidden):disabled {
 }
 
 .ui-property-card {
+  position: relative;
   display: grid;
   overflow: hidden;
   background: var(--color-surface);
@@ -555,6 +556,7 @@ select:not(.a11y-visually-hidden):disabled {
 }
 
 .ui-property-card__media {
+  position: relative;
   display: grid;
   place-items: center;
   min-block-size: 12rem;
@@ -997,4 +999,3 @@ select:not(.a11y-visually-hidden):disabled {
   color: var(--color-brand-primary, #1e3a8a);
   flex-shrink: 0;
 }
-

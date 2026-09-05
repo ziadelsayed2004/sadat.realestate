@@ -14,7 +14,7 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "a8af6e406cb2608007467ab2cae70b71115d7fc68bb35b3c3605f010c22960f9",
-    "afterHash": "cd53b6c012d9f5942cbc94c10dd54cf674fc559473d52579c176b161bddd9904",
+    "afterHash": "a0faed0765c4f5ffc0f384bed3d47479c3494866808736ca4dd35c7fac2c3ff7",
     "requestedApi": [],
     "apiResponses": []
   },
@@ -23,7 +23,7 @@
     "navs": 2,
     "sections": 2,
     "cards": 61,
-    "images": 28,
+    "images": 32,
     "forms": 1
   },
   "fonts": {
@@ -2300,6 +2300,30 @@
       "complete": true,
       "decoded": true,
       "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/figma/public-footer-phone.svg",
+      "complete": true,
+      "decoded": true,
+      "loading": "auto"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/figma/public-footer-whatsapp.svg",
+      "complete": true,
+      "decoded": true,
+      "loading": "auto"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/figma/public-footer-location.svg",
+      "complete": true,
+      "decoded": true,
+      "loading": "auto"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/figma/public-footer-x.svg",
+      "complete": true,
+      "decoded": true,
+      "loading": "auto"
     }
   ],
   "transitions": {
@@ -2386,27 +2410,27 @@
       },
       {
         "text": "العقارات",
-        "href": "/properties"
+        "href": "/properties?lang=ar"
       },
       {
         "text": "المطورون",
-        "href": "/developers"
+        "href": "/developers?lang=ar"
       },
       {
         "text": "المقالات",
-        "href": "/articles"
+        "href": "/articles?lang=ar"
       },
       {
         "text": "الكوميونتي",
-        "href": "/community"
+        "href": "/community?lang=ar"
       },
       {
         "text": "من نحن",
-        "href": "/about"
+        "href": "/about?lang=ar"
       },
       {
         "text": "فريق العمل",
-        "href": "/team"
+        "href": "/team?lang=ar"
       },
       {
         "text": "01001234567",
@@ -2423,6 +2447,10 @@
       {
         "text": "",
         "href": "https://instagram.com"
+      },
+      {
+        "text": "",
+        "href": "https://x.com"
       },
       {
         "text": "",
@@ -2580,7 +2608,7 @@
       },
       {
         "width": 1577,
-        "height": 1981
+        "height": 1941
       }
     ],
     "dimensions": {
@@ -2591,10 +2619,10 @@
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-02/visual-metrics.json",
     "visualMetrics": {
       "comparedWidth": 1577,
-      "comparedHeight": 1981,
-      "comparedPixels": 3124037,
-      "materialDifferencePercent": 12.7013,
-      "antiAliasingOnlyPercent": 7.5991,
+      "comparedHeight": 1941,
+      "comparedPixels": 3060957,
+      "materialDifferencePercent": 21.773,
+      "antiAliasingOnlyPercent": 4.5723,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

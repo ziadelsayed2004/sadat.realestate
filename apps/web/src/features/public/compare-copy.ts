@@ -17,6 +17,7 @@ export interface PublicPropertyComparisonCopy {
   readonly remove: string;
   readonly viewDetails: string;
   readonly clearAll: string;
+  readonly clearShort: string;
   readonly compareNow: string;
   readonly backToProperties: string;
   readonly property: string;
@@ -84,6 +85,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyComparisonCop
     remove: 'إزالة',
     viewDetails: 'عرض التفاصيل',
     clearAll: 'مسح الكل والعودة للبحث',
+    clearShort: 'مسح',
     compareNow: 'قارن الآن',
     backToProperties: 'تصفح العقارات',
     property: 'عقار',
@@ -149,6 +151,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicPropertyComparisonCop
     remove: 'Remove',
     viewDetails: 'View details',
     clearAll: 'Clear all and return to search',
+    clearShort: 'Clear',
     compareNow: 'Compare now',
     backToProperties: 'Browse properties',
     property: 'Property',

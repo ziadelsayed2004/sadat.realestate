@@ -14,7 +14,7 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "775ed3ca971ead2112ab9ee5441005a21f50acbec3f35cd4475eb2678d7bcbd6",
-    "afterHash": "0088113cbc9782c27e5f18c01d187fe0be1914fa43cc3c687feb29092ba7f261",
+    "afterHash": "fa7bd933b718dcf9b2274353db63d2382b1db1d91f04f31a2f9c2a5d571e3614",
     "requestedApi": [],
     "apiResponses": []
   },
@@ -23,7 +23,7 @@
     "navs": 1,
     "sections": 9,
     "cards": 44,
-    "images": 26,
+    "images": 30,
     "forms": 1
   },
   "fonts": {
@@ -2230,7 +2230,7 @@
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/developer-nile.png",
+      "src": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
@@ -2288,6 +2288,30 @@
       "complete": true,
       "decoded": true,
       "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/figma/public-footer-phone.svg",
+      "complete": true,
+      "decoded": true,
+      "loading": "auto"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/figma/public-footer-whatsapp.svg",
+      "complete": true,
+      "decoded": true,
+      "loading": "auto"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/figma/public-footer-location.svg",
+      "complete": true,
+      "decoded": true,
+      "loading": "auto"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/figma/public-footer-x.svg",
+      "complete": true,
+      "decoded": true,
+      "loading": "auto"
     }
   ],
   "transitions": {
@@ -2418,27 +2442,27 @@
       },
       {
         "text": "العقارات",
-        "href": "/properties"
+        "href": "/properties?lang=ar"
       },
       {
         "text": "المطورون",
-        "href": "/developers"
+        "href": "/developers?lang=ar"
       },
       {
         "text": "المقالات",
-        "href": "/articles"
+        "href": "/articles?lang=ar"
       },
       {
         "text": "الكوميونتي",
-        "href": "/community"
+        "href": "/community?lang=ar"
       },
       {
         "text": "من نحن",
-        "href": "/about"
+        "href": "/about?lang=ar"
       },
       {
         "text": "فريق العمل",
-        "href": "/team"
+        "href": "/team?lang=ar"
       },
       {
         "text": "01001234567",
@@ -2455,6 +2479,10 @@
       {
         "text": "",
         "href": "https://instagram.com"
+      },
+      {
+        "text": "",
+        "href": "https://x.com"
       },
       {
         "text": "",
@@ -2577,8 +2605,8 @@
       "comparedWidth": 1549,
       "comparedHeight": 5377,
       "comparedPixels": 8328973,
-      "materialDifferencePercent": 18.6345,
-      "antiAliasingOnlyPercent": 15.4297,
+      "materialDifferencePercent": 18.7364,
+      "antiAliasingOnlyPercent": 15.4133,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

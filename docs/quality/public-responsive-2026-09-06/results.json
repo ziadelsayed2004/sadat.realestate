@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T21:51:56.604Z",
+  "generatedAt": "2026-09-05T22:27:10.538Z",
   "baseUrl": "http://127.0.0.1:4173",
   "cases": 72,
   "passed": 72,
@@ -17,7 +17,8 @@
       "scrollHeight": 5377,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-02",
@@ -103,7 +104,8 @@
           "right": -387,
           "width": 22
         }
-      ]
+      ],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-03",
@@ -116,7 +118,8 @@
       "scrollHeight": 3045,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-04",
@@ -126,10 +129,11 @@
       "errors": [],
       "clientWidth": 1440,
       "scrollWidth": 1440,
-      "scrollHeight": 2377,
+      "scrollHeight": 2299,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-05",
@@ -142,7 +146,8 @@
       "scrollHeight": 1536,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-06",
@@ -155,7 +160,8 @@
       "scrollHeight": 2684,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-07",
@@ -168,7 +174,8 @@
       "scrollHeight": 1802,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-08",
@@ -181,7 +188,8 @@
       "scrollHeight": 1839,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-09",
@@ -194,7 +202,8 @@
       "scrollHeight": 1999,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-10",
@@ -207,7 +216,8 @@
       "scrollHeight": 1999,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-11",
@@ -220,7 +230,8 @@
       "scrollHeight": 2214,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-12",
@@ -233,7 +244,8 @@
       "scrollHeight": 1560,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-01",
@@ -319,7 +331,8 @@
           "right": -366,
           "width": 31
         }
-      ]
+      ],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-02",
@@ -405,7 +418,8 @@
           "right": -362,
           "width": 31
         }
-      ]
+      ],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-03",
@@ -418,7 +432,8 @@
       "scrollHeight": 5349,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-04",
@@ -428,10 +443,11 @@
       "errors": [],
       "clientWidth": 768,
       "scrollWidth": 768,
-      "scrollHeight": 3626,
+      "scrollHeight": 3548,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-05",
@@ -444,7 +460,8 @@
       "scrollHeight": 6472,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-06",
@@ -457,7 +474,8 @@
       "scrollHeight": 3848,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-07",
@@ -470,7 +488,8 @@
       "scrollHeight": 6236,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-08",
@@ -483,7 +502,8 @@
       "scrollHeight": 4629,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-09",
@@ -496,7 +516,8 @@
       "scrollHeight": 2146,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-10",
@@ -509,7 +530,8 @@
       "scrollHeight": 2146,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-11",
@@ -522,7 +544,8 @@
       "scrollHeight": 2496,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-12",
@@ -535,7 +558,8 @@
       "scrollHeight": 2227,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-01",
@@ -621,7 +645,8 @@
           "right": -275,
           "width": 31
         }
-      ]
+      ],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-02",
@@ -707,7 +732,8 @@
           "right": -290,
           "width": 31
         }
-      ]
+      ],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-03",
@@ -720,7 +746,8 @@
       "scrollHeight": 5513,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-04",
@@ -730,7 +757,7 @@
       "errors": [],
       "clientWidth": 390,
       "scrollWidth": 390,
-      "scrollHeight": 3945,
+      "scrollHeight": 3867,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [
@@ -806,7 +833,8 @@
           "right": 377,
           "width": 672
         }
-      ]
+      ],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-05",
@@ -819,7 +847,8 @@
       "scrollHeight": 4636,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-06",
@@ -832,7 +861,8 @@
       "scrollHeight": 4282,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-07",
@@ -845,7 +875,8 @@
       "scrollHeight": 5101,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-08",
@@ -858,7 +889,8 @@
       "scrollHeight": 4095,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-09",
@@ -871,7 +903,8 @@
       "scrollHeight": 2481,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-10",
@@ -884,7 +917,8 @@
       "scrollHeight": 2481,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-11",
@@ -897,7 +931,8 @@
       "scrollHeight": 3909,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-12",
@@ -910,7 +945,8 @@
       "scrollHeight": 3357,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-01",
@@ -923,7 +959,8 @@
       "scrollHeight": 5377,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-02",
@@ -1009,7 +1046,8 @@
           "right": 1851,
           "width": 25
         }
-      ]
+      ],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-03",
@@ -1022,7 +1060,8 @@
       "scrollHeight": 3045,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-04",
@@ -1032,10 +1071,11 @@
       "errors": [],
       "clientWidth": 1440,
       "scrollWidth": 1440,
-      "scrollHeight": 2398,
+      "scrollHeight": 2320,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-05",
@@ -1048,7 +1088,8 @@
       "scrollHeight": 1536,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-06",
@@ -1061,7 +1102,8 @@
       "scrollHeight": 2684,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-07",
@@ -1074,7 +1116,8 @@
       "scrollHeight": 1826,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-08",
@@ -1087,7 +1130,8 @@
       "scrollHeight": 1848,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-09",
@@ -1100,7 +1144,8 @@
       "scrollHeight": 1999,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-10",
@@ -1113,7 +1158,8 @@
       "scrollHeight": 1999,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-11",
@@ -1126,7 +1172,8 @@
       "scrollHeight": 2214,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-12",
@@ -1139,7 +1186,8 @@
       "scrollHeight": 1560,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-01",
@@ -1225,7 +1273,8 @@
           "right": 1178,
           "width": 57
         }
-      ]
+      ],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-02",
@@ -1311,7 +1360,8 @@
           "right": 1174,
           "width": 57
         }
-      ]
+      ],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-03",
@@ -1324,7 +1374,8 @@
       "scrollHeight": 5386,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-04",
@@ -1334,10 +1385,11 @@
       "errors": [],
       "clientWidth": 768,
       "scrollWidth": 768,
-      "scrollHeight": 3626,
+      "scrollHeight": 3548,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-05",
@@ -1350,7 +1402,8 @@
       "scrollHeight": 6472,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-06",
@@ -1363,7 +1416,8 @@
       "scrollHeight": 3848,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-07",
@@ -1376,7 +1430,8 @@
       "scrollHeight": 6236,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-08",
@@ -1389,7 +1444,8 @@
       "scrollHeight": 4670,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-09",
@@ -1402,7 +1458,8 @@
       "scrollHeight": 2146,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-10",
@@ -1415,7 +1472,8 @@
       "scrollHeight": 2146,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-11",
@@ -1428,7 +1486,8 @@
       "scrollHeight": 2496,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-12",
@@ -1441,7 +1500,8 @@
       "scrollHeight": 2227,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-01",
@@ -1527,7 +1587,8 @@
           "right": 709,
           "width": 57
         }
-      ]
+      ],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-02",
@@ -1613,7 +1674,8 @@
           "right": 724,
           "width": 57
         }
-      ]
+      ],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-03",
@@ -1626,7 +1688,8 @@
       "scrollHeight": 5607,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-04",
@@ -1636,7 +1699,7 @@
       "errors": [],
       "clientWidth": 390,
       "scrollWidth": 390,
-      "scrollHeight": 3996,
+      "scrollHeight": 3900,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [
@@ -1712,7 +1775,8 @@
           "right": 685,
           "width": 672
         }
-      ]
+      ],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-05",
@@ -1725,7 +1789,8 @@
       "scrollHeight": 4657,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-06",
@@ -1738,7 +1803,8 @@
       "scrollHeight": 4350,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-07",
@@ -1751,7 +1817,8 @@
       "scrollHeight": 5232,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-08",
@@ -1764,7 +1831,8 @@
       "scrollHeight": 4180,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-09",
@@ -1802,7 +1870,8 @@
           "right": 392,
           "width": 97
         }
-      ]
+      ],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-10",
@@ -1840,7 +1909,8 @@
           "right": 392,
           "width": 97
         }
-      ]
+      ],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-11",
@@ -1853,7 +1923,8 @@
       "scrollHeight": 4034,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     },
     {
       "screenId": "PUB-12",
@@ -1866,7 +1937,8 @@
       "scrollHeight": 3357,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": []
+      "overflow": [],
+      "escapedPropertyBadges": []
     }
   ]
 }
