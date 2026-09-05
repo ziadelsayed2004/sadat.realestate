@@ -204,7 +204,7 @@ function ViewingCard({ viewing, locale, copy, onAction }: { readonly viewing: Vi
         <div>
           <strong>{viewing.customerName ?? `${copy.customerReference} ${safeReference(viewing.seekerId)}`}</strong>
           <span>{propertyLabel}</span>
-          {location ? <span>{location}</span> : null}
+          {location ? <span className="provider-viewings__location"><img src="/assets/canonical/provider/viewings/location.svg" width="10" height="10" alt="" />{location}</span> : null}
         </div>
         <Badge tone={statusTone(viewing.status)} data-viewing-status-badge={viewing.status}>{copy.statuses[viewing.status]}</Badge>
       </div>
