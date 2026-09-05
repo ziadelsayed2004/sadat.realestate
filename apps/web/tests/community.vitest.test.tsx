@@ -101,7 +101,7 @@ describe('public community feed and post creation', () => {
     fireEvent.change(screen.getByLabelText(copy.postBody), { target: { value: 'A new body' } });
     const submitButton = screen.getByRole('button', { name: copy.publishPost });
     fireEvent.click(submitButton);
-    await waitFor(() => expect(mutations.createPost).toHaveBeenCalledWith({ title: 'A new post', body: 'A new body' }));
+    await waitFor(() => expect(mutations.createPost).toHaveBeenCalledWith({ title: 'A new post', body: 'A new body', category: 'question' }));
   });
 
   it('loads details and submits comment and report mutations without exposing private fields', async () => {
