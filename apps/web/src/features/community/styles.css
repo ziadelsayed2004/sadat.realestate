@@ -182,7 +182,7 @@
 
 .public-community__success {
   color: var(--color-status-success);
-  border-color: color-mix(in srgb, var(--color-status-success) 35%, white);
+  border-color: #bceccf;
   background: color-mix(in srgb, var(--color-status-success) 8%, white);
 }
 

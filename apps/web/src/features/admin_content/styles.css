@@ -43,7 +43,7 @@
 .admin-content__localized-grid textarea { min-height: 120px; resize: vertical; }
 .admin-content__editor form > label textarea, .admin-content__action-panel textarea { min-height: 110px; resize: vertical; }
 .admin-content__checkbox { display: flex; align-items: center; gap: 8px; color: #5e6b80; font-weight: 800; }
-.admin-content__checkbox input { min-height: auto; }
+.admin-content__checkbox input { min-height: 0; }
 .admin-content__feedback { margin: 0; color: #bd2435; font-weight: 700; }
 .admin-content__feedback[data-tone='success'] { color: #07883e; }
 @media (max-width: 1100px) { .admin-content { grid-template-columns: 1fr; } .admin-content > .admin-dashboard__navigation { display: none; } .admin-content__filters { grid-template-columns: 1fr 1fr; } .admin-content__localized-grid, .admin-content__form-grid { grid-template-columns: 1fr; } }

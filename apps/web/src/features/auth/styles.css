@@ -45,7 +45,7 @@
 
 .auth-card__hero p,
 .auth-card__heading p {
-  color: color-mix(in srgb, currentColor 72%, transparent);
+  opacity: 0.72;
   line-height: var(--line-height-body);
 }
 
@@ -677,7 +677,7 @@
 
 .auth-card--form .auth-card__body {
   background: var(--color-surface);
-  border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  border: 1px solid #eee9df;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
 }
@@ -706,7 +706,7 @@
 .auth-page--registration-role .auth-role-card,
 .provider-type-option {
   background: var(--color-surface);
-  border-color: color-mix(in srgb, var(--color-brand-secondary) 16%, var(--color-border));
+  border-color: #c7c2c5;
   box-shadow: var(--shadow-sm);
 }
 
@@ -779,7 +779,7 @@
   padding-inline: 0.7rem;
   color: var(--color-text-strong);
   background: var(--color-surface-soft);
-  border: 1px solid color-mix(in srgb, var(--color-brand-accent) 55%, var(--color-border));
+  border: 1px solid #dbc07c;
   border-radius: 999px;
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-semibold);

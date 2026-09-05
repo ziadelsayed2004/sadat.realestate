@@ -358,7 +358,7 @@ function ComparisonContent({
             const title = localizedText(property.name, locale) ?? property.slug;
             return (
               <span className="public-property-comparison__sticky-item" key={property.id}>
-                <PublicMediaImage src={property.imageUrl} alt="" />
+                <PublicMediaImage src={property.imageUrl} alt="" fallback={<span aria-hidden="true">⌂</span>} />
                 <span>{title}</span>
                 <button type="button" aria-label={`${copy.remove}: ${title}`} onClick={() => onRemove(property.id)}>×</button>
               </span>

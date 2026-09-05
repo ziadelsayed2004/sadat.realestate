@@ -14,7 +14,7 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "7703031256bff4f83c825bfbc37f44601915221ef45ccc2a1b73807195a3442e",
-    "afterHash": "d53a8976940c0f43e670f1f55458e7af1118584e452db580e82e4897e093c8e2",
+    "afterHash": "e4c7f6b4ad560b8b3b66aa9f03f21fe1dd1da98c241e81a5bc83d3e7f0a1127e",
     "requestedApi": [],
     "apiResponses": []
   },
@@ -23,7 +23,7 @@
     "navs": 1,
     "sections": 1,
     "cards": 28,
-    "images": 11,
+    "images": 15,
     "forms": 1
   },
   "fonts": {
@@ -2198,6 +2198,30 @@
       "complete": true,
       "decoded": true,
       "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/figma/public-footer-phone.svg",
+      "complete": true,
+      "decoded": true,
+      "loading": "auto"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/figma/public-footer-whatsapp.svg",
+      "complete": true,
+      "decoded": true,
+      "loading": "auto"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/figma/public-footer-location.svg",
+      "complete": true,
+      "decoded": true,
+      "loading": "auto"
+    },
+    {
+      "src": "http://127.0.0.1:4173/assets/figma/public-footer-x.svg",
+      "complete": true,
+      "decoded": true,
+      "loading": "auto"
     }
   ],
   "transitions": {
@@ -2292,27 +2316,27 @@
       },
       {
         "text": "العقارات",
-        "href": "/properties"
+        "href": "/properties?lang=ar"
       },
       {
         "text": "المطورون",
-        "href": "/developers"
+        "href": "/developers?lang=ar"
       },
       {
         "text": "المقالات",
-        "href": "/articles"
+        "href": "/articles?lang=ar"
       },
       {
         "text": "الكوميونتي",
-        "href": "/community"
+        "href": "/community?lang=ar"
       },
       {
         "text": "من نحن",
-        "href": "/about"
+        "href": "/about?lang=ar"
       },
       {
         "text": "فريق العمل",
-        "href": "/team"
+        "href": "/team?lang=ar"
       },
       {
         "text": "01001234567",
@@ -2329,6 +2353,10 @@
       {
         "text": "",
         "href": "https://instagram.com"
+      },
+      {
+        "text": "",
+        "href": "https://x.com"
       },
       {
         "text": "",
@@ -2403,8 +2431,8 @@
       "comparedWidth": 1523,
       "comparedHeight": 1536,
       "comparedPixels": 2339328,
-      "materialDifferencePercent": 18.2549,
-      "antiAliasingOnlyPercent": 4.4885,
+      "materialDifferencePercent": 18.9404,
+      "antiAliasingOnlyPercent": 4.287,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

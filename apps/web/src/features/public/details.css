@@ -84,7 +84,7 @@
   padding: 0.625rem 1rem;
   color: var(--color-brand-primary);
   background: color-mix(in srgb, var(--color-brand-soft) 72%, var(--color-surface));
-  border: 1px solid color-mix(in srgb, var(--color-brand-primary) 28%, var(--color-border));
+    border: 1px solid #abb6a8;
   border-radius: 999px;
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-bold);
@@ -1004,7 +1004,7 @@
     padding: 6px 12px;
     color: var(--color-brand-primary);
     background: color-mix(in srgb, var(--color-brand-soft) 72%, var(--color-surface));
-    border: 1px solid color-mix(in srgb, var(--color-brand-primary) 28%, var(--color-border));
+  border: 1px solid #abb6a8;
     border-radius: 999px;
     font-size: 12px;
     font-weight: 700;

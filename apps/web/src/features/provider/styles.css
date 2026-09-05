@@ -450,7 +450,6 @@
     gap: 6px;
     overflow-x: auto;
     overscroll-behavior-inline: contain;
-    scrollbar-width: thin;
   }
 
   .provider-dashboard__navigation li {

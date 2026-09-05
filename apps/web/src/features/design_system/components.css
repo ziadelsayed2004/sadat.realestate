@@ -123,9 +123,9 @@
 }
 
 select:not(.a11y-visually-hidden) {
-  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+  appearance: none;
   display: inline-flex;
   align-items: center;
   inline-size: 100%;
@@ -224,7 +224,7 @@ select:not(.a11y-visually-hidden):disabled {
 .ui-tabs__list {
   display: flex;
   gap: var(--space-xs);
-  overflow-inline: auto;
+  overflow-x: auto;
   border-block-end: 1px solid var(--color-border);
 }
 
@@ -460,7 +460,7 @@ select:not(.a11y-visually-hidden):disabled {
 
 .ui-table-wrap {
   inline-size: 100%;
-  overflow-inline: auto;
+  overflow-x: auto;
 }
 
 .ui-table {
@@ -661,6 +661,7 @@ select:not(.a11y-visually-hidden):disabled {
   position: relative;
   display: inline-flex;
   align-items: center;
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -796,9 +797,9 @@ select:not(.a11y-visually-hidden):disabled {
 /* Custom Select Form Control */
 .ui-field__select {
   cursor: pointer;
-  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+  appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%2364748b' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4.5l3 3 3-3'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: calc(100% - 1rem) center;
@@ -875,6 +876,7 @@ select:not(.a11y-visually-hidden):disabled {
   flex-direction: column;
   gap: 0.25rem;
   width: 100%;
+  -webkit-user-select: none;
   user-select: none;
 }
 
