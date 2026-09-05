@@ -276,7 +276,13 @@ function RequestsContent({ data, locale, copy, status, searchInput, query, onSta
           <h1 id="provider-customer-requests-title">{copy.title}</h1>
           <p>{copy.description}</p>
         </div>
-        <Button onClick={onAdd} startIcon="+">{copy.add}</Button>
+        <div className="provider-customer-requests__actions provider-customer-requests__heading-actions">
+          <Button onClick={onAdd} startIcon={<img src="/assets/canonical/provider/customer-requests/add.svg" width="15" height="15" alt="" />}>{copy.add}</Button>
+          <a className="ui-button ui-button--secondary" data-state="idle" href={`/provider/viewings?lang=${encodeURIComponent(locale)}`}>
+            <img src="/assets/canonical/provider/customer-requests/calendar.svg" width="15" height="15" alt="" />
+            {copy.viewings}
+          </a>
+        </div>
       </div>
       <section className="provider-customer-requests__panel" aria-labelledby="provider-customer-requests-list-title">
         <div className="provider-dashboard__section-heading">

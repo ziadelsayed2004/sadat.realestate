@@ -47,6 +47,7 @@ describe('Provider customer requests', () => {
     const load = vi.fn().mockResolvedValue({ ...data, items: [request({ property })] });
     renderWithLocale(<ProviderCustomerRequests locale={locale} session={session} load={load} />, { locale });
     expect(await screen.findByText(property.name[locale])).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: getProviderCustomerRequestsCopy(locale).viewings })).toHaveAttribute('href', `/provider/viewings?lang=${locale}`);
   });
   it('loads provider-owned requests with strict list scope and authorization', async () => {
     const requests: Array<{ url: string; method: string; authorization: string | null }> = [];

@@ -2,6 +2,26 @@
   align-items: center;
 }
 
+.provider-customer-requests__heading-actions {
+  flex-shrink: 0;
+}
+
+.provider-customer-requests__heading-actions img {
+  display: block;
+  width: 15px;
+  height: 15px;
+}
+
+.provider-customer-requests .provider-customer-requests__heading-actions .ui-button[data-state] {
+  border-radius: 18px;
+  font-size: 14px;
+}
+
+.provider-customer-requests .provider-customer-requests__heading-actions a.ui-button[data-state] {
+  border-color: #17233d;
+  text-decoration: none;
+}
+
 .provider-customer-requests .provider-customer-requests__heading h1 {
   font-size: 20px;
   line-height: 28px;

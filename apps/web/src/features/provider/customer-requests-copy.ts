@@ -5,6 +5,7 @@ export interface ProviderCustomerRequestsCopy {
   readonly title: string;
   readonly description: string;
   readonly add: string;
+  readonly viewings: string;
   readonly countSuffix: string;
   readonly filtersLabel: string;
   readonly searchLabel: string;
@@ -73,6 +74,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderCustomerRequestsCop
     title: 'طلبات العملاء',
     description: 'تابع طلبات العملاء التي أنشأها حسابك باستخدام البيانات والإجراءات التي يعيدها النظام.',
     add: 'إضافة طلب يدوي',
+    viewings: 'مواعيد المعاينات',
     countSuffix: 'طلب',
     filtersLabel: 'تصفية طلبات العملاء',
     searchLabel: 'بحث',
@@ -106,6 +108,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderCustomerRequestsCop
     title: 'Customer requests',
     description: 'Track customer requests created by your provider account using the data and actions returned by the system.',
     add: 'Add customer request',
+    viewings: 'Viewing appointments',
     countSuffix: 'requests',
     filtersLabel: 'Filter customer requests',
     searchLabel: 'Search',

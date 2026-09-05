@@ -2,6 +2,13 @@
   "screenId": "PRV-16",
   "canonical": { "fileKey": "Odl1Epn2u6lIEuIMmABT7o", "nodeId": "6017:21368", "freshDesignContextRead": true },
   "status": "PARTIAL",
+  "headerFollowUp": {
+    "canonicalNode": "6017:21374",
+    "repair": "Added the missing viewing-appointments link with locale-preserving route, original downloaded calendar/add icons, and 18px action corners.",
+    "evidence": "14 component tests, 6 AR/EN desktop/tablet/mobile browser tests (including image loading and link visibility), web typecheck, full build and local smoke passed.",
+    "assetManifest": "apps/web/public/assets/canonical/provider/customer-requests/asset-manifest.json",
+    "pixelParityMeasured": false
+  },
   "searchFollowUp": {
     "problem": "Production MongoDB list search omitted firstName, lastName, phone and email although the UI advertised customer-name/phone search; in-memory tests masked this gap.",
     "repair": "Added literal case-insensitive customer identity search plus combined first/last-name matching. Provider ownership and status/type/source filters remain outside the OR; rows and totals share the same filter.",

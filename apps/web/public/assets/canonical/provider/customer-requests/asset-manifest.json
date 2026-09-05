@@ -1,0 +1,8 @@
+{
+  "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "screen": "PRV-16",
+  "assets": [
+    { "file": "calendar.svg", "nodeId": "6017:21377", "sha256": "5e000e27e8b85c33e76ad72210658257f207a88703b5278b8fc0e178836c0393" },
+    { "file": "add.svg", "nodeId": "6017:21384", "sha256": "7856e6520d079c7d8ae03a01aa9c79fe9d68738b5333ce4ad945d87b8d455364" }
+  ]
+}

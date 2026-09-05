@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { PropertyData, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import type { RouteSession } from '../routing/index.ts';
@@ -99,6 +99,17 @@ function navigationItemIsActive(id: (typeof navigationItems)[number][0], path: s
 export function ProviderNavigation({ locale, activePath, authClient }: { readonly locale: SupportedLocale; readonly activePath: string; readonly authClient?: ProviderAuthorizationSource | undefined }) {
   const copy = getProviderCopy(locale);
   const [signingOut, setSigningOut] = useState(false);
+  const navigationList = useRef<HTMLUListElement>(null);
+  useEffect(() => {
+    const revealActive = () => {
+      if (window.matchMedia?.('(max-width: 900px)').matches) {
+        navigationList.current?.querySelector('[aria-current="page"]')?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
+      }
+    };
+    revealActive();
+    window.addEventListener('resize', revealActive);
+    return () => window.removeEventListener('resize', revealActive);
+  }, [activePath]);
   const providerLabel = locale === 'ar' ? 'مزود عقار' : 'Property provider';
   const logoutLabel = signingOut ? (locale === 'ar' ? 'جاري تسجيل الخروج…' : 'Signing out…') : (locale === 'ar' ? 'تسجيل الخروج' : 'Sign out');
   const signOut = () => {
@@ -124,7 +135,7 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
           <span>{copy.overview.eyebrow}</span>
         </a>
         <span className="provider-dashboard__navigation-title">{copy.overview.eyebrow}</span>
-        <ul>
+        <ul ref={navigationList}>
           {navigationItems.map(([id, path]) => {
             const active = navigationItemIsActive(id, path, activePath);
             const icon = navigationIcons[id];
@@ -139,6 +150,11 @@ export function ProviderNavigation({ locale, activePath, authClient }: { readonl
               </li>
             );
           })}
+          <li className="provider-dashboard__mobile-logout">
+            <button type="button" onClick={signOut} disabled={signingOut} aria-label={logoutLabel}>
+              <img src={`${providerNavigationAssetRoot}/logout.svg`} alt="" width="19" height="19" />
+            </button>
+          </li>
         </ul>
         <footer className="provider-dashboard__navigation-footer">
           <strong>{providerLabel}</strong><small>{locale === 'ar' ? 'شركة' : 'Company'}</small>

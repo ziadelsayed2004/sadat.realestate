@@ -100,8 +100,10 @@ describe('Provider overview', () => {
     const links = Array.from(result.container.querySelectorAll('.provider-dashboard__navigation ul a'));
     expect(links).toHaveLength(9);
     expect(result.container.querySelector('.provider-dashboard__navigation a[data-active="true"]')).toHaveAttribute('href', `/provider/customer-requests?lang=${locale}`);
-    expect(result.container.querySelectorAll('.provider-dashboard__navigation ul img')).toHaveLength(9);
-    for (const image of result.container.querySelectorAll('.provider-dashboard__navigation ul img')) {
+    expect(result.container.querySelectorAll('.provider-dashboard__navigation ul a img')).toHaveLength(9);
+    expect(result.container.querySelector('.provider-dashboard__mobile-logout button')).toHaveAttribute('aria-label', locale === 'ar' ? 'تسجيل الخروج' : 'Sign out');
+    expect(result.container.querySelector('.provider-dashboard__mobile-logout img')).toHaveAttribute('src', '/assets/canonical/provider/navigation/logout.svg');
+    for (const image of result.container.querySelectorAll('.provider-dashboard__navigation ul a img')) {
       expect(image).toHaveAttribute('width', '19');
       expect(image).toHaveAttribute('height', '19');
       expect(image.getAttribute('src')).toMatch(/^\/assets\/canonical\/provider\/navigation\/[a-z-]+(?:-active)?\.svg$/u);

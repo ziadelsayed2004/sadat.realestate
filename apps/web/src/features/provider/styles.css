@@ -163,6 +163,8 @@
 }
 .provider-dashboard__navigation-footer button:disabled { opacity: .65; cursor: wait; }
 
+.provider-dashboard__mobile-logout { display: none; }
+
 .provider-dashboard__navigation a {
   display: flex;
   align-items: center;
@@ -454,6 +456,9 @@
   .provider-dashboard__navigation li {
     flex: 0 0 auto;
   }
+
+  .provider-dashboard__mobile-logout { display: block; }
+  .provider-dashboard__mobile-logout button { padding: 13px; border: 0; background: transparent; cursor: pointer; }
 
   .provider-dashboard__navigation a {
     min-height: 40px;

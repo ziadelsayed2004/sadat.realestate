@@ -68,11 +68,28 @@ test('PRV-16 responsive layout keeps filters and request actions usable', async 
   await page.goto(`/provider/customer-requests?lang=${locale}`);
   await expect(page.getByTestId(`provider-customer-request-${REQUEST_ID}`)).toBeVisible();
   const dimensions = await page.evaluate(() => ({ width: innerWidth, content: document.documentElement.scrollWidth }));
+  const viewingsLink = page.locator(`.provider-customer-requests__heading-actions a[href="/provider/viewings?lang=${locale}"]`);
+  await expect(viewingsLink).toBeVisible();
+  await expect(viewingsLink).toHaveCSS('border-radius', '18px');
+  await expect(viewingsLink).toHaveCSS('border-top-color', 'rgb(23, 35, 61)');
+  await expect(viewingsLink).toHaveCSS('text-decoration-line', 'none');
+  await expect(viewingsLink.locator('img')).toHaveJSProperty('naturalWidth', 15);
   expect(dimensions.content).toBeLessThanOrEqual(dimensions.width + 1);
   if (dimensions.width <= 900) {
     await expect(page.locator('.provider-dashboard__brand')).toBeHidden();
     const navigation = await page.locator('.provider-dashboard__navigation').boundingBox();
     expect(navigation?.height).toBeLessThan(100);
+    const active = page.locator('.provider-dashboard__navigation [aria-current="page"]');
+    const activeBounds = await active.boundingBox();
+    expect(activeBounds?.x).toBeGreaterThanOrEqual(0);
+    expect((activeBounds?.x ?? 0) + (activeBounds?.width ?? 0)).toBeLessThanOrEqual(dimensions.width);
+    const logout = page.locator('.provider-dashboard__mobile-logout button');
+    await logout.focus();
+    await expect(logout).toBeFocused();
+    const logoutBounds = await logout.boundingBox();
+    expect(logoutBounds?.width).toBeGreaterThanOrEqual(44);
+    expect(logoutBounds?.x).toBeGreaterThanOrEqual(0);
+    expect((logoutBounds?.x ?? 0) + (logoutBounds?.width ?? 0)).toBeLessThanOrEqual(dimensions.width);
   }
   const filters = page.locator('.provider-customer-requests__filters');
   await expect(filters).toBeVisible();
