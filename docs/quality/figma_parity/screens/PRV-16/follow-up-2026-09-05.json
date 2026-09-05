@@ -1,0 +1,26 @@
+{
+  "screenId": "PRV-16",
+  "canonical": { "fileKey": "Odl1Epn2u6lIEuIMmABT7o", "nodeId": "6017:21368", "freshDesignContextRead": true },
+  "status": "PARTIAL",
+  "repairs": [
+    "Removed duplicate visible heading and outer panel absent from canonical design",
+    "Matched heading size and primary button navy color",
+    "Reduced table minimum width and made horizontal scrolling keyboard-focusable",
+    "Stacked filters on phone widths",
+    "Rendered safe localized related property name when supplied by the API",
+    "Corrected shared provider navigation specificity so its brand is hidden on mobile"
+  ],
+  "verification": {
+    "componentTests": { "passed": 14 },
+    "webTypecheck": "passed",
+    "fullBuild": "passed",
+    "responsiveBrowserFinalRerun": { "passed": 6, "locales": ["ar", "en"], "devices": ["desktop", "tablet", "mobile"], "scope": "Mocked authenticated requests; document overflow, filters, keyboard focus, mobile navigation height; not pixel parity or production journey" }
+  },
+  "remaining": [
+    "Canonical status summary cards need accurate backend aggregate counts, not current-page estimates",
+    "Priority, responsibility and follow-up fields lack the full canonical safe projection",
+    "Canonical versus runtime screenshot metrics are not freshly measured",
+    "Production deployment and real-data journeys not verified"
+  ],
+  "currentParityPercent": null
+}

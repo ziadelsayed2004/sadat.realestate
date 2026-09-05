@@ -30,7 +30,7 @@
 
 .provider-customer-requests .ui-button[data-state].ui-button--primary {
   color: var(--color-on-brand);
-  background: var(--color-brand-primary);
+  background: #17233d;
 }
 
 .provider-customer-requests .ui-button[data-state].ui-button--secondary {

@@ -69,6 +69,11 @@ test('PRV-16 responsive layout keeps filters and request actions usable', async 
   await expect(page.getByTestId(`provider-customer-request-${REQUEST_ID}`)).toBeVisible();
   const dimensions = await page.evaluate(() => ({ width: innerWidth, content: document.documentElement.scrollWidth }));
   expect(dimensions.content).toBeLessThanOrEqual(dimensions.width + 1);
+  if (dimensions.width <= 900) {
+    await expect(page.locator('.provider-dashboard__brand')).toBeHidden();
+    const navigation = await page.locator('.provider-dashboard__navigation').boundingBox();
+    expect(navigation?.height).toBeLessThan(100);
+  }
   const filters = page.locator('.provider-customer-requests__filters');
   await expect(filters).toBeVisible();
   await page.locator('#provider-customer-requests-status').selectOption('contacted');

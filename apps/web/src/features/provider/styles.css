@@ -434,7 +434,7 @@
     border-bottom: 1px solid #edf0f4;
   }
 
-  .provider-dashboard__brand,
+  .provider-dashboard__navigation .provider-dashboard__brand,
   .provider-dashboard__navigation-footer { display: none; }
 
   .provider-dashboard__topbar { grid-column: 1; grid-row: 1; }

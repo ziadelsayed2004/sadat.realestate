@@ -131,6 +131,14 @@ export function createMongooseRequestRepository(connection: Connection): Request
         const clauses: Record<string, unknown>[] = [
           { type: escapedSearch(search) },
           { status: escapedSearch(search) },
+          { 'payload.firstName': escapedSearch(search) },
+          { 'payload.lastName': escapedSearch(search) },
+          { 'payload.phone': escapedSearch(search) },
+          { 'payload.email': escapedSearch(search) },
+          { $expr: { $regexMatch: {
+            input: { $concat: [{ $ifNull: ['$payload.firstName', ''] }, ' ', { $ifNull: ['$payload.lastName', ''] }] },
+            regex: escapedSearch(search)
+          } } },
           { 'payload.message': escapedSearch(search) },
           { 'payload.note': escapedSearch(search) }
         ];
