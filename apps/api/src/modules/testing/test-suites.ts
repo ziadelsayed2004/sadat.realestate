@@ -45,6 +45,7 @@ export const TEST_SUITES = Object.freeze({
     'tests/uploads/contracts.test.ts',
     'tests/uploads/environment.test.ts',
     'tests/uploads/models.test.ts',
+    'tests/uploads/repository-list.test.ts',
     'tests/uploads/service.test.ts',
     'tests/uploads/validation.test.ts',
     'tests/media/media.test.ts',
