@@ -77,7 +77,7 @@ function customerName(request: RequestData, unavailable: string): string {
 }
 
 function relatedLabel(request: RequestData, copy: ProviderCustomerRequestsCopy, locale: SupportedLocale): string {
-  if (request.property) return request.property.title[locale] ?? request.property.title.ar;
+  if (request.property) return request.property.name[locale] ?? request.property.name.ar;
   if (payloadText(request, 'propertyId') !== undefined || request.propertyId !== undefined) return copy.form.propertyId;
   if (payloadText(request, 'projectId') !== undefined || request.projectId !== undefined) return copy.form.projectId;
   return copy.unavailable;

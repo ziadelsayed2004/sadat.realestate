@@ -42,6 +42,12 @@ function success(payload: unknown, requestIdValue: string, meta: Record<string, 
 }
 
 describe('Provider customer requests', () => {
+  it.each(['ar', 'en'] as const)('renders the safe related property name in %s', async locale => {
+    const property = { id: 'cccccccccccccccccccccccc', slug: 'local-apartment', kind: 'property' as const, name: { ar: 'شقة السادات', en: 'Sadat apartment' }, transactionType: 'sale' as const };
+    const load = vi.fn().mockResolvedValue({ ...data, items: [request({ property })] });
+    renderWithLocale(<ProviderCustomerRequests locale={locale} session={session} load={load} />, { locale });
+    expect(await screen.findByText(property.name[locale])).toBeInTheDocument();
+  });
   it('loads provider-owned requests with strict list scope and authorization', async () => {
     const requests: Array<{ url: string; method: string; authorization: string | null }> = [];
     const client = new ApiClient({
