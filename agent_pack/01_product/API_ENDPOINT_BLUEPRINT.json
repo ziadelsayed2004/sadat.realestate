@@ -292,6 +292,16 @@
     "apiVersion": "v1"
   },
   {
+    "method": "GET",
+    "path": "/api/v1/provider/application/documents",
+    "module": "provider-onboarding",
+    "auth": "access-token",
+    "roles": ["provider"],
+    "purpose": "List active owned document metadata without storage keys or download URLs",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
     "method": "DELETE",
     "path": "/api/v1/provider/application/documents/:documentId",
     "module": "provider-onboarding",

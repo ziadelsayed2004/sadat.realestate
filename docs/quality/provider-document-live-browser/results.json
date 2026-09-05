@@ -1,0 +1,47 @@
+{
+  "scope": "Real local document/application GET requests after API upload; injected real session bootstrap only; no browser upload or submission",
+  "results": [
+    {
+      "locale": "ar",
+      "width": 1440,
+      "reloadRestoresTwoFiles": true,
+      "reviewEnabled": true,
+      "overflow": false
+    },
+    {
+      "locale": "ar",
+      "width": 768,
+      "reloadRestoresTwoFiles": true,
+      "reviewEnabled": true,
+      "overflow": false
+    },
+    {
+      "locale": "ar",
+      "width": 390,
+      "reloadRestoresTwoFiles": true,
+      "reviewEnabled": true,
+      "overflow": false
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "reloadRestoresTwoFiles": true,
+      "reviewEnabled": true,
+      "overflow": false
+    },
+    {
+      "locale": "en",
+      "width": 768,
+      "reloadRestoresTwoFiles": true,
+      "reviewEnabled": true,
+      "overflow": false
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "reloadRestoresTwoFiles": true,
+      "reviewEnabled": true,
+      "overflow": false
+    }
+  ]
+}

@@ -20,6 +20,7 @@ import {
   providerCompanyPatchSchema,
   providerDocumentDeleteSuccessEnvelopeSchema,
   providerDocumentSuccessEnvelopeSchema,
+  providerDocumentListSuccessEnvelopeSchema,
   providerDocumentUploadHeadersSchema,
   providerRegistrationSuccessEnvelopeSchema,
   providerSubmitRequestSchema,
@@ -295,6 +296,15 @@ export class AuthClient {
       responseSchema: providerApplicationStatusSuccessEnvelopeSchema
     });
     return response.data.data;
+  }
+
+  async listProviderDocuments(): Promise<readonly ProviderDocumentData[]> {
+    const headers = this.authorizationHeaders();
+    const response = await this.apiClient.request('/provider/application/documents', {
+      method: 'GET', ...(headers === undefined ? {} : { headers }),
+      responseSchema: providerDocumentListSuccessEnvelopeSchema
+    });
+    return response.data.data.items;
   }
 
   async uploadProviderDocument(category: ProviderDocumentCategory, file: File): Promise<ProviderDocumentData> {

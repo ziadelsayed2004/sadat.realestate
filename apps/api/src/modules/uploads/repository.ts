@@ -50,6 +50,7 @@ export type RegisterProviderDocumentResult =
   | { kind: 'concurrency_conflict' };
 
 export interface ProviderDocumentRepository {
+  listOwned(providerId: string, applicationId: string): Promise<ProviderDocumentEntity[]>;
   findOwnedApplication(providerId: string): Promise<OwnedProviderApplication | undefined>;
   register(input: RegisterProviderDocumentInput): Promise<RegisterProviderDocumentResult>;
   updateSecurity(
@@ -152,6 +153,14 @@ export function createMongooseProviderDocumentRepository(
       };
     },
 
+    async listOwned(providerId, applicationId) {
+      if (!validObjectId(providerId) || !validObjectId(applicationId)) return [];
+      const rows = await ProviderDocument.find({
+        providerId: new Types.ObjectId(providerId), applicationId: new Types.ObjectId(applicationId),
+        active: true, deletedAt: { $exists: false }, securityState: { $ne: 'deleted' }
+      }).sort({ uploadedAt: -1, _id: -1 }).lean<LeanDocument[]>().exec();
+      return rows.map(entity);
+    },
     async register(input) {
       const applicationId = new Types.ObjectId(input.application.id);
       const providerId = new Types.ObjectId(input.application.providerId);

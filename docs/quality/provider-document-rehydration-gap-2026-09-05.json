@@ -1,0 +1,26 @@
+{
+  "status": "locally_verified_reload_production_and_submission_unverified",
+  "implementationUpdate": "Owner-scoped document listing and page rehydration verified using real loopback OTP/account/PDF upload APIs, isolated Mongo repository probe, and six AR/EN browser reload cases at 1440/768/390. Both required files restored, optional absent, review enabled, no overflow. Browser session bootstrap injected; uploads occurred via API, not browser. Build and API documentation checks passed. Browser upload, final submission, approval and production remain unverified. Evidence array below describes the original defect, not current code.",
+  "currentEvidence": ["provider-document-live-api-2026-09-05.json", "provider-document-live-browser/results.json", "document-list-live-mongo-2026-09-05.json"],
+  "screen": "AUTH-12",
+  "problem": "Saved documents are not rehydrated when the documents page mounts. Completeness may say no required documents are missing while the cards still offer Choose file.",
+  "evidence": [
+    "apps/web/src/features/provider_auth/documents.tsx initializes documents to an empty object and populates it only on upload in the current mount.",
+    "AuthClient exposes upload/delete but no provider document listing method.",
+    "UPLOAD_ROUTE_DEFINITIONS exposes POST upload, access grants, DELETE and private download, but no owner-scoped GET document list.",
+    "ProviderDocumentRepository supports individual findOwned but has no active owned list method."
+  ],
+  "requiredFix": [
+    "Add authenticated owner-scoped list contract, repository and service returning active non-deleted document metadata only, never storage keys or permanent URLs.",
+    "Wire AuthClient and page initialization to the list, with explicit retry/error behavior.",
+    "Test provider isolation, deleted/superseded exclusion and reload retaining filenames and security/review states.",
+    "Verify real local upload, leave/reopen step, save location, and review without duplicate uploads."
+  ],
+  "relatedBrowserEvidence": {
+    "test": "apps/web/tests/e2e/provider-organization-documents.spec.ts: individual broker repairs locations inline before reviewing documents",
+    "passedCases": 6,
+    "locales": ["ar", "en"],
+    "devices": ["desktop", "tablet", "mobile"],
+    "scope": "Location selection and mocked successful account save enable review without document overflow. Fixture completeness is not a real upload test or Figma parity measurement."
+  }
+}

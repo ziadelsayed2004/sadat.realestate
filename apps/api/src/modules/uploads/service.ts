@@ -70,6 +70,7 @@ export interface ProviderDocumentServiceDependencies {
 }
 
 export interface ProviderDocumentService {
+  list(claims: AccessTokenClaims): Promise<{ items: ProviderDocumentData[] }>;
   upload(
     claims: AccessTokenClaims,
     headers: ProviderDocumentUploadHeaders,
@@ -178,6 +179,13 @@ export function createProviderDocumentService(
   }
 
   return {
+    async list(claims) {
+      const owner = providerId(claims);
+      const application = await dependencies.repository.findOwnedApplication(owner);
+      if (!application) throw new UploadServiceError('PROVIDER_APPLICATION_NOT_FOUND');
+      const documents = await dependencies.repository.listOwned(owner, application.id);
+      return { items: documents.map(document => toData(document, false)) };
+    },
     async isReady() {
       const [storage, scanner] = await Promise.all([
         dependencies.storage.isReady(),

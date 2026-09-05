@@ -66,6 +66,7 @@ export {
   providerDocumentAccessRequestSchema,
   providerDocumentAccessSuccessEnvelopeSchema,
   providerDocumentDataSchema,
+  providerDocumentListSuccessEnvelopeSchema,
   providerDocumentDeleteDataSchema,
   providerDocumentDeleteSuccessEnvelopeSchema,
   providerDocumentMimeSchema,

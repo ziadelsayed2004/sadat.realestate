@@ -13,8 +13,12 @@ import { missingRequiredDocumentCategories } from './completeness.ts';
 import { getProviderDocumentsCopy, type ProviderDocumentsCopy } from './documents-copy.ts';
 import './styles.css';
 import { getProviderAccountCopy } from './account-copy.ts';
+import { DocumentLocationRepair } from './document-location-repair.tsx';
+import type { ProviderAccountFlowClient } from './account.tsx';
 
 export interface ProviderDocumentsFlowClient {
+  readonly listProviderDocuments?: (() => Promise<readonly ProviderDocumentData[]>) | undefined;
+  readonly updateProviderAccount?: ProviderAccountFlowClient['updateProviderAccount'];
   readonly getProviderApplication?: (() => Promise<ProviderApplicationData>) | undefined;
   readonly uploadProviderDocument?: ((category: ProviderDocumentCategory, file: File) => Promise<ProviderDocumentData>) | undefined;
   readonly deleteProviderDocument?: ((documentId: string) => Promise<{ readonly documentId: string; readonly deleted: true }>) | undefined;
@@ -233,13 +237,27 @@ export function ProviderDocumentsPage({ client, locale, providerType, initialApp
         return;
       }
       setApplication(nextApplication);
+      if (client.listProviderDocuments !== undefined) {
+        let saved: readonly ProviderDocumentData[];
+        try {
+          saved = await client.listProviderDocuments();
+        } catch (listError: unknown) {
+          if (isUnauthorized(listError)) throw listError;
+          setLoadState('retry');
+          setError({ state: 'retry', title: copy.unavailableTitle, message: locale === 'ar'
+            ? 'تعذر استرجاع بيانات الملفات المحفوظة. أعد المحاولة؛ هذا لا يعني حذف الملفات ولا تحتاج لإعادة رفعها.'
+            : 'Saved file details could not be loaded. Retry; this does not mean your files were deleted or need uploading again.' });
+          return;
+        }
+        setDocuments(Object.fromEntries(saved.filter(document => document.active && document.applicationId === nextApplication.id).map(document => [document.category, document])));
+      }
       setLoadState('ready');
     } catch (requestError: unknown) {
       const nextError = loadError(requestError, copy);
       setLoadState(nextError.state);
       setError(nextError);
     }
-  }, [client, copy, initialApplication, providerType]);
+  }, [client, copy, initialApplication, providerType, locale]);
 
   useEffect(() => {
     void loadApplication();
@@ -263,20 +281,24 @@ export function ProviderDocumentsPage({ client, locale, providerType, initialApp
     try {
       const document = await client.uploadProviderDocument(category, file);
       setDocuments(previous => ({ ...previous, [category]: document }));
+      const acceptable = document.active && document.securityState === 'clean'
+        && ['uploaded', 'pending_review', 'approved'].includes(document.reviewState);
       setApplication(previous => previous === undefined
         ? previous
-        : { ...previous, missingDocuments: previous.missingDocuments.filter(item => item !== category) });
-      setUploadStates(previous => ({ ...previous, [category]: 'success' }));
+        : { ...previous, missingDocuments: acceptable
+          ? previous.missingDocuments.filter(item => item !== category)
+          : [...new Set([...previous.missingDocuments, category])] });
       if (client.getProviderApplication !== undefined) {
         try {
           const refreshed = await client.getProviderApplication();
           if (refreshed.providerType === providerType) {
-            setApplication({ ...refreshed, missingDocuments: refreshed.missingDocuments.filter(item => item !== category) });
+            setApplication(refreshed);
           }
         } catch {
           // The uploaded document remains visible locally; the server response is authoritative for this card.
         }
       }
+      setUploadStates(previous => ({ ...previous, [category]: 'success' }));
     } catch (requestError: unknown) {
       setUploadStates(previous => ({ ...previous, [category]: 'idle' }));
       setCardErrors(previous => ({ ...previous, [category]: uploadError(requestError, copy) }));
@@ -352,7 +374,15 @@ export function ProviderDocumentsPage({ client, locale, providerType, initialApp
 
   const canEdit = application !== undefined && canEditDocuments(application, providerType);
   const missingRequiredDocuments = application === undefined ? [] : missingRequiredDocumentCategories(application);
+  const hasUnreadyRequiredDocument = requirements.some(requirement => {
+    if (!requirement.applies || requirement.classification === 'optional') return false;
+    const document = documents[requirement.key];
+    return document !== undefined && (!document.active || document.securityState !== 'clean'
+      || !['uploaded', 'pending_review', 'approved'].includes(document.reviewState));
+  });
   const canSubmit = canEdit
+    && !Object.values(uploadStates).includes('loading')
+    && !hasUnreadyRequiredDocument
     && application !== undefined
     && application.availableActions.includes('submit')
     && application.missingFields.length === 0
@@ -394,6 +424,9 @@ export function ProviderDocumentsPage({ client, locale, providerType, initialApp
             ))}
           </div>
           <aside className="provider-documents-privacy" role="note"><strong>{copy.privacyNote}</strong><span>{copy.noPublicUrlNote}</span></aside>
+          {canEdit && application !== undefined && client.updateProviderAccount !== undefined && application.missingFields.some(field => field === 'primaryLocationId' || field === 'serviceAreaIds') ? (
+            <DocumentLocationRepair application={application} locale={locale} save={client.updateProviderAccount.bind(client)} onSaved={setApplication} />
+          ) : null}
           {!canSubmit ? <StateMessage state="empty" title={copy.reviewUnavailableTitle} message={copy.reviewUnavailableBody} /> : null}
           {application !== undefined && application.missingFields.length > 0 ? (
             <aside role="status">

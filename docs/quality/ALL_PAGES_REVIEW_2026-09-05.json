@@ -2,6 +2,17 @@
   "date": "2026-09-05",
   "followUp": {
     "status": "implementation_in_progress_not_100_percent",
+    "documentSecurityGate": "Fixed local upload completeness: keep server missingDocuments authoritative, require active clean acceptable required metadata, remain busy during refresh, and exclude optional scan-pending documents from the gate. 22 component tests, web typecheck, targeted lint and diff check passed. New browser/production verification remains pending. Evidence: provider-document-security-gate-2026-09-05.json.",
+    "documentListApiDocumentation": "Added GET document list to implemented blueprint. api:audit passed with 184 implemented/runtime/policy routes, 7 planned and no errors. OpenAPI and Postman validation passed. Does not prove end-to-end persistence or production deployment.",
+    "providerDocumentRehydration": "Verified locally with real email OTP registration, account PATCH, two required synthetic PDF uploads and owner-scoped list. Optional documents absent; application reports complete. Six browser cases AR/EN at 1440/768/390 restore both files after reload, enable review and show no overflow. Real session bootstrap injected; no browser upload, submission or production verification. Isolated Mongo probe verifies owner/application isolation and deleted/inactive exclusion. API documentation audit passes: 184 implemented routes/policies, 7 planned. Evidence: provider-document-live-api-2026-09-05.json, provider-document-live-browser/results.json, document-list-live-mongo-2026-09-05.json.",
+    "providerDocumentsLocationRepair": {
+      "screens": ["AUTH-12", "AUTH-13"],
+      "cause": "Required documents were uploaded; primaryLocationId and serviceAreaIds remained missing. Optional documents were not the blocker.",
+      "implementation": "Documents page now offers inline primary-location/service-area selection and persists them through updateProviderAccount using the current application version. Server-returned completeness controls review availability; no document re-upload is required.",
+      "validation": "13 organization/documents component tests passed, including failed location save retaining selections and disabling review until successful retry, with optional document absent. Web typecheck and targeted lint passed. Fresh full build, local restart and runtime smoke passed; stylesheet total 480178 bytes is within the 480256-byte budget.",
+      "limitations": ["Local change; not deployed or production verified", "Latest inline repair still needs desktop/tablet/mobile browser verification", "Component test and generic runtime smoke do not prove a complete real upload-to-approval journey"],
+      "source": "../../apps/web/src/features/provider_auth/document-location-repair.tsx"
+    },
     "providerLiveLocalRouteAudit": {
       "evidence": "provider-live-local-responsive-2026-09-05/results.json",
       "cases": 66,
@@ -425,6 +436,7 @@
       "surface": "auth",
       "route": "/auth/register/provider/documents",
       "name": "المستندات",
+      "latestAssessment": "تحقق محلي فعلي: تسجيل بإيميل وOTP، حفظ البيانات ورفع المستندين المطلوبين عبر API دون الاختياري. استرجاع الملفين بعد تحديث المتصفح وزر المراجعة مفعّل في 6 حالات AR/EN على 1440 و768 و390 دون خروج أفقي. تهيئة الجلسة محقونة؛ الرفع من واجهة المتصفح والإرسال النهائي والاعتماد والإنتاج لم تُثبت. ليس قياس مطابقة فيجما.",
       "status": "REPAIRED_VERIFIED",
       "audit": "REPAIRED_VERIFIED",
       "metrics": [],

@@ -9,12 +9,119 @@ import { ProviderDocumentsPage, validateFile } from '../src/features/provider_au
 import { getProviderOrganizationCopy } from '../src/features/provider_auth/organization-copy.ts';
 import { ProviderOrganizationPage } from '../src/features/provider_auth/organization.tsx';
 import { renderWithLocale } from '../src/features/testing/index.ts';
+import { loadProviderAccountLocations } from '../src/features/provider_auth/locations.ts';
 
 const applicationId = 'a'.repeat(24);
 vi.mock('../src/features/provider_auth/locations.ts', () => ({
   loadProviderAccountLocations: vi.fn().mockResolvedValue([])
 }));
 const documentId = 'c'.repeat(24);
+
+it('prevents review while a document replacement is in flight', async () => {
+  let finishUpload!: (document: ProviderDocumentData) => void;
+  const pending = new Promise<ProviderDocumentData>(resolve => { finishUpload = resolve; });
+  const draft = application('brokerage_office', { missingFields: [], missingDocuments: [] });
+  const copy = getProviderDocumentsCopy('ar');
+  renderWithLocale(<ProviderDocumentsPage locale="ar" providerType="brokerage_office" initialApplication={draft} client={{ uploadProviderDocument: () => pending }} onBack={vi.fn()} />, { locale: 'ar' });
+  const review = await screen.findByRole('button', { name: copy.reviewAction });
+  expect(review).toBeEnabled();
+  fireEvent.change(screen.getByLabelText(`${copy.chooseFileAction}: ${copy.categoryLabels.commercial_registration}`), { target: { files: [new File(['synthetic'], 'replacement.pdf', { type: 'application/pdf' })] } });
+  expect(review).toBeDisabled();
+  finishUpload({ ...documentData('commercial_registration'), securityState: 'clean' });
+  await waitFor(() => expect(review).toBeEnabled());
+  cleanup();
+});
+
+it.each(['scan_pending', 'quarantined', 'infected', 'scan_failed'] as const)('does not accept a required upload with security state %s', async securityState => {
+  const draft = application('brokerage_office', { missingFields: [], missingDocuments: [] });
+  const copy = getProviderDocumentsCopy('ar');
+  const next = vi.fn();
+  renderWithLocale(<ProviderDocumentsPage locale="ar" providerType="brokerage_office" initialApplication={draft} client={{ uploadProviderDocument: vi.fn().mockResolvedValue({ ...documentData('commercial_registration'), securityState }) }} onBack={vi.fn()} onContinue={next} />, { locale: 'ar' });
+  fireEvent.change(screen.getByLabelText(`${copy.chooseFileAction}: ${copy.categoryLabels.commercial_registration}`), { target: { files: [new File(['synthetic'], 'replacement.pdf', { type: 'application/pdf' })] } });
+  await screen.findByTestId('provider-document-file-commercial_registration');
+  expect(screen.getByRole('button', { name: copy.reviewAction })).toBeDisabled();
+  expect(next).not.toHaveBeenCalled();
+  cleanup();
+});
+
+it('does not block review for an optional document awaiting security scan', async () => {
+  const draft = application('developer_company', { missingFields: [], missingDocuments: ['developer_license'] });
+  const copy = getProviderDocumentsCopy('ar');
+  renderWithLocale(<ProviderDocumentsPage locale="ar" providerType="developer_company" client={{ getProviderApplication: vi.fn().mockResolvedValue(draft), listProviderDocuments: vi.fn().mockResolvedValue([documentData('developer_license')]) }} onBack={vi.fn()} />, { locale: 'ar' });
+  await screen.findByTestId('provider-document-file-developer_license');
+  expect(screen.getByRole('button', { name: copy.reviewAction })).toBeEnabled();
+  cleanup();
+});
+
+it('waits for application reconciliation and preserves the server missing-document decision', async () => {
+  const draft = application('brokerage_office', { missingFields: [], missingDocuments: [] });
+  let reconcile!: (value: ProviderApplicationData) => void;
+  const pending = new Promise<ProviderApplicationData>(resolve => { reconcile = resolve; });
+  const get = vi.fn().mockResolvedValueOnce(draft).mockReturnValueOnce(pending);
+  const copy = getProviderDocumentsCopy('ar');
+  renderWithLocale(<ProviderDocumentsPage locale="ar" providerType="brokerage_office" client={{ getProviderApplication: get, uploadProviderDocument: vi.fn().mockResolvedValue({ ...documentData('commercial_registration'), securityState: 'clean' }) }} onBack={vi.fn()} />, { locale: 'ar' });
+  const review = await screen.findByRole('button', { name: copy.reviewAction });
+  fireEvent.change(screen.getByLabelText(`${copy.chooseFileAction}: ${copy.categoryLabels.commercial_registration}`), { target: { files: [new File(['synthetic'], 'replacement.pdf', { type: 'application/pdf' })] } });
+  await waitFor(() => expect(get).toHaveBeenCalledTimes(2));
+  expect(review).toBeDisabled();
+  reconcile({ ...draft, missingDocuments: ['commercial_registration'] });
+  await waitFor(() => expect(screen.getByTestId('provider-document-commercial_registration')).toHaveAttribute('data-upload-state', 'success'));
+  expect(review).toBeDisabled();
+  cleanup();
+});
+
+it.each([false, true])('restores saved document metadata (initial list failure: %s)', async failFirstLoad => {
+  const saved = documentData('commercial_registration');
+  const draft = application('brokerage_office');
+  const list = vi.fn().mockResolvedValue([saved]);
+  if (failFirstLoad) list.mockRejectedValueOnce(new Error('Temporary list failure'));
+  renderWithLocale(<ProviderDocumentsPage locale="ar" providerType="brokerage_office" client={{ getProviderApplication: vi.fn().mockResolvedValue(draft), listProviderDocuments: list }} onBack={vi.fn()} />, { locale: 'ar' });
+  if (failFirstLoad) {
+    await screen.findByText('تعذر استرجاع بيانات الملفات المحفوظة. أعد المحاولة؛ هذا لا يعني حذف الملفات ولا تحتاج لإعادة رفعها.');
+    expect(screen.queryByTestId('provider-document-commercial_registration')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: getProviderDocumentsCopy('ar').retryAction }));
+  }
+  expect(await screen.findByTestId('provider-document-file-commercial_registration')).toHaveTextContent(saved.originalFilename);
+  expect(list).toHaveBeenCalledTimes(failFirstLoad ? 2 : 1);
+  cleanup();
+});
+
+it.each([false, true])('repairs missing broker locations without optional uploads (failed first save: %s)', async failFirstSave => {
+  const locationId = 'd'.repeat(24);
+  vi.mocked(loadProviderAccountLocations).mockResolvedValueOnce([{ id: locationId, kind: 'location', slug: 'sadat', order: 0, name: { ar: 'السادات', en: 'Sadat' } }]);
+  const draft = application('individual_broker', {
+    missingFields: ['primaryLocationId', 'serviceAreaIds'], missingDocuments: [],
+    availableActions: ['edit_account', 'submit'],
+    requirementsSnapshot: { version: '2026-08-13.1', providerType: 'individual_broker', requirements: [
+      { key: 'government_id_front', labelKey: 'provider.documents.governmentIdFront', classification: 'required', applies: true },
+      { key: 'brokerage_license', labelKey: 'provider.documents.brokerageLicense', classification: 'optional', applies: true }
+    ] }
+  });
+  const updated = { ...draft, version: 1, primaryLocationId: locationId, serviceAreaIds: [locationId], missingFields: [] };
+  const save = vi.fn().mockResolvedValue(updated);
+  if (failFirstSave) save.mockRejectedValueOnce(new Error('Network unavailable'));
+  const next = vi.fn();
+  renderWithLocale(<ProviderDocumentsPage locale="ar" providerType="individual_broker" initialApplication={draft} client={{ updateProviderAccount: save }} onBack={vi.fn()} onContinue={next} />, { locale: 'ar' });
+  const review = await screen.findByRole('button', { name: 'مراجعة الطلب' });
+  expect(review).toBeDisabled();
+  await screen.findByRole('option', { name: 'السادات' });
+  fireEvent.change(screen.getByRole('combobox', { name: 'الموقع الرئيسي' }), { target: { value: locationId } });
+  fireEvent.click(screen.getByRole('checkbox', { name: 'السادات' }));
+  fireEvent.click(screen.getByRole('button', { name: 'حفظ الموقع ومناطق الخدمة' }));
+  if (failFirstSave) {
+    await screen.findByRole('alert');
+    expect(review).toBeDisabled();
+    expect(next).not.toHaveBeenCalled();
+    expect(screen.getByRole('combobox', { name: 'الموقع الرئيسي' })).toHaveValue(locationId);
+    expect(screen.getByRole('checkbox', { name: 'السادات' })).toBeChecked();
+    fireEvent.click(screen.getByRole('button', { name: 'حفظ الموقع ومناطق الخدمة' }));
+  }
+  await waitFor(() => expect(review).toBeEnabled());
+  expect(save).toHaveBeenCalledWith({ version: 0, primaryLocationId: locationId, serviceAreaIds: [locationId] });
+  fireEvent.click(review);
+  expect(next).toHaveBeenCalledWith(updated);
+  cleanup();
+});
 
 function requirements(providerType: ProviderApplicationData['providerType']): ProviderRequirementSnapshot['requirements'] {
   return [

@@ -1,0 +1,11 @@
+{
+  "generatedAt": "2026-09-05T14:22:26.390Z",
+  "scope": "Real loopback OTP registration, account PATCH, two synthetic PDF uploads, list and application reload; no browser or approval submission",
+  "applicationId": "6a9c25a27b01a98fb570ef50",
+  "documentCount": 2,
+  "requiredFieldsComplete": true,
+  "requiredDocumentsComplete": true,
+  "optionalDocumentsUploaded": false,
+  "privateKeysAbsent": true,
+  "retainedSyntheticDraft": true
+}

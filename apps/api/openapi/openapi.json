@@ -2010,6 +2010,30 @@
       }
     },
     "/api/v1/provider/application/documents": {
+      "get": {
+        "operationId": "listProviderDocuments",
+        "summary": "List current documents owned by the authenticated provider",
+        "description": "Resolves the application from the provider session. Returns active, non-deleted metadata only, including security/review states. Superseded documents and private storage keys are excluded. No download grants are issued.",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Current owned document metadata; an empty list is valid",
+            "headers": { "Cache-Control": { "schema": { "type": "string", "enum": ["no-store"] } } },
+            "content": { "application/json": { "schema": {
+              "allOf": [
+                { "$ref": "#/components/schemas/SuccessEnvelope" },
+                { "type": "object", "properties": { "data": {
+                  "type": "object", "required": ["items"], "additionalProperties": false,
+                  "properties": { "items": { "type": "array", "items": { "$ref": "#/components/schemas/ProviderDocumentData" } } }
+                } } }
+              ]
+            } } }
+          },
+          "401": { "$ref": "#/components/responses/ProviderDocumentError" },
+          "403": { "$ref": "#/components/responses/ProviderDocumentError" },
+          "404": { "$ref": "#/components/responses/ProviderDocumentError" }
+        }
+      },
       "post": {
         "operationId": "uploadProviderDocument",
         "summary": "Stream an owned provider document into private quarantine",

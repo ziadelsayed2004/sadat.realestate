@@ -66,6 +66,7 @@ export const providerDocumentDeleteDataSchema = z.object({
 }).strict();
 
 export const providerDocumentSuccessEnvelopeSchema = successEnvelopeSchema(providerDocumentDataSchema);
+export const providerDocumentListSuccessEnvelopeSchema = successEnvelopeSchema(z.object({ items: z.array(providerDocumentDataSchema) }).strict());
 export const providerDocumentAccessSuccessEnvelopeSchema = successEnvelopeSchema(providerDocumentAccessDataSchema);
 export const providerDocumentDeleteSuccessEnvelopeSchema = successEnvelopeSchema(providerDocumentDeleteDataSchema);
 

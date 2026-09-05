@@ -1,0 +1,23 @@
+{
+  "status": "implemented_and_component_verified_locally",
+  "screen": "AUTH-12",
+  "cause": "Upload handling unconditionally removed the category from missingDocuments, including from the refreshed authoritative application response, and ended loading before reconciliation.",
+  "changes": [
+    "Required uploaded metadata must be active, security clean and review uploaded/pending_review/approved, matching backend inventory/submission rules.",
+    "Application refresh missingDocuments is retained without filtering out the uploaded category.",
+    "Upload remains busy through application reconciliation.",
+    "Optional documents do not block review when absent or awaiting a security scan."
+  ],
+  "verification": {
+    "componentSuite": "apps/web/tests/provider-organization-documents.vitest.test.tsx",
+    "passed": 22,
+    "typecheck": "passed",
+    "targetedLint": "passed",
+    "diffCheck": "passed"
+  },
+  "limitations": [
+    "No new browser or production verification of this security-gate change.",
+    "Previously recorded six browser reload cases predate this change.",
+    "Pending scan metadata currently requires a page reload to retrieve an updated status; no polling added."
+  ]
+}

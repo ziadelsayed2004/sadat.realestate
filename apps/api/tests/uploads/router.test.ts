@@ -26,6 +26,7 @@ const pdf = Buffer.from('%PDF-1.7\nsynthetic\n%%EOF');
 
 function service(): ProviderDocumentService {
   return {
+    list: async () => ({ items: [] }),
     isReady: async () => true,
     async upload(_claims, headers, source) {
       for await (const chunk of source) void chunk;
@@ -88,6 +89,19 @@ function upload(baseUrl: string, token = providerToken, category = 'government_i
     body: pdf
   });
 }
+
+test('lists document metadata only for authenticated providers with no-store caching', async () => {
+  await withServer(async baseUrl => {
+    const url = `${baseUrl}/api/v1/provider/application/documents`;
+    assert.equal((await fetch(url)).status, 401);
+    assert.equal((await fetch(url, { headers: { Authorization: `Bearer ${seekerToken}` } })).status, 403);
+    const response = await fetch(url, { headers: { Authorization: `Bearer ${providerToken}` } });
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get('cache-control'), 'no-store');
+    const body = await response.json() as { data: unknown };
+    assert.deepEqual(body.data, { items: [] });
+  });
+});
 
 test('uploads an authenticated provider stream with explicit metadata and no storage internals', async () => {
   await withServer(async (baseUrl) => {

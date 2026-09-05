@@ -1,0 +1,9 @@
+{
+  "generatedAt": "2026-09-05T14:19:14.409Z",
+  "scope": "Actual repository and schema on isolated local Mongo collection; no HTTP/upload/browser journey",
+  "inserted": 6,
+  "returned": 1,
+  "ownershipAndApplicationIsolation": true,
+  "inactiveAndDeletedExcluded": true,
+  "privateStorageKeyNotSelected": true
+}

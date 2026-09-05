@@ -13,6 +13,7 @@ import { UploadServiceError, type ProviderDocumentService } from './service.js';
 import { MAX_PROVIDER_DOCUMENT_BYTES } from './validation.js';
 
 export const UPLOAD_ROUTE_DEFINITIONS = [
+  { method: 'GET', path: '/api/v1/provider/application/documents', operationId: 'listProviderDocuments' },
   { method: 'POST', path: '/api/v1/provider/application/documents', operationId: 'uploadProviderDocument' },
   { method: 'POST', path: '/api/v1/provider/application/documents/:documentId/access', operationId: 'createProviderDocumentAccess' },
   { method: 'GET', path: '/api/v1/admin/provider-documents/:documentId/access', operationId: 'createAdminProviderDocumentAccess' },
@@ -117,6 +118,12 @@ export function createUploadRouter(dependencies: UploadRouterDependencies): Rout
   router.use((_request, response, next) => {
     response.setHeader('Cache-Control', 'no-store');
     next();
+  });
+
+  router.get('/provider/application/documents', providerAuth, async (request, response) => {
+    try {
+      response.json(toSuccessResponse(await dependencies.service.list(claims(response)), requestId(request)));
+    } catch (error) { sendError(request, response, error); }
   });
 
   router.post(

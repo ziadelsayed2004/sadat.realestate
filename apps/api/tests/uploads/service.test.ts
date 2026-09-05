@@ -35,6 +35,9 @@ function repository() {
   let sequence = 0;
   const documents = new Map<string, ProviderDocumentEntity>();
   const repo: ProviderDocumentRepository = {
+    async listOwned(ownerId, appId) {
+      return [...documents.values()].filter(document => document.providerId === ownerId && document.applicationId === appId && document.active && !document.deletedAt && document.securityState !== 'deleted');
+    },
     async findOwnedApplication(ownerId) {
       return ownerId === providerId ? {
         id: applicationId,
@@ -130,6 +133,21 @@ const headers = {
   contentType: 'application/pdf' as const,
   contentLength: pdf.byteLength
 };
+
+test('owned document listing restores active metadata without private storage details', async () => {
+  const state = fixture();
+  const uploaded = await state.service.upload(claims, headers, Readable.from(pdf));
+  const listed = await state.service.list(claims);
+  assert.equal(listed.items.length, 1);
+  assert.equal(listed.items[0]?.id, uploaded.id);
+  assert.equal(listed.items[0]?.securityState, 'clean');
+  assert.equal('storageKey' in listed.items[0]!, false);
+  assert.equal('providerId' in listed.items[0]!, false);
+  await assert.rejects(state.service.list({ ...claims, sub: otherProviderId }), /PROVIDER_APPLICATION_NOT_FOUND/);
+  await assert.rejects(state.service.list({ ...claims, role: 'seeker' }), /PROVIDER_APPLICATION_NOT_FOUND/);
+  await state.service.delete(claims, uploaded.id);
+  assert.deepEqual(await state.service.list(claims), { items: [] });
+});
 
 test('uploads to quarantine, scans clean, fingerprints metadata, and treats checksum replay idempotently', async () => {
   const value = fixture();

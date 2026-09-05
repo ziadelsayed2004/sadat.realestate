@@ -3,6 +3,44 @@ import { expect, test } from '@playwright/test';
 const APPLICATION_ID = 'a'.repeat(24);
 const DOCUMENT_ID = 'c'.repeat(24);
 
+test('individual broker repairs locations inline before reviewing documents', async ({ page }, testInfo) => {
+  const locale = localeForProject();
+  const ar = locale === 'ar';
+  let current = application('brokerage_office', {
+    providerType: 'individual_broker', missingFields: ['primaryLocationId', 'serviceAreaIds'],
+    missingDocuments: [], availableActions: ['edit_account', 'submit', 'view_status'],
+    requirementsSnapshot: { version: '2026-08-13.1', providerType: 'individual_broker', requirements: [
+      { key: 'government_id_front', labelKey: 'provider.documents.governmentIdFront', classification: 'required', applies: true },
+      { key: 'brokerage_license', labelKey: 'provider.documents.brokerageLicense', classification: 'optional', applies: true }
+    ] }
+  });
+  await page.route('**/api/v1/provider/application', route => route.fulfill({ status: 200, contentType: 'application/json', body: envelope(current) }));
+  await page.route('**/api/v1/provider/application/account', async route => {
+    expect(route.request().method()).toBe('PATCH');
+    const patch = route.request().postDataJSON();
+    expect(patch.version).toBe(0);
+    expect(patch.primaryLocationId).toMatch(/^[a-f0-9]{24}$/);
+    expect(patch.serviceAreaIds).toEqual([patch.primaryLocationId]);
+    current = { ...current, ...patch, version: 1, missingFields: [] };
+    await route.fulfill({ status: 200, contentType: 'application/json', body: envelope(current) });
+  });
+  await page.goto(`/auth/register/provider/account?providerType=individual_broker&step=documents&lang=${locale}`);
+  const review = page.getByRole('button', { name: ar ? 'مراجعة الطلب' : 'Review application', exact: true });
+  await expect(review).toBeDisabled();
+  const primary = page.getByRole('combobox', { name: ar ? 'الموقع الرئيسي' : 'Primary location' });
+  await expect(primary).toBeEnabled();
+  const options = await primary.locator('option').evaluateAll(nodes => nodes.map(node => ({ value: (node as HTMLOptionElement).value, label: node.textContent ?? '' })).filter(option => option.value));
+  expect(options.length).toBeGreaterThan(0);
+  const selected = options[0]!;
+  await primary.selectOption(selected.value);
+  await page.getByRole('checkbox', { name: selected.label, exact: true }).check();
+  await page.screenshot({ path: testInfo.outputPath('location-selected.png'), fullPage: true });
+  await page.getByRole('button', { name: ar ? 'حفظ الموقع ومناطق الخدمة' : 'Save location and service areas', exact: true }).click();
+  await expect(review).toBeEnabled();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  await page.screenshot({ path: testInfo.outputPath('review-enabled.png'), fullPage: true });
+});
+
 function localeForProject(): 'ar' | 'en' {
   const projectName = test.info().project.name;
   if (projectName.endsWith('-en')) return 'en';

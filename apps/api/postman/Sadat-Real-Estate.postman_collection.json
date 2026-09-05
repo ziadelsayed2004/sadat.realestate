@@ -42,6 +42,24 @@
   ],
   "item": [
     {
+      "name": "List current provider documents",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{providerAccessToken}}" }],
+        "url": { "raw": "{{apiV1BaseUrl}}/provider/application/documents", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application", "documents"] },
+        "description": "Owner-scoped active document metadata; no storage keys or public URLs."
+      },
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+        "pm.test('Owned document list is private', function () {",
+        "  pm.expect([200, 401, 403, 404]).to.include(pm.response.code);",
+        "  if (pm.response.code === 200) {",
+        "    pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
+        "    pm.response.json().data.items.forEach(function (item) { pm.expect(item).not.to.have.property('storageKey'); pm.expect(item.active).to.eql(true); });",
+        "  }",
+        "});"
+      ] } }]
+    },
+    {
       "name": "Health",
       "event": [
         {
