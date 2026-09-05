@@ -11,6 +11,9 @@ import { ProviderOrganizationPage } from '../src/features/provider_auth/organiza
 import { renderWithLocale } from '../src/features/testing/index.ts';
 
 const applicationId = 'a'.repeat(24);
+vi.mock('../src/features/provider_auth/locations.ts', () => ({
+  loadProviderAccountLocations: vi.fn().mockResolvedValue([])
+}));
 const documentId = 'c'.repeat(24);
 
 function requirements(providerType: ProviderApplicationData['providerType']): ProviderRequirementSnapshot['requirements'] {

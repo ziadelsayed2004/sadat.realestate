@@ -11,6 +11,11 @@ import { ProviderAccountPage } from '../src/features/provider_auth/account.tsx';
 import { renderWithLocale } from '../src/features/testing/index.ts';
 
 const verificationToken = 'V'.repeat(43);
+vi.mock('../src/features/provider_auth/locations.ts', () => ({
+  loadProviderAccountLocations: vi.fn().mockResolvedValue([
+    { id: 'd'.repeat(24), name: { ar: 'مدينة السادات', en: 'Sadat City' } }
+  ])
+}));
 const applicationId = 'a'.repeat(24);
 const session = {
   accessToken: 'header.payload.signature',
@@ -65,6 +70,21 @@ function createAuthClient(overrides: Partial<AuthFlowClient> = {}): AuthFlowClie
 }
 
 describe('provider account details', () => {
+  it('lets an individual provider save the required location and service areas without losing uploaded documents', async () => {
+    const copy = getProviderAccountCopy('en');
+    const draft = application({ providerType: 'individual_broker', accountOwnerFullName: 'Mona Hassan', displayName: 'Mona Properties', preferredLocale: 'en', termsAcceptedAt: '2026-08-13T00:00:00.000Z', privacyAcceptedAt: '2026-08-13T00:00:00.000Z', missingFields: ['primaryLocationId', 'serviceAreaIds'], missingDocuments: [] });
+    const updated = { ...draft, version: 1, primaryLocationId: 'd'.repeat(24), serviceAreaIds: ['d'.repeat(24)], missingFields: [] };
+    const updateProviderAccount = vi.fn().mockResolvedValue(updated);
+    const onContinue = vi.fn();
+    renderWithLocale(<ProviderAccountPage client={{ getProviderApplication: vi.fn().mockResolvedValue(draft), updateProviderAccount }} locale="en" providerType="individual_broker" onBack={vi.fn()} onContinue={onContinue} />, { locale: 'en' });
+    await screen.findByRole('checkbox', { name: 'Sadat City' });
+    fireEvent.change(screen.getByLabelText('Primary location'), { target: { value: 'd'.repeat(24) } });
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Sadat City' }));
+    fireEvent.click(screen.getByRole('button', { name: copy.saveContinueAction }));
+    await waitFor(() => expect(onContinue).toHaveBeenCalledWith(updated));
+    expect(updateProviderAccount).toHaveBeenCalledWith(expect.objectContaining({ primaryLocationId: 'd'.repeat(24), serviceAreaIds: ['d'.repeat(24)] }));
+    expect(updateProviderAccount.mock.calls[0]?.[0]).not.toHaveProperty('documents');
+  });
   it.each(['ar', 'en',] as const)('renders the API-backed account form with the correct direction for %s', async (locale) => {
     const copy = getProviderAccountCopy(locale);
     const getProviderApplication = vi.fn().mockResolvedValue(application());

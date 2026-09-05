@@ -9,6 +9,7 @@ import {
   type PublicRelatedOrganization
 } from '../public/related-property.js';
 import type { ViewingRecord, ViewingRepository } from './service.js';
+import { ViewingServiceError } from './service.js';
 
 type Row = Record<string, unknown>;
 
@@ -99,6 +100,16 @@ export function createMongooseViewingRepository(connection: Connection): Viewing
 
   return {
     async create(row) {
+      // Resolve ownership on the server; a seeker must never choose the recipient.
+      const propertyFilter: Record<string, unknown> = {
+        $or: [{ _id: oid(row.propertyId) }, { _id: row.propertyId }],
+        status: 'published',
+        active: true
+      };
+      const property = await properties.findOne(propertyFilter, { projection: { providerId: 1 } });
+      const providerId = publicRelatedId(property?.providerId);
+      if (!providerId || !Types.ObjectId.isValid(providerId)) throw new ViewingServiceError('VIEWING_NOT_FOUND');
+      row = { ...row, providerId };
       await collection.createIndex({ propertyId: 1, requestedAt: 1, status: 1 });
       await collection.insertOne({
         _id: oid(row.id),

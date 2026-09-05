@@ -12,6 +12,7 @@ import { Button, StateMessage } from '../design_system/index.ts';
 import { missingRequiredDocumentCategories } from './completeness.ts';
 import { getProviderDocumentsCopy, type ProviderDocumentsCopy } from './documents-copy.ts';
 import './styles.css';
+import { getProviderAccountCopy } from './account-copy.ts';
 
 export interface ProviderDocumentsFlowClient {
   readonly getProviderApplication?: (() => Promise<ProviderApplicationData>) | undefined;
@@ -394,6 +395,12 @@ export function ProviderDocumentsPage({ client, locale, providerType, initialApp
           </div>
           <aside className="provider-documents-privacy" role="note"><strong>{copy.privacyNote}</strong><span>{copy.noPublicUrlNote}</span></aside>
           {!canSubmit ? <StateMessage state="empty" title={copy.reviewUnavailableTitle} message={copy.reviewUnavailableBody} /> : null}
+          {application !== undefined && application.missingFields.length > 0 ? (
+            <aside role="status">
+              <p>{locale === 'ar' ? 'ارجع لاستكمال بيانات الحساب الناقصة؛ الملفات المرفوعة محفوظة:' : 'Go back to complete the missing account details; uploaded files are saved:'}</p>
+              <ul>{application.missingFields.map(field => <li key={field}>{getProviderAccountCopy(locale).missingFieldLabels[field] ?? field}</li>)}</ul>
+            </aside>
+          ) : null}
           <div className="provider-documents-card__footer">
             <Button type="button" variant="ghost" onClick={onBack}>{copy.backAction}</Button>
             <Button type="button" variant="primary" disabled={!canSubmit} onClick={() => {

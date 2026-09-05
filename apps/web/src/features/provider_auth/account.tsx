@@ -4,6 +4,7 @@ import {
   type ProviderAccountPatch,
   type ProviderApplicationData,
   type ProviderType,
+  type PublicPropertyLocation,
   type SupportedLocale
 } from '@sadat-real-estate/contracts';
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
@@ -12,6 +13,7 @@ import { Button, Input, Select, StateMessage } from '../design_system/index.ts';
 import { getProviderTypeCopy } from './copy.ts';
 import { getProviderAccountCopy, type ProviderAccountCopy } from './account-copy.ts';
 import './styles.css';
+import { loadProviderAccountLocations } from './locations.ts';
 
 export interface ProviderAccountFlowClient {
   readonly getProviderApplication?: (() => Promise<ProviderApplicationData>) | undefined;
@@ -32,6 +34,8 @@ type LoadState = 'loading' | 'ready' | 'error' | 'retry' | 'permission';
 type SaveState = 'idle' | 'loading' | 'error' | 'retry' | 'success';
 
 interface AccountFormState {
+  readonly primaryLocationId: string;
+  readonly serviceAreaIds: readonly string[];
   readonly accountOwnerFullName: string;
   readonly displayName: string;
   readonly email: string;
@@ -49,6 +53,8 @@ interface AccountUiError {
 
 function formFromApplication(application: ProviderApplicationData): AccountFormState {
   return {
+    primaryLocationId: application.primaryLocationId ?? '',
+    serviceAreaIds: application.serviceAreaIds ?? [],
     accountOwnerFullName: application.accountOwnerFullName ?? '',
     displayName: application.displayName ?? '',
     email: application.email ?? '',
@@ -61,6 +67,8 @@ function formFromApplication(application: ProviderApplicationData): AccountFormS
 
 function emptyForm(locale: SupportedLocale): AccountFormState {
   return {
+    primaryLocationId: '',
+    serviceAreaIds: [],
     accountOwnerFullName: '',
     displayName: '',
     email: '',
@@ -143,6 +151,8 @@ function buildPatch(application: ProviderApplicationData, form: AccountFormState
     preferredLocale: form.preferredLocale
   };
   if (form.whatsappNumber.trim() !== '') patch.whatsappNumber = normalizeEgyptianPhone(form.whatsappNumber);
+  if (form.primaryLocationId !== '') patch.primaryLocationId = form.primaryLocationId;
+  patch.serviceAreaIds = [...form.serviceAreaIds];
   if (form.termsAccepted) patch.termsAcceptedAt = new Date().toISOString();
   if (form.privacyAccepted) patch.privacyAcceptedAt = new Date().toISOString();
   return patch;
@@ -176,6 +186,18 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const [error, setError] = useState<AccountUiError | undefined>();
   const continueAfterSave = useRef(false);
+  const [locations, setLocations] = useState<readonly PublicPropertyLocation[]>([]);
+  const [locationsState, setLocationsState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const loadLocations = useCallback(async () => {
+    setLocationsState('loading');
+    try {
+      setLocations(await loadProviderAccountLocations());
+      setLocationsState('ready');
+    } catch {
+      setLocationsState('error');
+    }
+  }, []);
+  useEffect(() => { void loadLocations(); }, [loadLocations]);
 
   const loadApplication = useCallback(async () => {
     if (client.getProviderApplication === undefined) {
@@ -271,7 +293,6 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
 
   const screenId = hasAccountValues(form) ? 'AUTH-09+' : 'AUTH-09';
   const missingFields = application?.missingFields ?? [];
-  const locationMissing = missingFields.includes('primaryLocationId') || missingFields.includes('serviceAreaIds');
   const state = loadState === 'ready' ? saveState : loadState;
 
   if (loadState === 'loading') {
@@ -395,11 +416,27 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
               </label>
             </div>
             <p className="provider-account-contract-note">{copy.unsupportedFieldNote}</p>
-            {locationMissing ? (
-              <aside className="provider-account-guidance" role="note">
-                <strong>{copy.requirementsTitle}</strong>
-                <span>{copy.unavailableLocationBody}</span>
-              </aside>
+            <Select
+              label={copy.missingFieldLabels['primaryLocationId'] ?? 'Primary location'}
+              value={form.primaryLocationId}
+              onChange={event => update('primaryLocationId', event.currentTarget.value)}
+              options={[
+                { value: '', label: locale === 'ar' ? 'اختر الموقع الرئيسي' : 'Choose primary location' },
+                ...locations.map(location => ({ value: location.id, label: location.name[locale] ?? location.name.ar }))
+              ]}
+              disabled={locationsState !== 'ready'}
+            />
+            <fieldset className="provider-account-consents">
+              <legend>{copy.missingFieldLabels['serviceAreaIds']}</legend>
+              {locations.map(location => (
+                <label className="provider-account-checkbox" key={location.id}>
+                  <input type="checkbox" checked={form.serviceAreaIds.includes(location.id)} onChange={event => update('serviceAreaIds', event.currentTarget.checked ? [...form.serviceAreaIds, location.id] : form.serviceAreaIds.filter(id => id !== location.id))} />
+                  <span>{location.name[locale] ?? location.name.ar}</span>
+                </label>
+              ))}
+            </fieldset>
+            {locationsState === 'error' || (locationsState === 'ready' && locations.length === 0) ? (
+              <StateMessage state="retry" title={copy.requirementsTitle} message={copy.unavailableLocationBody} retryLabel={copy.retryAction} onRetry={() => void loadLocations()} />
             ) : null}
             {missingFields.length > 0 ? (
               <aside className="provider-account-missing" role="status">

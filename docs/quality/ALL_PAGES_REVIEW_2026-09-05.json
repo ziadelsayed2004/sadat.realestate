@@ -1,0 +1,2370 @@
+{
+  "date": "2026-09-05",
+  "scope": "131 canonical screen states; local source/evidence audit, not a full fresh visual or production audit",
+  "guide": "Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+  "authentication": "Email + OTP; production success reported by user",
+  "rows": [
+    {
+      "id": "PUB-01",
+      "surface": "public",
+      "route": "/",
+      "name": "الرئيسية",
+      "status": "PARTIAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/PUB-01/visual-metrics.json",
+          "diff": 18.6345,
+          "method": "same-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "PUB-02",
+      "surface": "public",
+      "route": "/properties",
+      "name": "قائمة العقارات",
+      "status": "PARTIAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/PUB-02/visual-metrics.json",
+          "diff": 12.7013,
+          "method": "same-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "PUB-03",
+      "surface": "public",
+      "route": "/properties/:slug",
+      "name": "تفاصيل العقار",
+      "status": "PARTIAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/PUB-03/visual-metrics.json",
+          "diff": 17.6572,
+          "method": "same-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "PUB-04",
+      "surface": "public",
+      "route": "/compare",
+      "name": "مقارنة الوحدات",
+      "status": "PARTIAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/PUB-04/visual-metrics.json",
+          "diff": 15.5635,
+          "method": "same-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "PUB-05",
+      "surface": "public",
+      "route": "/developers",
+      "name": "المطورون والشركات العقارية",
+      "status": "PARTIAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/PUB-05/visual-metrics.json",
+          "diff": 18.2549,
+          "method": "same-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "PUB-06",
+      "surface": "public",
+      "route": "/developers/:slug",
+      "name": "ملف المطور العقاري",
+      "status": "PARTIAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/PUB-06/visual-metrics.json",
+          "diff": 17.0273,
+          "method": "same-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "PUB-07",
+      "surface": "public",
+      "route": "/articles",
+      "name": "قائمة المقالات",
+      "status": "PARTIAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/PUB-07/visual-metrics.json",
+          "diff": 16.5285,
+          "method": "same-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "PUB-08",
+      "surface": "public",
+      "route": "/articles/:slug",
+      "name": "تفاصيل المقال",
+      "status": "PARTIAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/PUB-08/visual-metrics.json",
+          "diff": 19.0309,
+          "method": "same-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "PUB-09",
+      "surface": "public",
+      "route": "/community",
+      "name": "الكوميونيتي",
+      "status": "PARTIAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/PUB-09/visual-metrics.json",
+          "diff": 4.9396,
+          "method": "same-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "PUB-10",
+      "surface": "public",
+      "route": "/community?create=1",
+      "name": "إنشاء منشور",
+      "status": "PARTIAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/PUB-10/visual-metrics.json",
+          "diff": 5.5267,
+          "method": "same-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "PUB-11",
+      "surface": "public",
+      "route": "/about",
+      "name": "عن المنصة",
+      "status": "PARTIAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/PUB-11/visual-metrics.json",
+          "diff": 4.7616,
+          "method": "same-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "PUB-12",
+      "surface": "public",
+      "route": "/team",
+      "name": "فريق العمل",
+      "status": "PARTIAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/PUB-12/visual-metrics.json",
+          "diff": 6.7041,
+          "method": "same-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-01",
+      "surface": "auth",
+      "route": "/auth/login",
+      "name": "Login",
+      "status": "PARTIAL",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/AUTH-01/visual-metrics-pass4.json",
+          "diff": 2.4583,
+          "date": null,
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-02",
+      "surface": "auth",
+      "route": "/auth/register/seeker",
+      "name": "إنشاء حساب باحث",
+      "status": "PARTIAL",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/AUTH-02/visual-metrics.json",
+          "diff": 5.3906,
+          "date": null,
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-03",
+      "surface": "auth",
+      "route": "/auth/register/seeker",
+      "name": "Seeker Registration — Default",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-04",
+      "surface": "auth",
+      "route": "/auth/verify-phone",
+      "name": "تأكيد رقم الهاتف — OTP",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-05",
+      "surface": "auth",
+      "route": "/auth/verify-phone",
+      "name": "Phone Verification — OTP",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-06",
+      "surface": "auth",
+      "route": "/auth/register/seeker/success",
+      "name": "نجاح إنشاء حساب الباحث",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-07",
+      "surface": "auth",
+      "route": "/auth/register/provider/type",
+      "name": "اختيار نوع مقدم العقار",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-08",
+      "surface": "auth",
+      "route": "/auth/register/provider/type",
+      "name": "اختيار نوع مقدم العقار — محدد",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-09",
+      "surface": "auth",
+      "route": "/auth/register/provider/account",
+      "name": "بيانات حساب مقدم العقار",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-09+",
+      "surface": "auth",
+      "route": "/auth/register/provider/account",
+      "name": "Provider Registration — Account Details",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-10",
+      "surface": "auth",
+      "route": "/auth/register/provider/business",
+      "name": "بيانات النشاط",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-10+",
+      "surface": "auth",
+      "route": "/auth/register/provider/business",
+      "name": "Provider Registration — Business Details",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-11",
+      "surface": "auth",
+      "route": "/auth/register/provider/company",
+      "name": "بيانات شركة التطوير",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-12",
+      "surface": "auth",
+      "route": "/auth/register/provider/documents",
+      "name": "المستندات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-13",
+      "surface": "auth",
+      "route": "/auth/register/provider/review",
+      "name": "المراجعة والإرسال",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-14",
+      "surface": "auth",
+      "route": "/provider-application/status",
+      "name": "طلب مقدم العقار — قيد المراجعة",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-15",
+      "surface": "auth",
+      "route": "/provider-application/status",
+      "name": "متابعة طلب مقدم العقار",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-16",
+      "surface": "auth",
+      "route": "/provider-application/needs-information",
+      "name": "الطلب يحتاج استكمال",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "AUTH-17",
+      "surface": "auth",
+      "route": "/provider-application/approved",
+      "name": "تم اعتماد مقدم العقار",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
+      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+    },
+    {
+      "id": "SEK-01",
+      "surface": "seeker",
+      "route": "/seeker",
+      "name": "نظرة عامة",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-01/visual-metrics-verified-2026-08-27.json",
+          "diff": 37.6388,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        },
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-01/visual-metrics-verified-en-2026-08-27.json",
+          "diff": 55.5412,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "SEK-02",
+      "surface": "seeker",
+      "route": "/seeker/requests",
+      "name": "طلباتي",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-02/visual-metrics-verified-2026-08-27.json",
+          "diff": 51.0561,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        },
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-02/visual-metrics-verified-en-2026-08-27.json",
+          "diff": 66.0187,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "الطلبات والصلاحيات والتحولات مختبرة؛ اكتمال بيانات التصميم غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "SEK-03",
+      "surface": "seeker",
+      "route": "/seeker/requests/:id",
+      "name": "تفاصيل الطلب — قيد المراجعة",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-03/visual-metrics-verified-detail-ar-2026-08-27.json",
+          "diff": 40.1473,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        },
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-03/visual-metrics-verified-detail-en-2026-08-27.json",
+          "diff": 47.5624,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "الطلبات والصلاحيات والتحولات مختبرة؛ اكتمال بيانات التصميم غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "SEK-04",
+      "surface": "seeker",
+      "route": "/seeker/requests/:id",
+      "name": "تفاصيل الطلب — تم التواصل",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-04/visual-metrics-verified-detail-ar-2026-08-27.json",
+          "diff": 38.4367,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        },
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-04/visual-metrics-verified-detail-en-2026-08-27.json",
+          "diff": 46.8723,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "الطلبات والصلاحيات والتحولات مختبرة؛ اكتمال بيانات التصميم غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "SEK-05",
+      "surface": "seeker",
+      "route": "/seeker/viewings",
+      "name": "طلبات المعاينة",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-05/visual-metrics-verified-2026-08-27.json",
+          "diff": 34.7515,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        },
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-05/visual-metrics-verified-en-2026-08-27.json",
+          "diff": 58.2073,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "غير مكتمل: إنشاء المعاينة لا يعيّن مقدم العقار؛ عرض المواعيد القائمة مؤكد محليًا",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "SEK-06",
+      "surface": "seeker",
+      "route": "/seeker/saved",
+      "name": "العقارات المحفوظة",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-06/visual-metrics-verified-2026-08-27.json",
+          "diff": 48.6991,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        },
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-06/visual-metrics-verified-en-2026-08-27.json",
+          "diff": 59.4172,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "SEK-07",
+      "surface": "seeker",
+      "route": "/seeker/notifications",
+      "name": "الإشعارات",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-07/visual-metrics-verified-2026-08-27.json",
+          "diff": 29.8472,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        },
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-07/visual-metrics-verified-en-2026-08-27.json",
+          "diff": 62.1224,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "SEK-08",
+      "surface": "seeker",
+      "route": "/seeker/profile?tab=preferences",
+      "name": "تفضيلات البحث",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-08/visual-metrics-verified-2026-08-27.json",
+          "diff": 15.1707,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        },
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-08/visual-metrics-verified-en-2026-08-27.json",
+          "diff": 55.2693,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "SEK-09",
+      "surface": "seeker",
+      "route": "/seeker/profile?tab=personal",
+      "name": "المعلومات الشخصية",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-09/visual-metrics-verified-2026-08-27.json",
+          "diff": 27.9429,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        },
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-09/visual-metrics-verified-en-2026-08-27.json",
+          "diff": 58.0248,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "SEK-10",
+      "surface": "seeker",
+      "route": "/seeker/settings",
+      "name": "إعدادات الحساب",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-10/visual-metrics-verified-2026-08-27.json",
+          "diff": 19.0977,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        },
+        {
+          "path": "docs/quality/figma_parity/screens/SEK-10/visual-metrics-verified-en-2026-08-27.json",
+          "diff": 56.0828,
+          "date": "2026-08-27",
+          "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-01",
+      "surface": "provider",
+      "route": "/provider",
+      "name": "نظرة عامة",
+      "status": "PARTIAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "جزئي: مؤشرات متاحة؛ التاريخ الإحصائي الكامل غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-02",
+      "surface": "provider",
+      "route": "/provider/properties",
+      "name": "عقاراتي",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-03",
+      "surface": "provider",
+      "route": "/provider/properties/new/basic",
+      "name": "إضافة عقار — البيانات الأساسية",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-04",
+      "surface": "provider",
+      "route": "/provider/properties/:id/location",
+      "name": "إضافة عقار — الموقع",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-05",
+      "surface": "provider",
+      "route": "/provider/properties/:id/details",
+      "name": "إضافة عقار — تفاصيل العقار",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-06",
+      "surface": "provider",
+      "route": "/provider/properties/:id/price-payment",
+      "name": "إضافة عقار — السعر والسداد",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-07",
+      "surface": "provider",
+      "route": "/provider/properties/:id/features",
+      "name": "إضافة عقار — المميزات والخدمات",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-08",
+      "surface": "provider",
+      "route": "/provider/properties/:id/media",
+      "name": "إضافة عقار — الصور والوسائط",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-09",
+      "surface": "provider",
+      "route": "/provider/properties/:id/contact",
+      "name": "إضافة عقار — التواصل",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-10",
+      "surface": "provider",
+      "route": "/provider/properties/:id/review",
+      "name": "إضافة عقار — المراجعة والإرسال",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-11",
+      "surface": "provider",
+      "route": "/provider/properties/:id/review",
+      "name": "بيانات تحتاج استكمال",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-12",
+      "surface": "provider",
+      "route": "/provider/properties/:id/submitted",
+      "name": "تم إرسال العقار للمراجعة",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-13",
+      "surface": "provider",
+      "route": "/provider/properties/:id/rejected",
+      "name": "تعذر اعتماد العقار",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-14",
+      "surface": "provider",
+      "route": "/provider/properties/:id/published",
+      "name": "تم نشر العقار",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-15",
+      "surface": "provider",
+      "route": "/provider/projects",
+      "name": "المشروعات",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-16",
+      "surface": "provider",
+      "route": "/provider/customer-requests",
+      "name": "طلبات العملاء",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "الطلبات والصلاحيات والتحولات مختبرة؛ اكتمال بيانات التصميم غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-17",
+      "surface": "provider",
+      "route": "/provider/customer-requests?create=1",
+      "name": "إضافة طلب عميل",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "الطلبات والصلاحيات والتحولات مختبرة؛ اكتمال بيانات التصميم غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-18",
+      "surface": "provider",
+      "route": "/provider/viewings",
+      "name": "مواعيد المعاينات",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "غير مكتمل: إنشاء المعاينة لا يعيّن مقدم العقار؛ عرض المواعيد القائمة مؤكد محليًا",
+      "responsiveAssessment": "6/6 اختبارات تشغيل AR/EN للمقاسات الثلاثة؛ ليست نسبة Figma"
+    },
+    {
+      "id": "PRV-19",
+      "surface": "provider",
+      "route": "/provider/ads",
+      "name": "طلبات الإعلانات",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات الإعلان/إثبات الدفع/العمولة مختبرة اصطناعيًا؛ دورة إنتاج كاملة غير مثبتة",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-20",
+      "surface": "provider",
+      "route": "/provider/commission",
+      "name": "العمولة",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات الإعلان/إثبات الدفع/العمولة مختبرة اصطناعيًا؛ دورة إنتاج كاملة غير مثبتة",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-21",
+      "surface": "provider",
+      "route": "/provider/notifications",
+      "name": "الإشعارات",
+      "status": "PARTIAL",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-22-1",
+      "surface": "provider",
+      "route": "/provider/settings",
+      "name": "الإعدادات — الحالة 1",
+      "status": "PARTIAL",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-22-2",
+      "surface": "provider",
+      "route": "/provider/settings",
+      "name": "الإعدادات — الحالة 2",
+      "status": "PARTIAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "PRV-22-3",
+      "surface": "provider",
+      "route": "/provider/settings",
+      "name": "الإعدادات — الحالة 3",
+      "status": "PARTIAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-01",
+      "surface": "admin",
+      "route": "/admin",
+      "name": "نظرة عامة",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-01/visual-metrics.json",
+          "diff": 51.7288,
+          "date": "2026-08-29T19:12:44.738Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-02",
+      "surface": "admin",
+      "route": "/admin/users",
+      "name": "إدارة المستخدمين",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-02/visual-metrics.json",
+          "diff": 38.7622,
+          "date": "2026-08-29T19:12:45.233Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-03",
+      "surface": "admin",
+      "route": "/admin/property-seekers",
+      "name": "الباحثون عن عقار",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-03/visual-metrics.json",
+          "diff": 59.8328,
+          "date": "2026-08-29T19:12:45.622Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-04",
+      "surface": "admin",
+      "route": "/admin/providers",
+      "name": "مقدمو العقارات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-04/visual-metrics.json",
+          "diff": 41.3434,
+          "date": "2026-08-29T19:12:46.026Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-05",
+      "surface": "admin",
+      "route": "/admin/verification",
+      "name": "مراجعة مستندات مقدمي العقارات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-05/visual-metrics.json",
+          "diff": 50.8621,
+          "date": "2026-08-29T19:12:46.419Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-06",
+      "surface": "admin",
+      "route": "/admin/account-reports",
+      "name": "بلاغات الحسابات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-06/visual-metrics.json",
+          "diff": 55.4317,
+          "date": "2026-08-29T19:12:46.778Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-07",
+      "surface": "admin",
+      "route": "/admin/account-reports/:id",
+      "name": "تفاصيل بلاغ الحساب",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-07/visual-metrics.json",
+          "diff": 45.0111,
+          "date": "2026-08-29T19:12:47.189Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-08",
+      "surface": "admin",
+      "route": "/admin/account-restrictions",
+      "name": "قيود الحسابات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-08/visual-metrics.json",
+          "diff": 51.9087,
+          "date": "2026-08-29T19:12:47.543Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-09",
+      "surface": "admin",
+      "route": "/admin/property-categories",
+      "name": "التصنيفات وأنواع العقارات",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-09/visual-metrics.json",
+          "diff": 31.0421,
+          "date": "2026-08-29T19:12:47.898Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-10",
+      "surface": "admin",
+      "route": "/admin/locations",
+      "name": "المناطق والأحياء",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-10/visual-metrics.json",
+          "diff": 51.1689,
+          "date": "2026-08-29T19:12:48.258Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-11",
+      "surface": "admin",
+      "route": "/admin/features",
+      "name": "المميزات والخدمات",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-11/visual-metrics.json",
+          "diff": 50.4612,
+          "date": "2026-08-29T19:12:48.625Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-12",
+      "surface": "admin",
+      "route": "/admin/projects",
+      "name": "إدارة المشروعات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-12/visual-metrics.json",
+          "diff": 50.1601,
+          "date": "2026-08-29T19:12:49.028Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-13",
+      "surface": "admin",
+      "route": "/admin/projects/review",
+      "name": "مراجعة المشروعات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-13/visual-metrics.json",
+          "diff": 53.8626,
+          "date": "2026-08-29T19:12:49.406Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-14",
+      "surface": "admin",
+      "route": "/admin/properties",
+      "name": "إدارة العقارات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-14/visual-metrics.json",
+          "diff": 50.3116,
+          "date": "2026-08-29T19:12:49.822Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-15",
+      "surface": "admin",
+      "route": "/admin/properties/review",
+      "name": "مراجعة العقارات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-15/visual-metrics.json",
+          "diff": 57.4828,
+          "date": "2026-08-29T19:12:50.233Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-16",
+      "surface": "admin",
+      "route": "/admin/properties/possible-duplicates",
+      "name": "عقارات يشتبه بتكرارها",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-16/visual-metrics.json",
+          "diff": 52.7664,
+          "date": "2026-08-29T19:12:50.607Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-17",
+      "surface": "admin",
+      "route": "/admin/property-reports",
+      "name": "بلاغات العقارات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-17/visual-metrics.json",
+          "diff": 62.9135,
+          "date": "2026-08-29T19:12:50.993Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-18",
+      "surface": "admin",
+      "route": "/admin/requests",
+      "name": "Requests Management",
+      "status": "BLOCKED_SOURCE",
+      "audit": "BLOCKED_SOURCE",
+      "metrics": [],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-19",
+      "surface": "admin",
+      "route": "/admin/customer-requests",
+      "name": "طلبات العملاء",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-19/visual-metrics.json",
+          "diff": 42.4555,
+          "date": "2026-08-29T19:12:51.451Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-20",
+      "surface": "admin",
+      "route": "/admin/overdue-requests",
+      "name": "الطلبات المتأخرة",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-20/visual-metrics.json",
+          "diff": 60.0765,
+          "date": "2026-08-29T19:12:51.830Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-21",
+      "surface": "admin",
+      "route": "/admin/contact-requests",
+      "name": "طلبات التواصل",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-21/visual-metrics.json",
+          "diff": 51.9159,
+          "date": "2026-08-29T19:12:52.188Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-22",
+      "surface": "admin",
+      "route": "/admin/viewing-requests",
+      "name": "طلبات المعاينة",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-22/visual-metrics.json",
+          "diff": 48.9954,
+          "date": "2026-08-29T19:12:52.564Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "غير مكتمل: إنشاء المعاينة لا يعيّن مقدم العقار؛ عرض المواعيد القائمة مؤكد محليًا",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-23",
+      "surface": "admin",
+      "route": "/admin/search-requests",
+      "name": "طلبات البحث عن عقار",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-23/visual-metrics.json",
+          "diff": 65.0805,
+          "date": "2026-08-29T19:12:52.937Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-24",
+      "surface": "admin",
+      "route": "/admin/request-issues",
+      "name": "بلاغات ومشكلات الطلبات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-24/visual-metrics.json",
+          "diff": 58.374,
+          "date": "2026-08-29T19:12:53.299Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-25",
+      "surface": "admin",
+      "route": "/admin/articles",
+      "name": "إدارة المقالات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-25/visual-metrics.json",
+          "diff": 47.0511,
+          "date": "2026-08-29T19:12:53.677Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-26",
+      "surface": "admin",
+      "route": "/admin/article-categories",
+      "name": "تصنيفات المقالات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-26/visual-metrics.json",
+          "diff": 49.0249,
+          "date": "2026-08-29T19:12:54.064Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-27",
+      "surface": "admin",
+      "route": "/admin/community",
+      "name": "إدارة الكوميونيتي",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-27/visual-metrics.json",
+          "diff": 35.5305,
+          "date": "2026-08-29T19:12:54.531Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-28",
+      "surface": "admin",
+      "route": "/admin/community/comments",
+      "name": "التعليقات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-28/visual-metrics.json",
+          "diff": 49.9811,
+          "date": "2026-08-29T19:12:54.935Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-29",
+      "surface": "admin",
+      "route": "/admin/community/moderation",
+      "name": "البلاغات والإشراف",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-29/visual-metrics.json",
+          "diff": 48.8072,
+          "date": "2026-08-29T19:12:55.374Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-30",
+      "surface": "admin",
+      "route": "/admin/content/about",
+      "name": "النبذة عن المنصة",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-30/visual-metrics.json",
+          "diff": 48.3238,
+          "date": "2026-08-29T19:12:55.977Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-31",
+      "surface": "admin",
+      "route": "/admin/content/team",
+      "name": "إدارة فريق العمل",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-31/visual-metrics.json",
+          "diff": 41.9359,
+          "date": "2026-08-29T19:12:56.367Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-32",
+      "surface": "admin",
+      "route": "/admin/content/population-counter",
+      "name": "عداد سكان مدينة السادات",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-32/visual-metrics.json",
+          "diff": 57.9836,
+          "date": "2026-08-29T19:12:56.828Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-33",
+      "surface": "admin",
+      "route": "/admin/ads/requests",
+      "name": "طلبات الإعلانات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-33/visual-metrics.json",
+          "diff": 45.1336,
+          "date": "2026-08-29T19:12:57.294Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات الإعلان/إثبات الدفع/العمولة مختبرة اصطناعيًا؛ دورة إنتاج كاملة غير مثبتة",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-34",
+      "surface": "admin",
+      "route": "/admin/ads/payment-proofs/pending",
+      "name": "الإثباتات المعلقة",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-34/visual-metrics.json",
+          "diff": 62.6568,
+          "date": "2026-08-29T19:12:57.700Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات الإعلان/إثبات الدفع/العمولة مختبرة اصطناعيًا؛ دورة إنتاج كاملة غير مثبتة",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-35",
+      "surface": "admin",
+      "route": "/admin/ads/payment-proofs/approved",
+      "name": "الإثباتات المقبولة",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-35/visual-metrics.json",
+          "diff": 57.1875,
+          "date": "2026-08-29T19:12:58.116Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات الإعلان/إثبات الدفع/العمولة مختبرة اصطناعيًا؛ دورة إنتاج كاملة غير مثبتة",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-36",
+      "surface": "admin",
+      "route": "/admin/ads/calendar",
+      "name": "تقويم الإعلانات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-36/visual-metrics.json",
+          "diff": 42.805,
+          "date": "2026-08-29T19:12:58.629Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات الإعلان/إثبات الدفع/العمولة مختبرة اصطناعيًا؛ دورة إنتاج كاملة غير مثبتة",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-37",
+      "surface": "admin",
+      "route": "/admin/ads/payments/pending-review",
+      "name": "مراجعة المدفوعات المعلقة",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-37/visual-metrics.json",
+          "diff": 43.6797,
+          "date": "2026-08-29T19:12:59.069Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات الإعلان/إثبات الدفع/العمولة مختبرة اصطناعيًا؛ دورة إنتاج كاملة غير مثبتة",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-38",
+      "surface": "admin",
+      "route": "/admin/ads/financial-review",
+      "name": "الفحص المالي",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-38/visual-metrics.json",
+          "diff": 35.8061,
+          "date": "2026-08-29T19:12:59.546Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات الإعلان/إثبات الدفع/العمولة مختبرة اصطناعيًا؛ دورة إنتاج كاملة غير مثبتة",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-39",
+      "surface": "admin",
+      "route": "/admin/commissions",
+      "name": "إدارة العمولات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-39/visual-metrics.json",
+          "diff": 60.7086,
+          "date": "2026-08-29T19:12:59.958Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات الإعلان/إثبات الدفع/العمولة مختبرة اصطناعيًا؛ دورة إنتاج كاملة غير مثبتة",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-40",
+      "surface": "admin",
+      "route": "/admin/commissions/new",
+      "name": "إنشاء سياسة عمولة",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-40/visual-metrics.json",
+          "diff": 65.7436,
+          "date": "2026-08-29T19:13:00.380Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات الإعلان/إثبات الدفع/العمولة مختبرة اصطناعيًا؛ دورة إنتاج كاملة غير مثبتة",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-41",
+      "surface": "admin",
+      "route": "/admin/commissions/history",
+      "name": "سجل تغييرات العمولات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-41/visual-metrics.json",
+          "diff": 57.4612,
+          "date": "2026-08-29T19:13:00.868Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات الإعلان/إثبات الدفع/العمولة مختبرة اصطناعيًا؛ دورة إنتاج كاملة غير مثبتة",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-42",
+      "surface": "admin",
+      "route": "/admin/commissions/accounts/:id",
+      "name": "عمولة الحساب",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-42/visual-metrics.json",
+          "diff": 45.9689,
+          "date": "2026-08-29T19:13:01.333Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات الإعلان/إثبات الدفع/العمولة مختبرة اصطناعيًا؛ دورة إنتاج كاملة غير مثبتة",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-43",
+      "surface": "admin",
+      "route": "/admin/commissions/exceptions",
+      "name": "استثناءات العمولات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-43/visual-metrics.json",
+          "diff": 69.8167,
+          "date": "2026-08-29T19:13:01.697Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات الإعلان/إثبات الدفع/العمولة مختبرة اصطناعيًا؛ دورة إنتاج كاملة غير مثبتة",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-44",
+      "surface": "admin",
+      "route": "/admin/commissions/exceptions/new",
+      "name": "إنشاء استثناء عمولة",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-44/visual-metrics.json",
+          "diff": 64.9074,
+          "date": "2026-08-29T19:13:02.091Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات الإعلان/إثبات الدفع/العمولة مختبرة اصطناعيًا؛ دورة إنتاج كاملة غير مثبتة",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-45",
+      "surface": "admin",
+      "route": "/admin/commissions/confirmations",
+      "name": "تأكيد سياسات العمولات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-45/visual-metrics.json",
+          "diff": 64.627,
+          "date": "2026-08-29T19:13:02.482Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "خدمات الإعلان/إثبات الدفع/العمولة مختبرة اصطناعيًا؛ دورة إنتاج كاملة غير مثبتة",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-46",
+      "surface": "admin",
+      "route": "/admin/banners",
+      "name": "البانرات الإعلانية",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-46/visual-metrics.json",
+          "diff": 45.0314,
+          "date": "2026-08-29T19:13:02.916Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-47",
+      "surface": "admin",
+      "route": "/admin/banners/new",
+      "name": "إضافة بانر جديد",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-47/visual-metrics.json",
+          "diff": 45.611,
+          "date": "2026-08-29T19:13:03.368Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-48",
+      "surface": "admin",
+      "route": "/admin/content/tips",
+      "name": "نصائح عقارات السادات",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-48/visual-metrics.json",
+          "diff": 55.0079,
+          "date": "2026-08-29T19:13:03.722Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-49",
+      "surface": "admin",
+      "route": "/admin/content/homepage",
+      "name": "إدارة الصفحة الرئيسية",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-49/visual-metrics.json",
+          "diff": 34.7504,
+          "date": "2026-08-29T19:13:04.081Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-50",
+      "surface": "admin",
+      "route": "/admin/settings/platform",
+      "name": "بيانات المنصة",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-50/visual-metrics.json",
+          "diff": 54.2403,
+          "date": "2026-08-29T19:13:04.620Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-51",
+      "surface": "admin",
+      "route": "/admin/settings/contact",
+      "name": "بيانات التواصل",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-51/visual-metrics.json",
+          "diff": 50.216,
+          "date": "2026-08-29T19:13:05.124Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-52",
+      "surface": "admin",
+      "route": "/admin/settings/social",
+      "name": "حسابات التواصل الاجتماعي",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-52/visual-metrics.json",
+          "diff": 53.0714,
+          "date": "2026-08-29T19:13:05.542Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-53",
+      "surface": "admin",
+      "route": "/admin/settings/properties",
+      "name": "إعدادات العقارات",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-53/visual-metrics.json",
+          "diff": 51.9993,
+          "date": "2026-08-29T19:13:05.977Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-54",
+      "surface": "admin",
+      "route": "/admin/settings/requests",
+      "name": "Request Settings",
+      "status": "PARTIAL_EXTERNAL",
+      "audit": "PARTIAL_EXTERNAL",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-54/visual-metrics.json",
+          "diff": 52.4088,
+          "date": "2026-08-29T17:30:00+03:00",
+          "method": "same-width owner-source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-55",
+      "surface": "admin",
+      "route": "/admin/settings/advertising",
+      "name": "إعدادات الإعلانات",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-55/visual-metrics.json",
+          "diff": 52.8209,
+          "date": "2026-08-29T19:13:06.336Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-56",
+      "surface": "admin",
+      "route": "/admin/settings/seo",
+      "name": "SEO عام",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-56/visual-metrics.json",
+          "diff": 53.1667,
+          "date": "2026-08-29T19:13:06.815Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-57",
+      "surface": "admin",
+      "route": "/admin/settings/privacy-security",
+      "name": "الخصوصية والأمان",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-57/visual-metrics.json",
+          "diff": 50.0622,
+          "date": "2026-08-29T19:13:07.153Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-58",
+      "surface": "admin",
+      "route": "/admin/settings/display",
+      "name": "إعدادات العرض",
+      "status": "VERIFIED_NO_CHANGE",
+      "audit": "VERIFIED_NO_CHANGE",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-58/visual-metrics.json",
+          "diff": 53.4424,
+          "date": "2026-08-29T19:13:07.708Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-59",
+      "surface": "admin",
+      "route": "/admin/admin-users",
+      "name": "المستخدمون الإداريون",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-59/visual-metrics.json",
+          "diff": 51.1451,
+          "date": "2026-08-29T19:13:08.100Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-60",
+      "surface": "admin",
+      "route": "/admin/admin-users/new",
+      "name": "إضافة مستخدم إداري",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-60/visual-metrics.json",
+          "diff": 49.1553,
+          "date": "2026-08-29T19:13:08.462Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-61",
+      "surface": "admin",
+      "route": "/admin/admin-users/:id",
+      "name": "تفاصيل مدير النظام",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-61/visual-metrics.json",
+          "diff": 35.6468,
+          "date": "2026-08-29T19:13:08.859Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-62",
+      "surface": "admin",
+      "route": "/admin/admin-users/:id",
+      "name": "تفاصيل مستخدم إداري",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-62/visual-metrics.json",
+          "diff": 35.899,
+          "date": "2026-08-29T19:13:09.249Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-63",
+      "surface": "admin",
+      "route": "/admin/roles",
+      "name": "الأدوار والصلاحيات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-63/visual-metrics.json",
+          "diff": 50.8,
+          "date": "2026-08-29T19:13:09.676Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-64",
+      "surface": "admin",
+      "route": "/admin/roles/:id",
+      "name": "تفاصيل الدور والصلاحيات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-64/visual-metrics.json",
+          "diff": 41.1144,
+          "date": "2026-08-29T19:13:10.700Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-65",
+      "surface": "admin",
+      "route": "/admin/notifications",
+      "name": "إشعارات الإدارة",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-65/visual-metrics.json",
+          "diff": 51.4761,
+          "date": "2026-08-29T19:14:14.353Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    },
+    {
+      "id": "ADM-66",
+      "surface": "admin",
+      "route": "/admin/audit-logs",
+      "name": "سجل الإجراءات",
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "path": "docs/quality/figma_parity/screens/ADM-66/visual-metrics.json",
+          "diff": 51.608,
+          "date": "2026-08-29T19:14:14.744Z",
+          "method": "unmasked normalized-width source/runtime canvas comparison over the overlapping document height"
+        }
+      ],
+      "currentDesktopParityPercent": null,
+      "currentResponsiveParityPercent": null,
+      "backendAssessment": "تنفيذ وخدمات مرتبطة موجودة بالسجلات؛ اكتمال رحلة الصفحة على الإنتاج غير مثبت",
+      "responsiveAssessment": "Desktop Only في الدليل؛ تشغيل ريسبونسيف مطلوب منك، لم يُثبت لكل هذه الصفحة"
+    }
+  ]
+}
