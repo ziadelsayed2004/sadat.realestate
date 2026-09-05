@@ -8,21 +8,12 @@ import {
   publicRelatedId,
   type PublicRelatedOrganization
 } from '../public/related-property.js';
-import type { PublicPropertyRelatedProperty } from '@sadat-real-estate/contracts';
 import type { ViewingRecord, ViewingRepository } from './service.js';
 
 type Row = Record<string, unknown>;
 
 function oid(value: string): Types.ObjectId {
   return new Types.ObjectId(value);
-}
-
-function id(value: unknown): string | undefined {
-  if (typeof value === 'string') return value;
-  if (value && typeof value === 'object' && typeof (value as { toHexString?: () => string }).toHexString === 'function') {
-    return (value as { toHexString: () => string }).toHexString();
-  }
-  return undefined;
 }
 
 function parse(value: Row): ViewingRecord | undefined {
