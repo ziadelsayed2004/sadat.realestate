@@ -11,7 +11,7 @@ const row: ViewingRecord = { id: '4123456789abcdef01234567', propertyId: '312345
 function fixture(property: Record<string, unknown> | null) {
   const inserted: Record<string, unknown>[] = [];
   let lookup: Record<string, unknown> | undefined;
-  const connection = { collection(name: string) {
+  const connection = { collection(_name: string) {
     return {
       async findOne(filter: Record<string, unknown>) { lookup = filter; return property; },
       async createIndex() {},
