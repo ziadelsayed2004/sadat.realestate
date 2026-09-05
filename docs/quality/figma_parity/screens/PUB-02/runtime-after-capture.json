@@ -14,7 +14,7 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "a8af6e406cb2608007467ab2cae70b71115d7fc68bb35b3c3605f010c22960f9",
-    "afterHash": "a0faed0765c4f5ffc0f384bed3d47479c3494866808736ca4dd35c7fac2c3ff7",
+    "afterHash": "c6c2898175dbba02d8aba186b8b45231a507ed6217941fa728e1004e9cc4ea61",
     "requestedApi": [],
     "apiResponses": []
   },
@@ -2621,8 +2621,8 @@
       "comparedWidth": 1577,
       "comparedHeight": 1941,
       "comparedPixels": 3060957,
-      "materialDifferencePercent": 21.773,
-      "antiAliasingOnlyPercent": 4.5723,
+      "materialDifferencePercent": 22.042,
+      "antiAliasingOnlyPercent": 4.582,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3
