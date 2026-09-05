@@ -118,8 +118,12 @@ export function createMongooseRequestRepository(connection: Connection): Request
         throw error;
       }
     },
-    async list(query: RequestListQuery, scope) {
+    async list(query: RequestListQuery, scope, options) {
       const filter: Record<string, unknown> = {};
+      if (options?.overdueBefore) {
+        filter.dueAt = { $lt: options.overdueBefore };
+        filter.$and = [{ status: { $nin: ['resolved', 'cancelled', 'closed'] } }];
+      }
       if (query.status) filter.status = query.status;
       if (query.type) filter.type = query.type;
       if (query.source) filter.source = query.source;

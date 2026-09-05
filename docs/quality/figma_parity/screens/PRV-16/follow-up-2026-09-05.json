@@ -2,6 +2,12 @@
   "screenId": "PRV-16",
   "canonical": { "fileKey": "Odl1Epn2u6lIEuIMmABT7o", "nodeId": "6017:21368", "freshDesignContextRead": true },
   "status": "PARTIAL",
+  "searchFollowUp": {
+    "problem": "Production MongoDB list search omitted firstName, lastName, phone and email although the UI advertised customer-name/phone search; in-memory tests masked this gap.",
+    "repair": "Added literal case-insensitive customer identity search plus combined first/last-name matching. Provider ownership and status/type/source filters remain outside the OR; rows and totals share the same filter.",
+    "verification": "10 focused request tests and API typecheck passed. Direct MongoDB probe in a temporary local collection verified full name, phone, email, escaped regex, and foreign-provider isolation. Probe collection removed after verification.",
+    "productionVerified": false
+  },
   "repairs": [
     "Removed duplicate visible heading and outer panel absent from canonical design",
     "Matched heading size and primary button navy color",
