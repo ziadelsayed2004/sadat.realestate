@@ -20,5 +20,6 @@
     "antiAliasingRgbSumGreaterThan": 3
   },
   "method": "same-width source/runtime canvas comparison over the overlapping document height",
-  "reviewed": false
+  "reviewed": true,
+  "reviewedAt": "2026-09-06T08:48:00.000+03:00"
 }

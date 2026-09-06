@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "screenId": "PUB-10",
   "classification": "PARTIAL",
-  "classificationReason": "Fresh source and runtime capture completed; direct repair/parity confirmation is not complete.",
+  "classificationReason": "Current Figma-guided desktop verification is measured at 93.9298% agreement; residual visual difference remains, so the screen stays PARTIAL.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",
@@ -17,7 +17,7 @@
     "getDesignContext": {
       "tool": "mcp__figma__get_design_context",
       "skill": "resource:figma-design-to-code",
-      "resultStatus": "SPARSE_METADATA_DUE_TO_CONTEXT_LIMIT",
+      "resultStatus": "FULL_REFERENCE_CODE_RETURNED",
       "root": {
         "id": "6017:13611",
         "name": "Create Post — Modal",
@@ -35,7 +35,7 @@
         "footer"
       ],
       "reviewed": true,
-      "note": "The tool explicitly returned sparse metadata and instructed sublayer retrieval for full code; this is recorded as an incomplete context result, not treated as parity proof."
+      "note": "The canonical get_design_context call returned the complete modal reference, asset map, and screenshot; existing Modal, CustomSelect, Input, and Button components were retained."
     }
   },
   "runtime": {
@@ -254,14 +254,23 @@
     },
     "apiRequests": [
       {
+        "method": "GET",
+        "url": "http://127.0.0.1:4182/api/v1/public/community/posts?page=1&limit=20"
+      },
+      {
         "method": "POST",
-        "url": "http://127.0.0.1:4173/api/v1/auth/refresh"
+        "url": "http://127.0.0.1:4182/api/v1/auth/refresh"
       }
     ],
     "apiResponses": [
       {
+        "method": "GET",
+        "url": "http://127.0.0.1:4182/api/v1/public/community/posts?page=1&limit=20",
+        "status": 200
+      },
+      {
         "method": "POST",
-        "url": "http://127.0.0.1:4173/api/v1/auth/refresh",
+        "url": "http://127.0.0.1:4182/api/v1/auth/refresh",
         "status": 200
       }
     ],
@@ -271,7 +280,7 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-10/runtime-after.png",
-      "sha256": "2cd73c7859c91cf86b46cc2af24e886f5530455159fb3d0ef681b644ef07aa0f"
+      "sha256": "93b77192ef51bc50a105703e2c628a8aa22ab487ba9e43809baf0baabbbd55b3"
     }
   },
   "structuredVisualComparison": {
@@ -288,37 +297,74 @@
       },
       {
         "width": 1524,
-        "height": 1125
+        "height": 1999
       }
     ],
     "observations": [
-      "Figma source is 1524px wide and 1999px high for PUB-10.",
-      "Runtime is 1524px wide at the approved Desktop Chrome viewport and has 1999px document height.",
-      "The side-by-side diff is evidence for review only; no baseline was updated.",
-      "Exact typography, spacing, imagery, control states, responsive variants, and prototype transitions remain to be checked against focused fixtures."
+      "The fresh Arabic RTL runtime and canonical Figma source are both exactly 1524px wide and 1999px high.",
+      "Overlay, centered 512x470 modal, heading, moderation notice, category select, title, body, cancel, and publish controls were independently reviewed.",
+      "The category select visibly exposes its current value instead of reproducing the ambiguous blank field in the old design, preserving the required create-post mechanism.",
+      "Desktop material difference is 6.0702%, yielding 93.9298% measured agreement; no Figma evidence was replaced.",
+      "Desktop, tablet, and mobile authenticated create-post snapshots passed after review."
     ]
   },
   "functionalApiComparison": {
     "reviewed": true,
-    "requestProjection": "GET /api/v1/public/community/posts",
+    "requestProjection": "GET /api/v1/public/community/posts; POST /api/v1/auth/refresh; POST /api/v1/community/posts",
     "responseProjection": "public-community-create fixture captured and hashed",
-    "outcome": "route loaded with a public-community-create fixture; complete CTA/prototype/API projection comparison remains pending"
+    "outcome": "Authenticated composer opens, exposes the category, validates title/body/category, and submits the real create-post mutation contract in focused tests."
   },
   "defects": [
-    "Full per-screen parity review is incomplete.",
-    "Figma get_design_context returned sparse metadata because the full frame exceeded context limits."
+    "Resolved: post category is visible and selected instead of appearing as an unexplained empty field.",
+    "Resolved: authenticated create-post modal and responsive variants are covered by current visual and behavioral tests.",
+    "Residual 6.0702% material visual difference remains before exact desktop parity can be claimed."
   ],
-  "filesRepaired": [],
-  "focusedTests": [],
+  "filesRepaired": [
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots"
+  ],
+  "focusedTests": [
+    {
+      "name": "focused community and accessibility Vitest",
+      "command": "npm.cmd --workspace @sadat-real-estate/web exec vitest run tests/community.vitest.test.tsx tests/accessibility-audit.vitest.test.ts",
+      "result": "9/9 passed",
+      "exitCode": 0
+    },
+    {
+      "name": "community and create-post responsive Playwright matrix",
+      "command": "npm.cmd --workspace @sadat-real-estate/web exec -- playwright test --config playwright.config.ts tests/e2e/community.spec.ts",
+      "result": "12/12 passed across desktop, tablet, mobile, Arabic, and English",
+      "exitCode": 0
+    },
+    {
+      "name": "production build and bundle budget",
+      "command": "npm.cmd --workspace @sadat-real-estate/web run build",
+      "exitCode": 0
+    },
+    {
+      "name": "focused Figma/runtime visual comparison",
+      "command": "node --import tsx scripts/capture-figma-parity-runtime.mjs --screen-id PUB-10 --fixture public-community-create --route /community?create=1 --phase after --base-url http://127.0.0.1:4182",
+      "exitCode": 0
+    }
+  ],
   "accessibility": {
-    "focusedCheck": "not yet run",
-    "exitCode": null
+    "focusedCheck": "Labeled category, title/body controls, modal close/cancel/publish actions, keyboard access, and locale direction.",
+    "exitCode": 0
   },
   "evidencePaths": {
     "figma": "docs/quality/figma_parity/screens/PUB-10/figma.png",
     "runtimeBefore": "docs/quality/figma_parity/screens/PUB-10/runtime-before.png",
     "runtimeAfter": "docs/quality/figma_parity/screens/PUB-10/runtime-after.png",
     "diff": "docs/quality/figma_parity/screens/PUB-10/diff.png",
-    "review": "docs/quality/figma_parity/screens/PUB-10/review.json"
+    "review": "docs/quality/figma_parity/screens/PUB-10/review.json",
+    "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-10/runtime-after-capture.json"
+  },
+  "reviewedAt": "2026-09-06T08:48:00.000+03:00",
+  "latestRuntimeVerification": {
+    "source": "runtime-after-capture.json and visual-metrics.json",
+    "phase": "after",
+    "apiResponseStatus": 200,
+    "materialDifferencePercent": 6.0702,
+    "antiAliasingOnlyPercent": 63.3358,
+    "officialClosureEligible": false
   }
 }
