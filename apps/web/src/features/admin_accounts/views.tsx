@@ -7,6 +7,7 @@ import type {
   AdminProviderDocumentData,
   AdminProviderListData,
   AdminProviderListQuery,
+  ProviderReviewAction,
   ProviderType,
   SupportedLocale
 } from '@sadat-real-estate/contracts';
@@ -17,12 +18,14 @@ import { AdminNavigation } from '../admin/index.ts';
 import {
   createAdminDocumentAccessLoader,
   createAdminProviderLoader,
+  createAdminProviderReviewer,
   createAdminProvidersLoader,
   createAdminUserLoader,
   createAdminUsersLoader,
   type AdminAccountsAuthorizationSource,
   type AdminDocumentAccessLoader,
   type AdminProviderLoader,
+  type AdminProviderReviewer,
   type AdminProvidersLoader,
   type AdminUserLoader,
   type AdminUsersLoader
@@ -51,6 +54,7 @@ export interface AdminAccountsProps {
   readonly loadProviders?: AdminProvidersLoader | undefined;
   readonly loadProvider?: AdminProviderLoader | undefined;
   readonly loadDocumentAccess?: AdminDocumentAccessLoader | undefined;
+  readonly reviewProvider?: AdminProviderReviewer | undefined;
 }
 
 function localePath(locale: SupportedLocale, path: string): string {
@@ -479,8 +483,10 @@ function DocumentRow({ document, locale, onOpen, opening }: { readonly document:
   );
 }
 
-function ProviderDetail({ provider, locale, onBack, onOpenDocument, openingDocumentId, documentError }: { readonly provider: AdminProviderData; readonly locale: SupportedLocale; readonly onBack: string; readonly onOpenDocument: (documentId: string) => void; readonly openingDocumentId: string | undefined; readonly documentError: string | undefined }) {
+function ProviderDetail({ provider, locale, onBack, onOpenDocument, openingDocumentId, documentError, reviewReason, onReviewReasonChange, onReview, reviewingAction, reviewFeedback }: { readonly provider: AdminProviderData; readonly locale: SupportedLocale; readonly onBack: string; readonly onOpenDocument: (documentId: string) => void; readonly openingDocumentId: string | undefined; readonly documentError: string | undefined; readonly reviewReason: string; readonly onReviewReasonChange: (value: string) => void; readonly onReview: (action: ProviderReviewAction) => void; readonly reviewingAction: ProviderReviewAction | undefined; readonly reviewFeedback: { readonly tone: 'success' | 'error'; readonly message: string } | undefined }) {
   const copy = getAdminAccountsCopy(locale);
+  const reviewLabels: Readonly<Record<ProviderReviewAction, string>> = { verify: copy.actions.verify, reject: copy.actions.reject, needs_information: copy.actions.needsInformation, suspend: copy.actions.suspend };
+  const validReason = reviewReason.trim().length >= 3;
   return (
     <main className="admin-accounts__main admin-accounts__detail" aria-labelledby="admin-provider-detail-title">
       <a className="admin-accounts__back" href={onBack}>{copy.actions.back}</a>
@@ -507,11 +513,25 @@ function ProviderDetail({ provider, locale, onBack, onOpenDocument, openingDocum
         )}
         {documentError !== undefined ? <p className="admin-accounts__document-error" role="alert">{documentError}</p> : null}
       </section>
+      {provider.availableActions.length > 0 ? (
+        <section className="admin-accounts__detail-card admin-account-reports" aria-labelledby="admin-provider-review-title">
+          <h2 id="admin-provider-review-title">{copy.actions.reviewHeading}</h2>
+          <label className="admin-account-reports__reason-label" htmlFor="admin-provider-review-reason">
+            <span>{copy.actions.reviewReason}</span>
+            <textarea id="admin-provider-review-reason" value={reviewReason} onChange={event => onReviewReasonChange(event.currentTarget.value)} placeholder={copy.actions.reviewReasonPlaceholder} minLength={3} maxLength={1000} rows={4} disabled={reviewingAction !== undefined} />
+          </label>
+          {!validReason && reviewReason.length > 0 ? <p className="admin-accounts__document-error" role="alert">{copy.actions.reviewReasonRequired}</p> : null}
+          <div className="admin-accounts__actions">
+            {provider.availableActions.map(action => <Button key={action} type="button" variant={action === 'verify' ? 'success' : action === 'needs_information' ? 'secondary' : 'danger'} disabled={!validReason || reviewingAction !== undefined} loading={reviewingAction === action} onClick={() => onReview(action)}>{reviewLabels[action]}</Button>)}
+          </div>
+          {reviewFeedback !== undefined ? <p className={reviewFeedback.tone === 'error' ? 'admin-accounts__document-error' : 'admin-accounts__muted'} role={reviewFeedback.tone === 'error' ? 'alert' : 'status'}>{reviewFeedback.message}</p> : null}
+        </section>
+      ) : null}
     </main>
   );
 }
 
-export function AdminAccounts({ locale, session, view, detailId, authClient, apiOrigin, initialListData, initialUserData, initialProviderData, initialState = 'loading', loadUsers, loadUser, loadProviders, loadProvider, loadDocumentAccess }: AdminAccountsProps) {
+export function AdminAccounts({ locale, session, view, detailId, authClient, apiOrigin, initialListData, initialUserData, initialProviderData, initialState = 'loading', loadUsers, loadUser, loadProviders, loadProvider, loadDocumentAccess, reviewProvider }: AdminAccountsProps) {
   const copy = getAdminAccountsCopy(locale);
   const [state, setState] = useState<AdminAccountsState>(initialState);
   const [listData, setListData] = useState<AdminAccountUserListData | AdminProviderListData | undefined>(initialListData);
@@ -527,6 +547,9 @@ export function AdminAccounts({ locale, session, view, detailId, authClient, api
   const [attempt, setAttempt] = useState(0);
   const [openingDocumentId, setOpeningDocumentId] = useState<string>();
   const [documentError, setDocumentError] = useState<string>();
+  const [reviewReason, setReviewReason] = useState('');
+  const [reviewingAction, setReviewingAction] = useState<ProviderReviewAction>();
+  const [reviewFeedback, setReviewFeedback] = useState<{ tone: 'success' | 'error'; message: string }>();
   const isDetail = detailId !== undefined;
   const isUserView = view === 'users' || view === 'seekers';
   const isProviderView = view === 'providers' || view === 'verification';
@@ -547,6 +570,7 @@ export function AdminAccounts({ locale, session, view, detailId, authClient, api
   const providersLoader = useMemo(() => loadProviders ?? createAdminProvidersLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, loadProviders]);
   const providerLoader = useMemo(() => loadProvider ?? createAdminProviderLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, loadProvider]);
   const documentAccessLoader = useMemo(() => loadDocumentAccess ?? createAdminDocumentAccessLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, loadDocumentAccess]);
+  const providerReviewer = useMemo(() => reviewProvider ?? createAdminProviderReviewer({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, reviewProvider]);
   const activePath = isUserView ? '/admin/users' : '/admin/providers';
   const backPath = localePath(locale, view === 'seekers' ? '/admin/property-seekers' : view === 'verification' ? '/admin/verification' : activePath);
   const sessionRole = session.status === 'authenticated' ? session.role : undefined;
@@ -603,6 +627,26 @@ export function AdminAccounts({ locale, session, view, detailId, authClient, api
     }
   }
 
+  async function reviewApplication(action: ProviderReviewAction): Promise<void> {
+    if (providerData === undefined || reviewReason.trim().length < 3) {
+      setReviewFeedback({ tone: 'error', message: copy.actions.reviewReasonRequired });
+      return;
+    }
+    setReviewingAction(action);
+    setReviewFeedback(undefined);
+    try {
+      await providerReviewer(providerData.id, { action, reason: reviewReason.trim() });
+      const refreshed = await providerLoader(providerData.id);
+      setProviderData(refreshed);
+      setReviewReason('');
+      setReviewFeedback({ tone: 'success', message: copy.actions.reviewSaved });
+    } catch (error) {
+      setReviewFeedback({ tone: 'error', message: error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? copy.states.permission.body : copy.states.error.body });
+    } finally {
+      setReviewingAction(undefined);
+    }
+  }
+
   const path = typeof window === 'undefined' ? activePath : new URL(window.location.href).pathname.replace(/\/+$/u, '') || '/';
   return (
     <section className="admin-dashboard admin-accounts" data-screen-id={view === 'users' ? 'ADM-02' : view === 'seekers' ? 'ADM-03' : view === 'providers' ? 'ADM-04' : 'ADM-05'} data-route={path} data-device-scope="desktop" data-admin-accounts-state={state}>
@@ -612,7 +656,7 @@ export function AdminAccounts({ locale, session, view, detailId, authClient, api
         {state === 'not_found' ? <section className="admin-accounts__state" data-state="not_found" role="alert"><StateMessage state="error" title={copy.states.not_found.title} message={copy.states.not_found.body} /><a className="admin-accounts__back" href={backPath}>{copy.actions.back}</a></section> : null}
         {state === 'empty' && !isDetail && listData !== undefined ? <div className="admin-accounts__empty" data-state="empty"><h1>{(view === 'providers' ? copy.providers : view === 'verification' ? copy.verification : copy.users).emptyTitle}</h1><p>{(view === 'providers' ? copy.providers : view === 'verification' ? copy.verification : copy.users).emptyBody}</p></div> : null}
         {state === 'success' && isDetail && isUserView && userData !== undefined ? <UserDetail user={userData} locale={locale} onBack={backPath} /> : null}
-        {state === 'success' && isDetail && isProviderView && providerData !== undefined ? <ProviderDetail provider={providerData} locale={locale} onBack={backPath} onOpenDocument={documentId => { void openDocument(documentId); }} openingDocumentId={openingDocumentId} documentError={documentError} /> : null}
+        {state === 'success' && isDetail && isProviderView && providerData !== undefined ? <ProviderDetail provider={providerData} locale={locale} onBack={backPath} onOpenDocument={documentId => { void openDocument(documentId); }} openingDocumentId={openingDocumentId} documentError={documentError} reviewReason={reviewReason} onReviewReasonChange={setReviewReason} onReview={action => { void reviewApplication(action); }} reviewingAction={reviewingAction} reviewFeedback={reviewFeedback} /> : null}
         {state === 'success' && !isDetail && listData !== undefined ? <ListContent view={view} locale={locale} data={listData} search={search} onPageChange={setPage} searchInput={searchInput} roleFilter={roleFilter} statusFilter={isUserView ? userStatusFilter : providerStatusFilter} providerTypeFilter={providerTypeFilter} onSearchChange={setSearchInput} onRoleChange={value => { setRoleFilter(value); setPage(1); }} onStatusChange={value => { if (isUserView) setUserStatusFilter(value as UserStatusFilter); else setProviderStatusFilter(value as ProviderStatusFilter); setPage(1); }} onProviderTypeChange={value => { setProviderTypeFilter(value); setPage(1); }} onSubmit={() => { setSearch(searchInput.trim()); setPage(1); setAttempt(value => value + 1); }} onClear={() => { setSearchInput(''); setSearch(''); setRoleFilter('all'); setUserStatusFilter('all'); setProviderStatusFilter('all'); setProviderTypeFilter('all'); setPage(1); setAttempt(value => value + 1); }} /> : null}
       </div>
     </section>

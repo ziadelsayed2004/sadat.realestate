@@ -437,6 +437,9 @@ export function ProviderReviewPage({ client, locale, providerType, initialApplic
         setLoadError({ state: 'permission', title: copy.permissionTitle, message: copy.permissionBody });
         return;
       }
+      if (nextApplication.status === 'approved' && client.refresh !== undefined) {
+        await client.refresh();
+      }
       setApplication(nextApplication);
       setShowTracking(false);
       setLoadState('ready');
@@ -470,6 +473,9 @@ export function ProviderReviewPage({ client, locale, providerType, initialApplic
     try {
       const status = await client.getProviderApplicationStatus();
       setApplication(current => current === undefined || current.id !== status.applicationId ? current : mergeStatus(current, status));
+      if (status.status === 'approved' && client.refresh !== undefined) {
+        await client.refresh();
+      }
       setActionState('success');
     } catch (requestError: unknown) {
       const nextError = toReviewError(requestError, copy);

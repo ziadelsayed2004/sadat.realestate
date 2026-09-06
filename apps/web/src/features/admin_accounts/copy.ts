@@ -61,6 +61,15 @@ export interface AdminAccountsCopy {
     readonly openDocument: string;
     readonly unavailableDocument: string;
     readonly loadingDocument: string;
+    readonly reviewHeading: string;
+    readonly reviewReason: string;
+    readonly reviewReasonPlaceholder: string;
+    readonly reviewReasonRequired: string;
+    readonly reviewSaved: string;
+    readonly verify: string;
+    readonly reject: string;
+    readonly needsInformation: string;
+    readonly suspend: string;
   };
 }
 
@@ -129,7 +138,7 @@ const english: AdminAccountsCopy = {
   },
   securityStateLabels: { quarantined: 'Quarantined', scan_pending: 'Scan pending', clean: 'Clean', infected: 'Infected', scan_failed: 'Scan failed', deleted: 'Deleted' },
   reviewStateLabels: { uploaded: 'Uploaded', pending_review: 'Pending review', needs_replacement: 'Needs replacement', approved: 'Approved', rejected: 'Rejected' },
-  actions: { retry: 'Retry', view: 'View details', back: 'Back to list', openDocument: 'Open document', unavailableDocument: 'Unavailable', loadingDocument: 'Opening…' }
+  actions: { retry: 'Retry', view: 'View details', back: 'Back to list', openDocument: 'Open document', unavailableDocument: 'Unavailable', loadingDocument: 'Opening…', reviewHeading: 'Application decision', reviewReason: 'Decision reason', reviewReasonPlaceholder: 'Write a clear reason (at least 3 characters)', reviewReasonRequired: 'Enter a valid reason before saving the decision.', reviewSaved: 'The provider application decision was saved.', verify: 'Verify account', reject: 'Reject application', needsInformation: 'Request information', suspend: 'Suspend account' }
 };
 
 const arabic: AdminAccountsCopy = {
@@ -157,7 +166,7 @@ const arabic: AdminAccountsCopy = {
   documentCategoryLabels: { government_id_front: 'الهوية (أمام)', government_id_back: 'الهوية (خلف)', broker_license: 'رخصة الوساطة', professional_membership: 'عضوية مهنية', commercial_registration: 'السجل التجاري', tax_card: 'البطاقة الضريبية', authorized_representative_id_front: 'هوية الممثل (أمام)', authorized_representative_id_back: 'هوية الممثل (خلف)', authorization_letter: 'خطاب التفويض', brokerage_license: 'ترخيص الوساطة', company_profile: 'ملف الشركة', developer_license: 'ترخيص المطور', additional_supporting_document: 'مستند داعم' },
   securityStateLabels: { quarantined: 'معزول', scan_pending: 'في انتظار الفحص', clean: 'نظيف', infected: 'مصاب', scan_failed: 'فشل الفحص', deleted: 'محذوف' },
   reviewStateLabels: { uploaded: 'تم الرفع', pending_review: 'قيد المراجعة', needs_replacement: 'يحتاج استبدالاً', approved: 'معتمد', rejected: 'مرفوض' },
-  actions: { retry: 'إعادة المحاولة', view: 'عرض التفاصيل', back: 'العودة للقائمة', openDocument: 'فتح المستند', unavailableDocument: 'غير متاح', loadingDocument: 'جار الفتح…' }
+  actions: { retry: 'إعادة المحاولة', view: 'عرض التفاصيل', back: 'العودة للقائمة', openDocument: 'فتح المستند', unavailableDocument: 'غير متاح', loadingDocument: 'جار الفتح…', reviewHeading: 'قرار مراجعة الطلب', reviewReason: 'سبب القرار', reviewReasonPlaceholder: 'اكتب سبباً واضحاً لا يقل عن 3 أحرف', reviewReasonRequired: 'أدخل سبباً صحيحاً قبل حفظ القرار.', reviewSaved: 'تم حفظ قرار مراجعة طلب مقدم العقار.', verify: 'توثيق الحساب', reject: 'رفض الطلب', needsInformation: 'طلب استكمال البيانات', suspend: 'إيقاف الحساب' }
 };
 
 const copies: Readonly<Record<SupportedLocale, AdminAccountsCopy>> = { ar: arabic, en: english,};

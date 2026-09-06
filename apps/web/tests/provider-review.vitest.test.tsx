@@ -180,6 +180,22 @@ describe('provider application review and status', () => {
     expect(screen.queryByRole('link', { name: copy.openDashboardAction })).not.toBeInTheDocument();
   });
 
+  it('refreshes the provider session when an approved application is loaded', async () => {
+    const refresh = vi.fn().mockResolvedValue(undefined);
+    renderWithLocale(
+      <ProviderReviewPage
+        client={{ refresh }}
+        locale="en"
+        initialApplication={application({ status: 'approved', availableActions: ['view_status', 'open_dashboard'] })}
+        onBack={vi.fn()}
+      />,
+      { locale: 'en' }
+    );
+
+    await waitFor(() => expect(refresh).toHaveBeenCalledTimes(1));
+    expect(screen.getByTestId('provider-review-dashboard')).toBeInTheDocument();
+  });
+
   it('fails closed for an unavailable application and exposes retry without private response data', async () => {
     const copy = getProviderReviewCopy('en');
     const getProviderApplication = vi.fn().mockRejectedValue({ status: 503 });

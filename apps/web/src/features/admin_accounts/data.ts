@@ -14,6 +14,8 @@ import {
   adminAccountUserSuccessEnvelopeSchema,
   providerDocumentAccessRequestSchema,
   providerDocumentAccessSuccessEnvelopeSchema,
+  providerReviewRequestSchema,
+  providerReviewSuccessEnvelopeSchema,
   successEnvelopeSchema,
   type AccountReportData,
   type AccountReportListData,
@@ -27,7 +29,9 @@ import {
   type AdminProviderData,
   type AdminProviderListData,
   type AdminProviderListQuery,
-  type ProviderDocumentAccessData
+  type ProviderDocumentAccessData,
+  type ProviderReviewData,
+  type ProviderReviewRequest
 } from '@sadat-real-estate/contracts';
 import { ApiClient, type ApiClientOptions } from '../contracts/index.ts';
 
@@ -67,6 +71,7 @@ export type AdminUserLoader = (userId: string, signal?: AbortSignal) => Promise<
 export type AdminProvidersLoader = (query: AdminProviderListQuery, signal?: AbortSignal) => Promise<AdminProviderListData>;
 export type AdminProviderLoader = (providerId: string, signal?: AbortSignal) => Promise<AdminProviderData>;
 export type AdminDocumentAccessLoader = (documentId: string, purpose: string, signal?: AbortSignal) => Promise<ProviderDocumentAccessData>;
+export type AdminProviderReviewer = (providerId: string, input: ProviderReviewRequest, signal?: AbortSignal) => Promise<ProviderReviewData>;
 export type AdminAccountReportsLoader = (query: AccountReportListQuery, signal?: AbortSignal) => Promise<AccountReportListData>;
 export type AdminAccountReportResolver = (reportId: string, input: AccountReportResolve, signal?: AbortSignal) => Promise<AccountReportData>;
 export type AdminAccountTransitionLoader = (userId: string, input: AccountTransitionRequest, signal?: AbortSignal) => Promise<AccountTransitionData>;
@@ -123,6 +128,15 @@ export async function loadAdminDocumentAccess(documentId: string, purpose: strin
   return response.data.data;
 }
 
+export async function reviewAdminProvider(providerId: string, input: ProviderReviewRequest, options: CommonLoadOptions = {}): Promise<ProviderReviewData> {
+  const id = accountObjectIdSchema.parse(providerId);
+  const body = providerReviewRequestSchema.parse(input);
+  const client = clientFor(options);
+  const headers = headersFor(options.authorization);
+  const response = await client.request(`${ADMIN_PROVIDERS_ROUTE}/${id}/review`, { method: 'POST', responseSchema: providerReviewSuccessEnvelopeSchema, json: body, ...(headers === undefined ? {} : { headers }), ...(options.signal === undefined ? {} : { signal: options.signal }) });
+  return response.data.data;
+}
+
 export async function loadAdminAccountReports(options: AdminAccountReportsLoadOptions = {}): Promise<AccountReportListData> {
   const client = clientFor(options);
   const headers = headersFor(options.authorization);
@@ -167,6 +181,10 @@ export function createAdminProviderLoader(options: Omit<CommonLoadOptions, 'sign
 
 export function createAdminDocumentAccessLoader(options: Omit<CommonLoadOptions, 'signal'> = {}): AdminDocumentAccessLoader {
   return (documentId, purpose, signal) => loadAdminDocumentAccess(documentId, purpose, { ...options, ...(signal === undefined ? {} : { signal }) });
+}
+
+export function createAdminProviderReviewer(options: Omit<CommonLoadOptions, 'signal'> = {}): AdminProviderReviewer {
+  return (providerId, input, signal) => reviewAdminProvider(providerId, input, { ...options, ...(signal === undefined ? {} : { signal }) });
 }
 
 export function createAdminAccountReportsLoader(options: Omit<AdminAccountReportsLoadOptions, 'query' | 'signal'> = {}): AdminAccountReportsLoader {
