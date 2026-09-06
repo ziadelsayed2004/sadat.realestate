@@ -104,7 +104,16 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
     await expect(page.locator('.route-shell--seeker')).toHaveAttribute('data-device-scope', 'desktop');
-    await expect(page.getByLabel(copy.preferences.minPrice)).toHaveValue('500000');
+    await expect(page.locator('#seeker-preferences-min-price')).toHaveValue('500000');
+    const tabsBox = await page.locator('.seeker-profile__tabs').boundingBox();
+    const panelBox = await page.locator('.seeker-profile__panel').boundingBox();
+    expect(tabsBox).not.toBeNull();
+    expect(panelBox).not.toBeNull();
+    if (tabsBox !== null && panelBox !== null) {
+      const tabsEdge = locale === 'ar' ? tabsBox.x + tabsBox.width : tabsBox.x;
+      const panelEdge = locale === 'ar' ? panelBox.x + panelBox.width : panelBox.x;
+      expect(Math.abs(tabsEdge - panelEdge)).toBeLessThanOrEqual(2);
+    }
     await page.locator('.a11y-skip-link').focus();
     await expect(page.locator('.a11y-skip-link')).toBeFocused();
     await page.getByRole('link', { name: copy.tabs.profile }).focus();
@@ -124,7 +133,7 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
 
     await page.goto(`/seeker/settings?${query}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-screen-id="SEK-10"]')).toBeVisible();
-    await expect(page.locator('.seeker-profile__settings-card[data-state="unavailable"]')).toHaveCount(3);
+    await expect(page.locator('.seeker-profile__settings-card[data-state="unavailable"]')).toHaveCount(4);
     await expect(page.locator('body')).not.toContainText(/accessToken|refreshToken|internalNote|providerDocument|m\.salem@email\.com/u);
     await page.evaluate(async () => {
       await document.fonts.ready;
@@ -154,5 +163,43 @@ test.describe('SEK-08/09/10 Seeker profile, preferences, and settings', () => {
     await page.goto(`/seeker/settings?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-access="authentication-required"]')).toBeVisible();
     await expect(page.locator('[data-screen-id="SEK-10"]')).toHaveCount(0);
+  });
+});
+
+test.describe('SEK-08 profile responsive layout', () => {
+  test.beforeEach(async ({ page }) => {
+    await routeSession(page);
+    await routeProfile(page);
+  });
+
+  test('keeps localized headings and tabs inside the content surface', async ({ page }, testInfo) => {
+    const locale = localeForProject();
+    await page.goto(`/seeker/profile?tab=preferences&lang=${locale}`, { waitUntil: 'domcontentloaded' });
+
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(1);
+
+    const heading = await page.locator('.seeker-dashboard__heading-row h1').boundingBox();
+    const description = await page.locator('.seeker-dashboard__heading-row p:last-child').boundingBox();
+    const tabs = await page.locator('.seeker-profile__tabs').boundingBox();
+    const panel = await page.locator('.seeker-profile__panel').boundingBox();
+    expect(heading).not.toBeNull();
+    expect(description).not.toBeNull();
+    expect(tabs).not.toBeNull();
+    expect(panel).not.toBeNull();
+    if (heading !== null && description !== null) {
+      const gap = description.y - (heading.y + heading.height);
+      expect(gap).toBeGreaterThanOrEqual(0);
+      expect(gap).toBeLessThanOrEqual(16);
+    }
+    if (tabs !== null && panel !== null) {
+      expect(tabs.x).toBeGreaterThanOrEqual(-1);
+      expect(tabs.x + tabs.width).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
+      if (testInfo.project.name.includes('desktop')) {
+        const tabsEdge = locale === 'ar' ? tabs.x + tabs.width : tabs.x;
+        const panelEdge = locale === 'ar' ? panel.x + panel.width : panel.x;
+        expect(Math.abs(tabsEdge - panelEdge)).toBeLessThanOrEqual(2);
+      }
+    }
   });
 });

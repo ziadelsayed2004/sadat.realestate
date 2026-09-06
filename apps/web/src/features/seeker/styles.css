@@ -1620,8 +1620,9 @@
   padding: clamp(2rem, 4vw, 4.5rem);
 }
 
-.seeker-dashboard__heading-row h1 { margin: .15rem 0 .35rem; font-size: clamp(2.15rem, 3vw, 3.25rem); }
-.seeker-dashboard__eyebrow { text-transform: none; letter-spacing: 0; }
+.seeker-dashboard__heading-row h1 { margin: 0 0 .375rem; font-size: clamp(2.15rem, 3vw, 3.25rem); }
+.seeker-dashboard__eyebrow { margin: 0 0 .375rem; text-transform: none; letter-spacing: 0; }
+.seeker-dashboard__heading-row :is(.seeker-saved__count, .seeker-notifications__count) { margin-block-start: 0; }
 .seeker-dashboard__summary,
 .seeker-dashboard__activity,
 .seeker-requests__panel,
@@ -1887,7 +1888,7 @@
   .seeker-overview .seeker-dashboard__section-heading { display: none; }
 
   .seeker-dashboard__heading-row h1 {
-    margin-block: .1rem .2rem;
+    margin-block: 0;
     font-size: 1.5rem;
     line-height: 2rem;
   }
@@ -2068,8 +2069,8 @@
 
   .seeker-profile > .seeker-dashboard__content > .seeker-profile__tabs {
     width: max-content;
-    margin-left: max(0px, calc((100% - 42rem) / 2));
-    margin-right: auto;
+    margin-inline-start: max(0px, calc((100% - 42rem) / 2));
+    margin-inline-end: auto;
     padding: .25rem;
     gap: .25rem;
   }
@@ -2094,7 +2095,6 @@
   }
 
   .seeker-profile__panel { text-align: start; }
-  .seeker-profile__tabs { direction: rtl; }
   .seeker-profile__form { gap: 1rem; margin-block-start: 1rem; }
   .seeker-profile__form-grid { gap: .75rem; }
   .seeker-profile__preference-stack { gap: 1rem; }

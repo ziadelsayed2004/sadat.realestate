@@ -72,7 +72,6 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<Seeker
 
 export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, onDisplayNameChange }: { readonly locale: SupportedLocale; readonly activePath: string; readonly authClient?: SeekerAuthorizationSource | undefined; readonly apiOrigin?: string | undefined; readonly onDisplayNameChange?: ((displayName: string) => void) | undefined }) {
   const copy = getSeekerCopy(locale);
-  const canonicalAvatar = '/assets/canonical/seeker/avatar.png';
   const [displayName, setDisplayName] = useState<string>();
   const [menuOpen, setMenuOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
@@ -117,6 +116,7 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, on
   const closeMenuLabel = locale === 'ar' ? 'إغلاق قائمة لوحة الباحث' :'Close seeker dashboard menu';
   const websiteLabel = locale === 'ar' ? 'عرض الموقع' :'View website';
   const roleLabel = locale === 'ar' ? 'باحث عن عقار' : 'Property seeker';
+  const avatarLabel = (displayName ?? roleLabel).trim().split(/\s+/u).slice(0, 2).map(part => part.slice(0, 1)).join('').toUpperCase();
   const notificationsLabel = locale === 'ar' ? 'الإشعارات' : 'Notifications';
   const signOutLabel = locale === 'ar' ? 'تسجيل الخروج' : 'Sign out';
   const signOut = () => {
@@ -156,7 +156,7 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, on
             <SeekerIcon name="notifications" /><i aria-hidden="true" />
           </a>
           <a className="seeker-dashboard__topbar-profile" href={localeForSeekerPath(locale, '/seeker/profile?tab=personal')}>
-            <span className="seeker-dashboard__avatar" aria-hidden="true"><img src={canonicalAvatar} alt="" /></span>
+            <span className="seeker-dashboard__avatar" aria-hidden="true">{avatarLabel}</span>
             <span><strong>{displayName ?? copy.overview.eyebrow}</strong><small>{roleLabel}</small></span>
           </a>
         </div>
@@ -184,7 +184,7 @@ export function SeekerNavigation({ locale, activePath, authClient, apiOrigin, on
         </ul>
         <div className="seeker-dashboard__nav-footer">
           <div className="seeker-dashboard__nav-footer-profile">
-            <span className="seeker-dashboard__avatar" aria-hidden="true"><img src={canonicalAvatar} alt="" /></span>
+            <span className="seeker-dashboard__avatar" aria-hidden="true">{avatarLabel}</span>
             <span><strong>{displayName ?? copy.overview.eyebrow}</strong><small>{roleLabel}</small></span>
           </div>
           <a href={localeForSeekerPath(locale, '/')} onClick={() => setMenuOpen(false)}>{websiteLabel}<span aria-hidden="true">↗</span></a>
