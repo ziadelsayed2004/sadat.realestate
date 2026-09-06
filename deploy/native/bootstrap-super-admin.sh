@@ -60,8 +60,15 @@ if ! bootstrap_output=$(runuser -u elsadat --preserve-environment -- \
 fi
 printf '%s\n' "$bootstrap_output"
 
-if [[ "$bootstrap_output" == ADMIN_BOOTSTRAP_OK* ]]; then
-  echo 'SUPER_ADMIN_READY login=https://elsadatrealestate.com/auth/login?lang=ar'
-else
-  echo 'SUPER_ADMIN_ALREADY_EXISTS The entered credentials were not applied; use the original account.'
-fi
+case "$bootstrap_output" in
+  ADMIN_BOOTSTRAP_OK*)
+    echo 'SUPER_ADMIN_READY login=https://elsadatrealestate.com/auth/login?lang=ar'
+    ;;
+  ADMIN_BOOTSTRAP_ALREADY_COMPLETED)
+    echo 'SUPER_ADMIN_BOOTSTRAP_ALREADY_COMPLETED The entered credentials were not applied; use password recovery for the original account.'
+    ;;
+  *)
+    echo 'SUPER_ADMIN_BOOTSTRAP_UNEXPECTED_RESULT' >&2
+    exit 1
+    ;;
+esac

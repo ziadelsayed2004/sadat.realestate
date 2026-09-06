@@ -36,6 +36,19 @@ function isDuplicateKey(error: unknown): boolean {
   return typeof error === 'object' && error !== null && 'code' in error && error.code === 11000;
 }
 
+export async function nonSyntheticAdministratorExists(
+  users: IdentityModels['User']['collection'],
+  session: ClientSession
+): Promise<boolean> {
+  // `synthetic` is an operations-only marker written by the guarded demo seed,
+  // not a public User schema field. Query the native collection so Mongoose's
+  // strict query casting cannot remove it and turn this into "any admin exists".
+  return Boolean(await users.findOne(
+    { roleType: 'admin', synthetic: { $ne: true } },
+    { session, projection: { _id: 1 } }
+  ));
+}
+
 export function createAdminRepository(transaction: AdminBootstrapTransaction): AdminRepository {
   return {
     async createFirstSuperAdmin(input) {
@@ -72,10 +85,7 @@ function mongooseStore(
       // guarded Super Admin. Every administrator created by a product flow or
       // an earlier manual database write lacks this trusted seed marker and
       // still fails the bootstrap closed.
-      return Boolean(await identityModels.User.exists({
-        roleType: 'admin',
-        synthetic: { $ne: true }
-      }).session(session));
+      return nonSyntheticAdministratorExists(identityModels.User.collection, session);
     },
     async create(input) {
       const userId = new Types.ObjectId();

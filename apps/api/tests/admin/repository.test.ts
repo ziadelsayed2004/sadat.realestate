@@ -2,9 +2,11 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   createAdminRepository,
+  nonSyntheticAdministratorExists,
   type AdminBootstrapStore,
   type CreateFirstSuperAdminInput
 } from '../../src/modules/admin/repository.js';
+import type { ClientSession } from 'mongoose';
 
 const input: CreateFirstSuperAdminInput = {
   email: 'admin@example.com',
@@ -69,4 +71,24 @@ test('classifies the unique-key loser as a concurrent bootstrap conflict', async
 test('does not hide non-duplicate persistence failures', async () => {
   const repository = createAdminRepository(async () => { throw new Error('transaction unavailable'); });
   await assert.rejects(repository.createFirstSuperAdmin(input), /transaction unavailable/);
+});
+
+test('checks the native identity collection so synthetic demo administrators do not block bootstrap', async () => {
+  let receivedFilter: unknown;
+  let receivedOptions: unknown;
+  const users = {
+    async findOne(filter: unknown, options: unknown) {
+      receivedFilter = filter;
+      receivedOptions = options;
+      return null;
+    }
+  };
+  const session = { id: 'bootstrap-session' };
+
+  assert.equal(await nonSyntheticAdministratorExists(
+    users as Parameters<typeof nonSyntheticAdministratorExists>[0],
+    session as unknown as ClientSession
+  ), false);
+  assert.deepEqual(receivedFilter, { roleType: 'admin', synthetic: { $ne: true } });
+  assert.deepEqual(receivedOptions, { session, projection: { _id: 1 } });
 });
