@@ -350,6 +350,7 @@
   border-radius: 0.875rem 0.875rem 0 0;
   box-shadow: 0 0.2rem 0.8rem rgb(23 35 61 / 6%);
   backdrop-filter: blur(0.75rem);
+  -webkit-backdrop-filter: blur(0.75rem);
   scroll-padding-inline: 0.5rem;
   scrollbar-width: thin;
 }
