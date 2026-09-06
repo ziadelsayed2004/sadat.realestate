@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T23:46:49.473Z",
+  "generatedAt": "2026-09-06T05:16:18.037Z",
   "baseUrl": "http://127.0.0.1:4180",
   "cases": 72,
   "passed": 72,
@@ -171,7 +171,7 @@
       "errors": [],
       "clientWidth": 1440,
       "scrollWidth": 1440,
-      "scrollHeight": 1802,
+      "scrollHeight": 1787,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [],
@@ -185,7 +185,7 @@
       "errors": [],
       "clientWidth": 1440,
       "scrollWidth": 1440,
-      "scrollHeight": 1839,
+      "scrollHeight": 1764,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [],
@@ -676,12 +676,12 @@
           "selector": "strong",
           "left": -37,
           "right": 25,
-          "width": 63
+          "width": 61
         },
         {
           "selector": "span",
-          "left": -21,
-          "right": 9,
+          "left": -22,
+          "right": 10,
           "width": 31
         },
         {
@@ -698,14 +698,14 @@
         },
         {
           "selector": "strong",
-          "left": -197,
-          "right": -115,
-          "width": 81
+          "left": -202,
+          "right": -110,
+          "width": 92
         },
         {
           "selector": "span",
-          "left": -171,
-          "right": -141,
+          "left": -172,
+          "right": -140,
           "width": 31
         },
         {
@@ -722,14 +722,14 @@
         },
         {
           "selector": "strong",
-          "left": -318,
-          "right": -294,
-          "width": 23
+          "left": -319,
+          "right": -293,
+          "width": 26
         },
         {
           "selector": "span",
-          "left": -321,
-          "right": -291,
+          "left": -322,
+          "right": -290,
           "width": 31
         }
       ],
@@ -994,15 +994,15 @@
         },
         {
           "selector": "strong",
-          "left": 1507,
-          "right": 1569,
-          "width": 61
+          "left": 1504,
+          "right": 1572,
+          "width": 67
         },
         {
           "selector": "span",
-          "left": 1513,
-          "right": 1563,
-          "width": 51
+          "left": 1511,
+          "right": 1565,
+          "width": 53
         },
         {
           "selector": "button",
@@ -1018,15 +1018,15 @@
         },
         {
           "selector": "strong",
-          "left": 1660,
-          "right": 1716,
-          "width": 56
+          "left": 1657,
+          "right": 1719,
+          "width": 61
         },
         {
           "selector": "span",
-          "left": 1663,
-          "right": 1713,
-          "width": 51
+          "left": 1661,
+          "right": 1715,
+          "width": 53
         },
         {
           "selector": "button",
@@ -1042,9 +1042,9 @@
         },
         {
           "selector": "strong",
-          "left": 1825,
-          "right": 1851,
-          "width": 25
+          "left": 1824,
+          "right": 1852,
+          "width": 27
         }
       ],
       "escapedPropertyBadges": []
@@ -1057,7 +1057,7 @@
       "errors": [],
       "clientWidth": 1440,
       "scrollWidth": 1440,
-      "scrollHeight": 3045,
+      "scrollHeight": 3042,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [],
@@ -1113,7 +1113,7 @@
       "errors": [],
       "clientWidth": 1440,
       "scrollWidth": 1440,
-      "scrollHeight": 1826,
+      "scrollHeight": 1787,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [],
@@ -1127,7 +1127,7 @@
       "errors": [],
       "clientWidth": 1440,
       "scrollWidth": 1440,
-      "scrollHeight": 1848,
+      "scrollHeight": 1773,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [],

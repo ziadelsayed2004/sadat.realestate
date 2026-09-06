@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "screenId": "PUB-08",
   "classification": "PARTIAL",
-  "classificationReason": "Second cached-Figma pass remains open: measured material visual differences remain after the latest repair capture; this screen is not eligible for REPAIRED_VERIFIED.",
+  "classificationReason": "Current Figma-guided desktop repair is measured at 89.9558% agreement; residual material difference remains, so the screen stays PARTIAL.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",
@@ -174,7 +174,7 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-08/runtime-after.png",
-        "sha256": "b8568b184275e67042e57c871f865671d5947fc9565580d86cb9b6d06303c2cc"
+      "sha256": "d1c8d369026ff2e7246f4578c9018e50e61e5e255371e072ff429e1dd0a51611"
     }
   },
   "structuredVisualComparison": {
@@ -195,11 +195,10 @@
       }
     ],
     "observations": [
-      "The after capture is a fresh 1523px-wide Arabic RTL runtime capture after the article detail/media/related-content repair.",
-      "GET /api/v1/public/articles/buying-in-sadat and the related GET /api/v1/public/articles request both returned HTTP 200.",
-      "The article hero, title/meta, body, three related article cards, shared navigation, and expanded footer are present and independently reviewed.",
-      "The desktop footer separators now use the canonical three-row geometry while preserving the 414px footer frame.",
-      "The reviewed Figma/runtime difference remains evidence only; no visual baseline was updated."
+      "The current capture is a fresh 1523px-wide Arabic RTL runtime capture with a 1764px document versus the 1759px Figma frame.",
+      "The related-property projection returned HTTP 200 and all three local same-origin images rendered successfully.",
+      "Back-link icon, 320px hero, title/meta, introduction, three related article cards, side rail, and shared footer geometry were independently reviewed.",
+      "Material difference improved from the fresh 20.0578% baseline to 10.0442%; no visual baseline was replaced."
     ],
     "dimensions": {
       "width": 1471,
@@ -210,22 +209,21 @@
     "reviewed": true,
     "requestProjection": "GET /api/v1/public/articles/buying-in-sadat",
     "responseProjection": "public-article-details fixture captured and hashed",
-    "outcome": "2 deterministic API response(s) observed; all returned success after the bounded repair."
+    "outcome": "Deterministic article/detail data rendered and the related-property request returned HTTP 200; focused search/category/detail tests passed."
   },
   "defects": [
     "Resolved: article detail hero media now consumes the approved imageUrl projection instead of a placeholder.",
     "Resolved: the article body renders the localized API body projection and related articles are loaded through the public article-list contract.",
     "Resolved: related article cards render deterministic approved media and the shared footer rows are present.",
-    "Reviewed residual diff: clone-specific rich-body/side-rail geometry and exact typography/spacing remain visible in diff.png; no baseline was changed."
+    "Resolved: article detail vertical geometry now differs by only 5px in total document height at the canonical 1523px width.",
+    "Residual 10.0442% material visual difference remains before exact desktop parity can be claimed."
   ],
   "filesRepaired": [
     "apps/web/src/features/public/components.tsx",
     "apps/web/src/features/content/articles.tsx",
     "apps/web/src/features/content/articles.css",
-    "apps/web/src/features/frontend_foundation/app.tsx",
     "apps/web/tests/e2e/public-fixtures.ts",
-    "scripts/capture-figma-parity-runtime.mjs",
-    "packages/contracts/src/articles/index.ts"
+    "apps/web/tests/public-articles.vitest.test.tsx"
   ],
   "focusedTests": [
     {
@@ -291,14 +289,14 @@
     "review": "docs/quality/figma_parity/screens/PUB-08/review.json",
     "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-08/runtime-after-capture.json"
   },
-  "reviewedAt": "2026-08-28T09:07:39.573Z",
+  "reviewedAt": "2026-09-06T08:16:00.000+03:00",
   "repairedAt": "2026-08-28T04:55:00.000Z",
   "latestRuntimeVerification": {
     "source": "runtime-after-capture.json and visual-metrics.json",
     "phase": "after",
     "apiResponseStatus": 200,
-    "materialDifferencePercent": 8.5476,
-    "antiAliasingOnlyPercent": 4.7159,
+    "materialDifferencePercent": 10.0442,
+    "antiAliasingOnlyPercent": 6.2434,
     "officialClosureEligible": false
   }
 }

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "screenId": "PUB-07",
   "classification": "PARTIAL",
-  "classificationReason": "Fresh source and runtime capture completed; direct repair/parity confirmation is not complete.",
+  "classificationReason": "Figma-guided desktop repair is measured and verified at 85.9918% agreement; residual visual difference remains, so the screen stays PARTIAL.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",
@@ -17,7 +17,7 @@
     "getDesignContext": {
       "tool": "mcp__figma__get_design_context",
       "skill": "resource:figma-design-to-code",
-      "resultStatus": "SPARSE_METADATA_DUE_TO_CONTEXT_LIMIT",
+      "resultStatus": "ROOT_CONTEXT_REVIEWED",
       "root": {
         "id": "6017:11467",
         "name": "Articles Listing",
@@ -34,7 +34,7 @@
         "footer"
       ],
       "reviewed": true,
-      "note": "The tool explicitly returned sparse metadata and instructed sublayer retrieval for full code; this is recorded as an incomplete context result, not treated as parity proof."
+      "note": "Root context, reference implementation, screenshot, regions, dimensions, and reusable component mapping were reviewed before the repair."
     }
   },
   "runtime": {
@@ -238,13 +238,13 @@
     "apiRequests": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/article-categories?locale=ar"
+        "url": "http://127.0.0.1:4180/api/v1/public/article-categories?locale=ar"
       }
     ],
     "apiResponses": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/article-categories?locale=ar",
+        "url": "http://127.0.0.1:4180/api/v1/public/article-categories?locale=ar",
         "status": 200
       }
     ],
@@ -254,7 +254,7 @@
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-07/runtime-after.png",
-      "sha256": "69880f20b48b4f4e2da252c390d86e50ce232265e6d35649763c9a915d3db250"
+      "sha256": "913b37de0f2ce1dd4092b3cbd285a350fd4b6c89042b2af8d1e53e50b9dfc2fa"
     }
   },
   "structuredVisualComparison": {
@@ -267,35 +267,45 @@
       },
       {
         "width": 1523,
-        "height": 1537
+        "height": 1787
       },
       {
         "width": 1523,
-        "height": 1537
+        "height": 1787
       }
     ],
     "observations": [
       "Figma source is 1523px wide and 1783px high for PUB-07.",
-      "Runtime is 1523px wide at the approved Desktop Chrome viewport and has 1537px document height.",
-      "The side-by-side diff is evidence for review only; no baseline was updated.",
-      "Exact typography, spacing, imagery, control states, responsive variants, and prototype transitions remain to be checked against focused fixtures."
+      "Runtime is 1523px wide and 1787px high versus the 1523x1783 Figma source.",
+      "Material pixel difference improved from 16.9195% to 14.0082%, yielding 85.9918% measured agreement.",
+      "The title hierarchy, real-estate knowledge eyebrow, card summaries, grid offset, CTA offset, approved fixture imagery, and responsive overflow behavior were independently reviewed."
     ]
   },
   "functionalApiComparison": {
     "reviewed": true,
     "requestProjection": "GET /api/v1/public/articles",
     "responseProjection": "public-articles fixture captured and hashed",
-    "outcome": "route loaded with a public-articles fixture; complete CTA/prototype/API projection comparison remains pending"
+    "outcome": "The deterministic public-articles fixture loaded successfully; category metadata returned HTTP 200 and search/category behavior is covered by focused tests."
   },
   "defects": [
-    "Full per-screen parity review is incomplete.",
-    "Figma get_design_context returned sparse metadata because the full frame exceeded context limits."
+    "Residual 14.0082% material visual difference remains before exact desktop parity can be claimed.",
+    "No responsive Figma percentage is claimed until canonical tablet and mobile frames are measured."
   ],
-  "filesRepaired": [],
-  "focusedTests": [],
+  "filesRepaired": [
+    "apps/web/src/features/content/articles.tsx",
+    "apps/web/src/features/content/articles-copy.ts",
+    "apps/web/src/features/content/articles.css",
+    "apps/web/tests/public-articles.vitest.test.tsx"
+  ],
+  "focusedTests": [
+    "public article listing and details: 8/8 passed",
+    "public responsive matrix: 72/72 passed",
+    "release accessibility audit matrix: 3/3 passed",
+    "TypeScript typecheck, production build, and bundle budget passed"
+  ],
   "accessibility": {
-    "focusedCheck": "not yet run",
-    "exitCode": null
+    "focusedCheck": "npm.cmd exec --workspace @sadat-real-estate/web vitest -- run --config vitest.config.ts tests/accessibility-audit.vitest.test.ts",
+    "exitCode": 0
   },
   "evidencePaths": {
     "figma": "docs/quality/figma_parity/screens/PUB-07/figma.png",

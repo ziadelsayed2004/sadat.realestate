@@ -3,7 +3,7 @@
   "screenId": "PUB-08",
   "phase": "after",
   "runtime": {
-    "route": "/articles/buying-in-sadat?lang=ar",
+    "route": "/articles/buying-in-sadat",
     "locale": "ar",
     "direction": "rtl",
     "viewport": {
@@ -14,17 +14,17 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "4a4d9f867b0dc38c6eab5a63c59b2579556cd0a57e94bc77659de65d74cfb00d",
-    "afterHash": "a4b0eb1d52fd7f61f11db808b552039e18f0fb1b71dd27df6c6e1a62f193ec8c",
+    "afterHash": "d1c8d369026ff2e7246f4578c9018e50e61e5e255371e072ff429e1dd0a51611",
     "requestedApi": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=3"
+        "url": "http://127.0.0.1:4180/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=3"
       }
     ],
     "apiResponses": [
       {
         "method": "GET",
-        "url": "http://127.0.0.1:4173/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=3",
+        "url": "http://127.0.0.1:4180/api/v1/public/properties?sort=publishedAt&direction=desc&page=1&limit=3",
         "status": 200
       }
     ]
@@ -34,7 +34,7 @@
     "navs": 1,
     "sections": 2,
     "cards": 30,
-    "images": 10,
+    "images": 14,
     "forms": 0
   },
   "fonts": {
@@ -2145,64 +2145,88 @@
   },
   "images": [
     {
-      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4180/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4180/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub08-e.png",
+      "src": "http://127.0.0.1:4180/assets/clone/pub08-e.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub08-f.png",
+      "src": "http://127.0.0.1:4180/assets/clone/pub08-f.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub08-g.png",
+      "src": "http://127.0.0.1:4180/assets/clone/pub08-g.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub07-a.png",
+      "src": "http://127.0.0.1:4180/assets/clone/pub07-a.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub07-b.png",
+      "src": "http://127.0.0.1:4180/assets/clone/pub07-b.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub07-c.png",
+      "src": "http://127.0.0.1:4180/assets/clone/pub07-c.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub07-d.png",
+      "src": "http://127.0.0.1:4180/assets/clone/pub07-d.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4180/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
+    },
+    {
+      "src": "http://127.0.0.1:4180/assets/figma/public-footer-phone.svg",
+      "complete": true,
+      "decoded": true,
+      "loading": "auto"
+    },
+    {
+      "src": "http://127.0.0.1:4180/assets/figma/public-footer-whatsapp.svg",
+      "complete": true,
+      "decoded": true,
+      "loading": "auto"
+    },
+    {
+      "src": "http://127.0.0.1:4180/assets/figma/public-footer-location.svg",
+      "complete": true,
+      "decoded": true,
+      "loading": "auto"
+    },
+    {
+      "src": "http://127.0.0.1:4180/assets/figma/public-footer-x.svg",
+      "complete": true,
+      "decoded": true,
+      "loading": "auto"
     }
   ],
   "transitions": {
@@ -2305,27 +2329,27 @@
       },
       {
         "text": "العقارات",
-        "href": "/properties"
+        "href": "/properties?lang=ar"
       },
       {
         "text": "المطورون",
-        "href": "/developers"
+        "href": "/developers?lang=ar"
       },
       {
         "text": "المقالات",
-        "href": "/articles"
+        "href": "/articles?lang=ar"
       },
       {
         "text": "الكوميونتي",
-        "href": "/community"
+        "href": "/community?lang=ar"
       },
       {
         "text": "من نحن",
-        "href": "/about"
+        "href": "/about?lang=ar"
       },
       {
         "text": "فريق العمل",
-        "href": "/team"
+        "href": "/team?lang=ar"
       },
       {
         "text": "01001234567",
@@ -2342,6 +2366,10 @@
       {
         "text": "",
         "href": "https://instagram.com"
+      },
+      {
+        "text": "",
+        "href": "https://x.com"
       },
       {
         "text": "",
@@ -2395,12 +2423,12 @@
       },
       {
         "width": 1523,
-        "height": 1839
+        "height": 1764
       }
     ],
     "dimensions": {
       "width": 1471,
-      "height": 669
+      "height": 644
     },
     "diffPath": "docs/quality/figma_parity/screens/PUB-08/diff.png",
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-08/visual-metrics.json",
@@ -2408,8 +2436,8 @@
       "comparedWidth": 1523,
       "comparedHeight": 1759,
       "comparedPixels": 2678957,
-      "materialDifferencePercent": 19.0309,
-      "antiAliasingOnlyPercent": 5.3647,
+      "materialDifferencePercent": 10.0442,
+      "antiAliasingOnlyPercent": 6.2434,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

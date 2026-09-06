@@ -6,7 +6,7 @@
 <h1>تقرير كل الصفحات — آخر حالة مثبتة</h1>
 <p>6 سبتمبر 2026 · 131 شاشة/حالة. المرجع البصري المعتمد هو ملف Figma <code>Odl1Epn2u6lIEuIMmABT7o</code>، ودليل المستخدم مرجع للآلية مع اعتماد البريد الإلكتروني وOTP بدل التسجيل القديم بالهاتف.</p>
 <section><h2>الخلاصة بالأرقام</h2><div class="cards">
-<div class="card"><strong>131</strong>إجمالي الشاشات/الحالات المسجلة</div><div class="card"><strong>6/131</strong>نسب Figma الحالية المقاسة للديسكتوب</div><div class="card"><strong>0/131</strong>نسب Figma الحالية المقاسة للريسبونسيف</div><div class="card"><strong>72/72</strong>فحص صفحات Public كاملًا + 72/72 للفوتر</div></div>
+<div class="card"><strong>131</strong>إجمالي الشاشات/الحالات المسجلة</div><div class="card"><strong>9/131</strong>نسب Figma الحالية المقاسة للديسكتوب</div><div class="card"><strong>0/131</strong>نسب Figma الحالية المقاسة للريسبونسيف</div><div class="card"><strong>72/72</strong>فحص صفحات Public كاملًا + 72/72 للفوتر</div></div>
 <p class="warn"><strong>لا توجد حتى الآن نسبة مطابقة حديثة موثوقة للصفحات الكاملة؛ «غير مقاسة» لا تعني 0% ولا 100%.</strong> القياسات التاريخية تعرض فرقًا قديمًا فقط، ولا يصح تحويلها إلى نسبة حالية بطرحها من 100.</p><p>public: 12 · auth: 19 · seeker: 10 · provider: 24 · admin: 66</p></section>
 <section><h2>تحديث الفوتر العام PUB-01 إلى PUB-12</h2><p class="ok"><strong>تم إصلاح الفوتر المشترك والتحقق منه على كل صفحات Public الاثنتي عشرة.</strong></p>
 <p>طابق التنفيذ بنية عقدتي Figma: الديسكتوب <code>6017:11365</code> والموبايل <code>6129:7924</code> داخل الشاشة <code>6017:110792</code>. أُصلح ترتيب RTL، وتقسيم الأعمدة 4/2/1 للديسكتوب/التابلت/الموبايل، وصف المتابعة والحقوق، والروابط الحافظة للغة، وأيقونات التواصل والنسخة المختصرة للموبايل.</p><p>72/72 Playwright cases passed across 12 public routes, AR/EN and widths 1440/768/390. No horizontal overflow, broken footer images, locale loss, browser errors or structural mismatches. 12/12 focused component tests, targeted lint, diff check, full build and runtime smoke passed.</p>
@@ -64,27 +64,27 @@
 </tr><tr data-surface="public">
   <td><strong>PUB-07</strong><br>قائمة المقالات</td>
   <td><code>/articles</code></td>
+  <td>85.9918%</td>
   <td>غير مقاسة حاليًا</td>
-  <td>غير مقاسة حاليًا</td>
-  <td>16.5285% اختلاف تاريخي — same-width source/runtime canvas comparison over the overlapping document height</td>
+  <td>14.0082% اختلاف تاريخي — same-width source/runtime canvas comparison over the overlapping document height</td>
   <td>خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
   <td>مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات — الفوتر المشترك فقط: ناجح ضمن 72/72 حالة على 12 صفحة ولغتين وثلاثة مقاسات؛ لا يمثل قياس الصفحة كاملة.</td>
 </tr><tr data-surface="public">
   <td><strong>PUB-08</strong><br>تفاصيل المقال</td>
   <td><code>/articles/:slug</code></td>
+  <td>89.9558%</td>
   <td>غير مقاسة حاليًا</td>
-  <td>غير مقاسة حاليًا</td>
-  <td>19.0309% اختلاف تاريخي — same-width source/runtime canvas comparison over the overlapping document height</td>
+  <td>10.0442% اختلاف تاريخي — same-width source/runtime canvas comparison over the overlapping document height</td>
   <td>خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
   <td>مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات — الفوتر المشترك فقط: ناجح ضمن 72/72 حالة على 12 صفحة ولغتين وثلاثة مقاسات؛ لا يمثل قياس الصفحة كاملة.</td>
 </tr><tr data-surface="public">
   <td><strong>PUB-09</strong><br>الكوميونيتي</td>
   <td><code>/community</code></td>
+  <td>94.545%</td>
   <td>غير مقاسة حاليًا</td>
-  <td>غير مقاسة حاليًا</td>
-  <td>4.9396% اختلاف تاريخي — same-width source/runtime canvas comparison over the overlapping document height</td>
-  <td>خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
-  <td>مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات — الفوتر المشترك فقط: ناجح ضمن 72/72 حالة على 12 صفحة ولغتين وثلاثة مقاسات؛ لا يمثل قياس الصفحة كاملة.</td>
+  <td>5.455% اختلاف تاريخي — same-width source/runtime canvas comparison over the overlapping document height</td>
+  <td>قائمة المنشورات والفلاتر وبوابة المصادقة وعقد إنشاء المنشور مدققة باختبارات مركزة ناجحة<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
+  <td>مصفوفة المتصفح ناجحة 12/12 للديسكتوب والتابلت والموبايل بالعربية والإنجليزية؛ لا توجد نسبة فيجما موحدة للمقاسات غير الديسكتوب — الفوتر المشترك فقط: ناجح ضمن 72/72 حالة على 12 صفحة ولغتين وثلاثة مقاسات؛ لا يمثل قياس الصفحة كاملة.</td>
 </tr><tr data-surface="public">
   <td><strong>PUB-10</strong><br>إنشاء منشور</td>
   <td><code>/community?create=1</code></td>

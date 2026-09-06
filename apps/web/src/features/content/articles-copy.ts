@@ -1,6 +1,7 @@
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
 
 export interface PublicArticlesCopy {
+  readonly eyebrow: string;
   readonly title: string;
   readonly subtitle: string;
   readonly searchLabel: string;
@@ -45,6 +46,7 @@ export interface PublicArticlesCopy {
 
 const copyByLocale: Readonly<Record<SupportedLocale, PublicArticlesCopy>> = {
   ar: {
+    eyebrow: '\u0645\u0639\u0631\u0641\u0629 \u0639\u0642\u0627\u0631\u064a\u0629',
     title: 'مقالات ومحتوى متخصص',
     subtitle: 'دليلك الموثوق في سوق عقارات مدينة السادات',
     searchLabel: 'البحث في المقالات',
@@ -87,6 +89,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, PublicArticlesCopy>> = {
     footerLinks: 'روابط المنصة'
   },
   en: {
+    eyebrow: 'Real-estate knowledge',
     title: 'Articles and expert content',
     subtitle: 'Your trusted guide to the Sadat City real-estate market',
     searchLabel: 'Search articles',

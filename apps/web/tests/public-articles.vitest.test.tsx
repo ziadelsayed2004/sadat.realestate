@@ -98,6 +98,7 @@ describe('public article listing and details', () => {
     const copy = getPublicArticlesCopy(locale);
 
     expect(result.direction).toBe(locale === 'ar' ? 'rtl' : 'ltr');
+    expect(screen.getByText(copy.eyebrow)).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: copy.title, level: 1 })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Buying in Sadat City' })).toHaveAttribute('href', '/articles/buying-in-sadat');
     expect(screen.getAllByText('Buying tips').length).toBeGreaterThan(0);

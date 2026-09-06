@@ -296,7 +296,7 @@ export function PublicArticles({
     <div className="public-articles" data-page="public-articles" data-articles-state={view}>
       <PublicSiteHeader locale={locale} copy={homepageCopy} activePath={PUBLIC_ARTICLES_PATH} />
       <section className="public-articles__intro" aria-labelledby="public-articles-title">
-        <p className="public-articles__eyebrow">{homepageCopy.nav.articles}</p>
+        <p className="public-articles__eyebrow">{copy.eyebrow}</p>
         <h1 id="public-articles-title">{copy.title}</h1>
         <p>{copy.subtitle}</p>
         <label className="public-articles__search-label" htmlFor="public-articles-search">{copy.searchLabel}</label>
@@ -501,7 +501,10 @@ export function PublicArticleDetails({
     <div className="public-article-details" data-page="public-article-details" data-article-details-state={view}>
       <PublicSiteHeader locale={locale} copy={homepageCopy} activePath={PUBLIC_ARTICLES_PATH} />
       <div className="public-article-details__content">
-        <a className="public-article-details__back" href={PUBLIC_ARTICLES_PATH}>{copy.backToArticles}</a>
+        <a className="public-article-details__back" href={PUBLIC_ARTICLES_PATH}>
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m6 3 5 5-5 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" /></svg>
+          <span>{copy.backToArticles}</span>
+        </a>
         {view === 'not_found' ? <NotFoundNotice copy={copy} /> : view === 'success' && data !== undefined ? <ArticleDetailsView article={data} locale={locale} copy={copy} categories={categories} relatedArticles={relatedData} relatedProperties={relatedPropertyData} /> : state === null ? null : <section className="public-article-details__state" data-state={view}><UxStateView state={view} title={state.title} message={state.body} retryLabel={copy.retryLabel} onRetry={retry}>{view === 'permission' ? <a href="/">{copy.permissionLink}</a> : null}{view === 'error' ? <button type="button" onClick={retry}>{copy.retryLabel}</button> : null}</UxStateView></section>}
       </div>
       <Footer locale={locale} copy={copy} />

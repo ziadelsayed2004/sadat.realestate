@@ -334,7 +334,10 @@
 
 .public-article-details__back {
   display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   margin-block-end: var(--space-xl);
+  color: var(--color-text-secondary);
   text-decoration: none;
 }
 
@@ -462,7 +465,7 @@
 
   .public-articles__intro {
     gap: 0.5rem;
-    padding-block: 2.1875rem 0;
+    padding-block: 2.5rem 0;
     text-align: start;
   }
 
@@ -476,7 +479,7 @@
   }
 
   .public-articles__intro h1 {
-    font-size: 2.5rem;
+    font-size: 1.875rem;
     line-height: 1.3;
   }
 
@@ -496,7 +499,7 @@
 
   .public-articles__categories {
     gap: 0.5rem;
-    padding-block: 2.5625rem 1.4375rem;
+    padding-block: 3.3125rem 1.4375rem;
   }
 
   [dir="rtl"] .public-articles__categories {
@@ -580,8 +583,11 @@
 
   .public-articles__card-summary {
     min-block-size: 0;
+    overflow: hidden;
     font-size: 0.875rem;
     line-height: 1.55;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .public-articles__card-meta {
@@ -624,7 +630,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
-    margin-block: 3.6875rem 7.5rem;
+    margin-block: 4.125rem 7.0625rem;
     padding: 1.5rem;
     border-radius: 1rem;
   }
@@ -691,10 +697,6 @@
     padding-block: 1.0625rem;
   }
 
-  .public-articles__cta {
-    margin-block-start: 3.6875rem;
-  }
-
   .public-articles__grid .public-articles__card-meta,
   .public-article-details__related .public-articles__card-meta {
     display: none;
@@ -706,7 +708,7 @@
 
   .public-article-details__content {
     width: min(calc(100% - 2rem), 77rem);
-    padding-block: 2rem 7.5rem;
+    padding-block: 2.5rem;
   }
 
   .public-article-details__back {
@@ -922,6 +924,7 @@
   .public-article-details__related-grid .public-articles__card-summary {
     font-size: 0.8125rem;
     line-height: 1.5;
+    white-space: normal;
   }
 
 }

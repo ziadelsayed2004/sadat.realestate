@@ -13,8 +13,8 @@
   "comparedWidth": 1524,
   "comparedHeight": 1999,
   "comparedPixels": 3046476,
-  "materialDifferencePercent": 5.5267,
-  "antiAliasingOnlyPercent": 63.4739,
+  "materialDifferencePercent": 6.0702,
+  "antiAliasingOnlyPercent": 63.3358,
   "threshold": {
     "materialRgbSumGreaterThan": 24,
     "antiAliasingRgbSumGreaterThan": 3

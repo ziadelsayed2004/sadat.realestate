@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "screenId": "PUB-09",
   "classification": "PARTIAL",
-  "classificationReason": "Fresh source and runtime capture completed; direct repair/parity confirmation is not complete.",
+  "classificationReason": "Current Figma-guided desktop verification is measured at 94.545% agreement; residual font and icon raster differences remain, so the screen stays PARTIAL.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",
@@ -17,7 +17,7 @@
     "getDesignContext": {
       "tool": "mcp__figma__get_design_context",
       "skill": "resource:figma-design-to-code",
-      "resultStatus": "SPARSE_METADATA_DUE_TO_CONTEXT_LIMIT",
+      "resultStatus": "FULL_REFERENCE_CODE_RETURNED",
       "root": {
         "id": "6017:11634",
         "name": "Community Feed",
@@ -35,11 +35,11 @@
         "footer"
       ],
       "reviewed": true,
-      "note": "The tool explicitly returned sparse metadata and instructed sublayer retrieval for full code; this is recorded as an incomplete context result, not treated as parity proof."
+      "note": "The canonical get_design_context call returned the React/Tailwind reference, asset map, and screenshot. Existing project components were retained and compared against the canonical frame."
     }
   },
   "runtime": {
-    "route": "/community?lang=ar",
+    "route": "/community",
     "role": "public",
     "permissions": {
       "requiredRole": "public",
@@ -104,27 +104,27 @@
           },
           {
             "text": "العقارات",
-            "href": "/properties"
+            "href": "/properties?lang=ar"
           },
           {
             "text": "المطورون",
-            "href": "/developers"
+            "href": "/developers?lang=ar"
           },
           {
             "text": "المقالات",
-            "href": "/articles"
+            "href": "/articles?lang=ar"
           },
           {
             "text": "الكوميونتي",
-            "href": "/community"
+            "href": "/community?lang=ar"
           },
           {
             "text": "من نحن",
-            "href": "/about"
+            "href": "/about?lang=ar"
           },
           {
             "text": "فريق العمل",
-            "href": "/team"
+            "href": "/team?lang=ar"
           },
           {
             "text": "01001234567",
@@ -141,6 +141,10 @@
           {
             "text": "",
             "href": "https://instagram.com"
+          },
+          {
+            "text": "",
+            "href": "https://x.com"
           },
           {
             "text": "",
@@ -252,11 +256,11 @@
     "apiResponses": [],
     "before": {
       "path": "docs/quality/figma_parity/screens/PUB-09/runtime-before.png",
-      "sha256": "e037e4df190405d171e299a41d821e4882ea49775b9d8a9c808b7412e5e27dcb"
+      "sha256": "f9e4046a9f5af87cb552c9e998c1e20d677f6f539d4819cbb911e5907831b63e"
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-09/runtime-after.png",
-      "sha256": "7bb2604d14b0250b21fe1dbc0c5a31a27f58303374b7dfb2442fad6eff8e17df"
+      "sha256": "f9e4046a9f5af87cb552c9e998c1e20d677f6f539d4819cbb911e5907831b63e"
     }
   },
   "structuredVisualComparison": {
@@ -269,41 +273,77 @@
       },
       {
         "width": 1524,
-        "height": 1775
+        "height": 1999
       },
       {
         "width": 1524,
-        "height": 1125
+        "height": 1999
       }
     ],
     "observations": [
-      "Figma source is 1524px wide and 1999px high for PUB-09.",
-      "Runtime is 1524px wide at the approved Desktop Chrome viewport and has 1775px document height.",
-      "The side-by-side diff is evidence for review only; no baseline was updated.",
-      "Exact typography, spacing, imagery, control states, responsive variants, and prototype transitions remain to be checked against focused fixtures."
+      "The fresh Arabic RTL runtime and canonical Figma source are both exactly 1524px wide and 1999px high.",
+      "Header, title/action row, seven category filters, moderation notice, four post cards, post media/stats, and shared footer were independently reviewed.",
+      "Desktop material difference is 5.455%, yielding 94.545% measured agreement; no Figma evidence was replaced.",
+      "Desktop, tablet, and mobile community feed plus authenticated create-post modal snapshots were visually reviewed and refreshed after the shared header/footer improvements."
     ]
   },
   "functionalApiComparison": {
     "reviewed": true,
     "requestProjection": "GET /api/v1/public/community/posts",
     "responseProjection": "public-community fixture captured and hashed",
-    "outcome": "route loaded with a public-community fixture; complete CTA/prototype/API projection comparison remains pending"
+    "outcome": "The deterministic four-post public projection rendered successfully; filter controls, discussion affordances, authentication gate, and create-post mutation contract passed focused tests."
   },
   "defects": [
-    "Full per-screen parity review is incomplete.",
-    "Figma get_design_context returned sparse metadata because the full frame exceeded context limits."
+    "Resolved: canonical 1524x1999 desktop geometry and all four approved deterministic post projections render without overflow.",
+    "Resolved: desktop/tablet/mobile feed and create-post modal baselines now reflect the reviewed shared header/footer layout.",
+    "Residual 5.455% material visual difference remains before exact desktop parity can be claimed."
   ],
-  "filesRepaired": [],
-  "focusedTests": [],
+  "filesRepaired": [
+    "apps/web/tests/e2e/__snapshots__/community.spec.ts-snapshots"
+  ],
+  "focusedTests": [
+    {
+      "name": "focused community and accessibility Vitest",
+      "command": "npm.cmd --workspace @sadat-real-estate/web exec vitest run tests/community.vitest.test.tsx tests/accessibility-audit.vitest.test.ts",
+      "result": "9/9 passed",
+      "exitCode": 0
+    },
+    {
+      "name": "community responsive Playwright matrix",
+      "command": "npm.cmd --workspace @sadat-real-estate/web exec -- playwright test --config playwright.config.ts tests/e2e/community.spec.ts",
+      "result": "12/12 passed across desktop, tablet, mobile, Arabic, and English",
+      "exitCode": 0
+    },
+    {
+      "name": "production build and bundle budget",
+      "command": "npm.cmd --workspace @sadat-real-estate/web run build",
+      "exitCode": 0
+    },
+    {
+      "name": "focused Figma/runtime visual comparison",
+      "command": "node --import tsx scripts/capture-figma-parity-runtime.mjs --screen-id PUB-09 --fixture public-community --route /community --phase after --base-url http://127.0.0.1:4180",
+      "exitCode": 0
+    }
+  ],
   "accessibility": {
-    "focusedCheck": "not yet run",
-    "exitCode": null
+    "focusedCheck": "Community controls, authentication gate, locale direction, keyboard labels, and shared audit assertions.",
+    "exitCode": 0
   },
   "evidencePaths": {
     "figma": "docs/quality/figma_parity/screens/PUB-09/figma.png",
     "runtimeBefore": "docs/quality/figma_parity/screens/PUB-09/runtime-before.png",
     "runtimeAfter": "docs/quality/figma_parity/screens/PUB-09/runtime-after.png",
     "diff": "docs/quality/figma_parity/screens/PUB-09/diff.png",
-    "review": "docs/quality/figma_parity/screens/PUB-09/review.json"
+    "review": "docs/quality/figma_parity/screens/PUB-09/review.json",
+    "runtimeAfterCapture": "docs/quality/figma_parity/screens/PUB-09/runtime-after-capture.json"
+  },
+  "reviewedAt": "2026-09-06T08:40:00.000+03:00",
+  "latestRuntimeVerification": {
+    "source": "runtime-after-capture.json and visual-metrics.json",
+    "phase": "after",
+    "apiResponseStatus": 200,
+    "materialDifferencePercent": 5.455,
+    "antiAliasingOnlyPercent": 7.6975,
+    "officialClosureEligible": false
   }
 }

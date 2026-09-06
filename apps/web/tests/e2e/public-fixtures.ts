@@ -1,8 +1,7 @@
 import { cmsPublicContentListSuccessEnvelopeSchema, communityPublicPostListSuccessEnvelopeSchema, publicHomepageSuccessEnvelopeSchema, publicPropertyListSuccessEnvelopeSchema } from '@sadat-real-estate/contracts';
 import { expect, type Page } from '@playwright/test';
 
-const publicAssetOrigin = process.env.PUBLIC_ASSET_ORIGIN ?? process.env.WEB_BASE_URL ?? 'http://127.0.0.1:4173';
-const publicAsset = (assetPath: string) => new URL(assetPath, publicAssetOrigin).toString();
+const publicAsset = (assetPath: string) => assetPath;
 
 export const PUBLIC_CLONE_ASSETS = Object.freeze({
   homepageHero: publicAsset('/assets/canonical/public/home-hero-sadat-city.png'),
