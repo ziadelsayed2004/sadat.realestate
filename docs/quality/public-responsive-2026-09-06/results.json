@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-05T22:39:30.852Z",
-  "baseUrl": "http://127.0.0.1:4173",
+  "generatedAt": "2026-09-05T23:46:49.473Z",
+  "baseUrl": "http://127.0.0.1:4180",
   "cases": 72,
   "passed": 72,
   "failed": 0,
@@ -143,7 +143,7 @@
       "errors": [],
       "clientWidth": 1440,
       "scrollWidth": 1440,
-      "scrollHeight": 1536,
+      "scrollHeight": 1532,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [],
@@ -255,7 +255,7 @@
       "errors": [],
       "clientWidth": 768,
       "scrollWidth": 768,
-      "scrollHeight": 6241,
+      "scrollHeight": 6180,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [
@@ -471,7 +471,7 @@
       "errors": [],
       "clientWidth": 768,
       "scrollWidth": 768,
-      "scrollHeight": 3848,
+      "scrollHeight": 3866,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [],
@@ -569,7 +569,7 @@
       "errors": [],
       "clientWidth": 390,
       "scrollWidth": 390,
-      "scrollHeight": 8175,
+      "scrollHeight": 7633,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [
@@ -587,9 +587,9 @@
         },
         {
           "selector": "strong",
-          "left": -22,
-          "right": 40,
-          "width": 61
+          "left": -23,
+          "right": 41,
+          "width": 63
         },
         {
           "selector": "small",
@@ -611,9 +611,9 @@
         },
         {
           "selector": "strong",
-          "left": -187,
-          "right": -95,
-          "width": 92
+          "left": -182,
+          "right": -100,
+          "width": 83
         },
         {
           "selector": "small",
@@ -635,9 +635,9 @@
         },
         {
           "selector": "strong",
-          "left": -304,
-          "right": -278,
-          "width": 26
+          "left": -303,
+          "right": -279,
+          "width": 23
         },
         {
           "selector": "small",
@@ -676,12 +676,12 @@
           "selector": "strong",
           "left": -37,
           "right": 25,
-          "width": 61
+          "width": 63
         },
         {
           "selector": "span",
-          "left": -22,
-          "right": 10,
+          "left": -21,
+          "right": 9,
           "width": 31
         },
         {
@@ -698,14 +698,14 @@
         },
         {
           "selector": "strong",
-          "left": -202,
-          "right": -110,
-          "width": 92
+          "left": -197,
+          "right": -115,
+          "width": 81
         },
         {
           "selector": "span",
-          "left": -172,
-          "right": -140,
+          "left": -171,
+          "right": -141,
           "width": 31
         },
         {
@@ -722,14 +722,14 @@
         },
         {
           "selector": "strong",
-          "left": -319,
-          "right": -293,
-          "width": 26
+          "left": -318,
+          "right": -294,
+          "width": 23
         },
         {
           "selector": "span",
-          "left": -322,
-          "right": -290,
+          "left": -321,
+          "right": -291,
           "width": 31
         }
       ],
@@ -858,7 +858,7 @@
       "errors": [],
       "clientWidth": 390,
       "scrollWidth": 390,
-      "scrollHeight": 4282,
+      "scrollHeight": 4246,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [],
@@ -1085,7 +1085,7 @@
       "errors": [],
       "clientWidth": 1440,
       "scrollWidth": 1440,
-      "scrollHeight": 1536,
+      "scrollHeight": 1532,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [],
@@ -1197,7 +1197,7 @@
       "errors": [],
       "clientWidth": 768,
       "scrollWidth": 768,
-      "scrollHeight": 6302,
+      "scrollHeight": 6241,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [
@@ -1413,7 +1413,7 @@
       "errors": [],
       "clientWidth": 768,
       "scrollWidth": 768,
-      "scrollHeight": 3848,
+      "scrollHeight": 3866,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [],
@@ -1511,7 +1511,7 @@
       "errors": [],
       "clientWidth": 390,
       "scrollWidth": 390,
-      "scrollHeight": 8389,
+      "scrollHeight": 8298,
       "h1Count": 1,
       "brokenImages": [],
       "overflow": [
@@ -1800,10 +1800,17 @@
       "errors": [],
       "clientWidth": 390,
       "scrollWidth": 390,
-      "scrollHeight": 4350,
+      "scrollHeight": 4314,
       "h1Count": 1,
       "brokenImages": [],
-      "overflow": [],
+      "overflow": [
+        {
+          "selector": "a",
+          "left": 338,
+          "right": 414,
+          "width": 76
+        }
+      ],
       "escapedPropertyBadges": []
     },
     {

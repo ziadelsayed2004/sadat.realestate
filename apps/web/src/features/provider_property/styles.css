@@ -556,3 +556,34 @@
   .provider-property-state__actions > a,
   .provider-property-state__actions > button { width: 100%; }
 }
+
+@media (max-width: 620px) {
+  .provider-property-wizard__steps {
+    display: flex;
+    gap: 0.25rem;
+    margin-inline: -16px;
+    padding: 0.25rem 16px 0.75rem;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: inline proximity;
+    scrollbar-width: thin;
+  }
+
+  .provider-property-wizard__steps li {
+    flex: 0 0 5.75rem;
+    padding-inline: 0.25rem;
+    scroll-snap-align: start;
+  }
+
+  .provider-property-wizard__steps strong {
+    max-inline-size: 5.5rem;
+    font-size: 0.6875rem;
+    line-height: 1.35;
+    text-wrap: balance;
+  }
+
+  .provider-property-wizard__card {
+    padding: 1.125rem;
+    border-radius: 1rem;
+  }
+}

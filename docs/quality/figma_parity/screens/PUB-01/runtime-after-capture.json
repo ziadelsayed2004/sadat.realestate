@@ -14,7 +14,7 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "775ed3ca971ead2112ab9ee5441005a21f50acbec3f35cd4475eb2678d7bcbd6",
-    "afterHash": "fa7bd933b718dcf9b2274353db63d2382b1db1d91f04f31a2f9c2a5d571e3614",
+    "afterHash": "ec3b63ae16231c821232ee7f5bf801c1e3171bc5141c116913e9e1bb4e200baf",
     "requestedApi": [],
     "apiResponses": []
   },
@@ -2134,181 +2134,181 @@
   },
   "images": [
     {
-      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4180/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4180/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/home-hero-sadat-city.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/home-hero-sadat-city.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/banner-elite-compound-figma.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/banner-elite-compound-figma.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/developer-sadat.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/developer-sadat.png",
       "complete": true,
       "decoded": true,
       "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-restaurants-cafes.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/category-restaurants-cafes.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4180/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-showrooms.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/category-showrooms.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-full-commercial-building.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/category-full-commercial-building.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-room.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/category-room.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-roof.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/category-roof.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-duplex.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/category-duplex.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/category-villa.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/category-villa.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-home.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/listing-property-home.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/developer-sadat.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/developer-sadat.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-villa.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/listing-property-villa.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/clone/pub05-c.png",
+      "src": "http://127.0.0.1:4180/assets/clone/pub05-c.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-duplex.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/listing-property-duplex.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/developer-sadat.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/developer-sadat.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/article-buying-guide.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/article-buying-guide.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/article-investment.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/article-investment.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/article-services.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/article-services.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/community-mohamed.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/community-mohamed.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/community-hanaa.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/community-hanaa.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/home-about-dashboard.png",
+      "src": "http://127.0.0.1:4180/assets/canonical/public/home-about-dashboard.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4180/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/figma/public-footer-phone.svg",
+      "src": "http://127.0.0.1:4180/assets/figma/public-footer-phone.svg",
       "complete": true,
       "decoded": true,
       "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/figma/public-footer-whatsapp.svg",
+      "src": "http://127.0.0.1:4180/assets/figma/public-footer-whatsapp.svg",
       "complete": true,
       "decoded": true,
       "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/figma/public-footer-location.svg",
+      "src": "http://127.0.0.1:4180/assets/figma/public-footer-location.svg",
       "complete": true,
       "decoded": true,
       "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/figma/public-footer-x.svg",
+      "src": "http://127.0.0.1:4180/assets/figma/public-footer-x.svg",
       "complete": true,
       "decoded": true,
       "loading": "auto"
@@ -2605,8 +2605,8 @@
       "comparedWidth": 1549,
       "comparedHeight": 5377,
       "comparedPixels": 8328973,
-      "materialDifferencePercent": 18.7364,
-      "antiAliasingOnlyPercent": 15.4133,
+      "materialDifferencePercent": 18.4996,
+      "antiAliasingOnlyPercent": 15.5807,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

@@ -22,7 +22,13 @@ const homepageData = publicHomepageDataSchema.parse({
     transactionType: 'sale',
     area: { value: 120, unit: 'sqm' },
     layout: { bedrooms: 3, bathrooms: 2 },
-    price: { amount: 1_250_000, currency: 'EGP' }
+    price: { amount: 1_250_000, currency: 'EGP' },
+    sourceName: { en: 'Professional Development Company' },
+    sourceType: 'developer_company',
+    sourceImageUrl: 'https://example.com/developer-logo.png',
+    publicCode: 'SDT-0567',
+    installmentAvailable: true,
+    featured: true
   }],
   developers: [{
     id: 'bbbbbbbbbbbbbbbbbbbbbbbb',
@@ -110,6 +116,17 @@ describe('public homepage', () => {
     expect(transactionInput).toHaveValue('rent');
     expect(result.container.querySelector('.public-homepage__category-card--all')).toHaveAttribute('href', '/properties');
     expect(result.container.querySelector('.public-homepage__category-card--all')).toHaveTextContent('1,200+ properties');
+  });
+
+  it('keeps homepage property metadata clean and aligns the developer identity', () => {
+    const result = renderWithLocale(<PublicHomepage locale="en" initialData={homepageData} />, { locale: 'en' });
+    const card = result.container.querySelector('.public-homepage__property-card');
+
+    expect(card?.querySelector('.ui-property-card__badges')).toBeNull();
+    expect(card).not.toHaveTextContent('SDT-0567');
+    expect(card).not.toHaveTextContent('Installment');
+    expect(card?.querySelector('.public-homepage__source-logo > img')).toHaveAttribute('src', 'https://example.com/developer-logo.png');
+    expect(card?.querySelector('.public-homepage__source-copy')).toHaveTextContent('Professional Development Company');
   });
 
   it('renders the hero district control from active admin-managed locations', () => {

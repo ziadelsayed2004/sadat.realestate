@@ -30,11 +30,52 @@
       "viewportWidth": 1549,
       "sourceHeight": 5378,
       "runtimeHeight": 5377,
-      "materialPixelAgreementPercent": 81.2636,
-      "materialDifferencePercent": 18.7364,
+      "materialPixelAgreementPercent": 81.5004,
+      "materialDifferencePercent": 18.4996,
       "method": "Same-width source/runtime canvas comparison over the overlapping document height; RGB-sum material threshold greater than 24.",
       "limitations": ["Large unchanged backgrounds contribute to pixel agreement", "This desktop metric does not prove tablet/mobile parity or functional journey completion"],
       "evidence": "figma_parity/screens/PUB-01/visual-metrics.json"
+    },
+    "publicHomepageBannerRepair": {
+      "screens": ["PUB-01"],
+      "implementation": "Locked the desktop advertisement carousel to the canonical 2.797:1 Figma ratio, kept tablet/mobile stacking, clamped variable title/body copy, and retained external controls without CTA clipping.",
+      "validation": "Fresh 1549px capture is 1549x5377 versus the 1549x5378 reference; material agreement is 81.5004% (18.4996% difference). Chromium geometry checks at 1534/768/320 report zero document overflow.",
+      "evidence": "figma_parity/screens/PUB-01/visual-metrics.json"
+    },
+    "publicHomepagePropertyCardRepair": {
+      "screens": ["PUB-01"],
+      "implementation": "Removed transaction, installment, featured and public-code badges from homepage property cards only. Rebuilt the developer identity row with a fixed circular logo, separate source name/type copy, long-name truncation and consistent card spacing; listing-page badges remain available.",
+      "validation": "Focused homepage suite passes 13/13. Production-build browser checks at 1440/768/390 found three cards, zero homepage badge containers, a 36x36 circular logo, zero logo/text center-line deviation, no card or document overflow and no browser exceptions.",
+      "limitations": ["The existing PUB-01 desktop parity percentage predates this card-only change and is not presented as a fresh measurement"]
+    },
+    "publicDeveloperProfileInteractionRepair": {
+      "screens": ["PUB-06"],
+      "implementation": "Converted the static profile tabs into real hash/scroll navigation with active-section tracking, sticky spacing and mobile horizontal scrolling. Developer/project cards now grow with long content and keep actions separated; WhatsApp uses a recognizable filled brand treatment.",
+      "validation": "Chromium verified the four tabs at 1534/768/320, #developer-properties scrolling to an 88px offset, correct active state and zero document overflow. The current full-canvas metric remains data-limited at 54.1922% because the live seeded profile has no projects, units or public contact details.",
+      "evidence": "figma_parity/screens/PUB-06/visual-metrics.json"
+    },
+    "communityComposerCategoryRepair": {
+      "screens": ["PUB-10"],
+      "implementation": "Replaced the empty decorative composer field with the supported six-value post category selector and now submits the chosen category to the API.",
+      "validation": "Focused component test submits category=advice through the real mutation contract; web typecheck passes. Fresh protected browser replay remains pending.",
+      "source": "../../apps/web/src/features/community/components.tsx"
+    },
+    "providerResponsiveNavigationRepair": {
+      "screens": ["PRV-03", "PRV-04", "PRV-05", "PRV-06", "PRV-07", "PRV-08", "PRV-09", "PRV-10"],
+      "implementation": "Added snap-scrolling mobile provider navigation and an explicit scrollable eight-step wizard rail, preventing step labels and circles from collapsing into each other at 320px.",
+      "limitations": ["The original UX guide marks provider dashboards Desktop Only", "Responsive hardening is implemented but full protected-session pixel parity at tablet/mobile is not yet measured"]
+    },
+    "productionDemoInstaller": {
+      "source": "../../deploy/native/update-and-install-demo.sh",
+      "behavior": "Fast-forward pulls main, prints the exact revision, deploys, idempotently installs linked realistic synthetic demo records, restarts services and runs health checks. Existing real records are preserved.",
+      "warning": "This is realistic test content, not real customer data; the production demo contract intentionally never fabricates or overwrites real records."
+    },
+    "adminProviderRequestConceptAudit": {
+      "adminAccess": "Use the password login at /auth/login?lang=ar with the deployment-configured bootstrap administrator account; an administrator is redirected to /admin. Provider applications are reviewed under /admin/providers and /admin/verification, while requests are managed under /admin/requests and its request-type views.",
+      "providerScope": "Individual and office accounts share the provider role. The provider customer-request API is ownership-scoped by providerId, so a provider sees only CRM/customer-request records created for that provider; administrators can review the platform-wide request collection.",
+      "paymentFinding": "Request authorization currently checks verified role and ownership, not subscription or payment state. Payment, advertising and commission modules do not currently unlock customer-request visibility.",
+      "backendGap": "A seeker contact request stores seeker and property/project references but is not currently resolved to the owning provider. Therefore it does not automatically enter that provider's customer-request inbox. Defining and implementing this routing, including office assignment and paid-access policy if desired, remains a product/backend decision and is not claimed complete.",
+      "guideContext": "The guide assigns account/property/request/content/advertising/commission administration to Admin and property/request/viewing operations to Provider. Its original Provider/Admin layouts are marked Desktop Only; the new mobile work is explicit hardening beyond that original scope."
     },
     "providerIndividualProductionSubmission": {
       "screens": ["AUTH-12", "AUTH-13", "AUTH-14"],
@@ -77,16 +118,16 @@
       "surface": "public",
       "route": "/",
       "name": "الرئيسية",
-      "latestAssessment": "قياس ديسكتوب حديث بتاريخ 6 سبتمبر على عرض 1549px بعد إصلاح تموضع شارات كروت العقارات: اتفاق بكسلات مادي 81.2636% وفرق 18.7364% عبر ارتفاع متداخل 5377px، مع نجاح التشغيل. هذه نسبة كانفاس ديسكتوب وليست اكتمالًا وظيفيًا أو ريسبونسيف.",
+      "latestAssessment": "قياس ديسكتوب حديث بتاريخ 6 سبتمبر على عرض 1549px بعد إصلاح أبعاد سلايدر الإعلانات وتموضع شارات كروت العقارات: اتفاق بكسلات مادي 81.5004% وفرق 18.4996% عبر ارتفاع متداخل 5377px، مع نجاح التشغيل. هذه نسبة كانفاس ديسكتوب وليست اكتمالًا وظيفيًا أو ريسبونسيف.",
       "status": "PARTIAL",
       "metrics": [
         {
           "path": "docs/quality/figma_parity/screens/PUB-01/visual-metrics.json",
-          "diff": 18.7364,
+          "diff": 18.4996,
           "method": "same-width source/runtime canvas comparison over the overlapping document height"
         }
       ],
-      "currentDesktopParityPercent": 81.2636,
+      "currentDesktopParityPercent": 81.5004,
       "currentResponsiveParityPercent": null,
       "backendAssessment": "خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل",
       "responsiveAssessment": "72/72 حالات Public نجحت بعد إضافة gate يمنع خروج شارات العقار من حدود الكارت؛ لا تتوفر بعد نسبة Figma موحدة للتابلت والموبايل"
@@ -173,16 +214,16 @@
       "surface": "public",
       "route": "/developers/:slug",
       "name": "ملف المطور العقاري",
-      "latestAssessment": "قياس ديسكتوب حديث بتاريخ 6 سبتمبر على عرض 1534px لحالة نجاح السيرفر الفعلية: اتفاق البكسلات المادي 59.7834% وفرق 40.2166%، والارتفاع 2684 بدل 2985. الفجوة الأساسية ليست مجرد CSS: بيانات المطور المزروعة ناقصة مقارنة بفيجما (شعار/غلاف صحيحان، أعداد النشاط، مشروعات ووحدات أكثر، وبيانات تواصل)، ما يغيّر كثافة الصفحة وارتفاعها.",
+      "latestAssessment": "قياس ديسكتوب حديث بتاريخ 6 سبتمبر على عرض 1534px بعد إصلاح التابس والمسافات وسلوك الكروت: اتفاق البكسلات المادي 54.1922% وفرق 45.8078%، والارتفاع 2191 بدل 2985. الفجوة الأساسية في القياس الحالي بيانات وليست CSS فقط: ملف المطور المزروع لا يحتوي مشروعات أو وحدات أو بيانات تواصل عامة، ما يغيّر كثافة الصفحة وارتفاعها جذريًا.",
       "status": "PARTIAL",
       "metrics": [
         {
           "path": "docs/quality/figma_parity/screens/PUB-06/visual-metrics.json",
-          "diff": 40.2166,
+          "diff": 45.8078,
           "method": "same-width source/runtime canvas comparison over the overlapping document height"
         }
       ],
-      "currentDesktopParityPercent": 59.7834,
+      "currentDesktopParityPercent": 54.1922,
       "currentResponsiveParityPercent": null,
       "backendAssessment": "الـAPI وحالة النجاح يعملان، لكن اكتمال محتوى ملف المطور غير مطابق لعقد فيجما: بيانات الهوية والغلاف والإحصاءات والمشروعات والوحدات والتواصل تحتاج استكمالًا من المصدر/seed",
       "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"

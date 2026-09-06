@@ -97,11 +97,12 @@ describe('public community feed and post creation', () => {
     const openCreateButton = screen.getAllByRole('button', { name: copy.createPost })[0];
     if (openCreateButton === undefined) throw new Error('Create-post opener is missing.');
     fireEvent.click(openCreateButton);
+    fireEvent.change(screen.getByLabelText('Post category'), { target: { value: 'advice' } });
     fireEvent.change(screen.getByLabelText(copy.postTitle), { target: { value: 'A new post' } });
     fireEvent.change(screen.getByLabelText(copy.postBody), { target: { value: 'A new body' } });
     const submitButton = screen.getByRole('button', { name: copy.publishPost });
     fireEvent.click(submitButton);
-    await waitFor(() => expect(mutations.createPost).toHaveBeenCalledWith({ title: 'A new post', body: 'A new body', category: 'question' }));
+    await waitFor(() => expect(mutations.createPost).toHaveBeenCalledWith({ title: 'A new post', body: 'A new body', category: 'advice' }));
   });
 
   it('loads details and submits comment and report mutations without exposing private fields', async () => {

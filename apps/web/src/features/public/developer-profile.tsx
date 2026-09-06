@@ -97,7 +97,7 @@ function ProfileIcon({ name }: { readonly name: IconName }) {
     case 'unit':
       return <svg {...common}><path d="M5 20V8l7-4 7 4v12M9 20v-4h6v4M9 10h.01M12 10h.01M15 10h.01" /></svg>;
     case 'whatsapp':
-      return <svg {...common}><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.4-4.1A8 8 0 1 1 20 11.5Z" /><path d="M9 8.5c.2-.3.4-.3.7-.2l1 .5c.2.1.3.3.2.5l-.5.7c.5.8 1.1 1.4 2 1.8l.7-.6c.2-.1.4-.1.6 0l.9.5c.3.2.3.4.2.7-.2.6-.7 1-1.4 1-1.1-.1-2.4-.8-3.4-1.7-1.1-1-1.8-2.2-1.8-3.1 0-.4.3-.7.8-1.1Z" /></svg>;
+      return <svg className="public-developer-profile__icon public-developer-profile__icon--whatsapp" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="11" fill="currentColor" /><path d="M8.2 7.4c.2-.45.42-.47.79-.48h.67c.2 0 .42.07.54.43l.76 2.05c.1.3.03.55-.15.78l-.57.7c-.18.2-.14.4-.02.6.7 1.2 1.6 2.1 2.82 2.8.22.12.4.14.6-.08l.72-.86c.2-.24.45-.3.73-.18l1.93.91c.3.14.45.28.45.5 0 .35-.17 1.1-.78 1.68-.6.57-1.4.8-2.16.8-1.05 0-2.62-.52-4.37-2.05-2.08-1.82-3.42-4.3-3.42-5.88 0-.64.2-1.24.46-1.72Z" fill="#fff" stroke="none" /><path d="M5.7 18.5 6.5 16a7.25 7.25 0 1 1 2 1.8l-2.8.7Z" fill="none" stroke="#fff" strokeWidth="1.05" strokeLinecap="round" strokeLinejoin="round" /></svg>;
   }
 }
 
@@ -166,13 +166,43 @@ function ProfileHero({ data, locale, copy }: { readonly data: PublicOrganization
   );
 }
 
+const PROFILE_SECTION_IDS = ['developer-overview', 'developer-projects', 'developer-properties', 'developer-contact'] as const;
+type ProfileSectionId = typeof PROFILE_SECTION_IDS[number];
+
 function ProfileTabs({ copy }: { readonly copy: PublicDevelopersCopy }) {
+  const [activeSection, setActiveSection] = useState<ProfileSectionId>('developer-overview');
+
+  useEffect(() => {
+    const syncFromHash = () => {
+      const section = window.location.hash.slice(1) as ProfileSectionId;
+      if (PROFILE_SECTION_IDS.includes(section)) setActiveSection(section);
+    };
+    syncFromHash();
+    window.addEventListener('hashchange', syncFromHash);
+    if (typeof IntersectionObserver === 'undefined') {
+      return () => window.removeEventListener('hashchange', syncFromHash);
+    }
+    const sections = PROFILE_SECTION_IDS.map(id => document.getElementById(id)).filter((section): section is HTMLElement => section !== null);
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries.filter(entry => entry.isIntersecting).sort((left, right) => right.intersectionRatio - left.intersectionRatio)[0];
+      if (visible && PROFILE_SECTION_IDS.includes(visible.target.id as ProfileSectionId)) setActiveSection(visible.target.id as ProfileSectionId);
+    }, { rootMargin: '-18% 0px -62% 0px', threshold: [0.05, 0.25, 0.5] });
+    sections.forEach(section => observer.observe(section));
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('hashchange', syncFromHash);
+    };
+  }, []);
+
+  const link = (id: ProfileSectionId, label: string) => (
+    <a className={activeSection === id ? 'is-active' : undefined} aria-current={activeSection === id ? 'location' : undefined} href={`#${id}`} onClick={() => setActiveSection(id)}>{label}</a>
+  );
   return (
     <nav className="public-developer-profile__tabs" aria-label={copy.profileOverview}>
-      <a className="is-active" aria-current="page" href="#developer-overview">{copy.profileOverview}</a>
-      <a href="#developer-projects">{copy.profileProjects}</a>
-      <a href="#developer-properties">{copy.profileProperties}</a>
-      <a href="#developer-contact">{copy.profileContact}</a>
+      {link('developer-overview', copy.profileOverview)}
+      {link('developer-projects', copy.profileProjects)}
+      {link('developer-properties', copy.profileProperties)}
+      {link('developer-contact', copy.profileContact)}
     </nav>
   );
 }

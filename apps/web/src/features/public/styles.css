@@ -1075,6 +1075,64 @@
   padding: 0;
 }
 
+.public-homepage__property-card .ui-property-card__body {
+  min-inline-size: 0;
+}
+
+.public-homepage__property-card .ui-property-card__title {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.public-homepage__property-card .ui-property-card__source {
+  min-inline-size: 0;
+  margin-block-start: auto;
+}
+
+.public-homepage__source-identity {
+  display: flex;
+  min-inline-size: 0;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.public-homepage__source-logo {
+  flex: 0 0 2.25rem;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  overflow: hidden;
+  border: 1px solid rgb(23 35 63 / 0.12);
+  border-radius: 50%;
+}
+
+.public-homepage__source-logo>img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.public-homepage__source-copy {
+  display: grid;
+  min-inline-size: 0;
+}
+
+.public-homepage__source-copy>span {
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.public-homepage__source-copy>small {
+  color: var(--color-text-muted);
+  font-size: 0.6875rem;
+  line-height: 1.25;
+}
+
 .public-homepage .ui-property-card__media {
   min-block-size: 13rem;
 }
@@ -2637,7 +2695,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-
   .public-homepage *,
   .public-homepage *::before,
   .public-homepage *::after {
@@ -2659,6 +2716,43 @@
   flex: 0 0 8.625rem;
   min-inline-size: 8.625rem;
   scroll-snap-align: start;
+}
+
+@media (min-width: 56.3125rem) {
+  .public-homepage__section--banners .public-homepage__banner-card,
+  .public-homepage__section--banners .public-homepage__banner-link {
+    min-block-size: 0;
+  }
+
+  .public-homepage__section--banners .public-homepage__banner-link {
+    aspect-ratio: 2.797 / 1;
+  }
+
+  .public-homepage__section--banners .public-homepage__banner-media-wrapper,
+  .public-homepage__section--banners .public-homepage__banner-copy {
+    block-size: 100%;
+    min-block-size: 0;
+  }
+
+  .public-homepage__section--banners .public-homepage__banner-copy {
+    gap: clamp(0.5rem, 1.1vw, 0.875rem);
+    padding: clamp(1.5rem, 2.5vw, 2.5rem);
+  }
+
+  .public-homepage__section--banners .public-homepage__banner-title,
+  .public-homepage__section--banners .public-homepage__banner-body {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+  }
+
+  .public-homepage__section--banners .public-homepage__banner-title {
+    -webkit-line-clamp: 2;
+  }
+
+  .public-homepage__section--banners .public-homepage__banner-body {
+    -webkit-line-clamp: 2;
+  }
 }
 
 @media (min-width: 64.0625rem) {

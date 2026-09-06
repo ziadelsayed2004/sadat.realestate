@@ -3,7 +3,7 @@
   "screenId": "PUB-06",
   "phase": "after",
   "runtime": {
-    "route": "/developers/sadat-demo-developer?lang=ar",
+    "route": "/developers/as-real-estate-development?lang=ar",
     "locale": "ar",
     "direction": "rtl",
     "viewport": {
@@ -14,7 +14,7 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "4daebbf4536e7db32c9ddcf67bc8068ad708fe4e7fafc16ca526ab9f642788a3",
-    "afterHash": "749f4e6326b4bc01547f2a62e520520dd35af5ba0cf74d1aea7170b86623814c",
+    "afterHash": "b7e0e0a1dfe38467cd6b7809b10f23ba95ad3295b2752a4852d3ce1fe91be77f",
     "requestedApi": [],
     "apiResponses": []
   },
@@ -22,8 +22,8 @@
     "headers": 2,
     "navs": 2,
     "sections": 7,
-    "cards": 4,
-    "images": 10,
+    "cards": 1,
+    "images": 9,
     "forms": 0
   },
   "fonts": {
@@ -2134,61 +2134,55 @@
   },
   "images": [
     {
-      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4180/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4180/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/developer-sadat.png",
+      "src": "http://127.0.0.1:4180/assets/clone/pub05-a.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-duplex.png",
+      "src": "http://127.0.0.1:4180/assets/clone/pub05-b.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "eager"
+    },
+    {
+      "src": "http://127.0.0.1:4180/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/listing-property-home.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/figma/public-footer-phone.svg",
+      "src": "http://127.0.0.1:4180/assets/figma/public-footer-phone.svg",
       "complete": true,
       "decoded": true,
       "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/figma/public-footer-whatsapp.svg",
+      "src": "http://127.0.0.1:4180/assets/figma/public-footer-whatsapp.svg",
       "complete": true,
       "decoded": true,
       "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/figma/public-footer-location.svg",
+      "src": "http://127.0.0.1:4180/assets/figma/public-footer-location.svg",
       "complete": true,
       "decoded": true,
       "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/figma/public-footer-x.svg",
+      "src": "http://127.0.0.1:4180/assets/figma/public-footer-x.svg",
       "complete": true,
       "decoded": true,
       "loading": "auto"
@@ -2285,20 +2279,8 @@
         "href": "#developer-contact"
       },
       {
-        "text": "عرض المشروع",
-        "href": "https://sadat-realestate.com/projects/zahrat-sadat"
-      },
-      {
         "text": "عرض الوحدات المتاحة",
         "href": "#developer-contact"
-      },
-      {
-        "text": "دوبلكس فاخر في الحي الخامس",
-        "href": "/properties/demo-garden-duplex"
-      },
-      {
-        "text": "شقة فاخرة في الحي الأول",
-        "href": "/properties/demo-open-view-apartment"
       },
       {
         "text": "العقارات",
@@ -2396,7 +2378,7 @@
       },
       {
         "width": 1534,
-        "height": 2684
+        "height": 2191
       }
     ],
     "dimensions": {
@@ -2407,10 +2389,10 @@
     "visualMetricsPath": "docs/quality/figma_parity/screens/PUB-06/visual-metrics.json",
     "visualMetrics": {
       "comparedWidth": 1534,
-      "comparedHeight": 2684,
-      "comparedPixels": 4117256,
-      "materialDifferencePercent": 40.2166,
-      "antiAliasingOnlyPercent": 1.6081,
+      "comparedHeight": 2191,
+      "comparedPixels": 3360994,
+      "materialDifferencePercent": 45.8078,
+      "antiAliasingOnlyPercent": 3.2407,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

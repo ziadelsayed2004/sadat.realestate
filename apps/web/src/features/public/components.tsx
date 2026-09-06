@@ -757,8 +757,7 @@ function PropertyGrid({
             href={'/properties/' + property.slug}
             price={formatMoney(property.price, locale)}
             location={localizedText(property.locationName, locale)}
-            source={sourceName === undefined ? undefined : <span className="public-homepage__source-identity"><img src={property.sourceImageUrl ?? '/assets/sadat-real-estate-logo.png'} alt="" width="24" height="24" loading="lazy" decoding="async" /><span>{sourceName}{property.sourceType ? <small>{property.sourceType === 'developer_company' ? listingCopy.developerSource : listingCopy.brokerageSource}</small> : null}</span></span>}
-            badges={[property.transactionType === 'sale' ? copy.sale : copy.rent, ...(property.installmentAvailable ? [listingCopy.installment] : []), ...(property.featured ? [listingCopy.featured] : []), ...(property.publicCode ? [property.publicCode] : [])]}
+            source={sourceName === undefined ? undefined : <span className="public-homepage__source-identity"><span className="public-homepage__source-logo"><img src={property.sourceImageUrl ?? '/assets/sadat-real-estate-logo.png'} alt="" width="36" height="36" loading="lazy" decoding="async" /></span><span className="public-homepage__source-copy"><span>{sourceName}</span>{property.sourceType ? <small>{property.sourceType === 'developer_company' ? listingCopy.developerSource : listingCopy.brokerageSource}</small> : null}</span></span>}
             features={features}
             image={<PublicMediaImage src={property.imageUrl ?? fallbackPropertyImage(property.slug, property.kind)} alt={title} fallback={<span className="public-homepage__content-media-fallback" />} />}
             imageAlt={title}

@@ -33,6 +33,7 @@ type DetailViewState = PublicCommunityViewState | 'not_found';
 type ComposerState = 'closed' | 'checking' | 'open' | 'permission';
 type MutationState = 'idle' | 'creating' | 'commenting' | 'reporting';
 type ReportReason = 'spam' | 'abuse' | 'misinformation' | 'other';
+type PostCategory = 'question' | 'experience' | 'advice' | 'service' | 'area' | 'property';
 
 export interface CommunityAuthClient {
   readonly getSnapshot: () => AuthSnapshot;
@@ -373,6 +374,7 @@ export function PublicCommunity({
   const [composerState, setComposerState] = useState<ComposerState>(() => requestedCreate(sourceUrl) ? (isAuthenticated ? 'open' : 'permission') : 'closed');
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const [category, setCategory] = useState<PostCategory>('question');
   const [comment, setComment] = useState('');
   const [report, setReport] = useState<{ readonly reason: ReportReason; readonly details: string }>({ reason: 'other', details: '' });
   const [reportOpen, setReportOpen] = useState(false);
@@ -448,6 +450,7 @@ export function PublicCommunity({
     setComposerState('closed');
     setTitle('');
     setBody('');
+    setCategory('question');
     setValidationError(false);
     removeCreateQuery();
   };
@@ -471,7 +474,7 @@ export function PublicCommunity({
   const submitPost = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setValidationError(false);
-    const parsed = communityPostCreateSchema.safeParse({ title, body });
+    const parsed = communityPostCreateSchema.safeParse({ title, body, category });
     if (!parsed.success || !isAuthenticated) {
       setValidationError(true);
       return;
@@ -552,6 +555,9 @@ export function PublicCommunity({
 
   const pageCount = data === undefined || data.limit <= 0 ? 0 : Math.ceil(data.total / data.limit);
   const filters = communityFilters(locale);
+  const categoryOptions = filters
+    .filter((filter): filter is { readonly key: PostCategory; readonly label: string } => filter.key !== 'all')
+    .map(filter => ({ value: filter.key, label: filter.label }));
   const visiblePosts = data?.items.filter(post => activeFilter === 'all' || postPresentation(post, locale).categoryKey === activeFilter) ?? [];
   const modalOpen = composerState !== 'closed';
   const composerTitle = composerState === 'permission' || composerState === 'checking'
@@ -625,7 +631,16 @@ export function PublicCommunity({
           <form id="community-create-form" className="public-community__composer" onSubmit={submitPost}>
             <p className="public-community__composer-notice" role="note"><span>{copy.composerModerationNotice}</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 10v6m0-9v1" /></svg></p>
             <div className="public-community__composer-fields">
-              <div className="public-community__composer-dropdown" aria-hidden="true" />
+              <div className="public-community__composer-dropdown">
+                <CustomSelect
+                  id="community-post-category"
+                  name="category"
+                  value={category}
+                  onChange={value => setCategory(value as PostCategory)}
+                  ariaLabel={locale === 'ar' ? 'تصنيف البوست' : 'Post category'}
+                  options={categoryOptions}
+                />
+              </div>
               <Input className="public-community__composer-title" label={<span className="a11y-visually-hidden">{copy.postTitle}</span>} value={title} onChange={event => setTitle(event.target.value)} placeholder={copy.postTitlePlaceholder} state={validationError && title.trim().length === 0 ? 'error' : 'default'} error={copy.validationBody} />
               <label className="a11y-visually-hidden" htmlFor="community-post-body">{copy.postBody}</label>
               <textarea id="community-post-body" value={body} onChange={event => setBody(event.target.value)} placeholder={copy.composerPostBodyPlaceholder} rows={5} aria-invalid={validationError && body.trim().length === 0 ? true : undefined} />
