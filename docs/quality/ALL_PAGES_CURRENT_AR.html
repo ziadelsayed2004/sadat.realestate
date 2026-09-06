@@ -6,7 +6,7 @@
 <h1>تقرير كل الصفحات — آخر حالة مثبتة</h1>
 <p>6 سبتمبر 2026 · 131 شاشة/حالة. المرجع البصري المعتمد هو ملف Figma <code>Odl1Epn2u6lIEuIMmABT7o</code>، ودليل المستخدم مرجع للآلية مع اعتماد البريد الإلكتروني وOTP بدل التسجيل القديم بالهاتف.</p>
 <section><h2>الخلاصة بالأرقام</h2><div class="cards">
-<div class="card"><strong>131</strong>إجمالي الشاشات/الحالات المسجلة</div><div class="card"><strong>20/131</strong>نسب Figma الحالية المقاسة للديسكتوب</div><div class="card"><strong>0/131</strong>نسب Figma الحالية المقاسة للريسبونسيف</div><div class="card"><strong>72/72</strong>فحص صفحات Public كاملًا + 72/72 للفوتر</div></div>
+<div class="card"><strong>131</strong>إجمالي الشاشات/الحالات المسجلة</div><div class="card"><strong>22/131</strong>نسب Figma الحالية المقاسة للديسكتوب</div><div class="card"><strong>0/131</strong>نسب Figma الحالية المقاسة للريسبونسيف</div><div class="card"><strong>72/72</strong>فحص صفحات Public كاملًا + 72/72 للفوتر</div></div>
 <p class="warn"><strong>لا توجد حتى الآن نسبة مطابقة حديثة موثوقة للصفحات الكاملة؛ «غير مقاسة» لا تعني 0% ولا 100%.</strong> القياسات التاريخية تعرض فرقًا قديمًا فقط، ولا يصح تحويلها إلى نسبة حالية بطرحها من 100.</p><p>public: 12 · auth: 19 · seeker: 10 · provider: 24 · admin: 66</p></section>
 <section><h2>تحديث الفوتر العام PUB-01 إلى PUB-12</h2><p class="ok"><strong>تم إصلاح الفوتر المشترك والتحقق منه على كل صفحات Public الاثنتي عشرة.</strong></p>
 <p>طابق التنفيذ بنية عقدتي Figma: الديسكتوب <code>6017:11365</code> والموبايل <code>6129:7924</code> داخل الشاشة <code>6017:110792</code>. أُصلح ترتيب RTL، وتقسيم الأعمدة 4/2/1 للديسكتوب/التابلت/الموبايل، وصف المتابعة والحقوق، والروابط الحافظة للغة، وأيقونات التواصل والنسخة المختصرة للموبايل.</p><p>72/72 Playwright cases passed across 12 public routes, AR/EN and widths 1440/768/390. No horizontal overflow, broken footer images, locale loss, browser errors or structural mismatches. 12/12 focused component tests, targeted lint, diff check, full build and runtime smoke passed.</p>
@@ -176,17 +176,17 @@
 </tr><tr data-surface="auth">
   <td><strong>AUTH-09</strong><br>بيانات حساب مقدم العقار</td>
   <td><code>/auth/register/provider/account</code></td>
+  <td>87.7447%</td>
   <td>غير مقاسة حاليًا</td>
-  <td>غير مقاسة حاليًا</td>
-  <td>لا يوجد قياس مسجل</td>
+  <td>12.2553% اختلاف تاريخي — Fresh raw-pixel comparison after hiding unavailable location controls and deduplicating server requirements; AR is the report baseline</td>
   <td>Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
   <td>مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات</td>
 </tr><tr data-surface="auth">
   <td><strong>AUTH-09+</strong><br>Provider Registration — Account Details</td>
   <td><code>/auth/register/provider/account</code></td>
+  <td>88.0394%</td>
   <td>غير مقاسة حاليًا</td>
-  <td>غير مقاسة حاليًا</td>
-  <td>لا يوجد قياس مسجل</td>
+  <td>11.9606% اختلاف تاريخي — Fresh raw-pixel comparison of the filled account state after resolving requirements from current form values; AR is the report baseline</td>
   <td>Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
   <td>مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات</td>
 </tr><tr data-surface="auth">

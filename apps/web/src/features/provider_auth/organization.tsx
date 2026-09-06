@@ -293,6 +293,15 @@ export function ProviderOrganizationPage({ client, locale, providerType, initial
   const title = variant === 'business' ? copy.businessTitle : copy.companyTitle;
   const description = variant === 'business' ? copy.businessDescription : copy.companyDescription;
   const organizationFields = new Set(application?.missingFields ?? []);
+  const missingOrganizationLabels = [...new Set((application?.missingFields ?? [])
+    .filter(field => {
+      if (copy.missingFieldLabels[field] === undefined) return false;
+      if (field === 'accountOwnerHasRegisteredAuthority') return form.accountOwnerHasRegisteredAuthority === undefined;
+      const value = form[field as OrganizationField];
+      return value.trim() === '';
+    })
+    .map(field => copy.missingFieldLabels[field])
+    .filter((label): label is string => label !== undefined))];
   const inputState = (field: OrganizationField): 'default' | 'error' => saveState === 'error' && form[field].trim() === '' && organizationFields.has(field) ? 'error' : 'default';
 
   return (
@@ -350,10 +359,10 @@ export function ProviderOrganizationPage({ client, locale, providerType, initial
             />
             <p className="provider-organization-contract-note">{copy.unsupportedFieldNote}</p>
             <aside className="provider-account-guidance" role="note"><strong>{copy.requirementsTitle}</strong><span>{copy.requirementsBody}</span></aside>
-            {(application?.missingFields.length ?? 0) > 0 ? (
+            {missingOrganizationLabels.length > 0 ? (
               <aside className="provider-account-missing" role="status">
                 <strong>{copy.requirementsTitle}</strong>
-                <ul>{application?.missingFields.map(field => <li key={field}>{copy.missingFieldLabels[field] ?? field}</li>)}</ul>
+                <ul>{missingOrganizationLabels.map(label => <li key={label}>{label}</li>)}</ul>
               </aside>
             ) : null}
             <div className="provider-account-actions">

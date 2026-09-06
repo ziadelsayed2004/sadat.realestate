@@ -491,8 +491,13 @@
       "name": "بيانات حساب مقدم العقار",
       "status": "REPAIRED_VERIFIED",
       "audit": "REPAIRED_VERIFIED",
-      "metrics": [],
-      "currentDesktopParityPercent": null,
+      "metrics": [
+        {
+          "diff": 12.2553,
+          "method": "Fresh raw-pixel comparison after hiding unavailable location controls and deduplicating server requirements; AR is the report baseline"
+        }
+      ],
+      "currentDesktopParityPercent": 87.7447,
       "currentResponsiveParityPercent": null,
       "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
       "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
@@ -502,10 +507,15 @@
       "surface": "auth",
       "route": "/auth/register/provider/account",
       "name": "Provider Registration — Account Details",
-      "status": "VERIFIED_NO_CHANGE",
-      "audit": "VERIFIED_NO_CHANGE",
-      "metrics": [],
-      "currentDesktopParityPercent": null,
+      "status": "REPAIRED_VERIFIED",
+      "audit": "REPAIRED_VERIFIED",
+      "metrics": [
+        {
+          "diff": 11.9606,
+          "method": "Fresh raw-pixel comparison of the filled account state after resolving requirements from current form values; AR is the report baseline"
+        }
+      ],
+      "currentDesktopParityPercent": 88.0394,
       "currentResponsiveParityPercent": null,
       "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
       "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"

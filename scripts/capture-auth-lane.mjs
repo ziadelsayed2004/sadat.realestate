@@ -265,6 +265,8 @@ async function prepareScreen(page, screen) {
       await page.locator('#provider-account-owner-name').fill('Ahmed Mohamed Ali');
       await page.locator('#provider-account-display-name').fill('Sadat Real Estate Development');
       await page.locator('#provider-account-whatsapp').fill('+201000000001');
+      await page.locator('.provider-account-consents input').nth(0).check();
+      await page.locator('.provider-account-consents input').nth(1).check();
       await waitForScreen(page, 'AUTH-09+');
     }
     return;

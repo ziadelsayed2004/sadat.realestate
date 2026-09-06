@@ -40,8 +40,8 @@ async function hideSkipLink(page: import('@playwright/test').Page): Promise<void
   });
 }
 
-async function mockProviderApplicationApi(page: import('@playwright/test').Page): Promise<void> {
-  let savedApplication = application();
+async function mockProviderApplicationApi(page: import('@playwright/test').Page, initialOverrides: Record<string, unknown> = {}): Promise<void> {
+  let savedApplication = application(initialOverrides);
 
   await page.route('**/api/v1/auth/otp/send', async route => {
     const body = route.request().postDataJSON() as Record<string, unknown>;
@@ -73,7 +73,7 @@ async function mockProviderApplicationApi(page: import('@playwright/test').Page)
     if (request.method() === 'POST') {
       const body = request.postDataJSON() as Record<string, unknown>;
       expect(body).toEqual({ verificationToken: VERIFICATION_TOKEN, providerType: 'developer_company', password: PASSWORD });
-      savedApplication = application();
+      savedApplication = application(initialOverrides);
       await route.fulfill({
         status: 201,
         contentType: 'application/json',
@@ -176,6 +176,7 @@ test('provider account default and filled variants have responsive visual baseli
   await page.locator('.provider-account-consents input').nth(0).check();
   await page.locator('.provider-account-consents input').nth(1).check();
   await expect(page.locator('[data-screen-id="AUTH-09+"]')).toBeVisible();
+  await expect(page.locator('.provider-account-missing li')).toHaveCount(2);
   await expect(page).toHaveScreenshot(`provider-account-filled-${locale}.png`, { fullPage: true });
 });
 
@@ -232,6 +233,7 @@ test('provider account form exposes accessible labels, keyboard order, and valid
   await expect(form.locator('[id*="phone"], [name*="phone"]')).toHaveCount(0);
   await expect(form.getByRole('checkbox')).toHaveCount(2);
   await expect(form.getByRole('checkbox', { name: /.+/ })).toHaveCount(2);
+  await expect(form.locator('fieldset.provider-account-consents')).toHaveCount(0);
 
   await page.locator('#provider-account-owner-name').focus();
   await page.keyboard.press('Tab');
@@ -243,4 +245,12 @@ test('provider account form exposes accessible labels, keyboard order, and valid
   await expect(page.locator('#provider-account-email')).not.toHaveAttribute('aria-invalid', 'true');
   await expect(page.locator('#provider-account-whatsapp')).not.toHaveAttribute('aria-invalid', 'true');
   await expect(page.locator('.provider-account-missing[role="status"]')).toBeVisible();
+});
+
+test('provider account groups unsupported server requirements instead of repeating fallback copy', async ({ page }) => {
+  const locale = localeForProject();
+  await mockProviderApplicationApi(page, { missingFields: ['futureRequirementA', 'futureRequirementB'] });
+  await reachAccountDetails(page, locale);
+
+  await expect(page.locator('.provider-account-missing')).toHaveCount(0);
 });

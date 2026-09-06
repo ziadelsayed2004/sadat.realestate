@@ -121,10 +121,6 @@ function registrationError(error: unknown, copy: ProviderAccountCopy): AccountUi
   return { state: 'error', title: copy.unavailableTitle, message: copy.unavailableBody };
 }
 
-function missingFieldLabel(copy: ProviderAccountCopy, field: string): string {
-  return copy.missingFieldLabels[field] ?? copy.requirementsTitle;
-}
-
 function hasAccountValues(form: AccountFormState): boolean {
   return form.accountOwnerFullName.trim() !== ''
     || form.displayName.trim() !== ''
@@ -133,6 +129,18 @@ function hasAccountValues(form: AccountFormState): boolean {
     || form.whatsappNumber.trim() !== ''
     || form.termsAccepted
     || form.privacyAccepted;
+}
+
+function isAccountRequirementResolved(field: string, form: AccountFormState): boolean {
+  if (field === 'accountOwnerFullName') return form.accountOwnerFullName.trim() !== '';
+  if (field === 'displayName') return form.displayName.trim() !== '';
+  if (field === 'email') return form.email.trim() !== '';
+  if (field === 'primaryLocationId') return form.primaryLocationId !== '';
+  if (field === 'serviceAreaIds') return form.serviceAreaIds.length > 0;
+  if (field === 'preferredLocale') return true;
+  if (field === 'termsAcceptedAt') return form.termsAccepted;
+  if (field === 'privacyAcceptedAt') return form.privacyAccepted;
+  return false;
 }
 
 function normalizeEgyptianPhone(value: string): string {
@@ -293,7 +301,10 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
 
   const screenId = hasAccountValues(form) ? 'AUTH-09+' : 'AUTH-09';
   const missingFields = application?.missingFields ?? [];
-  const missingFieldLabels = [...new Set(missingFields.map(field => missingFieldLabel(copy, field)))];
+  const missingFieldLabels = [...new Set(missingFields
+    .filter(field => !isAccountRequirementResolved(field, form))
+    .map(field => copy.missingFieldLabels[field])
+    .filter((label): label is string => label !== undefined))];
   const hasLocations = locationsState === 'ready' && locations.length > 0;
   const state = loadState === 'ready' ? saveState : loadState;
 
@@ -451,7 +462,7 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
             {locationsState === 'error' || (locationsState === 'ready' && locations.length === 0) ? (
               <StateMessage state="retry" title={copy.requirementsTitle} message={copy.unavailableLocationBody} retryLabel={copy.retryAction} onRetry={() => void loadLocations()} />
             ) : null}
-            {missingFields.length > 0 ? (
+            {missingFieldLabels.length > 0 ? (
               <aside className="provider-account-missing" role="status">
                 <strong>{copy.requirementsTitle}</strong>
                 <p>{copy.requirementsBody}</p>
