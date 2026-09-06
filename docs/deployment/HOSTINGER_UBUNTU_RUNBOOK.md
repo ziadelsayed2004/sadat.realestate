@@ -138,20 +138,26 @@ Perform an isolated Seeker registration, retrieve the delivered OTP, verify it o
 
 ## 8. First Super Admin
 
-After readiness, read credentials silently and run the compiled bootstrap once:
+Deploy the current release first, then run the guarded interactive helper once:
 
 ```bash
-read -r ADMIN_BOOTSTRAP_EMAIL
-read -rs ADMIN_BOOTSTRAP_PASSWORD
-export ADMIN_BOOTSTRAP_EMAIL ADMIN_BOOTSTRAP_PASSWORD
-export ADMIN_BOOTSTRAP_CONFIRMATION=CREATE_FIRST_SUPER_ADMIN
-export ADMIN_BOOTSTRAP_LOCALE=ar
-sudo --preserve-env=ADMIN_BOOTSTRAP_EMAIL,ADMIN_BOOTSTRAP_PASSWORD,ADMIN_BOOTSTRAP_CONFIRMATION,ADMIN_BOOTSTRAP_LOCALE \
-  bash -c 'set -a; source /etc/elsadatrealestate/production.env; set +a; \
-  exec runuser -u elsadat --preserve-environment -- \
-  /usr/bin/node /opt/elsadatrealestate/current/apps/api/dist/modules/admin/run-bootstrap.js'
-unset ADMIN_BOOTSTRAP_EMAIL ADMIN_BOOTSTRAP_PASSWORD ADMIN_BOOTSTRAP_CONFIRMATION ADMIN_BOOTSTRAP_LOCALE
+sudo bash /opt/elsadatrealestate/current/deploy/native/bootstrap-super-admin.sh
 ```
+
+The helper prompts for the email and asks for the password twice without echoing it.
+Use a unique password of 8-128 characters containing uppercase, lowercase, a number,
+and a symbol. It is hashed with Argon2id and is never written to the environment file,
+Git, a temporary file, or shell history. Log in at
+`https://elsadatrealestate.com/auth/login?lang=ar`; the resulting bootstrap identity
+is authorized as a Super Admin without a separate role assignment.
+
+The bootstrap is one-time and fail-closed. `ADMIN_BOOTSTRAP_ALREADY_COMPLETED` means
+the original Super Admin remains unchanged and the newly entered password was not
+saved. `ADMINISTRATOR_ALREADY_EXISTS` means a non-demo administrator exists without
+the bootstrap guard and requires database investigation instead of bypassing it.
+Synthetic administrators installed by `manage-production.sh demo` do not block the
+first real Super Admin, and `manage-production.sh empty` will not delete the real
+bootstrap account.
 
 ## 9. Backup, restore, and monitoring
 

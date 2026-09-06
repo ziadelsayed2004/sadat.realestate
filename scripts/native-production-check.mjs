@@ -13,6 +13,7 @@ const requiredFiles = [
   'deploy/systemd/elsadat-healthcheck.timer',
   'deploy/native/install-ubuntu.sh',
   'deploy/native/deploy-release.sh',
+  'deploy/native/bootstrap-super-admin.sh',
   'deploy/native/healthcheck.sh',
   'deploy/native/backup.sh',
   'deploy/native/restore.sh'

@@ -67,7 +67,15 @@ function mongooseStore(
       }).session(session));
     },
     async administratorExists() {
-      return Boolean(await identityModels.User.exists({ roleType: 'admin' }).session(session));
+      // Full production-demo installs contain explicitly tagged synthetic
+      // administrators. They must not block creation of the first real,
+      // guarded Super Admin. Every administrator created by a product flow or
+      // an earlier manual database write lacks this trusted seed marker and
+      // still fails the bootstrap closed.
+      return Boolean(await identityModels.User.exists({
+        roleType: 'admin',
+        synthetic: { $ne: true }
+      }).session(session));
     },
     async create(input) {
       const userId = new Types.ObjectId();

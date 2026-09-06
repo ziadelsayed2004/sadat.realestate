@@ -63,7 +63,7 @@ if (isEntrypoint()) {
     // local-runtime restart. Keep all other bootstrap failures fatal so a
     // pre-existing untracked administrator can never be mistaken for a valid
     // first Super Admin.
-    if (error instanceof AdminServiceError && (error.code === 'ADMIN_BOOTSTRAP_ALREADY_COMPLETED' || error.code === 'ADMINISTRATOR_ALREADY_EXISTS')) {
+    if (error instanceof AdminServiceError && error.code === 'ADMIN_BOOTSTRAP_ALREADY_COMPLETED') {
       process.stdout.write(`${error.code}\n`);
       return;
     }
