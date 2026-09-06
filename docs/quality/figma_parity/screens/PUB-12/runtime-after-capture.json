@@ -3,7 +3,7 @@
   "screenId": "PUB-12",
   "phase": "after",
   "runtime": {
-    "route": "/team?lang=ar",
+    "route": "/team",
     "locale": "ar",
     "direction": "rtl",
     "viewport": {
@@ -14,16 +14,27 @@
     "responseStatus": 200,
     "responseOk": true,
     "beforeHash": "f8f18d3ae3430249f8451a69ebe00680d5171109718a771d966775c12155aeb6",
-    "afterHash": "2335b37b9b43009bdc27fcfcef53826f8283912b135b53112ceac8f18b4ff262",
-    "requestedApi": [],
-    "apiResponses": []
+    "afterHash": "b115f704bbc8dde741b2feaddd9f09f0420ae885619c2ae8dd5fe89509657360",
+    "requestedApi": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4183/api/v1/public/team"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4183/api/v1/public/team",
+        "status": 200
+      }
+    ]
   },
   "structure": {
     "headers": 2,
     "navs": 1,
     "sections": 2,
     "cards": 12,
-    "images": 9,
+    "images": 13,
     "forms": 0
   },
   "fonts": {
@@ -2134,58 +2145,82 @@
   },
   "images": [
     {
-      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4183/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
+      "src": "http://127.0.0.1:4183/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "eager"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/team-asset-1.png",
+      "src": "http://127.0.0.1:4183/assets/canonical/public/team-asset-1.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "eager"
+    },
+    {
+      "src": "http://127.0.0.1:4183/assets/canonical/public/team-asset-2.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "eager"
+    },
+    {
+      "src": "http://127.0.0.1:4183/assets/canonical/public/team-asset-3.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "eager"
+    },
+    {
+      "src": "http://127.0.0.1:4183/assets/canonical/public/team-asset-4.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "eager"
+    },
+    {
+      "src": "http://127.0.0.1:4183/assets/canonical/public/team-asset-5.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "eager"
+    },
+    {
+      "src": "http://127.0.0.1:4183/assets/canonical/public/team-asset-6.png",
+      "complete": true,
+      "decoded": true,
+      "loading": "eager"
+    },
+    {
+      "src": "http://127.0.0.1:4183/assets/sadat-real-estate-logo.png",
       "complete": true,
       "decoded": true,
       "loading": "lazy"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/team-asset-2.png",
+      "src": "http://127.0.0.1:4183/assets/figma/public-footer-phone.svg",
       "complete": true,
       "decoded": true,
-      "loading": "lazy"
+      "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/team-asset-3.png",
+      "src": "http://127.0.0.1:4183/assets/figma/public-footer-whatsapp.svg",
       "complete": true,
       "decoded": true,
-      "loading": "lazy"
+      "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/team-asset-4.png",
+      "src": "http://127.0.0.1:4183/assets/figma/public-footer-location.svg",
       "complete": true,
       "decoded": true,
-      "loading": "lazy"
+      "loading": "auto"
     },
     {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/team-asset-5.png",
+      "src": "http://127.0.0.1:4183/assets/figma/public-footer-x.svg",
       "complete": true,
       "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/canonical/public/team-asset-6.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
-    },
-    {
-      "src": "http://127.0.0.1:4173/assets/sadat-real-estate-logo.png",
-      "complete": true,
-      "decoded": true,
-      "loading": "lazy"
+      "loading": "auto"
     }
   ],
   "transitions": {
@@ -2248,27 +2283,27 @@
       },
       {
         "text": "العقارات",
-        "href": "/properties"
+        "href": "/properties?lang=ar"
       },
       {
         "text": "المطورون",
-        "href": "/developers"
+        "href": "/developers?lang=ar"
       },
       {
         "text": "المقالات",
-        "href": "/articles"
+        "href": "/articles?lang=ar"
       },
       {
         "text": "الكوميونتي",
-        "href": "/community"
+        "href": "/community?lang=ar"
       },
       {
         "text": "من نحن",
-        "href": "/about"
+        "href": "/about?lang=ar"
       },
       {
         "text": "فريق العمل",
-        "href": "/team"
+        "href": "/team?lang=ar"
       },
       {
         "text": "01001234567",
@@ -2285,6 +2320,10 @@
       {
         "text": "",
         "href": "https://instagram.com"
+      },
+      {
+        "text": "",
+        "href": "https://x.com"
       },
       {
         "text": "",
@@ -2371,8 +2410,8 @@
       "comparedWidth": 1523,
       "comparedHeight": 1560,
       "comparedPixels": 2375880,
-      "materialDifferencePercent": 6.7041,
-      "antiAliasingOnlyPercent": 7.0369,
+      "materialDifferencePercent": 7.3674,
+      "antiAliasingOnlyPercent": 6.8318,
       "threshold": {
         "materialRgbSumGreaterThan": 24,
         "antiAliasingRgbSumGreaterThan": 3

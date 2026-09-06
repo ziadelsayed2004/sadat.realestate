@@ -258,21 +258,22 @@
 .auth-card--success {
   display: grid;
   justify-items: center;
-  gap: var(--space-xl);
-  padding: clamp(var(--space-2xl), 7vw, var(--space-4xl)) clamp(var(--space-xl), 7vw, var(--space-4xl));
+  gap: var(--space-lg);
+  inline-size: min(100%, 27.5rem);
+  padding: clamp(1.5rem, 4vw, 2rem);
   text-align: center;
 }
 
 .auth-success-mark {
   display: grid;
   place-items: center;
-  inline-size: clamp(5rem, 18vw, 8rem);
-  block-size: clamp(5rem, 18vw, 8rem);
+  inline-size: clamp(3.75rem, 13vw, 5rem);
+  block-size: clamp(3.75rem, 13vw, 5rem);
   color: var(--color-on-brand);
   background: var(--color-status-success);
   border-radius: 50%;
-  box-shadow: 0 0 0 1rem color-mix(in srgb, var(--color-status-success) 12%, transparent);
-  font-size: clamp(2.5rem, 8vw, 4rem);
+  box-shadow: 0 0 0 0.75rem color-mix(in srgb, var(--color-status-success) 12%, transparent);
+  font-size: clamp(2rem, 7vw, 3rem);
   font-weight: var(--font-weight-bold);
 }
 
@@ -286,17 +287,26 @@
   margin: 0;
 }
 
-.auth-success-actions {
-  display: grid;
-  gap: var(--space-md);
-  inline-size: min(100%, 22rem);
+.auth-success-benefit__icon .auth-icon {
+  inline-size: 1rem;
+  block-size: 1rem;
 }
 
-.auth-success-actions a {
+.auth-success-actions {
+  display: grid;
+  gap: var(--space-sm);
+  inline-size: 100%;
+}
+
+.auth-success-actions a:not(.ui-button) {
   color: var(--color-brand-secondary);
   font-weight: var(--font-weight-semibold);
   text-decoration: underline;
   text-underline-offset: 0.2em;
+}
+
+.auth-success-actions > .ui-button {
+  text-decoration: none;
 }
 
 .auth-page--unavailable {
@@ -330,6 +340,7 @@
   .auth-role-options {
     grid-template-columns: 1fr;
   }
+
 }
 
 /* Auth screens use the approved full-width page treatment while the shared

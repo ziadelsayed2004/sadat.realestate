@@ -27,7 +27,7 @@ const matrixMode = args.has('matrix');
 if (!['before', 'after'].includes(phase)) throw new Error(`Unsupported phase: ${phase}`);
 if (!['ar', 'en'].includes(locale)) throw new Error(`Unsupported locale: ${locale}`);
 if (matrixMode && phase !== 'after') throw new Error('Responsive matrix evidence is captured after the repaired state only');
-if (!aliasMode && !allMode && !matrixMode && !/^AUTH-(?:0[1-9]|1[0-7])\+?$/.test(screenId)) {
+if (!aliasMode && !allMode && !/^AUTH-(?:0[1-9]|1[0-7])\+?$/.test(screenId)) {
   throw new Error(`Expected --screen-id AUTH-01..AUTH-17 (or --all), received ${screenId}`);
 }
 
@@ -234,6 +234,8 @@ async function prepareScreen(page, screen) {
       await waitForScreen(page, 'AUTH-03');
       await page.locator('#auth-registration-first-name').fill('Ahmed');
       await page.locator('#auth-registration-last-name').fill('Mohamed');
+      await page.locator('#auth-registration-password').fill('SafePass1!');
+      await page.locator('#auth-registration-password-confirmation').fill('SafePass1!');
       await page.locator('[data-screen-id="AUTH-03"] form button[type="submit"]').click();
       await waitForScreen(page, 'AUTH-06');
     } else {
@@ -761,7 +763,7 @@ async function captureResponsiveScreen(screen, selectedLocale) {
 
 if (aliasMode) {
   await captureAlias(locale);
-} else if (allMode) {
+} else if (allMode && !matrixMode) {
   for (const id of screenIds) {
     const existing = path.join(root, 'docs/quality/figma_parity/screens', id, `runtime-${phase}-auth-lane-${locale}${revision === '' ? '' : `-${revision}`}.png`);
     if (fs.existsSync(existing)) {
@@ -771,7 +773,8 @@ if (aliasMode) {
     await captureScreen(id, locale);
   }
 } else if (matrixMode) {
-  for (const id of screenIds) {
+  const matrixScreenIds = allMode ? screenIds : [screenId];
+  for (const id of matrixScreenIds) {
     const existing = path.join(root, 'docs/quality/figma_parity/screens', id, `auth-lane-${locale}${revision === '' ? '' : `-${revision}`}-responsive-matrix-after.json`);
     if (fs.existsSync(existing)) {
       console.log(JSON.stringify({ screenId: id, locale, phase, skipped: true, reason: `existing ${path.basename(existing)}` }));

@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { publicTeamFixture } from './public-fixtures';
 
 function localeForProject(): 'ar' | 'en' {
   const projectName = test.info().project.name;
@@ -40,7 +41,7 @@ async function routeAboutTeamApi(page: import('@playwright/test').Page) {
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(aboutFixture()) });
   });
   await page.route('**/api/v1/public/team', async route => {
-    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(teamFixture()) });
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ...teamFixture(), data: publicTeamFixture().data }) });
   });
 }
 
@@ -77,5 +78,9 @@ test('public Team renders safe published projections across approved locales and
   await expect(team).toHaveAttribute('data-team-state', 'success');
   await expect(team.locator('.public-team__card')).toHaveCount(6);
   await expect(team.locator('[data-media-state="success"]')).toHaveCount(6);
+  await team.locator('.public-team__filters button', { hasText: locale === 'ar' ? 'محتوى' : 'Content' }).click();
+  await expect(team.locator('.public-team__card')).toHaveCount(2);
+  await team.locator('.public-team__filters button', { hasText: locale === 'ar' ? 'الكل' : 'All' }).click();
+  await expect(team.locator('.public-team__card')).toHaveCount(6);
   await expect(page).toHaveScreenshot(`public-team-${locale}.png`, { fullPage: true });
 });

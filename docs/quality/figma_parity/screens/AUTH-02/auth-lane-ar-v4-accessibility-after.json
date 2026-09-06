@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-02",
+  "phase": "after",
+  "html": {
+    "lang": "ar",
+    "dir": "rtl"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-02",
+    "state": "idle",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/register/seeker?lang=ar",
+    "html": {
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 944
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 14,
+      "forms": 0,
+      "buttons": 2,
+      "links": 4,
+      "inputs": 0,
+      "unlabeledControls": 0
+    },
+    "controls": [],
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "أريد عرض عقاراتأضف وحداتك وتابع طلبات العملاء بعد مراجعة واعتماد حسابك.مقدم عقار",
+        "href": "/auth/register/provider/type"
+      },
+      {
+        "text": "العودة إلى تسجيل الدخول",
+        "href": "/auth/login"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "أبحث عن عقاراستكشف الوحدات، احفظ العقارات المناسبة، وأرسل طلبات الاستفسار والمعاينة.",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "متابعة",
+        "ariaLabel": null,
+        "disabled": true
+      }
+    ]
+  }
+}

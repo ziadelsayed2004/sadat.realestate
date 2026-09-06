@@ -13,9 +13,7 @@ async function waitForHomepageMediaToSettle(page: Page): Promise<void> {
     if (image.loading === 'lazy') image.loading = 'eager';
     image.decoding = 'sync';
   }));
-  for (let index = 0; index < await images.count(); index += 1) {
-    await images.nth(index).scrollIntoViewIfNeeded();
-  }
+  await images.evaluateAll(elements => elements.forEach(element => element.scrollIntoView({ block: 'nearest' })));
   await page.evaluate(() => document.fonts.ready);
   await expect.poll(
     () => images.evaluateAll(elements => (elements as HTMLImageElement[]).every(image => image.complete && image.naturalWidth > 0)),

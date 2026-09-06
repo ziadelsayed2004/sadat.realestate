@@ -182,7 +182,7 @@ function StateNotice({ error, copy, onRetry }: { readonly error: AuthUiError; re
   );
 }
 
-type AuthIconName = 'mail' | 'lock' | 'eye' | 'eye-off' | 'shield' | 'home' | 'building';
+type AuthIconName = 'mail' | 'lock' | 'eye' | 'eye-off' | 'shield' | 'home' | 'building' | 'heart' | 'message' | 'settings';
 
 function AuthIcon({ name }: { readonly name: AuthIconName }) {
   const svgProps = {
@@ -212,6 +212,12 @@ function AuthIcon({ name }: { readonly name: AuthIconName }) {
       return <svg {...svgProps}><path d="m4 10 8-7 8 7" /><path d="M5 9.5V20h14V9.5" /><path d="M9.5 20v-6h5v6" /></svg>;
     case 'building':
       return <svg {...svgProps}><path d="M7 21V4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v17" /><path d="M7 10H5a2 2 0 0 0-2 2v9M17 10h2a2 2 0 0 1 2 2v9M3 21h18" /><path d="M10 6h4M10 10h4M10 14h4M10 18h4" /></svg>;
+    case 'heart':
+      return <svg {...svgProps}><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z" /></svg>;
+    case 'message':
+      return <svg {...svgProps}><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.3 9.3 0 0 1-4-.9L3 21l1.8-4.8A8.4 8.4 0 1 1 21 11.5Z" /></svg>;
+    case 'settings':
+      return <svg {...svgProps}><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3V2.8h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z" /></svg>;
   }
 }
 
@@ -799,15 +805,15 @@ function SeekerRegistrationForm({ client, locale, email, verificationToken, onRe
 
   return (
     <section className="auth-page auth-page--registration-form" data-screen-id="AUTH-03" data-state={state} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-      <div className="auth-card auth-card--form">
-        <header className="auth-card__heading">
-          <span className="auth-card__icon" aria-hidden="true">✓</span>
-          <h1>{copy.registrationFormTitle}</h1>
+      <div className="auth-card auth-card--form" style={{ inlineSize: 'min(100%, 31.25rem)' }}>
+        <header className="auth-card__heading" style={{ gap: '0.5rem', paddingBlockEnd: '1.75rem' }}>
+          <span className="auth-card__icon" aria-hidden="true" style={{ inlineSize: '3.5rem', blockSize: '3.5rem', borderRadius: '1rem' }}>✓</span>
+          <h1 style={{ fontSize: '1.5rem' }}>{copy.registrationFormTitle}</h1>
           <p>{copy.registrationFormBody}</p>
         </header>
-        <div className="auth-card__body">
+        <div className="auth-card__body" style={{ gap: '1.25rem', padding: '2.0625rem' }}>
           {error === undefined ? null : <StateNotice error={error} copy={copy} onRetry={() => void submit()} />}
-          <form className="auth-form" onSubmit={handleSubmit} noValidate>
+          <form className="auth-form" style={{ gap: '1rem' }} onSubmit={handleSubmit} noValidate>
             <Input
               id="auth-registration-first-name"
               label={copy.firstNameLabel}
@@ -868,6 +874,20 @@ interface SeekerRegistrationSuccessProps {
 }
 
 function SeekerRegistrationSuccess({ copy, locale, snapshot, onContinue }: SeekerRegistrationSuccessProps) {
+  const benefits = locale === 'ar'
+    ? [
+        { icon: 'heart' as const, label: 'حفظ العقارات في المفضلة' },
+        { icon: 'message' as const, label: 'متابعة طلبات الاستفسار' },
+        { icon: 'home' as const, label: 'طلب معاينة العقارات' },
+        { icon: 'settings' as const, label: 'تحديث تفضيلات البحث' }
+      ]
+    : [
+        { icon: 'heart' as const, label: 'Save favorite properties' },
+        { icon: 'message' as const, label: 'Track enquiry requests' },
+        { icon: 'home' as const, label: 'Request property viewings' },
+        { icon: 'settings' as const, label: 'Update search preferences' }
+      ];
+
   return (
     <section className="auth-page auth-page--registration-success" data-screen-id="AUTH-06" data-state="success" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <div className="auth-card auth-card--success">
@@ -876,11 +896,22 @@ function SeekerRegistrationSuccess({ copy, locale, snapshot, onContinue }: Seeke
           <h1>{copy.registrationSuccessTitle}</h1>
           <p>{copy.registrationSuccessBody}</p>
         </div>
+        <section className="auth-success-benefits" aria-labelledby="auth-success-benefits-title" style={{ display: 'grid', gap: '0.75rem', inlineSize: '100%', padding: '1rem', background: '#fff', border: '1px solid var(--color-border)', borderRadius: '1rem', boxShadow: 'var(--shadow-sm)', textAlign: 'start' }}>
+          <h2 id="auth-success-benefits-title" style={{ margin: 0, color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>{locale === 'ar' ? 'مزايا حسابك' : 'Your account benefits'}</h2>
+          <div className="auth-success-benefits__grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(10rem, 1fr))', gap: '0.5rem' }}>
+            {benefits.map(benefit => (
+              <div className="auth-success-benefit" key={benefit.label} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minBlockSize: '3.5rem', padding: '0.5rem 0.75rem', background: '#faf8f2', borderRadius: '0.75rem', fontSize: '0.875rem', lineHeight: 1.35 }}>
+                <span className="auth-success-benefit__icon" aria-hidden="true" style={{ display: 'grid', flex: '0 0 auto', placeItems: 'center', inlineSize: '2rem', blockSize: '2rem', background: '#f3e8d0', borderRadius: '50%' }}><AuthIcon name={benefit.icon} /></span>
+                <span>{benefit.label}</span>
+              </div>
+            ))}
+          </div>
+        </section>
         <div className="auth-success-actions">
-          <Button type="button" fullWidth size="lg" onClick={() => onContinue(snapshot)}>
-            {copy.registrationNextAction}
-          </Button>
-          <a href="/auth/login">{copy.loginAction}</a>
+          <a className="ui-button ui-button--primary ui-button--lg ui-button--full" href={`/properties?lang=${locale}`}>
+            <span className="ui-button__label">{locale === 'ar' ? 'ابدأ استكشاف العقارات' : 'Start exploring properties'}</span>
+          </a>
+          <Button type="button" variant="secondary" fullWidth size="lg" onClick={() => onContinue(snapshot)}>{copy.registrationNextAction}</Button>
         </div>
       </div>
     </section>

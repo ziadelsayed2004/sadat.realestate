@@ -410,7 +410,6 @@ await page.evaluate(async () => {
   }
   window.scrollTo(0, 0);
   await Promise.all(images.map(async image => {
-    if (image.complete) return;
     await Promise.race([
       image.decode().catch(() => undefined),
       new Promise(resolve => setTimeout(resolve, 5_000))

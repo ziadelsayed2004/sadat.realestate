@@ -251,7 +251,7 @@ function TeamCard({ locale, copy, member }: { readonly locale: SupportedLocale; 
   return (
     <article className="public-team__card" data-team-category={presentation?.category ?? 'unknown'}>
       <div className="public-team__media" data-media-state={presentation === undefined ? 'unavailable' : 'success'}>
-        {presentation === undefined ? fallback : <PublicMediaImage src={presentation.image} alt="" fallback={fallback} className="public-team__photo" loading="lazy" />}
+        {presentation === undefined ? fallback : <PublicMediaImage src={presentation.image} alt="" fallback={fallback} className="public-team__photo" loading="eager" />}
       </div>
       <div className="public-team__card-body"><h2>{name}</h2><p className="public-team__role">{role}</p><p>{bio}</p></div>
     </article>

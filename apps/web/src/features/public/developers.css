@@ -418,36 +418,6 @@
   cursor: pointer;
 }
 
-  .public-developer-profile__content {
-    width: min(calc(100% - 5rem), 81rem);
-  }
-
-  .public-developer-profile__hero {
-    grid-template-columns: 1fr;
-    overflow: visible;
-    background: rgb(0 0 0 / 25%);
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
-  }
-
-  .public-developer-profile__hero-media {
-    inline-size: 100dvw;
-    max-inline-size: 100dvw;
-    block-size: 31rem;
-    margin-inline-start: calc(50% - 50dvw);
-  }
-
-  .public-developer-profile__hero-media > img {
-    block-size: 31rem;
-    border-radius: 0;
-  }
-
-  .public-developer-profile__project-card > img,
-  .public-developer-profile__property-card > img {
-    block-size: 13rem;
-  }
-
 .public-developer-profile__layout {
   display: block;
   padding-block: 0 var(--space-4xl);
@@ -1076,7 +1046,7 @@
 
 @media (min-width: 64.01rem) {
   .public-developer-profile__content {
-    width: min(calc(100% - 2rem), 77rem);
+    width: min(calc(100% - clamp(3rem, 6vw, 5rem)), 77rem);
     padding-block: 0 4rem;
   }
 

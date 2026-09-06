@@ -293,6 +293,8 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
 
   const screenId = hasAccountValues(form) ? 'AUTH-09+' : 'AUTH-09';
   const missingFields = application?.missingFields ?? [];
+  const missingFieldLabels = [...new Set(missingFields.map(field => missingFieldLabel(copy, field)))];
+  const hasLocations = locationsState === 'ready' && locations.length > 0;
   const state = loadState === 'ready' ? saveState : loadState;
 
   if (loadState === 'loading') {
@@ -416,25 +418,36 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
               </label>
             </div>
             <p className="provider-account-contract-note">{copy.unsupportedFieldNote}</p>
-            <Select
-              label={copy.missingFieldLabels['primaryLocationId'] ?? 'Primary location'}
-              value={form.primaryLocationId}
-              onChange={event => update('primaryLocationId', event.currentTarget.value)}
-              options={[
-                { value: '', label: locale === 'ar' ? 'اختر الموقع الرئيسي' : 'Choose primary location' },
-                ...locations.map(location => ({ value: location.id, label: location.name[locale] ?? location.name.ar }))
-              ]}
-              disabled={locationsState !== 'ready'}
-            />
-            <fieldset className="provider-account-consents">
-              <legend>{copy.missingFieldLabels['serviceAreaIds']}</legend>
-              {locations.map(location => (
-                <label className="provider-account-checkbox" key={location.id}>
-                  <input type="checkbox" checked={form.serviceAreaIds.includes(location.id)} onChange={event => update('serviceAreaIds', event.currentTarget.checked ? [...form.serviceAreaIds, location.id] : form.serviceAreaIds.filter(id => id !== location.id))} />
-                  <span>{location.name[locale] ?? location.name.ar}</span>
-                </label>
-              ))}
-            </fieldset>
+            {locationsState === 'loading' ? (
+              <Select
+                label={copy.missingFieldLabels['primaryLocationId'] ?? 'Primary location'}
+                value=""
+                options={[{ value: '', label: locale === 'ar' ? 'جارٍ تحميل المواقع…' : 'Loading locations…' }]}
+                disabled
+              />
+            ) : null}
+            {hasLocations ? (
+              <>
+                <Select
+                  label={copy.missingFieldLabels['primaryLocationId'] ?? 'Primary location'}
+                  value={form.primaryLocationId}
+                  onChange={event => update('primaryLocationId', event.currentTarget.value)}
+                  options={[
+                    { value: '', label: locale === 'ar' ? 'اختر الموقع الرئيسي' : 'Choose primary location' },
+                    ...locations.map(location => ({ value: location.id, label: location.name[locale] ?? location.name.ar }))
+                  ]}
+                />
+                <fieldset className="provider-account-consents">
+                  <legend>{copy.missingFieldLabels['serviceAreaIds']}</legend>
+                  {locations.map(location => (
+                    <label className="provider-account-checkbox" key={location.id}>
+                      <input type="checkbox" checked={form.serviceAreaIds.includes(location.id)} onChange={event => update('serviceAreaIds', event.currentTarget.checked ? [...form.serviceAreaIds, location.id] : form.serviceAreaIds.filter(id => id !== location.id))} />
+                      <span>{location.name[locale] ?? location.name.ar}</span>
+                    </label>
+                  ))}
+                </fieldset>
+              </>
+            ) : null}
             {locationsState === 'error' || (locationsState === 'ready' && locations.length === 0) ? (
               <StateMessage state="retry" title={copy.requirementsTitle} message={copy.unavailableLocationBody} retryLabel={copy.retryAction} onRetry={() => void loadLocations()} />
             ) : null}
@@ -443,7 +456,7 @@ export function ProviderAccountPage({ client, locale, providerType, initialAppli
                 <strong>{copy.requirementsTitle}</strong>
                 <p>{copy.requirementsBody}</p>
                 <ul>
-                  {missingFields.map(field => <li key={field}>{missingFieldLabel(copy, field)}</li>)}
+                  {missingFieldLabels.map(label => <li key={label}>{label}</li>)}
                 </ul>
               </aside>
             ) : null}

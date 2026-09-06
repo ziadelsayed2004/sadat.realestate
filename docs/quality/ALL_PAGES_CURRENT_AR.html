@@ -6,7 +6,7 @@
 <h1>تقرير كل الصفحات — آخر حالة مثبتة</h1>
 <p>6 سبتمبر 2026 · 131 شاشة/حالة. المرجع البصري المعتمد هو ملف Figma <code>Odl1Epn2u6lIEuIMmABT7o</code>، ودليل المستخدم مرجع للآلية مع اعتماد البريد الإلكتروني وOTP بدل التسجيل القديم بالهاتف.</p>
 <section><h2>الخلاصة بالأرقام</h2><div class="cards">
-<div class="card"><strong>131</strong>إجمالي الشاشات/الحالات المسجلة</div><div class="card"><strong>10/131</strong>نسب Figma الحالية المقاسة للديسكتوب</div><div class="card"><strong>0/131</strong>نسب Figma الحالية المقاسة للريسبونسيف</div><div class="card"><strong>72/72</strong>فحص صفحات Public كاملًا + 72/72 للفوتر</div></div>
+<div class="card"><strong>131</strong>إجمالي الشاشات/الحالات المسجلة</div><div class="card"><strong>20/131</strong>نسب Figma الحالية المقاسة للديسكتوب</div><div class="card"><strong>0/131</strong>نسب Figma الحالية المقاسة للريسبونسيف</div><div class="card"><strong>72/72</strong>فحص صفحات Public كاملًا + 72/72 للفوتر</div></div>
 <p class="warn"><strong>لا توجد حتى الآن نسبة مطابقة حديثة موثوقة للصفحات الكاملة؛ «غير مقاسة» لا تعني 0% ولا 100%.</strong> القياسات التاريخية تعرض فرقًا قديمًا فقط، ولا يصح تحويلها إلى نسبة حالية بطرحها من 100.</p><p>public: 12 · auth: 19 · seeker: 10 · provider: 24 · admin: 66</p></section>
 <section><h2>تحديث الفوتر العام PUB-01 إلى PUB-12</h2><p class="ok"><strong>تم إصلاح الفوتر المشترك والتحقق منه على كل صفحات Public الاثنتي عشرة.</strong></p>
 <p>طابق التنفيذ بنية عقدتي Figma: الديسكتوب <code>6017:11365</code> والموبايل <code>6129:7924</code> داخل الشاشة <code>6017:110792</code>. أُصلح ترتيب RTL، وتقسيم الأعمدة 4/2/1 للديسكتوب/التابلت/الموبايل، وصف المتابعة والحقوق، والروابط الحافظة للغة، وأيقونات التواصل والنسخة المختصرة للموبايل.</p><p>72/72 Playwright cases passed across 12 public routes, AR/EN and widths 1440/768/390. No horizontal overflow, broken footer images, locale loss, browser errors or structural mismatches. 12/12 focused component tests, targeted lint, diff check, full build and runtime smoke passed.</p>
@@ -96,81 +96,81 @@
 </tr><tr data-surface="public">
   <td><strong>PUB-11</strong><br>عن المنصة</td>
   <td><code>/about</code></td>
+  <td>94.7786%</td>
   <td>غير مقاسة حاليًا</td>
-  <td>غير مقاسة حاليًا</td>
-  <td>4.7616% اختلاف تاريخي — same-width source/runtime canvas comparison over the overlapping document height</td>
-  <td>خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
-  <td>مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات — الفوتر المشترك فقط: ناجح ضمن 72/72 حالة على 12 صفحة ولغتين وثلاثة مقاسات؛ لا يمثل قياس الصفحة كاملة.</td>
+  <td>5.2214% اختلاف تاريخي — same-width source/runtime canvas comparison over the overlapping document height</td>
+  <td>GET /api/v1/public/about وعرض محتوى CMS العام وحالة النجاح وروابط CTA مدققة باختبارات مركزة ناجحة<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
+  <td>مصفوفة مرئية وإتاحة ناجحة 12/12 للديسكتوب والتابلت والموبايل بالعربية والإنجليزية؛ لا تُدّعى نسبة فيجما رقمية موحدة للمقاسات غير الديسكتوب — الفوتر المشترك فقط: ناجح ضمن 72/72 حالة على 12 صفحة ولغتين وثلاثة مقاسات؛ لا يمثل قياس الصفحة كاملة.</td>
 </tr><tr data-surface="public">
   <td><strong>PUB-12</strong><br>فريق العمل</td>
   <td><code>/team</code></td>
+  <td>92.6326%</td>
   <td>غير مقاسة حاليًا</td>
-  <td>غير مقاسة حاليًا</td>
-  <td>6.7041% اختلاف تاريخي — same-width source/runtime canvas comparison over the overlapping document height</td>
-  <td>خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
-  <td>مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات — الفوتر المشترك فقط: ناجح ضمن 72/72 حالة على 12 صفحة ولغتين وثلاثة مقاسات؛ لا يمثل قياس الصفحة كاملة.</td>
+  <td>7.3674% اختلاف تاريخي — same-width source/runtime canvas comparison over the overlapping document height</td>
+  <td>GET /api/v1/public/team وإسقاط بيانات الفريق العام الآمن وصور الأعضاء والفلاتر مدققة باختبارات مركزة ناجحة<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
+  <td>مصفوفة مرئية ووظيفية وإتاحة ناجحة 12/12 للديسكتوب والتابلت والموبايل بالعربية والإنجليزية؛ لا تُدّعى نسبة فيجما رقمية موحدة للمقاسات غير الديسكتوب — الفوتر المشترك فقط: ناجح ضمن 72/72 حالة على 12 صفحة ولغتين وثلاثة مقاسات؛ لا يمثل قياس الصفحة كاملة.</td>
 </tr><tr data-surface="auth">
   <td><strong>AUTH-01</strong><br>Login</td>
   <td><code>/auth/login</code></td>
+  <td>97.25%</td>
   <td>غير مقاسة حاليًا</td>
-  <td>غير مقاسة حاليًا</td>
-  <td>2.4583% اختلاف تاريخي — unmasked same-width source/runtime canvas comparison over overlapping document height</td>
-  <td>Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
-  <td>مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات</td>
+  <td>2.75% اختلاف تاريخي — unmasked same-width source/runtime canvas comparison over overlapping document height</td>
+  <td>تسجيل الدخول بالبريد وكلمة المرور ومسار Email OTP يعملان بعقد API الحالي؛ نجحت اختبارات الوحدة 6/6 واختبارات التنقل واللغة والاتجاه 6/6، مع بقاء التدقيق الحي الكامل على الإنتاج ضمن المراحل اللاحقة<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
+  <td>نجحت مصفوفة الديسكتوب والتابلت والموبايل بالعربية والإنجليزية بلا خروج أفقي؛ لقطات الأساس المرئية 6/6، ولا تُدّعى نسبة Figma رقمية للمقاسات التي لا تملك مرجعًا مطابقًا</td>
 </tr><tr data-surface="auth">
   <td><strong>AUTH-02</strong><br>إنشاء حساب باحث</td>
   <td><code>/auth/register/seeker</code></td>
+  <td>98.5882%</td>
   <td>غير مقاسة حاليًا</td>
-  <td>غير مقاسة حاليًا</td>
-  <td>5.3906% اختلاف تاريخي — unmasked same-width source/runtime canvas comparison over overlapping document height</td>
-  <td>Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
-  <td>مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات</td>
+  <td>1.4118% اختلاف تاريخي — unmasked same-width source/runtime canvas comparison over overlapping document height</td>
+  <td>اختيار الباحث ينتقل إلى Email OTP، واختيار مقدم العقار ينتقل إلى نوع مقدم العقار؛ منطق الاختيار والتعطيل والتنقل مدقق باختبارات الوحدة 6/6 واختبارات لوحة المفاتيح عبر المقاسات واللغتين 6/6<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
+  <td>نجحت مصفوفة الديسكتوب والتابلت والموبايل بالعربية والإنجليزية بلا خروج أفقي؛ لا تُدّعى نسبة Figma رقمية للمقاسات التي لا تملك مرجعًا مطابقًا</td>
 </tr><tr data-surface="auth">
   <td><strong>AUTH-03</strong><br>Seeker Registration — Default</td>
   <td><code>/auth/register/seeker</code></td>
+  <td>94.8429%</td>
   <td>غير مقاسة حاليًا</td>
-  <td>غير مقاسة حاليًا</td>
-  <td>لا يوجد قياس مسجل</td>
+  <td>5.1571% اختلاف تاريخي — Fresh canonical Figma comparison at 1577px; active email + OTP flow preserved</td>
   <td>Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
   <td>مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات</td>
 </tr><tr data-surface="auth">
   <td><strong>AUTH-04</strong><br>تأكيد رقم الهاتف — OTP</td>
   <td><code>/auth/verify-phone</code></td>
+  <td>82.312%</td>
   <td>غير مقاسة حاليًا</td>
-  <td>غير مقاسة حاليًا</td>
-  <td>لا يوجد قياس مسجل</td>
+  <td>17.688% اختلاف تاريخي — Fresh raw-pixel comparison against the retired phone-account Figma composition; active route is email OTP</td>
   <td>Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
   <td>مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات</td>
 </tr><tr data-surface="auth">
   <td><strong>AUTH-05</strong><br>Phone Verification — OTP</td>
   <td><code>/auth/verify-phone</code></td>
+  <td>79.0909%</td>
   <td>غير مقاسة حاليًا</td>
-  <td>غير مقاسة حاليًا</td>
-  <td>لا يوجد قياس مسجل</td>
+  <td>20.9091% اختلاف تاريخي — Fresh raw-pixel comparison against the retired phone-OTP Figma composition; active state is email OTP</td>
   <td>Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
   <td>مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات</td>
 </tr><tr data-surface="auth">
   <td><strong>AUTH-06</strong><br>نجاح إنشاء حساب الباحث</td>
   <td><code>/auth/register/seeker/success</code></td>
+  <td>85.1569%</td>
   <td>غير مقاسة حاليًا</td>
-  <td>غير مقاسة حاليًا</td>
-  <td>لا يوجد قياس مسجل</td>
+  <td>14.8431% اختلاف تاريخي — Fresh raw-pixel comparison after restoring the four account benefits and both approved success actions</td>
   <td>Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
   <td>مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات</td>
 </tr><tr data-surface="auth">
   <td><strong>AUTH-07</strong><br>اختيار نوع مقدم العقار</td>
   <td><code>/auth/register/provider/type</code></td>
+  <td>85.5786%</td>
   <td>غير مقاسة حاليًا</td>
-  <td>غير مقاسة حاليًا</td>
-  <td>لا يوجد قياس مسجل</td>
+  <td>14.4214% اختلاف تاريخي — Fresh raw-pixel comparison; residual includes the current required password fields absent from the older Figma export</td>
   <td>Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
   <td>مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات</td>
 </tr><tr data-surface="auth">
   <td><strong>AUTH-08</strong><br>اختيار نوع مقدم العقار — محدد</td>
   <td><code>/auth/register/provider/type</code></td>
+  <td>83.5614%</td>
   <td>غير مقاسة حاليًا</td>
-  <td>غير مقاسة حاليًا</td>
-  <td>لا يوجد قياس مسجل</td>
+  <td>16.4386% اختلاف تاريخي — Fresh raw-pixel comparison of the selected provider type; residual includes current password requirements</td>
   <td>Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق<br><small>اكتمال الرحلة على الإنتاج غير مثبت إلا في حدود الدليل المذكور.</small></td>
   <td>مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات</td>
 </tr><tr data-surface="auth">

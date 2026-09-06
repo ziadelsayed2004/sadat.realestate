@@ -78,6 +78,10 @@ test('community feed and create-post surface match the approved responsive publi
   await expect(page.getByLabel(/Post body|نص المشاركة|محتوى البوست|帖子内容/)).toBeVisible();
   await expect(page.locator('.ui-modal__footer')).toBeVisible();
   await expect(page).toHaveScreenshot(`public-community-create-${locale}.png`, { fullPage: true });
+  const titleInput = page.locator('#community-create-form input').first();
+  await titleInput.fill('Focus remains here');
+  await expect(titleInput).toBeFocused();
+  await expect(page.locator('.ui-modal__close')).not.toBeFocused();
 });
 
 test('community controls are labeled and keyboard-accessible across approved locales', async ({ page }) => {

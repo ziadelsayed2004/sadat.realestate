@@ -321,6 +321,8 @@ export function Modal({ open, className, title, description, children, closeLabe
   const descriptionId = `${titleId}-description`;
   const dialogRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
     if (!open) return undefined;
@@ -333,7 +335,7 @@ export function Modal({ open, className, title, description, children, closeLabe
     }
 
     const handleKeyDown = (event: globalThis.KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape') onCloseRef.current();
       if (event.key !== 'Tab' || dialog === null) return;
 
       const focusableElements = getFocusableElements(dialog);
@@ -369,7 +371,7 @@ export function Modal({ open, className, title, description, children, closeLabe
       previousFocusRef.current = null;
       if (previousFocus?.isConnected === true) previousFocus.focus();
     };
-  }, [onClose, open]);
+  }, [open]);
 
   if (!open) return null;
 

@@ -309,14 +309,14 @@
       "metrics": [
         {
           "path": "docs/quality/figma_parity/screens/PUB-11/visual-metrics.json",
-          "diff": 4.7616,
+          "diff": 5.2214,
           "method": "same-width source/runtime canvas comparison over the overlapping document height"
         }
       ],
-      "currentDesktopParityPercent": null,
+      "currentDesktopParityPercent": 94.7786,
       "currentResponsiveParityPercent": null,
-      "backendAssessment": "خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل",
-      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+      "backendAssessment": "GET /api/v1/public/about وعرض محتوى CMS العام وحالة النجاح وروابط CTA مدققة باختبارات مركزة ناجحة",
+      "responsiveAssessment": "مصفوفة مرئية وإتاحة ناجحة 12/12 للديسكتوب والتابلت والموبايل بالعربية والإنجليزية؛ لا تُدّعى نسبة فيجما رقمية موحدة للمقاسات غير الديسكتوب"
     },
     {
       "id": "PUB-12",
@@ -327,14 +327,14 @@
       "metrics": [
         {
           "path": "docs/quality/figma_parity/screens/PUB-12/visual-metrics.json",
-          "diff": 6.7041,
+          "diff": 7.3674,
           "method": "same-width source/runtime canvas comparison over the overlapping document height"
         }
       ],
-      "currentDesktopParityPercent": null,
+      "currentDesktopParityPercent": 92.6326,
       "currentResponsiveParityPercent": null,
-      "backendAssessment": "خدمات موجودة؛ smoke للقوائم ناجح؛ الرحلة الخاصة بهذه الصفحة ليست مدققة بالكامل",
-      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+      "backendAssessment": "GET /api/v1/public/team وإسقاط بيانات الفريق العام الآمن وصور الأعضاء والفلاتر مدققة باختبارات مركزة ناجحة",
+      "responsiveAssessment": "مصفوفة مرئية ووظيفية وإتاحة ناجحة 12/12 للديسكتوب والتابلت والموبايل بالعربية والإنجليزية؛ لا تُدّعى نسبة فيجما رقمية موحدة للمقاسات غير الديسكتوب"
     },
     {
       "id": "AUTH-01",
@@ -345,16 +345,16 @@
       "audit": "REPAIRED_VERIFIED",
       "metrics": [
         {
-          "path": "docs/quality/figma_parity/screens/AUTH-01/visual-metrics-pass4.json",
-          "diff": 2.4583,
-          "date": null,
+          "path": "docs/quality/figma_parity/screens/AUTH-01/auth-lane-ar-v4-visual-metrics-after.json",
+          "diff": 2.75,
+          "date": "2026-09-06",
           "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
         }
       ],
-      "currentDesktopParityPercent": null,
+      "currentDesktopParityPercent": 97.25,
       "currentResponsiveParityPercent": null,
-      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
-      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+      "backendAssessment": "تسجيل الدخول بالبريد وكلمة المرور ومسار Email OTP يعملان بعقد API الحالي؛ نجحت اختبارات الوحدة 6/6 واختبارات التنقل واللغة والاتجاه 6/6، مع بقاء التدقيق الحي الكامل على الإنتاج ضمن المراحل اللاحقة",
+      "responsiveAssessment": "نجحت مصفوفة الديسكتوب والتابلت والموبايل بالعربية والإنجليزية بلا خروج أفقي؛ لقطات الأساس المرئية 6/6، ولا تُدّعى نسبة Figma رقمية للمقاسات التي لا تملك مرجعًا مطابقًا"
     },
     {
       "id": "AUTH-02",
@@ -365,16 +365,16 @@
       "audit": "REPAIRED_VERIFIED",
       "metrics": [
         {
-          "path": "docs/quality/figma_parity/screens/AUTH-02/visual-metrics.json",
-          "diff": 5.3906,
-          "date": null,
+          "path": "docs/quality/figma_parity/screens/AUTH-02/auth-lane-ar-v4-visual-metrics-after.json",
+          "diff": 1.4118,
+          "date": "2026-09-06",
           "method": "unmasked same-width source/runtime canvas comparison over overlapping document height"
         }
       ],
-      "currentDesktopParityPercent": null,
+      "currentDesktopParityPercent": 98.5882,
       "currentResponsiveParityPercent": null,
-      "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
-      "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
+      "backendAssessment": "اختيار الباحث ينتقل إلى Email OTP، واختيار مقدم العقار ينتقل إلى نوع مقدم العقار؛ منطق الاختيار والتعطيل والتنقل مدقق باختبارات الوحدة 6/6 واختبارات لوحة المفاتيح عبر المقاسات واللغتين 6/6",
+      "responsiveAssessment": "نجحت مصفوفة الديسكتوب والتابلت والموبايل بالعربية والإنجليزية بلا خروج أفقي؛ لا تُدّعى نسبة Figma رقمية للمقاسات التي لا تملك مرجعًا مطابقًا"
     },
     {
       "id": "AUTH-03",
@@ -383,8 +383,13 @@
       "name": "Seeker Registration — Default",
       "status": "REPAIRED_VERIFIED",
       "audit": "REPAIRED_VERIFIED",
-      "metrics": [],
-      "currentDesktopParityPercent": null,
+      "metrics": [
+        {
+          "diff": 5.1571,
+          "method": "Fresh canonical Figma comparison at 1577px; active email + OTP flow preserved"
+        }
+      ],
+      "currentDesktopParityPercent": 94.8429,
       "currentResponsiveParityPercent": null,
       "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
       "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
@@ -396,8 +401,13 @@
       "name": "تأكيد رقم الهاتف — OTP",
       "status": "REPAIRED_VERIFIED",
       "audit": "REPAIRED_VERIFIED",
-      "metrics": [],
-      "currentDesktopParityPercent": null,
+      "metrics": [
+        {
+          "diff": 17.688,
+          "method": "Fresh raw-pixel comparison against the retired phone-account Figma composition; active route is email OTP"
+        }
+      ],
+      "currentDesktopParityPercent": 82.312,
       "currentResponsiveParityPercent": null,
       "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
       "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
@@ -409,8 +419,13 @@
       "name": "Phone Verification — OTP",
       "status": "REPAIRED_VERIFIED",
       "audit": "REPAIRED_VERIFIED",
-      "metrics": [],
-      "currentDesktopParityPercent": null,
+      "metrics": [
+        {
+          "diff": 20.9091,
+          "method": "Fresh raw-pixel comparison against the retired phone-OTP Figma composition; active state is email OTP"
+        }
+      ],
+      "currentDesktopParityPercent": 79.0909,
       "currentResponsiveParityPercent": null,
       "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
       "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
@@ -422,8 +437,13 @@
       "name": "نجاح إنشاء حساب الباحث",
       "status": "REPAIRED_VERIFIED",
       "audit": "REPAIRED_VERIFIED",
-      "metrics": [],
-      "currentDesktopParityPercent": null,
+      "metrics": [
+        {
+          "diff": 14.8431,
+          "method": "Fresh raw-pixel comparison after restoring the four account benefits and both approved success actions"
+        }
+      ],
+      "currentDesktopParityPercent": 85.1569,
       "currentResponsiveParityPercent": null,
       "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
       "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
@@ -435,8 +455,13 @@
       "name": "اختيار نوع مقدم العقار",
       "status": "REPAIRED_VERIFIED",
       "audit": "REPAIRED_VERIFIED",
-      "metrics": [],
-      "currentDesktopParityPercent": null,
+      "metrics": [
+        {
+          "diff": 14.4214,
+          "method": "Fresh raw-pixel comparison; residual includes the current required password fields absent from the older Figma export"
+        }
+      ],
+      "currentDesktopParityPercent": 85.5786,
       "currentResponsiveParityPercent": null,
       "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
       "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"
@@ -448,8 +473,13 @@
       "name": "اختيار نوع مقدم العقار — محدد",
       "status": "REPAIRED_VERIFIED",
       "audit": "REPAIRED_VERIFIED",
-      "metrics": [],
-      "currentDesktopParityPercent": null,
+      "metrics": [
+        {
+          "diff": 16.4386,
+          "method": "Fresh raw-pixel comparison of the selected provider type; residual includes current password requirements"
+        }
+      ],
+      "currentDesktopParityPercent": 83.5614,
       "currentResponsiveParityPercent": null,
       "backendAssessment": "Email + OTP معتمد؛ مسار الاعتماد موجود؛ اكتمال كل الحالات على الإنتاج غير مدقق",
       "responsiveAssessment": "مطلوب في التصميم؛ لا تتوفر نسبة حديثة موحدة لكل المقاسات"

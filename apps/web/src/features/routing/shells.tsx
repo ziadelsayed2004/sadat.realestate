@@ -61,14 +61,10 @@ function ShellFrame({ kind, route, locale, copy, assets, onLocaleChange, childre
         <BrandMark label={copy.brand} assets={assets} />
         {adminHeader === undefined ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            {kind === 'auth' ? (
-              <a href="/" style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem', textDecoration: 'none', fontWeight: 600 }}>
-                {locale === 'ar' ? 'الرئيسية' : 'Home'}
-              </a>
-            ) : (
+            {kind === 'auth' ? null : <>
               <span className="surface-label" data-shell-surface="true">{surfaceLabel}</span>
-            )}
-            <LanguageSwitch locale={locale} copy={copy} onLocaleChange={onLocaleChange} />
+              <LanguageSwitch locale={locale} copy={copy} onLocaleChange={onLocaleChange} />
+            </>}
           </div>
         ) : (
           <div data-admin-header="true" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>

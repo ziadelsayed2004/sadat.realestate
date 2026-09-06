@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-01",
+  "phase": "after",
+  "capturedAt": "2026-09-06T07:30:26.592Z",
+  "source": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "forbiddenFileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4353",
+    "nodeId": "6017:16212",
+    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-16212&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4353&starting-point-node-id=6017%3A16212&show-proto-sidebar=1",
+    "dimensions": {
+      "width": 1577,
+      "height": 944
+    }
+  },
+  "runtime": {
+    "route": "/auth/login?lang=ar",
+    "requestedQueueRoute": "/auth/login",
+    "role": "anonymous",
+    "locale": "ar",
+    "direction": "rtl",
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "capture": {
+      "path": "docs/quality/figma_parity/screens/AUTH-01/runtime-after-auth-lane-ar-v4.png",
+      "sha256": "592b1d32b2e3a1953444649f67227b3b83d5aa354e851895266a764e1593623c"
+    },
+    "beforeHash": "1ab6237422eed19e89c560357cc1d746897ec9b9541056b40e9b28fef89828c3",
+    "afterHash": "592b1d32b2e3a1953444649f67227b3b83d5aa354e851895266a764e1593623c",
+    "apiRequests": [],
+    "apiResponses": [],
+    "routeHits": []
+  },
+  "page": {
+    "screenId": "AUTH-01",
+    "state": "idle",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/login?lang=ar",
+    "html": {
+      "lang": "ar",
+      "dir": "rtl"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 944
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 9,
+      "forms": 1,
+      "buttons": 2,
+      "links": 5,
+      "inputs": 3,
+      "unlabeledControls": 0
+    },
+    "controls": [
+      {
+        "tag": "input",
+        "id": "auth-login-email",
+        "name": "email",
+        "type": "email",
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "email"
+      },
+      {
+        "tag": "input",
+        "id": "auth-login-password",
+        "name": "password",
+        "type": "password",
+        "required": true,
+        "ariaLabel": null,
+        "autocomplete": "current-password"
+      },
+      {
+        "tag": "input",
+        "id": null,
+        "name": null,
+        "type": "checkbox",
+        "required": false,
+        "ariaLabel": null,
+        "autocomplete": null
+      }
+    ],
+    "links": [
+      {
+        "text": "تخطي إلى المحتوى الرئيسي",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "نسيت كلمة المرور؟",
+        "href": "/auth/forgot-password?lang=ar"
+      },
+      {
+        "text": "التحقق بالبريد",
+        "href": "/auth/verify-email?purpose=login&roleType=seeker"
+      },
+      {
+        "text": "إنشاء حساب",
+        "href": "/auth/register"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "",
+        "ariaLabel": "إظهار كلمة المرور",
+        "disabled": false
+      },
+      {
+        "text": "تسجيل الدخول",
+        "ariaLabel": null,
+        "disabled": false
+      }
+    ]
+  },
+  "comparison": {
+    "diffPath": "docs/quality/figma_parity/screens/AUTH-01/auth-lane-ar-v4-diff-after.png",
+    "visualMetrics": {
+      "schemaVersion": 1,
+      "screenId": "AUTH-01",
+      "phase": "after",
+      "source": {
+        "width": 1577,
+        "height": 944
+      },
+      "runtimeBefore": {
+        "width": 1577,
+        "height": 944
+      },
+      "runtimeAfter": {
+        "width": 1577,
+        "height": 944
+      },
+      "comparedWidth": 1577,
+      "comparedHeight": 944,
+      "comparedPixels": 1488688,
+      "materialDifferencePercent": 2.75,
+      "antiAliasingOnlyPercent": 3.3242,
+      "threshold": {
+        "materialRgbSumGreaterThan": 24,
+        "antiAliasingRgbSumGreaterThan": 3
+      },
+      "method": "unmasked same-width source/runtime canvas comparison over overlapping document height",
+      "comparedCapture": "RUNTIME AFTER (REPAIRED)",
+      "reviewed": false,
+      "reviewedAt": null
+    }
+  }
+}

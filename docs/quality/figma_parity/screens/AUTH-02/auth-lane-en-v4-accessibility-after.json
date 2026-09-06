@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "screenId": "AUTH-02",
+  "phase": "after",
+  "html": {
+    "lang": "en",
+    "dir": "ltr"
+  },
+  "checks": {
+    "directionMatchesLocale": true,
+    "singleMain": true,
+    "singleH1": true,
+    "controlsHaveAccessibleNames": true,
+    "noPhoneIdentityControl": true
+  },
+  "dom": {
+    "screenId": "AUTH-02",
+    "state": "idle",
+    "applicationStatus": null,
+    "providerVariant": null,
+    "route": "/auth/register/seeker?lang=en",
+    "html": {
+      "lang": "en",
+      "dir": "ltr"
+    },
+    "viewport": {
+      "width": 1577,
+      "height": 944,
+      "devicePixelRatio": 1
+    },
+    "scroll": {
+      "width": 1577,
+      "height": 944
+    },
+    "structure": {
+      "headings": 1,
+      "h1": 1,
+      "main": 1,
+      "headers": 2,
+      "sections": 1,
+      "cards": 14,
+      "forms": 0,
+      "buttons": 2,
+      "links": 4,
+      "inputs": 0,
+      "unlabeledControls": 0
+    },
+    "controls": [],
+    "links": [
+      {
+        "text": "Skip to main content",
+        "href": "#main-content"
+      },
+      {
+        "text": "",
+        "href": "/"
+      },
+      {
+        "text": "I want to list propertiesAdd your units and follow customer requests after your account is reviewed and approved.Property provider",
+        "href": "/auth/register/provider/type"
+      },
+      {
+        "text": "Back to log in",
+        "href": "/auth/login"
+      }
+    ],
+    "buttons": [
+      {
+        "text": "I am looking for a propertyExplore units, save suitable properties, and send inquiry and viewing requests.",
+        "ariaLabel": null,
+        "disabled": false
+      },
+      {
+        "text": "Continue",
+        "ariaLabel": null,
+        "disabled": true
+      }
+    ]
+  }
+}

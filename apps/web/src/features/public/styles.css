@@ -2710,7 +2710,13 @@
   padding: 0.5rem 0.25rem 0.875rem;
   overflow-x: auto;
   scroll-snap-type: inline proximity;
+  scrollbar-color: #c7aa6a transparent;
+  scrollbar-width: thin;
 }
+
+.public-homepage__category-rail::-webkit-scrollbar { height: 5px; }
+.public-homepage__category-rail::-webkit-scrollbar-track { background: transparent; }
+.public-homepage__category-rail::-webkit-scrollbar-thumb { background: #c7aa6a; border-radius: 999px; }
 
 .public-homepage__category-rail .public-homepage__category-card {
   flex: 0 0 8.625rem;

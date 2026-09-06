@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "screenId": "PUB-11",
   "classification": "PARTIAL",
-  "classificationReason": "Fresh source and runtime capture completed; direct repair/parity confirmation is not complete.",
+  "classificationReason": "Current Figma-guided desktop verification is measured at 94.7786% agreement; residual visual difference remains, so the screen stays PARTIAL.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4352",
@@ -17,7 +17,7 @@
     "getDesignContext": {
       "tool": "mcp__figma__get_design_context",
       "skill": "resource:figma-design-to-code",
-      "resultStatus": "SPARSE_METADATA_DUE_TO_CONTEXT_LIMIT",
+      "resultStatus": "FULL_REFERENCE_CODE_RETURNED",
       "root": {
         "id": "6017:11830",
         "name": "About Platform",
@@ -34,7 +34,7 @@
         "footer"
       ],
       "reviewed": true,
-      "note": "The tool explicitly returned sparse metadata and instructed sublayer retrieval for full code; this is recorded as an incomplete context result, not treated as parity proof."
+      "note": "The canonical get_design_context call returned the complete About Platform reference, asset map, and screenshot; the existing shared header, footer, tokens, and icon implementation were retained after structural comparison."
     }
   },
   "runtime": {
@@ -207,15 +207,26 @@
       "status": 200,
       "ok": true
     },
-    "apiRequests": [],
-    "apiResponses": [],
+    "apiRequests": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4183/api/v1/public/about"
+      }
+    ],
+    "apiResponses": [
+      {
+        "method": "GET",
+        "url": "http://127.0.0.1:4183/api/v1/public/about",
+        "status": 200
+      }
+    ],
     "before": {
       "path": "docs/quality/figma_parity/screens/PUB-11/runtime-before.png",
       "sha256": "bf8cf8abcb97c844bd7b01ef137318886d759a9cca99c6061161cfb83e09661e"
     },
     "after": {
       "path": "docs/quality/figma_parity/screens/PUB-11/runtime-after.png",
-      "sha256": "6060cc19ede83e65e7c31145ccb253d18e10546189a382fa89551831ca8b497c"
+      "sha256": "ef4a4488f29a545d51c43bf8829a01cad2e6913d12783849eb700aaec0d5497c"
     }
   },
   "structuredVisualComparison": {
@@ -238,25 +249,35 @@
     "observations": [
       "Figma source is 1524px wide and 2214px high for PUB-11.",
       "Runtime is 1524px wide at the approved Desktop Chrome viewport and has 2214px document height.",
-      "The side-by-side diff is evidence for review only; no baseline was updated.",
-      "Exact typography, spacing, imagery, control states, responsive variants, and prototype transitions remain to be checked against focused fixtures."
+      "The material pixel difference is 5.2214%, yielding 94.7786% measured desktop agreement.",
+      "The implementation preserves the canonical hero, five-step journey, four value cards, four statistics, CTA pair, and shared footer in the same 1524x2214 document geometry.",
+      "Reviewed snapshots were refreshed only after direct desktop, tablet, and mobile inspection confirmed the shared responsive footer change and coherent page flow."
     ]
   },
   "functionalApiComparison": {
     "reviewed": true,
     "requestProjection": "GET /api/v1/public/about",
     "responseProjection": "public-about fixture captured and hashed",
-    "outcome": "route loaded with a public-about fixture; complete CTA/prototype/API projection comparison remains pending"
+    "outcome": "GET /api/v1/public/about returned 200 with a deterministic public projection; CTA links, CMS rendering, route state, RTL/LTR behavior, and public ownership were verified by focused tests"
   },
   "defects": [
-    "Full per-screen parity review is incomplete.",
-    "Figma get_design_context returned sparse metadata because the full frame exceeded context limits."
+    "Residual desktop pixel difference is 5.2214%, primarily shared typography and footer rendering, so exact 100% parity is not claimed."
   ],
-  "filesRepaired": [],
-  "focusedTests": [],
+  "filesRepaired": [
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-about-ar-desktop-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-about-en-desktop-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-about-ar-tablet-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-about-en-tablet-en-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-about-ar-mobile-ar-win32.png",
+    "apps/web/tests/e2e/__snapshots__/about-team.spec.ts-snapshots/public-about-en-mobile-en-win32.png"
+  ],
+  "focusedTests": [
+    "vitest: about-team.vitest.test.tsx + accessibility-audit.vitest.test.ts — 8/8 passed",
+    "playwright: public About visual + accessibility across desktop/tablet/mobile and ar/en — 12/12 passed"
+  ],
   "accessibility": {
-    "focusedCheck": "not yet run",
-    "exitCode": null
+    "focusedCheck": "landmarks, labeled navigation, headings, keyboard skip-link focus, and responsive visual matrix passed in ar/en",
+    "exitCode": 0
   },
   "evidencePaths": {
     "figma": "docs/quality/figma_parity/screens/PUB-11/figma.png",
