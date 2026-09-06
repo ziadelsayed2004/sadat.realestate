@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { EventEmitter } from 'node:events';
+import path from 'node:path';
 import test from 'node:test';
+import { pathToFileURL } from 'node:url';
 import type { Connection } from 'mongoose';
 import type { DatabaseConnection } from '../../src/modules/database/connection.js';
 import {
@@ -23,12 +25,12 @@ function environment() {
 }
 
 test('recognizes a compiled bootstrap entrypoint reached through the current-release symlink', () => {
-  const canonicalize = (value: string) => value
-    .replaceAll('\\', '/')
-    .replace('/opt/elsadatrealestate/current', '/opt/elsadatrealestate/releases/20260906T211341Z');
+  const releaseEntrypoint = path.resolve('bootstrap-test/releases/20260906T211341Z/run-bootstrap.js');
+  const currentEntrypoint = path.resolve('bootstrap-test/current/run-bootstrap.js');
+  const canonicalize = (value: string) => value === currentEntrypoint ? releaseEntrypoint : value;
   assert.equal(isAdminBootstrapEntrypoint(
-    'file:///D:/opt/elsadatrealestate/releases/20260906T211341Z/apps/api/dist/modules/admin/run-bootstrap.js',
-    'D:\\opt\\elsadatrealestate\\current\\apps\\api\\dist\\modules\\admin\\run-bootstrap.js',
+    pathToFileURL(releaseEntrypoint).href,
+    currentEntrypoint,
     canonicalize
   ), true);
 });
