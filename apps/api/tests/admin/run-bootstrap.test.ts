@@ -4,6 +4,7 @@ import test from 'node:test';
 import type { Connection } from 'mongoose';
 import type { DatabaseConnection } from '../../src/modules/database/connection.js';
 import {
+  isAdminBootstrapEntrypoint,
   parseAdminBootstrapEnvironment,
   runAdminBootstrapCommand
 } from '../../src/modules/admin/run-bootstrap.js';
@@ -20,6 +21,17 @@ function environment() {
     ADMIN_BOOTSTRAP_CONFIRMATION: 'CREATE_FIRST_SUPER_ADMIN'
   };
 }
+
+test('recognizes a compiled bootstrap entrypoint reached through the current-release symlink', () => {
+  const canonicalize = (value: string) => value
+    .replaceAll('\\', '/')
+    .replace('/opt/elsadatrealestate/current', '/opt/elsadatrealestate/releases/20260906T211341Z');
+  assert.equal(isAdminBootstrapEntrypoint(
+    'file:///D:/opt/elsadatrealestate/releases/20260906T211341Z/apps/api/dist/modules/admin/run-bootstrap.js',
+    'D:\\opt\\elsadatrealestate\\current\\apps\\api\\dist\\modules\\admin\\run-bootstrap.js',
+    canonicalize
+  ), true);
+});
 
 test('requires explicit confirmation and never includes credential values in validation errors', () => {
   const source: Partial<ReturnType<typeof environment>> = environment();

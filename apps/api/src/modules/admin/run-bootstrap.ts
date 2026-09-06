@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { realpathSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import {
   adminBootstrapInputSchema,
@@ -44,9 +45,19 @@ export async function runAdminBootstrapCommand(
   }
 }
 
-function isEntrypoint(): boolean {
-  const entrypoint = process.argv[1];
-  return Boolean(entrypoint && fileURLToPath(import.meta.url) === path.resolve(entrypoint));
+export function isAdminBootstrapEntrypoint(
+  moduleUrl: string,
+  entrypoint: string | undefined,
+  canonicalize: (value: string) => string = realpathSync
+): boolean {
+  if (!entrypoint) return false;
+  const modulePath = fileURLToPath(moduleUrl);
+  const entrypointPath = path.resolve(entrypoint);
+  try {
+    return canonicalize(modulePath) === canonicalize(entrypointPath);
+  } catch {
+    return modulePath === entrypointPath;
+  }
 }
 
 function safeFailureCode(error: unknown): string {
@@ -55,7 +66,7 @@ function safeFailureCode(error: unknown): string {
   return 'ADMIN_BOOTSTRAP_FAILED';
 }
 
-if (isEntrypoint()) {
+if (isAdminBootstrapEntrypoint(import.meta.url, process.argv[1])) {
   runAdminBootstrapCommand().then((result) => {
     process.stdout.write(`ADMIN_BOOTSTRAP_OK adminId=${result.adminId}\n`);
   }).catch((error: unknown) => {

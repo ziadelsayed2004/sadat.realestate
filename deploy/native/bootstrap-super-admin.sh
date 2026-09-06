@@ -3,7 +3,11 @@ set -Eeuo pipefail
 umask 077
 
 PRODUCTION_ENV_FILE=${PRODUCTION_ENV_FILE:-/etc/elsadatrealestate/production.env}
-CURRENT_RELEASE=${CURRENT_RELEASE:-/opt/elsadatrealestate/current}
+CURRENT_RELEASE_LINK=${CURRENT_RELEASE:-/opt/elsadatrealestate/current}
+if ! CURRENT_RELEASE=$(readlink -e "$CURRENT_RELEASE_LINK"); then
+  echo 'CURRENT_RELEASE_NOT_RESOLVABLE' >&2
+  exit 1
+fi
 BOOTSTRAP_RUNNER="$CURRENT_RELEASE/apps/api/dist/modules/admin/run-bootstrap.js"
 
 cleanup() {
