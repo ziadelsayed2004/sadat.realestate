@@ -1,17 +1,14 @@
 .admin-requests {
-  display: grid;
-  grid-template-columns: minmax(15rem, 18rem) minmax(0, 1fr);
   min-height: calc(100vh - var(--header-height-min));
   overflow: hidden;
   background: #f5e9cb;
   color: #1b2942;
 }
 
-.admin-requests > .admin-dashboard__navigation { padding: 28px 18px; background: #fff; border-inline-end: 1px solid #e4e7ec; }
-.admin-requests__content { min-width: 0; padding: 34px clamp(22px, 4vw, 58px) 58px; }
-.admin-requests__heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; max-width: 1420px; margin: 0 auto 22px; padding: 28px 32px; border: 1px solid #e3e5e7; border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(50 50 50 / 6%); }
-.admin-requests__heading h1 { margin: 0 0 10px; color: #1b2942; font-size: clamp(2rem, 3vw, 3rem); letter-spacing: -.03em; }
-.admin-requests__heading p:not(.admin-requests__eyebrow) { max-width: 760px; margin: 0; color: #6d788b; line-height: 1.7; }
+.admin-requests__content { min-width: 0; padding: 28px clamp(18px, 2.2vw, 34px) 48px; }
+.admin-requests__heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; max-width: 1420px; margin: 0 auto 22px; padding: 4px 0 18px; }
+.admin-requests__heading h1 { margin: 0 0 6px; color: #1b2942; font-size: clamp(1.75rem, 2.2vw, 2rem); letter-spacing: -.03em; }
+.admin-requests__heading p:not(.admin-requests__eyebrow) { max-width: 760px; margin: 0; color: #6d788b; line-height: 1.5; }
 .admin-requests__eyebrow { margin: 0 0 8px; color: #d79a2b; font-size: .74rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .admin-requests__direction-note { color: #7e8999; font-size: .86rem; line-height: 1.6; text-align: end; }
 .admin-requests__filters { display: grid; grid-template-columns: minmax(14rem, 1.6fr) minmax(10rem, 1fr) minmax(10rem, 1fr) auto; align-items: end; gap: 12px; max-width: 1420px; margin: 0 auto 24px; padding: 18px 22px; border: 1px solid #e3e5e7; border-radius: 18px; background: #fff; box-shadow: 0 6px 16px rgb(50 50 50 / 4%); }

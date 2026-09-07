@@ -67,16 +67,16 @@ function ShellFrame({ kind, route, locale, copy, assets, onLocaleChange, childre
             </>}
           </div>
         ) : (
-          <div data-admin-header="true" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '.65rem', order: 0 }}>
-              <span aria-hidden="true" style={{ display: 'grid', width: '2.25rem', height: '2.25rem', placeItems: 'center', borderRadius: '50%', background: '#e4eee9', color: '#155b4f', fontWeight: 800 }}>م</span>
-              <span style={{ display: 'grid', gap: '.1rem', color: '#1b2942', fontSize: '.78rem' }}><strong>{adminHeader.role}</strong><small style={{ color: '#8a94a5' }}>{surfaceLabel}</small></span>
+          <div className="admin-shell-header" data-admin-header="true">
+            <div className="admin-shell-header__identity">
+              <span aria-hidden="true" className="admin-shell-header__avatar">م</span>
+              <span className="admin-shell-header__identity-copy"><strong>{adminHeader.role}</strong><small>{surfaceLabel}</small></span>
             </div>
-            <label style={{ display: 'flex', alignItems: 'center', minWidth: 'min(34rem, 48vw)', border: '1px solid #e5d9bd', borderRadius: '999px', background: '#f8efd9', color: '#69768b', padding: '.55rem 1rem' }}>
+            <label className="admin-shell-header__search">
               <span className="a11y-visually-hidden">{adminHeader.searchLabel}</span>
-              <input aria-label={adminHeader.searchLabel} placeholder={adminHeader.search} type="search" style={{ width: '100%', border: 0, outline: 0, background: 'transparent', color: 'inherit' }} />
+              <input aria-label={adminHeader.searchLabel} placeholder={adminHeader.search} type="search" />
             </label>
-            <span aria-label={adminHeader.menu} role="img" style={{ color: '#1b2942', fontSize: '1.25rem', lineHeight: 1 }}>☰</span>
+            <span aria-label={adminHeader.menu} className="admin-shell-header__menu" role="img">☰</span>
             <LanguageSwitch locale={locale} copy={copy} onLocaleChange={onLocaleChange} />
           </div>
         )}

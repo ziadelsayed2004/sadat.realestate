@@ -2,6 +2,16 @@
   display: none;
 }
 
+.route-shell--admin > .route-shell__header { min-height: 64px; padding-block: 8px; }
+.admin-shell-header { direction: ltr; display: flex; flex: 1; align-items: center; gap: 16px; min-width: 0; }
+.admin-shell-header__identity { direction: rtl; display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+.admin-shell-header__avatar { display: grid; width: 36px; height: 36px; place-items: center; border-radius: 50%; background: #e4eee9; color: #155b4f; font-weight: 800; }
+.admin-shell-header__identity-copy { display: grid; gap: 2px; color: #1b2942; font-size: .78rem; }
+.admin-shell-header__identity-copy small { color: #8a94a5; }
+.admin-shell-header__search { direction: rtl; display: flex; flex: 1; align-items: center; max-width: 540px; margin-inline: auto; padding: 9px 16px; border: 1px solid #e5d9bd; border-radius: 999px; background: #f8efd9; color: #69768b; }
+.admin-shell-header__search input { width: 100%; border: 0; outline: 0; background: transparent; color: inherit; }
+.admin-shell-header__menu { color: #1b2942; font-size: 1.25rem; line-height: 1; }
+
 .route-shell--admin .route-shell__body {
   grid-template-columns: minmax(0, 1fr);
   background: #f5e9cb;
@@ -16,7 +26,7 @@
 
 .route-shell--admin .route-shell__body > .app-main > :has(> .admin-dashboard__navigation) {
   display: grid;
-  grid-template-columns: 13rem minmax(0, 1fr);
+  grid-template-columns: 16rem minmax(0, 1fr);
 }
 
 .route-shell--admin .route-shell__body > .app-main > :has(> .admin-dashboard__navigation) > .admin-dashboard__navigation {
@@ -209,10 +219,11 @@
   margin-block-start: 20px;
 }
 
-.a1 .admin-dashboard__content { padding: 20px clamp(16px, 2vw, 28px) 32px; }
+.a1 .admin-dashboard__content { padding: 24px 24px 40px; }
 .a1 .admin-dashboard__main { max-width: none; }
 .a1 .admin-dashboard__heading-row { align-items: center; gap: 18px; margin-block-end: 16px; padding: 16px 20px; }
 .a1 h1 { margin-block-end: 4px; font-size: clamp(1.5rem, 2vw, 1.85rem); }
+.a1 .admin-dashboard__metric { min-height: 150px; }
 .a1 .admin-dashboard__extended { gap: 14px; margin-block-start: 16px; }
 
 .admin-dashboard__extended-grid,
@@ -379,6 +390,9 @@
 }
 
 @media (max-width: 760px) {
+  .admin-shell-header__search { display: none; }
+  .admin-shell-header { gap: 10px; }
+  .admin-shell-header__identity-copy { display: none; }
   .route-shell--admin .app-main > :has(> .admin-dashboard__navigation) {
     min-width: 0 !important;
     overflow: clip;

@@ -1,20 +1,9 @@
 .admin-accounts__main {
-  max-width: 1240px;
+  max-width: 1320px;
   margin-inline: auto;
 }
 
-.admin-accounts__heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 24px;
-  margin-block-end: 22px;
-  padding: 28px 32px;
-  border: 1px solid #e3e5e7;
-  border-radius: 20px;
-  background: #fff;
-  box-shadow: 0 8px 24px rgb(50 50 50 / 6%);
-}
+.admin-accounts__heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-block-end: 22px; padding: 4px 0 18px; }
 
 .admin-accounts__heading h1,
 .admin-accounts__heading p,
@@ -23,12 +12,7 @@
   margin-block-start: 0;
 }
 
-.admin-accounts__heading h1 {
-  margin-block-end: 10px;
-  color: #1b2942;
-  font-size: clamp(2rem, 3vw, 3rem);
-  letter-spacing: -.03em;
-}
+.admin-accounts__heading h1 { margin-block-end: 6px; color: #1b2942; font-size: clamp(1.75rem, 2.2vw, 2rem); letter-spacing: -.03em; }
 
 .admin-accounts__eyebrow {
   margin-block-end: 8px;
@@ -39,37 +23,11 @@
   text-transform: uppercase;
 }
 
-.admin-accounts__description {
-  max-width: 760px;
-  color: #6d788b;
-  line-height: 1.7;
-}
+.admin-accounts__description { max-width: 760px; margin-block-end: 0; color: #6d788b; line-height: 1.5; }
 
-.admin-accounts__summary {
-  flex: 0 0 auto;
-  min-width: 150px;
-  padding: 15px 20px;
-  border-radius: 15px;
-  background: #f4e8ca;
-  color: #155b4f;
-  text-align: center;
-}
-
-.admin-accounts__summary strong,
-.admin-accounts__summary span {
-  display: block;
-}
-
-.admin-accounts__summary strong {
-  font-size: 2rem;
-  line-height: 1.1;
-}
-
-.admin-accounts__summary span {
-  margin-block-start: 5px;
-  color: #68768b;
-  font-size: .84rem;
-}
+.admin-accounts__heading-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.admin-accounts__heading-actions a { display: inline-flex; min-height: 42px; align-items: center; padding: 10px 18px; border: 1px solid #d9cfba; border-radius: 999px; color: #1b2942; font-weight: 800; text-decoration: none; }
+.admin-accounts__heading-actions .admin-accounts__primary-link { border-color: #0e5849; background: #0e5849; color: #fff; }
 
 .admin-accounts__panel {
   overflow: hidden;
@@ -83,9 +41,8 @@
   display: flex;
   align-items: flex-end;
   gap: 12px;
-  padding: 18px 22px;
-  border-block-end: 1px solid #eceff3;
-  background: #fffdf8;
+  margin-block: 22px;
+  padding: 0;
 }
 
 .admin-accounts__field {

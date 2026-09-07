@@ -160,7 +160,7 @@ function AccountMetricStrip({ view, data, locale }: { readonly view: AdminAccoun
     <section aria-label={locale === 'ar' ? '\u0645\u0624\u0634\u0631\u0627\u062a \u0627\u0644\u0633\u062c\u0644\u0627\u062a' : 'Record metrics'} className="admin-dashboard__metric-section" style={{ marginBlockStart: 0 }}>
       <div className="admin-dashboard__metric-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}>
         {definitions.map((definition, index) => (
-          <article className="admin-dashboard__metric" data-testid={`admin-accounts-metric-${index}`} key={`${definition.label}-${index}`}>
+          <article className="admin-dashboard__metric" data-testid={index === 0 ? 'admin-accounts-total' : `admin-accounts-metric-${index}`} key={`${definition.label}-${index}`}>
             <strong style={{ color: definition.color }}>{numberLabel(definition.value, locale)}</strong>
             <span>{localizedLabels[index] ?? definition.label}</span>
           </article>
@@ -420,7 +420,15 @@ function ListContent({
 }) {
   const copy = getAdminAccountsCopy(locale);
   const viewCopy = view === 'providers' ? copy.providers : view === 'verification' ? copy.verification : copy.users;
-  const total = data.total;
+  const headingLinks: ReadonlyArray<readonly [string, string]> = locale === 'ar' ? [
+    ['إضافة مستخدم', '/admin/admin-users/new'],
+    ['الباحثون', '/admin/property-seekers'],
+    ['مقدمو العقارات', '/admin/providers']
+  ] : [
+    ['Add user', '/admin/admin-users/new'],
+    ['Seekers', '/admin/property-seekers'],
+    ['Property providers', '/admin/providers']
+  ];
   return (
     <main className="admin-accounts__main" aria-labelledby="admin-accounts-title">
       <div className="admin-accounts__heading">
@@ -429,13 +437,15 @@ function ListContent({
           <h1 id="admin-accounts-title">{viewCopy.title}</h1>
           <p className="admin-accounts__description">{viewCopy.description}</p>
         </div>
-        <div className="admin-accounts__summary" data-testid="admin-accounts-total"><strong>{numberLabel(total, locale)}</strong><span>{viewCopy.totalLabel}</span></div>
+        <nav className="admin-accounts__heading-actions" aria-label={locale === 'ar' ? 'إجراءات الحسابات' : 'Account actions'}>
+          {headingLinks.map(([label, path], index) => <a className={index === 0 ? 'admin-accounts__primary-link' : undefined} href={localePath(locale, path)} key={path}>{label}</a>)}
+        </nav>
       </div>
       <AccountMetricStrip view={view} data={data} locale={locale} />
       <AccountFilterStrips view={view} locale={locale} statusFilter={statusFilter} providerTypeFilter={providerTypeFilter} onStatusChange={onStatusChange} onProviderTypeChange={onProviderTypeChange} />
+      <FilterBar locale={locale} view={view} searchInput={searchInput} roleFilter={roleFilter} statusFilter={statusFilter} providerTypeFilter={providerTypeFilter} onSearchChange={onSearchChange} onRoleChange={onRoleChange} onStatusChange={onStatusChange} onProviderTypeChange={onProviderTypeChange} onSubmit={onSubmit} onClear={onClear} />
       <section className="admin-accounts__panel" aria-labelledby="admin-accounts-list-title">
         <h2 id="admin-accounts-list-title" className="a11y-visually-hidden">{viewCopy.title}</h2>
-        <FilterBar locale={locale} view={view} searchInput={searchInput} roleFilter={roleFilter} statusFilter={statusFilter} providerTypeFilter={providerTypeFilter} onSearchChange={onSearchChange} onRoleChange={onRoleChange} onStatusChange={onStatusChange} onProviderTypeChange={onProviderTypeChange} onSubmit={onSubmit} onClear={onClear} />
         {view === 'users' || view === 'seekers' ? <UsersTable data={data as AdminAccountUserListData} locale={locale} search={search} onPageChange={onPageChange} /> : <ProvidersTable data={data as AdminProviderListData} locale={locale} view={view} search={search} onPageChange={onPageChange} />}
       </section>
     </main>

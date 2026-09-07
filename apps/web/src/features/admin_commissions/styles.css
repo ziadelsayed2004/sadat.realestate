@@ -1,10 +1,10 @@
 .admin-commissions {
   display: grid;
   grid-template-columns: minmax(14rem, 18rem) minmax(0, 1fr);
-  min-height: 42rem;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  background: var(--color-surface-subtle, #f5f7f8);
+  min-height: calc(100vh - var(--header-height-min));
+  gap: 0;
+  padding: 0;
+  background: #f5e9cb;
   color: var(--color-text-primary, #15232b);
 }
 
@@ -13,13 +13,14 @@
   display: grid;
   align-content: start;
   gap: 1rem;
+  padding: 28px clamp(18px, 2.2vw, 34px) 48px;
 }
 
 .admin-commissions__heading,
 .admin-commissions__panel-heading,
 .admin-commissions__detail-heading {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 1rem;
 }
@@ -29,6 +30,8 @@
 .admin-commissions__subpanel h2 {
   margin: 0;
 }
+
+.admin-commissions__heading h1 { font-size: clamp(1.75rem, 2.2vw, 2rem); }
 
 .admin-commissions__heading p,
 .admin-commissions__panel-heading p,
@@ -236,7 +239,7 @@
 }
 
 @media (max-width: 48rem) {
-  .admin-commissions { padding: 0.8rem; }
+  .admin-commissions__content { padding: 20px 12px 36px; }
   .admin-commissions__form-grid,
   .admin-commissions__details { grid-template-columns: 1fr; }
   .admin-commissions__heading { flex-direction: column; }
