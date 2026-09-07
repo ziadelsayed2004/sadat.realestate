@@ -358,5 +358,7 @@
 }
 
 @media (max-width: 760px) {
-  .admin-accounts { min-width: 900px; }
+  .admin-accounts { min-width: 0; }
+  .admin-accounts__detail-grid { grid-template-columns: 1fr; }
+  .admin-accounts__heading { align-items: flex-start; flex-direction: column; }
 }

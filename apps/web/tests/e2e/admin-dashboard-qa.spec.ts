@@ -161,7 +161,6 @@ async function routeAdminApi(page: Page, mode: QaMode): Promise<void> {
 test.describe('F5 Admin Dashboard QA', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'design-source', description: 'ADM-01 through ADM-66 approved local Admin exports and shared Admin Desktop patterns recorded in DESIGN_SOURCE_MANIFEST.json; ADM-54 uses the owner-approved DESIGN-EXCEPTION-ADM-54 waiver and is never claimed as direct pixel comparison.' });
-    test.skip(!testInfo.project.name.startsWith('desktop-'), 'Admin Dashboard is approved for desktop only.');
     await routeAdminApi(page, { role: 'admin', adminStatus: 200 });
   });
 
@@ -185,6 +184,10 @@ test.describe('F5 Admin Dashboard QA', () => {
       const firstNavigationLink = page.locator('.admin-dashboard__navigation a').first();
       await firstNavigationLink.focus();
       await expect(firstNavigationLink, `${screenId} first navigation link`).toBeFocused();
+
+      const viewportWidth = page.viewportSize()?.width ?? 0;
+      const documentWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+      expect(documentWidth, `${screenId} must not overflow the ${test.info().project.name} viewport`).toBeLessThanOrEqual(viewportWidth + 1);
     });
   }
 

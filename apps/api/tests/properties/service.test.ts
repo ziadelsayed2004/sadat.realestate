@@ -153,6 +153,20 @@ test('admin list requires view permission and exposes safe state actions', async
   await assert.rejects(service.adminList(other, { page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' }), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_FORBIDDEN');
 });
 
+test('admin list tolerates legacy payment-plan records while preserving valid rows', async () => {
+  const { service, rows } = fixture();
+  rows.set(id, record({ paymentPlans: [{ downPaymentPercentage: 15 }] as never }));
+  const legacyResult = await service.adminList(admin, { page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' });
+  assert.equal(legacyResult.data.items.length, 1);
+  assert.equal(legacyResult.data.items[0]?.paymentPlans, undefined);
+
+  rows.set(id, record({
+    paymentPlans: [{ name: { en: 'Annual plan' }, installments: 12, frequency: 'monthly', installmentAmount: { amount: 80_000, currency: 'EGP' } }]
+  }));
+  const currentResult = await service.adminList(admin, { page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' });
+  assert.equal(currentResult.data.items[0]?.paymentPlans?.[0]?.installments, 12);
+});
+
 test('admin duplicate detection returns bounded explainable signals and requires review permission', async () => {
   const { service, rows } = fixture();
   rows.set('8123456789abcdef01234567', record({ id: '8123456789abcdef01234567', slug: 'apartment' }));

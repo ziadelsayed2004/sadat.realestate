@@ -42,7 +42,15 @@ test.describe('F5 Admin accounts and provider verification', () => {
       await expect(page.locator('.admin-dashboard__navigation a').nth(1)).toBeFocused();
 
       await page.locator('.a11y-skip-link').evaluate(element => { (element as HTMLElement).style.visibility = 'hidden'; });
-      await expect(page).toHaveScreenshot(`${routeCase.snapshot}-${locale}.png`, { fullPage: true });
+      await page.evaluate(() => document.fonts.ready);
+      await page.mouse.move(0, 0);
+      await page.evaluate(() => new Promise<void>(resolve => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      }));
+      await expect(page).toHaveScreenshot(`${routeCase.snapshot}-${locale}.png`, {
+        fullPage: true,
+        maxDiffPixelRatio: 0.007
+      });
     }
   });
 

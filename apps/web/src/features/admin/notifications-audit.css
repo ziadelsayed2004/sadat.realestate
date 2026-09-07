@@ -1,5 +1,7 @@
 .admin-notifications-audit {
   display: grid;
+  width: 100%;
+  max-width: none;
   grid-template-columns: minmax(15rem, 18rem) minmax(0, 1fr);
   min-height: calc(100vh - var(--header-height-min));
   overflow: hidden;
@@ -31,7 +33,11 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
-  padding: 28px 32px;
+  padding: 6px 0 18px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .admin-notifications-audit__heading h1,
@@ -235,6 +241,8 @@
 }
 
 @media (max-width: 760px) {
-  .admin-notifications-audit { min-width: 900px; }
+  .admin-notifications-audit { min-width: 0; }
+  .admin-notifications-audit__content { padding: 16px 12px 32px; }
+  .admin-notifications-audit__heading { flex-direction: column; gap: 14px; }
   .admin-notifications-audit__filter-form { grid-template-columns: 1fr; }
 }

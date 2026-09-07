@@ -16,7 +16,7 @@ function record(overrides: Partial<StoredProject> = {}): StoredProject {
   return { id, providerId: provider, name: { en: 'Project' }, slug: 'project', status: 'draft', version: 0, createdAt: now, updatedAt: now, ...overrides };
 }
 
-function fixture(allowProjectView = true) {
+function fixture(allowProjectView = true, canManageProjects = true) {
   const rows = new Map([[id, record()]]);
   const repository: ProjectRepository = {
     async list(owner, query) {
@@ -62,7 +62,7 @@ function fixture(allowProjectView = true) {
       return { kind: 'written', project: next };
     }
   };
-  return { service: createProjectService({ repository, authorization: { authorize: async (actor, permission) => actor === admin && (permission === 'admin:projects.review' || (allowProjectView && permission === 'admin:projects.view')) }, now: () => now }), rows };
+  return { service: createProjectService({ repository, providerPolicy: { canManageProjects: async () => canManageProjects }, authorization: { authorize: async (actor, permission) => actor === admin && (permission === 'admin:projects.review' || (allowProjectView && permission === 'admin:projects.view')) }, now: () => now }), rows };
 }
 
 test('creates and lists only provider-owned localized drafts with safe projections', async () => {
@@ -81,6 +81,14 @@ test('rejects pending providers, cross-provider access, unknown fields, and stal
   await assert.rejects(fixtureData.service.update(claims(other), id, { version: 0, slug: 'other', reason: 'Cross provider update' }, { requestId: 'project-2', traceId: 'b'.repeat(32) }), error => error instanceof ProjectServiceError && error.code === 'PROJECT_NOT_FOUND');
   await assert.rejects(fixtureData.service.create(claims(), { name: { en: 'Invalid' }, slug: 'invalid', reason: 'Valid reason', extra: true } as never, { requestId: 'project-3', traceId: 'c'.repeat(32) }));
   await assert.rejects(fixtureData.service.update(claims(), id, { version: 9, slug: 'new-slug', reason: 'Stale project update' }, { requestId: 'project-4', traceId: 'd'.repeat(32) }), error => error instanceof ProjectServiceError && error.code === 'PROJECT_VERSION_CONFLICT');
+});
+
+test('allows projects only for approved developer-company providers', async () => {
+  const service = fixture(true, false).service;
+  await assert.rejects(
+    service.create(claims(), { name: { en: 'Not allowed' }, slug: 'not-allowed', reason: 'Attempt project creation' }, { requestId: 'project-provider-type', traceId: '0'.repeat(32) }),
+    error => error instanceof ProjectServiceError && error.code === 'PROJECT_FORBIDDEN'
+  );
 });
 
 test('lists all projects for an authorized admin with review-safe projections', async () => {

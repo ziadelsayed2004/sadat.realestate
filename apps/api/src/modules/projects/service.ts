@@ -36,6 +36,9 @@ export interface ProjectMutationContext { requestId: string; traceId: string; }
 export interface ProjectAuthorization {
   authorize(adminId: string, permission: 'admin:projects.view' | 'admin:projects.review'): Promise<boolean>;
 }
+export interface ProjectProviderPolicy {
+  canManageProjects(providerId: string): Promise<boolean>;
+}
 
 export function publicProjectProjection(project: StoredProject, developer: ProjectPublicDeveloper | null = null, linkedProperties: ProjectPublicProperty[] = []): ProjectPublicData | null {
   if (project.status !== 'published') return null;
@@ -80,10 +83,11 @@ function write(result: ProjectWriteResult): StoredProject {
   return result.project;
 }
 
-export function createProjectService(dependencies: { repository: ProjectRepository; authorization?: ProjectAuthorization; now?: () => Date }) {
+export function createProjectService(dependencies: { repository: ProjectRepository; providerPolicy: ProjectProviderPolicy; authorization?: ProjectAuthorization; now?: () => Date }) {
   const now = dependencies.now ?? (() => new Date());
-  function provider(claims: AccessTokenClaims): void {
+  async function provider(claims: AccessTokenClaims): Promise<void> {
     if (claims.role !== 'provider' || claims.status !== 'verified') throw new ProjectServiceError('PROJECT_FORBIDDEN');
+    if (!await dependencies.providerPolicy.canManageProjects(claims.sub)) throw new ProjectServiceError('PROJECT_FORBIDDEN');
   }
   async function reviewPermission(adminId: string): Promise<void> {
     if (!dependencies.authorization || !await dependencies.authorization.authorize(adminId, 'admin:projects.review')) throw new ProjectServiceError('PROJECT_FORBIDDEN');
@@ -94,7 +98,7 @@ export function createProjectService(dependencies: { repository: ProjectReposito
 
   return {
     async list(claims: AccessTokenClaims, query: ProjectListQuery): Promise<{ data: ProjectListData; page: number; limit: number; total: number }> {
-      provider(claims);
+      await provider(claims);
       const parsed = projectListQuerySchema.parse(query);
       const result = await dependencies.repository.list(claims.sub, parsed);
       return { data: { items: result.items.map(project => data(project)) }, page: parsed.page, limit: parsed.limit, total: result.total };
@@ -107,13 +111,13 @@ export function createProjectService(dependencies: { repository: ProjectReposito
       return { data: { items: result.items.map(project => data(project, 'admin')) }, page: parsed.page, limit: parsed.limit, total: result.total };
     },
     async create(claims: AccessTokenClaims, input: ProjectCreate, context: ProjectMutationContext): Promise<ProjectData> {
-      provider(claims);
+      await provider(claims);
       const parsed = projectCreateSchema.parse(input);
       const result = await dependencies.repository.create({ project: { providerId: claims.sub, name: parsed.name, slug: parsed.slug, ...(parsed.description ? { description: parsed.description } : {}), ...(parsed.locationId ? { locationId: parsed.locationId } : {}), ...(parsed.organizationId ? { organizationId: parsed.organizationId } : {}), ...(parsed.website ? { website: parsed.website } : {}), status: 'draft' }, metadata: metadata(claims.sub, parsed.reason, context) });
       return data(write(result));
     },
     async update(claims: AccessTokenClaims, id: string, input: ProjectPatch, context: ProjectMutationContext): Promise<ProjectData> {
-      provider(claims);
+      await provider(claims);
       projectObjectIdSchema.parse(id);
       const parsed = projectPatchSchema.parse(input);
       const before = await dependencies.repository.findById(claims.sub, id);
@@ -128,7 +132,7 @@ export function createProjectService(dependencies: { repository: ProjectReposito
       return data(write(await dependencies.repository.update({ providerId: claims.sub, id, expectedVersion: parsed.version, changes, metadata: metadata(claims.sub, parsed.reason, context), before })));
     },
     async submit(claims: AccessTokenClaims, id: string, input: ProjectSubmitRequest, context: ProjectMutationContext): Promise<ProjectData> {
-      provider(claims);
+      await provider(claims);
       projectObjectIdSchema.parse(id);
       const parsed = projectSubmitRequestSchema.parse(input);
       const before = await dependencies.repository.findById(claims.sub, id);

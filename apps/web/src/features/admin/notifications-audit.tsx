@@ -238,6 +238,18 @@ function AuditMetricStrip({ locale, data }: { readonly locale: SupportedLocale; 
   return <div data-testid="admin-audit-metrics" aria-label={copy.audit.metrics.total} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 14, marginBlock: 18 }}>{values.map((value, index) => <article className="admin-dashboard__metric" key={labels[index]}><strong style={{ color: colors[index] }}>{new Intl.NumberFormat(locale).format(value)}</strong><span>{labels[index]}</span></article>)}</div>;
 }
 
+function exportAuditPage(data: AdminAuditLogPage): void {
+  const escape = (value: string | null | undefined): string => `"${(value ?? '').replaceAll('"', '""')}"`;
+  const rows = data.items.map(item => [item.createdAt, item.actorType, item.actorId, item.targetType, item.targetId, item.action, item.reason].map(escape).join(','));
+  const csv = ['date,actorType,actorId,targetType,targetId,action,reason', ...rows].join('\r\n');
+  const url = URL.createObjectURL(new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8' }));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `admin-audit-page-${data.page}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 function AuditListView({ locale, session, apiOrigin, authClient, load, initialData }: { readonly locale: SupportedLocale; readonly session: RouteSession; readonly apiOrigin?: string | undefined; readonly authClient?: AdminNotificationsAuditProps['authClient']; readonly load?: AdminAuditLogsLoader | undefined; readonly initialData?: AdminAuditLogPage | undefined }) {
   const copy = getAdminNotificationsAuditCopy(locale);
   const [filters, setFilters] = useState<AuditFilters>(EMPTY_FILTERS);
@@ -266,7 +278,7 @@ function AuditListView({ locale, session, apiOrigin, authClient, load, initialDa
   const pageCount = data === undefined ? 0 : Math.ceil(data.total / data.limit);
   return (
     <Shell locale={locale} path={ADMIN_AUDIT_LOGS_ROUTE} screenId="ADM-66" state={state}>
-      <Heading eyebrow={copy.audit.eyebrow} title={copy.audit.title} description={copy.audit.description} />
+      <Heading eyebrow={copy.audit.eyebrow} title={copy.audit.title} description={copy.audit.description} action={<Button type="button" variant="secondary" disabled={data === undefined || data.items.length === 0} onClick={() => { if (data !== undefined) exportAuditPage(data); }}>{locale === 'ar' ? 'تصدير السجل' : 'Export log'}</Button>} />
       {state !== 'success' && state !== 'empty' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
       {data !== undefined ? <><aside role="note" data-testid="admin-audit-redaction-note" style={{ marginBlockStart: 18, padding: '12px 16px', border: '1px solid #f3c64f', borderRadius: 12, background: '#fff9e7', color: '#a45b00', lineHeight: 1.6 }}>{copy.audit.snapshotNotice}</aside><AuditMetricStrip locale={locale} data={data} /></> : null}
       <section className="admin-notifications-audit__panel"><div className="admin-notifications-audit__toolbar"><h2>{copy.audit.filters}</h2></div><AuditFilterForm locale={locale} filters={filters} onSubmit={submit} onClear={clear} />{filterError !== undefined ? <p className="admin-notifications-audit__feedback" role="alert">{filterError}</p> : null}</section>

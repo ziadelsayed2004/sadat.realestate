@@ -208,6 +208,15 @@ function ExtendedOverview({ data, locale }: { readonly data: AdminOverviewData; 
         { label: copy.nav.settings },
         { label: copy.nav.audit }
       ]
+    },
+    {
+      title: copy.nav.requests,
+      cards: [
+        { label: copy.overview.metrics.openRequests, value: data.metrics.openRequests },
+        { label: copy.overview.metrics.pendingReviews, value: data.metrics.pendingReviews },
+        { label: copy.nav.notifications },
+        { label: copy.nav.audit }
+      ]
     }
   ] as const;
 
@@ -239,7 +248,7 @@ function ExtendedOverview({ data, locale }: { readonly data: AdminOverviewData; 
         ))}
       </div>
       <div className="admin-dashboard__activity-grid">
-        {[copy.nav.requests, copy.nav.notifications, copy.nav.audit].map(title => (
+        {[copy.nav.notifications, copy.nav.audit].map(title => (
           <section className="admin-dashboard__activity-panel" key={title} aria-labelledby={`admin-activity-${title.replaceAll(' ', '-').toLowerCase()}`}>
             <div className="admin-dashboard__section-heading">
               <h2 id={`admin-activity-${title.replaceAll(' ', '-').toLowerCase()}`}>{title}</h2>
@@ -287,8 +296,8 @@ function OverviewContent({ data, locale }: { readonly data: AdminOverviewData; r
           <p className="admin-dashboard__description">{copy.overview.description}</p>
           <p className="admin-dashboard__metadata"><span>{copy.overview.rangeLabel}: {dateLabel(data.range.from, locale)} — {dateLabel(data.range.to, locale)}</span><span>{copy.overview.refreshedLabel}: {dateLabel(data.generatedAt, locale)}</span></p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', alignSelf: 'center', flexWrap: 'wrap', gap: '.55rem', justifyContent: 'flex-end' }}>
-          {headingActions.map(([label, path]) => <a key={path} href={localePath(locale, path)} style={{ display: 'inline-flex', alignItems: 'center', minHeight: '2.35rem', padding: '.45rem .75rem', border: '1px solid #d9d4c9', borderRadius: '999px', color: '#155b4f', fontSize: '.76rem', fontWeight: 800, textDecoration: 'none', whiteSpace: 'nowrap' }}>{label}</a>)}
+        <div className="admin-dashboard__heading-actions">
+          {headingActions.map(([label, path], index) => <a className={`ui-button ui-button--${index < 2 ? 'primary' : 'secondary'} ui-button--xs`} key={path} href={localePath(locale, path)}>{label}</a>)}
         </div>
       </div>
       <MetricSection title={copy.overview.platformTitle} metrics={platformMetrics} data={data.metrics} locale={locale} />
@@ -326,7 +335,7 @@ export function AdminOverview({ locale, session, authClient, apiOrigin, initialD
   }, [attempt, initialData, session.status, sessionRole, source]);
 
   return (
-    <section className="admin-dashboard" data-screen-id="ADM-01" data-route="/admin" data-device-scope="desktop" data-admin-state={state}>
+    <section className="admin-dashboard a1" data-screen-id="ADM-01" data-route="/admin" data-device-scope="desktop" data-admin-state={state}>
       <AdminNavigation locale={locale} activePath={path} />
       <div className="admin-dashboard__content">
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}

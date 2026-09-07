@@ -343,12 +343,12 @@
 
 @media (max-width: 980px) {
   .admin-master-data {
-    grid-template-columns: minmax(12rem, 15rem) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
 @media (max-width: 760px) {
   .admin-master-data {
-    min-width: 900px;
+    min-width: 0;
   }
 }

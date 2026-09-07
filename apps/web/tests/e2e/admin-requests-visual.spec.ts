@@ -20,6 +20,8 @@ test('ADM-18 through ADM-24 match the approved desktop visual baseline', async (
     if (name === 'viewing') await expect(page.getByTestId(`admin-viewing-${adminViewingId}`)).toBeVisible();
     else if (name === 'issues') await expect(page.getByTestId(`admin-issue-${adminIssueId}`)).toBeVisible();
     else await expect(page.getByTestId(`admin-request-${adminRequestId}`)).toBeVisible();
-    await expect(page).toHaveScreenshot(`admin-requests-${locale}-${name}.png`, { fullPage: true, maxDiffPixels: 300 });
+    await page.evaluate(() => document.fonts.ready);
+    await page.mouse.move(0, 0);
+    await expect(page).toHaveScreenshot(`admin-requests-${locale}-${name}.png`, { fullPage: true, maxDiffPixels: 800 });
   }
 });

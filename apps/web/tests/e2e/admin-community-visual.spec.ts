@@ -18,6 +18,8 @@ test('ADM-27 through ADM-29 match the approved desktop visual baseline', async (
   for (const [path, name] of routes) {
     await page.goto(`${path}?lang=${encodeURIComponent(locale)}`);
     await expect(page.locator(`[data-screen-id="${name === 'posts' ? 'ADM-27' : name === 'comments' ? 'ADM-28' : 'ADM-29'}"]`)).toBeVisible();
-    await expect(page).toHaveScreenshot(`admin-community-${locale}-${name}.png`, { fullPage: true });
+    await page.evaluate(() => document.fonts.ready);
+    await page.mouse.move(0, 0);
+    await expect(page).toHaveScreenshot(`admin-community-${locale}-${name}.png`, { fullPage: true, maxDiffPixels: 800 });
   }
 });

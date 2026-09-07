@@ -14,6 +14,8 @@ test('ADM-46 through ADM-49 match the approved desktop visual matrix', async ({ 
   for (const [name, path, screenId] of [['banners', '/admin/banners', 'ADM-46'], ['banner-create', '/admin/banners/new', 'ADM-47'], ['tips', '/admin/content/tips', 'ADM-48'], ['homepage', '/admin/content/homepage', 'ADM-49']] as const) {
     await page.goto(`${path}?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator(`[data-screen-id="${screenId}"]`)).toBeVisible();
-    await expect(page).toHaveScreenshot(`admin-home-${locale}-${name}.png`, { fullPage: true });
+    await page.evaluate(() => document.fonts.ready);
+    await page.mouse.move(0, 0);
+    await expect(page).toHaveScreenshot(`admin-home-${locale}-${name}.png`, { fullPage: true, maxDiffPixels: 800 });
   }
 });

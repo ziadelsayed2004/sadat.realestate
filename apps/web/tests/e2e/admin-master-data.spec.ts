@@ -37,6 +37,7 @@ test.describe('ADM-09 through ADM-11 admin master data', () => {
       await expect(page.locator('.admin-dashboard__navigation a').nth(1)).toBeFocused();
 
       await page.locator('.a11y-skip-link').evaluate(element => { (element as HTMLElement).style.visibility = 'hidden'; });
+      await page.evaluate(() => document.fonts.ready);
       await expect(page).toHaveScreenshot(`${routeCase.snapshot}-${locale}.png`, { fullPage: true });
     }
   });

@@ -7,6 +7,7 @@ import {
   propertyFeaturesServicesStepSchema,
   propertyLocationStepSchema,
   propertyObjectIdSchema,
+  propertyPaymentPlanSchema,
   propertyPricingStepSchema,
   propertyContactStepSchema,
   propertySubmitSchema,
@@ -78,7 +79,14 @@ function actions(record: StoredProperty, actor: 'provider' | 'admin'): PropertyD
   return [];
 }
 
+function compatiblePaymentPlans(record: StoredProperty): StoredProperty['paymentPlans'] | undefined {
+  if (record.paymentPlans === undefined) return undefined;
+  const compatible = record.paymentPlans.filter(plan => propertyPaymentPlanSchema.safeParse(plan).success);
+  return compatible.length > 0 ? compatible : undefined;
+}
+
 function data(record: StoredProperty, actor: 'provider' | 'admin' = 'provider'): PropertyData {
+  const paymentPlans = compatiblePaymentPlans(record);
   return propertyDataSchema.parse({
     id: record.id,
     kind: record.kind,
@@ -97,7 +105,7 @@ function data(record: StoredProperty, actor: 'provider' | 'admin' = 'provider'):
     ...(record.area ? { area: record.area } : {}),
     ...(record.layout ? { layout: record.layout } : {}),
     ...(record.price ? { price: record.price } : {}),
-    ...(record.paymentPlans ? { paymentPlans: record.paymentPlans } : {}),
+    ...(paymentPlans ? { paymentPlans } : {}),
     ...(record.featureIds ? { featureIds: record.featureIds } : {}),
     ...(record.serviceIds ? { serviceIds: record.serviceIds } : {}),
     ...(record.contact ? { contact: record.contact } : {}),

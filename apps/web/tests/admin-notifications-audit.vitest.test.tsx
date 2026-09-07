@@ -113,7 +113,7 @@ describe('Admin notifications and audit log', () => {
     expect(screen.getByRole('heading', { name: 'Audit log' })).toBeInTheDocument();
     expect(screen.getByText('settings.update')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Apply filters' })).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /export/i })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Export log' })).toBeEnabled();
     list.unmount();
 
     const detail = renderWithLocale(<AdminNotificationsAudit url={`/admin/audit-logs/${auditId}`} locale="en" session={adminSession} initialAuditLog={log} />, { locale: 'en' });
