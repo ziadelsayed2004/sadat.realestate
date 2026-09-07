@@ -40,8 +40,8 @@ export interface CommunityAuthClient {
   readonly subscribe: (listener: (snapshot: AuthSnapshot) => void) => () => void;
   readonly refresh: () => Promise<AuthSnapshot>;
   readonly getAuthorizationHeader: () => string | undefined;
-  readonly logout?: (() => Promise<unknown>) | undefined;
-  readonly hasSessionHint?: (() => boolean | undefined) | undefined;
+  readonly logout?: () => Promise<unknown>;
+  readonly hasSessionHint?: () => boolean | undefined;
 }
 
 export interface PublicCommunityProps {
