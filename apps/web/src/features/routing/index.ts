@@ -9,8 +9,9 @@ export {
   AuthShell,
   ProviderShell,
   PublicShell,
+  RouteShellAuthContext,
   RouteShell,
   SeekerShell,
   shellKindForRoute
 } from './shells.tsx';
-export type { RouteShellProps, ShellKind } from './shells.tsx';
+export type { RouteShellAuthClient, RouteShellProps, ShellKind } from './shells.tsx';

@@ -27,6 +27,7 @@ test.describe('F5 Admin accounts and provider verification', () => {
     for (const routeCase of routes) {
       const response = await page.goto(`${routeCase.path}?lang=${encodeURIComponent(locale)}`);
       expect(response?.status()).toBe(200);
+      await page.waitForLoadState('networkidle');
       await expect(page.locator('html')).toHaveAttribute('lang', locale);
       await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
       await expect(page.locator(`[data-screen-id="${routeCase.screen}"]`)).toBeVisible();
@@ -47,6 +48,7 @@ test.describe('F5 Admin accounts and provider verification', () => {
       await page.evaluate(() => new Promise<void>(resolve => {
         requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
       }));
+      await page.waitForTimeout(500);
       await expect(page).toHaveScreenshot(`${routeCase.snapshot}-${locale}.png`, {
         fullPage: true,
         maxDiffPixelRatio: 0.007
@@ -62,7 +64,7 @@ test.describe('F5 Admin accounts and provider verification', () => {
     await expect(page.locator(`[data-testid="admin-document-${ADMIN_DOCUMENT_ID}"]`)).toBeVisible();
     await expect(page.locator(`[data-testid="admin-document-${ADMIN_INACTIVE_DOCUMENT_ID}"] button:disabled`)).toHaveCount(1);
 
-    const openButton = page.locator('main button:not(:disabled)');
+    const openButton = page.locator(`[data-testid="admin-document-${ADMIN_DOCUMENT_ID}"] button:not(:disabled)`);
     await expect(openButton).toHaveCount(1);
     const accessRequest = page.waitForRequest(request => request.url().includes(`/api/v1/admin/provider-documents/${ADMIN_DOCUMENT_ID}/access`));
     const popup = page.waitForEvent('popup');

@@ -18,9 +18,23 @@ test('ADM-12 and ADM-13 match the approved desktop visual baseline', async ({ pa
   });
 
   await page.goto(`/admin/projects?lang=${encodeURIComponent(locale)}`);
+  await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(500);
   await expect(page.locator('[data-screen-id="ADM-12"]')).toBeVisible();
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+  });
+  await page.waitForTimeout(300);
   await expect(page).toHaveScreenshot(`admin-projects-${locale}-list.png`, { fullPage: true });
   await page.getByRole('button', { name: /review|مراجعة|审核/iu }).click();
+  await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(500);
   await expect(page.locator('[data-screen-id="ADM-13"]')).toBeVisible();
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+  });
+  await page.waitForTimeout(300);
   await expect(page).toHaveScreenshot(`admin-projects-${locale}-review.png`, { fullPage: true });
 });

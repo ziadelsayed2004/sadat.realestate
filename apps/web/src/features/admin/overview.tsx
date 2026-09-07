@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import type { AdminOverviewData, AdminOverviewMetrics, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import { StateMessage } from '../design_system/index.ts';
-import type { RouteSession } from '../routing/index.ts';
+import { RouteShellAuthContext, type RouteSession } from '../routing/index.ts';
 import { getAdminCopy, type AdminMetricKey, type AdminOverviewState } from './copy.ts';
 import {
   createAdminOverviewLoader,
@@ -55,75 +55,201 @@ const navigationItems = [
   ['settings', '/admin/settings']
 ] as const satisfies ReadonlyArray<readonly [keyof ReturnType<typeof getAdminCopy>['nav'], string]>;
 
-const navigationGroups = [
-  { id: 'home', items: [navigationItems[0]] },
-  { id: 'accounts', items: [navigationItems[1], navigationItems[2]] },
-  { id: 'properties', items: [navigationItems[3]] },
-  { id: 'requests', items: [navigationItems[4]] },
-  { id: 'content', items: [navigationItems[5]] },
-  { id: 'revenue', items: [navigationItems[6], navigationItems[7]] },
-  { id: 'system', items: [navigationItems[8], navigationItems[9], navigationItems[10]] }
+const navigationIconSources: Readonly<Record<(typeof navigationItems)[number][0], string>> = {
+  overview: '/assets/canonical/provider/navigation/overview.svg',
+  users: '/assets/canonical/provider/navigation/requests.svg',
+  providers: '/assets/canonical/provider/navigation/properties.svg',
+  properties: '/assets/canonical/provider/navigation/properties.svg',
+  requests: '/assets/canonical/provider/navigation/requests.svg',
+  content: '/assets/canonical/provider/navigation/projects.svg',
+  advertising: '/assets/canonical/provider/navigation/advertising.svg',
+  commissions: '/assets/canonical/provider/navigation/commission.svg',
+  notifications: '/assets/canonical/provider/navigation/notifications.svg',
+  audit: '/assets/canonical/provider/navigation/requests.svg',
+  settings: '/assets/canonical/provider/navigation/settings.svg'
+};
+
+type AdminSidebarIcon = keyof typeof navigationIconSources;
+type AdminSidebarItem = {
+  readonly id: string;
+  readonly path: string;
+  readonly matchers: readonly string[];
+  readonly icon: AdminSidebarIcon;
+  readonly label: Readonly<Record<SupportedLocale, string>>;
+};
+type AdminSidebarGroup = {
+  readonly id: string;
+  readonly label: Readonly<Record<SupportedLocale, string>>;
+  readonly items: readonly AdminSidebarItem[];
+};
+
+const sidebarItem = (id: string, path: string, icon: AdminSidebarIcon, ar: string, en: string, matchers: readonly string[] = [path]): AdminSidebarItem => ({
+  id,
+  path,
+  matchers,
+  icon,
+  label: { ar, en }
+});
+
+const sidebarGroups: readonly AdminSidebarGroup[] = [
+  { id: 'home', label: { ar: 'الرئيسية', en: 'Home' }, items: [sidebarItem('overview', '/admin', 'overview', 'نظرة عامة', 'Overview', ['/admin', '/admin/overview'])] },
+  {
+    id: 'accounts',
+    label: { ar: 'المستخدمون والحسابات', en: 'Users and accounts' },
+    items: [
+      sidebarItem('users', '/admin/users', 'users', 'جميع المستخدمين', 'All users'),
+      sidebarItem('seekers', '/admin/property-seekers', 'users', 'الباحثون عن عقار', 'Property seekers'),
+      sidebarItem('providers', '/admin/providers', 'providers', 'مقدمو العقارات', 'Property providers'),
+      sidebarItem('verification', '/admin/verification', 'requests', 'قائمة التوثيق', 'Verification queue'),
+      sidebarItem('account-reports', '/admin/account-reports', 'requests', 'بلاغات الحسابات', 'Account reports'),
+      sidebarItem('account-restrictions', '/admin/account-restrictions', 'settings', 'قيود الحسابات', 'Account restrictions')
+    ]
+  },
+  {
+    id: 'properties',
+    label: { ar: 'إدارة العقارات', en: 'Property management' },
+    items: [
+      sidebarItem('properties', '/admin/properties', 'properties', 'العقارات', 'Properties'),
+      sidebarItem('property-review', '/admin/properties/review', 'properties', 'مراجعة العقارات', 'Property review'),
+      sidebarItem('property-duplicates', '/admin/properties/possible-duplicates', 'properties', 'عقارات مكررة محتملة', 'Possible duplicates'),
+      sidebarItem('property-reports', '/admin/property-reports', 'requests', 'بلاغات العقارات', 'Property reports'),
+      sidebarItem('projects', '/admin/projects', 'content', 'المشروعات', 'Projects', ['/admin/projects']),
+      sidebarItem('project-review', '/admin/projects/review', 'content', 'مراجعة المشروعات', 'Project review'),
+      sidebarItem('categories', '/admin/property-categories', 'settings', 'التصنيفات وأنواع العقارات', 'Property categories'),
+      sidebarItem('locations', '/admin/locations', 'settings', 'المناطق والأحياء', 'Locations and districts'),
+      sidebarItem('features', '/admin/features', 'settings', 'المميزات والخدمات', 'Features and services')
+    ]
+  },
+  {
+    id: 'requests',
+    label: { ar: 'الطلبات والعمليات', en: 'Requests and operations' },
+    items: [
+      sidebarItem('requests', '/admin/requests', 'requests', 'كل الطلبات', 'All requests'),
+      sidebarItem('customer-requests', '/admin/customer-requests', 'requests', 'طلبات العملاء', 'Customer requests'),
+      sidebarItem('overdue-requests', '/admin/overdue-requests', 'requests', 'الطلبات المتأخرة', 'Overdue requests'),
+      sidebarItem('contact-requests', '/admin/contact-requests', 'requests', 'طلبات التواصل', 'Contact requests'),
+      sidebarItem('viewing-requests', '/admin/viewing-requests', 'requests', 'طلبات المعاينة', 'Viewing requests'),
+      sidebarItem('search-requests', '/admin/search-requests', 'requests', 'طلبات البحث عن عقار', 'Property search requests'),
+      sidebarItem('request-issues', '/admin/request-issues', 'requests', 'بلاغات ومشكلات الطلبات', 'Request issues')
+    ]
+  },
+  {
+    id: 'content',
+    label: { ar: 'المحتوى والكوميونيتي', en: 'Content and community' },
+    items: [
+      sidebarItem('articles', '/admin/articles', 'content', 'المقالات', 'Articles'),
+      sidebarItem('article-categories', '/admin/article-categories', 'content', 'تصنيفات المقالات', 'Article categories'),
+      sidebarItem('community', '/admin/community', 'content', 'الكوميونيتي', 'Community', ['/admin/community']),
+      sidebarItem('community-comments', '/admin/community/comments', 'content', 'التعليقات', 'Comments'),
+      sidebarItem('community-reports', '/admin/community/moderation', 'requests', 'البلاغات', 'Reports'),
+      sidebarItem('about', '/admin/content/about', 'content', 'النبذة عن المنصة', 'About the platform'),
+      sidebarItem('team', '/admin/content/team', 'content', 'فريق العمل', 'Team'),
+      sidebarItem('population', '/admin/content/population-counter', 'content', 'عدّاد سكان مدينة السادات', 'Sadat population counter')
+    ]
+  },
+  {
+    id: 'revenue',
+    label: { ar: 'الإعلانات والمدفوعات', en: 'Advertising and payments' },
+    items: [
+      sidebarItem('advertising', '/admin/ads/requests', 'advertising', 'طلبات الإعلانات', 'Ad requests', ['/admin/ads/requests', '/admin/advertising']),
+      sidebarItem('approved-proofs', '/admin/ads/payment-proofs/approved', 'advertising', 'إثباتات الدفع المعتمدة', 'Approved payment proofs'),
+      sidebarItem('payment-review', '/admin/ads/payments/pending-review', 'advertising', 'مراجعة المدفوعات', 'Payment review'),
+      sidebarItem('ad-calendar', '/admin/ads/calendar', 'advertising', 'تقويم الإعلانات', 'Ad calendar'),
+      sidebarItem('payment-proofs', '/admin/ads/payment-proofs/pending', 'requests', 'إثباتات الدفع', 'Payment proofs'),
+      sidebarItem('financial-review', '/admin/ads/financial-review', 'commissions', 'الملخص المالي', 'Financial summary'),
+      sidebarItem('commission-policies', '/admin/commissions', 'commissions', 'سياسات العمولات', 'Commission policies'),
+      sidebarItem('commission-assignments', '/admin/commissions/account', 'commissions', 'تعيين العمولات', 'Commission assignments'),
+      sidebarItem('commission-exceptions', '/admin/commissions/exceptions', 'commissions', 'استثناءات العمولات', 'Commission exceptions'),
+      sidebarItem('commission-confirmations', '/admin/commissions/confirmations', 'commissions', 'تأكيد السياسات', 'Policy confirmations')
+    ]
+  },
+  {
+    id: 'experience',
+    label: { ar: 'تجربة المنصة', en: 'Platform experience' },
+    items: [
+      sidebarItem('banners', '/admin/banners', 'advertising', 'البانرات الإعلانية', 'Banners'),
+      sidebarItem('tips', '/admin/content/tips', 'content', 'نصائح عقارات السادات', 'Property tips'),
+      sidebarItem('homepage', '/admin/content/homepage', 'overview', 'إدارة الصفحة الرئيسية', 'Homepage management'),
+      sidebarItem('contact-social', '/admin/settings/contact', 'notifications', 'بيانات التواصل والسوشيال', 'Contact and social'),
+      sidebarItem('seo', '/admin/settings/seo', 'settings', 'إعدادات SEO', 'SEO settings')
+    ]
+  },
+  {
+    id: 'system',
+    label: { ar: 'النظام', en: 'System' },
+    items: [
+      sidebarItem('admin-users', '/admin/admin-users', 'users', 'المستخدمون الإداريون', 'Admin users'),
+      sidebarItem('roles', '/admin/roles', 'settings', 'الأدوار والصلاحيات', 'Roles and permissions'),
+      sidebarItem('notifications', '/admin/notifications', 'notifications', 'إشعارات الإدارة', 'Admin notifications'),
+      sidebarItem('audit', '/admin/audit-logs', 'requests', 'سجل الإجراءات', 'Action log'),
+      sidebarItem('settings', '/admin/settings', 'settings', 'الإعدادات العامة', 'General settings', ['/admin/settings'])
+    ]
+  }
 ] as const;
-
-const navigationGroupLabels: Readonly<Record<SupportedLocale, Readonly<Record<(typeof navigationGroups)[number]['id'], string>>>> = {
-  ar: { home: 'الرئيسية', accounts: 'المستخدمون والحسابات', properties: 'إدارة العقارات', requests: 'إدارة الطلبات', content: 'إدارة المحتوى والمجتمع', revenue: 'الإعلانات والإيرادات', system: 'إدارة المنصة' },
-  en: { home: 'Home', accounts: 'Users and accounts', properties: 'Property management', requests: 'Request management', content: 'Content and community', revenue: 'Advertising and revenue', system: 'Platform management' },};
-
-const navigationMatchers: Readonly<Record<(typeof navigationItems)[number][0], readonly string[]>> = {
-  overview: ['/admin', '/admin/overview'],
-  users: ['/admin/users', '/admin/property-seekers', '/admin/account-reports', '/admin/account-restrictions', '/admin/admin-users', '/admin/roles'],
-  providers: ['/admin/providers', '/admin/verification'],
-  properties: ['/admin/properties', '/admin/property-categories', '/admin/locations', '/admin/features', '/admin/projects', '/admin/property-reports'],
-  requests: ['/admin/requests', '/admin/customer-requests', '/admin/overdue-requests', '/admin/contact-requests', '/admin/viewing-requests', '/admin/search-requests', '/admin/request-issues'],
-  content: ['/admin/content', '/admin/articles', '/admin/article-categories', '/admin/community', '/admin/banners'],
-  advertising: ['/admin/advertising', '/admin/ads'],
-  commissions: ['/admin/commissions'],
-  notifications: ['/admin/notifications'],
-  audit: ['/admin/audit-logs'],
-  settings: ['/admin/settings']
-};
-
-const navigationIcons: Readonly<Record<(typeof navigationItems)[number][0], string>> = {
-  overview: '⌂',
-  users: '♙',
-  providers: '▤',
-  properties: '⌂',
-  requests: '◇',
-  content: '▱',
-  advertising: '◈',
-  commissions: '₿',
-  notifications: '♧',
-  audit: '≡',
-  settings: '⚙'
-};
 
 export function AdminNavigation({ locale, activePath }: { readonly locale: SupportedLocale; readonly activePath: string }) {
   const copy = getAdminCopy(locale);
+  const authClient = useContext(RouteShellAuthContext);
+  const [signingOut, setSigningOut] = useState(false);
+  const activeItemId = sidebarGroups.flatMap(group => group.items).map(item => ({
+    id: item.id,
+    score: Math.max(...item.matchers.map(candidate => activePath === candidate ? candidate.length + 10000 : activePath.startsWith(`${candidate}/`) ? candidate.length : -1))
+  })).filter(item => item.score >= 0).sort((left, right) => right.score - left.score)[0]?.id;
+  const signOut = () => {
+    if (signingOut) return;
+    setSigningOut(true);
+    void (authClient?.logout?.() ?? Promise.resolve()).catch(() => undefined).finally(() => {
+      if (typeof window !== 'undefined') window.location.assign(localePath(locale, '/auth/login'));
+      else setSigningOut(false);
+    });
+  };
   return (
-    <nav className="admin-dashboard__navigation" aria-label={copy.overview.eyebrow}>
-      <div className="admin-dashboard__navigation-heading">
-        <span className="admin-dashboard__navigation-kicker">{copy.overview.eyebrow}</span>
-        <strong>{copy.nav.overview}</strong>
+    <nav className="admin-dashboard__navigation" aria-label={copy.overview.eyebrow} data-testid="admin-sidebar">
+      <div className="admin-dashboard__navigation-brand">
+        <a href={localePath(locale, '/')} aria-label={locale === 'ar' ? 'عرض الموقع' : 'View website'}>
+          <img src="/assets/sadat-real-estate-logo.png" alt={locale === 'ar' ? 'عقارات السادات' : 'Sadat Real Estate'} />
+        </a>
       </div>
-      <div className="admin-dashboard__navigation-groups">
-        {navigationGroups.map(group => (
-          <div className="admin-dashboard__navigation-group" key={group.id}>
-            <p className="admin-dashboard__navigation-kicker">{navigationGroupLabels[locale][group.id]}</p>
-            <ul>
-              {group.items.map(([id, path]) => {
-                const active = navigationMatchers[id].some(candidate => activePath === candidate || (candidate !== '/admin' && activePath.startsWith(`${candidate}/`)));
-                return (
-                  <li key={id}>
-                    <a href={localePath(locale, path)} aria-current={active ? 'page' : undefined} data-active={active || undefined}>
-                      <span aria-hidden="true" className="admin-dashboard__navigation-icon">{navigationIcons[id]}</span>
-                      <span>{copy.nav[id]}</span>
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        ))}
+      <div className="admin-dashboard__navigation-scroll">
+        <div className="admin-dashboard__navigation-groups">
+          {sidebarGroups.map(group => (
+            <div className="admin-dashboard__navigation-group" key={group.id}>
+              <p className="admin-dashboard__navigation-kicker">{group.label[locale]}</p>
+              <ul>
+                {group.items.map(item => {
+                  const active = item.id === activeItemId;
+                  return (
+                    <li key={item.id}>
+                      <a href={localePath(locale, item.path)} aria-current={active ? 'page' : undefined} data-active={active || undefined}>
+                        <span aria-hidden="true" className="admin-dashboard__navigation-icon">
+                          <img src={navigationIconSources[item.icon]} alt="" width="17" height="17" />
+                        </span>
+                        <span>{item.label[locale]}</span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div className="admin-dashboard__navigation-mobile-actions">
+          <button type="button" className="admin-dashboard__navigation-footer-link admin-dashboard__navigation-logout" onClick={signOut} disabled={signingOut} data-testid="admin-logout-button" aria-label={signingOut ? (locale === 'ar' ? 'جارٍ تسجيل الخروج…' : 'Signing out…') : (locale === 'ar' ? 'تسجيل الخروج' : 'Sign out')}>
+            <img src="/assets/canonical/provider/navigation/logout.svg" alt="" width="17" height="17" />
+            <span>{signingOut ? (locale === 'ar' ? 'جارٍ تسجيل الخروج…' : 'Signing out…') : (locale === 'ar' ? 'تسجيل الخروج' : 'Sign out')}</span>
+          </button>
+        </div>
+      </div>
+      <div className="admin-dashboard__navigation-footer">
+        <div className="admin-dashboard__navigation-profile">
+          <span className="admin-dashboard__navigation-profile-avatar" aria-hidden="true">{locale === 'ar' ? 'م' : 'A'}</span>
+          <span><strong>{locale === 'ar' ? 'مدير النظام' : 'System administrator'}</strong><small>{locale === 'ar' ? 'حساب إداري' : 'Administrator account'}</small></span>
+        </div>
+        <a href={localePath(locale, '/')} className="admin-dashboard__navigation-footer-link">{locale === 'ar' ? 'عرض الموقع' : 'View website'}</a>
+        <button type="button" className="admin-dashboard__navigation-footer-link admin-dashboard__navigation-logout" onClick={signOut} disabled={signingOut} data-testid="admin-logout-button" aria-label={signingOut ? (locale === 'ar' ? 'جارٍ تسجيل الخروج…' : 'Signing out…') : (locale === 'ar' ? 'تسجيل الخروج' : 'Sign out')}>
+          <img src="/assets/canonical/provider/navigation/logout.svg" alt="" width="17" height="17" />
+          {signingOut ? (locale === 'ar' ? 'جارٍ تسجيل الخروج…' : 'Signing out…') : (locale === 'ar' ? 'تسجيل الخروج' : 'Sign out')}
+        </button>
       </div>
     </nav>
   );

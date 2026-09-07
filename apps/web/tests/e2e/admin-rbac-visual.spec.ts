@@ -26,7 +26,9 @@ for (const [path, screenId, name] of routes) {
     await expect(page.locator(`[data-screen-id="${screenId}"][data-device-scope="desktop"][data-state="success"]`)).toBeVisible();
     await page.evaluate(async () => {
       await document.fonts.ready;
+      await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
     });
+    await page.waitForTimeout(500);
     await expect(page).toHaveScreenshot(`${name}-${locale}.png`, { fullPage: true, maxDiffPixels: 300 });
   });
 }

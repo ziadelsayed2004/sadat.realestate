@@ -189,6 +189,13 @@
   background: var(--color-surface, #fff);
   color: var(--color-text-primary, #15232b);
   font: inherit;
+  line-height: 1.5;
+}
+
+.admin-commissions__field select {
+  block-size: 2.7rem;
+  height: 2.7rem;
+  min-block-size: 2.7rem;
 }
 
 .admin-commissions__field textarea {

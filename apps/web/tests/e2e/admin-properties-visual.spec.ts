@@ -13,12 +13,18 @@ test('ADM-14 through ADM-17 match the approved desktop visual baseline', async (
   ] as const;
   for (const [name, route, screenId] of routes) {
     await page.goto(route);
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(500);
     await expect(page.locator(`[data-screen-id="${screenId}"]`).first()).toBeVisible();
     if (name === 'list') await expect(page.getByTestId(`admin-property-${adminPropertyId}`)).toBeVisible();
     if (name === 'review') await expect(page.locator('#admin-property-reason')).toBeVisible();
     if (name === 'duplicates') await expect(page.getByText(adminPropertyCandidateId)).toBeVisible();
     if (name === 'reports') await expect(page.locator('#admin-property-report-reason')).toBeVisible();
-    await page.evaluate(() => document.fonts.ready);
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+      await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+    });
+    await page.waitForTimeout(300);
     await page.mouse.move(0, 0);
     await expect(page).toHaveScreenshot(`admin-properties-${locale}-${name}.png`, { fullPage: true, maxDiffPixelRatio: 0.035 });
   }

@@ -7,7 +7,10 @@ const clientAssets = path.resolve(appRoot, 'dist/client/assets');
 const maxJavaScriptChunkBytes = 650 * 1024;
 const maxJavaScriptBytes = 2_500 * 1024;
 // Responsive public, seeker, provider, and Admin shells are on the critical path.
-const maxStylesheetBytes = 473 * 1024;
+// The admin sidebar now includes the approved Figma structure (brand, scroll area,
+// grouped navigation, and account footer). Keep the budget tight while allowing
+// that shared shell to ship without silently dropping its responsive states.
+const maxStylesheetBytes = 478 * 1024;
 const files = readdirSync(clientAssets)
   .map(name => path.join(clientAssets, name))
   .filter(file => statSync(file).isFile());

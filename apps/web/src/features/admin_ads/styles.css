@@ -22,6 +22,7 @@
 .admin-ads__filters input,
 .admin-ads__filters select,
 .admin-ads__field textarea { min-height: 44px; padding: 10px 12px; border: 1px solid #dbe0e6; border-radius: 10px; background: #fff; color: #1b2942; font: inherit; }
+.admin-ads__filters select { block-size: 44px; height: 44px; min-block-size: 44px; line-height: 1.5; }
 .admin-ads__filters input:focus-visible,
 .admin-ads__filters select:focus-visible,
 .admin-ads__field textarea:focus-visible,

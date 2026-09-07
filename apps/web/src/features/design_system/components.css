@@ -122,7 +122,7 @@
   font: inherit;
 }
 
-select:not(.a11y-visually-hidden) {
+:where(select:not(.a11y-visually-hidden)) {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;

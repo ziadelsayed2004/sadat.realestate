@@ -16,11 +16,16 @@ test('ADM-18 through ADM-24 match the approved desktop visual baseline', async (
   ] as const;
   for (const [name, pathname, screenId] of routes) {
     await page.goto(`${pathname}?lang=${encodeURIComponent(locale)}`);
+    await page.waitForLoadState('networkidle');
     await expect(page.locator(`[data-screen-id="${screenId}"]`).first()).toBeVisible();
     if (name === 'viewing') await expect(page.getByTestId(`admin-viewing-${adminViewingId}`)).toBeVisible();
     else if (name === 'issues') await expect(page.getByTestId(`admin-issue-${adminIssueId}`)).toBeVisible();
     else await expect(page.getByTestId(`admin-request-${adminRequestId}`)).toBeVisible();
-    await page.evaluate(() => document.fonts.ready);
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+      await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+    });
+    await page.waitForTimeout(300);
     await page.mouse.move(0, 0);
     await expect(page).toHaveScreenshot(`admin-requests-${locale}-${name}.png`, { fullPage: true, maxDiffPixels: 800 });
   }

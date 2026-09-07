@@ -48,9 +48,9 @@ test.describe('ADM-01 Admin Overview accessibility', () => {
     await page.goto(`/admin?lang=${encodeURIComponent(locale)}`);
     await expect(page.locator('main#main-content')).toBeVisible();
     await expect(page.locator('.admin-dashboard__navigation')).toHaveAttribute('aria-label', /.+/u);
-    await expect(page.locator('.admin-dashboard__metric-section')).toHaveCount(2);
-    await expect(page.locator('.admin-dashboard__metric-section .admin-dashboard__metric')).toHaveCount(7);
-    await expect(page.locator('.admin-dashboard__navigation a')).toHaveCount(11);
+    await expect(page.locator('.admin-dashboard__metric-section')).toHaveCount(4);
+    await expect(page.locator('.admin-dashboard__metric-section .admin-dashboard__metric')).toHaveCount(15);
+    await expect(page.locator('.admin-dashboard__navigation a')).toHaveCount(53);
     await expect(page.locator('.admin-dashboard__navigation a[href^="/admin/audit-logs"]')).toBeVisible();
     await expect(page.locator('body')).not.toContainText(/internalNotes|assignedTo|auditData|storageKey|accessToken|refreshToken/u);
 

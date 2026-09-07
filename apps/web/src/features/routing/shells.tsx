@@ -1,5 +1,5 @@
 import type { SupportedLocale } from '@sadat-real-estate/contracts';
-import type { ReactNode } from 'react';
+import { createContext, type ReactNode } from 'react';
 import { BrandMark, type DesignAssetCatalog } from '../design_system/index.ts';
 import { getAccessibilityCopy, SkipLink } from '../accessibility/index.ts';
 import type { FoundationCopy } from '../frontend_foundation/locale.js';
@@ -15,9 +15,17 @@ export interface RouteShellProps {
   readonly locale: SupportedLocale;
   readonly copy: FoundationCopy;
   readonly assets?: DesignAssetCatalog | undefined;
+  readonly authClient?: RouteShellAuthClient | undefined;
   readonly onLocaleChange?: ((locale: SupportedLocale) => void) | undefined;
   readonly children: ReactNode;
 }
+
+export interface RouteShellAuthClient {
+  readonly getSnapshot?: (() => unknown) | undefined;
+  readonly logout?: (() => Promise<unknown>) | undefined;
+}
+
+export const RouteShellAuthContext = createContext<RouteShellAuthClient | undefined>(undefined);
 
 interface LanguageSwitchProps {
   readonly locale: SupportedLocale;
@@ -29,7 +37,7 @@ function LanguageSwitch({ locale, copy, onLocaleChange }: LanguageSwitchProps) {
   return <LocaleSwitcher locale={locale} label={copy.localeLabel} onLocaleChange={onLocaleChange} />;
 }
 
-function ShellFrame({ kind, route, locale, copy, assets, onLocaleChange, children }: RouteShellProps & { readonly kind: ShellKind }) {
+function ShellFrame({ kind, route, locale, copy, assets, authClient, onLocaleChange, children }: RouteShellProps & { readonly kind: ShellKind }) {
   const dashboard = kind === 'seeker' || kind === 'provider' || kind === 'admin';
   const surfaceLabel = copy.surfaceLabels[route.surface];
   const accessibilityCopy = getAccessibilityCopy(locale);
@@ -46,18 +54,19 @@ function ShellFrame({ kind, route, locale, copy, assets, onLocaleChange, childre
   );
 
   return (
-    <div
-      className={`app-shell route-shell route-shell--${kind} surface-${route.surface}`}
-      data-auth-required={route.requiresAuthentication}
-      data-device-scope={route.deviceScope}
-      data-locale={locale}
-      data-route-id={route.id}
-      data-shell={kind}
-      data-surface={route.surface}
-      dir={directionForLocale(locale)}
-    >
-      <SkipLink label={accessibilityCopy.skipToContent} />
-      <header className="app-header route-shell__header">
+    <RouteShellAuthContext.Provider value={authClient}>
+      <div
+        className={`app-shell route-shell route-shell--${kind} surface-${route.surface}`}
+        data-auth-required={route.requiresAuthentication}
+        data-device-scope={route.deviceScope}
+        data-locale={locale}
+        data-route-id={route.id}
+        data-shell={kind}
+        data-surface={route.surface}
+        dir={directionForLocale(locale)}
+      >
+        <SkipLink label={accessibilityCopy.skipToContent} />
+        <header className="app-header route-shell__header">
         <BrandMark label={copy.brand} assets={assets} />
         {adminHeader === undefined ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -80,16 +89,17 @@ function ShellFrame({ kind, route, locale, copy, assets, onLocaleChange, childre
             <LanguageSwitch locale={locale} copy={copy} onLocaleChange={onLocaleChange} />
           </div>
         )}
-      </header>
-      {dashboard ? (
-        <div className="route-shell__body">
-          <nav className="route-shell__navigation" aria-label={surfaceLabel} data-shell-navigation="true">
-            <span className="route-shell__navigation-label">{surfaceLabel}</span>
-          </nav>
-          {body}
-        </div>
-      ) : body}
-    </div>
+        </header>
+        {dashboard ? (
+          <div className="route-shell__body">
+            <nav className="route-shell__navigation" aria-label={surfaceLabel} data-shell-navigation="true">
+              <span className="route-shell__navigation-label">{surfaceLabel}</span>
+            </nav>
+            {body}
+          </div>
+        ) : body}
+      </div>
+    </RouteShellAuthContext.Provider>
   );
 }
 

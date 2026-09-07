@@ -23,15 +23,18 @@ for (const [name, path, screenId] of visualRoutes) {
     await routeAdminCommissionApis(page);
     const locale = localeForProject();
     await page.goto(`${path}${path.includes('?') ? '&' : '?'}lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
     await expect(page.locator(`[data-screen-id="${screenId}"]`)).toBeVisible();
+    await page.waitForTimeout(500);
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+    });
     await page.evaluate(() => {
       const active = document.activeElement;
       if (active instanceof HTMLElement) active.blur();
       for (const select of document.querySelectorAll('select')) select.blur();
     });
-    await page.evaluate(async () => {
-      await document.fonts.ready;
-    });
+    await page.waitForTimeout(500);
     await expect(page).toHaveScreenshot(`admin-commissions-${locale}-${name}.png`, { fullPage: true, maxDiffPixels: 256 });
   });
 }

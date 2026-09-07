@@ -22,7 +22,12 @@ test('ADM-33 through ADM-38 match the approved desktop visual matrix', async ({ 
   const locale = localeForProject();
   for (const [name, path, screenId] of visualRoutes) {
     await page.goto(`${path}?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(500);
     await expect(page.locator(`[data-screen-id="${screenId}"]`)).toBeVisible();
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+    });
     await expect(page).toHaveScreenshot(`admin-ads-${locale}-${name}.png`, { fullPage: true });
   }
 });

@@ -23,6 +23,8 @@ test('ADM-30, ADM-31, and ADM-32 match the approved desktop visual baselines', a
     ['/admin/content/population-counter', 'ADM-32', `admin-cms-content-${locale}-population.png`]
   ] as const) {
     await page.goto(`${path}?lang=${encodeURIComponent(locale)}`);
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(500);
     await expect(page.locator(`[data-screen-id="${screenId}"]`)).toBeVisible();
     await expect(page).toHaveScreenshot(snapshot, { fullPage: true, maxDiffPixelRatio: 0.015 });
   }
