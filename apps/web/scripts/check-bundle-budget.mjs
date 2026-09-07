@@ -10,7 +10,8 @@ const maxJavaScriptBytes = 2_500 * 1024;
 // The admin sidebar now includes the approved Figma structure (brand, scroll area,
 // grouped navigation, and account footer). Keep the budget tight while allowing
 // that shared shell to ship without silently dropping its responsive states.
-const maxStylesheetBytes = 478 * 1024;
+// Add 2 KiB for accessible category disclosure and viewport-bounded sticky states.
+const maxStylesheetBytes = 480 * 1024;
 const files = readdirSync(clientAssets)
   .map(name => path.join(clientAssets, name))
   .filter(file => statSync(file).isFile());

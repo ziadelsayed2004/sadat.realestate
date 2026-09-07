@@ -23,7 +23,6 @@ async function routeAdminContentApis(page: import('@playwright/test').Page, allo
 test.describe('ADM-25 and ADM-26 article management', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'design-source', description: 'ADM-25 and ADM-26 local final exports; Figma prototype node 6017:61879; desktop scope.' });
-    test.skip(!testInfo.project.name.includes('desktop'), 'Admin dashboard is approved for desktop only.');
     await routeAdminContentApis(page);
   });
 
@@ -34,6 +33,8 @@ test.describe('ADM-25 and ADM-26 article management', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
     await expect(page.getByTestId(`admin-article-${adminArticleId}`)).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.screenshot({ path: test.info().outputPath('admin-articles.png') });
     await expect(page.locator('body')).not.toContainText(/authorId|internalNotes|assignedTo|auditData|storageKey|accessToken|refreshToken|privateUrl/u);
     await page.getByRole('button', { name: /submit for review|إرسال للمراجعة|提交审核/iu }).click();
     await page.getByLabel(/change reason|سبب التغيير|变更原因/iu).fill('Submit article for review');

@@ -191,10 +191,25 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
   const copy = getAdminCopy(locale);
   const authClient = useContext(RouteShellAuthContext);
   const [signingOut, setSigningOut] = useState(false);
+  const [collapsedGroups, setCollapsedGroups] = useState<readonly string[]>([]);
   const activeItemId = sidebarGroups.flatMap(group => group.items).map(item => ({
     id: item.id,
     score: Math.max(...item.matchers.map(candidate => activePath === candidate ? candidate.length + 10000 : activePath.startsWith(`${candidate}/`) ? candidate.length : -1))
   })).filter(item => item.score >= 0).sort((left, right) => right.score - left.score)[0]?.id;
+  const activeGroupId = sidebarGroups.find(group => group.items.some(item => item.id === activeItemId))?.id;
+  useEffect(() => {
+    try {
+      const saved: unknown = JSON.parse(sessionStorage.getItem('admin-sidebar-collapsed') ?? '[]');
+      setCollapsedGroups(Array.isArray(saved) ? saved.filter((id): id is string => typeof id === 'string' && id !== activeGroupId && sidebarGroups.some(group => group.id === id)) : []);
+    } catch {
+      setCollapsedGroups([]);
+    }
+  }, [activeGroupId]);
+  const toggleGroup = (id: string) => {
+    const next = collapsedGroups.includes(id) ? collapsedGroups.filter(value => value !== id) : [...collapsedGroups, id];
+    setCollapsedGroups(next);
+    try { sessionStorage.setItem('admin-sidebar-collapsed', JSON.stringify(next)); } catch { /* Navigation still works when storage is unavailable. */ }
+  };
   const signOut = () => {
     if (signingOut) return;
     setSigningOut(true);
@@ -214,8 +229,11 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
         <div className="admin-dashboard__navigation-groups">
           {sidebarGroups.map(group => (
             <div className="admin-dashboard__navigation-group" key={group.id}>
-              <p className="admin-dashboard__navigation-kicker">{group.label[locale]}</p>
-              <ul>
+              <button type="button" className="admin-dashboard__navigation-kicker" aria-expanded={!collapsedGroups.includes(group.id)} aria-controls={`admin-navigation-${group.id}`} onClick={() => toggleGroup(group.id)}>
+                <span>{group.label[locale]}</span>
+                <span aria-hidden="true">{collapsedGroups.includes(group.id) ? '+' : '−'}</span>
+              </button>
+              <ul id={`admin-navigation-${group.id}`} hidden={collapsedGroups.includes(group.id)}>
                 {group.items.map(item => {
                   const active = item.id === activeItemId;
                   return (

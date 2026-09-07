@@ -9,7 +9,6 @@ function localeForCommunity(): 'ar' | 'en' {
 test.describe('ADM-27 through ADM-29 community administration', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'design-source', description: 'ADM-27, ADM-28, and ADM-29 local final exports; Figma node 6017:61879; desktop scope.' });
-    test.skip(!testInfo.project.name.includes('desktop'), 'Admin dashboard is approved for desktop only.');
     await routeAdminCommunityApis(page);
   });
 
@@ -18,6 +17,8 @@ test.describe('ADM-27 through ADM-29 community administration', () => {
     await page.goto(`/admin/community?lang=${encodeURIComponent(locale)}`);
     await expect(page.locator('[data-screen-id="ADM-27"]')).toBeVisible();
     await expect(page.getByTestId(`admin-community-post-${adminCommunityPostId}`)).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.screenshot({ path: test.info().outputPath('admin-community.png') });
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
     await expect(page.locator('body')).not.toContainText(/internalNotes|assignedTo|auditData|storageKey|accessToken|refreshToken|privateUrl/u);

@@ -51,6 +51,7 @@ test.describe('Admin sidebar responsive shell', () => {
     }));
     expect(dimensions.documentWidth).toBeLessThanOrEqual(dimensions.viewport);
     expect(dimensions.bodyWidth).toBeLessThanOrEqual(dimensions.viewport);
+    await page.screenshot({ path: test.info().outputPath('admin-overview.png') });
   });
 
   test('keeps the admin logout action visible and functional', async ({ page }) => {
@@ -66,7 +67,46 @@ test.describe('Admin sidebar responsive shell', () => {
     const logout = page.locator('[data-testid="admin-logout-button"]:visible');
     await expect(logout).toHaveCount(1);
     await expect(logout).toBeEnabled();
+    if ((page.viewportSize()?.width ?? 0) > 1100) {
+      const box = await logout.boundingBox();
+      expect(box!.y + box!.height).toBeLessThanOrEqual(page.viewportSize()!.height);
+    }
     await logout.click();
     await expect(page).toHaveURL(new RegExp(`/auth/login\\?lang=${locale}$`, 'u'));
+  });
+
+  test('collapses each category independently and restores the active route on reload', async ({ page }) => {
+    await page.goto(`/admin?lang=${localeForProject()}`);
+    const sidebar = page.getByTestId('admin-sidebar');
+    const toggles = sidebar.locator('button[aria-controls]');
+    await expect(toggles).toHaveCount(8);
+    for (const toggle of await toggles.all()) {
+      const id = await toggle.getAttribute('aria-controls');
+      await toggle.click();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+      await expect(page.locator(`#${id}`)).toBeHidden();
+      await toggle.press('Enter');
+      await expect(page.locator(`#${id}`)).toBeVisible();
+    }
+    await sidebar.locator('[aria-controls="admin-navigation-content"]').click();
+    await sidebar.locator('[aria-controls="admin-navigation-home"]').click();
+    await page.reload();
+    await expect(page.locator('#admin-navigation-content')).toBeHidden();
+    await expect(sidebar.locator('a[aria-current="page"]')).toBeVisible();
+  });
+
+  test('keeps navigation pinned during page scroll and card spacing bounded', async ({ page }) => {
+    await page.goto(`/admin?lang=${localeForProject()}`);
+    const sidebar = page.getByTestId('admin-sidebar');
+    await expect(page.locator('.admin-dashboard__metric').first()).toBeVisible();
+    await page.evaluate(() => window.scrollTo(0, 650));
+    await expect.poll(async () => Math.round((await sidebar.boundingBox())?.y ?? -1)).toBe((page.viewportSize()?.width ?? 0) > 1100 ? 72 : 0);
+    if ((page.viewportSize()?.width ?? 0) > 1100) {
+      const box = await sidebar.boundingBox();
+      expect(box!.height).toBeLessThanOrEqual(page.viewportSize()!.height);
+      const gap = await page.locator('.admin-dashboard__metric-grid').first().evaluate(element => getComputedStyle(element).gap);
+      expect(gap).toBe('12px');
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   });
 });
