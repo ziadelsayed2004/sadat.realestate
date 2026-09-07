@@ -1,45 +1,47 @@
-.admin-rbac { min-height: calc(100vh - var(--header-height-min)); background: #f5e9cb; color: #1b2942; }
-.admin-rbac__content { min-width: 0; padding: 28px clamp(18px, 2.2vw, 34px) 48px; }
-.admin-rbac__heading, .admin-rbac__form-panel, .admin-rbac__panel { max-width: 1320px; margin: 0 auto 24px; }
-.admin-rbac__heading { padding: 4px 0 18px; }
-.admin-rbac__form-panel, .admin-rbac__panel { padding: 28px 32px; border: 1px solid #e3e5e7; border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(50 50 50 / 6%); }
+.route-shell--admin .route-shell__body:has(.admin-rbac) { grid-template-columns: minmax(0, 1fr); }
+.route-shell--admin .app-main:has(> .admin-rbac), .admin-rbac { width: 100%; }
+#main-content > .admin-rbac { max-width: none; min-height: calc(100vh - var(--header-height-min)); margin: 0; padding: 0; border: 0; border-radius: 0; background: #f5e9cb; box-shadow: none; color: #1b2942; }
+.admin-rbac__content { width: 100%; min-width: 0; padding: 28px clamp(18px, 2.2vw, 34px) 48px; }
+.admin-rbac__heading, .admin-rbac__form-panel, .admin-rbac__panel, .admin-rbac__metrics, .admin-rbac__filters, .admin-rbac__status-tabs { width: 100%; max-width: 1320px; margin: 0 auto 24px; }
+.admin-rbac__heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 4px 0 18px; }
+.admin-rbac__heading h1, .admin-rbac__panel-heading h2 { margin: 0; color: #1b2942; letter-spacing: -.03em; }
 .admin-rbac__heading h1 { font-size: clamp(1.75rem, 2.2vw, 2rem); }
-.admin-rbac__heading h1, .admin-rbac__panel-heading h2 { margin: 0 0 8px; color: #1b2942; letter-spacing: -.03em; }
-.admin-rbac__heading p, .admin-rbac__panel-heading p, .admin-rbac__muted { color: #68768b; line-height: 1.6; }
-.admin-rbac__eyebrow { margin: 0 0 8px; color: #d79a2b; font-size: .74rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-.admin-rbac__tabs { display: flex; flex-wrap: wrap; gap: 8px; max-width: 1320px; margin: 0 auto 24px; padding: 8px; border: 1px solid #e3e5e7; border-radius: 16px; background: #fff; }
-.admin-rbac__tabs a, .admin-rbac__row-link { color: #0e5849; font-weight: 800; text-decoration: none; }
-.admin-rbac__tabs a { padding: 10px 14px; border-radius: 10px; }
-.admin-rbac__tabs a:hover, .admin-rbac__tabs a:focus-visible, .admin-rbac__tabs a[aria-current='page'] { background: #0e5849; color: #fff; }
+.admin-rbac__heading p, .admin-rbac__panel-heading p, .admin-rbac__muted { margin: 6px 0 0; color: #68768b; line-height: 1.6; }
+.admin-rbac__heading-actions, .admin-rbac__actions, .admin-rbac__pagination { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.admin-rbac__secondary-link, .admin-rbac__row-link { color: #0e5849; font-weight: 800; text-decoration: none; }
+.admin-rbac__secondary-link { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 18px; border: 1px solid #d8cbaa; border-radius: 12px; background: transparent; }
+.admin-rbac__metrics { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+.admin-rbac__metrics article { display: grid; min-height: 92px; place-content: center; gap: 5px; padding: 14px; border: 1px solid #e3e5e7; border-radius: 18px; background: #fff; text-align: center; }
+.admin-rbac__metrics strong { color: #0e5849; font-size: 1.35rem; }
+.admin-rbac__metrics span { color: #68768b; font-size: .82rem; }
+.admin-rbac__status-tabs { display: flex; gap: 4px; padding: 8px; border: 1px solid #e3e5e7; border-radius: 16px; background: #fff; }
+.admin-rbac__status-tabs button { min-height: 38px; padding: 7px 16px; border: 0; border-radius: 999px; background: transparent; color: #68768b; font: inherit; font-weight: 800; cursor: pointer; }
+.admin-rbac__status-tabs button[data-active='true'] { background: #0e5849; color: #fff; }
+.admin-rbac__form-panel, .admin-rbac__panel { padding: 28px 32px; overflow-x: auto; border: 1px solid #e3e5e7; border-radius: 20px; background: #fff; }
 .admin-rbac__panel-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-block-end: 20px; }
-.admin-rbac__filters { display: flex; flex-wrap: wrap; gap: 14px; max-width: 1320px; margin: 0 auto 24px; padding: 18px 22px; border: 1px solid #e3e5e7; border-radius: 18px; background: #fff; }
-.admin-rbac__field { display: grid; gap: 7px; color: #5e6b80; font-weight: 800; }
-.admin-rbac__filters label { min-width: 15rem; }
+.admin-rbac__filters { display: flex; justify-content: flex-end; gap: 14px; }
+.admin-rbac__filters label, .admin-rbac__field { display: grid; gap: 7px; color: #5e6b80; font-weight: 800; }
+.admin-rbac__filters label { width: min(100%, 30rem); }
 .admin-rbac__field input, .admin-rbac__field select, .admin-rbac__field textarea, .admin-rbac__filters select { min-height: 44px; padding: 10px 12px; border: 1px solid #dbe0e6; border-radius: 10px; background: #fff; color: #1b2942; font: inherit; }
 .admin-rbac__field textarea { min-height: 120px; resize: vertical; }
-.admin-rbac__field input:focus-visible, .admin-rbac__field select:focus-visible, .admin-rbac__field textarea:focus-visible, .admin-rbac__tabs a:focus-visible, .admin-rbac__row-link:focus-visible { outline: 3px solid #5a8cf1; outline-offset: 3px; }
-.admin-rbac__table { width: 100%; border-collapse: collapse; }
+.admin-rbac__table { width: 100%; min-width: 720px; border-collapse: collapse; }
 .admin-rbac__table th, .admin-rbac__table td { padding: 14px 12px; border-block-end: 1px solid #eef0f3; text-align: start; vertical-align: middle; }
 .admin-rbac__table th { color: #5e6b80; font-size: .82rem; white-space: nowrap; }
 .admin-rbac__table small { display: block; margin-block-start: 4px; color: #68768b; }
-.admin-rbac__table code { font-size: .74rem; }
-.admin-rbac__state { max-width: 760px; margin: 40px auto; padding: 34px; border: 1px solid #e1e5eb; border-radius: 18px; background: #fff; box-shadow: 0 10px 28px rgb(50 50 50 / 6%); }
-.admin-rbac__form-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-block-end: 18px; }
-.admin-rbac__details { display: grid; gap: 0; margin: 0 0 24px; padding: 18px 22px; border: 1px solid #eef0f3; border-radius: 14px; }
-.admin-rbac__details > div { display: flex; justify-content: space-between; gap: 20px; padding: 10px 0; border-block-end: 1px solid #eef0f3; }
-.admin-rbac__details > div:last-child { border-block-end: 0; }
-.admin-rbac__details dt { color: #68768b; font-weight: 800; }
-.admin-rbac__details dd { margin: 0; }
-.admin-rbac__actions, .admin-rbac__pagination { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-block-start: 18px; }
-.admin-rbac__pagination { justify-content: center; }
-.admin-rbac__pagination span { min-width: 80px; text-align: center; }
-.admin-rbac__permissions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 20px 0; padding: 16px; border: 1px solid #eef0f3; border-radius: 14px; }
-.admin-rbac__permissions legend { padding-inline: 8px; color: #5e6b80; font-weight: 800; }
-.admin-rbac__permissions label, .admin-rbac__checkbox { display: flex; align-items: center; gap: 8px; min-height: 36px; color: #33435d; font-size: .88rem; }
-.admin-rbac__status { padding: 7px 12px; border-radius: 999px; background: #e1edff; color: #1c5ce0; font-weight: 800; }
-.admin-rbac__feedback { margin-block-start: 16px; padding: 12px 16px; border-radius: 10px; background: #fff1bd; color: #6f541b; font-weight: 700; }
-.admin-rbac__panel > .admin-rbac__table { min-width: 720px; }
-.admin-rbac__panel { overflow-x: auto; }
+.admin-rbac__state { max-width: 760px; margin: 40px auto; padding: 34px; border: 1px solid #e1e5eb; border-radius: 18px; background: #fff; }
 .admin-rbac__form-panel > form { display: grid; gap: 18px; }
-@media (max-width: 980px) { .admin-rbac { grid-template-columns: 1fr; } .admin-rbac > .admin-dashboard__navigation { border-inline-end: 0; border-block-end: 1px solid #e4e7ec; } .admin-rbac__content { padding-inline: 18px; } .admin-rbac__form-grid { grid-template-columns: 1fr 1fr; } .admin-rbac__permissions { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 640px) { .admin-rbac__heading { padding: 4px 0 14px; } .admin-rbac__form-panel, .admin-rbac__panel { padding: 22px 18px; } .admin-rbac__form-grid, .admin-rbac__permissions { grid-template-columns: 1fr; } .admin-rbac__panel-heading { flex-direction: column; } }
+.admin-rbac__form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-block-end: 18px; }
+.admin-rbac__details { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 0 24px; }
+.admin-rbac__details > div { display: grid; gap: 6px; padding: 16px; border: 1px solid #eef0f3; border-radius: 12px; }
+.admin-rbac__details dd { margin: 0; }
+.admin-rbac__actions { margin-block-start: 18px; }
+.admin-rbac__pagination { justify-content: center; margin-block-start: 18px; }
+.admin-rbac__pagination span { min-width: 80px; text-align: center; }
+.admin-rbac__permissions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 20px 0; padding: 20px; border: 1px solid #eef0f3; border-radius: 14px; }
+.admin-rbac__permissions legend { padding-inline: 8px; color: #5e6b80; font-weight: 800; }
+.admin-rbac__permissions label, .admin-rbac__checkbox { display: flex; align-items: flex-start; gap: 8px; min-width: 0; min-height: 36px; color: #33435d; font-size: .82rem; overflow-wrap: anywhere; }
+.admin-rbac__permissions input { flex: 0 0 auto; }
+.admin-rbac__status { display: inline-flex; padding: 7px 12px; border-radius: 999px; background: #e1edff; color: #1c5ce0; font-weight: 800; }
+.admin-rbac__feedback { margin-block-start: 16px; padding: 12px 16px; border-radius: 10px; background: #fff1bd; color: #6f541b; font-weight: 700; }
+@media (max-width: 1100px) { .admin-rbac__metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); } .admin-rbac__content { padding-inline: 18px; } }
+@media (max-width: 700px) { .admin-rbac__heading, .admin-rbac__panel-heading { align-items: stretch; flex-direction: column; } .admin-rbac__heading-actions { width: 100%; } .admin-rbac__metrics, .admin-rbac__form-grid, .admin-rbac__details, .admin-rbac__permissions { grid-template-columns: 1fr; } .admin-rbac__form-panel, .admin-rbac__panel { padding: 22px 18px; } }

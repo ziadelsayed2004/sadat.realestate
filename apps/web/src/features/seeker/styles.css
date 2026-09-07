@@ -1721,25 +1721,9 @@
 .seeker-profile__identity {
   display: flex;
   align-items: center;
-  gap: 1rem;
   padding-block-end: 1.5rem;
   border-block-end: 1px solid #ebe6dc;
 }
-.seeker-profile__identity-avatar {
-  display: grid;
-  place-items: center;
-  inline-size: 4.5rem;
-  block-size: 4.5rem;
-  flex: 0 0 auto;
-  color: #0f4a3b;
-  background: #f3e8d0;
-  border: 1px solid #dfcfad;
-  border-radius: 50%;
-  font-size: 1.15rem;
-  font-weight: 800;
-  overflow: hidden;
-}
-.seeker-profile__identity-avatar img { inline-size: 100%; block-size: 100%; object-fit: cover; }
 .seeker-profile__identity > span:last-child { display: grid; gap: .35rem; }
 .seeker-profile__identity strong { color: #17233d; font-size: 1.15rem; }
 .seeker-profile__identity small { color: #7d8492; }

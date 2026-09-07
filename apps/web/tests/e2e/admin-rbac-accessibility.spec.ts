@@ -12,7 +12,7 @@ test('ADM-59 through ADM-64 expose labeled controls, landmarks, and keyboard foc
   const locale = localeForProject();
   await page.goto(`/admin/admin-users?lang=${encodeURIComponent(locale)}`);
   await expect(page.locator('main#main-content')).toBeVisible();
-  await expect(page.locator('.admin-rbac__tabs[aria-label]')).toBeVisible();
+  await expect(page.locator('.admin-rbac__status-tabs[aria-label]')).toBeVisible();
   await expect(page.locator('table caption')).toContainText(/administrator|المسؤول|مستخدمو الإدارة|管理员/iu);
   await page.keyboard.press('Tab');
   await expect(page.locator(':focus')).toBeVisible();

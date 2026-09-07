@@ -333,7 +333,6 @@ function ProfileForm({
   return (
     <form className="seeker-profile__form" onSubmit={onSubmit} noValidate>
       <div className="seeker-profile__identity">
-        <span className="seeker-profile__identity-avatar" aria-hidden="true">{profile.firstName.trim().slice(0, 1)}{profile.lastName.trim().slice(0, 1)}</span>
         <span><strong>{profile.firstName} {profile.lastName}</strong><small>{surfaceCopy.role}</small></span>
       </div>
       <div className="seeker-profile__form-grid">

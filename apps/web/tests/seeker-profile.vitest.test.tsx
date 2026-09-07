@@ -119,9 +119,7 @@ describe('Seeker profile, preferences, and settings', () => {
     const profileCopy = getSeekerProfileCopy('en');
     await waitFor(() => expect(screen.getByRole('heading', { name: profileCopy.profile.heading, level: 2 })).toBeInTheDocument());
     expect(profileResult.container.querySelector('[data-screen-id="SEK-09"]')).not.toBeNull();
-    const identityAvatar = profileResult.container.querySelector('.seeker-profile__identity-avatar');
-    expect(identityAvatar).toHaveTextContent('MS');
-    expect(identityAvatar?.querySelector('img')).toBeNull();
+    expect(profileResult.container.querySelector('.seeker-profile__identity-avatar')).toBeNull();
     expect(screen.getByDisplayValue(profile.email)).toBeDisabled();
     profileResult.unmount();
 

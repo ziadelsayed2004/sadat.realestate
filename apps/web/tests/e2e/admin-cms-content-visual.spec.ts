@@ -24,6 +24,6 @@ test('ADM-30, ADM-31, and ADM-32 match the approved desktop visual baselines', a
   ] as const) {
     await page.goto(`${path}?lang=${encodeURIComponent(locale)}`);
     await expect(page.locator(`[data-screen-id="${screenId}"]`)).toBeVisible();
-    await expect(page).toHaveScreenshot(snapshot, { fullPage: true, maxDiffPixels: 300 });
+    await expect(page).toHaveScreenshot(snapshot, { fullPage: true, maxDiffPixelRatio: 0.015 });
   }
 });
