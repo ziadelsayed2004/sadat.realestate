@@ -23,6 +23,7 @@
 .admin-rbac__filters label, .admin-rbac__field { display: grid; gap: 7px; color: #5e6b80; font-weight: 800; }
 .admin-rbac__filters label { width: min(100%, 30rem); }
 .admin-rbac__field input, .admin-rbac__field select, .admin-rbac__field textarea, .admin-rbac__filters select { min-height: 44px; padding: 10px 12px; border: 1px solid #dbe0e6; border-radius: 10px; background: #fff; color: #1b2942; font: inherit; }
+.admin-rbac__field select, .admin-rbac__filters select { box-sizing: border-box; block-size: 44px; min-block-size: 44px; appearance: none; }
 .admin-rbac__field textarea { min-height: 120px; resize: vertical; }
 .admin-rbac__table { width: 100%; min-width: 720px; border-collapse: collapse; }
 .admin-rbac__table th, .admin-rbac__table td { padding: 14px 12px; border-block-end: 1px solid #eef0f3; text-align: start; vertical-align: middle; }

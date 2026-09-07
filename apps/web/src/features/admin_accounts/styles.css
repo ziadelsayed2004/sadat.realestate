@@ -67,6 +67,13 @@
   color: #1b2942;
 }
 
+.admin-accounts__field select {
+  box-sizing: border-box;
+  block-size: 44px;
+  min-block-size: 44px;
+  appearance: none;
+}
+
 .admin-accounts__filter-actions {
   display: flex;
   flex: 0 0 auto;

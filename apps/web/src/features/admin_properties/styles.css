@@ -86,6 +86,14 @@
   font: inherit;
 }
 
+.admin-properties__filters select,
+.admin-properties__action-card select {
+  box-sizing: border-box;
+  block-size: 44px;
+  min-block-size: 44px;
+  appearance: none;
+}
+
 .admin-properties__filters input,
 .admin-properties__filters select {
   grid-row: 2;

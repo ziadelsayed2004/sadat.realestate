@@ -15,6 +15,7 @@
 .admin-requests__filters > div { display: grid; gap: 7px; }
 .admin-requests__filters label, .admin-requests__actions label { color: #5e6b80; font-size: .85rem; font-weight: 800; }
 .admin-requests__filters input, .admin-requests__filters select, .admin-requests__actions input, .admin-requests__actions select, .admin-requests__actions textarea { min-height: 44px; padding: 10px 12px; border: 1px solid #dbe0e6; border-radius: 10px; background: #fff; color: #1b2942; font: inherit; }
+.admin-requests__filters select, .admin-requests__actions select { box-sizing: border-box; block-size: 44px; min-block-size: 44px; appearance: none; }
 .admin-requests__filters input:focus-visible, .admin-requests__filters select:focus-visible, .admin-requests__actions input:focus-visible, .admin-requests__actions select:focus-visible, .admin-requests__actions textarea:focus-visible { outline: 3px solid #5a8cf1; outline-offset: 3px; }
 .admin-requests__filter-actions { display: flex !important; flex-wrap: wrap; align-items: end; gap: 8px; }
 .admin-requests__panel { max-width: 1420px; margin: 0 auto; overflow: hidden; border: 1px solid #e3e5e7; border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(50 50 50 / 6%); }

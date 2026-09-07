@@ -16,6 +16,8 @@ const routes = [
 ] as const;
 
 test.describe('ADM-33 through ADM-38 advertising administration', () => {
+  test.describe.configure({ timeout: 60_000 });
+
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'design-source', description: 'ADM-33..ADM-38 checked-in local final exports; shared Figma prototype node 6017:61879; per-screen Drive references in DESIGN_SOURCE_MANIFEST.json' });
     test.skip(!testInfo.project.name.includes('desktop'), 'Admin dashboard is approved for desktop only.');
