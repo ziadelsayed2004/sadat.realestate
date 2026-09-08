@@ -25,6 +25,7 @@ async function withServer(run: (baseUrl: string) => Promise<void>) {
   const settings = {
     accessTokens,
     service: {
+      async getPublicSeo() { return { title: { en: 'Sadat Real Estate' }, description: { en: 'Published description' }, canonicalUrl: 'https://example.test', robots: 'index,follow' as const, sitemapStatus: 'active' as const }; },
       async get() { return { namespace: 'display' as const, schemaVersion: 1, values: { show_map: true }, version: 0, updatedBy: '0123456789abcdef01234567', updatedAt: '2026-08-01T00:00:00.000Z' }; },
       async update(_claims: unknown, namespace: unknown, input: unknown) { return { namespace: String(namespace) as 'display', schemaVersion: (input as { schemaVersion: number }).schemaVersion, values: (input as { values: Record<string, unknown> }).values, version: 1, updatedBy: '0123456789abcdef01234567', updatedAt: '2026-08-02T00:00:00.000Z' }; }
     },
@@ -43,6 +44,10 @@ async function withServer(run: (baseUrl: string) => Promise<void>) {
 
 test('protects unified settings routes and validates namespace and payload', async () => {
   await withServer(async baseUrl => {
+    const publicSeo = await fetch(`${baseUrl}/api/v1/public/settings/seo`);
+    assert.equal(publicSeo.status, 200);
+    assert.equal(publicSeo.headers.get('cache-control'), 'public, max-age=300, stale-while-revalidate=600');
+    assert.deepEqual((await publicSeo.json() as { data: unknown }).data, { title: { en: 'Sadat Real Estate' }, description: { en: 'Published description' }, canonicalUrl: 'https://example.test', robots: 'index,follow', sitemapStatus: 'active' });
     assert.equal((await fetch(`${baseUrl}/api/v1/admin/settings/display`)).status, 401);
     assert.equal((await fetch(`${baseUrl}/api/v1/admin/settings/display`, { headers: { authorization: `Bearer ${providerToken}` } })).status, 403);
     const read = await fetch(`${baseUrl}/api/v1/admin/settings/display`, { headers: { authorization: `Bearer ${adminToken}` } });

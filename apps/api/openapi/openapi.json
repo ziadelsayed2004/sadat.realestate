@@ -1547,6 +1547,30 @@
         }
       }
     },
+    "/api/v1/public/settings/seo": {
+      "get": {
+        "operationId": "getPublicSeoSettings",
+        "summary": "Read the safe public SEO projection",
+        "responses": {
+          "200": {
+            "description": "Public SEO defaults",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicSeoSettingsSuccessEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/SettingsError"
+          },
+          "500": {
+            "$ref": "#/components/responses/SettingsError"
+          }
+        }
+      }
+    },
     "/api/v1/public/home": {
       "get": {
         "operationId": "getPublicHomepage",
@@ -17790,6 +17814,26 @@
             "format": "date-time"
           }
         }
+      },
+      "PublicSeoSettings": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "description", "canonicalUrl", "robots", "sitemapStatus"],
+        "properties": {
+          "title": { "$ref": "#/components/schemas/LocalizedText" },
+          "description": { "$ref": "#/components/schemas/LocalizedText" },
+          "canonicalUrl": { "type": "string", "format": "uri", "maxLength": 2048 },
+          "robots": { "type": "string", "enum": ["index,follow", "noindex,nofollow", "noindex,follow", "index,nofollow"] },
+          "titleSeparator": { "type": "string", "minLength": 1, "maxLength": 10 },
+          "sitemapStatus": { "type": "string", "enum": ["active", "inactive"] },
+          "googleSiteVerification": { "type": "string", "minLength": 1, "maxLength": 512 }
+        }
+      },
+      "PublicSeoSettingsSuccessEnvelope": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SuccessEnvelope" },
+          { "type": "object", "properties": { "data": { "$ref": "#/components/schemas/PublicSeoSettings" } } }
+        ]
       },
       "AdminSettingsSuccessEnvelope": {
         "allOf": [

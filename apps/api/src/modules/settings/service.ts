@@ -3,9 +3,11 @@ import {
   adminSettingsDataSchema,
   adminSettingsNamespaceSchema,
   adminSettingsUpdateSchema,
+  publicSeoSettingsSchema,
   type AdminSettingsData,
   type AdminSettingsNamespace,
-  type AdminSettingsUpdate
+  type AdminSettingsUpdate,
+  type PublicSeoSettings
 } from '@sadat-real-estate/contracts';
 
 export interface SettingsAuthorization {
@@ -93,6 +95,36 @@ function output(value: AdminSettingsData): AdminSettingsData {
   return adminSettingsDataSchema.parse(value);
 }
 
+function canonicalOrigin(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  try {
+    const parsed = new URL(value);
+    if (!['http:', 'https:'].includes(parsed.protocol) || parsed.username || parsed.password || parsed.search || parsed.hash || parsed.pathname !== '/') return undefined;
+    return parsed.origin;
+  } catch {
+    return undefined;
+  }
+}
+
+function publicSeoProjection(setting: AdminSettingsData | undefined): PublicSeoSettings | undefined {
+  if (setting?.namespace !== 'seo') return undefined;
+  const canonicalUrl = canonicalOrigin(setting.values.canonical_domain);
+  const sitemapStatus = setting.values.sitemap_status;
+  if (canonicalUrl === undefined || typeof setting.values.allow_indexing !== 'boolean' || (sitemapStatus !== 'active' && sitemapStatus !== 'inactive')) return undefined;
+  const titleSeparator = typeof setting.values.title_separator === 'string' && setting.values.title_separator !== '' ? setting.values.title_separator : undefined;
+  const googleSiteVerification = typeof setting.values.google_search_console_verification === 'string' && setting.values.google_search_console_verification !== '' ? setting.values.google_search_console_verification : undefined;
+  const parsed = publicSeoSettingsSchema.safeParse({
+    title: setting.values.default_seo_title,
+    description: setting.values.default_meta_description,
+    canonicalUrl,
+    robots: setting.values.allow_indexing ? 'index,follow' : 'noindex,nofollow',
+    sitemapStatus,
+    ...(titleSeparator === undefined ? {} : { titleSeparator }),
+    ...(googleSiteVerification === undefined ? {} : { googleSiteVerification })
+  });
+  return parsed.success ? parsed.data : undefined;
+}
+
 export function createSettingsService(dependencies: SettingsServiceDependencies) {
   const clock = dependencies.now ?? (() => new Date());
   const get = async (claims: AccessTokenClaims, unparsedNamespace: unknown): Promise<AdminSettingsData> => {
@@ -102,6 +134,11 @@ export function createSettingsService(dependencies: SettingsServiceDependencies)
     const value = await dependencies.repository.find(target);
     if (!value) throw new SettingsServiceError('SETTINGS_NOT_FOUND');
     return output(value);
+  };
+  const getPublicSeo = async (): Promise<PublicSeoSettings> => {
+    const value = publicSeoProjection(await dependencies.repository.find('seo'));
+    if (value === undefined) throw new SettingsServiceError('SETTINGS_NOT_FOUND');
+    return value;
   };
 
   const update = async (
@@ -148,6 +185,7 @@ export function createSettingsService(dependencies: SettingsServiceDependencies)
 
   return {
     get,
+    getPublicSeo,
     read: get,
     getNamespace: get,
     update,

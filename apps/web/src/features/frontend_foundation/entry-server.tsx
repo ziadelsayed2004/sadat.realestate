@@ -1,22 +1,23 @@
 import { renderToString } from 'react-dom/server';
-import { type ArticleListQuery, type ArticlePublic, type ArticlePublicListData, type CmsPublicContentListData, type CommunityPublicPostListData, type PublicHomepageData, type PublicOrganizationDirectoryQuery, type PublicOrganizationListData, type PublicOrganizationProfile, type PublicPropertyComparisonData, type PublicPropertyDetails, type PublicPropertyListData, type PublicPropertySearchQuery, type SupportedLocale } from '@sadat-real-estate/contracts';
+import { type ArticleListQuery, type ArticlePublic, type ArticlePublicListData, type CmsPublicContentListData, type CommunityPublicPostListData, type PublicHomepageData, type PublicOrganizationDirectoryQuery, type PublicOrganizationListData, type PublicOrganizationProfile, type PublicPropertyComparisonData, type PublicPropertyDetails, type PublicPropertyListData, type PublicPropertySearchQuery, type PublicSeoSettings, type SupportedLocale } from '@sadat-real-estate/contracts';
 import { resolveRoute } from '../../routes/route-table.js';
 import { ApiClientError } from '../contracts/index.ts';
 import { getPublicDevelopersCopy, getPublicHomepageCopy, getPublicPropertyComparisonCopy, getPublicPropertyDetailsCopy, getPublicPropertyListingCopy, loadPublicDeveloperDirectory, loadPublicDeveloperProfile, loadPublicHomepage, loadPublicPropertyComparison, loadPublicPropertyDetails, loadPublicPropertyList, localizedText, parsePublicDeveloperDirectoryQuery, parsePublicPropertyComparisonIds, parsePublicPropertySearchQuery, propertyDetailsSlugFromUrl, publicDeveloperProfileSlugFromUrl, publicDeveloperProfileUrl, publicPropertyDetailsUrl } from '../public/index.ts';
 import { getPublicAboutTeamCopy, getPublicArticlesCopy, loadPublicAbout, loadPublicArticleDetails, loadPublicArticles, loadPublicTeam, parsePublicArticleListQuery, publicArticleSlugFromUrl, publicArticleUrl, type PublicArticleDetailsViewState } from '../content/index.ts';
 import { getCommunityCopy, loadPublicCommunity, parseCommunityListQuery } from '../community/index.ts';
-import { canonicalPathForUrl, createPublicSeo, type PublicSeoMetadata } from '../seo/index.ts';
+import { canonicalPathForUrl, createPublicSeo, loadPublicSeoSettings, normalizePublicOrigin, type PublicSeoMetadata } from '../seo/index.ts';
 import { App } from './app.js';
 import { directionForLocale, getFoundationCopy, resolveLocale } from './locale.js';
 
 export type ServerRenderSeo = PublicSeoMetadata;
-export { createRobotsTxt, createSitemapXml } from '../seo/index.ts';
+export { createRobotsTxt, createSitemapXml, loadPublicSeoSettings } from '../seo/index.ts';
 
 export interface ServerRenderOptions {
   readonly acceptLanguage?: string;
   readonly preferredLocale?: string;
   readonly apiOrigin?: string;
   readonly publicOrigin?: string;
+  readonly publicSeoSettings?: PublicSeoSettings;
   readonly homepageData?: PublicHomepageData;
   readonly propertyListData?: PublicPropertyListData;
   readonly propertyListQuery?: PublicPropertySearchQuery;
@@ -199,11 +200,35 @@ function unavailableDetailSeo(routeId: string, locale: SupportedLocale, url: str
   return createPublicSeo({ title: notFound ? copy.notFoundTitle : copy.loadingTitle, locale, canonicalPath, description: notFound ? copy.notFoundBody : copy.loadingBody, robots: 'noindex,follow' });
 }
 
+function applyPublicSeoSettings(seo: ServerRenderSeo, settings: PublicSeoSettings, locale: SupportedLocale, homepage: boolean): ServerRenderSeo {
+  const siteTitle = localizedText(settings.title, locale);
+  const title = homepage
+    ? siteTitle ?? seo.title
+    : siteTitle === undefined || settings.titleSeparator === undefined
+      ? seo.title
+      : `${seo.title} ${settings.titleSeparator} ${siteTitle}`;
+  const description = homepage ? localizedText(settings.description, locale) ?? seo.description : seo.description;
+  const robots = settings.robots.startsWith('noindex') ? settings.robots : seo.robots;
+  const base = {
+    ...seo,
+    title,
+    robots,
+    openGraph: { ...seo.openGraph, title },
+    jsonLd: homepage ? { ...seo.jsonLd, name: title, ...(description === undefined ? {} : { description }) } : seo.jsonLd,
+    ...(settings.googleSiteVerification === undefined ? {} : { googleSiteVerification: settings.googleSiteVerification })
+  };
+  return description === undefined ? base : { ...base, description, openGraph: { ...base.openGraph, description } };
+}
+
 export async function render(url: string, options: ServerRenderOptions = {}): Promise<ServerRenderResult> {
   const parsedUrl = new URL(url, 'http://sadat.local');
   const locale = resolveLocale(parsedUrl.searchParams.get('lang') ?? options.preferredLocale, options.acceptLanguage);
   const route = resolveRoute(url);
   const copy = getFoundationCopy(locale);
+  let publicSeoSettings = options.publicSeoSettings;
+  const publicSeoSettingsPromise = publicSeoSettings === undefined && options.apiOrigin !== undefined && route.kind === 'matched' && route.surface === 'public'
+    ? loadPublicSeoSettings({ apiOrigin: options.apiOrigin, signal: AbortSignal.timeout(1_500) }).catch(() => undefined)
+    : undefined;
   let homepageData = options.homepageData;
   let propertyListData = options.propertyListData;
   let propertyListQuery = options.propertyListQuery;
@@ -447,6 +472,13 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
     }
   }
 
+  if (publicSeoSettings === undefined && publicSeoSettingsPromise !== undefined) publicSeoSettings = await publicSeoSettingsPromise;
+  if (seo !== undefined && publicSeoSettings !== undefined && route.kind === 'matched' && route.surface === 'public') {
+    seo = applyPublicSeoSettings(seo, publicSeoSettings, locale, route.id === 'public-home');
+  }
+
+  const configuredPublicOrigin = normalizePublicOrigin(publicSeoSettings?.canonicalUrl) ?? options.publicOrigin;
+
   const appProps = {
     url,
     locale,
@@ -513,6 +545,6 @@ export async function render(url: string, options: ServerRenderOptions = {}): Pr
     ...(teamData === undefined ? {} : { teamData }),
     ...(teamInitialState === undefined ? {} : { teamInitialState }),
     ...(seo === undefined ? {} : { seo }),
-    ...(options.publicOrigin === undefined ? {} : { publicOrigin: options.publicOrigin })
+    ...(configuredPublicOrigin === undefined ? {} : { publicOrigin: configuredPublicOrigin })
   };
 }

@@ -23,6 +23,7 @@ export interface PublicSeoMetadata {
   readonly robots: RobotsDirective;
   readonly openGraph: SeoOpenGraph;
   readonly jsonLd: Readonly<Record<string, unknown>>;
+  readonly googleSiteVerification?: string;
 }
 
 export interface PublicSeoInput {
@@ -130,8 +131,8 @@ export function createSitemapXml(origin: string, paths: readonly string[] = PUBL
     + '</urlset>';
 }
 
-export function createRobotsTxt(sitemapUrl?: string): string {
-  const lines = [
+export function createRobotsTxt(sitemapUrl?: string, allowIndexing = true): string {
+  const lines = allowIndexing ? [
     'User-agent: *',
     'Allow: /',
     'Disallow: /admin/',
@@ -140,7 +141,7 @@ export function createRobotsTxt(sitemapUrl?: string): string {
     'Disallow: /provider/',
     'Disallow: /provider-application/',
     'Disallow: /seeker/'
-  ];
+  ] : ['User-agent: *', 'Disallow: /'];
   if (sitemapUrl !== undefined) lines.push(`Sitemap: ${sitemapUrl}`);
   return `${lines.join('\n')}\n`;
 }

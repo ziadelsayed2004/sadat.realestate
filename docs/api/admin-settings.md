@@ -4,6 +4,7 @@ The administrator settings API exposes a strict, versioned namespace boundary:
 
 - `GET /api/v1/admin/settings/:namespace` requires `admin:settings.view`.
 - `PUT /api/v1/admin/settings/:namespace` requires `admin:settings.manage`.
+- `GET /api/v1/public/settings/seo` is anonymous and returns only a complete validated SEO projection: localized title/description, canonical origin, robots policy, sitemap status, and optional title separator and Google site-verification value. It never exposes version, actor, audit, or unrelated administrative values and returns 404 when the required namespace values are missing or invalid.
 
 Supported namespaces are `platform`, `contact`, `social`, `properties`, `requests`, `advertising`, `seo`, `privacy-security`, and `display`. Values use stable logical keys and a bounded scalar/localized value contract; unknown fields, control characters, credentials, tokens, private keys, and other secrets are rejected.
 

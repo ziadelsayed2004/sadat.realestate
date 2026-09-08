@@ -4,7 +4,8 @@ import {
   adminSettingsUpdateSchema,
   providerSettingsPatchSchema,
   type AdminSettingsData,
-  type ProviderSettingsData
+  type ProviderSettingsData,
+  type PublicSeoSettings
 } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims, AccessTokenService } from '../auth/crypto.js';
 import { ApiContractError, toApiErrorResponse } from '../contracts/error-boundary.js';
@@ -16,6 +17,7 @@ import { ProviderSettingsServiceError } from './provider-service.js';
 import { SettingsServiceError } from './service.js';
 
 export const SETTINGS_ROUTE_DEFINITIONS = [
+  { method: 'GET', path: '/api/v1/public/settings/seo', operationId: 'getPublicSeoSettings' },
   { method: 'GET', path: '/api/v1/admin/settings/:namespace', operationId: 'getAdminSettings' },
   { method: 'PUT', path: '/api/v1/admin/settings/:namespace', operationId: 'updateAdminSettings' },
   { method: 'GET', path: '/api/v1/provider/settings', operationId: 'getProviderSettings' },
@@ -25,6 +27,7 @@ export const SETTINGS_ROUTE_DEFINITIONS = [
 export interface SettingsRouterDependencies {
   service: {
     get(claims: AccessTokenClaims, namespace: unknown): Promise<AdminSettingsData>;
+    getPublicSeo(): Promise<PublicSeoSettings>;
     update(claims: AccessTokenClaims, namespace: unknown, input: unknown, context: { requestId: string; traceId: string }): Promise<AdminSettingsData>;
   };
   provider?: {
@@ -61,6 +64,13 @@ function sendError(request: Request, response: Response, error: unknown): void {
 export function createSettingsRouter(dependencies: SettingsRouterDependencies): Router {
   const router = Router();
   router.use((_request, response, next) => { response.setHeader('Cache-Control', 'no-store'); next(); });
+  router.get('/public/settings/seo', async (request, response) => {
+    try {
+      const result = await dependencies.service.getPublicSeo();
+      response.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+      response.status(200).json(toSuccessResponse(result, requestId(request)));
+    } catch (error) { sendError(request, response, error); }
+  });
   router.use('/admin/settings', createAdminRbacAuthMiddleware(dependencies.accessTokens));
 
   router.get('/admin/settings/:namespace', async (request, response) => {

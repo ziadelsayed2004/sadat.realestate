@@ -54,5 +54,6 @@ describe('crawler documents', () => {
     expect(robots).toContain('Disallow: /admin/');
     expect(robots).toContain('Disallow: /api/');
     expect(robots).toContain('Sitemap: https://example.test/sitemap.xml');
+    expect(createRobotsTxt(undefined, false)).toBe('User-agent: *\nDisallow: /\n');
   });
 });

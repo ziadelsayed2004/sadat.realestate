@@ -166,6 +166,60 @@ describe('secure preview build and deployment', () => {
     }
   }, 30_000);
 
+  it('applies the public SEO projection to HTML and crawler documents', async () => {
+    const apiPort = await unusedPort();
+    const apiOrigin = `http://127.0.0.1:${apiPort}`;
+    const api = createServer((request, response) => {
+      if (request.url !== '/api/v1/public/settings/seo') {
+        response.statusCode = 404;
+        response.end();
+        return;
+      }
+      response.setHeader('Content-Type', 'application/json');
+      response.end(JSON.stringify({
+        data: {
+          title: { en: 'Configured production title' },
+          description: { en: 'Configured production description' },
+          canonicalUrl: 'https://canonical.example',
+          robots: 'noindex,nofollow',
+          titleSeparator: '|',
+          sitemapStatus: 'inactive',
+          googleSiteVerification: 'verification-value'
+        },
+        meta: { requestId: 'preview-seo-settings' }
+      }));
+    });
+    await new Promise<void>((resolve, reject) => {
+      api.once('error', reject);
+      api.listen(apiPort, '127.0.0.1', () => resolve());
+    });
+
+    const port = await unusedPort();
+    const origin = `http://127.0.0.1:${port}`;
+    const child = spawn(process.execPath, ['server.mjs', '--mode', 'production'], {
+      cwd: webRoot,
+      env: { ...process.env, APP_ENV: 'preview', NODE_ENV: 'production', WEB_HOST: '127.0.0.1', WEB_PORT: String(port), WEB_PUBLIC_ORIGIN: origin, WEB_API_ORIGIN: apiOrigin },
+      stdio: ['ignore', 'pipe', 'pipe'],
+      windowsHide: true
+    });
+
+    server.close();
+    try {
+      await waitForPreviewServer(child, `${origin}/health`);
+      const html = await (await fetch(`${origin}/?lang=en`)).text();
+      expect(html).toContain('<title>Configured production title</title>');
+      expect(html).toContain('name="google-site-verification" content="verification-value"');
+      expect(html).toContain('rel="canonical" href="https://canonical.example/"');
+      const robots = await (await fetch(`${origin}/robots.txt`)).text();
+      expect(robots).toBe('User-agent: *\nDisallow: /\n');
+      expect((await fetch(`${origin}/sitemap.xml`)).status).toBe(404);
+    } finally {
+      await stopPreviewServer(child);
+      await new Promise<void>(resolve => api.close(() => resolve()));
+      server.listen({ onUnhandledRequest: 'error' });
+    }
+  }, 40_000);
+
   it('keeps the development CSP compatible with Vite hydration and HMR', async () => {
     const port = await unusedPort();
     const origin = `http://127.0.0.1:${port}`;

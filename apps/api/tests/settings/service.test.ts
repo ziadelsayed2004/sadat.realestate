@@ -86,6 +86,17 @@ test('returns unavailable for a missing namespace without fabricating settings',
   await assert.rejects(() => service.get(adminClaims, 'display'), (error: unknown) => error instanceof SettingsServiceError && error.code === 'SETTINGS_NOT_FOUND');
 });
 
+test('projects only complete public SEO values and strips administrative metadata', async () => {
+  const seo: AdminSettingsData = {
+    namespace: 'seo', schemaVersion: 1, version: 3, updatedBy: adminClaims.sub, updatedAt: '2026-08-02T00:00:00.000Z',
+    values: { default_seo_title: { ar: 'عقارات السادات', en: 'Sadat Real Estate' }, default_meta_description: { en: 'Published homes in Sadat City' }, canonical_domain: 'https://example.test/', allow_indexing: false, sitemap_status: 'active', title_separator: '|', google_search_console_verification: 'site-verification-value' }
+  };
+  const service = createSettingsService({ authorization: { async authorize() { return true; } }, repository: { async find(namespace) { return namespace === 'seo' ? seo : undefined; }, async upsert() { return { kind: 'version_conflict' as const }; } }, audit: { async record() { return 'audit-id'; } } });
+  assert.deepEqual(await service.getPublicSeo(), { title: seo.values.default_seo_title, description: seo.values.default_meta_description, canonicalUrl: 'https://example.test', robots: 'noindex,nofollow', sitemapStatus: 'active', titleSeparator: '|', googleSiteVerification: 'site-verification-value' });
+  const incomplete = createSettingsService({ authorization: { async authorize() { return true; } }, repository: { async find() { return { ...seo, values: { default_seo_title: { en: 'Missing description' }, canonical_domain: 'https://example.test', allow_indexing: true } }; }, async upsert() { return { kind: 'version_conflict' as const }; } }, audit: { async record() { return 'audit-id'; } } });
+  await assert.rejects(() => incomplete.getPublicSeo(), (error: unknown) => error instanceof SettingsServiceError && error.code === 'SETTINGS_NOT_FOUND');
+});
+
 function providerRepository(result: { kind: 'updated'; settings: ProviderSettingsData } | { kind: 'not_found' } | { kind: 'version_conflict' } = { kind: 'updated', settings: providerSettings }): ProviderSettingsRepository {
   return {
     async find() { return providerSettings; },

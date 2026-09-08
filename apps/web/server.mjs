@@ -247,6 +247,9 @@ function renderSeoMetadata(seo, publicOrigin, cspNonce) {
     ? ''
     : '<meta name="description" content="' + escapeHtml(seo.description) + '" />';
   const robots = '<meta name="robots" content="' + escapeHtml(seo.robots) + '" />';
+  const verification = seo.googleSiteVerification === undefined
+    ? ''
+    : '<meta name="google-site-verification" content="' + escapeHtml(seo.googleSiteVerification) + '" />';
   const canonical = '<link rel="canonical" href="' + escapeHtml(absoluteSeoUrl(publicOrigin, seo.canonicalPath)) + '" />';
   const alternates = seo.alternatePaths.map(alternate => '<link rel="alternate" hreflang="'
     + escapeHtml(alternate.hrefLang)
@@ -260,7 +263,7 @@ function renderSeoMetadata(seo, publicOrigin, cspNonce) {
   const jsonLd = `<script${inlineNonceAttribute(cspNonce)} type="application/ld+json">`
     + escapeJsonForHtml(JSON.stringify(seo.jsonLd))
     + '</script>';
-  return description + robots + canonical + alternates + openGraph + jsonLd;
+  return description + robots + verification + canonical + alternates + openGraph + jsonLd;
 }
 
 function renderDocument(template, result, cspNonce) {
@@ -299,13 +302,31 @@ function sendCrawlerDocument(request, response, body, contentType) {
   response.end(request.method === 'HEAD' ? undefined : body);
 }
 
-function serveCrawlerDocument(request, response, seoHelpers) {
+async function serveCrawlerDocument(request, response, seoHelpers) {
   const pathname = new URL(request.url ?? '/', 'http://sadat.local').pathname;
   if (pathname !== '/robots.txt' && pathname !== '/sitemap.xml') return false;
-  const origin = requestPublicOrigin(request);
+  let settings;
+  const apiOrigin = normalizePublicOrigin(process.env.WEB_API_ORIGIN);
+  if (apiOrigin !== undefined) {
+    try {
+      settings = await seoHelpers.loadPublicSeoSettings({ apiOrigin, signal: globalThis.AbortSignal.timeout(1_500) });
+    } catch {
+      // Crawler documents retain their static safe defaults when settings are unavailable.
+    }
+  }
+  const origin = normalizePublicOrigin(settings?.canonicalUrl) ?? requestPublicOrigin(request);
+  const allowIndexing = settings?.robots.startsWith('noindex') !== true;
+  const sitemapActive = settings?.sitemapStatus !== 'inactive';
   if (pathname === '/robots.txt') {
-    const sitemapUrl = origin === undefined ? undefined : `${origin}/sitemap.xml`;
-    sendCrawlerDocument(request, response, seoHelpers.createRobotsTxt(sitemapUrl), 'text/plain; charset=utf-8');
+    const sitemapUrl = allowIndexing && sitemapActive && origin !== undefined ? `${origin}/sitemap.xml` : undefined;
+    sendCrawlerDocument(request, response, seoHelpers.createRobotsTxt(sitemapUrl, allowIndexing), 'text/plain; charset=utf-8');
+    return true;
+  }
+  if (!sitemapActive) {
+    applySecurityHeaders(response);
+    response.statusCode = 404;
+    response.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+    response.end();
     return true;
   }
   if (origin === undefined) {
@@ -393,7 +414,7 @@ async function renderDevelopmentPage(request, response, vite) {
     const requestUrl = request.url ?? '/';
     const template = await readFile(path.resolve(appRoot, 'index.html'), 'utf8');
     const entry = await vite.ssrLoadModule('/src/features/frontend_foundation/entry-server.tsx');
-    if (serveCrawlerDocument(request, response, entry)) return;
+    if (await serveCrawlerDocument(request, response, entry)) return;
     const publicOrigin = requestPublicOrigin(request);
     const result = await entry.render(requestUrl, {
       acceptLanguage: getAcceptLanguage(request),
@@ -488,13 +509,13 @@ async function serveAsset(request, response) {
 
 async function createProductionServer() {
   const template = await readFile(path.resolve(clientRoot, 'index.html'), 'utf8');
-  const { createRobotsTxt, createSitemapXml, render } = await import(pathToFileURL(entryModulePath).href);
-  const seoHelpers = { createRobotsTxt, createSitemapXml };
+  const { createRobotsTxt, createSitemapXml, loadPublicSeoSettings, render } = await import(pathToFileURL(entryModulePath).href);
+  const seoHelpers = { createRobotsTxt, createSitemapXml, loadPublicSeoSettings };
   const server = createHttpServer(async (request, response) => {
     if (await proxyApiRequest(request, response)) return;
     if (rejectUnsupportedMethod(request, response)) return;
     if (serveHealth(request, response)) return;
-    if (serveCrawlerDocument(request, response, seoHelpers)) return;
+    if (await serveCrawlerDocument(request, response, seoHelpers)) return;
     if (await serveAsset(request, response)) return;
     try {
       const requestUrl = request.url ?? '/';

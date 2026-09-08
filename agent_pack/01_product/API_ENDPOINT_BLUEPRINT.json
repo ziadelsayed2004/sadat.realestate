@@ -2246,6 +2246,16 @@
   },
   {
     "method": "GET",
+    "path": "/api/v1/public/settings/seo",
+    "module": "settings",
+    "auth": "none",
+    "roles": [],
+    "purpose": "Read the safe public SEO projection",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "GET",
     "path": "/api/v1/admin/settings/:namespace",
     "module": "settings",
     "auth": "access-token",

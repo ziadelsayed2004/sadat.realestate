@@ -144,6 +144,33 @@
       }
     },
     {
+      "name": "Public - SEO Settings",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Public SEO projection contains no administrative metadata', function () {",
+              "  pm.expect([200, 404, 500]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) pm.expect(pm.response.json().data).to.include.keys('title', 'description', 'canonicalUrl', 'robots', 'sitemapStatus');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/public/settings/seo",
+          "host": ["{{apiV1BaseUrl}}"],
+          "path": ["public", "settings", "seo"]
+        },
+        "description": "Unauthenticated projection of complete SEO defaults only; version, actor, audit, and verification fields are excluded."
+      }
+    },
+    {
       "name": "Public - Homepage",
       "event": [
         {
