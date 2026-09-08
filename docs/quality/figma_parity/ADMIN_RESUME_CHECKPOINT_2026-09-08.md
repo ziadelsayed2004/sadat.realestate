@@ -11,7 +11,7 @@
 
 - Broad desktop admin browser suite: 270/272 passed. The two failures were overview screenshot comparisons after intentional icon/layout changes, not failed functional assertions. Actual images were inspected before updating the two runtime regression baselines; the focused overview suite then passed 4/4. These snapshots are not Figma acceptance evidence.
 - The focused admin layout, sidebar, and filter matrix: 60/60 passed across Desktop, Tablet, and Pixel 5 in Arabic and English. This includes compact-rail active-link visibility and empty-result filter recovery.
-- The Web Vitest suite: 413/413 passed. The API route suite: 112/112 passed; the full API suite had already passed 556/556 before the final source-only sidebar change.
+- The Web Vitest suite: 413/413 passed. The API route suite: 112/112 passed; the full API suite was rerun after the final changes with 556/556 passing. `npm audit --audit-level=high` reports 0 vulnerabilities after the `qs` lockfile update.
 - API contract inventory: 187/187 runtime and policy routes match the implemented blueprint; OpenAPI and Postman validators are green.
 - Final build, TypeScript, and lint checks completed successfully.
 - The full `quality` aggregator is not green yet: all 556 API tests pass, but its coverage gate reports 78.23% lines and 79.88% functions against the configured 80% thresholds. The pack audit also retains the explicit ADM-54 design-source path exception. Neither result is a behavior-test failure.
