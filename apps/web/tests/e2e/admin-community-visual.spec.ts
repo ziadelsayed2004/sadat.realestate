@@ -18,7 +18,12 @@ test('ADM-27 through ADM-29 match the approved desktop visual baseline', async (
   for (const [path, name] of routes) {
     await page.goto(`${path}?lang=${encodeURIComponent(locale)}`);
     await expect(page.locator(`[data-screen-id="${name === 'posts' ? 'ADM-27' : name === 'comments' ? 'ADM-28' : 'ADM-29'}"]`)).toBeVisible();
-    await page.evaluate(() => document.fonts.ready);
+    await page.evaluate(async () => {
+      await Promise.all(['400 16px Cairo', '600 16px Cairo', '700 16px Cairo', '800 16px Cairo'].map(font => document.fonts.load(font)));
+      await document.fonts.ready;
+      await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+    });
+    await page.waitForTimeout(500);
     await page.mouse.move(0, 0);
     await expect(page).toHaveScreenshot(`admin-community-${locale}-${name}.png`, { fullPage: true, maxDiffPixels: 800 });
   }
