@@ -1,27 +1,27 @@
 {
   "schemaVersion": 1,
   "screenId": "ADM-18",
-  "classification": "BLOCKED_SOURCE",
-  "classificationReason": "The canonical file is confirmed, but the exact ADM-18 clone frame is unavailable. The checked-in local export is retained as provenance only; no node, historical comparison, or invented replacement source was used, and no visual closure claim is made.",
+  "classification": "MATERIAL_VISUAL_DIVERGENCE",
+  "classificationReason": "The exact source is recovered as Figma node 6017:69276. A fresh 1577 × 944 runtime capture differs materially in shell placement, heading hierarchy, filter density, table density, and populated-state coverage.",
   "source": {
     "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "pageId": "6017:4356",
-    "nodeId": null,
-    "url": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?page-id=6017%3A4356",
+    "nodeId": "6017:69276",
+    "url": "https://www.figma.com/design/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-69276",
     "screenshot": {
-      "path": "docs/quality/figma_parity/screens/ADM-18/figma.png",
-      "width": 6308,
-      "height": 3776,
+      "path": "docs/quality/figma_parity/screens/ADM-18/figma-direct-2026-09-08.png",
+      "width": 1577,
+      "height": 944,
       "reviewed": true
     },
     "getDesignContext": {
       "tool": "mcp__figma__get_design_context",
-      "resultStatus": "NO_EXACT_CLONE_FRAME",
+      "resultStatus": "RECOVERED_EXACT_CLONE_FRAME",
       "root": {
-        "id": null,
-        "name": "ADM-18 Requests Management local export",
-        "width": 6308,
-        "height": 3776
+        "id": "6017:69276",
+        "name": "Sadat Real Estate",
+        "width": 1577,
+        "height": 944
       },
       "retrievedRegions": [
         "admin shell",
@@ -31,7 +31,7 @@
         "pagination"
       ],
       "reviewed": true,
-      "note": "The local export exists under docs/design_sources/final_screens/admin/ADM-18.png, but the canonical clone registry has no matching node. A local image is not treated as a recovered Figma frame."
+      "note": "Direct Admin-page metadata recovered node 6017:69276; the approved 6308 × 3776 source is its 4× export."
     }
   },
   "runtime": {
@@ -82,28 +82,34 @@
       "capture": "First Admin visual capture retained before any ADM-18 repair; no pre-Admin runtime capture exists."
     },
     "after": {
-      "path": "docs/quality/figma_parity/screens/ADM-18/runtime-after.png",
-      "sha256": "f3454780caf9b0921a93433c21e5bc69d94c89aa30919d4bdf42138d55e3200b",
-      "capture": "Same current runtime retained because the missing exact source prevents an authorized repair/recapture claim."
+      "path": "docs/quality/figma_parity/screens/ADM-18/runtime-direct-2026-09-08.png",
+      "sha256": "0e1b436cc2909fd951d71891fad4703d1bbb36ee7c2a8c922717c8e4d5b598a6",
+      "capture": "Fresh local runtime capture at the exact recovered Figma frame size after the final admin layout repairs."
     }
   },
   "structuredVisualComparison": {
     "reviewed": true,
-    "diffPath": "docs/quality/figma_parity/screens/ADM-18/diff.png",
+    "diffPath": "docs/quality/figma_parity/screens/ADM-18/diff-direct-2026-09-08.png",
     "sourceDimensions": {
-      "width": 6308,
-      "height": 3776
+      "width": 1577,
+      "height": 944
     },
     "runtimeDimensions": {
-      "width": 1280,
-      "height": 885
+      "width": 1577,
+      "height": 944
     },
-    "comparisonKind": "preserved Playwright no-update implementation diff; not an exact Figma-node comparison",
+    "comparisonKind": "direct same-size Figma source-to-local-runtime pixel comparison",
+    "metrics": {
+      "meanAbsoluteError": 16.0068,
+      "differentPixelRatio": 0.811063,
+      "materialPixelRatioAt24": 0.397325
+    },
     "observations": [
       "The Admin request route is rendered in Arabic RTL Desktop scope and the deterministic request row is present.",
-      "The preserved no-update visual run reported an expected 1280x1127 image versus a 1280x885 runtime image, with 9795 different pixels (ratio 0.01).",
-      "The local source and runtime have different provenance and dimensions; the diff is retained as failure evidence, not as source parity proof.",
-      "No snapshot was updated."
+      "The recovered source and runtime were captured at the same 1577 × 944 dimensions.",
+      "The material pixel ratio is 39.7325% at an RGB delta threshold of 24.",
+      "The source places the compact admin navigation on the left and shows a dense six-row success state; the runtime uses the current RTL navigation shell on the right and a one-row deterministic fixture.",
+      "No parity snapshot was updated from this divergent result."
     ],
     "officialClosureEligible": false
   },
@@ -111,12 +117,12 @@
     "reviewed": true,
     "requestProjection": "GET /api/v1/admin/requests",
     "responseProjection": "deterministic Admin request list fixture",
-    "outcome": "The functional Admin route assertion, locale/direction, Desktop marker, keyboard focus, and safe-projection checks passed; visual closure is blocked by source provenance."
+    "outcome": "The functional Admin route assertion, locale/direction, Desktop marker, keyboard focus, and safe-projection checks passed. Direct visual comparison remains open because the runtime materially diverges from the recovered source."
   },
   "defects": [
-    "External source blocker: the canonical file has no exact clone node for ADM-18.",
-    "The local export cannot establish an exact historical Figma comparison and no replacement source was invented.",
-    "The existing implementation visual mismatch remains open; no repository-owned repair is claimed under the source blocker."
+    "The current RTL shell places navigation on the opposite side from the recovered Arabic source.",
+    "Heading, filter, table, and populated-state density differ materially from the recovered source.",
+    "A product decision is required before changing the shared admin shell because the supplied Production examples use the current right-side RTL navigation pattern."
   ],
   "filesRepaired": [],
   "focusedTests": [
@@ -127,8 +133,8 @@
     },
     {
       "name": "Admin request no-update visual evidence",
-      "result": "visual assertion failed; evidence preserved",
-      "exitCode": 1
+      "result": "fresh same-size source/runtime comparison captured; material divergence preserved",
+      "exitCode": 0
     }
   ],
   "accessibility": {
@@ -137,16 +143,16 @@
     "exitCode": 0
   },
   "evidencePaths": {
-    "figma": "docs/quality/figma_parity/screens/ADM-18/figma.png",
+    "figma": "docs/quality/figma_parity/screens/ADM-18/figma-direct-2026-09-08.png",
     "runtimeBefore": "docs/quality/figma_parity/screens/ADM-18/runtime-before.png",
-    "runtimeAfter": "docs/quality/figma_parity/screens/ADM-18/runtime-after.png",
-    "diff": "docs/quality/figma_parity/screens/ADM-18/diff.png",
+    "runtimeAfter": "docs/quality/figma_parity/screens/ADM-18/runtime-direct-2026-09-08.png",
+    "diff": "docs/quality/figma_parity/screens/ADM-18/diff-direct-2026-09-08.png",
     "review": "docs/quality/figma_parity/screens/ADM-18/review.json"
   },
-  "reviewedAt": "2026-08-29T17:30:00+03:00",
-  "externalBlocker": "Provide an exact ADM-18 clone frame or an explicitly approved current source tied to the canonical file, then recapture and re-review without changing snapshots prematurely.",
+  "reviewedAt": "2026-09-08T10:30:00+03:00",
+  "externalBlocker": "Confirm whether the recovered left-side Arabic admin shell or the current right-side RTL shell shown in the supplied Production examples is the final product authority before a shared-shell rewrite.",
   "latestRuntimeVerification": {
-    "source": "Admin request visual test-results and preserved evidence",
+    "source": "Fresh Playwright capture and direct recovered Figma comparison",
     "phase": "after",
     "apiResponseStatus": 200,
     "officialClosureEligible": false

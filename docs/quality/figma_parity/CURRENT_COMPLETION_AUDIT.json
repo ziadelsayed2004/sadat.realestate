@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-08T07:26:00.057Z",
+  "generatedAt": "2026-09-08T07:33:06.106Z",
   "authority": {
     "figmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "inventory": "docs/design_sources/figma/SCREEN_FRAME_INVENTORY.json",
@@ -1007,10 +1007,10 @@
       "figmaFrameNodeId": "6017:69276",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "DIRECT_RUNTIME_COMPARISON_PENDING",
+      "classification": "MATERIAL_VISUAL_DIVERGENCE",
       "closureProven": false,
       "blockers": [
-        "DIRECT_RUNTIME_COMPARISON_PENDING"
+        "MATERIAL_VISUAL_DIVERGENCE"
       ]
     },
     {

@@ -13110,20 +13110,26 @@
         },
         "structuredVisualComparison": {
           "reviewed": true,
-          "diffPath": "docs/quality/figma_parity/screens/ADM-18/diff.png",
+          "diffPath": "docs/quality/figma_parity/screens/ADM-18/diff-direct-2026-09-08.png",
           "sourceDimensions": {
-            "width": 6308,
-            "height": 3776
+            "width": 1577,
+            "height": 944
           },
           "runtimeDimensions": {
-            "width": 1280,
-            "height": 885
+            "width": 1577,
+            "height": 944
           },
-          "comparisonKind": "recovered exact Figma source with the previous runtime diff retained pending a fresh direct runtime comparison",
+          "comparisonKind": "direct same-size Figma source-to-local-runtime pixel comparison",
+          "metrics": {
+            "meanAbsoluteError": 16.0068,
+            "differentPixelRatio": 0.811063,
+            "materialPixelRatioAt24": 0.397325
+          },
           "observations": [
             "The Admin request route is rendered in Arabic RTL Desktop scope and the deterministic request row is present.",
             "The preserved no-update visual run reported an expected 1280x1127 image versus a 1280x885 runtime image, with 9795 different pixels (ratio 0.01).",
-            "The source provenance is now resolved to Figma node 6017:69276; the previous runtime capture predates the final admin layout repairs.",
+            "The source and runtime were compared at the same recovered 1577 × 944 frame size after the final admin layout repairs.",
+            "The material pixel ratio is 39.7325%; shell placement, heading hierarchy, filters, table density, and populated-state coverage differ.",
             "No snapshot was updated."
           ],
           "officialClosureEligible": false
@@ -13132,19 +13138,20 @@
           "reviewed": true,
           "requestProjection": "GET /api/v1/admin/requests",
           "responseProjection": "deterministic Admin request list fixture",
-          "outcome": "The functional Admin route assertion, locale/direction, Desktop marker, keyboard focus, and safe-projection checks passed; a fresh direct source-to-runtime comparison is still required for visual closure."
+          "outcome": "The functional Admin route assertion, locale/direction, Desktop marker, keyboard focus, and safe-projection checks passed. Direct visual closure remains open because the recovered source and current runtime materially diverge."
         },
         "defects": [
-          "Fresh direct runtime capture and comparison against recovered node 6017:69276 remain pending."
+          "The recovered source uses a left-side Arabic admin shell while the current runtime and supplied Production examples use a right-side RTL shell.",
+          "Heading, filter, table, and populated-state density remain materially different."
         ],
         "repairedFiles": [],
         "runtimeAfter": {
-          "path": "docs/quality/figma_parity/screens/ADM-18/runtime-after.png",
-          "sha256": "f3454780caf9b0921a93433c21e5bc69d94c89aa30919d4bdf42138d55e3200b",
-          "capture": "Previous current runtime retained as historical evidence; it predates the final admin layout repairs and cannot close the recovered-source comparison."
+          "path": "docs/quality/figma_parity/screens/ADM-18/runtime-direct-2026-09-08.png",
+          "sha256": "0e1b436cc2909fd951d71891fad4703d1bbb36ee7c2a8c922717c8e4d5b598a6",
+          "capture": "Fresh local runtime captured at the exact recovered Figma frame size after the final admin layout repairs."
         },
         "reviewedDiff": {
-          "path": "docs/quality/figma_parity/screens/ADM-18/diff.png",
+          "path": "docs/quality/figma_parity/screens/ADM-18/diff-direct-2026-09-08.png",
           "reviewed": true
         },
         "focusedTests": [
@@ -13155,8 +13162,8 @@
           },
           {
             "name": "Admin request no-update visual evidence",
-            "result": "visual assertion failed; evidence preserved",
-            "exitCode": 1
+            "result": "same-size direct comparison captured; material divergence preserved",
+            "exitCode": 0
           }
         ],
         "accessibility": {
@@ -13165,10 +13172,10 @@
           "exitCode": 0
         }
       },
-      "classification": "DIRECT_RUNTIME_COMPARISON_PENDING",
+      "classification": "MATERIAL_VISUAL_DIVERGENCE",
       "processedAt": "2026-08-29T14:38:21.798Z",
       "notes": [
-        "The exact ADM-18 frame was recovered as 6017:69276. Source provenance is resolved; visual closure still requires a fresh direct runtime comparison after the final admin repairs."
+        "The exact ADM-18 frame was recovered as 6017:69276 and compared directly at 1577 × 944. Material divergence remains open pending a product decision on the conflicting sidebar authority."
       ]
     },
     {

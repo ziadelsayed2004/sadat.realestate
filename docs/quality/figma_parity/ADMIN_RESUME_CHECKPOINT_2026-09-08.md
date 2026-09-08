@@ -22,6 +22,7 @@
 
 - Direct source dimensions are recorded in `direct-frame-inventory-2026-09-08.json`; detailed admin source nodes are recorded in `admin-direct-measurements-2026-09-08.json`. Source measurement inventory is separate from source-to-runtime parity.
 - ADM-18 source frame was recovered as `6017:69276`. ADM-54 uses the previously owner-approved authored source, not a recovered Figma frame.
+- ADM-18 was recaptured locally at its exact 1577 × 944 source size after the final admin repairs. Direct comparison remains open at 39.7325% material pixel difference because the recovered source uses a left-side Arabic admin shell while the supplied Production examples and current RTL runtime use the right side.
 - The narrow frame `6029:48309` (296 × 6194) was inspected directly. Its seven 256 × 862 symbols are seeker sidebar variants; inspection of `6029:48308` shows logo, navigation, and account footer. It is not evidence of seven responsive page designs.
 - The later user-supplied prototype points to Figma file `0HBdTNGROmmpC6S7OYa3iJ`, page `6017:4357`. Direct metadata records 402px mobile and 1024px tablet frames; `responsive-prototype-source-2026-09-08.json` supersedes the earlier missing-source conclusion.
 - ADM-01 still differs materially from its source in data coverage and section contents. The source includes richer review queues and activity summaries; current runtime explicitly shows unavailable data where the overview API does not supply it. Do not replace missing data with fabricated source examples or mark parity complete.

@@ -13,6 +13,7 @@
 
 - The user supplied Figma file `0HBdTNGROmmpC6S7OYa3iJ`, responsive page `6017:4357`. Direct metadata includes 62 top-level objects, including 402px mobile and 1024px tablet designs. The earlier missing-responsive-source conclusion applied to a different file and must not be retained as a current global blocker.
 - `USER_GUIDE_CONFORMANCE_MATRIX.json` now references the actual HTML guide, with 26 extracted journeys and explicit references for 121/131 screens. Mapping is not completion verification; ten screens have no explicit guide reference.
+- ADM-18 was recovered as exact node `6017:69276` at 1577 × 944. A fresh local runtime capture at the same dimensions produced a 39.7325% material pixel difference, driven by the opposite sidebar placement plus heading, filter, table-density, and populated-state differences. The supplied Production examples use the current right-side RTL shell while the recovered source uses a left-side Arabic shell, so no shell rewrite or parity closure is claimed without a final product-authority decision.
 
 ## Advertising lifecycle closure
 
