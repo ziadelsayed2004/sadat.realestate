@@ -39,4 +39,11 @@ This checkpoint is not release approval, a claim that all features were exhausti
 
 ## Latest live recheck superseding the earlier browser note
 
+### Prototype source and field-spacing follow-up
+
+- Reopened the supplied prototype with `get_design_context` at `6017:110792`: it is the 402px mobile homepage, not a sidebar variant. The page metadata contains 1024px tablet layouts as well. `responsive-prototype-geometry-2026-09-08.json` records 64 top-level objects with immediate child names and geometry; this includes isolated headers/components and is not a count of 64 complete screens or a runtime parity result.
+- Direct Admin contact subframe `6017:71935` in file `Odl1Epn2u6lIEuIMmABT7o` specifies a 16px grid gap. Restored that gap in the shared settings field grid, which previously used zero and made adjacent controls touch.
+- Reviewed the eight changed Arabic/English settings regression images. The subsequent normal Playwright run of `admin-page-layout.spec.ts` and `admin-settings-visual.spec.ts` passed 14 tests, skipped four desktop-only visual cases on responsive projects, and failed none. Layout checks ran on all six device/language projects. These tests use intercepted API fixtures and do not establish Production behavior or Figma parity.
+- Production client/server builds and the bundle-budget check passed (491496 stylesheet bytes against 491520). This follow-up has not been deployed.
+
 The supplied credentials still authenticate through the Production API as an explicit `admin` (`200` login, `200` overview and properties with the bearer token, and `200` refresh in the same cookie session). A fresh browser audit against the deployed pre-change bundle, however, lost the session after navigation: the first refresh returned `REFRESH_TOKEN_REUSED` and later refreshes returned `INVALID_REFRESH_TOKEN`, so that run recorded `0/102` authenticated pages. The candidate remains undeployed; repeat the browser audit after deployment before accepting the live gate.

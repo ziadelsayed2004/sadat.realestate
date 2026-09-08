@@ -1,0 +1,1542 @@
+{
+  "fileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+  "pageId": "6017:4357",
+  "startingNodeId": "6017:110792",
+  "capturedAt": "2026-09-08T13:00:20.008Z",
+  "method": "Direct Figma page metadata with immediate child geometry; starting mobile homepage additionally inspected using get_design_context and its screenshot.",
+  "scope": "Source inventory only. These dimensions are not runtime measurements or a parity percentage. Header variants and isolated components must not be counted as complete screens.",
+  "objects": [
+    {
+      "id": "6017:110431",
+      "type": "frame",
+      "name": "Frame 34",
+      "x": 13634,
+      "y": 0,
+      "width": 1024,
+      "height": 4904,
+      "children": [
+        {
+          "id": "6017:110432",
+          "name": "homepage-tablet",
+          "x": 0,
+          "y": 0,
+          "width": 1024,
+          "height": 4904
+        }
+      ]
+    },
+    {
+      "id": "6133:8937",
+      "type": "instance",
+      "name": "PUB-REF-02 — Header Variants — Tablet / حالات الهيدر — موبايل",
+      "x": 13634,
+      "y": -208,
+      "width": 1024,
+      "height": 90,
+      "children": []
+    },
+    {
+      "id": "6017:110792",
+      "type": "frame",
+      "name": "Frame 35",
+      "x": 14256,
+      "y": 7461,
+      "width": 402,
+      "height": 6263,
+      "children": [
+        {
+          "id": "6017:110793",
+          "name": "homepage-mobile",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 6287
+        }
+      ]
+    },
+    {
+      "id": "6017:111095",
+      "type": "frame",
+      "name": "Frame 43",
+      "x": 9606,
+      "y": 0,
+      "width": 1024,
+      "height": 2287,
+      "children": [
+        {
+          "id": "6017:111096",
+          "name": "developers-tablet",
+          "x": 0,
+          "y": 0,
+          "width": 1024,
+          "height": 2287
+        }
+      ]
+    },
+    {
+      "id": "6017:111226",
+      "type": "frame",
+      "name": "Frame 46",
+      "x": 8268,
+      "y": 0,
+      "width": 1024,
+      "height": 3928.800048828125,
+      "children": [
+        {
+          "id": "6017:111227",
+          "name": "developers-tablet",
+          "x": 0,
+          "y": 0,
+          "width": 1024,
+          "height": 3928.800048828125
+        }
+      ]
+    },
+    {
+      "id": "6017:111593",
+      "type": "frame",
+      "name": "Frame 44",
+      "x": 12420,
+      "y": 7461,
+      "width": 402,
+      "height": 1772,
+      "children": [
+        {
+          "id": "6017:111594",
+          "name": "developers-mobile",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 1772
+        }
+      ]
+    },
+    {
+      "id": "6017:111666",
+      "type": "frame",
+      "name": "Frame 47",
+      "x": 11804,
+      "y": 7461,
+      "width": 402,
+      "height": 5366.2001953125,
+      "children": [
+        {
+          "id": "6017:111667",
+          "name": "developers-mobile",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 5390.2001953125
+        }
+      ]
+    },
+    {
+      "id": "6017:111975",
+      "type": "frame",
+      "name": "Frame 49",
+      "x": 6930,
+      "y": 0,
+      "width": 1024,
+      "height": 1792,
+      "children": [
+        {
+          "id": "6017:111976",
+          "name": "articles-tablet",
+          "x": 0,
+          "y": 0,
+          "width": 1024,
+          "height": 1792
+        }
+      ]
+    },
+    {
+      "id": "6017:112139",
+      "type": "frame",
+      "name": "Frame 50",
+      "x": 11188,
+      "y": 7461,
+      "width": 402,
+      "height": 3415,
+      "children": [
+        {
+          "id": "6017:112140",
+          "name": "articles-mobile",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 3439
+        }
+      ]
+    },
+    {
+      "id": "6017:112299",
+      "type": "frame",
+      "name": "Frame 55",
+      "x": 4240,
+      "y": 0,
+      "width": 1024,
+      "height": 1608,
+      "children": [
+        {
+          "id": "6017:112300",
+          "name": "community-tablet",
+          "x": 0,
+          "y": 0,
+          "width": 1024,
+          "height": 1608
+        }
+      ]
+    },
+    {
+      "id": "6017:112421",
+      "type": "frame",
+      "name": "Frame 58",
+      "x": 2704,
+      "y": 0,
+      "width": 1024,
+      "height": 1608,
+      "children": [
+        {
+          "id": "6017:112422",
+          "name": "community-tablet",
+          "x": 0,
+          "y": 0,
+          "width": 1024,
+          "height": 1608
+        }
+      ]
+    },
+    {
+      "id": "6017:112568",
+      "type": "frame",
+      "name": "Frame 56",
+      "x": 9912,
+      "y": 7461,
+      "width": 402,
+      "height": 1953,
+      "children": [
+        {
+          "id": "6017:112569",
+          "name": "community-mobile",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 1953
+        }
+      ]
+    },
+    {
+      "id": "6017:112681",
+      "type": "frame",
+      "name": "community-mobile",
+      "x": 9169,
+      "y": 7461,
+      "width": 402,
+      "height": 1253,
+      "children": [
+        {
+          "id": "6017:112682",
+          "name": "PUB-REF-03 — Header Variants — Mobile / حالات الهيدر — موبايل",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 74
+        },
+        {
+          "id": "6017:112683",
+          "name": "Content Mobile",
+          "x": 0,
+          "y": 80,
+          "width": 402,
+          "height": 1024
+        },
+        {
+          "id": "6129:8282",
+          "name": "Footer",
+          "x": 0,
+          "y": 1104,
+          "width": 402,
+          "height": 855
+        },
+        {
+          "id": "6017:112793",
+          "name": "community-page-tablet",
+          "x": 6,
+          "y": 80,
+          "width": 396,
+          "height": 1024
+        }
+      ]
+    },
+    {
+      "id": "6145:3250",
+      "type": "instance",
+      "name": "PUB-REF-02 — Header Variants — Tablet / حالات الهيدر — موبايل",
+      "x": 1352,
+      "y": 0,
+      "width": 1024,
+      "height": 90,
+      "children": []
+    },
+    {
+      "id": "6017:113015",
+      "type": "frame",
+      "name": "Frame 61",
+      "x": 8426,
+      "y": 7461,
+      "width": 402,
+      "height": 2201,
+      "children": [
+        {
+          "id": "6017:113016",
+          "name": "about-us-mobile",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 2225
+        }
+      ]
+    },
+    {
+      "id": "6017:113121",
+      "type": "frame",
+      "name": "Frame 63",
+      "x": 0,
+      "y": 0,
+      "width": 1024,
+      "height": 1580,
+      "children": [
+        {
+          "id": "6017:113122",
+          "name": "team-tablet",
+          "x": 0,
+          "y": 0,
+          "width": 1024,
+          "height": 1580
+        }
+      ]
+    },
+    {
+      "id": "6017:113212",
+      "type": "frame",
+      "name": "Frame 64",
+      "x": 7683,
+      "y": 7461,
+      "width": 402,
+      "height": 3154,
+      "children": [
+        {
+          "id": "6017:113213",
+          "name": "team-mobile",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 3178
+        }
+      ]
+    },
+    {
+      "id": "6017:113300",
+      "type": "frame",
+      "name": "Frame 37",
+      "x": 12282,
+      "y": 0,
+      "width": 1024,
+      "height": 2162,
+      "children": [
+        {
+          "id": "6017:113301",
+          "name": "properties-tablet",
+          "x": 0,
+          "y": 0,
+          "width": 1024,
+          "height": 2162
+        }
+      ]
+    },
+    {
+      "id": "6017:113591",
+      "type": "frame",
+      "name": "Frame 38",
+      "x": 13640,
+      "y": 7461,
+      "width": 402,
+      "height": 3643,
+      "children": [
+        {
+          "id": "6017:113592",
+          "name": "properties-mobile",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 3667
+        }
+      ]
+    },
+    {
+      "id": "6017:113860",
+      "type": "frame",
+      "name": "Frame 52",
+      "x": 5592,
+      "y": 0,
+      "width": 1024,
+      "height": 2146,
+      "children": [
+        {
+          "id": "6017:113861",
+          "name": "article-inner-tablet",
+          "x": 0,
+          "y": 0,
+          "width": 1024,
+          "height": 2146
+        }
+      ]
+    },
+    {
+      "id": "6017:114000",
+      "type": "frame",
+      "name": "Frame 53",
+      "x": 10572,
+      "y": 7461,
+      "width": 402,
+      "height": 1964,
+      "children": [
+        {
+          "id": "6017:114001",
+          "name": "article-inner-mobile",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 1988
+        }
+      ]
+    },
+    {
+      "id": "6017:114089",
+      "type": "frame",
+      "name": "Frame 40",
+      "x": 10944,
+      "y": 0,
+      "width": 1024,
+      "height": 2949,
+      "children": [
+        {
+          "id": "6017:114090",
+          "name": "unit-details-a-tablet",
+          "x": 0,
+          "y": 0,
+          "width": 1024,
+          "height": 2949
+        }
+      ]
+    },
+    {
+      "id": "6017:114485",
+      "type": "frame",
+      "name": "Frame 41",
+      "x": 13024,
+      "y": 7461,
+      "width": 402,
+      "height": 3792,
+      "children": [
+        {
+          "id": "6017:114486",
+          "name": "unit-details-a-mobile",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 3822
+        }
+      ]
+    },
+    {
+      "id": "6017:115496",
+      "type": "frame",
+      "name": "لوحة تحكم المزود - عقاراتي",
+      "x": -7617,
+      "y": 1638,
+      "width": 1024,
+      "height": 1366,
+      "children": [
+        {
+          "id": "6017:115497",
+          "name": "TabletMainPanel",
+          "x": 0,
+          "y": 0,
+          "width": 952,
+          "height": 1366
+        },
+        {
+          "id": "6017:115686",
+          "name": "SidebarRail",
+          "x": 952,
+          "y": 0,
+          "width": 72,
+          "height": 1366
+        }
+      ]
+    },
+    {
+      "id": "6017:115748",
+      "type": "frame",
+      "name": "لوحة تحكم المزود - عقاراتي- إضافة عقار جديد - البيانات الأساسية",
+      "x": -7617,
+      "y": 3308,
+      "width": 1024,
+      "height": 917,
+      "children": [
+        {
+          "id": "6017:115749",
+          "name": "LayoutWrapper",
+          "x": 0,
+          "y": 0,
+          "width": 1024,
+          "height": 917
+        }
+      ]
+    },
+    {
+      "id": "6017:115944",
+      "type": "frame",
+      "name": "TabletHeader",
+      "x": -7559,
+      "y": 3124,
+      "width": 952,
+      "height": 64,
+      "children": [
+        {
+          "id": "6017:115945",
+          "name": "LeftHeaderActions",
+          "x": 24,
+          "y": 10.5,
+          "width": 165,
+          "height": 43
+        },
+        {
+          "id": "6017:115956",
+          "name": "RightSearch",
+          "x": 213,
+          "y": 12,
+          "width": 715,
+          "height": 40
+        }
+      ]
+    },
+    {
+      "id": "6017:115960",
+      "type": "frame",
+      "name": "لوحة تحكم المزود - عقاراتي- إضافة عقار جديد - الموقع",
+      "x": -7617,
+      "y": 4360,
+      "width": 1024,
+      "height": 1008,
+      "children": [
+        {
+          "id": "6017:115961",
+          "name": "LayoutWrapper",
+          "x": 0,
+          "y": 0,
+          "width": 1024,
+          "height": 1008
+        }
+      ]
+    },
+    {
+      "id": "6017:116166",
+      "type": "frame",
+      "name": "لوحة تحكم المزود - عقاراتي- إضافة عقار جديد - تفاصيل العقار",
+      "x": -7621,
+      "y": 5581,
+      "width": 1024,
+      "height": 900,
+      "children": [
+        {
+          "id": "6017:116167",
+          "name": "LayoutWrapper",
+          "x": 0,
+          "y": 0,
+          "width": 1024,
+          "height": 900
+        }
+      ]
+    },
+    {
+      "id": "6017:116402",
+      "type": "frame",
+      "name": "لوحة تحكم المزود - عقاراتي- إضافة عقار جديد - الصور والوسائط",
+      "x": -7621,
+      "y": 9934,
+      "width": 1024,
+      "height": 1042,
+      "children": [
+        {
+          "id": "6017:116403",
+          "name": "MainWorkspace",
+          "x": 0,
+          "y": 0,
+          "width": 952,
+          "height": 1042
+        },
+        {
+          "id": "6017:116548",
+          "name": "SidebarRail",
+          "x": 952,
+          "y": 0,
+          "width": 72,
+          "height": 1042
+        }
+      ]
+    },
+    {
+      "id": "6017:116610",
+      "type": "frame",
+      "name": "Public website pages",
+      "x": -7621,
+      "y": 11199,
+      "width": 1024,
+      "height": 1291,
+      "children": [
+        {
+          "id": "6017:116611",
+          "name": "MainContent",
+          "x": 0,
+          "y": 0,
+          "width": 952,
+          "height": 1294
+        },
+        {
+          "id": "6017:116784",
+          "name": "SidebarRail",
+          "x": 952,
+          "y": 0,
+          "width": 72,
+          "height": 1291
+        }
+      ]
+    },
+    {
+      "id": "6017:116846",
+      "type": "frame",
+      "name": "Public website pages",
+      "x": -7647,
+      "y": 12928,
+      "width": 1024,
+      "height": 1436,
+      "children": [
+        {
+          "id": "6017:116847",
+          "name": "MainPane",
+          "x": 0,
+          "y": 0,
+          "width": 952,
+          "height": 1436
+        },
+        {
+          "id": "6017:117015",
+          "name": "SidebarRail",
+          "x": 952,
+          "y": 0,
+          "width": 72,
+          "height": 1436
+        }
+      ]
+    },
+    {
+      "id": "6017:117077",
+      "type": "frame",
+      "name": "Public website pages",
+      "x": -7647,
+      "y": 16806,
+      "width": 1024,
+      "height": 900,
+      "children": [
+        {
+          "id": "6017:117078",
+          "name": "MainContent",
+          "x": 0,
+          "y": 0,
+          "width": 952,
+          "height": 900
+        },
+        {
+          "id": "6017:117121",
+          "name": "SidebarRail",
+          "x": 952,
+          "y": 0,
+          "width": 72,
+          "height": 900
+        }
+      ]
+    },
+    {
+      "id": "6017:117183",
+      "type": "frame",
+      "name": "status-rejected-tablet",
+      "x": -7647,
+      "y": 18494,
+      "width": 1024,
+      "height": 900,
+      "children": [
+        {
+          "id": "6017:117184",
+          "name": "MainContent",
+          "x": 0,
+          "y": 0,
+          "width": 952,
+          "height": 900
+        },
+        {
+          "id": "6017:117215",
+          "name": "SidebarRail",
+          "x": 952,
+          "y": 0,
+          "width": 72,
+          "height": 900
+        }
+      ]
+    },
+    {
+      "id": "6017:117277",
+      "type": "frame",
+      "name": "لوحة تحكم المزود - الرئيسية",
+      "x": -7626,
+      "y": 0,
+      "width": 1024,
+      "height": 1432,
+      "children": [
+        {
+          "id": "6017:117278",
+          "name": "TabletDashboardRoot",
+          "x": 0,
+          "y": 0,
+          "width": 1024,
+          "height": 1432
+        }
+      ]
+    },
+    {
+      "id": "6017:117525",
+      "type": "frame",
+      "name": "لوحة تحكم المزود - الرئيسية",
+      "x": -6363,
+      "y": 0,
+      "width": 402,
+      "height": 1786,
+      "children": [
+        {
+          "id": "6017:117526",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:117536",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 1730
+        }
+      ]
+    },
+    {
+      "id": "6017:117738",
+      "type": "frame",
+      "name": "لوحة تحكم المزود - عقاراتي",
+      "x": -6354,
+      "y": 2105,
+      "width": 402,
+      "height": 1107,
+      "children": [
+        {
+          "id": "6017:117739",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:117749",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 1051
+        }
+      ]
+    },
+    {
+      "id": "6017:117871",
+      "type": "frame",
+      "name": "لوحة تحكم المزود - عقاراتي- إضافة عقار جديد - البيانات الأساسية",
+      "x": -6354,
+      "y": 3471,
+      "width": 402,
+      "height": 957,
+      "children": [
+        {
+          "id": "6017:117872",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:117882",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 901
+        }
+      ]
+    },
+    {
+      "id": "6017:118000",
+      "type": "frame",
+      "name": "لوحة تحكم المزود - عقاراتي- إضافة عقار جديد - الموقع",
+      "x": -6354,
+      "y": 4747,
+      "width": 402,
+      "height": 965,
+      "children": [
+        {
+          "id": "6017:118001",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:118011",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 909
+        }
+      ]
+    },
+    {
+      "id": "6017:118128",
+      "type": "frame",
+      "name": "لوحة تحكم المزود - عقاراتي- إضافة عقار جديد - تفاصيل العقار",
+      "x": -6354,
+      "y": 6031,
+      "width": 402,
+      "height": 969,
+      "children": [
+        {
+          "id": "6017:118129",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:118139",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 913
+        }
+      ]
+    },
+    {
+      "id": "6017:118284",
+      "type": "frame",
+      "name": "لوحة تحكم المزود - عقاراتي- إضافة عقار جديد - السعر والسداد",
+      "x": -6354,
+      "y": 7319,
+      "width": 402,
+      "height": 1514,
+      "children": [
+        {
+          "id": "6017:118285",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:118295",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 1458
+        }
+      ]
+    },
+    {
+      "id": "6017:118435",
+      "type": "frame",
+      "name": "لوحة تحكم المزود - عقاراتي- إضافة عقار جديد - المميزات والخدمات",
+      "x": -6354,
+      "y": 9169,
+      "width": 402,
+      "height": 950,
+      "children": [
+        {
+          "id": "6017:118436",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:118446",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 894
+        }
+      ]
+    },
+    {
+      "id": "6017:118561",
+      "type": "frame",
+      "name": "لوحة تحكم المزود - عقاراتي- إضافة عقار جديد - الصور والوسائط",
+      "x": -6354,
+      "y": 10455,
+      "width": 402,
+      "height": 1209,
+      "children": [
+        {
+          "id": "6017:118562",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:118572",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 1153
+        }
+      ]
+    },
+    {
+      "id": "6017:118695",
+      "type": "frame",
+      "name": "Public website pages",
+      "x": -6354,
+      "y": 11977,
+      "width": 402,
+      "height": 1427,
+      "children": [
+        {
+          "id": "6017:118696",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:118706",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 1371
+        }
+      ]
+    },
+    {
+      "id": "6017:118851",
+      "type": "frame",
+      "name": "Public website pages",
+      "x": -6354,
+      "y": 13717,
+      "width": 402,
+      "height": 1385,
+      "children": [
+        {
+          "id": "6017:118852",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:118862",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 1329
+        }
+      ]
+    },
+    {
+      "id": "6017:119003",
+      "type": "frame",
+      "name": "Public website pages",
+      "x": -6321,
+      "y": 16045,
+      "width": 402,
+      "height": 858,
+      "children": [
+        {
+          "id": "6017:119004",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:119014",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 802
+        }
+      ]
+    },
+    {
+      "id": "6017:119058",
+      "type": "frame",
+      "name": "Public website pages",
+      "x": -6321,
+      "y": 17089,
+      "width": 402,
+      "height": 930,
+      "children": [
+        {
+          "id": "6017:119059",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:119069",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 874
+        }
+      ]
+    },
+    {
+      "id": "6017:119117",
+      "type": "frame",
+      "name": "Public website pages",
+      "x": -6339,
+      "y": 18142,
+      "width": 402,
+      "height": 962,
+      "children": [
+        {
+          "id": "6017:119118",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:119128",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 906
+        }
+      ]
+    },
+    {
+      "id": "6017:119163",
+      "type": "frame",
+      "name": "Public website pages",
+      "x": -6339,
+      "y": 19181,
+      "width": 402,
+      "height": 858,
+      "children": [
+        {
+          "id": "6017:119164",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:119174",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 802
+        }
+      ]
+    },
+    {
+      "id": "6017:119219",
+      "type": "frame",
+      "name": "Projects Mobile",
+      "x": -6339,
+      "y": 20138,
+      "width": 402,
+      "height": 1327,
+      "children": [
+        {
+          "id": "6017:119220",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:119230",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 1205
+        },
+        {
+          "id": "6017:119328",
+          "name": "BottomNav",
+          "x": 0,
+          "y": 1261,
+          "width": 402,
+          "height": 66
+        }
+      ]
+    },
+    {
+      "id": "6017:119345",
+      "type": "frame",
+      "name": "Client Requests Mobile",
+      "x": -6339,
+      "y": 21836,
+      "width": 402,
+      "height": 1282,
+      "children": [
+        {
+          "id": "6017:119346",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:119356",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 1160
+        },
+        {
+          "id": "6017:119462",
+          "name": "BottomNav",
+          "x": 0,
+          "y": 1216,
+          "width": 402,
+          "height": 66
+        }
+      ]
+    },
+    {
+      "id": "6017:119479",
+      "type": "frame",
+      "name": "Client Requests Mobile",
+      "x": -6339,
+      "y": 23155,
+      "width": 402,
+      "height": 1560,
+      "children": [
+        {
+          "id": "6017:119480",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:119490",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 1160
+        },
+        {
+          "id": "6017:119596",
+          "name": "BottomNav",
+          "x": 0,
+          "y": 1494,
+          "width": 402,
+          "height": 66
+        },
+        {
+          "id": "6017:119613",
+          "name": "Container",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 1438
+        }
+      ]
+    },
+    {
+      "id": "6017:119686",
+      "type": "frame",
+      "name": "Ad Requests Mobile",
+      "x": -6347,
+      "y": 26559,
+      "width": 402,
+      "height": 1062,
+      "children": [
+        {
+          "id": "6017:119687",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:119697",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 940
+        },
+        {
+          "id": "6017:119768",
+          "name": "BottomNav",
+          "x": 0,
+          "y": 996,
+          "width": 402,
+          "height": 66
+        }
+      ]
+    },
+    {
+      "id": "6017:119785",
+      "type": "frame",
+      "name": "Inspection Appointments Mobile",
+      "x": -6308,
+      "y": 25098,
+      "width": 402,
+      "height": 1042,
+      "children": [
+        {
+          "id": "6017:119786",
+          "name": "MobileHeader",
+          "x": 0,
+          "y": 0,
+          "width": 402,
+          "height": 56
+        },
+        {
+          "id": "6017:119796",
+          "name": "MobileContent",
+          "x": 0,
+          "y": 56,
+          "width": 402,
+          "height": 920
+        },
+        {
+          "id": "6017:119896",
+          "name": "BottomNav",
+          "x": 0,
+          "y": 976,
+          "width": 402,
+          "height": 66
+        }
+      ]
+    },
+    {
+      "id": "6017:119913",
+      "type": "frame",
+      "name": "لوحة تحكم المزود - عقاراتي- إضافة عقار جديد - السعر والسداد",
+      "x": -7621,
+      "y": 6694,
+      "width": 1024,
+      "height": 1340,
+      "children": [
+        {
+          "id": "6017:119914",
+          "name": "MainArea",
+          "x": 0,
+          "y": 0,
+          "width": 952,
+          "height": 1340
+        },
+        {
+          "id": "6017:120068",
+          "name": "SidebarRail",
+          "x": 952,
+          "y": 0,
+          "width": 72,
+          "height": 1340
+        }
+      ]
+    },
+    {
+      "id": "6017:120130",
+      "type": "frame",
+      "name": "لوحة تحكم المزود - عقاراتي- إضافة عقار جديد - المميزات والخدمات",
+      "x": -7621,
+      "y": 8371,
+      "width": 1024,
+      "height": 1340,
+      "children": [
+        {
+          "id": "6017:120131",
+          "name": "main-panel",
+          "x": 0,
+          "y": 0,
+          "width": 952,
+          "height": 1340
+        },
+        {
+          "id": "6017:120327",
+          "name": "SidebarRail",
+          "x": 952,
+          "y": 0,
+          "width": 72,
+          "height": 1340
+        }
+      ]
+    },
+    {
+      "id": "6017:120389",
+      "type": "frame",
+      "name": "Page1-Tablet",
+      "x": -7647,
+      "y": 20182,
+      "width": 1024,
+      "height": 720,
+      "children": [
+        {
+          "id": "6017:120390",
+          "name": "Workspace",
+          "x": 0,
+          "y": 0,
+          "width": 952,
+          "height": 720
+        },
+        {
+          "id": "6017:120434",
+          "name": "SidebarRail",
+          "x": 952,
+          "y": 0,
+          "width": 72,
+          "height": 720
+        }
+      ]
+    },
+    {
+      "id": "6017:120496",
+      "type": "frame",
+      "name": "Tablet-Projects",
+      "x": -7647,
+      "y": 21482,
+      "width": 1024,
+      "height": 916,
+      "children": [
+        {
+          "id": "6017:120497",
+          "name": "MainContent",
+          "x": 0,
+          "y": 0,
+          "width": 952,
+          "height": 916
+        },
+        {
+          "id": "6017:120690",
+          "name": "SidebarRail",
+          "x": 952,
+          "y": 0,
+          "width": 72,
+          "height": 916
+        }
+      ]
+    },
+    {
+      "id": "6017:120752",
+      "type": "frame",
+      "name": "Tablet-ClientRequests",
+      "x": -7647,
+      "y": 23004,
+      "width": 1024,
+      "height": 936,
+      "children": [
+        {
+          "id": "6017:120753",
+          "name": "MainContent",
+          "x": 0,
+          "y": 0,
+          "width": 952,
+          "height": 936
+        },
+        {
+          "id": "6017:120940",
+          "name": "SidebarRail",
+          "x": 952,
+          "y": 0,
+          "width": 72,
+          "height": 936
+        }
+      ]
+    },
+    {
+      "id": "6017:121002",
+      "type": "frame",
+      "name": "Tablet-ClientRequests",
+      "x": -7647,
+      "y": 24323,
+      "width": 1024,
+      "height": 936,
+      "children": [
+        {
+          "id": "6017:121003",
+          "name": "MainContent",
+          "x": 0,
+          "y": 0,
+          "width": 952,
+          "height": 936
+        },
+        {
+          "id": "6017:121285",
+          "name": "SidebarRail",
+          "x": 952,
+          "y": 0,
+          "width": 72,
+          "height": 936
+        }
+      ]
+    },
+    {
+      "id": "6017:121347",
+      "type": "frame",
+      "name": "Tablet-AdRequests",
+      "x": -7655,
+      "y": 27727,
+      "width": 1024,
+      "height": 760,
+      "children": [
+        {
+          "id": "6017:121348",
+          "name": "ContentArea",
+          "x": 0,
+          "y": 0,
+          "width": 952,
+          "height": 760
+        },
+        {
+          "id": "6017:121536",
+          "name": "SidebarRail",
+          "x": 952,
+          "y": 0,
+          "width": 72,
+          "height": 760
+        }
+      ]
+    },
+    {
+      "id": "6017:121591",
+      "type": "frame",
+      "name": "Tablet-InspectionAppointments",
+      "x": -7621,
+      "y": 26240,
+      "width": 1024,
+      "height": 944,
+      "children": [
+        {
+          "id": "6017:121592",
+          "name": "ContentArea",
+          "x": 0,
+          "y": 0,
+          "width": 952,
+          "height": 944
+        },
+        {
+          "id": "6017:121701",
+          "name": "SidebarRail",
+          "x": 952,
+          "y": 0,
+          "width": 72,
+          "height": 944
+        }
+      ]
+    },
+    {
+      "id": "6017:121763",
+      "type": "frame",
+      "name": "Public website pages",
+      "x": -7647,
+      "y": 14962,
+      "width": 1024,
+      "height": 720,
+      "children": [
+        {
+          "id": "6017:121764",
+          "name": "Workspace",
+          "x": 0,
+          "y": 0,
+          "width": 952,
+          "height": 720
+        },
+        {
+          "id": "6017:121806",
+          "name": "SidebarRail",
+          "x": 952,
+          "y": 0,
+          "width": 72,
+          "height": 720
+        }
+      ]
+    },
+    {
+      "id": "2051:8763",
+      "type": "frame",
+      "name": "PUB-REF-02 — Header Variants — Tablet / حالات الهيدر — موبايل",
+      "x": 6550,
+      "y": 3113,
+      "width": 1074,
+      "height": 790,
+      "children": []
+    },
+    {
+      "id": "2051:8939",
+      "type": "frame",
+      "name": "PUB-REF-03 — Header Variants — Mobile / حالات الهيدر — موبايل",
+      "x": 6551,
+      "y": 4046,
+      "width": 404,
+      "height": 256,
+      "children": []
+    }
+  ]
+}

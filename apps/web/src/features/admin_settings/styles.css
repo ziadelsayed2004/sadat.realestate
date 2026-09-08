@@ -19,7 +19,7 @@
 .admin-settings__editor-heading p, .admin-settings__hint { margin-block-start: 5px; color: #7e8999; font-size: .86rem; line-height: 1.6; }
 .admin-settings__version { color: #7e8999; font-size: .84rem; font-weight: 800; white-space: nowrap; }
 .admin-settings__editor form { display: grid; gap: 18px; padding: 20px 20px 24px; }
-.admin-settings__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; }
+.admin-settings__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .admin-settings__empty-values { grid-column: 1 / -1; min-height: 156px; display: grid; place-items: center; grid-template-columns: auto minmax(0, 1fr); gap: 14px; padding: 22px 26px; border: 1px dashed #d8d7d1; border-radius: 16px; background: #faf8f2; text-align: start; }
 .admin-settings__empty-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; background: #e8f2ee; color: #0e5849; font-size: 1.35rem; font-weight: 800; }
 .admin-settings__empty-values h3 { margin: 0; color: #1b2942; font-size: 1rem; }
