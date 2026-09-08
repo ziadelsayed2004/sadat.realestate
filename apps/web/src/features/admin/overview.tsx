@@ -213,13 +213,16 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
     // The desktop sidebar scrolls vertically while the compact tablet/mobile
     // rail scrolls horizontally. Resolve both axes explicitly because the
     // compact rail has nested overflow containers and RTL scroll coordinates.
+    const containers = [active.closest<HTMLElement>('ul'), scroll].filter((container, index, all): container is HTMLElement => Boolean(container) && all.indexOf(container) === index);
     const reveal = () => {
-      const container = scroll.getBoundingClientRect();
-      const item = active.getBoundingClientRect();
-      const deltaX = item.left < container.left ? item.left - container.left : item.right > container.right ? item.right - container.right : 0;
-      const deltaY = item.top < container.top ? item.top - container.top : item.bottom > container.bottom ? item.bottom - container.bottom : 0;
-      if (deltaX !== 0) scroll.scrollLeft += deltaX;
-      if (deltaY !== 0) scroll.scrollTop += deltaY;
+      for (const containerElement of containers) {
+        const container = containerElement.getBoundingClientRect();
+        const item = active.getBoundingClientRect();
+        const deltaX = item.left < container.left ? item.left - container.left : item.right > container.right ? item.right - container.right : 0;
+        const deltaY = item.top < container.top ? item.top - container.top : item.bottom > container.bottom ? item.bottom - container.bottom : 0;
+        if (deltaX !== 0) containerElement.scrollLeft += deltaX;
+        if (deltaY !== 0) containerElement.scrollTop += deltaY;
+      }
     };
     const frame = requestAnimationFrame(() => {
       reveal();
