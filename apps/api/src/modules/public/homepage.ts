@@ -13,6 +13,7 @@ import {
   type PublicHomepageLocation
 } from '@sadat-real-estate/contracts';
 import { unexpiredPropertyFilter } from '../settings/property-policy.js';
+import type { DisplayRuntimeSettings, DisplaySettingsReader } from '../settings/display-policy.js';
 
 export interface HomepageSectionSource { key: string; title: unknown; body?: unknown; order: number; status: string; visible: boolean }
 export interface HomepageCategorySource { id: string; slug: string; name: unknown; imageUrl?: string; propertyCount: number; order: number; active: boolean }
@@ -112,12 +113,32 @@ function publicBanners(items: HomepageBannerSource[]) {
   }));
 }
 
-export function publicHomepageProjection(sources: HomepageSources): PublicHomepageData {
+function configuredMetrics(sources: HomepageSources, settings: DisplayRuntimeSettings = {}) {
+  const metrics = [...(sources.metrics ?? [])];
+  const index = metrics.findIndex((metric) => metric.key === 'population');
+  if (settings.showPopulationCounter === false) return metrics.filter((metric) => metric.key !== 'population');
+  if (settings.populationCount === undefined && settings.populationLabel === undefined) return metrics;
+  const current = index >= 0 ? metrics[index] : undefined;
+  const population: HomepageMetricSource = {
+    key: 'population',
+    title: settings.populationLabel ?? current?.title ?? { ar: 'عدد السكان', en: 'Population' },
+    value: settings.populationCount ?? current?.value ?? 0,
+    ...(current?.unit !== undefined ? { unit: current.unit } : {}),
+    order: current?.order ?? 0,
+    status: 'published',
+    visible: settings.showPopulationCounter ?? current?.visible ?? true
+  };
+  if (index >= 0) metrics[index] = population;
+  else metrics.push(population);
+  return metrics;
+}
+
+export function publicHomepageProjection(sources: HomepageSources, settings: DisplayRuntimeSettings = {}): PublicHomepageData {
   return publicHomepageDataSchema.parse({
     sections: publicSections(sources.sections),
     categories: publicCategories(sources.categories),
     ...(sources.locations === undefined ? {} : { locations: publicLocations(sources.locations) }),
-    metrics: publicMetrics(sources.metrics),
+    metrics: publicMetrics(configuredMetrics(sources, settings)),
     properties: publicProperties(sources.properties),
     developers: publicDevelopers(sources.developers),
     content: publicContent(sources.content),
@@ -125,8 +146,8 @@ export function publicHomepageProjection(sources: HomepageSources): PublicHomepa
   });
 }
 
-export function createPublicHomepageService(dependencies: { repository: PublicHomepageRepository }) {
-  return { read: async (): Promise<PublicHomepageData> => publicHomepageProjection(await dependencies.repository.read()) };
+export function createPublicHomepageService(dependencies: { repository: PublicHomepageRepository; displaySettings?: DisplaySettingsReader }) {
+  return { read: async (): Promise<PublicHomepageData> => publicHomepageProjection(await dependencies.repository.read(), dependencies.displaySettings ? await dependencies.displaySettings.read() : {}) };
 }
 
 type MongoRow = {

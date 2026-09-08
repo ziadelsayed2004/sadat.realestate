@@ -78,6 +78,13 @@ test('projects only active admin-managed locations for the hero search', () => {
   assert.deepEqual(result.locations?.map((item) => [item.id, item.parentLocationId]), [[id, undefined], [secondId, id]]);
 });
 
+test('applies the saved population counter to the public homepage projection', () => {
+  const visible = publicHomepageProjection(sources(), { populationCount: 500_000, populationLabel: { ar: 'سكان المدينة', en: 'City residents' }, showPopulationCounter: true });
+  assert.deepEqual(visible.metrics[0], { key: 'population', title: { ar: 'سكان المدينة', en: 'City residents' }, value: 500_000, order: 0 });
+  const hidden = publicHomepageProjection(sources(), { showPopulationCounter: false });
+  assert.equal(hidden.metrics.some((metric) => metric.key === 'population'), false);
+});
+
 test('drops malformed persisted public rows and supports a safe empty state', async () => {
   const service = createPublicHomepageService({ repository: { async read() { return sources({ sections: [{ key: 'bad key', title: {}, order: -1, status: 'published', visible: true }] as never, properties: [], developers: [], content: [], banners: [] }); } } });
   assert.deepEqual(await service.read(), { sections: [], categories: [{ id, slug: 'apartments', name: localized, propertyCount: 7, order: 0 }], metrics: [{ key: 'population', title: localized, value: 342800, order: 0 }], properties: [], developers: [], content: [], banners: [] });
