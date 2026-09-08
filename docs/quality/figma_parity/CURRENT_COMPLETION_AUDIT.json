@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-04T17:03:56.620Z",
+  "generatedAt": "2026-09-08T07:26:00.057Z",
   "authority": {
     "figmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
     "inventory": "docs/design_sources/figma/SCREEN_FRAME_INVENTORY.json",
@@ -1004,14 +1004,13 @@
       "name": "Requests Management",
       "route": "/admin/requests",
       "figmaPageId": "6017:4356",
-      "figmaFrameNodeId": null,
+      "figmaFrameNodeId": "6017:69276",
       "sourcePresent": true,
       "reviewPresent": true,
-      "classification": "BLOCKED_SOURCE",
+      "classification": "DIRECT_RUNTIME_COMPARISON_PENDING",
       "closureProven": false,
       "blockers": [
-        "FIGMA_OWNING_FRAME_MISSING",
-        "BLOCKED_SOURCE"
+        "DIRECT_RUNTIME_COMPARISON_PENDING"
       ]
     },
     {

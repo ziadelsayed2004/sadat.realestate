@@ -13033,13 +13033,15 @@
       "surface": "admin",
       "surfaceLabel": "Admin Dashboard",
       "englishName": "Requests Management",
-      "sourceAuthority": "LOCAL_EXPORT_WITHOUT_MATCHING_CLONE_FRAME",
+      "sourceAuthority": "CANONICAL_FIGMA_FRAME",
       "clone": {
         "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
         "pageId": "6017:4356",
-        "nodeId": null,
-        "nodeIds": [],
-        "url": null,
+        "nodeId": "6017:69276",
+        "nodeIds": [
+          "6017:69276"
+        ],
+        "url": "https://www.figma.com/design/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-69276",
         "pageUrl": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?page-id=6017%3A4356"
       },
       "runtime": {
@@ -13078,12 +13080,12 @@
       "evidence": {
         "figmaContext": {
           "tool": "mcp__figma__get_design_context",
-          "resultStatus": "NO_EXACT_CLONE_FRAME",
+          "resultStatus": "RECOVERED_EXACT_CLONE_FRAME",
           "root": {
-            "id": null,
-            "name": "ADM-18 Requests Management local export",
-            "width": 6308,
-            "height": 3776
+            "id": "6017:69276",
+            "name": "Sadat Real Estate",
+            "width": 1577,
+            "height": 944
           },
           "retrievedRegions": [
             "admin shell",
@@ -13093,7 +13095,7 @@
             "pagination"
           ],
           "reviewed": true,
-          "note": "The local export exists under docs/design_sources/final_screens/admin/ADM-18.png, but the canonical clone registry has no matching node. A local image is not treated as a recovered Figma frame."
+          "note": "Direct Admin-page metadata recovered node 6017:69276. Its 1577 × 944 frame corresponds to the approved 4× export at 6308 × 3776."
         },
         "figmaScreenshot": {
           "path": "docs/quality/figma_parity/screens/ADM-18/figma.png",
@@ -13117,11 +13119,11 @@
             "width": 1280,
             "height": 885
           },
-          "comparisonKind": "preserved Playwright no-update implementation diff; not an exact Figma-node comparison",
+          "comparisonKind": "recovered exact Figma source with the previous runtime diff retained pending a fresh direct runtime comparison",
           "observations": [
             "The Admin request route is rendered in Arabic RTL Desktop scope and the deterministic request row is present.",
             "The preserved no-update visual run reported an expected 1280x1127 image versus a 1280x885 runtime image, with 9795 different pixels (ratio 0.01).",
-            "The local source and runtime have different provenance and dimensions; the diff is retained as failure evidence, not as source parity proof.",
+            "The source provenance is now resolved to Figma node 6017:69276; the previous runtime capture predates the final admin layout repairs.",
             "No snapshot was updated."
           ],
           "officialClosureEligible": false
@@ -13130,18 +13132,16 @@
           "reviewed": true,
           "requestProjection": "GET /api/v1/admin/requests",
           "responseProjection": "deterministic Admin request list fixture",
-          "outcome": "The functional Admin route assertion, locale/direction, Desktop marker, keyboard focus, and safe-projection checks passed; visual closure is blocked by source provenance."
+          "outcome": "The functional Admin route assertion, locale/direction, Desktop marker, keyboard focus, and safe-projection checks passed; a fresh direct source-to-runtime comparison is still required for visual closure."
         },
         "defects": [
-          "External source blocker: the canonical file has no exact clone node for ADM-18.",
-          "The local export cannot establish an exact historical Figma comparison and no replacement source was invented.",
-          "The existing implementation visual mismatch remains open; no repository-owned repair is claimed under the source blocker."
+          "Fresh direct runtime capture and comparison against recovered node 6017:69276 remain pending."
         ],
         "repairedFiles": [],
         "runtimeAfter": {
           "path": "docs/quality/figma_parity/screens/ADM-18/runtime-after.png",
           "sha256": "f3454780caf9b0921a93433c21e5bc69d94c89aa30919d4bdf42138d55e3200b",
-          "capture": "Same current runtime retained because the missing exact source prevents an authorized repair/recapture claim."
+          "capture": "Previous current runtime retained as historical evidence; it predates the final admin layout repairs and cannot close the recovered-source comparison."
         },
         "reviewedDiff": {
           "path": "docs/quality/figma_parity/screens/ADM-18/diff.png",
@@ -13165,10 +13165,10 @@
           "exitCode": 0
         }
       },
-      "classification": "BLOCKED_SOURCE",
+      "classification": "DIRECT_RUNTIME_COMPARISON_PENDING",
       "processedAt": "2026-08-29T14:38:21.798Z",
       "notes": [
-        "The canonical file is confirmed, but the exact ADM-18 clone frame is unavailable. The checked-in local export is retained as provenance only; no node, historical comparison, or invented replacement source was used, and no visual closure claim is made."
+        "The exact ADM-18 frame was recovered as 6017:69276. Source provenance is resolved; visual closure still requires a fresh direct runtime comparison after the final admin repairs."
       ]
     },
     {

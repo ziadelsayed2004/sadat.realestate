@@ -6,8 +6,8 @@
   "historicalExpectedScreenCount": 131,
   "canonicalScreenCount": 131,
   "screensInventoried": 131,
-  "screensMappedToExactCloneNodes": 129,
-  "uniqueCloneFramesMapped": 130,
+  "screensMappedToExactCloneNodes": 130,
+  "uniqueCloneFramesMapped": 131,
   "ownerAuthoredCurrentBaselines": [
     "ADM-54"
   ],
@@ -144,7 +144,6 @@
     }
   ],
   "unmappedScreenIds": [
-    "ADM-18",
     "ADM-54"
   ],
   "directPageEvidence": {
@@ -5422,11 +5421,15 @@
       ],
       "cloneFileKey": "Odl1Epn2u6lIEuIMmABT7o",
       "clonePageId": "6017:4356",
-      "exactCloneNodeId": null,
-      "exactCloneNodeIds": [],
-      "exactCloneUrl": null,
-      "frameName": null,
-      "frameNames": [],
+      "exactCloneNodeId": "6017:69276",
+      "exactCloneNodeIds": [
+        "6017:69276"
+      ],
+      "exactCloneUrl": "https://www.figma.com/design/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-69276",
+      "frameName": "Sadat Real Estate",
+      "frameNames": [
+        "Sadat Real Estate"
+      ],
       "dimensions": [
         {
           "path": "docs/design_sources/final_screens/admin/ADM-18.png",
@@ -5457,14 +5460,15 @@
       "currentParityStatus": "DIRECT_SOURCE_CAPTURED_RUNTIME_REVIEW_PENDING",
       "defectSeverity": null,
       "owningAtomicTask": "frontend_066",
-      "sourceAuthority": "LOCAL_EXPORT_WITHOUT_MATCHING_CLONE_FRAME",
+      "sourceAuthority": "CANONICAL_FIGMA_FRAME",
       "aliasOf": null,
       "mappingNotes": [
-        "Local export exists, but no ADM-18 frame was returned by the canonical clone page metadata."
+        "Recovered from direct Admin-page metadata on 2026-09-08; the 1577 × 944 frame corresponds to the approved 4× export."
       ],
       "evidencePaths": [
         "docs/design_sources/final_screens/admin/ADM-18.png",
-        "figma://Odl1Epn2u6lIEuIMmABT7o/6017:4356/unmapped"
+        "figma://Odl1Epn2u6lIEuIMmABT7o/6017:4356/6017:69276",
+        "docs/quality/figma_parity/screens/ADM-18/figma-direct-2026-09-08.png"
       ]
     },
     {

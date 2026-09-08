@@ -41,9 +41,8 @@
   ],
   "summary": {
     "canonicalScreens": 131,
-    "historicalFigmaOwningFramesResolved": 129,
+    "historicalFigmaOwningFramesResolved": 130,
     "historicalFigmaOwningFramesAbsent": [
-      "ADM-18",
       "ADM-54"
     ],
     "comparisonStatusCounts": {
@@ -3745,9 +3744,9 @@
       "surface": "admin",
       "englishName": "Requests Management",
       "figmaPageId": "6017:4356",
-      "figmaFrameNodeId": null,
-      "figmaFrameName": null,
-      "historicalFrameStatus": "NO_INDEPENDENT_HISTORICAL_FRAME_FOUND",
+      "figmaFrameNodeId": "6017:69276",
+      "figmaFrameName": "Sadat Real Estate",
+      "historicalFrameStatus": "PRESENT_RECOVERED",
       "route": "/admin/requests",
       "role": "admin",
       "localeScope": [
@@ -3770,7 +3769,7 @@
           "height": 3776
         }
       ],
-      "figmaRetrievedAt": "2026-08-25T14:45:05.3262555Z",
+      "figmaRetrievedAt": "2026-09-08T01:49:26.000Z",
       "runtimeComponent": {
         "featureRoot": "apps/web/src/features/admin_requests",
         "routeComposer": "apps/web/src/features/frontend_foundation/app.tsx",
@@ -3782,7 +3781,7 @@
         "ledger": "agent_pack/07_finish/frontend_095/design-comparison.json"
       },
       "comparisonStatus": "Partial",
-      "comparisonReason": "The registry source is owner-authored pending review, and direct Admin-page metadata contains no independent ADM-18 owning frame."
+      "comparisonReason": "Direct Admin-page metadata recovered node 6017:69276 at 1577 × 944; its 4× export matches the approved 6308 × 3776 source. Direct runtime parity review remains pending."
     },
     {
       "canonicalScreenId": "ADM-19",
