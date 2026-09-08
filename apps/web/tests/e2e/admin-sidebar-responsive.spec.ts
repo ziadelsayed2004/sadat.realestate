@@ -114,4 +114,22 @@ test.describe('Admin sidebar responsive shell', () => {
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   });
+
+  test('brings the active route into view in the compact navigation rail', async ({ page }) => {
+    const locale = localeForProject();
+    await page.goto(`/admin/settings/seo?lang=${locale}`);
+    const sidebar = page.getByTestId('admin-sidebar');
+    const scroll = sidebar.locator('.admin-dashboard__navigation-scroll');
+    const active = sidebar.locator('a[aria-current="page"]');
+    await expect(active).toHaveCount(1);
+    await expect.poll(async () => active.evaluate(element => {
+      const item = element.getBoundingClientRect();
+      const container = element.closest('.admin-dashboard__navigation-scroll')!.getBoundingClientRect();
+      const tolerance = 1;
+      return item.left >= container.left - tolerance && item.right <= container.right + tolerance && item.top >= container.top - tolerance && item.bottom <= container.bottom + tolerance;
+    })).toBe(true);
+    if ((page.viewportSize()?.width ?? 0) <= 1100) {
+      await expect(scroll).toBeVisible();
+    }
+  });
 });

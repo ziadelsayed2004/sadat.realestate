@@ -210,11 +210,28 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
     const scroll = navigationScroll.current;
     const active = scroll?.querySelector<HTMLElement>('[aria-current="page"]');
     if (!scroll || !active) return;
-    const container = scroll.getBoundingClientRect();
-    const item = active.getBoundingClientRect();
-    if (item.top < container.top || item.bottom > container.bottom) {
-      scroll.scrollTop += item.top - container.top - (container.height - item.height) / 2;
-    }
+    // The desktop sidebar scrolls vertically while the compact tablet/mobile
+    // rail scrolls horizontally. Resolve both axes explicitly because the
+    // compact rail has nested overflow containers and RTL scroll coordinates.
+    const reveal = () => {
+      const container = scroll.getBoundingClientRect();
+      const item = active.getBoundingClientRect();
+      const deltaX = item.left < container.left ? item.left - container.left : item.right > container.right ? item.right - container.right : 0;
+      const deltaY = item.top < container.top ? item.top - container.top : item.bottom > container.bottom ? item.bottom - container.bottom : 0;
+      if (deltaX !== 0) scroll.scrollLeft += deltaX;
+      if (deltaY !== 0) scroll.scrollTop += deltaY;
+    };
+    const frame = requestAnimationFrame(() => {
+      reveal();
+      requestAnimationFrame(reveal);
+    });
+    const delayed = [0, 80, 240, 500].map(delay => window.setTimeout(reveal, delay));
+    const fontsReady = document.fonts?.ready.then(reveal);
+    return () => {
+      cancelAnimationFrame(frame);
+      delayed.forEach(timer => window.clearTimeout(timer));
+      void fontsReady;
+    };
   }, [activeItemId, collapsedGroups]);
   const toggleGroup = (id: string) => {
     if (id === activeGroupId) return;
