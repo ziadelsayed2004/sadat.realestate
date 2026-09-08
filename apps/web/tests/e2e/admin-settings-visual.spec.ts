@@ -33,6 +33,11 @@ test('ADM-50 through ADM-58 render the Admin Desktop settings visual regression 
     });
     await page.waitForTimeout(100);
     await expect(page.locator('.admin-settings__tabs [aria-current="page"]')).toBeVisible();
-    if (screenId !== 'ADM-54') await expect(page).toHaveScreenshot(`admin-settings-${locale}-${name}.png`, { fullPage: true, mask: [page.locator('.admin-settings__tabs')], maskColor: '#f5e9cb' });
+    await expect.poll(() => page.locator('.admin-settings__tabs').evaluate(tabs => {
+      const active = tabs.querySelector('[aria-current="page"]')!.getBoundingClientRect();
+      const bounds = tabs.getBoundingClientRect();
+      return active.left >= bounds.left && active.right <= bounds.right;
+    })).toBe(true);
+    if (screenId !== 'ADM-54') await expect(page).toHaveScreenshot(`admin-settings-${locale}-${name}.png`, { fullPage: true });
   }
 });

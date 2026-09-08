@@ -247,8 +247,23 @@ export function AdminSettings({ path = ADMIN_SETTINGS_PLATFORM_ROUTE, locale, se
   }, [attempt, initialMatches, load, namespace, sessionAllowed, source]);
 
   useEffect(() => {
-    const activeTab = settingsTabsRef.current?.querySelector<HTMLElement>('[data-active="true"]');
-    activeTab?.scrollIntoView?.({ block: 'nearest', inline: 'center' });
+    const tabs = settingsTabsRef.current;
+    const activeTab = tabs?.querySelector<HTMLElement>('[data-active="true"]');
+    if (!tabs || !activeTab) return;
+    let disposed = false;
+    const reveal = () => {
+      if (disposed) return;
+      const container = tabs.getBoundingClientRect();
+      const active = activeTab.getBoundingClientRect();
+      tabs.scrollLeft += active.left + active.width / 2 - container.left - container.width / 2;
+    };
+    // Recalculate after fonts and responsive widths settle, without scrolling the document.
+    const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(reveal);
+    observer?.observe(tabs);
+    for (const tab of tabs.children) observer?.observe(tab);
+    void document.fonts?.ready.then(reveal);
+    reveal();
+    return () => { disposed = true; observer?.disconnect(); };
   }, [locale, namespace]);
 
   if (namespace === undefined) return <section className="admin-settings" data-device-scope="desktop" data-admin-settings-state="not_found"><AdminNavigation locale={locale} activePath={path} />{stateMessage('not_found', locale, () => undefined)}</section>;

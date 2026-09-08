@@ -3,6 +3,26 @@ import { routeAdminNotificationsAuditApis } from './admin-notifications-audit.fi
 import { routeAdminSettingsApis } from './admin-settings.fixtures.ts';
 import { routeAdminAdsApis } from './admin-ads.fixtures.ts';
 
+test('active settings tab stays fully visible after text and viewport resize', async ({ page }) => {
+  const locale = test.info().project.name.endsWith('-en') ? 'en' : 'ar';
+  await routeAdminSettingsApis(page);
+  await page.goto(`/admin/settings/seo?lang=${locale}`);
+  await expect(page.locator('[data-admin-settings-state="success"]')).toBeVisible();
+  await page.evaluate(() => document.fonts.ready);
+  const viewport = page.viewportSize()!;
+  for (const width of [viewport.width, Math.max(360, viewport.width - 160)]) {
+    await page.setViewportSize({ width, height: viewport.height });
+    await page.locator('.admin-settings__tabs').evaluate(tabs => {
+      for (const tab of tabs.querySelectorAll<HTMLElement>('a')) tab.style.fontSize = '18px';
+    });
+    await expect.poll(() => page.locator('.admin-settings__tabs').evaluate(tabs => {
+      const bounds = tabs.getBoundingClientRect();
+      const active = tabs.querySelector('[aria-current="page"]')!.getBoundingClientRect();
+      return active.left >= bounds.left && active.right <= bounds.right;
+    })).toBe(true);
+  }
+});
+
 test('admin settings, audit, notifications and advertising use the available page width', async ({ page }) => {
   const locale = test.info().project.name.endsWith('-en') ? 'en' : 'ar';
   for (const route of ['settings', 'settings/seo', 'settings/contact', 'audit-logs', 'notifications', 'ads/requests', 'ads/payments/pending-review', 'ads/financial-review']) {

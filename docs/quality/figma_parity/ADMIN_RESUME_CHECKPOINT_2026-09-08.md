@@ -34,7 +34,7 @@ This checkpoint is not release approval, a claim that all features were exhausti
 ## Current geometry and regression baseline
 
 - The desktop Admin header/sidebar geometry is now 64px, with the sticky sidebar pinned from `top: 64px`; the stale 72px sidebar test expectation was corrected and `admin-sidebar-responsive.spec.ts` passed 30/30.
-- Settings, advertising, notifications, and audit content use a 24px desktop inset. Focused layout/settings tests passed 36/36 executed checks, and advertising/notifications/filter/sidebar checks passed 66/66 executed checks (device-scoped skips remain intentional).
+- Settings, advertising, notifications, and audit content use a 24px desktop inset. Focused layout/settings tests passed 16 with 20 skipped. The advertising/notifications/filter/sidebar run passed 66, failed two stale header assertions, and skipped 28; after correcting those assertions, the sidebar rerun passed 30/30. Skips are not passes.
 - Admin advertising, notifications/audit, and settings visual snapshots were regenerated after visual review of the intentional header/inset changes; the six desktop Arabic/English visual tests pass. They are implementation baselines and do not close the two open Admin source-parity rows.
 
 ## Latest live recheck superseding the earlier browser note
