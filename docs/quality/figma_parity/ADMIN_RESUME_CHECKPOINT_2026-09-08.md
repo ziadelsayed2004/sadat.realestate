@@ -14,6 +14,7 @@
 - The Web Vitest suite: 413/413 passed. The API route suite: 112/112 passed; the full API suite had already passed 556/556 before the final source-only sidebar change.
 - API contract inventory: 187/187 runtime and policy routes match the implemented blueprint; OpenAPI and Postman validators are green.
 - Final build, TypeScript, and lint checks completed successfully.
+- The full `quality` aggregator is not green yet: all 556 API tests pass, but its coverage gate reports 78.23% lines and 79.88% functions against the configured 80% thresholds. The pack audit also retains the explicit ADM-54 design-source path exception. Neither result is a behavior-test failure.
 - Logs are under `.local/`; browser evidence is under `apps/web/test-results/admin-review-entry`, `request-filter-recovery`, `admin-review-regression`, and `admin-overview-reviewed`.
 
 ## Design evidence and remaining limits

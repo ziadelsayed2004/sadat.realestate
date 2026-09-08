@@ -8,6 +8,7 @@
 - Sidebar scroll brings the current link into view, and the active group cannot be collapsed. Other group preferences remain persistent.
 - Browser geometry verification passed for the named admin layout, sidebar, and filter routes in six device/locale configurations; the final matrix passed 60/60 across Desktop, Tablet, and Pixel 5 in Arabic and English. Checks cover screen width, horizontal overflow, active link identity, compact-rail active-link visibility, and filter recovery. These are local checks and remain distinct from post-deployment evidence.
 - The final Web Vitest suite passed 413/413. The API route suite passed 112/112, the full API suite passed 556/556 before the final source-only sidebar change, and the contract audit reports 187/187 runtime/policy routes covered by the implemented blueprint.
+- The aggregate `quality` command still has two declared release-gate exceptions: API coverage is 78.23% lines / 79.88% functions versus its 80% thresholds, and the pack audit retains the ADM-54 design-source path mismatch. All 556 API tests themselves pass; these are coverage/provenance gates rather than failing behavior assertions.
 
 ## Source and guide recovery
 
