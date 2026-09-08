@@ -47,3 +47,11 @@ This checkpoint is not release approval, a claim that all features were exhausti
 - Production client/server builds and the bundle-budget check passed (491496 stylesheet bytes against 491520). This follow-up has not been deployed.
 
 The supplied credentials still authenticate through the Production API as an explicit `admin` (`200` login, `200` overview and properties with the bearer token, and `200` refresh in the same cookie session). A fresh browser audit against the deployed pre-change bundle, however, lost the session after navigation: the first refresh returned `REFRESH_TOKEN_REUSED` and later refreshes returned `INVALID_REFRESH_TOKEN`, so that run recorded `0/102` authenticated pages. The candidate remains undeployed; repeat the browser audit after deployment before accepting the live gate.
+
+## Admin settings field completion
+
+- Direct Figma contexts for ADM-53 (`6017:72075`), ADM-55 (`6017:72206`), ADM-56 (`6017:72311`), ADM-57 (`6017:72413`), and ADM-58 (`6017:72503`) were used to replace the empty generic settings forms with their named property, advertising, SEO, privacy/security, display, population, and moderation controls.
+- The controls preserve the existing protected settings contract: role/permission checks remain server-side, every mutation requires a reason and `expectedVersion`, and the repository records the audit entry atomically with the versioned update. An unconfigured namespace can now be created at version zero from the visible Figma-defined form.
+- Focused component verification passed 15/15. The Arabic/English desktop visual matrix was regenerated after inspection and then passed normally 2/2; each locale visits ADM-50 through ADM-58, compares eight owning-frame pages, checks the active tab is visible, and retains the documented ADM-54 owner-authored source exception.
+- Screenshot stability now loads the required Cairo weights explicitly and fixes form line-height before capture. It no longer waits for global `networkidle`, which could be held open by the external font connection after all application data had settled.
+- These values are persisted through the generic Admin settings API. Their downstream use by public SEO metadata, privacy projections, homepage counters, moderation policy, property limits, and advertising validation is not established by this UI change and remains open cycle work.

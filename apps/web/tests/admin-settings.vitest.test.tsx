@@ -88,6 +88,20 @@ describe('Admin platform, contact, and social settings', () => {
     expect(screen.getByText(/No unverified production values are added/u)).toBeInTheDocument();
   });
 
+  it('creates an unconfigured SEO namespace from the Figma-defined controls', async () => {
+    const requests: Array<{ namespace: AdminSettingsNamespace; input: unknown }> = [];
+    renderWithLocale(<AdminSettings path="/admin/settings/seo" locale="en" session={session} load={async () => { throw new ApiClientError('missing', { code: 'HTTP_ERROR', status: 404 }); }} update={async (namespace, input) => { requests.push({ namespace, input }); return settings(namespace, 0); }} />, { locale: 'en' });
+    await waitFor(() => expect(screen.getByTestId('admin-settings-seo-form')).toBeInTheDocument());
+    fireEvent.change(screen.getByLabelText('English', { selector: '#admin-settings-default_seo_title-en' }), { target: { value: 'Sadat Real Estate' } });
+    fireEvent.change(screen.getByLabelText('Canonical domain'), { target: { value: 'https://elsadatrealestate.com' } });
+    fireEvent.click(screen.getByLabelText('Allow pages to be indexed by default'));
+    fireEvent.change(screen.getByLabelText('Sitemap status'), { target: { value: 'active' } });
+    fireEvent.change(screen.getByLabelText('Change reason'), { target: { value: 'Create approved SEO settings' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+    await waitFor(() => expect(requests).toHaveLength(1));
+    expect(requests[0]).toMatchObject({ namespace: 'seo', input: { expectedVersion: 0, schemaVersion: 1, reason: 'Create approved SEO settings', values: { default_seo_title: { en: 'Sadat Real Estate' }, canonical_domain: 'https://elsadatrealestate.com', allow_indexing: true, sitemap_status: 'active' } } });
+  });
+
   it('requires a reason and sends the server version plus multilingual values on save', async () => {
     const requests: Array<{ namespace: AdminSettingsNamespace; input: unknown }> = [];
     const source = createAdminSettingsSource({ apiClient: apiClientFor([]) });

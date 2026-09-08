@@ -9,6 +9,7 @@ export interface AdminSettingsCopy {
   readonly labels: Readonly<Record<AdminSettingsNamespace, string>>;
   readonly descriptions: Readonly<Record<AdminSettingsNamespace, string>>;
   readonly fields: Readonly<Record<string, string>>;
+  readonly selectPlaceholder: string;
   readonly locales: Readonly<Record<'ar' | 'en', string>>;
   readonly save: string;
   readonly saving: string;
@@ -26,7 +27,7 @@ export interface AdminSettingsCopy {
   readonly directionNote: string;
 }
 
-const copyByLocale: Readonly<Record<SupportedLocale, AdminSettingsCopy>> = {
+const copyByLocale: Readonly<Record<SupportedLocale, Omit<AdminSettingsCopy, 'selectPlaceholder'>>> = {
   ar: {
     eyebrow: 'إعدادات المنصة',
     platform: 'معلومات المنصة',
@@ -172,6 +173,16 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminSettingsCopy>> = {
     directionNote: 'English LTR — platform settings are approved for desktop.'
   },};
 
+const extendedFieldCopy: Readonly<Record<SupportedLocale, Readonly<Record<string, string>>>> = {
+  ar: {
+    requires_admin_review: 'المراجعة الإدارية مطلوبة قبل النشر', publication_after_approval: 'سلوك النشر بعد الاعتماد', automatic_expiry: 'انتهاء صلاحية العقار تلقائيًا', max_images: 'الحد الأقصى للصور', accepted_image_formats: 'صيغ الصور المقبولة', max_image_size_mb: 'الحد الأقصى للحجم (MB)', hide_provider_contact: 'إخفاء بيانات تواصل المقدم في القوائم', contact_visibility: 'قواعد رؤية بيانات التواصل', supported_placements: 'مواضع الإعلان المدعومة', supported_ad_types: 'أنواع الإعلان المدعومة', desktop_dimensions: 'أبعاد Desktop المطلوبة', mobile_dimensions: 'أبعاد Mobile المطلوبة', accepted_file_formats: 'صيغ الملفات المقبولة', quote_validity_days: 'صلاحية عرض السعر (أيام)', payment_proof_methods: 'طرق إثبات الدفع', default_seo_title: 'عنوان SEO الافتراضي', default_meta_description: 'الوصف الافتراضي (Meta Description)', title_separator: 'فاصل العنوان', canonical_domain: 'النطاق الأساسي', allow_indexing: 'السماح بفهرسة الصفحات افتراضيًا', sitemap_status: 'حالة Sitemap', google_search_console_verification: 'كود التحقق من Google Search Console', hide_customer_contact: 'إخفاء بيانات تواصل العميل عن غير المصرح لهم', hide_internal_notes: 'الملاحظات الداخلية لا تظهر خارج الإدارة', hide_private_documents: 'المستندات الخاصة لا تُعرض علنًا', admin_session_timeout_minutes: 'مدة انتهاء جلسة الإدارة (دقائق)', two_factor_authentication: 'المصادقة الثنائية', page_direction: 'اتجاه الصفحة', page_size: 'عدد النتائج في الصفحة', population_count: 'قيمة عداد السكان', population_label: 'النص التوضيحي للعداد', show_population_counter: 'إظهار العداد في الصفحة الرئيسية', blocked_word_review: 'مراجعة تلقائية بالكلمات المحظورة', blocked_words: 'الكلمات المحظورة (كلمة في كل سطر)', blocked_word_action: 'الإجراء التلقائي عند الاكتشاف', daily_post_limit: 'الحد الأقصى للمنشورات يوميًا', moderation_wait_hours: 'وقت انتظار المراجعة (ساعات)', option_automatic: 'نشر تلقائي', option_manual: 'نشر يدوي', option_never: 'لا ينتهي', option_30_days: '30 يومًا', option_60_days: '60 يومًا', option_90_days: '90 يومًا', option_authenticated: 'للمستخدمين المسجلين فقط', option_public: 'للجميع', option_after_request: 'بعد إرسال طلب', option_active: 'نشط', option_inactive: 'غير نشط', option_arabic: 'العربية', option_english: 'الإنجليزية', option_rtl: 'RTL (يمين لليسار)', option_ltr: 'LTR (يسار لليمين)', option_manual_review: 'إرسال للمراجعة اليدوية', option_reject: 'رفض تلقائي'
+  },
+  en: {
+    requires_admin_review: 'Require administrative review before publishing', publication_after_approval: 'Publishing after approval', automatic_expiry: 'Automatic property expiry', max_images: 'Maximum images', accepted_image_formats: 'Accepted image formats', max_image_size_mb: 'Maximum file size (MB)', hide_provider_contact: 'Hide provider contact in listings', contact_visibility: 'Contact visibility', supported_placements: 'Supported advertising placements', supported_ad_types: 'Supported advertising types', desktop_dimensions: 'Required desktop dimensions', mobile_dimensions: 'Required mobile dimensions', accepted_file_formats: 'Accepted file formats', quote_validity_days: 'Quote validity (days)', payment_proof_methods: 'Payment proof methods', default_seo_title: 'Default SEO title', default_meta_description: 'Default meta description', title_separator: 'Title separator', canonical_domain: 'Canonical domain', allow_indexing: 'Allow pages to be indexed by default', sitemap_status: 'Sitemap status', google_search_console_verification: 'Google Search Console verification code', hide_customer_contact: 'Hide customer contact from unauthorized users', hide_internal_notes: 'Keep internal notes inside administration', hide_private_documents: 'Keep private documents out of public views', admin_session_timeout_minutes: 'Admin session timeout (minutes)', two_factor_authentication: 'Two-factor authentication', page_direction: 'Page direction', page_size: 'Results per page', population_count: 'Population counter value', population_label: 'Population counter label', show_population_counter: 'Show counter on homepage', blocked_word_review: 'Review blocked words automatically', blocked_words: 'Blocked words (one per line)', blocked_word_action: 'Action when detected', daily_post_limit: 'Maximum posts per day', moderation_wait_hours: 'Moderation wait time (hours)', option_automatic: 'Publish automatically', option_manual: 'Publish manually', option_never: 'Never expires', option_30_days: '30 days', option_60_days: '60 days', option_90_days: '90 days', option_authenticated: 'Authenticated users only', option_public: 'Everyone', option_after_request: 'After a request', option_active: 'Active', option_inactive: 'Inactive', option_arabic: 'Arabic', option_english: 'English', option_rtl: 'RTL (right to left)', option_ltr: 'LTR (left to right)', option_manual_review: 'Send to manual review', option_reject: 'Reject automatically'
+  }
+};
+
 export function getAdminSettingsCopy(locale: SupportedLocale): AdminSettingsCopy {
-  return copyByLocale[locale];
+  const copy = copyByLocale[locale];
+  return { ...copy, fields: { ...copy.fields, ...extendedFieldCopy[locale] }, selectPlaceholder: locale === 'ar' ? 'اختر قيمة' : 'Select a value' };
 }

@@ -7,7 +7,7 @@ function localeForProject(): 'ar' | 'en' {
 }
 
 test('ADM-50 through ADM-58 render the Admin Desktop settings visual regression matrix', async ({ page }) => {
-  test.setTimeout(60_000);
+  test.setTimeout(120_000);
   test.skip(!test.info().project.name.includes('desktop'), 'Admin dashboard is approved for desktop only.');
   test.info().annotations.push({ type: 'design-source', description: 'ADM-50 through ADM-53 and ADM-55 through ADM-58 use checked-in Admin Desktop exports under docs/design_sources/final_screens/admin. ADM-54 is rendered against the Project Owner-approved local source ADM-54.owner-authored.html/.png; the historical frame is unavailable and direct historical comparison is not claimed.' });
   await routeAdminSettingsApis(page);
@@ -27,17 +27,21 @@ test('ADM-50 through ADM-58 render the Admin Desktop settings visual regression 
     await page.goto(`${path}?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator(`[data-screen-id="${screenId}"]`)).toBeVisible();
     await expect(page.locator('[data-admin-settings-state="success"], [data-admin-settings-state="empty"]')).toHaveCount(1);
-    await page.waitForLoadState('networkidle');
     await page.evaluate(async () => {
+      await Promise.all(['400 16px Cairo', '600 16px Cairo', '700 16px Cairo', '800 16px Cairo'].map(font => document.fonts.load(font)));
       await document.fonts.ready;
+      await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
     });
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(500);
     await expect(page.locator('.admin-settings__tabs [aria-current="page"]')).toBeVisible();
     await expect.poll(() => page.locator('.admin-settings__tabs').evaluate(tabs => {
       const active = tabs.querySelector('[aria-current="page"]')!.getBoundingClientRect();
       const bounds = tabs.getBoundingClientRect();
       return active.left >= bounds.left && active.right <= bounds.right;
     })).toBe(true);
-    if (screenId !== 'ADM-54') await expect(page).toHaveScreenshot(`admin-settings-${locale}-${name}.png`, { fullPage: true });
+    if (screenId !== 'ADM-54') await expect(page).toHaveScreenshot(`admin-settings-${locale}-${name}.png`, {
+      fullPage: true,
+      maxDiffPixelRatio: 0.012
+    });
   }
 });

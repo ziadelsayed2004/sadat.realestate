@@ -36,7 +36,7 @@ describe('frontend_074 settings namespaces', () => {
     result.unmount();
   });
 
-  it('edits only server-provided dynamic values and sends the current version', async () => {
+  it('preserves server-provided dynamic values while sending the current version', async () => {
     const requests: Array<{ namespace: AdminSettingsNamespace; input: unknown }> = [];
     renderWithLocale(
       <AdminSettings

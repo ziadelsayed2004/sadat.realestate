@@ -67,8 +67,9 @@ const LOCALES: readonly LocalizedLocale[] = ['ar', 'en',];
 
 type Field = {
   readonly key: string;
-  readonly kind: 'localized' | 'text' | 'url' | 'number' | 'boolean' | 'array';
+  readonly kind: 'localized' | 'text' | 'url' | 'number' | 'boolean' | 'array' | 'select';
   readonly labelKey: string;
+  readonly options?: readonly { readonly value: string; readonly labelKey: string }[];
 };
 
 const FIELD_MAP: Readonly<Record<SettingsNamespace, readonly Field[]>> = {
@@ -99,12 +100,55 @@ const FIELD_MAP: Readonly<Record<SettingsNamespace, readonly Field[]>> = {
     { key: 'youtube_url', kind: 'url', labelKey: 'youtube_url' },
     { key: 'tiktok_url', kind: 'url', labelKey: 'tiktok_url' }
   ],
-  properties: [],
+  properties: [
+    { key: 'requires_admin_review', kind: 'boolean', labelKey: 'requires_admin_review' },
+    { key: 'publication_after_approval', kind: 'select', labelKey: 'publication_after_approval', options: [{ value: 'automatic', labelKey: 'option_automatic' }, { value: 'manual', labelKey: 'option_manual' }] },
+    { key: 'automatic_expiry', kind: 'select', labelKey: 'automatic_expiry', options: [{ value: 'never', labelKey: 'option_never' }, { value: '30_days', labelKey: 'option_30_days' }, { value: '60_days', labelKey: 'option_60_days' }, { value: '90_days', labelKey: 'option_90_days' }] },
+    { key: 'max_images', kind: 'number', labelKey: 'max_images' },
+    { key: 'accepted_image_formats', kind: 'array', labelKey: 'accepted_image_formats' },
+    { key: 'max_image_size_mb', kind: 'number', labelKey: 'max_image_size_mb' },
+    { key: 'hide_provider_contact', kind: 'boolean', labelKey: 'hide_provider_contact' },
+    { key: 'contact_visibility', kind: 'select', labelKey: 'contact_visibility', options: [{ value: 'authenticated', labelKey: 'option_authenticated' }, { value: 'public', labelKey: 'option_public' }, { value: 'after_request', labelKey: 'option_after_request' }] }
+  ],
   requests: [],
-  advertising: [],
-  seo: [],
-  'privacy-security': [],
-  display: []
+  advertising: [
+    { key: 'supported_placements', kind: 'array', labelKey: 'supported_placements' },
+    { key: 'supported_ad_types', kind: 'array', labelKey: 'supported_ad_types' },
+    { key: 'desktop_dimensions', kind: 'text', labelKey: 'desktop_dimensions' },
+    { key: 'mobile_dimensions', kind: 'text', labelKey: 'mobile_dimensions' },
+    { key: 'accepted_file_formats', kind: 'array', labelKey: 'accepted_file_formats' },
+    { key: 'quote_validity_days', kind: 'number', labelKey: 'quote_validity_days' },
+    { key: 'payment_proof_methods', kind: 'array', labelKey: 'payment_proof_methods' }
+  ],
+  seo: [
+    { key: 'default_seo_title', kind: 'localized', labelKey: 'default_seo_title' },
+    { key: 'default_meta_description', kind: 'localized', labelKey: 'default_meta_description' },
+    { key: 'title_separator', kind: 'text', labelKey: 'title_separator' },
+    { key: 'canonical_domain', kind: 'url', labelKey: 'canonical_domain' },
+    { key: 'allow_indexing', kind: 'boolean', labelKey: 'allow_indexing' },
+    { key: 'sitemap_status', kind: 'select', labelKey: 'sitemap_status', options: [{ value: 'active', labelKey: 'option_active' }, { value: 'inactive', labelKey: 'option_inactive' }] },
+    { key: 'google_search_console_verification', kind: 'text', labelKey: 'google_search_console_verification' }
+  ],
+  'privacy-security': [
+    { key: 'hide_customer_contact', kind: 'boolean', labelKey: 'hide_customer_contact' },
+    { key: 'hide_internal_notes', kind: 'boolean', labelKey: 'hide_internal_notes' },
+    { key: 'hide_private_documents', kind: 'boolean', labelKey: 'hide_private_documents' },
+    { key: 'admin_session_timeout_minutes', kind: 'number', labelKey: 'admin_session_timeout_minutes' },
+    { key: 'two_factor_authentication', kind: 'boolean', labelKey: 'two_factor_authentication' }
+  ],
+  display: [
+    { key: 'default_locale', kind: 'select', labelKey: 'default_locale', options: [{ value: 'ar', labelKey: 'option_arabic' }, { value: 'en', labelKey: 'option_english' }] },
+    { key: 'page_direction', kind: 'select', labelKey: 'page_direction', options: [{ value: 'rtl', labelKey: 'option_rtl' }, { value: 'ltr', labelKey: 'option_ltr' }] },
+    { key: 'page_size', kind: 'number', labelKey: 'page_size' },
+    { key: 'population_count', kind: 'number', labelKey: 'population_count' },
+    { key: 'population_label', kind: 'localized', labelKey: 'population_label' },
+    { key: 'show_population_counter', kind: 'boolean', labelKey: 'show_population_counter' },
+    { key: 'blocked_word_review', kind: 'boolean', labelKey: 'blocked_word_review' },
+    { key: 'blocked_words', kind: 'array', labelKey: 'blocked_words' },
+    { key: 'blocked_word_action', kind: 'select', labelKey: 'blocked_word_action', options: [{ value: 'manual_review', labelKey: 'option_manual_review' }, { value: 'reject', labelKey: 'option_reject' }] },
+    { key: 'daily_post_limit', kind: 'number', labelKey: 'daily_post_limit' },
+    { key: 'moderation_wait_hours', kind: 'number', labelKey: 'moderation_wait_hours' }
+  ]
 };
 
 function namespaceForPath(path: string): SettingsNamespace | undefined {
@@ -177,7 +221,8 @@ function LocalizedField({ field, values, locale, copy, onChange }: { readonly fi
 function PrimitiveField({ field, values, copy, onChangeText, onChangeArray, onChangeNumber, onChangeBoolean }: { readonly field: Field; readonly values: DraftValues; readonly copy: ReturnType<typeof getAdminSettingsCopy>; readonly onChangeText: (key: string, value: string) => void; readonly onChangeArray: (key: string, value: string) => void; readonly onChangeNumber: (key: string, value: string) => void; readonly onChangeBoolean: (key: string, value: boolean) => void }) {
   const label = copy.fields[field.labelKey] ?? field.key;
   if (field.kind === 'boolean') return <label className="admin-settings__boolean" htmlFor={`admin-settings-${field.key}`}><span>{label}</span><input id={`admin-settings-${field.key}`} type="checkbox" checked={booleanDraft(values[field.key])} onChange={event => onChangeBoolean(field.key, event.target.checked)} /></label>;
-  if (field.kind === 'array') return <label htmlFor={`admin-settings-${field.key}`}>{label}<textarea id={`admin-settings-${field.key}`} value={arrayDraft(values[field.key])} onChange={event => onChangeArray(field.key, event.target.value)} /></label>;
+  if (field.kind === 'select') return <label htmlFor={`admin-settings-${field.key}`}>{label}<select id={`admin-settings-${field.key}`} value={stringDraft(values[field.key])} onChange={event => onChangeText(field.key, event.target.value)}><option value="">{copy.selectPlaceholder}</option>{field.options?.map(option => <option key={option.value} value={option.value}>{copy.fields[option.labelKey] ?? option.value}</option>)}</select></label>;
+  if (field.kind === 'array') return <label style={{ gridColumn: '1 / -1' }} htmlFor={`admin-settings-${field.key}`}>{label}<textarea id={`admin-settings-${field.key}`} value={arrayDraft(values[field.key])} onChange={event => onChangeArray(field.key, event.target.value)} /></label>;
   if (field.kind === 'number') return <label htmlFor={`admin-settings-${field.key}`}>{label}<input id={`admin-settings-${field.key}`} type="number" inputMode="decimal" value={numberDraft(values[field.key])} onChange={event => onChangeNumber(field.key, event.target.value)} /></label>;
   return <label htmlFor={`admin-settings-${field.key}`}>{label}<input id={`admin-settings-${field.key}`} type={field.kind === 'url' ? 'url' : 'text'} value={stringDraft(values[field.key])} onChange={event => onChangeText(field.key, event.target.value)} /></label>;
 }
