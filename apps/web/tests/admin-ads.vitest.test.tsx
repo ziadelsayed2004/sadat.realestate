@@ -15,6 +15,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { ApiClient } from '../src/features/contracts/index.ts';
 import {
   AdminAds,
+  createAdminAdsSource,
   getAdminAdsCopy,
   loadAdminAdCalendar,
   loadAdminAdRequest,
@@ -108,6 +109,8 @@ function apiClientFor(requests: Array<{ method: string; path: string; query: str
       const url = new URL(String(input), 'http://sadat-real-estate.local');
       const method = init?.method ?? 'GET';
       requests.push({ method, path: url.pathname, query: url.search, authorization: new Headers(init?.headers).get('authorization'), body: init?.body === undefined ? undefined : JSON.parse(String(init.body)) as unknown });
+      if (method === 'POST' && url.pathname.endsWith('/quote')) return envelope(quote);
+      if (method === 'POST' && url.pathname.includes('/ad-requests/')) return envelope(adminRequest);
       if (method === 'POST') return envelope(proof);
       if (url.pathname.endsWith('/ad-calendar')) return envelope(calendarList, { page: 1, limit: 50, total: 1 });
       if (url.pathname.endsWith('/ad-financial-review')) return envelope(financialList, { page: 1, limit: 20, total: 1 });
@@ -137,6 +140,8 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
     const client = apiClientFor(requests);
     await expect(loadAdminAdRequests({ apiClient: client, authorization, query: { status: 'waiting_payment', page: 2, limit: 10 } })).resolves.toEqual(requestList);
     await expect(loadAdminAdRequest(request.id, { apiClient: client, authorization })).resolves.toEqual(adminRequest);
+    await expect(createAdminAdsSource({ apiClient: client, authorization }).reviewRequest(request.id, { action: 'approve', expectedVersion: request.version, reason: 'Reviewed and ready for pricing' })).resolves.toEqual(adminRequest);
+    await expect(createAdminAdsSource({ apiClient: client, authorization }).issueQuote(request.id, { currency: 'EGP', lineItems: [{ description: 'Homepage placement', quantity: 1, unitAmountMinor: 125000 }], validUntil: '2026-10-01T09:00:00.000Z', terms: 'Manual administrative quote' })).resolves.toEqual(quote);
     await expect(loadAdminPaymentProofs({ apiClient: client, authorization, query: { status: 'pending_review' } })).resolves.toEqual(proofList);
     await expect(reviewAdminPaymentProof(proof.id, { action: 'approve', expectedVersion: proof.version, reason: 'Reviewed against the submitted proof' }, { apiClient: client, authorization })).resolves.toEqual(proof);
     await expect(loadAdminAdCalendar({ apiClient: client, authorization })).resolves.toEqual(calendarList);
@@ -147,6 +152,8 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
     expect(requests.map(item => `${item.method} ${item.path}`)).toEqual([
       'GET /api/v1/admin/ad-requests',
       `GET /api/v1/admin/ad-requests/${request.id}`,
+      `POST /api/v1/admin/ad-requests/${request.id}/review`,
+      `POST /api/v1/admin/ad-requests/${request.id}/quote`,
       'GET /api/v1/admin/payment-proofs',
       `POST /api/v1/admin/payment-proofs/${proof.id}/review`,
       'GET /api/v1/admin/ad-calendar',
@@ -154,7 +161,14 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
       `GET /api/v1/admin/ad-financial-review/${request.id}`,
       'GET /api/v1/admin/ad-ledger'
     ]);
-    expect(requests[3]?.body).toEqual({ action: 'approve', expectedVersion: proof.version, reason: 'Reviewed against the submitted proof' });
+    expect(requests[2]?.body).toEqual({ action: 'approve', expectedVersion: request.version, reason: 'Reviewed and ready for pricing' });
+    expect(requests[3]?.body).toEqual({
+      currency: 'EGP',
+      lineItems: [{ description: 'Homepage placement', quantity: 1, unitAmountMinor: 125000 }],
+      validUntil: '2026-10-01T09:00:00.000Z',
+      terms: 'Manual administrative quote'
+    });
+    expect(requests[5]?.body).toEqual({ action: 'approve', expectedVersion: proof.version, reason: 'Reviewed against the submitted proof' });
     await expect(reviewAdminPaymentProof(proof.id, { action: 'approve', expectedVersion: proof.version, reason: 'x' }, { apiClient: client })).rejects.toThrow();
   });
 
@@ -184,6 +198,31 @@ describe('Admin advertising, payment, calendar, and financial projections', () =
     fireEvent.change(reasonField, { target: { value: 'Reviewed against the submitted proof' } });
     fireEvent.submit(reviewForm!);
     await waitFor(() => expect(review).toHaveBeenCalledWith(proof.id, { action: 'approve', expectedVersion: proof.version, reason: 'Reviewed against the submitted proof' }));
+  });
+
+  it('reviews a submitted advertising request from the detail screen with a reason and version', async () => {
+    const submitted = adAdminRequestSchema.parse({ request: { ...request, status: 'review', version: 5 }, quote: undefined });
+    const review = vi.fn(async () => submitted);
+    window.history.pushState({}, '', `/admin/ads/requests?requestId=${request.id}`);
+    renderWithLocale(<AdminAds locale="en" session={session} authClient={authorization} {...loaders} loadRequestDetail={vi.fn(async () => submitted)} reviewRequest={review} />, { locale: 'en' });
+    const copy = getAdminAdsCopy('en');
+    const reason = await screen.findByLabelText(copy.reasonLabel);
+    fireEvent.change(reason, { target: { value: 'Reviewed and ready for pricing' } });
+    fireEvent.submit(reason.closest('form')!);
+    await waitFor(() => expect(review).toHaveBeenCalledWith(request.id, { action: 'approve', expectedVersion: 5, reason: 'Reviewed and ready for pricing' }));
+  });
+
+  it('issues a quote from a request waiting for pricing', async () => {
+    const waiting = adAdminRequestSchema.parse({ request: { ...request, status: 'waiting_pricing', version: 6 }, quote: undefined });
+    const issue = vi.fn(async () => quote);
+    window.history.pushState({}, '', `/admin/ads/requests?requestId=${request.id}`);
+    renderWithLocale(<AdminAds locale="en" session={session} authClient={authorization} {...loaders} loadRequestDetail={vi.fn(async () => waiting)} issueQuote={issue} />, { locale: 'en' });
+    fireEvent.change(await screen.findByLabelText('Line description'), { target: { value: 'Homepage placement' } });
+    fireEvent.change(screen.getByLabelText('Amount in minor units'), { target: { value: '125000' } });
+    fireEvent.change(screen.getByLabelText('Valid until'), { target: { value: '2026-10-01T12:00' } });
+    fireEvent.change(screen.getByLabelText('Terms'), { target: { value: 'Manual administrative quote' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Issue quote' }));
+    await waitFor(() => expect(issue).toHaveBeenCalledWith(request.id, { currency: 'EGP', lineItems: [{ description: 'Homepage placement', quantity: 1, unitAmountMinor: 125000 }], validUntil: new Date('2026-10-01T12:00').toISOString(), terms: 'Manual administrative quote' }));
   });
 
   it('fails closed for a non-admin session without calling any loader', async () => {

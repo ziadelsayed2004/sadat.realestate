@@ -225,6 +225,7 @@ describe('Provider advertising requests and commission', () => {
     const loadDetail = vi.fn(async () => adRequest({ status: 'waiting_payment', quote: { ...detail.quote!, status: 'accepted' }, paymentProofs: [] }));
     const mutations: ProviderAdvertisingMutationApi = {
       createRequest: vi.fn(async () => request),
+      submitRequest: vi.fn(async () => request),
       acceptQuote: vi.fn(async () => quote),
       uploadPaymentProof: vi.fn(async () => proof)
     };
@@ -233,6 +234,19 @@ describe('Provider advertising requests and commission', () => {
     fireEvent.click(screen.getByRole('button', { name: getProviderAdvertisingCopy('en').acceptQuote }));
     await waitFor(() => expect(mutations.acceptQuote).toHaveBeenCalledWith(requestId, { action: 'accept', expectedVersion: 2 }));
     expect(screen.queryByLabelText(getProviderAdvertisingCopy('en').uploadPaymentProof)).not.toBeInTheDocument();
+  });
+
+  it('submits a draft advertising request with its current version', async () => {
+    const draft = adRequest({ status: 'draft', version: 4, quote: undefined, history: [{ status: 'draft', version: 4, changedAt: '2026-08-18T09:00:00.000Z' }] });
+    const mutations: ProviderAdvertisingMutationApi = {
+      createRequest: vi.fn(async () => request),
+      submitRequest: vi.fn(async () => request),
+      acceptQuote: vi.fn(async () => quote),
+      uploadPaymentProof: vi.fn(async () => proof)
+    };
+    renderWithLocale(<ProviderAdvertising locale="en" session={session} requestId={requestId} initialDetail={draft} loadDetail={vi.fn(async () => draft)} mutations={mutations} />, { locale: 'en' });
+    fireEvent.click(screen.getByRole('button', { name: getProviderAdvertisingCopy('en').submitRequest }));
+    await waitFor(() => expect(mutations.submitRequest).toHaveBeenCalledWith(requestId, 4));
   });
 
   it('renders commission as a read-only server projection and supports an unavailable source', () => {

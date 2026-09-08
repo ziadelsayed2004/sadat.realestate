@@ -70,10 +70,13 @@ function syntheticExecutor(): BackendJourneyExecutor & { readonly state: Record<
       case 'seeker-request-idor-negative': assert.equal(state.requestResolved, true); return { outcome: 'forbidden' as const, statusCode: 403 };
       case 'ad-placement': return { outcome: 'success' as const };
       case 'ad-request-draft': return { outcome: 'success' as const };
-      case 'ad-request-review': return { outcome: 'success' as const };
+      case 'ad-request-submitted': return { outcome: 'success' as const };
+      case 'ad-request-admin-reviewed': return { outcome: 'success' as const };
       case 'ad-quote-issued': return { outcome: 'success' as const };
       case 'ad-quote-accepted': state.adWaitingPayment = true; return { outcome: 'success' as const };
+      case 'payment-proof-uploaded': assert.equal(state.adWaitingPayment, true); return { outcome: 'success' as const, statusCode: 201 };
       case 'payment-proof-reviewed': assert.equal(state.adWaitingPayment, true); state.paymentApproved = true; return { outcome: 'success' as const };
+      case 'ad-request-scheduled': assert.equal(state.paymentApproved, true); return { outcome: 'success' as const, statusCode: 200 };
       case 'commission-policy-resolved': assert.equal(state.paymentApproved, true); return { outcome: 'success' as const };
       case 'commission-event-snapshotted': state.commissionSnapshotted = true; return { outcome: 'success' as const };
       case 'commission-provider-projection': assert.equal(state.commissionSnapshotted, true); return { outcome: 'success' as const };

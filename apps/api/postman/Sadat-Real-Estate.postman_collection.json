@@ -5194,6 +5194,28 @@
           }
         },
         {
+          "name": "Submit provider advertising request",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"expectedVersion\": 0\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/provider/ads/:adRequestId/submit",
+              "host": ["{{apiV1BaseUrl}}"],
+              "path": ["provider", "ads", ":adRequestId", "submit"],
+              "variable": [{ "key": "adRequestId", "value": "000000000000000000000000" }]
+            },
+            "description": "Submits an owner-scoped draft for administrative review using optimistic version control."
+          }
+        },
+        {
           "name": "Accept provider advertising quote",
           "request": {
             "method": "POST",
@@ -5373,6 +5395,28 @@
               ]
             },
             "description": "Requires a verified administrator with the ads view permission and excludes private payment-proof storage details."
+          }
+        },
+        {
+          "name": "Review administrative advertising request",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminAccessToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"approve\",\n  \"expectedVersion\": 1,\n  \"reason\": \"Reviewed and ready for pricing\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{apiV1BaseUrl}}/admin/ad-requests/:adRequestId/review",
+              "host": ["{{apiV1BaseUrl}}"],
+              "path": ["admin", "ad-requests", ":adRequestId", "review"],
+              "variable": [{ "key": "adRequestId", "value": "000000000000000000000000" }]
+            },
+            "description": "Requires admin:ads.price. Approval advances a submitted request to pricing; rejection also requires a recorded reason and expected version."
           }
         },
         {

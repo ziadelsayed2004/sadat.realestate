@@ -6048,6 +6048,28 @@
         }
       }
     },
+    "/api/v1/provider/ads/{adRequestId}/submit": {
+      "parameters": [
+        { "name": "adRequestId", "in": "path", "required": true, "schema": { "$ref": "#/components/schemas/AdObjectId" } }
+      ],
+      "post": {
+        "operationId": "submitProviderAdRequest",
+        "summary": "Submit a provider-owned advertising draft for review",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["expectedVersion"], "properties": { "expectedVersion": { "type": "integer", "minimum": 0 } } } } }
+        },
+        "responses": {
+          "200": { "description": "Advertising request submitted for administrative review", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SuccessEnvelope" } } } },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/AuthError" },
+          "403": { "$ref": "#/components/responses/AuthError" },
+          "404": { "$ref": "#/components/responses/ProviderError" },
+          "409": { "$ref": "#/components/responses/ProviderError" }
+        }
+      }
+    },
     "/api/v1/provider/ads/{adRequestId}/accept-quote": {
       "parameters": [
         {
@@ -6447,6 +6469,29 @@
           "404": {
             "$ref": "#/components/responses/ProviderError"
           }
+        }
+      }
+    },
+    "/api/v1/admin/ad-requests/{adRequestId}/review": {
+      "parameters": [
+        { "name": "adRequestId", "in": "path", "required": true, "schema": { "$ref": "#/components/schemas/AdObjectId" } }
+      ],
+      "post": {
+        "operationId": "reviewAdminAdRequest",
+        "summary": "Approve an advertising request for pricing or reject it",
+        "description": "Requires admin:ads.price and records a reason through an optimistic version transition.",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object", "additionalProperties": false, "required": ["action", "expectedVersion", "reason"], "properties": { "action": { "type": "string", "enum": ["approve", "reject"] }, "expectedVersion": { "type": "integer", "minimum": 0 }, "reason": { "type": "string", "minLength": 2, "maxLength": 500 } } } } }
+        },
+        "responses": {
+          "200": { "description": "Reviewed administrative advertising request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AdAdminRequestSuccessEnvelope" } } } },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/AuthError" },
+          "403": { "$ref": "#/components/responses/AuthError" },
+          "404": { "$ref": "#/components/responses/ProviderError" },
+          "409": { "$ref": "#/components/responses/ProviderError" }
         }
       }
     },

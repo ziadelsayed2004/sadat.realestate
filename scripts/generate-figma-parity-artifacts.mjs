@@ -661,7 +661,7 @@ const FIGMA_FRAME_EVIDENCE = {
   }
 };
 
-const guidePath = "Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html";
+const guidePath = "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html";
 const requiredRole = { public: "public", auth: "anonymous", seeker: "seeker", provider: "provider", admin: "administrator" };
 const surfaceLabel = { public: "Public Website", auth: "Authentication and Onboarding", seeker: "Property Seeker", provider: "Property Provider", admin: "Admin Dashboard" };
 const evidenceRoot = "docs/quality/figma_parity";

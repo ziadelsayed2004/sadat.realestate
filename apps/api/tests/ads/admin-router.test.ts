@@ -72,6 +72,13 @@ function repository(): AdAdminRequestRepository {
     },
     async getAdminRequest(id) {
       return id === requestId ? record : undefined;
+    },
+    async reviewAdminRequest(id, expectedVersion, status, reason) {
+      assert.equal(id, requestId);
+      assert.equal(expectedVersion, 1);
+      assert.equal(status, 'waiting_pricing');
+      assert.equal(reason, 'Reviewed and ready for pricing');
+      return record;
     }
   };
 }
@@ -132,6 +139,21 @@ test('denies the permission boundary even for a verified administrator', async (
   await withServer(false, async baseUrl => {
     const response = await fetch(`${baseUrl}/api/v1/admin/ad-requests`, { headers: { Authorization: `Bearer ${adminToken}` } });
     assert.equal(response.status, 403);
+  });
+});
+
+test('reviews a submitted advertising request with a reason and expected version', async () => {
+  await withServer(true, async baseUrl => {
+    const path = `${baseUrl}/api/v1/admin/ad-requests/${requestId}/review`;
+    assert.equal((await fetch(path, { method: 'POST' })).status, 401);
+    const reviewed = await fetch(path, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${adminToken}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'approve', expectedVersion: 1, reason: 'Reviewed and ready for pricing' })
+    });
+    assert.equal(reviewed.status, 200);
+    assert.deepEqual((await reviewed.json() as { data: AdAdminRequest }).data, record);
+    assert.equal((await fetch(path, { method: 'POST', headers: { Authorization: `Bearer ${adminToken}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'approve', expectedVersion: 1, reason: 'x' }) })).status, 400);
   });
 });
 

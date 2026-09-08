@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from 'express';
-import { adAdminRequestListQuerySchema, adCalendarQuerySchema, adRequestIdParamsSchema } from '@sadat-real-estate/contracts';
+import { adAdminRequestListQuerySchema, adAdminRequestReviewSchema, adCalendarQuerySchema, adRequestIdParamsSchema } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims, AccessTokenService } from '../auth/crypto.js';
 import { ApiContractError, toApiErrorResponse } from '../contracts/error-boundary.js';
 import { toSuccessResponse } from '../contracts/response.js';
@@ -10,6 +10,7 @@ import { AdSettingsServiceError, type AdAdminRequestService, type AdCalendarServ
 export const ADMIN_ADS_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/admin/ad-requests', operationId: 'listAdminAdRequests' },
   { method: 'GET', path: '/api/v1/admin/ad-requests/:adRequestId', operationId: 'getAdminAdRequest' },
+  { method: 'POST', path: '/api/v1/admin/ad-requests/:adRequestId/review', operationId: 'reviewAdminAdRequest' },
   { method: 'GET', path: '/api/v1/admin/ad-calendar', operationId: 'listAdminAdCalendar' },
   { method: 'POST', path: '/api/v1/admin/ad-requests/:adRequestId/schedule', operationId: 'scheduleAdminAdRequest' }
 ] as const;
@@ -70,6 +71,18 @@ export function createAdminAdsRouter(dependencies: AdminAdsRouterDependencies): 
       const { adRequestId } = adRequestIdParamsSchema.parse(request.params);
       response.status(200).json(toSuccessResponse(
         await dependencies.service.get(claims(response), adRequestId),
+        requestId(request)
+      ));
+    } catch (error) {
+      sendError(request, response, error);
+    }
+  });
+
+  router.post('/admin/ad-requests/:adRequestId/review', async (request, response) => {
+    try {
+      const { adRequestId } = adRequestIdParamsSchema.parse(request.params);
+      response.status(200).json(toSuccessResponse(
+        await dependencies.service.review(claims(response), adRequestId, adAdminRequestReviewSchema.parse(request.body ?? {})),
         requestId(request)
       ));
     } catch (error) {

@@ -209,6 +209,23 @@ export function createMongooseAdRequestRepository(
       await document.save();
       const row = document.toObject() as AdRequestRecord & { _id: Types.ObjectId };
       return toAdRequest(row);
+    },
+
+    async getRequest(requestId: string): Promise<AdRequest | undefined> {
+      if (!Types.ObjectId.isValid(requestId)) return undefined;
+      const row = await models.AdRequest.findOne({ _id: new Types.ObjectId(requestId) }).lean<AdRequestRow>().exec();
+      return row ? toAdRequest(row) : undefined;
+    },
+
+    async transitionRequest(requestId, expectedVersion, fromStatus, toStatus, reason, now) {
+      if (!Types.ObjectId.isValid(requestId)) return undefined;
+      const history = { status: toStatus, version: expectedVersion + 1, changedAt: now, ...(reason === undefined ? {} : { reason }) };
+      const row = await models.AdRequest.findOneAndUpdate(
+        { _id: new Types.ObjectId(requestId), status: fromStatus, version: expectedVersion },
+        { $set: { status: toStatus, updatedAt: now }, $inc: { version: 1 }, $push: { history } },
+        { new: true, runValidators: true, lean: true }
+      ).lean<AdRequestRow>().exec();
+      return row ? toAdRequest(row) : undefined;
     }
   };
 }
@@ -236,6 +253,17 @@ export function createMongooseAdAdminRequestRepository(
       const row = await models.AdRequest.findOne({ _id: requestObjectId(requestId) }).lean();
       if (!row) return undefined;
       const values = await hydrateAdminRequests(models, [row as AdRequestRow]);
+      return values[0];
+    },
+    async reviewAdminRequest(requestId, expectedVersion, status, reason, now) {
+      const id = requestObjectId(requestId);
+      const row = await models.AdRequest.findOneAndUpdate(
+        { _id: id, status: 'review', version: expectedVersion },
+        { $set: { status, updatedAt: now }, $inc: { version: 1 }, $push: { history: { status, version: expectedVersion + 1, reason, changedAt: now } } },
+        { new: true, runValidators: true, lean: true }
+      ).lean<AdRequestRow>().exec();
+      if (!row) return undefined;
+      const values = await hydrateAdminRequests(models, [row]);
       return values[0];
     }
   };
@@ -270,6 +298,15 @@ export function createMongooseAdCalendarRepository(
         if (request.status !== 'waiting_payment' || request.version !== expectedVersion) {
           throw new AdSettingsServiceError('VERSION_CONFLICT');
         }
+
+        const approvedProof = await models.PaymentProof.findOne({
+          adRequestId: request._id,
+          providerId: request.providerId,
+          active: true,
+          status: 'approved',
+          securityState: 'clean'
+        }).session(session).select('_id').lean().exec();
+        if (!approvedProof) throw new AdSettingsServiceError('VERSION_CONFLICT');
 
         const now = new Date();
         if (now.getTime() >= request.intervalEnd.getTime()) {

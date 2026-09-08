@@ -32,6 +32,7 @@ export interface ProviderAdvertisingCopy {
   readonly quoteValidUntil: string;
   readonly quoteTerms: string;
   readonly acceptQuote: string;
+  readonly submitRequest: string;
   readonly paymentProof: string;
   readonly paymentProofHelp: string;
   readonly uploadPaymentProof: string;
@@ -106,6 +107,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAdvertisingCopy>> =
     quoteValidUntil: 'صالح حتى',
     quoteTerms: 'الشروط',
     acceptQuote: 'قبول العرض',
+    submitRequest: 'إرسال للمراجعة',
     paymentProof: 'إثبات الدفع',
     paymentProofHelp: 'ارفع ملف PDF أو JPG أو PNG بحجم لا يتجاوز 10 ميجابايت. يتم فحص الملف ومراجعته يدويًا؛ لا يعني الرفع التحقق البنكي.',
     uploadPaymentProof: 'رفع إثبات الدفع',
@@ -151,6 +153,7 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAdvertisingCopy>> =
     quoteValidUntil: 'Valid until',
     quoteTerms: 'Terms',
     acceptQuote: 'Accept quote',
+    submitRequest: 'Submit for review',
     paymentProof: 'Payment proof',
     paymentProofHelp: 'Upload a PDF, JPG, or PNG up to 10 MB. The file is scanned and manually reviewed; upload does not mean bank verification.',
     uploadPaymentProof: 'Upload payment proof',

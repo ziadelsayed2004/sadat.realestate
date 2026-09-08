@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import type { AdminOverviewData, AdminOverviewMetrics, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import { StateMessage } from '../design_system/index.ts';
@@ -192,6 +192,7 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
   const authClient = useContext(RouteShellAuthContext);
   const [signingOut, setSigningOut] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState<readonly string[]>([]);
+  const navigationScroll = useRef<HTMLDivElement>(null);
   const activeItemId = sidebarGroups.flatMap(group => group.items).map(item => ({
     id: item.id,
     score: Math.max(...item.matchers.map(candidate => activePath === candidate ? candidate.length + 10000 : activePath.startsWith(`${candidate}/`) ? candidate.length : -1))
@@ -205,7 +206,18 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
       setCollapsedGroups([]);
     }
   }, [activeGroupId]);
+  useEffect(() => {
+    const scroll = navigationScroll.current;
+    const active = scroll?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!scroll || !active) return;
+    const container = scroll.getBoundingClientRect();
+    const item = active.getBoundingClientRect();
+    if (item.top < container.top || item.bottom > container.bottom) {
+      scroll.scrollTop += item.top - container.top - (container.height - item.height) / 2;
+    }
+  }, [activeItemId, collapsedGroups]);
   const toggleGroup = (id: string) => {
+    if (id === activeGroupId) return;
     const next = collapsedGroups.includes(id) ? collapsedGroups.filter(value => value !== id) : [...collapsedGroups, id];
     setCollapsedGroups(next);
     try { sessionStorage.setItem('admin-sidebar-collapsed', JSON.stringify(next)); } catch { /* Navigation still works when storage is unavailable. */ }
@@ -225,7 +237,7 @@ export function AdminNavigation({ locale, activePath }: { readonly locale: Suppo
           <img src="/assets/sadat-real-estate-logo.png" alt={locale === 'ar' ? 'عقارات السادات' : 'Sadat Real Estate'} />
         </a>
       </div>
-      <div className="admin-dashboard__navigation-scroll">
+      <div className="admin-dashboard__navigation-scroll" ref={navigationScroll}>
         <div className="admin-dashboard__navigation-groups">
           {sidebarGroups.map(group => (
             <div className="admin-dashboard__navigation-group" key={group.id}>

@@ -3,6 +3,7 @@ import type { AccessTokenClaims } from '../auth/crypto.js';
 import { resolveLocalizedText } from '../quality/localization-audit.js';
 import {
   AD_EGYPT_TIME_ZONE,
+  adAdminRequestReviewSchema,
   adAdminRequestListQuerySchema,
   adBannerCreateSchema,
   adBannerListQuerySchema,
@@ -39,6 +40,7 @@ import {
   type AdBannerMediaCreate,
   type AdBannerMediaDelete,
   type AdAdminRequest,
+  type AdAdminRequestReview,
   type AdAdminRequestListData,
   type AdAdminRequestListQuery,
   type AdBannerMedia,
@@ -88,20 +90,24 @@ export class AdBannerServiceError extends AdSettingsServiceError {
 
 export interface AdRequestRepository {
   createProviderRequest(providerId: string, input: AdRequestCreate, now: Date): Promise<AdRequest>;
+  getRequest(requestId: string): Promise<AdRequest | undefined>;
+  transitionRequest(requestId: string, expectedVersion: number, fromStatus: AdRequest['status'], toStatus: AdRequest['status'], reason: string | undefined, now: Date): Promise<AdRequest | undefined>;
 }
 
 export interface AdAdminRequestRepository {
   listAdminRequests(query: AdAdminRequestListQuery): Promise<{ items: AdAdminRequest[]; total: number }>;
   getAdminRequest(requestId: string): Promise<AdAdminRequest | undefined>;
+  reviewAdminRequest(requestId: string, expectedVersion: number, status: 'waiting_pricing' | 'rejected', reason: string, now: Date): Promise<AdAdminRequest | undefined>;
 }
 
 export interface AdAdminRequestAuthorization {
-  authorize(adminId: string, permission: 'admin:ads.view'): Promise<boolean>;
+  authorize(adminId: string, permission: 'admin:ads.view' | 'admin:ads.price'): Promise<boolean>;
 }
 
 export interface AdAdminRequestService {
   list(claims: AccessTokenClaims, input: unknown): Promise<AdAdminRequestListData>;
   get(claims: AccessTokenClaims, requestId: string): Promise<AdAdminRequest>;
+  review(claims: AccessTokenClaims, requestId: string, input: unknown): Promise<AdAdminRequest>;
 }
 
 export interface AdCalendarRepository {
@@ -149,6 +155,7 @@ export interface AdQuoteRepository {
 
 export interface AdRequestWorkflowService {
   createRequest(claims: AccessTokenClaims, input: unknown): Promise<AdRequest>;
+  submitRequest(claims: AccessTokenClaims, requestId: string, input: unknown): Promise<AdRequest>;
   issueQuote(claims: AccessTokenClaims, input: unknown): Promise<AdQuote>;
   acceptQuote(claims: AccessTokenClaims, requestId: string, input: unknown): Promise<AdQuote>;
 }
@@ -157,22 +164,30 @@ export function createAdAdminRequestService(dependencies: {
   repository: AdAdminRequestRepository;
   authorization: AdAdminRequestAuthorization;
 }): AdAdminRequestService {
-  const requirePermission = async (claims: AccessTokenClaims): Promise<void> => {
-    if (claims.role !== 'admin' || claims.status !== 'verified' || !await dependencies.authorization.authorize(claims.sub, 'admin:ads.view')) {
+  const requirePermission = async (claims: AccessTokenClaims, permission: 'admin:ads.view' | 'admin:ads.price'): Promise<void> => {
+    if (claims.role !== 'admin' || claims.status !== 'verified' || !await dependencies.authorization.authorize(claims.sub, permission)) {
       throw new AdSettingsServiceError('FORBIDDEN');
     }
   };
   return {
     async list(claims, input) {
-      await requirePermission(claims);
+      await requirePermission(claims, 'admin:ads.view');
       const query = adAdminRequestListQuerySchema.parse(input);
       const result = await dependencies.repository.listAdminRequests(query);
       return { items: result.items, page: query.page, limit: query.limit, total: result.total };
     },
     async get(claims, requestId) {
-      await requirePermission(claims);
+      await requirePermission(claims, 'admin:ads.view');
       const result = await dependencies.repository.getAdminRequest(requestId);
       if (!result) throw new AdSettingsServiceError('NOT_FOUND');
+      return result;
+    },
+    async review(claims, requestId, input) {
+      await requirePermission(claims, 'admin:ads.price');
+      const parsed: AdAdminRequestReview = adAdminRequestReviewSchema.parse(input);
+      const status = parsed.action === 'approve' ? 'waiting_pricing' : 'rejected';
+      const result = await dependencies.repository.reviewAdminRequest(requestId, parsed.expectedVersion, status, parsed.reason, new Date());
+      if (!result) throw new AdSettingsServiceError('VERSION_CONFLICT');
       return result;
     }
   };
@@ -391,8 +406,11 @@ export function createAdSettingsService(seed: {
       if (!authorized(claims) && !(claims.role === 'provider' && claims.status === 'verified')) throw new AdSettingsServiceError('FORBIDDEN');
       return [...requests.values()].filter(item => claims.role === 'admin' || item.providerId === claims.sub).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
     },
+    async submitRequest(claims: AccessTokenClaims, requestId: string, input: unknown) {
+      return this.transitionRequest(claims, requestId, { ...(input as object), status: 'review' });
+    },
     async transitionRequest(claims: AccessTokenClaims, requestId: string, input: unknown) {
-      const request = requests.get(requestId);
+      const request = seed.requestRepository ? await seed.requestRepository.getRequest(requestId) : requests.get(requestId);
       if (!request) throw new AdSettingsServiceError('NOT_FOUND');
       if (claims.role === 'provider' && request.providerId !== claims.sub) throw new AdSettingsServiceError('FORBIDDEN');
       if (claims.role !== 'admin' && claims.role !== 'provider') throw new AdSettingsServiceError('FORBIDDEN');
@@ -409,6 +427,11 @@ export function createAdSettingsService(seed: {
       if ((parsed.status === 'scheduled' || parsed.status === 'active') && [...requests.values()].some(item => item.id !== request.id && item.placementKey === request.placementKey && ['scheduled', 'active'].includes(item.status) && startsAt < new Date(item.intervalEnd).getTime() && endsAt > new Date(item.intervalStart).getTime())) throw new AdSettingsServiceError('PLACEMENT_CONFLICT');
       if (parsed.status === 'ended' && currentAt < endsAt) throw new AdSettingsServiceError('VERSION_CONFLICT');
       const updated = adRequestSchema.parse({ ...request, status: parsed.status, version: request.version + 1, updatedAt: now() });
+      if (seed.requestRepository) {
+        const persisted = await seed.requestRepository.transitionRequest(request.id, parsed.expectedVersion, request.status, parsed.status, parsed.reason, clock());
+        if (!persisted) throw new AdSettingsServiceError('VERSION_CONFLICT');
+        return persisted;
+      }
       requests.set(request.id, updated);
       return updated;
     },

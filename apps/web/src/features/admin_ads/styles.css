@@ -6,6 +6,8 @@
 }
 
 .admin-ads__content { min-width: 0; padding: 28px clamp(18px, 2.2vw, 34px) 48px; }
+.admin-ads__metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(145px, 100%), 1fr)); gap: 12px; padding: 24px; border-block-end: 1px solid #eef0f3; }
+.admin-ads__metrics > .admin-dashboard__metric { min-width: 0; min-height: 104px; padding: 16px; text-align: center; overflow-wrap: anywhere; }
 .admin-ads__heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; max-width: 1320px; margin: 0 auto 22px; padding: 4px 0 18px; }
 .admin-ads__detail-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; max-width: 1320px; margin: 0 auto 22px; padding: 28px 32px; border: 1px solid #e3e5e7; border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(50 50 50 / 6%); }
 .admin-ads__heading h1,

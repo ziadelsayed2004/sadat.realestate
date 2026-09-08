@@ -23,6 +23,7 @@ async function readCredentials() {
 async function inspectRoute(page, route, name, device) {
   const failures = [];
   const httpErrors = [];
+  const apiResponses = [];
   const httpErrorTasks = [];
   const onRequestFailed = request => failures.push({
     method: request.method(),
@@ -32,6 +33,10 @@ async function inspectRoute(page, route, name, device) {
   });
   page.on('requestfailed', onRequestFailed);
   const onResponse = response => {
+    const url = new URL(response.url());
+    if (url.pathname.startsWith('/api/v1/')) {
+      apiResponses.push({ method: response.request().method(), path: url.pathname, status: response.status() });
+    }
     if (response.status() >= 400) {
       httpErrorTasks.push(response.text().catch(() => '').then(body => {
         httpErrors.push({
@@ -86,6 +91,7 @@ async function inspectRoute(page, route, name, device) {
     ...details,
     requestFailures: failures,
     httpErrors,
+    apiResponses,
     screenshot,
   };
 }

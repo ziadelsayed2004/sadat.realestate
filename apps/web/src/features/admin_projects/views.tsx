@@ -236,6 +236,7 @@ export function AdminProjects({ locale, session, authClient, apiOrigin, initialD
   const source = useMemo(() => load ?? createAdminProjectsLoader({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, load]);
   const reviewMutation = useMemo(() => review ?? createAdminProjectReviewMutation({ apiOrigin, authorization: authClient }), [apiOrigin, authClient, review]);
   const selectedProjectId = reviewProjectId ?? (typeof window === 'undefined' ? undefined : new URL(window.location.href).searchParams.get('projectId') ?? undefined);
+  const showProjectList = !isReview || selectedProjectId === undefined;
   const selectedProject = data?.items.find(item => item.id === selectedProjectId);
   const sessionAllowed = session.status === 'authenticated' && session.role === 'admin';
 
@@ -282,7 +283,7 @@ export function AdminProjects({ locale, session, authClient, apiOrigin, initialD
     <section className="admin-projects" data-screen-id={isReview ? 'ADM-13' : 'ADM-12'} data-route={isReview ? ADMIN_PROJECT_REVIEW_ROUTE : ADMIN_PROJECTS_ROUTE} data-device-scope="desktop" data-admin-projects-state={state}>
       <AdminNavigation locale={locale} activePath={pathname} />
       <div className="admin-projects__content">
-        {!isReview ? <>
+        {showProjectList ? <>
           <div className="admin-projects__heading">
             <div><p className="admin-projects__eyebrow">{copy.eyebrow}</p><h1>{copy.listTitle}</h1><p>{copy.listDescription}</p></div>
             <a className="admin-projects__all-link" href={localePath(locale, ADMIN_PROJECTS_ROUTE)}>{copy.allProjects}</a>
@@ -303,15 +304,15 @@ export function AdminProjects({ locale, session, authClient, apiOrigin, initialD
         </> : null}
         {state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={() => setAttempt(value => value + 1)} /> : null}
         {state === 'not_found' ? <NotFoundPanel locale={locale} /> : null}
-        {!isReview && state === 'empty' ? <section className="admin-projects__empty" data-state="empty"><h2>{copy.states.empty.title}</h2><p>{copy.states.empty.body}</p></section> : null}
-        {!isReview && state === 'success' && data !== undefined ? <>
+        {showProjectList && state === 'empty' ? <section className="admin-projects__empty" data-state="empty"><h2>{copy.states.empty.title}</h2><p>{copy.states.empty.body}</p></section> : null}
+        {showProjectList && state === 'success' && data !== undefined ? <>
           <section className="admin-projects__panel" aria-labelledby="admin-projects-table-title">
             <div className="admin-projects__panel-heading"><div><h2 id="admin-projects-table-title">{copy.allProjects}</h2><p>{copy.count(data.total)}</p></div><span className="admin-projects__direction-note">{copy.directionNote}</span></div>
             <ProjectTable projects={data.items} locale={locale} onReview={id => { window.location.href = reviewPath(id); }} />
             <div className="admin-projects__pagination"><Button size="sm" variant="secondary" disabled={page <= 1} onClick={() => { setQuery(current => ({ ...current, page: page - 1 })); setAttempt(value => value + 1); }}>{copy.previous}</Button><span>{copy.page(page, totalPages)}</span><Button size="sm" variant="secondary" disabled={page >= totalPages} onClick={() => { setQuery(current => ({ ...current, page: page + 1 })); setAttempt(value => value + 1); }}>{copy.next}</Button></div>
           </section>
         </> : null}
-        {isReview && state === 'success' && data !== undefined ? <ProjectMetricStrip data={data} locale={locale} review /> : null}
+        {isReview && !showProjectList && state === 'success' && data !== undefined ? <ProjectMetricStrip data={data} locale={locale} review /> : null}
         {isReview && state === 'success' && selectedProject !== undefined ? <ReviewPanel project={selectedProject} locale={locale} review={reviewMutation} onBack={() => { window.location.href = localePath(locale, ADMIN_PROJECTS_ROUTE); }} /> : null}
       </div>
     </section>

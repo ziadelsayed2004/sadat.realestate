@@ -76,6 +76,9 @@ export interface AdminAdsCopy {
   readonly reasonRequired: string;
   readonly reviewSaved: string;
   readonly reviewing: string;
+  readonly approveRequest: string;
+  readonly rejectRequest: string;
+  readonly requestReviewHelp: string;
   readonly detail: string;
   readonly back: string;
   readonly notRealized: string;
@@ -117,6 +120,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminAdsCopy>> = {
     reasonRequired: 'سبب الإجراء مطلوب.',
     reviewSaved: 'تم حفظ الإجراء.',
     reviewing: 'جارٍ الحفظ',
+    approveRequest: 'إحالة إلى التسعير',
+    rejectRequest: 'رفض الطلب',
+    requestReviewHelp: 'اختر قرار المراجعة وسجّل سببه قبل الانتقال إلى التسعير.',
     detail: 'تفاصيل الطلب',
     back: 'العودة إلى الطلبات',
     notRealized: 'بيانات تشغيلية فقط؛ لا تمثل إيراداً محققاً أو تحققاً بنكياً.',
@@ -156,6 +162,9 @@ const copyByLocale: Readonly<Record<SupportedLocale, AdminAdsCopy>> = {
     reasonRequired: 'An action reason is required.',
     reviewSaved: 'Action saved.',
     reviewing: 'Saving',
+    approveRequest: 'Send to pricing',
+    rejectRequest: 'Reject request',
+    requestReviewHelp: 'Choose a review decision and record its reason before pricing can begin.',
     detail: 'Request details',
     back: 'Back to requests',
     notRealized: 'Operational data only; it does not represent realized revenue or bank verification.',

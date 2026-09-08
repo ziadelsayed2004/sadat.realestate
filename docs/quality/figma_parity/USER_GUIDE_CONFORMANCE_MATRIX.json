@@ -1,926 +1,1480 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-25T18:00:00.000Z",
-  "guidePath": null,
-  "guideAvailable": false,
-  "status": "BLOCKED_GUIDE_FILE_MISSING",
+  "generatedAt": "2026-09-08T04:52:01.125723+00:00",
+  "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+  "guideAvailable": true,
+  "status": "MAPPED_PENDING_CYCLE_VERIFICATION",
   "rows": [
     {
       "screenId": "PUB-01",
       "route": "/",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-01"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-02",
       "route": "/properties",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-01",
+        "GUIDE-02"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-03",
       "route": "/properties/:slug",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-02",
+        "GUIDE-08"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-04",
       "route": "/compare",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-02",
+        "GUIDE-08"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-05",
       "route": "/developers",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-01"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-06",
       "route": "/developers/:slug",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-02"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-07",
       "route": "/articles",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-03"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-08",
       "route": "/articles/:slug",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-03"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-09",
       "route": "/community",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-03"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-10",
       "route": "/community?create=1",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-03"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-11",
       "route": "/about",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-03"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-12",
       "route": "/team",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-03"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-01",
       "route": "/auth/login",
-      "guidePath": null,
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
       "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
     },
     {
       "screenId": "AUTH-02",
       "route": "/auth/register/seeker",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-04"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-03",
       "route": "/auth/register/seeker",
-      "guidePath": null,
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
       "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
     },
     {
       "screenId": "AUTH-04",
       "route": "/auth/verify-phone",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-04"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-05",
       "route": "/auth/verify-phone",
-      "guidePath": null,
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
       "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
     },
     {
       "screenId": "AUTH-06",
       "route": "/auth/register/seeker/success",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-04"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-07",
       "route": "/auth/register/provider/type",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-11"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-08",
       "route": "/auth/register/provider/type",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-11"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-09",
       "route": "/auth/register/provider/account",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-11"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-09+",
       "route": "/auth/register/provider/account",
-      "guidePath": null,
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
       "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
     },
     {
       "screenId": "AUTH-10",
       "route": "/auth/register/provider/business",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-11"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-10+",
       "route": "/auth/register/provider/business",
-      "guidePath": null,
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
       "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
     },
     {
       "screenId": "AUTH-11",
       "route": "/auth/register/provider/company",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-11"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-12",
       "route": "/auth/register/provider/documents",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-12"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-13",
       "route": "/auth/register/provider/review",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-12"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-14",
       "route": "/provider-application/status",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-12"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-15",
       "route": "/provider-application/status",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-13"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-16",
       "route": "/provider-application/needs-information",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-13"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-17",
       "route": "/provider-application/approved",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-13"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-01",
       "route": "/seeker",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-05"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-02",
       "route": "/seeker/requests",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-06"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-03",
       "route": "/seeker/requests/:id",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-06"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-04",
       "route": "/seeker/requests/:id",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-06"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-05",
       "route": "/seeker/viewings",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-07"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-06",
       "route": "/seeker/saved",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-08"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-07",
       "route": "/seeker/notifications",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-09"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-08",
       "route": "/seeker/profile?tab=preferences",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-10"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-09",
       "route": "/seeker/profile?tab=personal",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-10"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-10",
       "route": "/seeker/settings",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-10"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-01",
       "route": "/provider",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-14"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-02",
       "route": "/provider/properties",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-14"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-03",
       "route": "/provider/properties/new/basic",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-14"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-04",
       "route": "/provider/properties/:id/location",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-14"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-05",
       "route": "/provider/properties/:id/details",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-14"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-06",
       "route": "/provider/properties/:id/price-payment",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-14"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-07",
       "route": "/provider/properties/:id/features",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-14"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-08",
       "route": "/provider/properties/:id/media",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-14"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-09",
       "route": "/provider/properties/:id/contact",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-14"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-10",
       "route": "/provider/properties/:id/review",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-14"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-11",
       "route": "/provider/properties/:id/review",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-15"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-12",
       "route": "/provider/properties/:id/submitted",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-15"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-13",
       "route": "/provider/properties/:id/rejected",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-15"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-14",
       "route": "/provider/properties/:id/published",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-15"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-15",
       "route": "/provider/projects",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-16"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-16",
       "route": "/provider/customer-requests",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-16"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-17",
       "route": "/provider/customer-requests?create=1",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-16"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-18",
       "route": "/provider/viewings",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-16"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-19",
       "route": "/provider/ads",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-17"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-20",
       "route": "/provider/commission",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-17"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-21",
       "route": "/provider/notifications",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-18"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-22-1",
       "route": "/provider/settings",
-      "guidePath": null,
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
       "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
     },
     {
       "screenId": "PRV-22-2",
       "route": "/provider/settings",
-      "guidePath": null,
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
       "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
     },
     {
       "screenId": "PRV-22-3",
       "route": "/provider/settings",
-      "guidePath": null,
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
       "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
     },
     {
       "screenId": "ADM-01",
       "route": "/admin",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-19"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-02",
       "route": "/admin/users",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-19"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-03",
       "route": "/admin/property-seekers",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-19"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-04",
       "route": "/admin/providers",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-19"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-05",
       "route": "/admin/verification",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-19"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-06",
       "route": "/admin/account-reports",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-19"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-07",
       "route": "/admin/account-reports/:id",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-19"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-08",
       "route": "/admin/account-restrictions",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-19"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-09",
       "route": "/admin/property-categories",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-20"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-10",
       "route": "/admin/locations",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-20"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-11",
       "route": "/admin/features",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-20"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-12",
       "route": "/admin/projects",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-20"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-13",
       "route": "/admin/projects/review",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-20"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-14",
       "route": "/admin/properties",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-20"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-15",
       "route": "/admin/properties/review",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-20"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-16",
       "route": "/admin/properties/possible-duplicates",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-20"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-17",
       "route": "/admin/property-reports",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-20"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-18",
       "route": "/admin/requests",
-      "guidePath": null,
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
       "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
     },
     {
       "screenId": "ADM-19",
       "route": "/admin/customer-requests",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-21"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-20",
       "route": "/admin/overdue-requests",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-21"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-21",
       "route": "/admin/contact-requests",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-21"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-22",
       "route": "/admin/viewing-requests",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-21"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-23",
       "route": "/admin/search-requests",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-21"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-24",
       "route": "/admin/request-issues",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-21"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-25",
       "route": "/admin/articles",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-22"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-26",
       "route": "/admin/article-categories",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-22"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-27",
       "route": "/admin/community",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-22"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-28",
       "route": "/admin/community/comments",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-22"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-29",
       "route": "/admin/community/moderation",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-22"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-30",
       "route": "/admin/content/about",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-22"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-31",
       "route": "/admin/content/team",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-22"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-32",
       "route": "/admin/content/population-counter",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-22"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-33",
       "route": "/admin/ads/requests",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-23"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-34",
       "route": "/admin/ads/payment-proofs/pending",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-23"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-35",
       "route": "/admin/ads/payment-proofs/approved",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-23"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-36",
       "route": "/admin/ads/calendar",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-23"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-37",
       "route": "/admin/ads/payments/pending-review",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-23"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-38",
       "route": "/admin/ads/financial-review",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-23"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-39",
       "route": "/admin/commissions",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-24"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-40",
       "route": "/admin/commissions/new",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-24"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-41",
       "route": "/admin/commissions/history",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-24"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-42",
       "route": "/admin/commissions/accounts/:id",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-24"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-43",
       "route": "/admin/commissions/exceptions",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-24"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-44",
       "route": "/admin/commissions/exceptions/new",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-24"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-45",
       "route": "/admin/commissions/confirmations",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-24"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-46",
       "route": "/admin/banners",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-25"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-47",
       "route": "/admin/banners/new",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-25"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-48",
       "route": "/admin/content/tips",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-25"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-49",
       "route": "/admin/content/homepage",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-25"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-50",
       "route": "/admin/settings/platform",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-25"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-51",
       "route": "/admin/settings/contact",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-25"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-52",
       "route": "/admin/settings/social",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-25"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-53",
       "route": "/admin/settings/properties",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-25"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-54",
       "route": "/admin/settings/requests",
-      "guidePath": null,
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
       "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
     },
     {
       "screenId": "ADM-55",
       "route": "/admin/settings/advertising",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-25"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-56",
       "route": "/admin/settings/seo",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-25"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-57",
       "route": "/admin/settings/privacy-security",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-25"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-58",
       "route": "/admin/settings/display",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-25"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-59",
       "route": "/admin/admin-users",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-26"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-60",
       "route": "/admin/admin-users/new",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-26"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-61",
       "route": "/admin/admin-users/:id",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-26"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-62",
       "route": "/admin/admin-users/:id",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-26"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-63",
       "route": "/admin/roles",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-26"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-64",
       "route": "/admin/roles/:id",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-26"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-65",
       "route": "/admin/notifications",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-26"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-66",
       "route": "/admin/audit-logs",
-      "guidePath": null,
-      "guideJourneyReferences": [],
-      "status": "BLOCKED_GUIDE_FILE_MISSING"
+      "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+      "guideJourneyReferences": [
+        "GUIDE-26"
+      ],
+      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+    }
+  ],
+  "journeys": [
+    {
+      "id": "GUIDE-01",
+      "description": "01 الموقع العام الدخول إلى المنصة التعرف على المنصة والبدء في استكشاف السوق العقاري. ماذا يفعل المستخدم؟ يبدأ من الصفحة الرئيسية، ثم يستخدم البحث أو أقسام الموقع للوصول إلى العقارات والمطورين. النتيجة يصل إلى المحتوى أو العقار الذي يبحث عنه. PUB-01 الرئيسية ↗ PUB-02 قائمة العقارات ↗ PUB-05 المطورون والشركات العقارية ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "PUB-01",
+        "PUB-02",
+        "PUB-05"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-02",
+      "description": "02 استكشاف العقارات البحث واختيار العقار الوصول إلى العقار المناسب ومراجعة تفاصيله. ماذا يفعل المستخدم؟ يتصفح القائمة، يفتح تفاصيل العقار، ويمكنه حفظ العقار أو إضافته للمقارنة حسب الحالة. النتيجة تظهر تفاصيل العقار ومقدم العقار والمشروع والمطور عند انطباق ذلك. PUB-02 قائمة العقارات ↗ PUB-03 تفاصيل العقار ↗ PUB-04 مقارنة الوحدات ↗ PUB-06 ملف المطور العقاري ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "PUB-02",
+        "PUB-03",
+        "PUB-04",
+        "PUB-06"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-03",
+      "description": "03 المحتوى استكشاف المحتوى والمجتمع الاستفادة من المحتوى والأقسام المساندة. ماذا يفعل المستخدم؟ يقرأ المقالات، يتصفح الكوميونيتي، ويتعرف على المنصة وفريق العمل. النتيجة يحصل على محتوى داعم لرحلة اتخاذ القرار. PUB-07 قائمة المقالات ↗ PUB-08 تفاصيل المقال ↗ PUB-09 الكوميونيتي ↗ PUB-10 إنشاء منشور ↗ PUB-11 عن المنصة ↗ PUB-12 فريق العمل ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "PUB-07",
+        "PUB-08",
+        "PUB-09",
+        "PUB-10",
+        "PUB-11",
+        "PUB-12"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-04",
+      "description": "01 بداية الرحلة إنشاء حساب باحث عن عقار تحويل الزائر إلى مستخدم مسجل. ماذا يفعل المستخدم؟ ينشئ حساب الباحث ويكمل بياناته ثم يؤكد رقم الهاتف عبر رمز التحقق. النتيجة يتم إنشاء الحساب والانتقال إلى تجربة الباحث. AUTH-02 إنشاء حساب باحث ↗ AUTH-04 تأكيد رقم الهاتف — OTP ↗ AUTH-06 نجاح إنشاء حساب الباحث ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "AUTH-02",
+        "AUTH-04",
+        "AUTH-06"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-05",
+      "description": "02 لوحة الباحث الدخول إلى لوحة الباحث مشاهدة أهم ما يحتاجه المستخدم في مكان واحد. ماذا يفعل المستخدم؟ يفتح لوحة الباحث لمراجعة الطلبات النشطة والمعاينات والمحفوظات والإشعارات. النتيجة يحصل على ملخص مباشر لحسابه ونشاطه. SEK-01 نظرة عامة ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "SEK-01"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-06",
+      "description": "03 الطلبات متابعة الطلبات معرفة حالة الطلب وما حدث عليه. ماذا يفعل المستخدم؟ يفتح «طلباتي»، ثم يختار طلبًا لعرض التفاصيل ومتابعة تغير الحالة. النتيجة يرى حالة الطلب والمعلومات المتاحة له. SEK-02 طلباتي ↗ SEK-03 تفاصيل الطلب — قيد المراجعة ↗ SEK-04 تفاصيل الطلب — تم التواصل ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "SEK-02",
+        "SEK-03",
+        "SEK-04"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-07",
+      "description": "04 المعاينات متابعة المعاينات الرجوع إلى طلبات ومواعيد معاينة العقارات. ماذا يفعل المستخدم؟ يفتح قسم المعاينات ويراجع المواعيد المرتبطة بالعقارات. النتيجة يعرف حالة المعاينات والمواعيد من حسابه. SEK-05 طلبات المعاينة ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "SEK-05"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-08",
+      "description": "05 المحفوظات العقارات المحفوظة الاحتفاظ بالعقارات المهمة للرجوع إليها. ماذا يفعل المستخدم؟ يفتح المحفوظات، يراجع العقارات ويعود إلى التفاصيل أو المقارنة عبر المسار العام. النتيجة تبقى اختياراته المهمة مجمعة في مكان واحد. SEK-06 العقارات المحفوظة ↗ PUB-03 تفاصيل العقار ↗ PUB-04 مقارنة الوحدات ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "PUB-03",
+        "PUB-04",
+        "SEK-06"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-09",
+      "description": "06 التحديثات الإشعارات معرفة تحديثات الطلبات والمعاينات والحساب. ماذا يفعل المستخدم؟ يراجع مركز الإشعارات ويفتح التحديث المرتبط بالطلب أو النشاط. النتيجة يتابع آخر المستجدات بدون البحث يدويًا. SEK-07 الإشعارات ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "SEK-07"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-10",
+      "description": "07 الحساب الملف والتفضيلات وإعدادات الحساب تحديث بيانات المستخدم وضبط احتياجات البحث. ماذا يفعل المستخدم؟ يعدل المعلومات الشخصية وتفضيلات البحث والإعدادات المتاحة. النتيجة تظل بيانات الحساب وتفضيلاته محدثة. SEK-08 تفضيلات البحث ↗ SEK-09 المعلومات الشخصية ↗ SEK-10 إعدادات الحساب ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "SEK-08",
+        "SEK-09",
+        "SEK-10"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-11",
+      "description": "01 التسجيل اختيار نوع مقدم العقار تحديد صفة المستخدم قبل بدء التسجيل. ماذا يفعل المستخدم؟ يحدد نوع مقدم العقار ثم يبدأ تسجيل بيانات الحساب والنشاط. النتيجة يتم توجيهه إلى الحقول المناسبة لنوع الحساب. AUTH-07 اختيار نوع مقدم العقار ↗ AUTH-08 اختيار نوع مقدم العقار — محدد ↗ AUTH-09 بيانات حساب مقدم العقار ↗ AUTH-10 بيانات النشاط ↗ AUTH-11 بيانات شركة التطوير ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "AUTH-07",
+        "AUTH-08",
+        "AUTH-09",
+        "AUTH-10",
+        "AUTH-11"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-12",
+      "description": "02 اعتماد الحساب رفع المستندات وإرسال الطلب إكمال طلب اعتماد حساب مقدم العقار. ماذا يفعل المستخدم؟ يرفع المستندات المطلوبة، يراجع البيانات ثم يرسل الطلب. النتيجة ينتقل الطلب إلى مرحلة المراجعة. AUTH-12 المستندات ↗ AUTH-13 المراجعة والإرسال ↗ AUTH-14 طلب مقدم العقار — قيد المراجعة ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "AUTH-12",
+        "AUTH-13",
+        "AUTH-14"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-13",
+      "description": "03 حالة الطلب متابعة حالة طلب الحساب معرفة ما إذا كان الطلب قيد المراجعة أو يحتاج استكمال أو تم اعتماده. ماذا يفعل المستخدم؟ يتابع الطلب ويستكمل المعلومات إن طُلبت ثم ينتظر النتيجة. النتيجة عند الاعتماد يصبح الحساب جاهزًا لاستخدام لوحة مقدم العقار. AUTH-15 متابعة طلب مقدم العقار ↗ AUTH-16 الطلب يحتاج استكمال ↗ AUTH-17 تم اعتماد مقدم العقار ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "AUTH-15",
+        "AUTH-16",
+        "AUTH-17"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-14",
+      "description": "04 العقارات إدارة العقارات وإضافة عقار إضافة عقار جديد ومراجعة العقارات الحالية. ماذا يفعل المستخدم؟ يفتح «عقاراتي»، ثم يمر بخطوات إضافة العقار من البيانات الأساسية حتى المراجعة والإرسال. النتيجة يتم تجهيز العقار وإرساله للمراجعة. PRV-01 نظرة عامة ↗ PRV-02 عقاراتي ↗ PRV-03 إضافة عقار — البيانات الأساسية ↗ PRV-04 إضافة عقار — الموقع ↗ PRV-05 إضافة عقار — تفاصيل العقار ↗ PRV-06 إضافة عقار — السعر والسداد ↗ PRV-07 إضافة عقار — المميزات والخدمات ↗ PRV-08 إضافة عقار — الصور والوسائط ↗ PRV-09 إضافة عقار — التواصل ↗ PRV-10 إضافة عقار — المراجعة والإرسال ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "PRV-01",
+        "PRV-02",
+        "PRV-03",
+        "PRV-04",
+        "PRV-05",
+        "PRV-06",
+        "PRV-07",
+        "PRV-08",
+        "PRV-09",
+        "PRV-10"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-15",
+      "description": "05 المراجعة نتيجة مراجعة العقار فهم ما حدث بعد إرسال العقار. ماذا يفعل المستخدم؟ يتابع حالة العقار ويتعامل مع البيانات الناقصة أو نتيجة الرفض، أو يشاهد حالة النشر. النتيجة تظهر نتيجة المراجعة بوضوح. PRV-11 بيانات تحتاج استكمال ↗ PRV-12 تم إرسال العقار للمراجعة ↗ PRV-13 تعذر اعتماد العقار ↗ PRV-14 تم نشر العقار ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "PRV-11",
+        "PRV-12",
+        "PRV-13",
+        "PRV-14"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-16",
+      "description": "06 إدارة النشاط المشروعات وطلبات العملاء والمعاينات متابعة النشاط التشغيلي للحساب. ماذا يفعل المستخدم؟ يراجع المشروعات وطلبات العملاء ويضيف طلبًا عند الحاجة ويتابع مواعيد المعاينات. النتيجة تكون الطلبات والمواعيد مجمعة داخل اللوحة. PRV-15 المشروعات ↗ PRV-16 طلبات العملاء ↗ PRV-17 إضافة طلب عميل ↗ PRV-18 مواعيد المعاينات ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "PRV-15",
+        "PRV-16",
+        "PRV-17",
+        "PRV-18"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-17",
+      "description": "07 التجاري الإعلانات والعمولة متابعة طلبات الإعلان وسياسة العمولة المطبقة على الحساب. ماذا يفعل المستخدم؟ يفتح طلبات الإعلانات ثم يراجع معلومات العمولة الخاصة بالحساب. النتيجة يمكنه متابعة الإعلانات ومعرفة سياسة العمولة دون تعديلها. PRV-19 طلبات الإعلانات ↗ PRV-20 العمولة ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "PRV-19",
+        "PRV-20"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-18",
+      "description": "08 الحساب الإشعارات والإعدادات إدارة التحديثات وبيانات الحساب. ماذا يفعل المستخدم؟ يراجع الإشعارات ثم ينتقل إلى الإعدادات لتحديث البيانات المتاحة. النتيجة يبقى الحساب محدثًا مع سهولة الوصول إلى التنبيهات. PRV-21 الإشعارات ↗ PRV-22-1 الإعدادات — الحالة 1 ↗ PRV-22-2 الإعدادات — الحالة 2 ↗ PRV-22-3 الإعدادات — الحالة 3 ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "PRV-21",
+        "PRV-22"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-19",
+      "description": "01 الحسابات نظرة عامة وإدارة الحسابات متابعة حالة المنصة وإدارة المستخدمين والبلاغات المرتبطة بالحسابات. ماذا يفعل المستخدم؟ يبدأ من النظرة العامة، ثم ينتقل للباحثين ومقدمي العقارات ومراجعة المستندات والبلاغات والقيود. النتيجة يستطيع متابعة حسابات المنصة واتخاذ الإجراءات المتاحة حسب الصلاحية. ADM-01 نظرة عامة ↗ ADM-02 إدارة المستخدمين ↗ ADM-03 الباحثون عن عقار ↗ ADM-04 مقدمو العقارات ↗ ADM-05 مراجعة مستندات مقدمي العقارات ↗ ADM-06 بلاغات الحسابات ↗ ADM-07 تفاصيل بلاغ الحساب ↗ ADM-08 قيود الحسابات ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "ADM-01",
+        "ADM-02",
+        "ADM-03",
+        "ADM-04",
+        "ADM-05",
+        "ADM-06",
+        "ADM-07",
+        "ADM-08"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-20",
+      "description": "02 العقارات والمشروعات إعداد العقارات والمشروعات إدارة الهيكل الأساسي للمحتوى العقاري ومراجعته. ماذا يفعل المستخدم؟ يدير التصنيفات والمناطق والمميزات، ثم يتابع المشروعات والعقارات ومراجعاتها والبلاغات والتكرار المحتمل. النتيجة تظل بيانات العقارات والمشروعات منظمة وقابلة للمراجعة. ADM-09 التصنيفات وأنواع العقارات ↗ ADM-10 المناطق والأحياء ↗ ADM-11 المميزات والخدمات ↗ ADM-12 إدارة المشروعات ↗ ADM-13 مراجعة المشروعات ↗ ADM-14 إدارة العقارات ↗ ADM-15 مراجعة العقارات ↗ ADM-16 عقارات يشتبه بتكرارها ↗ ADM-17 بلاغات العقارات ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "ADM-09",
+        "ADM-10",
+        "ADM-11",
+        "ADM-12",
+        "ADM-13",
+        "ADM-14",
+        "ADM-15",
+        "ADM-16",
+        "ADM-17"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-21",
+      "description": "03 الطلبات إدارة الطلبات والمتابعة متابعة طلبات العملاء والاتصال والمعاينة والبحث والمشكلات. ماذا يفعل المستخدم؟ يراجع أنواع الطلبات المختلفة والطلبات المتأخرة والمشكلات والبلاغات المرتبطة بها. النتيجة يمكن متابعة حالة الطلبات والعمليات اليومية. ADM-19 طلبات العملاء ↗ ADM-20 الطلبات المتأخرة ↗ ADM-21 طلبات التواصل ↗ ADM-22 طلبات المعاينة ↗ ADM-23 طلبات البحث عن عقار ↗ ADM-24 بلاغات ومشكلات الطلبات ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "ADM-19",
+        "ADM-20",
+        "ADM-21",
+        "ADM-22",
+        "ADM-23",
+        "ADM-24"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-22",
+      "description": "04 المحتوى المقالات والكوميونيتي ومحتوى المنصة إدارة المحتوى الذي يظهر للمستخدمين. ماذا يفعل المستخدم؟ يدير المقالات وتصنيفاتها والكوميونيتي والتعليقات والبلاغات والنبذة وفريق العمل وعداد السكان. النتيجة يمكن تحديث المحتوى العام والإشراف عليه. ADM-25 إدارة المقالات ↗ ADM-26 تصنيفات المقالات ↗ ADM-27 إدارة الكوميونيتي ↗ ADM-28 التعليقات ↗ ADM-29 البلاغات والإشراف ↗ ADM-30 النبذة عن المنصة ↗ ADM-31 إدارة فريق العمل ↗ ADM-32 عداد سكان مدينة السادات ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "ADM-25",
+        "ADM-26",
+        "ADM-27",
+        "ADM-28",
+        "ADM-29",
+        "ADM-30",
+        "ADM-31",
+        "ADM-32"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-23",
+      "description": "05 الإعلانات الإعلانات والمدفوعات مراجعة دورة الإعلان وإثباتات الدفع والفحص المالي. ماذا يفعل المستخدم؟ يتابع طلبات الإعلانات والإثباتات المعلقة والمقبولة والتقويم ومراجعة المدفوعات والفحص المالي. النتيجة تكون دورة الإعلان والدفع واضحة وقابلة للمراجعة. ADM-33 طلبات الإعلانات ↗ ADM-34 الإثباتات المعلقة ↗ ADM-35 الإثباتات المقبولة ↗ ADM-36 تقويم الإعلانات ↗ ADM-37 مراجعة المدفوعات المعلقة ↗ ADM-38 الفحص المالي ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "ADM-33",
+        "ADM-34",
+        "ADM-35",
+        "ADM-36",
+        "ADM-37",
+        "ADM-38"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-24",
+      "description": "06 العمولات العمولات والسياسات إدارة سياسات العمولة والاستثناءات والتأكيدات. ماذا يفعل المستخدم؟ ينشئ أو يراجع سياسة عمولة ويتابع سجل التغييرات وعمولة الحساب والاستثناءات والتأكيدات. النتيجة يمكن ضبط سياسات العمولة بشكل مرن حسب السياسة والحساب. ADM-39 إدارة العمولات ↗ ADM-40 إنشاء سياسة عمولة ↗ ADM-41 سجل تغييرات العمولات ↗ ADM-42 عمولة الحساب ↗ ADM-43 استثناءات العمولات ↗ ADM-44 إنشاء استثناء عمولة ↗ ADM-45 تأكيد سياسات العمولات ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "ADM-39",
+        "ADM-40",
+        "ADM-41",
+        "ADM-42",
+        "ADM-43",
+        "ADM-44",
+        "ADM-45"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-25",
+      "description": "07 الإعدادات الواجهة العامة وإعدادات المنصة إدارة البانرات والصفحة الرئيسية وبيانات المنصة والإعدادات. ماذا يفعل المستخدم؟ يدير البانرات والنصائح والصفحة الرئيسية وبيانات التواصل والسوشيال وإعدادات العقارات والإعلانات وSEO والخصوصية والعرض. النتيجة تظل الواجهة العامة وإعدادات المنصة قابلة للإدارة. ADM-46 البانرات الإعلانية ↗ ADM-47 إضافة بانر جديد ↗ ADM-48 نصائح عقارات السادات ↗ ADM-49 إدارة الصفحة الرئيسية ↗ ADM-50 بيانات المنصة ↗ ADM-51 بيانات التواصل ↗ ADM-52 حسابات التواصل الاجتماعي ↗ ADM-53 إعدادات العقارات ↗ ADM-55 إعدادات الإعلانات ↗ ADM-56 SEO عام ↗ ADM-57 الخصوصية والأمان ↗ ADM-58 إعدادات العرض ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "ADM-46",
+        "ADM-47",
+        "ADM-48",
+        "ADM-49",
+        "ADM-50",
+        "ADM-51",
+        "ADM-52",
+        "ADM-53",
+        "ADM-55",
+        "ADM-56",
+        "ADM-57",
+        "ADM-58"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+    },
+    {
+      "id": "GUIDE-26",
+      "description": "08 الصلاحيات المستخدمون الإداريون والصلاحيات ضبط من يستطيع الوصول إلى أجزاء لوحة الإدارة ومراجعة سجل الإجراءات. ماذا يفعل المستخدم؟ يدير المستخدمين الإداريين والأدوار والصلاحيات، ويراجع الإشعارات وسجل الإجراءات. النتيجة تتوزع الصلاحيات حسب الدور ويظل سجل الإجراءات متاحًا للمراجعة. ADM-59 المستخدمون الإداريون ↗ ADM-60 إضافة مستخدم إداري ↗ ADM-61 تفاصيل مدير النظام ↗ ADM-62 تفاصيل مستخدم إداري ↗ ADM-63 الأدوار والصلاحيات ↗ ADM-64 تفاصيل الدور والصلاحيات ↗ ADM-65 إشعارات الإدارة ↗ ADM-66 سجل الإجراءات ↗ تشغيل البروتوتايب ↗",
+      "screenIds": [
+        "ADM-59",
+        "ADM-60",
+        "ADM-61",
+        "ADM-62",
+        "ADM-63",
+        "ADM-64",
+        "ADM-65",
+        "ADM-66"
+      ],
+      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
     }
   ]
 }

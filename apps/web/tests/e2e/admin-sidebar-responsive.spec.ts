@@ -82,6 +82,11 @@ test.describe('Admin sidebar responsive shell', () => {
     await expect(toggles).toHaveCount(8);
     for (const toggle of await toggles.all()) {
       const id = await toggle.getAttribute('aria-controls');
+      if (id === 'admin-navigation-home') {
+        await toggle.click();
+        await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+        continue;
+      }
       await toggle.click();
       await expect(toggle).toHaveAttribute('aria-expanded', 'false');
       await expect(page.locator(`#${id}`)).toBeHidden();

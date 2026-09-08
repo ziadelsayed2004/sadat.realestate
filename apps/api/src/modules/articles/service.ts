@@ -142,7 +142,9 @@ function categoryData(item: StoredArticleCategory, manage: boolean): ArticleCate
 }
 
 function articleData(item: StoredArticle, manage: boolean, publish: boolean): Article {
-  const { imageUrl: _imageUrl, readingTimeMinutes: _readingTimeMinutes, ...adminFields } = item;
+  const adminFields = { ...item };
+  delete adminFields.imageUrl;
+  delete adminFields.readingTimeMinutes;
   return articleDataSchema.parse({
     ...adminFields,
     ...(item.publishedAt ? { publishedAt: item.publishedAt.toISOString() } : {}),

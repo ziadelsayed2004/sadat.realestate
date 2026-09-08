@@ -1,6 +1,7 @@
 import { Router, type Request, type Response } from 'express';
 import {
   adQuoteIssueSchema,
+  adRequestSubmitSchema,
   providerAccountPatchSchema,
   providerApplicationCreateRequestSchema,
   providerBusinessPatchSchema,
@@ -36,6 +37,7 @@ export const PROVIDER_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/provider/application/status', operationId: 'getProviderApplicationStatus' },
   { method: 'GET', path: '/api/v1/provider/ads', operationId: 'listProviderAds' },
   { method: 'POST', path: '/api/v1/provider/ads', operationId: 'createProviderAdRequest' },
+  { method: 'POST', path: '/api/v1/provider/ads/:adRequestId/submit', operationId: 'submitProviderAdRequest' },
   { method: 'GET', path: '/api/v1/provider/ads/:adRequestId', operationId: 'getProviderAd' },
   { method: 'POST', path: '/api/v1/provider/ads/:adRequestId/accept-quote', operationId: 'acceptProviderAdQuote' },
   { method: 'GET', path: '/api/v1/provider/commission', operationId: 'getProviderCommission' },
@@ -265,6 +267,24 @@ export function createProviderRouter(dependencies: ProviderRouterDependencies): 
       }
       response.status(201).json(toSuccessResponse(
         await dependencies.advertisingWorkflow.createRequest(claims(response), request.body ?? {}),
+        requestId(request)
+      ));
+    } catch (error) {
+      sendError(request, response, error);
+    }
+  });
+
+  router.post('/provider/ads/:adRequestId/submit', async (request, response) => {
+    try {
+      if (!dependencies.advertisingWorkflow) {
+        throw new ApiContractError('PROVIDER_AD_UNAVAILABLE', 'errors.internal', 503);
+      }
+      response.status(200).json(toSuccessResponse(
+        await dependencies.advertisingWorkflow.submitRequest(
+          claims(response),
+          objectIdPath(request.params.adRequestId),
+          adRequestSubmitSchema.parse(request.body ?? {})
+        ),
         requestId(request)
       ));
     } catch (error) {

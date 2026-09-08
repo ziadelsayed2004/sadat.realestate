@@ -158,6 +158,21 @@ const advertisingWorkflow = {
       updatedAt: '2026-08-13T00:00:00.000Z'
     });
   },
+  async submitRequest(claims: Parameters<typeof advertisingProjection.list>[0], requestId: string, input: unknown) {
+    const expectedVersion = (input as { expectedVersion: number }).expectedVersion;
+    return adRequestSchema.parse({
+      id: requestId,
+      providerId: claims.sub,
+      placementKey: 'homepage.hero',
+      purpose: 'Submitted campaign',
+      intervalStart: '2026-09-20T08:00:00.000Z',
+      intervalEnd: '2026-09-27T08:00:00.000Z',
+      status: 'review',
+      version: expectedVersion + 1,
+      createdAt: '2026-08-13T00:00:00.000Z',
+      updatedAt: '2026-08-13T01:00:00.000Z'
+    });
+  },
   async issueQuote(_claims: Parameters<typeof advertisingProjection.list>[0], input: unknown) {
     const requestId = (input as { requestId: string }).requestId;
     return adQuoteSchema.parse({
@@ -366,6 +381,25 @@ test('creates provider-owned advertising drafts with strict request validation',
       })
     });
     assert.equal(unknown.status, 400);
+  });
+});
+
+test('submits an owner-scoped provider advertising draft with optimistic versioning', async () => {
+  await withServer(async baseUrl => {
+    const path = `${baseUrl}/api/v1/provider/ads/${providerAdvertisingRecord.request.id}/submit`;
+    assert.equal((await fetch(path, { method: 'POST' })).status, 401);
+    assert.equal((await fetch(path, { method: 'POST', headers: { Authorization: `Bearer ${seekerToken}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ expectedVersion: 0 }) })).status, 403);
+    const submitted = await fetch(path, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${providerToken}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ expectedVersion: 0 })
+    });
+    assert.equal(submitted.status, 200);
+    const body = await submitted.json() as { data: { status: string; version: number; providerId: string } };
+    assert.equal(body.data.status, 'review');
+    assert.equal(body.data.version, 1);
+    assert.equal(body.data.providerId, '0123456789abcdef01234567');
+    assert.equal((await fetch(path, { method: 'POST', headers: { Authorization: `Bearer ${providerToken}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ expectedVersion: 0, extra: true }) })).status, 400);
   });
 });
 

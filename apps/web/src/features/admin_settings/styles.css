@@ -10,7 +10,9 @@
 .admin-settings__tabs a { min-height: 42px; padding: 10px 18px; border: 1px solid #d9cfba; border-radius: 999px; color: #155b4f; font-weight: 800; text-decoration: none; }
 .admin-settings__tabs a[data-active='true'], .admin-settings__tabs a:hover, .admin-settings__tabs a:focus-visible { background: #0e5849; color: #fff; }
 .admin-settings__state { display: grid; justify-items: center; gap: 12px; margin-block-end: 24px; padding: 42px 24px; text-align: center; }
-.admin-settings__editor { width: min(920px, 100%); margin-inline: 0 auto; overflow: hidden; }
+.admin-settings__editor { width: 100%; margin-inline: auto; overflow: hidden; }
+.admin-settings__fields > *, .admin-settings__localized-grid > * { min-width: 0; }
+.admin-settings__fields input, .admin-settings__fields textarea { width: 100%; min-width: 0; box-sizing: border-box; }
 .admin-settings__editor-heading { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 22px 26px; border-block-end: 1px solid #eceff3; background: #fffdf8; }
 .admin-settings__editor-heading h2, .admin-settings__editor-heading p { margin: 0; }
 .admin-settings__editor-heading h2 { color: #1b2942; font-size: 1.25rem; }
@@ -30,7 +32,7 @@
 .admin-settings__localized-field { grid-column: 1 / -1; display: grid; gap: 8px; padding: 0; border: 0; }
 .admin-settings__localized-field legend { color: #5e6b80; font-size: .85rem; font-weight: 800; }
 .admin-settings__localized-field .admin-settings__hint { margin: 0; }
-.admin-settings__localized-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.admin-settings__localized-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .admin-settings__localized-grid textarea { min-height: 96px; resize: vertical; }
 .admin-settings__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .admin-settings[data-screen-id='ADM-54'] .admin-settings__actions .ui-button--primary { color: #fff; background: #0e5849; border-color: #0e5849; }

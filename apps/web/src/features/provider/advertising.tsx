@@ -212,7 +212,7 @@ function FilterBar({ copy, draftStatus, onDraftStatus, onApply, onClear }: { rea
   );
 }
 
-function DetailContent({ detail, locale, copy, busy, onAccept, onUpload }: { readonly detail: ProviderAdRequestProjection; readonly locale: SupportedLocale; readonly copy: ProviderAdvertisingCopy; readonly busy: boolean; readonly onAccept: () => void; readonly onUpload: (file: File) => void }) {
+function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUpload }: { readonly detail: ProviderAdRequestProjection; readonly locale: SupportedLocale; readonly copy: ProviderAdvertisingCopy; readonly busy: boolean; readonly onSubmit: () => void; readonly onAccept: () => void; readonly onUpload: (file: File) => void }) {
   const payment = detail.paymentProofs.find(proof => proof.active) ?? detail.paymentProofs.at(-1);
   const canAccept = detail.quote?.status === 'issued';
   const canUpload = detail.status === 'waiting_payment' && detail.quote?.status === 'accepted';
@@ -220,6 +220,7 @@ function DetailContent({ detail, locale, copy, busy, onAccept, onUpload }: { rea
     <div className="provider-advertising__detail-grid">
       <section className="provider-advertising__detail-card" aria-labelledby="provider-advertising-detail-heading">
         <div className="provider-advertising__detail-heading"><div><p className="provider-dashboard__eyebrow">{copy.eyebrow}</p><h1 id="provider-advertising-detail-heading">{copy.requestDetails}</h1></div><Badge tone={statusTone(detail.status)}>{copy.statuses[detail.status]}</Badge></div>
+        {detail.status === 'draft' ? <Button onClick={onSubmit} loading={busy}>{copy.submitRequest}</Button> : null}
         <dl className="provider-advertising__definition-list"><div><dt>{copy.columns.request}</dt><dd>{shortId(detail.id)}</dd></div><div><dt>{copy.columns.placement}</dt><dd>{detail.placementKey}</dd></div><div><dt>{copy.purpose}</dt><dd>{detail.purpose}</dd></div><div><dt>{copy.interval}</dt><dd>{dateLabel(detail.intervalStart, locale)} — {dateLabel(detail.intervalEnd, locale)}</dd></div></dl>
         {detail.quote ? <section className="provider-advertising__nested-card"><h2>{copy.quote}</h2><div className="provider-advertising__quote-total"><span>{copy.quoteTotal}</span><strong>{moneyLabel(detail.quote.totalMinor, detail.quote.currency, locale)}</strong></div><dl className="provider-advertising__definition-list"><div><dt>{copy.columns.status}</dt><dd>{copy.quoteStatuses[detail.quote.status]}</dd></div><div><dt>{copy.quoteValidUntil}</dt><dd>{dateLabel(detail.quote.validUntil, locale)}</dd></div><div><dt>{copy.quoteTerms}</dt><dd>{detail.quote.terms}</dd></div></dl>{canAccept ? <Button onClick={onAccept} loading={busy}>{copy.acceptQuote}</Button> : null}</section> : <p className="provider-advertising__muted">{copy.noQuote}</p>}
       </section>
@@ -325,6 +326,21 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
     }
   }
 
+  async function submitRequest(): Promise<void> {
+    if (detail === undefined || !isProvider) return;
+    setMutationBusy(true);
+    setMutationError(undefined);
+    try {
+      await mutationApi.submitRequest(detail.id, detail.version);
+      setFeedback(copy.success);
+      setAttempt(value => value + 1);
+    } catch {
+      setMutationError(copy.mutationFailed);
+    } finally {
+      setMutationBusy(false);
+    }
+  }
+
   async function uploadPaymentProof(file: File): Promise<void> {
     if (detail === undefined) return;
     if (!isProvider) {
@@ -360,7 +376,7 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
           {feedback ? <p className="provider-advertising__feedback" role="status">{feedback}</p> : null}
           {mutationError ? <p className="provider-advertising__form-error" role="alert">{mutationError}</p> : null}
           {detailState === 'loading' || detailState === 'error' || detailState === 'retry' || detailState === 'permission' || detailState === 'notFound' ? <StatePanel state={detailState} locale={locale} copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : null}
-          {detailState === 'success' && detail !== undefined ? <DetailContent detail={detail} locale={locale} copy={copy} busy={mutationBusy} onAccept={() => { void acceptQuote(); }} onUpload={file => { void uploadPaymentProof(file); }} /> : null}
+          {detailState === 'success' && detail !== undefined ? <DetailContent detail={detail} locale={locale} copy={copy} busy={mutationBusy} onSubmit={() => { void submitRequest(); }} onAccept={() => { void acceptQuote(); }} onUpload={file => { void uploadPaymentProof(file); }} /> : null}
         </>}
       </div>
       {createOpen ? <CreateRequestModal copy={copy} busy={mutationBusy} error={mutationError} onClose={() => setCreateOpen(false)} onSave={saveRequest} /> : null}

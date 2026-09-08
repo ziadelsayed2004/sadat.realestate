@@ -91,9 +91,8 @@ const cleanup = (
 });
 
 /**
- * Ordered synthetic journey definitions. Route entries are deliberately
- * limited to the executable inventory; ads and commissions remain service
- * boundaries until dedicated HTTP routes exist.
+ * Ordered journey definitions. Route entries are checked against the
+ * executable runtime inventory; service entries cover internal boundaries.
  */
 export const BACKEND_JOURNEY_STEPS: readonly BackendJourneyStep[] = Object.freeze([
   route('seeker-registration', 'registration_to_publication', 10, 'POST', '/api/v1/auth/register/seeker', 'registerSeeker'),
@@ -118,11 +117,14 @@ export const BACKEND_JOURNEY_STEPS: readonly BackendJourneyStep[] = Object.freez
   route('admin-resolve-request', 'requests', 230, 'POST', '/api/v1/admin/requests/:requestId/transitions', 'transitionAdminRequest'),
   route('seeker-request-idor-negative', 'requests', 240, 'GET', '/api/v1/seeker/requests/:requestId', 'getSeekerRequest', 'forbidden'),
   service('ad-placement', 'advertising', 300, 'ads.createPlacement'),
-  service('ad-request-draft', 'advertising', 310, 'ads.createRequest'),
-  service('ad-request-review', 'advertising', 320, 'ads.transitionRequest'),
-  service('ad-quote-issued', 'advertising', 330, 'ads.issueQuote'),
-  service('ad-quote-accepted', 'advertising', 340, 'ads.decideQuote'),
-  service('payment-proof-reviewed', 'advertising', 350, 'payments.review'),
+  route('ad-request-draft', 'advertising', 310, 'POST', '/api/v1/provider/ads', 'createProviderAdRequest'),
+  route('ad-request-submitted', 'advertising', 320, 'POST', '/api/v1/provider/ads/:adRequestId/submit', 'submitProviderAdRequest'),
+  route('ad-request-admin-reviewed', 'advertising', 325, 'POST', '/api/v1/admin/ad-requests/:adRequestId/review', 'reviewAdminAdRequest'),
+  route('ad-quote-issued', 'advertising', 330, 'POST', '/api/v1/admin/ad-requests/:adRequestId/quote', 'issueAdminAdQuote'),
+  route('ad-quote-accepted', 'advertising', 340, 'POST', '/api/v1/provider/ads/:adRequestId/accept-quote', 'acceptProviderAdQuote'),
+  route('payment-proof-uploaded', 'advertising', 345, 'POST', '/api/v1/provider/ads/:adRequestId/payment-proof', 'uploadProviderPaymentProof'),
+  route('payment-proof-reviewed', 'advertising', 350, 'POST', '/api/v1/admin/payment-proofs/:proofId/review', 'reviewAdminPaymentProof'),
+  route('ad-request-scheduled', 'advertising', 360, 'POST', '/api/v1/admin/ad-requests/:adRequestId/schedule', 'scheduleAdminAdRequest'),
   service('commission-policy-resolved', 'commissions', 400, 'commissions.resolve'),
   service('commission-event-snapshotted', 'commissions', 410, 'commissions.snapshot'),
   service('commission-provider-projection', 'commissions', 420, 'provider.commission.read'),

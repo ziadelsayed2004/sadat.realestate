@@ -31,8 +31,10 @@ import {
   type AdminAdsLedgerLoader,
   type AdminAdsPaymentProofLoader,
   type AdminAdsPaymentProofReviewMutation,
+  type AdminAdsQuoteIssueMutation,
   type AdminAdsRequestDetailLoader,
-  type AdminAdsRequestLoader
+  type AdminAdsRequestLoader,
+  type AdminAdsRequestReviewMutation
 } from './data.ts';
 import { getAdminAdsCopy, type AdminAdsState } from './copy.ts';
 import './styles.css';
@@ -45,6 +47,8 @@ export interface AdminAdsProps {
   readonly url?: string | undefined;
   readonly loadRequests?: AdminAdsRequestLoader | undefined;
   readonly loadRequestDetail?: AdminAdsRequestDetailLoader | undefined;
+  readonly reviewRequest?: AdminAdsRequestReviewMutation | undefined;
+  readonly issueQuote?: AdminAdsQuoteIssueMutation | undefined;
   readonly loadPaymentProofs?: AdminAdsPaymentProofLoader | undefined;
   readonly reviewPaymentProof?: AdminAdsPaymentProofReviewMutation | undefined;
   readonly loadCalendar?: AdminAdsCalendarLoader | undefined;
@@ -163,7 +167,7 @@ interface AdsMetric {
 }
 
 function AdsMetricStrip({ metrics, locale, testId }: { readonly metrics: readonly AdsMetric[]; readonly locale: SupportedLocale; readonly testId: string }) {
-  return <div data-testid={testId} style={{ display: 'flex', flexWrap: 'wrap', gap: 12, maxWidth: 1320, margin: '0 auto 12px' }}>{metrics.map(metric => <article className="admin-dashboard__metric" key={metric.label}><strong style={{ color: metric.color }}>{new Intl.NumberFormat(locale).format(metric.value)}</strong><span>{metric.label}</span></article>)}</div>;
+  return <div data-testid={testId} className="admin-ads__metrics">{metrics.map(metric => <article className="admin-dashboard__metric" key={metric.label}><strong style={{ color: metric.color }}>{new Intl.NumberFormat(locale).format(metric.value)}</strong><span>{metric.label}</span></article>)}</div>;
 }
 
 function RequestsTable({ data, locale, onDetail }: { readonly data: AdAdminRequestListData; readonly locale: SupportedLocale; readonly onDetail: (id: string) => void }) {
@@ -185,9 +189,45 @@ function RequestsTable({ data, locale, onDetail }: { readonly data: AdAdminReque
   return <><AdsMetricStrip metrics={metrics} locale={locale} testId="admin-ad-request-metrics" /><div className="admin-ads__table-wrap"><table className="admin-ads__table"><thead><tr><th scope="col">{copy.columns.id}</th><th scope="col">{copy.columns.provider}</th><th scope="col">{copy.columns.placement}</th><th scope="col">{copy.columns.status}</th><th scope="col">{copy.columns.quote}</th><th scope="col">{copy.columns.interval}</th><th scope="col">{copy.columns.actions}</th></tr></thead><tbody>{data.items.map(item => <tr key={item.request.id} data-testid={`admin-ad-request-${item.request.id}`}><td><code>{item.request.id}</code></td><td><code>{item.request.providerId}</code></td><td>{item.request.placementKey}</td><td><StatusBadge status={item.request.status} label={copy.requestStatus[item.request.status] ?? item.request.status} /></td><td>{item.quote === undefined ? copy.unavailable : <><StatusBadge status={item.quote.status} label={item.quote.status} /><span className="admin-ads__stacked-value">{moneyLabel(item.quote.totalMinor, item.quote.currency, locale)}</span></>}</td><td>{dateLabel(item.request.intervalStart, locale)}<br />{dateLabel(item.request.intervalEnd, locale)}</td><td><Button size="sm" variant="secondary" onClick={() => onDetail(item.request.id)}>{copy.view}</Button></td></tr>)}</tbody></table></div></>;
 }
 
-function RequestDetail({ data, locale, onBack }: { readonly data: AdAdminRequest; readonly locale: SupportedLocale; readonly onBack: () => void }) {
+function RequestReviewPanel({ locale, onReview }: { readonly locale: SupportedLocale; readonly onReview: (action: 'approve' | 'reject', reason: string) => Promise<void> }) {
   const copy = getAdminAdsCopy(locale);
-  return <section className="admin-ads__detail"><div className="admin-ads__detail-heading"><div><p className="admin-ads__eyebrow">{copy.eyebrow}</p><h2>{copy.detail}</h2></div><Button variant="secondary" onClick={onBack}>{copy.back}</Button></div><dl className="admin-ads__detail-list"><div><dt>{copy.columns.id}</dt><dd><code>{data.request.id}</code></dd></div><div><dt>{copy.columns.provider}</dt><dd><code>{data.request.providerId}</code></dd></div><div><dt>{copy.columns.placement}</dt><dd>{data.request.placementKey}</dd></div><div><dt>{copy.columns.purpose}</dt><dd>{data.request.purpose}</dd></div><div><dt>{copy.columns.status}</dt><dd><StatusBadge status={data.request.status} label={copy.requestStatus[data.request.status] ?? data.request.status} /></dd></div><div><dt>{copy.columns.interval}</dt><dd>{dateLabel(data.request.intervalStart, locale)} — {dateLabel(data.request.intervalEnd, locale)}</dd></div><div><dt>{copy.columns.version}</dt><dd>{data.request.version}</dd></div>{data.quote !== undefined ? <div><dt>{copy.columns.quote}</dt><dd>{moneyLabel(data.quote.totalMinor, data.quote.currency, locale)} · {data.quote.status}</dd></div> : null}</dl>{data.quote !== undefined ? <div className="admin-ads__quote-lines"><h3>{copy.columns.quote}</h3><ul>{data.quote.lineItems.map((line, index) => <li key={`${line.description}-${index}`}><span>{line.description} × {line.quantity}</span><strong>{moneyLabel(line.unitAmountMinor * line.quantity, data.quote?.currency, locale)}</strong></li>)}</ul></div> : null}</section>;
+  const [action, setAction] = useState<'approve' | 'reject'>('approve');
+  const [reason, setReason] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(false);
+  const submit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (reason.trim().length < 2) { setError(true); return; }
+    setSaving(true);
+    setError(false);
+    void onReview(action, reason.trim()).catch(() => setError(true)).finally(() => setSaving(false));
+  };
+  return <form className="admin-ads__review-card" onSubmit={submit}><h3>{copy.reviewAction}</h3><p>{copy.requestReviewHelp}</p><fieldset disabled={saving}><legend>{copy.reviewAction}</legend><div className="admin-ads__action-list"><label><input type="radio" name="admin-ad-request-review" checked={action === 'approve'} onChange={() => setAction('approve')} />{copy.approveRequest}</label><label><input type="radio" name="admin-ad-request-review" checked={action === 'reject'} onChange={() => setAction('reject')} />{copy.rejectRequest}</label></div><label className="admin-ads__field" htmlFor="admin-ad-request-review-reason">{copy.reasonLabel}<textarea id="admin-ad-request-review-reason" value={reason} onChange={event => setReason(event.target.value)} minLength={2} maxLength={500} required placeholder={copy.reasonPlaceholder} /></label><Button type="submit" loading={saving}>{copy.reviewAction}</Button></fieldset>{error ? <p role="alert">{copy.states.error.body}</p> : null}</form>;
+}
+
+function QuoteIssuePanel({ locale, onIssue }: { readonly locale: SupportedLocale; readonly onIssue: (input: { currency: string; lineItems: [{ description: string; quantity: number; unitAmountMinor: number }]; validUntil: string; terms: string }) => Promise<void> }) {
+  const [description, setDescription] = useState('');
+  const [amount, setAmount] = useState('');
+  const [validUntil, setValidUntil] = useState('');
+  const [terms, setTerms] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(false);
+  const submit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const unitAmountMinor = Number(amount);
+    const validDate = new Date(validUntil);
+    if (description.trim().length < 2 || terms.trim().length < 2 || !Number.isSafeInteger(unitAmountMinor) || unitAmountMinor < 0 || Number.isNaN(validDate.getTime())) { setError(true); return; }
+    setSaving(true); setError(false);
+    void onIssue({ currency: 'EGP', lineItems: [{ description: description.trim(), quantity: 1, unitAmountMinor }], validUntil: validDate.toISOString(), terms: terms.trim() }).catch(() => setError(true)).finally(() => setSaving(false));
+  };
+  return <form className="admin-ads__review-card" onSubmit={submit}><h3>{locale === 'ar' ? 'إصدار عرض السعر' : 'Issue quote'}</h3><p>{locale === 'ar' ? 'أدخل المبلغ بالقروش المصرية وتاريخ صلاحية العرض وشروطه.' : 'Enter the EGP amount in minor units, validity date, and terms.'}</p><fieldset disabled={saving}><label className="admin-ads__field" htmlFor="admin-ad-quote-description">{locale === 'ar' ? 'وصف البند' : 'Line description'}<input id="admin-ad-quote-description" value={description} onChange={event => setDescription(event.target.value)} minLength={2} maxLength={300} required /></label><label className="admin-ads__field" htmlFor="admin-ad-quote-amount">{locale === 'ar' ? 'المبلغ بالقروش' : 'Amount in minor units'}<input id="admin-ad-quote-amount" type="number" min="0" step="1" value={amount} onChange={event => setAmount(event.target.value)} required /></label><label className="admin-ads__field" htmlFor="admin-ad-quote-valid">{locale === 'ar' ? 'صالح حتى' : 'Valid until'}<input id="admin-ad-quote-valid" type="datetime-local" value={validUntil} onChange={event => setValidUntil(event.target.value)} required /></label><label className="admin-ads__field" htmlFor="admin-ad-quote-terms">{locale === 'ar' ? 'الشروط' : 'Terms'}<textarea id="admin-ad-quote-terms" value={terms} onChange={event => setTerms(event.target.value)} minLength={2} maxLength={2000} required /></label><Button type="submit" loading={saving}>{locale === 'ar' ? 'إصدار العرض' : 'Issue quote'}</Button></fieldset>{error ? <p role="alert">{locale === 'ar' ? 'تعذر إصدار العرض. راجع القيم والصلاحية وحالة الطلب.' : 'The quote could not be issued. Check the values, permission, and request state.'}</p> : null}</form>;
+}
+
+function RequestDetail({ data, locale, onBack, onReview, onIssueQuote, onSchedule }: { readonly data: AdAdminRequest; readonly locale: SupportedLocale; readonly onBack: () => void; readonly onReview: (action: 'approve' | 'reject', reason: string) => Promise<void>; readonly onIssueQuote: (input: { currency: string; lineItems: [{ description: string; quantity: number; unitAmountMinor: number }]; validUntil: string; terms: string }) => Promise<void>; readonly onSchedule: () => Promise<void> }) {
+  const copy = getAdminAdsCopy(locale);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(false);
+  return <section className="admin-ads__detail"><div className="admin-ads__detail-heading"><div><p className="admin-ads__eyebrow">{copy.eyebrow}</p><h2>{copy.detail}</h2></div><Button variant="secondary" onClick={onBack}>{copy.back}</Button></div><dl className="admin-ads__detail-list"><div><dt>{copy.columns.id}</dt><dd><code>{data.request.id}</code></dd></div><div><dt>{copy.columns.provider}</dt><dd><code>{data.request.providerId}</code></dd></div><div><dt>{copy.columns.placement}</dt><dd>{data.request.placementKey}</dd></div><div><dt>{copy.columns.purpose}</dt><dd>{data.request.purpose}</dd></div><div><dt>{copy.columns.status}</dt><dd><StatusBadge status={data.request.status} label={copy.requestStatus[data.request.status] ?? data.request.status} /></dd></div><div><dt>{copy.columns.interval}</dt><dd>{dateLabel(data.request.intervalStart, locale)} — {dateLabel(data.request.intervalEnd, locale)}</dd></div><div><dt>{copy.columns.version}</dt><dd>{data.request.version}</dd></div>{data.quote !== undefined ? <div><dt>{copy.columns.quote}</dt><dd>{moneyLabel(data.quote.totalMinor, data.quote.currency, locale)} · {data.quote.status}</dd></div> : null}</dl>{data.quote !== undefined ? <div className="admin-ads__quote-lines"><h3>{copy.columns.quote}</h3><ul>{data.quote.lineItems.map((line, index) => <li key={`${line.description}-${index}`}><span>{line.description} × {line.quantity}</span><strong>{moneyLabel(line.unitAmountMinor * line.quantity, data.quote?.currency, locale)}</strong></li>)}</ul></div> : null}{data.request.status === 'review' ? <RequestReviewPanel locale={locale} onReview={onReview} /> : null}{data.request.status === 'waiting_pricing' ? <QuoteIssuePanel locale={locale} onIssue={onIssueQuote} /> : null}{data.request.status === 'waiting_payment' ? <div className="admin-ads__review-card"><p>{locale === 'ar' ? 'تتطلب الجدولة إثبات دفع معتمدًا وفترة متاحة.' : 'Scheduling requires an approved payment proof and an available time slot.'}</p><Button loading={saving} onClick={() => { setSaving(true); setError(false); void onSchedule().catch(() => setError(true)).finally(() => setSaving(false)); }}>{locale === 'ar' ? 'جدولة الإعلان' : 'Schedule advertisement'}</Button>{error ? <p role="alert">{locale === 'ar' ? 'تعذرت الجدولة. راجع اعتماد الدفع وتوافر الفترة وصلاحيتك، ثم حدّث الطلب.' : 'Scheduling failed. Check payment approval, slot availability and your permission, then refresh the request.'}</p> : null}</div> : null}</section>;
 }
 
 function PaymentProofTable({ data, locale, review, onReview }: { readonly data: PaymentProofAdminListData; readonly locale: SupportedLocale; readonly review: boolean; readonly onReview: (id: string) => void }) {
@@ -279,7 +319,7 @@ function EmptyPanel({ locale }: { readonly locale: SupportedLocale }) {
   return <section className="admin-ads__state" data-state="empty" aria-label={message.title}><h2>{message.title}</h2><p>{message.body}</p></section>;
 }
 
-export function AdminAds({ locale, session, authClient, apiOrigin, url, loadRequests, loadRequestDetail, loadPaymentProofs, reviewPaymentProof, loadCalendar, loadFinancialReview, loadFinancialDetail, loadLedger }: AdminAdsProps) {
+export function AdminAds({ locale, session, authClient, apiOrigin, url, loadRequests, loadRequestDetail, reviewRequest, issueQuote, loadPaymentProofs, reviewPaymentProof, loadCalendar, loadFinancialReview, loadFinancialDetail, loadLedger }: AdminAdsProps) {
   const copy = getAdminAdsCopy(locale);
   const pathname = pathnameFrom(url);
   const projection = projectionForPath(pathname);
@@ -392,7 +432,7 @@ export function AdminAds({ locale, session, authClient, apiOrigin, url, loadRequ
       {reviewFeedback !== undefined ? <p className="admin-ads__feedback" data-tone="success" role="status">{reviewFeedback}</p> : null}
       {state === 'not_found' ? <NotFoundPanel locale={locale} /> : null}
       {state === 'empty' ? <EmptyPanel locale={locale} /> : null}
-      {state === 'success' && selectedRequest !== undefined ? <RequestDetail data={selectedRequest} locale={locale} onBack={() => go(ADMIN_ADS_REQUESTS_ROUTE)} /> : null}
+      {state === 'success' && selectedRequest !== undefined ? <RequestDetail data={selectedRequest} locale={locale} onBack={() => go(ADMIN_ADS_REQUESTS_ROUTE)} onReview={async (action, reason) => { await (reviewRequest ?? source.reviewRequest)(selectedRequest.request.id, { action, reason, expectedVersion: selectedRequest.request.version }); setAttempt(value => value + 1); }} onIssueQuote={async input => { await (issueQuote ?? source.issueQuote)(selectedRequest.request.id, input); setAttempt(value => value + 1); }} onSchedule={async () => { await source.scheduleRequest(selectedRequest.request.id, selectedRequest.request.version); setAttempt(value => value + 1); }} /> : null}
       {state === 'success' && selectedFinancial !== undefined ? <section className="admin-ads__detail"><div className="admin-ads__detail-heading"><div><p className="admin-ads__eyebrow">{copy.eyebrow}</p><h2>{copy.detail}</h2></div><Button variant="secondary" onClick={() => go(ADMIN_ADS_FINANCIAL_REVIEW_ROUTE)}>{copy.back}</Button></div><dl className="admin-ads__detail-list"><div><dt>{copy.columns.request}</dt><dd><code>{selectedFinancial.requestId}</code></dd></div><div><dt>{copy.columns.provider}</dt><dd><code>{selectedFinancial.providerId}</code></dd></div><div><dt>{copy.columns.placement}</dt><dd>{selectedFinancial.placementKey}</dd></div><div><dt>{copy.columns.status}</dt><dd><StatusBadge status={selectedFinancial.requestStatus} label={copy.requestStatus[selectedFinancial.requestStatus] ?? selectedFinancial.requestStatus} /></dd></div><div><dt>{copy.columns.state}</dt><dd><StatusBadge status={selectedFinancial.financialState} label={copy.financialState[selectedFinancial.financialState] ?? selectedFinancial.financialState} /></dd></div><div><dt>{copy.columns.quote}</dt><dd>{moneyLabel(selectedFinancial.quotedTotalMinor, selectedFinancial.quoteCurrency, locale)}</dd></div><div><dt>{copy.columns.interval}</dt><dd>{dateLabel(selectedFinancial.intervalStart, locale)} — {dateLabel(selectedFinancial.intervalEnd, locale)}</dd></div></dl><p className="admin-ads__notice">{copy.notRealized}</p></section> : null}
       {state === 'success' && payload?.kind === 'requests' ? <><TableFrame title={copy.titles.requests} count={copy.count(payload.data.total)} note={copy.directionNote}><RequestsTable data={payload.data} locale={locale} onDetail={id => go(`${ADMIN_ADS_REQUESTS_ROUTE}?requestId=${encodeURIComponent(id)}`)} /><Pagination page={payload.data.page} limit={payload.data.limit} total={payload.data.total} locale={locale} onPrevious={() => { setRequestQuery(current => ({ ...current, page: current.page - 1 })); setAttempt(value => value + 1); }} onNext={() => { setRequestQuery(current => ({ ...current, page: current.page + 1 })); setAttempt(value => value + 1); }} /></TableFrame></> : null}
       {state === 'success' && payload?.kind === 'proofs' ? <><TableFrame title={copy.titles[projection.view]} count={copy.count(payload.data.total)} note={copy.directionNote}><PaymentProofTable data={payload.data} locale={locale} review={projection.view === 'review'} onReview={id => go(`${ADMIN_ADS_PENDING_REVIEW_ROUTE}?proofId=${encodeURIComponent(id)}`)} /><Pagination page={payload.data.page} limit={payload.data.limit} total={payload.data.total} locale={locale} onPrevious={() => setAttempt(value => value + 1)} onNext={() => setAttempt(value => value + 1)} /></TableFrame>{projection.view === 'review' && selectedProof !== undefined ? <ReviewPanel proof={selectedProof} locale={locale} review={loaders.reviewPaymentProof} onSaved={() => { setReviewFeedback(copy.reviewSaved); setAttempt(value => value + 1); }} /> : null}</> : null}

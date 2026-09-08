@@ -70,6 +70,7 @@ export interface ProviderAdvertisingMutationOptions {
 
 export interface ProviderAdvertisingMutationApi {
   createRequest(input: AdRequestCreate, signal?: AbortSignal): Promise<AdRequest>;
+  submitRequest(requestId: string, expectedVersion: number, signal?: AbortSignal): Promise<AdRequest>;
   acceptQuote(requestId: string, input: AdQuoteDecision, signal?: AbortSignal): Promise<AdQuote>;
   uploadPaymentProof(requestId: string, file: Blob, filename: string, signal?: AbortSignal): Promise<PaymentProofData>;
 }
@@ -169,6 +170,17 @@ export function createProviderAdvertisingMutationApi(options: ProviderAdvertisin
         responseSchema: successEnvelopeSchema(adRequestSchema),
         ...(requestHeaders === undefined ? {} : { headers: requestHeaders }),
         json: request,
+        ...requestOptions(signal)
+      });
+      return response.data.data;
+    },
+    async submitRequest(id, expectedVersion, signal) {
+      const requestHeaders = headers();
+      const response = await client.request(`${PROVIDER_ADVERTISING_ROUTE}/${encodeURIComponent(requestId(id))}/submit`, {
+        method: 'POST',
+        responseSchema: successEnvelopeSchema(adRequestSchema),
+        ...(requestHeaders === undefined ? {} : { headers: requestHeaders }),
+        json: { expectedVersion },
         ...requestOptions(signal)
       });
       return response.data.data;

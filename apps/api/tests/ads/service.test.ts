@@ -31,6 +31,8 @@ test('provider draft creation delegates to the configured persistent request rep
   const service = createAdSettingsService({
     hasActivePlacement: async (placementKey) => placementKey === 'homepage.hero',
     requestRepository: {
+      async getRequest() { return undefined; },
+      async transitionRequest() { return undefined; },
       async createProviderRequest(providerId, input) {
         calledWith = { providerId, placementKey: input.placementKey };
         return adRequestSchema.parse({
@@ -59,6 +61,30 @@ test('provider draft creation delegates to the configured persistent request rep
     intervalStart: '2026-09-01T09:00:00+00:00',
     intervalEnd: '2026-09-02T09:00:00+00:00'
   }), (error) => error instanceof AdSettingsServiceError && error.code === 'NOT_FOUND');
+});
+
+test('provider submission loads and atomically transitions its persistent draft', async () => {
+  const provider = { ...admin, role: 'provider', sub: '2123456789abcdef01234567' } as AccessTokenClaims;
+  const draft = adRequestSchema.parse({
+    id: 'aaaaaaaaaaaaaaaaaaaaaaaa', providerId: provider.sub, placementKey: 'homepage.hero', purpose: 'Persistent campaign',
+    intervalStart: '2026-09-20T08:00:00.000Z', intervalEnd: '2026-09-27T08:00:00.000Z', status: 'draft', version: 0,
+    createdAt: '2026-08-13T00:00:00.000Z', updatedAt: '2026-08-13T00:00:00.000Z'
+  });
+  let transition: unknown;
+  const service = createAdSettingsService({
+    requestRepository: {
+      async createProviderRequest() { return draft; },
+      async getRequest() { return draft; },
+      async transitionRequest(id, expectedVersion, fromStatus, toStatus, reason) {
+        transition = { id, expectedVersion, fromStatus, toStatus, reason };
+        return adRequestSchema.parse({ ...draft, status: toStatus, version: expectedVersion + 1, updatedAt: '2026-08-13T01:00:00.000Z' });
+      }
+    }
+  });
+  const submitted = await service.submitRequest(provider, draft.id, { expectedVersion: 0 });
+  assert.equal(submitted.status, 'review');
+  assert.deepEqual(transition, { id: draft.id, expectedVersion: 0, fromStatus: 'draft', toStatus: 'review', reason: undefined });
+  await assert.rejects(() => service.submitRequest({ ...provider, sub: '3123456789abcdef01234567' }, draft.id, { expectedVersion: 0 }), error => error instanceof AdSettingsServiceError && error.code === 'FORBIDDEN');
 });
 
 test('administrative quotes compute integer minor-unit totals and accept idempotently', async () => {

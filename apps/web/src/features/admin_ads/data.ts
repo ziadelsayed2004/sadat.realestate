@@ -1,4 +1,8 @@
 import {
+  adAdminRequestReviewSchema,
+  adCalendarEventSchema,
+  adScheduleRequestSchema,
+  successEnvelopeSchema,
   adAdminRequestListQuerySchema,
   adAdminRequestListSuccessEnvelopeSchema,
   adAdminRequestSuccessEnvelopeSchema,
@@ -9,12 +13,15 @@ import {
   adFinancialReviewSuccessEnvelopeSchema,
   adLedgerListSuccessEnvelopeSchema,
   adLedgerQuerySchema,
+  adQuoteIssueSchema,
+  adQuoteSchema,
   adRequestIdParamsSchema,
   paymentProofAdminListQuerySchema,
   paymentProofAdminListSuccessEnvelopeSchema,
   paymentProofReviewSchema,
   paymentProofSuccessEnvelopeSchema,
   type AdAdminRequest,
+  type AdAdminRequestReview,
   type AdAdminRequestListData,
   type AdAdminRequestListQuery,
   type AdCalendarListData,
@@ -24,6 +31,8 @@ import {
   type AdFinancialReviewRow,
   type AdLedgerListData,
   type AdLedgerQuery,
+  type AdQuote,
+  type AdQuoteIssue,
   type PaymentProofAdminListData,
   type PaymentProofAdminListQuery,
   type PaymentProofData,
@@ -83,6 +92,8 @@ export type AdminAdsLedgerData = AdLedgerListData & { readonly page: number; rea
 
 export type AdminAdsRequestLoader = (query: AdAdminRequestListQuery, signal?: AbortSignal) => Promise<AdminAdsRequestListData>;
 export type AdminAdsRequestDetailLoader = (requestId: string, signal?: AbortSignal) => Promise<AdAdminRequest>;
+export type AdminAdsRequestReviewMutation = (requestId: string, input: AdAdminRequestReview, signal?: AbortSignal) => Promise<AdAdminRequest>;
+export type AdminAdsQuoteIssueMutation = (requestId: string, input: Omit<AdQuoteIssue, 'requestId'>, signal?: AbortSignal) => Promise<AdQuote>;
 export type AdminAdsPaymentProofLoader = (query: PaymentProofAdminListQuery, signal?: AbortSignal) => Promise<AdminAdsPaymentProofListData>;
 export type AdminAdsPaymentProofReviewMutation = (proofId: string, input: PaymentProofReview, signal?: AbortSignal) => Promise<PaymentProofData>;
 export type AdminAdsCalendarLoader = (query: AdCalendarQuery, signal?: AbortSignal) => Promise<AdminAdsCalendarData>;
@@ -232,6 +243,36 @@ export function createAdminAdsLedgerLoader(options: Omit<AdminAdsLedgerLoadOptio
 
 export function createAdminAdsSource(options: Omit<CommonOptions, 'signal'> = {}) {
   return {
+    async issueQuote(requestId: string, input: Omit<AdQuoteIssue, 'requestId'>) {
+      const id = adRequestIdParamsSchema.parse({ adRequestId: requestId }).adRequestId;
+      const response = await clientFor(options).request(`${ADMIN_AD_REQUESTS_API_ROUTE}/${id}/quote`, {
+        method: 'POST',
+        json: adQuoteIssueSchema.omit({ requestId: true }).parse(input),
+        responseSchema: successEnvelopeSchema(adQuoteSchema),
+        ...requestOptions(options)
+      });
+      return response.data.data;
+    },
+    async reviewRequest(requestId: string, input: AdAdminRequestReview) {
+      const id = adRequestIdParamsSchema.parse({ adRequestId: requestId }).adRequestId;
+      const response = await clientFor(options).request(`${ADMIN_AD_REQUESTS_API_ROUTE}/${id}/review`, {
+        method: 'POST',
+        json: adAdminRequestReviewSchema.parse(input),
+        responseSchema: adAdminRequestSuccessEnvelopeSchema,
+        ...requestOptions(options)
+      });
+      return response.data.data;
+    },
+    async scheduleRequest(requestId: string, expectedVersion: number) {
+      const id = adRequestIdParamsSchema.parse({ adRequestId: requestId }).adRequestId;
+      const response = await clientFor(options).request(`${ADMIN_AD_REQUESTS_API_ROUTE}/${id}/schedule`, {
+        method: 'POST',
+        json: adScheduleRequestSchema.parse({ expectedVersion }),
+        responseSchema: successEnvelopeSchema(adCalendarEventSchema),
+        ...requestOptions(options)
+      });
+      return response.data.data;
+    },
     loadRequests: createAdminAdsRequestLoader(options),
     loadRequestDetail: createAdminAdsRequestDetailLoader(options),
     loadPaymentProofs: createAdminAdsPaymentProofLoader(options),
