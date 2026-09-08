@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-09-08T16:16:48.060Z",
+  "method": "Direct Figma MCP metadata measurements. This report counts source geometry only and does not convert runtime tests into Figma parity.",
+  "desktop": {
+    "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+    "inventory": "docs/quality/figma_parity/direct-frame-inventory-2026-09-08.json",
+    "canonicalFrameRecords": 131,
+    "expectedCanonicalRecords": 131,
+    "measurementCoverage": "131/131",
+    "complete": true,
+    "note": "The inventory includes every canonical desktop record. Duplicate historical screen identifiers remain separate frame records and are not deduplicated."
+  },
+  "responsive": {
+    "fileKey": "0HBdTNGROmmpC6S7OYa3iJ",
+    "pageId": "6017:4357",
+    "inventory": "docs/quality/figma_parity/responsive-prototype-geometry-2026-09-08.json",
+    "topLevelObjectsMeasured": 64,
+    "framesMeasured": 62,
+    "instancesMeasured": 2,
+    "frameWidths": {
+      "402": 30,
+      "404": 1,
+      "952": 1,
+      "1024": 29,
+      "1074": 1
+    },
+    "pageFrameCandidates": 59,
+    "componentOrHeaderReferenceFrames": 3,
+    "canonicalScreenMappingComplete": false,
+    "note": "The prototype page contains public/provider responsive compositions and header/component references. It does not contain one responsive owning frame for every canonical screen, so 62 direct frame measurements must not be reported as 62/131 screen parity."
+  },
+  "adminSourceDecisions": {
+    "ADM-18": {
+      "owningFrame": "6017:69276",
+      "status": "MATERIAL_VISUAL_DIVERGENCE",
+      "reason": "The recovered source places the Arabic sidebar on the left, while the supplied Production examples and current RTL runtime place it on the right."
+    },
+    "ADM-54": {
+      "owningFrame": null,
+      "status": "OWNER_AUTHORED_FALLBACK",
+      "source": "docs/design_sources/final_screens/admin/ADM-54.owner-authored.html",
+      "reason": "No owning ADM-54 frame exists in the inspected Admin page or supplied responsive prototype."
+    }
+  }
+}
