@@ -96,9 +96,11 @@ const viewingResponse = viewingDataSchema.parse({
 describe('public property details', () => {
   it('uses the implemented details contract with one API prefix and a validated slug', async () => {
     let seenUrl = '';
+    let seenInit: RequestInit | undefined;
     const client = new ApiClient({
-      fetcher: async input => {
+      fetcher: async (input, init) => {
         seenUrl = String(input);
+        seenInit = init;
         return new Response(JSON.stringify({ data: detailsData, meta: { requestId: 'details-request' } }), {
           status: 200,
           headers: { 'content-type': 'application/json' }
@@ -106,12 +108,27 @@ describe('public property details', () => {
       }
     });
 
-    await expect(loadPublicPropertyDetails({ slug: detailsData.slug, apiClient: client })).resolves.toEqual(detailsData);
+    await expect(loadPublicPropertyDetails({ slug: detailsData.slug, apiClient: client, authorizationHeader: 'Bearer seeker-token' })).resolves.toEqual(detailsData);
     expect(seenUrl).toBe('/api/v1/public/properties/published-home');
+    expect(new Headers(seenInit?.headers).get('authorization')).toBe('Bearer seeker-token');
     expect(propertyDetailsSlugFromUrl('/properties/published-home?lang=en')).toBe('published-home');
     expect(propertyDetailsSlugFromUrl('/properties/published-home?%24where=true')).toBe('published-home');
     expect(propertyDetailsSlugFromUrl('/properties/invalid slug')).toBeUndefined();
     expect(publicPropertyDetailsUrl(detailsData.slug)).toBe('/properties/published-home');
+  });
+
+  it('renders contact details only when the API includes its authorized projection', () => {
+    const authorized = publicPropertyDetailsSchema.parse({
+      ...detailsData,
+      contact: { contactName: 'Sales desk', phone: '+201234567890', email: 'sales@example.com' }
+    });
+    const result = renderWithLocale(
+      <PublicPropertyDetails locale="en" url="/properties/published-home" initialData={authorized} />,
+      { locale: 'en' }
+    );
+    expect(result.container.querySelector('[data-contact-revealed="true"]')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '+201234567890' })).toHaveAttribute('href', 'tel:+201234567890');
+    expect(screen.getByRole('link', { name: 'sales@example.com' })).toHaveAttribute('href', 'mailto:sales@example.com');
   });
 
   it.each(['ar', 'en'] as const)('renders the localized public projection and safe media state for %s', locale => {

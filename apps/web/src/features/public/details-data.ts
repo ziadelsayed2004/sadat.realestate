@@ -22,6 +22,7 @@ export interface PublicPropertyDetailsLoadOptions {
   readonly apiClient?: ApiClient | undefined;
   readonly apiOrigin?: string | undefined;
   readonly signal?: AbortSignal | undefined;
+  readonly authorizationHeader?: string | (() => string | undefined) | undefined;
 }
 
 export type PublicPropertyDetailsLoader = (
@@ -83,9 +84,14 @@ export function publicPropertyDetailsUrl(slug: string): string {
 export async function loadPublicPropertyDetails(options: PublicPropertyDetailsLoadOptions): Promise<PublicPropertyDetails> {
   const slug = propertySlugSchema.parse(options.slug);
   const client = clientFor(options);
-  const requestOptions = options.signal === undefined
-    ? { responseSchema: publicPropertyDetailsSuccessEnvelopeSchema }
-    : { responseSchema: publicPropertyDetailsSuccessEnvelopeSchema, signal: options.signal };
+  const authorization = typeof options.authorizationHeader === 'function'
+    ? options.authorizationHeader()
+    : options.authorizationHeader;
+  const requestOptions = {
+    responseSchema: publicPropertyDetailsSuccessEnvelopeSchema,
+    ...(options.signal === undefined ? {} : { signal: options.signal }),
+    ...(authorization === undefined ? {} : { headers: { Authorization: authorization } })
+  };
   const response = await client.request(`${PUBLIC_PROPERTY_DETAILS_ROUTE_PREFIX}/${encodeURIComponent(slug)}`, requestOptions);
   return response.data.data;
 }

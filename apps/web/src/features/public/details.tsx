@@ -11,6 +11,7 @@ import { getPublicHomepageCopy } from './copy.ts';
 import { PublicMediaImage, PublicSiteFooter, PublicSiteHeader } from './components.tsx';
 import {
   createPublicPropertyDetailsActions,
+  createPublicPropertyDetailsLoader,
   defaultPublicPropertyDetailsActions,
   defaultPublicPropertyDetailsLoader,
   propertyDetailsSlugFromUrl,
@@ -494,13 +495,15 @@ function RequestPanel({
   locale,
   copy,
   url,
-  actions
+  actions,
+  onContactSubmitted
 }: {
   readonly data: PublicPropertyDetailsData;
   readonly locale: SupportedLocale;
   readonly copy: PublicPropertyDetailsCopy;
   readonly url?: string | undefined;
   readonly actions: PublicPropertyDetailsActions;
+  readonly onContactSubmitted?: (() => void) | undefined;
 }) {
   const [message, setMessage] = useState('');
   const [fullName, setFullName] = useState('');
@@ -537,6 +540,7 @@ function RequestPanel({
       await actions.submitContact(input);
       setContactState('success');
       setMessage('');
+      onContactSubmitted?.();
     } catch (error) {
       setContactState(error instanceof ApiClientError && (error.status === 401 || error.status === 403) ? 'permission' : 'error');
     }
@@ -578,6 +582,14 @@ function RequestPanel({
       <Button type="button" fullWidth startIcon={<span className="public-property-details__button-icon public-property-details__button-icon--calendar"><DetailLineIcon kind="calendar" /></span>} data-action="request-viewing" onClick={() => { setViewingState('idle'); setViewingOpen(true); }}>{copy.requestViewing}</Button>
       <section className="public-property-details__card public-property-details__contact">
         <h2 id="public-property-details-contact-title">{copy.contactTitle}</h2>
+        {data.contact === undefined ? null : (
+          <div className="public-property-details__revealed-contact" data-contact-revealed="true">
+            {data.contact.contactName ? <strong>{data.contact.contactName}</strong> : null}
+            {data.contact.phone ? <a href={`tel:${data.contact.phone}`}>{data.contact.phone}</a> : null}
+            {data.contact.whatsappNumber ? <a href={`https://wa.me/${data.contact.whatsappNumber.replace(/\D/gu, '')}`} target="_blank" rel="noopener noreferrer">{data.contact.whatsappNumber}</a> : null}
+            {data.contact.email ? <a href={`mailto:${data.contact.email}`}>{data.contact.email}</a> : null}
+          </div>
+        )}
         {contactState === 'success' || contactState === 'permission' || contactState === 'error' ? <ActionFeedback state={contactState} copy={copy} url={url} /> : null}
         <form aria-label={copy.contactTitle} onSubmit={submitContact}>
           <label className="public-property-details__visually-hidden" htmlFor="public-property-contact-name">{locale === 'ar' ? 'الاسم الكامل' : 'Full name'}</label>
@@ -632,13 +644,15 @@ function SuccessDetails({
   locale,
   copy,
   url,
-  actions
+  actions,
+  onContactSubmitted
 }: {
   readonly data: PublicPropertyDetailsData;
   readonly locale: SupportedLocale;
   readonly copy: PublicPropertyDetailsCopy;
   readonly url?: string | undefined;
   readonly actions: PublicPropertyDetailsActions;
+  readonly onContactSubmitted?: (() => void) | undefined;
 }) {
   return (
     <>
@@ -654,7 +668,7 @@ function SuccessDetails({
             <LocationAdvisory locale={locale} />
             <RelatedProperties properties={data.relatedProperties} locale={locale} copy={copy} />
           </div>
-          <RequestPanel data={data} locale={locale} copy={copy} url={url} actions={actions} />
+          <RequestPanel data={data} locale={locale} copy={copy} url={url} actions={actions} onContactSubmitted={onContactSubmitted} />
         </div>
       </div>
     </>
@@ -677,6 +691,13 @@ export function PublicPropertyDetails({
   const [data, setData] = useState<PublicPropertyDetailsData | undefined>(initialData);
   const [view, setView] = useState<PublicPropertyDetailsViewState>(initialView);
   const [attempt, setAttempt] = useState(0);
+  const authorizationHeader = authClient?.getAuthorizationHeader();
+  const resolvedLoader = useMemo(
+    () => load === defaultPublicPropertyDetailsLoader && authorizationHeader !== undefined
+      ? createPublicPropertyDetailsLoader({ authorizationHeader })
+      : load,
+    [authorizationHeader, load]
+  );
   const resolvedActions = useMemo(
     () => actions ?? (authClient === undefined
       ? defaultPublicPropertyDetailsActions
@@ -685,14 +706,14 @@ export function PublicPropertyDetails({
   );
 
   useEffect(() => {
-    if (initialData !== undefined && attempt === 0) return;
+    if (initialData !== undefined && attempt === 0 && authorizationHeader === undefined) return;
     if (slug === undefined) {
       setView('not_found');
       return;
     }
     const controller = new AbortController();
     setView('loading');
-    void load(slug, controller.signal)
+    void resolvedLoader(slug, controller.signal)
       .then(nextData => {
         if (controller.signal.aborted) return;
         setData(nextData);
@@ -703,14 +724,14 @@ export function PublicPropertyDetails({
         setView(errorState(error));
       });
     return () => controller.abort();
-  }, [attempt, initialData, load, slug]);
+  }, [attempt, authorizationHeader, initialData, resolvedLoader, slug]);
 
   const retry = () => setAttempt(value => value + 1);
 
   return (
     <div className="public-property-details" data-page="public-property-details" data-details-state={view}>
       <PublicSiteHeader locale={locale} copy={getPublicHomepageCopy(locale)} activePath="/properties" />
-      {view === 'success' && data !== undefined ? <SuccessDetails data={data} locale={locale} copy={copy} url={url} actions={resolvedActions} /> : view === 'not_found' ? <NotFoundNotice copy={copy} /> : <StateNotice state={view === 'success' ? 'empty' : view} copy={copy} url={url} onRetry={retry} />}
+      {view === 'success' && data !== undefined ? <SuccessDetails data={data} locale={locale} copy={copy} url={url} actions={resolvedActions} onContactSubmitted={authorizationHeader === undefined ? undefined : retry} /> : view === 'not_found' ? <NotFoundNotice copy={copy} /> : <StateNotice state={view === 'success' ? 'empty' : view} copy={copy} url={url} onRetry={retry} />}
       <Footer locale={locale} />
     </div>
   );

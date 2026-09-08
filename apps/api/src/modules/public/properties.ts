@@ -1,6 +1,7 @@
 import { Types, type Connection } from 'mongoose';
 import { propertySlugSchema, publicPropertyDetailsSchema, publicPropertyRelatedPropertySchema, type PublicPropertyDetails } from '@sadat-real-estate/contracts';
 import { DEFAULT_PROPERTY_RUNTIME_SETTINGS, unexpiredPropertyFilter, type PropertyRuntimeSettings, type PropertySettingsReader } from '../settings/property-policy.js';
+import type { AccessTokenClaims } from '../auth/crypto.js';
 
 export interface PublicPropertyDetailsSource {
   id: string;
@@ -19,6 +20,7 @@ export interface PublicPropertyDetailsSource {
   installmentAvailable?: boolean;
   sourceType: string;
   organizationId?: string;
+  providerId?: string;
   sourceName?: unknown;
   sourceImageUrl?: string;
   sourceVerified?: boolean;
@@ -37,7 +39,10 @@ export interface PublicPropertyDetailsSource {
   services?: Array<{ id: string; kind: string; groupKey: string; name: unknown; detail?: unknown; distanceLabel?: unknown; slug: string; order: number; active: boolean }>;
 }
 
-export interface PublicPropertyDetailsRepository { findBySlug(slug: string): Promise<PublicPropertyDetailsSource | null> }
+export interface PublicPropertyDetailsRepository {
+  findBySlug(slug: string): Promise<PublicPropertyDetailsSource | null>;
+  hasPropertyRequest?(seekerId: string, propertyId: string): Promise<boolean>;
+}
 
 function card(source: { id: string; slug: string; kind: string; name: unknown; transactionType: string; imageUrl?: string; locationName?: unknown; publicCode?: string; viewCount?: number; deliveryStatus?: string; installmentAvailable?: boolean; sourceType?: string; sourceName?: unknown; sourceImageUrl?: string; sourceVerified?: boolean; projectId?: string; description?: unknown; area?: unknown; layout?: unknown; price?: unknown; status: string; active: boolean }) {
   const parsed = publicPropertyRelatedPropertySchema.safeParse({
@@ -65,7 +70,11 @@ function card(source: { id: string; slug: string; kind: string; name: unknown; t
   return parsed.success ? parsed.data : null;
 }
 
-export function publicPropertyDetailsProjection(source: PublicPropertyDetailsSource, settings: PropertyRuntimeSettings = DEFAULT_PROPERTY_RUNTIME_SETTINGS): PublicPropertyDetails | null {
+export function publicPropertyDetailsProjection(
+  source: PublicPropertyDetailsSource,
+  settings: PropertyRuntimeSettings = DEFAULT_PROPERTY_RUNTIME_SETTINGS,
+  contactAuthorized = settings.contactVisibility === 'public'
+): PublicPropertyDetails | null {
   if (source.status !== 'published' || !source.active) return null;
   const property = card(source);
   if (!property) return null;
@@ -93,13 +102,26 @@ export function publicPropertyDetailsProjection(source: PublicPropertyDetailsSou
     ...(property.publicCode ? { publicCode: property.publicCode } : {}),
     ...(property.deliveryStatus ? { deliveryStatus: property.deliveryStatus } : {}),
     ...(property.installmentAvailable !== undefined ? { installmentAvailable: property.installmentAvailable } : {}),
-    ...(!settings.hideProviderContact && settings.contactVisibility === 'public' && source.contact !== undefined ? { contact: source.contact } : {})
+    ...(!settings.hideProviderContact && contactAuthorized && source.contact !== undefined ? { contact: source.contact } : {})
   };
   return publicPropertyDetailsSchema.parse({ ...publicProperty, source: { sourceType: source.sourceType, ...(source.organizationId ? { organizationId: source.organizationId } : {}), ...(source.sourceName !== undefined ? { name: source.sourceName } : {}), ...(source.sourceImageUrl ? { imageUrl: source.sourceImageUrl } : {}), ...(source.sourceVerified !== undefined ? { verified: source.sourceVerified } : {}) }, seo: { title: source.name, ...(source.description !== undefined ? { description: source.description } : {}), slug: source.slug }, project, media, features:amenities('feature'), services:amenities('service'), relatedProperties });
 }
 
 export function createPublicPropertyDetailsService(dependencies: { repository: PublicPropertyDetailsRepository; settings?: PropertySettingsReader }) {
-  return { async get(slug: string): Promise<PublicPropertyDetails | null> { const source = await dependencies.repository.findBySlug(propertySlugSchema.parse(slug)); const settings = dependencies.settings ? await dependencies.settings.read() : DEFAULT_PROPERTY_RUNTIME_SETTINGS; return source ? publicPropertyDetailsProjection(source, settings) : null; } };
+  return { async get(slug: string, viewer?: AccessTokenClaims): Promise<PublicPropertyDetails | null> {
+    const source = await dependencies.repository.findBySlug(propertySlugSchema.parse(slug));
+    const settings = dependencies.settings ? await dependencies.settings.read() : DEFAULT_PROPERTY_RUNTIME_SETTINGS;
+    if (!source) return null;
+    const verified = viewer?.status === 'verified';
+    const contactAuthorized = settings.contactVisibility === 'public'
+      || (settings.contactVisibility === 'authenticated' && verified)
+      || (settings.contactVisibility === 'after_request' && verified && (
+        viewer?.role === 'admin'
+        || (viewer?.role === 'provider' && source.providerId === viewer.sub)
+        || (viewer?.role === 'seeker' && await dependencies.repository.hasPropertyRequest?.(viewer.sub, source.id) === true)
+      ));
+    return publicPropertyDetailsProjection(source, settings, contactAuthorized);
+  } };
 }
 
 type Row = Record<string, unknown>;
@@ -108,13 +130,14 @@ function property(row: Row): PublicPropertyDetailsSource | null {
   const rowId = id(row._id); const slug = row.slug; const kind = row.kind; const name = row.name; const transactionType = row.transactionType; const sourceType = row.sourceType; const status = row.status; const active = row.active;
   if (!rowId || typeof slug !== 'string' || typeof kind !== 'string' || name === undefined || typeof transactionType !== 'string' || typeof sourceType !== 'string' || typeof status !== 'string' || typeof active !== 'boolean') return null;
   const projectId = id(row.projectId); const organizationId = id(row.organizationId); const locationId = id(row.locationId); const propertyTypeId = id(row.propertyTypeId);
-  return { id: rowId, slug, kind, name, transactionType, sourceType, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}), ...(locationId ? { locationId } : {}), ...(propertyTypeId ? { propertyTypeId } : {}), ...(typeof row.mapUrl === 'string' ? { mapUrl: row.mapUrl } : {}), ...(typeof row.publicCode === 'string' ? { publicCode: row.publicCode } : {}), ...(typeof row.viewCount === 'number' ? { viewCount: row.viewCount } : {}), ...(typeof row.deliveryStatus === 'string' ? { deliveryStatus: row.deliveryStatus } : {}), ...(Array.isArray(row.paymentPlans) ? { installmentAvailable: row.paymentPlans.length > 0 } : {}), ...(organizationId ? { organizationId } : {}), ...(projectId ? { projectId } : {}), ...(row.description !== undefined ? { description: row.description } : {}), ...(row.area !== undefined ? { area: row.area } : {}), ...(row.layout !== undefined ? { layout: row.layout } : {}), ...(row.price !== undefined ? { price: row.price } : {}), ...(row.contact !== undefined ? { contact: row.contact } : {}), status, active, media: [], features: [], services: [], relatedProperties: [] };
+  const providerId = id(row.providerId) ?? id((row.source as Row | undefined)?.providerId);
+  return { id: rowId, slug, kind, name, transactionType, sourceType, ...(typeof row.imageUrl === 'string' ? { imageUrl: row.imageUrl } : {}), ...(locationId ? { locationId } : {}), ...(propertyTypeId ? { propertyTypeId } : {}), ...(typeof row.mapUrl === 'string' ? { mapUrl: row.mapUrl } : {}), ...(typeof row.publicCode === 'string' ? { publicCode: row.publicCode } : {}), ...(typeof row.viewCount === 'number' ? { viewCount: row.viewCount } : {}), ...(typeof row.deliveryStatus === 'string' ? { deliveryStatus: row.deliveryStatus } : {}), ...(Array.isArray(row.paymentPlans) ? { installmentAvailable: row.paymentPlans.length > 0 } : {}), ...(organizationId ? { organizationId } : {}), ...(providerId ? { providerId } : {}), ...(projectId ? { projectId } : {}), ...(row.description !== undefined ? { description: row.description } : {}), ...(row.area !== undefined ? { area: row.area } : {}), ...(row.layout !== undefined ? { layout: row.layout } : {}), ...(row.price !== undefined ? { price: row.price } : {}), ...(row.contact !== undefined ? { contact: row.contact } : {}), status, active, media: [], features: [], services: [], relatedProperties: [] };
 }
 
 export function createMongoosePublicPropertyDetailsRepository(connection: Connection): PublicPropertyDetailsRepository {
   return { async findBySlug(slug) {
     const properties = connection.collection('properties');
-    const row = await properties.findOne({ slug, status: 'published', active: true, ...unexpiredPropertyFilter() }, { projection: { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, sourceType: 1, organizationId: 1, projectId: 1, propertyTypeId: 1, locationId: 1, mapUrl: 1, publicCode: 1, viewCount: 1, deliveryStatus: 1, paymentPlans: 1, featureIds:1, serviceIds:1, description: 1, area: 1, layout: 1, price: 1, contact: 1, status: 1, active: 1 } });
+    const row = await properties.findOne({ slug, status: 'published', active: true, ...unexpiredPropertyFilter() }, { projection: { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, sourceType: 1, source: 1, providerId: 1, organizationId: 1, projectId: 1, propertyTypeId: 1, locationId: 1, mapUrl: 1, publicCode: 1, viewCount: 1, deliveryStatus: 1, paymentPlans: 1, featureIds:1, serviceIds:1, description: 1, area: 1, layout: 1, price: 1, contact: 1, status: 1, active: 1 } });
     const base = property(row as Row | null ?? {}); if (!base) return null;
     const project = base.projectId ? await connection.collection('projects').findOne({ _id: new Types.ObjectId(base.projectId), status: 'published' }, { projection: { _id: 1, slug: 1, name: 1, description: 1, status: 1 } }) : null;
     const location = base.locationId ? await connection.collection('locations').findOne({ _id: new Types.ObjectId(base.locationId), active: true }, { projection: { name: 1, active: 1 } }) : null;
@@ -166,5 +189,10 @@ export function createMongoosePublicPropertyDetailsRepository(connection: Connec
     });
     const organization = base.organizationId ? await connection.collection('organizations').findOne({ _id: new Types.ObjectId(base.organizationId), status: 'approved' }, { projection: { name: 1, imageUrl: 1, status: 1 } }) : null;
     return { ...base, ...(location?.name !== undefined ? { locationName: location.name } : {}), ...(organization?.name !== undefined ? { sourceName: organization.name, sourceVerified: true } : {}), ...(typeof organization?.imageUrl === 'string' ? { sourceImageUrl: organization.imageUrl } : {}), project: mappedProject, media: mappedMedia, features:amenities.filter((value)=>value.kind==='feature'), services:amenities.filter((value)=>value.kind==='service'), relatedProperties };
+  }, async hasPropertyRequest(seekerId, propertyId) {
+    return await connection.collection('requests').findOne(
+      { seekerId: new Types.ObjectId(seekerId), propertyId: new Types.ObjectId(propertyId) },
+      { projection: { _id: 1 } }
+    ) !== null;
   } };
 }

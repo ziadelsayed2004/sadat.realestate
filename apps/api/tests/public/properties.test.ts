@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createPublicPropertyDetailsService, publicPropertyDetailsProjection, type PublicPropertyDetailsRepository, type PublicPropertyDetailsSource } from '../../src/modules/public/properties.js';
+import type { AccessTokenClaims } from '../../src/modules/auth/crypto.js';
+import type { PropertyRuntimeSettings } from '../../src/modules/settings/property-policy.js';
 
 const id = '0123456789abcdef01234567';
 const relatedId = '1123456789abcdef01234567';
@@ -58,4 +60,36 @@ test('exposes property contact only when the saved public-contact policy permits
     contactVisibility: 'public'
   });
   assert.equal(visible?.contact?.phone, '+201234567890');
+});
+
+const viewer = (role: AccessTokenClaims['role'], sub = relatedId): AccessTokenClaims => ({
+  iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub, sid: id, role,
+  status: 'verified', iat: 1, exp: 2, jti: 'test'
+});
+
+test('applies authenticated and after-request contact visibility without leaking to guests', async () => {
+  let allowed = false;
+  const repository: PublicPropertyDetailsRepository = {
+    async findBySlug() { return source({ providerId: relatedId, contact: { phone: '+201234567890' } }); },
+    async hasPropertyRequest(seekerId, propertyId) {
+      assert.equal(seekerId, relatedId);
+      assert.equal(propertyId, id);
+      return allowed;
+    }
+  };
+  const values: PropertyRuntimeSettings = {
+    requiresAdminReview: true, publicationAfterApproval: 'manual', automaticExpiry: 'never',
+    maxImages: 50, acceptedImageMimes: ['image/jpeg'], maxImageBytes: 10_000_000,
+    hideProviderContact: false, contactVisibility: 'authenticated'
+  };
+  const service = createPublicPropertyDetailsService({ repository, settings: { async read() { return values; } } });
+  assert.equal((await service.get('apartment'))?.contact, undefined);
+  assert.equal((await service.get('apartment', viewer('seeker')))?.contact?.phone, '+201234567890');
+
+  values.contactVisibility = 'after_request';
+  assert.equal((await service.get('apartment', viewer('seeker')))?.contact, undefined);
+  allowed = true;
+  assert.equal((await service.get('apartment', viewer('seeker')))?.contact?.phone, '+201234567890');
+  assert.equal((await service.get('apartment', viewer('provider')))?.contact?.phone, '+201234567890');
+  assert.equal((await service.get('apartment', viewer('admin')))?.contact?.phone, '+201234567890');
 });

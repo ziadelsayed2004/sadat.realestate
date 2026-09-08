@@ -5,15 +5,31 @@ import { getRequestContext } from '../observability/context.js';
 import type { PublicHomepageData } from '@sadat-real-estate/contracts';
 import { propertySlugSchema, type PublicPropertyDetails } from '@sadat-real-estate/contracts';
 import { ApiContractError } from '../contracts/error-boundary.js';
+import type { AccessTokenClaims, AccessTokenService } from '../auth/crypto.js';
 
 export const PUBLIC_ROUTE_DEFINITIONS = [
   { method: 'GET', path: '/api/v1/public/home', operationId: 'getPublicHomepage' },
   { method: 'GET', path: '/api/v1/public/properties/:slug', operationId: 'getPublicPropertyDetails' }
 ] as const;
 
-export interface PublicRouterDependencies { service: { read(): Promise<PublicHomepageData> }; details?: { get(slug: string): Promise<PublicPropertyDetails | null> } }
+export interface PublicRouterDependencies {
+  service: { read(): Promise<PublicHomepageData> };
+  details?: { get(slug: string, viewer?: AccessTokenClaims): Promise<PublicPropertyDetails | null> };
+  accessTokens?: AccessTokenService;
+}
 
 function requestId(request: Request): string { return getRequestContext()?.requestId ?? request.get('x-request-id') ?? 'unknown-request'; }
+
+function optionalViewer(request: Request, accessTokens: AccessTokenService | undefined): AccessTokenClaims | undefined {
+  const header = request.get('authorization')?.trim();
+  if (!header || !/^Bearer\s+/iu.test(header) || !accessTokens) return undefined;
+  try {
+    const claims = accessTokens.verify(header.replace(/^Bearer\s+/iu, '').trim());
+    return claims.status === 'verified' ? claims : undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 export function createPublicRouter(dependencies: PublicRouterDependencies): Router {
   const router = Router();
@@ -31,9 +47,10 @@ export function createPublicRouter(dependencies: PublicRouterDependencies): Rout
     try {
       if (!dependencies.details) throw new ApiContractError('NOT_IMPLEMENTED', 'errors.notFound', 404);
       const slug = propertySlugSchema.parse(request.params.slug);
-      const details = await dependencies.details.get(slug);
+      const viewer = optionalViewer(request, dependencies.accessTokens);
+      const details = await dependencies.details.get(slug, viewer);
       if (!details) throw new ApiContractError('PROPERTY_NOT_FOUND', 'errors.properties.notFound', 404);
-      response.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+      response.setHeader('Cache-Control', viewer ? 'private, no-store' : 'public, max-age=60, stale-while-revalidate=300');
       response.status(200).json(toSuccessResponse(details, currentRequestId));
     } catch (error) {
       const mapped = toApiErrorResponse(error, currentRequestId);
