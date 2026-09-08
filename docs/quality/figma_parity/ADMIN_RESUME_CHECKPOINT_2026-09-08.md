@@ -10,12 +10,10 @@
 ## Verification
 
 - Broad desktop admin browser suite: 270/272 passed. The two failures were overview screenshot comparisons after intentional icon/layout changes, not failed functional assertions. Actual images were inspected before updating the two runtime regression baselines; the focused overview suite then passed 4/4. These snapshots are not Figma acceptance evidence.
-- New sidebar entry, filter spacing, and provider empty recovery tests: 18/18 passed across desktop/tablet/mobile and Arabic/English.
-- Request search empty-result recovery: 6/6 passed across the same matrix.
-- Existing property/project/request browser flows after the final changes: 14/14 passed.
-- Final admin layout, sidebar, and advertising scheduling matrix: 36/36 passed across Desktop, Tablet, and Pixel 5 in Arabic and English.
-- Property/project/request unit/component tests: 18/18 passed.
-- Final build and TypeScript checks completed successfully. Lint was rerun after removing unused article projection variables.
+- The focused admin layout, sidebar, and filter matrix: 60/60 passed across Desktop, Tablet, and Pixel 5 in Arabic and English. This includes compact-rail active-link visibility and empty-result filter recovery.
+- The Web Vitest suite: 413/413 passed. The API route suite: 112/112 passed; the full API suite had already passed 556/556 before the final source-only sidebar change.
+- API contract inventory: 187/187 runtime and policy routes match the implemented blueprint; OpenAPI and Postman validators are green.
+- Final build, TypeScript, and lint checks completed successfully.
 - Logs are under `.local/`; browser evidence is under `apps/web/test-results/admin-review-entry`, `request-filter-recovery`, `admin-review-regression`, and `admin-overview-reviewed`.
 
 ## Design evidence and remaining limits
@@ -26,6 +24,6 @@
 - The narrow frame `6029:48309` (296 × 6194) was inspected directly. Its seven 256 × 862 symbols are seeker sidebar variants; inspection of `6029:48308` shows logo, navigation, and account footer. It is not evidence of seven responsive page designs.
 - The later user-supplied prototype points to Figma file `0HBdTNGROmmpC6S7OYa3iJ`, page `6017:4357`. Direct metadata records 402px mobile and 1024px tablet frames; `responsive-prototype-source-2026-09-08.json` supersedes the earlier missing-source conclusion.
 - ADM-01 still differs materially from its source in data coverage and section contents. The source includes richer review queues and activity summaries; current runtime explicitly shows unavailable data where the overview API does not supply it. Do not replace missing data with fabricated source examples or mark parity complete.
-- A read-only Production audit authenticated the supplied account as `ADM-01` and exercised all 51 sidebar routes on Desktop and Pixel 5. Pixel 5 width matched at 393px on every route, and the property APIs returned 200. The candidate was pushed to `main` as `f7f5c66`; deployment remains outstanding because this workstation has no VPS SSH key or authenticated Hostinger control session. GitHub CI could not start its runner because of an account billing lock, so it produced no code-test result.
+- A read-only Production audit authenticated the supplied account as a real `admin` account and exercised all 51 sidebar routes on Desktop and Pixel 5. Pixel 5 width matched at 393px on every route, and the property APIs plus public property list/detail returned 200 with `installmentAvailable`. The latest candidate is pushed to `main` as `87514c7` (including `67c0e71`); deployment remains outstanding because this workstation has no VPS SSH key or authenticated Hostinger control session. GitHub CI could not start its runner because of an account billing lock, so it produced no code-test result. Production still serves the pre-change asset hashes, and the old article query contract returns 400 until deployment.
 
 This checkpoint is not release approval, a claim that all features were exhaustively tested, or a 100% Figma parity statement.

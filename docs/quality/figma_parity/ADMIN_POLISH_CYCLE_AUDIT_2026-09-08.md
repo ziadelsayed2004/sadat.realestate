@@ -6,13 +6,13 @@
 - Settings editors fill their content column; bilingual fields use two equal columns with bounded inputs.
 - Advertising metrics use a padded responsive grid instead of content-sized flex cards.
 - Sidebar scroll brings the current link into view, and the active group cannot be collapsed. Other group preferences remain persistent.
-- Browser geometry verification passed for eight named routes in six device/locale configurations (48 route visits). Checks cover screen width, horizontal overflow, active link identity, desktop sidebar visibility, and advertising card overlap. Screenshots were inspected for audit and ad requests.
-- The final sequential admin layout, sidebar, and ad scheduling matrix passed 36/36 across Desktop, Tablet, and Pixel 5 in Arabic and English. The final Web Vitest suite passed 412/412. These are local checks and remain distinct from post-deployment evidence.
+- Browser geometry verification passed for the named admin layout, sidebar, and filter routes in six device/locale configurations; the final matrix passed 60/60 across Desktop, Tablet, and Pixel 5 in Arabic and English. Checks cover screen width, horizontal overflow, active link identity, compact-rail active-link visibility, and filter recovery. These are local checks and remain distinct from post-deployment evidence.
+- The final Web Vitest suite passed 413/413. The API route suite passed 112/112, the full API suite passed 556/556 before the final source-only sidebar change, and the contract audit reports 187/187 runtime/policy routes covered by the implemented blueprint.
 
 ## Source and guide recovery
 
 - The user supplied Figma file `0HBdTNGROmmpC6S7OYa3iJ`, responsive page `6017:4357`. Direct metadata includes 62 top-level objects, including 402px mobile and 1024px tablet designs. The earlier missing-responsive-source conclusion applied to a different file and must not be retained as a current global blocker.
-- `USER_GUIDE_CONFORMANCE_MATRIX.json` now references the actual HTML guide, with 26 extracted journeys and explicit references for 121/131 screens. Mapping is not completion verification; ten screens have no explicit guide reference.
+- `USER_GUIDE_CONFORMANCE_MATRIX.json` now references the actual HTML guide, with 26 extracted journeys and 131 rows. Seven source references are inferred and remain pending cycle verification; mapping is not completion verification and does not support a 100% parity claim.
 - ADM-18 was recovered as exact node `6017:69276` at 1577 × 944. A fresh local runtime capture at the same dimensions produced a 39.7325% material pixel difference, driven by the opposite sidebar placement plus heading, filter, table-density, and populated-state differences. The supplied Production examples use the current right-side RTL shell while the recovered source uses a left-side Arabic shell, so no shell rewrite or parity closure is claimed without a final product-authority decision.
 
 ## Advertising lifecycle closure
@@ -33,4 +33,4 @@
 - Production still runs the pre-change article contract: `/api/v1/admin/articles?sort=updatedAt...` returned 400. The local contract accepts `updatedAt`; post-deployment recheck is required.
 - Platform, contact, and SEO settings returned the intentional `SETTINGS_NOT_FOUND` 404 and the UI displayed the create-at-version-zero state. No stored values were fabricated during the read-only audit.
 
-The candidate was pushed to `main` as commit `f7f5c66`, but it has not been deployed because this workstation has no VPS SSH key or authenticated Hostinger control session. GitHub CI could not start its runner because the repository account is locked by a billing issue; this is an infrastructure failure rather than a test result. The Production observations above describe the currently deployed revision, not the pushed candidate. Do not interpret the green local tests as an exhaustive Figma parity approval.
+The latest candidate was pushed to `main` as commit `87514c7` (including the compact-rail fix in `67c0e71`), but it has not been deployed because this workstation has no VPS SSH key or authenticated Hostinger control session. GitHub CI could not start its runner because the repository account is locked by a billing issue; this is an infrastructure failure rather than a test result. The Production observations above describe the currently deployed revision, not the pushed candidate. Do not interpret the green local tests as an exhaustive Figma parity approval.
