@@ -95,10 +95,10 @@ function dateLabel(value: string, locale: SupportedLocale): string {
 }
 
 function iconForType(type: string): string {
-  if (type.startsWith('security.')) return '🔒';
-  if (type.startsWith('request.')) return '◆';
-  if (type.startsWith('property.')) return '◇';
-  return '•';
+  if (type.startsWith('security.')) return '/assets/canonical/provider/navigation/settings.svg';
+  if (type.startsWith('request.')) return '/assets/canonical/provider/navigation/requests.svg';
+  if (type.startsWith('property.')) return '/assets/canonical/provider/navigation/properties.svg';
+  return '/assets/canonical/provider/navigation/notifications.svg';
 }
 
 function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<AdminNotificationsAuditState, 'success' | 'empty'>; readonly locale: SupportedLocale; readonly onRetry: () => void }) {
@@ -133,7 +133,7 @@ function NotificationRow({ item, locale, copy, marking, onMarkRead }: { readonly
   const read = item.readAt !== null;
   return (
     <article className="admin-notifications-audit__notification" data-testid={`admin-notification-${item.id}`} data-state={read ? 'read' : 'unread'}>
-      <span className="admin-notifications-audit__notification-icon" aria-hidden="true">{iconForType(item.type)}</span>
+      <span className="admin-notifications-audit__notification-icon" aria-hidden="true"><img src={iconForType(item.type)} alt="" width="22" height="22" /></span>
       <div>
         <div className="admin-notifications-audit__meta"><span className="admin-notifications-audit__type">{item.type}</span>{!read ? <span className="admin-notifications-audit__unread">{copy.notifications.tabs.unread}</span> : null}<time dateTime={item.createdAt}>{dateLabel(item.createdAt, locale)}</time></div>
         <h3>{title}</h3>
@@ -235,7 +235,8 @@ function AuditMetricStrip({ locale, data }: { readonly locale: SupportedLocale; 
   const values = [data.total, data.items.length, new Set(data.items.map(item => item.actorId)).size, data.items.length];
   const labels = [copy.audit.metrics.total, copy.audit.metrics.onPage, copy.audit.metrics.administrators, copy.audit.metrics.redactedSnapshots];
   const colors = ['#1b2942', '#2f68c9', '#087b43', '#bf6500'];
-  return <div data-testid="admin-audit-metrics" aria-label={copy.audit.metrics.total} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 14, marginBlock: 18 }}>{values.map((value, index) => <article className="admin-dashboard__metric" key={labels[index]}><strong style={{ color: colors[index] }}>{new Intl.NumberFormat(locale).format(value)}</strong><span>{labels[index]}</span></article>)}</div>;
+  const icons = ['/assets/canonical/provider/navigation/requests.svg', '/assets/canonical/provider/navigation/overview.svg', '/assets/canonical/provider/navigation/properties.svg', '/assets/canonical/provider/navigation/settings.svg'] as const;
+  return <div data-testid="admin-audit-metrics" className="admin-notifications-audit__metrics" aria-label={copy.audit.metrics.total}>{values.map((value, index) => <article className="admin-dashboard__metric" key={labels[index]}><span className="admin-dashboard__metric-icon" aria-hidden="true"><img src={icons[index]} alt="" width="20" height="20" /></span><strong style={{ color: colors[index] }}>{new Intl.NumberFormat(locale).format(value)}</strong><span>{labels[index]}</span></article>)}</div>;
 }
 
 function exportAuditPage(data: AdminAuditLogPage): void {

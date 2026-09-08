@@ -14,7 +14,12 @@ test('admin settings, audit, notifications and advertising use the available pag
     const screen = page.locator('[data-screen-id]').first();
     await expect(screen).toBeVisible();
     await expect.poll(async () => Math.round((await screen.boundingBox())!.width)).toBe(page.viewportSize()!.width);
-    await expect(page.getByTestId('admin-sidebar').locator('[aria-current="page"]')).toHaveCount(1);
+    const activeSidebarLink = page.getByTestId('admin-sidebar').locator('[aria-current="page"]');
+    await expect(activeSidebarLink).toHaveCount(1);
+    if (route.startsWith('ads/')) {
+      await expect(activeSidebarLink).toHaveAttribute('href', new RegExp(`^/admin/${route.replaceAll('/', '\\/')}(?:\\?|$)`));
+    }
+    if (route.startsWith('settings')) await expect(page.locator('.admin-settings__tabs [aria-current="page"]')).toHaveCount(1);
     if (page.viewportSize()!.width > 1100) {
       const visible = await page.locator('.admin-dashboard__navigation-scroll').evaluate(element => {
         const item = element.querySelector('[aria-current="page"]')!.getBoundingClientRect();

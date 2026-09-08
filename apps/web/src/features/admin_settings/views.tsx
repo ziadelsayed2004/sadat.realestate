@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import type { AdminSettingsData, AdminSettingsNamespace, AdminSettingsUpdate, AdminSettingsValues, SupportedLocale } from '@sadat-real-estate/contracts';
 import { ApiClientError } from '../contracts/index.ts';
 import { Button, StateMessage } from '../design_system/index.ts';
@@ -225,6 +225,7 @@ export function AdminSettings({ path = ADMIN_SETTINGS_PLATFORM_ROUTE, locale, se
   const [attempt, setAttempt] = useState(0);
   const [saving, setSaving] = useState(false);
   const sessionAllowed = session.status === 'authenticated' && session.role === 'admin';
+  const settingsTabsRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!sessionAllowed) { setState('permission'); return undefined; }
@@ -245,6 +246,11 @@ export function AdminSettings({ path = ADMIN_SETTINGS_PLATFORM_ROUTE, locale, se
     return () => controller.abort();
   }, [attempt, initialMatches, load, namespace, sessionAllowed, source]);
 
+  useEffect(() => {
+    const activeTab = settingsTabsRef.current?.querySelector<HTMLElement>('[data-active="true"]');
+    activeTab?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
+  }, [locale, namespace]);
+
   if (namespace === undefined) return <section className="admin-settings" data-device-scope="desktop" data-admin-settings-state="not_found"><AdminNavigation locale={locale} activePath={path} />{stateMessage('not_found', locale, () => undefined)}</section>;
 
   const activeNamespace = namespace;
@@ -264,5 +270,5 @@ export function AdminSettings({ path = ADMIN_SETTINGS_PLATFORM_ROUTE, locale, se
     } finally { setSaving(false); }
   }
 
-  return <section className="admin-settings" data-screen-id={SETTINGS_SCREEN_IDS[activeNamespace]} data-route={activePath} data-device-scope="desktop" data-admin-settings-state={state}><AdminNavigation locale={locale} activePath={activePath} /><div className="admin-settings__content"><header className="admin-settings__heading"><div><p className="admin-settings__eyebrow">{copy.eyebrow}</p><h1>{copy.labels[activeNamespace]}</h1><p>{copy.descriptions[activeNamespace]}</p></div></header><nav className="admin-settings__tabs" aria-label={copy.eyebrow}>{ADMIN_SETTINGS_NAMESPACES.map(tab => <a key={tab} href={localePath(locale, SETTINGS_ROUTES[tab])} data-active={activeNamespace === tab || undefined}>{copy.labels[tab]}</a>)}</nav>{state === 'loading' ? <section className="admin-settings__state" data-state="loading" aria-label={copy.states.loading.title}><StateMessage state="loading" title={copy.states.loading.title} message={copy.states.loading.body} /></section> : null}{state === 'permission' || state === 'retry' || state === 'error' || state === 'conflict' ? stateMessage(state, locale, refresh) : null}{state === 'empty' ? <section className="admin-settings__state" data-state="empty" aria-label={copy.states.empty.title}><StateMessage state="empty" title={copy.states.empty.title} message={copy.states.empty.body} /></section> : null}{state === 'success' || state === 'empty' ? <SettingsForm namespace={activeNamespace} {...(data === undefined ? {} : { data })} values={values} locale={locale} saving={saving} onChangeText={(key, value) => setValues(current => setTextValue(current, key, value))} onChangeLocalized={(key, language, value) => setValues(current => setLocalizedValue(current, key, language, value))} onChangeArray={(key, value) => setValues(current => setArrayValue(current, key, value))} onChangeNumber={(key, value) => setValues(current => setNumberValue(current, key, value))} onChangeBoolean={(key, value) => setValues(current => setBooleanValue(current, key, value))} onSave={save} /> : null}<p className="admin-settings__direction-note">{copy.directionNote}</p></div></section>;
+  return <section className="admin-settings" data-screen-id={SETTINGS_SCREEN_IDS[activeNamespace]} data-route={activePath} data-device-scope="desktop" data-admin-settings-state={state}><AdminNavigation locale={locale} activePath={activePath} /><div className="admin-settings__content"><header className="admin-settings__heading"><div><p className="admin-settings__eyebrow">{copy.eyebrow}</p><h1>{copy.labels[activeNamespace]}</h1><p>{copy.descriptions[activeNamespace]}</p></div></header><nav ref={settingsTabsRef} className="admin-settings__tabs" aria-label={copy.eyebrow}>{ADMIN_SETTINGS_NAMESPACES.map(tab => <a key={tab} href={localePath(locale, SETTINGS_ROUTES[tab])} aria-current={activeNamespace === tab ? 'page' : undefined} data-active={activeNamespace === tab || undefined}>{copy.labels[tab]}</a>)}</nav>{state === 'loading' ? <section className="admin-settings__state" data-state="loading" aria-label={copy.states.loading.title}><StateMessage state="loading" title={copy.states.loading.title} message={copy.states.loading.body} /></section> : null}{state === 'permission' || state === 'retry' || state === 'error' || state === 'conflict' ? stateMessage(state, locale, refresh) : null}{state === 'empty' ? <section className="admin-settings__state" data-state="empty" aria-label={copy.states.empty.title}><StateMessage state="empty" title={copy.states.empty.title} message={copy.states.empty.body} /></section> : null}{state === 'success' || state === 'empty' ? <SettingsForm namespace={activeNamespace} {...(data === undefined ? {} : { data })} values={values} locale={locale} saving={saving} onChangeText={(key, value) => setValues(current => setTextValue(current, key, value))} onChangeLocalized={(key, language, value) => setValues(current => setLocalizedValue(current, key, language, value))} onChangeArray={(key, value) => setValues(current => setArrayValue(current, key, value))} onChangeNumber={(key, value) => setValues(current => setNumberValue(current, key, value))} onChangeBoolean={(key, value) => setValues(current => setBooleanValue(current, key, value))} onSave={save} /> : null}<p className="admin-settings__direction-note">{copy.directionNote}</p></div></section>;
 }

@@ -167,7 +167,8 @@ interface AdsMetric {
 }
 
 function AdsMetricStrip({ metrics, locale, testId }: { readonly metrics: readonly AdsMetric[]; readonly locale: SupportedLocale; readonly testId: string }) {
-  return <div data-testid={testId} className="admin-ads__metrics">{metrics.map(metric => <article className="admin-dashboard__metric" key={metric.label}><strong style={{ color: metric.color }}>{new Intl.NumberFormat(locale).format(metric.value)}</strong><span>{metric.label}</span></article>)}</div>;
+  const icons = ['/assets/canonical/provider/navigation/advertising.svg', '/assets/canonical/provider/navigation/requests.svg', '/assets/canonical/provider/navigation/properties.svg', '/assets/canonical/provider/navigation/commission.svg'] as const;
+  return <div data-testid={testId} className="admin-ads__metrics">{metrics.map((metric, index) => <article className="admin-dashboard__metric" key={metric.label}><span className="admin-dashboard__metric-icon" aria-hidden="true"><img src={icons[index % icons.length]} alt="" width="18" height="18" /></span><strong style={{ color: metric.color }}>{new Intl.NumberFormat(locale).format(metric.value)}</strong><span>{metric.label}</span></article>)}</div>;
 }
 
 function RequestsTable({ data, locale, onDetail }: { readonly data: AdAdminRequestListData; readonly locale: SupportedLocale; readonly onDetail: (id: string) => void }) {
@@ -422,7 +423,7 @@ export function AdminAds({ locale, session, authClient, apiOrigin, url, loadRequ
   const selectedFinancial = payload?.kind === 'financialDetail' ? payload.data : undefined;
 
   return <section className="admin-ads" data-screen-id={projection.screenId} data-route={projection.route} data-device-scope="desktop" data-admin-ads-state={state}>
-    <AdminNavigation locale={locale} activePath="/admin/advertising" />
+    <AdminNavigation locale={locale} activePath={projection.route} />
     <div className="admin-ads__content">
       <header className="admin-ads__heading"><div><p className="admin-ads__eyebrow">{copy.eyebrow}</p><h1>{copy.titles[projection.view]}</h1><p>{copy.descriptions[projection.view]}</p></div></header>
       <nav className="admin-ads__tabs" aria-label={copy.eyebrow}>{tabs.map(([path, label]) => <a key={path} href={localePath(locale, path)} aria-current={projection.route === path ? 'page' : undefined} data-active={projection.route === path || undefined}>{label}</a>)}</nav>
