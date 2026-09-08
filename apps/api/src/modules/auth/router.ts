@@ -17,6 +17,7 @@ import type { AuthCookiePolicy } from './environment.js';
 import { AuthServiceError, type AuthService } from './service.js';
 import { OtpServiceError, type OtpService } from './otp-service.js';
 import type { AccessTokenService } from './crypto.js';
+import type { OtpSendRequest, OtpVerifyRequest } from '@sadat-real-estate/contracts';
 
 export const AUTH_ROUTE_DEFINITIONS = [
   { method: 'POST', path: '/api/v1/auth/login', operationId: 'loginAdmin' },
@@ -110,6 +111,33 @@ function setRefreshCookie(response: Response, token: string, policy: AuthCookieP
   response.setHeader('Set-Cookie', serializeRefreshCookie(token, policy));
 }
 
+function bearer(request: Request): string | undefined {
+  const header = request.get('authorization')?.trim();
+  if (!header || !/^Bearer\s+/iu.test(header)) return undefined;
+  return header.replace(/^Bearer\s+/iu, '').trim() || undefined;
+}
+
+function requireAdminSecondFactorAuthority(
+  request: Request,
+  dependencies: AuthRouterDependencies,
+  input: OtpSendRequest | OtpVerifyRequest
+): void {
+  if (input.roleType !== 'admin') return;
+  const token = bearer(request);
+  if (!token || !dependencies.accessTokens) {
+    throw new ApiContractError('AUTHENTICATION_REQUIRED', 'errors.authenticationRequired', 401);
+  }
+  const claims = dependencies.accessTokens.verify(token);
+  if (
+    claims.role !== 'admin'
+    || claims.status !== 'unverified'
+    || claims.amr !== 'password'
+    || claims.email !== input.email
+  ) {
+    throw new ApiContractError('AUTHENTICATION_REQUIRED', 'errors.authenticationRequired', 401);
+  }
+}
+
 function mappedAuthError(error: AuthServiceError | OtpServiceError): ApiContractError {
   const definition = AUTH_ERROR_MAP[error.code];
   return new ApiContractError(
@@ -147,7 +175,9 @@ export function createAuthRouter(dependencies: AuthRouterDependencies): Router {
     try {
       const input = adminLoginRequestSchema.parse(request.body ?? {});
       const session = await dependencies.service.loginAdmin(input);
-      setRefreshCookie(response, session.refreshToken, dependencies.cookie);
+      if (!('outcome' in session.data && session.data.outcome === 'second_factor_required') && 'refreshToken' in session) {
+        setRefreshCookie(response, session.refreshToken, dependencies.cookie);
+      }
       response.status(200).json(toSuccessResponse(session.data, requestId(request)));
     } catch (error) {
       sendError(request, response, error, false, dependencies.cookie);
@@ -157,6 +187,7 @@ export function createAuthRouter(dependencies: AuthRouterDependencies): Router {
   router.post('/otp/send', async (request, response) => {
     try {
       const input = otpSendRequestSchema.parse(request.body ?? {});
+      requireAdminSecondFactorAuthority(request, dependencies, input);
       const result = await dependencies.otpService.send(input);
       response.status(202).json(toSuccessResponse(result, requestId(request)));
     } catch (error) {
@@ -167,6 +198,7 @@ export function createAuthRouter(dependencies: AuthRouterDependencies): Router {
   router.post('/otp/verify', async (request, response) => {
     try {
       const input = otpVerifyRequestSchema.parse(request.body ?? {});
+      requireAdminSecondFactorAuthority(request, dependencies, input);
       const result = await dependencies.otpService.verify(input);
       if (result.data.outcome === 'authenticated' && 'refreshToken' in result) {
         setRefreshCookie(response, result.refreshToken, dependencies.cookie);

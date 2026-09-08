@@ -24,6 +24,8 @@ import {
   type OtpProvider
 } from './otp-provider.js';
 import { createOtpService } from './otp-service.js';
+import { createMongoosePrivacySecuritySettingsReader } from '../settings/privacy-security-policy.js';
+import { registerAdminPrivacySecurityPolicy } from '../rbac/auth.js';
 
 export interface AuthRuntimeOptions {
   otpProvider?: OtpProvider;
@@ -42,13 +44,16 @@ export function createAuthRuntime(
     environment.accessTokenSecret,
     environment.accessTokenTtlSeconds
   );
+  const privacySecurity = createMongoosePrivacySecuritySettingsReader(connection);
+  registerAdminPrivacySecurityPolicy(accessTokens, privacySecurity);
   const service = createAuthService({
     repository,
     passwordHasher: createArgon2PasswordHasher(),
     accessTokens,
     refreshTokens: createOpaqueTokenService(),
     accessTokenTtlSeconds: environment.accessTokenTtlSeconds,
-    refreshTokenTtlSeconds: environment.refreshTokenTtlSeconds
+    refreshTokenTtlSeconds: environment.refreshTokenTtlSeconds,
+    privacySecurity
   });
   const deterministic = environment.otpProviderMode === 'deterministic-fake';
   const configuredProvider = environment.otpProviderMode === 'smtp' && environment.smtp

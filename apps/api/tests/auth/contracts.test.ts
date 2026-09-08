@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   adminLoginRequestSchema,
+  authLoginSuccessEnvelopeSchema,
   authSessionSuccessEnvelopeSchema,
   emptyAuthRequestSchema,
   logoutSuccessEnvelopeSchema,
@@ -58,6 +59,11 @@ test('keeps contact phone normalization separate and accepts only email OTP iden
     purpose: 'login'
   }).email, 'seeker@example.com');
   assert.equal(otpSendRequestSchema.parse({
+    email: 'Admin@Example.COM',
+    roleType: 'admin',
+    purpose: 'login'
+  }).roleType, 'admin');
+  assert.equal(otpSendRequestSchema.parse({
     email: ' Seeker@Example.COM ',
     roleType: 'seeker',
     purpose: 'login'
@@ -65,7 +71,7 @@ test('keeps contact phone normalization separate and accepts only email OTP iden
   for (const invalid of [
     { phone: '+201000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login' },
     { email: 'bad', roleType: 'seeker', purpose: 'login' },
-    { email: 'seeker@example.com', roleType: 'admin', purpose: 'login' },
+    { email: 'seeker@example.com', roleType: 'admin', purpose: 'registration' },
     { email: 'seeker@example.com', roleType: 'seeker', purpose: 'password-reset' },
     { email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', unexpected: true }
   ]) assert.throws(() => otpSendRequestSchema.parse(invalid));
@@ -124,4 +130,26 @@ test('validates strict auth success envelopes and empty refresh/logout commands'
     data: { loggedOut: true },
     meta: { requestId: 'request-2' }
   }).data, { loggedOut: true });
+});
+
+test('validates the password-authenticated Admin second-factor response without a refresh token', () => {
+  const envelope = {
+    data: {
+      outcome: 'second_factor_required',
+      accessToken: 'first.factor.signature',
+      tokenType: 'Bearer',
+      expiresInSeconds: 900,
+      user: {
+        id: '0123456789abcdef01234567',
+        roleType: 'admin',
+        status: 'verified'
+      }
+    },
+    meta: { requestId: 'admin-second-factor' }
+  };
+  assert.deepEqual(authLoginSuccessEnvelopeSchema.parse(envelope), envelope);
+  assert.throws(() => authLoginSuccessEnvelopeSchema.parse({
+    ...envelope,
+    data: { ...envelope.data, refreshToken: 'unsafe' }
+  }));
 });

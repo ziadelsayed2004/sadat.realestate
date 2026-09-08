@@ -189,7 +189,10 @@ export function createOtpService(dependencies: OtpServiceDependencies): OtpServi
       if (account.status === 'rejected' || account.status === 'suspended') {
         throw new OtpServiceError('ACCOUNT_NOT_ACTIVE');
       }
-      return asAuthenticated(await dependencies.authService.issueAccount(account));
+      return asAuthenticated(await dependencies.authService.issueAccount(
+        account,
+        account.roleType === 'admin' ? 'mfa' : 'otp'
+      ));
     },
 
     async resetPassword(input: PasswordResetRequest) {

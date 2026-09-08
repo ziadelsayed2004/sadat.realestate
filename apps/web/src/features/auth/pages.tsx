@@ -31,6 +31,7 @@ import { ApiClientError } from '../contracts/index.ts';
 import { Button, Input, Select, StateMessage } from '../design_system/index.ts';
 import {
   AuthClient,
+  type AuthPasswordLoginResult,
   type AuthOtpVerifyResult,
   type AuthSnapshot
 } from './index.ts';
@@ -50,7 +51,7 @@ const OTP_COOLDOWN_FALLBACK_SECONDS = 60;
 const OTP_LENGTH = 6;
 
 export interface AuthFlowClient {
-  loginAdmin(input: AdminLoginRequest): Promise<AuthSnapshot>;
+  loginAdmin(input: AdminLoginRequest): Promise<AuthPasswordLoginResult>;
   sendOtp(input: {
     readonly email: string;
     readonly roleType: OtpRoleType | 'admin';
@@ -229,6 +230,7 @@ function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthF
   const [rememberMe, setRememberMe] = useState(true);
   const [state, setState] = useState<RequestState>('idle');
   const [error, setError] = useState<AuthUiError | undefined>();
+  const [secondFactorEmail, setSecondFactorEmail] = useState<string>();
 
   const submit = useCallback(async () => {
     const parsed = adminLoginRequestSchema.safeParse({ email, password });
@@ -241,9 +243,14 @@ function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthF
     setState('loading');
     setError(undefined);
     try {
-      const snapshot = await client.loginAdmin(parsed.data);
+      const result = await client.loginAdmin(parsed.data);
+      if ('email' in result) {
+        setSecondFactorEmail(result.email);
+        setState('idle');
+        return;
+      }
       setState('success');
-      onAuthenticated(snapshot);
+      onAuthenticated(result);
     } catch (requestError: unknown) {
       const nextError = authError(requestError, copy);
       setState(nextError.state);
@@ -254,6 +261,10 @@ function LoginPage({ client, locale, onAuthenticated }: { readonly client: AuthF
   function handleSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
     void submit();
+  }
+
+  if (secondFactorEmail !== undefined) {
+    return <OtpPage client={client} locale={locale} roleType="admin" purpose="login" initialEmail={secondFactorEmail} lockRoleType onAuthenticated={onAuthenticated} />;
   }
 
   return (
@@ -395,11 +406,12 @@ interface OtpPageProps {
     email: string
   ) => void) | undefined;
   readonly lockRoleType?: boolean | undefined;
+  readonly initialEmail?: string | undefined;
 }
 
-function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthenticated, onRegistrationVerified, lockRoleType = false }: OtpPageProps) {
+function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthenticated, onRegistrationVerified, lockRoleType = false, initialEmail = '' }: OtpPageProps) {
   const copy = getAuthCopy(locale);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(initialEmail);
   const [roleType, setRoleType] = useState<OtpRoleType | 'admin'>(initialRoleType);
   const [stage, setStage] = useState<'request' | 'verify'>('request');
   const [challenge, setChallenge] = useState<OtpSendData | undefined>();
@@ -478,7 +490,7 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
     setError(undefined);
     const request: OtpVerifyRequest | PasswordResetOtpVerifyRequest = purpose === 'password_reset'
       ? { email: normalizedEmail, roleType, purpose: 'password_reset', challengeId: challenge.challengeId, code: code.join('') }
-      : { email: normalizedEmail, roleType: roleType === 'admin' ? 'seeker' : roleType, purpose: purpose === 'registration' ? 'registration' : 'login', challengeId: challenge.challengeId, code: code.join('') };
+      : { email: normalizedEmail, roleType, purpose: purpose === 'registration' ? 'registration' : 'login', challengeId: challenge.challengeId, code: code.join('') };
     try {
       const result = await client.verifyOtp(request);
       setState('success');
@@ -568,6 +580,7 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
                 placeholder={copy.identifierPlaceholder}
                 value={email}
                 onChange={event => setEmail(event.currentTarget.value)}
+                disabled={lockRoleType && initialEmail !== ''}
                 required
                 state={state === 'error' && normalizedEmail === undefined ? 'error' : 'default'}
               />
@@ -639,9 +652,11 @@ function OtpPage({ client, locale, roleType: initialRoleType, purpose, onAuthent
             <Button type="button" variant="ghost" size="sm" onClick={() => void sendCode()} disabled={cooldownSeconds > 0 || state === 'loading' || verified}>
               {cooldownSeconds > 0 ? copy.resendIn(cooldownSeconds) : copy.resendAction}
             </Button>
-            <Button type="button" variant="ghost" size="sm" onClick={changeEmail} disabled={state === 'loading'}>
-              {copy.changeEmailAction}
-            </Button>
+            {lockRoleType ? null : (
+              <Button type="button" variant="ghost" size="sm" onClick={changeEmail} disabled={state === 'loading'}>
+                {copy.changeEmailAction}
+              </Button>
+            )}
           </div>
           <p className="auth-card__prompt"><a href="/auth/login">{copy.loginAction}</a></p>
         </div>

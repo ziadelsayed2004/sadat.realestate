@@ -10,7 +10,7 @@ import {
 } from '../../src/modules/security/authorization-matrix.js';
 import { IMPLEMENTED_ROUTE_DEFINITIONS } from '../../src/modules/docs/api-artifacts.js';
 import type { AccessTokenClaims, AccessTokenService } from '../../src/modules/auth/crypto.js';
-import { createAdminRbacAuthMiddleware } from '../../src/modules/rbac/auth.js';
+import { createAdminRbacAuthMiddleware, registerAdminPrivacySecurityPolicy } from '../../src/modules/rbac/auth.js';
 import { createProviderAuthMiddleware } from '../../src/modules/provider/auth.js';
 import { createSeekerAuthMiddleware } from '../../src/modules/seeker/auth.js';
 
@@ -66,6 +66,33 @@ function invoke(
     }
   } as unknown as Response;
   middleware(request, response, () => { next = true; });
+  return { next, status, body, locals: response.locals };
+}
+
+async function invokeAsync(
+  middleware: ReturnType<typeof createAdminRbacAuthMiddleware>,
+  token?: string
+): Promise<{ next: boolean; status: number; body: Record<string, unknown> | undefined; locals: Record<string, unknown> }> {
+  let next = false;
+  let status = 200;
+  let body: Record<string, unknown> | undefined;
+  const request = {
+    get(name: string) {
+      return name.toLowerCase() === 'authorization' && token ? `Bearer ${token}` : undefined;
+    }
+  } as unknown as Request;
+  const response = {
+    locals: {},
+    status(code: number) {
+      status = code;
+      return this;
+    },
+    json(value: Record<string, unknown>) {
+      body = value;
+      return this;
+    }
+  } as unknown as Response;
+  await Promise.resolve(middleware(request, response, () => { next = true; }));
   return { next, status, body, locals: response.locals };
 }
 
@@ -166,4 +193,27 @@ test('admin RBAC middleware exercises every administrative authentication state'
   const verified = invoke(middleware, 'admin');
   assert.equal(verified.next, true);
   assert.equal((verified.locals.adminRbacClaims as AccessTokenClaims).role, 'admin');
+});
+
+test('admin RBAC middleware enforces configured session age and a completed second factor', async () => {
+  const now = Math.floor(Date.now() / 1_000);
+  const tokens = tokenService({
+    password: { ...claims('admin'), iat: now, amr: 'password' },
+    mfa: { ...claims('admin'), iat: now, amr: 'mfa' },
+    stale: { ...claims('admin'), iat: now - 601, amr: 'mfa' }
+  });
+  registerAdminPrivacySecurityPolicy(tokens, {
+    read: async () => ({
+      hideCustomerContact: true,
+      hideInternalNotes: true,
+      hidePrivateDocuments: true,
+      adminSessionTimeoutMinutes: 10,
+      twoFactorAuthentication: true
+    })
+  });
+  const middleware = createAdminRbacAuthMiddleware(tokens);
+
+  assert.equal((await invokeAsync(middleware, 'password')).status, 401);
+  assert.equal((await invokeAsync(middleware, 'stale')).status, 401);
+  assert.equal((await invokeAsync(middleware, 'mfa')).next, true);
 });

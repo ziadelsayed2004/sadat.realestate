@@ -63,6 +63,45 @@ describe('login and OTP screens', () => {
     expect(document.body.textContent).not.toContain('header.payload.signature');
   });
 
+  it('continues a protected Admin password login through the OTP second factor', async () => {
+    const sendOtp = vi.fn().mockResolvedValue(challenge);
+    const verifyOtp = vi.fn().mockResolvedValue({ outcome: 'authenticated', snapshot: authenticatedSnapshot });
+    const client = createClient({
+      loginAdmin: vi.fn().mockResolvedValue({ outcome: 'second_factor_required', email: 'admin@example.com' }),
+      sendOtp,
+      verifyOtp
+    });
+    const onAuthenticated = vi.fn();
+    const copy = getAuthCopy('en');
+    renderWithLocale(<AuthPage url="/auth/login" locale="en" client={client} onAuthenticated={onAuthenticated} />, { locale: 'en' });
+
+    fireEvent.change(screen.getByLabelText(copy.identifierLabel), { target: { value: 'admin@example.com' } });
+    fireEvent.change(screen.getByLabelText(copy.passwordLabel), { target: { value: 'secret' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.loginAction }));
+    await waitFor(() => expect(screen.getByRole('heading', { name: copy.emailTitle, level: 1 })).toBeInTheDocument());
+    expect(screen.getByLabelText(copy.identifierLabel)).toHaveValue('admin@example.com');
+    expect(screen.getByLabelText(copy.identifierLabel)).toBeDisabled();
+
+    fireEvent.click(screen.getByRole('button', { name: copy.sendCodeAction }));
+    await waitFor(() => expect(sendOtp).toHaveBeenCalledWith({
+      email: 'admin@example.com',
+      roleType: 'admin',
+      purpose: 'login'
+    }));
+    expect(screen.queryByRole('button', { name: copy.changeEmailAction })).not.toBeInTheDocument();
+    const digits = Array.from({ length: 6 }, (_, position) => screen.getByLabelText(copy.codeDigitLabel(position + 1)));
+    fireEvent.paste(digits[0]!, { clipboardData: { getData: () => '123456' } });
+    fireEvent.click(screen.getByRole('button', { name: copy.verifyAction }));
+    await waitFor(() => expect(verifyOtp).toHaveBeenCalledWith({
+      email: 'admin@example.com',
+      roleType: 'admin',
+      purpose: 'login',
+      challengeId: challenge.challengeId,
+      code: '123456'
+    }));
+    expect(onAuthenticated).toHaveBeenCalledWith(authenticatedSnapshot);
+  });
+
   it('sends OTP through the real contract, applies the server cooldown, and verifies six digits', async () => {
     const verifyOtp = vi.fn().mockResolvedValue({ outcome: 'authenticated', snapshot: authenticatedSnapshot });
     const client = createClient({ verifyOtp });

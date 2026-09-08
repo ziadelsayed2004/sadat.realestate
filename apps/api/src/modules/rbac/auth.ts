@@ -2,6 +2,16 @@ import type { Request, RequestHandler, Response } from 'express';
 import type { AccessTokenService } from '../auth/crypto.js';
 import { ApiContractError, toApiErrorResponse } from '../contracts/error-boundary.js';
 import { getRequestContext } from '../observability/context.js';
+import type { PrivacySecuritySettingsReader } from '../settings/privacy-security-policy.js';
+
+const privacyPolicies = new WeakMap<AccessTokenService, PrivacySecuritySettingsReader>();
+
+export function registerAdminPrivacySecurityPolicy(
+  accessTokens: AccessTokenService,
+  reader: PrivacySecuritySettingsReader
+): void {
+  privacyPolicies.set(accessTokens, reader);
+}
 
 function requestId(request: Request): string {
   return getRequestContext()?.requestId ?? request.get('x-request-id') ?? 'unknown-request';
@@ -28,7 +38,7 @@ function bearer(request: Request): string | undefined {
 }
 
 export function createAdminRbacAuthMiddleware(accessTokens: AccessTokenService): RequestHandler {
-  return (request, response, next) => {
+  return async (request, response, next) => {
     const token = bearer(request);
     if (!token) {
       sendError(request, response, 'AUTHENTICATION_REQUIRED', 'errors.authenticationRequired', 401);
@@ -39,6 +49,19 @@ export function createAdminRbacAuthMiddleware(accessTokens: AccessTokenService):
       if (claims.role !== 'admin' || claims.status !== 'verified') {
         sendError(request, response, 'FORBIDDEN', 'errors.forbidden', 403);
         return;
+      }
+      const reader = privacyPolicies.get(accessTokens);
+      if (reader) {
+        const policy = await reader.read();
+        const nowSeconds = Math.floor(Date.now() / 1_000);
+        if (
+          (policy.adminSessionTimeoutMinutes !== undefined
+            && nowSeconds - claims.iat >= policy.adminSessionTimeoutMinutes * 60)
+          || (policy.twoFactorAuthentication && claims.amr !== 'mfa')
+        ) {
+          sendError(request, response, 'AUTHENTICATION_REQUIRED', 'errors.authenticationRequired', 401);
+          return;
+        }
       }
       response.locals.adminRbacClaims = claims;
       next();

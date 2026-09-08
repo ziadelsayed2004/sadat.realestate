@@ -24,7 +24,7 @@ export const AUTH_ERROR_CODES = Object.freeze({
   OTP_PROVIDER_UNAVAILABLE: 'OTP_PROVIDER_UNAVAILABLE'
 } as const);
 
-export const OTP_ROLE_TYPES = ['seeker', 'provider'] as const;
+export const OTP_ROLE_TYPES = ['seeker', 'provider', 'admin'] as const;
 export const OTP_PURPOSES = ['login', 'registration'] as const;
 
 const phoneInputSchema = z
@@ -59,13 +59,19 @@ const otpRequestIdentityShape = {
   purpose: otpPurposeSchema
 };
 
-export const otpSendRequestSchema = z.object(otpRequestIdentityShape).strict();
+export const otpSendRequestSchema = z.object(otpRequestIdentityShape).strict().refine(
+  value => value.roleType !== 'admin' || value.purpose === 'login',
+  { message: 'Administrator OTP is limited to login second factor' }
+);
 
 export const otpVerifyRequestSchema = z.object({
   ...otpRequestIdentityShape,
   challengeId: z.string().uuid(),
   code: z.string().regex(/^\d{6}$/)
-}).strict();
+}).strict().refine(
+  value => value.roleType !== 'admin' || value.purpose === 'login',
+  { message: 'Administrator OTP is limited to login second factor' }
+);
 
 export const passwordResetOtpSendRequestSchema = z.object({
   email: normalizedEmailSchema,
@@ -137,6 +143,15 @@ export const authSessionDataSchema = z.object({
   user: authenticatedUserSchema
 }).strict();
 
+export const authSecondFactorRequiredDataSchema = authSessionDataSchema.extend({
+  outcome: z.literal('second_factor_required')
+}).strict();
+
+export const authLoginDataSchema = z.union([
+  authSessionDataSchema,
+  authSecondFactorRequiredDataSchema
+]);
+
 export const otpAuthenticatedDataSchema = authSessionDataSchema.extend({
   outcome: z.literal('authenticated')
 }).strict();
@@ -150,6 +165,7 @@ export const otpSendSuccessEnvelopeSchema = successEnvelopeSchema(otpSendDataSch
 export const otpVerifySuccessEnvelopeSchema = successEnvelopeSchema(otpVerifyDataSchema);
 
 export const authSessionSuccessEnvelopeSchema = successEnvelopeSchema(authSessionDataSchema);
+export const authLoginSuccessEnvelopeSchema = successEnvelopeSchema(authLoginDataSchema);
 export const passwordResetSuccessEnvelopeSchema = successEnvelopeSchema(passwordResetDataSchema);
 
 export const logoutDataSchema = z.object({ loggedOut: z.literal(true) }).strict();
@@ -164,6 +180,7 @@ export type PasswordResetRequest = z.infer<typeof passwordResetRequestSchema>;
 export type PasswordChangeRequest = z.infer<typeof passwordChangeRequestSchema>;
 export type AuthenticatedUser = z.infer<typeof authenticatedUserSchema>;
 export type AuthSessionData = z.infer<typeof authSessionDataSchema>;
+export type AuthLoginData = z.infer<typeof authLoginDataSchema>;
 export type LogoutData = z.infer<typeof logoutDataSchema>;
 export type NormalizedPhone = z.infer<typeof normalizedPhoneSchema>;
 export type OtpPurpose = z.infer<typeof otpPurposeSchema>;

@@ -1,6 +1,7 @@
 import {
   AUTH_ERROR_CODES,
   adminLoginRequestSchema,
+  authLoginSuccessEnvelopeSchema,
   authSessionSuccessEnvelopeSchema,
   emptyAuthRequestSchema,
   logoutSuccessEnvelopeSchema,
@@ -90,6 +91,10 @@ export type AuthenticatedOtpResult = {
 };
 
 export type AuthOtpVerifyResult = AuthenticatedOtpResult | OtpVerifiedData;
+export type AuthPasswordLoginResult = AuthSnapshot | {
+  readonly outcome: 'second_factor_required';
+  readonly email: string;
+};
 
 function isInvalidRefreshError(error: unknown): boolean {
   if (!(error instanceof ApiClientError)) return false;
@@ -103,6 +108,7 @@ export class AuthClient {
   private readonly apiClient: AuthApiClient;
   private readonly sessionHintStorage: AuthSessionHintStorage | undefined;
   private refreshPromise: Promise<AuthSnapshot> | undefined;
+  private pendingSecondFactorToken: string | undefined;
 
   constructor(options: AuthClientOptions = {}) {
     this.apiClient = options.apiClient ?? new ApiClient();
@@ -153,13 +159,17 @@ export class AuthClient {
     return this.store.setAvailableActions(availableActions);
   }
 
-  async loginAdmin(input: AdminLoginRequest): Promise<AuthSnapshot> {
+  async loginAdmin(input: AdminLoginRequest): Promise<AuthPasswordLoginResult> {
     const request = adminLoginRequestSchema.parse(input);
     const response = await this.apiClient.request('/auth/login', {
       method: 'POST',
       json: request,
-      responseSchema: authSessionSuccessEnvelopeSchema
+      responseSchema: authLoginSuccessEnvelopeSchema
     });
+    if ('outcome' in response.data.data && response.data.data.outcome === 'second_factor_required') {
+      this.pendingSecondFactorToken = response.data.data.accessToken;
+      return { outcome: 'second_factor_required', email: request.email };
+    }
     return this.setSession(response.data.data);
   }
 
@@ -169,6 +179,9 @@ export class AuthClient {
     const response = await this.apiClient.request(reset ? '/auth/account-recovery/otp/send' : '/auth/otp/send', {
       method: 'POST',
       json: request,
+      ...(request.roleType === 'admin' && !reset && this.pendingSecondFactorToken
+        ? { headers: { authorization: `Bearer ${this.pendingSecondFactorToken}` } }
+        : {}),
       responseSchema: otpSendSuccessEnvelopeSchema
     });
     return response.data.data;
@@ -180,10 +193,14 @@ export class AuthClient {
     const response = await this.apiClient.request(reset ? '/auth/account-recovery/otp/verify' : '/auth/otp/verify', {
       method: 'POST',
       json: request,
+      ...(request.roleType === 'admin' && !reset && this.pendingSecondFactorToken
+        ? { headers: { authorization: `Bearer ${this.pendingSecondFactorToken}` } }
+        : {}),
       responseSchema: otpVerifySuccessEnvelopeSchema
     });
     const result: OtpVerifyData = response.data.data;
     if (result.outcome === 'authenticated') {
+      this.pendingSecondFactorToken = undefined;
       return {
         outcome: 'authenticated',
         snapshot: this.setSession({
@@ -368,12 +385,14 @@ export class AuthClient {
       });
       return response.data.data;
     } finally {
+      this.pendingSecondFactorToken = undefined;
       this.markSessionHint(false);
       this.store.clear();
     }
   }
 
   dispose(): void {
+    this.pendingSecondFactorToken = undefined;
     this.store.dispose();
   }
 
@@ -403,6 +422,7 @@ export class AuthClient {
   }
 
   private setSession(session: unknown, availableActions?: unknown): AuthSnapshot {
+    this.pendingSecondFactorToken = undefined;
     const snapshot = this.store.setSession(session, availableActions);
     this.markSessionHint(true);
     return snapshot;

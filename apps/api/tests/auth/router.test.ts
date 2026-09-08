@@ -113,8 +113,11 @@ async function withAuthServer(run: (baseUrl: string) => Promise<void>): Promise<
       accessTokens: {
         issue() { return 'header.payload.signature'; },
         verify(token) {
+          if (token === 'first.factor.signature') {
+            return { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '0123456789abcdef01234567', sid: 'abcdefabcdefabcdefabcdef', role: 'admin', status: 'unverified', iat: 1, exp: 9999999999, jti: 'test', amr: 'password', email: 'admin@example.com' };
+          }
           if (token !== 'header.payload.signature') throw new Error('invalid');
-          return { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '0123456789abcdef01234567', sid: 'abcdefabcdefabcdefabcdef', role: 'seeker', status: 'verified', iat: 1, exp: 9999999999, jti: 'test' };
+          return { iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sub: '0123456789abcdef01234567', sid: 'abcdefabcdefabcdefabcdef', role: 'admin', status: 'verified', iat: 1, exp: 9999999999, jti: 'test', amr: 'mfa' };
         }
       }
     }
@@ -216,10 +219,32 @@ test('sends and verifies strict email-bound OTP challenges for seeker/provider f
   });
 });
 
-test('rejects Admin OTP, phone-bound payloads, malformed codes, and provider failures safely', async () => {
+test('requires password authority for Admin OTP and rejects malformed OTP payloads safely', async () => {
   await withAuthServer(async (baseUrl) => {
+    const unauthorizedAdmin = await fetch(`${baseUrl}/api/v1/auth/otp/send`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: 'admin@example.com', roleType: 'admin', purpose: 'login' })
+    });
+    assert.equal(unauthorizedAdmin.status, 401);
+
+    const authorizedAdmin = await fetch(`${baseUrl}/api/v1/auth/otp/send`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer first.factor.signature' },
+      body: JSON.stringify({ email: 'admin@example.com', roleType: 'admin', purpose: 'login' })
+    });
+    assert.equal(authorizedAdmin.status, 202);
+    const verifiedAdmin = await fetch(`${baseUrl}/api/v1/auth/otp/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer first.factor.signature' },
+      body: JSON.stringify({
+        email: 'admin@example.com', roleType: 'admin', purpose: 'login', challengeId, code: '000000'
+      })
+    });
+    assert.equal(verifiedAdmin.status, 200);
+    assert.match(verifiedAdmin.headers.get('set-cookie') ?? '', /^sadat_refresh=/);
+    const verifiedAdminBody = await verifiedAdmin.json() as AuthResponseBody;
+    assert.equal(verifiedAdminBody.data?.user?.roleType, 'admin');
+
     for (const body of [
-      { email: 'admin@example.com', roleType: 'admin', purpose: 'login' },
       { phone: '01000000000', email: 'seeker@example.com', roleType: 'seeker', purpose: 'login' },
       { email: 'seeker@example.com', roleType: 'seeker', purpose: 'login', password: 'unsafe' }
     ]) {

@@ -24,6 +24,12 @@ import type {
 
 const REQUEST_ID = 'auth-test-request';
 const USER_ID = 'a'.repeat(24);
+const challenge = {
+  accepted: true as const,
+  challengeId: '00000000-0000-4000-8000-000000000001',
+  expiresInSeconds: 300,
+  retryAfterSeconds: 30
+};
 
 function session(roleType: AuthSessionData['user']['roleType'] = 'admin', accessToken = 'header.payload.signature'): AuthSessionData {
   return {
@@ -132,6 +138,7 @@ test('admin login normalizes input, keeps the access token in memory, and expose
 
   const snapshot = await client.loginAdmin({ email: ' ADMIN@EXAMPLE.COM ', password: 'secret' });
 
+  if ('email' in snapshot) assert.fail('Second factor was not expected for this session');
   assert.equal(snapshot.status, 'authenticated');
   assert.equal(snapshot.user?.roleType, 'admin');
   assert.equal(client.getAccessToken(), 'header.payload.signature');
@@ -139,6 +146,36 @@ test('admin login normalizes input, keeps the access token in memory, and expose
   assert.equal('accessToken' in snapshot, false);
   assert.equal(sync.publishCount, 0);
   client.dispose();
+});
+
+test('Admin two-factor login keeps the password grant out of the session and authorizes both OTP calls', async () => {
+  const firstFactor = {
+    ...session('admin', 'first.factor.signature'),
+    outcome: 'second_factor_required' as const
+  };
+  const verifiedSession = session('admin', 'mfa.access.signature');
+  const apiClient = new FakeApiClient(async (path) => {
+    if (path === '/auth/login') return response(firstFactor);
+    if (path === '/auth/otp/send') return response(challenge);
+    return response({ outcome: 'authenticated', ...verifiedSession });
+  });
+  const client = new AuthClient({ apiClient, store: new AuthStore({ sync: new TestSync() }) });
+
+  const login = await client.loginAdmin({ email: 'admin@example.com', password: 'secret' });
+  assert.deepEqual(login, { outcome: 'second_factor_required', email: 'admin@example.com' });
+  assert.equal(client.getAccessToken(), undefined);
+  await client.sendOtp({ email: 'admin@example.com', roleType: 'admin', purpose: 'login' });
+  const verified = await client.verifyOtp({
+    email: 'admin@example.com',
+    roleType: 'admin',
+    purpose: 'login',
+    challengeId: challenge.challengeId,
+    code: '123456'
+  });
+  assert.equal(apiClient.calls[1]?.options.headers && new Headers(apiClient.calls[1].options.headers).get('authorization'), 'Bearer first.factor.signature');
+  assert.equal(apiClient.calls[2]?.options.headers && new Headers(apiClient.calls[2].options.headers).get('authorization'), 'Bearer first.factor.signature');
+  assert.equal(verified.outcome, 'authenticated');
+  assert.equal(client.getAuthorizationHeader(), 'Bearer mfa.access.signature');
 });
 
 test('session hint distinguishes known guests from sessions that should be refreshed', async () => {

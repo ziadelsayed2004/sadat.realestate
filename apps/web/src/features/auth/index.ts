@@ -4,6 +4,7 @@ export type {
   AuthenticatedOtpResult,
   AuthClientOptions,
   AuthOtpVerifyResult,
+  AuthPasswordLoginResult,
   AuthSessionHintStorage
 } from './client.ts';
 export { AuthStore } from './store.ts';

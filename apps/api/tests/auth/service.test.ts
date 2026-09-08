@@ -64,7 +64,7 @@ function repository(overrides: Partial<AuthRepository> = {}): AuthRepository {
   };
 }
 
-function service(repo: AuthRepository) {
+function service(repo: AuthRepository, twoFactorAuthentication = false) {
   return createAuthService({
     repository: repo,
     passwordHasher,
@@ -72,7 +72,15 @@ function service(repo: AuthRepository) {
     refreshTokens: tokenService(),
     accessTokenTtlSeconds: 900,
     refreshTokenTtlSeconds: 2_592_000,
-    now: () => new Date('2026-08-12T12:00:00.000Z')
+    now: () => new Date('2026-08-12T12:00:00.000Z'),
+    privacySecurity: {
+      read: async () => ({
+        hideCustomerContact: true,
+        hideInternalNotes: true,
+        hidePrivateDocuments: true,
+        twoFactorAuthentication
+      })
+    }
   });
 }
 
@@ -126,6 +134,13 @@ test('logs in a provider through the same email/password endpoint', async () => 
     roleType: 'provider',
     status: 'pending_review'
   });
+});
+
+test('requires an email OTP after a valid Admin password when two-factor authentication is enabled', async () => {
+  const auth = service(repository(), true);
+  const result = await auth.loginAdmin({ email: 'admin@example.com', password: 'correct-password' });
+  assert.equal('outcome' in result.data ? result.data.outcome : undefined, 'second_factor_required');
+  assert.equal(result.data.user.roleType, 'admin');
 });
 
 test('resets a non-admin account password and revokes its sessions', async () => {

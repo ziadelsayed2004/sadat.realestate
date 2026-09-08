@@ -21,6 +21,8 @@ export interface AccessTokenSubject {
   id: string;
   roleType: AuthRoleType;
   status: AuthAccountState;
+  authenticationMethod?: 'password' | 'otp' | 'mfa';
+  authenticationEmail?: string;
 }
 
 export interface AccessTokenClaims {
@@ -33,6 +35,8 @@ export interface AccessTokenClaims {
   iat: number;
   exp: number;
   jti: string;
+  amr?: 'password' | 'otp' | 'mfa';
+  email?: string;
 }
 
 export interface AccessTokenService {
@@ -123,6 +127,8 @@ function parseClaims(encoded: string): AccessTokenClaims {
       typeof value.iat !== 'number' || !Number.isSafeInteger(value.iat) ||
       typeof value.exp !== 'number' || !Number.isSafeInteger(value.exp) ||
       typeof value.jti !== 'string' || value.jti.length < 1
+      || (value.amr !== undefined && value.amr !== 'password' && value.amr !== 'otp' && value.amr !== 'mfa')
+      || (value.email !== undefined && (typeof value.email !== 'string' || value.email.length > 254))
     ) throw new AccessTokenValidationError();
     return value as unknown as AccessTokenClaims;
   } catch (error) {
@@ -153,7 +159,9 @@ export function createHmacAccessTokenService(
         status: subject.status,
         iat: issuedAt,
         exp: issuedAt + ttlSeconds,
-        jti: createJti()
+        jti: createJti(),
+        ...(subject.authenticationMethod ? { amr: subject.authenticationMethod } : {}),
+        ...(subject.authenticationEmail ? { email: subject.authenticationEmail } : {})
       };
       const payload = encodeJson(claims);
       const unsigned = `${header}.${payload}`;

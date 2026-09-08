@@ -1,10 +1,12 @@
-import type { AdminLoginRequest, AuthRoleType, AuthSessionData, PasswordChangeRequest } from '@sadat-real-estate/contracts';
+import { randomBytes } from 'node:crypto';
+import type { AdminLoginRequest, AuthLoginData, AuthRoleType, AuthSessionData, PasswordChangeRequest } from '@sadat-real-estate/contracts';
 import type {
   AccessTokenService,
   OpaqueTokenService,
   PasswordHasher
 } from './crypto.js';
 import type { AuthAccount, AuthRepository } from './repository.js';
+import type { PrivacySecuritySettingsReader } from '../settings/privacy-security-policy.js';
 
 const DUMMY_PASSWORD = 'synthetic-timing-equalization-value-not-a-credential';
 
@@ -30,9 +32,11 @@ export interface IssuedAuthSession {
   refreshExpiresAt: Date;
 }
 
+export type IssuedAuthLogin = IssuedAuthSession | { data: AuthLoginData };
+
 export interface AuthService {
-  loginAdmin(input: AdminLoginRequest): Promise<IssuedAuthSession>;
-  issueAccount(account: AuthAccount): Promise<IssuedAuthSession>;
+  loginAdmin(input: AdminLoginRequest): Promise<IssuedAuthLogin>;
+  issueAccount(account: AuthAccount, authenticationMethod?: 'password' | 'otp' | 'mfa'): Promise<IssuedAuthSession>;
   refresh(refreshToken: string): Promise<IssuedAuthSession>;
   logout(refreshToken: string): Promise<void>;
   setAccountPassword(userId: string, newPassword: string): Promise<void>;
@@ -49,6 +53,7 @@ export interface AuthServiceDependencies {
   refreshTokens: OpaqueTokenService;
   accessTokenTtlSeconds: number;
   refreshTokenTtlSeconds: number;
+  privacySecurity?: PrivacySecuritySettingsReader;
   now?: () => Date;
 }
 
@@ -57,10 +62,16 @@ function responseData(
   sessionId: string,
   accessTokens: AccessTokenService,
   accessTokenTtlSeconds: number,
-  now: Date
+  now: Date,
+  authenticationMethod: 'password' | 'otp' | 'mfa',
+  authenticationEmail?: string
 ): AuthSessionData {
   return {
-    accessToken: accessTokens.issue(account, sessionId, now),
+    accessToken: accessTokens.issue({
+      ...account,
+      authenticationMethod,
+      ...(authenticationEmail ? { authenticationEmail } : {})
+    }, sessionId, now),
     tokenType: 'Bearer',
     expiresInSeconds: accessTokenTtlSeconds,
     user: account
@@ -83,7 +94,7 @@ export function createAuthService(dependencies: AuthServiceDependencies): AuthSe
     return Boolean(passwordHash && valid);
   }
 
-  async function issue(account: AuthAccount): Promise<IssuedAuthSession> {
+  async function issue(account: AuthAccount, authenticationMethod: 'password' | 'otp' | 'mfa' = 'password', authenticationEmail?: string): Promise<IssuedAuthSession> {
     const issuedAt = now();
     const refreshToken = dependencies.refreshTokens.create();
     const refreshExpiresAt = new Date(
@@ -92,7 +103,8 @@ export function createAuthService(dependencies: AuthServiceDependencies): AuthSe
     const { sessionId } = await dependencies.repository.createSession({
       userId: account.id,
       tokenHash: dependencies.refreshTokens.hash(refreshToken),
-      expiresAt: refreshExpiresAt
+      expiresAt: refreshExpiresAt,
+      authenticationMethod
     });
     return {
       data: responseData(
@@ -100,7 +112,9 @@ export function createAuthService(dependencies: AuthServiceDependencies): AuthSe
         sessionId,
         dependencies.accessTokens,
         dependencies.accessTokenTtlSeconds,
-        issuedAt
+        issuedAt,
+        authenticationMethod,
+        authenticationEmail
       ),
       refreshToken,
       refreshExpiresAt
@@ -124,18 +138,32 @@ export function createAuthService(dependencies: AuthServiceDependencies): AuthSe
       // AdminLoginRecord carries the credential hash only for verification. Do
       // not let that repository-only field cross the authentication response
       // boundary into the session user projection.
-      return issue({
+      const authenticatedAccount = {
         id: record.id,
         roleType: record.roleType,
         status: record.status
-      });
+      };
+      const policy = dependencies.privacySecurity ? await dependencies.privacySecurity.read() : undefined;
+      if (record.roleType === 'admin' && policy?.twoFactorAuthentication) {
+        const data = responseData(
+          { ...authenticatedAccount, status: 'unverified' },
+          randomBytes(12).toString('hex'),
+          dependencies.accessTokens,
+          dependencies.accessTokenTtlSeconds,
+          now(),
+          'password',
+          input.email
+        );
+        return { data: { ...data, user: authenticatedAccount, outcome: 'second_factor_required' } };
+      }
+      return issue(authenticatedAccount, 'password', input.email);
     },
 
-    async issueAccount(account) {
+    async issueAccount(account, authenticationMethod = 'otp') {
       if (account.status === 'rejected' || account.status === 'suspended') {
         throw new AuthServiceError('ACCOUNT_NOT_ACTIVE');
       }
-      return issue(account);
+      return issue(account, authenticationMethod);
     },
 
     async refresh(refreshToken) {
@@ -162,7 +190,8 @@ export function createAuthService(dependencies: AuthServiceDependencies): AuthSe
           result.sessionId,
           dependencies.accessTokens,
           dependencies.accessTokenTtlSeconds,
-          rotatedAt
+          rotatedAt,
+          result.authenticationMethod ?? 'password'
         ),
         refreshToken: replacementToken,
         refreshExpiresAt: replacementExpiresAt

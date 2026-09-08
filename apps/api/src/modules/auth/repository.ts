@@ -25,6 +25,7 @@ export interface CreateSessionInput {
   userId: string;
   tokenHash: string;
   expiresAt: Date;
+  authenticationMethod: 'password' | 'otp' | 'mfa';
 }
 
 export interface RotateSessionInput {
@@ -35,7 +36,7 @@ export interface RotateSessionInput {
 }
 
 export type SessionRotationResult =
-  | { kind: 'rotated'; account: AuthAccount; sessionId: string }
+  | { kind: 'rotated'; account: AuthAccount; sessionId: string; authenticationMethod: 'password' | 'otp' | 'mfa' }
   | { kind: 'invalid' }
   | { kind: 'reuse_detected' }
   | { kind: 'account_not_active' };
@@ -141,6 +142,7 @@ interface LeanSession {
   expiresAt: Date;
   revokedAt?: Date;
   replacedBySessionId?: Types.ObjectId;
+  authenticationMethod?: 'password' | 'otp' | 'mfa';
 }
 
 interface LeanOtpChallenge {
@@ -296,14 +298,15 @@ export function createMongooseAuthRepository(
       const session = await Session.create({
         userId: new Types.ObjectId(input.userId),
         tokenHash: input.tokenHash,
-        expiresAt: input.expiresAt
+        expiresAt: input.expiresAt,
+        authenticationMethod: input.authenticationMethod
       });
       return { sessionId: session._id.toString() };
     },
 
     async rotateSession(input) {
       const current = await Session.findOne({ tokenHash: input.currentTokenHash })
-        .select('+tokenHash _id userId expiresAt revokedAt replacedBySessionId')
+        .select('+tokenHash _id userId expiresAt revokedAt replacedBySessionId authenticationMethod')
         .lean<LeanSession>()
         .exec();
       if (!current) return { kind: 'invalid' };
@@ -338,7 +341,8 @@ export function createMongooseAuthRepository(
         _id: replacementId,
         userId: current.userId,
         tokenHash: input.replacementTokenHash,
-        expiresAt: input.replacementExpiresAt
+        expiresAt: input.replacementExpiresAt,
+        authenticationMethod: current.authenticationMethod ?? 'password'
       });
       const rotation = await Session.updateOne(
         {
@@ -361,7 +365,8 @@ export function createMongooseAuthRepository(
       return {
         kind: 'rotated',
         account,
-        sessionId: replacementId.toHexString()
+        sessionId: replacementId.toHexString(),
+        authenticationMethod: current.authenticationMethod ?? 'password'
       };
     },
 
