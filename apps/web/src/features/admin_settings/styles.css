@@ -1,6 +1,6 @@
 .admin-settings { min-height: calc(100vh - var(--header-height-min)); overflow: hidden; background: #f5e9cb; color: #1b2942; }
 .admin-settings__content { min-width: 0; padding: 28px clamp(18px, 2.2vw, 34px) 48px; }
-.admin-settings__heading, .admin-settings__editor, .admin-settings__state { max-width: 1320px; margin-inline: auto; }
+.admin-settings__heading, .admin-settings__state { max-width: 1320px; margin-inline: auto; }
 .admin-settings__editor, .admin-settings__state { border: 1px solid #e3e5e7; border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(50 50 50 / 6%); }
 .admin-settings__heading { margin-block-end: 22px; padding: 4px 0 18px; }
 .admin-settings__heading h1 { margin: 0 0 6px; color: #1b2942; font-size: clamp(1.75rem, 2.2vw, 2rem); letter-spacing: -.03em; }
@@ -64,7 +64,7 @@
 .admin-settings[data-screen-id='ADM-54'] .admin-settings__tabs { max-width: none; flex-wrap: nowrap; gap: 8px; margin: 0 0 26px; padding: 10px; overflow-x: auto; border: 1px solid #e3e4e6; border-radius: 18px; background: #fff; box-shadow: 0 8px 24px rgb(27 41 66 / 8%); }
 .admin-settings[data-screen-id='ADM-54'] .admin-settings__tabs a { min-height: 0; flex: 0 0 auto; padding: 12px 17px; border: 0; color: #788296; font-size: 14px; border-radius: 999px; white-space: nowrap; }
 .admin-settings[data-screen-id='ADM-54'] .admin-settings__tabs a[data-active='true'] { color: #fff; background: #0e5849; }
-.admin-settings[data-screen-id='ADM-54'] .admin-settings__editor { width: min(860px, 100%); max-width: none; margin-right: 0; margin-left: auto; border-color: #e3e4e6; box-shadow: 0 8px 24px rgb(27 41 66 / 8%); }
+.admin-settings[data-screen-id='ADM-54'] .admin-settings__editor { width: min(860px, 100%); margin-right: 0; margin-left: auto; border-color: #e3e4e6; box-shadow: 0 8px 24px rgb(27 41 66 / 8%); }
 .admin-settings[data-screen-id='ADM-54'] .admin-settings__editor-heading { align-items: flex-start; padding: 24px 28px 20px; background: #fff; }
 .admin-settings[data-screen-id='ADM-54'] .admin-settings__editor-heading h2 { font-size: 23px; }
 .admin-settings[data-screen-id='ADM-54'] .admin-settings__editor-heading p { margin-top: 7px; font-size: 14px; }
