@@ -10,6 +10,8 @@
 - The final Web Vitest suite passed 413/413. The API route suite passed 112/112, the full API suite was rerun after the final changes with 556/556 passing, and the contract audit reports 187/187 runtime/policy routes covered by the implemented blueprint. `npm audit --audit-level=high` reports 0 vulnerabilities after the `qs` lockfile update.
 - The aggregate `quality` command still has two declared release-gate exceptions: API coverage is 78.23% lines / 79.88% functions versus its 80% thresholds, and the pack audit retains the ADM-54 design-source path mismatch. All 556 API tests themselves pass; these are coverage/provenance gates rather than failing behavior assertions.
 - A native local runtime smoke was also run against freshly started API/SSR services and seeded data; it returned `RUNTIME_SMOKE_OK` with the expected property, developer, article, community, About, and homepage counts plus private-file and security-header checks.
+- The admin route auditor now accepts `ADMIN_AUDIT_BASE_URL` while retaining Production as its default. This permits the same 51-route, Desktop/Pixel 5 audit against a seeded local runtime without changing the Production procedure.
+- Against that native runtime, the auditor completed all 102 route visits (51 Desktop + 51 Pixel 5): login reached `ADM-01`, every HTML response was 200, access projections and request failures were zero, and every viewport matched its target with zero horizontal overflow. The six `SETTINGS_NOT_FOUND` responses (three intentionally uncreated settings namespaces on two devices) are classified as expected empty-state responses; no unexpected HTTP error remained.
 
 ## Source and guide recovery
 

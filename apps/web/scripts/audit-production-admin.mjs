@@ -4,10 +4,20 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { createInterface } from 'node:readline/promises';
 
-const baseUrl = 'https://elsadatrealestate.com';
+const baseUrl = (process.env.ADMIN_AUDIT_BASE_URL?.trim() || 'https://elsadatrealestate.com').replace(/\/$/u, '');
 const outputDirectory = path.resolve(process.env.ADMIN_AUDIT_OUTPUT ?? 'test-results/production-admin-audit');
 const sidebarSource = readFileSync(new URL('../src/features/admin/overview.tsx', import.meta.url), 'utf8');
 const routes = [...sidebarSource.matchAll(/sidebarItem\('([^']+)', '([^']+)'/gu)].map(([, name, route]) => [`${route}?lang=ar`, name]);
+
+function isExpectedEmptySettingsResponse(error) {
+  if (error.method !== 'GET' || error.status !== 404) return false;
+  if (!/^\/api\/v1\/admin\/settings\/(platform|contact|seo)$/u.test(error.path.split('?')[0])) return false;
+  try {
+    return JSON.parse(error.body)?.error?.code === 'SETTINGS_NOT_FOUND';
+  } catch {
+    return false;
+  }
+}
 
 
 async function readCredentials() {
@@ -83,6 +93,8 @@ async function inspectRoute(page, route, name, device) {
   await Promise.all(httpErrorTasks);
   page.off('requestfailed', onRequestFailed);
   page.off('response', onResponse);
+  const expectedHttpErrors = httpErrors.filter(isExpectedEmptySettingsResponse);
+  const unexpectedHttpErrors = httpErrors.filter(error => !isExpectedEmptySettingsResponse(error));
   return {
     device,
     route,
@@ -91,6 +103,8 @@ async function inspectRoute(page, route, name, device) {
     ...details,
     requestFailures: failures,
     httpErrors,
+    expectedHttpErrors,
+    unexpectedHttpErrors,
     apiResponses,
     screenshot,
   };
@@ -157,7 +171,7 @@ async function main() {
     };
     await writeFile(path.join(outputDirectory, 'report.json'), `${JSON.stringify(report, null, 2)}\n`, 'utf8');
     process.stdout.write(JSON.stringify({
-      ok: login.screenId === 'ADM-01' && !login.error && [...desktopResults, ...mobileResults].every(result => result.status === 200 && !result.access && result.httpErrors.length === 0 && result.viewportWidth === (result.device === 'mobile' ? 393 : 1440)),
+      ok: login.screenId === 'ADM-01' && !login.error && [...desktopResults, ...mobileResults].every(result => result.status === 200 && !result.access && result.unexpectedHttpErrors.length === 0 && result.viewportWidth === (result.device === 'mobile' ? 393 : 1440)),
       login,
       desktop: desktopResults.map(({ screenshot: _screenshot, ...result }) => result),
       mobile: mobileResults.map(({ screenshot: _screenshot, ...result }) => result),
