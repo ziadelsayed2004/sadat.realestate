@@ -96,6 +96,8 @@ function sendError(request: Request, response: Response, error: unknown): void {
     FORBIDDEN: { statusCode: 403, messageKey: 'errors.forbidden' },
     NOT_FOUND: { statusCode: 404, messageKey: 'errors.communityNotFound' },
     INVALID_STATE: { statusCode: 409, messageKey: 'errors.communityInvalidState' },
+    BLOCKED_CONTENT: { statusCode: 422, messageKey: 'errors.communityBlockedContent' },
+    POST_LIMIT: { statusCode: 429, messageKey: 'errors.communityPostLimit' },
     DUPLICATE: { statusCode: 409, messageKey: 'errors.communityReportDuplicate' }
     ,VERSION_CONFLICT: { statusCode: 409, messageKey: 'errors.communityReportVersionConflict' }
   };

@@ -37,3 +37,21 @@ test('a failed audit leaves the community post unpublished', async () => {
   await assert.rejects(() => service.moderate(admin, post.id, { action: 'publish', reason: 'Reviewed content', expectedUpdatedAt: post.updatedAt }, { requestId: 'test', traceId: 'test' }), /audit offline/);
   assert.equal((await repo.getPost(post.id))!.status, 'draft');
 });
+
+test('community settings reject blocked content and enforce the Cairo daily post limit', async () => {
+  const repository = createMemoryCommunityRepository();
+  const settings = { read: async () => ({ blockedWordReview: true, blockedWords: ['spam'], blockedWordAction: 'reject' as const, dailyPostLimit: 1 }) };
+  const service = createCommunityService([], repository, { authorize: async () => true }, settings);
+  await assert.rejects(() => service.create(seeker, { title: 'Spam offer', body: 'Rejected content' }), /BLOCKED_CONTENT/);
+  await service.create(seeker, { title: 'First post', body: 'Allowed content' });
+  await assert.rejects(() => service.create(seeker, { title: 'Second post', body: 'Daily limit' }), /POST_LIMIT/);
+});
+
+test('community moderation wait settings expose a truthful admin review deadline', async () => {
+  const repository = createMemoryCommunityRepository();
+  const service = createCommunityService([], repository, { authorize: async () => true }, { read: async () => ({ blockedWordReview: false, blockedWords: [], blockedWordAction: 'manual_review' as const, moderationWaitHours: 1 }) });
+  const post = await service.create(seeker, { title: 'Review deadline', body: 'Waiting for moderation' });
+  const page = await service.adminPage(admin, { page: 1, limit: 20 });
+  assert.equal(page.items[0]?.moderationDueAt, new Date(Date.parse(post.createdAt) + 60 * 60 * 1000).toISOString());
+  assert.equal(page.items[0]?.moderationOverdue, false);
+});

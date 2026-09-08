@@ -24,6 +24,7 @@ import {
 } from '@sadat-real-estate/contracts';
 import type { AuditRecordInput, AuditWriter } from '../audit/writer.js';
 import type { AccessTokenClaims } from '../auth/crypto.js';
+import { DEFAULT_COMMUNITY_RUNTIME_SETTINGS, type CommunityRuntimeSettings, type CommunitySettingsReader } from '../settings/community-policy.js';
 
 const id = () => randomBytes(12).toString('hex');
 const active = (claims: AccessTokenClaims) => claims.status === 'verified' && ['seeker', 'provider', 'admin'].includes(claims.role);
@@ -116,17 +117,26 @@ function publicComment(comment: CommunityComment): CommunityPublicComment {
 export function createCommunityService(
   seed: CommunityPost[] = [],
   repository: CommunityRepository = createMemoryCommunityRepository(seed),
-  authorization?: CommunityAuthorization
+  authorization?: CommunityAuthorization,
+  settingsReader?: CommunitySettingsReader
 ): CommunityService {
   const now = () => new Date().toISOString();
+  const settings = async (): Promise<CommunityRuntimeSettings> => settingsReader ? settingsReader.read() : DEFAULT_COMMUNITY_RUNTIME_SETTINGS;
+  const cairoDay = (value: string): string => new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Cairo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(value));
+  const containsBlockedWord = (value: string, policy: CommunityRuntimeSettings): boolean => {
+    const normalized = value.toLocaleLowerCase('ar-EG');
+    return policy.blockedWordReview && policy.blockedWords.some((word) => normalized.includes(word));
+  };
   async function requireAdminView(claims: AccessTokenClaims): Promise<void> {
     if (claims.role !== 'admin' || claims.status !== 'verified' || authorization === undefined || !(await authorization.authorize(claims.sub, 'admin:community.view'))) {
       throw new Error('FORBIDDEN');
     }
   }
 
-  function adminPost(post: CommunityPost, commentCount: number) {
-    return { ...post, commentCount };
+  function adminPost(post: CommunityPost, commentCount: number, policy: CommunityRuntimeSettings, currentTime: number) {
+    if (post.status !== 'draft' || policy.moderationWaitHours === undefined) return { ...post, commentCount };
+    const moderationDueAt = new Date(Date.parse(post.createdAt) + policy.moderationWaitHours * 60 * 60 * 1000).toISOString();
+    return { ...post, commentCount, moderationDueAt, moderationOverdue: Date.parse(moderationDueAt) <= currentTime };
   }
 
   return {
@@ -134,6 +144,13 @@ export function createCommunityService(
       if (!active(claims)) throw new Error('FORBIDDEN');
       const parsed: CommunityPostCreate = communityPostCreateSchema.parse(input);
       const stamp = now();
+      const policy = await settings();
+      if (policy.dailyPostLimit !== undefined) {
+        const today = cairoDay(stamp);
+        const createdToday = (await repository.listPosts()).filter((post) => post.authorId === claims.sub && post.status !== 'removed' && cairoDay(post.createdAt) === today).length;
+        if (createdToday >= policy.dailyPostLimit) throw new Error('POST_LIMIT');
+      }
+      if (containsBlockedWord(`${parsed.title} ${parsed.body}`, policy) && policy.blockedWordAction === 'reject') throw new Error('BLOCKED_CONTENT');
       const post = communityPostSchema.parse({ id: id(), authorId: claims.sub, ...parsed, status: 'draft', createdAt: stamp, updatedAt: stamp });
       await repository.savePost(post);
       return post;
@@ -145,7 +162,10 @@ export function createCommunityService(
     async update(claims, postId, input) {
       const post = await repository.getPost(postId);
       if (!post || post.authorId !== claims.sub) throw new Error('NOT_FOUND');
-      const updated = communityPostSchema.parse({ ...post, ...communityPostPatchSchema.parse(input), updatedAt: now() });
+      const patch = communityPostPatchSchema.parse(input);
+      const policy = await settings();
+      if (containsBlockedWord(`${patch.title ?? post.title} ${patch.body ?? post.body}`, policy) && policy.blockedWordAction === 'reject') throw new Error('BLOCKED_CONTENT');
+      const updated = communityPostSchema.parse({ ...post, ...patch, updatedAt: now() });
       await repository.savePost(updated);
       return updated;
     },
@@ -226,6 +246,8 @@ export function createCommunityService(
     async adminPage(claims, query) {
       await requireAdminView(claims);
       const parsed = communityAdminPostListQuerySchema.parse(query);
+      const policy = await settings();
+      const currentTime = Date.now();
       const search = parsed.search?.toLocaleLowerCase('en-US');
       const posts = (await repository.listPosts())
         .filter(post => parsed.status === undefined || post.status === parsed.status)
@@ -237,7 +259,7 @@ export function createCommunityService(
         if (comment.status !== 'removed') commentCounts.set(comment.postId, (commentCounts.get(comment.postId) ?? 0) + 1);
       }
       const start = (parsed.page - 1) * parsed.limit;
-      const items = posts.slice(start, start + parsed.limit).map(post => adminPost(post, commentCounts.get(post.id) ?? 0));
+      const items = posts.slice(start, start + parsed.limit).map(post => adminPost(post, commentCounts.get(post.id) ?? 0, policy, currentTime));
       return { items, page: parsed.page, limit: parsed.limit, total: posts.length };
     },
     async adminCommentsPage(claims, query) {

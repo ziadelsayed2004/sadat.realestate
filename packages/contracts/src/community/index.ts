@@ -89,7 +89,11 @@ export type CommunityPublicPost = z.infer<typeof communityPublicPostSchema>;
 export type CommunityPublicComment = z.infer<typeof communityPublicCommentSchema>;
 export type CommunityPublicPostListData = z.infer<typeof communityPublicPostListDataSchema>;
 export type CommunityPublicPostDetailData = z.infer<typeof communityPublicPostDetailDataSchema>;
-export const communityAdminPostSchema = communityPostSchema.extend({ commentCount: z.number().int().nonnegative() }).strict();
+export const communityAdminPostSchema = communityPostSchema.extend({
+  commentCount: z.number().int().nonnegative(),
+  moderationDueAt: z.string().datetime({ offset: true }).optional(),
+  moderationOverdue: z.boolean().optional()
+}).strict();
 export const communityAdminPostListDataSchema = z.object({
   items: z.array(communityAdminPostSchema),
   page: z.number().int().positive(),
