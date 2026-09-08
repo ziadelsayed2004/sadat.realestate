@@ -5,6 +5,7 @@
 - Sidebar entry routes for property review, project review, and potential duplicates now render a selectable, filterable list when no record ID is provided. Explicit missing IDs retain the missing-record state.
 - Property/report/request filter application replaces submitted filter values, so removing a search or status does not retain an omitted previous value. Request status tabs remain available after empty results.
 - Earlier repairs include metric/filter spacing, project filter input/button ordering, reusable navigation icons, provider empty-result recovery, and protected community publish/hide with reason, audit, and optimistic concurrency.
+- Generic settings editors now follow the measured 672px desktop column from the owning Figma frames, with logical RTL/LTR alignment and the existing compact single-column behavior.
 - The production audit script now records successful API response statuses as well as errors. A successful page response alone is not proof that its API succeeded.
 
 ## Verification

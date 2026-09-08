@@ -3,7 +3,7 @@
 ## Verified changes
 
 - The generic `[data-state]` card rule no longer constrains admin screens to 48rem. Audit and notifications now use the full admin shell width.
-- Settings editors fill their content column; bilingual fields use two equal columns with bounded inputs.
+- Settings editors now use the 672px right-aligned desktop column measured from ADM-50/51/52/53/55/56/57/58; bilingual fields use two equal columns with bounded inputs and collapse safely on compact screens.
 - Advertising metrics use a padded responsive grid instead of content-sized flex cards.
 - Sidebar scroll brings the current link into view through both the outer compact rail and any nested horizontal group list, and the active group cannot be collapsed. Other group preferences remain persistent.
 - Browser geometry verification passed for the named admin layout, sidebar, and filter routes in six device/locale configurations; the final matrix passed 60/60 across Desktop, Tablet, and Pixel 5 in Arabic and English. Checks cover screen width, horizontal overflow, active link identity, compact-rail active-link visibility, and filter recovery. These are local checks and remain distinct from post-deployment evidence.
@@ -45,3 +45,7 @@ The reviewed candidate is pushed to `main` with the compact-rail fix, advertisin
 - A direct read-only Production login with the supplied credentials returned `200` and an explicit `admin` role (`/api/v1/admin/overview` and `/api/v1/admin/properties` also returned `200` when called with the returned bearer token). The refresh endpoint returned `200` in the same cookie session.
 - Re-running the browser route auditor against the currently deployed bundle did not retain that session after navigation: the first protected page triggered `REFRESH_TOKEN_REUSED`, then subsequent pages triggered `INVALID_REFRESH_TOKEN`. The browser run therefore produced `0/102` authenticated route visits, even though the direct API check proves the account is an Admin. This is evidence about the pre-change Production bundle and must be rerun after deployment; it is not evidence that the pushed candidate is deployed.
 - The strict Figma closure gate currently reports `90/119` closed and `29` open (seeker `10`, provider `17`, admin `2`); the repository still records the broader 131-row guide matrix and the ADM-18/ADM-54 source decisions as open release evidence. No 100% Figma claim is made.
+
+## Settings geometry recheck
+
+- The local desktop/compact matrix was rerun after aligning the generic settings editor to the measured 672px Figma column. `admin-page-layout.spec.ts` passed 6/6 across Desktop, Tablet, and Pixel 5 in Arabic and English; desktop assertions reject an editor wider than 672px while compact layouts remain within the viewport.

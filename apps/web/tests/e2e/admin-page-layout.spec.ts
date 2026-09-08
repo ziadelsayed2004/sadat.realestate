@@ -20,6 +20,11 @@ test('admin settings, audit, notifications and advertising use the available pag
       await expect(activeSidebarLink).toHaveAttribute('href', new RegExp(`^/admin/${route.replaceAll('/', '\\/')}(?:\\?|$)`));
     }
     if (route.startsWith('settings')) await expect(page.locator('.admin-settings__tabs [aria-current="page"]')).toHaveCount(1);
+    if (route.startsWith('settings') && page.viewportSize()!.width > 1100) {
+      const editor = page.locator('.admin-settings__editor');
+      await expect(editor).toBeVisible();
+      await expect.poll(async () => Math.round((await editor.boundingBox())!.width)).toBeLessThanOrEqual(672);
+    }
     if (page.viewportSize()!.width > 1100) {
       const visible = await page.locator('.admin-dashboard__navigation-scroll').evaluate(element => {
         const item = element.querySelector('[aria-current="page"]')!.getBoundingClientRect();

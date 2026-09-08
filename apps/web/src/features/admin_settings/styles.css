@@ -10,7 +10,7 @@
 .admin-settings__tabs a { flex: 0 0 auto; min-height: 42px; padding: 10px 18px; border: 1px solid #d9cfba; border-radius: 999px; color: #155b4f; font-weight: 800; text-decoration: none; white-space: nowrap; }
 .admin-settings__tabs a[data-active='true'], .admin-settings__tabs a:hover, .admin-settings__tabs a:focus-visible { background: #0e5849; color: #fff; }
 .admin-settings__state { display: grid; justify-items: center; gap: 12px; margin-block-end: 24px; padding: 42px 24px; text-align: center; }
-.admin-settings__editor { width: 100%; margin-inline: auto; overflow: hidden; }
+.admin-settings__editor { width: min(672px, 100%); margin-inline: 0 auto; overflow: hidden; }
 .admin-settings__fields > *, .admin-settings__localized-grid > * { min-width: 0; }
 .admin-settings__fields input, .admin-settings__fields textarea { width: 100%; min-width: 0; box-sizing: border-box; }
 .admin-settings__editor-heading { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 22px 26px; border-block-end: 1px solid #eceff3; background: #fffdf8; }
@@ -38,7 +38,7 @@
 .admin-settings[data-screen-id='ADM-54'] .admin-settings__actions .ui-button--primary { color: #fff; background: #0e5849; border-color: #0e5849; }
 .admin-settings[data-screen-id='ADM-54'] .admin-settings__actions .ui-button--primary:hover:not(:disabled) { background: #084538; border-color: #084538; }
 .admin-settings__feedback { margin: 0; color: #a32129; font-weight: 700; }
-.admin-settings__direction-note { max-width: 1320px; margin: 24px auto 0; color: #7e8999; font-size: .84rem; }
+.admin-settings__direction-note { width: min(672px, 100%); margin: 24px 0 0; margin-inline: 0 auto; color: #7e8999; font-size: .84rem; }
 .admin-settings input:focus-visible, .admin-settings textarea:focus-visible, .admin-settings__tabs a:focus-visible, .admin-settings button:focus-visible { outline: 3px solid #5a8cf1; outline-offset: 3px; }
 @media (max-width: 980px) { .admin-settings { grid-template-columns: 1fr; } .admin-settings > .admin-dashboard__navigation { border-inline-end: 0; border-block-end: 1px solid #e4e7ec; } .admin-settings__content { padding-inline: 18px; } }
 @media (max-width: 700px) { .admin-settings__fields, .admin-settings__localized-grid { grid-template-columns: 1fr; } .admin-settings__heading { padding: 4px 0 14px; } .admin-settings__editor-heading { align-items: flex-start; flex-direction: column; padding: 18px; } .admin-settings__editor form { padding-inline: 18px; } .admin-settings__version { white-space: normal; } }
