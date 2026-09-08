@@ -39,3 +39,9 @@
 - Platform, contact, and SEO settings returned the intentional `SETTINGS_NOT_FOUND` 404 and the UI displayed the create-at-version-zero state. No stored values were fabricated during the read-only audit.
 
 The reviewed candidate is pushed to `main` with the compact-rail fix, advertising contract inventory, and QA handoff updates, but it has not been deployed because this workstation has no VPS SSH key or authenticated Hostinger control session. GitHub CI could not start its runner because the repository account is locked by a billing issue; this is an infrastructure failure rather than a test result. The Production observations above describe the currently deployed revision, not the pushed candidate. Do not interpret the green local tests as an exhaustive Figma parity approval.
+
+## Latest live recheck
+
+- A direct read-only Production login with the supplied credentials returned `200` and an explicit `admin` role (`/api/v1/admin/overview` and `/api/v1/admin/properties` also returned `200` when called with the returned bearer token). The refresh endpoint returned `200` in the same cookie session.
+- Re-running the browser route auditor against the currently deployed bundle did not retain that session after navigation: the first protected page triggered `REFRESH_TOKEN_REUSED`, then subsequent pages triggered `INVALID_REFRESH_TOKEN`. The browser run therefore produced `0/102` authenticated route visits, even though the direct API check proves the account is an Admin. This is evidence about the pre-change Production bundle and must be rerun after deployment; it is not evidence that the pushed candidate is deployed.
+- The strict Figma closure gate currently reports `90/119` closed and `29` open (seeker `10`, provider `17`, admin `2`); the repository still records the broader 131-row guide matrix and the ADM-18/ADM-54 source decisions as open release evidence. No 100% Figma claim is made.

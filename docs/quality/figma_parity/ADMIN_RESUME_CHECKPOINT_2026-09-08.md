@@ -29,3 +29,7 @@
 - A read-only Production audit authenticated the supplied account as a real `admin` account and exercised all 51 sidebar routes on Desktop and Pixel 5. Pixel 5 width matched at 393px on every route, and the property APIs plus public property list/detail returned 200 with `installmentAvailable`. The reviewed candidate is pushed to `main` with the compact-rail fix, advertising contract inventory, and QA handoff updates; deployment remains outstanding because this workstation has no VPS SSH key or authenticated Hostinger control session. GitHub CI could not start its runner because of an account billing lock, so it produced no code-test result. Production still serves the pre-change asset hashes, and the old article query contract returns 400 until deployment.
 
 This checkpoint is not release approval, a claim that all features were exhaustively tested, or a 100% Figma parity statement.
+
+## Latest live recheck superseding the earlier browser note
+
+The supplied credentials still authenticate through the Production API as an explicit `admin` (`200` login, `200` overview and properties with the bearer token, and `200` refresh in the same cookie session). A fresh browser audit against the deployed pre-change bundle, however, lost the session after navigation: the first refresh returned `REFRESH_TOKEN_REUSED` and later refreshes returned `INVALID_REFRESH_TOKEN`, so that run recorded `0/102` authenticated pages. The candidate remains undeployed; repeat the browser audit after deployment before accepting the live gate.
