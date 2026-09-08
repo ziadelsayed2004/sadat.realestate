@@ -49,3 +49,10 @@ The reviewed candidate is pushed to `main` with the compact-rail fix, advertisin
 ## Settings geometry recheck
 
 - The local desktop/compact matrix was rerun after aligning the generic settings editor to the measured 672px Figma column. `admin-page-layout.spec.ts` passed 6/6 across Desktop, Tablet, and Pixel 5 in Arabic and English; desktop assertions reject an editor wider than 672px while compact layouts remain within the viewport.
+
+## Header and visual-baseline recheck
+
+- The desktop admin header and sticky navigation now use the 64px geometry measured in the supplied responsive prototype; the sidebar remains pinned at `top: 64px` after document scroll. The responsive sidebar matrix passed 30/30 after its stale 72px assertion was corrected.
+- Admin settings, advertising, notifications, and audit content now start at the measured 24px inset. The focused functional matrix passed 36/36 (16 executed and 20 intentionally skipped for desktop-only settings), and the advertising/notifications/filter matrix passed 66/66 executed checks with 30 expected device skips.
+- The Admin Desktop visual snapshots were regenerated only after reviewing the changed geometry; the advertising, notifications/audit, and settings visual suites pass 6/6 for Arabic and English. These snapshots remain implementation baselines, not a claim that ADM-65/ADM-66 or ADM-54 have direct source parity.
+- The supplied responsive prototype contains tablet/mobile public and provider compositions plus a compact sidebar rail. It does not provide owning Admin frames for the unresolved ADM-54 source, so the responsive source is recorded as evidence without converting it into a 100% Admin Figma claim.

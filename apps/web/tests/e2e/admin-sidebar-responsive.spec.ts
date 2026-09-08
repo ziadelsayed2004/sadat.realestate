@@ -105,7 +105,7 @@ test.describe('Admin sidebar responsive shell', () => {
     const sidebar = page.getByTestId('admin-sidebar');
     await expect(page.locator('.admin-dashboard__metric').first()).toBeVisible();
     await page.evaluate(() => window.scrollTo(0, 650));
-    await expect.poll(async () => Math.round((await sidebar.boundingBox())?.y ?? -1)).toBe((page.viewportSize()?.width ?? 0) > 1100 ? 72 : 0);
+    await expect.poll(async () => Math.round((await sidebar.boundingBox())?.y ?? -1)).toBe((page.viewportSize()?.width ?? 0) > 1100 ? 64 : 0);
     if ((page.viewportSize()?.width ?? 0) > 1100) {
       const box = await sidebar.boundingBox();
       expect(box!.height).toBeLessThanOrEqual(page.viewportSize()!.height);

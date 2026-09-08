@@ -7,7 +7,7 @@
 
 .admin-notifications-audit__content {
   min-width: 0;
-  padding: 28px clamp(18px, 2.2vw, 34px) 48px;
+  padding: 24px clamp(18px, 2vw, 24px) 48px;
 }
 
 .admin-notifications-audit__main {

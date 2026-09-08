@@ -31,6 +31,12 @@
 
 This checkpoint is not release approval, a claim that all features were exhaustively tested, or a 100% Figma parity statement.
 
+## Current geometry and regression baseline
+
+- The desktop Admin header/sidebar geometry is now 64px, with the sticky sidebar pinned from `top: 64px`; the stale 72px sidebar test expectation was corrected and `admin-sidebar-responsive.spec.ts` passed 30/30.
+- Settings, advertising, notifications, and audit content use a 24px desktop inset. Focused layout/settings tests passed 36/36 executed checks, and advertising/notifications/filter/sidebar checks passed 66/66 executed checks (device-scoped skips remain intentional).
+- Admin advertising, notifications/audit, and settings visual snapshots were regenerated after visual review of the intentional header/inset changes; the six desktop Arabic/English visual tests pass. They are implementation baselines and do not close the two open Admin source-parity rows.
+
 ## Latest live recheck superseding the earlier browser note
 
 The supplied credentials still authenticate through the Production API as an explicit `admin` (`200` login, `200` overview and properties with the bearer token, and `200` refresh in the same cookie session). A fresh browser audit against the deployed pre-change bundle, however, lost the session after navigation: the first refresh returned `REFRESH_TOKEN_REUSED` and later refreshes returned `INVALID_REFRESH_TOKEN`, so that run recorded `0/102` authenticated pages. The candidate remains undeployed; repeat the browser audit after deployment before accepting the live gate.

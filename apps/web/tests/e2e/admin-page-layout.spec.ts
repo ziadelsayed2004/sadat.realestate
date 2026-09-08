@@ -14,6 +14,7 @@ test('admin settings, audit, notifications and advertising use the available pag
     const screen = page.locator('[data-screen-id]').first();
     await expect(screen).toBeVisible();
     await expect.poll(async () => Math.round((await screen.boundingBox())!.width)).toBe(page.viewportSize()!.width);
+    if (page.viewportSize()!.width > 1100) await expect.poll(async () => Math.round((await page.locator('.route-shell__header').boundingBox())!.height)).toBe(64);
     const activeSidebarLink = page.getByTestId('admin-sidebar').locator('[aria-current="page"]');
     await expect(activeSidebarLink).toHaveCount(1);
     if (route.startsWith('ads/')) {
@@ -24,6 +25,8 @@ test('admin settings, audit, notifications and advertising use the available pag
       const editor = page.locator('.admin-settings__editor');
       await expect(editor).toBeVisible();
       await expect.poll(async () => Math.round((await editor.boundingBox())!.width)).toBeLessThanOrEqual(672);
+      await expect.poll(async () => Math.round((await page.locator('.admin-settings__heading').boundingBox())!.height)).toBe(56);
+      await expect.poll(async () => Math.round((await page.locator('.admin-settings__tabs').boundingBox())!.height)).toBe(54);
     }
     if (page.viewportSize()!.width > 1100) {
       const visible = await page.locator('.admin-dashboard__navigation-scroll').evaluate(element => {

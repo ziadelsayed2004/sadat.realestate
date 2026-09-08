@@ -14,9 +14,11 @@ test('ADM-65 and ADM-66 render stable Admin Desktop implementation baselines', a
   for (const [path, name] of [['/admin/notifications', 'admin-notifications'], ['/admin/audit-logs', 'admin-audit-log'], [`/admin/audit-logs/${auditId}`, 'admin-audit-detail']] as const) {
     await page.goto(`${path}?lang=${encodeURIComponent(locale)}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('[data-device-scope="desktop"][data-state="success"]')).toBeVisible();
+    await page.waitForLoadState('networkidle');
     await page.evaluate(async () => {
       await document.fonts.ready;
     });
+    await page.waitForTimeout(100);
     await expect(page).toHaveScreenshot(`${name}-${locale}.png`, { fullPage: true, maxDiffPixels: 300 });
   }
 });

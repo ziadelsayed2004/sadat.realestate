@@ -2,7 +2,7 @@
   display: none;
 }
 
-.route-shell--admin > .route-shell__header { min-height: 64px; padding-block: 8px; }
+.route-shell--admin > .route-shell__header { --asset-logo-max-block-size: 3rem; min-height: 64px; min-block-size: 64px; padding-block: 8px; }
 .admin-shell-header { direction: ltr; display: flex; flex: 1; align-items: center; gap: 16px; min-width: 0; }
 .admin-shell-header__identity { direction: rtl; display: flex; align-items: center; gap: 10px; white-space: nowrap; }
 .admin-shell-header__avatar { display: grid; width: 36px; height: 36px; place-items: center; border-radius: 50%; background: #e4eee9; color: #155b4f; font-weight: 800; }
@@ -496,8 +496,8 @@
 }
 
 @media (min-width: 1101px) {
-  .route-shell--admin > .route-shell__header { position: sticky; top: 0; z-index: 30; height: 72px; flex-wrap: nowrap; }
-  .admin-dashboard__navigation { top: 72px; height: calc(100dvh - 72px); }
+  .route-shell--admin > .route-shell__header { position: sticky; top: 0; z-index: 30; height: 64px; flex-wrap: nowrap; }
+  .admin-dashboard__navigation { top: 64px; height: calc(100dvh - 64px); }
 }
 
 @media (max-width: 1100px) {
