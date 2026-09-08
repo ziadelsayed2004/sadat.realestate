@@ -52,6 +52,8 @@ The reviewed candidate is pushed to `main` with the compact-rail fix, advertisin
 
 ## Header and visual-baseline recheck
 
+- Notification filter recovery: an empty unread response previously removed the filter toolbar. The loaded empty state now keeps the same list panel and controls, allowing a return to all notifications without navigation or reload. The new browser regression passed all six device/locale configurations; five notification/audit unit tests, build, TypeScript and lint also passed. This is local intercepted-API evidence, not a live Production acceptance result.
+
 - Follow-up tab repair: the settings strip observes its own and its tabs' sizes and recalculates the active tab position after font loading or viewport changes. It scrolls only the strip, and cancels observation when unmounted. The full strip is now included in visual snapshots (the previous mask was removed). The combined settings visual/layout run passed 14 tests with four desktop-only visual skips; this includes six device/locale text-and-viewport resize checks. Focused settings unit tests passed 14/14; build, lint and TypeScript passed.
 
 - The desktop admin header and sticky navigation now use the 64px geometry measured in the owning Admin desktop frames; the sidebar remains pinned at `top: 64px` after document scroll. The responsive sidebar matrix passed 30/30 after its stale 72px assertion was corrected.
