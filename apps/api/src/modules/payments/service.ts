@@ -16,6 +16,7 @@ import {
 import type { AccessTokenClaims } from '../auth/crypto.js';
 import type { MalwareScanOutcome, MalwareScannerAdapter, StorageAdapter } from '../uploads/adapters.js';
 import { ProviderDocumentValidationTransform, UploadValidationError, type ValidatedProviderDocument } from '../uploads/validation.js';
+import { DEFAULT_ADVERTISING_RUNTIME_SETTINGS, type AdvertisingSettingsReader } from '../settings/advertising-policy.js';
 
 export type PaymentProofServiceErrorCode =
   | 'FORBIDDEN'
@@ -57,6 +58,7 @@ export interface StoredPaymentProof extends PaymentProofData {
 export interface PaymentProofRegistrationInput extends ValidatedProviderDocument {
   adRequestId: string;
   providerId: string;
+  paymentMethod?: string;
   storageKey: string;
   uploadedAt: Date;
 }
@@ -97,6 +99,7 @@ export interface PaymentProofServiceDependencies {
   audit?: PaymentProofAuditWriter;
   now?: () => Date;
   createObjectKey?: () => string;
+  runtimeSettings?: AdvertisingSettingsReader;
 }
 
 export interface PaymentProofAuthorization {
@@ -176,6 +179,8 @@ export function createPaymentProofService(dependencies: PaymentProofServiceDepen
         throw new PaymentProofServiceError('FORBIDDEN');
       }
       const headers = paymentProofUploadHeadersSchema.parse(input);
+      const policy = dependencies.runtimeSettings ? await dependencies.runtimeSettings.read() : DEFAULT_ADVERTISING_RUNTIME_SETTINGS;
+      if (policy.paymentProofMethods.length > 0 && (headers.paymentMethod === undefined || !policy.paymentProofMethods.includes(headers.paymentMethod))) throw new PaymentProofServiceError('AD_REQUEST_NOT_PAYABLE');
       const request = await (dependencies.repository
         ? dependencies.repository.findPayableAdRequest(claims.sub, adRequestId)
         : dependencies.findPayableAdRequest?.(claims.sub, adRequestId));
@@ -212,6 +217,7 @@ export function createPaymentProofService(dependencies: PaymentProofServiceDepen
           registered = await dependencies.repository.register({
             adRequestId: request.id,
             providerId: claims.sub,
+            ...(headers.paymentMethod ? { paymentMethod: headers.paymentMethod } : {}),
             ...validated,
             storageKey: objectKey,
             uploadedAt
@@ -270,6 +276,7 @@ export function createPaymentProofService(dependencies: PaymentProofServiceDepen
         id: id(),
         adRequestId: request.id,
         providerId: claims.sub,
+        ...(headers.paymentMethod ? { paymentMethod: headers.paymentMethod } : {}),
         ...validated,
         version: 1,
         securityState: 'scan_pending',

@@ -84,6 +84,7 @@ function paymentProjection(proof: PaymentProofData, request: AdRequest): Provide
   return {
     id: proof.id,
     adRequestId: proof.adRequestId,
+    ...(proof.paymentMethod ? { paymentMethod: proof.paymentMethod } : {}),
     status: proof.status,
     securityState: proof.securityState,
     version: proof.version,
@@ -101,6 +102,7 @@ function projection(record: ProviderAdvertisingRequestRecord): ProviderAdRequest
   const result = {
     id: request.id,
     placementKey: request.placementKey,
+    ...(request.adType ? { adType: request.adType } : {}),
     purpose: request.purpose,
     intervalStart: request.intervalStart,
     intervalEnd: request.intervalEnd,

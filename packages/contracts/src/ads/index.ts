@@ -4,6 +4,7 @@ import { successEnvelopeSchema } from '../contracts/envelopes.js';
 
 const id = z.string().regex(/^[a-f0-9]{24}$/);
 const placementKey = z.string().trim().min(2).max(80).regex(/^[a-z][a-z0-9_.-]*$/);
+const adType = z.string().trim().min(2).max(80).regex(/^[a-z][a-z0-9_.-]*$/);
 const surface = z.enum(['homepage', 'search', 'property_detail', 'project_detail', 'community']);
 const positiveInt = (max: number) => z.number().int().positive().max(max);
 
@@ -44,8 +45,8 @@ export type AdPlacementCreate = z.infer<typeof adPlacementCreateSchema>;
 export type AdSettings = z.infer<typeof adSettingsSchema>;
 export type AdSettingsPatch = z.infer<typeof adSettingsPatchSchema>;
 export const adRequestStatusSchema = z.enum(['draft', 'review', 'waiting_pricing', 'quote_sent', 'waiting_payment', 'scheduled', 'active', 'ended', 'rejected', 'cancelled', 'expired']);
-export const adRequestSchema = z.object({ id, providerId: id, placementKey, purpose: z.string().trim().min(2).max(500), intervalStart: z.string().datetime({ offset: true }), intervalEnd: z.string().datetime({ offset: true }), status: adRequestStatusSchema, version: z.number().int().nonnegative(), createdAt: z.string().datetime({ offset: true }), updatedAt: z.string().datetime({ offset: true }) }).strict();
-export const adRequestCreateSchema = adRequestSchema.pick({ placementKey: true, purpose: true, intervalStart: true, intervalEnd: true }).strict().superRefine((value, ctx) => { if (new Date(value.intervalEnd) <= new Date(value.intervalStart)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['intervalEnd'], message: 'intervalEnd must be after intervalStart' }); });
+export const adRequestSchema = z.object({ id, providerId: id, placementKey, adType: adType.optional(), purpose: z.string().trim().min(2).max(500), intervalStart: z.string().datetime({ offset: true }), intervalEnd: z.string().datetime({ offset: true }), status: adRequestStatusSchema, version: z.number().int().nonnegative(), createdAt: z.string().datetime({ offset: true }), updatedAt: z.string().datetime({ offset: true }) }).strict();
+export const adRequestCreateSchema = adRequestSchema.pick({ placementKey: true, adType: true, purpose: true, intervalStart: true, intervalEnd: true }).strict().superRefine((value, ctx) => { if (new Date(value.intervalEnd) <= new Date(value.intervalStart)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['intervalEnd'], message: 'intervalEnd must be after intervalStart' }); });
 export const adRequestTransitionSchema = z.object({ status: adRequestStatusSchema, expectedVersion: z.number().int().nonnegative(), reason: z.string().trim().min(2).max(500).optional() }).strict().superRefine((value, ctx) => { if (['rejected', 'cancelled', 'expired'].includes(value.status) && !value.reason) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['reason'], message: 'reason is required' }); });
 export const adRequestSubmitSchema = z.object({ expectedVersion: z.number().int().nonnegative() }).strict();
 export const adAdminRequestReviewSchema = z.object({ action: z.enum(['approve', 'reject']), expectedVersion: z.number().int().nonnegative(), reason: z.string().trim().min(2).max(500) }).strict();

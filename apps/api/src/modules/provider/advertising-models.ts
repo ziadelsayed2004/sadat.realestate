@@ -37,6 +37,7 @@ interface PaymentReviewRecord {
 export interface AdRequestRecord {
   providerId: Types.ObjectId;
   placementKey: AdRequest['placementKey'];
+  adType?: AdRequest['adType'];
   purpose: AdRequest['purpose'];
   intervalStart: Date;
   intervalEnd: Date;
@@ -67,6 +68,7 @@ export interface AdQuoteRecord {
 export interface PaymentProofRecord {
   adRequestId: Types.ObjectId;
   providerId: Types.ObjectId;
+  paymentMethod?: PaymentProofData['paymentMethod'];
   originalFilename: PaymentProofData['originalFilename'];
   normalizedExtension: PaymentProofData['normalizedExtension'];
   detectedMime: PaymentProofData['detectedMime'];
@@ -143,6 +145,7 @@ const paymentReviewSchema = new Schema<PaymentReviewRecord>({
 const adRequestSchema = new Schema<AdRequestRecord>({
   providerId: { type: Schema.Types.ObjectId, required: true, immutable: true, ref: 'User' },
   placementKey: { type: String, trim: true, required: true, maxlength: 80 },
+  adType: { type: String, trim: true, maxlength: 80 },
   purpose: { type: String, trim: true, required: true, maxlength: 500 },
   intervalStart: { type: Date, required: true },
   intervalEnd: { type: Date, required: true },
@@ -195,6 +198,7 @@ adQuoteSchema.index(
 const paymentProofSchema = new Schema<PaymentProofRecord>({
   adRequestId: { type: Schema.Types.ObjectId, required: true, immutable: true, ref: 'AdRequest' },
   providerId: { type: Schema.Types.ObjectId, required: true, immutable: true, ref: 'User' },
+  paymentMethod: { type: String, trim: true, maxlength: 80 },
   originalFilename: { type: String, required: true, maxlength: 120 },
   normalizedExtension: { type: String, enum: ['.pdf', '.jpg', '.jpeg', '.png'], required: true },
   detectedMime: { type: String, enum: ['application/pdf', 'image/jpeg', 'image/png'], required: true },

@@ -75,6 +75,35 @@ test('payment-proof upload validates strict metadata and fails closed when capab
   await assert.rejects(() => infected.upload(provider, adRequestId, headers, Readable.from(validPdf)), (error) => error instanceof PaymentProofServiceError && error.code === 'MALWARE_SCAN_FAILED');
 });
 
+test('payment-proof upload enforces the configured payment method and stores the accepted method', async () => {
+  const service = createPaymentProofService({
+    storage: createInMemoryStorageAdapter(),
+    scanner: createDeterministicMalwareScanner('clean'),
+    findPayableAdRequest: (providerId, requestId) => requestId === adRequestId ? requestFor(providerId) : undefined,
+    runtimeSettings: {
+      read: async () => ({
+        supportedPlacements: [],
+        supportedAdTypes: [],
+        acceptedFileFormats: [],
+        dimensions: [],
+        paymentProofMethods: ['bank_transfer']
+      })
+    }
+  });
+
+  await assert.rejects(
+    () => service.upload(provider, adRequestId, headers, Readable.from(validPdf)),
+    (error) => error instanceof PaymentProofServiceError && error.code === 'AD_REQUEST_NOT_PAYABLE'
+  );
+  await assert.rejects(
+    () => service.upload(provider, adRequestId, { ...headers, paymentMethod: 'cash' }, Readable.from(validPdf)),
+    (error) => error instanceof PaymentProofServiceError && error.code === 'AD_REQUEST_NOT_PAYABLE'
+  );
+
+  const proof = await service.upload(provider, adRequestId, { ...headers, paymentMethod: 'bank_transfer' }, Readable.from(validPdf));
+  assert.equal(proof.paymentMethod, 'bank_transfer');
+});
+
 test('payment-proof review requires RBAC and reasons, records audit, and replays idempotently', async () => {
   const events: unknown[] = [];
   const service = createPaymentProofService({

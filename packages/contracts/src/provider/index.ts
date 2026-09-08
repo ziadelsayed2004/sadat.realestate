@@ -247,6 +247,7 @@ export const providerAdPaymentHistoryEntrySchema = z.object({
 export const providerAdPaymentProjectionSchema = z.object({
   id: providerAdvertisingObjectIdSchema,
   adRequestId: providerAdvertisingObjectIdSchema,
+  paymentMethod: z.string().trim().min(2).max(80).regex(/^[a-z][a-z0-9_.-]*$/).optional(),
   status: z.enum(['uploaded', 'pending_review', 'approved', 'rejected']),
   securityState: z.enum(['quarantined', 'scan_pending', 'clean', 'infected', 'scan_failed', 'deleted']),
   version: z.number().int().positive(),
@@ -266,6 +267,7 @@ export const providerAdScheduleProjectionSchema = z.object({
 export const providerAdRequestProjectionSchema = z.object({
   id: providerAdvertisingObjectIdSchema,
   placementKey: z.string().trim().min(2).max(80).regex(/^[a-z][a-z0-9_.-]*$/),
+  adType: z.string().trim().min(2).max(80).regex(/^[a-z][a-z0-9_.-]*$/).optional(),
   purpose: safeTextSchema.max(500),
   intervalStart: providerAdvertisingDateSchema,
   intervalEnd: providerAdvertisingDateSchema,

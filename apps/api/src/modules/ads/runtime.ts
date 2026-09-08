@@ -7,6 +7,7 @@ import { createAdSettingsService } from './service.js';
 import { createAdAdminRequestService, createAdCalendarService } from './service.js';
 import type { AdminAdsRouterDependencies } from './admin-router.js';
 import type { AdminBannerRouterDependencies } from './banner-router.js';
+import { createMongooseAdvertisingSettingsReader } from '../settings/advertising-policy.js';
 
 export function createAdminAdsRuntime(
   connection: Connection,
@@ -35,7 +36,8 @@ export function createAdminBannersRuntime(
     accessTokens,
     service: createAdSettingsService({
       bannerRepository: createMongooseAdBannerRepository(connection),
-      bannerAuthorization: authorization
+      bannerAuthorization: authorization,
+      runtimeSettings: createMongooseAdvertisingSettingsReader(connection)
     })
   };
 }

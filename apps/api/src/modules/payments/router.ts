@@ -144,6 +144,7 @@ export function createPaymentProofRouter(dependencies: PaymentProofRouterDepende
       const headers = paymentProofUploadHeadersSchema.parse({
         filename: request.get('x-file-name'),
         contentType: request.get('content-type')?.split(';', 1)[0]?.trim().toLowerCase(),
+        paymentMethod: request.get('x-payment-method'),
         contentLength: contentLength(request)
       });
       const result = await dependencies.service.upload(

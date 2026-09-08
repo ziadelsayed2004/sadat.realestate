@@ -20,6 +20,7 @@ import {
   createMongooseProviderRepository
 } from './repository.js';
 import type { ProviderRouterDependencies } from './router.js';
+import { createMongooseAdvertisingSettingsReader } from '../settings/advertising-policy.js';
 import { createProviderService } from './service.js';
 
 export function createProviderRuntime(
@@ -42,7 +43,8 @@ export function createProviderRuntime(
         { key: placementKey, active: true },
         { projection: { _id: 1 } }
       )
-    )
+    ),
+    runtimeSettings: createMongooseAdvertisingSettingsReader(connection)
   });
   return {
     service: createProviderService({

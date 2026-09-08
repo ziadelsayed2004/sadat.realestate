@@ -25,6 +25,27 @@ test('advertising requests are provider-owned and use explicit draft-to-review w
   await assert.rejects(() => service.transitionRequest({ ...provider, sub: '3123456789abcdef01234567' } as AccessTokenClaims, request.id, { status: 'cancelled', expectedVersion: 1, reason: 'IDOR' }), (error) => error instanceof AdSettingsServiceError && error.code === 'FORBIDDEN');
 });
 
+test('saved advertising policy restricts placements, banner assets, and quote validity', async () => {
+  const provider = { ...admin, role: 'provider', sub: '2123456789abcdef01234567' } as AccessTokenClaims;
+  const service = createAdSettingsService({
+    now: () => new Date('2026-09-01T00:00:00.000Z'),
+    runtimeSettings: { read: async () => ({ supportedPlacements: ['homepage.hero'], supportedAdTypes: ['banner'], acceptedFileFormats: ['image/png'], dimensions: [{ width: 1200, height: 400 }], quoteValidityDays: 7, paymentProofMethods: ['bank_transfer'] }) }
+  });
+  await service.createPlacement(admin, { key: 'homepage.hero', surface: 'homepage', label: { en: 'Hero' }, width: 1200, height: 400, active: true, sortOrder: 1, allowedLocales: ['en'], targetUrlRequired: false });
+  await service.createPlacement(admin, { key: 'search.inline', surface: 'search', label: { en: 'Search' }, width: 600, height: 300, active: true, sortOrder: 2, allowedLocales: ['en'], targetUrlRequired: false });
+  await assert.rejects(() => service.createRequest(provider, { placementKey: 'search.inline', purpose: 'Disallowed placement', intervalStart: '2026-09-02T00:00:00.000Z', intervalEnd: '2026-09-03T00:00:00.000Z' }), /NOT_FOUND/);
+  await assert.rejects(() => service.createRequest(provider, { placementKey: 'homepage.hero', adType: 'video', purpose: 'Unsupported type', intervalStart: '2026-09-02T00:00:00.000Z', intervalEnd: '2026-09-03T00:00:00.000Z' }), /NOT_FOUND/);
+  const request = await service.createRequest(provider, { placementKey: 'homepage.hero', adType: 'banner', purpose: 'Approved placement', intervalStart: '2026-09-02T00:00:00.000Z', intervalEnd: '2026-09-03T00:00:00.000Z' });
+  await service.transitionRequest(provider, request.id, { status: 'review', expectedVersion: 0 });
+  await service.transitionRequest(admin, request.id, { status: 'waiting_pricing', expectedVersion: 1 });
+  await assert.rejects(() => service.issueQuote(admin, { requestId: request.id, currency: 'EGP', lineItems: [{ description: 'Placement', quantity: 1, unitAmountMinor: 100 }], validUntil: '2026-09-09T00:00:00.000Z', terms: 'Quote terms' }), /VERSION_CONFLICT/);
+  const banner = await service.createBanner(admin, { placementKey: 'homepage.hero', title: { en: 'Campaign' }, startAt: '2026-09-02T00:00:00.000Z', endAt: '2026-09-03T00:00:00.000Z', sortOrder: 1 });
+  await assert.rejects(() => service.createBannerMedia(admin, banner.id, { url: 'https://cdn.example.com/wrong.webp', mime: 'image/webp', width: 1200, height: 400 }), /BANNER_INVALID_STATE/);
+  await assert.rejects(() => service.createBannerMedia(admin, banner.id, { url: 'https://cdn.example.com/wrong.png', mime: 'image/png', width: 600, height: 300 }), /BANNER_INVALID_STATE/);
+  const media = await service.createBannerMedia(admin, banner.id, { url: 'https://cdn.example.com/right.png', mime: 'image/png', width: 1200, height: 400 });
+  assert.equal(media.mime, 'image/png');
+});
+
 test('provider draft creation delegates to the configured persistent request repository', async () => {
   const provider = { ...admin, role: 'provider', sub: '2123456789abcdef01234567' } as AccessTokenClaims;
   let calledWith: { providerId: string; placementKey: string } | undefined;

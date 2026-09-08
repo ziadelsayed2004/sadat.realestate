@@ -25,6 +25,7 @@ function toStoredPaymentProof(row: PaymentProofRow): StoredPaymentProof {
     id: row._id.toHexString(),
     adRequestId: row.adRequestId.toHexString(),
     providerId: row.providerId.toHexString(),
+    ...(row.paymentMethod ? { paymentMethod: row.paymentMethod } : {}),
     originalFilename: row.originalFilename,
     normalizedExtension: row.normalizedExtension,
     detectedMime: row.detectedMime,
@@ -122,6 +123,7 @@ export function createMongoosePaymentProofRepository(
           const [created] = await models.PaymentProof.create([{
             adRequestId,
             providerId,
+            ...(input.paymentMethod ? { paymentMethod: input.paymentMethod } : {}),
             originalFilename: input.originalFilename,
             normalizedExtension: input.normalizedExtension,
             detectedMime: input.detectedMime,

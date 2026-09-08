@@ -19,6 +19,7 @@ import {
   type PaymentProofServiceDependencies
 } from './service.js';
 import type { PaymentProofRouterDependencies } from './router.js';
+import { createMongooseAdvertisingSettingsReader } from '../settings/advertising-policy.js';
 
 export function createPaymentProofRuntime(
   connection: Connection,
@@ -55,7 +56,8 @@ export function createPaymentProofRuntime(
           }
         : {}),
       storage,
-      scanner
+      scanner,
+      runtimeSettings: createMongooseAdvertisingSettingsReader(connection)
     })
   };
 }

@@ -128,7 +128,7 @@ function toIsoDate(value: string): string {
 }
 
 function CreateRequestModal({ copy, busy, error, onClose, onSave }: { readonly copy: ProviderAdvertisingCopy; readonly busy: boolean; readonly error?: string | undefined; readonly onClose: () => void; readonly onSave: (input: AdRequestCreate) => Promise<void> }) {
-  const [form, setForm] = useState({ placementKey: '', purpose: '', intervalStart: '', intervalEnd: '' });
+  const [form, setForm] = useState({ placementKey: '', adType: '', purpose: '', intervalStart: '', intervalEnd: '' });
   const [validationError, setValidationError] = useState(false);
   const formId = 'provider-advertising-create-form';
 
@@ -140,6 +140,7 @@ function CreateRequestModal({ copy, busy, error, onClose, onSave }: { readonly c
     event.preventDefault();
     const parsed = adRequestCreateSchema.safeParse({
       placementKey: form.placementKey.trim(),
+      ...(form.adType.trim() === '' ? {} : { adType: form.adType.trim() }),
       purpose: form.purpose.trim(),
       intervalStart: toIsoDate(form.intervalStart),
       intervalEnd: toIsoDate(form.intervalEnd)
@@ -163,6 +164,8 @@ function CreateRequestModal({ copy, busy, error, onClose, onSave }: { readonly c
         {validationError || error ? <p className="provider-advertising__form-error" role="alert">{validationError ? copy.createForm.validation : error}</p> : null}
         <Input id="provider-advertising-placement-key" label={copy.createForm.placementKey} value={form.placementKey} onChange={event => update('placementKey', event.target.value)} required />
         <p className="provider-advertising__help">{copy.createForm.placementKeyHelp}</p>
+        <Input id="provider-advertising-ad-type" label={copy.createForm.adType} value={form.adType} onChange={event => update('adType', event.target.value)} />
+        <p className="provider-advertising__help">{copy.createForm.adTypeHelp}</p>
         <label className="provider-advertising__field" htmlFor="provider-advertising-purpose">
           <span>{copy.createForm.purpose}</span>
           <textarea id="provider-advertising-purpose" value={form.purpose} onChange={event => update('purpose', event.target.value)} rows={3} required />
@@ -212,8 +215,9 @@ function FilterBar({ copy, draftStatus, onDraftStatus, onApply, onClear }: { rea
   );
 }
 
-function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUpload }: { readonly detail: ProviderAdRequestProjection; readonly locale: SupportedLocale; readonly copy: ProviderAdvertisingCopy; readonly busy: boolean; readonly onSubmit: () => void; readonly onAccept: () => void; readonly onUpload: (file: File) => void }) {
+function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUpload }: { readonly detail: ProviderAdRequestProjection; readonly locale: SupportedLocale; readonly copy: ProviderAdvertisingCopy; readonly busy: boolean; readonly onSubmit: () => void; readonly onAccept: () => void; readonly onUpload: (file: File, paymentMethod: string) => void }) {
   const payment = detail.paymentProofs.find(proof => proof.active) ?? detail.paymentProofs.at(-1);
+  const [paymentMethod, setPaymentMethod] = useState('');
   const canAccept = detail.quote?.status === 'issued';
   const canUpload = detail.status === 'waiting_payment' && detail.quote?.status === 'accepted';
   return (
@@ -227,7 +231,7 @@ function DetailContent({ detail, locale, copy, busy, onSubmit, onAccept, onUploa
       <section className="provider-advertising__detail-card" aria-labelledby="provider-advertising-payment-heading">
         <h2 id="provider-advertising-payment-heading">{copy.paymentProof}</h2><p className="provider-advertising__muted">{copy.paymentProofHelp}</p>
         {payment ? <div className="provider-advertising__proof-summary"><Badge tone={payment.status === 'approved' ? 'success' : payment.status === 'rejected' ? 'neutral' : 'warning'}>{copy.paymentStatuses[payment.status]}</Badge><span>{dateLabel(payment.uploadedAt, locale)}</span><span>{payment.active ? copy.paymentProofUploaded : copy.unavailable}</span></div> : <p className="provider-advertising__muted">{copy.noPaymentProof}</p>}
-        {canUpload ? <label className="provider-advertising__upload"><span>{copy.uploadPaymentProof}</span><input type="file" accept="application/pdf,image/jpeg,image/png" onChange={(event: ChangeEvent<HTMLInputElement>) => { const file = event.target.files?.[0]; if (file) onUpload(file); event.currentTarget.value = ''; }} disabled={busy} /></label> : null}
+        {canUpload ? <><Input id="provider-advertising-payment-method" label={copy.paymentMethod} value={paymentMethod} onChange={event => setPaymentMethod(event.target.value)} /><label className="provider-advertising__upload"><span>{copy.uploadPaymentProof}</span><input type="file" accept="application/pdf,image/jpeg,image/png" onChange={(event: ChangeEvent<HTMLInputElement>) => { const file = event.target.files?.[0]; if (file) onUpload(file, paymentMethod); event.currentTarget.value = ''; }} disabled={busy} /></label></> : null}
         <section className="provider-advertising__nested-card"><h2>{copy.schedule}</h2>{detail.schedule ? <dl className="provider-advertising__definition-list"><div><dt>{copy.columns.status}</dt><dd>{detail.schedule.status}</dd></div><div><dt>{copy.interval}</dt><dd>{detail.schedule.localStart} — {detail.schedule.localEnd} ({detail.schedule.timezone})</dd></div></dl> : <p className="provider-advertising__muted">{copy.noSchedule}</p>}</section>
       </section>
       <section className="provider-advertising__detail-card provider-advertising__detail-card--wide" aria-labelledby="provider-advertising-history-heading"><h2 id="provider-advertising-history-heading">{copy.history}</h2>{detail.history.length === 0 ? <p className="provider-advertising__muted">{copy.noHistory}</p> : <ol className="provider-advertising__history">{detail.history.map((entry, index) => <li key={`${entry.changedAt}-${entry.version}-${index}`}><Badge tone={statusTone(entry.status)}>{copy.statuses[entry.status]}</Badge><time dateTime={entry.changedAt}>{dateLabel(entry.changedAt, locale)}</time>{entry.reason ? <span>{entry.reason}</span> : null}</li>)}</ol>}</section>
@@ -341,7 +345,7 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
     }
   }
 
-  async function uploadPaymentProof(file: File): Promise<void> {
+  async function uploadPaymentProof(file: File, paymentMethod: string): Promise<void> {
     if (detail === undefined) return;
     if (!isProvider) {
       setMutationError(copy.mutationFailed);
@@ -350,7 +354,7 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
     setMutationBusy(true);
     setMutationError(undefined);
     try {
-      await mutationApi.uploadPaymentProof(detail.id, file, file.name);
+      await mutationApi.uploadPaymentProof(detail.id, file, file.name, paymentMethod);
       setFeedback(copy.paymentProofUploaded);
       setAttempt(value => value + 1);
     } catch {
@@ -376,7 +380,7 @@ export function ProviderAdvertising({ locale, session, authClient, apiOrigin, re
           {feedback ? <p className="provider-advertising__feedback" role="status">{feedback}</p> : null}
           {mutationError ? <p className="provider-advertising__form-error" role="alert">{mutationError}</p> : null}
           {detailState === 'loading' || detailState === 'error' || detailState === 'retry' || detailState === 'permission' || detailState === 'notFound' ? <StatePanel state={detailState} locale={locale} copy={copy} onRetry={() => setAttempt(value => value + 1)} /> : null}
-          {detailState === 'success' && detail !== undefined ? <DetailContent detail={detail} locale={locale} copy={copy} busy={mutationBusy} onSubmit={() => { void submitRequest(); }} onAccept={() => { void acceptQuote(); }} onUpload={file => { void uploadPaymentProof(file); }} /> : null}
+          {detailState === 'success' && detail !== undefined ? <DetailContent detail={detail} locale={locale} copy={copy} busy={mutationBusy} onSubmit={() => { void submitRequest(); }} onAccept={() => { void acceptQuote(); }} onUpload={(file, paymentMethod) => { void uploadPaymentProof(file, paymentMethod); }} /> : null}
         </>}
       </div>
       {createOpen ? <CreateRequestModal copy={copy} busy={mutationBusy} error={mutationError} onClose={() => setCreateOpen(false)} onSave={saveRequest} /> : null}

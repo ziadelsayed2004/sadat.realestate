@@ -72,7 +72,7 @@ export interface ProviderAdvertisingMutationApi {
   createRequest(input: AdRequestCreate, signal?: AbortSignal): Promise<AdRequest>;
   submitRequest(requestId: string, expectedVersion: number, signal?: AbortSignal): Promise<AdRequest>;
   acceptQuote(requestId: string, input: AdQuoteDecision, signal?: AbortSignal): Promise<AdQuote>;
-  uploadPaymentProof(requestId: string, file: Blob, filename: string, signal?: AbortSignal): Promise<PaymentProofData>;
+  uploadPaymentProof(requestId: string, file: Blob, filename: string, paymentMethod?: string, signal?: AbortSignal): Promise<PaymentProofData>;
 }
 
 function clientFor(options: Pick<ProviderAdvertisingLoadOptions, 'apiClient' | 'apiOrigin'>): ApiClient {
@@ -197,12 +197,13 @@ export function createProviderAdvertisingMutationApi(options: ProviderAdvertisin
       });
       return response.data.data;
     },
-    async uploadPaymentProof(id, file, filename, signal) {
+    async uploadPaymentProof(id, file, filename, paymentMethod, signal) {
       const normalizedFilename = filename.trim();
       if (/[/\\\u0000-\u001f\u007f]/u.test(normalizedFilename)) throw new Error('Payment proof filename contains unsafe characters');
       const upload = paymentProofUploadHeadersSchema.parse({
         filename: normalizedFilename,
         contentType: file.type.toLowerCase(),
+        ...(paymentMethod?.trim() ? { paymentMethod: paymentMethod.trim() } : {}),
         contentLength: file.size
       });
       const extensionStart = upload.filename.lastIndexOf('.');
@@ -216,7 +217,8 @@ export function createProviderAdvertisingMutationApi(options: ProviderAdvertisin
         headers: {
           ...(requestHeaders ?? {}),
           'content-type': upload.contentType,
-          'x-file-name': upload.filename
+          'x-file-name': upload.filename,
+          ...(upload.paymentMethod ? { 'x-payment-method': upload.paymentMethod } : {})
         },
         body: file,
         ...requestOptions(signal)

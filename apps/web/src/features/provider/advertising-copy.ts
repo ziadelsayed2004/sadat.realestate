@@ -36,6 +36,7 @@ export interface ProviderAdvertisingCopy {
   readonly paymentProof: string;
   readonly paymentProofHelp: string;
   readonly uploadPaymentProof: string;
+  readonly paymentMethod: string;
   readonly paymentProofUploaded: string;
   readonly noPaymentProof: string;
   readonly schedule: string;
@@ -47,6 +48,8 @@ export interface ProviderAdvertisingCopy {
     readonly description: string;
     readonly placementKey: string;
     readonly placementKeyHelp: string;
+    readonly adType: string;
+    readonly adTypeHelp: string;
     readonly purpose: string;
     readonly start: string;
     readonly end: string;
@@ -111,13 +114,14 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAdvertisingCopy>> =
     paymentProof: 'إثبات الدفع',
     paymentProofHelp: 'ارفع ملف PDF أو JPG أو PNG بحجم لا يتجاوز 10 ميجابايت. يتم فحص الملف ومراجعته يدويًا؛ لا يعني الرفع التحقق البنكي.',
     uploadPaymentProof: 'رفع إثبات الدفع',
+    paymentMethod: 'طريقة الدفع',
     paymentProofUploaded: 'تم إرسال إثبات الدفع للمراجعة.',
     noPaymentProof: 'لم يتم إرسال إثبات دفع.',
     schedule: 'الجدولة',
     noSchedule: 'لا توجد جدولة متاحة بعد.',
     noQuote: 'لا يوجد عرض إداري بعد.',
     noHistory: 'لا يوجد سجل تغييرات.',
-    createForm: { title: 'طلب إعلان جديد', description: 'أدخل بيانات الطلب المعتمدة. لا يتم تحديد السعر من هذا النموذج.', placementKey: 'مفتاح موضع الإعلان', placementKeyHelp: 'استخدم مفتاح موضع معتمد من إدارة المنصة.', purpose: 'الغرض من الإعلان', start: 'بداية الفترة', end: 'نهاية الفترة', cancel: 'إلغاء', save: 'إرسال الطلب', validation: 'راجع الحقول والتواريخ قبل الإرسال.', close: 'إغلاق نموذج الطلب' },
+    createForm: { title: 'طلب إعلان جديد', description: 'أدخل بيانات الطلب المعتمدة. لا يتم تحديد السعر من هذا النموذج.', placementKey: 'مفتاح موضع الإعلان', placementKeyHelp: 'استخدم مفتاح موضع معتمد من إدارة المنصة.', adType: 'نوع الإعلان', adTypeHelp: 'أدخل نوعًا معتمدًا من إعدادات الإعلانات عند طلبه.', purpose: 'الغرض من الإعلان', start: 'بداية الفترة', end: 'نهاية الفترة', cancel: 'إلغاء', save: 'إرسال الطلب', validation: 'راجع الحقول والتواريخ قبل الإرسال.', close: 'إغلاق نموذج الطلب' },
     commission: { eyebrow: 'العمولة', title: 'العمولة', description: 'سياسة العمولة المطبقة على حسابك كما يحددها النظام.', appliedPolicy: 'السياسة الحالية', source: 'المصدر', effectiveAt: 'سارية من', version: 'إصدار السياسة', kind: 'نوع العمولة', percentage: 'نسبة مئوية', fixed: 'مبلغ ثابت', noneTitle: 'لا توجد سياسة عمولة متاحة', noneBody: 'لم يتم تحديد سياسة عمولة لحسابك حاليًا. لا يتم افتراض نسبة عامة.', readOnly: 'هذه البيانات للعرض فقط ولا يمكن تغييرها من حساب المزود.', unavailable: 'غير متاح' },
     states: { loading: { title: 'جارٍ التحميل', body: 'يتم تحميل بيانات الإعلانات.' }, empty: { title: 'لا توجد طلبات إعلان', body: 'ستظهر طلبات الإعلان الخاصة بحسابك هنا عند توفرها.' }, error: { title: 'تعذر تحميل الإعلانات', body: 'تحقق من الاتصال وحاول مرة أخرى.' }, retry: { title: 'الإعلانات غير متاحة مؤقتًا', body: 'يمكنك إعادة المحاولة عند توفر الاتصال.' }, permission: { title: 'يلزم تسجيل الدخول', body: 'لا يتم عرض بيانات الإعلانات قبل التحقق من جلسة المزود.' }, notFound: { title: 'طلب الإعلان غير موجود', body: 'لا يمكن العثور على هذا الطلب ضمن بيانات حسابك.' }, success: { title: 'تم تحميل الإعلانات', body: 'تم تحميل بيانات الإعلانات بنجاح.' } },
     retry: 'إعادة المحاولة',
@@ -157,13 +161,14 @@ const copyByLocale: Readonly<Record<SupportedLocale, ProviderAdvertisingCopy>> =
     paymentProof: 'Payment proof',
     paymentProofHelp: 'Upload a PDF, JPG, or PNG up to 10 MB. The file is scanned and manually reviewed; upload does not mean bank verification.',
     uploadPaymentProof: 'Upload payment proof',
+    paymentMethod: 'Payment method',
     paymentProofUploaded: 'Payment proof was submitted for review.',
     noPaymentProof: 'No payment proof submitted.',
     schedule: 'Schedule',
     noSchedule: 'No schedule is available yet.',
     noQuote: 'No administrative quote is available yet.',
     noHistory: 'No status history is available.',
-    createForm: { title: 'New advertising request', description: 'Enter the approved request fields. Pricing is not set in this form.', placementKey: 'Advertising placement key', placementKeyHelp: 'Use a placement key approved by platform administration.', purpose: 'Advertising purpose', start: 'Period start', end: 'Period end', cancel: 'Cancel', save: 'Submit request', validation: 'Review the fields and dates before submitting.', close: 'Close request form' },
+    createForm: { title: 'New advertising request', description: 'Enter the approved request fields. Pricing is not set in this form.', placementKey: 'Advertising placement key', placementKeyHelp: 'Use a placement key approved by platform administration.', adType: 'Advertising type', adTypeHelp: 'Enter a type approved in advertising settings when required.', purpose: 'Advertising purpose', start: 'Period start', end: 'Period end', cancel: 'Cancel', save: 'Submit request', validation: 'Review the fields and dates before submitting.', close: 'Close request form' },
     commission: { eyebrow: 'Commission', title: 'Commission', description: 'The effective commission policy returned for your account.', appliedPolicy: 'Current policy', source: 'Source', effectiveAt: 'Effective from', version: 'Policy version', kind: 'Commission type', percentage: 'Percentage', fixed: 'Fixed amount', noneTitle: 'No commission policy available', noneBody: 'No commission policy is currently assigned to your account. No universal rate is assumed.', readOnly: 'This information is read-only and cannot be changed by the provider.', unavailable: 'Unavailable' },
     states: { loading: { title: 'Loading', body: 'Advertising data is loading.' }, empty: { title: 'No advertising requests', body: 'Advertising requests owned by your account will appear here when available.' }, error: { title: 'Advertising data could not load', body: 'Check the connection and try again.' }, retry: { title: 'Advertising is temporarily unavailable', body: 'You can retry when the connection is available.' }, permission: { title: 'Authentication required', body: 'Provider advertising data is not rendered before the session is verified.' }, notFound: { title: 'Advertising request not found', body: 'This request is not available in your account projection.' }, success: { title: 'Advertising data loaded', body: 'Advertising data loaded successfully.' } },
     retry: 'Retry',

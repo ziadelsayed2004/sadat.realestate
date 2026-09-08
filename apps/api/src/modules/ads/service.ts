@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import type { AccessTokenClaims } from '../auth/crypto.js';
+import { DEFAULT_ADVERTISING_RUNTIME_SETTINGS, type AdvertisingRuntimeSettings, type AdvertisingSettingsReader } from '../settings/advertising-policy.js';
 import { resolveLocalizedText } from '../quality/localization-audit.js';
 import {
   AD_EGYPT_TIME_ZONE,
@@ -248,6 +249,7 @@ export function createAdSettingsService(seed: {
   bannerAuthorization?: { authorize(adminId: string, permission: 'admin:banners.view' | 'admin:banners.manage'): Promise<boolean> };
   bannerRepository?: AdBannerRepository;
   hasActivePlacement?: (placementKey: string) => Promise<boolean> | boolean;
+  runtimeSettings?: AdvertisingSettingsReader;
 } = {}) {
   const placements = new Map((seed.placements ?? []).map(item => [item.id, item]));
   const requests = new Map<string, AdRequest>();
@@ -257,6 +259,11 @@ export function createAdSettingsService(seed: {
   let settings = seed.settings ?? adSettingsSchema.parse({ enabled: false, maxActiveBanners: 100, defaultDisplaySeconds: 10, allowedSurfaces: ['homepage'], version: 0, updatedBy: '000000000000000000000000', updatedAt: new Date(0).toISOString() });
   const clock = seed.now ?? (() => new Date());
   const now = () => clock().toISOString();
+  const runtimeSettings = async (): Promise<AdvertisingRuntimeSettings> => seed.runtimeSettings ? seed.runtimeSettings.read() : DEFAULT_ADVERTISING_RUNTIME_SETTINGS;
+  const requireMediaPolicy = (media: { mime: string; width: number; height: number }, policy: AdvertisingRuntimeSettings) => {
+    if (policy.acceptedFileFormats.length > 0 && !policy.acceptedFileFormats.includes(media.mime as never)) throw new AdBannerServiceError('BANNER_INVALID_STATE');
+    if (policy.dimensions.length > 0 && !policy.dimensions.some((size) => size.width === media.width && size.height === media.height)) throw new AdBannerServiceError('BANNER_INVALID_STATE');
+  };
   const requireAdmin = (claims: AccessTokenClaims) => {
     if (!authorized(claims)) throw new AdSettingsServiceError('FORBIDDEN');
   };
@@ -392,6 +399,9 @@ export function createAdSettingsService(seed: {
     async createRequest(claims: AccessTokenClaims, input: unknown) {
       if (claims.role !== 'provider' || claims.status !== 'verified') throw new AdSettingsServiceError('FORBIDDEN');
       const parsed = adRequestCreateSchema.parse(input);
+      const policy = await runtimeSettings();
+      if (policy.supportedPlacements.length > 0 && !policy.supportedPlacements.includes(parsed.placementKey)) throw new AdSettingsServiceError('NOT_FOUND');
+      if (policy.supportedAdTypes.length > 0 && (parsed.adType === undefined || !policy.supportedAdTypes.includes(parsed.adType))) throw new AdSettingsServiceError('NOT_FOUND');
       const placementAvailable = seed.hasActivePlacement
         ? await seed.hasActivePlacement(parsed.placementKey)
         : [...placements.values()].some(item => item.key === parsed.placementKey && item.active);
@@ -446,6 +456,8 @@ export function createAdSettingsService(seed: {
     async issueQuote(claims: AccessTokenClaims, input: unknown) {
       await requireQuotePermission(claims);
       const parsed = adQuoteIssueSchema.parse(input);
+      const policy = await runtimeSettings();
+      if (policy.quoteValidityDays !== undefined && new Date(parsed.validUntil).getTime() > clock().getTime() + policy.quoteValidityDays * 24 * 60 * 60 * 1000) throw new AdSettingsServiceError('VERSION_CONFLICT');
       if (seed.quoteRepository) return seed.quoteRepository.issueAdminQuote(claims.sub, parsed, clock());
       const request = requests.get(parsed.requestId);
       if (!request) throw new AdSettingsServiceError('NOT_FOUND');
@@ -523,6 +535,7 @@ export function createAdSettingsService(seed: {
     async createBannerMedia(claims: AccessTokenClaims, bannerId: string, input: unknown) {
       const parsed = adBannerMediaCreateSchema.parse(input);
       await requireBannerPermission(claims, 'admin:banners.manage');
+      requireMediaPolicy(parsed, await runtimeSettings());
       if (seed.bannerRepository) return seed.bannerRepository.createBannerMedia(claims.sub, bannerId, parsed, clock());
       bannerById(bannerId);
       const stamp = now();
@@ -539,8 +552,16 @@ export function createAdSettingsService(seed: {
     async updateBannerMedia(claims: AccessTokenClaims, mediaId: string, input: unknown) {
       const parsed = adBannerMediaPatchSchema.parse(input);
       await requireBannerPermission(claims, 'admin:banners.manage');
-      if (seed.bannerRepository) return seed.bannerRepository.updateBannerMedia(claims.sub, mediaId, parsed, clock());
+      const policy = await runtimeSettings();
+      if (seed.bannerRepository) {
+        if (parsed.mime !== undefined && policy.acceptedFileFormats.length > 0 && !policy.acceptedFileFormats.includes(parsed.mime)) throw new AdBannerServiceError('BANNER_INVALID_STATE');
+        if (policy.dimensions.length > 0 && (parsed.width !== undefined || parsed.height !== undefined)) {
+          if (parsed.width === undefined || parsed.height === undefined || !policy.dimensions.some((size) => size.width === parsed.width && size.height === parsed.height)) throw new AdBannerServiceError('BANNER_INVALID_STATE');
+        }
+        return seed.bannerRepository.updateBannerMedia(claims.sub, mediaId, parsed, clock());
+      }
       const current = mediaById(mediaId);
+      requireMediaPolicy({ mime: parsed.mime ?? current.mime, width: parsed.width ?? current.width, height: parsed.height ?? current.height }, policy);
       if (parsed.expectedVersion !== current.version) throw new AdBannerServiceError('VERSION_CONFLICT');
       const { expectedVersion: _expectedVersion, reason: _reason, ...changes } = parsed;
       void _expectedVersion;

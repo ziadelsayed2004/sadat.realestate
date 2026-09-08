@@ -121,12 +121,12 @@ function envelope(payload: unknown, requestIdValue = 'provider-advertising-test'
 
 describe('Provider advertising requests and commission', () => {
   it('uses the implemented owner-scoped routes, strict query, and private upload headers', async () => {
-    const calls: Array<{ path: string; method: string; query: string; authorization: string | null; body?: unknown; contentType: string | null; filename: string | null }> = [];
+    const calls: Array<{ path: string; method: string; query: string; authorization: string | null; body?: unknown; contentType: string | null; filename: string | null; paymentMethod: string | null }> = [];
     const client = new ApiClient({
       fetcher: async (input, init) => {
         const url = new URL(String(input), 'http://sadat-real-estate.local');
         const headers = new Headers(init?.headers);
-        const entry = { path: url.pathname, method: init?.method ?? 'GET', query: url.search, authorization: headers.get('authorization'), body: init?.body instanceof Blob ? init.body : init?.body === undefined ? undefined : JSON.parse(String(init.body)) as unknown, contentType: headers.get('content-type'), filename: headers.get('x-file-name') };
+        const entry = { path: url.pathname, method: init?.method ?? 'GET', query: url.search, authorization: headers.get('authorization'), body: init?.body instanceof Blob ? init.body : init?.body === undefined ? undefined : JSON.parse(String(init.body)) as unknown, contentType: headers.get('content-type'), filename: headers.get('x-file-name'), paymentMethod: headers.get('x-payment-method') };
         calls.push(entry);
         if (url.pathname === '/api/v1/provider/ads' && entry.method === 'GET') return envelope(data);
         if (url.pathname === `/api/v1/provider/ads/${requestId}` && entry.method === 'GET') return envelope(detail);
@@ -143,13 +143,13 @@ describe('Provider advertising requests and commission', () => {
     const mutations = createProviderAdvertisingMutationApi({ apiClient: client, authorization: auth });
     await expect(mutations.createRequest({ placementKey: 'homepage.hero', purpose: 'Promote an approved property campaign.', intervalStart: '2026-09-01T08:00:00.000Z', intervalEnd: '2026-09-30T08:00:00.000Z' })).resolves.toEqual(request);
     await expect(mutations.acceptQuote(requestId, { action: 'accept', expectedVersion: 2 })).resolves.toEqual(quote);
-    await expect(mutations.uploadPaymentProof(requestId, new Blob(['test'], { type: 'application/pdf' }), 'receipt.pdf')).resolves.toEqual(proof);
+    await expect(mutations.uploadPaymentProof(requestId, new Blob(['test'], { type: 'application/pdf' }), 'receipt.pdf', 'bank_transfer')).resolves.toEqual(proof);
 
     expect(calls[0]).toMatchObject({ path: '/api/v1/provider/ads', method: 'GET', query: '?status=quote_sent&page=2&limit=5', authorization: 'Bearer provider.advertising.token' });
     expect(calls.some(call => call.path === `/api/v1/provider/ads/${requestId}` && call.method === 'GET')).toBe(true);
     expect(calls.some(call => call.path === '/api/v1/provider/commission')).toBe(true);
     const upload = calls.at(-1);
-    expect(upload).toMatchObject({ path: `/api/v1/provider/ads/${requestId}/payment-proof`, method: 'POST', authorization: 'Bearer provider.advertising.token', contentType: 'application/pdf', filename: 'receipt.pdf' });
+    expect(upload).toMatchObject({ path: `/api/v1/provider/ads/${requestId}/payment-proof`, method: 'POST', authorization: 'Bearer provider.advertising.token', contentType: 'application/pdf', filename: 'receipt.pdf', paymentMethod: 'bank_transfer' });
     expect(upload?.body).toBeInstanceOf(Blob);
   });
 

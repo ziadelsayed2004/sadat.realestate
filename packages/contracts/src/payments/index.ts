@@ -3,6 +3,7 @@ import { successEnvelopeSchema } from '../contracts/envelopes.js';
 
 const objectIdSchema = z.string().regex(/^[a-f0-9]{24}$/);
 const sha256Schema = z.string().regex(/^[a-f0-9]{64}$/);
+const paymentMethodSchema = z.string().trim().min(2).max(80).regex(/^[a-z][a-z0-9_.-]*$/);
 
 export const PAYMENT_PROOF_MAX_BYTES = 10 * 1024 * 1024;
 export const PAYMENT_PROOF_ALLOWED_MIME_TYPES = ['application/pdf', 'image/jpeg', 'image/png'] as const;
@@ -26,6 +27,7 @@ export const paymentProofReviewSchema = z.object({
 export const paymentProofUploadHeadersSchema = z.object({
   filename: z.string().trim().min(1).max(512),
   contentType: paymentProofMimeSchema,
+  paymentMethod: paymentMethodSchema.optional(),
   contentLength: z.number().int().min(1).max(PAYMENT_PROOF_MAX_BYTES).optional()
 }).strict();
 
@@ -33,6 +35,7 @@ export const paymentProofDataSchema = z.object({
   id: objectIdSchema,
   adRequestId: objectIdSchema,
   providerId: objectIdSchema,
+  paymentMethod: paymentMethodSchema.optional(),
   originalFilename: z.string().min(1).max(120),
   normalizedExtension: z.enum(['.pdf', '.jpg', '.jpeg', '.png']),
   detectedMime: paymentProofMimeSchema,

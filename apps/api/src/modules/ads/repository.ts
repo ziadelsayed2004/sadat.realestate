@@ -40,6 +40,7 @@ function toAdRequest(row: {
   _id: Types.ObjectId;
   providerId: Types.ObjectId;
   placementKey: string;
+  adType?: string | undefined;
   purpose: string;
   intervalStart: Date;
   intervalEnd: Date;
@@ -52,6 +53,7 @@ function toAdRequest(row: {
     id: row._id.toHexString(),
     providerId: row.providerId.toHexString(),
     placementKey: row.placementKey,
+    ...(row.adType ? { adType: row.adType } : {}),
     purpose: row.purpose,
     intervalStart: row.intervalStart.toISOString(),
     intervalEnd: row.intervalEnd.toISOString(),
@@ -197,6 +199,7 @@ export function createMongooseAdRequestRepository(
       const document = new models.AdRequest({
         providerId: providerObjectId,
         placementKey: input.placementKey,
+        ...(input.adType ? { adType: input.adType } : {}),
         purpose: input.purpose,
         intervalStart: new Date(input.intervalStart),
         intervalEnd: new Date(input.intervalEnd),

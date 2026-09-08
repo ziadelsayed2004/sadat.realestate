@@ -94,7 +94,7 @@ function createCorsMiddleware(allowedOrigins: readonly string[]): RequestHandler
     response.setHeader('Access-Control-Allow-Credentials', 'true');
     response.setHeader(
       'Access-Control-Allow-Headers',
-      'Content-Type, Authorization, X-Request-Id, X-Document-Category, X-File-Name'
+      'Content-Type, Authorization, X-Request-Id, X-Document-Category, X-File-Name, X-Payment-Method'
     );
     response.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
     if (request.method === 'OPTIONS') {
