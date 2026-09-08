@@ -14,6 +14,7 @@
 - The Web Vitest suite: 413/413 passed. The API route suite: 112/112 passed; the full API suite was rerun after the final changes with 556/556 passing. `npm audit --audit-level=high` reports 0 vulnerabilities after the `qs` lockfile update.
 - API contract inventory: 187/187 runtime and policy routes match the implemented blueprint; OpenAPI and Postman validators are green.
 - Final build, TypeScript, and lint checks completed successfully.
+- Native local runtime smoke passed after starting the API, SSR web app, and seeded local data: `RUNTIME_SMOKE_OK` reported 6 properties, 4 developers, 6 articles, 4 community records, 2 About records, and 6 homepage properties; invalid API, private-file authorization, content encoding, and security headers were checked.
 - The full `quality` aggregator is not green yet: all 556 API tests pass, but its coverage gate reports 78.23% lines and 79.88% functions against the configured 80% thresholds. The pack audit also retains the explicit ADM-54 design-source path exception. Neither result is a behavior-test failure.
 - Logs are under `.local/`; browser evidence is under `apps/web/test-results/admin-review-entry`, `request-filter-recovery`, `admin-review-regression`, and `admin-overview-reviewed`.
 
