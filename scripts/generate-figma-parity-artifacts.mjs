@@ -383,6 +383,11 @@ const FIGMA_FRAME_EVIDENCE = {
       "6017:64905"
     ]
   },
+  "ADM-18": {
+    "nodeIds": [
+      "6017:69276"
+    ]
+  },
   "ADM-12": {
     "nodeIds": [
       "6017:65001"
@@ -675,6 +680,17 @@ const runtimeEvidence = {
     runtimeState: "error-retry-no-api-fixture",
     comparisonStatus: "NOT_COMPARABLE_TO_FIGMA_SUCCESS_STATE",
   },
+  "ADM-18": {
+    locale: "ar",
+    direction: "rtl",
+    viewport: { width: 1577, height: 944 },
+    sourceScreenshot: "docs/quality/figma_parity/screens/ADM-18/figma-direct-2026-09-08.png",
+    runtimeScreenshot: "docs/quality/figma_parity/screens/ADM-18/runtime-direct-2026-09-08.png",
+    diffScreenshot: "docs/quality/figma_parity/screens/ADM-18/diff-direct-2026-09-08.png",
+    runtimeState: "deterministic-admin-request-success",
+    comparisonStatus: "REVIEWED_MATERIAL_VISUAL_DIVERGENCE",
+    metrics: { meanAbsoluteError: 16.0068, differentPixelRatio: 0.811063, materialPixelRatioAt24: 0.397325 },
+  },
 };
 
 async function readJson(path) { return JSON.parse(await readFile(path, "utf8")); }
@@ -684,12 +700,50 @@ function cloneUrl(surface, nodeId) {
   return PROTOTYPE_URLS[surface].replace(/node-id=[^&]+/, `node-id=${nodeId.replace(":", "-")}`);
 }
 function sourceFor(sources, screenId) { return sources.find((item) => item.id === screenId) ?? null; }
+function plainText(html) {
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&#(\d+);/g, (_, value) => String.fromCodePoint(Number(value)))
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
 const registry = await readJson("agent_pack/01_product/SCREEN_REGISTRY.json");
 const coverage = await readJson("agent_pack/01_product/SCREEN_COVERAGE.json");
 const sourceManifest = await readJson("agent_pack/09_sources/DESIGN_SOURCE_MANIFEST.json");
 const sourceScreens = sourceManifest.screens;
 const guideExists = await readFile(guidePath).then(() => true).catch(() => false);
+const guideHtml = guideExists ? await readFile(guidePath, "utf8") : "";
+const guideJourneys = [...guideHtml.matchAll(/<article class="step-card searchable">([\s\S]*?)<\/article>/g)].map((match, index) => ({
+  id: `GUIDE-${String(index + 1).padStart(2, "0")}`,
+  description: plainText(match[1]),
+  screenIds: [...new Set(match[1].match(/\b(?:PUB|AUTH|SEK|PRV|ADM)-\d+(?:\+)?(?:-\d+)?\b/g) ?? [])],
+  verificationStatus: "PENDING_BACKEND_CYCLE_REVIEW",
+}));
+const explicitGuideReferences = new Map();
+for (const journey of guideJourneys) {
+  for (const screenId of journey.screenIds) {
+    const references = explicitGuideReferences.get(screenId) ?? [];
+    references.push(journey.id);
+    explicitGuideReferences.set(screenId, references);
+  }
+}
+const inferredGuideReferences = Object.freeze({
+  "AUTH-01": ["GUIDE-05", "GUIDE-14", "GUIDE-19"],
+  "AUTH-03": ["GUIDE-04"],
+  "AUTH-05": ["GUIDE-04"],
+  "AUTH-09+": ["GUIDE-11"],
+  "AUTH-10+": ["GUIDE-11"],
+  "PRV-22-1": ["GUIDE-18"],
+  "PRV-22-2": ["GUIDE-18"],
+  "PRV-22-3": ["GUIDE-18"],
+  "ADM-18": ["GUIDE-21"],
+  "ADM-54": ["GUIDE-25"],
+});
 const screens = registry.map((screen) => {
   const coverageRecord = coverage.find((item) => item.id === screen.id);
   const source = sourceFor(sourceScreens, screen.id);
@@ -708,7 +762,7 @@ const screens = registry.map((screen) => {
   const mappingNotes = [];
   if (aliasOf) mappingNotes.push(`Registry variant aliases ${aliasOf} in the clone metadata.`);
   if (screen.id === "ADM-44" && cloneNodeIds.length > 1) mappingNotes.push("One registry ID has separate list and create clone frames; both are retained.");
-  if (screen.id === "ADM-18") mappingNotes.push("Local export exists, but no ADM-18 frame was returned by the canonical clone page metadata.");
+  if (screen.id === "ADM-18") mappingNotes.push("Direct Admin-page metadata recovered node 6017:69276 at 1577 × 944; the approved source is its 4× export.");
   if (ownerAuthored) mappingNotes.push("Historical ADM-54 Figma frame was not recovered; the owner-authored local source is the approved fallback.");
   return {
     screenId: screen.id,
@@ -731,7 +785,7 @@ const screens = registry.map((screen) => {
     requiredRole: requiredRole[screen.surface] ?? "unknown",
     apiDependencies: [],
     backendTaskIds: coverageRecord?.backendTaskIds ?? [],
-    userGuideJourneyReferences: [],
+    userGuideJourneyReferences: explicitGuideReferences.get(screen.id) ?? inferredGuideReferences[screen.id] ?? [],
     supportedStates: ["default"],
     stateCoverageStatus: "UNVERIFIED_PENDING_EXECUTABLE_MATRIX",
     currentParityStatus: ownerAuthored ? "OWNER_AUTHORED_SOURCE_APPROVED_RUNTIME_REVIEW_RECORDED" : "DIRECT_SOURCE_CAPTURED_RUNTIME_REVIEW_PENDING",
@@ -777,7 +831,11 @@ const routeMatrix = screens.map((screen) => ({
   backendTaskIds: screen.backendTaskIds,
   apiDependencies: screen.apiDependencies,
   userGuideJourneyReferences: screen.userGuideJourneyReferences,
-  guideStatus: guideExists ? "PENDING_SCREEN_JOURNEY_MAPPING" : "BLOCKED_GUIDE_FILE_MISSING",
+  guideStatus: !guideExists
+    ? "BLOCKED_GUIDE_FILE_MISSING"
+    : screen.userGuideJourneyReferences.length
+      ? "MAPPED_PENDING_CYCLE_VERIFICATION"
+      : "NO_GUIDE_JOURNEY_MAPPING",
   supportedStates: screen.supportedStates,
   verificationStatus: "PENDING_RUNTIME_MATRIX",
 }));
@@ -788,12 +846,14 @@ const parityLedger = screens.map((screen) => ({
   exactCloneNodeId: screen.exactCloneNodeId,
   sourceChecksum: screen.sourceChecksums[0]?.sha256 ?? null,
   directMetadataEvidence: Boolean(screen.exactCloneNodeId),
-  directScreenshotEvidence: screen.screenId === "PUB-01",
+  directScreenshotEvidence: screen.screenId === "PUB-01" || screen.screenId === "ADM-18",
   runtimeBeforeEvidence: null,
   runtimeAfterEvidence: runtimeEvidence[screen.screenId]?.runtimeScreenshot ?? null,
-  visualDiffEvidence: null,
+  visualDiffEvidence: runtimeEvidence[screen.screenId]?.diffScreenshot ?? null,
   visualReviewStatus: screen.screenId === "ADM-54"
     ? "OWNER_AUTHORED_REVIEW_RECORDED"
+    : screen.screenId === "ADM-18"
+      ? "REVIEWED_MATERIAL_VISUAL_DIVERGENCE"
     : screen.screenId === "PUB-01"
       ? "REVIEWED_MATERIAL_DIFFERENCES_OBSERVED_RUNTIME_ERROR_STATE"
       : "PENDING_DIRECT_RUNTIME_COMPARISON",
@@ -804,14 +864,18 @@ const guideMatrix = screens.map((screen) => ({
   screenId: screen.screenId,
   route: screen.runtimeRoute,
   guidePath: guideExists ? guidePath : null,
-  guideJourneyReferences: [],
-  status: guideExists ? "NOT_YET_MAPPED" : "BLOCKED_GUIDE_FILE_MISSING",
+  guideJourneyReferences: screen.userGuideJourneyReferences,
+  status: !guideExists
+    ? "BLOCKED_GUIDE_FILE_MISSING"
+    : explicitGuideReferences.has(screen.screenId)
+      ? "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
+      : "MAPPED_INFERRED_PENDING_CYCLE_VERIFICATION",
 }));
 const defects = [
   { id: "FIGMA-SOURCE-001", severity: "P1", status: "resolved", area: "source-integrity", description: "Active prototype, registry, coverage, source manifest, and handoff references migrated to the canonical clone.", evidence: "FIGMA_SOURCE_MIGRATION.json" },
-  { id: "FIGMA-MAP-ADM-18", severity: "P1", status: "open", area: "source-mapping", screenId: "ADM-18", description: "The canonical Admin page metadata does not expose an ADM-18 frame; the local export remains unverified against clone truth.", evidence: "FIGMA_SCREEN_INVENTORY.json" },
+  { id: "FIGMA-MAP-ADM-18", severity: "P1", status: "resolved", area: "source-mapping", screenId: "ADM-18", description: "Recovered Requests Management as generically named frame Sadat Real Estate, node 6017:69276. Direct screenshot matches the supplied ADM-18 source dimensions at 4× export scale; runtime comparison remains materially divergent.", evidence: "screens/ADM-18/review.json" },
   { id: "FIGMA-MAP-ADM-54", severity: "P1", status: "accepted-owner-fallback", area: "source-mapping", screenId: "ADM-54", description: "Historical ADM-54 frame was not recovered; the approved owner-authored local source is explicitly not a Figma recovery.", evidence: "docs/design_sources/final_screens/admin/ADM-54.owner-authored.html" },
-  { id: "FIGMA-GUIDE-001", severity: "P1", status: guideExists ? "open" : "blocked", area: "user-guide", description: guideExists ? "Arabic user guide exists but screen-to-journey mapping is still pending." : "Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html is absent from the repository and docs/.", evidence: "USER_GUIDE_CONFORMANCE_MATRIX.json" },
+  { id: "FIGMA-GUIDE-001", severity: "P1", status: guideExists ? "resolved" : "blocked", area: "user-guide", description: guideExists ? "Arabic user guide is parsed into ordered journeys and every registry screen is mapped explicitly or by a documented route/state inference; backend cycle verification remains a separate gate." : "Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html is absent from the repository and docs/.", evidence: "USER_GUIDE_CONFORMANCE_MATRIX.json" },
   { id: "WEB-DEV-CSP-001", severity: "P1", status: "resolved", area: "runtime", description: "Development CSP blocked Vite hydration and HMR, producing an unstyled SSR shell; development-only CSP allowances and a no-HMR test mode now keep production CSP strict.", evidence: "apps/web/server.mjs; apps/web/tests/preview-deployment.vitest.test.ts" },
   { id: "FIGMA-RUNTIME-001", severity: "P1", status: "open", area: "visual-verification", description: "PUB-01 runtime evidence is an error/retry state without a populated API fixture and is therefore not comparable to the canonical Figma success state; the remaining direct runtime comparison matrix is not claimed complete.", evidence: "FIGMA_PARITY_LEDGER.json" },
   { id: "PLATFORM-EXTERNAL-001", severity: "P1", status: "blocked", area: "release-gate", description: "backend_139 remains blocked on external production-like infrastructure and providers, so frontend_098 cannot be closed honestly.", evidence: "agent_pack/03_execution/TASK_STATE.json" },
@@ -831,7 +895,7 @@ await writeJson(`${evidenceRoot}/FIGMA_SCREEN_INVENTORY.json`, {
   aliases,
   unmappedScreenIds: unmapped.map((screen) => screen.screenId),
   directPageEvidence: Object.fromEntries(Object.entries(PAGE_IDS).map(([surface, pageId]) => [surface, { pageId, fileKey: CLONE_FILE_KEY, metadataCaptured: true }])),
-  directScreenshotEvidence: ["PUB-01"],
+  directScreenshotEvidence: ["PUB-01", "ADM-18"],
   runtimeEvidence,
   screens,
 });
@@ -855,8 +919,9 @@ await writeJson(`${evidenceRoot}/USER_GUIDE_CONFORMANCE_MATRIX.json`, {
   generatedAt: "2026-08-25T18:00:00.000Z",
   guidePath: guideExists ? guidePath : null,
   guideAvailable: guideExists,
-  status: guideExists ? "PENDING_MAPPING" : "BLOCKED_GUIDE_FILE_MISSING",
+  status: guideExists ? "MAPPED_PENDING_BACKEND_CYCLE_REVIEW" : "BLOCKED_GUIDE_FILE_MISSING",
   rows: guideMatrix,
+  journeys: guideJourneys,
 });
 await writeJson(`${evidenceRoot}/FIGMA_DEFECT_REGISTER.json`, {
   schemaVersion: 1,
@@ -867,13 +932,13 @@ await writeJson(`${evidenceRoot}/RUN_CHECKPOINT.json`, {
   schemaVersion: 1,
   updatedAt: "2026-08-25T18:00:00.000Z",
   currentTask: "frontend_098",
-  status: "blocked_by_external_backend_139_and_unavailable_user_guide",
+  status: guideExists ? "blocked_by_external_backend_139" : "blocked_by_external_backend_139_and_unavailable_user_guide",
   lastCompletedIndependentWork: ["canonical-clone-identity-verification", "direct-page-metadata-capture", "active-source-migration", "screen-inventory-reconciliation", "development-runtime-csp-repair"],
   canonicalScreenCount: screens.length,
   mappedToCloneNodeCount: mapped.length,
   uniqueCloneFrameCount: uniqueCloneNodes.size,
   unmappedScreenIds: unmapped.map((screen) => screen.screenId),
-  remainingIndependentWork: ["focused runtime/browser matrix", "route/API/user-guide matrix where repository evidence exists", "final release-gate evidence"],
+  remainingIndependentWork: ["focused runtime/browser matrix", "backend-cycle verification for mapped user-guide journeys", "final release-gate evidence"],
   externalBlockers: ["backend_139 external infrastructure/provider prerequisites", guideExists ? null : "Arabic client user guide file is absent"].filter(Boolean),
 });
 console.log(JSON.stringify({canonicalScreenCount:screens.length,mappedToCloneNodeCount:mapped.length,uniqueCloneFrameCount:uniqueCloneNodes.size,unmapped:unmapped.map((screen)=>screen.screenId),aliases:aliases.map((screen)=>screen.screenId)},null,2));

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-08T04:52:01.125723+00:00",
+  "generatedAt": "2026-08-25T18:00:00.000Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
-  "status": "MAPPED_PENDING_CYCLE_VERIFICATION",
+  "status": "MAPPED_PENDING_BACKEND_CYCLE_REVIEW",
   "rows": [
     {
       "screenId": "PUB-01",
@@ -12,7 +12,7 @@
       "guideJourneyReferences": [
         "GUIDE-01"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-02",
@@ -22,7 +22,7 @@
         "GUIDE-01",
         "GUIDE-02"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-03",
@@ -32,7 +32,7 @@
         "GUIDE-02",
         "GUIDE-08"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-04",
@@ -42,7 +42,7 @@
         "GUIDE-02",
         "GUIDE-08"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-05",
@@ -51,7 +51,7 @@
       "guideJourneyReferences": [
         "GUIDE-01"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-06",
@@ -60,7 +60,7 @@
       "guideJourneyReferences": [
         "GUIDE-02"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-07",
@@ -69,7 +69,7 @@
       "guideJourneyReferences": [
         "GUIDE-03"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-08",
@@ -78,7 +78,7 @@
       "guideJourneyReferences": [
         "GUIDE-03"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-09",
@@ -87,7 +87,7 @@
       "guideJourneyReferences": [
         "GUIDE-03"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-10",
@@ -96,7 +96,7 @@
       "guideJourneyReferences": [
         "GUIDE-03"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-11",
@@ -105,7 +105,7 @@
       "guideJourneyReferences": [
         "GUIDE-03"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PUB-12",
@@ -114,14 +114,18 @@
       "guideJourneyReferences": [
         "GUIDE-03"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-01",
       "route": "/auth/login",
       "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
-      "guideJourneyReferences": [],
-      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
+      "guideJourneyReferences": [
+        "GUIDE-05",
+        "GUIDE-14",
+        "GUIDE-19"
+      ],
+      "status": "MAPPED_INFERRED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-02",
@@ -130,30 +134,34 @@
       "guideJourneyReferences": [
         "GUIDE-04"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-03",
       "route": "/auth/register/seeker",
       "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
-      "guideJourneyReferences": [],
-      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
+      "guideJourneyReferences": [
+        "GUIDE-04"
+      ],
+      "status": "MAPPED_INFERRED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-04",
-      "route": "/auth/verify-phone",
+      "route": "/auth/verify-email",
       "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
       "guideJourneyReferences": [
         "GUIDE-04"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-05",
-      "route": "/auth/verify-phone",
+      "route": "/auth/verify-email",
       "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
-      "guideJourneyReferences": [],
-      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
+      "guideJourneyReferences": [
+        "GUIDE-04"
+      ],
+      "status": "MAPPED_INFERRED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-06",
@@ -162,7 +170,7 @@
       "guideJourneyReferences": [
         "GUIDE-04"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-07",
@@ -171,7 +179,7 @@
       "guideJourneyReferences": [
         "GUIDE-11"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-08",
@@ -180,7 +188,7 @@
       "guideJourneyReferences": [
         "GUIDE-11"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-09",
@@ -189,14 +197,16 @@
       "guideJourneyReferences": [
         "GUIDE-11"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-09+",
       "route": "/auth/register/provider/account",
       "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
-      "guideJourneyReferences": [],
-      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
+      "guideJourneyReferences": [
+        "GUIDE-11"
+      ],
+      "status": "MAPPED_INFERRED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-10",
@@ -205,14 +215,16 @@
       "guideJourneyReferences": [
         "GUIDE-11"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-10+",
       "route": "/auth/register/provider/business",
       "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
-      "guideJourneyReferences": [],
-      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
+      "guideJourneyReferences": [
+        "GUIDE-11"
+      ],
+      "status": "MAPPED_INFERRED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-11",
@@ -221,7 +233,7 @@
       "guideJourneyReferences": [
         "GUIDE-11"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-12",
@@ -230,7 +242,7 @@
       "guideJourneyReferences": [
         "GUIDE-12"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-13",
@@ -239,7 +251,7 @@
       "guideJourneyReferences": [
         "GUIDE-12"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-14",
@@ -248,7 +260,7 @@
       "guideJourneyReferences": [
         "GUIDE-12"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-15",
@@ -257,7 +269,7 @@
       "guideJourneyReferences": [
         "GUIDE-13"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-16",
@@ -266,7 +278,7 @@
       "guideJourneyReferences": [
         "GUIDE-13"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "AUTH-17",
@@ -275,7 +287,7 @@
       "guideJourneyReferences": [
         "GUIDE-13"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-01",
@@ -284,7 +296,7 @@
       "guideJourneyReferences": [
         "GUIDE-05"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-02",
@@ -293,7 +305,7 @@
       "guideJourneyReferences": [
         "GUIDE-06"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-03",
@@ -302,7 +314,7 @@
       "guideJourneyReferences": [
         "GUIDE-06"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-04",
@@ -311,7 +323,7 @@
       "guideJourneyReferences": [
         "GUIDE-06"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-05",
@@ -320,7 +332,7 @@
       "guideJourneyReferences": [
         "GUIDE-07"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-06",
@@ -329,7 +341,7 @@
       "guideJourneyReferences": [
         "GUIDE-08"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-07",
@@ -338,7 +350,7 @@
       "guideJourneyReferences": [
         "GUIDE-09"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-08",
@@ -347,7 +359,7 @@
       "guideJourneyReferences": [
         "GUIDE-10"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-09",
@@ -356,7 +368,7 @@
       "guideJourneyReferences": [
         "GUIDE-10"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "SEK-10",
@@ -365,7 +377,7 @@
       "guideJourneyReferences": [
         "GUIDE-10"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-01",
@@ -374,7 +386,7 @@
       "guideJourneyReferences": [
         "GUIDE-14"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-02",
@@ -383,7 +395,7 @@
       "guideJourneyReferences": [
         "GUIDE-14"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-03",
@@ -392,7 +404,7 @@
       "guideJourneyReferences": [
         "GUIDE-14"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-04",
@@ -401,7 +413,7 @@
       "guideJourneyReferences": [
         "GUIDE-14"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-05",
@@ -410,7 +422,7 @@
       "guideJourneyReferences": [
         "GUIDE-14"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-06",
@@ -419,7 +431,7 @@
       "guideJourneyReferences": [
         "GUIDE-14"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-07",
@@ -428,7 +440,7 @@
       "guideJourneyReferences": [
         "GUIDE-14"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-08",
@@ -437,7 +449,7 @@
       "guideJourneyReferences": [
         "GUIDE-14"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-09",
@@ -446,7 +458,7 @@
       "guideJourneyReferences": [
         "GUIDE-14"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-10",
@@ -455,7 +467,7 @@
       "guideJourneyReferences": [
         "GUIDE-14"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-11",
@@ -464,7 +476,7 @@
       "guideJourneyReferences": [
         "GUIDE-15"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-12",
@@ -473,7 +485,7 @@
       "guideJourneyReferences": [
         "GUIDE-15"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-13",
@@ -482,7 +494,7 @@
       "guideJourneyReferences": [
         "GUIDE-15"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-14",
@@ -491,7 +503,7 @@
       "guideJourneyReferences": [
         "GUIDE-15"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-15",
@@ -500,7 +512,7 @@
       "guideJourneyReferences": [
         "GUIDE-16"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-16",
@@ -509,7 +521,7 @@
       "guideJourneyReferences": [
         "GUIDE-16"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-17",
@@ -518,7 +530,7 @@
       "guideJourneyReferences": [
         "GUIDE-16"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-18",
@@ -527,7 +539,7 @@
       "guideJourneyReferences": [
         "GUIDE-16"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-19",
@@ -536,7 +548,7 @@
       "guideJourneyReferences": [
         "GUIDE-17"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-20",
@@ -545,7 +557,7 @@
       "guideJourneyReferences": [
         "GUIDE-17"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-21",
@@ -554,28 +566,34 @@
       "guideJourneyReferences": [
         "GUIDE-18"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-22-1",
       "route": "/provider/settings",
       "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
-      "guideJourneyReferences": [],
-      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
+      "guideJourneyReferences": [
+        "GUIDE-18"
+      ],
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-22-2",
       "route": "/provider/settings",
       "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
-      "guideJourneyReferences": [],
-      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
+      "guideJourneyReferences": [
+        "GUIDE-18"
+      ],
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "PRV-22-3",
       "route": "/provider/settings",
       "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
-      "guideJourneyReferences": [],
-      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
+      "guideJourneyReferences": [
+        "GUIDE-18"
+      ],
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-01",
@@ -584,7 +602,7 @@
       "guideJourneyReferences": [
         "GUIDE-19"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-02",
@@ -593,7 +611,7 @@
       "guideJourneyReferences": [
         "GUIDE-19"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-03",
@@ -602,7 +620,7 @@
       "guideJourneyReferences": [
         "GUIDE-19"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-04",
@@ -611,7 +629,7 @@
       "guideJourneyReferences": [
         "GUIDE-19"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-05",
@@ -620,7 +638,7 @@
       "guideJourneyReferences": [
         "GUIDE-19"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-06",
@@ -629,7 +647,7 @@
       "guideJourneyReferences": [
         "GUIDE-19"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-07",
@@ -638,7 +656,7 @@
       "guideJourneyReferences": [
         "GUIDE-19"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-08",
@@ -647,7 +665,7 @@
       "guideJourneyReferences": [
         "GUIDE-19"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-09",
@@ -656,7 +674,7 @@
       "guideJourneyReferences": [
         "GUIDE-20"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-10",
@@ -665,7 +683,7 @@
       "guideJourneyReferences": [
         "GUIDE-20"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-11",
@@ -674,7 +692,7 @@
       "guideJourneyReferences": [
         "GUIDE-20"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-12",
@@ -683,7 +701,7 @@
       "guideJourneyReferences": [
         "GUIDE-20"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-13",
@@ -692,7 +710,7 @@
       "guideJourneyReferences": [
         "GUIDE-20"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-14",
@@ -701,7 +719,7 @@
       "guideJourneyReferences": [
         "GUIDE-20"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-15",
@@ -710,7 +728,7 @@
       "guideJourneyReferences": [
         "GUIDE-20"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-16",
@@ -719,7 +737,7 @@
       "guideJourneyReferences": [
         "GUIDE-20"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-17",
@@ -728,14 +746,16 @@
       "guideJourneyReferences": [
         "GUIDE-20"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-18",
       "route": "/admin/requests",
       "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
-      "guideJourneyReferences": [],
-      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
+      "guideJourneyReferences": [
+        "GUIDE-21"
+      ],
+      "status": "MAPPED_INFERRED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-19",
@@ -744,7 +764,7 @@
       "guideJourneyReferences": [
         "GUIDE-21"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-20",
@@ -753,7 +773,7 @@
       "guideJourneyReferences": [
         "GUIDE-21"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-21",
@@ -762,7 +782,7 @@
       "guideJourneyReferences": [
         "GUIDE-21"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-22",
@@ -771,7 +791,7 @@
       "guideJourneyReferences": [
         "GUIDE-21"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-23",
@@ -780,7 +800,7 @@
       "guideJourneyReferences": [
         "GUIDE-21"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-24",
@@ -789,7 +809,7 @@
       "guideJourneyReferences": [
         "GUIDE-21"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-25",
@@ -798,7 +818,7 @@
       "guideJourneyReferences": [
         "GUIDE-22"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-26",
@@ -807,7 +827,7 @@
       "guideJourneyReferences": [
         "GUIDE-22"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-27",
@@ -816,7 +836,7 @@
       "guideJourneyReferences": [
         "GUIDE-22"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-28",
@@ -825,7 +845,7 @@
       "guideJourneyReferences": [
         "GUIDE-22"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-29",
@@ -834,7 +854,7 @@
       "guideJourneyReferences": [
         "GUIDE-22"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-30",
@@ -843,7 +863,7 @@
       "guideJourneyReferences": [
         "GUIDE-22"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-31",
@@ -852,7 +872,7 @@
       "guideJourneyReferences": [
         "GUIDE-22"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-32",
@@ -861,7 +881,7 @@
       "guideJourneyReferences": [
         "GUIDE-22"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-33",
@@ -870,7 +890,7 @@
       "guideJourneyReferences": [
         "GUIDE-23"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-34",
@@ -879,7 +899,7 @@
       "guideJourneyReferences": [
         "GUIDE-23"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-35",
@@ -888,7 +908,7 @@
       "guideJourneyReferences": [
         "GUIDE-23"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-36",
@@ -897,7 +917,7 @@
       "guideJourneyReferences": [
         "GUIDE-23"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-37",
@@ -906,7 +926,7 @@
       "guideJourneyReferences": [
         "GUIDE-23"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-38",
@@ -915,7 +935,7 @@
       "guideJourneyReferences": [
         "GUIDE-23"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-39",
@@ -924,7 +944,7 @@
       "guideJourneyReferences": [
         "GUIDE-24"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-40",
@@ -933,7 +953,7 @@
       "guideJourneyReferences": [
         "GUIDE-24"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-41",
@@ -942,7 +962,7 @@
       "guideJourneyReferences": [
         "GUIDE-24"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-42",
@@ -951,7 +971,7 @@
       "guideJourneyReferences": [
         "GUIDE-24"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-43",
@@ -960,7 +980,7 @@
       "guideJourneyReferences": [
         "GUIDE-24"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-44",
@@ -969,7 +989,7 @@
       "guideJourneyReferences": [
         "GUIDE-24"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-45",
@@ -978,7 +998,7 @@
       "guideJourneyReferences": [
         "GUIDE-24"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-46",
@@ -987,7 +1007,7 @@
       "guideJourneyReferences": [
         "GUIDE-25"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-47",
@@ -996,7 +1016,7 @@
       "guideJourneyReferences": [
         "GUIDE-25"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-48",
@@ -1005,7 +1025,7 @@
       "guideJourneyReferences": [
         "GUIDE-25"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-49",
@@ -1014,7 +1034,7 @@
       "guideJourneyReferences": [
         "GUIDE-25"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-50",
@@ -1023,7 +1043,7 @@
       "guideJourneyReferences": [
         "GUIDE-25"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-51",
@@ -1032,7 +1052,7 @@
       "guideJourneyReferences": [
         "GUIDE-25"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-52",
@@ -1041,7 +1061,7 @@
       "guideJourneyReferences": [
         "GUIDE-25"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-53",
@@ -1050,14 +1070,16 @@
       "guideJourneyReferences": [
         "GUIDE-25"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-54",
       "route": "/admin/settings/requests",
       "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
-      "guideJourneyReferences": [],
-      "status": "NO_EXPLICIT_GUIDE_REFERENCE"
+      "guideJourneyReferences": [
+        "GUIDE-25"
+      ],
+      "status": "MAPPED_INFERRED_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-55",
@@ -1066,7 +1088,7 @@
       "guideJourneyReferences": [
         "GUIDE-25"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-56",
@@ -1075,7 +1097,7 @@
       "guideJourneyReferences": [
         "GUIDE-25"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-57",
@@ -1084,7 +1106,7 @@
       "guideJourneyReferences": [
         "GUIDE-25"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-58",
@@ -1093,7 +1115,7 @@
       "guideJourneyReferences": [
         "GUIDE-25"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-59",
@@ -1102,7 +1124,7 @@
       "guideJourneyReferences": [
         "GUIDE-26"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-60",
@@ -1111,7 +1133,7 @@
       "guideJourneyReferences": [
         "GUIDE-26"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-61",
@@ -1120,7 +1142,7 @@
       "guideJourneyReferences": [
         "GUIDE-26"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-62",
@@ -1129,7 +1151,7 @@
       "guideJourneyReferences": [
         "GUIDE-26"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-63",
@@ -1138,7 +1160,7 @@
       "guideJourneyReferences": [
         "GUIDE-26"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-64",
@@ -1147,7 +1169,7 @@
       "guideJourneyReferences": [
         "GUIDE-26"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-65",
@@ -1156,7 +1178,7 @@
       "guideJourneyReferences": [
         "GUIDE-26"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     },
     {
       "screenId": "ADM-66",
@@ -1165,7 +1187,7 @@
       "guideJourneyReferences": [
         "GUIDE-26"
       ],
-      "status": "MAPPED_PENDING_CYCLE_VERIFICATION"
+      "status": "MAPPED_EXPLICIT_PENDING_CYCLE_VERIFICATION"
     }
   ],
   "journeys": [
@@ -1243,9 +1265,9 @@
       "id": "GUIDE-08",
       "description": "05 المحفوظات العقارات المحفوظة الاحتفاظ بالعقارات المهمة للرجوع إليها. ماذا يفعل المستخدم؟ يفتح المحفوظات، يراجع العقارات ويعود إلى التفاصيل أو المقارنة عبر المسار العام. النتيجة تبقى اختياراته المهمة مجمعة في مكان واحد. SEK-06 العقارات المحفوظة ↗ PUB-03 تفاصيل العقار ↗ PUB-04 مقارنة الوحدات ↗ تشغيل البروتوتايب ↗",
       "screenIds": [
+        "SEK-06",
         "PUB-03",
-        "PUB-04",
-        "SEK-06"
+        "PUB-04"
       ],
       "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
     },
@@ -1352,7 +1374,9 @@
       "description": "08 الحساب الإشعارات والإعدادات إدارة التحديثات وبيانات الحساب. ماذا يفعل المستخدم؟ يراجع الإشعارات ثم ينتقل إلى الإعدادات لتحديث البيانات المتاحة. النتيجة يبقى الحساب محدثًا مع سهولة الوصول إلى التنبيهات. PRV-21 الإشعارات ↗ PRV-22-1 الإعدادات — الحالة 1 ↗ PRV-22-2 الإعدادات — الحالة 2 ↗ PRV-22-3 الإعدادات — الحالة 3 ↗ تشغيل البروتوتايب ↗",
       "screenIds": [
         "PRV-21",
-        "PRV-22"
+        "PRV-22-1",
+        "PRV-22-2",
+        "PRV-22-3"
       ],
       "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
     },
