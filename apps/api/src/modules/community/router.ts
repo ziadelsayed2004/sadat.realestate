@@ -11,6 +11,7 @@ import {
   communityAdminReportListSuccessEnvelopeSchema,
   communityAdminReportResolveSuccessEnvelopeSchema,
   communityPostCreateSchema,
+  communityPostModerationSchema,
   communityPostIdParamsSchema,
   communityPostMutationDataSchema,
   communityPostMutationSuccessEnvelopeSchema,
@@ -37,6 +38,7 @@ export const COMMUNITY_ROUTE_DEFINITIONS = [
   { method: 'POST', path: '/api/v1/public/community/posts', operationId: 'createCommunityPost' },
   { method: 'POST', path: '/api/v1/public/community/posts/:postId/comments', operationId: 'createCommunityComment' },
   { method: 'POST', path: '/api/v1/public/community/posts/:postId/reports', operationId: 'createCommunityReport' },
+  { method: 'POST', path: '/api/v1/admin/community/posts/:postId/moderate', operationId: 'moderateAdminCommunityPost' },
   { method: 'GET', path: '/api/v1/admin/community/posts', operationId: 'listAdminCommunityPosts' },
   { method: 'GET', path: '/api/v1/admin/community/comments', operationId: 'listAdminCommunityComments' },
   { method: 'GET', path: '/api/v1/admin/community/reports', operationId: 'listAdminCommunityReports' },
@@ -185,6 +187,21 @@ export function createCommunityRouter(dependencies: CommunityRouterDependencies)
       communityReportSuccessEnvelopeSchema.parse(toSuccessResponse(data, requestId(request)));
       response.setHeader('Cache-Control', 'no-store');
       response.status(201).json(toSuccessResponse(data, requestId(request)));
+    } catch (error) { sendError(request, response, error); }
+  });
+
+  router.post('/admin/community/posts/:postId/moderate', async (request, response) => {
+    try {
+      const { postId } = communityPostIdParamsSchema.parse(request.params);
+      const input = communityPostModerationSchema.parse(request.body ?? {});
+      const context = getRequestContext();
+      const post = await dependencies.service.moderate(adminClaims(response), postId, input, {
+        requestId: requestId(request), traceId: context?.traceId ?? requestId(request)
+      });
+      const data = communityPostMutationDataSchema.parse(postMutationData(post));
+      const body = communityPostMutationSuccessEnvelopeSchema.parse(toSuccessResponse(data, requestId(request)));
+      response.setHeader('Cache-Control', 'no-store');
+      response.status(200).json(body);
     } catch (error) { sendError(request, response, error); }
   });
 

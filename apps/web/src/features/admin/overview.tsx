@@ -288,10 +288,10 @@ function StatePanel({ state, locale, onRetry }: { readonly state: Exclude<AdminO
 const platformMetrics: readonly AdminMetricKey[] = ['users', 'seekers', 'providers', 'verifiedProviders'];
 const operationMetrics: readonly AdminMetricKey[] = ['publishedProperties', 'openRequests', 'pendingReviews'];
 
-function MetricCard({ value, label, testId }: { readonly value: number; readonly label: string; readonly testId?: string }) {
+function MetricCard({ value, label, testId, icon = 'properties' }: { readonly value: number; readonly label: string; readonly testId?: string; readonly icon?: AdminSidebarIcon }) {
   return (
     <article className="admin-dashboard__metric" {...(testId === undefined ? {} : { 'data-testid': testId })}>
-      <span className="admin-dashboard__metric-icon" aria-hidden="true">•</span>
+      <span className="admin-dashboard__metric-icon" aria-hidden="true"><img src={navigationIconSources[icon]} alt="" width="20" height="20" /></span>
       <strong>{new Intl.NumberFormat().format(value)}</strong>
       <span>{label}</span>
     </article>
@@ -306,7 +306,7 @@ function MetricSection({ title, metrics, data, locale }: { readonly title: strin
         <h2 id={`admin-${title.replaceAll(' ', '-').toLowerCase()}-title`}>{title}</h2>
       </div>
       <div className="admin-dashboard__metric-grid">
-        {metrics.map(metric => <MetricCard key={metric} value={data[metric]} label={copy.overview.metrics[metric]} testId={`admin-metric-${metric}`} />)}
+        {metrics.map(metric => <MetricCard key={metric} icon={metric === 'users' || metric === 'seekers' ? 'users' : metric === 'providers' || metric === 'verifiedProviders' ? 'providers' : metric === 'publishedProperties' ? 'properties' : 'requests'} value={data[metric]} label={copy.overview.metrics[metric]} testId={`admin-metric-${metric}`} />)}
       </div>
     </section>
   );

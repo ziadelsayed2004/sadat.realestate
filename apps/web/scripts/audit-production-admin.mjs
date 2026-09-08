@@ -1,18 +1,14 @@
 import { chromium, devices } from 'playwright';
+import { readFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { createInterface } from 'node:readline/promises';
 
 const baseUrl = 'https://elsadatrealestate.com';
-const outputDirectory = path.resolve('test-results/production-admin-audit');
-const routes = [
-  ['/admin?lang=ar', 'overview'],
-  ['/admin/providers?lang=ar', 'providers'],
-  ['/admin/verification?lang=ar', 'verification'],
-  ['/admin/properties?lang=ar', 'properties'],
-  ['/admin/projects?lang=ar', 'projects'],
-  ['/admin/audit-logs?lang=ar', 'audit-logs'],
-];
+const outputDirectory = path.resolve(process.env.ADMIN_AUDIT_OUTPUT ?? 'test-results/production-admin-audit');
+const sidebarSource = readFileSync(new URL('../src/features/admin/overview.tsx', import.meta.url), 'utf8');
+const routes = [...sidebarSource.matchAll(/sidebarItem\('([^']+)', '([^']+)'/gu)].map(([, name, route]) => [`${route}?lang=ar`, name]);
+
 
 async function readCredentials() {
   const lines = createInterface({ input: process.stdin, terminal: false });
@@ -70,6 +66,8 @@ async function inspectRoute(page, route, name, device) {
       heading: heading?.textContent?.trim().slice(0, 160) ?? null,
       documentWidth: document.documentElement.scrollWidth,
       viewportWidth: window.innerWidth,
+      screenWidth: window.screen.width,
+      clientWidth: document.documentElement.clientWidth,
       overflowPixels: Math.max(0, document.documentElement.scrollWidth - window.innerWidth),
       visibleInteractive,
     };
@@ -153,7 +151,7 @@ async function main() {
     };
     await writeFile(path.join(outputDirectory, 'report.json'), `${JSON.stringify(report, null, 2)}\n`, 'utf8');
     process.stdout.write(JSON.stringify({
-      ok: login.access !== 'authentication-required' && !login.error,
+      ok: login.screenId === 'ADM-01' && !login.error && [...desktopResults, ...mobileResults].every(result => result.status === 200 && !result.access && result.httpErrors.length === 0 && result.viewportWidth === (result.device === 'mobile' ? 393 : 1440)),
       login,
       desktop: desktopResults.map(({ screenshot: _screenshot, ...result }) => result),
       mobile: mobileResults.map(({ screenshot: _screenshot, ...result }) => result),

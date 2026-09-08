@@ -296,7 +296,9 @@
     "path": "/api/v1/provider/application/documents",
     "module": "provider-onboarding",
     "auth": "access-token",
-    "roles": ["provider"],
+    "roles": [
+      "provider"
+    ],
     "purpose": "List active owned document metadata without storage keys or download URLs",
     "status": "implemented",
     "apiVersion": "v1"
@@ -2299,6 +2301,18 @@
       "admin:audit.view"
     ],
     "purpose": "Audit details",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/community/posts/:postId/moderate",
+    "module": "community",
+    "auth": "access-token",
+    "roles": [
+      "admin:community.moderate"
+    ],
+    "purpose": "Publish or hide community content with reason, audit and optimistic concurrency",
     "status": "implemented",
     "apiVersion": "v1"
   }

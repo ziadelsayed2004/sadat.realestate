@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import type { AccessTokenClaims, AccessTokenService } from '../../src/modules/auth/crypto.js';
 import { createMemoryCommunityReportService } from '../../src/modules/community/report-service.js';
-import { createCommunityService } from '../../src/modules/community/service.js';
+import { createCommunityService, createMemoryCommunityRepository } from '../../src/modules/community/service.js';
 import { createApiServer, startApiServer, stopApiServer } from '../../src/server.js';
 
 const SEEKER_ID = '1123456789abcdef01234567';
@@ -41,15 +41,16 @@ async function withServer(run: (origin: string, postId: string) => Promise<void>
       return userId === ADMIN_ID && (permission === 'admin:community.view' || permission === 'admin:community.moderate');
     }
   };
-  const service = createCommunityService([{
+  const seed = [{
     id: POST_ID,
     authorId: ADMIN_ID,
     title: 'Published community post',
     body: 'Public body',
-    status: 'published',
+    status: 'published' as const,
     createdAt: NOW,
     updatedAt: NOW
-  }], undefined, authorization);
+  }];
+  const service = createCommunityService([], createMemoryCommunityRepository(seed, { record: async () => 'audit-id' }), authorization);
   const server = createApiServer({
     database: { isReady: async () => true },
     community: { service, reports: createMemoryCommunityReportService(authorization), accessTokens }
@@ -154,4 +155,25 @@ test('community mutations require verified authentication and keep strict safe r
 
   assert.equal((await request(origin, 'POST', `/api/v1/public/community/posts/${postId}/reports`, 'seeker', { reason: 'unsafe', details: 'bad' })).status, 400);
   assert.equal((await request(origin, 'POST', `/api/v1/public/community/posts/${postId}/comments`, 'seeker', { body: 'bad', extra: true })).status, 400);
+}));
+
+
+test('community HTTP lifecycle creates a private draft, moderates it, rejects stale decisions, and hides it publicly', async () => withServer(async origin => {
+  const created = await request(origin, 'POST', '/api/v1/public/community/posts', 'seeker', { title: 'Lifecycle test', body: 'Reviewed test content' });
+  assert.equal(created.status, 201);
+  const { data: draft } = await created.json() as { data: { id: string; updatedAt: string } };
+  const path = `/api/v1/admin/community/posts/${draft.id}/moderate`;
+  const input = { action: 'publish', reason: 'Approved after content review', expectedUpdatedAt: draft.updatedAt };
+  assert.equal((await request(origin, 'GET', `/api/v1/public/community/posts/${draft.id}`)).status, 404);
+  assert.equal((await request(origin, 'POST', path, undefined, input)).status, 401);
+  assert.equal((await request(origin, 'POST', path, 'seeker', input)).status, 403);
+  assert.equal((await request(origin, 'POST', path, 'limited-admin', input)).status, 403);
+  assert.equal((await request(origin, 'POST', path, 'admin', { ...input, reason: ' ' })).status, 400);
+  const published = await request(origin, 'POST', path, 'admin', input);
+  assert.equal(published.status, 200);
+  const { data } = await published.json() as { data: { updatedAt: string } };
+  assert.equal((await request(origin, 'GET', `/api/v1/public/community/posts/${draft.id}`)).status, 200);
+  assert.equal((await request(origin, 'POST', path, 'admin', input)).status, 409);
+  assert.equal((await request(origin, 'POST', path, 'admin', { ...input, action: 'hide', expectedUpdatedAt: data.updatedAt })).status, 200);
+  assert.equal((await request(origin, 'GET', `/api/v1/public/community/posts/${draft.id}`)).status, 404);
 }));

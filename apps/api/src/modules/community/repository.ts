@@ -1,3 +1,4 @@
+import type { AuditWriter } from '../audit/writer.js';
 import type { CommunityComment, CommunityPost } from '@sadat-real-estate/contracts';
 import { communityCommentSchema, communityPostSchema } from '@sadat-real-estate/contracts';
 import type { CommunityModels, CommunityPostRecord, CommunityCommentRecord } from './models.js';
@@ -14,7 +15,7 @@ function comment(row: CommunityCommentRecord): CommunityComment {
   return communityCommentSchema.parse(row);
 }
 
-export function createMongooseCommunityRepository(models: CommunityModels): CommunityRepository {
+export function createMongooseCommunityRepository(models: CommunityModels, audit?: AuditWriter): CommunityRepository {
   return {
     async listPosts() {
       const rows = await models.CommunityPost.find({}, postProjection).sort({ createdAt: -1, id: 1 }).lean();
@@ -29,6 +30,14 @@ export function createMongooseCommunityRepository(models: CommunityModels): Comm
     },
     async savePost(value) {
       await models.CommunityPost.replaceOne({ id: value.id }, value, { upsert: true });
+    },
+    async moderatePost(value, expectedUpdatedAt, entry) {
+      if (!audit) throw new Error('AUDIT_UNAVAILABLE');
+      await models.CommunityPost.db.transaction(async session => {
+        const result = await models.CommunityPost.replaceOne({ id: value.id, updatedAt: expectedUpdatedAt }, value, { session });
+        if (result.matchedCount !== 1) throw new Error('VERSION_CONFLICT');
+        await audit.record(entry, session);
+      });
     },
     async listComments(postId) {
       const filter = postId === undefined ? {} : { postId };

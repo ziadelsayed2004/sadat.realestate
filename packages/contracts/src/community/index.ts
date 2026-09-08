@@ -176,3 +176,10 @@ export type CommunityReportResolve = z.infer<typeof communityReportResolveSchema
 export type CommunityAdminReportListQuery = z.infer<typeof communityAdminReportListQuerySchema>;
 export type CommunityAdminReport = z.infer<typeof communityAdminReportSchema>;
 export type CommunityAdminReportListData = z.infer<typeof communityAdminReportListDataSchema>;
+
+export const communityPostModerationSchema = z.object({
+  action: z.enum(['publish', 'hide']),
+  expectedUpdatedAt: z.string().datetime({ offset: true }),
+  reason: z.string().trim().min(5).max(500).regex(/^[^\u0000-\u001f\u007f]+$/u)
+}).strict();
+export type CommunityPostModeration = z.infer<typeof communityPostModerationSchema>;

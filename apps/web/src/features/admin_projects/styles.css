@@ -36,9 +36,9 @@
 .admin-projects__filters select { min-height: 44px; padding: 10px 12px; border: 1px solid #dbe0e6; border-radius: 10px; background: #fff; color: #1b2942; font: inherit; }
 .admin-projects__filters select { box-sizing: border-box; block-size: 44px; min-block-size: 44px; appearance: none; }
 .admin-projects__filters label:first-child::after { content: ''; display: block; }
-.admin-projects__filters input { grid-column: 1; }
+.admin-projects__filters input { grid-column: 1; grid-row: 2; }
 .admin-projects__filters label:nth-of-type(2) { grid-column: 2; }
-.admin-projects__filters select { grid-column: 2; }
+.admin-projects__filters select { grid-column: 2; grid-row: 2; }
 .admin-projects__filters .ui-button { grid-row: 2; }
 .admin-projects__filters input:focus-visible,
 .admin-projects__filters select:focus-visible,
@@ -103,4 +103,9 @@
   .admin-projects > .admin-dashboard__navigation { border-inline-end: 0; border-block-end: 1px solid #e4e7ec; }
   .admin-projects__filters { grid-template-columns: 1fr 1fr; }
   .admin-projects__review-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .admin-projects__filters { grid-template-columns: minmax(0, 1fr); }
+  .admin-projects__filters > :is(label, input, select, .ui-button) { grid-column: 1; grid-row: auto; min-width: 0; }
 }

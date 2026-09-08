@@ -157,3 +157,16 @@ describe('Admin account and verification views', () => {
     expect(load).not.toHaveBeenCalled();
   });
 });
+
+
+describe('empty account filter recovery', () => {
+  it('keeps provider filters available and reloads results without refreshing', async () => {
+    const loadProviders = vi.fn().mockResolvedValueOnce({ ...providerList, items: [], total: 0 }).mockResolvedValue(providerList);
+    renderWithLocale(<AdminAccounts locale="en" session={session} view="providers" loadProviders={loadProviders} />, { locale: 'en' });
+    await waitFor(() => expect(document.querySelector('[data-admin-accounts-state="empty"]')).not.toBeNull());
+    const clear = screen.getByRole('button', { name: /clear/i });
+    fireEvent.click(clear);
+    await waitFor(() => expect(screen.getByText('Provider Office')).toBeInTheDocument());
+    expect(loadProviders).toHaveBeenCalledTimes(2);
+  });
+});

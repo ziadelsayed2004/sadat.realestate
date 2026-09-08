@@ -1,0 +1,8420 @@
+{
+  "capturedAt": "2026-09-07T22:55:49.241Z",
+  "fileKey": "Odl1Epn2u6lIEuIMmABT7o",
+  "method": "Direct Figma MCP metadata: source dimensions and layout nodes; not runtime parity",
+  "frames": [
+    {
+      "id": "6017:10847",
+      "name": "PUB-01 — Home / الرئيسية",
+      "x": "1756",
+      "y": "4194",
+      "width": "1549",
+      "height": "5284",
+      "pageId": "6017:4352",
+      "layoutNodes": [
+        {
+          "id": "6017:10848",
+          "name": "HOME PAGE",
+          "x": "0",
+          "y": "0",
+          "width": "1549",
+          "height": "5284"
+        },
+        {
+          "id": "6017:10849",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1549",
+          "height": "944"
+        },
+        {
+          "id": "6017:10850",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1549",
+          "height": "5377.10009765625"
+        },
+        {
+          "id": "6017:10851",
+          "name": "PUB-REF-01 — Header Variants — Desktop / حالات الهيدر — ديسكتوب",
+          "x": "0",
+          "y": "0",
+          "width": "1549",
+          "height": "90"
+        },
+        {
+          "id": "6017:10852",
+          "name": "Main Content",
+          "x": "0",
+          "y": "90",
+          "width": "1549",
+          "height": "4793.10009765625"
+        },
+        {
+          "id": "6017:11364",
+          "name": "Footer:margin",
+          "x": "0",
+          "y": "4883.10009765625",
+          "width": "1549",
+          "height": "494"
+        }
+      ]
+    },
+    {
+      "id": "6017:11366",
+      "name": "PUB-05 — Developers &amp; Companies / المطورون والشركات العقارية",
+      "x": "-5590",
+      "y": "4194",
+      "width": "1523",
+      "height": "1536",
+      "pageId": "6017:4352",
+      "layoutNodes": [
+        {
+          "id": "6017:11367",
+          "name": "المطورون",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "1536"
+        },
+        {
+          "id": "6017:11368",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "1536"
+        },
+        {
+          "id": "6017:11369",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "1536"
+        },
+        {
+          "id": "6017:11370",
+          "name": "PUB-REF-01 — Header Variants — Desktop / حالات الهيدر — ديسكتوب",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "90"
+        },
+        {
+          "id": "6017:11371",
+          "name": "Main Content",
+          "x": "0",
+          "y": "90",
+          "width": "1523",
+          "height": "952"
+        },
+        {
+          "id": "6017:11464",
+          "name": "Footer:margin",
+          "x": "0",
+          "y": "1042",
+          "width": "1523",
+          "height": "494"
+        }
+      ]
+    },
+    {
+      "id": "6017:11467",
+      "name": "PUB-07 — Articles Listing / قائمة المقالات",
+      "x": "-9239",
+      "y": "4194",
+      "width": "1523",
+      "height": "1782",
+      "pageId": "6017:4352",
+      "layoutNodes": [
+        {
+          "id": "6017:11468",
+          "name": "المقالات",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "1782"
+        },
+        {
+          "id": "6017:11469",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "1782"
+        },
+        {
+          "id": "6017:11470",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "1782.25"
+        },
+        {
+          "id": "6017:11471",
+          "name": "PUB-REF-01 — Header Variants — Desktop / حالات الهيدر — ديسكتوب",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "90"
+        },
+        {
+          "id": "6017:11472",
+          "name": "Main Content",
+          "x": "0",
+          "y": "90",
+          "width": "1523",
+          "height": "1198.25"
+        },
+        {
+          "id": "6017:11632",
+          "name": "Footer:margin",
+          "x": "0",
+          "y": "1288.25",
+          "width": "1523",
+          "height": "494"
+        }
+      ]
+    },
+    {
+      "id": "6017:11634",
+      "name": "PUB-09 — Community Feed / الكوميونيتي",
+      "x": "-12878",
+      "y": "4194",
+      "width": "1524",
+      "height": "1999",
+      "pageId": "6017:4352",
+      "layoutNodes": [
+        {
+          "id": "6017:11635",
+          "name": "الكوميونتي",
+          "x": "0",
+          "y": "0",
+          "width": "1524",
+          "height": "1999"
+        },
+        {
+          "id": "6017:11636",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1524",
+          "height": "1999"
+        },
+        {
+          "id": "6017:11637",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1524",
+          "height": "1999"
+        },
+        {
+          "id": "6017:11638",
+          "name": "PUB-REF-01 — Header Variants — Desktop / حالات الهيدر — ديسكتوب",
+          "x": "0",
+          "y": "0",
+          "width": "1524",
+          "height": "90"
+        },
+        {
+          "id": "6017:11639",
+          "name": "Main Content",
+          "x": "0",
+          "y": "90",
+          "width": "1524",
+          "height": "1415"
+        },
+        {
+          "id": "6017:11828",
+          "name": "Footer:margin",
+          "x": "0",
+          "y": "1505",
+          "width": "1524",
+          "height": "494"
+        }
+      ]
+    },
+    {
+      "id": "6017:11830",
+      "name": "PUB-11 — About Platform / عن المنصة",
+      "x": "-16518",
+      "y": "4194",
+      "width": "1524",
+      "height": "2214",
+      "pageId": "6017:4352",
+      "layoutNodes": [
+        {
+          "id": "6017:11831",
+          "name": "من نحن",
+          "x": "0",
+          "y": "0",
+          "width": "1524",
+          "height": "2214"
+        },
+        {
+          "id": "6017:11832",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "2213.5"
+        },
+        {
+          "id": "6017:11833",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "2213.5"
+        },
+        {
+          "id": "6048:37691",
+          "name": "PUB-REF-01 — Header Variants — Desktop / حالات الهيدر — ديسكتوب",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "90"
+        },
+        {
+          "id": "6017:11835",
+          "name": "Main Content",
+          "x": "0",
+          "y": "90",
+          "width": "1523",
+          "height": "1629.5"
+        },
+        {
+          "id": "6017:12004",
+          "name": "Footer:margin",
+          "x": "0",
+          "y": "1719.5",
+          "width": "1523",
+          "height": "494"
+        }
+      ]
+    },
+    {
+      "id": "6017:12006",
+      "name": "PUB-12 — Team / فريق العمل",
+      "x": "-18337",
+      "y": "4194",
+      "width": "1523",
+      "height": "1560",
+      "pageId": "6017:4352",
+      "layoutNodes": [
+        {
+          "id": "6017:12007",
+          "name": "فريق العمل",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "1560"
+        },
+        {
+          "id": "6017:12008",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "1560"
+        },
+        {
+          "id": "6017:12009",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "1559.5"
+        },
+        {
+          "id": "6048:37759",
+          "name": "PUB-REF-01 — Header Variants — Desktop / حالات الهيدر — ديسكتوب",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "90"
+        },
+        {
+          "id": "6017:12011",
+          "name": "Main Content",
+          "x": "0",
+          "y": "90",
+          "width": "1523",
+          "height": "975.5"
+        },
+        {
+          "id": "6017:12093",
+          "name": "Footer:margin",
+          "x": "0",
+          "y": "1065.5",
+          "width": "1523",
+          "height": "494"
+        }
+      ]
+    },
+    {
+      "id": "6017:12095",
+      "name": "PUB-02 — Properties Listing / قائمة العقارات",
+      "x": "-117",
+      "y": "4194",
+      "width": "1577",
+      "height": "1873",
+      "pageId": "6017:4352",
+      "layoutNodes": [
+        {
+          "id": "6017:12096",
+          "name": "العقارات - رأسي",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1873"
+        },
+        {
+          "id": "6017:12097",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1873"
+        },
+        {
+          "id": "6017:12098",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1981"
+        },
+        {
+          "id": "6017:12099",
+          "name": "PUB-REF-01 — Header Variants — Desktop / حالات الهيدر — ديسكتوب",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "90"
+        },
+        {
+          "id": "6017:12100",
+          "name": "Main Content",
+          "x": "0",
+          "y": "90",
+          "width": "1577",
+          "height": "1397"
+        },
+        {
+          "id": "6017:12558",
+          "name": "Footer:margin",
+          "x": "0",
+          "y": "1487",
+          "width": "1577",
+          "height": "494"
+        }
+      ]
+    },
+    {
+      "id": "6017:12560",
+      "name": "PUB-08 — Article Details / تفاصيل المقال",
+      "x": "-11058",
+      "y": "4194",
+      "width": "1523",
+      "height": "1759",
+      "pageId": "6017:4352",
+      "layoutNodes": [
+        {
+          "id": "6017:12561",
+          "name": "المقالات - الداخل",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "1759"
+        },
+        {
+          "id": "6017:12562",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "1759"
+        },
+        {
+          "id": "6017:12563",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "1758.75"
+        },
+        {
+          "id": "6017:12564",
+          "name": "PUB-REF-01 — Header Variants — Desktop / حالات الهيدر — ديسكتوب",
+          "x": "0",
+          "y": "0",
+          "width": "1523",
+          "height": "90"
+        },
+        {
+          "id": "6017:12565",
+          "name": "Main Content",
+          "x": "0",
+          "y": "90",
+          "width": "1523",
+          "height": "1174.75"
+        },
+        {
+          "id": "6017:12691",
+          "name": "Footer:margin",
+          "x": "0",
+          "y": "1264.75",
+          "width": "1523",
+          "height": "494"
+        }
+      ]
+    },
+    {
+      "id": "6017:12693",
+      "name": "PUB-03 — Property Details / تفاصيل العقار",
+      "x": "-1990",
+      "y": "4194",
+      "width": "1577",
+      "height": "3046",
+      "pageId": "6017:4352",
+      "layoutNodes": [
+        {
+          "id": "6017:12694",
+          "name": "تفاصيل الوحدة",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "3046"
+        },
+        {
+          "id": "6017:12695",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "3046"
+        },
+        {
+          "id": "6017:12696",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "3046"
+        },
+        {
+          "id": "6017:12697",
+          "name": "PUB-REF-01 — Header Variants — Desktop / حالات الهيدر — ديسكتوب",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "90"
+        },
+        {
+          "id": "6017:12698",
+          "name": "Main Content",
+          "x": "0",
+          "y": "90",
+          "width": "1577",
+          "height": "2462"
+        },
+        {
+          "id": "6017:13153",
+          "name": "Footer:margin",
+          "x": "0",
+          "y": "2552",
+          "width": "1577",
+          "height": "494"
+        }
+      ]
+    },
+    {
+      "id": "2051:8587",
+      "name": "Desktop",
+      "x": "6008",
+      "y": "4194",
+      "width": "1589",
+      "height": "790",
+      "pageId": "6017:4352",
+      "layoutNodes": []
+    },
+    {
+      "id": "6017:13155",
+      "name": "PUB-06 — Developer Profile / ملف المطور العقاري",
+      "x": "-7420",
+      "y": "4194",
+      "width": "1534",
+      "height": "2984",
+      "pageId": "6017:4352",
+      "layoutNodes": [
+        {
+          "id": "6017:13156",
+          "name": "Public website pages",
+          "x": "0",
+          "y": "0",
+          "width": "1534",
+          "height": "2984"
+        },
+        {
+          "id": "6017:13157",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1534",
+          "height": "2984"
+        },
+        {
+          "id": "6017:13158",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1534",
+          "height": "2984.35009765625"
+        },
+        {
+          "id": "6017:13159",
+          "name": "PUB-REF-01 — Header Variants — Desktop / حالات الهيدر — ديسكتوب",
+          "x": "0",
+          "y": "0",
+          "width": "1534",
+          "height": "90"
+        },
+        {
+          "id": "6017:13160",
+          "name": "Main Content",
+          "x": "0",
+          "y": "90",
+          "width": "1534",
+          "height": "2400.35009765625"
+        },
+        {
+          "id": "6017:13609",
+          "name": "Footer:margin",
+          "x": "0",
+          "y": "2490.35009765625",
+          "width": "1534",
+          "height": "494"
+        }
+      ]
+    },
+    {
+      "id": "6017:13611",
+      "name": "PUB-10 — Create Post — Modal / إنشاء منشور — نافذة منبثقة",
+      "x": "-14698",
+      "y": "4194",
+      "width": "1524",
+      "height": "1999",
+      "pageId": "6017:4352",
+      "layoutNodes": [
+        {
+          "id": "6017:13612",
+          "name": "الكوميونتي",
+          "x": "0",
+          "y": "0",
+          "width": "1524",
+          "height": "1999"
+        },
+        {
+          "id": "6017:13613",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1524",
+          "height": "1999"
+        },
+        {
+          "id": "6017:13614",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1524",
+          "height": "1999"
+        },
+        {
+          "id": "6017:13615",
+          "name": "PUB-REF-01 — Header Variants — Desktop / حالات الهيدر — ديسكتوب",
+          "x": "0",
+          "y": "0",
+          "width": "1524",
+          "height": "90"
+        },
+        {
+          "id": "6017:13616",
+          "name": "Main Content",
+          "x": "0",
+          "y": "90",
+          "width": "1524",
+          "height": "1415"
+        },
+        {
+          "id": "6017:13836",
+          "name": "Footer:margin",
+          "x": "0",
+          "y": "1505",
+          "width": "1524",
+          "height": "494"
+        }
+      ]
+    },
+    {
+      "id": "6017:13838",
+      "name": "PUB-04 — Unit Comparison / مقارنة الوحدات",
+      "x": "-3863",
+      "y": "4194",
+      "width": "1577",
+      "height": "2314",
+      "pageId": "6017:4352",
+      "layoutNodes": [
+        {
+          "id": "6017:13839",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:13840",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "2314"
+        },
+        {
+          "id": "6017:13841",
+          "name": "Placeholder for Navbar",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "65"
+        },
+        {
+          "id": "6017:13842",
+          "name": "Main Content",
+          "x": "0",
+          "y": "65",
+          "width": "1577",
+          "height": "1675"
+        },
+        {
+          "id": "6017:13843",
+          "name": "CompareUnitsPage",
+          "x": "276.5",
+          "y": "0",
+          "width": "1024",
+          "height": "1675"
+        },
+        {
+          "id": "6017:14056",
+          "name": "Footer:margin",
+          "x": "0",
+          "y": "1740",
+          "width": "1577",
+          "height": "494"
+        },
+        {
+          "id": "6017:14057",
+          "name": "Footer",
+          "x": "0",
+          "y": "80",
+          "width": "1577",
+          "height": "414"
+        },
+        {
+          "id": "6017:14058",
+          "name": "ComparisonBar",
+          "x": "0",
+          "y": "1708",
+          "width": "1577",
+          "height": "77"
+        },
+        {
+          "id": "6017:14059",
+          "name": "Container:margin",
+          "x": "0",
+          "y": "1",
+          "width": "1577",
+          "height": "76"
+        },
+        {
+          "id": "6017:14060",
+          "name": "Container",
+          "x": "276.5",
+          "y": "0",
+          "width": "1024",
+          "height": "76"
+        },
+        {
+          "id": "6017:14061",
+          "name": "Container:align",
+          "x": "16",
+          "y": "18",
+          "width": "392",
+          "height": "40"
+        },
+        {
+          "id": "6017:14067",
+          "name": "Container",
+          "x": "424",
+          "y": "12",
+          "width": "216",
+          "height": "52"
+        },
+        {
+          "id": "6017:14075",
+          "name": "Container",
+          "x": "656",
+          "y": "12",
+          "width": "216",
+          "height": "52"
+        },
+        {
+          "id": "6017:14083",
+          "name": "Container",
+          "x": "888",
+          "y": "28",
+          "width": "120",
+          "height": "20"
+        },
+        {
+          "id": "6017:14089",
+          "name": "PUB-REF-01 — Header Variants — Desktop / حالات الهيدر — ديسكتوب",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "90"
+        }
+      ]
+    },
+    {
+      "id": "239:180",
+      "name": "PUB-REF-01 — Header Variants — Desktop / حالات الهيدر — ديسكتوب",
+      "x": "3829",
+      "y": "4194",
+      "width": "1589",
+      "height": "790",
+      "pageId": "6017:4352",
+      "layoutNodes": []
+    },
+    {
+      "id": "6017:15835",
+      "name": "AUTH-02 — Seeker Registration — Default / إنشاء حساب باحث — افتراضي",
+      "x": "5306",
+      "y": "709",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:15836",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:15837",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:15838",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "888"
+        },
+        {
+          "id": "6017:15839",
+          "name": "RegisterPurposePage",
+          "x": "452.5",
+          "y": "197.75",
+          "width": "672",
+          "height": "492.5"
+        },
+        {
+          "id": "6017:15840",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "672",
+          "height": "144"
+        },
+        {
+          "id": "6017:15851",
+          "name": "Container:margin",
+          "x": "0",
+          "y": "144",
+          "width": "672",
+          "height": "268.5"
+        },
+        {
+          "id": "6017:15881",
+          "name": "Container",
+          "x": "0",
+          "y": "412.5",
+          "width": "672",
+          "height": "80"
+        }
+      ]
+    },
+    {
+      "id": "6017:15890",
+      "name": "AUTH-03 — Seeker Registration — Default / إنشاء حساب باحث — افتراضي",
+      "x": "5306",
+      "y": "1793",
+      "width": "1577",
+      "height": "979",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:15891",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:15892",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "979"
+        },
+        {
+          "id": "6017:15893",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:15894",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "923"
+        },
+        {
+          "id": "6017:15895",
+          "name": "RegisterSeekerPage",
+          "x": "538.5",
+          "y": "40",
+          "width": "500",
+          "height": "843"
+        }
+      ]
+    },
+    {
+      "id": "6017:15993",
+      "name": "AUTH-04 — Phone Verification — OTP / تأكيد رقم الهاتف — رمز التحقق",
+      "x": "5306",
+      "y": "2912",
+      "width": "1577",
+      "height": "1033",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:15994",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:15995",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1033"
+        },
+        {
+          "id": "6017:15996",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:15997",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "977"
+        },
+        {
+          "id": "6017:15998",
+          "name": "RegisterSeekerPage",
+          "x": "538.5",
+          "y": "40",
+          "width": "500",
+          "height": "897"
+        }
+      ]
+    },
+    {
+      "id": "6017:16113",
+      "name": "AUTH-05 — Phone Verification — OTP / تأكيد رقم الهاتف — رمز التحقق",
+      "x": "5306",
+      "y": "4085",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:16114",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:16115",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:16116",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "888"
+        },
+        {
+          "id": "6017:16117",
+          "name": "VerifyOtpPage",
+          "x": "578.5",
+          "y": "175",
+          "width": "420",
+          "height": "538"
+        },
+        {
+          "id": "6017:16118",
+          "name": "BrandLogo:margin",
+          "x": "0",
+          "y": "0",
+          "width": "420",
+          "height": "40"
+        },
+        {
+          "id": "6017:16120",
+          "name": "Container:margin",
+          "x": "0",
+          "y": "40",
+          "width": "420",
+          "height": "88"
+        },
+        {
+          "id": "6017:16124",
+          "name": "Heading 1:margin",
+          "x": "0",
+          "y": "128",
+          "width": "420",
+          "height": "52"
+        },
+        {
+          "id": "6017:16127",
+          "name": "Paragraph:margin",
+          "x": "0",
+          "y": "180",
+          "width": "420",
+          "height": "28"
+        },
+        {
+          "id": "6017:16130",
+          "name": "Paragraph:margin",
+          "x": "0",
+          "y": "208",
+          "width": "420",
+          "height": "28"
+        },
+        {
+          "id": "6017:16133",
+          "name": "Container:margin",
+          "x": "0",
+          "y": "236",
+          "width": "420",
+          "height": "302"
+        }
+      ]
+    },
+    {
+      "id": "6017:16158",
+      "name": "AUTH-06 — Seeker Registration — Success / تم إنشاء حساب الباحث",
+      "x": "5306",
+      "y": "5131",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:16159",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:16160",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:16161",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "888"
+        },
+        {
+          "id": "6017:16162",
+          "name": "RegisterSuccessPage",
+          "x": "568.5",
+          "y": "167.5",
+          "width": "440",
+          "height": "553"
+        },
+        {
+          "id": "6017:16163",
+          "name": "Container:margin",
+          "x": "0",
+          "y": "0",
+          "width": "440",
+          "height": "80"
+        },
+        {
+          "id": "6017:16168",
+          "name": "Heading 1:margin",
+          "x": "0",
+          "y": "80",
+          "width": "440",
+          "height": "56"
+        },
+        {
+          "id": "6017:16171",
+          "name": "Paragraph:margin",
+          "x": "0",
+          "y": "136",
+          "width": "440",
+          "height": "52"
+        },
+        {
+          "id": "6017:16174",
+          "name": "Container:margin",
+          "x": "0",
+          "y": "188",
+          "width": "440",
+          "height": "239"
+        },
+        {
+          "id": "6017:16206",
+          "name": "Container:margin",
+          "x": "0",
+          "y": "427",
+          "width": "440",
+          "height": "126"
+        }
+      ]
+    },
+    {
+      "id": "6017:16212",
+      "name": "AUTH-01 — Login / تسجيل الدخول",
+      "x": "7125",
+      "y": "1793",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:16213",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:16214",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:16215",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "888"
+        },
+        {
+          "id": "6017:16216",
+          "name": "Container",
+          "x": "558.5",
+          "y": "139.5",
+          "width": "460",
+          "height": "609"
+        },
+        {
+          "id": "6017:16217",
+          "name": "Container",
+          "x": "1",
+          "y": "1",
+          "width": "458",
+          "height": "204"
+        },
+        {
+          "id": "6017:16225",
+          "name": "Container",
+          "x": "1",
+          "y": "205",
+          "width": "458",
+          "height": "403"
+        }
+      ]
+    },
+    {
+      "id": "6017:16275",
+      "name": "AUTH-07 — Provider Type Selection — Default / اختيار نوع مقدم العقار — افتراضي",
+      "x": "2949",
+      "y": "851",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:16276",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:16277",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:16278",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "888"
+        },
+        {
+          "id": "6017:16279",
+          "name": "RegisterProviderTypePage",
+          "x": "452.5",
+          "y": "205.375",
+          "width": "672",
+          "height": "477.25"
+        },
+        {
+          "id": "6017:16280",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "672",
+          "height": "121"
+        },
+        {
+          "id": "6017:16291",
+          "name": "Container:margin",
+          "x": "0",
+          "y": "121",
+          "width": "672",
+          "height": "206.25"
+        },
+        {
+          "id": "6017:16334",
+          "name": "Container:margin",
+          "x": "0",
+          "y": "327.25",
+          "width": "672",
+          "height": "70"
+        },
+        {
+          "id": "6017:16343",
+          "name": "Container",
+          "x": "0",
+          "y": "397.25",
+          "width": "672",
+          "height": "80"
+        }
+      ]
+    },
+    {
+      "id": "6017:16352",
+      "name": "AUTH-08 — Provider Type Selection — Selected / اختيار نوع مقدم العقار — محدد",
+      "x": "2949",
+      "y": "2252",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:16353",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:16354",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:16355",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "888"
+        },
+        {
+          "id": "6017:16356",
+          "name": "RegisterProviderTypePage",
+          "x": "452.5",
+          "y": "205.375",
+          "width": "672",
+          "height": "477.25"
+        },
+        {
+          "id": "6017:16357",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "672",
+          "height": "121"
+        },
+        {
+          "id": "6017:16368",
+          "name": "Container:margin",
+          "x": "0",
+          "y": "121",
+          "width": "672",
+          "height": "206.25"
+        },
+        {
+          "id": "6017:16414",
+          "name": "Container:margin",
+          "x": "0",
+          "y": "327.25",
+          "width": "672",
+          "height": "70"
+        },
+        {
+          "id": "6017:16423",
+          "name": "Container",
+          "x": "0",
+          "y": "397.25",
+          "width": "672",
+          "height": "80"
+        }
+      ]
+    },
+    {
+      "id": "6017:16432",
+      "name": "AUTH-09 — Provider Registration — Account Details / تسجيل مقدم العقار — بيانات الحساب",
+      "x": "2949",
+      "y": "3584",
+      "width": "1577",
+      "height": "1108",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:16433",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:16434",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1107.75"
+        },
+        {
+          "id": "6017:16435",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:16436",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "1051.75"
+        },
+        {
+          "id": "6017:16437",
+          "name": "ProviderAccountInfoPage",
+          "x": "452.5",
+          "y": "39.875",
+          "width": "672",
+          "height": "972"
+        }
+      ]
+    },
+    {
+      "id": "6017:16630",
+      "name": "AUTH-09+ — Provider Registration — Account Details / تسجيل مقدم العقار — بيانات الحساب",
+      "x": "2949",
+      "y": "5080",
+      "width": "1577",
+      "height": "1140",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:16631",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1139.75"
+        },
+        {
+          "id": "6017:16632",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1139.75"
+        },
+        {
+          "id": "6017:16633",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:16634",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "1083.75"
+        },
+        {
+          "id": "6017:16635",
+          "name": "ProviderAccountInfoPage",
+          "x": "452.5",
+          "y": "39.875",
+          "width": "672",
+          "height": "1004"
+        }
+      ]
+    },
+    {
+      "id": "6017:16843",
+      "name": "AUTH-10 — Provider Registration — Business Details / تسجيل مقدم العقار — بيانات النشاط",
+      "x": "2949",
+      "y": "6412",
+      "width": "1577",
+      "height": "1960",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:16844",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:16845",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1959.75"
+        },
+        {
+          "id": "6017:16846",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:16847",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "1903.75"
+        },
+        {
+          "id": "6017:16848",
+          "name": "ProviderBusinessInfoPage",
+          "x": "452.5",
+          "y": "39.875",
+          "width": "672",
+          "height": "1824"
+        }
+      ]
+    },
+    {
+      "id": "6017:17120",
+      "name": "AUTH-10+ — Provider Registration — Business Details / تسجيل مقدم العقار — بيانات النشاط",
+      "x": "2949",
+      "y": "8829",
+      "width": "1577",
+      "height": "2020",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:17121",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:17122",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "2019.75"
+        },
+        {
+          "id": "6017:17123",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:17124",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "1963.75"
+        },
+        {
+          "id": "6017:17125",
+          "name": "ProviderBusinessInfoPage",
+          "x": "452.5",
+          "y": "39.875",
+          "width": "672",
+          "height": "1884"
+        }
+      ]
+    },
+    {
+      "id": "6017:17441",
+      "name": "AUTH-11 — Provider Registration — Developer Company Details / تسجيل مقدم العقار — بيانات شركة التطوير",
+      "x": "2949",
+      "y": "11041",
+      "width": "1577",
+      "height": "1611",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:17442",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:17443",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1611"
+        },
+        {
+          "id": "6017:17444",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:17445",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "1555"
+        },
+        {
+          "id": "6017:17446",
+          "name": "ProviderCompanyInfoPage",
+          "x": "452.5",
+          "y": "40",
+          "width": "672",
+          "height": "1475"
+        }
+      ]
+    },
+    {
+      "id": "6017:17706",
+      "name": "AUTH-12 — Provider Registration — Documents / تسجيل مقدم العقار — المستندات",
+      "x": "2949",
+      "y": "12932",
+      "width": "1577",
+      "height": "2094",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:17707",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:17708",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "2094"
+        },
+        {
+          "id": "6017:17709",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:17710",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "2038"
+        },
+        {
+          "id": "6017:17711",
+          "name": "ProviderCompanyDocsPage",
+          "x": "452.5",
+          "y": "38",
+          "width": "672",
+          "height": "1962"
+        }
+      ]
+    },
+    {
+      "id": "6017:17975",
+      "name": "AUTH-13 — Provider Registration — Review &amp; Submit / تسجيل مقدم العقار — المراجعة والإرسال",
+      "x": "2949",
+      "y": "15287",
+      "width": "1577",
+      "height": "2326",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:17976",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:17977",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "2325.75"
+        },
+        {
+          "id": "6017:17978",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:17979",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "2269.75"
+        },
+        {
+          "id": "6017:17980",
+          "name": "ProviderReviewPage",
+          "x": "452.5",
+          "y": "40",
+          "width": "672",
+          "height": "2189.75"
+        }
+      ]
+    },
+    {
+      "id": "6017:18373",
+      "name": "-",
+      "x": "0",
+      "y": "10765",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:18374",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:18375",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:18376",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "888"
+        },
+        {
+          "id": "6017:18377",
+          "name": "ProviderOtpPage",
+          "x": "568.5",
+          "y": "175",
+          "width": "440",
+          "height": "538"
+        },
+        {
+          "id": "6017:18378",
+          "name": "BrandLogo:margin",
+          "x": "0",
+          "y": "0",
+          "width": "440",
+          "height": "40"
+        },
+        {
+          "id": "6017:18380",
+          "name": "Container:margin",
+          "x": "0",
+          "y": "40",
+          "width": "440",
+          "height": "88"
+        },
+        {
+          "id": "6017:18384",
+          "name": "Heading 1:margin",
+          "x": "0",
+          "y": "128",
+          "width": "440",
+          "height": "52"
+        },
+        {
+          "id": "6017:18387",
+          "name": "Paragraph:margin",
+          "x": "0",
+          "y": "180",
+          "width": "440",
+          "height": "28"
+        },
+        {
+          "id": "6017:18390",
+          "name": "Paragraph:margin",
+          "x": "0",
+          "y": "208",
+          "width": "440",
+          "height": "28"
+        },
+        {
+          "id": "6017:18393",
+          "name": "Container:margin",
+          "x": "0",
+          "y": "236",
+          "width": "440",
+          "height": "302"
+        }
+      ]
+    },
+    {
+      "id": "6017:18418",
+      "name": "AUTH-14 — Provider Application — Under Review / طلب مقدم العقار — قيد المراجعة",
+      "x": "0",
+      "y": "11970",
+      "width": "1577",
+      "height": "1072",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:18419",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:18420",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1304"
+        },
+        {
+          "id": "6017:18421",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:18422",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "1088"
+        },
+        {
+          "id": "6017:18423",
+          "name": "ProviderPendingPage",
+          "x": "518.5",
+          "y": "-15.5",
+          "width": "540",
+          "height": "1086"
+        },
+        {
+          "id": "6017:18516",
+          "name": "Container",
+          "x": "0",
+          "y": "1144",
+          "width": "1577",
+          "height": "160"
+        },
+        {
+          "id": "6017:18517",
+          "name": "Paragraph",
+          "x": "0",
+          "y": "25",
+          "width": "1577",
+          "height": "15"
+        },
+        {
+          "id": "6017:18519",
+          "name": "Container:margin",
+          "x": "0",
+          "y": "40",
+          "width": "1577",
+          "height": "96"
+        }
+      ]
+    },
+    {
+      "id": "6017:18529",
+      "name": "AUTH-15 — Provider Application — Tracking / متابعة طلب مقدم العقار",
+      "x": "0",
+      "y": "13348",
+      "width": "1577",
+      "height": "1167",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:18530",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:18531",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1167"
+        },
+        {
+          "id": "6017:18532",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:18533",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "1111"
+        },
+        {
+          "id": "6017:18534",
+          "name": "ProviderTrackingPage",
+          "x": "538.5",
+          "y": "40",
+          "width": "500",
+          "height": "1031"
+        }
+      ]
+    },
+    {
+      "id": "6017:18651",
+      "name": "AUTH-16 — Provider Application — Needs Information / طلب مقدم العقار — يحتاج استكمال",
+      "x": "0",
+      "y": "14977",
+      "width": "1577",
+      "height": "1297",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:18652",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:18653",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1456.5"
+        },
+        {
+          "id": "6017:18654",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:18655",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "1240.5"
+        },
+        {
+          "id": "6017:18656",
+          "name": "ProviderNeedsInfoPage",
+          "x": "508.5",
+          "y": "38.75",
+          "width": "560",
+          "height": "1163"
+        },
+        {
+          "id": "6017:18809",
+          "name": "Container",
+          "x": "0",
+          "y": "1296.5",
+          "width": "1577",
+          "height": "160"
+        },
+        {
+          "id": "6017:18810",
+          "name": "Paragraph",
+          "x": "0",
+          "y": "25",
+          "width": "1577",
+          "height": "15"
+        },
+        {
+          "id": "6017:18812",
+          "name": "Container:margin",
+          "x": "0",
+          "y": "40",
+          "width": "1577",
+          "height": "96"
+        }
+      ]
+    },
+    {
+      "id": "6017:18822",
+      "name": "AUTH-17 — Provider Application — Approved / طلب مقدم العقار — تم الاعتماد",
+      "x": "0",
+      "y": "16580",
+      "width": "1577",
+      "height": "1033",
+      "pageId": "6017:4353",
+      "layoutNodes": [
+        {
+          "id": "6017:18823",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:18824",
+          "name": "AuthLayout",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1193"
+        },
+        {
+          "id": "6017:18825",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "56"
+        },
+        {
+          "id": "6017:18826",
+          "name": "Container",
+          "x": "0",
+          "y": "56",
+          "width": "1577",
+          "height": "977"
+        },
+        {
+          "id": "6017:18827",
+          "name": "ProviderApprovedPage",
+          "x": "538.5",
+          "y": "39.5",
+          "width": "500",
+          "height": "898"
+        },
+        {
+          "id": "6017:18935",
+          "name": "Container",
+          "x": "0",
+          "y": "1033",
+          "width": "1577",
+          "height": "160"
+        },
+        {
+          "id": "6017:18936",
+          "name": "Paragraph",
+          "x": "0",
+          "y": "25",
+          "width": "1577",
+          "height": "15"
+        },
+        {
+          "id": "6017:18938",
+          "name": "Container:margin",
+          "x": "0",
+          "y": "40",
+          "width": "1577",
+          "height": "96"
+        }
+      ]
+    },
+    {
+      "id": "6027:3579",
+      "name": "SEK-01 — Seeker Overview / نظرة عامة",
+      "x": "-997",
+      "y": "-334",
+      "width": "1551",
+      "height": "1033",
+      "pageId": "6017:4354",
+      "layoutNodes": [
+        {
+          "id": "6027:3583",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1551",
+          "height": "862"
+        },
+        {
+          "id": "6027:3584",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1551",
+          "height": "1033"
+        },
+        {
+          "id": "6027:3681",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "1033"
+        },
+        {
+          "id": "6029:51280",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "64"
+        },
+        {
+          "id": "6027:3716",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1295",
+          "height": "969"
+        },
+        {
+          "id": "6029:49466",
+          "name": "باحث",
+          "x": "1295",
+          "y": "0",
+          "width": "256",
+          "height": "862"
+        }
+      ]
+    },
+    {
+      "id": "6027:4046",
+      "name": "SEK-02 — My Requests / طلباتي",
+      "x": "-997",
+      "y": "929",
+      "width": "1551",
+      "height": "863",
+      "pageId": "6017:4354",
+      "layoutNodes": [
+        {
+          "id": "6027:4047",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1551",
+          "height": "862"
+        },
+        {
+          "id": "6027:4148",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "862"
+        },
+        {
+          "id": "6029:51311",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "64"
+        },
+        {
+          "id": "6027:4183",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1295",
+          "height": "798"
+        },
+        {
+          "id": "6027:4184",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1247",
+          "height": "751"
+        },
+        {
+          "id": "6029:49551",
+          "name": "باحث",
+          "x": "1295",
+          "y": "0",
+          "width": "256",
+          "height": "862"
+        }
+      ]
+    },
+    {
+      "id": "6027:4477",
+      "name": "SEK-05 — Viewing Requests / طلبات المعاينة",
+      "x": "-997",
+      "y": "1935",
+      "width": "1551",
+      "height": "862",
+      "pageId": "6017:4354",
+      "layoutNodes": [
+        {
+          "id": "6027:4478",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1551",
+          "height": "862"
+        },
+        {
+          "id": "6027:4579",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "862"
+        },
+        {
+          "id": "6029:51373",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "64"
+        },
+        {
+          "id": "6027:4614",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1295",
+          "height": "798"
+        },
+        {
+          "id": "6027:4615",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1247",
+          "height": "511.75"
+        },
+        {
+          "id": "6029:49822",
+          "name": "باحث",
+          "x": "1295",
+          "y": "0",
+          "width": "256",
+          "height": "862"
+        }
+      ]
+    },
+    {
+      "id": "6027:4748",
+      "name": "SEK-06 — Saved Properties / العقارات المحفوظة",
+      "x": "-997",
+      "y": "3177",
+      "width": "1551",
+      "height": "1228",
+      "pageId": "6017:4354",
+      "layoutNodes": [
+        {
+          "id": "6027:4752",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1551",
+          "height": "862"
+        },
+        {
+          "id": "6027:4753",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1551",
+          "height": "1228"
+        },
+        {
+          "id": "6027:4850",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "1228"
+        },
+        {
+          "id": "6029:51435",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "64"
+        },
+        {
+          "id": "6027:4885",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1295",
+          "height": "1164"
+        },
+        {
+          "id": "6029:50176",
+          "name": "باحث",
+          "x": "1295",
+          "y": "0",
+          "width": "256",
+          "height": "862"
+        }
+      ]
+    },
+    {
+      "id": "6027:5319",
+      "name": "SEK-07 — Notifications / الإشعارات",
+      "x": "-565",
+      "y": "4850",
+      "width": "1551",
+      "height": "1010",
+      "pageId": "6017:4354",
+      "layoutNodes": [
+        {
+          "id": "6027:5323",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1551",
+          "height": "862"
+        },
+        {
+          "id": "6027:5324",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1551",
+          "height": "1010"
+        },
+        {
+          "id": "6027:5421",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "1010"
+        },
+        {
+          "id": "6029:51466",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "64"
+        },
+        {
+          "id": "6027:5456",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1295",
+          "height": "946"
+        },
+        {
+          "id": "6029:50353",
+          "name": "باحث",
+          "x": "1295",
+          "y": "0",
+          "width": "256",
+          "height": "862"
+        }
+      ]
+    },
+    {
+      "id": "6027:5677",
+      "name": "SEK-09 — Profile &amp; Preferences — Personal Information / الملف الشخصي والتفضيلات — المعلومات الشخصية",
+      "x": "-1516",
+      "y": "6122",
+      "width": "1551",
+      "height": "862",
+      "pageId": "6017:4354",
+      "layoutNodes": [
+        {
+          "id": "6027:5678",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1551",
+          "height": "862"
+        },
+        {
+          "id": "6027:5779",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "862"
+        },
+        {
+          "id": "6029:51528",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "64"
+        },
+        {
+          "id": "6027:5814",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1295",
+          "height": "798"
+        },
+        {
+          "id": "6027:5815",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1247",
+          "height": "493"
+        },
+        {
+          "id": "6029:50705",
+          "name": "باحث",
+          "x": "1295",
+          "y": "0",
+          "width": "256",
+          "height": "862"
+        }
+      ]
+    },
+    {
+      "id": "6027:6531",
+      "name": "SEK-10 — Account Settings / إعدادات الحساب",
+      "x": "-1496",
+      "y": "7246",
+      "width": "1551",
+      "height": "1776",
+      "pageId": "6017:4354",
+      "layoutNodes": [
+        {
+          "id": "6027:6535",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1551",
+          "height": "862"
+        },
+        {
+          "id": "6027:6536",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1551",
+          "height": "1776"
+        },
+        {
+          "id": "6027:6633",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "1776"
+        },
+        {
+          "id": "6029:51559",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "64"
+        },
+        {
+          "id": "6027:6668",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1295",
+          "height": "1712"
+        },
+        {
+          "id": "6029:50881",
+          "name": "باحث",
+          "x": "1295",
+          "y": "0",
+          "width": "256",
+          "height": "862"
+        }
+      ]
+    },
+    {
+      "id": "6027:6850",
+      "name": "SEK-08 — Profile &amp; Preferences — Search Preferences / الملف الشخصي والتفضيلات — تفضيلات البحث",
+      "x": "-2272",
+      "y": "4850",
+      "width": "1551",
+      "height": "997",
+      "pageId": "6017:4354",
+      "layoutNodes": [
+        {
+          "id": "6027:6854",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1551",
+          "height": "862"
+        },
+        {
+          "id": "6027:6855",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1551",
+          "height": "997"
+        },
+        {
+          "id": "6027:6952",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "997"
+        },
+        {
+          "id": "6029:51497",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "64"
+        },
+        {
+          "id": "6027:6987",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1295",
+          "height": "933"
+        },
+        {
+          "id": "6029:50529",
+          "name": "باحث",
+          "x": "1295",
+          "y": "0",
+          "width": "256",
+          "height": "862"
+        }
+      ]
+    },
+    {
+      "id": "6027:7187",
+      "name": "SEK-03 — Request Details — Under Review / تفاصيل الطلب — قيد المراجعة",
+      "x": "-2621",
+      "y": "929",
+      "width": "1551",
+      "height": "897",
+      "pageId": "6017:4354",
+      "layoutNodes": [
+        {
+          "id": "6027:7191",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1551",
+          "height": "862"
+        },
+        {
+          "id": "6027:7192",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1551",
+          "height": "897"
+        },
+        {
+          "id": "6027:7289",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "897"
+        },
+        {
+          "id": "6029:51342",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "64"
+        },
+        {
+          "id": "6027:7324",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1295",
+          "height": "833"
+        },
+        {
+          "id": "6029:49728",
+          "name": "باحث",
+          "x": "1295",
+          "y": "0",
+          "width": "256",
+          "height": "862"
+        }
+      ]
+    },
+    {
+      "id": "6027:7928",
+      "name": "SEK-04 — Request Details — Contacted / تفاصيل الطلب — تم التواصل",
+      "x": "-2621",
+      "y": "1935",
+      "width": "1551",
+      "height": "862",
+      "pageId": "6017:4354",
+      "layoutNodes": [
+        {
+          "id": "6027:7929",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1551",
+          "height": "862"
+        },
+        {
+          "id": "6027:8030",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "862"
+        },
+        {
+          "id": "6029:51404",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1295",
+          "height": "64"
+        },
+        {
+          "id": "6027:8065",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1295",
+          "height": "798"
+        },
+        {
+          "id": "6027:8066",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1247",
+          "height": "712"
+        },
+        {
+          "id": "6029:49999",
+          "name": "باحث",
+          "x": "1295",
+          "y": "0",
+          "width": "256",
+          "height": "862"
+        }
+      ]
+    },
+    {
+      "id": "6029:48309",
+      "name": "باحث",
+      "x": "1203",
+      "y": "-1162",
+      "width": "296",
+      "height": "6194",
+      "pageId": "6017:4354",
+      "layoutNodes": []
+    },
+    {
+      "id": "6017:19032",
+      "name": "PRV-01 — Dashboard Overview / نظرة عامة",
+      "x": "0",
+      "y": "0",
+      "width": "1577",
+      "height": "1067",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:19033",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1067"
+        },
+        {
+          "id": "6017:19034",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "1067"
+        },
+        {
+          "id": "6017:19035",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:19036",
+          "name": "Button",
+          "x": "16",
+          "y": "10.5",
+          "width": "34",
+          "height": "34"
+        },
+        {
+          "id": "6017:19041",
+          "name": "Container",
+          "x": "62",
+          "y": "11.5",
+          "width": "32",
+          "height": "32"
+        },
+        {
+          "id": "6017:19043",
+          "name": "Button",
+          "x": "106",
+          "y": "10.5",
+          "width": "34",
+          "height": "34"
+        },
+        {
+          "id": "6017:19045",
+          "name": "Container",
+          "x": "152",
+          "y": "27.499950408935547",
+          "width": "1151",
+          "height": "0.00009999999747378752"
+        },
+        {
+          "id": "6017:19047",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "1011.0000610351562"
+        },
+        {
+          "id": "6017:19048",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "928"
+        },
+        {
+          "id": "6017:19307",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:19308",
+      "name": "PRV-02 — My Properties / عقاراتي",
+      "x": "9",
+      "y": "1432",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:19309",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:19310",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "944"
+        },
+        {
+          "id": "6017:19311",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:19312",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "888"
+        },
+        {
+          "id": "6017:19313",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "770.5"
+        },
+        {
+          "id": "6017:19498",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:19499",
+      "name": "PRV-03 — Add Property — 01 Basic Information / إضافة عقار — 01 البيانات الأساسية",
+      "x": "9",
+      "y": "2788",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:19500",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:19501",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "944"
+        },
+        {
+          "id": "6017:19502",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:19503",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "888"
+        },
+        {
+          "id": "6017:19504",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "1012"
+        },
+        {
+          "id": "6017:19678",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:19679",
+      "name": "PRV-04 — Add Property — 02 Location / إضافة عقار — 02 الموقع",
+      "x": "9",
+      "y": "4347",
+      "width": "1577",
+      "height": "1224",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:19680",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1224"
+        },
+        {
+          "id": "6017:19681",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "1224"
+        },
+        {
+          "id": "6017:19682",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:19683",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "1168"
+        },
+        {
+          "id": "6017:19684",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "994"
+        },
+        {
+          "id": "6017:19857",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:19858",
+      "name": "PRV-05 — Add Property — 03 Property Details / إضافة عقار — 03 تفاصيل العقار",
+      "x": "9",
+      "y": "5874",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:19859",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:19860",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "944"
+        },
+        {
+          "id": "6017:19861",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:19862",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "888"
+        },
+        {
+          "id": "6017:19863",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "712"
+        },
+        {
+          "id": "6017:20033",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:20034",
+      "name": "PRV-06 — Add Property — 04 Price &amp; Payment / إضافة عقار — 04 السعر والسداد",
+      "x": "9",
+      "y": "7401",
+      "width": "1577",
+      "height": "1144",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:20035",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1144"
+        },
+        {
+          "id": "6017:20036",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "1144"
+        },
+        {
+          "id": "6017:20037",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:20038",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "1107"
+        },
+        {
+          "id": "6017:20039",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "1107"
+        },
+        {
+          "id": "6017:20228",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:20229",
+      "name": "PRV-07 — Add Property — 05 Features &amp; Services / إضافة عقار — 05 المميزات والخدمات",
+      "x": "9",
+      "y": "8767",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:20230",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:20231",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "944"
+        },
+        {
+          "id": "6017:20232",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:20233",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "888"
+        },
+        {
+          "id": "6017:20234",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "683"
+        },
+        {
+          "id": "6017:20390",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:20391",
+      "name": "PRV-08 — Add Property — 06 Media / إضافة عقار — 06 الصور والوسائط",
+      "x": "9",
+      "y": "9855",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:20392",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:20393",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "944"
+        },
+        {
+          "id": "6017:20394",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:20395",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "888"
+        },
+        {
+          "id": "6017:20396",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "874"
+        },
+        {
+          "id": "6017:20560",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:20561",
+      "name": "PRV-09 — Add Property — 07 Contact / إضافة عقار — 07 التواصل",
+      "x": "40",
+      "y": "11176",
+      "width": "1577",
+      "height": "1087",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:20562",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1087"
+        },
+        {
+          "id": "6017:20563",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "1087"
+        },
+        {
+          "id": "6017:20564",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:20565",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "1031"
+        },
+        {
+          "id": "6017:20566",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "1014"
+        },
+        {
+          "id": "6017:20736",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:20737",
+      "name": "PRV-10 — Add Property — 08 Review &amp; Submit / إضافة عقار — 08 المراجعة والإرسال",
+      "x": "70",
+      "y": "12397",
+      "width": "1577",
+      "height": "1492",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:20738",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1492"
+        },
+        {
+          "id": "6017:20739",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "1446"
+        },
+        {
+          "id": "6017:20740",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:20741",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "1492"
+        },
+        {
+          "id": "6017:20742",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "1492"
+        },
+        {
+          "id": "6017:20972",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:20973",
+      "name": "PRV-14 — Property Published / تم نشر العقار",
+      "x": "58",
+      "y": "17966",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:20974",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:20975",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "944"
+        },
+        {
+          "id": "6017:20976",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:20977",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "888"
+        },
+        {
+          "id": "6017:20978",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "548"
+        },
+        {
+          "id": "6017:21011",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:21012",
+      "name": "PRV-12 — Property Submitted / تم إرسال العقار للمراجعة",
+      "x": "80",
+      "y": "14095",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:21013",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:21014",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "944"
+        },
+        {
+          "id": "6017:21015",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:21016",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "888"
+        },
+        {
+          "id": "6017:21017",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "548"
+        },
+        {
+          "id": "6017:21051",
+          "name": "Container",
+          "x": "473",
+          "y": "548",
+          "width": "391",
+          "height": "87"
+        },
+        {
+          "id": "6017:21063",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:21064",
+      "name": "PRV-11 — Add Property — Validation Errors / إضافة عقار — بيانات تحتاج استكمال",
+      "x": "80",
+      "y": "15148",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:21065",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:21066",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "944"
+        },
+        {
+          "id": "6017:21067",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:21068",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "507"
+        },
+        {
+          "id": "6017:21069",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "548"
+        },
+        {
+          "id": "6017:21110",
+          "name": "Container",
+          "x": "473",
+          "y": "563",
+          "width": "391",
+          "height": "87"
+        },
+        {
+          "id": "6017:21111",
+          "name": "Paragraph",
+          "x": "13",
+          "y": "13",
+          "width": "365",
+          "height": "16"
+        },
+        {
+          "id": "6017:21113",
+          "name": "Container",
+          "x": "23",
+          "y": "29",
+          "width": "345",
+          "height": "38"
+        },
+        {
+          "id": "6017:21122",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:21123",
+      "name": "PRV-13 — Property Rejected / تعذر اعتماد العقار",
+      "x": "80",
+      "y": "16557",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:21124",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:21125",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "944"
+        },
+        {
+          "id": "6017:21126",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:21127",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "490"
+        },
+        {
+          "id": "6017:21128",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "548"
+        },
+        {
+          "id": "6017:21149",
+          "name": "Container",
+          "x": "473",
+          "y": "546",
+          "width": "391",
+          "height": "87"
+        },
+        {
+          "id": "6017:21150",
+          "name": "Paragraph",
+          "x": "13",
+          "y": "13",
+          "width": "365",
+          "height": "16"
+        },
+        {
+          "id": "6017:21152",
+          "name": "Container",
+          "x": "23",
+          "y": "29",
+          "width": "345",
+          "height": "38"
+        },
+        {
+          "id": "6017:21161",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:21162",
+      "name": "PRV-15 — Projects Listing / المشاريع",
+      "x": "49",
+      "y": "19069",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:21163",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:21164",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "944"
+        },
+        {
+          "id": "6017:21165",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:21166",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "888"
+        },
+        {
+          "id": "6017:21167",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "770.5"
+        },
+        {
+          "id": "6017:21367",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:21368",
+      "name": "PRV-16 — Customer Requests / طلبات العملاء",
+      "x": "49",
+      "y": "20138",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:21369",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:21370",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "944"
+        },
+        {
+          "id": "6017:21371",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:21372",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "888"
+        },
+        {
+          "id": "6017:21373",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "743.1875"
+        },
+        {
+          "id": "6017:21612",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:21613",
+      "name": "PRV-18 — Viewing Appointments / مواعيد المعاينات",
+      "x": "49",
+      "y": "22261",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:21614",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:21615",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "944"
+        },
+        {
+          "id": "6017:21616",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:21617",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "888"
+        },
+        {
+          "id": "6017:21618",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "681"
+        },
+        {
+          "id": "6017:21746",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:21747",
+      "name": "PRV-17 — Add Customer Request — Modal / إضافة طلب عميل — نافذة منبثقة",
+      "x": "49",
+      "y": "21136",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:21748",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:21749",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "944"
+        },
+        {
+          "id": "6017:21750",
+          "name": "Placeholder for Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:21751",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "888"
+        },
+        {
+          "id": "6017:21752",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "743.1875"
+        },
+        {
+          "id": "6017:21991",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        },
+        {
+          "id": "6017:21992",
+          "name": "Header",
+          "x": "-1",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:21993",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:21994",
+          "name": "Container",
+          "x": "532.5",
+          "y": "47.203125",
+          "width": "512",
+          "height": "849.59375"
+        },
+        {
+          "id": "6017:21995",
+          "name": "Placeholder for Container",
+          "x": "0",
+          "y": "0",
+          "width": "512",
+          "height": "60"
+        },
+        {
+          "id": "6017:21996",
+          "name": "Container",
+          "x": "0",
+          "y": "60",
+          "width": "512",
+          "height": "720"
+        },
+        {
+          "id": "6017:21997",
+          "name": "Container",
+          "x": "20",
+          "y": "20",
+          "width": "472",
+          "height": "164"
+        },
+        {
+          "id": "6017:22026",
+          "name": "Container",
+          "x": "20",
+          "y": "184",
+          "width": "472",
+          "height": "480"
+        },
+        {
+          "id": "6017:22068",
+          "name": "Label",
+          "x": "20",
+          "y": "664",
+          "width": "472",
+          "height": "36"
+        },
+        {
+          "id": "6017:22076",
+          "name": "Container",
+          "x": "0",
+          "y": "780",
+          "width": "512",
+          "height": "75"
+        },
+        {
+          "id": "6017:22077",
+          "name": "Button",
+          "x": "20",
+          "y": "17",
+          "width": "63",
+          "height": "42"
+        },
+        {
+          "id": "6017:22079",
+          "name": "Button",
+          "x": "91",
+          "y": "17",
+          "width": "401",
+          "height": "40"
+        },
+        {
+          "id": "6017:22081",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "512",
+          "height": "60"
+        },
+        {
+          "id": "6017:22082",
+          "name": "Button",
+          "x": "20",
+          "y": "20.5",
+          "width": "18",
+          "height": "18"
+        },
+        {
+          "id": "6017:22086",
+          "name": "Heading 3",
+          "x": "353",
+          "y": "16",
+          "width": "139",
+          "height": "27"
+        }
+      ]
+    },
+    {
+      "id": "6017:22088",
+      "name": "PRV-19 — Ad Requests / طلبات الإعلانات",
+      "x": "49",
+      "y": "23456",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6017:22089",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:22090",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "944"
+        },
+        {
+          "id": "6017:22091",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6017:22092",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "888"
+        },
+        {
+          "id": "6017:22093",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "637.90625"
+        },
+        {
+          "id": "6017:22260",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6028:10071",
+      "name": "PRV-20 — Commission / العمولة",
+      "x": "49",
+      "y": "24592",
+      "width": "1577",
+      "height": "1035",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6028:10072",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1035"
+        },
+        {
+          "id": "6028:10073",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "1035"
+        },
+        {
+          "id": "6028:10074",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6028:10075",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "978.9999389648438"
+        },
+        {
+          "id": "6028:10427",
+          "name": "ProviderCommissionPage",
+          "x": "332.5",
+          "y": "50",
+          "width": "672",
+          "height": "923.5"
+        },
+        {
+          "id": "6028:10243",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6028:10830",
+      "name": "PRV-21 — Notifications / الإشعارات",
+      "x": "49",
+      "y": "25829",
+      "width": "1577",
+      "height": "1035",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6028:10831",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1035"
+        },
+        {
+          "id": "6028:10832",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "1035"
+        },
+        {
+          "id": "6028:10833",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6028:10834",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "978.9999389648438"
+        },
+        {
+          "id": "6028:11139",
+          "name": "ProviderNotificationsPage",
+          "x": "284.5",
+          "y": "50",
+          "width": "768",
+          "height": "898"
+        },
+        {
+          "id": "6028:10955",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6028:11337",
+      "name": "PRV-22 - 1 — Settings / الإعدادات",
+      "x": "49",
+      "y": "27067",
+      "width": "1577",
+      "height": "1035",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6028:11338",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1035"
+        },
+        {
+          "id": "6028:11339",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "1035"
+        },
+        {
+          "id": "6028:11340",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6028:11341",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "978.9999389648438"
+        },
+        {
+          "id": "6028:11608",
+          "name": "Container",
+          "x": "0",
+          "y": "50",
+          "width": "1337",
+          "height": "400"
+        },
+        {
+          "id": "6028:11510",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6028:11875",
+      "name": "PRV-22 - 2 — Settings / الإعدادات",
+      "x": "49",
+      "y": "28210",
+      "width": "1577",
+      "height": "1035",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6028:11876",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1035"
+        },
+        {
+          "id": "6028:11877",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "1035"
+        },
+        {
+          "id": "6028:11878",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6028:11879",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "978.9999389648438"
+        },
+        {
+          "id": "6028:12016",
+          "name": "Container",
+          "x": "0",
+          "y": "50",
+          "width": "1337",
+          "height": "422"
+        },
+        {
+          "id": "6028:11918",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6028:12067",
+      "name": "PRV-22 - 3 — Settings / الإعدادات",
+      "x": "49",
+      "y": "29457",
+      "width": "1577",
+      "height": "1035",
+      "pageId": "6017:4355",
+      "layoutNodes": [
+        {
+          "id": "6028:12068",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1035"
+        },
+        {
+          "id": "6028:12069",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "1035"
+        },
+        {
+          "id": "6028:12070",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1337",
+          "height": "56"
+        },
+        {
+          "id": "6028:12071",
+          "name": "Main Content",
+          "x": "0",
+          "y": "56",
+          "width": "1337",
+          "height": "978.9999389648438"
+        },
+        {
+          "id": "6028:12218",
+          "name": "Container",
+          "x": "0",
+          "y": "50",
+          "width": "1337",
+          "height": "668"
+        },
+        {
+          "id": "6028:12120",
+          "name": "Sidebar",
+          "x": "1337",
+          "y": "0",
+          "width": "240",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:61879",
+      "name": "ADM-01 — Admin Overview / نظرة عامة",
+      "x": "31044",
+      "y": "369",
+      "width": "1577",
+      "height": "3117",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:61880",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:61881",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "3116.828125"
+        },
+        {
+          "id": "6017:61882",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "3116.828125"
+        },
+        {
+          "id": "6017:61883",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:61884",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "3052.828125"
+        },
+        {
+          "id": "6017:62727",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:63271",
+      "name": "Container",
+      "x": "30839",
+      "y": "126",
+      "width": "123.140625",
+      "height": "32",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:63272",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "74.140625",
+          "height": "32"
+        },
+        {
+          "id": "6017:63273",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "74.140625",
+          "height": "14"
+        },
+        {
+          "id": "6017:63274",
+          "name": "مصطفي",
+          "x": "20.140625",
+          "y": "0",
+          "width": "54",
+          "height": "14"
+        },
+        {
+          "id": "6017:63275",
+          "name": "Container",
+          "x": "0",
+          "y": "14",
+          "width": "74.140625",
+          "height": "18"
+        },
+        {
+          "id": "6017:63276",
+          "name": "مدير عام",
+          "x": "31.140625",
+          "y": "2",
+          "width": "43",
+          "height": "16"
+        },
+        {
+          "id": "6017:63277",
+          "name": "Image (المدير)",
+          "x": "82.140625",
+          "y": "0",
+          "width": "32",
+          "height": "32"
+        }
+      ]
+    },
+    {
+      "id": "6017:63278",
+      "name": "ADM-02 — Users Management / إدارة المستخدمين",
+      "x": "29406",
+      "y": "369",
+      "width": "1577",
+      "height": "971",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:63279",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:63280",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "971"
+        },
+        {
+          "id": "6017:63281",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "971"
+        },
+        {
+          "id": "6017:63282",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:63283",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "907"
+        },
+        {
+          "id": "6017:63641",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:63642",
+      "name": "ADM-03 — Property Seekers / الباحثون عن عقار",
+      "x": "27768",
+      "y": "369",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:63643",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:63644",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:63645",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:63646",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:63647",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "469"
+        },
+        {
+          "id": "6017:63785",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:63786",
+      "name": "ADM-04 — Property Providers / مقدمو العقارات",
+      "x": "26130",
+      "y": "369",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:63787",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:63788",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:63789",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:63790",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:63791",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "799"
+        },
+        {
+          "id": "6017:64065",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:64066",
+      "name": "ADM-05 — Provider Documents Review / مراجعة مستندات مقدمي العقارات",
+      "x": "24492",
+      "y": "369",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:64067",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:64068",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:64069",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:64070",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:64071",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "643"
+        },
+        {
+          "id": "6017:64290",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:64291",
+      "name": "ADM-06 — Account Reports / بلاغات الحسابات",
+      "x": "22854",
+      "y": "369",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:64292",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:64293",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:64294",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:64295",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:64296",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "424"
+        },
+        {
+          "id": "6017:64421",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:64422",
+      "name": "ADM-14 — Properties Management / إدارة العقارات",
+      "x": "17539",
+      "y": "369",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:64423",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:64424",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:64425",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:64426",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:64427",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "754"
+        },
+        {
+          "id": "6017:64693",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:64694",
+      "name": "ADM-15 — Properties Review / مراجعة العقارات",
+      "x": "17539",
+      "y": "1433",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:64695",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:64696",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:64697",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:64698",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:64699",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "632"
+        },
+        {
+          "id": "6017:64904",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:64905",
+      "name": "ADM-17 — Property Reports / بلاغات العقارات",
+      "x": "17539",
+      "y": "3561",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:64906",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:64907",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:64908",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:64909",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:64910",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "310"
+        },
+        {
+          "id": "6017:65000",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:65001",
+      "name": "ADM-12 — Projects Management / إدارة المشروعات",
+      "x": "19321",
+      "y": "369",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:65002",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:65003",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:65004",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:65005",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:65006",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "542"
+        },
+        {
+          "id": "6017:65195",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:65196",
+      "name": "ADM-13 — Projects Review / مراجعة المشروعات",
+      "x": "19321",
+      "y": "1433",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:65197",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:65198",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:65199",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:65200",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:65201",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "399"
+        },
+        {
+          "id": "6017:65311",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:65312",
+      "name": "ADM-09 — Property Categories &amp; Types / التصنيفات وأنواع العقارات",
+      "x": "21103",
+      "y": "369",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:65313",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:65314",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:65315",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:65316",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:65317",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "790"
+        },
+        {
+          "id": "6017:65609",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:65610",
+      "name": "ADM-10 — Locations &amp; Neighborhoods / المناطق والأحياء",
+      "x": "21103",
+      "y": "1433",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:65611",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:65612",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:65613",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:65614",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:65615",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "464"
+        },
+        {
+          "id": "6017:65782",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:65783",
+      "name": "ADM-11 — Features &amp; Services / المميزات والخدمات",
+      "x": "21103",
+      "y": "2497",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:65784",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:65785",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:65786",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:65787",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:65788",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "535"
+        },
+        {
+          "id": "6017:66044",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:66045",
+      "name": "ADM-19 — Customer Requests / طلبات العملاء",
+      "x": "15358",
+      "y": "369",
+      "width": "1577",
+      "height": "1065",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:66046",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:66047",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1065"
+        },
+        {
+          "id": "6017:66048",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "1065"
+        },
+        {
+          "id": "6017:66049",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:66050",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "1001"
+        },
+        {
+          "id": "6017:66299",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:66300",
+      "name": "ADM-20 — Overdue Requests / الطلبات المتأخرة",
+      "x": "15358",
+      "y": "1553",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:66301",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:66302",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:66303",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:66304",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:66305",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "335"
+        },
+        {
+          "id": "6017:66404",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:66405",
+      "name": "ADM-21 — Contact Requests / طلبات التواصل",
+      "x": "15358",
+      "y": "2616",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:66406",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:66407",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:66408",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:66409",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:66410",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "459"
+        },
+        {
+          "id": "6017:66512",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:66513",
+      "name": "ADM-22 — Viewing Requests / طلبات المعاينة",
+      "x": "13513",
+      "y": "369",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:66514",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:66515",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:66516",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:66517",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:66518",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "528"
+        },
+        {
+          "id": "6017:66656",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:66657",
+      "name": "ADM-23 — Property Search Requests / طلبات البحث عن عقار",
+      "x": "13513",
+      "y": "1434",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:66658",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:66659",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:66660",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:66661",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:66662",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "179"
+        },
+        {
+          "id": "6017:66705",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:66706",
+      "name": "ADM-24 — Request Issues &amp; Reports / بلاغات ومشكلات الطلبات",
+      "x": "13513",
+      "y": "2499",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:66707",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:66708",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:66709",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:66710",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:66711",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "253"
+        },
+        {
+          "id": "6017:66767",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:66768",
+      "name": "ADM-25 — Articles Management / إدارة المقالات",
+      "x": "11533",
+      "y": "369",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:66769",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:66770",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:66771",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:66772",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:66773",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "709"
+        },
+        {
+          "id": "6017:67002",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:67003",
+      "name": "ADM-26 — Article Categories / تصنيفات المقالات",
+      "x": "11533",
+      "y": "1553",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:67004",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:67005",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:67006",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:67007",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:67008",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "461"
+        },
+        {
+          "id": "6017:67185",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:67186",
+      "name": "ADM-27 — Community Management / إدارة الكوميونيتي",
+      "x": "11533",
+      "y": "2737",
+      "width": "1577",
+      "height": "986",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:67187",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:67188",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "985.75"
+        },
+        {
+          "id": "6017:67189",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "985.75"
+        },
+        {
+          "id": "6017:67190",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:67191",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "921.75"
+        },
+        {
+          "id": "6017:67482",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:67483",
+      "name": "ADM-28 — Comments / التعليقات",
+      "x": "11533",
+      "y": "3914",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:67484",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:67485",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:67486",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:67487",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:67488",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "420"
+        },
+        {
+          "id": "6017:67621",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:67622",
+      "name": "ADM-29 — Reports &amp; Moderation / البلاغات والإشراف",
+      "x": "11533",
+      "y": "5098",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:67623",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:67624",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:67625",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:67626",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:67627",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "530"
+        },
+        {
+          "id": "6017:67742",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:67743",
+      "name": "ADM-30 — About Platform / النبذة عن المنصة",
+      "x": "11533",
+      "y": "6282",
+      "width": "1577",
+      "height": "1515",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:67744",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:67745",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1515"
+        },
+        {
+          "id": "6017:67746",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "1515"
+        },
+        {
+          "id": "6017:67747",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:67748",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "1451"
+        },
+        {
+          "id": "6017:67965",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:67966",
+      "name": "ADM-31 — Team Management / إدارة فريق العمل",
+      "x": "11533",
+      "y": "8126",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:67967",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:67968",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:67969",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:67970",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:67971",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "346"
+        },
+        {
+          "id": "6017:68132",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:68133",
+      "name": "ADM-32 — Sadat Population Counter / عداد سكان مدينة السادات",
+      "x": "11533",
+      "y": "9399",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:68134",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:68135",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:68136",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:68137",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:68138",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "467"
+        },
+        {
+          "id": "6017:68193",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:68194",
+      "name": "ADM-33 — Ad Requests / طلبات الإعلانات",
+      "x": "9729",
+      "y": "369",
+      "width": "1577",
+      "height": "956",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:68195",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:68196",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "956"
+        },
+        {
+          "id": "6017:68197",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "956"
+        },
+        {
+          "id": "6017:68198",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:68199",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "892"
+        },
+        {
+          "id": "6017:68403",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:68404",
+      "name": "ADM-34 — Pending Payment Proofs / الإثباتات المعلقة",
+      "x": "9729",
+      "y": "1553",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:68405",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:68406",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:68407",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:68408",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:68409",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "349"
+        },
+        {
+          "id": "6017:68501",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:68502",
+      "name": "ADM-35 — Approved Payment Proofs / الإثباتات المقبولة",
+      "x": "9729",
+      "y": "2758",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:68503",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:68504",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:68505",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:68506",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:68507",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "367"
+        },
+        {
+          "id": "6017:68624",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:68625",
+      "name": "ADM-36 — Ad Calendar / تقويم الإعلانات",
+      "x": "9729",
+      "y": "4000",
+      "width": "1577",
+      "height": "1098",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:68626",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:68627",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1098"
+        },
+        {
+          "id": "6017:68628",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "1098"
+        },
+        {
+          "id": "6017:68629",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:68630",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "1034"
+        },
+        {
+          "id": "6017:68758",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:68759",
+      "name": "ADM-37 — Pending Payments Review / مراجعة المدفوعات المعلقة",
+      "x": "9729",
+      "y": "5396",
+      "width": "1577",
+      "height": "962",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:68760",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:68761",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "962"
+        },
+        {
+          "id": "6017:68762",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "962"
+        },
+        {
+          "id": "6017:68763",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:68764",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "898"
+        },
+        {
+          "id": "6017:68952",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:68953",
+      "name": "ADM-38 — Financial Review / الفحص المالي",
+      "x": "9729",
+      "y": "6832",
+      "width": "1577",
+      "height": "1130",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:68954",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:68955",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1130"
+        },
+        {
+          "id": "6017:68956",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "1130"
+        },
+        {
+          "id": "6017:68957",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:68958",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "1066"
+        },
+        {
+          "id": "6017:69142",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:69143",
+      "name": "ADM-39 — Commissions Management / إدارة العمولات",
+      "x": "7920",
+      "y": "369",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:69144",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:69145",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:69146",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:69147",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:69148",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "675"
+        },
+        {
+          "id": "6017:69275",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:69276",
+      "name": "Sadat Real Estate",
+      "x": "31044",
+      "y": "3858",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:69277",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:69278",
+          "name": "Sidebar",
+          "x": "0",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        },
+        {
+          "id": "6017:69279",
+          "name": "Container",
+          "x": "1",
+          "y": "0",
+          "width": "255",
+          "height": "64"
+        },
+        {
+          "id": "6017:69280",
+          "name": "Image (منصة السادات للعقارات)",
+          "x": "12",
+          "y": "13.5",
+          "width": "51",
+          "height": "36"
+        },
+        {
+          "id": "6017:69281",
+          "name": "Navigation",
+          "x": "1",
+          "y": "64",
+          "width": "255",
+          "height": "693"
+        },
+        {
+          "id": "6017:69282",
+          "name": "Container",
+          "x": "0",
+          "y": "12",
+          "width": "255",
+          "height": "80"
+        },
+        {
+          "id": "6017:69299",
+          "name": "Container",
+          "x": "0",
+          "y": "92",
+          "width": "255",
+          "height": "314"
+        },
+        {
+          "id": "6017:69360",
+          "name": "Container",
+          "x": "0",
+          "y": "406",
+          "width": "255",
+          "height": "222"
+        },
+        {
+          "id": "6017:69406",
+          "name": "Container",
+          "x": "0",
+          "y": "628",
+          "width": "255",
+          "height": "130"
+        },
+        {
+          "id": "6017:69430",
+          "name": "Container",
+          "x": "0",
+          "y": "758",
+          "width": "255",
+          "height": "176"
+        },
+        {
+          "id": "6017:69458",
+          "name": "Container",
+          "x": "0",
+          "y": "934",
+          "width": "255",
+          "height": "314"
+        },
+        {
+          "id": "6017:69516",
+          "name": "Container",
+          "x": "0",
+          "y": "1248",
+          "width": "255",
+          "height": "406"
+        },
+        {
+          "id": "6017:69586",
+          "name": "Container",
+          "x": "0",
+          "y": "1654",
+          "width": "255",
+          "height": "314"
+        },
+        {
+          "id": "6017:69643",
+          "name": "Container",
+          "x": "0",
+          "y": "1968",
+          "width": "255",
+          "height": "222"
+        },
+        {
+          "id": "6017:69682",
+          "name": "Container",
+          "x": "0",
+          "y": "2190",
+          "width": "255",
+          "height": "268"
+        },
+        {
+          "id": "6017:69729",
+          "name": "Container",
+          "x": "0",
+          "y": "2458",
+          "width": "255",
+          "height": "364"
+        },
+        {
+          "id": "6017:69793",
+          "name": "Container",
+          "x": "1",
+          "y": "757",
+          "width": "255",
+          "height": "187"
+        },
+        {
+          "id": "6017:69794",
+          "name": "Container",
+          "x": "12",
+          "y": "13",
+          "width": "231",
+          "height": "62"
+        },
+        {
+          "id": "6017:69805",
+          "name": "Button:margin",
+          "x": "12",
+          "y": "75",
+          "width": "231",
+          "height": "50"
+        },
+        {
+          "id": "6017:69813",
+          "name": "Button:margin",
+          "x": "12",
+          "y": "125",
+          "width": "231",
+          "height": "50"
+        },
+        {
+          "id": "6017:69821",
+          "name": "Container",
+          "x": "256",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:69822",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:69823",
+          "name": "Button",
+          "x": "20",
+          "y": "14.5",
+          "width": "34",
+          "height": "34"
+        },
+        {
+          "id": "6017:69828",
+          "name": "Container",
+          "x": "66",
+          "y": "12.5",
+          "width": "448",
+          "height": "38"
+        },
+        {
+          "id": "6017:69834",
+          "name": "Container:align",
+          "x": "526",
+          "y": "9.5",
+          "width": "775",
+          "height": "44"
+        },
+        {
+          "id": "6017:69858",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:69859",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "532"
+        }
+      ]
+    },
+    {
+      "id": "6017:69976",
+      "name": "ADM-07 — Account Report Details / تفاصيل بلاغ الحساب",
+      "x": "22854",
+      "y": "1433",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:69977",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:69978",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:69979",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:69980",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:69981",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "735.5"
+        },
+        {
+          "id": "6017:70126",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:70127",
+      "name": "ADM-08 — Account Restrictions / قيود الحسابات",
+      "x": "22854",
+      "y": "2497",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:70128",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:70129",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:70130",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:70131",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:70132",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "236"
+        },
+        {
+          "id": "6017:70198",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:70199",
+      "name": "ADM-16 — Suspected Duplicate Properties / عقارات يشتبه بتكرارها",
+      "x": "17539",
+      "y": "2497",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:70200",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:70201",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:70202",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:70203",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:70204",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "350"
+        },
+        {
+          "id": "6017:70247",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:70248",
+      "name": "ADM-41 — Commission Change Log / سجل القرارات والتغييرات",
+      "x": "7920",
+      "y": "2758",
+      "width": "1577",
+      "height": "1115",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:70249",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:70250",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1115"
+        },
+        {
+          "id": "6017:70251",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "1115"
+        },
+        {
+          "id": "6017:70252",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:70253",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "1051"
+        },
+        {
+          "id": "6017:70477",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:70478",
+      "name": "ADM-42 — Commissions Management / إدارة العمولات",
+      "x": "7920",
+      "y": "4000",
+      "width": "1577",
+      "height": "1132",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:70479",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:70480",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1132"
+        },
+        {
+          "id": "6017:70481",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "1132"
+        },
+        {
+          "id": "6017:70482",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:70483",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "1068"
+        },
+        {
+          "id": "6017:70664",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:70665",
+      "name": "ADM-43 — Account Commission / عمولة الحساب",
+      "x": "7920",
+      "y": "5259",
+      "width": "1577",
+      "height": "948",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:70666",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:70667",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "948"
+        },
+        {
+          "id": "6017:70668",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "948"
+        },
+        {
+          "id": "6017:70669",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:70670",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "884"
+        },
+        {
+          "id": "6017:70758",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:70759",
+      "name": "ADM-44 — Commission Exceptions / استثناءات العمولات",
+      "x": "7920",
+      "y": "6334",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:70760",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:70761",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:70762",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:70763",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:70764",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "367"
+        },
+        {
+          "id": "6017:70857",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:70858",
+      "name": "ADM-44 — Create Commission Exception / إنشاء استثناء عمولة",
+      "x": "7920",
+      "y": "7373",
+      "width": "1577",
+      "height": "981",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:70859",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:70860",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "981"
+        },
+        {
+          "id": "6017:70861",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "981"
+        },
+        {
+          "id": "6017:70862",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:70863",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "917"
+        },
+        {
+          "id": "6017:70954",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:70955",
+      "name": "ADM-45 — Commission Policy Confirmations / تأكيد سياسات العمولات",
+      "x": "7920",
+      "y": "8598",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:70956",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:70957",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:70958",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:70959",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:70960",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "587"
+        },
+        {
+          "id": "6017:71122",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:71123",
+      "name": "ADM-46 — Ad Banners / البانرات الإعلانية",
+      "x": "5940",
+      "y": "369",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:71124",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:71125",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:71126",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:71127",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:71128",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "293"
+        },
+        {
+          "id": "6017:71229",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:71230",
+      "name": "ADM-47 — Add New Banner / إضافة بانر جديد",
+      "x": "5940",
+      "y": "1553",
+      "width": "1577",
+      "height": "1046",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:71231",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:71232",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1046"
+        },
+        {
+          "id": "6017:71233",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "1046"
+        },
+        {
+          "id": "6017:71234",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:71235",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "982"
+        },
+        {
+          "id": "6017:71344",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:71345",
+      "name": "ADM-48 — Sadat Real Estate Tips / نصائح عقارات السادات",
+      "x": "5940",
+      "y": "2758",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:71346",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:71347",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:71348",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:71349",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:71350",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "408"
+        },
+        {
+          "id": "6017:71487",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:71488",
+      "name": "ADM-49 — Homepage Management / إدارة الصفحة الرئيسية",
+      "x": "5940",
+      "y": "3873",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:71489",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:71490",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:71491",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:71492",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:71493",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "645"
+        },
+        {
+          "id": "6017:71724",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:71725",
+      "name": "ADM-50 — Platform Information / بيانات المنصة",
+      "x": "3960",
+      "y": "369",
+      "width": "1577",
+      "height": "1366",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:71726",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:71727",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1366"
+        },
+        {
+          "id": "6017:71728",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "1366"
+        },
+        {
+          "id": "6017:71729",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:71730",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "1302"
+        },
+        {
+          "id": "6017:71896",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:71897",
+      "name": "ADM-51 — Contact Information / بيانات التواصل",
+      "x": "3960",
+      "y": "1906",
+      "width": "1577",
+      "height": "1108",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:71898",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:71899",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1108"
+        },
+        {
+          "id": "6017:71900",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "1108"
+        },
+        {
+          "id": "6017:71901",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:71902",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "1044"
+        },
+        {
+          "id": "6017:72004",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:72005",
+      "name": "ADM-52 — Social Media Accounts / حسابات التواصل الاجتماعي",
+      "x": "3960",
+      "y": "3251",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:72006",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:72007",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:72008",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:72009",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:72010",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "712"
+        },
+        {
+          "id": "6017:72074",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:72075",
+      "name": "ADM-53 — Property Settings / إعدادات العقارات",
+      "x": "3960",
+      "y": "4432",
+      "width": "1577",
+      "height": "1168",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:72076",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:72077",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1168"
+        },
+        {
+          "id": "6017:72078",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "1168"
+        },
+        {
+          "id": "6017:72079",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:72080",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "1104"
+        },
+        {
+          "id": "6017:72205",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:72206",
+      "name": "ADM-55 — Advertising Settings / إعدادات الإعلانات",
+      "x": "3960",
+      "y": "5837",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:72207",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:72208",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:72209",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:72210",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:72211",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "702"
+        },
+        {
+          "id": "6017:72310",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:72311",
+      "name": "ADM-56 — General SEO / SEO عام",
+      "x": "3960",
+      "y": "7018",
+      "width": "1577",
+      "height": "1204",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:72312",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:72313",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1204"
+        },
+        {
+          "id": "6017:72314",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "1204"
+        },
+        {
+          "id": "6017:72315",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:72316",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "1140"
+        },
+        {
+          "id": "6017:72412",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:72413",
+      "name": "ADM-57 — Privacy &amp; Security / الخصوصية والأمان",
+      "x": "3960",
+      "y": "8431",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:72414",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:72415",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:72416",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:72417",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:72418",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "752"
+        },
+        {
+          "id": "6017:72502",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:72503",
+      "name": "ADM-58 — Display Settings / إعدادات العرض",
+      "x": "3960",
+      "y": "9504",
+      "width": "1577",
+      "height": "1516",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:72504",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:72505",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1516"
+        },
+        {
+          "id": "6017:72506",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "1516"
+        },
+        {
+          "id": "6017:72507",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:72508",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "1452"
+        },
+        {
+          "id": "6017:72652",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:72653",
+      "name": "ADM-59 — Admin Users / المستخدمون الإداريون",
+      "x": "1980",
+      "y": "369",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:72654",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:72655",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:72656",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:72657",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:72658",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "731"
+        },
+        {
+          "id": "6017:72873",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:72874",
+      "name": "ADM-60 — Add Admin User / إضافة مستخدم إداري",
+      "x": "1980",
+      "y": "1598",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:72875",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:72876",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:72877",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:72878",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:72879",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "733"
+        },
+        {
+          "id": "6017:72977",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:72978",
+      "name": "ADM-61 — Admin User Details — Super Admin / تفاصيل المستخدم الإداري — مدير النظام",
+      "x": "1980",
+      "y": "2829",
+      "width": "1577",
+      "height": "972",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:72979",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:72980",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "972"
+        },
+        {
+          "id": "6017:72981",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "972"
+        },
+        {
+          "id": "6017:72982",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:72983",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "908"
+        },
+        {
+          "id": "6017:73121",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:73122",
+      "name": "ADM-62 — Admin User Details — Standard Role / تفاصيل المستخدم الإداري — دور مخصص",
+      "x": "1980",
+      "y": "4044",
+      "width": "1577",
+      "height": "972",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:73123",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:73124",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "972"
+        },
+        {
+          "id": "6017:73125",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "972"
+        },
+        {
+          "id": "6017:73126",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:73127",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "908"
+        },
+        {
+          "id": "6017:73267",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:73268",
+      "name": "ADM-63 — Roles &amp; Permissions / الأدوار والصلاحيات",
+      "x": "1980",
+      "y": "5259",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:73269",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:73270",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:73271",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:73272",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:73273",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "635"
+        },
+        {
+          "id": "6017:73434",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:73435",
+      "name": "ADM-64 — Role Details &amp; Permissions / تفاصيل الدور والصلاحيات",
+      "x": "1980",
+      "y": "6446",
+      "width": "1577",
+      "height": "3113",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:73436",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:73437",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "3113"
+        },
+        {
+          "id": "6017:73438",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "3113"
+        },
+        {
+          "id": "6017:73439",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:73440",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "3049"
+        },
+        {
+          "id": "6017:74028",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:74029",
+      "name": "ADM-65 — Admin Notifications / إشعارات الإدارة",
+      "x": "0",
+      "y": "369",
+      "width": "1577",
+      "height": "1249",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:74030",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:74031",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "1249"
+        },
+        {
+          "id": "6017:74032",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "1249"
+        },
+        {
+          "id": "6017:74033",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:74034",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "1185"
+        },
+        {
+          "id": "6017:74240",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:74241",
+      "name": "ADM-66 — Audit Log / سجل الإجراءات",
+      "x": "0",
+      "y": "2076",
+      "width": "1577",
+      "height": "944",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:74242",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:74243",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "944"
+        },
+        {
+          "id": "6017:74244",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:74245",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "880"
+        },
+        {
+          "id": "6017:74246",
+          "name": "Container",
+          "x": "24",
+          "y": "24",
+          "width": "1273",
+          "height": "676"
+        },
+        {
+          "id": "6017:74394",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    },
+    {
+      "id": "6017:74395",
+      "name": "ADM-40 — Create Commission Policy / إنشاء سياسة عمولة",
+      "x": "7920",
+      "y": "1446",
+      "width": "1577",
+      "height": "994",
+      "pageId": "6017:4356",
+      "layoutNodes": [
+        {
+          "id": "6017:74396",
+          "name": "Body",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "944"
+        },
+        {
+          "id": "6017:74397",
+          "name": "App",
+          "x": "0",
+          "y": "0",
+          "width": "1577",
+          "height": "994"
+        },
+        {
+          "id": "6017:74398",
+          "name": "Container",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "994"
+        },
+        {
+          "id": "6017:74399",
+          "name": "Header",
+          "x": "0",
+          "y": "0",
+          "width": "1321",
+          "height": "64"
+        },
+        {
+          "id": "6017:74400",
+          "name": "Main Content",
+          "x": "0",
+          "y": "64",
+          "width": "1321",
+          "height": "930"
+        },
+        {
+          "id": "6017:74483",
+          "name": "Sidebar",
+          "x": "1321",
+          "y": "0",
+          "width": "256",
+          "height": "944"
+        }
+      ]
+    }
+  ]
+}

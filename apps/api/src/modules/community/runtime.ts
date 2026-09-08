@@ -11,7 +11,7 @@ export function createCommunityRuntime(connection: Connection, accessTokens: Acc
   const models = createCommunityModels(connection);
   return {
     accessTokens,
-    service: createCommunityService([], createMongooseCommunityRepository(models), authorization),
+    service: createCommunityService([], createMongooseCommunityRepository(models, audit), authorization),
     reports: createMongooseCommunityReportService(connection, authorization, audit)
   };
 }

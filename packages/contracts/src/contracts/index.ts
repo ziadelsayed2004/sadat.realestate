@@ -759,3 +759,6 @@ export type {
   ReleaseReadiness,
   ReleaseReadinessOutcome
 } from '../release/index.js';
+
+export { communityPostModerationSchema } from '../community/index.js';
+export type { CommunityPostModeration } from '../community/index.js';

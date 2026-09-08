@@ -45,19 +45,42 @@
       "name": "List current provider documents",
       "request": {
         "method": "GET",
-        "header": [{ "key": "Authorization", "value": "Bearer {{providerAccessToken}}" }],
-        "url": { "raw": "{{apiV1BaseUrl}}/provider/application/documents", "host": ["{{apiV1BaseUrl}}"], "path": ["provider", "application", "documents"] },
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{providerAccessToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/provider/application/documents",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "provider",
+            "application",
+            "documents"
+          ]
+        },
         "description": "Owner-scoped active document metadata; no storage keys or public URLs."
       },
-      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
-        "pm.test('Owned document list is private', function () {",
-        "  pm.expect([200, 401, 403, 404]).to.include(pm.response.code);",
-        "  if (pm.response.code === 200) {",
-        "    pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
-        "    pm.response.json().data.items.forEach(function (item) { pm.expect(item).not.to.have.property('storageKey'); pm.expect(item.active).to.eql(true); });",
-        "  }",
-        "});"
-      ] } }]
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Owned document list is private', function () {",
+              "  pm.expect([200, 401, 403, 404]).to.include(pm.response.code);",
+              "  if (pm.response.code === 200) {",
+              "    pm.expect(pm.response.headers.get('Cache-Control')).to.eql('no-store');",
+              "    pm.response.json().data.items.forEach(function (item) { pm.expect(item).not.to.have.property('storageKey'); pm.expect(item.active).to.eql(true); });",
+              "  }",
+              "});"
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "Health",
@@ -1462,27 +1485,101 @@
       "name": "Auth - Send Admin Password Reset OTP",
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
-        "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin.operations@example.invalid\",\n  \"roleType\": \"admin\",\n  \"purpose\": \"password_reset\"\n}", "options": { "raw": { "language": "json" } } },
-        "url": { "raw": "{{apiV1BaseUrl}}/auth/account-recovery/otp/send", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "account-recovery", "otp", "send"] }
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin.operations@example.invalid\",\n  \"roleType\": \"admin\",\n  \"purpose\": \"password_reset\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/auth/account-recovery/otp/send",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "account-recovery",
+            "otp",
+            "send"
+          ]
+        }
       }
     },
     {
       "name": "Auth - Verify Admin Password Reset OTP",
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
-        "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin.operations@example.invalid\",\n  \"roleType\": \"admin\",\n  \"purpose\": \"password_reset\",\n  \"challengeId\": \"replace-with-challenge-id\",\n  \"code\": \"000000\"\n}", "options": { "raw": { "language": "json" } } },
-        "url": { "raw": "{{apiV1BaseUrl}}/auth/account-recovery/otp/verify", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "account-recovery", "otp", "verify"] }
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin.operations@example.invalid\",\n  \"roleType\": \"admin\",\n  \"purpose\": \"password_reset\",\n  \"challengeId\": \"replace-with-challenge-id\",\n  \"code\": \"000000\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/auth/account-recovery/otp/verify",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "account-recovery",
+            "otp",
+            "verify"
+          ]
+        }
       }
     },
     {
       "name": "Auth - Reset Admin Password",
       "request": {
         "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json", "type": "text" }],
-        "body": { "mode": "raw", "raw": "{\n  \"verificationToken\": \"replace-with-single-use-token\",\n  \"newPassword\": \"Replace-With-Strong-Password-1!\"\n}", "options": { "raw": { "language": "json" } } },
-        "url": { "raw": "{{apiV1BaseUrl}}/auth/account-recovery/complete", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "account-recovery", "complete"] }
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"verificationToken\": \"replace-with-single-use-token\",\n  \"newPassword\": \"Replace-With-Strong-Password-1!\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/auth/account-recovery/complete",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "account-recovery",
+            "complete"
+          ]
+        }
       }
     },
     {
@@ -1490,11 +1587,37 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json", "type": "text" },
-          { "key": "Authorization", "value": "Bearer {{accessToken}}", "type": "text" }
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{accessToken}}",
+            "type": "text"
+          }
         ],
-        "body": { "mode": "raw", "raw": "{\n  \"currentPassword\": \"Replace-With-Current-Password-1!\",\n  \"newPassword\": \"Replace-With-New-Password-2!\"\n}", "options": { "raw": { "language": "json" } } },
-        "url": { "raw": "{{apiV1BaseUrl}}/auth/account-access/change", "host": ["{{apiV1BaseUrl}}"], "path": ["auth", "account-access", "change"] }
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"currentPassword\": \"Replace-With-Current-Password-1!\",\n  \"newPassword\": \"Replace-With-New-Password-2!\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/auth/account-access/change",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "auth",
+            "account-access",
+            "change"
+          ]
+        }
       }
     },
     {
@@ -3364,7 +3487,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"placementKey\": \"homepage_primary\",\n  \"title\": {\"ar\": \"عنوان\", \"en\": \"Title\"},\n  \"startAt\": \"2026-09-01T00:00:00+00:00\",\n  \"endAt\": \"2026-10-01T00:00:00+00:00\",\n  \"sortOrder\": 0\n}",
+                  "raw": "{\n  \"placementKey\": \"homepage_primary\",\n  \"title\": {\"ar\": \"Ø¹Ù†ÙˆØ§Ù†\", \"en\": \"Title\"},\n  \"startAt\": \"2026-09-01T00:00:00+00:00\",\n  \"endAt\": \"2026-10-01T00:00:00+00:00\",\n  \"sortOrder\": 0\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -7059,6 +7182,57 @@
           }
         }
       ]
+    },
+    {
+      "name": "Moderate Community Post",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{syntheticBearer}}",
+              "type": "string"
+            }
+          ]
+        },
+        "description": "Requires admin:community.moderate. Uses expectedUpdatedAt from the current admin list. Audit and mutation commit together.",
+        "url": {
+          "raw": "{{apiV1BaseUrl}}/admin/community/posts/:postId/moderate",
+          "host": [
+            "{{apiV1BaseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "community",
+            "posts",
+            ":postId",
+            "moderate"
+          ],
+          "variable": [
+            {
+              "key": "postId",
+              "value": "000000000000000000000000"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"action\": \"publish\",\n  \"expectedUpdatedAt\": \"2026-09-08T00:00:00.000Z\",\n  \"reason\": \"Reviewed community content\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
     }
   ]
 }

@@ -5,6 +5,7 @@ import {
   communityAdminPostListQuerySchema,
   communityAdminCommentListQuerySchema,
   communityPostCreateSchema,
+  communityPostModerationSchema,
   communityPostPatchSchema,
   communityPostSchema,
   type CommunityComment,
@@ -21,6 +22,7 @@ import {
   type CommunityPublicPostListData,
   type CommunityPublicListQuery
 } from '@sadat-real-estate/contracts';
+import type { AuditRecordInput, AuditWriter } from '../audit/writer.js';
 import type { AccessTokenClaims } from '../auth/crypto.js';
 
 const id = () => randomBytes(12).toString('hex');
@@ -30,6 +32,7 @@ export interface CommunityRepository {
   listPosts(): Promise<CommunityPost[]>;
   getPost(postId: string): Promise<CommunityPost | undefined>;
   savePost(post: CommunityPost): Promise<void>;
+  moderatePost(post: CommunityPost, expectedUpdatedAt: string, audit: AuditRecordInput): Promise<void>;
   listComments(postId?: string): Promise<CommunityComment[]>;
   getComment(commentId: string): Promise<CommunityComment | undefined>;
   saveComment(comment: CommunityComment): Promise<void>;
@@ -44,7 +47,7 @@ export interface CommunityService {
   listOwned(claims: AccessTokenClaims): Promise<CommunityPost[]>;
   update(claims: AccessTokenClaims, postId: string, input: unknown): Promise<CommunityPost>;
   remove(claims: AccessTokenClaims, postId: string): Promise<CommunityPost>;
-  publish(claims: AccessTokenClaims, postId: string): Promise<CommunityPost>;
+  moderate(claims: AccessTokenClaims, postId: string, input: unknown, context: { requestId: string; traceId: string }): Promise<CommunityPost>;
   createComment(claims: AccessTokenClaims, input: unknown): Promise<CommunityComment>;
   listComments(postId: string): Promise<CommunityComment[]>;
   removeComment(claims: AccessTokenClaims, commentId: string): Promise<CommunityComment>;
@@ -56,13 +59,24 @@ export interface CommunityService {
   adminCommentsPage(claims: AccessTokenClaims, query: CommunityAdminCommentListQuery): Promise<CommunityAdminCommentListData>;
 }
 
-export function createMemoryCommunityRepository(seed: CommunityPost[] = []): CommunityRepository {
+export function createMemoryCommunityRepository(seed: CommunityPost[] = [], audit?: AuditWriter): CommunityRepository {
   const posts = new Map(seed.map(post => [post.id, post]));
   const comments = new Map<string, CommunityComment>();
+  let mutationQueue: Promise<void> = Promise.resolve();
   return {
     async listPosts() { return [...posts.values()]; },
     async getPost(postId) { return posts.get(postId); },
     async savePost(post) { posts.set(post.id, post); },
+    async moderatePost(post, expectedUpdatedAt, entry) {
+      const mutation = mutationQueue.then(async () => {
+        if (posts.get(post.id)?.updatedAt !== expectedUpdatedAt) throw new Error('VERSION_CONFLICT');
+        if (!audit) throw new Error('AUDIT_UNAVAILABLE');
+        await audit.record(entry);
+        posts.set(post.id, post);
+      });
+      mutationQueue = mutation.catch(() => undefined);
+      return mutation;
+    },
     async listComments(postId) {
       const values = [...comments.values()];
       return postId === undefined ? values : values.filter(comment => comment.postId === postId);
@@ -142,12 +156,22 @@ export function createCommunityService(
       await repository.savePost(updated);
       return updated;
     },
-    async publish(claims, postId) {
-      if (claims.role !== 'admin' || claims.status !== 'verified') throw new Error('FORBIDDEN');
+    async moderate(claims, postId, input, context) {
+      if (claims.role !== 'admin' || claims.status !== 'verified' || !authorization || !(await authorization.authorize(claims.sub, 'admin:community.moderate'))) throw new Error('FORBIDDEN');
+      const parsed = communityPostModerationSchema.parse(input);
       const post = await repository.getPost(postId);
       if (!post) throw new Error('NOT_FOUND');
-      const updated = { ...post, status: 'published' as const, updatedAt: now() };
-      await repository.savePost(updated);
+      if (post.updatedAt !== parsed.expectedUpdatedAt) throw new Error('VERSION_CONFLICT');
+      const status = parsed.action === 'publish' ? 'published' : 'hidden';
+      if (post.status === 'removed' || post.status === status) throw new Error('INVALID_STATE');
+      const updatedAt = new Date(Math.max(Date.now(), Date.parse(post.updatedAt) + 1)).toISOString();
+      const updated = { ...post, status, updatedAt } as CommunityPost;
+      await repository.moderatePost(updated, parsed.expectedUpdatedAt, {
+        actorType: 'admin', actorId: claims.sub, targetType: 'community_post', targetId: postId,
+        action: `community_post.${parsed.action}`, reason: parsed.reason,
+        before: { status: post.status, updatedAt: post.updatedAt }, after: { status, updatedAt },
+        ...context, occurredAt: new Date(updatedAt)
+      });
       return updated;
     },
     async createComment(claims, input) {

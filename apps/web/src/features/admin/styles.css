@@ -646,3 +646,8 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Separate list metrics from status filters on every admin surface. */
+.surface-admin .admin-dashboard__metric-section:has(+ [role="tablist"]),
+.surface-admin .admin-dashboard__metric-section:has(+ [role="group"]),
+.surface-admin .admin-dashboard__metric-section:has(+ form) { margin-block-end: 24px; }

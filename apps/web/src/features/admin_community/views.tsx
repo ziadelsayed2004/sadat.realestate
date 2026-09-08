@@ -155,9 +155,9 @@ function Pagination({ locale, page, limit, total, onPage }: { readonly locale: S
   return <nav className="admin-community__pagination" aria-label={copy.pageLabel}><span>{copy.page(page, totalPages)}</span><div><Button size="sm" variant="secondary" disabled={page <= 1} onClick={() => onPage(page - 1)}>{copy.previous}</Button><Button size="sm" variant="secondary" disabled={page >= totalPages} onClick={() => onPage(page + 1)}>{copy.next}</Button></div></nav>;
 }
 
-function PostTable({ items, locale }: { readonly items: readonly CommunityAdminPost[]; readonly locale: SupportedLocale }) {
+function PostTable({ items, locale, onReview }: { readonly items: readonly CommunityAdminPost[]; readonly locale: SupportedLocale; readonly onReview: (post: CommunityAdminPost) => void }) {
   const copy = getAdminCommunityCopy(locale);
-  return <div className="admin-community__table-wrap"><table className="admin-community__table"><thead><tr><th>{copy.columns.title}</th><th>{copy.columns.author}</th><th>{copy.columns.status}</th><th>{copy.columns.comments}</th><th>{copy.columns.updated}</th><th>{copy.columns.actions}</th></tr></thead><tbody>{items.map(post => <tr key={post.id} data-testid={`admin-community-post-${post.id}`}><td><strong>{post.title}</strong><small>{post.body}</small></td><td><code>{labelValue(post.authorId, locale)}</code></td><td><StatusBadge label={copy.postStatus[post.status]} tone={statusTone(post.status)} /></td><td>{post.commentCount}</td><td>{dateLabel(post.updatedAt, locale)}</td><td><span className="admin-community__muted">{copy.noActions}</span></td></tr>)}</tbody></table></div>;
+  return <div className="admin-community__table-wrap"><table className="admin-community__table"><thead><tr><th>{copy.columns.title}</th><th>{copy.columns.author}</th><th>{copy.columns.status}</th><th>{copy.columns.comments}</th><th>{copy.columns.updated}</th><th>{copy.columns.actions}</th></tr></thead><tbody>{items.map(post => <tr key={post.id} data-testid={`admin-community-post-${post.id}`}><td><strong>{post.title}</strong><small>{post.body}</small></td><td><code>{labelValue(post.authorId, locale)}</code></td><td><StatusBadge label={copy.postStatus[post.status]} tone={statusTone(post.status)} /></td><td>{post.commentCount}</td><td>{dateLabel(post.updatedAt, locale)}</td><td><Button size="sm" variant="secondary" disabled={post.status === 'removed'} onClick={() => onReview(post)}>{copy.action.review}</Button></td></tr>)}</tbody></table></div>;
 }
 
 function CommentTable({ items, locale }: { readonly items: readonly CommunityAdminComment[]; readonly locale: SupportedLocale }) {
@@ -215,6 +215,7 @@ export function AdminCommunity({ locale, session, authClient, apiOrigin, initial
   const [postQuery, setPostQuery] = useState<CommunityAdminPostListQuery>({ page: 1, limit: 20 });
   const [commentQuery, setCommentQuery] = useState<CommunityAdminCommentListQuery>({ page: 1, limit: 20 });
   const [reportQuery, setReportQuery] = useState<CommunityAdminReportListQuery>({ page: 1, limit: 20 });
+  const [selectedPost, setSelectedPost] = useState<CommunityAdminPost | undefined>();
   const [selectedReport, setSelectedReport] = useState<CommunityAdminReport | undefined>();
 
   useEffect(() => {
@@ -230,9 +231,9 @@ export function AdminCommunity({ locale, session, authClient, apiOrigin, initial
   const data = view === 'posts' ? posts : view === 'comments' ? comments : reports;
   const refresh = () => setAttempt(value => value + 1);
   const applyFilters = (input: Record<string, string>) => {
-    if (view === 'posts') setPostQuery(communityAdminPostListQuerySchema.parse({ ...postQuery, page: 1, ...input }));
-    else if (view === 'comments') setCommentQuery(communityAdminCommentListQuerySchema.parse({ ...commentQuery, page: 1, ...input }));
-    else setReportQuery(communityAdminReportListQuerySchema.parse({ ...reportQuery, page: 1, ...input }));
+    if (view === 'posts') setPostQuery(communityAdminPostListQuerySchema.parse({ page: 1, limit: postQuery.limit, ...input }));
+    else if (view === 'comments') setCommentQuery(communityAdminCommentListQuerySchema.parse({ page: 1, limit: commentQuery.limit, ...input }));
+    else setReportQuery(communityAdminReportListQuerySchema.parse({ page: 1, limit: reportQuery.limit, ...input }));
     refresh();
   };
   const clearFilters = () => {
@@ -271,5 +272,41 @@ export function AdminCommunity({ locale, session, authClient, apiOrigin, initial
   };
 
   const title = copy.title[view];
-  return <section className="admin-community" data-screen-id={view === 'posts' ? 'ADM-27' : view === 'comments' ? 'ADM-28' : 'ADM-29'} data-route={pathname} data-device-scope="desktop" data-admin-community-state={state}><AdminNavigation locale={locale} activePath={pathname} /><div className="admin-community__content"><header className="admin-community__heading"><div><p className="admin-community__eyebrow">{copy.eyebrow}</p><h1>{title}</h1><p>{copy.description[view]}</p><span className="admin-community__direction-note">{copy.directionNote}</span></div></header><Tabs locale={locale} view={view} /><SummaryCards data={data} locale={locale} view={view} /><StatusStrip view={view} locale={locale} selected={selectedStatus} onSelect={selectStatus} /><Filters view={view} locale={locale} onApply={applyFilters} onClear={clearFilters} />{state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={refresh} /> : null}{state === 'empty' ? <EmptyPanel locale={locale} /> : null}{state === 'success' && data !== undefined ? <section className="admin-community__panel"><div className="admin-community__panel-heading"><div><h2>{title}</h2><span>{copy.page(data.page, Math.max(1, Math.ceil(data.total / Math.max(1, data.limit))))}</span></div></div>{view === 'posts' ? <PostTable items={posts?.items ?? []} locale={locale} /> : view === 'comments' ? <CommentTable items={comments?.items ?? []} locale={locale} /> : <ReportTable items={reports?.items ?? []} locale={locale} onReview={setSelectedReport} />}<Pagination locale={locale} page={data.page} limit={data.limit} total={data.total} onPage={changePage} /></section> : null}{selectedReport !== undefined ? <ReportResolution report={selectedReport} locale={locale} onClose={() => setSelectedReport(undefined)} onResolve={handleResolve} /> : null}</div></section>;
+  return <section className="admin-community" data-screen-id={view === 'posts' ? 'ADM-27' : view === 'comments' ? 'ADM-28' : 'ADM-29'} data-route={pathname} data-device-scope="desktop" data-admin-community-state={state}><AdminNavigation locale={locale} activePath={pathname} /><div className="admin-community__content"><header className="admin-community__heading"><div><p className="admin-community__eyebrow">{copy.eyebrow}</p><h1>{title}</h1><p>{copy.description[view]}</p><span className="admin-community__direction-note">{copy.directionNote}</span></div></header><Tabs locale={locale} view={view} /><SummaryCards data={data} locale={locale} view={view} /><StatusStrip view={view} locale={locale} selected={selectedStatus} onSelect={selectStatus} /><Filters view={view} locale={locale} onApply={applyFilters} onClear={clearFilters} />{state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={refresh} /> : null}{state === 'empty' ? <EmptyPanel locale={locale} /> : null}{state === 'success' && data !== undefined ? <section className="admin-community__panel"><div className="admin-community__panel-heading"><div><h2>{title}</h2><span>{copy.page(data.page, Math.max(1, Math.ceil(data.total / Math.max(1, data.limit))))}</span></div></div>{view === 'posts' ? <PostTable items={posts?.items ?? []} locale={locale} onReview={setSelectedPost} /> : view === 'comments' ? <CommentTable items={comments?.items ?? []} locale={locale} /> : <ReportTable items={reports?.items ?? []} locale={locale} onReview={setSelectedReport} />}<Pagination locale={locale} page={data.page} limit={data.limit} total={data.total} onPage={changePage} /></section> : null}{selectedPost !== undefined ? <PostModeration key={selectedPost.updatedAt} post={selectedPost} locale={locale} onClose={() => setSelectedPost(undefined)} onSave={async (action, reason) => { await source.moderatePost(selectedPost.id, { action, reason, expectedUpdatedAt: selectedPost.updatedAt }); setSelectedPost(undefined); refresh(); }} onReload={() => { setSelectedPost(undefined); refresh(); }} /> : null}{selectedReport !== undefined ? <ReportResolution report={selectedReport} locale={locale} onClose={() => setSelectedReport(undefined)} onResolve={handleResolve} /> : null}</div></section>;
+}
+
+function PostModeration({ post, locale, onSave, onClose, onReload }: {
+  readonly post: CommunityAdminPost; readonly locale: SupportedLocale;
+  readonly onSave: (action: 'publish' | 'hide', reason: string) => Promise<void>;
+  readonly onClose: () => void; readonly onReload: () => void;
+}) {
+  const copy = getAdminCommunityCopy(locale);
+  const [reason, setReason] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [conflict, setConflict] = useState(false);
+  const action = post.status === 'published' ? 'hide' : 'publish';
+  const label = locale === 'ar' ? (action === 'publish' ? 'نشر المنشور' : 'إخفاء المنشور') : (action === 'publish' ? 'Publish post' : 'Hide post');
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (saving || conflict) return;
+    setSaving(true); setError('');
+    try { await onSave(action, reason.trim()); }
+    catch (failure) {
+      const stale = failure instanceof ApiClientError && failure.status === 409;
+      setConflict(stale);
+      setError(stale ? (locale === 'ar' ? 'تم تغيير المنشور. أعد تحميل بياناته قبل اتخاذ القرار.' : 'The post changed. Reload it before making a decision.') : copy.states.error.body);
+    } finally { setSaving(false); }
+  }
+  return <section className="admin-community__resolution" role="region" aria-label={label}>
+    <div><h2>{label}</h2><p>{post.title}</p></div>
+    <form onSubmit={event => { void submit(event); }}>
+      <label htmlFor="community-moderation-reason">{copy.reason}</label>
+      <textarea id="community-moderation-reason" required minLength={5} maxLength={500} value={reason} disabled={saving} onChange={event => setReason(event.target.value)} />
+      {error ? <p role="alert">{error}</p> : null}
+      <Button type="submit" disabled={saving || conflict || reason.trim().length < 5}>{label}</Button>
+      {conflict ? <Button type="button" onClick={onReload}>{copy.retry}</Button> : null}
+      <Button type="button" variant="secondary" disabled={saving} onClick={onClose}>{copy.action.close}</Button>
+    </form>
+  </section>;
 }

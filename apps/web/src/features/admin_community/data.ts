@@ -8,6 +8,10 @@ import {
   communityAdminReportResolveSuccessEnvelopeSchema,
   communityReportIdParamsSchema,
   communityReportResolveSchema,
+  communityPostModerationSchema,
+  communityPostMutationSuccessEnvelopeSchema,
+  communityPostIdParamsSchema,
+  type CommunityPostModeration,
   type CommunityAdminCommentListData,
   type CommunityAdminCommentListQuery,
   type CommunityAdminPostListData,
@@ -126,6 +130,7 @@ export async function resolveAdminCommunityReport(reportId: string, input: unkno
 
 export function createAdminCommunitySource(options: Omit<CommonOptions, 'signal'> = {}) {
   return {
+    moderatePost: (postId: string, input: CommunityPostModeration) => moderateAdminCommunityPost(postId, input, options),
     loadPosts: (query: CommunityAdminPostListQuery, signal?: AbortSignal) => loadAdminCommunityPosts({ ...options, query, ...(signal === undefined ? {} : { signal }) }),
     loadComments: (query: CommunityAdminCommentListQuery, signal?: AbortSignal) => loadAdminCommunityComments({ ...options, query, ...(signal === undefined ? {} : { signal }) }),
     loadReports: (query: CommunityAdminReportListQuery, signal?: AbortSignal) => loadAdminCommunityReports({ ...options, query, ...(signal === undefined ? {} : { signal }) }),
@@ -134,3 +139,12 @@ export function createAdminCommunitySource(options: Omit<CommonOptions, 'signal'
 }
 
 export type AdminCommunitySource = ReturnType<typeof createAdminCommunitySource>;
+
+export async function moderateAdminCommunityPost(postId: string, input: unknown, options: CommonOptions = {}) {
+  const { postId: id } = communityPostIdParamsSchema.parse({ postId });
+  const response = await clientFor(options).request(`${ADMIN_COMMUNITY_POSTS_ROUTE}/${id}/moderate`, {
+    method: 'POST', responseSchema: communityPostMutationSuccessEnvelopeSchema,
+    json: communityPostModerationSchema.parse(input), ...requestOptions(options)
+  });
+  return response.data.data;
+}
