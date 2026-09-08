@@ -10,6 +10,7 @@ import {
 } from '../public/related-property.js';
 import type { ViewingRecord, ViewingRepository } from './service.js';
 import { ViewingServiceError } from './service.js';
+import { unexpiredPropertyFilter } from '../settings/property-policy.js';
 
 type Row = Record<string, unknown>;
 
@@ -61,7 +62,8 @@ export function createMongooseViewingRepository(connection: Connection): Viewing
     const propertyFilter: Record<string, unknown> = {
       $or: [{ _id: { $in: propertyObjectIds } }, { _id: { $in: propertyIds } }],
       status: 'published',
-      active: true
+      active: true,
+      ...unexpiredPropertyFilter()
     };
     const propertyRows = await properties.find(propertyFilter, { projection: publicRelatedPropertyProjection }).toArray();
     if (propertyRows.length === 0) return [...items];
@@ -104,7 +106,8 @@ export function createMongooseViewingRepository(connection: Connection): Viewing
       const propertyFilter: Record<string, unknown> = {
         $or: [{ _id: oid(row.propertyId) }, { _id: row.propertyId }],
         status: 'published',
-        active: true
+        active: true,
+        ...unexpiredPropertyFilter()
       };
       const property = await properties.findOne(propertyFilter, { projection: { providerId: 1 } });
       const providerId = publicRelatedId(property?.providerId);

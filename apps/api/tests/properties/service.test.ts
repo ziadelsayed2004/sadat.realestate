@@ -16,7 +16,7 @@ function record(overrides: Partial<StoredProperty> = {}): StoredProperty {
   return { id, providerId: provider, source: { providerId: provider, sourceType: 'individual_broker' }, kind: 'property', name: { en: 'Apartment' }, slug: 'apartment', transactionType: 'sale', status: 'draft', active: true, version: 0, createdAt: now, updatedAt: now, ...overrides };
 }
 
-function fixture(ready = false) {
+function fixture(ready = false, settings?: { requiresAdminReview: boolean; publicationAfterApproval: 'automatic' | 'manual'; automaticExpiry?: 'never' | '30_days' | '60_days' | '90_days' }) {
   const rows = new Map([[id, record(ready ? { locationId: location, price: { amount: 1000000, currency: 'EGP' }, contact: { phone: '+201234567890' } } : {})]]);
   const repository: PropertyRepository = {
     async findOwned(owner, target) { const property = rows.get(target); return property?.providerId === owner ? property : null; },
@@ -85,7 +85,8 @@ function fixture(ready = false) {
       if (!current || current.providerId !== input.providerId) return { kind: 'not_found' };
       if (current.status === 'pending_review') return { kind: 'already_submitted', property: current };
       if (current.version !== input.expectedVersion) return { kind: 'version_conflict' };
-      const next = { ...current, status: 'pending_review' as const, submittedAt: input.metadata.changedAt, version: current.version + 1, updatedAt: input.metadata.changedAt };
+      const targetStatus = input.targetStatus ?? 'pending_review';
+      const next = { ...current, status: targetStatus, submittedAt: input.metadata.changedAt, ...(targetStatus === 'published' ? { publishedAt: input.metadata.changedAt, ...(input.expiresAt ? { expiresAt: input.expiresAt } : {}) } : {}), version: current.version + 1, updatedAt: input.metadata.changedAt };
       rows.set(input.id, next);
       return { kind: 'written', property: next };
     },
@@ -93,8 +94,8 @@ function fixture(ready = false) {
       const current = rows.get(input.id);
       if (!current) return { kind: 'not_found' };
       if (current.version !== input.expectedVersion) return { kind: 'version_conflict' };
-      if ((input.toStatus === 'published' && current.status !== 'approved') || (input.toStatus !== 'published' && current.status !== 'pending_review')) return { kind: 'invalid_state' };
-      const next = { ...current, status: input.toStatus, active: input.toStatus === 'published', reviewedBy: input.reviewerId, reviewedAt: input.metadata.changedAt, reviewReason: input.metadata.reason, ...(input.toStatus === 'published' ? { publishedAt: input.metadata.changedAt } : {}), version: current.version + 1, updatedAt: input.metadata.changedAt };
+      if ((input.toStatus === 'published' && !['approved', 'pending_review'].includes(current.status)) || (input.toStatus !== 'published' && current.status !== 'pending_review')) return { kind: 'invalid_state' };
+      const next = { ...current, status: input.toStatus, active: input.toStatus === 'published', reviewedBy: input.reviewerId, reviewedAt: input.metadata.changedAt, reviewReason: input.metadata.reason, ...(input.toStatus === 'published' ? { publishedAt: input.metadata.changedAt, ...(input.expiresAt ? { expiresAt: input.expiresAt } : {}) } : {}), version: current.version + 1, updatedAt: input.metadata.changedAt };
       rows.set(input.id, next);
       return { kind: 'written', property: next };
     },
@@ -105,12 +106,12 @@ function fixture(ready = false) {
       const valid = input.action === 'hide' ? ['published', 'approved'].includes(current.status) : input.action === 'restore' ? current.status === 'hidden' : current.status !== 'archived';
       if (!valid) return { kind: 'invalid_state' };
       const status = input.action === 'hide' ? 'hidden' : input.action === 'restore' ? 'published' : 'archived';
-      const next = { ...current, status: status as StoredProperty['status'], active: input.action === 'restore', version: current.version + 1, updatedAt: input.metadata.changedAt };
+      const next = { ...current, status: status as StoredProperty['status'], active: input.action === 'restore', ...(input.action === 'restore' ? { publishedAt: input.metadata.changedAt, ...(input.expiresAt ? { expiresAt: input.expiresAt } : {}) } : {}), version: current.version + 1, updatedAt: input.metadata.changedAt };
       rows.set(input.id, next);
       return { kind: 'written', property: next };
     }
   };
-  return { service: createPropertyService({ repository, authorization: { async authorize(id, permission) { return id === admin && ['admin:properties.view', 'admin:properties.review', 'admin:properties.manage'].includes(permission); } }, now: () => now }), rows };
+  return { service: createPropertyService({ repository, authorization: { async authorize(id, permission) { return id === admin && ['admin:properties.view', 'admin:properties.review', 'admin:properties.manage'].includes(permission); } }, ...(settings ? { settings: { async read() { return { requiresAdminReview: settings.requiresAdminReview, publicationAfterApproval: settings.publicationAfterApproval, automaticExpiry: settings.automaticExpiry ?? 'never', maxImages: 50, acceptedImageMimes: ['image/jpeg' as const, 'image/png' as const], maxImageBytes: 10 * 1024 * 1024, hideProviderContact: true, contactVisibility: 'authenticated' as const }; } } } : {}), now: () => now }), rows };
 }
 
 test('creates provider-owned drafts and saves core/location steps with optimistic versions', async () => {
@@ -218,4 +219,22 @@ test('preserves the current published version by rejecting provider edits outsid
   const original = service;
   await assert.rejects(original.saveStep(claims(), id, 'basic', { version: 4, name: { en: 'Attempted public overwrite' }, reason: 'Attempt public revision' }, { requestId: 'property-revision-1', traceId: '7'.repeat(32) }), error => error instanceof PropertyServiceError && error.code === 'PROPERTY_INVALID_STATE');
   assert.equal(rows.get(id)?.status, 'published');
+});
+
+test('publishes a valid provider submission when administrative review is disabled', async () => {
+  const { service } = fixture(true, { requiresAdminReview: false, publicationAfterApproval: 'manual' });
+  const context = { requestId: 'property-policy-submit', traceId: '8'.repeat(32) };
+  const published = await service.submit(claims(), id, { version: 0, reason: 'Publish under the configured property policy' }, context);
+  assert.equal(published.status, 'published');
+  assert.equal(published.publishedAt, now.toISOString());
+});
+
+test('publishes an approved review immediately when automatic publication is configured', async () => {
+  const { service, rows } = fixture(true, { requiresAdminReview: true, publicationAfterApproval: 'automatic', automaticExpiry: '30_days' });
+  const context = { requestId: 'property-policy-review', traceId: '9'.repeat(32) };
+  rows.set(id, record({ status: 'pending_review', active: false }));
+  const published = await service.review(admin, id, { version: 0, action: 'approve', reason: 'Approve and publish under policy' }, context);
+  assert.equal(published.status, 'published');
+  assert.equal(published.publishedAt, now.toISOString());
+  assert.equal(published.expiresAt, '2026-09-13T08:00:00.000Z');
 });

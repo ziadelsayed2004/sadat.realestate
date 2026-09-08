@@ -1,5 +1,6 @@
 import { Types, type Connection } from 'mongoose';
 import type { FavoritePropertySource, FavoriteRecord, FavoriteRepository } from './service.js';
+import { unexpiredPropertyFilter } from '../settings/property-policy.js';
 
 type Row = Record<string, unknown>;
 
@@ -55,7 +56,7 @@ export function createMongooseFavoriteRepository(connection: Connection): Favori
   return {
     async save(seekerId, propertyId, now) {
       await ensureIndex();
-      const sourceRow = await properties.findOne({ _id: new Types.ObjectId(propertyId), status: 'published', active: true }, { projection });
+      const sourceRow = await properties.findOne({ _id: new Types.ObjectId(propertyId), status: 'published', active: true, ...unexpiredPropertyFilter(now) }, { projection });
       const source = property(sourceRow as Row | null ?? {});
       if (!source) return { kind: 'unavailable' };
       try {
@@ -75,7 +76,7 @@ export function createMongooseFavoriteRepository(connection: Connection): Favori
       const rows = await favorites.find({ seekerId: new Types.ObjectId(seekerId) }, { projection: { _id: 0, seekerId: 1, propertyId: 1, savedAt: 1 } }).sort({ savedAt: -1, propertyId: 1 }).skip((page - 1) * limit).limit(limit).toArray();
       const mapped = rows.flatMap(row => { const value = favorite(row as Row); return value ? [value] : []; });
       if (!mapped.length) return [];
-      const propertyRows = await properties.find({ _id: { $in: mapped.map(value => new Types.ObjectId(value.propertyId)) } }, { projection }).toArray();
+      const propertyRows = await properties.find({ _id: { $in: mapped.map(value => new Types.ObjectId(value.propertyId)) }, status: 'published', active: true, ...unexpiredPropertyFilter() }, { projection }).toArray();
       const locationIds = propertyRows.flatMap(row => { const value = id(row.locationId); return value ? [new Types.ObjectId(value)] : []; });
       const organizationIds = propertyRows.flatMap(row => { const value = id(row.organizationId); return value ? [new Types.ObjectId(value)] : []; });
       const [locationRows, organizationRows] = await Promise.all([

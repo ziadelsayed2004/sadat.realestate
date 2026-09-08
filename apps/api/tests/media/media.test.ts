@@ -6,16 +6,17 @@ import { createInMemoryStorageAdapter, createDeterministicMalwareScanner } from 
 import { propertyMediaSchema } from '../../src/modules/media/models.js';
 import type { PropertyMediaRepository, StoredPropertyMedia } from '../../src/modules/media/repository.js';
 import { createPropertyMediaService, PropertyMediaServiceError } from '../../src/modules/media/service.js';
+import { DEFAULT_PROPERTY_RUNTIME_SETTINGS, type PropertyRuntimeSettings } from '../../src/modules/settings/property-policy.js';
 
 const provider = '0123456789abcdef01234567'; const property = '1123456789abcdef01234567'; const mediaId = '2123456789abcdef01234567'; const now = new Date('2026-08-14T09:00:00.000Z');
 const claims = (status: 'verified' | 'pending_review' = 'verified') => ({ sub: provider, role: 'provider', status, iss: 'sadat-real-estate-api', aud: 'sadat-real-estate', sid: '3123456789abcdef01234567', iat: 1, exp: 2, jti: 'media-test' } as never);
 const bytes = Buffer.from([0xff, 0xd8, 0xff, 0x00, 0xff, 0xd9]);
 function media(overrides: Partial<StoredPropertyMedia> = {}): StoredPropertyMedia { return { id: mediaId, propertyId: property, kind: 'image', originalFilename: 'photo.jpg', detectedMime: 'image/jpeg', byteSize: bytes.byteLength, sha256: 'a'.repeat(64), sortOrder: 0, isCover: true, processingState: 'ready', active: true, version: 1, storageKey: 'quarantine/' + 'a'.repeat(32), createdAt: now, updatedAt: now, ...overrides }; }
-function fixture(scanner = createDeterministicMalwareScanner('clean')) {
+function fixture(scanner = createDeterministicMalwareScanner('clean'), settings: PropertyRuntimeSettings = DEFAULT_PROPERTY_RUNTIME_SETTINGS) {
   const rows = new Map<string, StoredPropertyMedia>(); const storage = createInMemoryStorageAdapter();
   const repository: PropertyMediaRepository = {
     async findOwnedProperty(owner, target) { return owner === provider && target === property ? { id: property, status: 'draft', active: true } : null; },
-    async create(input) { const current = [...rows.values()].find(row => row.sha256 === input.sha256 && row.active); if (current) return { kind: 'replay', media: current }; const value = media({ id: mediaId, propertyId: input.propertyId, kind: input.kind, originalFilename: input.originalFilename, detectedMime: input.detectedMime, byteSize: input.byteSize, sha256: input.sha256, storageKey: input.storageKey, processingState: 'processing', isCover: rows.size === 0, sortOrder: rows.size }); rows.set(value.id, value); return { kind: 'written', media: value }; },
+    async create(input) { const current = [...rows.values()].find(row => row.sha256 === input.sha256 && row.active); if (current) return { kind: 'replay', media: current }; if ([...rows.values()].filter(row => row.active).length >= input.capacity) return { kind: 'capacity' }; const value = media({ id: mediaId, propertyId: input.propertyId, kind: input.kind, originalFilename: input.originalFilename, detectedMime: input.detectedMime, byteSize: input.byteSize, sha256: input.sha256, storageKey: input.storageKey, processingState: 'processing', isCover: rows.size === 0, sortOrder: rows.size }); rows.set(value.id, value); return { kind: 'written', media: value }; },
     async updateProcessing(input) { const current = rows.get(input.mediaId); if (!current) return { kind: 'not_found' }; const value = { ...current, processingState: input.state, ...(input.failureCode ? { failureCode: input.failureCode } : {}), version: current.version + 1, updatedAt: input.metadata.changedAt }; rows.set(value.id, value); return { kind: 'written', media: value }; },
     async listOwned(owner, target) { return owner === provider && target === property ? [...rows.values()] : []; },
     async listPublic() { return [...rows.values()].filter(row => row.active && row.processingState === 'ready').map(({ storageKey: _storageKey, createdAt, updatedAt, ...value }) => ({ ...value, createdAt: createdAt.toISOString(), updatedAt: updatedAt.toISOString() })); },
@@ -23,7 +24,7 @@ function fixture(scanner = createDeterministicMalwareScanner('clean')) {
     async reorder(input) { const out = input.changes.items.map(item => { const current = rows.get(item.mediaId); if (!current) return { kind: 'not_found' as const }; const value = { ...current, sortOrder: item.sortOrder, ...(item.isCover !== undefined ? { isCover: item.isCover } : {}), version: current.version + 1, updatedAt: input.metadata.changedAt }; rows.set(value.id, value); return { kind: 'written' as const, media: value }; }); return out; },
     async markDeleted(input) { const current = rows.get(input.mediaId); if (!current) return { kind: 'not_found' }; const value = { ...current, active: false, isCover: false, processingState: 'deleted' as const, version: current.version + 1, updatedAt: input.metadata.changedAt }; rows.set(value.id, value); return { kind: 'written', media: value }; }
   };
-  return { service: createPropertyMediaService({ repository, storage, scanner, now: () => now, createObjectKey: () => 'quarantine/' + 'b'.repeat(32) }) };
+  return { service: createPropertyMediaService({ repository, storage, scanner, settings: { async read() { return settings; } }, now: () => now, createObjectKey: () => 'quarantine/' + 'b'.repeat(32) }) };
 }
 
 test('validates strict media kinds, MIME policy, ordering, and mass-assignment rejection', () => {
@@ -49,4 +50,16 @@ test('uploads ready media, supports cover ordering, ownership, replay, deletion,
   await assert.rejects(service.list(claims('pending_review'), property), error => error instanceof PropertyMediaServiceError && error.code === 'MEDIA_FORBIDDEN');
   const failed = fixture(createDeterministicMalwareScanner('infected'));
   await assert.rejects(failed.service.upload(claims(), property, { kind: 'image', filename: 'bad.jpg', contentType: 'image/jpeg' }, Readable.from(bytes), { requestId: 'media-5', traceId: 'e'.repeat(32) }), error => error instanceof PropertyMediaServiceError && error.code === 'MEDIA_PROCESSING_FAILED');
+});
+
+test('enforces the configured image count, MIME, and byte-size policy', async () => {
+  const pngOnly = { ...DEFAULT_PROPERTY_RUNTIME_SETTINGS, maxImages: 1, acceptedImageMimes: ['image/png' as const], maxImageBytes: 5 };
+  const restricted = fixture(createDeterministicMalwareScanner('clean'), pngOnly);
+  await assert.rejects(restricted.service.upload(claims(), property, { kind: 'image', filename: 'photo.jpg', contentType: 'image/jpeg' }, Readable.from(bytes), { requestId: 'media-policy-mime', traceId: 'f'.repeat(32) }), error => error instanceof PropertyMediaServiceError && error.code === 'MEDIA_INVALID_UPLOAD');
+  await assert.rejects(restricted.service.upload(claims(), property, { kind: 'image', filename: 'photo.jpg', contentType: 'image/jpeg', contentLength: 6 }, Readable.from(bytes), { requestId: 'media-policy-size', traceId: '1'.repeat(32) }), error => error instanceof PropertyMediaServiceError && error.code === 'MEDIA_INVALID_UPLOAD');
+
+  const oneImage = fixture(createDeterministicMalwareScanner('clean'), { ...DEFAULT_PROPERTY_RUNTIME_SETTINGS, maxImages: 1 });
+  await oneImage.service.upload(claims(), property, { kind: 'image', filename: 'photo.jpg', contentType: 'image/jpeg' }, Readable.from(bytes), { requestId: 'media-policy-first', traceId: '2'.repeat(32) });
+  const secondBytes = Buffer.from([0xff, 0xd8, 0xff, 0x01, 0xff, 0xd9]);
+  await assert.rejects(oneImage.service.upload(claims(), property, { kind: 'image', filename: 'second.jpg', contentType: 'image/jpeg' }, Readable.from(secondBytes), { requestId: 'media-policy-capacity', traceId: '3'.repeat(32) }), error => error instanceof PropertyMediaServiceError && error.code === 'MEDIA_CAPACITY');
 });

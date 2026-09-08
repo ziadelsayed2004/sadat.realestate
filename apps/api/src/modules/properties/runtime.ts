@@ -6,8 +6,9 @@ import { createPropertyModels } from './models.js';
 import { createMongoosePropertyRepository } from './repository.js';
 import { createPropertyService } from './service.js';
 import type { PropertyRouterDependencies } from './router.js';
+import { createMongoosePropertySettingsReader } from '../settings/property-policy.js';
 
 export function createPropertyRuntime(connection: Connection, accessTokens: AccessTokenService, audit: AuditWriter, rbac?: Pick<RbacService, 'authorize'>): PropertyRouterDependencies {
   const models = createPropertyModels(connection);
-  return { accessTokens, service: createPropertyService({ repository: createMongoosePropertyRepository(connection, models, audit), ...(rbac ? { authorization: rbac } : {}) }) };
+  return { accessTokens, service: createPropertyService({ repository: createMongoosePropertyRepository(connection, models, audit), settings: createMongoosePropertySettingsReader(connection), ...(rbac ? { authorization: rbac } : {}) }) };
 }

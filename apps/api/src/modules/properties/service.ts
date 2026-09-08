@@ -34,6 +34,7 @@ import {
 } from '@sadat-real-estate/contracts';
 import type { AccessTokenClaims } from '../auth/crypto.js';
 import type { PropertyMutationMetadata, PropertyRepository, StoredProperty } from './repository.js';
+import { DEFAULT_PROPERTY_RUNTIME_SETTINGS, propertyExpiryDays, type PropertyRuntimeSettings, type PropertySettingsReader } from '../settings/property-policy.js';
 
 export type PropertyServiceErrorCode =
   | 'PROPERTY_FORBIDDEN'
@@ -85,6 +86,11 @@ function compatiblePaymentPlans(record: StoredProperty): StoredProperty['payment
   return compatible.length > 0 ? compatible : undefined;
 }
 
+function expiryAt(publishedAt: Date, settings: PropertyRuntimeSettings): Date | undefined {
+  const days = propertyExpiryDays(settings.automaticExpiry);
+  return days === undefined ? undefined : new Date(publishedAt.getTime() + days * 24 * 60 * 60 * 1_000);
+}
+
 function data(record: StoredProperty, actor: 'provider' | 'admin' = 'provider'): PropertyData {
   const paymentPlans = compatiblePaymentPlans(record);
   return propertyDataSchema.parse({
@@ -114,6 +120,7 @@ function data(record: StoredProperty, actor: 'provider' | 'admin' = 'provider'):
     ...(record.reviewedAt ? { reviewedAt: record.reviewedAt.toISOString() } : {}),
     ...(record.reviewReason ? { reviewReason: record.reviewReason } : {}),
     ...(record.publishedAt ? { publishedAt: record.publishedAt.toISOString() } : {}),
+    ...(record.expiresAt ? { expiresAt: record.expiresAt.toISOString() } : {}),
     status: record.status,
     active: record.active,
     version: record.version,
@@ -146,7 +153,7 @@ function validation(record: StoredProperty): ReturnType<typeof propertyValidatio
   return propertyValidationDataSchema.parse({ valid: issues.length === 0, issues });
 }
 
-export function createPropertyService(dependencies: { repository: PropertyRepository; authorization?: PropertyAuthorization; now?: () => Date }): PropertyService {
+export function createPropertyService(dependencies: { repository: PropertyRepository; authorization?: PropertyAuthorization; settings?: PropertySettingsReader; now?: () => Date }): PropertyService {
   const now = dependencies.now ?? (() => new Date());
   async function adminPermission(adminId: string, permission: 'admin:properties.review' | 'admin:properties.manage'): Promise<void> {
     if (!dependencies.authorization || !await dependencies.authorization.authorize(adminId, permission)) throw new PropertyServiceError('PROPERTY_FORBIDDEN');
@@ -236,7 +243,7 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       provider(claims); propertyObjectIdSchema.parse(id); const result = await dependencies.repository.findOwned(claims.sub, id); if (!result) throw new PropertyServiceError('PROPERTY_NOT_FOUND'); return validation(result);
     },
     async submit(claims, id, unparsedInput, context) {
-      provider(claims); propertyObjectIdSchema.parse(id); const input = propertySubmitSchema.parse(unparsedInput) as PropertySubmit; const before = await dependencies.repository.findOwned(claims.sub, id); if (!before) throw new PropertyServiceError('PROPERTY_NOT_FOUND'); const result = validation(before); if (!result.valid) throw new PropertyServiceError('PROPERTY_VALIDATION_FAILED', result); const submitted = await dependencies.repository.submit({ providerId: claims.sub, id, expectedVersion: input.version, before, metadata: metadata(claims, input.reason, context, now()) }); if (submitted.kind === 'invalid_state') throw new PropertyServiceError('PROPERTY_INVALID_STATE'); if (submitted.kind === 'version_conflict') throw new PropertyServiceError('PROPERTY_VERSION_CONFLICT'); if (submitted.kind === 'not_found') throw new PropertyServiceError('PROPERTY_NOT_FOUND'); if (submitted.kind === 'written' || submitted.kind === 'already_submitted') return data(submitted.property); throw new PropertyServiceError('PROPERTY_INVALID_STATE');
+      provider(claims); propertyObjectIdSchema.parse(id); const input = propertySubmitSchema.parse(unparsedInput) as PropertySubmit; const before = await dependencies.repository.findOwned(claims.sub, id); if (!before) throw new PropertyServiceError('PROPERTY_NOT_FOUND'); const result = validation(before); if (!result.valid) throw new PropertyServiceError('PROPERTY_VALIDATION_FAILED', result); const settings = dependencies.settings ? await dependencies.settings.read() : DEFAULT_PROPERTY_RUNTIME_SETTINGS; const changedAt = now(); const publish = !settings.requiresAdminReview; const expiresAt = publish ? expiryAt(changedAt, settings) : undefined; const submitted = await dependencies.repository.submit({ providerId: claims.sub, id, expectedVersion: input.version, targetStatus: publish ? 'published' : 'pending_review', ...(expiresAt ? { expiresAt } : {}), before, metadata: metadata(claims, input.reason, context, changedAt) }); if (submitted.kind === 'invalid_state') throw new PropertyServiceError('PROPERTY_INVALID_STATE'); if (submitted.kind === 'version_conflict') throw new PropertyServiceError('PROPERTY_VERSION_CONFLICT'); if (submitted.kind === 'not_found') throw new PropertyServiceError('PROPERTY_NOT_FOUND'); if (submitted.kind === 'written' || submitted.kind === 'already_submitted') return data(submitted.property); throw new PropertyServiceError('PROPERTY_INVALID_STATE');
     },
     async review(adminId, id, unparsedInput, context) {
       await adminPermission(adminId, 'admin:properties.review');
@@ -244,8 +251,11 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       const input = propertyReviewSchema.parse(unparsedInput) as PropertyReview;
       const before = await dependencies.repository.findByIdAny(id);
       if (!before) throw new PropertyServiceError('PROPERTY_NOT_FOUND');
-      const toStatus = input.action === 'needs_changes' ? 'needs_changes' : input.action === 'approve' ? 'approved' : input.action === 'reject' ? 'rejected' : 'published';
-      return data(write(await dependencies.repository.review({ id, expectedVersion: input.version, toStatus, reviewerId: adminId, before, metadata: { actorId: adminId, reason: input.reason, requestId: context.requestId, traceId: context.traceId, changedAt: now() } })));
+      const settings = dependencies.settings ? await dependencies.settings.read() : DEFAULT_PROPERTY_RUNTIME_SETTINGS;
+      const toStatus = input.action === 'needs_changes' ? 'needs_changes' : input.action === 'approve' ? (settings.publicationAfterApproval === 'automatic' ? 'published' : 'approved') : input.action === 'reject' ? 'rejected' : 'published';
+      const changedAt = now();
+      const expiresAt = toStatus === 'published' ? expiryAt(changedAt, settings) : undefined;
+      return data(write(await dependencies.repository.review({ id, expectedVersion: input.version, toStatus, reviewerId: adminId, ...(expiresAt ? { expiresAt } : {}), before, metadata: { actorId: adminId, reason: input.reason, requestId: context.requestId, traceId: context.traceId, changedAt } })));
     },
     async visibility(adminId, id, unparsedInput, context) {
       await adminPermission(adminId, 'admin:properties.manage');
@@ -253,7 +263,10 @@ export function createPropertyService(dependencies: { repository: PropertyReposi
       const input = propertyVisibilitySchema.parse(unparsedInput) as PropertyVisibility;
       const before = await dependencies.repository.findByIdAny(id);
       if (!before) throw new PropertyServiceError('PROPERTY_NOT_FOUND');
-      return data(write(await dependencies.repository.visibility({ id, expectedVersion: input.version, action: input.action, before, metadata: { actorId: adminId, reason: input.reason, requestId: context.requestId, traceId: context.traceId, changedAt: now() } })));
+      const settings = dependencies.settings ? await dependencies.settings.read() : DEFAULT_PROPERTY_RUNTIME_SETTINGS;
+      const changedAt = now();
+      const expiresAt = input.action === 'restore' ? expiryAt(changedAt, settings) : undefined;
+      return data(write(await dependencies.repository.visibility({ id, expectedVersion: input.version, action: input.action, ...(expiresAt ? { expiresAt } : {}), before, metadata: { actorId: adminId, reason: input.reason, requestId: context.requestId, traceId: context.traceId, changedAt } })));
     }
   };
 }

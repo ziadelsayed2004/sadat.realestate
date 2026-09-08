@@ -42,3 +42,20 @@ test('details service returns null for an unknown slug without leaking an error'
   assert.equal((await service.get('missing')), null);
   assert.equal((await service.get('apartment'))?.slug, 'apartment');
 });
+
+test('exposes property contact only when the saved public-contact policy permits it', () => {
+  const record = source({ contact: { contactName: 'Sales desk', phone: '+201234567890' } });
+  const hidden = publicPropertyDetailsProjection(record);
+  assert.equal(hidden && 'contact' in hidden, false);
+  const visible = publicPropertyDetailsProjection(record, {
+    requiresAdminReview: true,
+    publicationAfterApproval: 'manual',
+    automaticExpiry: 'never',
+    maxImages: 50,
+    acceptedImageMimes: ['image/jpeg', 'image/png'],
+    maxImageBytes: 10 * 1024 * 1024,
+    hideProviderContact: false,
+    contactVisibility: 'public'
+  });
+  assert.equal(visible?.contact?.phone, '+201234567890');
+});

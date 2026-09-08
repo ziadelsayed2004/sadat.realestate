@@ -253,6 +253,7 @@ export const propertyDataSchema = z.object({
   reviewedAt: z.string().datetime({ offset: true }).optional(),
   reviewReason: propertyReasonSchema.optional(),
   publishedAt: z.string().datetime({ offset: true }).optional(),
+  expiresAt: z.string().datetime({ offset: true }).optional(),
   active: z.boolean(),
   version: z.number().int().nonnegative(),
   createdAt: z.string().datetime({ offset: true }),

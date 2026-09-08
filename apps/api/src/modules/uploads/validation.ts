@@ -77,16 +77,21 @@ export class ProviderDocumentValidationTransform extends Transform {
   private inspectionTail = Buffer.alloc(0);
   private encryptedPdf = false;
   private bytes = 0;
+  private readonly maxBytes: number;
 
-  constructor(filename: string, declaredMime: string) {
+  constructor(filename: string, declaredMime: string, options: { maxBytes?: number; allowedMimes?: readonly ProviderDocumentMime[] } = {}) {
     super();
     this.expected = validateFilenameAndType(filename, declaredMime);
+    this.maxBytes = options.maxBytes ?? MAX_PROVIDER_DOCUMENT_BYTES;
+    if (options.allowedMimes && !options.allowedMimes.includes(this.expected.detectedMime)) {
+      throw new UploadValidationError('FILE_TYPE_NOT_ALLOWED');
+    }
   }
 
   override _transform(chunk: Buffer | string, encoding: BufferEncoding, callback: TransformCallback): void {
     const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk, encoding);
     this.bytes += buffer.byteLength;
-    if (this.bytes > MAX_PROVIDER_DOCUMENT_BYTES) {
+    if (this.bytes > this.maxBytes) {
       callback(new UploadValidationError('FILE_TOO_LARGE'));
       return;
     }

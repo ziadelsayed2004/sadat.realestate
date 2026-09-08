@@ -12,6 +12,7 @@ import {
   type PublicHomepageData,
   type PublicHomepageLocation
 } from '@sadat-real-estate/contracts';
+import { unexpiredPropertyFilter } from '../settings/property-policy.js';
 
 export interface HomepageSectionSource { key: string; title: unknown; body?: unknown; order: number; status: string; visible: boolean }
 export interface HomepageCategorySource { id: string; slug: string; name: unknown; imageUrl?: string; propertyCount: number; order: number; active: boolean }
@@ -178,7 +179,7 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
     async read() {
       const [sections, properties, developers, about, tips, banners, categories, metrics, locations, organizations] = await Promise.all([
         findRows(connection, 'cms_homepage_sections', { status: 'published', visible: true }, { _id: 1, key: 1, title: 1, body: 1, order: 1, status: 1, visible: 1 }, { order: 1, key: 1, _id: 1 }, 100),
-        findRows(connection, 'properties', { status: 'published', active: true }, { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, projectId: 1, locationId: 1, organizationId: 1, publicCode: 1, viewCount: 1, paymentPlans: 1, featured: 1, deliveryStatus: 1, featuredOrder: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 }, { slug: 1, _id: 1 }, 100),
+        findRows(connection, 'properties', { status: 'published', active: true, ...unexpiredPropertyFilter() }, { _id: 1, slug: 1, kind: 1, name: 1, transactionType: 1, imageUrl: 1, projectId: 1, locationId: 1, organizationId: 1, publicCode: 1, viewCount: 1, paymentPlans: 1, featured: 1, deliveryStatus: 1, featuredOrder: 1, description: 1, area: 1, layout: 1, price: 1, status: 1, active: 1 }, { slug: 1, _id: 1 }, 100),
         findRows(connection, 'organizations', { status: 'approved', kind: 'developer_company' }, { _id: 1, slug: 1, name: 1, imageUrl: 1, description: 1, kind: 1, status: 1 }, { slug: 1, _id: 1 }, 100),
         findRows(connection, 'cms_about_blocks', { status: 'published', active: true }, { _id: 1, key: 1, title: 1, body: 1, order: 1, status: 1, active: 1 }, { order: 1, key: 1, _id: 1 }, 100),
         findRows(connection, 'cms_real_estate_tips', { status: 'published', active: true }, { _id: 1, key: 1, title: 1, body: 1, order: 1, status: 1, active: 1 }, { order: 1, key: 1, _id: 1 }, 100),
@@ -190,7 +191,7 @@ export function createMongoosePublicHomepageRepository(connection: Connection): 
       ]);
       const categoryIds = categories.flatMap((row) => { const value=id(row._id); return value ? [value] : []; });
       const categoryCounts = categoryIds.length ? await connection.collection('properties').aggregate<{_id: unknown; count: number}>([
-        { $match: { status: 'published', active: true, propertyTypeId: { $in: categoryIds.map((value) => new Types.ObjectId(value)) } } },
+        { $match: { status: 'published', active: true, ...unexpiredPropertyFilter(), propertyTypeId: { $in: categoryIds.map((value) => new Types.ObjectId(value)) } } },
         { $group: { _id: '$propertyTypeId', count: { $sum: 1 } } }
       ]).toArray() : [];
       const countById = new Map(categoryCounts.flatMap((row) => { const value=id(row._id); return value ? [[value,row.count] as const] : []; }));

@@ -1,5 +1,6 @@
 import { Types, type Connection } from 'mongoose';
 import { publicHomepageCategorySchema, publicPropertyListItemSchema, publicPropertyListDataSchema, publicPropertyLocationSchema, publicPropertySearchQuerySchema, type PublicHomepageCategory, type PublicPropertyListData, type PublicPropertyLocation, type PublicPropertySearchQuery } from '@sadat-real-estate/contracts';
+import { unexpiredPropertyFilter } from '../settings/property-policy.js';
 
 export interface PublicPropertySearchSource {
   id: string;
@@ -122,7 +123,7 @@ function source(row: MongoPropertyRow, locations = new Map<string, unknown>(), o
 export function createMongoosePublicPropertySearchRepository(connection: Connection): PublicPropertySearchRepository {
   return {
     async list(query) {
-      const filter: Record<string, unknown> = { status: 'published', active: true };
+      const filter: Record<string, unknown> = { status: 'published', active: true, ...unexpiredPropertyFilter() };
       if (query.kind) filter.kind = query.kind;
       if (query.transactionType) filter.transactionType = query.transactionType;
       if (query.projectId) filter.projectId = new Types.ObjectId(query.projectId);
@@ -152,7 +153,7 @@ export function createMongoosePublicPropertySearchRepository(connection: Connect
       const now = new Date();
       const [organizationRows, categoryCounts, featuredRows] = await Promise.all([
         organizationIds.length ? connection.collection('organizations').find({ _id: { $in: organizationIds.map((value) => new Types.ObjectId(value)) }, status: 'approved' }, { projection: { _id: 1, name: 1, imageUrl: 1, kind: 1, status: 1 } }).toArray() as Promise<NamedMongoRow[]> : [],
-        taxonomyIds.length ? collection.aggregate<{ _id: unknown; count: number }>([{ $match: { status: 'published', active: true, propertyTypeId: { $in: taxonomyIds.map((value) => new Types.ObjectId(value)) } } }, { $group: { _id: '$propertyTypeId', count: { $sum: 1 } } }]).toArray() : [],
+        taxonomyIds.length ? collection.aggregate<{ _id: unknown; count: number }>([{ $match: { status: 'published', active: true, ...unexpiredPropertyFilter(now), propertyTypeId: { $in: taxonomyIds.map((value) => new Types.ObjectId(value)) } } }, { $group: { _id: '$propertyTypeId', count: { $sum: 1 } } }]).toArray() : [],
         rows.length ? connection.collection('ad_banners').find({ status: 'active', startAt: { $lte: now }, endAt: { $gt: now }, $or: rows.map((row) => ({ targetUrl: { $regex: `/properties/${row.slug}$` } })) }, { projection: { targetUrl: 1 } }).limit(100).toArray() as Promise<Array<{ targetUrl?: string }>> : []
       ]);
       const names = new Map(allLocationRows.flatMap((row) => { const rowId = id(row._id); return rowId && row.name !== undefined ? [[rowId, row.name] as const] : []; }));

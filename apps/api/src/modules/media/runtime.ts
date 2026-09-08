@@ -7,6 +7,7 @@ import { createPropertyMediaModels } from './models.js';
 import { createMongoosePropertyMediaRepository } from './repository.js';
 import type { PropertyMediaRouterDependencies } from './router.js';
 import { createPropertyMediaService } from './service.js';
+import { createMongoosePropertySettingsReader } from '../settings/property-policy.js';
 
 export function createPropertyMediaRuntime(connection: Connection, accessTokens: AccessTokenService, environment: UploadEnvironment, audit: AuditWriter): PropertyMediaRouterDependencies {
   const storage = environment.mode === 'memory' ? createInMemoryStorageAdapter() : environment.mode === 'local-filesystem' ? createLocalFilesystemStorageAdapter(environment.localRoot!) : createUnavailableStorageAdapter();
@@ -15,5 +16,5 @@ export function createPropertyMediaRuntime(connection: Connection, accessTokens:
     : environment.scannerMode === 'deterministic-fake'
       ? createDeterministicMalwareScanner('clean')
       : createUnavailableMalwareScanner();
-  return { accessTokens, service: createPropertyMediaService({ repository: createMongoosePropertyMediaRepository(connection, createPropertyMediaModels(connection), audit), storage, scanner }) };
+  return { accessTokens, service: createPropertyMediaService({ repository: createMongoosePropertyMediaRepository(connection, createPropertyMediaModels(connection), audit), storage, scanner, settings: createMongoosePropertySettingsReader(connection) }) };
 }

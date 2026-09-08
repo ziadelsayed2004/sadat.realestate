@@ -8,6 +8,7 @@ import {
   projectPublicRelatedProperty
 } from '../public/related-property.js';
 import type { RequestRecord, RequestRepository } from './service.js';
+import { unexpiredPropertyFilter } from '../settings/property-policy.js';
 
 type Row = Record<string, unknown>;
 
@@ -50,7 +51,7 @@ export function createMongooseRequestRepository(connection: Connection): Request
     const propertyIds = publicRelatedUnique(items.flatMap(item => item.propertyId ? [item.propertyId] : []));
     const propertyObjectIds = publicRelatedObjectIds(propertyIds);
     if (propertyObjectIds.length === 0) return [...items];
-    const propertyRows = await properties.find({ _id: { $in: propertyObjectIds }, status: 'published', active: true }, { projection: publicRelatedPropertyProjection }).toArray();
+    const propertyRows = await properties.find({ _id: { $in: propertyObjectIds }, status: 'published', active: true, ...unexpiredPropertyFilter() }, { projection: publicRelatedPropertyProjection }).toArray();
     if (propertyRows.length === 0) return [...items];
 
     const locationIds = publicRelatedUnique(propertyRows.flatMap(value => {

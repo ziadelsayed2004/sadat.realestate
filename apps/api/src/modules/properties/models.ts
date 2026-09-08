@@ -29,6 +29,7 @@ export interface PropertyRecord {
   reviewedAt?: Date;
   reviewReason?: string;
   publishedAt?: Date;
+  expiresAt?: Date;
   status: PropertyStatus;
   active: boolean;
   createdAt: Date;
@@ -85,6 +86,7 @@ export const propertySchema = new Schema<PropertyRecord>({
   reviewedAt: { type: Date },
   reviewReason: { type: String, trim: true, maxlength: 500 },
   publishedAt: { type: Date },
+  expiresAt: { type: Date },
   status: { type: String, required: true, enum: ['draft', 'pending_review', 'needs_changes', 'approved', 'published', 'rejected', 'hidden', 'archived'], default: 'draft' },
   active: { type: Boolean, required: true, default: true }
 }, { collection: 'properties', strict: 'throw', timestamps: true, versionKey: 'version', optimisticConcurrency: true });
@@ -110,6 +112,7 @@ propertySchema.index({ providerId: 1, status: 1, updatedAt: -1, _id: -1 }, { nam
 propertySchema.index({ providerId: 1, slug: 1 }, { unique: true, name: 'properties_provider_slug_unique' });
 propertySchema.index({ projectId: 1, status: 1, active: 1 }, { name: 'properties_project_public' });
 propertySchema.index({ status: 1, active: 1, updatedAt: -1 }, { name: 'properties_public_status' });
+propertySchema.index({ status: 1, active: 1, expiresAt: 1 }, { name: 'properties_public_expiry' });
 propertySchema.index({ locationId: 1, status: 1, active: 1 }, { name: 'properties_location_public' });
 propertySchema.index({ coordinates: '2dsphere' }, { name: 'properties_coordinates_geo', sparse: true });
  propertySchema.index({ 'name.ar': 'text', 'name.en': 'text', slug: 'text' }, { name: 'properties_search_text', weights: { slug: 5, 'name.en': 3, 'name.ar': 3 } });

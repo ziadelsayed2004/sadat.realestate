@@ -31,6 +31,7 @@ export interface StoredProperty {
   reviewedAt?: Date;
   reviewReason?: string;
   publishedAt?: Date;
+  expiresAt?: Date;
   status: PropertyRecord['status'];
   active: boolean;
   version: number;
@@ -68,9 +69,9 @@ export interface PropertyRepository {
   updatePricing(input: { providerId: string; id: string; expectedVersion: number; changes: PropertyPricingStep; before: StoredProperty; metadata: PropertyMutationMetadata }): Promise<PropertyWriteResult>;
   updateFeaturesServices(input: { providerId: string; id: string; expectedVersion: number; changes: PropertyFeaturesServicesStep; before: StoredProperty; metadata: PropertyMutationMetadata }): Promise<PropertyWriteResult>;
   updateContact(input: { providerId: string; id: string; expectedVersion: number; changes: PropertyContactStep; before: StoredProperty; metadata: PropertyMutationMetadata }): Promise<PropertyWriteResult>;
-  submit(input: { providerId: string; id: string; expectedVersion: number; before: StoredProperty; metadata: PropertyMutationMetadata }): Promise<PropertyWriteResult>;
-  review(input: { id: string; expectedVersion: number; toStatus: Extract<PropertyRecord['status'], 'needs_changes' | 'approved' | 'rejected' | 'published'>; reviewerId: string; before: StoredProperty; metadata: PropertyMutationMetadata }): Promise<PropertyWriteResult>;
-  visibility(input: { id: string; expectedVersion: number; action: 'hide' | 'restore' | 'archive'; before: StoredProperty; metadata: PropertyMutationMetadata }): Promise<PropertyWriteResult>;
+  submit(input: { providerId: string; id: string; expectedVersion: number; targetStatus?: 'pending_review' | 'published'; expiresAt?: Date; before: StoredProperty; metadata: PropertyMutationMetadata }): Promise<PropertyWriteResult>;
+  review(input: { id: string; expectedVersion: number; toStatus: Extract<PropertyRecord['status'], 'needs_changes' | 'approved' | 'rejected' | 'published'>; reviewerId: string; expiresAt?: Date; before: StoredProperty; metadata: PropertyMutationMetadata }): Promise<PropertyWriteResult>;
+  visibility(input: { id: string; expectedVersion: number; action: 'hide' | 'restore' | 'archive'; expiresAt?: Date; before: StoredProperty; metadata: PropertyMutationMetadata }): Promise<PropertyWriteResult>;
 }
 
 function stored(record: PropertyRecord & { _id: Types.ObjectId }): StoredProperty {
@@ -106,6 +107,7 @@ function stored(record: PropertyRecord & { _id: Types.ObjectId }): StoredPropert
     ...(record.reviewedAt ? { reviewedAt: record.reviewedAt } : {}),
     ...(record.reviewReason ? { reviewReason: record.reviewReason } : {}),
     ...(record.publishedAt ? { publishedAt: record.publishedAt } : {}),
+    ...(record.expiresAt ? { expiresAt: record.expiresAt } : {}),
     status: record.status,
     active: record.active,
     version: record.version,
@@ -327,11 +329,12 @@ export function createMongoosePropertyRepository(connection: Connection, models:
     },
     async submit(input) {
       return transaction(async session => {
-        const result = await models.Property.findOneAndUpdate({ _id: input.id, providerId: new Types.ObjectId(input.providerId), version: input.expectedVersion, status: { $in: ['draft', 'needs_changes'] } }, { $set: { status: 'pending_review', submittedAt: input.metadata.changedAt, updatedAt: input.metadata.changedAt }, $inc: { version: 1 } }, { new: true, runValidators: true, lean: true, session });
+        const targetStatus = input.targetStatus ?? 'pending_review';
+        const result = await models.Property.findOneAndUpdate({ _id: input.id, providerId: new Types.ObjectId(input.providerId), version: input.expectedVersion, status: { $in: ['draft', 'needs_changes'] } }, { $set: { status: targetStatus, submittedAt: input.metadata.changedAt, ...(targetStatus === 'published' ? { publishedAt: input.metadata.changedAt, expiresAt: input.expiresAt ?? null, active: true } : {}), updatedAt: input.metadata.changedAt }, $inc: { version: 1 } }, { new: true, runValidators: true, lean: true, session });
         if (!result) {
           const current = await models.Property.findOne({ _id: input.id, providerId: new Types.ObjectId(input.providerId) }).lean().session(session);
           if (!current) return { kind: 'not_found' as const };
-          if (current.status === 'pending_review') return { kind: 'already_submitted' as const, property: stored(current as PropertyRecord & { _id: Types.ObjectId }) };
+          if (current.status === targetStatus) return { kind: 'already_submitted' as const, property: stored(current as PropertyRecord & { _id: Types.ObjectId }) };
           if (current.version !== input.expectedVersion) return { kind: 'version_conflict' as const };
           return { kind: 'invalid_state' as const };
         }
@@ -347,14 +350,14 @@ export function createMongoosePropertyRepository(connection: Connection, models:
         reviewedAt: input.metadata.changedAt,
         reviewReason: input.metadata.reason,
         updatedAt: input.metadata.changedAt,
-        ...(input.toStatus === 'published' ? { publishedAt: input.metadata.changedAt, active: true } : { active: false })
+        ...(input.toStatus === 'published' ? { publishedAt: input.metadata.changedAt, expiresAt: input.expiresAt ?? null, active: true } : { active: false })
       };
-      return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter: { status: input.toStatus === 'published' ? 'approved' : 'pending_review' }, set, before: input.before, metadata: input.metadata, action: 'property.review' });
+      return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter: { status: input.toStatus === 'published' ? (input.before.status === 'pending_review' ? 'pending_review' : 'approved') : 'pending_review' }, set, before: input.before, metadata: input.metadata, action: 'property.review' });
     },
     async visibility(input) {
       const target = input.action === 'hide' ? 'hidden' : input.action === 'restore' ? 'published' : 'archived';
       const filter = input.action === 'hide' ? { status: { $in: ['published', 'approved'] } } : input.action === 'restore' ? { status: 'hidden' } : { status: { $ne: 'archived' } };
-      return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter, set: { status: target, active: input.action === 'restore', updatedAt: input.metadata.changedAt }, before: input.before, metadata: input.metadata, action: 'property.visibility' });
+      return transitionState({ id: input.id, expectedVersion: input.expectedVersion, filter, set: { status: target, active: input.action === 'restore', ...(input.action === 'restore' ? { publishedAt: input.metadata.changedAt, expiresAt: input.expiresAt ?? null } : {}), updatedAt: input.metadata.changedAt }, before: input.before, metadata: input.metadata, action: 'property.visibility' });
     }
   };
 }

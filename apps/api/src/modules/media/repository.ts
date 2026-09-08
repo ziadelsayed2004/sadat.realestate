@@ -3,12 +3,13 @@ import type { PropertyMediaData, PropertyMediaKind, PropertyMediaMime, PropertyM
 import type { AuditWriter } from '../audit/writer.js';
 import type { PropertyMediaModels, PropertyMediaRecord } from './models.js';
 import { propertyMediaData } from './models.js';
+import { unexpiredPropertyFilter } from '../settings/property-policy.js';
 
 export interface OwnedMediaProperty { id: string; status: string; active: boolean; }
 export interface StoredPropertyMedia extends Omit<PropertyMediaData, 'createdAt' | 'updatedAt'> { storageKey: string; createdAt: Date; updatedAt: Date; }
 export interface MediaMutationMetadata { actorId: string; reason: string; requestId: string; traceId: string; changedAt: Date; }
 export type MediaWriteResult = { kind: 'written'; media: StoredPropertyMedia } | { kind: 'not_found' } | { kind: 'version_conflict' } | { kind: 'capacity' } | { kind: 'replay'; media: StoredPropertyMedia };
-export type MediaCreateInput = { propertyId: string; providerId: string; kind: PropertyMediaKind; originalFilename: string; declaredMime: PropertyMediaMime; detectedMime: PropertyMediaMime; byteSize: number; sha256: string; storageKey: string; metadata: MediaMutationMetadata };
+export type MediaCreateInput = { propertyId: string; providerId: string; kind: PropertyMediaKind; originalFilename: string; declaredMime: PropertyMediaMime; detectedMime: PropertyMediaMime; byteSize: number; sha256: string; storageKey: string; capacity: number; metadata: MediaMutationMetadata };
 
 export interface PropertyMediaRepository {
   findOwnedProperty(providerId: string, propertyId: string): Promise<OwnedMediaProperty | null>;
@@ -48,7 +49,7 @@ export function createMongoosePropertyMediaRepository(connection: Connection, mo
           const existing = await models.PropertyMedia.findOne({ propertyId: new Types.ObjectId(input.propertyId), providerId: new Types.ObjectId(input.providerId), sha256: input.sha256, active: true }).select('+storageKey').lean().session(session);
           if (existing) return { kind: 'replay' as const, media: toStored(existing as PropertyMediaRecord & { _id: Types.ObjectId }) };
           const count = await models.PropertyMedia.countDocuments({ propertyId: new Types.ObjectId(input.propertyId), active: true }).session(session);
-          if (count >= 50) return { kind: 'capacity' as const };
+          if (count >= input.capacity) return { kind: 'capacity' as const };
           const created = new models.PropertyMedia({ propertyId: new Types.ObjectId(input.propertyId), providerId: new Types.ObjectId(input.providerId), kind: input.kind, originalFilename: input.originalFilename, declaredMime: input.declaredMime, detectedMime: input.detectedMime, byteSize: input.byteSize, sha256: input.sha256, storageKey: input.storageKey, sortOrder: count, isCover: count === 0, processingState: 'processing', active: true, createdAt: input.metadata.changedAt, updatedAt: input.metadata.changedAt });
           await created.save({ session });
           const media = toStored(created.toObject() as PropertyMediaRecord & { _id: Types.ObjectId });
@@ -75,7 +76,7 @@ export function createMongoosePropertyMediaRepository(connection: Connection, mo
       return rows.map(row => toStored(row as PropertyMediaRecord & { _id: Types.ObjectId }));
     },
     async listPublic(propertyId) {
-      const property = await connection.collection('properties').findOne({ _id: new Types.ObjectId(propertyId), status: 'published', active: true }, { projection: { _id: 1 } });
+      const property = await connection.collection('properties').findOne({ _id: new Types.ObjectId(propertyId), status: 'published', active: true, ...unexpiredPropertyFilter() }, { projection: { _id: 1 } });
       if (!property) return [];
       const rows = await models.PropertyMedia.find({ propertyId, active: true, processingState: 'ready' }).sort({ sortOrder: 1, createdAt: 1, _id: 1 }).lean();
       return rows.map(row => propertyMediaData(row as PropertyMediaRecord & { _id: Types.ObjectId }));
