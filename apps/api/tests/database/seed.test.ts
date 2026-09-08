@@ -6,11 +6,37 @@ import {
   FIGMA_PUBLIC_ABOUT_SEED_STEP,
   FIGMA_PUBLIC_DETAILS_SEED_STEP,
   FIGMA_PUBLIC_LISTING_SEED_STEP,
+  DEVELOPMENT_SEED_STEPS,
   runDevelopmentSeed,
   SYNTHETIC_SHOWCASE_SEED_STEP,
   SYNTHETIC_WORKFLOW_SEED_STEP,
   SYNTHETIC_BROKER_APPLICATION_SEED_STEP
 } from '../../src/modules/database/seed.js';
+
+test('every registered development fixture executes against insert-only synthetic storage', async () => {
+  const writes: Array<{ collection: string; filter: Record<string, unknown>; update: Record<string, unknown> }> = [];
+  const connection = {
+    collection(name: string) {
+      return {
+        async findOne(filter: Record<string, unknown>) { return filter; },
+        async updateOne(filter: Record<string, unknown>, update: Record<string, unknown>) {
+          writes.push({ collection: name, filter, update });
+          return { acknowledged: true };
+        }
+      };
+    }
+  } as unknown as Connection;
+
+  for (const step of DEVELOPMENT_SEED_STEPS) await step.run(connection);
+
+  assert.ok(writes.length > DEVELOPMENT_SEED_STEPS.length);
+  assert.ok(writes.some(write => write.collection === 'properties'));
+  assert.ok(writes.some(write => write.collection === 'articles'));
+  assert.ok(writes.some(write => write.collection === 'community_posts'));
+  assert.ok(writes.every(write => write.filter.synthetic === true
+    || (write.update.$setOnInsert as Record<string, unknown> | undefined)?.synthetic === true
+    || typeof (write.update.$set as Record<string, unknown> | undefined)?.seedKey === 'string'));
+});
 
 test('broker application fixture is insert-only and requires both synthetic identity records', async () => {
   const reads: Array<{ collection: string; filter: Record<string, unknown> }> = [];
