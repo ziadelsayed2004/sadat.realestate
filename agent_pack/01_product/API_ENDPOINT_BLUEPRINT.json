@@ -1057,6 +1057,18 @@
   },
   {
     "method": "POST",
+    "path": "/api/v1/provider/ads/:adRequestId/submit",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "approved-provider"
+    ],
+    "purpose": "Submit owned ad request for review",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
     "path": "/api/v1/provider/ads/:adRequestId/accept-quote",
     "module": "ads",
     "auth": "access-token",
@@ -1917,6 +1929,18 @@
       "admin:ads.view"
     ],
     "purpose": "Ad request details",
+    "status": "implemented",
+    "apiVersion": "v1"
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/admin/ad-requests/:adRequestId/review",
+    "module": "ads",
+    "auth": "access-token",
+    "roles": [
+      "admin:ads.price"
+    ],
+    "purpose": "Approve or reject submitted ad request",
     "status": "implemented",
     "apiVersion": "v1"
   },
