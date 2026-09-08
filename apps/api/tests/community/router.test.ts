@@ -63,7 +63,7 @@ async function withServer(run: (origin: string, postId: string) => Promise<void>
 test('public community routes expose paginated safe projections and visible comments only', async () => withServer(async (origin, postId) => {
   const list = await request(origin, 'GET', '/api/v1/public/community/posts?page=1&limit=20');
   assert.equal(list.status, 200);
-  assert.match(list.headers.get('cache-control') ?? '', /public/);
+  assert.equal(list.headers.get('cache-control'), 'no-store');
   const listBody = await list.json() as { data: { items: Array<Record<string, unknown>>; total: number } };
   assert.equal(listBody.data.total, 1);
   assert.equal(listBody.data.items[0]?.id, postId);

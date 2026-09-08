@@ -2709,7 +2709,7 @@
       "id": "ADM-18",
       "surface": "admin",
       "englishName": "Requests Management",
-      "sourceStatus": "GROUP LINK",
+      "sourceStatus": "DIRECT_FRAME_RECOVERED",
       "visualSourceStatus": "LOCAL_FINAL_EXPORT",
       "localSources": [
         {
@@ -2720,7 +2720,7 @@
         }
       ],
       "driveUrl": "https://drive.google.com/drive/folders/1qunt0uMMz1Q3EyNrLY1DJgmexvnOp_24",
-      "figmaPrototypeUrl": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate-%E2%80%94-UX-UI---Final--MCP?node-id=6017-61879&p=f&t=5p22yTz0XefwFXqg-0&scaling=min-zoom&content-scaling=fixed&page-id=6017%3A4356&starting-point-node-id=6017%3A61879&show-proto-sidebar=1",
+      "figmaPrototypeUrl": "https://www.figma.com/proto/Odl1Epn2u6lIEuIMmABT7o/Sadat-Real-Estate?node-id=6017-69276&page-id=6017%3A4356",
       "deviceScope": [
         "desktop"
       ],
@@ -2733,7 +2733,15 @@
         "en"
       ],
       "canonicalFigmaFileKey": "Odl1Epn2u6lIEuIMmABT7o",
-      "figmaPageId": "6017:4356"
+      "figmaPageId": "6017:4356",
+      "figmaNodeId": "6017:69276",
+      "sourceRecovery": {
+        "verifiedAt": "2026-09-08",
+        "nodeName": "Sadat Real Estate",
+        "method": "Direct metadata and screenshot visually compared with supplied ADM-18 export",
+        "evidence": "docs/quality/figma_parity/screens/ADM-18/figma-direct-2026-09-08.png",
+        "runtimeParityClaim": false
+      }
     },
     {
       "id": "ADM-19",
@@ -3795,7 +3803,7 @@
       "id": "ADM-54",
       "surface": "admin",
       "englishName": "Request Settings",
-      "sourceStatus": "OWNER_AUTHORED_PENDING_REVIEW",
+      "sourceStatus": "OWNER_AUTHORED_REVIEW_APPROVED",
       "visualSourceStatus": "OWNER_AUTHORED_LOCAL_REVIEW_APPROVED",
       "localSources": [
         {

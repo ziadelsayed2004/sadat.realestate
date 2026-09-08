@@ -140,7 +140,7 @@ export function createCommunityRouter(dependencies: CommunityRouterDependencies)
         limit: data.limit,
         total: data.total
       }));
-      response.setHeader('Cache-Control', 'public, max-age=30, stale-while-revalidate=120');
+      response.setHeader('Cache-Control', 'no-store');
       response.status(200).json(toSuccessResponse(data, requestId(request), { page: data.page, limit: data.limit, total: data.total }));
     } catch (error) { sendError(request, response, error); }
   });
@@ -151,7 +151,7 @@ export function createCommunityRouter(dependencies: CommunityRouterDependencies)
       const data = await dependencies.service.publicDetail(postId);
       if (!data) throw new Error('NOT_FOUND');
       communityPublicPostDetailSuccessEnvelopeSchema.parse(toSuccessResponse(data, requestId(request)));
-      response.setHeader('Cache-Control', 'public, max-age=30, stale-while-revalidate=120');
+      response.setHeader('Cache-Control', 'no-store');
       response.status(200).json(toSuccessResponse(data, requestId(request)));
     } catch (error) { sendError(request, response, error); }
   });

@@ -71,7 +71,7 @@ describe('release visual fidelity source matrix', () => {
 
       if (screen.id === 'ADM-54') {
         expect(screen.visualSourceStatus).toBe('OWNER_AUTHORED_LOCAL_REVIEW_APPROVED');
-        expect(screen.sourceStatus).toBe('OWNER_AUTHORED_PENDING_REVIEW');
+        expect(screen.sourceStatus).toBe('OWNER_AUTHORED_REVIEW_APPROVED');
         expect(screen.localSources.map(source => source.localPath)).toEqual([
           'docs/design_sources/final_screens/admin/ADM-54.owner-authored.png'
         ]);

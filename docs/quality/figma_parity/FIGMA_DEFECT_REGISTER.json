@@ -13,11 +13,11 @@
     {
       "id": "FIGMA-MAP-ADM-18",
       "severity": "P1",
-      "status": "open",
+      "status": "resolved",
       "area": "source-mapping",
       "screenId": "ADM-18",
-      "description": "The canonical Admin page metadata does not expose an ADM-18 frame; the local export remains unverified against clone truth.",
-      "evidence": "FIGMA_SCREEN_INVENTORY.json"
+      "description": "Recovered Requests Management as generically named frame Sadat Real Estate, node 6017:69276. Direct screenshot matches the supplied ADM-18 source visually; runtime comparison remains pending.",
+      "evidence": "screens/ADM-18/figma-direct-2026-09-08.png"
     },
     {
       "id": "FIGMA-MAP-ADM-54",

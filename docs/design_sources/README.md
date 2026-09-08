@@ -17,7 +17,8 @@ This directory stores the user-supplied visual source artifacts outside `agent_p
 - `ADM-44` intentionally has list and create variants.
 - `PRV-22-1`, `PRV-22-2`, and `PRV-22-3` are separate settings variants.
 - One unlabeled phone-verification export is retained under `final_screens/supplementary/` and is not treated as a new Screen ID.
-- `ADM-54` has no dedicated local export in the supplied archive; its external group reference remains authoritative and must not be replaced by an invented frame.
+- `ADM-18` maps to the recovered Figma frame `6017:69276`, named `Sadat Real Estate`; direct source evidence was captured on 2026-09-08. Runtime parity is tracked separately.
+- `ADM-54` uses the owner-approved local `ADM-54.owner-authored.html`/`.png` under `DESIGN-DECISION-ADM-54-AUTHOR-001` (2026-08-25). The historical Figma frame remains unavailable.
 
 ## Brand Rules
 

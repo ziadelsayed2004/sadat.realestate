@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { adminCommunityCommentId, adminCommunityPostId, adminCommunityReportId, routeAdminCommunityApis } from './admin-community.fixtures.ts';
+import { adminCommunityPostFixture, adminCommunityCommentId, adminCommunityPostId, adminCommunityReportId, routeAdminCommunityApis } from './admin-community.fixtures.ts';
 
 function localeForCommunity(): 'ar' | 'en' {
   const project = test.info().project.name;
@@ -41,4 +41,31 @@ test.describe('ADM-27 through ADM-29 community administration', () => {
     await page.goto('/admin/community?lang=en');
     await expect(page.locator('[data-state="permission"]')).toBeVisible();
   });
+});
+
+test('publishes and hides posts through the administrative moderation form', async ({ page }) => {
+  await routeAdminCommunityApis(page);
+  let post = { ...adminCommunityPostFixture(), status: 'draft' };
+  const decisions: unknown[] = [];
+  await page.route('**/api/v1/admin/community/posts**', async route => {
+    if (route.request().method() === 'POST') {
+      const input = route.request().postDataJSON();
+      expect(input.expectedUpdatedAt).toBe(post.updatedAt);
+      expect(input.reason).toBe('Reviewed for the community');
+      decisions.push(input.action);
+      post = { ...post, status: input.action === 'publish' ? 'published' : 'hidden', updatedAt: new Date(Date.parse(post.updatedAt) + 1000).toISOString() };
+      await route.fulfill({ json: { data: { id: post.id, status: post.status, createdAt: post.createdAt, updatedAt: post.updatedAt }, meta: { requestId: 'moderation-test' } } });
+    } else await route.fulfill({ json: { data: { items: [post], page: 1, limit: 20, total: 1 }, meta: { requestId: 'moderation-list' } } });
+  });
+  const locale = localeForCommunity();
+  await page.goto(`/admin/community?lang=${locale}`);
+  for (const action of locale === 'ar' ? ['نشر المنشور', 'إخفاء المنشور'] : ['Publish post', 'Hide post']) {
+    await page.getByTestId(`admin-community-post-${adminCommunityPostId}`).getByRole('button').click();
+    const form = page.getByRole('region', { name: action });
+    await expect(form.getByRole('button', { name: action })).toBeDisabled();
+    await form.locator('textarea').fill('Reviewed for the community');
+    await form.getByRole('button', { name: action }).click();
+    await expect(form).toBeHidden();
+  }
+  expect(decisions).toEqual(['publish', 'hide']);
 });

@@ -215,3 +215,19 @@ test('inactive categories, in-use deletion, duplicate slugs, and publish permiss
     (error) => error instanceof ArticleServiceError && error.code === 'ARTICLE_CATEGORY_INACTIVE'
   );
 });
+
+
+test('admin article lists accept stored public display fields without leaking them into the strict admin contract', async () => {
+  const repository = createMemoryArticleRepository({ articles: [{
+    id: '4123456789abcdef01234567', categoryId: '5123456789abcdef01234567',
+    slug: 'display-fields', title: { en: 'Display fields' }, body: { en: 'Article body' },
+    imageUrl: '/assets/article.jpg', readingTimeMinutes: 3,
+    authorId: ADMIN_ID, status: 'published', version: 0, createdAt: NOW, updatedAt: NOW
+  }] });
+  const service = createArticleService({ repository, authorization: { authorize: async () => true }, audit: { record: async () => 'audit-id' } });
+  const result = await service.listArticles(PRINCIPAL, { page: 1, limit: 20, sort: 'updatedAt', direction: 'desc' });
+  assert.equal(result.data.items.length, 1);
+  assert.equal('imageUrl' in result.data.items[0]!, false);
+  assert.equal('readingTimeMinutes' in result.data.items[0]!, false);
+  assert.equal((await repository.findArticle('4123456789abcdef01234567'))!.imageUrl, '/assets/article.jpg');
+});

@@ -5659,20 +5659,19 @@
     },
     {
       "screenId": "ADM-18",
-      "sourceAuthority": "LOCAL_EXPORT_WITHOUT_MATCHING_CLONE_FRAME",
+      "sourceAuthority": "CANONICAL_FIGMA_FRAME",
       "clonePageId": "6017:4356",
-      "exactCloneNodeId": null,
+      "exactCloneNodeId": "6017:69276",
       "sourceChecksum": "adc81afb271d913ee62121c9f36b34d85bd3ba71b908ea57f1323c546a0b5884",
-      "directMetadataEvidence": false,
-      "directScreenshotEvidence": false,
+      "directMetadataEvidence": true,
+      "directScreenshotEvidence": true,
       "runtimeBeforeEvidence": null,
       "runtimeAfterEvidence": null,
       "visualDiffEvidence": null,
       "visualReviewStatus": "PENDING_DIRECT_RUNTIME_COMPARISON",
       "runtimeEvidence": null,
-      "materialDefects": [
-        "Local export exists, but no ADM-18 frame was returned by the canonical clone page metadata."
-      ]
+      "materialDefects": [],
+      "sourceRecoveryEvidence": "screens/ADM-18/figma-direct-2026-09-08.png"
     },
     {
       "screenId": "ADM-19",
