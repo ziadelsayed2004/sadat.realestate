@@ -88,6 +88,7 @@ export const TEST_SUITES = Object.freeze({
     'tests/cms/population-tips.test.ts',
     'tests/cms/admin-content.test.ts',
     'tests/cms/homepage-display.test.ts',
+    'tests/settings/property-policy.test.ts',
     'tests/settings/seo-privacy.test.ts',
     'tests/settings/service.test.ts',
     'tests/settings/router.test.ts',
