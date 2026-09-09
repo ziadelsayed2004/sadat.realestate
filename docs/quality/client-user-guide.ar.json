@@ -1,0 +1,2169 @@
+{
+  "schemaVersion": 1,
+  "language": "ar",
+  "direction": "rtl",
+  "title": "دليل استخدام منصة عقارات السادات",
+  "release": {
+    "version": "2026.09-delivery",
+    "baselineCommit": "1aa69fb",
+    "generatedAt": "2026-09-09T21:01:05.520Z"
+  },
+  "accountTypes": [
+    "visitor",
+    "seeker",
+    "individual_provider",
+    "broker",
+    "developer_company",
+    "full_admin",
+    "limited_admin"
+  ],
+  "journeys": [
+    {
+      "id": "GUIDE-01",
+      "number": "01",
+      "sectionId": "public",
+      "tag": "الموقع العام",
+      "title": "الدخول إلى المنصة",
+      "summary": "التعرف على المنصة والبدء في استكشاف السوق العقاري.",
+      "action": "يبدأ من الصفحة الرئيسية، ثم يستخدم البحث أو أقسام الموقع للوصول إلى العقارات والمطورين.",
+      "result": "يصل إلى المحتوى أو العقار الذي يبحث عنه.",
+      "audience": [
+        "visitor",
+        "seeker",
+        "provider"
+      ],
+      "audienceLabels": [
+        "زائر",
+        "باحث عن عقار",
+        "مستخدم مسجل"
+      ],
+      "preconditions": [
+        "لا يلزم تسجيل الدخول للتصفح العام",
+        "تتطلب الإجراءات المحفوظة أو التواصل حسابًا نشطًا"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1RDaXkGyrC4p2ycy_wHR7gNssJS7sNU7O",
+          "id": "PUB-01",
+          "label": "الرئيسية"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1qQzXJ32c1YuOBvx88oZBRezWmEqJ_VOI",
+          "id": "PUB-02",
+          "label": "قائمة العقارات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1Hx02nn7Ll4Rv4fbR8Xea8uPKL0ChEkLM",
+          "id": "PUB-05",
+          "label": "المطورون والشركات العقارية"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "PUB-01",
+          "route": "/"
+        },
+        {
+          "screenId": "PUB-02",
+          "route": "/properties"
+        },
+        {
+          "screenId": "PUB-05",
+          "route": "/developers"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-10847&viewport=-247%2C-797%2C0.29&t=jO0Is94EyiG394Gy-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A10847&page-id=6017%3A4352"
+    },
+    {
+      "id": "GUIDE-02",
+      "number": "02",
+      "sectionId": "public",
+      "tag": "استكشاف العقارات",
+      "title": "البحث واختيار العقار",
+      "summary": "الوصول إلى العقار المناسب ومراجعة تفاصيله.",
+      "action": "يتصفح القائمة، يفتح تفاصيل العقار، ويمكنه حفظ العقار أو إضافته للمقارنة حسب الحالة.",
+      "result": "تظهر تفاصيل العقار ومقدم العقار والمشروع والمطور عند انطباق ذلك.",
+      "audience": [
+        "visitor",
+        "seeker",
+        "provider"
+      ],
+      "audienceLabels": [
+        "زائر",
+        "باحث عن عقار",
+        "مستخدم مسجل"
+      ],
+      "preconditions": [
+        "لا يلزم تسجيل الدخول للتصفح العام",
+        "تتطلب الإجراءات المحفوظة أو التواصل حسابًا نشطًا"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1qQzXJ32c1YuOBvx88oZBRezWmEqJ_VOI",
+          "id": "PUB-02",
+          "label": "قائمة العقارات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1YKuQuflPrwhW_YzDuLL8cqc748ZEDtoQ",
+          "id": "PUB-03",
+          "label": "تفاصيل العقار"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/133Vb7i7iA6aqf96cKafQaq4zXfn6VRw8",
+          "id": "PUB-04",
+          "label": "مقارنة الوحدات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1tZHKw4xEPyQY2ICmRdXz5CwrYbucNoo1",
+          "id": "PUB-06",
+          "label": "ملف المطور العقاري"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "PUB-02",
+          "route": "/properties"
+        },
+        {
+          "screenId": "PUB-03",
+          "route": "/properties/:slug"
+        },
+        {
+          "screenId": "PUB-04",
+          "route": "/compare"
+        },
+        {
+          "screenId": "PUB-06",
+          "route": "/developers/:slug"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-10847&viewport=-247%2C-797%2C0.29&t=jO0Is94EyiG394Gy-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A10847&page-id=6017%3A4352"
+    },
+    {
+      "id": "GUIDE-03",
+      "number": "03",
+      "sectionId": "public",
+      "tag": "المحتوى",
+      "title": "استكشاف المحتوى والمجتمع",
+      "summary": "الاستفادة من المحتوى والأقسام المساندة.",
+      "action": "يقرأ المقالات، يتصفح الكوميونيتي، ويتعرف على المنصة وفريق العمل.",
+      "result": "يحصل على محتوى داعم لرحلة اتخاذ القرار.",
+      "audience": [
+        "visitor",
+        "seeker",
+        "provider"
+      ],
+      "audienceLabels": [
+        "زائر",
+        "باحث عن عقار",
+        "مستخدم مسجل"
+      ],
+      "preconditions": [
+        "لا يلزم تسجيل الدخول للتصفح العام",
+        "تتطلب الإجراءات المحفوظة أو التواصل حسابًا نشطًا"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1TNZyuSMv5lqL847yqnjJJzedmEhycR2Z",
+          "id": "PUB-07",
+          "label": "قائمة المقالات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1kTANteLpbcB5kmw8yLPGoZvwh4CVCLAr",
+          "id": "PUB-08",
+          "label": "تفاصيل المقال"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/113EnHTq_O-sfoNJYbelWyoPi1hcdvk3J",
+          "id": "PUB-09",
+          "label": "الكوميونيتي"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1FyJqHCqwTdzzPa4y4e7UGsV6IH5laGOd",
+          "id": "PUB-10",
+          "label": "إنشاء منشور"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1YfgHS3imL4ebIizEII7GFR418HXGpkY7",
+          "id": "PUB-11",
+          "label": "عن المنصة"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1WwO7cVz_vckLwjzW4SZ87nlliGI0W8if",
+          "id": "PUB-12",
+          "label": "فريق العمل"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "PUB-07",
+          "route": "/articles"
+        },
+        {
+          "screenId": "PUB-08",
+          "route": "/articles/:slug"
+        },
+        {
+          "screenId": "PUB-09",
+          "route": "/community"
+        },
+        {
+          "screenId": "PUB-10",
+          "route": "/community?create=1"
+        },
+        {
+          "screenId": "PUB-11",
+          "route": "/about"
+        },
+        {
+          "screenId": "PUB-12",
+          "route": "/team"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-10847&viewport=-247%2C-797%2C0.29&t=jO0Is94EyiG394Gy-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A10847&page-id=6017%3A4352"
+    },
+    {
+      "id": "GUIDE-04",
+      "number": "01",
+      "sectionId": "seeker",
+      "tag": "بداية الرحلة",
+      "title": "إنشاء حساب باحث عن عقار",
+      "summary": "تحويل الزائر إلى مستخدم مسجل.",
+      "action": "ينشئ حساب الباحث ويكمل بياناته ثم يؤكد رقم الهاتف عبر رمز التحقق.",
+      "result": "يتم إنشاء الحساب والانتقال إلى تجربة الباحث.",
+      "audience": [
+        "seeker"
+      ],
+      "audienceLabels": [
+        "باحث عن عقار"
+      ],
+      "preconditions": [
+        "حساب باحث نشط ومسجل الدخول",
+        "صلاحية الوصول إلى السجل المملوك للحساب فقط"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1v7bcXiDuK2pnEg1m8DrdJWPOYOhd3Oi0",
+          "id": "AUTH-02",
+          "label": "إنشاء حساب باحث"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/17KO1GaXuTSpVg1YouOfUgcTgJ4j3N8Ax",
+          "id": "AUTH-04",
+          "label": "تأكيد رقم الهاتف — OTP"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1MV0Ls2wpsAzzm8P05toWgiQqRe1sIzkW",
+          "id": "AUTH-06",
+          "label": "نجاح إنشاء حساب الباحث"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "AUTH-02",
+          "route": "/auth/register/seeker"
+        },
+        {
+          "screenId": "AUTH-04",
+          "route": "/auth/verify-email"
+        },
+        {
+          "screenId": "AUTH-06",
+          "route": "/auth/register/seeker/success"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353"
+    },
+    {
+      "id": "GUIDE-05",
+      "number": "02",
+      "sectionId": "seeker",
+      "tag": "لوحة الباحث",
+      "title": "الدخول إلى لوحة الباحث",
+      "summary": "مشاهدة أهم ما يحتاجه المستخدم في مكان واحد.",
+      "action": "يفتح لوحة الباحث لمراجعة الطلبات النشطة والمعاينات والمحفوظات والإشعارات.",
+      "result": "يحصل على ملخص مباشر لحسابه ونشاطه.",
+      "audience": [
+        "seeker"
+      ],
+      "audienceLabels": [
+        "باحث عن عقار"
+      ],
+      "preconditions": [
+        "حساب باحث نشط ومسجل الدخول",
+        "صلاحية الوصول إلى السجل المملوك للحساب فقط"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1EMmNVoMLcOU1Rjv1N0q_4j9tGCOGqvgE",
+          "id": "SEK-01",
+          "label": "نظرة عامة"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "SEK-01",
+          "route": "/seeker"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354"
+    },
+    {
+      "id": "GUIDE-06",
+      "number": "03",
+      "sectionId": "seeker",
+      "tag": "الطلبات",
+      "title": "متابعة الطلبات",
+      "summary": "معرفة حالة الطلب وما حدث عليه.",
+      "action": "يفتح «طلباتي»، ثم يختار طلبًا لعرض التفاصيل ومتابعة تغير الحالة.",
+      "result": "يرى حالة الطلب والمعلومات المتاحة له.",
+      "audience": [
+        "seeker"
+      ],
+      "audienceLabels": [
+        "باحث عن عقار"
+      ],
+      "preconditions": [
+        "حساب باحث نشط ومسجل الدخول",
+        "صلاحية الوصول إلى السجل المملوك للحساب فقط"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1BZ3kI-A4xUMfK7-ww6pVcaR8E5XDWgGl",
+          "id": "SEK-02",
+          "label": "طلباتي"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1akycehbR3O5_Mgdi6W5VCbJm943kASAe",
+          "id": "SEK-03",
+          "label": "تفاصيل الطلب — قيد المراجعة"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1hQUpbNKCrw6NQpt3S7ia6jiziY5kdVE2",
+          "id": "SEK-04",
+          "label": "تفاصيل الطلب — تم التواصل"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "SEK-02",
+          "route": "/seeker/requests"
+        },
+        {
+          "screenId": "SEK-03",
+          "route": "/seeker/requests/:id"
+        },
+        {
+          "screenId": "SEK-04",
+          "route": "/seeker/requests/:id"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354"
+    },
+    {
+      "id": "GUIDE-07",
+      "number": "04",
+      "sectionId": "seeker",
+      "tag": "المعاينات",
+      "title": "متابعة المعاينات",
+      "summary": "الرجوع إلى طلبات ومواعيد معاينة العقارات.",
+      "action": "يفتح قسم المعاينات ويراجع المواعيد المرتبطة بالعقارات.",
+      "result": "يعرف حالة المعاينات والمواعيد من حسابه.",
+      "audience": [
+        "seeker"
+      ],
+      "audienceLabels": [
+        "باحث عن عقار"
+      ],
+      "preconditions": [
+        "حساب باحث نشط ومسجل الدخول",
+        "صلاحية الوصول إلى السجل المملوك للحساب فقط"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1UBASEVD4IUBPnJl7hptGqB7Qv9EAlilU",
+          "id": "SEK-05",
+          "label": "طلبات المعاينة"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "SEK-05",
+          "route": "/seeker/viewings"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354"
+    },
+    {
+      "id": "GUIDE-08",
+      "number": "05",
+      "sectionId": "seeker",
+      "tag": "المحفوظات",
+      "title": "العقارات المحفوظة",
+      "summary": "الاحتفاظ بالعقارات المهمة للرجوع إليها.",
+      "action": "يفتح المحفوظات، يراجع العقارات ويعود إلى التفاصيل أو المقارنة عبر المسار العام.",
+      "result": "تبقى اختياراته المهمة مجمعة في مكان واحد.",
+      "audience": [
+        "seeker"
+      ],
+      "audienceLabels": [
+        "باحث عن عقار"
+      ],
+      "preconditions": [
+        "حساب باحث نشط ومسجل الدخول",
+        "صلاحية الوصول إلى السجل المملوك للحساب فقط"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1Vjh9lRx6mBrgJ3YvWTIR1iTT4r3-10M6",
+          "id": "SEK-06",
+          "label": "العقارات المحفوظة"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1YKuQuflPrwhW_YzDuLL8cqc748ZEDtoQ",
+          "id": "PUB-03",
+          "label": "تفاصيل العقار"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/133Vb7i7iA6aqf96cKafQaq4zXfn6VRw8",
+          "id": "PUB-04",
+          "label": "مقارنة الوحدات"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "SEK-06",
+          "route": "/seeker/saved"
+        },
+        {
+          "screenId": "PUB-03",
+          "route": "/properties/:slug"
+        },
+        {
+          "screenId": "PUB-04",
+          "route": "/compare"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354"
+    },
+    {
+      "id": "GUIDE-09",
+      "number": "06",
+      "sectionId": "seeker",
+      "tag": "التحديثات",
+      "title": "الإشعارات",
+      "summary": "معرفة تحديثات الطلبات والمعاينات والحساب.",
+      "action": "يراجع مركز الإشعارات ويفتح التحديث المرتبط بالطلب أو النشاط.",
+      "result": "يتابع آخر المستجدات بدون البحث يدويًا.",
+      "audience": [
+        "seeker"
+      ],
+      "audienceLabels": [
+        "باحث عن عقار"
+      ],
+      "preconditions": [
+        "حساب باحث نشط ومسجل الدخول",
+        "صلاحية الوصول إلى السجل المملوك للحساب فقط"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1SN0-v9Bf0xsgrPhTJ4Tzfby_6wUyZqrz",
+          "id": "SEK-07",
+          "label": "الإشعارات"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "SEK-07",
+          "route": "/seeker/notifications"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354"
+    },
+    {
+      "id": "GUIDE-10",
+      "number": "07",
+      "sectionId": "seeker",
+      "tag": "الحساب",
+      "title": "الملف والتفضيلات وإعدادات الحساب",
+      "summary": "تحديث بيانات المستخدم وضبط احتياجات البحث.",
+      "action": "يعدل المعلومات الشخصية وتفضيلات البحث والإعدادات المتاحة.",
+      "result": "تظل بيانات الحساب وتفضيلاته محدثة.",
+      "audience": [
+        "seeker"
+      ],
+      "audienceLabels": [
+        "باحث عن عقار"
+      ],
+      "preconditions": [
+        "حساب باحث نشط ومسجل الدخول",
+        "صلاحية الوصول إلى السجل المملوك للحساب فقط"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1Y80mQORqpi-tGD3pe2ZIyPo2b74SFHx9",
+          "id": "SEK-08",
+          "label": "تفضيلات البحث"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1od5yxd_sFEXo8V7FJKJE3YnnBvh4ERXY",
+          "id": "SEK-09",
+          "label": "المعلومات الشخصية"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1SMtml3vJtyoq2ORxLVXpt_6-5eBobKDc",
+          "id": "SEK-10",
+          "label": "إعدادات الحساب"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "SEK-08",
+          "route": "/seeker/profile?tab=preferences"
+        },
+        {
+          "screenId": "SEK-09",
+          "route": "/seeker/profile?tab=personal"
+        },
+        {
+          "screenId": "SEK-10",
+          "route": "/seeker/settings"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6027-3579&p=f&viewport=525%2C333%2C0.12&t=9G4D2asZTjIEQ87g-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6027%3A3579&page-id=6017%3A4354"
+    },
+    {
+      "id": "GUIDE-11",
+      "number": "01",
+      "sectionId": "provider",
+      "tag": "التسجيل",
+      "title": "اختيار نوع مقدم العقار",
+      "summary": "تحديد صفة المستخدم قبل بدء التسجيل.",
+      "action": "يحدد نوع مقدم العقار ثم يبدأ تسجيل بيانات الحساب والنشاط.",
+      "result": "يتم توجيهه إلى الحقول المناسبة لنوع الحساب.",
+      "audience": [
+        "individual_provider",
+        "broker",
+        "developer_company"
+      ],
+      "audienceLabels": [
+        "مقدم عقار فردي",
+        "وسيط أو مكتب عقاري",
+        "شركة تطوير"
+      ],
+      "preconditions": [
+        "حساب مقدم عقار نشط ومسجل الدخول",
+        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/16BX8MSYprjY3KZoI9FLUB8nitqq0PjEK",
+          "id": "AUTH-07",
+          "label": "اختيار نوع مقدم العقار"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1oUpeR-CISHjIhbyGPkhqPADmCUf58Seg",
+          "id": "AUTH-08",
+          "label": "اختيار نوع مقدم العقار — محدد"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1_SO4sScjNW9GVGMqWUDRRIMNxxl2X2bu",
+          "id": "AUTH-09",
+          "label": "بيانات حساب مقدم العقار"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1Gc5u4F3x_6NTHjZfyA7gZlHWR_lEuhmG",
+          "id": "AUTH-10",
+          "label": "بيانات النشاط"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1Bk7CqnHocflKdAvDrjrh2B2kXSyoteRk",
+          "id": "AUTH-11",
+          "label": "بيانات شركة التطوير"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "AUTH-07",
+          "route": "/auth/register/provider/type"
+        },
+        {
+          "screenId": "AUTH-08",
+          "route": "/auth/register/provider/type"
+        },
+        {
+          "screenId": "AUTH-09",
+          "route": "/auth/register/provider/account"
+        },
+        {
+          "screenId": "AUTH-10",
+          "route": "/auth/register/provider/business"
+        },
+        {
+          "screenId": "AUTH-11",
+          "route": "/auth/register/provider/company"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353"
+    },
+    {
+      "id": "GUIDE-12",
+      "number": "02",
+      "sectionId": "provider",
+      "tag": "اعتماد الحساب",
+      "title": "رفع المستندات وإرسال الطلب",
+      "summary": "إكمال طلب اعتماد حساب مقدم العقار.",
+      "action": "يرفع المستندات المطلوبة، يراجع البيانات ثم يرسل الطلب.",
+      "result": "ينتقل الطلب إلى مرحلة المراجعة.",
+      "audience": [
+        "individual_provider",
+        "broker",
+        "developer_company"
+      ],
+      "audienceLabels": [
+        "مقدم عقار فردي",
+        "وسيط أو مكتب عقاري",
+        "شركة تطوير"
+      ],
+      "preconditions": [
+        "حساب مقدم عقار نشط ومسجل الدخول",
+        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1gVQgJgzilt4hpDgQF7_2LHLaMe1Hhkz7",
+          "id": "AUTH-12",
+          "label": "المستندات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1mhqu7_EJ1r_ujb2nbY6uWr9R32drA724",
+          "id": "AUTH-13",
+          "label": "المراجعة والإرسال"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1KmHKcWsraQGbuqGMW9Awlf8_fpLCMWXF",
+          "id": "AUTH-14",
+          "label": "طلب مقدم العقار — قيد المراجعة"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "AUTH-12",
+          "route": "/auth/register/provider/documents"
+        },
+        {
+          "screenId": "AUTH-13",
+          "route": "/auth/register/provider/review"
+        },
+        {
+          "screenId": "AUTH-14",
+          "route": "/provider-application/status"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353"
+    },
+    {
+      "id": "GUIDE-13",
+      "number": "03",
+      "sectionId": "provider",
+      "tag": "حالة الطلب",
+      "title": "متابعة حالة طلب الحساب",
+      "summary": "معرفة ما إذا كان الطلب قيد المراجعة أو يحتاج استكمال أو تم اعتماده.",
+      "action": "يتابع الطلب ويستكمل المعلومات إن طُلبت ثم ينتظر النتيجة.",
+      "result": "عند الاعتماد يصبح الحساب جاهزًا لاستخدام لوحة مقدم العقار.",
+      "audience": [
+        "individual_provider",
+        "broker",
+        "developer_company"
+      ],
+      "audienceLabels": [
+        "مقدم عقار فردي",
+        "وسيط أو مكتب عقاري",
+        "شركة تطوير"
+      ],
+      "preconditions": [
+        "حساب مقدم عقار نشط ومسجل الدخول",
+        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1A8-RuDzNN1af4fJ7721NS7e8uBm_Xizu",
+          "id": "AUTH-15",
+          "label": "متابعة طلب مقدم العقار"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1dqMR6mouTsvGYIaSNj7nYGZMsInSf4yL",
+          "id": "AUTH-16",
+          "label": "الطلب يحتاج استكمال"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/19OL6QQmoC-IaKXAyNb22x-0Uhz2Is62i",
+          "id": "AUTH-17",
+          "label": "تم اعتماد مقدم العقار"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "AUTH-15",
+          "route": "/provider-application/status"
+        },
+        {
+          "screenId": "AUTH-16",
+          "route": "/provider-application/needs-information"
+        },
+        {
+          "screenId": "AUTH-17",
+          "route": "/provider-application/approved"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-16212&p=f&viewport=-1439%2C-618%2C0.31&t=FB2WHLNpqPD6FAhM-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A16212&show-proto-sidebar=1&page-id=6017%3A4353"
+    },
+    {
+      "id": "GUIDE-14",
+      "number": "04",
+      "sectionId": "provider",
+      "tag": "العقارات",
+      "title": "إدارة العقارات وإضافة عقار",
+      "summary": "إضافة عقار جديد ومراجعة العقارات الحالية.",
+      "action": "يفتح «عقاراتي»، ثم يمر بخطوات إضافة العقار من البيانات الأساسية حتى المراجعة والإرسال.",
+      "result": "يتم تجهيز العقار وإرساله للمراجعة.",
+      "audience": [
+        "individual_provider",
+        "broker",
+        "developer_company"
+      ],
+      "audienceLabels": [
+        "مقدم عقار فردي",
+        "وسيط أو مكتب عقاري",
+        "شركة تطوير"
+      ],
+      "preconditions": [
+        "حساب مقدم عقار نشط ومسجل الدخول",
+        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1-Jda_ykLlQC3ZwlFG8I-t6sq3B8UOg86",
+          "id": "PRV-01",
+          "label": "نظرة عامة"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1BmLx4tpZxfEGPmnsbQhay7RdCdpvy1hC",
+          "id": "PRV-02",
+          "label": "عقاراتي"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1DdoEN9a92vmsDI0Zk8dSN1Yxk5k37K4R",
+          "id": "PRV-03",
+          "label": "إضافة عقار — البيانات الأساسية"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1cHXSIRo0S4A5f2S16gpanhN4GgYsNDRS",
+          "id": "PRV-04",
+          "label": "إضافة عقار — الموقع"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1MVrrVE_RnSRXENVtxkfCznzhRRgUfwxW",
+          "id": "PRV-05",
+          "label": "إضافة عقار — تفاصيل العقار"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1cVLnmNLXHOdryi27qcAcGYp3EY3-2FDp",
+          "id": "PRV-06",
+          "label": "إضافة عقار — السعر والسداد"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1Oe-Y3S0qVxzfFYS1ck58iu4QUOKe2NhB",
+          "id": "PRV-07",
+          "label": "إضافة عقار — المميزات والخدمات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1PTID8nypqLiSrU3-O6cAiXoJdu9hVUi4",
+          "id": "PRV-08",
+          "label": "إضافة عقار — الصور والوسائط"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1yW0-rmLNBH19aM5xW3l3q0sm51yARrLS",
+          "id": "PRV-09",
+          "label": "إضافة عقار — التواصل"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1Q4Enn2KDiWVSa3zI_htObrmdyMn4f0WQ",
+          "id": "PRV-10",
+          "label": "إضافة عقار — المراجعة والإرسال"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "PRV-01",
+          "route": "/provider"
+        },
+        {
+          "screenId": "PRV-02",
+          "route": "/provider/properties"
+        },
+        {
+          "screenId": "PRV-03",
+          "route": "/provider/properties/new/basic"
+        },
+        {
+          "screenId": "PRV-04",
+          "route": "/provider/properties/:id/location"
+        },
+        {
+          "screenId": "PRV-05",
+          "route": "/provider/properties/:id/details"
+        },
+        {
+          "screenId": "PRV-06",
+          "route": "/provider/properties/:id/price-payment"
+        },
+        {
+          "screenId": "PRV-07",
+          "route": "/provider/properties/:id/features"
+        },
+        {
+          "screenId": "PRV-08",
+          "route": "/provider/properties/:id/media"
+        },
+        {
+          "screenId": "PRV-09",
+          "route": "/provider/properties/:id/contact"
+        },
+        {
+          "screenId": "PRV-10",
+          "route": "/provider/properties/:id/review"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355"
+    },
+    {
+      "id": "GUIDE-15",
+      "number": "05",
+      "sectionId": "provider",
+      "tag": "المراجعة",
+      "title": "نتيجة مراجعة العقار",
+      "summary": "فهم ما حدث بعد إرسال العقار.",
+      "action": "يتابع حالة العقار ويتعامل مع البيانات الناقصة أو نتيجة الرفض، أو يشاهد حالة النشر.",
+      "result": "تظهر نتيجة المراجعة بوضوح.",
+      "audience": [
+        "individual_provider",
+        "broker",
+        "developer_company"
+      ],
+      "audienceLabels": [
+        "مقدم عقار فردي",
+        "وسيط أو مكتب عقاري",
+        "شركة تطوير"
+      ],
+      "preconditions": [
+        "حساب مقدم عقار نشط ومسجل الدخول",
+        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1LMR8ByJMrmEE5500eTUOTtB0rWcL8G3u",
+          "id": "PRV-11",
+          "label": "بيانات تحتاج استكمال"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1rNEVgpLFKw_zSNpAXndLQfWMyNlT2bhb",
+          "id": "PRV-12",
+          "label": "تم إرسال العقار للمراجعة"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1wpWqXwKoSFCkvlGwPQxzjuAt6cti-uxT",
+          "id": "PRV-13",
+          "label": "تعذر اعتماد العقار"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/19ObqV6wXoya0W2PD0N_lWrTMNGkiGg0A",
+          "id": "PRV-14",
+          "label": "تم نشر العقار"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "PRV-11",
+          "route": "/provider/properties/:id/review"
+        },
+        {
+          "screenId": "PRV-12",
+          "route": "/provider/properties/:id/submitted"
+        },
+        {
+          "screenId": "PRV-13",
+          "route": "/provider/properties/:id/rejected"
+        },
+        {
+          "screenId": "PRV-14",
+          "route": "/provider/properties/:id/published"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355"
+    },
+    {
+      "id": "GUIDE-16",
+      "number": "06",
+      "sectionId": "provider",
+      "tag": "إدارة النشاط",
+      "title": "المشروعات وطلبات العملاء والمعاينات",
+      "summary": "متابعة النشاط التشغيلي للحساب.",
+      "action": "يراجع المشروعات وطلبات العملاء ويضيف طلبًا عند الحاجة ويتابع مواعيد المعاينات.",
+      "result": "تكون الطلبات والمواعيد مجمعة داخل اللوحة.",
+      "audience": [
+        "individual_provider",
+        "broker",
+        "developer_company"
+      ],
+      "audienceLabels": [
+        "مقدم عقار فردي",
+        "وسيط أو مكتب عقاري",
+        "شركة تطوير"
+      ],
+      "preconditions": [
+        "حساب مقدم عقار نشط ومسجل الدخول",
+        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1JM9TjIqqsFhXnObamIdFGepIPeLUf0ml",
+          "id": "PRV-15",
+          "label": "المشروعات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/19m_KQKHWSE-l-j3eqvML0W6RygO3tlAj",
+          "id": "PRV-16",
+          "label": "طلبات العملاء"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1u6elv1Y8xHFM22yAUsy2iF4WmJiG5wom",
+          "id": "PRV-17",
+          "label": "إضافة طلب عميل"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1wV5wYwgV1HV8sSBohdBqbIKP6qwztZgP",
+          "id": "PRV-18",
+          "label": "مواعيد المعاينات"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "PRV-15",
+          "route": "/provider/projects"
+        },
+        {
+          "screenId": "PRV-16",
+          "route": "/provider/customer-requests"
+        },
+        {
+          "screenId": "PRV-17",
+          "route": "/provider/customer-requests?create=1"
+        },
+        {
+          "screenId": "PRV-18",
+          "route": "/provider/viewings"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355"
+    },
+    {
+      "id": "GUIDE-17",
+      "number": "07",
+      "sectionId": "provider",
+      "tag": "التجاري",
+      "title": "الإعلانات والعمولة",
+      "summary": "متابعة طلبات الإعلان وسياسة العمولة المطبقة على الحساب.",
+      "action": "يفتح طلبات الإعلانات ثم يراجع معلومات العمولة الخاصة بالحساب.",
+      "result": "يمكنه متابعة الإعلانات ومعرفة سياسة العمولة دون تعديلها.",
+      "audience": [
+        "individual_provider",
+        "broker",
+        "developer_company"
+      ],
+      "audienceLabels": [
+        "مقدم عقار فردي",
+        "وسيط أو مكتب عقاري",
+        "شركة تطوير"
+      ],
+      "preconditions": [
+        "حساب مقدم عقار نشط ومسجل الدخول",
+        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1KCTXCjiPpyefVI2qnLBwQB1pI87MuCw3",
+          "id": "PRV-19",
+          "label": "طلبات الإعلانات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1FyRkPx1NM9yneEO-rbVV1hzunmUgjTmb",
+          "id": "PRV-20",
+          "label": "العمولة"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "PRV-19",
+          "route": "/provider/ads"
+        },
+        {
+          "screenId": "PRV-20",
+          "route": "/provider/commission"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355"
+    },
+    {
+      "id": "GUIDE-18",
+      "number": "08",
+      "sectionId": "provider",
+      "tag": "الحساب",
+      "title": "الإشعارات والإعدادات",
+      "summary": "إدارة التحديثات وبيانات الحساب.",
+      "action": "يراجع الإشعارات ثم ينتقل إلى الإعدادات لتحديث البيانات المتاحة.",
+      "result": "يبقى الحساب محدثًا مع سهولة الوصول إلى التنبيهات.",
+      "audience": [
+        "individual_provider",
+        "broker",
+        "developer_company"
+      ],
+      "audienceLabels": [
+        "مقدم عقار فردي",
+        "وسيط أو مكتب عقاري",
+        "شركة تطوير"
+      ],
+      "preconditions": [
+        "حساب مقدم عقار نشط ومسجل الدخول",
+        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1zDmZ5xczx2W_0TqF1eCdgn42SrlmwVDW",
+          "id": "PRV-21",
+          "label": "الإشعارات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/16sjluzJbRkAkORle4X--TNoVN01yXTv_",
+          "id": "PRV-22-1",
+          "label": "الإعدادات — الحالة 1"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1H1alNI_tQb1hlFv7VBeosfrmghm6sfq9",
+          "id": "PRV-22-2",
+          "label": "الإعدادات — الحالة 2"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1BrEClGr2UVWzR4s0p2Yt7Oce5eheWW8i",
+          "id": "PRV-22-3",
+          "label": "الإعدادات — الحالة 3"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "PRV-21",
+          "route": "/provider/notifications"
+        },
+        {
+          "screenId": "PRV-22-1",
+          "route": "/provider/settings"
+        },
+        {
+          "screenId": "PRV-22-2",
+          "route": "/provider/settings"
+        },
+        {
+          "screenId": "PRV-22-3",
+          "route": "/provider/settings"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-19032&p=f&viewport=241%2C363%2C0.29&t=42q3E6FU820TXCxJ-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A19032&page-id=6017%3A4355"
+    },
+    {
+      "id": "GUIDE-19",
+      "number": "01",
+      "sectionId": "admin",
+      "tag": "الحسابات",
+      "title": "نظرة عامة وإدارة الحسابات",
+      "summary": "متابعة حالة المنصة وإدارة المستخدمين والبلاغات المرتبطة بالحسابات.",
+      "action": "يبدأ من النظرة العامة، ثم ينتقل للباحثين ومقدمي العقارات ومراجعة المستندات والبلاغات والقيود.",
+      "result": "يستطيع متابعة حسابات المنصة واتخاذ الإجراءات المتاحة حسب الصلاحية.",
+      "audience": [
+        "full_admin",
+        "limited_admin"
+      ],
+      "audienceLabels": [
+        "مدير نظام كامل",
+        "مستخدم إداري محدود الصلاحيات"
+      ],
+      "preconditions": [
+        "جلسة إدارة نشطة",
+        "صلاحية الشاشة والإجراء؛ المدير المحدود يرى وينفذ المسموح فقط",
+        "سبب القرار ونسخة السجل مطلوبان للإجراءات الحساسة"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1s72Hbu89r_FpVR9NWqyi5N9kFfGfZJAa",
+          "id": "ADM-01",
+          "label": "نظرة عامة"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/14vSGg7Ljzv6rcp87XJQN3sk3rDF3oiwh",
+          "id": "ADM-02",
+          "label": "إدارة المستخدمين"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1Wzt9wRgunYtmiBpNUuiCYBIJ8SkCiUhU",
+          "id": "ADM-03",
+          "label": "الباحثون عن عقار"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1YwgW0GdiDn87ZodQT33xOaCFiwUEFd7T",
+          "id": "ADM-04",
+          "label": "مقدمو العقارات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1Zm2pM2-ReIbtM6x4SL7M9U5kdUnSQF4Q",
+          "id": "ADM-05",
+          "label": "مراجعة مستندات مقدمي العقارات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1Evyazld_AFFdEYHEzGlM48Z6GnxG-UYV",
+          "id": "ADM-06",
+          "label": "بلاغات الحسابات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/19Pa0NzUKpbvpY0Kh460QB6Jj8kxe14ut",
+          "id": "ADM-07",
+          "label": "تفاصيل بلاغ الحساب"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1HbA-ztHzERThbWC88U68QQINzCTiLSNQ",
+          "id": "ADM-08",
+          "label": "قيود الحسابات"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "ADM-01",
+          "route": "/admin"
+        },
+        {
+          "screenId": "ADM-02",
+          "route": "/admin/users"
+        },
+        {
+          "screenId": "ADM-03",
+          "route": "/admin/property-seekers"
+        },
+        {
+          "screenId": "ADM-04",
+          "route": "/admin/providers"
+        },
+        {
+          "screenId": "ADM-05",
+          "route": "/admin/verification"
+        },
+        {
+          "screenId": "ADM-06",
+          "route": "/admin/account-reports"
+        },
+        {
+          "screenId": "ADM-07",
+          "route": "/admin/account-reports/:id"
+        },
+        {
+          "screenId": "ADM-08",
+          "route": "/admin/account-restrictions"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356"
+    },
+    {
+      "id": "GUIDE-20",
+      "number": "02",
+      "sectionId": "admin",
+      "tag": "العقارات والمشروعات",
+      "title": "إعداد العقارات والمشروعات",
+      "summary": "إدارة الهيكل الأساسي للمحتوى العقاري ومراجعته.",
+      "action": "يدير التصنيفات والمناطق والمميزات، ثم يتابع المشروعات والعقارات ومراجعاتها والبلاغات والتكرار المحتمل.",
+      "result": "تظل بيانات العقارات والمشروعات منظمة وقابلة للمراجعة.",
+      "audience": [
+        "full_admin",
+        "limited_admin"
+      ],
+      "audienceLabels": [
+        "مدير نظام كامل",
+        "مستخدم إداري محدود الصلاحيات"
+      ],
+      "preconditions": [
+        "جلسة إدارة نشطة",
+        "صلاحية الشاشة والإجراء؛ المدير المحدود يرى وينفذ المسموح فقط",
+        "سبب القرار ونسخة السجل مطلوبان للإجراءات الحساسة"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1BsuhLY1vb55AY8eokQf0KEeTyIS4g9bw",
+          "id": "ADM-09",
+          "label": "التصنيفات وأنواع العقارات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1qIx1wxB5bBDIjfIYLI-huLuBDNNQIjX-",
+          "id": "ADM-10",
+          "label": "المناطق والأحياء"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/11uMoUTllcJFJ5gV7-B7aynZcQrRkLFjq",
+          "id": "ADM-11",
+          "label": "المميزات والخدمات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1HhR6X0VfCdBj3zARqW0KuYqivJLhL3Zk",
+          "id": "ADM-12",
+          "label": "إدارة المشروعات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1fp0z0D1aD_uyZjYeb-5GGUkPDaFlK0R2",
+          "id": "ADM-13",
+          "label": "مراجعة المشروعات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/154nQHf5hLQ4AwXr0b9ig8ld0De2FatIc",
+          "id": "ADM-14",
+          "label": "إدارة العقارات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1Q-t49USiJBt--gA6LMDi7_9lXH3FDCBL",
+          "id": "ADM-15",
+          "label": "مراجعة العقارات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1q4VnWJnoJZPD28Mso4QQiMfNKjFyWHHp",
+          "id": "ADM-16",
+          "label": "عقارات يشتبه بتكرارها"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1jSZHxNYJsd2iP9Dxit6LNnH933mmKvsP",
+          "id": "ADM-17",
+          "label": "بلاغات العقارات"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "ADM-09",
+          "route": "/admin/property-categories"
+        },
+        {
+          "screenId": "ADM-10",
+          "route": "/admin/locations"
+        },
+        {
+          "screenId": "ADM-11",
+          "route": "/admin/features"
+        },
+        {
+          "screenId": "ADM-12",
+          "route": "/admin/projects"
+        },
+        {
+          "screenId": "ADM-13",
+          "route": "/admin/projects/review"
+        },
+        {
+          "screenId": "ADM-14",
+          "route": "/admin/properties"
+        },
+        {
+          "screenId": "ADM-15",
+          "route": "/admin/properties/review"
+        },
+        {
+          "screenId": "ADM-16",
+          "route": "/admin/properties/possible-duplicates"
+        },
+        {
+          "screenId": "ADM-17",
+          "route": "/admin/property-reports"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356"
+    },
+    {
+      "id": "GUIDE-21",
+      "number": "03",
+      "sectionId": "admin",
+      "tag": "الطلبات",
+      "title": "إدارة الطلبات والمتابعة",
+      "summary": "متابعة طلبات العملاء والاتصال والمعاينة والبحث والمشكلات.",
+      "action": "يراجع أنواع الطلبات المختلفة والطلبات المتأخرة والمشكلات والبلاغات المرتبطة بها.",
+      "result": "يمكن متابعة حالة الطلبات والعمليات اليومية.",
+      "audience": [
+        "full_admin",
+        "limited_admin"
+      ],
+      "audienceLabels": [
+        "مدير نظام كامل",
+        "مستخدم إداري محدود الصلاحيات"
+      ],
+      "preconditions": [
+        "جلسة إدارة نشطة",
+        "صلاحية الشاشة والإجراء؛ المدير المحدود يرى وينفذ المسموح فقط",
+        "سبب القرار ونسخة السجل مطلوبان للإجراءات الحساسة"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1A8nI4o_jjyoTlR2T2nXJ2b7ZMfi68Upj",
+          "id": "ADM-19",
+          "label": "طلبات العملاء"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1eEytRpPosmYvn1GkqJT1QByUGuZxhpsJ",
+          "id": "ADM-20",
+          "label": "الطلبات المتأخرة"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1i8PdHEcfxqXPbnrAvwGH-eBEYUGDxbYE",
+          "id": "ADM-21",
+          "label": "طلبات التواصل"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1-yq0DjVfPvIA38DvJPOlBXGenMSOCRZD",
+          "id": "ADM-22",
+          "label": "طلبات المعاينة"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1-QhIOQf0fPdV-cDfiyu_xysmg4wP8C3I",
+          "id": "ADM-23",
+          "label": "طلبات البحث عن عقار"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1EjcMHZros-GyAcTG_yzY5_jGc9T_swon",
+          "id": "ADM-24",
+          "label": "بلاغات ومشكلات الطلبات"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "ADM-19",
+          "route": "/admin/customer-requests"
+        },
+        {
+          "screenId": "ADM-20",
+          "route": "/admin/overdue-requests"
+        },
+        {
+          "screenId": "ADM-21",
+          "route": "/admin/contact-requests"
+        },
+        {
+          "screenId": "ADM-22",
+          "route": "/admin/viewing-requests"
+        },
+        {
+          "screenId": "ADM-23",
+          "route": "/admin/search-requests"
+        },
+        {
+          "screenId": "ADM-24",
+          "route": "/admin/request-issues"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356"
+    },
+    {
+      "id": "GUIDE-22",
+      "number": "04",
+      "sectionId": "admin",
+      "tag": "المحتوى",
+      "title": "المقالات والكوميونيتي ومحتوى المنصة",
+      "summary": "إدارة المحتوى الذي يظهر للمستخدمين.",
+      "action": "يدير المقالات وتصنيفاتها والكوميونيتي والتعليقات والبلاغات والنبذة وفريق العمل وعداد السكان.",
+      "result": "يمكن تحديث المحتوى العام والإشراف عليه.",
+      "audience": [
+        "full_admin",
+        "limited_admin"
+      ],
+      "audienceLabels": [
+        "مدير نظام كامل",
+        "مستخدم إداري محدود الصلاحيات"
+      ],
+      "preconditions": [
+        "جلسة إدارة نشطة",
+        "صلاحية الشاشة والإجراء؛ المدير المحدود يرى وينفذ المسموح فقط",
+        "سبب القرار ونسخة السجل مطلوبان للإجراءات الحساسة"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1mtUKZqqDoN5noUYT_XNmTZzm8Bta6VNS",
+          "id": "ADM-25",
+          "label": "إدارة المقالات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1syHK9e5B8eMCKaYcS7Tt-M_Ibtqugyj4",
+          "id": "ADM-26",
+          "label": "تصنيفات المقالات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1v-dhWpWpgDMJJK_J7QMX4KJrQ1LX2Hzw",
+          "id": "ADM-27",
+          "label": "إدارة الكوميونيتي"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1rf8YWR6oo3MlcWiksOyoJQkbP3bTpHpJ",
+          "id": "ADM-28",
+          "label": "التعليقات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1un9tRaMEbov-zH_Pl7JgOlk5TvvcHR-K",
+          "id": "ADM-29",
+          "label": "البلاغات والإشراف"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1T4o9bQ0ebHJpX-fNIpRKDczlk3F37daH",
+          "id": "ADM-30",
+          "label": "النبذة عن المنصة"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1k7lhpKe1sM8O1hQoLs6fTgY-88f_dlTf",
+          "id": "ADM-31",
+          "label": "إدارة فريق العمل"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1JWQ-qEIvxxqHBPnsGz2xDA2_kMG_sq7s",
+          "id": "ADM-32",
+          "label": "عداد سكان مدينة السادات"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "ADM-25",
+          "route": "/admin/articles"
+        },
+        {
+          "screenId": "ADM-26",
+          "route": "/admin/article-categories"
+        },
+        {
+          "screenId": "ADM-27",
+          "route": "/admin/community"
+        },
+        {
+          "screenId": "ADM-28",
+          "route": "/admin/community/comments"
+        },
+        {
+          "screenId": "ADM-29",
+          "route": "/admin/community/moderation"
+        },
+        {
+          "screenId": "ADM-30",
+          "route": "/admin/content/about"
+        },
+        {
+          "screenId": "ADM-31",
+          "route": "/admin/content/team"
+        },
+        {
+          "screenId": "ADM-32",
+          "route": "/admin/content/population-counter"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356"
+    },
+    {
+      "id": "GUIDE-23",
+      "number": "05",
+      "sectionId": "admin",
+      "tag": "الإعلانات",
+      "title": "الإعلانات والمدفوعات",
+      "summary": "مراجعة دورة الإعلان وإثباتات الدفع والفحص المالي.",
+      "action": "يتابع طلبات الإعلانات والإثباتات المعلقة والمقبولة والتقويم ومراجعة المدفوعات والفحص المالي.",
+      "result": "تكون دورة الإعلان والدفع واضحة وقابلة للمراجعة.",
+      "audience": [
+        "full_admin",
+        "limited_admin"
+      ],
+      "audienceLabels": [
+        "مدير نظام كامل",
+        "مستخدم إداري محدود الصلاحيات"
+      ],
+      "preconditions": [
+        "جلسة إدارة نشطة",
+        "صلاحية الشاشة والإجراء؛ المدير المحدود يرى وينفذ المسموح فقط",
+        "سبب القرار ونسخة السجل مطلوبان للإجراءات الحساسة"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1vodkGQoNGThb-UrzVNR-N7uA3Of9_6c-",
+          "id": "ADM-33",
+          "label": "طلبات الإعلانات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1X7DQgPePHd2vGNbXdW9qdwNqluX-rvmQ",
+          "id": "ADM-34",
+          "label": "الإثباتات المعلقة"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1-CkxHZ4zDc4rnmBlVOqG2cjpNv0cKgkI",
+          "id": "ADM-35",
+          "label": "الإثباتات المقبولة"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1NU5LwfOuUFPZBwQDwPQGblfi8Z4Iiwhj",
+          "id": "ADM-36",
+          "label": "تقويم الإعلانات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/102cwmkS9hhuqd6ED-V5x-SNOu-E4o-5d",
+          "id": "ADM-37",
+          "label": "مراجعة المدفوعات المعلقة"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1Zt7UFy_7uDnJKHmBNFq4ErTkrECPQaL8",
+          "id": "ADM-38",
+          "label": "الفحص المالي"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "ADM-33",
+          "route": "/admin/ads/requests"
+        },
+        {
+          "screenId": "ADM-34",
+          "route": "/admin/ads/payment-proofs/pending"
+        },
+        {
+          "screenId": "ADM-35",
+          "route": "/admin/ads/payment-proofs/approved"
+        },
+        {
+          "screenId": "ADM-36",
+          "route": "/admin/ads/calendar"
+        },
+        {
+          "screenId": "ADM-37",
+          "route": "/admin/ads/payments/pending-review"
+        },
+        {
+          "screenId": "ADM-38",
+          "route": "/admin/ads/financial-review"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356"
+    },
+    {
+      "id": "GUIDE-24",
+      "number": "06",
+      "sectionId": "admin",
+      "tag": "العمولات",
+      "title": "العمولات والسياسات",
+      "summary": "إدارة سياسات العمولة والاستثناءات والتأكيدات.",
+      "action": "ينشئ أو يراجع سياسة عمولة ويتابع سجل التغييرات وعمولة الحساب والاستثناءات والتأكيدات.",
+      "result": "يمكن ضبط سياسات العمولة بشكل مرن حسب السياسة والحساب.",
+      "audience": [
+        "full_admin",
+        "limited_admin"
+      ],
+      "audienceLabels": [
+        "مدير نظام كامل",
+        "مستخدم إداري محدود الصلاحيات"
+      ],
+      "preconditions": [
+        "جلسة إدارة نشطة",
+        "صلاحية الشاشة والإجراء؛ المدير المحدود يرى وينفذ المسموح فقط",
+        "سبب القرار ونسخة السجل مطلوبان للإجراءات الحساسة"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1t9KQogo6BKdm9zCLSagbFR_5c27xnTrH",
+          "id": "ADM-39",
+          "label": "إدارة العمولات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1re3_Mj3yrCDf6zOry5acvfH-nvLt90f4",
+          "id": "ADM-40",
+          "label": "إنشاء سياسة عمولة"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1KAstGvgXaS2lFM3Rtki1Ueae-BkIMfP0",
+          "id": "ADM-41",
+          "label": "سجل تغييرات العمولات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1EnlY-JZIiN2qTUNiCPoEpbn7KoojtuR6",
+          "id": "ADM-42",
+          "label": "عمولة الحساب"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1ephF31UhqOBDeqVWS5jggCJruKlDqfBB",
+          "id": "ADM-43",
+          "label": "استثناءات العمولات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1omJ-4MUy3SMnkCygfxwVA5UBST4UAWo-",
+          "id": "ADM-44",
+          "label": "إنشاء استثناء عمولة"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1kKKdCYENuH3RIB7rLEZ4-sNsuht9ewhB",
+          "id": "ADM-45",
+          "label": "تأكيد سياسات العمولات"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "ADM-39",
+          "route": "/admin/commissions"
+        },
+        {
+          "screenId": "ADM-40",
+          "route": "/admin/commissions/new"
+        },
+        {
+          "screenId": "ADM-41",
+          "route": "/admin/commissions/history"
+        },
+        {
+          "screenId": "ADM-42",
+          "route": "/admin/commissions/accounts/:id"
+        },
+        {
+          "screenId": "ADM-43",
+          "route": "/admin/commissions/exceptions"
+        },
+        {
+          "screenId": "ADM-44",
+          "route": "/admin/commissions/exceptions/new"
+        },
+        {
+          "screenId": "ADM-45",
+          "route": "/admin/commissions/confirmations"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356"
+    },
+    {
+      "id": "GUIDE-25",
+      "number": "07",
+      "sectionId": "admin",
+      "tag": "الإعدادات",
+      "title": "الواجهة العامة وإعدادات المنصة",
+      "summary": "إدارة البانرات والصفحة الرئيسية وبيانات المنصة والإعدادات.",
+      "action": "يدير البانرات والنصائح والصفحة الرئيسية وبيانات التواصل والسوشيال وإعدادات العقارات والإعلانات وSEO والخصوصية والعرض.",
+      "result": "تظل الواجهة العامة وإعدادات المنصة قابلة للإدارة.",
+      "audience": [
+        "full_admin",
+        "limited_admin"
+      ],
+      "audienceLabels": [
+        "مدير نظام كامل",
+        "مستخدم إداري محدود الصلاحيات"
+      ],
+      "preconditions": [
+        "جلسة إدارة نشطة",
+        "صلاحية الشاشة والإجراء؛ المدير المحدود يرى وينفذ المسموح فقط",
+        "سبب القرار ونسخة السجل مطلوبان للإجراءات الحساسة"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1bt_4Eee608KYDLwS1DDAyYRFefQ0gV2X",
+          "id": "ADM-46",
+          "label": "البانرات الإعلانية"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1e0FVw_SDl2cKAr7KXwRKL3jAMnNUQh23",
+          "id": "ADM-47",
+          "label": "إضافة بانر جديد"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/16zSWznfKZOkXuYUg7oB1774r--fAbF9f",
+          "id": "ADM-48",
+          "label": "نصائح عقارات السادات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1hzPMW4k_59AQRZpD_9nBmAMI7pV67f9d",
+          "id": "ADM-49",
+          "label": "إدارة الصفحة الرئيسية"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1kU-ZltMai1vFLk-_W8IhdAnJMrnCIw7J",
+          "id": "ADM-50",
+          "label": "بيانات المنصة"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1_1LBD4BnQ3pFWe3OAiMziiw9eKbQ51Zm",
+          "id": "ADM-51",
+          "label": "بيانات التواصل"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1GYULMZZDXwyqfI2GOBMJavvzlLNLRfLX",
+          "id": "ADM-52",
+          "label": "حسابات التواصل الاجتماعي"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1BNlfcKdMtypREnOUWe_Lh4px7TCFQp_1",
+          "id": "ADM-53",
+          "label": "إعدادات العقارات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1aVqDrydYZtIn1KMOhQEsxc7xOps-kzcM",
+          "id": "ADM-55",
+          "label": "إعدادات الإعلانات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1GIDQHo-0SB-z9nY7tJk7S7pUiC5qo3hN",
+          "id": "ADM-56",
+          "label": "SEO عام"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1Y0PqcQl6kHn-8HNxXQA1f81aT-uAVIIL",
+          "id": "ADM-57",
+          "label": "الخصوصية والأمان"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/189KpHFjhdzbl31vpvW3LG11yxWD3Hx3W",
+          "id": "ADM-58",
+          "label": "إعدادات العرض"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "ADM-46",
+          "route": "/admin/banners"
+        },
+        {
+          "screenId": "ADM-47",
+          "route": "/admin/banners/new"
+        },
+        {
+          "screenId": "ADM-48",
+          "route": "/admin/content/tips"
+        },
+        {
+          "screenId": "ADM-49",
+          "route": "/admin/content/homepage"
+        },
+        {
+          "screenId": "ADM-50",
+          "route": "/admin/settings/platform"
+        },
+        {
+          "screenId": "ADM-51",
+          "route": "/admin/settings/contact"
+        },
+        {
+          "screenId": "ADM-52",
+          "route": "/admin/settings/social"
+        },
+        {
+          "screenId": "ADM-53",
+          "route": "/admin/settings/properties"
+        },
+        {
+          "screenId": "ADM-55",
+          "route": "/admin/settings/advertising"
+        },
+        {
+          "screenId": "ADM-56",
+          "route": "/admin/settings/seo"
+        },
+        {
+          "screenId": "ADM-57",
+          "route": "/admin/settings/privacy-security"
+        },
+        {
+          "screenId": "ADM-58",
+          "route": "/admin/settings/display"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356"
+    },
+    {
+      "id": "GUIDE-26",
+      "number": "08",
+      "sectionId": "admin",
+      "tag": "الصلاحيات",
+      "title": "المستخدمون الإداريون والصلاحيات",
+      "summary": "ضبط من يستطيع الوصول إلى أجزاء لوحة الإدارة ومراجعة سجل الإجراءات.",
+      "action": "يدير المستخدمين الإداريين والأدوار والصلاحيات، ويراجع الإشعارات وسجل الإجراءات.",
+      "result": "تتوزع الصلاحيات حسب الدور ويظل سجل الإجراءات متاحًا للمراجعة.",
+      "audience": [
+        "full_admin",
+        "limited_admin"
+      ],
+      "audienceLabels": [
+        "مدير نظام كامل",
+        "مستخدم إداري محدود الصلاحيات"
+      ],
+      "preconditions": [
+        "جلسة إدارة نشطة",
+        "صلاحية الشاشة والإجراء؛ المدير المحدود يرى وينفذ المسموح فقط",
+        "سبب القرار ونسخة السجل مطلوبان للإجراءات الحساسة"
+      ],
+      "states": [
+        "تحميل هيكلي أثناء جلب البيانات",
+        "نجاح مع تحديث المحتوى فورًا",
+        "نتيجة فارغة قابلة لتغيير الفلاتر",
+        "خطأ واضح مع إعادة المحاولة دون تحديث الصفحة"
+      ],
+      "troubleshooting": [
+        "عند عدم ظهور نتيجة، امسح الفلاتر أو غيّر التبويب دون عمل Refresh",
+        "عند تعارض تعديل إداري، حدّث السجل ثم أعد القرار بالسبب المطلوب",
+        "إذا اختفى إجراء، راجع حالة الحساب والصلاحية المطلوبة"
+      ],
+      "screens": [
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1wx5UUBb6FLodC04BNax8sovunKAWbITH",
+          "id": "ADM-59",
+          "label": "المستخدمون الإداريون"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1Vn-oqbWZlGbkbUnEHBQYQTfbRuzieMyb",
+          "id": "ADM-60",
+          "label": "إضافة مستخدم إداري"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1WYQc8OIzjQJpSA6_PJRVdrVnxRcCj7nL",
+          "id": "ADM-61",
+          "label": "تفاصيل مدير النظام"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1Ib6-LMKjv0diQpa3vVXJpkSQR2UYtVtW",
+          "id": "ADM-62",
+          "label": "تفاصيل مستخدم إداري"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1DuWzNGZwAG3NViUjxujCBz0SJ0cut9IC",
+          "id": "ADM-63",
+          "label": "الأدوار والصلاحيات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1NwvLAwHhG6yw75lnR0DRr0CerhiCFtLg",
+          "id": "ADM-64",
+          "label": "تفاصيل الدور والصلاحيات"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/16zLyUMI_IPh4w-n4mt_-B6nFmSreYDj_",
+          "id": "ADM-65",
+          "label": "إشعارات الإدارة"
+        },
+        {
+          "evidenceUrl": "https://drive.google.com/drive/folders/1-7uwvvFg0Y3J1jeuF3Jj6-Td4Y03fIpL",
+          "id": "ADM-66",
+          "label": "سجل الإجراءات"
+        }
+      ],
+      "directRoutes": [
+        {
+          "screenId": "ADM-59",
+          "route": "/admin/admin-users"
+        },
+        {
+          "screenId": "ADM-60",
+          "route": "/admin/admin-users/new"
+        },
+        {
+          "screenId": "ADM-61",
+          "route": "/admin/admin-users/:id"
+        },
+        {
+          "screenId": "ADM-62",
+          "route": "/admin/admin-users/:id"
+        },
+        {
+          "screenId": "ADM-63",
+          "route": "/admin/roles"
+        },
+        {
+          "screenId": "ADM-64",
+          "route": "/admin/roles/:id"
+        },
+        {
+          "screenId": "ADM-65",
+          "route": "/admin/notifications"
+        },
+        {
+          "screenId": "ADM-66",
+          "route": "/admin/audit-logs"
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/proto/0HBdTNGROmmpC6S7OYa3iJ/Sadat-Real-Estate-%E2%80%94-UX-UI---Final-?node-id=6017-61879&p=f&viewport=546%2C208%2C0.02&t=6vlo8xTuQKE9Nzd2-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=6017%3A61879&show-proto-sidebar=1&page-id=6017%3A4356"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-09-10T00:10:00+03:00",
+  "policy": "Delete only regenerable, untracked task output. Preserve seeded MongoDB data, referenced quality logs, Figma sources, latest comparison evidence and committed Production captures.",
+  "deleted": [
+    {
+      "paths": [
+        ".tmp/admin-all-desktop-ar-latest.log",
+        ".tmp/admin-baselines-update.log",
+        ".tmp/admin-baselines-verify.log",
+        ".tmp/api-full.log",
+        ".tmp/local-admin-audit.log",
+        ".tmp/web-full.log"
+      ],
+      "reason": "Untracked intermediate command logs superseded by retained reports and current .local/logs evidence."
+    },
+    {
+      "paths": [
+        ".tmp-guide-desktop.png",
+        ".tmp-guide-mobile.png",
+        ".tmp-guide-public-desktop.png",
+        ".tmp-guide-public-mobile.png",
+        ".tmp-guide-card-desktop.png",
+        ".tmp-guide-card-mobile.png",
+        ".tmp-guide-admin-desktop.png",
+        ".tmp-guide-admin-mobile.png",
+        ".tmp-guide-render.mjs"
+      ],
+      "reason": "Regenerable local visual-inspection artifacts created while validating the structured guide."
+    }
+  ],
+  "preserved": [
+    {
+      "path": ".local/mongodb-rs0-data",
+      "reason": "Seeded local demo database requested for client evaluation."
+    },
+    {
+      "path": ".local/mongodb-rs0-admin-data",
+      "reason": "Local replica-set metadata required by the seeded demo database."
+    },
+    {
+      "path": ".local/logs",
+      "reason": "Current release report directly references quality and live journey logs in this directory."
+    },
+    {
+      "path": ".local/figma-refs",
+      "reason": "Direct design references used by the visual review."
+    },
+    {
+      "path": ".local/runtime-refs",
+      "reason": "Runtime references used by visual comparison evidence."
+    },
+    {
+      "path": "docs/quality/figma_parity/screens",
+      "reason": "Canonical source, runtime, diff, metrics and review evidence; unresolved screens must retain their history."
+    },
+    {
+      "path": "test-results/production-admin-all-before",
+      "reason": "Committed pre-fix Production evidence retained for before/after traceability."
+    },
+    {
+      "path": "test-results/production-admin-audit",
+      "reason": "Committed Production audit evidence retained for review."
+    },
+    {
+      "path": "apps/web/test-results",
+      "reason": "Existing Figma reconciliation records reference files below this ignored directory; no broad deletion is safe until references are migrated."
+    }
+  ],
+  "productionDatabaseChanged": false,
+  "seededDemoDataChanged": false
+}

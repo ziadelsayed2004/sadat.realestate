@@ -1,9 +1,9 @@
 {
-  "schemaVersion": 1,
-  "generatedAt": "2026-08-25T18:00:00.000Z",
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-09T21:04:18.167Z",
   "guidePath": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
   "guideAvailable": true,
-  "status": "MAPPED_PENDING_BACKEND_CYCLE_REVIEW",
+  "status": "PARTIAL_LOCAL_EXECUTION_PENDING_COMPLETE_E2E_AND_PRODUCTION",
   "rows": [
     {
       "screenId": "PUB-01",
@@ -1199,14 +1199,66 @@
         "PUB-02",
         "PUB-05"
       ],
-      "verificationStatus": "LOCAL_E2E_PASSED_PENDING_PRODUCTION",
+      "verificationStatus": "PARTIAL",
       "executionEvidence": {
         "path": "docs/quality/guide-runs/discovery-local-latest.json",
         "verifiedAt": "2026-09-09T07:34:36.467Z",
         "mockedRoutes": false,
         "production": "PENDING",
         "remaining": []
-      }
+      },
+      "actor": [
+        "visitor",
+        "seeker",
+        "provider"
+      ],
+      "preconditions": [
+        "لا يلزم تسجيل الدخول للتصفح العام",
+        "تتطلب الإجراءات المحفوظة أو التواصل حسابًا نشطًا"
+      ],
+      "uiRoutes": [
+        "/",
+        "/properties",
+        "/developers"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "EVIDENCE_SCOPED",
+        "collections": [],
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
+      },
+      "cases": {
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "public"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "PARTIAL",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#public",
+        "journeyId": "GUIDE-01"
+      },
+      "executionDate": "2026-09-09T07:34:36.467Z",
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open."
     },
     {
       "id": "GUIDE-02",
@@ -1217,7 +1269,7 @@
         "PUB-04",
         "PUB-06"
       ],
-      "verificationStatus": "LOCAL_E2E_PASSED_PENDING_PRODUCTION",
+      "verificationStatus": "PARTIAL",
       "executionEvidence": {
         "paths": [
           "docs/quality/guide-runs/discovery-local-latest.json",
@@ -1227,7 +1279,60 @@
         "mockedRoutes": false,
         "production": "PENDING",
         "remaining": []
-      }
+      },
+      "actor": [
+        "visitor",
+        "seeker",
+        "provider"
+      ],
+      "preconditions": [
+        "لا يلزم تسجيل الدخول للتصفح العام",
+        "تتطلب الإجراءات المحفوظة أو التواصل حسابًا نشطًا"
+      ],
+      "uiRoutes": [
+        "/properties",
+        "/properties/:slug",
+        "/compare",
+        "/developers/:slug"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "public"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#public",
+        "journeyId": "GUIDE-02"
+      },
+      "executionDate": "2026-09-09T07:42:56.209Z",
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-03",
@@ -1240,7 +1345,62 @@
         "PUB-11",
         "PUB-12"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "visitor",
+        "seeker",
+        "provider"
+      ],
+      "preconditions": [
+        "لا يلزم تسجيل الدخول للتصفح العام",
+        "تتطلب الإجراءات المحفوظة أو التواصل حسابًا نشطًا"
+      ],
+      "uiRoutes": [
+        "/articles",
+        "/articles/:slug",
+        "/community",
+        "/community?create=1",
+        "/about",
+        "/team"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "public"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#public",
+        "journeyId": "GUIDE-03"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-04",
@@ -1250,7 +1410,7 @@
         "AUTH-04",
         "AUTH-06"
       ],
-      "verificationStatus": "LOCAL_E2E_PASSED_PENDING_PRODUCTION",
+      "verificationStatus": "PARTIAL",
       "executionEvidence": {
         "path": "docs/quality/guide-runs/guide-04-local-latest.json",
         "verifiedAt": "2026-09-09T07:42:56.209Z",
@@ -1267,7 +1427,57 @@
         "guideDeviation": "Email OTP replaces the historical phone OTP authority.",
         "production": "PENDING",
         "conflict": "Not applicable to registration; OTP replay and duplicate registration remain separate negative cases to verify."
-      }
+      },
+      "actor": [
+        "seeker"
+      ],
+      "preconditions": [
+        "حساب باحث نشط ومسجل الدخول",
+        "صلاحية الوصول إلى السجل المملوك للحساب فقط"
+      ],
+      "uiRoutes": [
+        "/auth/register/seeker",
+        "/auth/verify-email",
+        "/auth/register/seeker/success"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "EVIDENCE_SCOPED",
+        "collections": [],
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
+      },
+      "cases": {
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "anonymous"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "PARTIAL",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#seeker",
+        "journeyId": "GUIDE-04"
+      },
+      "executionDate": "2026-09-09T07:42:56.209Z",
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open."
     },
     {
       "id": "GUIDE-05",
@@ -1275,7 +1485,55 @@
       "screenIds": [
         "SEK-01"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "seeker"
+      ],
+      "preconditions": [
+        "حساب باحث نشط ومسجل الدخول",
+        "صلاحية الوصول إلى السجل المملوك للحساب فقط"
+      ],
+      "uiRoutes": [
+        "/seeker"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "seeker"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#seeker",
+        "journeyId": "GUIDE-05"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-06",
@@ -1285,7 +1543,7 @@
         "SEK-03",
         "SEK-04"
       ],
-      "verificationStatus": "LOCAL_CONTACT_CYCLE_PASSED_PENDING_REMAINING_SCOPE",
+      "verificationStatus": "PARTIAL",
       "executionEvidence": {
         "path": "docs/quality/guide-runs/guide-04-local-latest.json",
         "section": "contactJourneyEvidence",
@@ -1308,7 +1566,56 @@
         "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
         "status": "PASS_LOCAL_REQUEST_SUBCASES",
         "scope": "Request API authorization, current account state, ownership, atomic audit rollback, concurrent writes and repeated submissions. Does not close the complete browser journey or Production."
-      }
+      },
+      "actor": [
+        "seeker"
+      ],
+      "preconditions": [
+        "حساب باحث نشط ومسجل الدخول",
+        "صلاحية الوصول إلى السجل المملوك للحساب فقط"
+      ],
+      "uiRoutes": [
+        "/seeker/requests",
+        "/seeker/requests/:id"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "EVIDENCE_SCOPED",
+        "collections": [],
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
+      },
+      "cases": {
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "seeker"
+        ],
+        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "decisionReason": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "atomicAuditRollback": "PARTIAL_API_EVIDENCE_ATTACHED"
+      },
+      "environment": {
+        "local": "PARTIAL",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#seeker",
+        "journeyId": "GUIDE-06"
+      },
+      "executionDate": "2026-09-09T07:55:32.814Z",
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open."
     },
     {
       "id": "GUIDE-07",
@@ -1316,7 +1623,7 @@
       "screenIds": [
         "SEK-05"
       ],
-      "verificationStatus": "PARTIAL_LOCAL_BROWSER_VERIFIED",
+      "verificationStatus": "PARTIAL",
       "executionEvidence": {
         "path": "docs/quality/guide-runs/guide-04-local-latest.json",
         "section": "viewingJourneyEvidence",
@@ -1330,7 +1637,55 @@
       "backendGuaranteesEvidence": {
         "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
         "scope": "Ownership including legacy profile links, RBAC, current account status, atomic audit rollback, concurrent decisions and competing appointment slots"
-      }
+      },
+      "actor": [
+        "seeker"
+      ],
+      "preconditions": [
+        "حساب باحث نشط ومسجل الدخول",
+        "صلاحية الوصول إلى السجل المملوك للحساب فقط"
+      ],
+      "uiRoutes": [
+        "/seeker/viewings"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "EVIDENCE_SCOPED",
+        "collections": [],
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
+      },
+      "cases": {
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "seeker"
+        ],
+        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "decisionReason": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "atomicAuditRollback": "PARTIAL_API_EVIDENCE_ATTACHED"
+      },
+      "environment": {
+        "local": "PARTIAL",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#seeker",
+        "journeyId": "GUIDE-07"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open."
     },
     {
       "id": "GUIDE-08",
@@ -1340,7 +1695,58 @@
         "PUB-03",
         "PUB-04"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "seeker"
+      ],
+      "preconditions": [
+        "حساب باحث نشط ومسجل الدخول",
+        "صلاحية الوصول إلى السجل المملوك للحساب فقط"
+      ],
+      "uiRoutes": [
+        "/seeker/saved",
+        "/properties/:slug",
+        "/compare"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "seeker",
+          "public"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#seeker",
+        "journeyId": "GUIDE-08"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-09",
@@ -1348,7 +1754,55 @@
       "screenIds": [
         "SEK-07"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "seeker"
+      ],
+      "preconditions": [
+        "حساب باحث نشط ومسجل الدخول",
+        "صلاحية الوصول إلى السجل المملوك للحساب فقط"
+      ],
+      "uiRoutes": [
+        "/seeker/notifications"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "seeker"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#seeker",
+        "journeyId": "GUIDE-09"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-10",
@@ -1358,7 +1812,57 @@
         "SEK-09",
         "SEK-10"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "seeker"
+      ],
+      "preconditions": [
+        "حساب باحث نشط ومسجل الدخول",
+        "صلاحية الوصول إلى السجل المملوك للحساب فقط"
+      ],
+      "uiRoutes": [
+        "/seeker/profile?tab=preferences",
+        "/seeker/profile?tab=personal",
+        "/seeker/settings"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "seeker"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#seeker",
+        "journeyId": "GUIDE-10"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-11",
@@ -1370,7 +1874,60 @@
         "AUTH-10",
         "AUTH-11"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "individual_provider",
+        "broker",
+        "developer_company"
+      ],
+      "preconditions": [
+        "حساب مقدم عقار نشط ومسجل الدخول",
+        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+      ],
+      "uiRoutes": [
+        "/auth/register/provider/type",
+        "/auth/register/provider/account",
+        "/auth/register/provider/business",
+        "/auth/register/provider/company"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "anonymous"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#provider",
+        "journeyId": "GUIDE-11"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-12",
@@ -1380,7 +1937,59 @@
         "AUTH-13",
         "AUTH-14"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "individual_provider",
+        "broker",
+        "developer_company"
+      ],
+      "preconditions": [
+        "حساب مقدم عقار نشط ومسجل الدخول",
+        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+      ],
+      "uiRoutes": [
+        "/auth/register/provider/documents",
+        "/auth/register/provider/review",
+        "/provider-application/status"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "anonymous"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#provider",
+        "journeyId": "GUIDE-12"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-13",
@@ -1390,7 +1999,59 @@
         "AUTH-16",
         "AUTH-17"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "individual_provider",
+        "broker",
+        "developer_company"
+      ],
+      "preconditions": [
+        "حساب مقدم عقار نشط ومسجل الدخول",
+        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+      ],
+      "uiRoutes": [
+        "/provider-application/status",
+        "/provider-application/needs-information",
+        "/provider-application/approved"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "anonymous"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#provider",
+        "journeyId": "GUIDE-13"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-14",
@@ -1407,7 +2068,66 @@
         "PRV-09",
         "PRV-10"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "individual_provider",
+        "broker",
+        "developer_company"
+      ],
+      "preconditions": [
+        "حساب مقدم عقار نشط ومسجل الدخول",
+        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+      ],
+      "uiRoutes": [
+        "/provider",
+        "/provider/properties",
+        "/provider/properties/new/basic",
+        "/provider/properties/:id/location",
+        "/provider/properties/:id/details",
+        "/provider/properties/:id/price-payment",
+        "/provider/properties/:id/features",
+        "/provider/properties/:id/media",
+        "/provider/properties/:id/contact",
+        "/provider/properties/:id/review"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "provider"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#provider",
+        "journeyId": "GUIDE-14"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-15",
@@ -1418,7 +2138,60 @@
         "PRV-13",
         "PRV-14"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "individual_provider",
+        "broker",
+        "developer_company"
+      ],
+      "preconditions": [
+        "حساب مقدم عقار نشط ومسجل الدخول",
+        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+      ],
+      "uiRoutes": [
+        "/provider/properties/:id/review",
+        "/provider/properties/:id/submitted",
+        "/provider/properties/:id/rejected",
+        "/provider/properties/:id/published"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "provider"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#provider",
+        "journeyId": "GUIDE-15"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-16",
@@ -1429,7 +2202,60 @@
         "PRV-17",
         "PRV-18"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "individual_provider",
+        "broker",
+        "developer_company"
+      ],
+      "preconditions": [
+        "حساب مقدم عقار نشط ومسجل الدخول",
+        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+      ],
+      "uiRoutes": [
+        "/provider/projects",
+        "/provider/customer-requests",
+        "/provider/customer-requests?create=1",
+        "/provider/viewings"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "provider"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#provider",
+        "journeyId": "GUIDE-16"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-17",
@@ -1438,7 +2264,58 @@
         "PRV-19",
         "PRV-20"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "individual_provider",
+        "broker",
+        "developer_company"
+      ],
+      "preconditions": [
+        "حساب مقدم عقار نشط ومسجل الدخول",
+        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+      ],
+      "uiRoutes": [
+        "/provider/ads",
+        "/provider/commission"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "provider"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#provider",
+        "journeyId": "GUIDE-17"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-18",
@@ -1449,7 +2326,58 @@
         "PRV-22-2",
         "PRV-22-3"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "individual_provider",
+        "broker",
+        "developer_company"
+      ],
+      "preconditions": [
+        "حساب مقدم عقار نشط ومسجل الدخول",
+        "اكتمال المستندات والمراجعة عند طلب النشر أو الإعلان"
+      ],
+      "uiRoutes": [
+        "/provider/notifications",
+        "/provider/settings"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "provider"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#provider",
+        "journeyId": "GUIDE-18"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-19",
@@ -1464,7 +2392,64 @@
         "ADM-07",
         "ADM-08"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "full_admin",
+        "limited_admin"
+      ],
+      "preconditions": [
+        "جلسة إدارة نشطة",
+        "صلاحية الشاشة والإجراء؛ المدير المحدود يرى وينفذ المسموح فقط",
+        "سبب القرار ونسخة السجل مطلوبان للإجراءات الحساسة"
+      ],
+      "uiRoutes": [
+        "/admin",
+        "/admin/users",
+        "/admin/property-seekers",
+        "/admin/providers",
+        "/admin/verification",
+        "/admin/account-reports",
+        "/admin/account-reports/:id",
+        "/admin/account-restrictions"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "administrator"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#admin",
+        "journeyId": "GUIDE-19"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-20",
@@ -1480,7 +2465,65 @@
         "ADM-16",
         "ADM-17"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "full_admin",
+        "limited_admin"
+      ],
+      "preconditions": [
+        "جلسة إدارة نشطة",
+        "صلاحية الشاشة والإجراء؛ المدير المحدود يرى وينفذ المسموح فقط",
+        "سبب القرار ونسخة السجل مطلوبان للإجراءات الحساسة"
+      ],
+      "uiRoutes": [
+        "/admin/property-categories",
+        "/admin/locations",
+        "/admin/features",
+        "/admin/projects",
+        "/admin/projects/review",
+        "/admin/properties",
+        "/admin/properties/review",
+        "/admin/properties/possible-duplicates",
+        "/admin/property-reports"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "administrator"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#admin",
+        "journeyId": "GUIDE-20"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-21",
@@ -1493,7 +2536,7 @@
         "ADM-23",
         "ADM-24"
       ],
-      "verificationStatus": "LOCAL_CONTACT_CYCLE_PASSED_PENDING_REMAINING_SCOPE",
+      "verificationStatus": "PARTIAL",
       "executionEvidence": {
         "path": "docs/quality/guide-runs/guide-04-local-latest.json",
         "section": "contactJourneyEvidence",
@@ -1516,7 +2559,62 @@
         "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
         "status": "PASS_LOCAL_REQUEST_SUBCASES",
         "scope": "Request API authorization, current account state, ownership, atomic audit rollback, concurrent writes and repeated submissions. Does not close the complete browser journey or Production."
-      }
+      },
+      "actor": [
+        "full_admin",
+        "limited_admin"
+      ],
+      "preconditions": [
+        "جلسة إدارة نشطة",
+        "صلاحية الشاشة والإجراء؛ المدير المحدود يرى وينفذ المسموح فقط",
+        "سبب القرار ونسخة السجل مطلوبان للإجراءات الحساسة"
+      ],
+      "uiRoutes": [
+        "/admin/customer-requests",
+        "/admin/overdue-requests",
+        "/admin/contact-requests",
+        "/admin/viewing-requests",
+        "/admin/search-requests",
+        "/admin/request-issues"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "EVIDENCE_SCOPED",
+        "collections": [],
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
+      },
+      "cases": {
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "administrator"
+        ],
+        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "decisionReason": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "atomicAuditRollback": "PARTIAL_API_EVIDENCE_ATTACHED"
+      },
+      "environment": {
+        "local": "PARTIAL",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#admin",
+        "journeyId": "GUIDE-21"
+      },
+      "executionDate": "2026-09-09T07:55:32.814Z",
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open."
     },
     {
       "id": "GUIDE-22",
@@ -1531,7 +2629,64 @@
         "ADM-31",
         "ADM-32"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "full_admin",
+        "limited_admin"
+      ],
+      "preconditions": [
+        "جلسة إدارة نشطة",
+        "صلاحية الشاشة والإجراء؛ المدير المحدود يرى وينفذ المسموح فقط",
+        "سبب القرار ونسخة السجل مطلوبان للإجراءات الحساسة"
+      ],
+      "uiRoutes": [
+        "/admin/articles",
+        "/admin/article-categories",
+        "/admin/community",
+        "/admin/community/comments",
+        "/admin/community/moderation",
+        "/admin/content/about",
+        "/admin/content/team",
+        "/admin/content/population-counter"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "administrator"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#admin",
+        "journeyId": "GUIDE-22"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-23",
@@ -1544,7 +2699,62 @@
         "ADM-37",
         "ADM-38"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "full_admin",
+        "limited_admin"
+      ],
+      "preconditions": [
+        "جلسة إدارة نشطة",
+        "صلاحية الشاشة والإجراء؛ المدير المحدود يرى وينفذ المسموح فقط",
+        "سبب القرار ونسخة السجل مطلوبان للإجراءات الحساسة"
+      ],
+      "uiRoutes": [
+        "/admin/ads/requests",
+        "/admin/ads/payment-proofs/pending",
+        "/admin/ads/payment-proofs/approved",
+        "/admin/ads/calendar",
+        "/admin/ads/payments/pending-review",
+        "/admin/ads/financial-review"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "administrator"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#admin",
+        "journeyId": "GUIDE-23"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-24",
@@ -1558,7 +2768,63 @@
         "ADM-44",
         "ADM-45"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "full_admin",
+        "limited_admin"
+      ],
+      "preconditions": [
+        "جلسة إدارة نشطة",
+        "صلاحية الشاشة والإجراء؛ المدير المحدود يرى وينفذ المسموح فقط",
+        "سبب القرار ونسخة السجل مطلوبان للإجراءات الحساسة"
+      ],
+      "uiRoutes": [
+        "/admin/commissions",
+        "/admin/commissions/new",
+        "/admin/commissions/history",
+        "/admin/commissions/accounts/:id",
+        "/admin/commissions/exceptions",
+        "/admin/commissions/exceptions/new",
+        "/admin/commissions/confirmations"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "administrator"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#admin",
+        "journeyId": "GUIDE-24"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-25",
@@ -1577,7 +2843,68 @@
         "ADM-57",
         "ADM-58"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "PARTIAL",
+      "actor": [
+        "full_admin",
+        "limited_admin"
+      ],
+      "preconditions": [
+        "جلسة إدارة نشطة",
+        "صلاحية الشاشة والإجراء؛ المدير المحدود يرى وينفذ المسموح فقط",
+        "سبب القرار ونسخة السجل مطلوبان للإجراءات الحساسة"
+      ],
+      "uiRoutes": [
+        "/admin/banners",
+        "/admin/banners/new",
+        "/admin/content/tips",
+        "/admin/content/homepage",
+        "/admin/settings/platform",
+        "/admin/settings/contact",
+        "/admin/settings/social",
+        "/admin/settings/properties",
+        "/admin/settings/advertising",
+        "/admin/settings/seo",
+        "/admin/settings/privacy-security",
+        "/admin/settings/display"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "UNVERIFIED",
+        "collections": [],
+        "note": "No real MongoDB before/after evidence is attached for this complete journey yet."
+      },
+      "cases": {
+        "success": "UNVERIFIED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "UNVERIFIED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "administrator"
+        ],
+        "horizontalAccess": "UNVERIFIED",
+        "currentSessionState": "UNVERIFIED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "UNVERIFIED",
+        "decisionReason": "UNVERIFIED",
+        "atomicAuditRollback": "UNVERIFIED"
+      },
+      "environment": {
+        "local": "NOT_EXECUTED",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#admin",
+        "journeyId": "GUIDE-25"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Guide and route mapping exist, but no complete real browser/API/MongoDB execution evidence is attached."
     },
     {
       "id": "GUIDE-26",
@@ -1592,20 +2919,89 @@
         "ADM-65",
         "ADM-66"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW",
+      "verificationStatus": "PARTIAL",
       "backendGuaranteesEvidence": {
         "path": "docs/quality/guide-runs/request-guarantees-local-latest.json",
         "status": "PASS_LOCAL_REQUEST_SUBCASES",
         "scope": "Request API authorization, current account state, ownership, atomic audit rollback, concurrent writes and repeated submissions. Does not close the complete browser journey or Production."
-      }
+      },
+      "actor": [
+        "full_admin",
+        "limited_admin"
+      ],
+      "preconditions": [
+        "جلسة إدارة نشطة",
+        "صلاحية الشاشة والإجراء؛ المدير المحدود يرى وينفذ المسموح فقط",
+        "سبب القرار ونسخة السجل مطلوبان للإجراءات الحساسة"
+      ],
+      "uiRoutes": [
+        "/admin/admin-users",
+        "/admin/admin-users/new",
+        "/admin/admin-users/:id",
+        "/admin/roles",
+        "/admin/roles/:id",
+        "/admin/notifications",
+        "/admin/audit-logs"
+      ],
+      "apis": [],
+      "mongoChanges": {
+        "status": "EVIDENCE_SCOPED",
+        "collections": [],
+        "note": "See executionEvidence for the database observations captured by the executed subflow; unlisted collections are not claimed."
+      },
+      "cases": {
+        "success": "PARTIAL_EVIDENCE_ATTACHED",
+        "validation": "UNVERIFIED_COMPLETE_JOURNEY",
+        "empty": "UNVERIFIED_COMPLETE_JOURNEY",
+        "networkRetry": "UNVERIFIED_COMPLETE_JOURNEY",
+        "duplicateMutation": "PARTIAL_API_EVIDENCE_ATTACHED"
+      },
+      "permissions": {
+        "requiredRoles": [
+          "administrator"
+        ],
+        "horizontalAccess": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "currentSessionState": "PARTIAL_API_EVIDENCE_ATTACHED"
+      },
+      "versionAndAudit": {
+        "expectedVersion409": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "decisionReason": "PARTIAL_API_EVIDENCE_ATTACHED",
+        "atomicAuditRollback": "PARTIAL_API_EVIDENCE_ATTACHED"
+      },
+      "environment": {
+        "local": "PARTIAL",
+        "production": "NOT_EXECUTED_AFTER_CURRENT_COMMIT"
+      },
+      "userGuide": {
+        "path": "docs/quality/Sadat_Real_Estate_Client_User_Guide_FINAL_AR.html",
+        "section": "#admin",
+        "journeyId": "GUIDE-26"
+      },
+      "executionDate": null,
+      "commit": "1aa69fb",
+      "legacyStatus": "PARTIAL",
+      "incompleteReason": "Only the evidence named on this row is proven; the complete success, failure, retry, permission, MongoDB and Production scope remains open."
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-09T14:52:43.825517+00:00",
+    "updatedAt": "2026-09-09T21:04:18.167Z",
     "totalJourneys": 26,
-    "localE2ePassed": 3,
+    "verified": 0,
+    "partial": 26,
+    "blocked": 0,
+    "localWithAnyExecutionEvidence": 6,
     "productionVerified": 0,
-    "fullyClosed": 0,
-    "localE2ePartial": 3
+    "fullyClosed": 0
+  },
+  "contract": {
+    "allowedStatuses": [
+      "VERIFIED",
+      "PARTIAL",
+      "BLOCKED"
+    ],
+    "verifiedMeaning": "A real browser, API and MongoDB journey passed in the declared environment with reviewable evidence.",
+    "partialMeaning": "Mapping or only a subset of the required browser/API/database journey is evidenced.",
+    "blockedMeaning": "Execution cannot proceed because a named external prerequisite is unavailable.",
+    "mocksAreCompletionEvidence": false
   }
 }

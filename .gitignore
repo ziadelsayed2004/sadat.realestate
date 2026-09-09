@@ -13,4 +13,6 @@ coverage/
 apps/web/test-results/
 apps/web/playwright-report/
 .local/
+.tmp/
 .tmp-*
+/playwright-report/
