@@ -2,7 +2,7 @@
   "journey": "GUIDE-04",
   "environment": "local",
   "mockedRoutes": false,
-  "startedAt": "2026-09-09T07:42:51.378Z",
+  "startedAt": "2026-09-09T07:55:25.008Z",
   "status": "PASS_LOCAL",
   "scope": "Browser registration through real email OTP, API persistence, and authenticated seeker dashboard. Test account remains in isolated local data.",
   "guideDeviation": "The current implemented authority is email OTP; the historical guide says phone OTP.",
@@ -94,6 +94,41 @@
     },
     {
       "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/properties/demo-open-view-apartment",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/seeker/contact-requests",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/public/properties/demo-open-view-apartment",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/refresh",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/me",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/seeker/requests/53f4ffd26a24f712f31d4ee2",
+      "status": 200
+    },
+    {
+      "method": "POST",
       "path": "/api/v1/auth/logout",
       "status": 200
     },
@@ -118,5 +153,30 @@
     ],
     "remaining": "Production verification pending."
   },
-  "finishedAt": "2026-09-09T07:42:56.209Z"
+  "contactJourneyEvidence": {
+    "journeys": [
+      "GUIDE-06",
+      "GUIDE-21"
+    ],
+    "status": "PASS_LOCAL_CONTACT_PARTIAL_GUIDES",
+    "transitions": [
+      "browser_contact_created",
+      "under_review",
+      "contacted",
+      "resolved",
+      "closed"
+    ],
+    "checks": [
+      "seeker_denied_admin_transition_403",
+      "stale_version_rejected_409",
+      "seeker_reads_final_closed_state",
+      "seeker_browser_shows_closed"
+    ],
+    "remaining": [
+      "Admin browser actions",
+      "Other request types",
+      "Production verification"
+    ]
+  },
+  "finishedAt": "2026-09-09T07:55:32.814Z"
 }

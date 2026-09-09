@@ -289,16 +289,13 @@ describe('public property details', () => {
 
     expect(new Headers(requestInit?.headers).get('authorization')).toBe('Bearer current-session-token');
     expect(JSON.parse(String(requestInit?.body))).toEqual({
-      type: 'contact',
-      payload: {
-        message: 'Please share the details.',
-        fullName: 'Example Seeker',
-        phone: '+201001234567',
-        preferredContactTime: 'evening',
-        propertyId,
-        projectId,
-        locale: 'en'
-      }
+      message: 'Please share the details.',
+      fullName: 'Example Seeker',
+      phone: '+201001234567',
+      preferredContactTime: 'evening',
+      propertyId,
+      projectId,
+      locale: 'en'
     });
   });
 

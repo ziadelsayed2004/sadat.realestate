@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { chromium, expect } from '@playwright/test';
+import { verifyContactJourney } from './verify-guide-contact-local.mjs';
 
 // Uses the repository's loopback preview and mail catcher, never external mail.
 const base = 'http://127.0.0.1:4173';
@@ -99,6 +100,11 @@ try {
     passed: ['browser detail save', 'idempotent repeat save', 'browser saved-property projection', 'browser remove'],
     remaining: 'Production verification pending.'
   };
+  const contactRefresh = page.waitForResponse(response => new URL(response.url()).pathname === '/api/v1/auth/refresh' && response.status() === 200);
+  await page.goto(`${base}/properties/${property.slug}?lang=en`, { waitUntil: 'networkidle' });
+  await expect(page.locator('[data-details-state="success"]')).toBeVisible();
+  const contactAuthorization = `Bearer ${(await (await contactRefresh).json()).data.accessToken}`;
+  evidence.contactJourneyEvidence = await verifyContactJourney(page, browser, base, contactAuthorization);
   const logout = await page.request.post(`${base}/api/v1/auth/logout`, { data: {} });
   assert.equal(logout.status(), 200);
   const refreshAfterLogout = await page.request.post(`${base}/api/v1/auth/refresh`, { data: {} });

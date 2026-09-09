@@ -1285,7 +1285,25 @@
         "SEK-03",
         "SEK-04"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "LOCAL_CONTACT_CYCLE_PASSED_PENDING_REMAINING_SCOPE",
+      "executionEvidence": {
+        "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+        "section": "contactJourneyEvidence",
+        "verifiedAt": "2026-09-09T07:55:32.814Z",
+        "mockedRoutes": false,
+        "passed": [
+          "Browser contact creation 201",
+          "Admin API review/contact/resolve/close",
+          "Seeker forbidden 403",
+          "Stale version 409",
+          "Seeker final browser state"
+        ],
+        "remaining": [
+          "Admin UI decisions",
+          "Other request types",
+          "Production"
+        ]
+      }
     },
     {
       "id": "GUIDE-07",
@@ -1456,7 +1474,25 @@
         "ADM-23",
         "ADM-24"
       ],
-      "verificationStatus": "PENDING_BACKEND_CYCLE_REVIEW"
+      "verificationStatus": "LOCAL_CONTACT_CYCLE_PASSED_PENDING_REMAINING_SCOPE",
+      "executionEvidence": {
+        "path": "docs/quality/guide-runs/guide-04-local-latest.json",
+        "section": "contactJourneyEvidence",
+        "verifiedAt": "2026-09-09T07:55:32.814Z",
+        "mockedRoutes": false,
+        "passed": [
+          "Browser contact creation 201",
+          "Admin API review/contact/resolve/close",
+          "Seeker forbidden 403",
+          "Stale version 409",
+          "Seeker final browser state"
+        ],
+        "remaining": [
+          "Admin UI decisions",
+          "Other request types",
+          "Production"
+        ]
+      }
     },
     {
       "id": "GUIDE-22",
@@ -1536,11 +1572,11 @@
     }
   ],
   "executionSummary": {
-    "updatedAt": "2026-09-09T07:42:56.209Z",
+    "updatedAt": "2026-09-09T07:55:32.814Z",
     "totalJourneys": 26,
     "localE2ePassed": 3,
     "productionVerified": 0,
     "fullyClosed": 0,
-    "localE2ePartial": 0
+    "localE2ePartial": 2
   }
 }

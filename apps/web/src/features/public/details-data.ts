@@ -141,7 +141,7 @@ export function createPublicPropertyDetailsActions(options: PublicPropertyDetail
       const response = await client.request('/seeker/contact-requests', {
         method: 'POST',
         ...(headers === undefined ? {} : { headers }),
-        json: request,
+        json: request.payload,
         responseSchema: requestResponseSchema
       });
       return response.data.data;
