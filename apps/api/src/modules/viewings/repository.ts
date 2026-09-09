@@ -101,6 +101,9 @@ export function createMongooseViewingRepository(connection: Connection): Viewing
   }
 
   return {
+    async isActiveAccount(claims) {
+      return Boolean(await connection.collection('users').findOne({ _id: oid(claims.sub), roleType: claims.role, status: 'verified' }, { projection: { _id: 1 } }));
+    },
     async create(row) {
       // Resolve ownership on the server; a seeker must never choose the recipient.
       const propertyFilter: Record<string, unknown> = {

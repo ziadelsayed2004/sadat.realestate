@@ -1,4 +1,4 @@
-﻿import assert from 'node:assert/strict';
+import assert from 'node:assert/strict';
 import { randomBytes } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
@@ -7,6 +7,7 @@ import { createHmacAccessTokenService } from '../apps/api/src/modules/auth/crypt
 import { createAuditModels } from '../apps/api/src/modules/audit/models.ts';
 import { createMongooseAuditWriter } from '../apps/api/src/modules/audit/writer.ts';
 import { createRbacRuntime } from '../apps/api/src/modules/rbac/runtime.ts';
+import { createViewingRuntime } from '../apps/api/src/modules/viewings/runtime.ts';
 import { createRequestRuntime } from '../apps/api/src/modules/requests/runtime.ts';
 import { createApiServer, startApiServer, stopApiServer } from '../apps/api/src/server.ts';
 
@@ -29,13 +30,14 @@ try {
   } };
   const rbac = createRbacRuntime(connection, accessTokens, audit);
   const requests = createRequestRuntime(connection, accessTokens, rbac.service, audit);
+  const viewings = createViewingRuntime(connection, accessTokens, rbac.service);
   const ids = { seeker: new Types.ObjectId(), other: new Types.ObjectId(), admin: new Types.ObjectId(), role: new Types.ObjectId() };
   await connection.collection('users').insertMany(['seeker', 'other', 'admin'].map(name => ({ _id: ids[name], roleType: name === 'admin' ? 'admin' : 'seeker', status: 'verified' })));
   const permissions = ['admin:requests.view', 'admin:requests.manage', 'admin:requests.assign', 'admin:requests.notes'];
   await connection.collection('roles').insertOne({ _id: ids.role, name: 'Local request reviewer', nameKey: 'local-request-reviewer', accessMode: 'custom', active: true, permissions, createdAt: new Date(), updatedAt: new Date(), version: 0 });
   await connection.collection('admin_role_assignments').insertOne({ adminUserId: ids.admin, roleIds: [ids.role] });
   const tokens = Object.fromEntries(['seeker', 'other', 'admin'].map(name => [name, accessTokens.issue({ id: ids[name].toHexString(), roleType: name === 'admin' ? 'admin' : 'seeker', status: 'verified' }, new Types.ObjectId().toHexString(), new Date())]));
-  server = createApiServer({ database: { isReady: async () => true }, requests });
+  server = createApiServer({ database: { isReady: async () => true }, requests, viewings });
   const address = await startApiServer(server, { host: '127.0.0.1', port: 0 });
   const base = `http://127.0.0.1:${address.port}/api/v1`;
   const call = async (actor, path, body) => {
@@ -104,6 +106,13 @@ try {
   assert.equal((await connection.collection('requests').findOne({ _id: new Types.ObjectId(id) })).internalNotes.length, 1);
   assert.equal(JSON.stringify((await call('seeker', `/seeker/requests/${id}`)).body).includes('Private review note'), false);
   evidence.checks.push('assignment_and_note_atomic_audit_rollback_and_replay_409', 'private_note_hidden_from_seeker');
+  assert.equal((await call('admin', '/admin/viewings')).status, 403);
+  await connection.collection('roles').updateOne({ _id: ids.role }, { $set: { permissions: [...permissions, 'admin:viewings.view'] } });
+  assert.equal((await call('admin', '/admin/viewings')).status, 200);
+  await connection.collection('users').updateOne({ _id: ids.admin }, { $set: { status: 'suspended' } });
+  assert.equal((await call('admin', '/admin/viewings')).status, 403);
+  await connection.collection('users').updateOne({ _id: ids.admin }, { $set: { status: 'verified' } });
+  evidence.checks.push('viewing_admin_requires_own_permission_and_current_active_account');
   evidence.status = 'PASS_LOCAL';
 } catch (error) {
   evidence.status = 'FAIL_LOCAL';

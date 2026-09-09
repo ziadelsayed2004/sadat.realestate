@@ -4,6 +4,7 @@ import type { AccessTokenClaims, AccessTokenService } from '../auth/crypto.js';
 import { ApiContractError, toApiErrorResponse } from '../contracts/error-boundary.js';
 import { toSuccessResponse } from '../contracts/response.js';
 import { getRequestContext } from '../observability/context.js';
+import { createAdminRbacAuthMiddleware } from '../rbac/auth.js';
 import { ViewingServiceError } from './service.js';
 import type { createViewingService } from './service.js';
 export const VIEWING_ROUTE_DEFINITIONS = [
@@ -21,6 +22,6 @@ export function createViewingRouter(dependencies: ViewingRouterDependencies): Ro
   router.post('/seeker/viewings/:viewingId/cancel', auth(dependencies.accessTokens, 'seeker'), async (req, res) => { try { res.status(200).json(toSuccessResponse(await dependencies.service.cancel(claims(res), viewingIdParamsSchema.parse(req.params).viewingId, (req.body as { expectedVersion?: number } | undefined)?.expectedVersion), requestId(req))); } catch (e) { send(req, res, e); } });
   router.get('/provider/viewings', auth(dependencies.accessTokens, 'provider'), async (req, res) => { try { res.status(200).json(toSuccessResponse(await dependencies.service.list(claims(res), viewingListQuerySchema.parse(req.query)), requestId(req))); } catch (e) { send(req, res, e); } });
   router.post('/provider/viewings/:viewingId/transitions', auth(dependencies.accessTokens, 'provider'), async (req, res) => { try { res.status(200).json(toSuccessResponse(await dependencies.service.transition(claims(res), viewingIdParamsSchema.parse(req.params).viewingId, viewingTransitionSchema.parse(req.body ?? {})), requestId(req))); } catch (e) { send(req, res, e); } });
-  router.get('/admin/viewings', auth(dependencies.accessTokens, 'admin'), async (req, res) => { try { res.status(200).json(toSuccessResponse(await dependencies.service.list(claims(res), viewingListQuerySchema.parse(req.query)), requestId(req))); } catch (e) { send(req, res, e); } });
+  router.get('/admin/viewings', createAdminRbacAuthMiddleware(dependencies.accessTokens), async (req, res) => { try { res.status(200).json(toSuccessResponse(await dependencies.service.list(res.locals.adminRbacClaims as AccessTokenClaims, viewingListQuerySchema.parse(req.query)), requestId(req))); } catch (e) { send(req, res, e); } });
   return router;
 }
