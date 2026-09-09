@@ -33,7 +33,7 @@ export interface CommunityRepository {
   listPosts(): Promise<CommunityPost[]>;
   getPost(postId: string): Promise<CommunityPost | undefined>;
   savePost(post: CommunityPost): Promise<void>;
-  moderatePost(post: CommunityPost, expectedUpdatedAt: string, audit: AuditRecordInput): Promise<void>;
+  moderatePost(post: CommunityPost, expectedVersion: number, audit: AuditRecordInput): Promise<void>;
   listComments(postId?: string): Promise<CommunityComment[]>;
   getComment(commentId: string): Promise<CommunityComment | undefined>;
   saveComment(comment: CommunityComment): Promise<void>;
@@ -68,9 +68,9 @@ export function createMemoryCommunityRepository(seed: CommunityPost[] = [], audi
     async listPosts() { return [...posts.values()]; },
     async getPost(postId) { return posts.get(postId); },
     async savePost(post) { posts.set(post.id, post); },
-    async moderatePost(post, expectedUpdatedAt, entry) {
+    async moderatePost(post, expectedVersion, entry) {
       const mutation = mutationQueue.then(async () => {
-        if (posts.get(post.id)?.updatedAt !== expectedUpdatedAt) throw new Error('VERSION_CONFLICT');
+        if (posts.get(post.id)?.version !== expectedVersion) throw new Error('VERSION_CONFLICT');
         if (!audit) throw new Error('AUDIT_UNAVAILABLE');
         await audit.record(entry);
         posts.set(post.id, post);
@@ -151,7 +151,7 @@ export function createCommunityService(
         if (createdToday >= policy.dailyPostLimit) throw new Error('POST_LIMIT');
       }
       if (containsBlockedWord(`${parsed.title} ${parsed.body}`, policy) && policy.blockedWordAction === 'reject') throw new Error('BLOCKED_CONTENT');
-      const post = communityPostSchema.parse({ id: id(), authorId: claims.sub, ...parsed, status: 'draft', createdAt: stamp, updatedAt: stamp });
+      const post = communityPostSchema.parse({ id: id(), authorId: claims.sub, ...parsed, status: 'draft', version: 0, createdAt: stamp, updatedAt: stamp });
       await repository.savePost(post);
       return post;
     },
@@ -165,14 +165,14 @@ export function createCommunityService(
       const patch = communityPostPatchSchema.parse(input);
       const policy = await settings();
       if (containsBlockedWord(`${patch.title ?? post.title} ${patch.body ?? post.body}`, policy) && policy.blockedWordAction === 'reject') throw new Error('BLOCKED_CONTENT');
-      const updated = communityPostSchema.parse({ ...post, ...patch, updatedAt: now() });
+      const updated = communityPostSchema.parse({ ...post, ...patch, version: post.version + 1, updatedAt: now() });
       await repository.savePost(updated);
       return updated;
     },
     async remove(claims, postId) {
       const post = await repository.getPost(postId);
       if (!post || post.authorId !== claims.sub) throw new Error('NOT_FOUND');
-      const updated = { ...post, status: 'removed' as const, updatedAt: now() };
+      const updated = { ...post, status: 'removed' as const, version: post.version + 1, updatedAt: now() };
       await repository.savePost(updated);
       return updated;
     },
@@ -181,15 +181,16 @@ export function createCommunityService(
       const parsed = communityPostModerationSchema.parse(input);
       const post = await repository.getPost(postId);
       if (!post) throw new Error('NOT_FOUND');
-      if (post.updatedAt !== parsed.expectedUpdatedAt) throw new Error('VERSION_CONFLICT');
-      const status = parsed.action === 'publish' ? 'published' : 'hidden';
-      if (post.status === 'removed' || post.status === status) throw new Error('INVALID_STATE');
+      if (post.version !== parsed.expectedVersion) throw new Error('VERSION_CONFLICT');
+      const status = parsed.action === 'publish' ? 'published' : parsed.action === 'hide' ? 'hidden' : 'rejected';
+      const allowed = parsed.action === 'publish' ? ['draft', 'hidden', 'rejected'] : parsed.action === 'hide' ? ['published'] : ['draft', 'hidden'];
+      if (!allowed.includes(post.status)) throw new Error('INVALID_STATE');
       const updatedAt = new Date(Math.max(Date.now(), Date.parse(post.updatedAt) + 1)).toISOString();
-      const updated = { ...post, status, updatedAt } as CommunityPost;
-      await repository.moderatePost(updated, parsed.expectedUpdatedAt, {
+      const updated = { ...post, status, version: post.version + 1, updatedAt } as CommunityPost;
+      await repository.moderatePost(updated, parsed.expectedVersion, {
         actorType: 'admin', actorId: claims.sub, targetType: 'community_post', targetId: postId,
         action: `community_post.${parsed.action}`, reason: parsed.reason,
-        before: { status: post.status, updatedAt: post.updatedAt }, after: { status, updatedAt },
+        before: { status: post.status, version: post.version, updatedAt: post.updatedAt }, after: { status, version: updated.version, updatedAt },
         ...context, occurredAt: new Date(updatedAt)
       });
       return updated;

@@ -104,7 +104,7 @@ const localized = (ar: string, en: string) => ({ ar, en });
 interface SyntheticSeedDocument {
   _id: Types.ObjectId;
   synthetic: true;
-  seedKey: 'local-showcase-v1' | 'local-showcase-v2' | 'figma-public-content-v3' | 'figma-public-catalogue-v4' | 'figma-public-interactions-v5' | 'auth-buyer-v6' | 'figma-public-details-v9' | 'figma-public-details-v13' | 'figma-public-listing-v10' | 'figma-public-about-v1' | 'figma-public-parity-v11' | 'figma-public-parity-v12' | 'figma-public-directory-v14' | 'figma-public-profile-v15' | 'figma-public-profile-v16' | 'figma-public-articles-v17' | 'figma-public-article-route-v18' | 'figma-public-article-dates-v19' | 'figma-public-community-v20' | 'figma-public-team-v21';
+  seedKey: 'local-showcase-v1' | 'local-showcase-v2' | 'figma-public-content-v3' | 'figma-public-catalogue-v4' | 'figma-public-interactions-v5' | 'auth-buyer-v6' | 'figma-public-details-v9' | 'figma-public-details-v13' | 'figma-public-listing-v10' | 'figma-public-about-v1' | 'figma-public-parity-v11' | 'figma-public-parity-v12' | 'figma-public-directory-v14' | 'figma-public-profile-v15' | 'figma-public-profile-v16' | 'figma-public-articles-v17' | 'figma-public-article-route-v18' | 'figma-public-article-dates-v19' | 'figma-public-community-v20' | 'figma-public-team-v21' | 'local-rbac-community-v22';
   [key: string]: unknown;
 }
 
@@ -402,6 +402,7 @@ export const SYNTHETIC_SHOWCASE_SEED_STEP: DevelopmentSeedStep = {
       title: 'ما هي أفضل المدارس والخدمات التعليمية القريبة من المنطقة الخامسة؟',
       body: 'أخطط للانتقال مع الأسرة إلى الحي الخامس في مدينة السادات، وأود معرفة تجاربكم مع المدارس الحكومية والخاصة والمستشفيات القريبة من المنطقة. شكراً مقدماً لتعاونكم!',
       status: 'published',
+      version: 0,
       createdAt: SEEDED_AT.toISOString(),
       updatedAt: SEEDED_AT.toISOString()
     })]);
@@ -572,7 +573,8 @@ export const SYNTHETIC_WORKFLOW_SEED_STEP: DevelopmentSeedStep = {
       'admin:overview.view',
       'admin:properties.view',
       'admin:requests.view',
-      'admin:ads.view'
+      'admin:ads.view',
+      'admin:community.view'
     ];
     const operationsPermissions = [
       'admin:requests.view',
@@ -580,7 +582,9 @@ export const SYNTHETIC_WORKFLOW_SEED_STEP: DevelopmentSeedStep = {
       'admin:requests.assign',
       'admin:payments.review',
       'admin:commissions.manage',
-      'admin:commissions.view'
+      'admin:commissions.view',
+      'admin:community.view',
+      'admin:community.moderate'
     ];
     const localAdminPasswordHash = await argon2Hash(
       'LocalPreview-Admin-Only-2026!',
@@ -954,6 +958,7 @@ export const FIGMA_PUBLIC_CONTENT_SEED_STEP: DevelopmentSeedStep = {
       title,
       body,
       status: 'published',
+      version: 0,
       createdAt: SEEDED_AT.toISOString(),
       updatedAt: SEEDED_AT.toISOString()
     }, seedKey)));
@@ -1824,6 +1829,7 @@ export const FIGMA_PUBLIC_COMMUNITY_SEED_STEP: DevelopmentSeedStep = {
             likeCount,
             dislikeCount,
             status: 'published',
+            version: 0,
             createdAt,
             updatedAt: createdAt,
             seedKey
@@ -1905,6 +1911,21 @@ export const SYNTHETIC_BROKER_APPLICATION_SEED_STEP: DevelopmentSeedStep = {
   }
 };
 
+export const LOCAL_COMMUNITY_RBAC_SEED_STEP: DevelopmentSeedStep = {
+  id: 'local-rbac-community-v22',
+  async run(connection) {
+    const roles = connection.collection('roles');
+    await roles.updateOne(
+      { _id: ids.adminViewerRole, synthetic: true },
+      { $addToSet: { permissions: 'admin:community.view' } }
+    );
+    await roles.updateOne(
+      { _id: ids.adminOpsRole, synthetic: true },
+      { $addToSet: { permissions: { $each: ['admin:community.view', 'admin:community.moderate'] } } }
+    );
+  }
+};
+
 export const DEVELOPMENT_SEED_STEPS: readonly DevelopmentSeedStep[] = [
   SYNTHETIC_SHOWCASE_SEED_STEP,
   SYNTHETIC_WORKFLOW_SEED_STEP,
@@ -1925,7 +1946,8 @@ export const DEVELOPMENT_SEED_STEPS: readonly DevelopmentSeedStep[] = [
   FIGMA_PUBLIC_COMMUNITY_SEED_STEP,
   FIGMA_PUBLIC_TEAM_SEED_STEP,
   AUTH_BUYER_SEED_STEP,
-  SYNTHETIC_BROKER_APPLICATION_SEED_STEP
+  SYNTHETIC_BROKER_APPLICATION_SEED_STEP,
+  LOCAL_COMMUNITY_RBAC_SEED_STEP
 ];
 
 export function assertDevelopmentSeedAllowed(environment: AppEnvironment): void {

@@ -796,6 +796,7 @@
       "draft": "Draft",
       "published": "Published",
       "hidden": "Hidden",
+      "rejected": "Rejected",
       "removed": "Removed"
     },
     "commentStatus": {
@@ -819,7 +820,10 @@
       "review": "Review",
       "resolve": "Resolve report",
       "dismiss": "Dismiss report",
-      "close": "Close"
+      "close": "Close",
+      "publishPost": "Publish post",
+      "hidePost": "Hide post",
+      "rejectPost": "Reject post"
     },
     "reason": "Decision reason",
     "reasonPlaceholder": "Write a clear reason of at least five characters",

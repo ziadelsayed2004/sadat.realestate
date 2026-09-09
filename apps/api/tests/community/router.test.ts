@@ -47,6 +47,7 @@ async function withServer(run: (origin: string, postId: string) => Promise<void>
     title: 'Published community post',
     body: 'Public body',
     status: 'published' as const,
+    version: 0,
     createdAt: NOW,
     updatedAt: NOW
   }];
@@ -161,9 +162,9 @@ test('community mutations require verified authentication and keep strict safe r
 test('community HTTP lifecycle creates a private draft, moderates it, rejects stale decisions, and hides it publicly', async () => withServer(async origin => {
   const created = await request(origin, 'POST', '/api/v1/public/community/posts', 'seeker', { title: 'Lifecycle test', body: 'Reviewed test content' });
   assert.equal(created.status, 201);
-  const { data: draft } = await created.json() as { data: { id: string; updatedAt: string } };
+  const { data: draft } = await created.json() as { data: { id: string; version: number } };
   const path = `/api/v1/admin/community/posts/${draft.id}/moderate`;
-  const input = { action: 'publish', reason: 'Approved after content review', expectedUpdatedAt: draft.updatedAt };
+  const input = { action: 'publish', reason: 'Approved after content review', expectedVersion: draft.version };
   assert.equal((await request(origin, 'GET', `/api/v1/public/community/posts/${draft.id}`)).status, 404);
   assert.equal((await request(origin, 'POST', path, undefined, input)).status, 401);
   assert.equal((await request(origin, 'POST', path, 'seeker', input)).status, 403);
@@ -171,9 +172,12 @@ test('community HTTP lifecycle creates a private draft, moderates it, rejects st
   assert.equal((await request(origin, 'POST', path, 'admin', { ...input, reason: ' ' })).status, 400);
   const published = await request(origin, 'POST', path, 'admin', input);
   assert.equal(published.status, 200);
-  const { data } = await published.json() as { data: { updatedAt: string } };
+  const { data } = await published.json() as { data: { version: number } };
   assert.equal((await request(origin, 'GET', `/api/v1/public/community/posts/${draft.id}`)).status, 200);
   assert.equal((await request(origin, 'POST', path, 'admin', input)).status, 409);
-  assert.equal((await request(origin, 'POST', path, 'admin', { ...input, action: 'hide', expectedUpdatedAt: data.updatedAt })).status, 200);
+  const hidden = await request(origin, 'POST', path, 'admin', { ...input, action: 'hide', expectedVersion: data.version });
+  assert.equal(hidden.status, 200);
   assert.equal((await request(origin, 'GET', `/api/v1/public/community/posts/${draft.id}`)).status, 404);
+  const { data: hiddenData } = await hidden.json() as { data: { version: number } };
+  assert.equal((await request(origin, 'POST', path, 'admin', { ...input, action: 'reject', expectedVersion: hiddenData.version })).status, 200);
 }));

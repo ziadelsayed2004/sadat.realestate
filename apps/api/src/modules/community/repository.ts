@@ -4,7 +4,7 @@ import { communityCommentSchema, communityPostSchema } from '@sadat-real-estate/
 import type { CommunityModels, CommunityPostRecord, CommunityCommentRecord } from './models.js';
 import type { CommunityRepository } from './service.js';
 
-const postProjection = { _id: 0, id: 1, authorId: 1, title: 1, body: 1, category: 1, authorName: 1, avatarUrl: 1, imageUrl: 1, likeCount: 1, dislikeCount: 1, status: 1, createdAt: 1, updatedAt: 1 } as const;
+const postProjection = { _id: 0, id: 1, authorId: 1, title: 1, body: 1, category: 1, authorName: 1, avatarUrl: 1, imageUrl: 1, likeCount: 1, dislikeCount: 1, status: 1, version: 1, createdAt: 1, updatedAt: 1 } as const;
 const commentProjection = { _id: 0, id: 1, postId: 1, authorId: 1, body: 1, parentId: 1, depth: 1, status: 1, createdAt: 1 } as const;
 
 function post(row: CommunityPostRecord): CommunityPost {
@@ -31,10 +31,11 @@ export function createMongooseCommunityRepository(models: CommunityModels, audit
     async savePost(value) {
       await models.CommunityPost.replaceOne({ id: value.id }, value, { upsert: true });
     },
-    async moderatePost(value, expectedUpdatedAt, entry) {
+    async moderatePost(value, expectedVersion, entry) {
       if (!audit) throw new Error('AUDIT_UNAVAILABLE');
       await models.CommunityPost.db.transaction(async session => {
-        const result = await models.CommunityPost.replaceOne({ id: value.id, updatedAt: expectedUpdatedAt }, value, { session });
+        const versionFilter = expectedVersion === 0 ? { $or: [{ version: 0 }, { version: { $exists: false } }] } : { version: expectedVersion };
+        const result = await models.CommunityPost.replaceOne({ id: value.id, ...versionFilter }, value, { session });
         if (result.matchedCount !== 1) throw new Error('VERSION_CONFLICT');
         await audit.record(entry, session);
       });

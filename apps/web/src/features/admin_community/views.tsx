@@ -49,7 +49,7 @@ export interface AdminCommunityProps {
   readonly resolveReport?: AdminCommunityReportResolver | undefined;
 }
 
-const postStatuses: readonly CommunityPostStatus[] = ['draft', 'published', 'hidden', 'removed'];
+const postStatuses: readonly CommunityPostStatus[] = ['draft', 'published', 'hidden', 'rejected', 'removed'];
 const commentStatuses: readonly CommunityCommentStatus[] = ['visible', 'hidden', 'removed'];
 const reportStatuses: readonly CommunityReportStatus[] = ['open', 'in_review', 'resolved', 'dismissed'];
 type CommunityPostStatus = CommunityAdminPost['status'];
@@ -105,7 +105,7 @@ function StatusBadge({ label, tone = 'neutral' }: { readonly label: string; read
 function statusTone(status: string): 'neutral' | 'success' | 'warning' | 'danger' | 'info' {
   if (status === 'published' || status === 'visible' || status === 'resolved') return 'success';
   if (status === 'in_review' || status === 'hidden') return 'warning';
-  if (status === 'removed' || status === 'dismissed') return 'danger';
+  if (status === 'removed' || status === 'rejected' || status === 'dismissed') return 'danger';
   if (status === 'open') return 'info';
   return 'neutral';
 }
@@ -118,9 +118,9 @@ function SummaryCards({ data, locale, view }: { readonly data: { readonly total:
   if (data === undefined || view === 'comments') return null;
   const copy = getAdminCommunityCopy(locale);
   const labels = view === 'posts'
-    ? (locale === 'ar' ? ['إجمالي المنشورات', copy.postStatus.published, copy.postStatus.hidden, copy.postStatus.removed] :['Total posts', copy.postStatus.published, copy.postStatus.hidden, copy.postStatus.removed])
+    ? (locale === 'ar' ? ['إجمالي المنشورات', copy.postStatus.published, copy.postStatus.hidden, copy.postStatus.rejected] :['Total posts', copy.postStatus.published, copy.postStatus.hidden, copy.postStatus.rejected])
     : (locale === 'ar' ? ['إجمالي البلاغات', copy.reportStatus.open, copy.reportStatus.in_review, copy.reportStatus.resolved] :['Total reports', copy.reportStatus.open, copy.reportStatus.in_review, copy.reportStatus.resolved]);
-  const statuses = view === 'posts' ? ['published', 'hidden', 'removed'] : ['open', 'in_review', 'resolved'];
+  const statuses = view === 'posts' ? ['published', 'hidden', 'rejected'] : ['open', 'in_review', 'resolved'];
   const values = [data.total, ...statuses.map(status => statusCount(data, status))];
   const colors = ['#1b2942', '#087b43', '#bf6500', '#b42318'];
   return <div className="admin-community__summary" aria-label={labels[0]}>{values.map((value, index) => <article key={labels[index]} className="admin-community__summary-card"><strong style={{ color: colors[index] }}>{new Intl.NumberFormat(locale).format(value)}</strong><span>{labels[index]}</span></article>)}</div>;
@@ -272,12 +272,12 @@ export function AdminCommunity({ locale, session, authClient, apiOrigin, initial
   };
 
   const title = copy.title[view];
-  return <section className="admin-community" data-screen-id={view === 'posts' ? 'ADM-27' : view === 'comments' ? 'ADM-28' : 'ADM-29'} data-route={pathname} data-device-scope="desktop" data-admin-community-state={state}><AdminNavigation locale={locale} activePath={pathname} /><div className="admin-community__content"><header className="admin-community__heading"><div><p className="admin-community__eyebrow">{copy.eyebrow}</p><h1>{title}</h1><p>{copy.description[view]}</p><span className="admin-community__direction-note">{copy.directionNote}</span></div></header><Tabs locale={locale} view={view} /><SummaryCards data={data} locale={locale} view={view} /><StatusStrip view={view} locale={locale} selected={selectedStatus} onSelect={selectStatus} /><Filters view={view} locale={locale} onApply={applyFilters} onClear={clearFilters} />{state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={refresh} /> : null}{state === 'empty' ? <EmptyPanel locale={locale} /> : null}{state === 'success' && data !== undefined ? <section className="admin-community__panel"><div className="admin-community__panel-heading"><div><h2>{title}</h2><span>{copy.page(data.page, Math.max(1, Math.ceil(data.total / Math.max(1, data.limit))))}</span></div></div>{view === 'posts' ? <PostTable items={posts?.items ?? []} locale={locale} onReview={setSelectedPost} /> : view === 'comments' ? <CommentTable items={comments?.items ?? []} locale={locale} /> : <ReportTable items={reports?.items ?? []} locale={locale} onReview={setSelectedReport} />}<Pagination locale={locale} page={data.page} limit={data.limit} total={data.total} onPage={changePage} /></section> : null}{selectedPost !== undefined ? <PostModeration key={selectedPost.updatedAt} post={selectedPost} locale={locale} onClose={() => setSelectedPost(undefined)} onSave={async (action, reason) => { await source.moderatePost(selectedPost.id, { action, reason, expectedUpdatedAt: selectedPost.updatedAt }); setSelectedPost(undefined); refresh(); }} onReload={() => { setSelectedPost(undefined); refresh(); }} /> : null}{selectedReport !== undefined ? <ReportResolution report={selectedReport} locale={locale} onClose={() => setSelectedReport(undefined)} onResolve={handleResolve} /> : null}</div></section>;
+  return <section className="admin-community" data-screen-id={view === 'posts' ? 'ADM-27' : view === 'comments' ? 'ADM-28' : 'ADM-29'} data-route={pathname} data-device-scope="desktop" data-admin-community-state={state}><AdminNavigation locale={locale} activePath={pathname} /><div className="admin-community__content"><header className="admin-community__heading"><div><p className="admin-community__eyebrow">{copy.eyebrow}</p><h1>{title}</h1><p>{copy.description[view]}</p><span className="admin-community__direction-note">{copy.directionNote}</span></div></header><Tabs locale={locale} view={view} /><SummaryCards data={data} locale={locale} view={view} /><StatusStrip view={view} locale={locale} selected={selectedStatus} onSelect={selectStatus} /><Filters view={view} locale={locale} onApply={applyFilters} onClear={clearFilters} />{state === 'loading' || state === 'retry' || state === 'error' || state === 'permission' ? <StatePanel state={state} locale={locale} onRetry={refresh} /> : null}{state === 'empty' ? <EmptyPanel locale={locale} /> : null}{state === 'success' && data !== undefined ? <section className="admin-community__panel"><div className="admin-community__panel-heading"><div><h2>{title}</h2><span>{copy.page(data.page, Math.max(1, Math.ceil(data.total / Math.max(1, data.limit))))}</span></div></div>{view === 'posts' ? <PostTable items={posts?.items ?? []} locale={locale} onReview={setSelectedPost} /> : view === 'comments' ? <CommentTable items={comments?.items ?? []} locale={locale} /> : <ReportTable items={reports?.items ?? []} locale={locale} onReview={setSelectedReport} />}<Pagination locale={locale} page={data.page} limit={data.limit} total={data.total} onPage={changePage} /></section> : null}{selectedPost !== undefined ? <PostModeration key={`${selectedPost.id}:${selectedPost.version}`} post={selectedPost} locale={locale} onClose={() => setSelectedPost(undefined)} onSave={async (action, reason) => { await source.moderatePost(selectedPost.id, { action, reason, expectedVersion: selectedPost.version }); setSelectedPost(undefined); refresh(); }} onReload={() => { setSelectedPost(undefined); refresh(); }} /> : null}{selectedReport !== undefined ? <ReportResolution report={selectedReport} locale={locale} onClose={() => setSelectedReport(undefined)} onResolve={handleResolve} /> : null}</div></section>;
 }
 
 function PostModeration({ post, locale, onSave, onClose, onReload }: {
   readonly post: CommunityAdminPost; readonly locale: SupportedLocale;
-  readonly onSave: (action: 'publish' | 'hide', reason: string) => Promise<void>;
+  readonly onSave: (action: 'publish' | 'hide' | 'reject', reason: string) => Promise<void>;
   readonly onClose: () => void; readonly onReload: () => void;
 }) {
   const copy = getAdminCommunityCopy(locale);
@@ -285,10 +285,9 @@ function PostModeration({ post, locale, onSave, onClose, onReload }: {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [conflict, setConflict] = useState(false);
-  const action = post.status === 'published' ? 'hide' : 'publish';
-  const label = locale === 'ar' ? (action === 'publish' ? 'نشر المنشور' : 'إخفاء المنشور') : (action === 'publish' ? 'Publish post' : 'Hide post');
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const primaryAction = post.status === 'published' ? 'hide' : 'publish';
+  const actionLabel = (action: 'publish' | 'hide' | 'reject') => action === 'publish' ? copy.action.publishPost : action === 'hide' ? copy.action.hidePost : copy.action.rejectPost;
+  async function submit(action: 'publish' | 'hide' | 'reject') {
     if (saving || conflict) return;
     setSaving(true); setError('');
     try { await onSave(action, reason.trim()); }
@@ -298,13 +297,14 @@ function PostModeration({ post, locale, onSave, onClose, onReload }: {
       setError(stale ? (locale === 'ar' ? 'تم تغيير المنشور. أعد تحميل بياناته قبل اتخاذ القرار.' : 'The post changed. Reload it before making a decision.') : copy.states.error.body);
     } finally { setSaving(false); }
   }
-  return <section className="admin-community__resolution" role="region" aria-label={label}>
-    <div><h2>{label}</h2><p>{post.title}</p></div>
-    <form onSubmit={event => { void submit(event); }}>
+  return <section className="admin-community__resolution" role="region" aria-label={actionLabel(primaryAction)}>
+    <div><h2>{actionLabel(primaryAction)}</h2><p>{post.title}</p></div>
+    <form onSubmit={event => { event.preventDefault(); void submit(primaryAction); }}>
       <label htmlFor="community-moderation-reason">{copy.reason}</label>
       <textarea id="community-moderation-reason" required minLength={5} maxLength={500} value={reason} disabled={saving} onChange={event => setReason(event.target.value)} />
       {error ? <p role="alert">{error}</p> : null}
-      <Button type="submit" disabled={saving || conflict || reason.trim().length < 5}>{label}</Button>
+      <Button type="submit" disabled={saving || conflict || reason.trim().length < 5}>{actionLabel(primaryAction)}</Button>
+      {post.status !== 'published' && post.status !== 'rejected' ? <Button type="button" variant="secondary" disabled={saving || conflict || reason.trim().length < 5} onClick={() => { void submit('reject'); }}>{copy.action.rejectPost}</Button> : null}
       {conflict ? <Button type="button" onClick={onReload}>{copy.retry}</Button> : null}
       <Button type="button" variant="secondary" disabled={saving} onClick={onClose}>{copy.action.close}</Button>
     </form>

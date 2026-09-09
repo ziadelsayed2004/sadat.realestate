@@ -385,7 +385,10 @@ export function PublicCommunity({
   const [validationError, setValidationError] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
   const mutationApi = useMemo(
-    () => mutations ?? createCommunityMutationApi({ apiOrigin, getAuthorizationHeader: authClient?.getAuthorizationHeader }),
+    () => mutations ?? createCommunityMutationApi({
+      apiOrigin,
+      getAuthorizationHeader: authClient === undefined ? undefined : () => authClient.getAuthorizationHeader()
+    }),
     [apiOrigin, authClient, mutations]
   );
 

@@ -20,7 +20,8 @@ const postSchema = new Schema<CommunityPostRecord>({
   imageUrl: { type: String, trim: true, maxlength: 2_048 },
   likeCount: { type: Number, min: 0, default: 0 },
   dislikeCount: { type: Number, min: 0, default: 0 },
-  status: { type: String, required: true, enum: ['draft', 'published', 'hidden', 'removed'] },
+  status: { type: String, required: true, enum: ['draft', 'published', 'hidden', 'rejected', 'removed'] },
+  version: { type: Number, required: true, min: 0, default: 0 },
   createdAt: { type: String, required: true, immutable: true },
   updatedAt: { type: String, required: true }
 }, { collection: 'community_posts', strict: 'throw', versionKey: false });

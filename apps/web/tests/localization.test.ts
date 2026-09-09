@@ -83,6 +83,7 @@ test('the early locale guard and transition skeleton are present before hydratio
   assert.match(indexHtml, /classList\.add\('app-booting'\)/);
   assert.match(indexHtml, /sadat-real-estate\\\.locale=\(ar\|en\)/);
   assert.match(indexHtml, /id="app-transition-loader"/);
+  assert.doesNotMatch(indexHtml, /addEventListener\('submit'/);
   assert.ok(indexHtml.indexOf('app-booting') < indexHtml.indexOf('id="app"'));
 });
 

@@ -11,6 +11,7 @@ export function adminCommunityPostFixture() {
     title: 'Community post',
     body: 'A server-approved community post.',
     status: 'published',
+    version: 0,
     createdAt: '2026-08-18T10:00:00.000Z',
     updatedAt: '2026-08-18T11:00:00.000Z',
     commentCount: 3

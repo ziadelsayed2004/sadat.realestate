@@ -11,7 +11,7 @@ const publicMediaUrl = z.union([
   z.string().trim().min(2).max(2_048).regex(/^\/(?!\/)[^\s]*$/u)
 ]);
 
-export const communityPostStatusSchema = z.enum(['draft', 'published', 'hidden', 'removed']);
+export const communityPostStatusSchema = z.enum(['draft', 'published', 'hidden', 'rejected', 'removed']);
 export const communityPostCategorySchema = z.enum(['question', 'experience', 'advice', 'service', 'area', 'property']);
 export const communityPostSchema = z.object({
   id,
@@ -25,6 +25,7 @@ export const communityPostSchema = z.object({
   likeCount: z.number().int().nonnegative().optional(),
   dislikeCount: z.number().int().nonnegative().optional(),
   status: communityPostStatusSchema,
+  version: z.number().int().nonnegative().default(0),
   createdAt: z.string().datetime({ offset: true }),
   updatedAt: z.string().datetime({ offset: true })
 }).strict();
@@ -123,7 +124,7 @@ export const communityAdminCommentListSuccessEnvelopeSchema = successEnvelopeSch
 export type CommunityAdminComment = z.infer<typeof communityAdminCommentSchema>;
 export type CommunityAdminCommentListData = z.infer<typeof communityAdminCommentListDataSchema>;
 
-export const communityPostMutationDataSchema = communityPostSchema.pick({ id: true, status: true, createdAt: true, updatedAt: true }).strict();
+export const communityPostMutationDataSchema = communityPostSchema.pick({ id: true, status: true, version: true, createdAt: true, updatedAt: true }).strict();
 export const communityPostMutationSuccessEnvelopeSchema = successEnvelopeSchema(communityPostMutationDataSchema);
 export const communityCommentMutationDataSchema = communityCommentSchema.pick({ id: true, postId: true, depth: true, createdAt: true }).strict();
 export const communityCommentMutationSuccessEnvelopeSchema = successEnvelopeSchema(communityCommentMutationDataSchema);
@@ -182,8 +183,8 @@ export type CommunityAdminReport = z.infer<typeof communityAdminReportSchema>;
 export type CommunityAdminReportListData = z.infer<typeof communityAdminReportListDataSchema>;
 
 export const communityPostModerationSchema = z.object({
-  action: z.enum(['publish', 'hide']),
-  expectedUpdatedAt: z.string().datetime({ offset: true }),
+  action: z.enum(['publish', 'hide', 'reject']),
+  expectedVersion: z.number().int().nonnegative(),
   reason: z.string().trim().min(5).max(500).regex(/^[^\u0000-\u001f\u007f]+$/u)
 }).strict();
 export type CommunityPostModeration = z.infer<typeof communityPostModerationSchema>;

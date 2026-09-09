@@ -796,6 +796,7 @@
       "draft": "مسودة",
       "published": "منشور",
       "hidden": "مخفي",
+      "rejected": "مرفوض",
       "removed": "محذوف"
     },
     "commentStatus": {
@@ -819,7 +820,10 @@
       "review": "مراجعة",
       "resolve": "حل البلاغ",
       "dismiss": "رفض البلاغ",
-      "close": "إغلاق"
+      "close": "إغلاق",
+      "publishPost": "نشر المنشور",
+      "hidePost": "إخفاء المنشور",
+      "rejectPost": "رفض المنشور"
     },
     "reason": "سبب القرار",
     "reasonPlaceholder": "اكتب سبباً واضحاً من خمسة أحرف على الأقل",

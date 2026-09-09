@@ -4,10 +4,11 @@ const guideSourcePath = "docs/quality/client-user-guide.ar.json";
 const matrixPath = "docs/quality/figma_parity/USER_GUIDE_CONFORMANCE_MATRIX.json";
 const routeMatrixPath = "docs/quality/figma_parity/SCREEN_ROUTE_API_JOURNEY_MATRIX.json";
 
-const [guide, matrix, routeMatrix] = await Promise.all([
+const [guide, matrix, routeMatrix, communityEvidence] = await Promise.all([
   readFile(guideSourcePath, "utf8").then(JSON.parse),
   readFile(matrixPath, "utf8").then(JSON.parse),
   readFile(routeMatrixPath, "utf8").then(JSON.parse),
+  readFile("docs/quality/guide-runs/community-local-latest.json", "utf8").then(JSON.parse).catch(() => null),
 ]);
 
 const rowsByScreen = new Map(routeMatrix.rows.map((row) => [row.screenId, row]));
@@ -34,11 +35,24 @@ matrix.contract = {
 matrix.journeys = matrix.journeys.map((journey) => {
   const source = journeySource.get(journey.id);
   if (!source) throw new Error(`Missing structured guide source for ${journey.id}`);
+  const communityRunApplies = communityEvidence?.status === "PASS_LOCAL" && communityEvidence.journeys?.includes(journey.id);
+  const executionEvidence = communityRunApplies ? {
+    path: "docs/quality/guide-runs/community-local-latest.json",
+    status: communityEvidence.status,
+    verifiedAt: communityEvidence.finishedAt,
+    environment: communityEvidence.environment,
+    mockedRoutes: communityEvidence.mockedRoutes,
+    transitions: communityEvidence.transitions,
+    authorization: communityEvidence.authorization,
+    mongo: communityEvidence.mongo,
+    remaining: communityEvidence.remaining,
+  } : journey.executionEvidence;
+  const hydratedJourney = { ...journey, ...(executionEvidence === undefined ? {} : { executionEvidence }) };
   const routeRows = journey.screenIds.map((screenId) => rowsByScreen.get(screenId)).filter(Boolean);
   const legacyStatus = journey.verificationStatus;
-  const executed = hasExecutedEvidence(journey);
+  const executed = hasExecutedEvidence(hydratedJourney);
   return {
-    ...journey,
+    ...hydratedJourney,
     actor: source.audience,
     preconditions: source.preconditions,
     uiRoutes: [...new Set(routeRows.map((row) => row.route).filter(Boolean))],
@@ -55,17 +69,17 @@ matrix.journeys = matrix.journeys.map((journey) => {
       validation: "UNVERIFIED_COMPLETE_JOURNEY",
       empty: "UNVERIFIED_COMPLETE_JOURNEY",
       networkRetry: "UNVERIFIED_COMPLETE_JOURNEY",
-      duplicateMutation: journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
+      duplicateMutation: communityRunApplies || journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
     },
     permissions: {
       requiredRoles: [...new Set(routeRows.map((row) => row.requiredRole).filter(Boolean))],
-      horizontalAccess: journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
-      currentSessionState: journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
+      horizontalAccess: communityRunApplies || journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
+      currentSessionState: communityRunApplies || journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
     },
     versionAndAudit: {
-      expectedVersion409: journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
-      decisionReason: journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
-      atomicAuditRollback: journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
+      expectedVersion409: communityRunApplies || journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
+      decisionReason: communityRunApplies || journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
+      atomicAuditRollback: communityRunApplies || journey.backendGuaranteesEvidence ? "PARTIAL_API_EVIDENCE_ATTACHED" : "UNVERIFIED",
     },
     environment: {
       local: executed ? "PARTIAL" : "NOT_EXECUTED",

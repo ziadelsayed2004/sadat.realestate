@@ -21,7 +21,6 @@
           const target = new URL(link.href, location.href);
           if (target.origin === location.origin && target.href !== location.href) document.documentElement.classList.add('app-navigating');
         }, { capture: true });
-        addEventListener('submit', () => document.documentElement.classList.add('app-navigating'), { capture: true });
       })();
     </script>
     <link rel="icon" type="image/png" href="/assets/sadat-real-estate-favicon.png" />

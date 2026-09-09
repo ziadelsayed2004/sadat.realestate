@@ -113,6 +113,7 @@ function postMutationData(post: Awaited<ReturnType<CommunityService['create']>>)
   return {
     id: post.id,
     status: post.status,
+    version: post.version,
     createdAt: post.createdAt,
     updatedAt: post.updatedAt
   };
